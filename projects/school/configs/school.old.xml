@@ -1,0 +1,148 @@
+<APP name="School">
+	<MENU name="School">
+		<MENU name="Students">1</MENU>
+		<MENU name="Subjects">2</MENU>
+		<MENU name="Teachers">3</MENU>
+		<MENU name="Votes">4</MENU>
+		<MENU name="Terms">5</MENU>
+		<MENU name="Reports">
+			<MENU name="Students">101</MENU>
+		</MENU>
+	</MENU>
+	<DESK w="700" name="Students" key="1" h="500">
+		<GRID name="Students" keyfield="student_id" table="students">
+			<TEXTFIELD w="75" title="Student ID">student_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+			<TEXTDATE w="75" title="Admission Date">admission_date</TEXTDATE>
+			<TEXTDATE w="75" title="Birth Date">birth_date</TEXTDATE>
+			<TEXTFIELD w="75" title="House">house</TEXTFIELD>
+			<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
+			<GRID name="Reciepts" keyfield="receipt_id" linkfield="student_id" table="vw_reciepts">
+				<TEXTFIELD w="75" title="Student ID">student_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Receipt ID">receipt_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Receipt Date">receipt_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Cheque Number">cheque_number</TEXTFIELD>
+				<FORM name="Reciepts" keyfield="receipt_id" linkfield="student_id" table="reciepts">
+					<TEXTDATE w="150" title="Receipt Date" y="10" h="20" x="10">receipt_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="290">amount</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Bank Name" y="30" h="20" x="10">bank_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Cheque Number" y="30" h="20" x="290">cheque_number</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Students" keyfield="student_id" table="students">
+				<TEXTFIELD w="150" title="Student ID" y="10" h="20" x="10">student_id</TEXTFIELD>
+				<TEXTFIELD w="150" title="Student Name" y="10" h="20" x="290">student_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guardian Name" y="30" h="20" x="10">guardian_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Address" y="30" h="20" x="290">address</TEXTFIELD>
+				<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+				<TEXTDATE w="150" title="Admission Date" y="50" h="20" x="290">admission_date</TEXTDATE>
+				<TEXTDATE w="150" title="Birth Date" y="70" h="20" x="10">birth_date</TEXTDATE>
+				<TEXTFIELD w="150" title="House" y="70" h="20" x="290">house</TEXTFIELD>
+				<TEXTFIELD w="150" title="Stream" y="90" h="20" x="10">stream</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Subjects" key="2" h="500">
+		<GRID name="Subjects" keyfield="subject_id" table="subjects">
+			<TEXTFIELD w="75" title="Subject ID">subject_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
+			<FORM name="Subjects" keyfield="subject_id" table="subjects">
+				<TEXTFIELD w="150" title="Subject Name" y="10" h="20" x="10">subject_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Teachers" key="3" h="500">
+		<GRID name="Teachers" keyfield="teacher_id" table="teachers">
+			<TEXTFIELD w="75" title="Teacher ID">teacher_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Teacher Name">teacher_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Joining Date">joining_date</TEXTDATE>
+			<TEXTDATE w="75" title="Birth Date">birth_date</TEXTDATE>
+			<FORM name="Teachers" keyfield="teacher_id" table="teachers">
+				<TEXTFIELD w="150" title="Teacher Name" y="10" h="20" x="10">teacher_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Joining Date" y="10" h="20" x="290">joining_date</TEXTDATE>
+				<TEXTDATE w="150" title="Birth Date" y="30" h="20" x="10">birth_date</TEXTDATE>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Votes" key="4" h="500">
+		<GRID name="Votes" keyfield="vote_id" table="votes">
+			<TEXTFIELD w="75" title="Vote ID">vote_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Vote Name">vote_name</TEXTFIELD>
+			<FORM name="Votes" keyfield="vote_id" table="votes">
+				<TEXTFIELD w="150" title="Vote ID" y="10" h="20" x="10">vote_id</TEXTFIELD>
+				<TEXTFIELD w="150" title="Vote Name" y="10" h="20" x="290">vote_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Terms" key="5" h="500">
+		<GRID name="Terms" keyfield="term_id" table="terms">
+			<TEXTFIELD w="75" title="Term ID">term_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+			<GRID name="Std Terms" keyfield="std_term_id" linkfield="term_id" table="vw_std_terms">
+				<TEXTFIELD w="75" title="Student ID">student_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Admission Date">admission_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Term ID">term_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Std Class">std_class</TEXTFIELD>
+				<GRID name="Exams" keyfield="exam_id" linkfield="std_term_id" table="vw_exams">
+					<TEXTFIELD w="75" title="Student ID">student_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Term ID">term_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Std Class">std_class</TEXTFIELD>
+					<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Teacher Name">teacher_name</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Cat1">cat1</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Cat2">cat2</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Exam">exam</TEXTDECIMAL>
+					<FORM name="Exams" keyfield="exam_id" linkfield="std_term_id" table="exams">
+						<COMBOBOX w="150" title="Subject ID" lptable="subjects" y="10" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
+						<COMBOBOX w="150" title="Teacher ID" lptable="teachers" y="10" h="20" x="290" lpfield="teacher_name">teacher_id</COMBOBOX>
+						<TEXTDECIMAL w="150" title="CAT 1" y="30" h="20" x="10">cat1</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="CAT 2" y="30" h="20" x="290">cat2</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Exam" y="50" h="20" x="10">exam</TEXTDECIMAL>
+						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<FORM name="Std Terms" keyfield="std_term_id" linkfield="term_id" table="std_terms">
+					<COMBOBOX w="150" title="Student ID" lptable="students" y="10" h="20" x="10" lpfield="student_name">student_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Std Class" y="10" h="20" x="290">std_class</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Vote Terms" keyfield="vote_term_id" linkfield="term_id" table="vw_vote_terms">
+				<TEXTFIELD w="75" title="Term ID">term_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Vote ID">vote_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Vote Name">vote_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Class">class</TEXTFIELD>
+				<FORM name="Vote Terms" keyfield="vote_term_id" linkfield="term_id" table="vote_terms">
+					<COMBOBOX w="150" title="Vote ID" lptable="votes" y="10" h="20" x="10" lpfield="vote_name">vote_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="290">amount</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Class" y="30" h="20" x="10">class</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Terms" keyfield="term_id" table="terms">
+				<TEXTFIELD w="150" title="Term ID" y="10" h="20" x="10">term_id</TEXTFIELD>
+				<TEXTDATE w="150" title="Start Date" y="10" h="20" x="290">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="30" h="20" x="10">end_date</TEXTDATE>
+				<CHECKBOX w="150" title="Closed" y="30" h="20" x="290">closed</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Students" key="101" h="550">
+		<JASPER name="Students" reportfile="students.jasper"></JASPER>
+	</DESK>
+</APP>

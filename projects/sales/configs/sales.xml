@@ -1,0 +1,455 @@
+<APP name="Sales Force Automation">
+	<MENU name="Sales Force Automation">
+		<MENU name="Address">1</MENU>
+		<MENU name="Approval Phases">2</MENU>
+		<MENU name="Approval Types">3</MENU>
+		<MENU name="Approvals">4</MENU>
+		<MENU name="Checklist">5</MENU>
+		<MENU name="Entiry Refs">6</MENU>
+		<MENU name="Entity Subscriptions">7</MENU>
+		<MENU name="Entity Types">8</MENU>
+		<MENU name="Entitys">9</MENU>
+		<MENU name="Lead Checklist">10</MENU>
+		<MENU name="Orgs">11</MENU>
+		<MENU name="Phase">12</MENU>
+		<MENU name="Product">13</MENU>
+		<MENU name="Product Brand">14</MENU>
+		<MENU name="Product Category">15</MENU>
+		<MENU name="Prospect">16</MENU>
+		<MENU name="Prospect Phase">17</MENU>
+		<MENU name="Sales Lead">18</MENU>
+		<MENU name="Workflow">19</MENU>
+	</MENU>
+	<DESK w="700" name="Address" key="1" h="500">
+		<GRID name="Address" keyfield="address_id" table="vw_address">
+			<TEXTFIELD w="75" title="Sys Country ID">sys_country_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sys Country Name">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Address ID">address_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Address Name">address_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Post Office Box">post_office_box</TEXTFIELD>
+			<TEXTFIELD w="75" title="Postal Code">postal_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Premises">premises</TEXTFIELD>
+			<TEXTFIELD w="75" title="Street">street</TEXTFIELD>
+			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phone Number">phone_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Extension">extension</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fax">fax</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+			<CHECKBOX w="75" title="Is Default">is_default</CHECKBOX>
+			<FORM name="Address" keyfield="address_id" table="address">
+				<TEXTFIELD w="150" title="Address Name" h="20" y="10" x="10">address_name</TEXTFIELD>
+				<COMBOBOX w="150" title="Sys Country ID" lptable="sys_countrys" h="20" y="10" lpfield="sys_country_name" x="290">sys_country_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Table Name" h="20" y="30" x="10">table_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Table ID" h="20" y="30" x="290">table_id</TEXTFIELD>
+				<TEXTFIELD w="150" title="Post Office Box" h="20" y="50" x="10">post_office_box</TEXTFIELD>
+				<TEXTFIELD w="150" title="Postal Code" h="20" y="50" x="290">postal_code</TEXTFIELD>
+				<TEXTFIELD w="430" title="Premises" h="20" y="70" x="10">premises</TEXTFIELD>
+				<TEXTFIELD w="430" title="Street" h="20" y="90" x="10">street</TEXTFIELD>
+				<TEXTFIELD w="150" title="Town" h="20" y="110" x="10">town</TEXTFIELD>
+				<TEXTFIELD w="430" title="Phone Number" h="20" y="130" x="10">phone_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Extension" h="20" y="150" x="10">extension</TEXTFIELD>
+				<TEXTFIELD w="430" title="Mobile" h="20" y="170" x="10">mobile</TEXTFIELD>
+				<TEXTFIELD w="430" title="Fax" h="20" y="190" x="10">fax</TEXTFIELD>
+				<TEXTFIELD w="430" title="Email" h="20" y="210" x="10">email</TEXTFIELD>
+				<CHECKBOX w="150" title="Is Default" h="20" y="230" x="10">is_default</CHECKBOX>
+				<TEXTAREA w="430" title="Details" h="70" y="250" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Approval Phases" key="2" h="500">
+		<GRID name="Approval Phases" keyfield="approval_phase_id" table="vw_approval_phases">
+			<TEXTFIELD w="75" title="Approval Type ID">approval_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval Type Name">approval_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval Phase ID">approval_phase_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Return Level">return_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Escalation Time">escalation_time</TEXTFIELD>
+			<CHECKBOX w="75" title="Departmental">departmental</CHECKBOX>
+			<FORM name="Approval Phases" keyfield="approval_phase_id" table="approval_phases">
+				<TEXTFIELD w="150" title="Table Name" h="20" y="10" x="10">table_name</TEXTFIELD>
+				<COMBOBOX w="150" title="Entity Type ID" lptable="entity_types" h="20" y="10" lpfield="entity_type_name" x="290">entity_type_id</COMBOBOX>
+				<COMBOBOX w="150" title="Approval Type ID" lptable="approval_types" h="20" y="30" lpfield="approval_type_name" x="10">approval_type_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Approval Level" h="20" y="30" x="290">approval_level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Return Level" h="20" y="50" x="10">return_level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Escalation Time" h="20" y="50" x="290">escalation_time</TEXTFIELD>
+				<CHECKBOX w="150" title="Departmental" h="20" y="70" x="10">departmental</CHECKBOX>
+				<TEXTAREA w="430" title="Details" h="70" y="90" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Approval Types" key="3" h="500">
+		<GRID name="Approval Types" keyfield="approval_type_id" table="approval_types">
+			<TEXTFIELD w="75" title="Approval Type ID">approval_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval Type Name">approval_type_name</TEXTFIELD>
+			<FORM name="Approval Types" keyfield="approval_type_id" table="approval_types">
+				<TEXTFIELD w="150" title="Approval Type Name" h="20" y="10" x="10">approval_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" h="70" y="30" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Approvals" key="4" h="500">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals">
+			<TEXTFIELD w="75" title="Approval Type ID">approval_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval Type Name">approval_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval Phase ID">approval_phase_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Return Level">return_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval ID">approval_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Forward ID">forward_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Escalation Time">escalation_time</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
+			<CHECKBOX w="75" title="Rejected">rejected</CHECKBOX>
+			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<FORM name="Approvals" keyfield="approval_id" table="approvals">
+				<TEXTFIELD w="150" title="Forward ID" h="20" y="10" x="10">forward_id</TEXTFIELD>
+				<TEXTFIELD w="150" title="Table ID" h="20" y="10" x="290">table_id</TEXTFIELD>
+				<COMBOBOX w="150" title="Approval Phase ID" lptable="approval_phases" h="20" y="30" lpfield="approval_phase_id" x="10">approval_phase_id</COMBOBOX>
+				<COMBOBOX w="150" title="Entity ID" lptable="entitys" h="20" y="30" lpfield="entity_name" x="290">entity_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Escalation Time" h="20" y="50" x="10">escalation_time</TEXTFIELD>
+				<TEXTTIMESTAMP w="150" title="Application Date" h="20" y="50" x="290">application_date</TEXTTIMESTAMP>
+				<CHECKBOX w="150" title="Approved" h="20" y="70" x="10">approved</CHECKBOX>
+				<CHECKBOX w="150" title="Rejected" h="20" y="70" x="290">rejected</CHECKBOX>
+				<TEXTTIMESTAMP w="150" title="Action Date" h="20" y="90" x="10">action_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="430" title="Narrative" h="20" y="110" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="To Be Done" h="70" y="130" x="10">to_be_done</TEXTAREA>
+				<TEXTAREA w="430" title="What Is Done" h="70" y="200" x="10">what_is_done</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="270" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Checklist" key="5" h="500">
+		<GRID name="Checklist" keyfield="checklist_id" table="checklist">
+			<TEXTFIELD w="75" title="Checklist ID">checklist_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Checklist Value">checklist_value</TEXTFIELD>
+			<TEXTFIELD w="75" title="Weight">weight</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">created_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Created">created</TEXTDATE>
+			<TEXTFIELD w="75" title="Updated By">updated_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Updated">updated</TEXTDATE>
+			<CHECKBOX w="75" title="Isactive">isactive</CHECKBOX>
+			<FORM name="Checklist" keyfield="checklist_id" table="checklist">
+				<TEXTFIELD w="430" title="Checklist Value" h="20" y="10" x="10">checklist_value</TEXTFIELD>
+				<TEXTFIELD w="150" title="Weight" h="20" y="30" x="10">weight</TEXTFIELD>
+				<COMBOBOX w="150" title="Created By" lptable="entitys" lpkey="entity_id" h="20" y="30" lpfield="entity_name" x="290">created_by</COMBOBOX>
+				<TEXTDATE w="150" title="Created" h="20" y="50" x="10">created</TEXTDATE>
+				<TEXTAREA w="430" title="Remarks" h="70" y="70" x="10">remarks</TEXTAREA>
+				<COMBOBOX w="150" title="Updated By" lptable="entitys" lpkey="entity_id" h="20" y="140" lpfield="entity_name" x="10">updated_by</COMBOBOX>
+				<TEXTDATE w="150" title="Updated" h="20" y="140" x="290">updated</TEXTDATE>
+				<TEXTAREA w="430" title="Narrative" h="70" y="160" x="10">narrative</TEXTAREA>
+				<CHECKBOX w="150" title="Isactive" h="20" y="230" x="10">isactive</CHECKBOX>
+				<TEXTAREA w="430" title="Details" h="70" y="250" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Entiry Refs" key="6" h="500">
+		<GRID name="Entiry Refs" keyfield="entiry_ref_id" table="entiry_refs">
+			<TEXTFIELD w="75" title="Entiry Ref ID">entiry_ref_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Ref Entity ID">ref_entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<FORM name="Entiry Refs" keyfield="entiry_ref_id" table="entiry_refs">
+				<COMBOBOX w="150" title="Entity ID" lptable="entitys" h="20" y="10" lpfield="entity_name" x="10">entity_id</COMBOBOX>
+				<COMBOBOX w="150" title="Ref Entity ID" lptable="entitys" lpkey="entity_id" h="20" y="10" lpfield="entity_name" x="290">ref_entity_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Narrative" h="20" y="30" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" h="70" y="50" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Entity Subscriptions" key="7" h="500">
+		<GRID name="Entity Subscriptions" keyfield="entity_subscription_id" table="vw_entity_subscriptions">
+			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Subscription ID">entity_subscription_id</TEXTFIELD>
+			<FORM name="Entity Subscriptions" keyfield="entity_subscription_id" table="entity_subscriptions">
+				<COMBOBOX w="150" title="Entity Type ID" lptable="entity_types" h="20" y="10" lpfield="entity_type_name" x="10">entity_type_id</COMBOBOX>
+				<COMBOBOX w="150" title="Entity ID" lptable="entitys" h="20" y="10" lpfield="entity_name" x="290">entity_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" h="70" y="30" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Entity Types" key="8" h="500">
+		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types">
+			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
+			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types">
+				<TEXTFIELD w="150" title="Entity Type Name" h="20" y="10" x="10">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Entity Role" h="20" y="30" x="10">entity_role</TEXTFIELD>
+				<TEXTAREA w="430" title="Description" h="70" y="50" x="10">description</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="120" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Entitys" key="9" h="500">
+		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Address ID">address_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Address Name">address_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sys Country ID">sys_country_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sys Country Name">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Post Office Box">post_office_box</TEXTFIELD>
+			<TEXTFIELD w="75" title="Postal Code">postal_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Premises">premises</TEXTFIELD>
+			<TEXTFIELD w="75" title="Street">street</TEXTFIELD>
+			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phone Number">phone_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Extension">extension</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fax">fax</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Super User">super_user</CHECKBOX>
+			<CHECKBOX w="75" title="Entity Leader">entity_leader</CHECKBOX>
+			<TEXTTIMESTAMP w="75" title="Date Enroled">date_enroled</TEXTTIMESTAMP>
+			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Entity Password">entity_password</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Password">first_password</TEXTFIELD>
+			<FORM name="Entitys" keyfield="entity_id" table="entitys">
+				<COMBOBOX w="150" title="Org ID" lptable="orgs" h="20" y="10" lpfield="org_name" x="10">org_id</COMBOBOX>
+				<COMBOBOX w="150" title="Entity Type ID" lptable="entity_types" h="20" y="10" lpfield="entity_type_name" x="290">entity_type_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Entity Name" h="20" y="30" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="User Name" h="20" y="50" x="10">user_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Super User" h="20" y="50" x="290">super_user</CHECKBOX>
+				<CHECKBOX w="150" title="Entity Leader" h="20" y="70" x="10">entity_leader</CHECKBOX>
+				<TEXTFIELD w="430" title="Function Role" h="20" y="90" x="10">function_role</TEXTFIELD>
+				<TEXTTIMESTAMP w="150" title="Date Enroled" h="20" y="110" x="10">date_enroled</TEXTTIMESTAMP>
+				<CHECKBOX w="150" title="Is Active" h="20" y="110" x="290">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="Entity Password" h="20" y="130" x="10">entity_password</TEXTFIELD>
+				<TEXTFIELD w="150" title="First Password" h="20" y="130" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" h="70" y="150" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Lead Checklist" key="10" h="500">
+		<GRID name="Lead Checklist" keyfield="lead_checklist_id" table="lead_checklist">
+			<TEXTFIELD w="75" title="Lead Checklist ID">lead_checklist_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sales Lead ID">sales_lead_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Checklist ID">checklist_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Score">score</TEXTFIELD>
+			<CHECKBOX w="75" title="Isactive">isactive</CHECKBOX>
+			<TEXTFIELD w="75" title="Created By">created_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Created">created</TEXTDATE>
+			<TEXTFIELD w="75" title="Updated By">updated_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Updated">updated</TEXTDATE>
+			<FORM name="Lead Checklist" keyfield="lead_checklist_id" table="lead_checklist">
+				<COMBOBOX w="150" title="Sales Lead ID" lptable="sales_lead" h="20" y="10" lpfield="sales_lead_id" x="10">sales_lead_id</COMBOBOX>
+				<COMBOBOX w="150" title="Checklist ID" lptable="checklist" h="20" y="10" lpfield="checklist_id" x="290">checklist_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Result" h="20" y="30" x="10">result</TEXTFIELD>
+				<TEXTFIELD w="150" title="Score" h="20" y="50" x="10">score</TEXTFIELD>
+				<CHECKBOX w="150" title="Isactive" h="20" y="50" x="290">isactive</CHECKBOX>
+				<COMBOBOX w="150" title="Created By" lptable="entitys" lpkey="entity_id" h="20" y="70" lpfield="entity_name" x="10">created_by</COMBOBOX>
+				<TEXTDATE w="150" title="Created" h="20" y="70" x="290">created</TEXTDATE>
+				<TEXTAREA w="430" title="Remarks" h="70" y="90" x="10">remarks</TEXTAREA>
+				<COMBOBOX w="150" title="Updated By" lptable="entitys" lpkey="entity_id" h="20" y="160" lpfield="entity_name" x="10">updated_by</COMBOBOX>
+				<TEXTDATE w="150" title="Updated" h="20" y="160" x="290">updated</TEXTDATE>
+				<TEXTAREA w="430" title="Narrative" h="70" y="180" x="10">narrative</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="250" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Orgs" key="11" h="500">
+		<GRID name="Orgs" keyfield="org_id" table="orgs">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Is Default">is_default</CHECKBOX>
+			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Logo">logo</TEXTFIELD>
+			<FORM name="Orgs" keyfield="org_id" table="orgs">
+				<TEXTFIELD w="150" title="Org Name" h="20" y="10" x="10">org_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Is Default" h="20" y="10" x="290">is_default</CHECKBOX>
+				<CHECKBOX w="150" title="Is Active" h="20" y="30" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="Logo" h="20" y="30" x="290">logo</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" h="70" y="50" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Phase" key="12" h="500">
+		<GRID name="Phase" keyfield="phase_id" table="phase">
+			<TEXTFIELD w="75" title="Phase ID">phase_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phase Name">phase_name</TEXTFIELD>
+			<FORM name="Phase" keyfield="phase_id" table="phase">
+				<TEXTFIELD w="150" title="Phase Name" h="20" y="10" x="10">phase_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Phase Description" h="20" y="30" x="10">phase_description</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" h="70" y="50" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Product" key="13" h="500">
+		<GRID name="Product" keyfield="product_id" table="product">
+			<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Category ID">product_category_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Brand ID">product_brand_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">created_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Created">created</TEXTDATE>
+			<TEXTFIELD w="75" title="Updated By">updated_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Updated">updated</TEXTDATE>
+			<TEXTFIELD w="75" title="Product Version">product_version</TEXTFIELD>
+			<FORM name="Product" keyfield="product_id" table="product">
+				<TEXTFIELD w="150" title="Product Name" h="20" y="10" x="10">product_name</TEXTFIELD>
+				<COMBOBOX w="150" title="Product Category ID" lptable="product_category" h="20" y="10" lpfield="product_category_name" x="290">product_category_id</COMBOBOX>
+				<COMBOBOX w="150" title="Product Brand ID" lptable="product_brand" h="20" y="30" lpfield="product_brand_name" x="10">product_brand_id</COMBOBOX>
+				<COMBOBOX w="150" title="Created By" lptable="entitys" lpkey="entity_id" h="20" y="30" lpfield="entity_name" x="290">created_by</COMBOBOX>
+				<TEXTDATE w="150" title="Created" h="20" y="50" x="10">created</TEXTDATE>
+				<TEXTAREA w="430" title="Remarks" h="70" y="70" x="10">remarks</TEXTAREA>
+				<COMBOBOX w="150" title="Updated By" lptable="entitys" lpkey="entity_id" h="20" y="140" lpfield="entity_name" x="10">updated_by</COMBOBOX>
+				<TEXTDATE w="150" title="Updated" h="20" y="140" x="290">updated</TEXTDATE>
+				<TEXTAREA w="430" title="Narrative" h="70" y="160" x="10">narrative</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="230" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="Product Version" h="20" y="300" x="10">product_version</TEXTFIELD>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Product Brand" key="14" h="500">
+		<GRID name="Product Brand" keyfield="product_brand_id" table="product_brand">
+			<TEXTFIELD w="75" title="Product Brand ID">product_brand_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Brand Name">product_brand_name</TEXTFIELD>
+			<FORM name="Product Brand" keyfield="product_brand_id" table="product_brand">
+				<TEXTFIELD w="150" title="Product Brand Name" h="20" y="10" x="10">product_brand_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" h="70" y="30" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Product Category" key="15" h="500">
+		<GRID name="Product Category" keyfield="product_category_id" table="product_category">
+			<TEXTFIELD w="75" title="Product Category ID">product_category_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Category Name">product_category_name</TEXTFIELD>
+			<FORM name="Product Category" keyfield="product_category_id" table="product_category">
+				<TEXTFIELD w="150" title="Product Category Name" h="20" y="10" x="10">product_category_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" h="70" y="30" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Prospect" key="16" h="500">
+		<GRID name="Prospect" keyfield="prospect_id" table="prospect">
+			<TEXTFIELD w="75" title="Prospect ID">prospect_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Prospect Code">prospect_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Prospect Description">prospect_description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sales Lead ID">sales_lead_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">created_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Created">created</TEXTDATE>
+			<TEXTFIELD w="75" title="Updated By">updated_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Updated">updated</TEXTDATE>
+			<FORM name="Prospect" keyfield="prospect_id" table="prospect">
+				<TEXTFIELD w="150" title="Prospect Code" h="20" y="10" x="10">prospect_code</TEXTFIELD>
+				<TEXTFIELD w="430" title="Prospect Description" h="20" y="30" x="10">prospect_description</TEXTFIELD>
+				<COMBOBOX w="150" title="Sales Lead ID" lptable="sales_lead" h="20" y="50" lpfield="sales_lead_id" x="10">sales_lead_id</COMBOBOX>
+				<COMBOBOX w="150" title="Entity ID" lptable="entitys" h="20" y="50" lpfield="entity_name" x="290">entity_id</COMBOBOX>
+				<COMBOBOX w="150" title="Product ID" lptable="product" h="20" y="70" lpfield="product_name" x="10">product_id</COMBOBOX>
+				<COMBOBOX w="150" title="Created By" lptable="entitys" lpkey="entity_id" h="20" y="70" lpfield="entity_name" x="290">created_by</COMBOBOX>
+				<TEXTDATE w="150" title="Created" h="20" y="90" x="10">created</TEXTDATE>
+				<TEXTAREA w="430" title="Remarks" h="70" y="110" x="10">remarks</TEXTAREA>
+				<COMBOBOX w="150" title="Updated By" lptable="entitys" lpkey="entity_id" h="20" y="180" lpfield="entity_name" x="10">updated_by</COMBOBOX>
+				<TEXTDATE w="150" title="Updated" h="20" y="180" x="290">updated</TEXTDATE>
+				<TEXTAREA w="430" title="Narrative" h="70" y="200" x="10">narrative</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="270" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Prospect Phase" key="17" h="500">
+		<GRID name="Prospect Phase" keyfield="prospect_phase_id" table="prospect_phase">
+			<TEXTFIELD w="75" title="Prospect Phase ID">prospect_phase_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Prospect ID">prospect_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phase ID">phase_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Precedence">precedence</TEXTFIELD>
+			<TEXTFIELD w="75" title="Manager ID">manager_id</TEXTFIELD>
+			<CHECKBOX w="75" title="Iscomplete">iscomplete</CHECKBOX>
+			<TEXTFIELD w="75" title="Last Staff ID">last_staff_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Last Task Date">last_task_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Created By">created_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Created">created</TEXTDATE>
+			<TEXTFIELD w="75" title="Updated By">updated_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Updated">updated</TEXTDATE>
+			<FORM name="Prospect Phase" keyfield="prospect_phase_id" table="prospect_phase">
+				<COMBOBOX w="150" title="Prospect ID" lptable="prospect" h="20" y="10" lpfield="prospect_id" x="10">prospect_id</COMBOBOX>
+				<COMBOBOX w="150" title="Phase ID" lptable="phase" h="20" y="10" lpfield="phase_name" x="290">phase_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Precedence" h="20" y="30" x="10">precedence</TEXTFIELD>
+				<COMBOBOX w="150" title="Manager ID" lptable="entitys" lpkey="entity_id" h="20" y="30" lpfield="entity_name" x="290">manager_id</COMBOBOX>
+				<CHECKBOX w="150" title="Iscomplete" h="20" y="50" x="10">iscomplete</CHECKBOX>
+				<COMBOBOX w="150" title="Last Staff ID" lptable="entitys" lpkey="entity_id" h="20" y="50" lpfield="entity_name" x="290">last_staff_id</COMBOBOX>
+				<TEXTDATE w="150" title="Last Task Date" h="20" y="70" x="10">last_task_date</TEXTDATE>
+				<COMBOBOX w="150" title="Created By" lptable="entitys" lpkey="entity_id" h="20" y="70" lpfield="entity_name" x="290">created_by</COMBOBOX>
+				<TEXTDATE w="150" title="Created" h="20" y="90" x="10">created</TEXTDATE>
+				<TEXTAREA w="430" title="Remarks" h="70" y="110" x="10">remarks</TEXTAREA>
+				<COMBOBOX w="150" title="Updated By" lptable="entitys" lpkey="entity_id" h="20" y="180" lpfield="entity_name" x="10">updated_by</COMBOBOX>
+				<TEXTDATE w="150" title="Updated" h="20" y="180" x="290">updated</TEXTDATE>
+				<TEXTAREA w="430" title="Narrative" h="70" y="200" x="10">narrative</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="270" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Sales Lead" key="18" h="500">
+		<GRID name="Sales Lead" keyfield="sales_lead_id" table="sales_lead">
+			<TEXTFIELD w="75" title="Sales Lead ID">sales_lead_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Lead Code">lead_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Lead Description">lead_description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Lead Chaser ID">lead_chaser_id</TEXTFIELD>
+			<CHECKBOX w="75" title="Isdead">isdead</CHECKBOX>
+			<TEXTFIELD w="75" title="Created By">created_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Created">created</TEXTDATE>
+			<TEXTFIELD w="75" title="Updated By">updated_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Updated">updated</TEXTDATE>
+			<FORM name="Sales Lead" keyfield="sales_lead_id" table="sales_lead">
+				<TEXTFIELD w="150" title="Lead Code" h="20" y="10" x="10">lead_code</TEXTFIELD>
+				<TEXTFIELD w="430" title="Lead Description" h="20" y="30" x="10">lead_description</TEXTFIELD>
+				<COMBOBOX w="150" title="Product ID" lptable="product" h="20" y="50" lpfield="product_name" x="10">product_id</COMBOBOX>
+				<COMBOBOX w="150" title="Lead Chaser ID" lptable="entitys" lpkey="entity_id" h="20" y="50" lpfield="entity_name" x="290">lead_chaser_id</COMBOBOX>
+				<CHECKBOX w="150" title="Isdead" h="20" y="70" x="10">isdead</CHECKBOX>
+				<COMBOBOX w="150" title="Created By" lptable="entitys" lpkey="entity_id" h="20" y="70" lpfield="entity_name" x="290">created_by</COMBOBOX>
+				<TEXTDATE w="150" title="Created" h="20" y="90" x="10">created</TEXTDATE>
+				<TEXTAREA w="430" title="Remarks" h="70" y="110" x="10">remarks</TEXTAREA>
+				<COMBOBOX w="150" title="Updated By" lptable="entitys" lpkey="entity_id" h="20" y="180" lpfield="entity_name" x="10">updated_by</COMBOBOX>
+				<TEXTDATE w="150" title="Updated" h="20" y="180" x="290">updated</TEXTDATE>
+				<TEXTAREA w="430" title="Narrative" h="70" y="200" x="10">narrative</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="270" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Workflow" key="19" h="500">
+		<GRID name="Workflow" keyfield="workflow_id" table="workflow">
+			<TEXTFIELD w="75" title="Workflow ID">workflow_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Prospect Phase ID">prospect_phase_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff ID">staff_id</TEXTFIELD>
+			<CHECKBOX w="75" title="Isforwarded">isforwarded</CHECKBOX>
+			<TEXTFIELD w="75" title="Created By">created_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Created">created</TEXTDATE>
+			<TEXTFIELD w="75" title="Updated By">updated_by</TEXTFIELD>
+			<TEXTDATE w="75" title="Updated">updated</TEXTDATE>
+			<FORM name="Workflow" keyfield="workflow_id" table="workflow">
+				<COMBOBOX w="150" title="Prospect Phase ID" lptable="prospect_phase" h="20" y="10" lpfield="prospect_phase_id" x="10">prospect_phase_id</COMBOBOX>
+				<COMBOBOX w="150" title="Staff ID" lptable="entitys" lpkey="entity_id" h="20" y="10" lpfield="entity_name" x="290">staff_id</COMBOBOX>
+				<CHECKBOX w="150" title="Isforwarded" h="20" y="30" x="10">isforwarded</CHECKBOX>
+				<COMBOBOX w="150" title="Created By" lptable="entitys" lpkey="entity_id" h="20" y="30" lpfield="entity_name" x="290">created_by</COMBOBOX>
+				<TEXTDATE w="150" title="Created" h="20" y="50" x="10">created</TEXTDATE>
+				<TEXTAREA w="430" title="Remarks" h="70" y="70" x="10">remarks</TEXTAREA>
+				<COMBOBOX w="150" title="Updated By" lptable="entitys" lpkey="entity_id" h="20" y="140" lpfield="entity_name" x="10">updated_by</COMBOBOX>
+				<TEXTDATE w="150" title="Updated" h="20" y="140" x="290">updated</TEXTDATE>
+				<TEXTAREA w="430" title="Narrative" h="70" y="160" x="10">narrative</TEXTAREA>
+				<TEXTAREA w="430" title="Details" h="70" y="230" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+</APP>

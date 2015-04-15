@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<DATA dbclass="org.postgresql.Driver" dbusername="root" dbpassword="invent" dbpath="jdbc:postgresql://localhost/agency">
+
+	<EXPORT name="Email" keyfield="email_id" table="vw_email" update="email" marker="is_picked = 0" marked="is_picked = 1" noaudit="true">
+		<TEXTFIELD w="75" title="Email ID">email_id</TEXTFIELD>
+		<TEXTFIELD w="75" title="Phonenbr">phonenbr</TEXTFIELD>
+		<TEXTFIELD w="75" title="message">message</TEXTFIELD>
+		<TEXTTIMESTAMP w="75" title="Hosteventtimestamp">hosteventtimestamp</TEXTTIMESTAMP>
+
+		<INTO name="Emails" keyfield="email_id" table="email">
+			<TEXTFIELD w="75" title="Email ID">email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phonenbr">phonenbr</TEXTFIELD>
+			<TEXTFIELD w="75" title="message">message</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Hosteventtimestamp">hosteventtimestamp</TEXTTIMESTAMP>
+		</INTO>
+	</EXPORT>
+</DATA>
+
+

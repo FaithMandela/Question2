@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["128"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT registrationid, departmentid, departmentname, schoolid, schoolname,fullname, acceptance_fees, applicationdate, registrationid, (maxlevel / 100) as course_year
+FROM registrationview
+WHERE (registrationid = '$P!{filterid}')]]>
+	</queryString>
+	<field name="registrationid" class="java.lang.Integer"/>
+	<field name="departmentid" class="java.lang.String"/>
+	<field name="departmentname" class="java.lang.String"/>
+	<field name="schoolid" class="java.lang.String"/>
+	<field name="schoolname" class="java.lang.String"/>
+	<field name="fullname" class="java.lang.String"/>
+	<field name="acceptance_fees" class="java.lang.Float"/>
+	<field name="applicationdate" class="java.sql.Date"/>
+	<field name="course_year" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="68" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="3" width="125" height="65" uuid="b48b6d22-ff0b-42db-aa5c-7a8327ce4dec"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "baraza_logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="125" y="4" width="279" height="21" uuid="54bb4289-6f41-4dce-9f92-db3e138c293f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Times New Roman" size="16" isBold="false"/>
+				</textElement>
+				<text><![CDATA[<b>BABCOCK UNIVERSITY</b>]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="730" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="110" width="70" height="16" uuid="a19cca92-13e1-466c-a38f-5b1fcf387e6e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SCHOOL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="132" width="69" height="16" uuid="7f6a0398-2c4a-4d43-bacf-5264ca3b012f"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEGREE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="132" width="47" height="16" uuid="8ff3989c-8b82-4496-aa2e-b41072a47aa3"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LEVEL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="110" width="92" height="16" uuid="05e3a0ad-bab0-4065-9298-0b7ef8ff4906"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPARTMENT:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="291" y="132" width="36" height="16" uuid="92338511-a339-4f19-8b41-0136c99cdae4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["100"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="74" y="110" width="170" height="16" uuid="3cff5569-34f0-4948-a460-e801083e0922"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{schoolname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="132" width="169" height="16" uuid="f000d3a6-6ef2-43a1-93b7-51bf429c5db5"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{schoolid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="110" width="175" height="16" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{departmentname}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="331" y="132" width="73" height="16" uuid="8d7b5b82-99c8-40b4-b429-3d21b088ae2c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DURATION:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="404" y="132" width="86" height="16" uuid="02bf9f67-d0cf-4f09-a77d-68570ff12668"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{course_year} + " yrs"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="154" width="509" height="45" uuid="952d6dc4-04b1-4bf7-aaaf-dcd06146dd41"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[The confirmation of this offer of admission is subject to your submitting the required entry qualifications for the above degree programme for which you have been, or will be admitted.  You shall also meet the following conditions:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="222" width="509" height="115" uuid="916db600-d99d-4623-bfd4-621834db29f8"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[<blockquote>
+<ol><li>Pay <u>A NON REFUNDABLE ACCEPTANCE FEE</u> OF <i>N150,000 (one hundred and fifty thousand naira only).</i><b>Write your Application ID on the slip below, present the slip and your Acceptance Fee to the cashier at any at UBA, Diamond or First Bank via e-Bills or E-tranzact using your Application ID as reference..
+<li>At the time of registration, you will be required to present: Original(s) and four (4) photocopies of 2014 UTME results slips,8 recent passport-size photographs, birth certificates, SSCE results or their equivalents, if you are not awaiting result(s), official receipts of acceptance fees and balance of the school fees paid, evidence of payment for Babcock Post-UTME online form.</ol></blockquote>
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="436" width="511" height="39" uuid="51497d93-d9dd-4852-86ec-4e502db858c4"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[<b>1. A candidate evades any of the processes above</b><br/>
+<b>2. A candidate does not attain the age of sixteen (16) by 27<sup>th</sup> November 2014</b>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="511" width="511" height="86" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Babcock, the future is bright!<br/>
+<i>Jonathan C. Nwosu<br/>
+Registrar <br/>
+registrar@babcock.edu.ng<br/>
+admissions@babcock.edu.ng<br/>
+Hot Lines: 0816 283 5333; 0812 645 6667; 0818 3277727<i/>]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="80" width="509" height="30" uuid="1baee416-8a69-43aa-8a94-18cc3f2416f3"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[As a result of your recent <b>application for admission</b> and performance in our screening exercises, you have been offered a provisional admission into an <b>undergraduate programme</b>, as follows:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="63" width="419" height="15" uuid="283a7ddb-c330-4103-86de-eac066d4927f"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[<b>PROVISIONAL UNDERGRADUATE ADMISSION</b>]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="7" width="100" height="15" uuid="b862d0ed-c31e-4c1d-ab04-439467ab2ad2"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["14th July, 2014"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="41" width="396" height="15" uuid="93c3055c-e953-4b97-b276-be7112e66da0"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Dear, " + $F{fullname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="283" y="7" width="225" height="15" uuid="3b8e4486-1ea2-41af-8589-f433a2a7670c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Ref No:  Ref: BUREG/UADM/2014/2015"]]></textFieldExpression>
+			</textField>
+			<elementGroup>
+				<staticText>
+					<reportElement x="22" y="338" width="168" height="15" uuid="0c6b4de9-ab5c-440c-8004-98cd7660d5a4"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[New Student Arrival:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="22" y="368" width="168" height="15" uuid="c4886608-3738-4076-a238-4f883182b7b3"/>
+					<textElement verticalAlignment="Middle" markup="html">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[New Student Registration:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="22" y="353" width="168" height="15" uuid="c3aa341a-3c78-4c35-b731-8971165378a2"/>
+					<textElement verticalAlignment="Middle" markup="html">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[New Student Orientation:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="22" y="383" width="168" height="15" uuid="1ff5b9b5-9c92-4507-9313-36845606a7e2"/>
+					<textElement verticalAlignment="Top" markup="html">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Classes Begin for All Students:]]></text>
+				</staticText>
+			</elementGroup>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="200" width="513" height="20" uuid="9b122138-acf4-4f01-abd5-b30f5f03fe1b"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u><b>Beginning from Wednesday 16<sup>th</sup> July, 2014,</b></u> you are to:"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="420" width="511" height="15" uuid="afa6de77-34bd-48a4-ab8d-04e9a786fcdd"/>
+				<textElement verticalAlignment="Bottom" markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[PLEASE NOTE: <p>Babcock University reserves the right to withdraw any admission offer if:</p>]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="190" y="368" width="300" height="15" uuid="666d005d-8c96-4984-8890-9c578de1b206"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["28<sup>th</sup> - 31 <sup>st</sup> August, 2014"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="383" width="300" height="15" uuid="ab9202a8-b193-4dd1-860f-07949652566d"/>
+				<textElement verticalAlignment="Top" markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1<sup>st</sup> September, 2014"]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="670" width="511" height="60" uuid="efcb176d-f3d7-4d4c-a861-9ef7c91f5765"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "footer.jpeg"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="338" width="300" height="15" uuid="1d16e061-db52-4a10-af00-98ebbad68324"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["25<sup>th</sup> August, 2014"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="190" y="353" width="300" height="15" uuid="41625173-6908-4819-941a-3bf7cfcdcfbd"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["25<sup>th</sup> - 30 <sup>th</sup> August, 2014"]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperPrint PUBLIC "-//JasperReports//DTD JasperPrint//EN" "http://jasperreports.sourceforge.net/dtds/jasperprint.dtd">
+
+<jasperPrint name="qgradeviewtrans" pageWidth="361" pageHeight="838" locale="en_US" timezone="Africa/Nairobi">
+	<property name="net.sf.jasperreports.export.xml.start.page.index" value="0"/>
+	<property name="net.sf.jasperreports.export.xml.end.page.index" value="0"/>
+	<property name="net.sf.jasperreports.export.xml.page.count" value="1"/>
+	<origin band="background"/>
+	<origin band="title"/>
+	<origin band="pageHeader"/>
+	<origin band="columnHeader"/>
+	<origin band="detail"/>
+	<origin band="columnFooter"/>
+	<origin band="pageFooter"/>
+	<page>
+		<text verticalAlignment="Middle" textHeight="6.90625" lineSpacingFactor="1.1510416" leadingOffset="-1.296875">
+			<reportElement key="element-90" x="3" y="2" width="48" height="9" forecolor="#000000" origin="3"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Times New Roman" size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+			<textContent><![CDATA[COURSE CODE]]></textContent>
+		</text>
+		<text verticalAlignment="Middle" textHeight="6.90625" lineSpacingFactor="1.1510416" leadingOffset="-1.296875">
+			<reportElement key="element-90" x="50" y="2" width="158" height="9" forecolor="#000000" origin="3"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Times New Roman" size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+			<textContent><![CDATA[COURSE TITLE]]></textContent>
+		</text>
+		<text verticalAlignment="Middle" textHeight="6.90625" lineSpacingFactor="1.1510416" leadingOffset="-1.296875">
+			<reportElement key="element-90" x="208" y="2" width="10" height="9" forecolor="#000000" origin="3"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Times New Roman" size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+			<textContent><![CDATA[C]]></textContent>
+		</text>
+		<text verticalAlignment="Middle" textHeight="6.90625" lineSpacingFactor="1.1510416" leadingOffset="-1.296875">
+			<reportElement key="element-90" x="229" y="2" width="19" height="9" forecolor="#000000" origin="3"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Times New Roman" size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+			<textContent><![CDATA[Score]]></textContent>
+		</text>
+		<text verticalAlignment="Middle" textHeight="6.90625" lineSpacingFactor="1.1510416" leadingOffset="-1.296875">
+			<reportElement key="element-90" x="247" y="2" width="21" height="9" forecolor="#000000" origin="3"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Times New Roman" size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+			<textContent><![CDATA[Grade]]></textContent>
+		</text>
+		<text verticalAlignment="Middle" textHeight="6.90625" lineSpacingFactor="1.1510416" leadingOffset="-1.296875">
+			<reportElement key="element-91" x="267" y="2" width="20" height="9" forecolor="#000000" origin="3"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Times New Roman" size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+			<textContent><![CDATA[Point]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="8.046875" rotation="None" lineSpacingFactor="1.1495535" leadingOffset="-1.515625">
+			<reportElement key="textField" x="50" y="11" width="158" height="9" origin="4"/>
+			<box leftPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="Times New Roman" size="7"/>
+			<textContent><![CDATA[Youth Ministry]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625">
+			<reportElement key="textField-1" x="268" y="11" width="19" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[9.0]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="5.75" rotation="None" lineSpacingFactor="1.15" leadingOffset="-1.0625">
+			<reportElement key="textField" x="3" y="11" width="48" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="5"/>
+			<textContent><![CDATA[CHMN 634]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625">
+			<reportElement key="textField" x="247" y="11" width="21" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[B]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="0.0" rotation="None" lineSpacingFactor="0.0" leadingOffset="0.0" valueClass="java.lang.Float" pattern="">
+			<reportElement key="textField" x="229" y="11" width="19" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625" valueClass="java.lang.Double" pattern="">
+			<reportElement key="textField" x="208" y="11" width="22" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[3.0]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="8.046875" rotation="None" lineSpacingFactor="1.1495535" leadingOffset="-1.515625">
+			<reportElement key="textField" x="50" y="22" width="158" height="9" origin="4"/>
+			<box leftPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="Times New Roman" size="7"/>
+			<textContent><![CDATA[Biblical Archaeology]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625">
+			<reportElement key="textField-1" x="268" y="22" width="19" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[9.99]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="5.75" rotation="None" lineSpacingFactor="1.15" leadingOffset="-1.0625">
+			<reportElement key="textField" x="3" y="22" width="48" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="5"/>
+			<textContent><![CDATA[OTST 632]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625">
+			<reportElement key="textField" x="247" y="22" width="21" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[B+]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="0.0" rotation="None" lineSpacingFactor="0.0" leadingOffset="0.0" valueClass="java.lang.Float" pattern="">
+			<reportElement key="textField" x="229" y="22" width="19" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625" valueClass="java.lang.Double" pattern="">
+			<reportElement key="textField" x="208" y="22" width="22" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[3.0]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="8.046875" rotation="None" lineSpacingFactor="1.1495535" leadingOffset="-1.515625">
+			<reportElement key="textField" x="50" y="33" width="158" height="9" origin="4"/>
+			<box leftPadding="0" rightPadding="0">
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="Times New Roman" size="7"/>
+			<textContent><![CDATA[Church Leadership and Administration]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625">
+			<reportElement key="textField-1" x="268" y="33" width="19" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[9.99]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="5.75" rotation="None" lineSpacingFactor="1.15" leadingOffset="-1.0625">
+			<reportElement key="textField" x="3" y="33" width="48" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="5"/>
+			<textContent><![CDATA[CHMN 630]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625">
+			<reportElement key="textField" x="247" y="33" width="21" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[B+]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="0.0" rotation="None" lineSpacingFactor="0.0" leadingOffset="0.0" valueClass="java.lang.Float" pattern="">
+			<reportElement key="textField" x="229" y="33" width="19" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textAlignment="Left" verticalAlignment="Middle" textHeight="6.90625" rotation="None" lineSpacingFactor="1.1510416" leadingOffset="-1.265625" valueClass="java.lang.Double" pattern="">
+			<reportElement key="textField" x="208" y="33" width="22" height="9" origin="4"/>
+			<box leftPadding="2" rightPadding="2">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+			<font fontName="Arial" size="6"/>
+			<textContent><![CDATA[3.0]]></textContent>
+		</text>
+	</page>
+</jasperPrint>

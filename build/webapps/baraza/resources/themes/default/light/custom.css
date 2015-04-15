@@ -1,0 +1,66 @@
+.ui-helper-reset { 
+	line-height: 0.4; 
+}
+
+.k-grid td {
+    line-height: 1em;
+    padding: 0.4em 0.55em;
+}
+
+.breadcrumb li a {
+	font-size: 11px;
+}
+
+.form_content {
+	min-height:350px;
+}
+
+table#formtable td, table#formtable th{
+	border:0;
+	padding:3px 2px;
+	text-align:left;
+}
+
+#table_content {
+	padding-top:3px;
+}
+
+#grid_content {
+	padding-top:3px;
+}
+
+#reports td, #reports th{
+	padding:1px 1px;
+	text-align:left;
+	vertical-align: top;
+}
+
+#reports td > table {
+	background-color: transparent;
+}
+
+#reports table {
+	background-color: #FFFFFF;
+	background-image: none;
+}
+
+#gridtable td, #gridtable th{
+	padding:1px 1px;
+	text-align:left;
+	vertical-align: top;
+}
+
+#gridtable td > table {
+	background-color: transparent;
+}
+
+#gridtable table {
+	background-color: #FFFFFF;
+	background-image: none;
+}
+
+#gridtable table tbody tr:hover{
+	background:#E7E7E7;
+}
+
+

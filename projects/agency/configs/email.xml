@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ESCALATION title="Mail" processdelay="1"
+	host="localhost" mailuser="sysadmin" mailpassword="invent2k" 
+	mailfrom="tickets@galileo.co.ke"
+	imaphost="localhost" inbox="INBOX" sentbox="Sent" >
+	
+	<REPORT name="Domain Approval" keyfield="email_id" action="ticket_emailed" actioncount="1" 
+			table="sys_emails, email"
+			where="(sys_emails.sys_email_id = 1) AND (email.is_sent = false)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<ADDRESS title="address">sys_emails.default_email</ADDRESS>
+		<BODYFIELD reference="{{message}}" basetable="email">message</BODYFIELD>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
+	</REPORT>
+
+</ESCALATION>

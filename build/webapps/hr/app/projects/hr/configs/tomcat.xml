@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<TOMCAT baseDir="/root/baraza/build/webapps/" appBase="hr/" contextPath="/" repository="repository/" port="9090">
+
+</TOMCAT>
+

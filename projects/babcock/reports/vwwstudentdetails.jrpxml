@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperPrint PUBLIC "-//JasperReports//DTD JasperPrint//EN" "http://jasperreports.sourceforge.net/dtds/jasperprint.dtd">
+
+<jasperPrint name="vwwstudentdetails" pageWidth="595" pageHeight="842" locale="en_US" timezone="Africa/Nairobi">
+	<property name="net.sf.jasperreports.export.xml.start.page.index" value="0"/>
+	<property name="net.sf.jasperreports.export.xml.end.page.index" value="0"/>
+	<property name="net.sf.jasperreports.export.xml.page.count" value="1"/>
+	<origin band="background"/>
+	<origin band="title"/>
+	<origin band="pageHeader"/>
+	<origin band="columnHeader"/>
+	<origin band="detail"/>
+	<origin band="columnFooter"/>
+	<origin band="pageFooter"/>
+	<page>
+		<text textHeight="11.640625" lineSpacingFactor="1.1640625" leadingOffset="-2.359375">
+			<reportElement x="99" y="133" width="100" height="20" origin="3"/>
+			<textContent><![CDATA[NKEMDI, IFEOMA ]]></textContent>
+		</text>
+	</page>
+</jasperPrint>

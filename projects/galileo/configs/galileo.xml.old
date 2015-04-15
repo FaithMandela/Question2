@@ -1,0 +1,2248 @@
+<?xml version="1.0"?>
+<APP database="galileo" name="Galileo" reportpath="/root/baraza.i/projects/galileo/reports/">
+	<TREE name="Galileo">
+		<NODE name="User" role="admin">
+			<NODE key="1" name="Users" role="admin"></NODE>
+			<NODE name="Reports">
+				<NODE key="111" name="Users List"></NODE>
+			</NODE>
+
+		</NODE>
+
+		<NODE name="Clients">
+			<NODE key="2" name="Clients"></NODE>
+			<NODE key="42" name="Clients PCC" role="helpdesk,finance,technical,management,dewcis"></NODE>
+			<NODE key="30" name="Group Clients" role="finance,technical,helpdesk,management,dewcis"></NODE>
+			<NODE key="23" name="Clients Affiliates"></NODE>
+			<NODE key="24" name="Clients Groups"></NODE>
+			<NODE key="25" name="Clients Definations"></NODE>
+			<NODE name="Reports">
+				<NODE key="139" name="Clients List"></NODE>
+				<NODE key="112" name="Full Clients List"></NODE>
+				<NODE key="113" name="Clients System"></NODE>
+				<NODE key="114" name="Clients Link"></NODE>
+				<NODE key="115" name="Clients Groups"></NODE>
+				<NODE key="116" name="Clients Managers"></NODE>
+				<NODE key="126" name="Clients Town"></NODE>
+				<NODE key="127" name="Clients Address"></NODE>
+				<NODE key="584" name="Duplicate IATA NO."></NODE>
+				<NODE key="597" name="IATA Clients"></NODE>
+			</NODE>
+
+		</NODE>
+
+		<NODE name="Helpdesk">
+			<NODE key="11" name="Open Calls"></NODE>
+			<NODE key="10" name="Forward"></NODE>
+			<NODE key="12" name="ERFs"></NODE>
+			<NODE key="3" name="Definations"></NODE>
+			<NODE key="4" name="Helpdesk" role="admin"></NODE>
+			<NODE name="Reports">
+				<NODE name="Classification">
+					<NODE key="117" name="Classification"></NODE>
+					<NODE key="128" name="Helpdesk Task"></NODE>
+					<NODE key="130" name="Classification Task"></NODE>
+					<NODE key="131" name="Type Tasks"></NODE>
+					<NODE key="132" name="Defination Tasks"></NODE>
+					<NODE key="133" name="Helpdesk Levels"></NODE>
+				</NODE>
+
+				<NODE key="134" name="Open Calls"></NODE>
+				<NODE key="136" name="Client Calls"></NODE>
+				<NODE key="137" name="Filtered Calls"></NODE>
+				<NODE key="151" name="Forwarded Calls"></NODE>
+				<NODE key="135" name="Closed Calls"></NODE>
+				<NODE key="535" name="Classified Closed Calls"></NODE>
+			</NODE>
+
+		</NODE>
+
+		<NODE name="Work Schedule">
+			<NODE key="21" name="Work Schedule"></NODE>
+			<NODE key="410" name="Reports"></NODE>
+		</NODE>
+
+		<NODE name="Field Support">
+			<NODE key="5" name="Field Support"></NODE>
+			<NODE key="35" name="Field Support Actions"></NODE>
+			<NODE key="6" name="Transport"></NODE>
+			<NODE key="15" name="Transport Approval" role="administration"></NODE>
+			<NODE name="Reports">
+				<NODE key="154" name="Field Support"></NODE>
+				<NODE key="430" name="Field Support Action"></NODE>
+				<NODE key="155" name="Transport"></NODE>
+			</NODE>
+
+		</NODE>
+
+		<NODE name="Services" role="technical,helpdesk,finance,sales,administration,management,dewcis">
+			<NODE key="7" name="Services" role="technical,helpdesk,finance,sales,administration,management,dewcis"></NODE>
+			<NODE key="16" name="Client Services" role="finance,dewcis"></NODE>
+			<NODE name="Reports" role="technical,helpdesk,finance,sales,administration,management,dewcis">
+				<NODE key="300" name="Services Defination"></NODE>
+				<NODE key="301" name="Services List"></NODE>
+				<NODE key="119" name="Client Services Count"></NODE>
+				<NODE key="481" name="Client Services List"></NODE>
+				<NODE key="120" name="Client Services"></NODE>
+				<NODE key="141" name="Services Summary"></NODE>
+				<NODE key="303" name="Full Client Services List"></NODE>
+				<NODE key="304" name="Selected Services List"></NODE>
+				<NODE key="594" name="Asset Disposal List"></NODE>
+				<NODE key="595" name="Client Periodic Services"></NODE>
+				<NODE key="596" name="Full Client Services"></NODE>
+			</NODE>
+
+		</NODE>
+
+		<NODE name="Accounts">
+			<NODE key="8" name="Segments" role="finance,sales,management,dewcis"></NODE>
+			<NODE key="51" name="Incentives"></NODE>
+			<NODE key="52" name="Group Contracts"></NODE>
+			<NODE key="53" name="Client Contracts"></NODE>
+			<NODE name="Reports" role="finance,sales,management,technical,dewcis">
+				<NODE name="Statements">
+					<NODE key="124" name="Actual Client Statement"></NODE>
+					<NODE key="715" name="Actual Group Statement"></NODE>
+					<NODE key="121" name="Client Quarter Statement"></NODE>
+					<NODE key="122" name="Client Statement"></NODE>
+					<NODE key="305" name="Group Statement"></NODE>
+					<NODE key="125" name="Productivity Analysis"></NODE>
+				</NODE>
+
+				<NODE name="Client Summaries">
+					<NODE key="123" name="Monthly Summary"></NODE>
+					<NODE key="200" name="Quarter Summaries"></NODE>
+					<NODE key="201" name="Semister Summaries"></NODE>
+					<NODE key="202" name="Year Summaries"></NODE>
+				</NODE>
+
+				<NODE name="Grouped Client Summaries">
+					<NODE key="203" name="Monthly Summary"></NODE>
+					<NODE key="204" name="Quarter Summaries"></NODE>
+					<NODE key="205" name="Semister Summaries"></NODE>
+					<NODE key="206" name="Year Summaries"></NODE>
+					<NODE key="207" name="Group Range Summary"></NODE>
+					<NODE key="714" name="Group Monthly Summaries"></NODE>
+				</NODE>
+
+				<NODE name="Annual Incentives">
+					<NODE key="409" name="Combined Incentives"></NODE>
+					<NODE key="407" name="Affiliate Incentive Report"></NODE>
+					<NODE key="405" name="Group Incentive Report"></NODE>
+					<NODE key="404" name="Client Incentive Report"></NODE>
+				</NODE>
+
+				<NODE name="Quarter Incentives">
+					<NODE key="453" name="Combined Incentives"></NODE>
+					<NODE key="451" name="Affiliate Incentive Report"></NODE>
+					<NODE key="450" name="Group Incentive Report"></NODE>
+					<NODE key="452" name="Client Incentive Report"></NODE>
+				</NODE>
+
+				<NODE name="Total Productivity">
+					<NODE key="421" name="Total Productivity Grid"></NODE>
+					<NODE key="422" name="Client KQ Year Totals"></NODE>
+					<NODE key="440" name="MIDT Summary"></NODE>
+				</NODE>
+
+				<NODE name="Account Manager Targets">
+					<NODE key="420" name="Full Targets"></NODE>
+					<NODE key="460" name="Target per Manager"></NODE>
+					<NODE key="461" name="FP and GD Groups"></NODE>
+					<NODE key="471" name="Monthly Total Target"></NODE>
+					<NODE key="472" name="Quarter Total Target"></NODE>
+					<NODE key="473" name="Year Total Target"></NODE>
+					<NODE key="474" name="Accounting Period Total Target"></NODE>
+					<NODE key="581" name="Daily Client Productivity"></NODE>
+					<NODE key="580" name="Daily Report"></NODE>
+					<NODE key="583" name="Daily Productivity Summary"></NODE>
+				</NODE>
+
+				<NODE name="Competition Reports">
+					<NODE key="582" name="Competition"></NODE>
+					<NODE key="587" name="MIDT Transactions"></NODE>
+					<NODE key="588" name="MIDT Matrix"></NODE>
+					<NODE key="589" name="MIDT Analysis"></NODE>
+					<NODE key="592" name="Market Share Matrix"></NODE>
+					<NODE key="712" name="Market Share Analysis"></NODE>
+				</NODE>
+
+			</NODE>
+
+			<NODE name="Imports">
+				<NODE key="14" name="Imports" role="sales,dewcis"></NODE>
+				<NODE key="22" name="Calls" role="sales,dewcis"></NODE>
+				<NODE key="310" name="Unpicked Segments" role="sales,dewcis"></NODE>
+			</NODE>
+
+		</NODE>
+
+		<NODE name="Training">
+			<NODE key="9" name="Training"></NODE>
+			<NODE name="Reports">
+				<NODE key="156" name="Training List"></NODE>
+			</NODE>
+
+		</NODE>
+
+	</TREE>
+
+	<DESK h="530" key="1" name="Users" splitloc="230" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="userid" name="Users List" pos="top" table="UserView">
+			<TEXTFIELD title="Group Name" w="140">usergroupname</TEXTFIELD>
+			<TEXTFIELD title="User Name" w="140">Username</TEXTFIELD>
+			<TEXTFIELD title="Full Name" w="140">fullname</TEXTFIELD>
+			<TEXTFIELD title="Telno" w="140">telno</TEXTFIELD>
+			<TEXTFIELD title="Email" w="140">email</TEXTFIELD>
+		</GRID>
+
+		<FORM key="2" linkfield="userid" linkkey="1" name="Users" pos="bottom" table="users">
+			<COMBOBOX h="20" lpfield="usergroupname" lptable="usergroups" title="Group Name" w="210" x="10" y="10">usergroupid</COMBOBOX>
+			<TEXTFIELD h="20" title="User ID" w="90" x="350" y="10">UserID</TEXTFIELD>
+			<TEXTFIELD h="20" title="User Name" w="150" x="10" y="30">Username</TEXTFIELD>
+			<TEXTFIELD h="20" title="Full Name" w="150" x="290" y="30">fullname</TEXTFIELD>
+			<TEXTFIELD h="20" title="Extension" w="150" x="10" y="50">extension</TEXTFIELD>
+			<TEXTFIELD h="20" title="Tel no" w="150" x="290" y="50">telno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Email" w="430" x="10" y="70">email</TEXTFIELD>
+			<CHECKBOX h="20" title="Group Leader" w="30" x="10" y="90">GroupLeader</CHECKBOX>
+			<CHECKBOX h="20" title="Account Manager" w="30" x="170" y="90">AccountManager</CHECKBOX>
+			<CHECKBOX defaultvalue="true" h="20" title="Active" w="30" x="350" y="90">IsActive</CHECKBOX>
+			<CHECKBOX h="20" title="Super User" w="50" x="10" y="110">superuser</CHECKBOX>
+			<TEXTFIELD h="20" title="Role Name" w="250" x="190" y="110">rolename</TEXTFIELD>
+			<TEXTAREA h="90" title="Details" w="430" x="10" y="130">details</TEXTAREA>
+			<SECURITY name="user" rights="r"></SECURITY>
+		</FORM>
+
+		<GRID key="3" keyfield="usergroupid" name="Groups List" pos="top" table="usergroups">
+			<TEXTFIELD title="Group ID" w="40">usergroupid</TEXTFIELD>
+			<TEXTFIELD title="Group Name" w="240">usergroupname</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="usergroupid" key="4" linkfield="usergroupid" linkkey="3" name="Groups" pos="bottom" table="usergroups">
+			<TEXTFIELD h="20" lw="100" title="Group Name" w="270" x="10" y="10">usergroupname</TEXTFIELD>
+			<TEXTAREA h="70" lw="100" title="Activities" w="430" x="10" y="30">activities</TEXTAREA>
+			<TEXTAREA h="70" lw="100" title="Description" w="430" x="10" y="100">description</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="590" key="2" name="Clients" splitloc="170" splittype="vert" w="650">
+		<GRID filterkey="7" gridfilter="true" key="1" keyfield="Clientid" name="Clients" ordersql="clientname" pos="top" table="ClientView">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="Town" w="40">town</TEXTFIELD>
+			<TEXTFIELD title="Zip Code" w="40">ZipCode</TEXTFIELD>
+			<TEXTFIELD title="Division" w="40">division</TEXTFIELD>
+			<TEXTFIELD title="Tel no" w="40">telno</TEXTFIELD>
+			<TEXTFIELD title="Account Manager" w="40">fullname</TEXTFIELD>
+			<TEXTFIELD title="Client System" w="40">ClientSystemName</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientid" key="2" linkfield="clientid" linkkey="1" name="Clients" pos="bottom" table="clients">
+			<COMBOBOX h="20" lpfield="FullName" lptable="Users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="10" y="10">Userid</COMBOBOX>
+			<DEFAULTFIELD defaultvalue="0" h="20" title="Client Group" w="150" x="290" y="10">Clientgroupid</DEFAULTFIELD>
+			<COMBOBOX h="20" lpfield="ClientSystemname" lptable="ClientSystems" title="Client System" w="150" x="10" y="30">ClientSystemid</COMBOBOX>
+			<COMBOBOX h="20" lpfield="Clientlinkname" lptable="Clientlinks" title="Client Link" w="150" x="290" y="30">Clientlinkid</COMBOBOX>
+			<TEXTFIELD h="20" title="Client Name" w="430" x="10" y="50">Clientname</TEXTFIELD>
+			<TEXTFIELD h="20" title="Address" w="150" x="10" y="70">address</TEXTFIELD>
+			<TEXTFIELD h="20" title="ZIP Code" w="150" x="290" y="70">zipcode</TEXTFIELD>
+			<TEXTFIELD h="20" title="Premises" w="430" x="10" y="90">premises</TEXTFIELD>
+			<TEXTFIELD h="20" title="Street" w="430" x="10" y="110">street</TEXTFIELD>
+			<TEXTFIELD h="20" title="Division" w="150" x="10" y="130">division</TEXTFIELD>
+			<TEXTFIELD h="20" title="Town" w="150" x="290" y="130">town</TEXTFIELD>
+			<TEXTFIELD h="20" title="Country" w="150" x="10" y="150">country</TEXTFIELD>
+			<TEXTFIELD h="20" title="Tel No." w="150" x="290" y="150">telno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Fax No." w="150" x="10" y="170">faxno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Web Site" w="430" x="10" y="190">website</TEXTFIELD>
+			<TEXTFIELD h="20" title="email" w="430" x="10" y="210">email</TEXTFIELD>
+			<TEXTFIELD h="20" title="IATA No" w="150" x="10" y="230">iatano</TEXTFIELD>
+			<CHECKBOX h="20" lw="70" title="Is IATA" w="50" x="290" y="230">isiata</CHECKBOX>
+			<TEXTDATE h="20" title="Date Enroled" w="120" x="10" y="250">dateenroled</TEXTDATE>
+			<CHECKBOX h="20" lw="50" title="Active" w="30" x="260" y="250">isactive</CHECKBOX>
+			<TEXTDATE h="20" lw="90" title="Date Closed" w="120" x="350" y="250">DateClosed</TEXTDATE>
+			<TEXTFIELD h="20" title="Client Target" w="150" x="10" y="270">clienttarget</TEXTFIELD>
+			<TEXTFIELD h="20" title="Segment Budget" w="150" x="290" y="270">budget</TEXTFIELD>
+			<TEXTDATE h="20" title="Contract Date" w="110" x="10" y="290">contractdate</TEXTDATE>
+			<CHECKBOX h="20" lw="80" title="Connected" w="30" x="240" y="290">Connected</CHECKBOX>
+			<TEXTDATE h="20" lw="110" title="Contract Ending" w="100" x="350" y="290">contractend</TEXTDATE>
+			<TEXTAREA h="50" title="Details" w="430" x="10" y="310">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="Consultantid" linkfield="Clientid" linkkey="1" name="Consultants" pos="top" table="consultants">
+			<TEXTFIELD title="Salutation" w="40">salutation</TEXTFIELD>
+			<TEXTFIELD title="First Name" w="140">firstname</TEXTFIELD>
+			<TEXTFIELD title="Other Names Name" w="140">othernames</TEXTFIELD>
+			<TEXTFIELD title="Job Defination" w="240">jobdefination</TEXTFIELD>
+			<TEXTFIELD title="Tel No" w="240">telno</TEXTFIELD>
+			<TEXTFIELD title="SON" w="240">son</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="Consultantid" key="4" linkfield="Consultantid" linkkey="3" name="Consultants" pos="bottom" table="consultants">
+			<COMBOBOX h="20" lpfield="Clientname" lptable="Clients" title="Client" w="430" x="10" y="10">Clientid</COMBOBOX>
+			<TEXTFIELD h="20" title="Salutation" w="50" x="10" y="30">salutation</TEXTFIELD>
+			<TEXTFIELD h="20" lw="80" title="First Name" w="100" x="190" y="30">firstname</TEXTFIELD>
+			<TEXTFIELD h="20" lw="90" title="Other Names" w="100" x="370" y="30">othernames</TEXTFIELD>
+			<TEXTFIELD h="20" title="Job Defination" w="430" x="10" y="50">jobdefination</TEXTFIELD>
+			<TEXTFIELD h="20" title="Tel No" w="150" x="10" y="70">telno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Cellphone" w="150" x="290" y="70">cellphone</TEXTFIELD>
+			<TEXTFIELD h="20" title="E-mail" w="430" x="10" y="90">Email</TEXTFIELD>
+			<TEXTFIELD h="20" title="SON" w="150" x="10" y="110">son</TEXTFIELD>
+			<TEXTDATE h="20" title="Birth Date" w="150" x="290" y="110">birthdate</TEXTDATE>
+			<TEXTAREA h="20" title="Details" w="430" x="10" y="130">details</TEXTAREA>
+		</FORM>
+
+		<FILTER key="7" name="Clients Filter" pos="bottom">
+			<TEXTFIELD h="20" title="Name" w="150" x="10" y="10">Clientname</TEXTFIELD>
+			<TEXTFIELD h="20" title="PCC" w="150" x="290" y="10">pcc</TEXTFIELD>
+			<TEXTFIELD h="20" title="Town" w="150" x="10" y="30">town</TEXTFIELD>
+			<COMBOBOX editable="true" h="20" lpfield="fullname" lptable="users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="290" y="30">fullname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientgroupName" lptable="Clientgroups" title="Client Group" w="150" x="10" y="50">ClientgroupName</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientSystemName" lptable="ClientSystems" title="Client System" w="150" x="290" y="50">ClientSystemName</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientlinkName" lptable="Clientlinks" title="Client Link" w="150" x="10" y="70">ClientlinkName</COMBOBOX>
+		</FILTER>
+
+	</DESK>
+
+	<DESK h="590" key="42" name="Clients PCC" splitloc="170" splittype="vert" w="650">
+		<GRID filterkey="7" gridfilter="true" key="1" keyfield="Clientid" name="Clients" ordersql="clientname" pos="top" table="ClientView">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="Town" w="40">town</TEXTFIELD>
+			<TEXTFIELD title="Division" w="40">division</TEXTFIELD>
+			<TEXTFIELD title="Tel no" w="40">telno</TEXTFIELD>
+			<TEXTFIELD title="Account Manager" w="40">fullname</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientid" key="2" linkfield="clientid" linkkey="1" name="Clients" pos="bottom" table="clients">
+			<COMBOBOX h="20" lpfield="FullName" lptable="Users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="10" y="10">Userid</COMBOBOX>
+			<DEFAULTFIELD defaultvalue="0" h="20" title="Client Group" w="150" x="290" y="10">Clientgroupid</DEFAULTFIELD>
+			<COMBOBOX h="20" lpfield="ClientSystemname" lptable="ClientSystems" title="Client System" w="150" x="10" y="30">ClientSystemid</COMBOBOX>
+			<COMBOBOX h="20" lpfield="Clientlinkname" lptable="Clientlinks" title="Client Link" w="150" x="290" y="30">Clientlinkid</COMBOBOX>
+			<TEXTFIELD h="20" title="Client Name" w="430" x="10" y="50">Clientname</TEXTFIELD>
+			<TEXTFIELD h="20" title="Address" w="150" x="10" y="70">address</TEXTFIELD>
+			<TEXTFIELD h="20" title="ZIP Code" w="150" x="290" y="70">zipcode</TEXTFIELD>
+			<TEXTFIELD h="20" title="Premises" w="430" x="10" y="90">premises</TEXTFIELD>
+			<TEXTFIELD h="20" title="Street" w="430" x="10" y="110">street</TEXTFIELD>
+			<TEXTFIELD h="20" title="Division" w="150" x="10" y="130">division</TEXTFIELD>
+			<TEXTFIELD h="20" title="Town" w="150" x="290" y="130">town</TEXTFIELD>
+			<TEXTFIELD h="20" title="Country" w="150" x="10" y="150">country</TEXTFIELD>
+			<TEXTFIELD h="20" title="Tel No." w="150" x="290" y="150">telno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Fax No." w="150" x="10" y="170">faxno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Web Site" w="430" x="10" y="190">website</TEXTFIELD>
+			<TEXTFIELD h="20" title="email" w="430" x="10" y="210">email</TEXTFIELD>
+			<TEXTFIELD h="20" title="IATA No" w="150" x="10" y="230">iatano</TEXTFIELD>
+			<CHECKBOX h="20" lw="70" title="Is IATA" w="50" x="290" y="230">isiata</CHECKBOX>
+			<TEXTDATE h="20" title="Date Enroled" w="120" x="10" y="250">dateenroled</TEXTDATE>
+			<CHECKBOX h="20" lw="50" title="Active" w="30" x="260" y="250">isactive</CHECKBOX>
+			<TEXTDATE h="20" lw="90" title="Date Closed" w="120" x="350" y="250">DateClosed</TEXTDATE>
+			<TEXTFIELD h="20" title="Client Target" w="150" x="10" y="270">clienttarget</TEXTFIELD>
+			<TEXTFIELD h="20" title="Segment Budget" w="150" x="290" y="270">budget</TEXTFIELD>
+			<TEXTDATE h="20" title="Contract Date" w="110" x="10" y="290">contractdate</TEXTDATE>
+			<CHECKBOX h="20" lw="80" title="Connected" w="30" x="240" y="290">Connected</CHECKBOX>
+			<TEXTDATE h="20" lw="110" title="Contract Ending" w="100" x="350" y="290">contractend</TEXTDATE>
+			<TEXTAREA h="50" title="Details" w="430" x="10" y="310">details</TEXTAREA>
+		</FORM>
+
+		<GRID gridfilter="true" key="5" keyfield="pcc" name="PCC" pos="top" table="pccview">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="GDS" w="40">gds</TEXTFIELD>
+		</GRID>
+
+		<FORM key="6" linkfield="pcc" linkkey="5" name="PCC" pos="bottom" table="pccs">
+			<TEXTFIELD h="20" lw="70" title="PCC" w="100" x="10" y="10">pcc</TEXTFIELD>
+			<COMBOBOX h="20" lpfield="clientname" lptable="clients" lw="90" title="Client" w="280" x="190" y="10">clientid</COMBOBOX>
+			<TEXTFIELD h="20" title="GDS" w="150" x="10" y="30">gds</TEXTFIELD>
+			<TEXTDATE h="20" title="PCC Date" w="150" x="290" y="30">pccdate</TEXTDATE>
+		</FORM>
+
+		<FILTER key="7" name="Clients Filter" pos="bottom">
+			<TEXTFIELD h="20" title="Name" w="150" x="10" y="10">Clientname</TEXTFIELD>
+			<TEXTFIELD h="20" title="PCC" w="150" x="290" y="10">pcc</TEXTFIELD>
+			<TEXTFIELD h="20" title="Town" w="150" x="10" y="30">town</TEXTFIELD>
+			<COMBOBOX editable="true" h="20" lpfield="fullname" lptable="users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="290" y="30">fullname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientgroupName" lptable="Clientgroups" title="Client Group" w="150" x="10" y="50">ClientgroupName</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientSystemName" lptable="ClientSystems" title="Client System" w="150" x="290" y="50">ClientSystemName</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientlinkName" lptable="Clientlinks" title="Client Link" w="150" x="10" y="70">ClientlinkName</COMBOBOX>
+		</FILTER>
+
+	</DESK>
+
+	<DESK h="590" key="30" name="Group Clients" splitloc="170" splittype="vert" w="650">
+		<GRID filterkey="7" gridfilter="true" key="1" keyfield="Clientid" name="Clients" ordersql="clientname" pos="top" table="ClientView">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="IATA NO" w="40">iatano</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="Town" w="40">town</TEXTFIELD>
+			<TEXTFIELD title="Division" w="40">division</TEXTFIELD>
+			<TEXTFIELD title="Tel no" w="40">telno</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientid" key="2" linkfield="clientid" linkkey="1" name="Clients" pos="bottom" table="clients">
+			<COMBOBOX h="20" lpfield="FullName" lptable="Users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="10" y="10">Userid</COMBOBOX>
+			<COMBOBOX h="20" lpfield="Clientgroupname" lptable="Clientgroups" title="Client Group" w="150" x="290" y="10">Clientgroupid</COMBOBOX>
+			<COMBOBOX h="20" lpfield="ClientSystemname" lptable="ClientSystems" title="Client System" w="150" x="10" y="30">ClientSystemid</COMBOBOX>
+			<COMBOBOX h="20" lpfield="Clientlinkname" lptable="Clientlinks" title="Client Link" w="150" x="290" y="30">Clientlinkid</COMBOBOX>
+			<TEXTFIELD h="20" title="Client Name" w="430" x="10" y="50">Clientname</TEXTFIELD>
+			<TEXTFIELD h="20" title="Address" w="150" x="10" y="70">address</TEXTFIELD>
+			<TEXTFIELD h="20" title="ZIP Code" w="150" x="290" y="70">zipcode</TEXTFIELD>
+			<TEXTFIELD h="20" title="Premises" w="430" x="10" y="90">premises</TEXTFIELD>
+			<TEXTFIELD h="20" title="Street" w="430" x="10" y="110">street</TEXTFIELD>
+			<TEXTFIELD h="20" title="Division" w="150" x="10" y="130">division</TEXTFIELD>
+			<TEXTFIELD h="20" title="Town" w="150" x="290" y="130">town</TEXTFIELD>
+			<TEXTFIELD h="20" title="Country" w="150" x="10" y="150">country</TEXTFIELD>
+			<TEXTFIELD h="20" title="Tel No." w="150" x="290" y="150">telno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Fax No." w="150" x="10" y="170">faxno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Web Site" w="430" x="10" y="190">website</TEXTFIELD>
+			<TEXTFIELD h="20" title="email" w="430" x="10" y="210">email</TEXTFIELD>
+			<TEXTFIELD h="20" title="IATA No" w="150" x="10" y="230">iatano</TEXTFIELD>
+			<CHECKBOX h="20" lw="70" title="Is IATA" w="50" x="290" y="230">isiata</CHECKBOX>
+			<TEXTDATE h="20" title="Date Enroled" w="120" x="10" y="250">dateenroled</TEXTDATE>
+			<CHECKBOX h="20" lw="50" title="Active" w="30" x="260" y="250">isactive</CHECKBOX>
+			<TEXTDATE h="20" lw="90" title="Date Closed" w="120" x="350" y="250">DateClosed</TEXTDATE>
+			<TEXTFIELD h="20" title="Client Target" w="150" x="10" y="270">clienttarget</TEXTFIELD>
+			<TEXTFIELD h="20" title="Segment Budget" w="150" x="290" y="270">budget</TEXTFIELD>
+			<TEXTDATE h="20" title="Contract Date" w="110" x="10" y="290">contractdate</TEXTDATE>
+			<CHECKBOX h="20" lw="80" title="Connected" w="30" x="240" y="290">Connected</CHECKBOX>
+			<TEXTDATE h="20" lw="110" title="Contract Ending" w="100" x="350" y="290">contractend</TEXTDATE>
+			<TEXTAREA h="50" title="Details" w="430" x="10" y="310">details</TEXTAREA>
+		</FORM>
+
+		<GRID gridfilter="true" key="5" keyfield="pcc" name="PCC" pos="top" table="pccview">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="GDS" w="40">gds</TEXTFIELD>
+		</GRID>
+
+		<FORM key="6" linkfield="pcc" linkkey="5" name="PCC" pos="bottom" table="pccs">
+			<TEXTFIELD h="20" lw="70" title="PCC" w="100" x="10" y="10">pcc</TEXTFIELD>
+			<COMBOBOX h="20" lpfield="clientname" lptable="clients" lw="90" title="Client" w="280" x="190" y="10">clientid</COMBOBOX>
+			<TEXTFIELD h="20" title="GDS" w="150" x="10" y="30">gds</TEXTFIELD>
+			<TEXTDATE h="20" title="PCC Date" w="150" x="290" y="30">pccdate</TEXTDATE>
+		</FORM>
+
+		<FILTER key="7" name="Clients Filter" pos="bottom">
+			<TEXTFIELD h="20" title="Name" w="150" x="10" y="10">Clientname</TEXTFIELD>
+			<TEXTFIELD h="20" title="PCC" w="150" x="290" y="10">pcc</TEXTFIELD>
+			<TEXTFIELD h="20" title="Town" w="150" x="10" y="30">town</TEXTFIELD>
+			<COMBOBOX editable="true" h="20" lpfield="fullname" lptable="users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="290" y="30">fullname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientgroupName" lptable="Clientgroups" title="Client Group" w="150" x="10" y="50">ClientgroupName</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientSystemName" lptable="ClientSystems" title="Client System" w="150" x="290" y="50">ClientSystemName</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientlinkName" lptable="Clientlinks" title="Client Link" w="150" x="10" y="70">ClientlinkName</COMBOBOX>
+		</FILTER>
+
+	</DESK>
+
+	<DESK h="570" key="23" name="Clients Affiliates" splitloc="150" splittype="vert" w="585">
+		<GRID key="1" keyfield="ClientAffiliateid" name="Client Affiliates" pos="top" table="ClientAffiliates">
+			<TEXTFIELD title="Client Affiliate ID" w="40">ClientAffiliateid</TEXTFIELD>
+			<TEXTFIELD title="Client Affiliate Name" w="240">ClientAffiliatename</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientaffiliateid" key="2" linkfield="clientaffiliateid" linkkey="1" name="Client Affiliates" pos="bottom" table="clientaffiliates">
+			<TEXTFIELD h="20" title="C. Affiliate Name" w="430" x="10" y="10">ClientAffiliatename</TEXTFIELD>
+			<TEXTAREA h="110" title="Details" w="430" x="10" y="30">detail</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="affiliatetargetid" linkfield="clientaffiliateid" linkkey="1" name="Affiliate Target" pos="top" table="AffiliateTargetView">
+			<TEXTFIELD title="Client Affiliate" w="40">clientaffiliatename</TEXTFIELD>
+			<TEXTFIELD title="Target" w="40">target</TEXTFIELD>
+			<TEXTFIELD title="Market Ratio" w="40">marketratio</TEXTFIELD>
+			<TEXTFIELD title="Cost Variance" w="40">costvariance</TEXTFIELD>
+			<TEXTFIELD title="Amount" w="40">amount</TEXTFIELD>
+			<TEXTFIELD title="Narrative" w="40">narrative</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="affiliatetargetid" inputfield="clientaffiliateid" inputkey="1" key="4" linkfield="affiliatetargetid" linkkey="3" name="Affiliate Targets" pos="bottom" table="AffiliateTargets">
+			<TEXTFIELD h="20" title="Target" w="150" x="10" y="10">target</TEXTFIELD>
+			<TEXTFIELD h="20" title="Amount" w="150" x="290" y="10">amount</TEXTFIELD>
+			<TEXTFIELD h="20" title="Market Ratio" w="150" x="10" y="30">marketratio</TEXTFIELD>
+			<TEXTFIELD h="20" title="Cost Variance" w="150" x="290" y="30">costvariance</TEXTFIELD>
+			<TEXTFIELD h="20" title="Narrative" w="430" x="10" y="50">narrative</TEXTFIELD>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="570" key="24" name="Clients Groups" splitloc="150" splittype="vert" w="585">
+		<GRID key="1" keyfield="Clientgroupid" name="Client Groups" pos="top" table="ClientGroupView">
+			<TEXTFIELD title="Client Group ID" w="140">ClientGroupID</TEXTFIELD>
+			<TEXTFIELD title="Client Affiliate Name" w="140">ClientAffiliatename</TEXTFIELD>
+			<TEXTFIELD title="Client Group Name" w="240">Clientgroupname</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientgroupid" key="2" linkfield="clientgroupid" linkkey="1" name="Client Groups" pos="bottom" table="clientgroups">
+			<TEXTFIELD h="20" title="Client Gr. Name" w="150" x="10" y="10">Clientgroupname</TEXTFIELD>
+			<COMBOBOX h="20" lpfield="clientAffiliatename" lptable="clientAffiliates" title="Client Affiliate" w="150" x="290" y="10">clientAffiliateid</COMBOBOX>
+			<TEXTAREA h="110" title="Details" w="430" x="10" y="30">detail</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="grouptargetid" linkfield="clientgroupid" linkkey="1" name="GroupTargetView" pos="top" table="GroupTargetView">
+			<TEXTFIELD title="Client Affiliate" w="40">clientaffiliatename</TEXTFIELD>
+			<TEXTFIELD title="Client Group" w="40">clientgroupname</TEXTFIELD>
+			<TEXTFIELD title="Target" w="40">target</TEXTFIELD>
+			<TEXTFIELD title="Market Ratio" w="40">marketratio</TEXTFIELD>
+			<TEXTFIELD title="Cost Variance" w="40">costvariance</TEXTFIELD>
+			<TEXTFIELD title="Amount" w="40">amount</TEXTFIELD>
+			<TEXTFIELD title="Narrative" w="40">narrative</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="grouptargetid" inputfield="clientgroupid" inputkey="1" key="4" linkfield="grouptargetid" linkkey="3" name="GroupTargets" pos="bottom" table="GroupTargets">
+			<TEXTFIELD h="20" title="Target" w="150" x="10" y="10">target</TEXTFIELD>
+			<TEXTFIELD h="20" title="Amount" w="150" x="290" y="10">amount</TEXTFIELD>
+			<TEXTFIELD h="20" title="Marketratio" w="150" x="10" y="30">marketratio</TEXTFIELD>
+			<TEXTFIELD h="20" title="Costvariance" w="150" x="290" y="30">costvariance</TEXTFIELD>
+			<TEXTFIELD h="20" title="Narrative" w="430" x="10" y="50">narrative</TEXTFIELD>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="570" key="25" name="Clients Definations" splitloc="150" splittype="vert" w="585">
+		<GRID key="1" keyfield="ClientSystemid" name="Client Systems" pos="top" table="ClientSystems">
+			<TEXTFIELD title="Client System ID" w="40">ClientSystemid</TEXTFIELD>
+			<TEXTFIELD title="Client System Name" w="240">ClientSystemname</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientsystemid" key="2" linkfield="clientsystemid" linkkey="1" name="Client Systems" pos="bottom" table="clientsystems">
+			<TEXTFIELD h="20" title="System Name" w="430" x="10" y="10">ClientSystemname</TEXTFIELD>
+			<TEXTAREA h="110" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="Clientlinkid" name="Client Links" pos="top" table="Clientlinks">
+			<TEXTFIELD title="Client Link ID" w="40">Clientlinkid</TEXTFIELD>
+			<TEXTFIELD title="Client Link Name" w="240">Clientlinkname</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientlinkid" key="4" linkfield="clientlinkid" linkkey="3" name="Client Links" pos="bottom" table="clientlinks">
+			<TEXTFIELD h="20" title="Link Name" w="430" x="10" y="10">Clientlinkname</TEXTFIELD>
+			<TEXTAREA h="110" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+		<GRID gridfilter="true" key="5" keyfield="consultantrewardid" name="Consultant Rewards" pos="top" table="ConsultantRewards">
+			<TEXTFIELD title="Target" w="40">target</TEXTFIELD>
+			<TEXTFIELD title="Amount" w="40">amount</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="consultantrewardid" key="6" linkfield="consultantrewardid" linkkey="5" name="Consultant Rewards" pos="bottom" table="ConsultantRewards">
+			<TEXTFIELD h="20" title="Target" w="150" x="10" y="10">target</TEXTFIELD>
+			<TEXTFIELD h="20" title="Amount" w="150" x="290" y="10">amount</TEXTFIELD>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="3" name="Definations" splitloc="250" splittype="vert" w="585">
+		<GRID key="1" keyfield="pclassificationid" name="Problem Classifications" ordersql="pclassificationid" pos="top" table="pclassifications">
+			<TEXTFIELD title="Classifications ID" w="40">pclassificationid</TEXTFIELD>
+			<TEXTFIELD title="Classifications Name" w="240">pclassificationname</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="pclassificationid" key="2" linkfield="pclassificationid" linkkey="1" name="Problem Classifications" pos="bottom" table="pclassifications">
+			<TEXTFIELD h="20" lw="140" title="Classification Name" w="410" x="10" y="10">pclassificationname</TEXTFIELD>
+			<TEXTAREA h="110" lw="140" title="Description" w="410" x="10" y="30">description</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="ptypeid" linkfield="pclassificationid" linkkey="1" name="Problem Types" pos="top" table="ptypes">
+			<TEXTFIELD title="Type ID" w="5">ptypeid</TEXTFIELD>
+			<TEXTFIELD title="Type Name" w="40">ptypename</TEXTFIELD>
+			<TEXTFIELD title="Description" w="240">description</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="ptypeid" inputfield="pclassificationid" inputkey="1" key="4" linkfield="ptypeid" linkkey="3" name="Problem Types" pos="bottom" table="ptypes">
+			<TEXTFIELD h="20" title="Type Name" w="430" x="10" y="10">ptypename</TEXTFIELD>
+			<TEXTAREA h="110" title="Description" w="430" x="10" y="30">description</TEXTAREA>
+		</FORM>
+
+		<GRID key="5" keyfield="pdefinitionid" linkfield="ptypeid" linkkey="3" name="Problem Definitions" pos="top" table="pdefinitions">
+			<TEXTFIELD title="Definition ID" w="40">pdefinitionid</TEXTFIELD>
+			<TEXTFIELD title="Definition Name" w="240">pdefinitionname</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="pdefinitionid" inputfield="ptypeid" inputkey="3" key="6" linkfield="pdefinitionid" linkkey="5" name="Problem Definitions" pos="bottom" table="pdefinitions">
+			<TEXTFIELD h="20" title="Definition Name" w="430" x="10" y="10">pdefinitionname</TEXTFIELD>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="30">description</TEXTFIELD>
+			<TEXTAREA h="90" title="Solution" w="430" x="10" y="50">solution</TEXTAREA>
+		</FORM>
+
+		<GRID key="7" keyfield="stageid" linkfield="pdefinitionid" linkkey="5" name="Stages" pos="top" table="stageview">
+			<TEXTFIELD title="User Name" w="140">fullname</TEXTFIELD>
+			<TEXTFIELD title="Time Interval" w="40">timeinterval</TEXTFIELD>
+			<TEXTFIELD title="Stage Order" w="40">stageorder</TEXTFIELD>
+			<TEXTFIELD title="Dependent" w="40">isdependent</TEXTFIELD>
+			<TEXTFIELD title="task" w="240">task</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="stageid" inputfield="pdefinitionid" inputkey="5" key="8" linkfield="stageid" linkkey="7" name="Stages" pos="bottom" table="stages">
+			<COMBOBOX h="20" lpfield="FullName" lptable="UserView" title="User" w="250" x="10" y="10">Userid</COMBOBOX>
+			<CHECKBOX h="20" title="For Approval" w="50" x="390" y="10">IsForApproval</CHECKBOX>
+			<TEXTFIELD h="20" title="Time Interval" w="50" x="10" y="30">timeinterval</TEXTFIELD>
+			<TEXTFIELD h="20" title="Stage Order" w="50" x="190" y="30">stageorder</TEXTFIELD>
+			<CHECKBOX h="20" title="Dependent" w="50" x="390" y="30">isdependent</CHECKBOX>
+			<TEXTFIELD h="20" title="Task" w="430" x="10" y="50">task</TEXTFIELD>
+			<TEXTAREA h="90" title="Details" w="430" x="10" y="70">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="9" keyfield="plevelid" name="Problem Levels" pos="top" table="plevels">
+			<TEXTFIELD title="Level Name" w="40">plevelname</TEXTFIELD>
+			<TEXTFIELD title="Level Ratio" w="10">plevelratio</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="plevelid" key="10" linkfield="plevelid" linkkey="9" name="Problem levels" pos="bottom" table="plevels">
+			<TEXTFIELD h="20" title="Level Name" w="150" x="10" y="10">plevelname</TEXTFIELD>
+			<TEXTFIELD h="20" title="Level Ratio" w="150" x="290" y="10">plevelratio</TEXTFIELD>
+			<TEXTAREA h="110" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="520" key="4" name="Helpdesk" splitloc="220" splittype="vert" w="585">
+		<GRID filterkey="7" gridfilter="true" key="1" keyfield="problemlogid" name="HelpDesk" pos="top" table="ProblemLogView" wheresql="(IsSolved = false)">
+			<TEXTFIELD title="Problem Log ID" w="20">problemlogid</TEXTFIELD>
+			<TEXTFIELD title="Classification" w="40">PClassificationName</TEXTFIELD>
+			<TEXTFIELD title="Type" w="40">PTypeName</TEXTFIELD>
+			<TEXTFIELD title="Definition" w="40">PDefinitionName</TEXTFIELD>
+			<TEXTFIELD title="Level" w="40">PLevelName</TEXTFIELD>
+			<TEXTFIELD title="Client" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Recoded Time" w="40">recodedtime</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="problemlogid" key="2" linkfield="problemlogid" linkkey="1" name="HelpDesk" pos="bottom" table="problemlog">
+			<COMBOBOX cmbkey="1" h="20" lpfield="PClassificationName" lptable="PClassifications" title="Classification" w="150" x="10" y="10">PClassificationID</COMBOBOX>
+			<COMBOBOX cmbkey="2" h="20" linkfield="PClassificationID" linkkey="1" lpfield="PTypeName" lptable="PTypes" title="Type" w="150" x="290" y="10">PTypeID</COMBOBOX>
+			<COMBOBOX h="20" linkfield="PTypeID" linkkey="2" lpfield="PDefinitionName" lptable="PDefinitions" title="Definition" w="150" x="10" y="30">PDefinitionID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="PlevelName" lptable="PLevels" title="Level" w="150" x="290" y="30">PlevelID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="50">ClientID</COMBOBOX>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="70">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Reported By" w="150" x="10" y="90">reportedby</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="110">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="110">currstatus</TEXTFIELD>
+			<TEXTAREA h="30" title="Problem" w="430" x="10" y="130">problem</TEXTAREA>
+			<TEXTAREA h="30" title="Solution" w="430" x="10" y="160">solution</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="forwardid" linkfield="ProblemLogID" linkkey="1" name="Forwarded" pos="top" table="forwardedview">
+			<TEXTFIELD title="To" w="140">FullName</TEXTFIELD>
+			<TEXTFIELD title="Ref. No" w="20">referenceno</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Forward Time" w="40">forwardtime</TEXTFIELD>
+			<TEXTFIELD title="Solved Time" w="40">solvedtime</TEXTFIELD>
+			<TEXTFIELD title="Stage Order" w="40">stageorder</TEXTFIELD>
+			<TEXTFIELD title="Dependent" w="40">isdependent</TEXTFIELD>
+			<TEXTFIELD title="Solved" w="40">IsSolved</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="forwardid" inputfield="problemlogid" inputkey="1" key="4" linkfield="forwardid" linkkey="3" name="Forwarded" pos="bottom" table="forwarded">
+			<COMBOBOX h="20" lpfield="FullName" lptable="UserView" title="User" w="210" x="10" y="10">Userid</COMBOBOX>
+			<TEXTFIELD h="20" title="Ref. No" w="90" x="350" y="10">referenceno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="30">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Stage Order" w="150" x="10" y="50">stageorder</TEXTFIELD>
+			<CHECKBOX h="20" lw="90" title="Dependent" w="30" x="290" y="50">isdependent</CHECKBOX>
+			<CHECKBOX h="20" lw="70" title="Solved" w="30" x="420" y="50">issolved</CHECKBOX>
+			<TEXTAREA h="50" title="To Be Done" w="430" x="10" y="70">tobedone</TEXTAREA>
+			<TEXTAREA h="50" title="What is Done" w="430" x="10" y="120">whatisdone</TEXTAREA>
+		</FORM>
+
+		<FILTER key="7" name="problemlog Filter" pos="bottom">
+			<TEXTFIELD h="20" title="Client" w="240" x="10" y="10">ClientName</TEXTFIELD>
+			<TEXTFIELD h="20" title="Logged By" w="240" x="10" y="30">FullName</TEXTFIELD>
+		</FILTER>
+
+	</DESK>
+
+	<DESK h="520" key="12" name="ERFs" splitloc="220" splittype="vert" w="700">
+		<GRID filtername="problemlogid" gridfilter="true" key="1" keyfield="problemlogid" name="HelpDesk" ordersql="problemlogid desc" pos="top" table="ProblemLogView" wheresql="(IsSolved = false) AND ((PClassificationID = 0) OR (PClassificationID = 10))">
+			<TEXTFIELD title="CRM Ref" w="20">problemlogid</TEXTFIELD>
+			<TEXTFIELD title="Classification" w="40">PClassificationName</TEXTFIELD>
+			<TEXTFIELD title="Type" w="40">PTypeName</TEXTFIELD>
+			<TEXTFIELD title="Definition" w="40">PDefinitionName</TEXTFIELD>
+			<TEXTFIELD title="Level" w="40">PLevelName</TEXTFIELD>
+			<TEXTFIELD title="Client" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Recoded Time" w="40">recodedtime</TEXTFIELD>
+		</GRID>
+
+		<REPORT filtered="true" jasperfile="problemlogd.jasper" key="7" linkkey="1" name="Open Calls" pos="bottom">
+			<REPORT filtered="true" jasperfile="clientstatementeb.jasper" name="Open Calls" pos="bottom"></REPORT>
+		</REPORT>
+
+		<GRID key="2" keyfield="erfid" linkfield="ProblemLogID" linkkey="1" name="ERF" pos="bottom" table="erfview">
+			<TEXTFIELD title="ERF ID" w="40">erfid</TEXTFIELD>
+			<TEXTFIELD title="Requested By" w="40">FullName</TEXTFIELD>
+			<TEXTFIELD title="Sub Asset" w="40">AssetSubTypeName</TEXTFIELD>
+			<TEXTFIELD title="Quantity" w="40">Quantity</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="erfid" inputfield="problemlogid" inputkey="1" key="5" linkfield="erfid" linkkey="2" name="ERF Entry" pos="bottom" table="erf">
+			<COMBOBOX h="20" lpfield="AssetSubTypeName" lptable="AssetSubTypes" title="Sub Asset" w="430" x="10" y="10">AssetSubTypeID</COMBOBOX>
+			<TEXTFIELD h="20" title="Quantity" w="90" x="10" y="30">quantity</TEXTFIELD>
+			<CHECKBOX h="20" title="Replacement" w="90" x="350" y="30">Replacement</CHECKBOX>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="50">details</TEXTAREA>
+		</FORM>
+
+		<FORM autofield="Helpdeskimageid" inputfield="problemlogid" inputkey="1" key="12" layout="flow" linkfield="problemlogid" linkkey="1" name="Letter" pos="bottom" table="Helpdeskimages">
+			<IMAGE h="250" lw="5" title="" w="540" x="10" y="10">upload</IMAGE>
+		</FORM>
+
+		<GRID key="6" keyfield="forwardid" linkfield="ProblemLogID" linkkey="1" name="Call Forwarded" pos="bottom" table="forwardedview">
+			<TEXTFIELD title="To" w="140">FullName</TEXTFIELD>
+			<TEXTFIELD title="Ref. No" w="20">referenceno</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Forward Time" w="40">forwardtime</TEXTFIELD>
+			<TEXTFIELD title="Solved Time" w="40">solvedtime</TEXTFIELD>
+			<TEXTFIELD title="Stage Order" w="40">stageorder</TEXTFIELD>
+			<TEXTFIELD title="Dependent" w="40">isdependent</TEXTFIELD>
+			<TEXTFIELD title="Solved" w="40">IsSolved</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="ProblemLogID" key="9" linkfield="ProblemLogID" linkkey="1" name="Update ERF" pos="bottom" table="problemlog">
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="10">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="10">currstatus</TEXTFIELD>
+			<CHECKBOX h="20" title="Closed" w="50" x="10" y="30">issolved</CHECKBOX>
+			<TEXTAREA h="90" title="Problem" w="430" x="10" y="50">problem</TEXTAREA>
+			<TEXTAREA h="90" title="Solution" w="430" x="10" y="140">solution</TEXTAREA>
+		</FORM>
+
+		<FORM autofield="problemlogid" key="10" linkfield="ProblemLogID" linkkey="12" name="Add New ERF" pos="bottom" table="problemlog">
+			<COMBOBOX cmbkey="1" h="20" lpfield="PTypeName" lptable="PTypes" title="Type" w="150" wheresql="(PClassificationID = 0)" x="10" y="10">PTypeID</COMBOBOX>
+			<COMBOBOX h="20" linkfield="PTypeID" linkkey="1" lpfield="PDefinitionName" lptable="PDefinitions" title="Definition" w="150" x="290" y="10">PDefinitionID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="30">ClientID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="PlevelName" lptable="PLevels" title="Level" w="150" x="290" y="30">PlevelID</COMBOBOX>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="50">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Reportedby" w="150" x="10" y="70">reportedby</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="90">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="90">currstatus</TEXTFIELD>
+			<TEXTAREA h="100" title="Problem" w="430" x="10" y="110">problem</TEXTAREA>
+		</FORM>
+
+		<FORM autofield="problemlogid" key="10" linkfield="ProblemLogID" linkkey="14" name="Add Replacement ERF" pos="bottom" table="problemlog">
+			<COMBOBOX cmbkey="1" h="20" lpfield="PTypeName" lptable="PTypes" title="Type" w="150" wheresql="(PClassificationID = 10)" x="10" y="10">PTypeID</COMBOBOX>
+			<COMBOBOX h="20" linkfield="PTypeID" linkkey="1" lpfield="PDefinitionName" lptable="PDefinitions" title="Definition" w="150" x="290" y="10">PDefinitionID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="30">ClientID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="PlevelName" lptable="PLevels" title="Level" w="150" x="290" y="30">PlevelID</COMBOBOX>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="50">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Reportedby" w="150" x="10" y="70">reportedby</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="90">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="90">currstatus</TEXTFIELD>
+			<TEXTAREA h="100" title="Problem" w="430" x="10" y="110">problem</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="520" key="18" name="Letters" splitloc="220" splittype="vert" w="700">
+		<GRID key="1" keyfield="problemlogid" name="HelpDesk" pos="top" table="ProblemLogView" wheresql="(PClassificationID = 7) AND (IsSolved = false)">
+			<TEXTFIELD title="CRM Ref" w="20">problemlogid</TEXTFIELD>
+			<TEXTFIELD title="Type" w="40">PTypeName</TEXTFIELD>
+			<TEXTFIELD title="Definition" w="40">PDefinitionName</TEXTFIELD>
+			<TEXTFIELD title="Level" w="40">PLevelName</TEXTFIELD>
+			<TEXTFIELD title="Client" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Recoded Time" w="40">recodedtime</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="Helpdeskimageid" inputfield="problemlogid" inputkey="1" key="2" layout="flow" linkfield="problemlogid" linkkey="1" name="Letter" pos="bottom" table="Helpdeskimages">
+			<IMAGE h="250" lw="5" title="" w="540" x="10" y="10">upload</IMAGE>
+		</FORM>
+
+		<FORM autofield="ProblemLogID" key="9" linkfield="ProblemLogID" linkkey="1" name="Update Letter" pos="bottom" table="problemlog">
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="10">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="10">currstatus</TEXTFIELD>
+			<CHECKBOX h="20" title="Closed" w="50" x="10" y="30">issolved</CHECKBOX>
+			<TEXTAREA h="90" title="Problem" w="430" x="10" y="50">problem</TEXTAREA>
+			<TEXTAREA h="90" title="Solution" w="430" x="10" y="140">solution</TEXTAREA>
+		</FORM>
+
+		<FORM autofield="problemlogid" key="10" linkfield="ProblemLogID" linkkey="12" name="Add a New Letter" pos="bottom" table="problemlog">
+			<COMBOBOX cmbkey="1" h="20" lpfield="PTypeName" lptable="PTypes" title="Type" w="150" wheresql="(PClassificationID = 7)" x="10" y="10">PTypeID</COMBOBOX>
+			<COMBOBOX h="20" linkfield="PTypeID" linkkey="1" lpfield="PDefinitionName" lptable="PDefinitions" title="Definition" w="150" x="290" y="10">PDefinitionID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="30">ClientID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="PlevelName" lptable="PLevels" title="Level" w="150" x="290" y="30">PlevelID</COMBOBOX>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="50">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Reportedby" w="150" x="10" y="70">reportedby</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="90">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="90">currstatus</TEXTFIELD>
+			<TEXTAREA h="100" title="Problem" w="430" x="10" y="110">problem</TEXTAREA>
+		</FORM>
+
+		<GRID key="6" keyfield="forwardid" linkfield="ProblemLogID" linkkey="1" name="Letter Forwarded" pos="bottom" table="forwardedview">
+			<TEXTFIELD title="To" w="140">FullName</TEXTFIELD>
+			<TEXTFIELD title="Ref. No" w="20">referenceno</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Forward Time" w="40">forwardtime</TEXTFIELD>
+			<TEXTFIELD title="Solved Time" w="40">solvedtime</TEXTFIELD>
+			<TEXTFIELD title="Stage Order" w="40">stageorder</TEXTFIELD>
+			<TEXTFIELD title="Dependent" w="40">isdependent</TEXTFIELD>
+			<TEXTFIELD title="Solved" w="40">IsSolved</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="forwardid" inputfield="problemlogid" inputkey="1" key="8" linkfield="problemlogid" linkkey="12" name="Letter Forwarding" pos="bottom" table="forwarded">
+			<COMBOBOX h="20" lpfield="FullName" lptable="UserView" title="User" w="210" x="10" y="10">Userid</COMBOBOX>
+			<TEXTFIELD h="20" title="Ref. No" w="90" x="350" y="10">referenceno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="30">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Stage Order" w="150" x="10" y="50">stageorder</TEXTFIELD>
+			<CHECKBOX h="20" title="Dependent" w="150" x="290" y="50">isdependent</CHECKBOX>
+			<TEXTAREA h="50" title="To Be Done" w="430" x="10" y="70">tobedone</TEXTAREA>
+			<TEXTAREA h="50" title="What is Done" w="430" x="10" y="120">whatisdone</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="10" name="Forwarding" splitloc="200" splittype="vert" w="700">
+		<GRID filtername="forwardid" gridfilter="true" key="1" keyfield="forwardid" name="Personal Forwarded" ordersql="problemlogid" pos="top" table="ProblemForwardView" wheresql="(fduserid = getuserid()) AND (fdSolved = false) AND (dependent = false) AND (IsDrop = false) AND (IsSolved = false)">
+			<TEXTFIELD title="CRM Ref" w="40">problemlogid</TEXTFIELD>
+			<TEXTFIELD title="Client" w="80">clientname</TEXTFIELD>
+			<TEXTFIELD title="Description" w="180">FDDescription</TEXTFIELD>
+			<TEXTFIELD title="Forward Time" w="40">forwardtime</TEXTFIELD>
+			<TEXTFIELD title="Stage Order" w="40">stageorder</TEXTFIELD>
+			<TEXTFIELD title="Dependent" w="40">isdependent</TEXTFIELD>
+		</GRID>
+
+		<REPORT filtered="false" jasperfile="problemforwardviewd.jasper" key="2" linkfield="forwardid" linkkey="1" name="Forwarded - Details" pos="bottom"></REPORT>
+		<FORM autofield="forwardid" key="3" linkfield="forwardid" linkkey="1" name="Forwarded Details" pos="bottom" table="forwarded">
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="10">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Ref. No" w="150" x="10" y="30">referenceno</TEXTFIELD>
+			<CHECKBOX h="20" lw="90" title="Action" w="30" x="290" y="30">issolved</CHECKBOX>
+			<CHECKBOX h="20" lw="90" title="Drop" w="30" x="410" y="30">IsDrop</CHECKBOX>
+			<TEXTAREA h="50" title="To Be Done" w="430" x="10" y="50">tobedone</TEXTAREA>
+			<TEXTAREA h="50" title="What is Done" w="430" x="10" y="100">whatisdone</TEXTAREA>
+		</FORM>
+
+		<GRID key="5" keyfield="erfid" linkfield="forwardid" linkkey="1" name="ERF" pos="bottom" table="ForwardERFView">
+			<TEXTFIELD title="ERF ID" w="40">erfid</TEXTFIELD>
+			<TEXTFIELD title="Requested By" w="40">RequestedBy</TEXTFIELD>
+			<TEXTFIELD title="Asset" w="40">AssetSubTypeName</TEXTFIELD>
+			<TEXTFIELD title="Quantity" w="40">Quantity</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="6" keyfield="forwardid" name="Group Forwarded" pos="top" table="ProblemForwardView" wheresql="(fdgroupid = getgroupid()) AND (fdSolved = false) AND (dependent = false) AND (IsDrop = false) AND (IsSolved = false)">
+			<TEXTFIELD title="CRM Ref" w="40">problemlogid</TEXTFIELD>
+			<TEXTFIELD title="Client" w="80">clientname</TEXTFIELD>
+			<TEXTFIELD title="To" w="40">fdfullname</TEXTFIELD>
+			<TEXTFIELD title="Logged By" w="40">FullName</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">FDDescription</TEXTFIELD>
+			<TEXTFIELD title="Forward Time" w="40">forwardtime</TEXTFIELD>
+			<TEXTFIELD title="Stage Order" w="40">stageorder</TEXTFIELD>
+			<TEXTFIELD title="Dependent" w="40">isdependent</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="forwardid" key="7" linkfield="forwardid" linkkey="6" name="Group Forwarding" pos="bottom" table="forwarded">
+			<COMBOBOX h="20" lpfield="FullName" lptable="users" title="User" w="210" wheresql="usergroupid = getUserGroupID()" x="10" y="10">Userid</COMBOBOX>
+			<TEXTFIELD h="20" title="Ref. No" w="90" x="350" y="10">referenceno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="30">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Stage Order" w="50" x="10" y="50">stageorder</TEXTFIELD>
+			<CHECKBOX h="20" title="Dependent" w="50" x="190" y="50">isdependent</CHECKBOX>
+			<CHECKBOX h="20" title="For Approval" w="50" x="390" y="50">IsForApproval</CHECKBOX>
+			<TEXTAREA h="50" title="To Be Done" w="430" x="10" y="70">tobedone</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="580" key="11" name="Open Calls" splitloc="200" splittype="vert" w="700">
+		<GRID filtername="problemlogid" gridfilter="true" key="1" keyfield="problemlogid" name="Open Calls" ordersql="problemlogid desc" pos="top" table="ProblemLogView" wheresql="(IsSolved = false)">
+			<TEXTFIELD title="CRM Ref" w="20">problemlogid</TEXTFIELD>
+			<TEXTFIELD title="Classification" w="40">PClassificationName</TEXTFIELD>
+			<TEXTFIELD title="Type" w="40">PTypeName</TEXTFIELD>
+			<TEXTFIELD title="Definition" w="40">PDefinitionName</TEXTFIELD>
+			<TEXTFIELD title="Level" w="40">PLevelName</TEXTFIELD>
+			<TEXTFIELD title="Client" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Recoded Time" w="40">recodedtime</TEXTFIELD>
+		</GRID>
+
+		<REPORT filtered="true" jasperfile="problemlogd.jasper" key="7" linkkey="1" name="Open Calls" pos="bottom">
+			<REPORT filtered="true" jasperfile="erfview.jasper" name="ERF"></REPORT>
+			<REPORT filtered="true" jasperfile="forwardedview.jasper" name="Forwarded View"></REPORT>
+			<REPORT filtered="true" jasperfile="clientstatementeb.jasper" name="clientstatementeb"></REPORT>
+		</REPORT>
+
+		<FORM autofield="Helpdeskimageid" inputfield="problemlogid" inputkey="1" key="2" layout="flow" linkfield="problemlogid" linkkey="1" name="Letter" pos="bottom" table="Helpdeskimages">
+			<IMAGE h="250" lw="5" title="" w="540" x="10" y="10">upload</IMAGE>
+		</FORM>
+
+		<FORM autofield="erfid" inputfield="problemlogid" inputkey="1" key="3" linkfield="erfid" linkkey="12" name="ERF Entry" pos="bottom" table="erf">
+			<COMBOBOX h="20" lpfield="AssetSubTypeName" lptable="AssetSubTypes" title="Sub Asset" w="430" x="10" y="10">AssetSubTypeID</COMBOBOX>
+			<TEXTFIELD h="20" title="Quantity" w="90" x="10" y="30">quantity</TEXTFIELD>
+			<CHECKBOX h="20" title="Replacement" w="90" x="350" y="30">Replacement</CHECKBOX>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="50">details</TEXTAREA>
+		</FORM>
+
+		<FORM autofield="forwardid" inputfield="problemlogid" inputkey="1" key="4" linkfield="forwardid" linkkey="21" name="Call Forwarding" pos="bottom" table="forwarded">
+			<COMBOBOX h="20" lpfield="FullName" lptable="UserView" title="User" w="210" x="10" y="10">Userid</COMBOBOX>
+			<TEXTFIELD h="20" title="Ref. No" w="90" x="350" y="10">referenceno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="30">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Stage Order" w="50" x="10" y="50">stageorder</TEXTFIELD>
+			<CHECKBOX h="20" title="Dependent" w="50" x="190" y="50">isdependent</CHECKBOX>
+			<CHECKBOX h="20" title="For Approval" w="50" x="390" y="50">IsForApproval</CHECKBOX>
+			<TEXTAREA h="50" title="To Be Done" w="430" x="10" y="70">tobedone</TEXTAREA>
+			<TEXTAREA h="50" title="What is Done" w="430" x="10" y="120">whatisdone</TEXTAREA>
+		</FORM>
+
+		<FORM autofield="problemlogid" key="5" linkfield="ProblemLogID" linkkey="12" name="Call Logging" pos="bottom" table="problemlog">
+			<COMBOBOX cmbkey="1" h="20" lpfield="PClassificationName" lptable="PClassifications" title="Classification" w="150" x="10" y="10">PClassificationID</COMBOBOX>
+			<COMBOBOX cmbkey="2" h="20" linkfield="PClassificationID" linkkey="1" lpfield="PTypeName" lptable="PTypes" title="Type" w="150" x="290" y="10">PTypeID</COMBOBOX>
+			<COMBOBOX h="20" linkfield="PTypeID" linkkey="2" lpfield="PDefinitionName" lptable="PDefinitions" title="Definition" w="150" x="10" y="30">PDefinitionID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="PlevelName" lptable="PLevels" title="Level" w="150" x="290" y="30">PlevelID</COMBOBOX>
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="50">ClientID</COMBOBOX>
+			<TEXTFIELD h="20" title="Description" w="430" x="10" y="70">description</TEXTFIELD>
+			<TEXTFIELD h="20" title="Reportedby" w="150" x="10" y="90">reportedby</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="110">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="110">currstatus</TEXTFIELD>
+			<TEXTAREA h="100" title="Problem" w="430" x="10" y="130">problem</TEXTAREA>
+		</FORM>
+
+		<FORM autofield="ProblemLogID" key="6" linkfield="ProblemLogID" linkkey="1" name="Update Calls" pos="bottom" table="problemlog">
+			<TEXTFIELD h="20" title="Curr. Action" w="150" x="10" y="10">curraction</TEXTFIELD>
+			<TEXTFIELD h="20" title="Curr. Status" w="150" x="290" y="10">currstatus</TEXTFIELD>
+			<CHECKBOX h="20" title="Closed" w="50" x="10" y="30">issolved</CHECKBOX>
+			<TEXTAREA h="90" title="Problem" w="430" x="10" y="50">problem</TEXTAREA>
+			<TEXTAREA h="90" title="Solution" w="430" x="10" y="140">solution</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="580" key="21" name="Work Schedule" splitloc="220" splittype="vert" w="585">
+		<GRID key="1" keyfield="WorkScheduleID" name="Personal Work Schedule" pos="top" table="WorkScheduleView" wheresql="(IsDone = false) and (userid = getuserid())">
+			<TEXTFIELD title="Work Type" w="40">worktypename</TEXTFIELD>
+			<TEXTFIELD title="Date" w="40">WorkDate</TEXTFIELD>
+			<TEXTFIELD title="Narrative" w="40">narrative</TEXTFIELD>
+			<TEXTFIELD title="Hours Spent" w="40">HoursSpent</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="workscheduleid" key="2" linkfield="workscheduleid" linkkey="1" name="Work Schedule" pos="bottom" table="workschedule">
+			<COMBOBOX h="20" lpfield="worktypename" lptable="worktypes" title="Work Type" w="430" x="10" y="10">worktypeid</COMBOBOX>
+			<TEXTFIELD h="20" title="Narrative" w="430" x="10" y="30">narrative</TEXTFIELD>
+			<TEXTDATE h="20" title="Work Date" w="150" x="10" y="50">workdate</TEXTDATE>
+			<TEXTFIELD h="20" lw="90" title="Hours Spent" w="50" x="290" y="50">hoursspent</TEXTFIELD>
+			<CHECKBOX h="20" lw="50" title="Done" w="30" x="450" y="50">isdone</CHECKBOX>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="70">details</TEXTAREA>
+		</FORM>
+
+		<CALENDAR key="3" name="Calendar" pos="top"></CALENDAR>
+		<GRID key="4" keyfield="WorkScheduleID" linkfield="WorkDate" linkkey="3" name="Calendar Schedule" pos="bottom" table="WorkScheduleView">
+			<TEXTFIELD title="User" w="240">FullName</TEXTFIELD>
+			<TEXTFIELD title="Work Type" w="240">worktypename</TEXTFIELD>
+			<TEXTFIELD title="Date" w="240">WorkDate</TEXTFIELD>
+			<TEXTFIELD title="Narrative" w="240">narrative</TEXTFIELD>
+			<TEXTFIELD title="Hours Spent" w="240">HoursSpent</TEXTFIELD>
+			<TEXTFIELD title="Done" w="240">IsDone</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="5" keyfield="worktypeid" name="Work Types" pos="top" table="worktypes">
+			<TEXTFIELD title="Work Type" w="40">worktypename</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="worktypeid" key="6" linkfield="worktypeid" linkkey="5" name="Work Types" pos="bottom" table="worktypes">
+			<TEXTFIELD h="20" title="Work Type" w="430" x="10" y="10">worktypename</TEXTFIELD>
+			<TEXTAREA h="70" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="580" key="5" name="Field Support" splitloc="220" splittype="vert" w="585">
+		<GRID key="1" keyfield="FieldSupportid" name="Personal Field Support" pos="top" table="FieldSupportView" wheresql="(IsDone = false) AND (userid = getuserid())">
+			<TEXTFIELD title="Client" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Support Date" w="40">supportdate</TEXTFIELD>
+			<TEXTFIELD title="Reason" w="40">reason</TEXTFIELD>
+			<TEXTFIELD title="Time In" w="40">timein</TEXTFIELD>
+			<TEXTFIELD title="Hours Spent" w="40">HoursSpent</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="fieldsupportid" key="2" linkfield="fieldsupportid" linkkey="1" name="Field Support" pos="bottom" table="fieldsupport">
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="10">ClientID</COMBOBOX>
+			<TEXTFIELD h="20" title="Reason" w="430" x="10" y="30">reason</TEXTFIELD>
+			<TEXTDATE h="20" title="Support Date" w="100" x="10" y="50">supportdate</TEXTDATE>
+			<CHECKBOX defaultvalue="false" h="20" lw="70" title="Done" w="30" x="240" y="50">isdone</CHECKBOX>
+			<CHECKBOX h="20" lw="70" title="For Action" w="30" x="350" y="50">isforaction</CHECKBOX>
+			<TIMESPIN h="20" title="Time In" w="150" x="10" y="70">timein</TIMESPIN>
+			<TEXTFIELD h="20" title="Hours Spent" w="150" x="290" y="70">HoursSpent</TEXTFIELD>
+			<TEXTAREA h="50" title="Details" w="430" x="10" y="90">details</TEXTAREA>
+			<TEXTAREA h="50" title="Observations" w="430" x="10" y="140">observations</TEXTAREA>
+			<TEXTAREA h="50" title="Recommendation" w="430" x="10" y="190">recommendation</TEXTAREA>
+			<TEXTAREA h="50" title="Request" w="430" x="10" y="240">request</TEXTAREA>
+		</FORM>
+
+		<CALENDAR key="3" name="Calendar" pos="top"></CALENDAR>
+		<GRID key="4" keyfield="FieldSupportid" linkfield="supportdate" linkkey="3" name="Field Support" pos="bottom" table="FieldSupportView">
+			<TEXTFIELD title="Client" w="240">ClientName</TEXTFIELD>
+			<TEXTFIELD title="User" w="240">FullName</TEXTFIELD>
+			<TEXTFIELD title="Reason" w="240">reason</TEXTFIELD>
+			<TEXTFIELD title="Time In" w="240">timein</TEXTFIELD>
+			<TEXTFIELD title="Hours Spent" w="240">HoursSpent</TEXTFIELD>
+			<TEXTFIELD title="Done" w="240">isdone</TEXTFIELD>
+			<TEXTFIELD title="For Action" w="240">isforaction</TEXTFIELD>
+		</GRID>
+
+	</DESK>
+
+	<DESK h="580" key="35" name="Field Support Action" splitloc="220" splittype="vert" w="585">
+		<GRID key="1" keyfield="FieldSupportid" name="Personal Field Support" pos="top" table="FieldSupportView" wheresql="(IsDone = true) AND (userid = getuserid()) AND (IsForAction = true) AND (ActionDone = false)">
+			<TEXTFIELD title="Client" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Support Date" w="40">supportdate</TEXTFIELD>
+			<TEXTFIELD title="Reason" w="40">reason</TEXTFIELD>
+			<TEXTFIELD title="Time In" w="40">timein</TEXTFIELD>
+			<TEXTFIELD title="Hours Spent" w="40">HoursSpent</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="fieldsupportid" key="2" linkfield="fieldsupportid" linkkey="1" name="Field Support" pos="bottom" table="fieldsupport">
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="10">ClientID</COMBOBOX>
+			<TEXTFIELD h="20" title="Reason" w="430" x="10" y="30">reason</TEXTFIELD>
+			<TEXTDATE h="20" title="Support Date" w="100" x="10" y="50">supportdate</TEXTDATE>
+			<CHECKBOX defaultvalue="false" h="20" lw="70" title="Done" w="30" x="240" y="50">isdone</CHECKBOX>
+			<CHECKBOX h="20" lw="70" title="For Action" w="30" x="350" y="50">isforaction</CHECKBOX>
+			<CHECKBOX h="20" lw="70" title="Action Done" w="30" x="460" y="50">actiondone</CHECKBOX>
+			<TIMESPIN h="20" title="Time In" w="150" x="10" y="70">timein</TIMESPIN>
+			<TEXTFIELD h="20" title="Hours Spent" w="150" x="290" y="70">HoursSpent</TEXTFIELD>
+			<TEXTAREA h="50" title="Details" w="430" x="10" y="90">details</TEXTAREA>
+			<TEXTAREA h="50" title="Observations" w="430" x="10" y="140">observations</TEXTAREA>
+			<TEXTAREA h="50" title="Recommendation" w="430" x="10" y="190">recommendation</TEXTAREA>
+			<TEXTAREA h="50" title="Request" w="430" x="10" y="240">request</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="520" key="6" name="Transport" splitloc="220" splittype="vert" w="585">
+		<GRID key="1" keyfield="transportid" name="Transport" pos="top" table="TransportView" wheresql="(IsApproved = false) AND (TransportView.IsDrop = false) AND (UserID = getuserid())">
+			<TEXTFIELD title="User" w="40">FullName</TEXTFIELD>
+			<TEXTFIELD title="Car" w="40">carname</TEXTFIELD>
+			<TEXTFIELD title="Date" w="40">transportdate</TEXTFIELD>
+			<TEXTFIELD title="Book Time" w="40">booktime</TEXTFIELD>
+			<TEXTFIELD title="Hours Gone" w="40">timegone</TEXTFIELD>
+			<TEXTFIELD title="Location" w="40">location</TEXTFIELD>
+			<TEXTFIELD title="Done" w="40">isdone</TEXTFIELD>
+			<TEXTFIELD title="Approved" w="40">isapproved</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="transportid" key="2" linkfield="transportid" linkkey="1" name="Transport" pos="bottom" table="transport">
+			<TEXTFIELD h="20" title="Location" w="430" x="10" y="10">location</TEXTFIELD>
+			<TEXTDATE h="20" title="Transport Date" w="150" x="10" y="30">transportdate</TEXTDATE>
+			<CHECKBOX h="20" lw="90" title="Drop" w="30" x="290" y="30">IsDrop</CHECKBOX>
+			<TIMESPIN h="20" title="Book Time" w="150" x="10" y="50">booktime</TIMESPIN>
+			<TEXTFIELD h="20" title="Hours Gone" w="150" x="290" y="50">timegone</TEXTFIELD>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="70">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="transportid" name="Transport Completion" pos="top" table="TransportView" wheresql="(IsApproved = true) AND (IsDrop = false) AND (IsDone = false) AND (UserID = getuserid())">
+			<TEXTFIELD title="Car" w="40">carname</TEXTFIELD>
+			<TEXTFIELD title="Date" w="40">transportdate</TEXTFIELD>
+			<TEXTFIELD title="Book Time" w="40">booktime</TEXTFIELD>
+			<TEXTFIELD title="Time Gone" w="40">timegone</TEXTFIELD>
+			<TEXTFIELD title="Location" w="40">location</TEXTFIELD>
+			<TEXTFIELD title="Done" w="40">isdone</TEXTFIELD>
+			<TEXTFIELD title="Approved" w="40">isapproved</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="transportid" key="4" linkfield="transportid" linkkey="3" name="Transport Completion" pos="bottom" table="transport">
+			<TEXTFIELD enabled="false" h="20" title="Location" w="430" x="10" y="10">location</TEXTFIELD>
+			<TEXTFIELD enabled="false" h="20" title="Book Time" w="150" x="10" y="30">booktime</TEXTFIELD>
+			<TEXTFIELD enabled="false" h="20" title="Hours Requested" w="50" x="290" y="30">timegone</TEXTFIELD>
+			<TIMESPIN h="20" title="Returned Time" w="150" x="10" y="50">ReturnTime</TIMESPIN>
+			<TEXTFIELD h="20" title="Hours Spent" w="50" x="290" y="50">HoursSpent</TEXTFIELD>
+			<CHECKBOX h="20" lw="50" title="Done" w="40" x="470" y="50">isdone</CHECKBOX>
+			<TEXTFIELD h="20" title="Start Millage" w="150" x="10" y="70">SMillage</TEXTFIELD>
+			<TEXTFIELD h="20" title="Final Millage" w="150" x="290" y="70">Emillage</TEXTFIELD>
+			<TEXTFIELD h="20" title="Millage Claims" w="150" x="10" y="90">MillageClaims</TEXTFIELD>
+			<TEXTFIELD h="20" title="Taxi Fare" w="150" x="290" y="90">TaxiFare</TEXTFIELD>
+			<TEXTAREA h="90" title="Details" w="430" x="10" y="110">details</TEXTAREA>
+		</FORM>
+
+		<CALENDAR key="5" name="Calendar" pos="top"></CALENDAR>
+		<GRID key="6" keyfield="transportid" linkfield="transportdate" linkkey="5" name="Transport" pos="bottom" table="TransportView">
+			<TEXTFIELD title="User" w="40">FullName</TEXTFIELD>
+			<TEXTFIELD title="Car" w="40">carname</TEXTFIELD>
+			<TEXTFIELD title="Date" w="40">transportdate</TEXTFIELD>
+			<TEXTFIELD title="Book Time" w="40">booktime</TEXTFIELD>
+			<TEXTFIELD title="Hours Gone" w="40">timegone</TEXTFIELD>
+			<TEXTFIELD title="Location" w="40">location</TEXTFIELD>
+			<TEXTFIELD title="Done" w="40">isdone</TEXTFIELD>
+			<TEXTFIELD title="Approved" w="40">isapproved</TEXTFIELD>
+		</GRID>
+
+	</DESK>
+
+	<DESK h="520" key="15" name="Transport Approval" splitloc="220" splittype="vert" w="655">
+		<CALENDAR key="1" name="Calendar" pos="top"></CALENDAR>
+		<REPORT filtered="true" jasperfile="caravailability.jasper" key="2" linkkey="1" name="Car Availability" pos="bottom"></REPORT>
+		<GRID key="3" keyfield="transportid" name="Transport Approval" pos="top" table="TransportView" wheresql="(IsApproved = false) AND (IsDrop = false)">
+			<TEXTFIELD title="User" w="40">FullName</TEXTFIELD>
+			<TEXTFIELD title="Car" w="40">carname</TEXTFIELD>
+			<TEXTFIELD title="Date" w="40">transportdate</TEXTFIELD>
+			<TEXTFIELD title="Book Time" w="40">booktime</TEXTFIELD>
+			<TEXTFIELD title="Time Gone" w="40">timegone</TEXTFIELD>
+			<TEXTFIELD title="Location" w="40">location</TEXTFIELD>
+			<TEXTFIELD title="Done" w="40">isdone</TEXTFIELD>
+			<TEXTFIELD title="Approved" w="40">isapproved</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="transportid" key="4" linkfield="transportid" linkkey="3" name="Transport Approved" pos="bottom" table="transport">
+			<TIMESPIN h="20" title="Book Time" w="150" x="10" y="10">booktime</TIMESPIN>
+			<TEXTFIELD h="20" title="Hours Requested" w="150" x="290" y="10">timegone</TEXTFIELD>
+			<COMBOBOX h="20" lpfield="CarName" lptable="cars" title="Car" w="150" wheresql="(available = true)" x="10" y="30">CarID</COMBOBOX>
+			<CHECKBOX h="20" title="Approved" w="150" x="10" y="50">isapproved</CHECKBOX>
+			<CHECKBOX h="20" title="Cancel" w="150" x="290" y="50">IsDrop</CHECKBOX>
+		</FORM>
+
+		<GRID key="5" keyfield="transportid" name="Transport Clear" pos="top" table="TransportView" wheresql="(IsApproved = true) and (IsDrop = false) AND (keysreturned = false)">
+			<TEXTFIELD title="User" w="40">FullName</TEXTFIELD>
+			<TEXTFIELD title="Car" w="40">carname</TEXTFIELD>
+			<TEXTFIELD title="Date" w="40">transportdate</TEXTFIELD>
+			<TEXTFIELD title="Book Time" w="40">booktime</TEXTFIELD>
+			<TEXTFIELD title="Time Gone" w="40">timegone</TEXTFIELD>
+			<TEXTFIELD title="Location" w="40">location</TEXTFIELD>
+			<TEXTFIELD title="Done" w="40">isdone</TEXTFIELD>
+			<TEXTFIELD title="Approved" w="40">isapproved</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="transportid" key="6" linkfield="transportid" linkkey="5" name="Transport Clear" pos="bottom" table="transport">
+			<CHECKBOX h="20" lw="100" title="Self Driven" w="20" x="10" y="10">SelfDriven</CHECKBOX>
+			<CHECKBOX h="20" lw="100" title="Taxi" w="20" x="210" y="10">taxi</CHECKBOX>
+			<CHECKBOX h="20" lw="100" title="Personal Car" w="20" x="10" y="30">personalcar</CHECKBOX>
+			<CHECKBOX h="20" lw="100" title="Keys Returned" w="20" x="210" y="30">keysreturned</CHECKBOX>
+		</FORM>
+
+		<GRID key="8" keyfield="carid" name="Cars" pos="top" table="cars">
+			<TEXTFIELD title="Car ID" w="40">carid</TEXTFIELD>
+			<TEXTFIELD title="Car Name" w="140">carname</TEXTFIELD>
+			<TEXTFIELD title="Next Service" w="140">NextService</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="carid" key="9" linkfield="carid" linkkey="8" name="Cars Entry" pos="bottom" table="cars">
+			<TEXTFIELD h="20" title="Car Name" w="150" x="10" y="10">carname</TEXTFIELD>
+			<TEXTDATE h="20" title="Next Service" w="150" x="290" y="10">NextService</TEXTDATE>
+			<CHECKBOX h="20" title="Available" w="50" x="10" y="30">available</CHECKBOX>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="50">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="10" keyfield="carserviceid" name="Car Service" pos="top" table="CarServiceView">
+			<TEXTFIELD title="Car" w="40">carname</TEXTFIELD>
+			<TEXTFIELD title="Service Date" w="40">servicedate</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="carserviceid" key="11" linkfield="carserviceid" linkkey="10" name="Car Services" pos="bottom" table="carservices">
+			<COMBOBOX h="20" lpfield="CarName" lptable="Cars" title="Car" w="150" x="10" y="10">CarID</COMBOBOX>
+			<TEXTDATE h="20" title="Service Date" w="150" x="290" y="10">servicedate</TEXTDATE>
+			<TEXTAREA h="70" title="Problems" w="430" x="10" y="30">problems</TEXTAREA>
+			<TEXTAREA h="70" title="Replacements" w="430" x="10" y="100">replacements</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="7" name="Services" splitloc="210" splittype="vert" w="585">
+		<GRID key="1" keyfield="assettypeid" name="Service Types" pos="top" table="assettypes">
+			<TEXTFIELD title="ID" w="40">assettypeid</TEXTFIELD>
+			<TEXTFIELD title="Type Name" w="240">assettypename</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="assettypeid" key="2" linkfield="assettypeid" linkkey="1" name="Service Types" pos="bottom" table="assettypes">
+			<TEXTFIELD h="20" title="Type Name" w="430" x="10" y="10">assettypename</TEXTFIELD>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="assetsubtypeid" name="Service Sub Types" pos="top" table="assetsubtypeview">
+			<TEXTFIELD title="Service Type ID" w="40">assetsubtypeid</TEXTFIELD>
+			<TEXTFIELD title="Service Type" w="140">assettypename</TEXTFIELD>
+			<TEXTFIELD title="Service Sub Type Name" w="140">assetsubtypename</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="assetsubtypeid" key="4" linkfield="assetsubtypeid" linkkey="3" name="Service Sub Types" pos="bottom" table="assetsubtypes">
+			<COMBOBOX h="20" lpfield="assettypename" lptable="assettypes" title="Service" w="430" x="10" y="10">assettypeid</COMBOBOX>
+			<TEXTFIELD h="20" title="Sub Type Name" w="430" x="10" y="30">assetsubtypename</TEXTFIELD>
+			<TEXTFIELD h="20" title="Client Cost" w="150" x="10" y="50">clientcost</TEXTFIELD>
+			<TEXTFIELD h="20" title="Segments" w="150" x="290" y="50">segments</TEXTFIELD>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="70">details</TEXTAREA>
+		</FORM>
+
+		<GRID gridfilter="true" key="5" keyfield="assetid" name="Service" pos="top" table="assetsview">
+			<TEXTFIELD title="Service Type" w="80">assetsubtypename</TEXTFIELD>
+			<TEXTFIELD title="SN" w="80">assetsn</TEXTFIELD>
+			<TEXTFIELD title="Sold" w="40">sold</TEXTFIELD>
+			<TEXTFIELD title="Lost" w="40">lost</TEXTFIELD>
+			<TEXTFIELD title="On Lease" w="40">isonlease</TEXTFIELD>
+			<TEXTFIELD title="Condition" w="140">condition</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="assetid" key="6" linkfield="assetid" linkkey="5" name="Service" pos="bottom" table="assets">
+			<COMBOBOX h="20" lpfield="assetsubtypename" lptable="assetsubtypes" title="Service Sub Type" w="430" x="10" y="10">assetsubtypeid</COMBOBOX>
+			<TEXTFIELD h="20" title="Service SN" w="430" x="10" y="30">assetsn</TEXTFIELD>
+			<CHECKBOX h="20" title="In Store" w="30" x="10" y="50">isinstore</CHECKBOX>
+			<CHECKBOX h="20" title="On Lease" w="30" x="240" y="50">isonlease</CHECKBOX>
+			<CHECKBOX h="20" title="Singular Item" w="30" x="400" y="50">SingularItem</CHECKBOX>
+			<TEXTDATE h="20" title="Purchase Date" w="100" x="10" y="70">purchasedate</TEXTDATE>
+			<TEXTFIELD h="20" title="Warranty Period" w="150" x="240" y="70">WarrantyPeriod</TEXTFIELD>
+			<TEXTDECIMAL h="20" title="Purchase Cost" w="100" x="10" y="90">purchasecost</TEXTDECIMAL>
+			<TEXTDECIMAL h="20" lw="90" title="Monthly Cost" w="70" x="240" y="90">monthlycost</TEXTDECIMAL>
+			<TEXTDECIMAL h="20" lw="90" title="Maintenance" w="70" x="400" y="90">monthlymaintenance</TEXTDECIMAL>
+			<CHECKBOX h="20" title="Sold" w="50" x="10" y="110">sold</CHECKBOX>
+			<TEXTFIELD h="20" lw="70" title="Sold To" w="300" x="190" y="110">soldto</TEXTFIELD>
+			<TEXTDATE h="20" title="Sale Date" w="150" x="10" y="130">Saledate</TEXTDATE>
+			<TEXTDECIMAL h="20" title="Sale Amount" w="100" x="290" y="130">saleamount</TEXTDECIMAL>
+			<CHECKBOX h="20" title="Lost" w="50" x="10" y="150">lost</CHECKBOX>
+			<TEXTDATE h="20" title="Date Lost" w="150" x="190" y="150">lostdate</TEXTDATE>
+			<TEXTFIELD h="20" title="Last Store" w="430" x="10" y="170">LastStore</TEXTFIELD>
+			<TEXTFIELD h="20" title="Condition" w="430" x="10" y="190">condition</TEXTFIELD>
+		</FORM>
+
+		<GRID key="7" keyfield="clientassetid" linkfield="assetid" linkkey="5" name="Client Services" pos="bottom" table="ClientAssetView">
+			<TEXTFIELD title="Client" w="40">clientname</TEXTFIELD>
+			<TEXTFIELD title="Services" w="40">assetsubtypename</TEXTFIELD>
+			<TEXTFIELD title="SN" w="40">assetsn</TEXTFIELD>
+			<TEXTFIELD title="Issued" w="40">isissued</TEXTFIELD>
+			<TEXTFIELD title="Date Issued" w="40">dateissued</TEXTFIELD>
+			<TEXTFIELD title="Retrived" w="40">isretrived</TEXTFIELD>
+			<TEXTFIELD title="Date Retrived" w="40">dateretrived</TEXTFIELD>
+		</GRID>
+
+	</DESK>
+
+	<DESK h="500" key="16" name="Client Services" splitloc="210" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="Clientid" name="Clients" ordersql="clientname" pos="top" table="ClientView">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="Town" w="40">town</TEXTFIELD>
+			<TEXTFIELD title="Division" w="40">division</TEXTFIELD>
+			<TEXTFIELD title="Tel no" w="40">telno</TEXTFIELD>
+			<TEXTFIELD title="Account Manager" w="140">fullname</TEXTFIELD>
+		</GRID>
+
+		<GRID key="2" keyfield="clientassetid" linkfield="clientid" linkkey="1" name="Client Services" pos="bottom" table="ClientAssetView">
+			<TEXTFIELD title="Client" w="40">clientname</TEXTFIELD>
+			<TEXTFIELD title="Services" w="40">assetsubtypename</TEXTFIELD>
+			<TEXTFIELD title="SN" w="40">assetsn</TEXTFIELD>
+			<TEXTFIELD title="Issued" w="40">isissued</TEXTFIELD>
+			<TEXTFIELD title="Date Issued" w="40">dateissued</TEXTFIELD>
+			<TEXTFIELD title="Retrived" w="40">isretrived</TEXTFIELD>
+			<TEXTFIELD title="Date Retrived" w="40">dateretrived</TEXTFIELD>
+			<TEXTFIELD title="Units" w="40">units</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clientassetid" key="3" linkfield="clientassetid" linkkey="2" name="Client Services" pos="bottom" table="clientassets">
+			<CHECKBOX h="20" title="Issued" w="150" x="10" y="10">isissued</CHECKBOX>
+			<TEXTDATE h="20" title="Date Issued" w="150" x="290" y="10">dateissued</TEXTDATE>
+			<CHECKBOX h="20" title="Retrived" w="150" x="10" y="30">isretrived</CHECKBOX>
+			<TEXTDATE h="20" title="Date Retrived" w="150" x="290" y="30">dateretrived</TEXTDATE>
+			<TEXTFIELD h="20" title="CRM Ref." w="150" x="10" y="50">crmrefno</TEXTFIELD>
+			<TEXTFIELD h="20" title="D. Note No." w="150" x="290" y="50">dnoteno</TEXTFIELD>
+			<TEXTFIELD h="20" title="R. CRM Ref." w="150" x="10" y="70">rcrmrefno</TEXTFIELD>
+			<TEXTFIELD h="20" title="R. Note No." w="150" x="290" y="70">rdnoteno</TEXTFIELD>
+			<TEXTFIELD h="20" title="Narrative" w="430" x="10" y="90">narrative</TEXTFIELD>
+			<TEXTDATE enabled="false" h="20" title="Date Added" w="150" x="10" y="110">dateadded</TEXTDATE>
+			<TEXTDATE enabled="false" h="20" title="Date Changed" w="150" x="290" y="110">datechanged</TEXTDATE>
+		</FORM>
+
+		<FORM autofield="clientassetid" key="4" name="New Client Services" pos="bottom" table="clientassets">
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="10">clientid</COMBOBOX>
+			<TEXTLOOKUP h="20" lpfield="assetsubtypename || ', ' || assetsn" lptable="AssetsView" title="Course" w="430" x="10" y="30">AssetID
+				<GRID gridfilter="true" key="12" keyfield="AssetID" name="Assets" pos="top" table="AssetsView" wheresql="(((ClientAssetCount = 0) OR (SingularItem = false)) AND (sold = false) AND (lost = false))">
+					<TEXTFIELD title="Type" w="10">assetsubtypename</TEXTFIELD>
+					<TEXTFIELD title="Serial Number" w="40">assetsn</TEXTFIELD>
+				</GRID>
+
+			</TEXTLOOKUP>
+
+			<CHECKBOX defaultvalue="true" h="20" title="Issued" w="150" x="10" y="50">isissued</CHECKBOX>
+			<TEXTDATE h="20" title="Date Issued" w="150" x="290" y="50">dateissued</TEXTDATE>
+			<TEXTFIELD h="20" title="CRM Ref." w="150" x="10" y="70">crmrefno</TEXTFIELD>
+			<TEXTFIELD h="20" title="D. Note No." w="150" x="290" y="70">dnoteno</TEXTFIELD>
+			<TEXTFIELD defaultvalue="1" h="20" title="Units" w="100" x="10" y="90">units</TEXTFIELD>
+			<TEXTFIELD h="20" title="Narrative" w="430" x="10" y="110">narrative</TEXTFIELD>
+		</FORM>
+
+		<GRID key="7" keyfield="pcconfigurationid" linkfield="clientid" linkkey="1" name="Configuration" pos="top" table="PCConfigurationView">
+			<TEXTFIELD title="Clientid" w="40">clientName</TEXTFIELD>
+			<TEXTFIELD title="CPU SN" w="40">cpusn</TEXTFIELD>
+			<TEXTFIELD title="FPNet" w="40">fpnet</TEXTFIELD>
+			<TEXTFIELD title="FP config" w="40">fpconfig</TEXTFIELD>
+			<TEXTFIELD title="ISP" w="40">isp</TEXTFIELD>
+			<TEXTFIELD title="Config" w="40">confignumber</TEXTFIELD>
+			<TEXTFIELD title="IP Address" w="40">ipaddress</TEXTFIELD>
+			<TEXTFIELD title="GI Client ID" w="40">giclientid</TEXTFIELD>
+			<TEXTFIELD title="IWS Gtid" w="40">iwsgtid</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="pcconfigurationid" key="8" linkfield="pcconfigurationid" linkkey="7" name="Configuration" pos="bottom" table="pcconfiguration">
+			<COMBOBOX h="20" lpfield="ClientName" lptable="Clients" title="Client" w="430" x="10" y="10">clientid</COMBOBOX>
+			<TEXTFIELD h="20" title="CPU SN" w="150" x="10" y="30">cpusn</TEXTFIELD>
+			<CHECKBOX h="20" title="FPNet" w="150" x="290" y="30">fpnet</CHECKBOX>
+			<TEXTFIELD h="20" title="FP Config" w="150" x="10" y="50">fpconfig</TEXTFIELD>
+			<TEXTFIELD h="20" title="ISP" w="150" x="290" y="50">isp</TEXTFIELD>
+			<TEXTFIELD h="20" title="Order Date" w="150" x="10" y="70">orderdate</TEXTFIELD>
+			<TEXTFIELD h="20" title="Config Number" w="150" x="290" y="70">confignumber</TEXTFIELD>
+			<TEXTFIELD h="20" title="IP Address" w="150" x="10" y="90">ipaddress</TEXTFIELD>
+			<TEXTFIELD h="20" title="Subnet Mask" w="150" x="290" y="90">subnetmask</TEXTFIELD>
+			<TEXTFIELD h="20" title="GI Client ID" w="150" x="10" y="110">giclientid</TEXTFIELD>
+			<TEXTFIELD h="20" title="IWS GTID" w="150" x="290" y="110">iwsgtid</TEXTFIELD>
+			<TEXTFIELD h="20" title="PTR 1 GTID" w="150" x="10" y="130">printer1gtid</TEXTFIELD>
+			<TEXTFIELD h="20" title="PTR 2 GTID" w="150" x="290" y="130">printer2gtid</TEXTFIELD>
+			<TEXTAREA h="50" title="Details" w="430" x="10" y="150">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="8" name="Productivity" splitloc="250" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="periodid" name="Periods" ordersql="startdate desc" pos="top" table="periodview">
+			<TEXTFIELD title="Year" w="40">periodyear</TEXTFIELD>
+			<TEXTFIELD title="Month" w="40">periodmonth</TEXTFIELD>
+			<TEXTFIELD title="Acc. Period" w="40">accountperiod</TEXTFIELD>
+			<TEXTFIELD title="nasrate" w="40">nasrate</TEXTFIELD>
+			<TEXTFIELD title="Segemnt Rates" w="40">cancrates</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="periodid" key="2" linkfield="periodid" linkkey="1" name="Periods" pos="bottom" table="periods">
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="10">startdate</TEXTDATE>
+			<TEXTFIELD h="20" title="Acc. Period" w="150" x="290" y="10">accountperiod</TEXTFIELD>
+			<TEXTDECIMAL defaultvalue="0.2" h="20" title="NANC Rates" w="150" x="10" y="30">cancrates</TEXTDECIMAL>
+			<TEXTDECIMAL defaultvalue="3.63" h="20" title="NAS Rate" w="150" x="290" y="30">nasrate</TEXTDECIMAL>
+			<TEXTDECIMAL defaultvalue="0.56" h="20" title="TA rate" w="150" x="10" y="50">tarate</TEXTDECIMAL>
+			<TEXTDECIMAL defaultvalue="2.75" h="20" title="TP Rate" w="150" x="290" y="50">tprate</TEXTDECIMAL>
+			<TEXTDECIMAL defaultvalue="0.4" h="20" title="Incentive Rate" w="150" x="10" y="70">IncentiveRate</TEXTDECIMAL>
+			<TEXTDECIMAL defaultvalue="3" h="20" title="Competition Cost" w="150" x="290" y="70">CompetitionCost</TEXTDECIMAL>
+			<TEXTDECIMAL defaultvalue="5" h="20" title="Budget Rate" w="150" x="10" y="90">BudgetRate</TEXTDECIMAL>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="110">details</TEXTAREA>
+		</FORM>
+
+		<GRID gridfilter="true" key="3" keyfield="transactionid" linkfield="periodid" linkkey="1" name="Agency Productivity" pos="bottom" table="TransactionView">
+			<TEXTFIELD title="Client Name" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Net Active Segments" w="40">nasegs</TEXTFIELD>
+			<TEXTFIELD title="Ticketed" w="40">AOTSegs</TEXTFIELD>
+			<TEXTFIELD title="Amadeous Segs" w="40">AmadeousSegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="4" keyfield="ConsultantTransactionID" linkfield="periodid" linkkey="1" name="Consultant Productivity" pos="bottom" table="consdistributionview">
+			<TEXTFIELD title="Client ID" w="40">ClientID</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">PCC</TEXTFIELD>
+			<TEXTFIELD title="SON" w="40">SON</TEXTFIELD>
+			<TEXTFIELD title="Total Segsments" w="40">prd3</TEXTFIELD>
+			<TEXTFIELD title="Distribution" w="40">distribution</TEXTFIELD>
+			<TEXTFIELD title="Ticket Distribution" w="40">tkpdistribution</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="5" keyfield="assettypeid" linkfield="periodid" linkkey="1" name="Asset Cost" pos="bottom" table="periodassetcostview">
+			<TEXTFIELD title="Year" w="40">periodyear</TEXTFIELD>
+			<TEXTFIELD title="Month" w="40">periodmonth</TEXTFIELD>
+			<TEXTFIELD title="Type Name" w="40">assettypename</TEXTFIELD>
+			<TEXTFIELD title="Sub Type Name" w="40">assetsubtypename</TEXTFIELD>
+			<TEXTFIELD title="Cost" w="40">clientcost</TEXTFIELD>
+			<TEXTFIELD title="Segments" w="40">segments</TEXTFIELD>
+		</GRID>
+
+	</DESK>
+
+	<DESK h="500" key="22" name="Calls" splitloc="0" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="callid" name="Calls" pos="bottom" table="calls">
+			<TEXTFIELD title="Call Date" w="40">calldate</TEXTFIELD>
+			<TEXTFIELD title="Call Marker" w="40">callmarker</TEXTFIELD>
+			<TEXTFIELD title="Call Time" w="40">calltime</TEXTFIELD>
+			<TEXTFIELD title="Extension" w="40">extension</TEXTFIELD>
+			<TEXTFIELD title="Call Line" w="40">callline</TEXTFIELD>
+			<TEXTFIELD title="Call Details" w="40">calldetails</TEXTFIELD>
+			<TEXTFIELD title="Talk Time" w="40">talktime</TEXTFIELD>
+			<TEXTFIELD title="Call Code" w="40">callcode</TEXTFIELD>
+		</GRID>
+
+	</DESK>
+
+	<DESK h="500" key="9" name="Training" splitloc="230" splittype="vert" w="585">
+		<GRID key="1" keyfield="trainingtypeid" name="Training Types" pos="top" table="trainingtypes">
+			<TEXTFIELD title="ID" w="40">trainingtypeid</TEXTFIELD>
+			<TEXTFIELD title="Name" w="240">trainingtypename</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="trainingtypeid" key="2" linkfield="trainingtypeid" linkkey="1" name="Training Types" pos="bottom" table="trainingtypes">
+			<TEXTFIELD h="20" title="Course Name" w="430" x="10" y="10">trainingtypename</TEXTFIELD>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="trainingid" name="Training" pos="top" table="trainingview">
+			<TEXTFIELD title="Training" w="40">TrainingTypeName</TEXTFIELD>
+			<TEXTFIELD title="Trainner" w="40">FullName</TEXTFIELD>
+			<TEXTFIELD title="Start" w="40">startdate</TEXTFIELD>
+			<TEXTFIELD title="Stop" w="40">stopdate</TEXTFIELD>
+			<TEXTFIELD title="Done" w="40">isdone</TEXTFIELD>
+			<TEXTFIELD title="Amount" w="40">amount</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="trainingid" key="4" linkfield="trainingid" linkkey="3" name="Training" pos="bottom" table="training">
+			<COMBOBOX h="20" lpfield="FullName" lptable="UserView" title="Trainer" w="150" x="10" y="10">Userid</COMBOBOX>
+			<COMBOBOX h="20" lpfield="trainingtypename" lptable="trainingtypes" title="Course" w="150" x="290" y="10">trainingtypeid</COMBOBOX>
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="30">startdate</TEXTDATE>
+			<TEXTDATE h="20" title="Stop Date" w="150" x="290" y="30">stopdate</TEXTDATE>
+			<CHECKBOX h="20" title="Done" w="150" x="10" y="50">isdone</CHECKBOX>
+			<TEXTFIELD h="20" title="Amount" w="150" x="290" y="50">amount</TEXTFIELD>
+			<TEXTAREA h="120" title="Details" w="430" x="10" y="70">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="5" keyfield="clienttrainingid" linkfield="trainingid" linkkey="3" name="Client Training" pos="top" table="clienttrainingview">
+			<TEXTFIELD title="Client" w="40">ClientName</TEXTFIELD>
+			<TEXTFIELD title="Consultant" w="40">ConsultantName</TEXTFIELD>
+			<TEXTFIELD title="Done" w="40">isdone</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="clienttrainingid" inputfield="trainingid" inputkey="3" key="6" linkfield="clienttrainingid" linkkey="5" name="Client Training Entry" pos="bottom" table="clienttraining">
+			<TEXTLOOKUP h="20" lpfield="ClientName || ': ' || consultantname" lptable="ConsultantView" title="Consultant" w="350" x="10" y="10">ConsultantID
+				<GRID gridfilter="true" key="2" keyfield="ConsultantID" name="Consultant" pos="top" table="ConsultantView">
+					<TEXTFIELD title="Client" w="80">ClientName</TEXTFIELD>
+					<TEXTFIELD title="Consultant Name" w="80">consultantname</TEXTFIELD>
+					<TEXTFIELD title="SON" w="10">SON</TEXTFIELD>
+				</GRID>
+
+			</TEXTLOOKUP>
+
+			<CHECKBOX h="20" title="Done" w="150" x="10" y="30">isdone</CHECKBOX>
+			<CHECKBOX h="20" title="Paid" w="150" x="290" y="30">IsPaid</CHECKBOX>
+			<CHECKBOX h="20" title="Certificate" w="150" x="10" y="50">IsCert</CHECKBOX>
+			<CHECKBOX h="20" title="Completed" w="150" x="290" y="50">IsCompleted</CHECKBOX>
+			<TEXTFIELD h="20" title="Marks" w="150" x="10" y="70">Marks</TEXTFIELD>
+			<TEXTAREA h="100" title="Details" w="430" x="10" y="90">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="14" name="Imports" splitloc="0" splittype="vert" w="675">
+		<IMPORT autofield="new_Segments_id" filetype="record" key="1" keyfield="new_Segments_id" name="Segments" pos="bottom" procedure="insTransactions" table="new_Segments">
+			<TEXTFIELD dw="4" title="PCC" w="40">PCC</TEXTFIELD>
+			<TEXTFIELD dw="32" title="Agency_Name" w="40">Agency_Name</TEXTFIELD>
+			<TEXTFIELD dw="3" title="Terminal_ID" w="40">Terminal_ID</TEXTFIELD>
+			<TEXTFIELD dw="4" title="Month_Year" w="40">Month_Year</TEXTFIELD>
+			<TEXTFIELD dw="8" title="NAB" w="40">NAB</TEXTFIELD>
+			<TEXTFIELD dw="8" title="NCB" w="40">NCB</TEXTFIELD>
+			<TEXTFIELD dw="8" title="NHB" w="40">NHB</TEXTFIELD>
+			<TEXTFIELD dw="8" title="NAAB" w="40">NAAB</TEXTFIELD>
+			<TEXTFIELD dw="8" title="NPAB" w="40">NPAB</TEXTFIELD>
+			<TEXTFIELD dw="5" title="BARS" w="40">BARS</TEXTFIELD>
+			<TEXTFIELD dw="5" title="PARS" w="40">PARS</TEXTFIELD>
+			<TEXTFIELD dw="5" title="BPRS" w="40">BPRS</TEXTFIELD>
+			<TEXTFIELD dw="5" title="PPRS" w="40">PPRS</TEXTFIELD>
+			<TEXTFIELD dw="5" title="Billable" w="40">Billable</TEXTFIELD>
+			<TEXTFIELD dw="1" title="SA_IC" w="40">SA_IC</TEXTFIELD>
+			<TEXTFIELD dw="4" title="SA_PR" w="40">SA_PR</TEXTFIELD>
+			<TEXTFIELD dw="3" title="SA_RR" w="40">SA_RR</TEXTFIELD>
+			<TEXTFIELD dw="1" title="SA_GA" w="40">SA_GA</TEXTFIELD>
+			<TEXTFIELD dw="1" title="SA_II" w="40">SA_II</TEXTFIELD>
+			<TEXTFIELD dw="1" title="SA_DYO" w="40">SA_DYO</TEXTFIELD>
+			<TEXTFIELD dw="5" title="SA_NDYO" w="40">SA_NDYO</TEXTFIELD>
+			<TEXTFIELD dw="3" title="NLAT" w="40">NLAT</TEXTFIELD>
+			<TEXTFIELD dw="5" title="NRASL" w="40">NRASL</TEXTFIELD>
+			<TEXTFIELD dw="3" title="NDNR" w="40">NDNR</TEXTFIELD>
+			<TEXTFIELD dw="3" title="PDIN" w="40">PDIN</TEXTFIELD>
+			<TEXTFIELD dw="1" title="GMIR" w="40">GMIR</TEXTFIELD>
+			<TEXTFIELD dw="5" title="NGMIR" w="40">NGMIR</TEXTFIELD>
+			<TEXTFIELD dw="8" title="BBNS" w="40">BBNS</TEXTFIELD>
+			<TEXTFIELD dw="8" title="NRS" w="40">NRS</TEXTFIELD>
+		</IMPORT>
+
+		<IMPORT autofield="ConsultantSegmentID" filetype="text" key="2" keyfield="ConsultantSegmentID" name="Consultants Segments" pos="bottom" procedure="insConsultantTransactions" table="ConsultantSegments">
+			<TEXTFIELD title="YearMonth" w="40">YearMonth</TEXTFIELD>
+			<TEXTFIELD title="City" w="40">City</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="SON" w="40">son</TEXTFIELD>
+			<TEXTFIELD title="PRD 1" w="40">prd1</TEXTFIELD>
+			<TEXTFIELD title="PRD 2" w="40">prd2</TEXTFIELD>
+			<TEXTFIELD title="PRD 3" w="40">prd3</TEXTFIELD>
+		</IMPORT>
+
+		<IMPORT autofield="MIDTSegmentID" filetype="excel" key="3" keyfield="MIDTSegmentID" name="Competition Segments" pos="bottom" procedure="insCompetitionTransactions" table="MIDTSegments">
+			<TEXTFIELD title="YearMonth" w="40">YearMonth</TEXTFIELD>
+			<TEXTFIELD title="CRS" w="40">CRS</TEXTFIELD>
+			<TEXTFIELD title="IATA No" w="40">IATANo</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency" w="40">Agency</TEXTFIELD>
+			<TEXTFIELD title="YTD Productivity" w="40">prd</TEXTFIELD>
+		</IMPORT>
+
+		<IMPORT autofield="dailySegmentid" filetype="text" gridfilter="true" key="1" keyfield="dailySegmentid" name="Daily Productivity" pos="bottom" procedure="insDailyTransactions" table="dailySegments">
+			<TEXTFIELD title="Prd Date" w="40">prddate</TEXTFIELD>
+			<TEXTFIELD title="City" w="40">city</TEXTFIELD>
+			<TEXTFIELD title="NDC" w="40">ndc</TEXTFIELD>
+			<TEXTFIELD title="Pcc" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Dailynetsegments" w="40">dailynetsegments</TEXTFIELD>
+			<TEXTFIELD title="Mtdnetsegments" w="40">mtdnetsegments</TEXTFIELD>
+			<TEXTFIELD title="Ytdnetsegments" w="40">ytdnetsegments</TEXTFIELD>
+			<TEXTFIELD title="Mtdactivebookssegments" w="40">mtdactivebookssegments</TEXTFIELD>
+			<TEXTFIELD title="Mtdactivecancelssegments" w="40">mtdactivecancelssegments</TEXTFIELD>
+			<TEXTFIELD title="Mtdpassivenetsegments" w="40">mtdpassivenetsegments</TEXTFIELD>
+			<TEXTFIELD title="Mtdpassivenetcoupons" w="40">mtdpassivenetcoupons</TEXTFIELD>
+			<TEXTFIELD title="Mtdothernetcoupons" w="40">mtdothernetcoupons</TEXTFIELD>
+			<TEXTFIELD title="Activecancels" w="40">activecancels</TEXTFIELD>
+			<TEXTFIELD title="Otherticketed" w="40">otherticketed</TEXTFIELD>
+		</IMPORT>
+
+	</DESK>
+
+	<DESK h="500" key="51" name="Incentives" splitloc="250" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="incentive_type_id" name="Incentive Types" pos="top" table="incentive_types">
+			<TEXTFIELD title="Incentive Type ID" w="40">incentive_type_id</TEXTFIELD>
+			<TEXTFIELD title="Incentive type Name" w="40">incentive_type_name</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="incentive_type_id" key="2" linkfield="incentive_type_id" linkkey="1" name="Incentive Types" pos="bottom" table="incentive_types">
+			<TEXTFIELD h="20" title="Incentive Type" w="430" x="10" y="10">incentive_type_name</TEXTFIELD>
+			<TEXTAREA h="70" title="Details" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+		<GRID key="3" keyfield="incentive_target_id" linkfield="incentive_type_id" linkkey="1" name="Incentive Targets" pos="top" table="incentive_targets">
+			<TEXTFIELD title="Market share" w="40">market_share</TEXTFIELD>
+			<TEXTFIELD title="Incentive Rate" w="40">incentive_rate</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="incentive_target_id" inputfield="incentive_type_id" inputkey="1" key="4" linkfield="incentive_target_id" linkkey="3" name="Incentive Targets" pos="bottom" table="incentive_targets">
+			<TEXTFIELD h="20" title="Market share" w="150" x="10" y="10">market_share</TEXTFIELD>
+			<TEXTDECIMAL h="20" title="Incentive Rate" w="150" x="290" y="10">incentive_rate</TEXTDECIMAL>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="590" key="52" name="Group Contracts" splitloc="250" splittype="vert" w="650">
+		<GRID gridfilter="true" key="1" keyfield="Clientgroupid" name="Client Groups" pos="top" table="ClientGroupView">
+			<TEXTFIELD title="Client Group ID" w="140">ClientGroupID</TEXTFIELD>
+			<TEXTFIELD title="Client Affiliate Name" w="140">ClientAffiliatename</TEXTFIELD>
+			<TEXTFIELD title="Client Group Name" w="240">Clientgroupname</TEXTFIELD>
+		</GRID>
+
+		<GRID key="2" keyfield="contract_id" linkfield="clientgroupid" linkkey="1" name="Contracts" pos="bottom" table="vw_contracts">
+			<TEXTFIELD title="Contract id" w="40">contract_id</TEXTFIELD>
+			<TEXTFIELD title="Incentive Type" w="40">incentive_type_name</TEXTFIELD>
+			<TEXTFIELD title="Client Group" w="40">clientgroupname</TEXTFIELD>
+			<TEXTFIELD title="After cost" w="40">after_cost</TEXTFIELD>
+			<TEXTFIELD title="Market share" w="40">market_share</TEXTFIELD>
+			<TEXTFIELD title="Business volume" w="40">business_volume</TEXTFIELD>
+			<TEXTFIELD title="Contract date" w="40">contract_date</TEXTFIELD>
+			<TEXTFIELD title="Contract end" w="40">contract_end</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="contract_id" inputfield="Clientgroupid" inputkey="1" key="3" linkfield="contract_id" linkkey="2" name="Add Contracts" pos="bottom" table="contracts">
+			<COMBOBOX h="20" lpfield="incentive_type_name" lptable="incentive_types" title="Incentive Type" w="430" x="10" y="10">incentive_type_id</COMBOBOX>
+			<CHECKBOX h="20" title="Signed" w="150" x="10" y="30">signed</CHECKBOX>
+			<CHECKBOX h="20" title="After cost" w="150" x="290" y="30">after_cost</CHECKBOX>
+			<TEXTDECIMAL h="20" title="Market share" w="150" x="10" y="50">market_share</TEXTDECIMAL>
+			<TEXTFIELD h="20" title="Business volume" w="150" x="290" y="50">business_volume</TEXTFIELD>
+			<TEXTDATE h="20" title="Contract date" w="150" x="10" y="70">contract_date</TEXTDATE>
+			<TEXTDATE h="20" title="Contract end" w="150" x="290" y="70">contract_end</TEXTDATE>
+			<TEXTFIELD h="20" title="Bank name" w="150" x="10" y="90">bank_name</TEXTFIELD>
+			<TEXTFIELD h="20" title="Bank branch" w="150" x="290" y="90">bank_branch</TEXTFIELD>
+			<TEXTFIELD h="20" title="Swift code" w="150" x="10" y="110">swift_code</TEXTFIELD>
+			<TEXTFIELD h="20" title="Account name" w="150" x="10" y="130">account_name</TEXTFIELD>
+			<TEXTFIELD h="20" title="Account no" w="150" x="290" y="130">account_no</TEXTFIELD>
+			<TEXTFIELD h="20" title="Payment frequecy" w="150" x="10" y="150">payment_frequecy</TEXTFIELD>
+			<TEXTFIELD h="20" title="Competition Cost" w="150" x="290" y="150">competition_cost</TEXTFIELD>
+			<TEXTAREA h="70" title="Details" w="430" x="10" y="170">details</TEXTAREA>
+		</FORM>
+
+		<REPORT filtered="true" jasperfile="contracts.jasper" linkkey="2" name="Contracts" pos="bottom"></REPORT>
+		<GRID key="7" keyfield="incentive_payment_id" linkfield="contract_id" linkkey="2" name="Incentive Payments" pos="top" table="incentive_payments">
+			<TEXTFIELD title="Incentive payment id" w="40">incentive_payment_id</TEXTFIELD>
+			<TEXTFIELD title="Year" w="40">pay_year</TEXTFIELD>
+			<TEXTFIELD title="Quarter" w="40">pay_quarter</TEXTFIELD>
+			<TEXTFIELD title="Reference" w="40">payment_reference</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="incentive_payment_id" inputfield="contract_id" inputkey="2" key="8" linkfield="incentive_payment_id" linkkey="7" name="Incentive payments" pos="bottom" table="incentive_payments">
+			<TEXTFIELD h="20" title="Year" w="150" x="10" y="10">pay_year</TEXTFIELD>
+			<TEXTFIELD h="20" title="Quarter" w="150" x="290" y="10">pay_quarter</TEXTFIELD>
+			<TEXTDATE h="20" title="Payment date" w="150" x="10" y="30">payment_date</TEXTDATE>
+			<TEXTFIELD h="20" title="Reference" w="150" x="10" y="50">payment_reference</TEXTFIELD>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="590" key="53" name="Client Contracts" splitloc="250" splittype="vert" w="650">
+		<GRID gridfilter="true" key="4" keyfield="Clientid" name="Clients" ordersql="clientname" pos="top" table="ClientView">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="IATA NO" w="40">iatano</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="Town" w="40">town</TEXTFIELD>
+			<TEXTFIELD title="Division" w="40">division</TEXTFIELD>
+			<TEXTFIELD title="Tel no" w="40">telno</TEXTFIELD>
+		</GRID>
+
+		<GRID key="5" keyfield="contract_id" linkfield="clientid" linkkey="4" name="Contracts" pos="bottom" table="vw_contracts">
+			<TEXTFIELD title="Contract ID" w="40">contract_id</TEXTFIELD>
+			<TEXTFIELD title="Incentive Type" w="40">incentive_type_name</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="40">clientname</TEXTFIELD>
+			<TEXTFIELD title="After cost" w="40">after_cost</TEXTFIELD>
+			<TEXTFIELD title="Market share" w="40">market_share</TEXTFIELD>
+			<TEXTFIELD title="Business volume" w="40">business_volume</TEXTFIELD>
+			<TEXTFIELD title="Contract date" w="40">contract_date</TEXTFIELD>
+			<TEXTFIELD title="Contract end" w="40">contract_end</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="contract_id" inputfield="Clientid" inputkey="4" key="6" linkfield="contract_id" linkkey="5" name="Add Contracts" pos="bottom" table="contracts">
+			<COMBOBOX h="20" lpfield="incentive_type_name" lptable="incentive_types" title="Incentive Type" w="430" x="10" y="10">incentive_type_id</COMBOBOX>
+			<CHECKBOX h="20" title="Signed" w="150" x="10" y="30">signed</CHECKBOX>
+			<CHECKBOX h="20" title="After cost" w="150" x="290" y="30">after_cost</CHECKBOX>
+			<TEXTDECIMAL h="20" title="Market share" w="150" x="10" y="50">market_share</TEXTDECIMAL>
+			<TEXTFIELD h="20" title="Business volume" w="150" x="290" y="50">business_volume</TEXTFIELD>
+			<TEXTDATE h="20" title="Contract date" w="150" x="10" y="70">contract_date</TEXTDATE>
+			<TEXTDATE h="20" title="Contract end" w="150" x="290" y="70">contract_end</TEXTDATE>
+			<TEXTFIELD h="20" title="Bank name" w="150" x="10" y="90">bank_name</TEXTFIELD>
+			<TEXTFIELD h="20" title="Bank branch" w="150" x="290" y="90">bank_branch</TEXTFIELD>
+			<TEXTFIELD h="20" title="Swift code" w="150" x="10" y="110">swift_code</TEXTFIELD>
+			<TEXTFIELD h="20" title="Account name" w="150" x="10" y="130">account_name</TEXTFIELD>
+			<TEXTFIELD h="20" title="Account no" w="150" x="290" y="130">account_no</TEXTFIELD>
+			<TEXTFIELD h="20" title="Payment frequecy" w="150" x="10" y="150">payment_frequecy</TEXTFIELD>
+			<TEXTFIELD h="20" title="Competition Cost" w="150" x="290" y="150">competition_cost</TEXTFIELD>
+			<TEXTAREA h="70" title="Details" w="430" x="10" y="170">details</TEXTAREA>
+		</FORM>
+
+		<REPORT filtered="true" jasperfile="contracts.jasper" linkkey="5" name="Contracts" pos="bottom"></REPORT>
+		<GRID key="7" keyfield="incentive_payment_id" linkfield="contract_id" linkkey="5" name="Incentive Payments" pos="top" table="incentive_payments">
+			<TEXTFIELD title="Incentive payment id" w="40">incentive_payment_id</TEXTFIELD>
+			<TEXTFIELD title="Year" w="40">pay_year</TEXTFIELD>
+			<TEXTFIELD title="Quarter" w="40">pay_quarter</TEXTFIELD>
+			<TEXTFIELD title="Reference" w="40">payment_reference</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="incentive_payment_id" inputfield="contract_id" inputkey="5" key="8" linkfield="incentive_payment_id" linkkey="7" name="Incentive payments" pos="bottom" table="incentive_payments">
+			<TEXTFIELD h="20" title="Year" w="150" x="10" y="10">pay_year</TEXTFIELD>
+			<TEXTFIELD h="20" title="Quarter" w="150" x="290" y="10">pay_quarter</TEXTFIELD>
+			<TEXTDATE h="20" title="Payment date" w="150" x="10" y="30">payment_date</TEXTDATE>
+			<TEXTFIELD h="20" title="Reference" w="150" x="10" y="50">payment_reference</TEXTFIELD>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="111" name="Users List" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="users.jasper" name="Users" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="112" name="Client Full List" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="clients.jasper" name="Clients" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="consultants.jasper" name="Consultants" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="clientaddressb.jasper" name="PCC List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="139" name="Client List" splitloc="120" splittype="vert" w="700">
+		<FILTER key="1" name="Clients Filter" pos="top">
+			<TEXTFIELD h="20" title="Name" w="150" x="10" y="10">clientname</TEXTFIELD>
+			<TEXTFIELD h="20" title="Town" w="150" x="10" y="30">town</TEXTFIELD>
+			<COMBOBOX editable="true" h="20" lpfield="fullname" lptable="users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="290" y="30">fullname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientgroupName" lptable="Clientgroups" title="Client Group" w="150" x="10" y="50">clientgroupname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientSystemName" lptable="ClientSystems" title="Client System" w="150" x="290" y="50">clientsystemname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientlinkName" lptable="Clientlinks" title="Client Link" w="150" x="10" y="70">clientlinkname</COMBOBOX>
+		</FILTER>
+
+		<REPORT filtered="true" filterkey="1" jasperfile="clientsa.jasper" key="2" name="Clients" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="113" name="Client System" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="clientsystemid" listfield="clientsystemname" name="System Types" pos="top" table="clientsystems"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientsystem.jasper" name="Client System" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="114" name="Client Link" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="clientlinkid" listfield="clientlinkname" name="Link Types" pos="top" table="clientlinks"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientlink.jasper" name="Client Link" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="115" name="Client Affiliate" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="ClientAffiliateid" listfield="ClientAffiliateName" name="Affiliate" pos="top" table="ClientAffiliates">
+			<DRILLDOWN keyfield="ClientGroupid" listfield="ClientGroupName" name="Groups" pos="top" table="ClientGroups" wherefield="ClientAffiliateid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="clientgroups.jasper" name="Client Groups" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="116" name="Client Managers" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="userid" listfield="fullname" name="Account Managers" pos="top" table="users" wheresql="(AccountManager = true) and (IsActive = true)"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientmanager.jasper" name="Client Managers" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="126" name="Client Town" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="town" listfield="town" name="Towns" pos="top" table="ClientTownView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clienttown.jasper" name="Client Town" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="127" name="Client Address" splitloc="70" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientaddress.jasper" name="Client Town" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="117" name="Classification" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="pclassifications.jasper" name="Classification" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="ptypeview.jasper" name="Types" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="pdefinitionview.jasper" name="Defination" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="128" name="Task List" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="pdefinestage.jasper" name="Task Defination" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="130" name="Task Classification" splitloc="120" splittype="horl" w="700">
+		<DRILLDOWN keyfield="pclassificationid" listfield="pclassificationname" name="Classifications" pos="top" table="pclassifications"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="pdefinestagea.jasper" name="Task Defination" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="131" name="Task Types" splitloc="120" splittype="horl" w="700">
+		<DRILLDOWN keyfield="pclassificationid" listfield="pclassificationname" name="Types" pos="top" table="pclassifications">
+			<DRILLDOWN keyfield="PTypeid" listfield="PTypename" name="Types" pos="top" table="PTypes" wherefield="pclassificationid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="pdefinestageb.jasper" name="Task Defination" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="132" name="Task Defination" splitloc="120" splittype="horl" w="700">
+		<DRILLDOWN keyfield="pclassificationid" listfield="pclassificationname" name="Defination" pos="top" table="pclassifications">
+			<DRILLDOWN keyfield="PTypeid" listfield="PTypename" name="Defination" pos="top" table="PTypes" wherefield="pclassificationid">
+				<DRILLDOWN keyfield="PDefinitionid" listfield="PDefinitionname" name="Defination" pos="top" table="PDefinitions" wherefield="PTypeid"></DRILLDOWN>
+			</DRILLDOWN>
+
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="pdefinestagec.jasper" name="Task Defination" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="133" name="Helpdesk levels" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="plevels.jasper" name="Helpdesk levels" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="134" name="Open Calls" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="problemlogg.jasper" name="Open Calls" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="problemlogb.jasper" name="Open Calls - Details" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="700" key="136" name="Client Calls" splitloc="250" splittype="vert" w="700">
+		<GRID filtername="clientid" gridfilter="true" key="1" keyfield="Clientid" name="Clients" ordersql="clientname" pos="top" table="ClientView">
+			<TEXTFIELD title="ID" w="40">Clientid</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Client Name" w="140">Clientname</TEXTFIELD>
+			<TEXTFIELD title="Town" w="40">town</TEXTFIELD>
+			<TEXTFIELD title="Division" w="40">division</TEXTFIELD>
+			<TEXTFIELD title="Account Manager" w="40">fullname</TEXTFIELD>
+		</GRID>
+
+		<REPORT filtered="true" jasperfile="problemlogf.jasper" key="2" linkfield="clientid" linkkey="1" name="Client Calls" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="problemlogfa.jasper" key="3" linkfield="clientid" linkkey="1" name="Client Calls - Details" pos="bottom"></REPORT>
+		<GRID filtername="problemlogid" gridfilter="true" key="4" keyfield="problemlogid" linkfield="clientid" linkkey="1" name="Open Calls" pos="top" table="ProblemLogView">
+			<TEXTFIELD title="Problem Log ID" w="20">problemlogid</TEXTFIELD>
+			<TEXTFIELD title="Classification" w="40">PClassificationName</TEXTFIELD>
+			<TEXTFIELD title="Type" w="40">PTypeName</TEXTFIELD>
+			<TEXTFIELD title="Definition" w="40">PDefinitionName</TEXTFIELD>
+			<TEXTFIELD title="Level" w="40">PLevelName</TEXTFIELD>
+			<TEXTFIELD title="Description" w="140">description</TEXTFIELD>
+			<TEXTFIELD title="Recoded Time" w="40">recodedtime</TEXTFIELD>
+		</GRID>
+
+		<REPORT filtered="true" jasperfile="problemlogd.jasper" key="7" linkkey="4" name="Helpdesk Calls" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="700" key="137" name="Filtered Calls" splitloc="150" splittype="vert" w="700">
+		<FILTER key="14" name="Filter" pos="top">
+			<TEXTDATE h="20" title="Starting" w="150" x="10" y="10">startdate</TEXTDATE>
+			<TEXTDATE h="20" title="Ending" w="150" x="290" y="10">enddate</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="problemlogc.jasper" name="Calls By Opening Date" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="problemlogca.jasper" name="Calls By Closing date" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="problemlogcd.jasper" name="Service List" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="callscount.jasper" name="Opening Calls Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="callscounta.jasper" name="Closing Calls Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="callscountb.jasper" name="Opening Calls Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="callscountc.jasper" name="Closing Calls Count" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="151" name="Forwarded" splitloc="150" splittype="vert" w="700">
+		<FILTER key="14" name="Filter" pos="top">
+			<TEXTDATE h="20" title="Starting" w="150" x="10" y="10">startdate</TEXTDATE>
+			<TEXTDATE h="20" title="Ending" w="150" x="290" y="10">enddate</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="false" jasperfile="problemforwardviewb.jasper" name="Forwarded - Personal" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="problemforwardviewc.jasper" name="Forwarded - Group" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="problemforwardview.jasper" name="Forwarded - Details" pos="bottom">
+			<REPORT filtered="true" jasperfile="forwardedview.jasper" name="Forwarded" pos="bottom"></REPORT>
+		</REPORT>
+
+		<REPORT filtered="true" jasperfile="problemforwardviewbc.jasper" name="Forwarded - Closed" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="135" name="Closed Calls" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="problemlogh.jasper" name="Closed Calls" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="problemloga.jasper" name="Closed Calls - Details" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="535" name="Classified Closed Calls" splitloc="120" splittype="horl" w="700">
+		<DRILLDOWN keyfield="pclassificationid" listfield="pclassificationname" name="Classifications" pos="top" table="pclassifications"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="problemlogi.jasper" name="Closed Calls" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="580" key="154" name="Field Support" splitloc="180" splittype="vert" w="700">
+		<FILTER key="1" name="Filter" pos="top">
+			<COMBOBOX editable="true" h="20" lpfield="fullname" lptable="users" title="Account Manager" w="150" wheresql="(AccountManager = true) and (IsActive = true)" x="10" y="2">fullname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientName" lptable="ClientView" title="Client" w="150" x="290" y="2">clientname</COMBOBOX>
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="24">startdate</TEXTDATE>
+			<TEXTDATE h="20" title="End Date" w="150" x="290" y="24">enddate</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="staffvisitcount.jasper" key="2" linkkey="1" name="Staff Visit Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientvisitcount.jasper" key="3" linkkey="1" name="Client Visit Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="fieldsupportview.jasper" key="4" linkkey="1" name="Field Support - By Date" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="fieldsupportviewa.jasper" key="5" linkkey="1" name="Field Support - By Client" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="fieldsupportviewb.jasper" key="6" linkkey="1" name="Field Support - Details" pos="bottom">
+			<REPORT filtered="true" jasperfile="fieldsupport.jasper" linkkey="1" name="Field Support" pos="bottom"></REPORT>
+		</REPORT>
+
+	</DESK>
+
+	<DESK h="500" key="430" name="Field Report Actions" splittype="horl" w="700">
+		<REPORT jasperfile="fieldsupportviewc.jasper" key="1" name="Field Support - Details" pos="bottom">
+			<REPORT filtered="true" jasperfile="fieldsupport.jasper" linkkey="1" name="Field Support" pos="bottom"></REPORT>
+		</REPORT>
+
+	</DESK>
+
+	<DESK h="500" key="155" name="Transport" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="transportview.jasper" name="Transport" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="580" key="410" name="Work Schedule" splitloc="180" splittype="vert" w="700">
+		<FILTER key="1" name="Filter" pos="top">
+			<COMBOBOX editable="true" h="20" lpfield="fullname" lptable="UserView" title="Users" w="150" x="10" y="2">fullname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="worktypename" lptable="worktypes" title="Work Type" w="150" x="290" y="2">worktypename</COMBOBOX>
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="24">startdate</TEXTDATE>
+			<TEXTDATE h="20" title="End Date" w="150" x="290" y="24">enddate</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="staffschedulecount.jasper" key="2" linkkey="1" name="Staff Schedule Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="workschedulecount.jasper" key="3" linkkey="1" name="Work Schedule Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="workscheduleview.jasper" key="4" linkkey="1" name="Work Schedule - By Date" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="workscheduleviewa.jasper" key="5" linkkey="1" name="Work Schedule - By Staff" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="workscheduleviewb.jasper" key="6" linkkey="1" name="Work Schedule - Details" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="121" name="Client Quarter Statement" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<DRILLDOWN filtername="yearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarterid" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatement.jasper" name="Client Statement" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementa.jasper" name="Client Statement" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementb.jasper" name="Client Invoice" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="122" name="Client Statement" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<DRILLDOWN filtername="yearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatemente.jasper" name="Client Statement - Internal" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementea.jasper" name="Client Statement - Client" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementc.jasper" name="Client Statement" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="124" name="Client Actual Statement" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<DRILLDOWN filtername="yearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatementcd.jasper" name="Client Statement" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="305" name="Group Statement" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="clientGroupid" listfield="clientGroupName" name="Group" pos="top" table="ClientGroupview"></DRILLDOWN>
+		<DRILLDOWN filtername="yearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatementf.jasper" name="Group Statement - Internal" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementfa.jasper" name="Group Statement - Client" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementg.jasper" name="Group Statement" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="123" name="Client Monthly Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="clientcost.jasper" name="Client Monthly Summaries" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="200" name="Client Quarter Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarterid" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientquarterview.jasper" name="Client Quarter Summaries" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="201" name="Client Semister Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="semisterid" keyfield="semister" listfield="semister" name="Semister" pos="top" table="PeriodSemisterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientsemisterview.jasper" name="Client Semister Summaries" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="202" name="Client Year Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientyearview.jasper" name="Client Year Summaries" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="203" name="Group Monthly Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="groupcost.jasper" name="Group Monthly Summaries" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="agency_incentives.jasper" name="Agency Monthly Incentives" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="204" name="Group Quarter Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarterid" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="groupquarterview.jasper" name="Group Quarter Summaries" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="205" name="Group Semister Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="semisterid" keyfield="semister" listfield="semister" name="Semister" pos="top" table="PeriodSemisterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="groupsemisterview.jasper" name="Group Semister Summaries" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="206" name="Group Year Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="groupyearviewa.jasper" name="Ordered By Productivity" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="groupyearviewb.jasper" name="Ordered By % Variance" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="groupyearview.jasper" name="Ordered By Variance" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="207" name="Group Range Summary" splitloc="120" splittype="vert" w="700">
+		<FILTER key="1" name="Clients Filter" pos="top">
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="10">startrange</TEXTDATE>
+			<TEXTDATE h="20" title="End Date" w="150" x="290" y="10">endrange</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="grouprangeview.jasper" name="Group Range Summary" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="125" name="Productivity Analysis" splitloc="120" splittype="vert" w="700">
+		<FILTER key="1" name="Filter" pos="top">
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="10">startrange</TEXTDATE>
+			<TEXTDATE h="20" title="End Date" w="150" x="290" y="10">endrange</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="productivityaccmanagers.jasper" name="Account Managers" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="productivitygroups.jasper" name="Agency Groups" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="310" name="Unpicked Segments" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="unpickedsegs.jasper" key="1" name="Unpicked Segments" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="competitionunpicked.jasper" key="2" name="Competions Unpicked Segments" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="300" name="Services Defination" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="assetsubtypeview.jasper" name="Services Defination" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="301" name="Services List" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="servicelist.jasper" name="Services List" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="serviceavail.jasper" name="Services Available" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="servicedupl.jasper" name="Services Duplicate" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="serviceduplsn.jasper" name="Services Duplicate Serial No" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="119" name="Client Services Count" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="equipmentcost.jasper" name="Services Count" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="equipmentcosta.jasper" name="Group Services Count" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="481" name="Client Services List" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="equipmentlista.jasper" name="Current Services List" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="equipmentlistb.jasper" name="Leased Services List" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="equipmentlist.jasper" name="Services List" pos="bottom"></REPORT>
+		<REPORT filtered="false" jasperfile="equipmentlistc.jasper" name="Services Export List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="120" name="Client Services" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="clientequipmentcost.jasper" name="Services Count" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientequipmenta.jasper" name="Current Services List" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientequipment.jasper" name="Services List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="141" name="Services Summary" splitloc="0" splittype="horl" w="700">
+		<REPORT jasperfile="equipmentsummary.jasper" name="Services Summary" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="303" name="Full Client Services List" splitloc="90" splittype="vert" w="700">
+		<FILTER key="1" name="Filter" pos="top">
+			<COMBOBOX editable="true" h="20" lpfield="AssetTypename" lptable="assettypes" title="Service" w="150" x="10" y="2">assettypename</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="ClientName" lptable="ClientView" title="Client" w="150" x="290" y="2">clientname</COMBOBOX>
+			<COMBOBOX editable="true" h="20" lpfield="AssetsubTypename" lptable="assetsubtypes" title="Service Type" w="150" x="10" y="22">assetsubtypename</COMBOBOX>
+			<TEXTFIELD editable="true" h="20" title="Serial Number" w="150" x="290" y="22">assetsn</TEXTFIELD>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="servicefulllist.jasper" name="Full Client Services List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="304" name="Selected Services List" splitloc="120" splittype="vert" w="700">
+		<FILTER key="1" name="Filter" pos="top">
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="10">startdate</TEXTDATE>
+			<TEXTDATE h="20" title="End Date" w="150" x="290" y="10">enddate</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="serviceissuedlist.jasper" name="Service Issued" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="serviceretrivedlist.jasper" name="Service Retrived" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="servicewarrantylist.jasper" name="Service Warranty" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="servicepurchaselist.jasper" name="Service Purchases" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="156" name="Training" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="consultanttrainingview.jasper" name="Training" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="407" name="Affiliate Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="ClientAffiliateID" listfield="ClientAffiliateName" name="Affiliates" pos="top" table="ClientAffiliates"></DRILLDOWN>
+		<DRILLDOWN filtername="AccountPeriod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatementgbb.jasper" name="Affiliate Statement" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementgb.jasper" name="Affiliate Incentice Calculations" pos="bottom">
+			<REPORT filtered="true" jasperfile="targersa.jasper" name="Target" pos="bottom"></REPORT>
+		</REPORT>
+
+	</DESK>
+
+	<DESK h="500" key="405" name="Group Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="clientGroupid" listfield="clientGroupName" name="Group" pos="top" table="ClientGroupview"></DRILLDOWN>
+		<DRILLDOWN filtername="AccountPeriod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatementgj.jasper" name="Group Incentives" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementga.jasper" name="Group Incentives Calculation" pos="bottom">
+			<REPORT filtered="true" jasperfile="targers.jasper" name="Target" pos="bottom"></REPORT>
+		</REPORT>
+
+	</DESK>
+
+	<DESK h="500" key="404" name="Client Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<DRILLDOWN filtername="AccountPeriod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientincentives.jasper" name="Client Incentives Statement" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="409" name="Combined Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="allincentives.jasper" name="Combined Incentives Statement" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="450" name="Quarter Group Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="clientGroupid" listfield="clientGroupName" name="Group" pos="top" table="ClientGroupview"></DRILLDOWN>
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarterid" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatementgcc.jasper" name="Group Incentives" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementgc.jasper" name="Group Incentives Calculation" pos="bottom">
+			<REPORT filtered="true" jasperfile="targersb.jasper" name="Target" pos="bottom"></REPORT>
+		</REPORT>
+
+	</DESK>
+
+	<DESK h="500" key="451" name="Quarter Affiliate Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="ClientAffiliateID" listfield="ClientAffiliateName" name="Affiliates" pos="top" table="ClientAffiliates"></DRILLDOWN>
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarterid" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatementgdd.jasper" name="Affiliate Statement " pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientstatementgd.jasper" name="Affiliate Incentive Calulations" pos="bottom">
+			<REPORT filtered="true" jasperfile="targersc.jasper" name="Target" pos="bottom"></REPORT>
+		</REPORT>
+
+	</DESK>
+
+	<DESK h="500" key="452" name="Quarter Client Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarterid" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientincentivesa.jasper" name="Client Incentives Statement" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="453" name="Quarter Combined Incentive Report" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarterid" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="allqincentives.jasper" name="Combined Incentives Statement" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="421" name="Total Productivity Grid" splitloc="0" splittype="horl" w="700">
+		<REPORT filtered="false" jasperfile="totalproductivityviewa.jasper" name="Total Productivity Grid" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="422" name="Client Totals" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="accountperiod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientaccyearview.jasper" name="Client KQ Year List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="440" name="MIDT Summary" splittype="horl" w="700">
+		<REPORT jasperfile="competitiontrend.jasper" key="1" name="MIDT Summary" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="420" name="Account Manager Targets" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="accountperiod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<DRILLDOWN filtername="prevaccountperiod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Next Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientaccyearviewa.jasper" name="Client AP Year List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="460" name="Account Manager Targets by Manager" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="accountperiod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<DRILLDOWN filtername="prevaccountperiod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Next Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<DRILLDOWN keyfield="userid" listfield="fullname" name="Account Managers" pos="top" table="users" wheresql="(AccountManager = true) and (IsActive = true)"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientaccyearviewb.jasper" name="Client AP Year List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="461" name="Account Manager Targets by system" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="accountperiod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<DRILLDOWN filtername="prevaccountperiod" keyfield="AccountPeriod" listfield="AccountPeriod" name="Next Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientaccyearviewc.jasper" name="Client AP Year List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="471" name="Mothly Account Manager Targets" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="totalmanagersegs.jasper" name="Total Target" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="472" name="Quarterly Account Manager Targets" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="periodyear" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<DRILLDOWN filtername="quarter" keyfield="quarter" listfield="quarter" name="Quarter" pos="top" table="PeriodQuarterView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="totalmanagersegsa.jasper" name="Total Target" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="473" name="Year Account Manager Targets" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="totalmanagersegsb.jasper" name="Total Target" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="474" name="Account Period Manager Targets" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN filtername="filterid" keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="totalmanagersegsc.jasper" name="Total Target" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="580" name="Daily Summary" splitloc="150" splittype="horl" w="700">
+		<GRID gridfilter="true" key="1" keyfield="prddate" name="Days List" ordersql="prddate desc" pos="top" table="daylistview">
+			<TEXTFIELD title="Date" w="40">prddate</TEXTFIELD>
+		</GRID>
+
+		<REPORT filtered="true" jasperfile="dailytransactionviewa.jasper" key="3" linkfield="prddate" linkkey="1" name="Daily Summary" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="dailytransactionview.jasper" key="2" linkfield="prddate" linkkey="1" name="Daily List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="581" name="Daily Client Summary" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="dailytransactionviewb.jasper" name="Daily Report" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="582" name="Client Competition" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="clientcompetition.jasper" name="Competition Report" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="clientcompetitiona.jasper" name="Competition Summary" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="583" name="Daily Productivity Summary" splitloc="120" splittype="vert" w="700">
+		<FILTER key="1" name="Clients Filter" pos="top">
+			<TEXTDATE h="20" title="Start Date" w="150" x="10" y="10">startdate</TEXTDATE>
+			<TEXTDATE h="20" title="End Date" w="150" x="290" y="10">enddate</TEXTDATE>
+		</FILTER>
+
+		<REPORT filtered="true" jasperfile="mtdsegs.jasper" key="2" name="Daily Productivity Summary" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="584" name="Duplicate IATA NO." splitloc="0" splittype="horl" w="700">
+		<REPORT jasperfile="duplicateiatano.jasper" name="Duplicate IATA NO." pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="587" name="MIDT Transactions" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="midttransactionsa.jasper" name="MIDT Summary" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="midttransactions.jasper" name="MIDT Report" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="midttransactionsb.jasper" name="Non Galileo MIDT Report" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="588" name="MIDT Matrix" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="vwmidttransactions.jasper" name="MIDT Matrix" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="vwmidtransactionsa.jasper" name="MIDT Quarter Matrix" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="vwmidtransactionsb.jasper" name="MIDT Year Matrix" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="589" name="MIDT Analysis" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="midtanalysis.jasper" name="MIDT Analysis" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="592" name="Market Share Matrix" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="vwmarketshare.jasper" name="MIDT Year Matrix" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="594" name="Asset Disposal List" splitloc="120" splittype="horl" w="700">
+		<DRILLDOWN keyfield="assettypeid" listfield="assettypename" name="Asset Types" pos="top" table="assettypes">
+			<DRILLDOWN keyfield="assetsubtypeid" listfield="assetsubtypename" name="Asset Subtypes" pos="top" table="assetsubtypes" wherefield="assettypeid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="asset_disposal.jasper" name="Asset Disposal List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="595" name="Client Periodic Services" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="aid" listfield="aid" name="Clients" pos="top" table="ClientAList">
+			<DRILLDOWN keyfield="clientid" listfield="clientname" name="Clients" pos="top" table="Clientview" wherefield="aid"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<DRILLDOWN filtername="periodid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN filtername="periodid" keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="vw_assets_costinga.jasper" name="Period Services Costing" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="vw_assets_costing.jasper" name="Period Services Costing Addition" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="vw_assets_changes.jasper" name="Period Services Changes" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="596" name="Full Client Services" splitloc="0" splittype="horl" w="700">
+		<REPORT jasperfile="clientequipmentf.jasper" name="Services List" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="597" name="IATA Clients" splitloc="0" splittype="horl" w="700">
+		<REPORT jasperfile="clients_niata.jasper" name="Non IATA Clients" pos="bottom"></REPORT>
+		<REPORT jasperfile="clients_iata.jasper" name="IATA Clients" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="712" name="Market Share Analysis" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="AccountPeriod" listfield="AccountPeriod" name="Account Period" pos="top" table="AccountPeriodView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="vw_midt_summarya.jasper" name="Market Share Analysis" pos="bottom"></REPORT>
+		<REPORT jasperfile="vw_midt_summary.jasper" name="Full Market Share Analysis" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="714" name="Group Monthly Summaries" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView">
+			<DRILLDOWN keyfield="PeriodID" listfield="PeriodMonth" name="Month" pos="top" sortfield="monthid" table="PeriodView" wherefield="PeriodYear"></DRILLDOWN>
+		</DRILLDOWN>
+
+		<REPORT filtered="true" jasperfile="groupyearviewa_s.jasper" name="Ordered By Productivity" pos="bottom"></REPORT>
+		<REPORT filtered="true" jasperfile="groupyearviewa_a.jasper" name="Grouped by account manager" pos="bottom"></REPORT>
+	</DESK>
+
+	<DESK h="500" key="715" name="Group Actual Statement" splitloc="150" splittype="horl" w="700">
+		<DRILLDOWN keyfield="clientGroupid" listfield="clientGroupName" name="Group" pos="top" table="ClientGroupview"></DRILLDOWN>
+		<DRILLDOWN filtername="yearid" keyfield="PeriodYear" listfield="PeriodYear" name="Year" pos="top" table="PeriodYearView"></DRILLDOWN>
+		<REPORT filtered="true" jasperfile="clientstatementge.jasper" name="Group Statement" pos="bottom"></REPORT>
+	</DESK>
+
+</APP>
+
