@@ -80,8 +80,10 @@ INSERT INTO configuration (name, value, jclass) VALUES ('memberfee', '5000', 'de
 
 CREATE OR REPLACE FUNCTION insMembership(varchar(89)) RETURNS varchar(120) AS $$
 DECLARE
-	reca RECORD;
-	recb RECORD;
+	v_amount	real;
+	v_tax		real;
+	reca 		RECORD;
+	recb		RECORD;
 BEGIN
 	SELECT value INTO reca 
 	FROM configuration WHERE name = 'memberfee';
@@ -89,9 +91,12 @@ BEGIN
 	FROM client WHERE roid = $1;
 
 	INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
+	
+	v_amount := CAST(reca.value as real);
+	v_tax := v_amount * 0.16;
 
-	INSERT INTO ledger (client_roid, description, currency, tax, tax_label, total, trans_type, tld, processor_account_history_id, refund_expiry, refund_grace, refund_amount, exdate, previous_expiry_date)
-	VALUES ($1, 'Membership Fee', 'KES', 16, 'VAT', CAST(reca.value as real), 'Application', 'ke', '2', now(), now(), 0, recb.exdate, recb.billingdate);
+	INSERT INTO ledger (client_roid, description, currency, tax, tax_label, tax_content, tax_inclusive, amount, total, trans_type, tld, processor_account_history_id, refund_expiry, refund_grace, refund_amount, exdate, previous_expiry_date)
+	VALUES ($1, 'Membership Fee', 'KES', 16, 'VAT', v_tax, true, v_amount, v_amount, 'Application', 'ke', '2', now(), now(), 0, recb.exdate, recb.billingdate);
 
 	UPDATE client SET billingdate = billingdate + CAST('1 year' as interval), emailed[1] = false WHERE roid = $1;
 
@@ -190,6 +195,7 @@ DECLARE
 	recb		RECORD;
 	docno 		int;
 	cr_amount	numeric(8,2);
+	cr_tax		numeric(8,2);
 BEGIN
 	IF(TG_OP = 'INSERT') THEN		
 		IF((NEW.trans_type = 'Renewal') OR (NEW.trans_type = 'Registration') OR (NEW.trans_type = 'Application') OR (NEW.trans_type = 'Training')) THEN
@@ -213,8 +219,9 @@ BEGIN
 			INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
 			
 			cr_amount := ((-1)*NEW.total);
+			cr_tax := cr_amount * 0.16;
 			INSERT INTO ledger (client_roid, description, currency, amount, total, tax_content, tax_inclusive, trans_type, tld, processor_account_history_id, domain_roid, domain_name, refund_for_id, tax, tax_label)
-			VALUES (NEW.client_roid, 'Refund on domain renewal', 'KES', cr_amount, cr_amount, 0, true, 'Refund', 'ke', '2', NEW.domain_roid, NEW.domain_name, NEW.id, '16.0', 'VAT');
+			VALUES (NEW.client_roid, 'Refund on domain renewal', 'KES', cr_amount, cr_amount, cr_tax, true, 'Refund', 'ke', '2', NEW.domain_roid, NEW.domain_name, NEW.id, '16.0', 'VAT');
 
 			UPDATE domain SET exdate = NEW.previous_expiry_date WHERE name = NEW.domain_name;
 		END IF;

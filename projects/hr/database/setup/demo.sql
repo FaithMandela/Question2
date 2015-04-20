@@ -698,6 +698,35 @@ $_$;
 ALTER FUNCTION public.default_currency(character varying) OWNER TO root;
 
 --
+-- Name: del_period(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION del_period(integer) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE
+	msg 		varchar(120);
+BEGIN
+	DELETE FROM loan_monthly WHERE period_id = $1;
+	
+	DELETE FROM employee_adjustments WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
+	DELETE FROM employee_tax_types WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
+	DELETE FROM period_tax_rates WHERE (period_tax_type_id IN (SELECT period_tax_type_id FROM period_tax_types WHERE period_id = $1));
+	DELETE FROM period_tax_types WHERE period_id = $1;
+
+	DELETE FROM employee_month WHERE period_id = $1;
+	DELETE FROM periods WHERE period_id = $1;
+
+	msg := 'Period Deleted';
+
+	return msg;
+END;
+$_$;
+
+
+ALTER FUNCTION public.del_period(integer) OWNER TO postgres;
+
+--
 -- Name: emailed(integer, character varying); Type: FUNCTION; Schema: public; Owner: root
 --
 
@@ -978,26 +1007,29 @@ CREATE FUNCTION get_employee_tax(integer, integer) RETURNS double precision
     LANGUAGE plpgsql
     AS $_$
 DECLARE
-	v_employee_month_id		integer;
+	v_employee_month_id			integer;
 	v_period_tax_type_id		integer;
-	v_income				float;
-	v_tax					float;
+	v_exchange_rate				real;
+	v_income					real;
+	v_tax						real;
 BEGIN
 
-	SELECT employee_tax_types.employee_month_id, period_tax_types.period_tax_type_id
-		INTO v_employee_month_id, v_period_tax_type_id
+	SELECT employee_tax_types.employee_month_id, period_tax_types.period_tax_type_id, employee_tax_types.exchange_rate
+		INTO v_employee_month_id, v_period_tax_type_id, v_exchange_rate
 	FROM employee_tax_types INNER JOIN employee_month ON employee_tax_types.employee_month_id = employee_month.employee_month_id
 		INNER JOIN period_tax_types ON (employee_month.period_id = period_tax_types.period_id)
 			AND (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
 	WHERE (employee_tax_types.employee_tax_type_id	= $1);
+	
+	IF(v_exchange_rate = 0) THEN v_exchange_rate := 1; END IF;
 
 	IF ($2 = 1) THEN
-		v_income := getAdjustment(v_employee_month_id, 1);
+		v_income := getAdjustment(v_employee_month_id, 1) / v_exchange_rate;
 		v_tax := getTax(v_income, v_period_tax_type_id);
 
 	ELSIF ($2 = 2) THEN
-		v_income := getAdjustment(v_employee_month_id, 2);
-		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25);
+		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
+		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
 
 	ELSE
 		v_tax := 0;
@@ -1013,6 +1045,40 @@ $_$;
 
 
 ALTER FUNCTION public.get_employee_tax(integer, integer) OWNER TO postgres;
+
+--
+-- Name: get_formula_adjustment(integer, integer, real); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION get_formula_adjustment(integer, integer, real) RETURNS double precision
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE
+	v_employee_month_id		integer;
+	v_basic_pay				float;
+	v_adjustment			float;
+BEGIN
+
+	SELECT employee_month.employee_month_id, employee_month.basic_pay INTO v_employee_month_id, v_basic_pay
+	FROM employee_month
+	WHERE (employee_month.employee_month_id = $1);
+
+	IF ($2 = 1) THEN
+		v_adjustment := v_basic_pay * $3;
+	ELSE
+		v_adjustment := 0;
+	END IF;
+
+	IF(v_adjustment is null) THEN
+		v_adjustment := 0;
+	END IF;
+
+	RETURN v_adjustment;
+END;
+$_$;
+
+
+ALTER FUNCTION public.get_formula_adjustment(integer, integer, real) OWNER TO postgres;
 
 --
 -- Name: get_intrest_repayment(integer, date); Type: FUNCTION; Schema: public; Owner: postgres
@@ -1044,6 +1110,8 @@ DECLARE
 	v_leave_balance			real;
 	v_leave_days			real;
 	v_leave_work_days		real;
+	v_leave_initial			real;
+	v_year_leave			real;
 BEGIN
 
 	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry 
@@ -1060,6 +1128,7 @@ BEGIN
 
 	v_months := EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - 1;
 	v_leave_balance := reca.initial_days + reca.month_quota * v_months;
+	if(reca.month_quota = 0)THEN v_leave_balance := reca.allowed_leave_days; END IF;
 
 	IF(reca.maximum_carry = 0)THEN
 		SELECT sum(employee_leave.leave_days) INTO v_leave_days
@@ -1072,7 +1141,6 @@ BEGIN
 		SELECT SUM(CASE WHEN leave_work_days.half_day = true THEN 0.5 ELSE 1 END) INTO v_leave_work_days
 		FROM leave_work_days INNER JOIN employee_leave ON leave_work_days.employee_leave_id = employee_leave.employee_leave_id
 		WHERE (employee_leave.entity_id = $1) AND (employee_leave.leave_type_id = $2)
-			AND (employee_leave.approve_status <> 'Rejected') AND (employee_leave.approve_status <> 'Draft')
 			AND (leave_work_days.approve_status = 'Approved')
 			AND (EXTRACT(YEAR FROM employee_leave.leave_from) = EXTRACT(YEAR FROM now()));
 		IF(v_leave_work_days is null) THEN v_leave_work_days := 0; END IF;
@@ -1086,17 +1154,31 @@ BEGIN
 		WHERE (entity_id = $1) AND (leave_type_id = $2)
 			AND (approve_status <> 'Rejected') AND (approve_status <> 'Draft');
 		IF(v_leave_days is null) THEN v_leave_days := 0; END IF;
+		
+		SELECT sum(employee_leave.leave_days) INTO v_year_leave
+		FROM employee_leave 
+		WHERE (entity_id = $1) AND (leave_type_id = $2)
+			AND (approve_status <> 'Rejected') AND (approve_status <> 'Draft')
+			AND (EXTRACT(YEAR FROM leave_from) = EXTRACT(YEAR FROM now()));
+		IF(v_year_leave is null) THEN v_year_leave := 0; END IF;
 
 		SELECT SUM(CASE WHEN leave_work_days.half_day = true THEN 0.5 ELSE 1 END) INTO v_leave_work_days
 		FROM leave_work_days INNER JOIN employee_leave ON leave_work_days.employee_leave_id = employee_leave.employee_leave_id
 		WHERE (employee_leave.entity_id = $1) AND (employee_leave.leave_type_id = $2)
-			AND (employee_leave.approve_status <> 'Rejected') AND (employee_leave.approve_status <> 'Draft')
 			AND (leave_work_days.approve_status = 'Approved');
 		IF(v_leave_work_days is null) THEN v_leave_work_days := 0; END IF;
 		v_leave_days := v_leave_days - v_leave_work_days;
-
-		v_leave_balance := v_leave_balance + (EXTRACT(YEAR FROM now()) - EXTRACT(YEAR FROM v_leave_starting)) * reca.allowed_leave_days;
-		v_leave_balance := v_leave_carryover + v_leave_balance - v_leave_days;
+		
+		v_leave_initial := v_leave_carryover + (EXTRACT(YEAR FROM now()) - EXTRACT(YEAR FROM v_leave_starting)) * reca.allowed_leave_days;
+		IF(EXTRACT(MONTH FROM v_leave_starting) > 1)THEN
+			v_leave_initial := v_leave_carryover + (EXTRACT(YEAR FROM now()) - EXTRACT(YEAR FROM v_leave_starting) - 1) * reca.allowed_leave_days;
+			IF(reca.month_quota = 0)THEN v_leave_initial := v_leave_initial + (13 - EXTRACT(MONTH FROM v_leave_starting)) * reca.month_quota;
+			ELSE v_leave_initial := v_leave_initial + reca.allowed_leave_days;
+			END IF;
+		END IF;
+		v_leave_initial := v_leave_initial - (v_leave_days - v_year_leave);
+		IF(v_leave_initial > reca.maximum_carry) THEN v_leave_initial := reca.maximum_carry; END IF;		
+		v_leave_balance := v_leave_initial + v_leave_balance - v_year_leave;
 	END IF;
 
 	RETURN v_leave_balance;
@@ -1464,7 +1546,7 @@ BEGIN
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($2 = 2) THEN
 		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32) 
-			+ getAdjustment(Employee_Month_ID, 4, 23)			
+			+ getAdjustment(Employee_Month_ID, 4, 23)
 			- getAdjustment(Employee_Month_ID, 4, 12) - getAdjustment(Employee_Month_ID, 4, 24)) INTO adjustment
 		FROM Employee_Month
 		WHERE (Employee_Month_ID = $1);
@@ -1495,89 +1577,93 @@ DECLARE
 BEGIN
 
 	IF ($3 = 1) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2);
 	ELSIF ($3 = 2) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true) AND (Visible = true);
 	ELSIF ($3 = 3) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_Tax = true);
 	ELSIF ($3 = 4) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true);
 	ELSIF ($3 = 5) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (Visible = true);
 	ELSIF ($3 = 11) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Tax_Types
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($3 = 12) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Tax_Types
 		WHERE (Employee_Month_ID = $1) AND (In_Tax = true);
 	ELSIF ($3 = 14) THEN
-		SELECT SUM(Amount) INTO adjustment
+		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM Employee_Tax_Types
 		WHERE (Employee_Month_ID = $1) AND (Tax_Type_ID = $2);
 	ELSIF ($3 = 21) THEN
-		SELECT SUM(Amount * adjustment_factor) INTO adjustment
+		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (in_tax = true);
 	ELSIF ($3 = 22) THEN
-		SELECT SUM(Amount * adjustment_factor) INTO adjustment
+		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
 		FROM Employee_Adjustments
 		WHERE (Employee_Month_ID = $1) AND (In_payroll = true) AND (Visible = true);
 	ELSIF ($3 = 23) THEN
-		SELECT SUM(Amount * adjustment_factor) INTO adjustment
+		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = 1);
 	ELSIF ($3 = 24) THEN
-		SELECT SUM(tax_reduction_amount) INTO adjustment
+		SELECT SUM(exchange_rate * tax_reduction_amount) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
 	ELSIF ($3 = 25) THEN
-		SELECT SUM(tax_relief_amount) INTO adjustment
+		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
 	ELSIF ($3 = 31) THEN
-		SELECT SUM(OverTime * OverTime_Rate) INTO adjustment
-		FROM Employee_Overtime
+		SELECT SUM(overtime * overtime_rate) INTO adjustment
+		FROM employee_overtime
 		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
 	ELSIF ($3 = 32) THEN
-		SELECT SUM(tax_amount) INTO adjustment
-		FROM Employee_Per_Diem
+		SELECT SUM(exchange_rate * tax_amount) INTO adjustment
+		FROM employee_per_diem
 		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
 	ELSIF ($3 = 33) THEN
-		SELECT SUM(full_amount -  Cash_paid) INTO adjustment
+		SELECT SUM(exchange_rate * (full_amount -  cash_paid)) INTO adjustment
 		FROM Employee_Per_Diem
 		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
 	ELSIF ($3 = 34) THEN
-		SELECT SUM(Amount) INTO adjustment
-		FROM Employee_Advances
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_advances
 		WHERE (Employee_Month_ID = $1) AND (in_payroll = true);
 	ELSIF ($3 = 35) THEN
-		SELECT SUM(Amount) INTO adjustment
-		FROM Advance_Deductions
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM advance_deductions
 		WHERE (Employee_Month_ID = $1) AND (In_payroll = true);
 	ELSIF ($3 = 36) THEN
-		SELECT SUM(paid_amount) INTO adjustment
-		FROM Employee_Adjustments
+		SELECT SUM(exchange_rate * paid_amount) INTO adjustment
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (In_payroll = true) AND (Visible = true);
 	ELSIF ($3 = 37) THEN
-		SELECT SUM(tax_relief_amount) INTO adjustment
-		FROM Employee_Adjustments
+		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1);
 
 		IF(adjustment IS NULL)THEN
 			adjustment := 0;
 		END IF;
+	ELSIF ($3 = 41) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_banking
+		WHERE (Employee_Month_ID = $1);
 	ELSE
 		adjustment := 0;
 	END IF;
@@ -1634,7 +1720,7 @@ DECLARE
 	reca		RECORD;
 	tax			REAL;
 BEGIN
-	SELECT period_tax_type_id, Formural, tax_relief, percentage, linear, In_Tax, Employer, Employer_PS INTO reca
+	SELECT period_tax_type_id, formural, tax_relief, percentage, linear, in_tax, employer, employer_ps INTO reca
 	FROM period_tax_types
 	WHERE (period_tax_type_id = $2);
 
@@ -1698,6 +1784,8 @@ BEGIN
 
 	IF(NEW.is_default = true) AND (v_address_id is not null) THEN
 		RAISE EXCEPTION 'Only one default Address allowed.';
+	ELSIF (NEW.is_default = false) AND (v_address_id is null) THEN
+		NEW.is_default := true;
 	END IF;
 
 	RETURN NEW;
@@ -1862,7 +1950,7 @@ BEGIN
 	INSERT INTO pc_allocations (period_id, department_id, org_id)
 	SELECT NEW.period_id, department_id, org_id
 	FROM departments
-	WHERE (active = true) AND (	petty_cash = true) AND (departments.org_id = NEW.org_id);
+	WHERE (departments.active = true) AND (departments.petty_cash = true) AND (departments.org_id = NEW.org_id);
 
 	INSERT INTO pc_budget (	pc_allocation_id, org_id, pc_item_id, budget_units, budget_price)
 	SELECT pc_allocations.pc_allocation_id, pc_allocations.org_id,
@@ -1886,12 +1974,27 @@ CREATE FUNCTION ins_employee_adjustments() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
+	v_formural					varchar(430);
 	v_tax_relief_ps				float;
 	v_tax_reduction_ps			float;
 	v_tax_max_allowed			float;
 BEGIN
 	IF((NEW.Amount = 0) AND (NEW.paid_amount <> 0))THEN
 		NEW.Amount = NEW.paid_amount / 0.7;
+	END IF;
+	
+	IF(NEW.exchange_rate is null) THEN NEW.exchange_rate = 1; END IF;
+	IF(NEW.exchange_rate = 0) THEN NEW.exchange_rate = 1; END IF;
+	
+	IF(NEW.Amount = 0)THEN
+		SELECT formural INTO v_formural
+		FROM adjustments
+		WHERE (adjustments.adjustment_id = NEW.adjustment_id);
+		IF(v_formural is not null)THEN
+			EXECUTE 'SELECT ' || v_formural || ' FROM employee_month WHERE employee_month_id = ' || NEW.employee_month_id
+			INTO NEW.Amount;
+			NEW.Amount := NEW.Amount / NEW.exchange_rate;
+		END IF;
 	END IF;
 
 	IF(NEW.in_tax = true)THEN
@@ -1903,12 +2006,14 @@ BEGIN
 			NEW.tax_reduction_amount := 0;
 		ELSE
 			NEW.tax_reduction_amount := NEW.amount * v_tax_reduction_ps / 100;
+			NEW.tax_reduction_amount := NEW.tax_reduction_amount;
 		END IF;
 
 		IF(v_tax_relief_ps is null)THEN
 			NEW.tax_relief_amount := 0;
 		ELSE
 			NEW.tax_relief_amount := NEW.amount * v_tax_relief_ps / 100;
+			NEW.tax_relief_amount := NEW.tax_relief_amount;
 		END IF;
 
 		IF(v_tax_max_allowed is not null)THEN
@@ -1923,7 +2028,7 @@ BEGIN
 		NEW.tax_relief_amount := 0;
 		NEW.tax_reduction_amount := 0;
 	END IF;
-
+	
 	RETURN NEW;
 END;
 $$;
@@ -1997,30 +2102,18 @@ CREATE FUNCTION ins_employee_month() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 BEGIN
-	INSERT INTO employee_tax_types (org_id, employee_month_id, tax_type_id, tax_identification, additional, amount, employer, in_tax)
-	SELECT NEW.org_id, NEW.employee_month_id, default_tax_types.tax_type_id, default_tax_types.tax_identification, 
-		Default_Tax_Types.Additional, 0, 0, Tax_Types.In_Tax
-	FROM Default_Tax_Types INNER JOIN Tax_Types ON Default_Tax_Types.Tax_Type_id = Tax_Types.Tax_Type_id
-	WHERE (Default_Tax_Types.active = true) AND (Default_Tax_Types.entity_ID = NEW.entity_ID);
 
-	INSERT INTO employee_adjustments (org_id, employee_month_id, adjustment_id, amount, adjustment_type, in_payroll, in_tax, visible, adjustment_factor, balance, tax_relief_amount)
-	SELECT NEW.org_id, NEW.employee_month_id, default_adjustments.adjustment_id, default_adjustments.amount,
-		adjustments.adjustment_type, adjustments.in_payroll, adjustments.in_tax, adjustments.visible,
-		(CASE WHEN adjustments.adjustment_type = 2 THEN -1 ELSE 1 END),
-		(CASE WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = false) THEN (default_adjustments.balance + default_adjustments.amount)
-			WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = true) THEN (default_adjustments.balance - default_adjustments.amount) END),
-		(default_adjustments.amount * adjustments.tax_relief_ps / 100)
-	FROM default_adjustments INNER JOIN adjustments ON default_adjustments.adjustment_id = adjustments.adjustment_id
-	WHERE ((default_adjustments.final_date is null) OR (default_adjustments.final_date > current_date))
-		AND (default_adjustments.active = true) AND (default_adjustments.entity_id = NEW.entity_id);
+	SELECT exchange_rate INTO NEW.exchange_rate
+	FROM currency_rates
+	WHERE (currency_rate_id = 
+		(SELECT MAX(currency_rate_id)
+		FROM currency_rates
+		WHERE (currency_id = NEW.currency_id) AND (org_id = NEW.org_id)
+			AND (exchange_date < CURRENT_DATE)));
+		
+	IF(NEW.exchange_rate is null)THEN NEW.exchange_rate := 1; END IF;	
 
-	INSERT INTO advance_deductions (org_id, amount, employee_month_id)
-	SELECT NEW.org_id, (Amount / Pay_Period), NEW.Employee_Month_ID
-	FROM Employee_Advances INNER JOIN Employee_Month ON Employee_Advances.Employee_Month_ID = Employee_Month.Employee_Month_ID
-	WHERE (entity_ID = NEW.entity_ID) AND (Pay_Period > 0) AND (completed = false)
-		AND (Pay_upto >= current_date);
-
-	RETURN NULL;
+	RETURN NEW;
 END;
 $$;
 
@@ -2313,15 +2406,10 @@ DECLARE
 	sum_ods_ps					real;
 BEGIN
 
-	SELECT objective_ps INTO v_objective_ps
-	FROM objectives
-	WHERE (objective_id = NEW.objective_id);
-	SELECT sum(ods_ps) INTO sum_ods_ps
-	FROM objective_details
-	WHERE (objective_id = NEW.objective_id) AND (ods_ps is not null);
-		
-	IF(sum_ods_ps > v_objective_ps)THEN
-		RAISE EXCEPTION 'The % objective details are more than the overall objective details', '%';
+	IF(NEW.ln_objective_detail_id is not null)THEN
+		SELECT objective_id INTO NEW.objective_id
+		FROM objective_details
+		WHERE objective_detail_id = NEW.ln_objective_detail_id;
 	END IF;
 
 	RETURN NEW;
@@ -2569,6 +2657,7 @@ CREATE FUNCTION job_review_check(character varying, character varying, character
 DECLARE
 	v_objective_ps		real;
 	sum_ods_ps			real;
+	v_point_check		integer;
 	rec					RECORD;
 	msg 				varchar(120);
 BEGIN
@@ -2579,6 +2668,11 @@ BEGIN
 	SELECT sum(ods_ps) INTO sum_ods_ps
 	FROM objective_details INNER JOIN evaluation_points ON evaluation_points.objective_id = objective_details.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int));
+	
+	SELECT evaluation_points.evaluation_point_id INTO v_point_check
+	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
+	WHERE (evaluation_points.job_review_id = CAST($1 as int))
+		AND (objectives.objective_ps > 0) AND (evaluation_points.points = 0);
 	
 	IF(sum_ods_ps is null)THEN
 		sum_ods_ps := 100;
@@ -2594,6 +2688,9 @@ BEGIN
 		msg := 'Review Applied';
 	ELSIF(sum_ods_ps <> 100)THEN
 		msg := 'Objective details % must add up to 100';
+		RAISE EXCEPTION '%', msg;
+	ELSIF(v_point_check is not null)THEN
+		msg := 'All objective evaluations points must be between 1 to 4';
 		RAISE EXCEPTION '%', msg;
 	ELSE
 		msg := 'Objective % must add up to 100';
@@ -2910,6 +3007,26 @@ $_$;
 ALTER FUNCTION public.prev_returns(date) OWNER TO postgres;
 
 --
+-- Name: process_bio_imports1(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION process_bio_imports1(character varying, character varying, character varying) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	msg		 				varchar(120);
+BEGIN
+
+	msg := 'Already Added to project';
+	
+	return msg;
+END;
+$$;
+
+
+ALTER FUNCTION public.process_bio_imports1(character varying, character varying, character varying) OWNER TO postgres;
+
+--
 -- Name: process_journal(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -2996,28 +3113,38 @@ CREATE FUNCTION process_loans(character varying, character varying, character va
     LANGUAGE plpgsql
     AS $_$
 DECLARE
-	rec RECORD;
-	msg varchar(120);
+	rec					RECORD;
+	v_exchange_rate		real;
+	msg					varchar(120);
 BEGIN
 	
 	FOR rec IN SELECT vw_loan_monthly.loan_month_id, vw_loan_monthly.loan_id, vw_loan_monthly.entity_id, vw_loan_monthly.period_id, 
 		vw_loan_monthly.employee_adjustment_id, vw_loan_monthly.adjustment_id, vw_loan_monthly.loan_balance, 
 		vw_loan_monthly.repayment, (vw_loan_monthly.interest_paid + vw_loan_monthly.penalty_paid) as total_interest,
 		(vw_loan_monthly.repayment + vw_loan_monthly.interest_paid + vw_loan_monthly.penalty_paid) as total_deduction,
-		employee_month.employee_month_id
+		employee_month.employee_month_id, employee_month.org_id, 
+		employee_month.currency_id, employee_month.exchange_rate,
+		adjustments.currency_id as adj_currency_id
 	FROM vw_loan_monthly INNER JOIN employee_month ON (vw_loan_monthly.entity_id = employee_month.entity_id) AND (vw_loan_monthly.period_id = employee_month.period_id)
+		INNER JOIN adjustments ON vw_loan_monthly.adjustment_id = adjustments.adjustment_id
 	WHERE (vw_loan_monthly.period_id = CAST($1 as int)) LOOP
+	
+		IF(rec.currency_id = rec.adj_currency_id)THEN
+			v_exchange_rate := 1;
+		ELSE
+			v_exchange_rate := 1 / rec.exchange_rate;
+		END IF;
 
 		IF(rec.employee_adjustment_id is null)THEN
 			INSERT INTO employee_adjustments (employee_month_id, adjustment_id, adjustment_type, adjustment_factor,
-				amount, balance, in_tax)
+				amount, balance, in_tax, org_id, exchange_rate)
 			VALUES (rec.employee_month_id, rec.adjustment_id, 2, -1,
-				rec.total_deduction, rec.loan_balance, false);
+				rec.total_deduction, rec.loan_balance, false, rec.org_id, v_exchange_rate);
 
 			UPDATE loan_monthly SET employee_adjustment_id = currval('employee_adjustments_employee_adjustment_id_seq') 
 			WHERE (loan_month_id = rec.loan_month_id);
 		ELSE
-			UPDATE employee_adjustments SET amount = rec.total_deduction, balance = rec.loan_balance
+			UPDATE employee_adjustments SET amount = rec.total_deduction, balance = rec.loan_balance, exchange_rate = v_exchange_rate
 			WHERE (employee_adjustment_id = rec.employee_adjustment_id);
 		END IF;
 
@@ -3044,6 +3171,11 @@ DECLARE
 	msg 		varchar(120);
 BEGIN
 	IF ($3 = '1') THEN
+		UPDATE employee_adjustments SET tax_reduction_amount = 0 
+		FROM employee_month 
+		WHERE (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
+			AND (employee_month.period_id = CAST($1 as int));
+	
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));
@@ -3335,9 +3467,10 @@ BEGIN
 		UPDATE approvals SET approve_status = 'Approved', action_date = now(), app_entity_id = CAST($2 as int)
 		WHERE approval_id = app_id;
 
-		SELECT min(approval_level) INTO min_level
-		FROM approvals
-		WHERE (table_id = reca.table_id) AND (approve_status = 'Draft');
+		SELECT min(approvals.approval_level) INTO min_level
+		FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
+		WHERE (approvals.table_id = reca.table_id) AND (approvals.approve_status = 'Draft')
+			AND (workflow_phases.advice = false) AND (workflow_phases.notice = false);
 		
 		IF(min_level is null)THEN
 			mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Approved') 
@@ -3552,6 +3685,46 @@ $$;
 ALTER FUNCTION public.upd_employee_adjustments() OWNER TO postgres;
 
 --
+-- Name: upd_employee_month(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION upd_employee_month() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+	INSERT INTO employee_tax_types (org_id, employee_month_id, tax_type_id, tax_identification, additional, amount, employer, in_tax, exchange_rate)
+	SELECT NEW.org_id, NEW.employee_month_id, default_tax_types.tax_type_id, default_tax_types.tax_identification, 
+		Default_Tax_Types.Additional, 0, 0, Tax_Types.In_Tax,
+		(CASE WHEN Tax_Types.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END)
+	FROM Default_Tax_Types INNER JOIN Tax_Types ON Default_Tax_Types.Tax_Type_id = Tax_Types.Tax_Type_id
+	WHERE (Default_Tax_Types.active = true) AND (Default_Tax_Types.entity_ID = NEW.entity_ID);
+
+	INSERT INTO employee_adjustments (org_id, employee_month_id, adjustment_id, amount, adjustment_type, in_payroll, in_tax, visible, adjustment_factor, balance, tax_relief_amount, exchange_rate)
+	SELECT NEW.org_id, NEW.employee_month_id, default_adjustments.adjustment_id, default_adjustments.amount,
+		adjustments.adjustment_type, adjustments.in_payroll, adjustments.in_tax, adjustments.visible,
+		(CASE WHEN adjustments.adjustment_type = 2 THEN -1 ELSE 1 END),
+		(CASE WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = false) THEN (default_adjustments.balance + default_adjustments.amount)
+			WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = true) THEN (default_adjustments.balance - default_adjustments.amount) END),
+		(default_adjustments.amount * adjustments.tax_relief_ps / 100),
+		(CASE WHEN adjustments.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END)
+	FROM default_adjustments INNER JOIN adjustments ON default_adjustments.adjustment_id = adjustments.adjustment_id
+	WHERE ((default_adjustments.final_date is null) OR (default_adjustments.final_date > current_date))
+		AND (default_adjustments.active = true) AND (default_adjustments.entity_id = NEW.entity_id);
+
+	INSERT INTO advance_deductions (org_id, amount, employee_month_id)
+	SELECT NEW.org_id, (Amount / Pay_Period), NEW.Employee_Month_ID
+	FROM Employee_Advances INNER JOIN Employee_Month ON Employee_Advances.Employee_Month_ID = Employee_Month.Employee_Month_ID
+	WHERE (entity_ID = NEW.entity_ID) AND (Pay_Period > 0) AND (completed = false)
+		AND (Pay_upto >= current_date);
+
+	RETURN NULL;
+END;
+$$;
+
+
+ALTER FUNCTION public.upd_employee_month() OWNER TO postgres;
+
+--
 -- Name: upd_employee_per_diem(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -3605,6 +3778,36 @@ $$;
 
 
 ALTER FUNCTION public.upd_gls() OWNER TO postgres;
+
+--
+-- Name: upd_objective_details(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION upd_objective_details() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	v_objective_ps				real;
+	sum_ods_ps					real;
+BEGIN
+	
+	SELECT objective_ps INTO v_objective_ps
+	FROM objectives
+	WHERE (objective_id = NEW.objective_id);
+	SELECT sum(ods_ps) INTO sum_ods_ps
+	FROM objective_details
+	WHERE (objective_id = NEW.objective_id) AND (ods_ps is not null) AND (ln_objective_detail_id is null);
+		
+	IF(sum_ods_ps > v_objective_ps)THEN
+		RAISE EXCEPTION 'The % objective details are more than the overall objective details', '%';
+	END IF;
+
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.upd_objective_details() OWNER TO postgres;
 
 --
 -- Name: upd_reviews(character varying, character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
@@ -3779,8 +3982,6 @@ BEGIN
 		FROM employee_tax_types INNER JOIN period_tax_types ON (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
 		WHERE (employee_month_id = $1) AND (Period_Tax_Types.Period_ID = $2)
 		ORDER BY Period_Tax_Types.Tax_Type_order LOOP
-
-		UPDATE employee_adjustments SET tax_reduction_amount = 0 WHERE (employee_month_id = $1);
 
 		EXECUTE 'SELECT ' || reca.Formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
@@ -4526,8 +4727,12 @@ ALTER SEQUENCE bank_branch_bank_branch_id_seq OWNED BY bank_branch.bank_branch_i
 
 CREATE TABLE banks (
     bank_id integer NOT NULL,
+    sys_country_id character(2),
     org_id integer,
     bank_name character varying(50) NOT NULL,
+    bank_code character varying(25),
+    swift_code character varying(25),
+    sort_code character varying(25),
     narrative character varying(240)
 );
 
@@ -4597,6 +4802,51 @@ ALTER TABLE public.bidders_bidder_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE bidders_bidder_id_seq OWNED BY bidders.bidder_id;
+
+
+--
+-- Name: bio_imports1; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE bio_imports1 (
+    bio_imports1_id integer NOT NULL,
+    org_id integer,
+    col1 character varying(50),
+    col2 character varying(50),
+    col3 character varying(50),
+    col4 character varying(50),
+    col5 character varying(50),
+    col6 character varying(50),
+    col7 character varying(50),
+    col8 character varying(50),
+    col9 character varying(50),
+    col10 character varying(50),
+    col11 character varying(50),
+    is_picked boolean DEFAULT false
+);
+
+
+ALTER TABLE public.bio_imports1 OWNER TO postgres;
+
+--
+-- Name: bio_imports1_bio_imports1_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE bio_imports1_bio_imports1_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.bio_imports1_bio_imports1_id_seq OWNER TO postgres;
+
+--
+-- Name: bio_imports1_bio_imports1_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE bio_imports1_bio_imports1_id_seq OWNED BY bio_imports1.bio_imports1_id;
 
 
 --
@@ -4919,6 +5169,127 @@ ALTER TABLE public.checklists_checklist_id_seq OWNER TO root;
 --
 
 ALTER SEQUENCE checklists_checklist_id_seq OWNED BY checklists.checklist_id;
+
+
+--
+-- Name: claim_details; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE claim_details (
+    claim_detail_id integer NOT NULL,
+    claim_id integer,
+    currency_id integer,
+    org_id integer,
+    nature_of_expence character varying(50),
+    receipt_number character varying(50),
+    amount real NOT NULL,
+    exchange_rate real DEFAULT 1 NOT NULL,
+    expense_code character varying(50),
+    details text
+);
+
+
+ALTER TABLE public.claim_details OWNER TO postgres;
+
+--
+-- Name: claim_details_claim_detail_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE claim_details_claim_detail_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.claim_details_claim_detail_id_seq OWNER TO postgres;
+
+--
+-- Name: claim_details_claim_detail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE claim_details_claim_detail_id_seq OWNED BY claim_details.claim_detail_id;
+
+
+--
+-- Name: claim_types; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE claim_types (
+    claim_type_id integer NOT NULL,
+    adjustment_id integer,
+    org_id integer,
+    claim_type_name character varying(50),
+    details text
+);
+
+
+ALTER TABLE public.claim_types OWNER TO postgres;
+
+--
+-- Name: claim_types_claim_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE claim_types_claim_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.claim_types_claim_type_id_seq OWNER TO postgres;
+
+--
+-- Name: claim_types_claim_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE claim_types_claim_type_id_seq OWNED BY claim_types.claim_type_id;
+
+
+--
+-- Name: claims; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE claims (
+    claim_id integer NOT NULL,
+    claim_type_id integer,
+    entity_id integer,
+    employee_adjustment_id integer,
+    org_id integer,
+    claim_date date NOT NULL,
+    in_payroll boolean DEFAULT false NOT NULL,
+    narrative character varying(250),
+    application_date timestamp without time zone DEFAULT now(),
+    approve_status character varying(16) DEFAULT 'draft'::character varying NOT NULL,
+    workflow_table_id integer,
+    action_date timestamp without time zone,
+    details text
+);
+
+
+ALTER TABLE public.claims OWNER TO postgres;
+
+--
+-- Name: claims_claim_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE claims_claim_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.claims_claim_id_seq OWNER TO postgres;
+
+--
+-- Name: claims_claim_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE claims_claim_id_seq OWNED BY claims.claim_id;
 
 
 --
@@ -5823,8 +6194,8 @@ ALTER SEQUENCE employee_cases_employee_case_id_seq OWNED BY employee_cases.emplo
 CREATE TABLE employee_leave (
     employee_leave_id integer NOT NULL,
     entity_id integer,
-    leave_type_id integer,
     contact_entity_id integer,
+    leave_type_id integer,
     org_id integer,
     leave_from date NOT NULL,
     leave_to date NOT NULL,
@@ -6177,6 +6548,7 @@ CREATE TABLE employees (
     disability_id integer,
     employee_id character varying(12) NOT NULL,
     pay_scale_id integer,
+    pay_scale_step_id integer,
     pay_group_id integer,
     location_id integer,
     currency_id integer,
@@ -6363,7 +6735,8 @@ CREATE TABLE entitys (
     is_picked boolean DEFAULT false NOT NULL,
     details text,
     attention character varying(50),
-    account_id integer
+    account_id integer,
+    bio_code character varying(50)
 );
 
 
@@ -6448,10 +6821,10 @@ CREATE TABLE evaluation_points (
     org_id integer,
     points integer DEFAULT 1 NOT NULL,
     grade character varying(2),
-    narrative character varying(240),
+    narrative text,
     reviewer_points integer DEFAULT 1 NOT NULL,
     reviewer_grade character varying(2),
-    reviewer_narrative character varying(240),
+    reviewer_narrative text,
     details text
 );
 
@@ -7492,11 +7865,12 @@ ALTER SEQUENCE locations_location_id_seq OWNED BY locations.location_id;
 CREATE TABLE objective_details (
     objective_detail_id integer NOT NULL,
     objective_id integer,
+    ln_objective_detail_id integer,
     org_id integer,
     objective_detail_name character varying(320) NOT NULL,
     success_indicator text NOT NULL,
     achievements text,
-    resources_required character varying(320),
+    resources_required text,
     ods_ps real,
     ods_points integer DEFAULT 1 NOT NULL,
     ods_reviewer_points integer DEFAULT 1 NOT NULL,
@@ -7691,6 +8065,42 @@ ALTER SEQUENCE pay_groups_pay_group_id_seq OWNED BY pay_groups.pay_group_id;
 
 
 --
+-- Name: pay_scale_steps; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE pay_scale_steps (
+    pay_scale_step_id integer NOT NULL,
+    pay_scale_id integer,
+    org_id integer,
+    pay_step integer NOT NULL,
+    pay_amount real NOT NULL
+);
+
+
+ALTER TABLE public.pay_scale_steps OWNER TO postgres;
+
+--
+-- Name: pay_scale_steps_pay_scale_step_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE pay_scale_steps_pay_scale_step_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.pay_scale_steps_pay_scale_step_id_seq OWNER TO postgres;
+
+--
+-- Name: pay_scale_steps_pay_scale_step_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE pay_scale_steps_pay_scale_step_id_seq OWNED BY pay_scale_steps.pay_scale_step_id;
+
+
+--
 -- Name: pay_scale_years; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -7732,6 +8142,7 @@ ALTER SEQUENCE pay_scale_years_pay_scale_year_id_seq OWNED BY pay_scale_years.pa
 
 CREATE TABLE pay_scales (
     pay_scale_id integer NOT NULL,
+    currency_id integer,
     org_id integer,
     pay_scale_name character varying(32) NOT NULL,
     min_pay real,
@@ -7965,11 +8376,19 @@ CREATE TABLE pc_expenditure (
     pc_expenditure_id integer NOT NULL,
     pc_allocation_id integer,
     pc_item_id integer,
+    pc_type_id integer,
+    entity_id integer,
     org_id integer,
+    is_request boolean DEFAULT true NOT NULL,
+    request_date timestamp without time zone DEFAULT now(),
+    application_date timestamp without time zone DEFAULT now(),
+    approve_status character varying(16) DEFAULT 'Draft'::character varying NOT NULL,
+    workflow_table_id integer,
+    action_date timestamp without time zone,
     units integer NOT NULL,
     unit_price double precision NOT NULL,
     receipt_number character varying(50),
-    exp_date date DEFAULT ('now'::text)::date NOT NULL,
+    exp_date date,
     details text
 );
 
@@ -8033,6 +8452,41 @@ ALTER TABLE public.pc_items_pc_item_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE pc_items_pc_item_id_seq OWNED BY pc_items.pc_item_id;
+
+
+--
+-- Name: pc_types; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE pc_types (
+    pc_type_id integer NOT NULL,
+    org_id integer,
+    pc_type_name character varying(50) NOT NULL,
+    details text
+);
+
+
+ALTER TABLE public.pc_types OWNER TO postgres;
+
+--
+-- Name: pc_types_pc_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE pc_types_pc_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.pc_types_pc_type_id_seq OWNER TO postgres;
+
+--
+-- Name: pc_types_pc_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE pc_types_pc_type_id_seq OWNED BY pc_types.pc_type_id;
 
 
 --
@@ -8518,6 +8972,7 @@ CREATE TABLE reporting (
     org_id integer,
     date_from date,
     date_to date,
+    reporting_level integer DEFAULT 1 NOT NULL,
     primary_report boolean DEFAULT true NOT NULL,
     is_active boolean DEFAULT true NOT NULL,
     ps_reporting real,
@@ -9980,197 +10435,6 @@ ALTER SEQUENCE transactions_transaction_id_seq OWNED BY transactions.transaction
 
 
 --
--- Name: vw_periods; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW vw_periods AS
- SELECT fiscal_years.fiscal_year_id,
-    fiscal_years.fiscal_year_start,
-    fiscal_years.fiscal_year_end,
-    fiscal_years.year_opened,
-    fiscal_years.year_closed,
-    periods.period_id,
-    periods.org_id,
-    periods.start_date,
-    periods.end_date,
-    periods.opened,
-    periods.activated,
-    periods.closed,
-    periods.overtime_rate,
-    periods.per_diem_tax_limit,
-    periods.is_posted,
-    periods.bank_header,
-    periods.gl_payroll_account,
-    periods.gl_bank_account,
-    periods.bank_address,
-    periods.details,
-    date_part('month'::text, periods.start_date) AS month_id,
-    to_char((periods.start_date)::timestamp with time zone, 'YYYY'::text) AS period_year,
-    to_char((periods.start_date)::timestamp with time zone, 'Month'::text) AS period_month,
-    (trunc(((date_part('month'::text, periods.start_date) - (1)::double precision) / (3)::double precision)) + (1)::double precision) AS quarter,
-    (trunc(((date_part('month'::text, periods.start_date) - (1)::double precision) / (6)::double precision)) + (1)::double precision) AS semister,
-    to_char((periods.start_date)::timestamp with time zone, 'YYYYMM'::text) AS period_code
-   FROM (periods
-     LEFT JOIN fiscal_years ON (((periods.fiscal_year_id)::text = (fiscal_years.fiscal_year_id)::text)))
-  ORDER BY periods.start_date;
-
-
-ALTER TABLE public.vw_periods OWNER TO postgres;
-
---
--- Name: vw_pc_allocations; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW vw_pc_allocations AS
- SELECT vw_periods.fiscal_year_id,
-    vw_periods.fiscal_year_start,
-    vw_periods.fiscal_year_end,
-    vw_periods.year_opened,
-    vw_periods.year_closed,
-    vw_periods.period_id,
-    vw_periods.start_date,
-    vw_periods.end_date,
-    vw_periods.opened,
-    vw_periods.closed,
-    vw_periods.month_id,
-    vw_periods.period_year,
-    vw_periods.period_month,
-    vw_periods.quarter,
-    vw_periods.semister,
-    departments.department_id,
-    departments.department_name,
-    pc_allocations.org_id,
-    pc_allocations.pc_allocation_id,
-    pc_allocations.narrative,
-    pc_allocations.approve_status,
-    pc_allocations.details,
-    ( SELECT sum(((pc_budget.budget_units)::double precision * pc_budget.budget_price)) AS sum
-           FROM pc_budget
-          WHERE (pc_budget.pc_allocation_id = pc_allocations.pc_allocation_id)) AS sum_budget,
-    ( SELECT sum(((pc_expenditure.units)::double precision * pc_expenditure.unit_price)) AS sum
-           FROM pc_expenditure
-          WHERE (pc_expenditure.pc_allocation_id = pc_allocations.pc_allocation_id)) AS sum_expenditure,
-    ( SELECT sum(pc_banking.amount) AS sum
-           FROM pc_banking
-          WHERE (pc_banking.pc_allocation_id = pc_allocations.pc_allocation_id)) AS sum_banking
-   FROM ((pc_allocations
-     JOIN vw_periods ON ((pc_allocations.period_id = vw_periods.period_id)))
-     JOIN departments ON ((pc_allocations.department_id = departments.department_id)));
-
-
-ALTER TABLE public.vw_pc_allocations OWNER TO postgres;
-
---
--- Name: vw_pc_items; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW vw_pc_items AS
- SELECT pc_category.pc_category_id,
-    pc_category.pc_category_name,
-    pc_items.org_id,
-    pc_items.pc_item_id,
-    pc_items.pc_item_name,
-    pc_items.default_price,
-    pc_items.default_units,
-    pc_items.details,
-    (pc_items.default_price * (pc_items.default_units)::double precision) AS default_cost
-   FROM (pc_items
-     JOIN pc_category ON ((pc_items.pc_category_id = pc_category.pc_category_id)));
-
-
-ALTER TABLE public.vw_pc_items OWNER TO postgres;
-
---
--- Name: vw_pc_expenditure; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW vw_pc_expenditure AS
- SELECT vw_pc_allocations.fiscal_year_id,
-    vw_pc_allocations.fiscal_year_start,
-    vw_pc_allocations.fiscal_year_end,
-    vw_pc_allocations.year_opened,
-    vw_pc_allocations.year_closed,
-    vw_pc_allocations.period_id,
-    vw_pc_allocations.start_date,
-    vw_pc_allocations.end_date,
-    vw_pc_allocations.opened,
-    vw_pc_allocations.closed,
-    vw_pc_allocations.month_id,
-    vw_pc_allocations.period_year,
-    vw_pc_allocations.period_month,
-    vw_pc_allocations.quarter,
-    vw_pc_allocations.semister,
-    vw_pc_allocations.department_id,
-    vw_pc_allocations.department_name,
-    vw_pc_allocations.pc_allocation_id,
-    vw_pc_allocations.narrative,
-    vw_pc_allocations.approve_status,
-    vw_pc_items.pc_category_id,
-    vw_pc_items.pc_category_name,
-    vw_pc_items.pc_item_id,
-    vw_pc_items.pc_item_name,
-    vw_pc_items.default_price,
-    vw_pc_items.default_units,
-    vw_pc_items.default_cost,
-    pc_expenditure.org_id,
-    pc_expenditure.pc_expenditure_id,
-    pc_expenditure.units,
-    pc_expenditure.unit_price,
-    pc_expenditure.receipt_number,
-    pc_expenditure.exp_date,
-    ((pc_expenditure.units)::double precision * pc_expenditure.unit_price) AS items_cost,
-    pc_expenditure.details
-   FROM ((pc_expenditure
-     JOIN vw_pc_allocations ON ((pc_expenditure.pc_allocation_id = vw_pc_allocations.pc_allocation_id)))
-     JOIN vw_pc_items ON ((pc_expenditure.pc_item_id = vw_pc_items.pc_item_id)));
-
-
-ALTER TABLE public.vw_pc_expenditure OWNER TO postgres;
-
---
--- Name: vs_pc_expenditure; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW vs_pc_expenditure AS
- SELECT a.period_id,
-    a.period_year,
-    a.period_month,
-    a.department_id,
-    a.department_name,
-    a.pc_allocation_id,
-    a.pc_category_id,
-    a.pc_category_name,
-    a.pc_item_id,
-    a.pc_item_name,
-    a.sum_units,
-    a.avg_unit_price,
-    a.sum_items_cost,
-    pc_budget.budget_units,
-    pc_budget.budget_price,
-    ((pc_budget.budget_units)::double precision * pc_budget.budget_price) AS budget_cost,
-    (COALESCE(pc_budget.budget_units, 0) - a.sum_units) AS unit_diff,
-    (COALESCE(((pc_budget.budget_units)::double precision * pc_budget.budget_price), (0)::double precision) - a.sum_items_cost) AS budget_diff
-   FROM (( SELECT vw_pc_expenditure.period_id,
-            vw_pc_expenditure.period_year,
-            vw_pc_expenditure.period_month,
-            vw_pc_expenditure.department_id,
-            vw_pc_expenditure.department_name,
-            vw_pc_expenditure.pc_allocation_id,
-            vw_pc_expenditure.pc_category_id,
-            vw_pc_expenditure.pc_category_name,
-            vw_pc_expenditure.pc_item_id,
-            vw_pc_expenditure.pc_item_name,
-            sum(vw_pc_expenditure.units) AS sum_units,
-            avg(vw_pc_expenditure.unit_price) AS avg_unit_price,
-            sum(((vw_pc_expenditure.units)::double precision * vw_pc_expenditure.unit_price)) AS sum_items_cost
-           FROM vw_pc_expenditure
-          GROUP BY vw_pc_expenditure.period_id, vw_pc_expenditure.period_year, vw_pc_expenditure.period_month, vw_pc_expenditure.department_id, vw_pc_expenditure.department_name, vw_pc_expenditure.pc_allocation_id, vw_pc_expenditure.pc_category_id, vw_pc_expenditure.pc_category_name, vw_pc_expenditure.pc_item_id, vw_pc_expenditure.pc_item_name) a
-     LEFT JOIN pc_budget ON (((a.pc_allocation_id = pc_budget.pc_allocation_id) AND (a.pc_item_id = pc_budget.pc_item_id))));
-
-
-ALTER TABLE public.vs_pc_expenditure OWNER TO postgres;
-
---
 -- Name: vw_account_types; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -10284,15 +10548,22 @@ ALTER TABLE public.vw_adjustments OWNER TO postgres;
 --
 
 CREATE VIEW vw_bank_branch AS
- SELECT banks.bank_id,
+ SELECT sys_countrys.sys_country_id,
+    sys_countrys.sys_country_code,
+    sys_countrys.sys_country_name,
+    banks.bank_id,
     banks.bank_name,
+    banks.bank_code,
+    banks.swift_code,
+    banks.sort_code,
     bank_branch.bank_branch_id,
     bank_branch.org_id,
     bank_branch.bank_branch_name,
     bank_branch.bank_branch_code,
     bank_branch.narrative
-   FROM (bank_branch
-     JOIN banks ON ((bank_branch.bank_id = banks.bank_id)));
+   FROM ((bank_branch
+     JOIN banks ON ((bank_branch.bank_id = banks.bank_id)))
+     LEFT JOIN sys_countrys ON ((banks.sys_country_id = sys_countrys.sys_country_id)));
 
 
 ALTER TABLE public.vw_bank_branch OWNER TO postgres;
@@ -10323,6 +10594,44 @@ CREATE VIEW vw_department_roles AS
 
 
 ALTER TABLE public.vw_department_roles OWNER TO postgres;
+
+--
+-- Name: vw_periods; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_periods AS
+ SELECT fiscal_years.fiscal_year_id,
+    fiscal_years.fiscal_year_start,
+    fiscal_years.fiscal_year_end,
+    fiscal_years.year_opened,
+    fiscal_years.year_closed,
+    periods.period_id,
+    periods.org_id,
+    periods.start_date,
+    periods.end_date,
+    periods.opened,
+    periods.activated,
+    periods.closed,
+    periods.overtime_rate,
+    periods.per_diem_tax_limit,
+    periods.is_posted,
+    periods.bank_header,
+    periods.gl_payroll_account,
+    periods.gl_bank_account,
+    periods.bank_address,
+    periods.details,
+    date_part('month'::text, periods.start_date) AS month_id,
+    to_char((periods.start_date)::timestamp with time zone, 'YYYY'::text) AS period_year,
+    to_char((periods.start_date)::timestamp with time zone, 'Month'::text) AS period_month,
+    (trunc(((date_part('month'::text, periods.start_date) - (1)::double precision) / (3)::double precision)) + (1)::double precision) AS quarter,
+    (trunc(((date_part('month'::text, periods.start_date) - (1)::double precision) / (6)::double precision)) + (1)::double precision) AS semister,
+    to_char((periods.start_date)::timestamp with time zone, 'YYYYMM'::text) AS period_code
+   FROM (periods
+     LEFT JOIN fiscal_years ON (((periods.fiscal_year_id)::text = (fiscal_years.fiscal_year_id)::text)))
+  ORDER BY periods.start_date;
+
+
+ALTER TABLE public.vw_periods OWNER TO postgres;
 
 --
 -- Name: vw_employee_month; Type: VIEW; Schema: public; Owner: postgres
@@ -10399,7 +10708,7 @@ CREATE VIEW vw_employee_month AS
     getadjustment(employee_month.employee_month_id, 4, 34) AS advance,
     getadjustment(employee_month.employee_month_id, 4, 35) AS advance_deduction,
     ((((employee_month.basic_pay + getadjustment(employee_month.employee_month_id, 4, 31)) + getadjustment(employee_month.employee_month_id, 4, 22)) + getadjustment(employee_month.employee_month_id, 4, 33)) - getadjustment(employee_month.employee_month_id, 4, 11)) AS net_pay,
-    (((((((employee_month.basic_pay + getadjustment(employee_month.employee_month_id, 4, 31)) + getadjustment(employee_month.employee_month_id, 4, 22)) + getadjustment(employee_month.employee_month_id, 4, 33)) + getadjustment(employee_month.employee_month_id, 4, 34)) - getadjustment(employee_month.employee_month_id, 4, 11)) - getadjustment(employee_month.employee_month_id, 4, 35)) - getadjustment(employee_month.employee_month_id, 4, 36)) AS banked,
+    ((((((((employee_month.basic_pay + getadjustment(employee_month.employee_month_id, 4, 31)) + getadjustment(employee_month.employee_month_id, 4, 22)) + getadjustment(employee_month.employee_month_id, 4, 33)) + getadjustment(employee_month.employee_month_id, 4, 34)) - getadjustment(employee_month.employee_month_id, 4, 11)) - getadjustment(employee_month.employee_month_id, 4, 35)) - getadjustment(employee_month.employee_month_id, 4, 36)) - getadjustment(employee_month.employee_month_id, 4, 41)) AS banked,
     ((((employee_month.basic_pay + getadjustment(employee_month.employee_month_id, 4, 31)) + getadjustment(employee_month.employee_month_id, 1, 1)) + getadjustment(employee_month.employee_month_id, 3, 1)) + getadjustment(employee_month.employee_month_id, 4, 33)) AS cost
    FROM (((((((employee_month
      JOIN vw_bank_branch ON ((employee_month.bank_branch_id = vw_bank_branch.bank_branch_id)))
@@ -10763,6 +11072,7 @@ CREATE TABLE workflow_phases (
     escalation_days integer DEFAULT 0 NOT NULL,
     escalation_hours integer DEFAULT 3 NOT NULL,
     required_approvals integer DEFAULT 1 NOT NULL,
+    reporting_level integer DEFAULT 1 NOT NULL,
     use_reporting boolean DEFAULT false NOT NULL,
     advice boolean DEFAULT false NOT NULL,
     notice boolean DEFAULT false NOT NULL,
@@ -10809,6 +11119,7 @@ CREATE VIEW vw_workflow_phases AS
     workflow_phases.advice_file,
     workflow_phases.required_approvals,
     workflow_phases.use_reporting,
+    workflow_phases.reporting_level,
     workflow_phases.phase_narrative,
     workflow_phases.details
    FROM ((workflow_phases
@@ -10974,7 +11285,7 @@ UNION
    FROM ((((vw_workflow_phases
      JOIN approvals ON ((vw_workflow_phases.workflow_phase_id = approvals.workflow_phase_id)))
      JOIN entitys oe ON ((approvals.org_entity_id = oe.entity_id)))
-     JOIN reporting ON ((approvals.org_entity_id = reporting.entity_id)))
+     JOIN reporting ON (((approvals.org_entity_id = reporting.entity_id) AND (vw_workflow_phases.reporting_level = reporting.reporting_level))))
      JOIN entitys ON ((reporting.report_to_id = entitys.entity_id)))
   WHERE ((((approvals.forward_id IS NULL) AND (reporting.primary_report = true)) AND (reporting.is_active = true)) AND (vw_workflow_phases.use_reporting = true));
 
@@ -11543,6 +11854,83 @@ CREATE VIEW vw_casuals AS
 ALTER TABLE public.vw_casuals OWNER TO postgres;
 
 --
+-- Name: vw_claims; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_claims AS
+ SELECT claim_types.claim_type_id,
+    claim_types.claim_type_name,
+    entitys.entity_id,
+    entitys.entity_name,
+    claims.org_id,
+    claims.claim_id,
+    claims.claim_date,
+    claims.narrative,
+    claims.in_payroll,
+    claims.application_date,
+    claims.approve_status,
+    claims.workflow_table_id,
+    claims.action_date,
+    claims.details
+   FROM ((claims
+     JOIN claim_types ON ((claims.claim_type_id = claim_types.claim_type_id)))
+     JOIN entitys ON ((claims.entity_id = entitys.entity_id)));
+
+
+ALTER TABLE public.vw_claims OWNER TO postgres;
+
+--
+-- Name: vw_claim_details; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_claim_details AS
+ SELECT vw_claims.claim_type_id,
+    vw_claims.claim_type_name,
+    vw_claims.entity_id,
+    vw_claims.entity_name,
+    vw_claims.claim_id,
+    vw_claims.claim_date,
+    vw_claims.narrative,
+    vw_claims.application_date,
+    vw_claims.approve_status,
+    vw_claims.workflow_table_id,
+    vw_claims.action_date,
+    currency.currency_id,
+    currency.currency_name,
+    currency.currency_symbol,
+    claim_details.org_id,
+    claim_details.claim_detail_id,
+    claim_details.nature_of_expence,
+    claim_details.receipt_number,
+    claim_details.amount,
+    claim_details.exchange_rate,
+    claim_details.expense_code,
+    claim_details.details
+   FROM ((claim_details
+     JOIN vw_claims ON ((claim_details.claim_id = vw_claims.claim_id)))
+     JOIN currency ON ((claim_details.currency_id = currency.currency_id)));
+
+
+ALTER TABLE public.vw_claim_details OWNER TO postgres;
+
+--
+-- Name: vw_claim_types; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_claim_types AS
+ SELECT adjustments.adjustment_id,
+    adjustments.adjustment_name,
+    claim_types.org_id,
+    claim_types.claim_type_id,
+    claim_types.claim_type_name,
+    claim_types.details
+   FROM (claim_types
+     JOIN adjustments ON ((claim_types.adjustment_id = adjustments.adjustment_id)));
+
+
+ALTER TABLE public.vw_claim_types OWNER TO postgres;
+
+--
 -- Name: vw_contracting; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -11982,6 +12370,9 @@ CREATE VIEW vw_employee_adjustments AS
     adjustments.adjustment_type,
     adjustments.account_number,
     adjustments.earning_code,
+    currency.currency_id,
+    currency.currency_name,
+    currency.currency_symbol,
     employee_adjustments.org_id,
     employee_adjustments.employee_adjustment_id,
     employee_adjustments.pay_date,
@@ -11989,12 +12380,16 @@ CREATE VIEW vw_employee_adjustments AS
     employee_adjustments.in_payroll,
     employee_adjustments.in_tax,
     employee_adjustments.visible,
+    employee_adjustments.exchange_rate,
     employee_adjustments.paid_amount,
     employee_adjustments.balance,
-    employee_adjustments.narrative
-   FROM ((employee_adjustments
+    employee_adjustments.narrative,
+    employee_adjustments.tax_relief_amount,
+    (employee_adjustments.exchange_rate * employee_adjustments.amount) AS base_amount
+   FROM (((employee_adjustments
      JOIN adjustments ON ((employee_adjustments.adjustment_id = adjustments.adjustment_id)))
-     JOIN vw_employee_month ON ((employee_adjustments.employee_month_id = vw_employee_month.employee_month_id)));
+     JOIN vw_employee_month ON ((employee_adjustments.employee_month_id = vw_employee_month.employee_month_id)))
+     JOIN currency ON ((adjustments.currency_id = currency.currency_id)));
 
 
 ALTER TABLE public.vw_employee_adjustments OWNER TO postgres;
@@ -12057,7 +12452,8 @@ CREATE VIEW vw_employee_banking AS
     employee_banking.amount,
     employee_banking.exchange_rate,
     employee_banking.active,
-    employee_banking.narrative
+    employee_banking.narrative,
+    (employee_banking.exchange_rate * employee_banking.amount) AS base_amount
    FROM (((employee_banking
      JOIN vw_employee_month ON ((employee_banking.employee_month_id = vw_employee_month.employee_month_id)))
      JOIN vw_bank_branch ON ((employee_banking.bank_branch_id = vw_bank_branch.bank_branch_id)))
@@ -12241,7 +12637,9 @@ CREATE VIEW vw_employee_per_diem AS
     employee_per_diem.action_date,
     employee_per_diem.completed,
     employee_per_diem.post_account,
-    employee_per_diem.details
+    employee_per_diem.details,
+    (employee_per_diem.exchange_rate * employee_per_diem.tax_amount) AS base_tax_amount,
+    (employee_per_diem.exchange_rate * employee_per_diem.full_amount) AS base_full_amount
    FROM (employee_per_diem
      JOIN vw_employee_month ON ((employee_per_diem.employee_month_id = vw_employee_month.employee_month_id)));
 
@@ -12314,10 +12712,16 @@ CREATE VIEW vw_employee_tax_types AS
     employee_tax_types.amount,
     employee_tax_types.additional,
     employee_tax_types.employer,
-    employee_tax_types.narrative
-   FROM ((employee_tax_types
+    employee_tax_types.narrative,
+    currency.currency_id,
+    currency.currency_name,
+    currency.currency_symbol,
+    employee_tax_types.exchange_rate,
+    (employee_tax_types.exchange_rate * employee_tax_types.amount) AS base_amount
+   FROM (((employee_tax_types
      JOIN vw_employee_month ON ((employee_tax_types.employee_month_id = vw_employee_month.employee_month_id)))
-     JOIN tax_types ON ((employee_tax_types.tax_type_id = tax_types.tax_type_id)));
+     JOIN tax_types ON ((employee_tax_types.tax_type_id = tax_types.tax_type_id)))
+     JOIN currency ON ((tax_types.currency_id = currency.currency_id)));
 
 
 ALTER TABLE public.vw_employee_tax_types OWNER TO postgres;
@@ -12644,6 +13048,8 @@ CREATE VIEW vw_entitys AS
     entitys.first_password,
     entitys.function_role,
     entitys.attention,
+    entitys.primary_email,
+    entitys.primary_telephone,
     entity_types.entity_type_id,
     entity_types.entity_type_name,
     entity_types.entity_role,
@@ -13396,6 +13802,7 @@ CREATE VIEW vw_objective_details AS
     vw_objectives.objective_completed,
     objective_details.org_id,
     objective_details.objective_detail_id,
+    objective_details.ln_objective_detail_id,
     objective_details.objective_detail_name,
     objective_details.success_indicator,
     objective_details.achievements,
@@ -13452,6 +13859,47 @@ CREATE VIEW vw_org_address AS
 
 
 ALTER TABLE public.vw_org_address OWNER TO root;
+
+--
+-- Name: vw_pay_scale_steps; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_pay_scale_steps AS
+ SELECT currency.currency_id,
+    currency.currency_name,
+    currency.currency_symbol,
+    pay_scales.pay_scale_id,
+    pay_scales.pay_scale_name,
+    pay_scale_steps.org_id,
+    pay_scale_steps.pay_scale_step_id,
+    pay_scale_steps.pay_step,
+    pay_scale_steps.pay_amount,
+    (((((pay_scales.pay_scale_name)::text || '-'::text) || (currency.currency_symbol)::text) || '-'::text) || pay_scale_steps.pay_step) AS pay_step_name
+   FROM ((pay_scale_steps
+     JOIN pay_scales ON ((pay_scale_steps.pay_scale_id = pay_scales.pay_scale_id)))
+     JOIN currency ON ((pay_scales.currency_id = currency.currency_id)));
+
+
+ALTER TABLE public.vw_pay_scale_steps OWNER TO postgres;
+
+--
+-- Name: vw_pay_scales; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE vw_pay_scales (
+    currency_id integer,
+    currency_name character varying(50),
+    currency_symbol character varying(3),
+    org_id integer,
+    pay_scale_id integer,
+    pay_scale_name character varying(32),
+    min_pay real,
+    max_pay real,
+    details text
+);
+
+
+ALTER TABLE public.vw_pay_scales OWNER TO postgres;
 
 --
 -- Name: vw_payroll_ledger; Type: VIEW; Schema: public; Owner: postgres
@@ -13654,6 +14102,69 @@ CREATE VIEW vw_payroll_ledger_trx AS
 ALTER TABLE public.vw_payroll_ledger_trx OWNER TO postgres;
 
 --
+-- Name: vw_pc_allocations; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_pc_allocations AS
+ SELECT vw_periods.fiscal_year_id,
+    vw_periods.fiscal_year_start,
+    vw_periods.fiscal_year_end,
+    vw_periods.year_opened,
+    vw_periods.year_closed,
+    vw_periods.period_id,
+    vw_periods.start_date,
+    vw_periods.end_date,
+    vw_periods.opened,
+    vw_periods.closed,
+    vw_periods.month_id,
+    vw_periods.period_year,
+    vw_periods.period_month,
+    vw_periods.quarter,
+    vw_periods.semister,
+    departments.department_id,
+    departments.department_name,
+    pc_allocations.org_id,
+    pc_allocations.pc_allocation_id,
+    pc_allocations.narrative,
+    pc_allocations.approve_status,
+    pc_allocations.details,
+    ( SELECT sum(((pc_budget.budget_units)::double precision * pc_budget.budget_price)) AS sum
+           FROM pc_budget
+          WHERE (pc_budget.pc_allocation_id = pc_allocations.pc_allocation_id)) AS sum_budget,
+    ( SELECT sum(((pc_expenditure.units)::double precision * pc_expenditure.unit_price)) AS sum
+           FROM pc_expenditure
+          WHERE (pc_expenditure.pc_allocation_id = pc_allocations.pc_allocation_id)) AS sum_expenditure,
+    ( SELECT sum(pc_banking.amount) AS sum
+           FROM pc_banking
+          WHERE (pc_banking.pc_allocation_id = pc_allocations.pc_allocation_id)) AS sum_banking
+   FROM ((pc_allocations
+     JOIN vw_periods ON ((pc_allocations.period_id = vw_periods.period_id)))
+     JOIN departments ON ((pc_allocations.department_id = departments.department_id)));
+
+
+ALTER TABLE public.vw_pc_allocations OWNER TO postgres;
+
+--
+-- Name: vw_pc_items; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_pc_items AS
+ SELECT pc_category.pc_category_id,
+    pc_category.pc_category_name,
+    pc_items.org_id,
+    pc_items.pc_item_id,
+    pc_items.pc_item_name,
+    pc_items.default_price,
+    pc_items.default_units,
+    pc_items.details,
+    (pc_items.default_price * (pc_items.default_units)::double precision) AS default_cost
+   FROM (pc_items
+     JOIN pc_category ON ((pc_items.pc_category_id = pc_category.pc_category_id)));
+
+
+ALTER TABLE public.vw_pc_items OWNER TO postgres;
+
+--
 -- Name: vw_pc_budget; Type: VIEW; Schema: public; Owner: postgres
 --
 
@@ -13697,6 +14208,64 @@ CREATE VIEW vw_pc_budget AS
 
 
 ALTER TABLE public.vw_pc_budget OWNER TO postgres;
+
+--
+-- Name: vw_pc_expenditure; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vw_pc_expenditure AS
+ SELECT vw_pc_allocations.fiscal_year_id,
+    vw_pc_allocations.fiscal_year_start,
+    vw_pc_allocations.fiscal_year_end,
+    vw_pc_allocations.year_opened,
+    vw_pc_allocations.year_closed,
+    vw_pc_allocations.period_id,
+    vw_pc_allocations.start_date,
+    vw_pc_allocations.end_date,
+    vw_pc_allocations.opened,
+    vw_pc_allocations.closed,
+    vw_pc_allocations.month_id,
+    vw_pc_allocations.period_year,
+    vw_pc_allocations.period_month,
+    vw_pc_allocations.quarter,
+    vw_pc_allocations.semister,
+    vw_pc_allocations.department_id,
+    vw_pc_allocations.department_name,
+    vw_pc_allocations.pc_allocation_id,
+    vw_pc_allocations.narrative,
+    vw_pc_items.pc_category_id,
+    vw_pc_items.pc_category_name,
+    vw_pc_items.pc_item_id,
+    vw_pc_items.pc_item_name,
+    vw_pc_items.default_price,
+    vw_pc_items.default_units,
+    vw_pc_items.default_cost,
+    pc_types.pc_type_id,
+    pc_types.pc_type_name,
+    entitys.entity_id,
+    entitys.entity_name,
+    pc_expenditure.org_id,
+    pc_expenditure.pc_expenditure_id,
+    pc_expenditure.units,
+    pc_expenditure.unit_price,
+    pc_expenditure.receipt_number,
+    pc_expenditure.exp_date,
+    pc_expenditure.is_request,
+    pc_expenditure.request_date,
+    ((pc_expenditure.units)::double precision * pc_expenditure.unit_price) AS items_cost,
+    pc_expenditure.application_date,
+    pc_expenditure.approve_status,
+    pc_expenditure.workflow_table_id,
+    pc_expenditure.action_date,
+    pc_expenditure.details
+   FROM ((((pc_expenditure
+     JOIN vw_pc_allocations ON ((pc_expenditure.pc_allocation_id = vw_pc_allocations.pc_allocation_id)))
+     JOIN vw_pc_items ON ((pc_expenditure.pc_item_id = vw_pc_items.pc_item_id)))
+     JOIN pc_types ON ((pc_expenditure.pc_type_id = pc_types.pc_type_id)))
+     LEFT JOIN entitys ON ((pc_expenditure.entity_id = entitys.entity_id)));
+
+
+ALTER TABLE public.vw_pc_expenditure OWNER TO postgres;
 
 --
 -- Name: vw_period_loans; Type: VIEW; Schema: public; Owner: postgres
@@ -14713,6 +15282,99 @@ CREATE VIEW vw_workflow_entitys AS
 ALTER TABLE public.vw_workflow_entitys OWNER TO root;
 
 --
+-- Name: vws_pc_expenditure; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vws_pc_expenditure AS
+ SELECT a.period_id,
+    a.period_year,
+    a.period_month,
+    a.department_id,
+    a.department_name,
+    a.pc_allocation_id,
+    a.pc_category_id,
+    a.pc_category_name,
+    a.pc_item_id,
+    a.pc_item_name,
+    a.sum_units,
+    a.avg_unit_price,
+    a.sum_items_cost,
+    pc_budget.budget_units,
+    pc_budget.budget_price,
+    ((pc_budget.budget_units)::double precision * pc_budget.budget_price) AS budget_cost,
+    (COALESCE(pc_budget.budget_units, 0) - a.sum_units) AS unit_diff,
+    (COALESCE(((pc_budget.budget_units)::double precision * pc_budget.budget_price), (0)::double precision) - a.sum_items_cost) AS budget_diff
+   FROM (( SELECT vw_pc_expenditure.period_id,
+            vw_pc_expenditure.period_year,
+            vw_pc_expenditure.period_month,
+            vw_pc_expenditure.department_id,
+            vw_pc_expenditure.department_name,
+            vw_pc_expenditure.pc_allocation_id,
+            vw_pc_expenditure.pc_category_id,
+            vw_pc_expenditure.pc_category_name,
+            vw_pc_expenditure.pc_item_id,
+            vw_pc_expenditure.pc_item_name,
+            sum(vw_pc_expenditure.units) AS sum_units,
+            avg(vw_pc_expenditure.unit_price) AS avg_unit_price,
+            sum(((vw_pc_expenditure.units)::double precision * vw_pc_expenditure.unit_price)) AS sum_items_cost
+           FROM vw_pc_expenditure
+          GROUP BY vw_pc_expenditure.period_id, vw_pc_expenditure.period_year, vw_pc_expenditure.period_month, vw_pc_expenditure.department_id, vw_pc_expenditure.department_name, vw_pc_expenditure.pc_allocation_id, vw_pc_expenditure.pc_category_id, vw_pc_expenditure.pc_category_name, vw_pc_expenditure.pc_item_id, vw_pc_expenditure.pc_item_name) a
+     LEFT JOIN pc_budget ON (((a.pc_allocation_id = pc_budget.pc_allocation_id) AND (a.pc_item_id = pc_budget.pc_item_id))));
+
+
+ALTER TABLE public.vws_pc_expenditure OWNER TO postgres;
+
+--
+-- Name: vws_pc_budget_diff; Type: VIEW; Schema: public; Owner: postgres
+--
+
+CREATE VIEW vws_pc_budget_diff AS
+ SELECT a.period_id,
+    a.period_year,
+    a.period_month,
+    a.department_id,
+    a.department_name,
+    a.pc_allocation_id,
+    a.pc_category_id,
+    a.pc_category_name,
+    a.pc_item_id,
+    a.pc_item_name,
+    a.sum_units,
+    a.avg_unit_price,
+    a.sum_items_cost,
+    a.budget_units,
+    a.budget_price,
+    a.budget_cost,
+    a.unit_diff,
+    a.budget_diff
+   FROM vws_pc_expenditure a
+UNION
+ SELECT a.period_id,
+    a.period_year,
+    a.period_month,
+    a.department_id,
+    a.department_name,
+    a.pc_allocation_id,
+    a.pc_category_id,
+    a.pc_category_name,
+    a.pc_item_id,
+    a.pc_item_name,
+    0 AS sum_units,
+    0 AS avg_unit_price,
+    0 AS sum_items_cost,
+    a.budget_units,
+    a.budget_price,
+    a.budget_cost,
+    a.budget_units AS unit_diff,
+    a.budget_cost AS budget_diff
+   FROM (vw_pc_budget a
+     LEFT JOIN pc_expenditure ON (((a.pc_allocation_id = pc_expenditure.pc_allocation_id) AND (a.pc_item_id = pc_expenditure.pc_item_id))))
+  WHERE (pc_expenditure.pc_item_id IS NULL);
+
+
+ALTER TABLE public.vws_pc_budget_diff OWNER TO postgres;
+
+--
 -- Name: workflow_logs; Type: TABLE; Schema: public; Owner: root; Tablespace: 
 --
 
@@ -14821,56 +15483,6 @@ ALTER TABLE public.workflows_workflow_id_seq OWNER TO root;
 
 ALTER SEQUENCE workflows_workflow_id_seq OWNED BY workflows.workflow_id;
 
-
---
--- Name: ws_pc_budget_diff; Type: VIEW; Schema: public; Owner: postgres
---
-
-CREATE VIEW ws_pc_budget_diff AS
- SELECT a.period_id,
-    a.period_year,
-    a.period_month,
-    a.department_id,
-    a.department_name,
-    a.pc_allocation_id,
-    a.pc_category_id,
-    a.pc_category_name,
-    a.pc_item_id,
-    a.pc_item_name,
-    a.sum_units,
-    a.avg_unit_price,
-    a.sum_items_cost,
-    a.budget_units,
-    a.budget_price,
-    a.budget_cost,
-    a.unit_diff,
-    a.budget_diff
-   FROM vs_pc_expenditure a
-UNION
- SELECT a.period_id,
-    a.period_year,
-    a.period_month,
-    a.department_id,
-    a.department_name,
-    a.pc_allocation_id,
-    a.pc_category_id,
-    a.pc_category_name,
-    a.pc_item_id,
-    a.pc_item_name,
-    0 AS sum_units,
-    0 AS avg_unit_price,
-    0 AS sum_items_cost,
-    a.budget_units,
-    a.budget_price,
-    a.budget_cost,
-    a.budget_units AS unit_diff,
-    a.budget_cost AS budget_diff
-   FROM (vw_pc_budget a
-     LEFT JOIN pc_expenditure ON (((a.pc_allocation_id = pc_expenditure.pc_allocation_id) AND (a.pc_item_id = pc_expenditure.pc_item_id))))
-  WHERE (pc_expenditure.pc_item_id IS NULL);
-
-
-ALTER TABLE public.ws_pc_budget_diff OWNER TO postgres;
 
 --
 -- Name: address_id; Type: DEFAULT; Schema: public; Owner: root
@@ -14992,6 +15604,13 @@ ALTER TABLE ONLY bidders ALTER COLUMN bidder_id SET DEFAULT nextval('bidders_bid
 
 
 --
+-- Name: bio_imports1_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY bio_imports1 ALTER COLUMN bio_imports1_id SET DEFAULT nextval('bio_imports1_bio_imports1_id_seq'::regclass);
+
+
+--
 -- Name: budget_line_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -15045,6 +15664,27 @@ ALTER TABLE ONLY casuals ALTER COLUMN casual_id SET DEFAULT nextval('casuals_cas
 --
 
 ALTER TABLE ONLY checklists ALTER COLUMN checklist_id SET DEFAULT nextval('checklists_checklist_id_seq'::regclass);
+
+
+--
+-- Name: claim_detail_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claim_details ALTER COLUMN claim_detail_id SET DEFAULT nextval('claim_details_claim_detail_id_seq'::regclass);
+
+
+--
+-- Name: claim_type_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claim_types ALTER COLUMN claim_type_id SET DEFAULT nextval('claim_types_claim_type_id_seq'::regclass);
+
+
+--
+-- Name: claim_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claims ALTER COLUMN claim_id SET DEFAULT nextval('claims_claim_id_seq'::regclass);
 
 
 --
@@ -15503,6 +16143,13 @@ ALTER TABLE ONLY pay_groups ALTER COLUMN pay_group_id SET DEFAULT nextval('pay_g
 
 
 --
+-- Name: pay_scale_step_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pay_scale_steps ALTER COLUMN pay_scale_step_id SET DEFAULT nextval('pay_scale_steps_pay_scale_step_id_seq'::regclass);
+
+
+--
 -- Name: pay_scale_year_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -15563,6 +16210,13 @@ ALTER TABLE ONLY pc_expenditure ALTER COLUMN pc_expenditure_id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY pc_items ALTER COLUMN pc_item_id SET DEFAULT nextval('pc_items_pc_item_id_seq'::regclass);
+
+
+--
+-- Name: pc_type_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pc_types ALTER COLUMN pc_type_id SET DEFAULT nextval('pc_types_pc_type_id_seq'::regclass);
 
 
 --
@@ -16163,23 +16817,23 @@ SELECT pg_catalog.setval('address_types_address_type_id_seq', 1, false);
 -- Data for Name: adjustments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (1, NULL, 0, 'Sacco Allowance', 1, 0, NULL, NULL, true, true, true, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (2, NULL, 0, 'Bonus', 1, 0, NULL, NULL, true, true, true, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (11, NULL, 0, 'SACCO', 2, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (12, NULL, 0, 'HELB', 2, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (13, NULL, 0, 'Rent Payment', 2, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (21, NULL, 0, 'Travel', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (22, NULL, 0, 'Communcation', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (23, NULL, 0, 'Tools', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (24, NULL, 0, 'Payroll Cost', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (25, NULL, 0, 'Health Insurance', 3, 0, NULL, NULL, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (26, NULL, 0, 'GPA Insurance', 3, 0, NULL, NULL, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (27, NULL, 0, 'Accomodation', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (28, NULL, 0, 'Avenue Health Care', 3, 0, NULL, NULL, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (29, NULL, 0, 'Maternety Cost', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (30, NULL, 0, 'Health care claims', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (31, NULL, 0, 'Trainining', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
-INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (32, NULL, 0, 'per diem', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (1, 1, 0, 'Sacco Allowance', 1, 0, NULL, NULL, true, true, true, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (2, 1, 0, 'Bonus', 1, 0, NULL, NULL, true, true, true, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (11, 1, 0, 'SACCO', 2, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (12, 1, 0, 'HELB', 2, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (13, 1, 0, 'Rent Payment', 2, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (21, 1, 0, 'Travel', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (22, 1, 0, 'Communcation', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (23, 1, 0, 'Tools', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (24, 1, 0, 'Payroll Cost', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (25, 1, 0, 'Health Insurance', 3, 0, NULL, NULL, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (26, 1, 0, 'GPA Insurance', 3, 0, NULL, NULL, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (27, 1, 0, 'Accomodation', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (28, 1, 0, 'Avenue Health Care', 3, 0, NULL, NULL, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (29, 1, 0, 'Maternety Cost', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (30, 1, 0, 'Health care claims', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (31, 1, 0, 'Trainining', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (32, 1, 0, 'per diem', 3, 0, NULL, NULL, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
 
 
 --
@@ -16359,7 +17013,7 @@ SELECT pg_catalog.setval('bank_branch_bank_branch_id_seq', 1, false);
 -- Data for Name: banks; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO banks (bank_id, org_id, bank_name, narrative) VALUES (0, 0, 'Cash', NULL);
+INSERT INTO banks (bank_id, sys_country_id, org_id, bank_name, bank_code, swift_code, sort_code, narrative) VALUES (0, NULL, 0, 'Cash', NULL, NULL, NULL, NULL);
 
 
 --
@@ -16380,6 +17034,19 @@ SELECT pg_catalog.setval('banks_bank_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('bidders_bidder_id_seq', 1, false);
+
+
+--
+-- Data for Name: bio_imports1; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: bio_imports1_bio_imports1_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('bio_imports1_bio_imports1_id_seq', 1, false);
 
 
 --
@@ -16487,6 +17154,45 @@ SELECT pg_catalog.setval('checklists_checklist_id_seq', 1, false);
 
 
 --
+-- Data for Name: claim_details; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: claim_details_claim_detail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('claim_details_claim_detail_id_seq', 1, false);
+
+
+--
+-- Data for Name: claim_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: claim_types_claim_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('claim_types_claim_type_id_seq', 1, false);
+
+
+--
+-- Data for Name: claims; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: claims_claim_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('claims_claim_id_seq', 1, false);
+
+
+--
 -- Data for Name: contract_status; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -16535,7 +17241,7 @@ SELECT pg_catalog.setval('contracts_contract_id_seq', 1, false);
 --
 
 INSERT INTO currency (currency_id, currency_name, currency_symbol, org_id) VALUES (1, 'Kenya Shillings', 'KES', 0);
-INSERT INTO currency (currency_id, currency_name, currency_symbol, org_id) VALUES (2, 'US Dolar', 'USD', 0);
+INSERT INTO currency (currency_id, currency_name, currency_symbol, org_id) VALUES (2, 'US Dollar', 'USD', 0);
 INSERT INTO currency (currency_id, currency_name, currency_symbol, org_id) VALUES (3, 'British Pound', 'BPD', 0);
 INSERT INTO currency (currency_id, currency_name, currency_symbol, org_id) VALUES (4, 'Euro', 'ERO', 0);
 
@@ -16551,7 +17257,7 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 -- Data for Name: currency_rates; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO currency_rates (currency_rate_id, currency_id, org_id, exchange_date, exchange_rate) VALUES (0, 1, 0, '2014-10-12', 1);
+INSERT INTO currency_rates (currency_rate_id, currency_id, org_id, exchange_date, exchange_rate) VALUES (0, 1, 0, '2015-04-07', 1);
 
 
 --
@@ -16943,12 +17649,12 @@ SELECT pg_catalog.setval('employee_trainings_employee_training_id_seq', 1, false
 -- Data for Name: employees; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (2, 2, 0, NULL, '5628', 0, 0, 0, 1, 0, NULL, 'Patibandla', 'Ramya', 'sree', '1990-10-15', 'F', NULL, 'IN', NULL, NULL, 'S', '2012-02-09', NULL, NULL, true, 2, 'Full Time', 'Passport', 5000, '1234567890', NULL, true, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (3, 3, 0, NULL, '5513', 0, 0, 0, 1, 0, NULL, 'Pusapati', 'Varma', 'Narasimha', '1973-10-12', 'M', NULL, 'IN', NULL, NULL, 'M', '2011-08-29', NULL, NULL, true, 2, 'Full Time', 'Passport', 35000, '1234567890', '4pic.png', true, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (4, 4, 0, NULL, '2512', 0, 0, 0, 1, 0, NULL, 'Kamanda', 'Edwin', 'Geke', '1982-05-06', 'M', NULL, 'KE', NULL, NULL, 'S', '2013-02-08', NULL, '2013-08-10', false, 12, NULL, 'erweewr', 20000, '22365336142', NULL, true, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (5, 4, 0, NULL, '2592', 0, 0, 0, 1, 0, NULL, 'Kamau', 'Joseph', 'Wanjoki', '1977-10-16', 'M', NULL, 'KE', NULL, NULL, 'M', '2012-10-16', NULL, '2012-11-01', false, 0, NULL, '8098098098', 30000, '980809809', NULL, true, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (6, 2, 0, NULL, '8783', 0, 0, 0, 1, 0, NULL, 'blackshamrat', 'Sazzadur ', 'Rahman', '1993-10-08', 'M', NULL, 'BD', NULL, NULL, 'S', '2013-10-08', NULL, NULL, false, 0, NULL, '269250', 116500, '101-105-12270', NULL, true, 'English , Bangla', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (7, 2, 0, NULL, '7551', 0, 0, 0, 1, 0, NULL, 'Ondero', 'Stanley', 'Makori', '2012-11-03', 'M', NULL, 'KE', NULL, NULL, 'M', '2013-05-01', NULL, NULL, false, 0, 'Parmanent and pensionable', '25145552', 100000, '0510191137356', NULL, false, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (2, 2, 0, NULL, '5628', 0, NULL, 0, 0, 1, 0, NULL, 'Patibandla', 'Ramya', 'sree', '1990-10-15', 'F', NULL, 'IN', NULL, NULL, 'S', '2012-02-09', NULL, NULL, true, 2, 'Full Time', 'Passport', 5000, '1234567890', NULL, true, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (3, 3, 0, NULL, '5513', 0, NULL, 0, 0, 1, 0, NULL, 'Pusapati', 'Varma', 'Narasimha', '1973-10-12', 'M', NULL, 'IN', NULL, NULL, 'M', '2011-08-29', NULL, NULL, true, 2, 'Full Time', 'Passport', 35000, '1234567890', '4pic.png', true, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (4, 4, 0, NULL, '2512', 0, NULL, 0, 0, 1, 0, NULL, 'Kamanda', 'Edwin', 'Geke', '1982-05-06', 'M', NULL, 'KE', NULL, NULL, 'S', '2013-02-08', NULL, '2013-08-10', false, 12, NULL, 'erweewr', 20000, '22365336142', NULL, true, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (5, 4, 0, NULL, '2592', 0, NULL, 0, 0, 1, 0, NULL, 'Kamau', 'Joseph', 'Wanjoki', '1977-10-16', 'M', NULL, 'KE', NULL, NULL, 'M', '2012-10-16', NULL, '2012-11-01', false, 0, NULL, '8098098098', 30000, '980809809', NULL, true, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (6, 2, 0, NULL, '8783', 0, NULL, 0, 0, 1, 0, NULL, 'blackshamrat', 'Sazzadur ', 'Rahman', '1993-10-08', 'M', NULL, 'BD', NULL, NULL, 'S', '2013-10-08', NULL, NULL, false, 0, NULL, '269250', 116500, '101-105-12270', NULL, true, 'English , Bangla', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (7, 2, 0, NULL, '7551', 0, NULL, 0, 0, 1, 0, NULL, 'Ondero', 'Stanley', 'Makori', '2012-11-03', 'M', NULL, 'KE', NULL, NULL, 'M', '2013-05-01', NULL, NULL, false, 0, 'Parmanent and pensionable', '25145552', 100000, '0510191137356', NULL, false, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 --
@@ -17009,16 +17715,16 @@ SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
 -- Data for Name: entitys; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (0, 0, 0, 'root', 'root', 'root@localhost', NULL, true, true, false, NULL, '2014-10-12 20:59:14.433047', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', NULL, false, true, false, NULL, '2014-10-12 20:59:14.433047', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (2, 1, 0, 'Patibandla Ramya sree', 'dc.ramya.patibandla', NULL, NULL, false, false, false, 'staff', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (3, 1, 0, 'Pusapati Varma Narasimha', 'dc.varma.pusapati', NULL, NULL, false, false, false, 'staff', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (4, 1, 0, 'Kamanda Edwin Geke', 'dc.edwin.kamanda', NULL, NULL, false, false, false, 'staff', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (5, 1, 0, 'Kamau Joseph Wanjoki', 'dc.joseph.kamau', NULL, NULL, false, false, false, 'staff', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (6, 1, 0, 'blackshamrat Sazzadur  Rahman', 'dc.sazzadur .blackshamrat', NULL, NULL, false, false, false, 'staff', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (7, 1, 0, 'Ondero Stanley Makori', 'dc.stanley.ondero', NULL, NULL, false, false, false, 'staff', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (8, 4, 0, 'Joseph Kamau Karanja', 'joseph.kamau@gmail.com', 'joseph.kamau@gmail.com', NULL, false, false, false, 'applicant', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id) VALUES (9, 4, 0, 'Gichangi Dennis Wachira', 'dennis.aaron@gmail.com', 'dennis.aaron@gmail.com', NULL, false, false, false, 'applicant', '2015-01-02 11:10:29.063308', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (0, 0, 0, 'root', 'root', 'root@localhost', NULL, true, true, false, NULL, '2015-04-07 10:15:20.55013', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', NULL, false, true, false, NULL, '2015-04-07 10:15:20.55013', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (2, 1, 0, 'Patibandla Ramya sree', 'dc.ramya.patibandla', NULL, NULL, false, false, false, 'staff', '2015-04-20 11:37:21.620761', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (3, 1, 0, 'Pusapati Varma Narasimha', 'dc.varma.pusapati', NULL, NULL, false, false, false, 'staff', '2015-04-20 11:37:21.683656', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (4, 1, 0, 'Kamanda Edwin Geke', 'dc.edwin.kamanda', NULL, NULL, false, false, false, 'staff', '2015-04-20 11:37:21.694698', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (5, 1, 0, 'Kamau Joseph Wanjoki', 'dc.joseph.kamau', NULL, NULL, false, false, false, 'staff', '2015-04-20 11:37:21.705952', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (6, 1, 0, 'blackshamrat Sazzadur  Rahman', 'dc.sazzadur .blackshamrat', NULL, NULL, false, false, false, 'staff', '2015-04-20 11:37:21.717123', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (7, 1, 0, 'Ondero Stanley Makori', 'dc.stanley.ondero', NULL, NULL, false, false, false, 'staff', '2015-04-20 11:37:21.728216', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (8, 4, 0, 'Joseph Kamau Karanja', 'joseph.kamau@gmail.com', 'joseph.kamau@gmail.com', NULL, false, false, false, 'applicant', '2015-04-20 11:37:21.750954', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (9, 4, 0, 'Gichangi Dennis Wachira', 'dennis.aaron@gmail.com', 'dennis.aaron@gmail.com', NULL, false, false, false, 'applicant', '2015-04-20 11:37:21.761723', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
 
 
 --
@@ -17459,6 +18165,19 @@ SELECT pg_catalog.setval('pay_groups_pay_group_id_seq', 1, false);
 
 
 --
+-- Data for Name: pay_scale_steps; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: pay_scale_steps_pay_scale_step_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('pay_scale_steps_pay_scale_step_id_seq', 1, false);
+
+
+--
 -- Data for Name: pay_scale_years; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -17475,7 +18194,7 @@ SELECT pg_catalog.setval('pay_scale_years_pay_scale_year_id_seq', 1, false);
 -- Data for Name: pay_scales; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO pay_scales (pay_scale_id, org_id, pay_scale_name, min_pay, max_pay, details) VALUES (0, 0, 'Basic', 0, 1000000, NULL);
+INSERT INTO pay_scales (pay_scale_id, currency_id, org_id, pay_scale_name, min_pay, max_pay, details) VALUES (0, NULL, 0, 'Basic', 0, 1000000, NULL);
 
 
 --
@@ -17574,6 +18293,19 @@ SELECT pg_catalog.setval('pc_expenditure_pc_expenditure_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('pc_items_pc_item_id_seq', 1, false);
+
+
+--
+-- Data for Name: pc_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: pc_types_pc_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('pc_types_pc_type_id_seq', 1, false);
 
 
 --
@@ -18320,18 +19052,14 @@ SELECT pg_catalog.setval('sys_files_sys_file_id_seq', 1, false);
 -- Data for Name: sys_logins; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2014-11-07 15:26:52.689009', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (2, 0, '2014-11-13 13:05:32.760665', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3, 0, '2014-11-13 13:14:04.726709', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (4, 0, '2015-01-02 10:58:20.864886', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (5, 0, '2015-01-02 11:09:55.787436', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2015-04-20 11:28:27.163131', '127.0.0.1', NULL);
 
 
 --
 -- Name: sys_logins_sys_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
-SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 5, true);
+SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 1, true);
 
 
 --
@@ -18403,57 +19131,55 @@ SELECT pg_catalog.setval('tasks_task_id_seq', 1, false);
 -- Data for Name: tax_rates; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (1, 1, 0, 10164, 10, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (2, 1, 0, 19740, 15, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (3, 1, 0, 29316, 20, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (4, 1, 0, 38892, 25, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (5, 1, 0, 10000000, 30, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (6, 2, 0, 4000, 5, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (7, 2, 0, 10000000, 0, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (8, 3, 0, 999, 0, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (9, 3, 0, 1499, 30, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (10, 3, 0, 1999, 40, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (11, 3, 0, 2999, 60, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (12, 3, 0, 3999, 80, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (13, 3, 0, 4999, 100, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 3, 0, 5999, 120, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (15, 3, 0, 6999, 140, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 3, 0, 7999, 160, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (17, 3, 0, 8999, 180, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (18, 3, 0, 9999, 200, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (19, 3, 0, 10999, 220, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (20, 3, 0, 11999, 240, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (21, 3, 0, 12999, 260, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (22, 3, 0, 13999, 280, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (23, 3, 0, 14999, 300, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (24, 3, 0, 1000000, 320, NULL);
-INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (25, 4, 0, 10000000, 30, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (26, 1, 0, 10164, 10, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (27, 1, 0, 19740, 15, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (28, 1, 0, 29316, 20, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (29, 1, 0, 38892, 25, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (30, 1, 0, 10000000, 30, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (31, 2, 0, 4000, 5, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (32, 2, 0, 10000000, 0, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (33, 3, 0, 999, 0, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (34, 3, 0, 1499, 30, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (35, 3, 0, 1999, 40, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (36, 3, 0, 2999, 60, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (37, 3, 0, 3999, 80, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (38, 3, 0, 4999, 100, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (39, 3, 0, 5999, 120, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (40, 3, 0, 6999, 140, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (41, 3, 0, 7999, 160, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (42, 3, 0, 8999, 180, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (43, 3, 0, 9999, 200, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (44, 3, 0, 10999, 220, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (45, 3, 0, 11999, 240, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (46, 3, 0, 12999, 260, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (47, 3, 0, 13999, 280, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (48, 3, 0, 14999, 300, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (49, 3, 0, 1000000, 320, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (50, 4, 0, 10000000, 30, NULL);
 
 
 --
 -- Name: tax_rates_tax_rate_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tax_rates_tax_rate_id_seq', 25, true);
+SELECT pg_catalog.setval('tax_rates_tax_rate_id_seq', 50, true);
 
 
 --
 -- Data for Name: tax_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (1, 90000, 1, 0, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, 0, false, true, true, 0, 0, NULL, true, 1, NULL);
-INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (2, 90000, 1, 0, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, 0, false, true, true, 0, 0, NULL, true, 1, NULL);
-INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (3, 90000, 1, 0, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, false, false, 0, 0, NULL, true, 1, NULL);
-INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (4, 90000, 1, 0, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, 0, false, false, false, 0, 0, NULL, false, 1, NULL);
-INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (5, 90000, 1, 0, 'Exempt', NULL, 0, 0, false, 0, false, true, true, 0, 0, NULL, true, 0, NULL);
-INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (6, 90000, 1, 0, 'VAT', NULL, 0, 0, false, 16, false, true, true, 0, 0, NULL, true, 0, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (1, NULL, 1, 0, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, 0, false, true, true, 0, 0, NULL, true, 1, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (2, NULL, 1, 0, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, 0, false, true, true, 0, 0, NULL, true, 1, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (3, NULL, 1, 0, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, false, false, 0, 0, NULL, true, 1, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, use_key, details) VALUES (4, NULL, 1, 0, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, 0, false, false, false, 0, 0, NULL, false, 1, NULL);
 
 
 --
 -- Name: tax_types_tax_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 6, true);
+SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 4, true);
 
 
 --
@@ -18593,6 +19319,12 @@ SELECT pg_catalog.setval('transactions_transaction_id_seq', 1, false);
 
 
 --
+-- Data for Name: vw_pay_scales; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
 -- Data for Name: workflow_logs; Type: TABLE DATA; Schema: public; Owner: root
 --
 
@@ -18609,9 +19341,9 @@ SELECT pg_catalog.setval('workflow_logs_workflow_log_id_seq', 1, false);
 -- Data for Name: workflow_phases; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (1, 1, 0, 0, 1, 0, 0, 3, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (2, 2, 0, 0, 1, 0, 0, 3, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (3, 3, 0, 0, 1, 0, 0, 3, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (1, 1, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (2, 2, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (3, 3, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 
 
 --
@@ -18859,6 +19591,14 @@ ALTER TABLE ONLY bidders
 
 
 --
+-- Name: bio_imports1_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY bio_imports1
+    ADD CONSTRAINT bio_imports1_pkey PRIMARY KEY (bio_imports1_id);
+
+
+--
 -- Name: budget_lines_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -18928,6 +19668,30 @@ ALTER TABLE ONLY casuals
 
 ALTER TABLE ONLY checklists
     ADD CONSTRAINT checklists_pkey PRIMARY KEY (checklist_id);
+
+
+--
+-- Name: claim_details_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY claim_details
+    ADD CONSTRAINT claim_details_pkey PRIMARY KEY (claim_detail_id);
+
+
+--
+-- Name: claim_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY claim_types
+    ADD CONSTRAINT claim_types_pkey PRIMARY KEY (claim_type_id);
+
+
+--
+-- Name: claims_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY claims
+    ADD CONSTRAINT claims_pkey PRIMARY KEY (claim_id);
 
 
 --
@@ -19587,6 +20351,14 @@ ALTER TABLE ONLY pay_groups
 
 
 --
+-- Name: pay_scale_steps_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY pay_scale_steps
+    ADD CONSTRAINT pay_scale_steps_pkey PRIMARY KEY (pay_scale_step_id);
+
+
+--
 -- Name: pay_scale_years_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -19688,6 +20460,14 @@ ALTER TABLE ONLY pc_items
 
 ALTER TABLE ONLY pc_items
     ADD CONSTRAINT pc_items_pkey PRIMARY KEY (pc_item_id);
+
+
+--
+-- Name: pc_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY pc_types
+    ADD CONSTRAINT pc_types_pkey PRIMARY KEY (pc_type_id);
 
 
 --
@@ -20604,6 +21384,13 @@ CREATE INDEX bidders_tender_id ON bidders USING btree (tender_id);
 
 
 --
+-- Name: bio_imports1_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX bio_imports1_org_id ON bio_imports1 USING btree (org_id);
+
+
+--
 -- Name: branch_bankid; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -20762,6 +21549,69 @@ CREATE INDEX checklists_org_id ON checklists USING btree (org_id);
 --
 
 CREATE INDEX checklists_workflow_phase_id ON checklists USING btree (workflow_phase_id);
+
+
+--
+-- Name: claim_details_claim_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claim_details_claim_id ON claim_details USING btree (claim_id);
+
+
+--
+-- Name: claim_details_currency_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claim_details_currency_id ON claim_details USING btree (currency_id);
+
+
+--
+-- Name: claim_details_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claim_details_org_id ON claim_details USING btree (org_id);
+
+
+--
+-- Name: claim_types_adjustment_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claim_types_adjustment_id ON claim_types USING btree (adjustment_id);
+
+
+--
+-- Name: claim_types_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claim_types_org_id ON claim_types USING btree (org_id);
+
+
+--
+-- Name: claims_claim_type_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claims_claim_type_id ON claims USING btree (claim_type_id);
+
+
+--
+-- Name: claims_employee_adjustment_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claims_employee_adjustment_id ON claims USING btree (employee_adjustment_id);
+
+
+--
+-- Name: claims_entity_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claims_entity_id ON claims USING btree (entity_id);
+
+
+--
+-- Name: claims_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX claims_org_id ON claims USING btree (org_id);
 
 
 --
@@ -21451,6 +22301,13 @@ CREATE INDEX employees_pay_scale_id ON employees USING btree (pay_scale_id);
 
 
 --
+-- Name: employees_pay_scale_step_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX employees_pay_scale_step_id ON employees USING btree (pay_scale_step_id);
+
+
+--
 -- Name: employment_entity_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -21997,6 +22854,13 @@ CREATE INDEX locations_org_id ON locations USING btree (org_id);
 
 
 --
+-- Name: objective_details_ln_objective_detail_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX objective_details_ln_objective_detail_id ON objective_details USING btree (ln_objective_detail_id);
+
+
+--
 -- Name: objective_details_objective_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -22060,6 +22924,20 @@ CREATE INDEX pay_groups_org_id ON pay_groups USING btree (org_id);
 
 
 --
+-- Name: pay_scale_steps_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX pay_scale_steps_org_id ON pay_scale_steps USING btree (org_id);
+
+
+--
+-- Name: pay_scale_steps_pay_scale_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX pay_scale_steps_pay_scale_id ON pay_scale_steps USING btree (pay_scale_id);
+
+
+--
 -- Name: pay_scale_years_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -22071,6 +22949,13 @@ CREATE INDEX pay_scale_years_org_id ON pay_scale_years USING btree (org_id);
 --
 
 CREATE INDEX pay_scale_years_pay_scale_id ON pay_scale_years USING btree (pay_scale_id);
+
+
+--
+-- Name: pay_scales_currency_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX pay_scales_currency_id ON pay_scales USING btree (currency_id);
 
 
 --
@@ -22190,6 +23075,13 @@ CREATE INDEX pc_items_org_id ON pc_items USING btree (org_id);
 --
 
 CREATE INDEX pc_items_pc_category_id ON pc_items USING btree (pc_category_id);
+
+
+--
+-- Name: pc_types_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX pc_types_org_id ON pc_types USING btree (org_id);
 
 
 --
@@ -23043,7 +23935,7 @@ CREATE TRIGGER ins_employee_leave_types BEFORE INSERT ON employee_leave_types FO
 -- Name: ins_employee_month; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-CREATE TRIGGER ins_employee_month AFTER INSERT ON employee_month FOR EACH ROW EXECUTE PROCEDURE ins_employee_month();
+CREATE TRIGGER ins_employee_month BEFORE INSERT ON employee_month FOR EACH ROW EXECUTE PROCEDURE ins_employee_month();
 
 
 --
@@ -23099,7 +23991,7 @@ CREATE TRIGGER ins_leave_work_days BEFORE INSERT ON leave_work_days FOR EACH ROW
 -- Name: ins_objective_details; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
-CREATE TRIGGER ins_objective_details AFTER INSERT OR UPDATE ON objective_details FOR EACH ROW EXECUTE PROCEDURE ins_objective_details();
+CREATE TRIGGER ins_objective_details BEFORE INSERT OR UPDATE ON objective_details FOR EACH ROW EXECUTE PROCEDURE ins_objective_details();
 
 
 --
@@ -23239,6 +24131,13 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_per_diem FOR EACH 
 -- Name: upd_action; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON claims FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+
+--
+-- Name: upd_action; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON transactions FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 
@@ -23247,6 +24146,20 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON transactions FOR EACH ROW E
 --
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON budgets FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+
+--
+-- Name: upd_action; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON pc_allocations FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+
+--
+-- Name: upd_action; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON pc_expenditure FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 
 --
@@ -23278,6 +24191,13 @@ CREATE TRIGGER upd_employee_adjustments AFTER INSERT OR UPDATE ON employee_adjus
 
 
 --
+-- Name: upd_employee_month; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER upd_employee_month AFTER INSERT ON employee_month FOR EACH ROW EXECUTE PROCEDURE upd_employee_month();
+
+
+--
 -- Name: upd_employee_per_diem; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -23289,6 +24209,13 @@ CREATE TRIGGER upd_employee_per_diem BEFORE INSERT OR UPDATE ON employee_per_die
 --
 
 CREATE TRIGGER upd_gls BEFORE INSERT OR UPDATE ON gls FOR EACH ROW EXECUTE PROCEDURE upd_gls();
+
+
+--
+-- Name: upd_objective_details; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER upd_objective_details AFTER INSERT OR UPDATE ON objective_details FOR EACH ROW EXECUTE PROCEDURE upd_objective_details();
 
 
 --
@@ -23746,6 +24673,14 @@ ALTER TABLE ONLY banks
 
 
 --
+-- Name: banks_sys_country_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY banks
+    ADD CONSTRAINT banks_sys_country_id_fkey FOREIGN KEY (sys_country_id) REFERENCES sys_countrys(sys_country_id);
+
+
+--
 -- Name: bidders_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -23767,6 +24702,14 @@ ALTER TABLE ONLY bidders
 
 ALTER TABLE ONLY bidders
     ADD CONSTRAINT bidders_tender_id_fkey FOREIGN KEY (tender_id) REFERENCES tenders(tender_id);
+
+
+--
+-- Name: bio_imports1_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY bio_imports1
+    ADD CONSTRAINT bio_imports1_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
 
 
 --
@@ -23951,6 +24894,78 @@ ALTER TABLE ONLY checklists
 
 ALTER TABLE ONLY checklists
     ADD CONSTRAINT checklists_workflow_phase_id_fkey FOREIGN KEY (workflow_phase_id) REFERENCES workflow_phases(workflow_phase_id);
+
+
+--
+-- Name: claim_details_claim_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claim_details
+    ADD CONSTRAINT claim_details_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES claims(claim_id);
+
+
+--
+-- Name: claim_details_currency_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claim_details
+    ADD CONSTRAINT claim_details_currency_id_fkey FOREIGN KEY (currency_id) REFERENCES currency(currency_id);
+
+
+--
+-- Name: claim_details_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claim_details
+    ADD CONSTRAINT claim_details_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+
+
+--
+-- Name: claim_types_adjustment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claim_types
+    ADD CONSTRAINT claim_types_adjustment_id_fkey FOREIGN KEY (adjustment_id) REFERENCES adjustments(adjustment_id);
+
+
+--
+-- Name: claim_types_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claim_types
+    ADD CONSTRAINT claim_types_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+
+
+--
+-- Name: claims_claim_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claims
+    ADD CONSTRAINT claims_claim_type_id_fkey FOREIGN KEY (claim_type_id) REFERENCES claim_types(claim_type_id);
+
+
+--
+-- Name: claims_employee_adjustment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claims
+    ADD CONSTRAINT claims_employee_adjustment_id_fkey FOREIGN KEY (employee_adjustment_id) REFERENCES employee_adjustments(employee_adjustment_id);
+
+
+--
+-- Name: claims_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claims
+    ADD CONSTRAINT claims_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES entitys(entity_id);
+
+
+--
+-- Name: claims_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY claims
+    ADD CONSTRAINT claims_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
 
 
 --
@@ -24746,6 +25761,14 @@ ALTER TABLE ONLY employees
 
 
 --
+-- Name: employees_pay_scale_step_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY employees
+    ADD CONSTRAINT employees_pay_scale_step_id_fkey FOREIGN KEY (pay_scale_step_id) REFERENCES pay_scale_steps(pay_scale_step_id);
+
+
+--
 -- Name: employment_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -25394,6 +26417,14 @@ ALTER TABLE ONLY locations
 
 
 --
+-- Name: objective_details_ln_objective_detail_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY objective_details
+    ADD CONSTRAINT objective_details_ln_objective_detail_id_fkey FOREIGN KEY (ln_objective_detail_id) REFERENCES objective_details(objective_detail_id);
+
+
+--
 -- Name: objective_details_objective_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -25466,6 +26497,22 @@ ALTER TABLE ONLY pay_groups
 
 
 --
+-- Name: pay_scale_steps_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pay_scale_steps
+    ADD CONSTRAINT pay_scale_steps_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+
+
+--
+-- Name: pay_scale_steps_pay_scale_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pay_scale_steps
+    ADD CONSTRAINT pay_scale_steps_pay_scale_id_fkey FOREIGN KEY (pay_scale_id) REFERENCES pay_scales(pay_scale_id);
+
+
+--
 -- Name: pay_scale_years_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -25479,6 +26526,14 @@ ALTER TABLE ONLY pay_scale_years
 
 ALTER TABLE ONLY pay_scale_years
     ADD CONSTRAINT pay_scale_years_pay_scale_id_fkey FOREIGN KEY (pay_scale_id) REFERENCES pay_scales(pay_scale_id);
+
+
+--
+-- Name: pay_scales_currency_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pay_scales
+    ADD CONSTRAINT pay_scales_currency_id_fkey FOREIGN KEY (currency_id) REFERENCES currency(currency_id);
 
 
 --
@@ -25578,6 +26633,14 @@ ALTER TABLE ONLY pc_category
 
 
 --
+-- Name: pc_expenditure_entity_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pc_expenditure
+    ADD CONSTRAINT pc_expenditure_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES entitys(entity_id);
+
+
+--
 -- Name: pc_expenditure_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -25602,6 +26665,14 @@ ALTER TABLE ONLY pc_expenditure
 
 
 --
+-- Name: pc_expenditure_pc_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pc_expenditure
+    ADD CONSTRAINT pc_expenditure_pc_type_id_fkey FOREIGN KEY (pc_type_id) REFERENCES pc_types(pc_type_id);
+
+
+--
 -- Name: pc_items_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -25615,6 +26686,14 @@ ALTER TABLE ONLY pc_items
 
 ALTER TABLE ONLY pc_items
     ADD CONSTRAINT pc_items_pc_category_id_fkey FOREIGN KEY (pc_category_id) REFERENCES pc_category(pc_category_id);
+
+
+--
+-- Name: pc_types_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY pc_types
+    ADD CONSTRAINT pc_types_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
 
 
 --

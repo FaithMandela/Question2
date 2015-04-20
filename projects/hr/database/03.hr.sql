@@ -21,6 +21,16 @@ CREATE TABLE pay_scales (
 CREATE INDEX pay_scales_org_id ON pay_scales(org_id);
 CREATE INDEX pay_scales_currency_id ON pay_scales(currency_id);
 
+CREATE TABLE pay_scale_steps (
+	pay_scale_step_id		serial primary key,
+	pay_scale_id			integer references pay_scales,
+	org_id					integer references orgs,
+	pay_step				integer not null,
+	pay_amount				real not null
+);
+CREATE INDEX pay_scale_steps_pay_scale_id ON pay_scale_steps(pay_scale_id);
+CREATE INDEX pay_scale_steps_org_id ON pay_scale_steps(org_id);
+
 CREATE TABLE pay_scale_years (
 	pay_scale_year_id		serial primary key,
 	pay_scale_id			integer references pay_scales,
@@ -98,6 +108,7 @@ CREATE TABLE employees (
 	disability_id			integer references disability,
 	employee_id				varchar(12) not null,
 	pay_scale_id			integer references pay_scales,
+	pay_scale_step_id		integer references pay_scale_steps,
 	pay_group_id			integer references pay_groups,
 	location_id				integer references locations,
 	currency_id				integer references currency,
@@ -152,6 +163,7 @@ CREATE INDEX employees_department_role_id ON employees (department_role_id);
 CREATE INDEX employees_bank_branch_id ON employees (bank_branch_id);
 CREATE INDEX employees_disability_id ON employees (disability_id);
 CREATE INDEX employees_pay_scale_id ON employees (pay_scale_id);
+CREATE INDEX employees_pay_scale_step_id ON employees (pay_scale_step_id);
 CREATE INDEX employees_pay_group_id ON employees (pay_group_id);
 CREATE INDEX employees_location_id ON employees (location_id);
 CREATE INDEX employees_nationality ON employees (nationality);
@@ -781,6 +793,15 @@ CREATE TABLE vw_pay_scales AS
 		pay_scales.org_id, pay_scales.pay_scale_id, pay_scales.pay_scale_name,
 		pay_scales.min_pay, pay_scales.max_pay, pay_scales.details
 	FROM pay_scales INNER JOIN currency ON pay_scales.currency_id = currency.currency_id;
+	
+CREATE VIEW vw_pay_scale_steps AS
+	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
+		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
+		pay_scale_steps.org_id, pay_scale_steps.pay_scale_step_id, pay_scale_steps.pay_step, 
+		pay_scale_steps.pay_amount,
+		(pay_scales.pay_scale_name || '-' || currency.currency_symbol || '-' || pay_scale_steps.pay_step) as pay_step_name
+	FROM pay_scale_steps INNER JOIN pay_scales ON pay_scale_steps.pay_scale_id = pay_scales.pay_scale_id
+		INNER JOIN currency ON pay_scales.currency_id = currency.currency_id;
 
 CREATE VIEW vw_education_max AS
 	SELECT education_class.education_class_id, education_class.education_class_name, 
