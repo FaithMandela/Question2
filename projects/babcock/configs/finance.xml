@@ -45,6 +45,7 @@
 			<MENU name="Financial Clearance List">405</MENU>
 			<MENU name="Posting Variance">415</MENU>
 			<MENU name="Tuition Analysis">674</MENU>
+			<MENU name="Major Level Summary">679</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="585" name="Scholarship Types" key="1" h="500">
@@ -896,6 +897,14 @@
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" noorg="true" listfield="sublevelname" filter="sublevelid"></DRILLDOWN>
 			<JASPER name="Tuition Analysis" reportfile="tuition_analysis.jasper"></JASPER>
 			<JASPER name="Full Tuition Analysis" reportfile="tuition_analysis_a.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Major Level Summary" key="679" h="550">
+		<FILTER location="250" name="Major Level Summary" type="horl">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
+				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Major Level Summary" reportfile="vw_major_level_count.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>
