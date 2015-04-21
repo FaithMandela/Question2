@@ -214,11 +214,11 @@
 		<GRID name="Pay Grade" keyfield="pay_scale_id" table="pay_scales">
 			<TEXTFIELD w="75" title="Pay Grade ID">pay_scale_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pay Grade Name">pay_scale_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Min Pay">min_pay</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Max Pay">max_pay</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Min Pay" pattern="###,###,###.##">min_pay</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Max Pay" pattern="###,###,###.##">max_pay</TEXTDECIMAL>
 			<GRID name="Pay Steps" keyfield="pay_scale_step_id" linkfield="pay_scale_id" table="vw_pay_scale_steps">
 				<TEXTFIELD w="75" title="Pay Step">pay_step</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Pay Amount">pay_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Pay Amount" pattern="###,###,###.##">pay_amount</TEXTDECIMAL>
 				<FORM name="Pay Steps" keyfield="pay_scale_step_id" linkfield="pay_scale_id" table="pay_scale_steps">
 					<TEXTFIELD w="150" title="Pay Step" y="10" h="20" x="10">pay_step</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Pay Amount" y="10" h="20" x="290">pay_amount</TEXTDECIMAL>
@@ -226,7 +226,7 @@
 			</GRID>
 			<GRID name="Pay Year" keyfield="pay_scale_year_id" orderby="pay_year" linkfield="pay_scale_id" table="pay_scale_years">
 				<TEXTFIELD w="75" title="Pay Year">pay_year</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Pay Amount">pay_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Pay Amount" pattern="###,###,###.##">pay_amount</TEXTDECIMAL>
 				<FORM name="Pay Year" keyfield="pay_scale_year_id" linkfield="pay_scale_id" table="pay_scale_years">
 					<TEXTFIELD w="150" title="Pay Year" y="10" h="20" x="10">pay_year</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Pay Amount" y="10" h="20" x="290">pay_amount</TEXTDECIMAL>
@@ -351,6 +351,10 @@
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION fnct="increment_payroll" approval="1" role="hr">Generate Amounts</ACTION>
+				<ACTION fnct="increment_payroll" approval="2" role="hr">Step Increment</ACTION>
+			</ACTIONS>
 			<FORM tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
 				<COMBOBOX w="430" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10">employee_id</TEXTFIELD>

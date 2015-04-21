@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.lang.StringBuffer;
 import java.text.SimpleDateFormat;
 import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -1501,6 +1502,7 @@ public class BQuery {
 	public String formatData(BElement el) {
 		String response = "";
 		String format = el.getAttribute("format");
+		String pattern = el.getAttribute("pattern");
 		if(format == null) {
 			if(el.getName().equals("TEXTDATE")) format = "date";
 			if(el.getName().equals("TEXTTIMESTAMP")) format = "timestamp";
@@ -1534,11 +1536,13 @@ public class BQuery {
 				String mydate = dateformatter.format(rs.getTimestamp(el.getValue()));				
 				response = mydate;
 			} else if(format.equals("double")) {
-				NumberFormat numberFormatter;
-				String amountOut;
-				numberFormatter = NumberFormat.getNumberInstance();
-				amountOut = numberFormatter.format(rs.getDouble(el.getValue()));
-				response = amountOut;
+				if(pattern == null) {
+					NumberFormat numberFormatter = NumberFormat.getNumberInstance();
+					response = numberFormatter.format(rs.getDouble(el.getValue()));
+				} else {
+					DecimalFormat myFormatter = new DecimalFormat(pattern);
+					response = myFormatter.format(rs.getDouble(el.getValue()));
+				}
 			}
 		} catch(SQLException ex) {
 			log.severe("Query data field formating error : " + ex);
