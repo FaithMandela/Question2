@@ -27,17 +27,17 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT quarterid, degreelevelname, majorname, studylevel, count(qstudentid)
-FROM qstudentmajorview
+		<![CDATA[SELECT quarterid, sublevelname, majorname, studylevel, count(qstudentid) as level_count
+FROM vwqstudentbalances
 WHERE (finaceapproval = true) AND (quarterid = '$P!{filterid}')
-GROUP BY quarterid, degreelevelname, majorname, studylevel
-ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
+GROUP BY quarterid, sublevelname, majorname, studylevel
+ORDER BY quarterid, sublevelname, majorname, studylevel]]>
 	</queryString>
 	<field name="quarterid" class="java.lang.String"/>
-	<field name="degreelevelname" class="java.lang.String"/>
+	<field name="sublevelname" class="java.lang.String"/>
 	<field name="majorname" class="java.lang.String"/>
 	<field name="studylevel" class="java.lang.Integer"/>
-	<field name="count" class="java.lang.Long"/>
+	<field name="level_count" class="java.lang.Long"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -106,10 +106,10 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 	<summary>
 		<band height="84" splitType="Stretch">
 			<crosstab>
-				<reportElement x="0" y="0" width="802" height="84" uuid="acdbb1ef-47fd-4b14-94a8-714e0c61af4d"/>
-				<rowGroup name="degreelevelname" width="164" totalPosition="End">
+				<reportElement x="0" y="0" width="802" height="84" uuid="1be0385c-9c50-4211-940c-9f4c03195501"/>
+				<rowGroup name="sublevelname" width="214" totalPosition="End">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{degreelevelname}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{sublevelname}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -117,12 +117,12 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="164" height="50" uuid="08a627ad-da45-44fd-bdbe-75910e323835"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="214" height="46" uuid="3fb22933-e060-4a6c-b55f-84952e44ec8d"/>
 								<box leftPadding="2"/>
 								<textElement textAlignment="Left">
 									<font fontName="Times New Roman"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{degreelevelname}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{sublevelname}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabRowHeader>
@@ -132,7 +132,7 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="164" height="25" forecolor="#FFFFFF" uuid="95dbd5fa-55dc-46b6-8d38-92ee82219137"/>
+								<reportElement x="0" y="0" width="477" height="25" forecolor="#FFFFFF" uuid="196a3a72-2f04-45f3-adbc-5c85e470a6c9"/>
 								<box leftPadding="2"/>
 								<textElement verticalAlignment="Middle">
 									<font fontName="Times New Roman"/>
@@ -142,7 +142,7 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 						</cellContents>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="majorname" width="215" totalPosition="End">
+				<rowGroup name="majorname" width="263" totalPosition="End">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{majorname}]]></bucketExpression>
 					</bucket>
@@ -152,7 +152,7 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="215" height="25" uuid="d62d4736-0d70-40af-90ea-b546407e9f3d"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="263" height="21" uuid="cfcbf6bf-0ba0-4290-b0cc-c14bdb2c9948"/>
 								<box leftPadding="2"/>
 								<textElement textAlignment="Left">
 									<font fontName="Times New Roman"/>
@@ -167,7 +167,7 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="215" height="25" uuid="f4bec9e4-96b7-4bf4-b87f-e5cb7d73192d"/>
+								<reportElement x="0" y="0" width="263" height="25" uuid="dbc19084-0e3c-4a19-8cdd-a629990c5b03"/>
 								<box leftPadding="2"/>
 								<textElement verticalAlignment="Middle">
 									<font fontName="Times New Roman"/>
@@ -186,8 +186,8 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 							<box>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
-							<textField isBlankWhenNull="true">
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="30" uuid="ad13b83b-9dfb-4868-8c14-f64f140be4e4"/>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="47" height="30" uuid="eda1b439-ebbe-44e4-8052-261885e22be5"/>
 								<textElement>
 									<font fontName="Times New Roman"/>
 								</textElement>
@@ -201,85 +201,85 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="50" height="30" uuid="a7c4039f-098f-4168-b9d4-3d7245769ee0"/>
+								<reportElement x="0" y="0" width="50" height="30" uuid="6d146274-22e9-458f-9dd6-989182f21a5f"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Times New Roman"/>
 								</textElement>
-								<text><![CDATA[Total Study Level]]></text>
+								<text><![CDATA[Total studylevel]]></text>
 							</staticText>
 						</cellContents>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
-				<measure name="countMeasure" class="java.lang.Long" calculation="Sum">
-					<measureExpression><![CDATA[$F{count}]]></measureExpression>
+				<measure name="level_countMeasure" class="java.lang.Long" calculation="Sum">
+					<measureExpression><![CDATA[$F{level_count}]]></measureExpression>
 				</measure>
-				<crosstabCell width="50" height="25">
+				<crosstabCell width="47" height="21">
 					<cellContents>
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textField isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="8e9199ba-237f-478f-b6b5-00e4eff40bcd"/>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="47" height="21" uuid="fe4020a0-aa47-4730-bf99-211299a34f0d"/>
 							<textElement>
 								<font fontName="Times New Roman"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{level_countMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell height="25" rowTotalGroup="degreelevelname">
+				<crosstabCell width="47" height="25" rowTotalGroup="sublevelname">
 					<cellContents backcolor="#005FB3" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textField isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="1b7644e1-0655-4127-96b3-0e1ccdc08882"/>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="47" height="25" forecolor="#FFFFFF" uuid="7e7da816-15e3-4202-87ec-07c4d693bba1"/>
 							<textElement>
 								<font fontName="Times New Roman"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{level_countMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="50" columnTotalGroup="studylevel">
+				<crosstabCell width="50" height="21" columnTotalGroup="studylevel">
 					<cellContents backcolor="#BFE1FF" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textField isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="e26ef09e-f1a3-410e-9f90-1a66751fd44b"/>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="21" uuid="d7f81969-c104-4b7d-b4b3-043b67429c11"/>
 							<textElement>
 								<font fontName="Times New Roman"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{level_countMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell rowTotalGroup="degreelevelname" columnTotalGroup="studylevel">
+				<crosstabCell rowTotalGroup="sublevelname" columnTotalGroup="studylevel">
 					<cellContents backcolor="#005FB3" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textField isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="fbc0130e-5996-4650-9e58-5c75a14bb7f6"/>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="9594a183-07fa-4fd9-9752-a04fd395ca28"/>
 							<textElement>
 								<font fontName="Times New Roman"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{level_countMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell height="25" rowTotalGroup="majorname">
+				<crosstabCell width="47" height="25" rowTotalGroup="majorname">
 					<cellContents backcolor="#BFE1FF" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textField isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="7de488c7-1ed2-4a1a-b6af-b5066e333ccd"/>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="47" height="25" uuid="e8155306-f880-46fb-b90f-a4ad152b3a71"/>
 							<textElement>
 								<font fontName="Times New Roman"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{level_countMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
@@ -288,12 +288,12 @@ ORDER BY quarterid, degreelevelname, majorname, studylevel]]>
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textField isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="214bd147-0ab1-468c-9c1e-77c99199fafe"/>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="18157f27-da0b-4181-bcf1-1d1f920f9453"/>
 							<textElement>
 								<font fontName="Times New Roman"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$V{countMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{level_countMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
