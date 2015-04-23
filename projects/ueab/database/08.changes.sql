@@ -1,4 +1,60 @@
 
+ALTER  TABLE studentdegrees ADD grad_apply			boolean not null default false;
+ALTER  TABLE studentdegrees ADD grad_apply_date		date;
+ALTER  TABLE studentdegrees ADD grad_finance		boolean not null default false;
+ALTER  TABLE studentdegrees ADD grad_finance_date	date;
+ALTER  TABLE studentdegrees ADD grad_accept			boolean not null default false;
+ALTER  TABLE studentdegrees ADD grad_accept_date	date;
+
+
+CREATE OR REPLACE FUNCTION getoverload(varchar(2), float, float, float, boolean, float) RETURNS boolean AS $$
+DECLARE
+	myoverload boolean;
+BEGIN
+	myoverload := false;
+
+	IF ($1='I') THEN
+		IF ($3 is null) AND ($2 > 9) THEN
+			myoverload := true;
+		ELSIF (($4>=100) AND ($3>=2.67) AND ($2<=11)) THEN
+			myoverload := false;
+		ELSIF (($3<1.99) AND ($2>6)) THEN
+			myoverload := true;
+		ELSIF (($3<2.99) AND ($2>11)) THEN
+			myoverload := true;
+		ELSIF (($3<3.5) AND ($2>12)) THEN
+			myoverload := true;
+		ELSIF ($2>9) THEN
+			myoverload := true;
+		END IF;
+	ELSE
+		IF (($3<1.99) AND ($2<>9)) THEN
+			myoverload := true;
+		ELSIF ($3 is null) AND ($2 > 14) THEN
+			myoverload := true;
+		ELSIF (($4>=110) AND ($3>=2.70) AND ($2<=17)) THEN
+			myoverload := false;
+		ELSE
+			IF (($3<3) AND ($2>15)) THEN
+				myoverload := true;
+			ELSIF (($3<3.5) AND ($2>16)) THEN
+				myoverload := true;
+			ELSIF ($2>16) THEN
+				myoverload := true;
+			END IF;
+		END IF;
+	END IF;
+
+	IF (myoverload = true) THEN
+		IF ($5 = true) AND ($2 <= $6) THEN
+			myoverload := false;
+		END IF;
+	END IF;
+
+    RETURN myoverload;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION grade_updates(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
 BEGIN

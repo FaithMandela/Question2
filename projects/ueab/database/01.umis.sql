@@ -407,6 +407,14 @@ CREATE TABLE studentdegrees (
 	started				date,
 	cleared				boolean not null default false,
 	clearedate			date,
+	
+	grad_apply			boolean not null default false,
+	grad_apply_date		date,
+	grad_finance		boolean not null default false,
+	grad_finance_date	date,
+	grad_accept			boolean not null default false,
+	grad_accept_date	date,
+	
 	graduated			boolean not null default false,
 	graduatedate		date,
 	dropout				boolean not null default false,

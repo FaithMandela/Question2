@@ -1,109 +1,103 @@
 <html>
 <head>
 	<title>CWT Corporate Script</title>
-	<script src ="script.js" ></script> 
+	<script>
+		var VP = new ActiveXObject("Viewpoint.ViewpointSrv");
+
+		function getPNRInfor(){	
+			VP.RetrieveCurrentPNR();
+			var PNR = VP.GetPNR();
+	
+			var XMLDoc = new ActiveXObject("MICROSOFT.XMLDOM");
+			XMLDoc.async = false;
+			XMLDoc.loadXML(PNR);
+	
+			var AirSeg = XMLDoc.getElementsByTagName("AirSeg");
+
+			cwtScript.remark1seg.value = AirSeg.length;
+			cwtScript.remark2seg.value = AirSeg.length;
+
+			var txt1 = DisplayTE("*R");
+			var txt2 = DisplayTE("*RI");
+			cwtScript.resultarea.value = txt1 + txt2;
+		}
+
+		function addPNRInfor(){	
+			if(cwtScript.remark1ckb.checked) 
+				var results = DisplayTE("RI.S" + cwtScript.remark1seg.value + "*AIRFARE IN POLICY");
+			if(cwtScript.remark2ckb.checked) 
+				var results = DisplayTE("RI.S" + cwtScript.remark2seg.value + "*HOTEL IN POLICY");
+			if(cwtScript.remark3ckb.checked) 
+				var results = DisplayTE("DI.FT-FF" + cwtScript.remark3ftf.value + "/" + cwtScript.remark3val.value);
+			if(cwtScript.remark4ckb.checked) 
+				var results = DisplayTE("DI.FT-FF" + cwtScript.remark4ftf.value + "/" + cwtScript.remark4val.value);
+
+			var txt1 = DisplayTE("*R");
+			var txt2 = DisplayTE("*RI");
+			cwtScript.resultarea.value = txt1 + txt2;
+		}
+
+		function DisplayTE(gcmd) {
+			   //console.log('Writing to Free Field');
+			   var TE = new ActiveXObject("DAT32COM.TERMINALEMULATION");
+			   var command = "<FORMAT>" + gcmd + "</FORMAT>";
+			   TE.MakeEntry(command);
+			   while (TE.More == true) {
+				       TE.GetMore(true, false);
+			   }
+
+			   var rl = TE.NumResponseLines;
+			   var result = "";
+			   var i;
+			   for (i = 0; i < rl; i++) {
+				       result = result + TE.ResponseLine(i).replace("<CARRIAGE_RETURN/>", "").replace("<SOM/>", "").replace("<TABSTOP/>", "\t") + "\n";
+			   }
+			   //console.log('result : ' + result);
+			   return result;
+		}
+	</script> 
 </head>
-<body onload="fillDropDownValuesFromXml()">
-	<form name="frmCwtCorpScrpt">
+
+<body  onload="getPNRInfor()">
+	
+	<form name="cwtScript" method="post">
 		<P>
 			<strong><u><FONT face="Verdana" size="4" color="teal">CWT CORPORATE SCRIPT</FONT></u></strong>
 		</P>
 		<table id="tblInput" style="FONT-SIZE: 10px; FONT-FAMILY: verdana; HEIGHT: 192px" border="0" width="100%">
 			<tr>
-				<td>Supplier Code</td>
-				<td><select id="cboSupplierCode" name="cboSupplierCode" style="WIDTH: 120px"></select></td>
+				<td><input type="checkbox" name="remark1ckb" value="select" checked/></td>
+				<td><input type="text" id="remark1seg" name="remark1seg" maxLength="10" size="12"/></td>
+				<td>RI.S4*AIRFARE IN POLICY</td>
 			</tr>
-			
-			<tr>
-				<td>Customer Hierarchy Level</td>
 
-				<td><select id="cboCustomerHierarchy" name="cboCustomerHierarchy" style="WIDTH: 120px"></select>
-				<input type="text" id="txtHierachyID" name="txtHierachyID" maxLength="6" size="8"></td>
-				
-				<td>Ticket Number</td>
-				<td><select id="cboTicketNumber" name="cboTicketNumber" style="WIDTH: 120px"></select></td>
-				
 			<tr>
-				<td>Traveller ID</td>
-				<td><input type="text" id="txtTravellerID" name="txtTravellerID" maxLength="6" size="8" onpropertychange="upperCaseOnly(this)"></td>
-				<td>LPO/Travel Authorisation</td>
-				<td><input type="text" id="txtLpoAuthorization" name="txtLpoAuthorization" maxLength="15" size="17" onpropertychange="upperCaseOnly(this)"></td>
+				<td><input type="checkbox" name="remark2ckb" value="select" checked/></td>
+				<td><input type="text" id="remark2seg" name="remark2seg" maxLength="10" size="12"/></td>
+				<td>RI.S3*HOTEL IN POLICY</td>
 			</tr>
+		
 			<tr>
-					<td>Predominant Class Code</td>
-					<td>
-						<select id="cboPredominantClass" name="cboPredominantClass" style="WIDTH: 376px"></select>
-					</td>
-					<td>Region</td>
-					<td>
-						<select id="cboRegionClass" name="cboRegionClass" style="WIDTH: 266px"></select>
-					</td>
+				<td><input type="checkbox" name="remark3ckb" value="select"/></td>
+				<td><input type="text" id="remark3ftf" name="remark3ftf" maxLength="10" size="12" value="21"/></td>
+				<td><input type="text" id="remark3val" name="remark3val" maxLength="50" size="55"/></td>
 			</tr>
+
 			<tr>
-				<td>Reference Fare</td>
-				<td><input type="text" id="txtReferenceFare" name="txtReferenceFare" maxLength="10" size="12" onpropertychange="upperCaseOnly(this)"></td>
-				<td>Realised Saving Code</td>
-				<td><select id="cboRealisedSavingCode" name="cboRealisedSavingCode" style="WIDTH: 266px"></select></td>
+				<td><input type="checkbox" name="remark4ckb" value="select"/></td>
+				<td><input type="text" id="remark4ftf" name="remark4ftf" maxLength="10" size="12" value="22"/></td>
+				<td><input type="text" id="remark4val" name="remark4val" maxLength="50" size="55"/></td>
 			</tr>
+
 			<tr>
-				<td>Low Fare</td>
-				<td><input type="text" id="txtLowFare" name="txtLowFare" maxLength="10" size="12" onpropertychange="upperCaseOnly(this)"></td>
-				<td>Missed Saving Code</td>
-				<td><select id="cboMissedSavingCode" name="cboMissedSavingCode" style="WIDTH: 266px"></select></td>
+				<td colspan="3"><input type="button" id="btnExe" name="btnExe" value="Execute" onclick="addPNRInfor()"/></td>
 			</tr>
+
 			<tr>
-				<td></td>
+				<td colspan="3"><textarea id="resultarea"  name="resultarea" cols="100" rows="10"></textarea></td>
 			</tr>
-			<tr>
-				<td><strong><u><FONT face="Verdana" size="1" color="teal">CLIENT DEFINED REFERENCES</FONT></u></strong></td>
-			</tr>
-			<tr>
-				<td></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="chkRef13" name="chkRef13" onclick="setPrefTextStatus(this)">&nbsp;CDR 01</td>
-				<td><input type="text" id="txtRef13" name="txtRef13" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-				<td><input type="checkbox" id="chkRef14" name="chkRef14" onclick="setPrefTextStatus(this)">&nbsp;CDR 02</td>
-				<td><input type="text" id="txtRef14" name="txtRef14" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="chkRef15" name="chkRef15" onclick="setPrefTextStatus(this)">&nbsp;CDR 03</td>
-				<td><input type="text" id="txtRef15" name="txtRef15" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-				<td><input type="checkbox" id="chkRef16" name="chkRef16" onclick="setPrefTextStatus(this)">&nbsp;CDR 04</td>
-				<td><input type="text" id="txtRef16" name="txtRef16" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="chkRef17" name="chkRef17" onclick="setPrefTextStatus(this)">&nbsp;CDR 05</td>
-				<td><input type="text" id="txtRef17" name="txtRef17" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-				<td><input type="checkbox" id="chkRef18" name="chkRef18" onclick="setPrefTextStatus(this)">&nbsp;CDR 06</td>
-				<td><input type="text" id="txtRef18" name="txtRef18" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="chkRef19" name="chkRef19" onclick="setPrefTextStatus(this)">&nbsp;CDR 07</td>
-				<td><input type="text" id="txtRef19" name="txtRef19" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-				<td><input type="checkbox" id="chkRef20" name="chkRef20" onclick="setPrefTextStatus(this)">&nbsp;CDR 08</td>
-				<td><input type="text" id="txtRef20" name="txtRef20" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="chkRef21" name="chkRef21" onclick="setPrefTextStatus(this)">&nbsp;CDR 09</td>
-				<td><input type="text" id="txtRef21" name="txtRef21" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-				<td><input type="checkbox" id="chkRef23" name="chkRef23" onclick="setPrefTextStatus(this)">&nbsp;CDR 10</td>
-				<td><input type="text" id="txtRef23" name="txtRef23" disabled type="text" maxLength="20" size="22" onpropertychange="upperCaseOnly(this)"></td>
-			</tr>
-			<tr>
-				<td height="20"></td>
-			</tr>
-			<tr>
-				<td>Results</td>
-				<td colspan="3"><textarea name="resultarea" COLS=80 ROWS=4></textarea></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><input type="button" id="btnExecute" name="btnExecute" value="Execute Script" onclick="ExecuteScript('no')"></td>
-				<td><input type="button" id="btnExecute" name="btnExecute" value="Test Script" onclick="ExecuteScript('yes')"></td>
-				<td><input type="reset" id="btnReset" name="btnReset" value="Clear All"></td>
-			</tr>
-		</table>
+
+		
 	</form>
 </body>
 </html>

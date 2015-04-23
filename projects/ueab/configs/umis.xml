@@ -630,22 +630,28 @@
 				<FORM name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegrees" noorg="true">
 					<COMBOBOX w="430" title="Degree" lptable="degrees" noorg="true" y="10" h="20" x="10" lpfield="degreename">degreeid</COMBOBOX>
 					<COMBOBOX w="430" title="Sub Level" lptable="sublevels" noorg="true" y="30" h="20" x="10" lpfield="sublevelname">sublevelid</COMBOBOX>
-					<TEXTDATE w="150" title="Started" y="50" h="20" x="10">started</TEXTDATE>
-					<CHECKBOX w="150" title="Completed" y="50" h="20" x="290">completed</CHECKBOX>
-					<CHECKBOX w="150" title="Cleared" y="70" h="20" x="10">cleared</CHECKBOX>
-					<TEXTDATE w="150" title="Cleare Date" y="70" h="20" x="290">clearedate</TEXTDATE>
-					<CHECKBOX w="150" title="Graduated" y="90" h="20" x="10">graduated</CHECKBOX>
-					<TEXTDATE w="120" title="Graduation Date" y="90" h="20" x="290">graduatedate</TEXTDATE>
-					<CHECKBOX w="30" title="Drop Out" y="110" h="20" x="10">dropout</CHECKBOX>
-					<CHECKBOX w="30" title="Transfer In" y="110" h="20" x="290">transferin</CHECKBOX>
-					<CHECKBOX w="30" title="Transfer Out" y="130" h="20" x="10">transferout</CHECKBOX>
-					<CHECKBOX w="30" title="Trancripted" y="130" h="20" x="290">transcripted</CHECKBOX>
-					<TEXTDATE w="120" title="Transcrit Date" y="150" h="20" x="290">transcriptdate</TEXTDATE>
-					<TEXTFIELD w="50" title="Math Placement" y="170" h="20" x="10">mathplacement</TEXTFIELD>
-					<TEXTFIELD w="50" title="English Placement" y="170" h="20" x="190">englishplacement</TEXTFIELD>
-					<TEXTFIELD w="50" title="Kiswahili Placement" lw="130" y="170" h="20" x="380">kiswahiliplacement</TEXTFIELD>
-					<COMBOBOX w="250" title="Bulleting" lptable="bulleting" noorg="true" y="190" h="20" x="10" lpfield="bulletingname">bulletingid</COMBOBOX>
-					<TEXTAREA w="430" title="Details" y="210" h="120" x="10">details</TEXTAREA>
+					<COMBOBOX w="350" title="Bulleting" lptable="bulleting" noorg="true" y="50" h="20" x="10" lpfield="bulletingname">bulletingid</COMBOBOX>
+					<TEXTDATE w="150" title="Started" y="70" h="20" x="10">started</TEXTDATE>
+					<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
+					<CHECKBOX w="50" title="Drop Out" y="90" h="20" x="10">dropout</CHECKBOX>
+					<CHECKBOX w="50" title="Transfer In" y="90" h="20" x="190">transferin</CHECKBOX>
+					<CHECKBOX w="50" title="Transfer Out" y="90" h="20" x="370">transferout</CHECKBOX>
+					<CHECKBOX w="50" title="Trancripted" y="110" h="20" x="10">transcripted</CHECKBOX>
+					<TEXTDATE w="150" title="Transcrit Date" y="110" h="20" x="290">transcriptdate</TEXTDATE>
+					<TEXTFIELD w="50" title="Math Placement" y="130" h="20" x="10">mathplacement</TEXTFIELD>
+					<TEXTFIELD w="50" title="English Placement" y="130" h="20" x="190">englishplacement</TEXTFIELD>
+					<TEXTFIELD w="50" title="Kiswahili Placement" lw="130" y="130" h="20" x="380">kiswahiliplacement</TEXTFIELD>
+					<CHECKBOX w="150" title="Application" tab="Graduating" y="10" h="20" x="10">grad_apply</CHECKBOX>
+					<TEXTDATE w="150" title="Application Date" tab="Graduating" y="10" h="20" x="290">grad_apply_date</TEXTDATE>
+					<CHECKBOX w="150" title="Finance Clearance" tab="Graduating" y="30" h="20" x="10">grad_finance</CHECKBOX>
+					<TEXTDATE w="150" title="Finance Date" tab="Graduating" y="30" h="20" x="290">grad_finance_date</TEXTDATE>
+					<CHECKBOX w="150" title="Accepted" tab="Graduating" y="50" h="20" x="10">grad_accept</CHECKBOX>
+					<TEXTDATE w="150" title="Accepted Date" tab="Graduating" y="50" h="20" x="290">grad_accept_date</TEXTDATE>
+					<CHECKBOX w="150" title="Cleared" tab="Graduating" y="70" h="20" x="10">cleared</CHECKBOX>
+					<TEXTDATE w="150" title="Cleared Date" tab="Graduating" y="70" h="20" x="290">clearedate</TEXTDATE>
+					<CHECKBOX w="150" title="Graduated" tab="Graduating" y="90" h="20" x="10">graduated</CHECKBOX>
+					<TEXTDATE w="150" title="Graduation Date" tab="Graduating" y="90" h="20" x="290">graduatedate</TEXTDATE>
+					<TEXTAREA w="530" tab="Details" y="150" h="120" x="10">details</TEXTAREA>
 				</FORM>
 				<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 					<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
@@ -1972,7 +1978,6 @@
 	<DESK w="700" name="Programmes" type="horl" key="202" h="500">
 		<JASPER filtered="false" name="Programmes Summary" reportfile="qsummarycview.jasper"></JASPER>
 	</DESK>
-	
 	<DESK w="700" name="Administrative List" type="horl" key="159" h="500">
 		<JASPER name="Administrative List" reportfile="administrationlist.jasper"></JASPER>
 	</DESK>
@@ -2234,5 +2239,4 @@
 			<JASPER filtered="true" name="Enrollemtn Majors" reportfile="newmajorsummary.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	
 </APP>

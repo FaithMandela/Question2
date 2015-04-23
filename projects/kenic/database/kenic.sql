@@ -510,11 +510,14 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION updclient() RETURNS trigger AS $$
 DECLARE
-	myid varchar(50);
-	upstr varchar(2000);
-	reca RECORD;
-	recb RECORD;
-	recc RECORD;
+	myid		varchar(50);
+	upstr		varchar(2000);
+	reca		RECORD;
+	recb		RECORD;
+	recc		RECORD;
+	
+	v_amount	real;
+	v_tax		real;
 BEGIN
 	IF (OLD.Reject = false) AND (NEW.Reject = true) THEN
 		NEW.Processing = false;
@@ -541,10 +544,10 @@ BEGIN
 			myid := myid || reca.idcount + 1;
 		END IF;
 
-		INSERT INTO client (roid, clid, name, epp_password, email, phone, country, timezone, oldstatus, address,
+		INSERT INTO client (roid, clid, name, epp_password, email, phone, country, oldstatus, address,
 			admin_contact, admin_email, billing_contact, billing_email, tech_contact, tech_email, service_contact, service_email, billingdate,
 			admin_opt_out, billing_opt_out, tech_opt_out, service_opt_out)
-		VALUES(myid, myid, NEW.companyname, md5(NEW.firstpasswd), NEW.email, NEW.TelNo, NEW.countryid, 'Africa/Nairobi', '0',
+		VALUES(myid, myid, NEW.companyname, md5(NEW.firstpasswd), NEW.email, NEW.TelNo, NEW.countryid, '0',
 		(NEW.Premises || ', ' || COALESCE(NEW.Street, '') || E'\nP.O. Box ' || NEW.Address || ' - ' || NEW.PostalCode || E'\n' || NEW.Town),
 			NEW.admin_contact, NEW.admin_email, NEW.billing_contact, NEW.billing_email, 
 			NEW.tech_contact, NEW.tech_email, NEW.service_contact, NEW.service_email, now() + CAST('1 year' as interval),
@@ -565,9 +568,12 @@ BEGIN
 
 		INSERT INTO credit_limit (client_clid, tld, currency, tax, tax_label)
 		VALUES (myid, 'ke', 'KES', 16, 'VAT');
+		
+		v_amount := CAST(recc.value as real);
+		v_tax := v_amount * 0.16;
 
-		INSERT INTO ledger (client_roid, description, currency, tax, tax_label, total, trans_type, tld, processor_account_history_id, refund_expiry, refund_grace, refund_amount)
-		VALUES (myid, 'Membership fee', 'KES', 16, 'VAT', CAST(recc.value as real), 'Application', 'ke', '2', now(), now(), 0);
+		INSERT INTO ledger (client_roid, description, currency, tax, tax_label, tax_content, tax_inclusive, amount, total, trans_type, tld, processor_account_history_id, refund_expiry, refund_grace, refund_amount, exdate, previous_expiry_date)
+		VALUES ($1, 'Membership Fee', 'KES', 16, 'VAT', v_tax, true, v_amount, v_amount, 'Application', 'ke', '2', now(), now(), 0, recb.exdate, recb.billingdate);
 
 		NEW.clid := myid;
 	END IF;
