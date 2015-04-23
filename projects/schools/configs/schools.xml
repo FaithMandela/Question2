@@ -26,6 +26,7 @@
 			<MENU name="Clubs">40</MENU>
 			<MENU name="Scholarships">45</MENU>
 		</MENU>
+		<MENU name="Grading">130</MENU>
 	</MENU>
 	<DESK w="700" name="Teachers" key="10" h="500">
 		<GRID name="Teachers" keyfield="teacher_id" table="teachers">
@@ -324,20 +325,22 @@
 					<COMBOBOX w="430" title="Dormitory ID" lptable="dormitorys" y="10" h="20" x="10" lpfield="dormitory_name">dormitory_id</COMBOBOX>
 				</FORM>
 			</GRID>
-			<GRID name="Prefect Students" keyfield="prefect_student_id" linkfield="entity_id" table="vw_prefect_students">
-				<TEXTFIELD w="75" title="Student Name">surname</TEXTFIELD>
-				<TEXTFIELD w="75" title="Class Name">class_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Prefect Type">prefect_name</TEXTFIELD>
-				<FORM name="Prefect Students" keyfield="prefect_student_id" linkfield="entity_id" table="prefect_students">
-					<COMBOBOX w="430" title="Prefect Type" lptable="prefects" y="50" h="20" x="10" lpfield="prefect_name">prefect_id</COMBOBOX>
-				</FORM>
-			</GRID>
-			<GRID name="Disciplinarys" keyfield="disciplined_student_id" linkfield="entity_id" table="vw_disciplined_students">
-				<TEXTFIELD w="75" title="Displinary Name">displinary_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Displinary Details">details</TEXTFIELD>
-				<FORM name="Disciplined Students" keyfield="disciplined_student_id" linkfield="entity_id" table="disciplined_students">
-					<COMBOBOX w="430" title="Displinary Name" lptable="displinarys" y="30" h="20" x="10" lpfield="displinary_name">displinary_id</COMBOBOX>
-					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			<#comment></#comment>
+			<#comment></#comment>
+			<#comment></#comment>
+			<GRID name="Student Exam" keyfield="student_exam_id" linkfield="entity_id" table="vw_student_exam">
+				<TEXTFIELD w="75" title="Exam Name">exam_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Cat 1">cat1</TEXTFIELD>
+				<TEXTFIELD w="75" title="Cat 2">cat2</TEXTFIELD>
+				<TEXTFIELD w="75" title="Main Exam">main_exam</TEXTFIELD>
+				<JASPER name="Report Book" reportfile="subjectsReport.jasper"></JASPER>
+				<FORM name="Student Exam" keyfield="student_exam_id" linkfield="entity_id" table="student_exam">
+					<COMBOBOX w="430" title="Exam Name" lptable="exams" y="10" h="20" x="10" lpfield="exam_name">exam_id</COMBOBOX>
+					<COMBOBOX w="430" title="Subject Name" lptable="subjects" y="50" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Cat1" y="70" h="20" x="10">cat1</TEXTFIELD>
+					<TEXTFIELD w="150" title="Cat2" y="70" h="20" x="290">cat2</TEXTFIELD>
+					<TEXTFIELD w="150" title="Main Exam" y="90" h="20" x="10">main_exam</TEXTFIELD>
 				</FORM>
 			</GRID>
 		</GRID>
@@ -372,26 +375,28 @@
 	<DESK w="700" name="Class" key="50" h="550">
 		<GRID name="Class" keyfield="class_id" table="class">
 			<TEXTFIELD w="75" title="Class Name">class_name</TEXTFIELD>
-			<#comment></#comment>
 			<FORM name="Classs" keyfield="class_id" table="class">
 				<TEXTFIELD w="150" title="Class Name" y="10" h="20" x="10">class_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Level" y="30" h="20" x="10">level</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
-		</GRID>
-		<GRID name="Class Exam" keyfield="class_exam_id" linkfield="exam_id" table="class_exam">
-			<TEXTFIELD w="75" title="Class Exam ID">class_exam_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Exam ID">exam_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
-			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-			<TEXTFIELD w="75" title="Class ID">class_id</TEXTFIELD>
-			<FORM name="Class Exam" keyfield="class_exam_id" linkfield="exam_id" table="class_exam">
-				<TEXTDATE w="150" title="Start Date" h="20" y="10" x="10">start_date</TEXTDATE>
-				<TEXTDATE w="150" title="End Date" h="20" y="10" x="290">end_date</TEXTDATE>
-				<TEXTAREA w="430" title="Details" h="70" y="30" x="10">details</TEXTAREA>
-				<COMBOBOX w="430" title="Class ID" lptable="class" h="20" y="100" lpfield="class_name" x="10">class_id</COMBOBOX>
-			</FORM>
+			<GRID name="Class Exam" keyfield="class_exam_id" linkfield="class_id" table="class_exam">
+				<TEXTFIELD w="75" title="Class Exam ID">class_exam_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Exam ID">exam_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Class ID">class_id</TEXTFIELD>
+				<FORM name="Class Exam" keyfield="class_exam_id" linkfield="class_id" table="class_exam">
+					<COMBOBOX w="430" title="Exam Name" lptable="exams" y="10" h="20" x="10" lpfield="exam_name">exam_id</COMBOBOX>
+					<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
+					<TEXTDATE w="150" title="End Date" y="50" h="20" x="290">end_date</TEXTDATE>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Class List">
+				<JASPER name="Class List" reportfile="class_lists.jasper"></JASPER>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Exams" key="65" h="550">
@@ -513,7 +518,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Leave" key="100" h="550">
-		<JASPER name="Time Table" reportfile="newschool.jasper"></JASPER>
+	<DESK w="700" name="Leave" key="130" h="550">
+		<JASPER name="Time Table" reportfile="gradingReport.jasper"></JASPER>
 	</DESK>
 </APP>
