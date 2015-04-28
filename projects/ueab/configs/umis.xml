@@ -212,6 +212,8 @@
 					<TEXTFIELD w="350" title="Sub Level Name" y="30" h="20" x="10">sublevelname</TEXTFIELD>
 					<CHECKBOX w="50" title="Special Charge" y="50" h="20" x="10">specialcharges</CHECKBOX>
 					<COMBOBOX w="250" title="Level Location" lptable="levellocations" y="50" h="20" x="190" lpfield="levellocationname">levellocationid</COMBOBOX>
+					<CHECKBOX w="50" title="No Sabath Class" y="70" h="20" x="10">no_sabath_class</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Max. Credit" y="70" h="20" x="290">max_credits</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Unit Charge" tab="Charges" y="10" h="20" x="10">unit_charge</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Lab Charges" tab="Charges" y="10" h="20" x="290">lab_charges</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Exam Fees" tab="Charges" y="30" h="20" x="10">exam_fees</TEXTDECIMAL>
@@ -242,6 +244,7 @@
 				<CHECKBOX w="50" title="Special Charge" y="50" h="20" x="10">specialcharges</CHECKBOX>
 				<COMBOBOX w="250" title="Level Location" lptable="levellocations" noorg="true" y="50" h="20" x="190" lpfield="levellocationname">levellocationid</COMBOBOX>
 				<CHECKBOX w="50" title="No Sabath Class" y="70" h="20" x="10">no_sabath_class</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Max. Credit" y="70" h="20" x="290">max_credits</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Unit Charge" tab="Charges" y="10" h="20" x="10">unit_charge</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Lab Charges" tab="Charges" y="10" h="20" x="290">lab_charges</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Exam Fees" tab="Charges" y="30" h="20" x="10">exam_fees</TEXTDECIMAL>

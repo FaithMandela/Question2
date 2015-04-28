@@ -213,6 +213,27 @@ CREATE VIEW studentdegreeview AS
 	FROM ((studentview INNER JOIN studentdegrees ON studentview.studentid = studentdegrees.studentid)
 		INNER JOIN sublevelview ON studentdegrees.sublevelid = sublevelview.sublevelid)
 		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid;
+		
+CREATE VIEW vw_studentdegrees AS
+	SELECT studentview.religionid, studentview.religionname, studentview.denominationid, studentview.denominationname,
+		studentview.schoolid, studentview.schoolname, studentview.studentid, studentview.studentname, studentview.address, studentview.zipcode,
+		studentview.town, studentview.addresscountry, studentview.telno, studentview.email,  studentview.guardianname, studentview.gaddress,
+		studentview.gzipcode, studentview.gtown, studentview.gaddresscountry, studentview.gtelno, studentview.gemail,
+		studentview.accountnumber, studentview.Nationality, studentview.Nationalitycountry, studentview.Sex,
+		studentview.MaritalStatus, studentview.birthdate, studentview.firstpass, studentview.alumnae, studentview.postcontacts,
+		studentview.onprobation, studentview.offcampus, studentview.currentcontact, studentview.currentemail, studentview.currenttel,
+		studentview.org_id,
+		sublevelview.degreelevelid, sublevelview.degreelevelname,
+		sublevelview.freshman, sublevelview.sophomore, sublevelview.junior, sublevelview.senior,
+		sublevelview.levellocationid, sublevelview.levellocationname,
+		sublevelview.sublevelid, sublevelview.sublevelname, sublevelview.specialcharges,
+		degrees.degreeid, degrees.degreename,
+		studentdegrees.studentdegreeid, studentdegrees.completed, studentdegrees.started, studentdegrees.cleared, studentdegrees.clearedate,
+		studentdegrees.graduated, studentdegrees.graduatedate, studentdegrees.dropout, studentdegrees.transferin, studentdegrees.transferout,
+		studentdegrees.mathplacement, studentdegrees.englishplacement, studentdegrees.details
+	FROM ((studentview INNER JOIN studentdegrees ON studentview.studentid = studentdegrees.studentid)
+		INNER JOIN sublevelview ON studentdegrees.sublevelid = sublevelview.sublevelid)
+		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid;
 
 CREATE VIEW transcriptprintview AS
 	SELECT entitys.entity_id, entitys.entity_name, entitys.user_name, transcriptprint.transcriptprintid, 

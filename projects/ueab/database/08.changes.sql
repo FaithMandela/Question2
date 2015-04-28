@@ -1,33 +1,15 @@
 
-ALTER  TABLE studentdegrees ADD grad_apply			boolean not null default false;
-ALTER  TABLE studentdegrees ADD grad_apply_date		date;
-ALTER  TABLE studentdegrees ADD grad_finance		boolean not null default false;
-ALTER  TABLE studentdegrees ADD grad_finance_date	date;
-ALTER  TABLE studentdegrees ADD grad_accept			boolean not null default false;
-ALTER  TABLE studentdegrees ADD grad_accept_date	date;
+
+ALTER TABLE sublevels ADD 	max_credits			real default 14 not null;
 
 
-CREATE OR REPLACE FUNCTION getoverload(varchar(2), float, float, float, boolean, float) RETURNS boolean AS $$
+CREATE OR REPLACE FUNCTION getoverload(real, float, float, float, boolean, float) RETURNS boolean AS $$
 DECLARE
 	myoverload boolean;
 BEGIN
 	myoverload := false;
 
-	IF ($1='I') THEN
-		IF ($3 is null) AND ($2 > 9) THEN
-			myoverload := true;
-		ELSIF (($4>=100) AND ($3>=2.67) AND ($2<=11)) THEN
-			myoverload := false;
-		ELSIF (($3<1.99) AND ($2>6)) THEN
-			myoverload := true;
-		ELSIF (($3<2.99) AND ($2>11)) THEN
-			myoverload := true;
-		ELSIF (($3<3.5) AND ($2>12)) THEN
-			myoverload := true;
-		ELSIF ($2>9) THEN
-			myoverload := true;
-		END IF;
-	ELSE
+	IF ($1=14) THEN
 		IF (($3<1.99) AND ($2<>9)) THEN
 			myoverload := true;
 		ELSIF ($3 is null) AND ($2 > 14) THEN
@@ -35,13 +17,17 @@ BEGIN
 		ELSIF (($4>=110) AND ($3>=2.70) AND ($2<=17)) THEN
 			myoverload := false;
 		ELSE
-			IF (($3<3) AND ($2>15)) THEN
+			IF (($3<3) AND ($2>14)) THEN
 				myoverload := true;
-			ELSIF (($3<3.5) AND ($2>16)) THEN
+			ELSIF (($3<3.5) AND ($2>15)) THEN
 				myoverload := true;
 			ELSIF ($2>16) THEN
 				myoverload := true;
 			END IF;
+		END IF;
+	ELSE
+		IF($2 > $1)THEN
+			myoverload := true;
 		END IF;
 	END IF;
 
@@ -135,9 +121,11 @@ BEGIN
 		qstudents.overloadhours, qstudents.financenarrative, qstudents.firstinstalment, 
 		qstudents.firstdate, qstudents.secondinstalment, qstudents.seconddate, qstudents.registrarapproval, 
 		qstudents.approve_late_fee, qstudents.late_fee_date,
-		charges.last_reg_date
+		charges.last_reg_date,
+		sublevels.max_credits
 		INTO myqrec
 	FROM qstudents INNER JOIN charges ON qstudents.charge_id = charges.charge_id
+		INNER JOIN sublevels ON charges.sublevelid = sublevels.sublevelid 
 	WHERE qstudents.qstudentid = myrec.qstudentid;
 
 	SELECT courseid, coursetitle INTO courserec
@@ -147,7 +135,7 @@ BEGIN
 	FROM selectedgradeview 
 	WHERE (qstudentid = myrec.qstudentid) AND ((prereqpassed = false) OR (placementpassed = false));
 
-	myoverload := getoverload(myrec.quarter, myrec.hours, myrec.cummgpa, myrec.cummcredit, myqrec.overloadapproval, myqrec.overloadhours);
+	myoverload := getoverload(myqrec.max_credits, myrec.hours, myrec.cummgpa, myrec.cummcredit, myqrec.overloadapproval, myqrec.overloadhours);
 
 	SELECT coursetitle INTO ttb 
 	FROM studenttimetableview WHERE (qstudentid=myrec.qstudentid)

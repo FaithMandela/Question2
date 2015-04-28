@@ -114,6 +114,7 @@ CREATE TABLE sublevels (
 	general_fees		float not null default 7500,
 
 	no_sabath_class		boolean not null default true,
+	max_credits			real default 14 not null,
 
 	specialcharges		boolean not null default false,
 	details				text

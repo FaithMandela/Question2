@@ -13,9 +13,12 @@
 			XMLDoc.loadXML(PNR);
 	
 			var AirSeg = XMLDoc.getElementsByTagName("AirSeg");
+			var HotelSeg = XMLDoc.getElementsByTagName("HtlSeg");
 
 			cwtScript.remark1seg.value = AirSeg.length;
-			cwtScript.remark2seg.value = AirSeg.length;
+			cwtScript.remark2seg.value = HotelSeg.length;
+			if(AirSeg.length>0) cwtScript.remark1ckb.checked = true;
+			if(HotelSeg.length>0) cwtScript.remark2ckb.checked = true;
 
 			var txt1 = DisplayTE("*R");
 			var txt2 = DisplayTE("*RI");
@@ -55,6 +58,15 @@
 			   //console.log('result : ' + result);
 			   return result;
 		}
+
+		function getPNRXML(){	
+			VP.RetrieveCurrentPNR();
+			var PNR = VP.GetPNR();
+
+			var txt = document.getElementById("resultarea");
+			txt.value = PNR;
+		}
+
 	</script> 
 </head>
 
@@ -66,13 +78,13 @@
 		</P>
 		<table id="tblInput" style="FONT-SIZE: 10px; FONT-FAMILY: verdana; HEIGHT: 192px" border="0" width="100%">
 			<tr>
-				<td><input type="checkbox" name="remark1ckb" value="select" checked/></td>
+				<td><input type="checkbox" name="remark1ckb" value="select"/></td>
 				<td><input type="text" id="remark1seg" name="remark1seg" maxLength="10" size="12"/></td>
 				<td>RI.S4*AIRFARE IN POLICY</td>
 			</tr>
 
 			<tr>
-				<td><input type="checkbox" name="remark2ckb" value="select" checked/></td>
+				<td><input type="checkbox" name="remark2ckb" value="select"/></td>
 				<td><input type="text" id="remark2seg" name="remark2seg" maxLength="10" size="12"/></td>
 				<td>RI.S3*HOTEL IN POLICY</td>
 			</tr>
