@@ -856,13 +856,6 @@ BEGIN
 	FROM employees
 	WHERE (employees.active = true) and (employees.org_id = v_org_id);
 
-	INSERT INTO project_staff_costs (org_id, period_id, pay_group_id, entity_id, bank_branch_id, bank_account, 
-		project_id, staff_cost, tax_cost)
-	SELECT v_org_id, v_period_id, employees.pay_group_id, employees.entity_id, employees.bank_branch_id, employees.bank_account,
-		project_staff.project_id, project_staff.staff_cost, project_staff.tax_cost
-	FROM employees INNER JOIN project_staff ON employees.entity_id = project_staff.entity_id
-	WHERE (project_staff.monthly_cost = true);
-
 	INSERT INTO loan_monthly (org_id, period_id, loan_id, repayment, interest_amount, interest_paid)
 	SELECT v_org_id, v_Period_ID, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
 	FROM vw_loans WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true);
@@ -941,6 +934,13 @@ BEGIN
 	FROM Employee_Advances INNER JOIN Employee_Month ON Employee_Advances.Employee_Month_ID = Employee_Month.Employee_Month_ID
 	WHERE (entity_ID = NEW.entity_ID) AND (Pay_Period > 0) AND (completed = false)
 		AND (Pay_upto >= current_date);
+		
+	INSERT INTO project_staff_costs (employee_month_id, org_id, project_id, project_role, payroll_ps, staff_cost, tax_cost)
+	SELECT NEW.org_id, NEW.employee_month_id, 
+		project_staff.project_id, project_staff.project_role, project_staff.payroll_ps, project_staff.staff_cost, project_staff.tax_cost
+	FROM project_staff
+	WHERE (project_staff.entity_id = NEW.entity_id) AND (project_staff.monthly_cost = true);
+
 
 	RETURN NULL;
 END;

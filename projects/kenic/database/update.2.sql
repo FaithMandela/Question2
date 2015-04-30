@@ -121,7 +121,7 @@ BEGIN
 		VALUES (myid, myid, myid, md5(NEW.firstpasswd));
 
 		INSERT INTO login_role (username, role)
-		VALUES (myid, 'MASTER');
+		VALUES (myid, 'REGISTRAR');
 
 		SELECT value INTO recc FROM configuration WHERE name = 'memberfee';
 

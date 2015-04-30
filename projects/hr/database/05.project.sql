@@ -64,6 +64,8 @@ CREATE TABLE project_staff (
 	org_id					integer references orgs,
 	project_role			varchar(240),
 	monthly_cost			boolean default true not null,
+	is_active				boolean default true not null
+	payroll_ps				real default 0 not null,
 	staff_cost				real default 0 not null,
 	tax_cost				real default 0 not null,
 	details					text,
@@ -76,21 +78,16 @@ CREATE INDEX project_staff_org_id ON project_staff(org_id);
 CREATE TABLE project_staff_costs (
 	project_staff_cost_id	serial primary key,
 	project_id				integer references projects not null,
-	entity_id				integer references entitys not null,
-	period_id				integer references periods not null,
-	bank_branch_id			integer references bank_branch not null,
-	pay_group_id			integer references pay_groups not null,
+	employee_month_id		integer references employee_month not null,
 	org_id					integer references orgs,
-	bank_account			varchar(32),
+	project_role			varchar(240),
+	payroll_ps				real default 0 not null,
 	staff_cost				real default 0 not null,
 	tax_cost				real default 0 not null,
 	Details					text
 );
 CREATE INDEX project_staff_costs_project_id ON project_staff_costs (project_id);
-CREATE INDEX project_staff_costs_entity_id ON project_staff_costs (entity_id);
-CREATE INDEX project_staff_costs_period_id ON project_staff_costs (period_id);
-CREATE INDEX project_staff_costs_bank_branch_id ON project_staff_costs (bank_branch_id);
-CREATE INDEX project_staff_costs_pay_group_id ON project_staff_costs (pay_group_id);
+CREATE INDEX project_staff_costs_employee_month_id ON project_staff_costs (employee_month_id);
 CREATE INDEX project_staff_costs_org_id ON project_staff_costs(org_id);
 
 CREATE TABLE phases (
@@ -210,23 +207,22 @@ CREATE VIEW vw_project_staff AS
 		vw_projects.monthly_amount, vw_projects.full_amount, vw_projects.project_cost, vw_projects.narrative, 
 		vw_projects.project_account, vw_projects.start_date, vw_projects.ending_date,
 		entitys.entity_id as staff_id, entitys.entity_name as staff_name, 
-		project_staff.org_id, project_staff.project_staff_id, project_staff.project_role, project_staff.monthly_cost,
-		project_staff.staff_cost, project_staff.tax_cost, project_staff.details
+		project_staff.org_id, project_staff.project_staff_id, project_staff.project_role, 
+		project_staff.is_active, project_staff.payroll_ps,
+		project_staff.monthly_cost, project_staff.staff_cost, project_staff.tax_cost, project_staff.details
 	FROM project_staff INNER JOIN entitys ON project_staff.entity_id = entitys.entity_id
 		INNER JOIN vw_projects ON project_staff.project_id = vw_projects.project_id;
 
 CREATE VIEW vw_project_staff_costs AS
-	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
-		entitys.entity_id, entitys.entity_name, pay_groups.pay_group_id, pay_groups.pay_group_name, 
-		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
-		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
+	SELECT vw_employee_month.employee_month_id, vw_employee_month.period_id, vw_employee_month.start_date, 
+		vw_employee_month.month_id, vw_employee_month.period_year, vw_employee_month.period_month,
+		vw_employee_month.end_date, vw_employee_month.gl_payroll_account,
+		vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.employee_id,
 		projects.project_id, projects.project_name, projects.project_account,
-		project_staff_costs.org_id, project_staff_costs.project_staff_cost_id, project_staff_costs.bank_account, project_staff_costs.staff_cost, 
-		project_staff_costs.tax_cost, project_staff_costs.details
-	FROM project_staff_costs INNER JOIN vw_bank_branch ON project_staff_costs.bank_branch_id = vw_bank_branch.bank_branch_id
-		INNER JOIN entitys ON project_staff_costs.entity_id = entitys.entity_id
-		INNER JOIN pay_groups ON project_staff_costs.pay_group_id = pay_groups.pay_group_id
-		INNER JOIN vw_periods ON project_staff_costs.period_id = vw_periods.period_id
+		project_staff_costs.org_id, project_staff_costs.project_staff_cost_id, 
+		project_staff_costs.project_role, project_staff_costs.payroll_ps,
+		project_staff_costs.staff_cost, project_staff_costs.tax_cost, project_staff_costs.details
+	FROM project_staff_costs INNER JOIN vw_employee_month ON project_staff_costs.employee_month_id = vw_employee_month.employee_month_id
 		INNER JOIN projects ON project_staff_costs.project_id = projects.project_id;
 
 CREATE VIEW vw_phases AS

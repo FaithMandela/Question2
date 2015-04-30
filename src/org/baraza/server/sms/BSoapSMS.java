@@ -193,14 +193,9 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 	}
 
 	public boolean sendSMS(String number, String message, String linkId, String smsID, String orgID, boolean isRetry) {
-		String spId = smsOrgs.get(orgID)[0];
-		String serviceId = smsOrgs.get(orgID)[1];
-		String senderName = smsOrgs.get(orgID)[2];
 		boolean isSent = false;
 		
 		if(message == null) return isSent;
-		if(serviceId == null) return isSent;
-		if(senderName == null) return isSent;
 		
 		int smsLen = message.length();
 		Integer messageParts = new Integer(1);
@@ -212,6 +207,36 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 		mSql += smsID + "," + orgID + ", '" + number + "', " + messageParts.toString() + ", ";
 		mSql += smsOrgs.get(orgID)[3] + ")";
 		String correlator = db.executeAutoKey(mSql);
+		
+		int retry = 1;
+		while(retry != 0) {
+			if(retry > 1) System.out.println("MESSAGE RESENDING RETRY\n");
+			String sendResults = sendSMS(number, message, linkId, smsID, orgID, correlator);
+			
+			if(sendResults == null) {	// retry once for a error on the sending
+				if(retry < 2) retry++;
+				else retry = 0;
+			} else if(sendResults.equals("SVC0901")) { // retry twice for a error on the sending
+				if(retry < 3) retry++;
+				else retry = 0;
+			} else {
+				db.executeUpdate("UPDATE sms_queue SET send_results = '" + sendResults + "' WHERE sms_queue_id = " + correlator);
+				retry = 0;
+				isSent = true;
+			}
+		}
+		
+		return isSent;
+	}
+		
+	public String sendSMS(String number, String message, String linkId, String smsID, String orgID, String correlator) {
+		String spId = smsOrgs.get(orgID)[0];
+		String serviceId = smsOrgs.get(orgID)[1];
+		String senderName = smsOrgs.get(orgID)[2];
+		String sendResults = null;
+		
+		if(serviceId == null) return sendResults;
+		if(senderName == null) return sendResults;
 	
 		try {
 			MessageFactory factory = MessageFactory.newInstance();
@@ -273,14 +298,11 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
             URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
 			SOAPMessage response = con.call(soapMessage, endpoint);
 			SOAPBody respBody = response.getSOAPBody();
-			String respResults = respBody.getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+			sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getNodeValue();
 			con.close();
 			
-			db.executeUpdate("UPDATE sms_queue SET send_results = '" + respResults + "' WHERE sms_queue_id = " + correlator);
 			System.out.println("RESPOSE\n" + getResp(response) + "\n");
-			System.out.println("RESPOSE : " + respResults + "\n");
-
-			isSent = true;
+			System.out.println("RESPOSE : " + sendResults + "\n");
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -289,7 +311,7 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 			System.out.println("No Algorithim Error : " + ex);
 		}
 
-		return isSent;
+		return sendResults;
 	}
 
 	public void smsStatus(String number, String requestIdentifier, String orgID) {

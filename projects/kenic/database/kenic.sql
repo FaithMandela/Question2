@@ -557,7 +557,7 @@ BEGIN
 		VALUES (myid, myid, myid, md5(NEW.firstpasswd));
 
 		INSERT INTO login_role (username, role)
-		VALUES (myid, 'MASTER');
+		VALUES (myid, 'REGISTRAR');
 
 		SELECT value INTO recc FROM configuration WHERE name = 'memberfee';
 
@@ -573,14 +573,15 @@ BEGIN
 		v_tax := v_amount * 0.16;
 
 		INSERT INTO ledger (client_roid, description, currency, tax, tax_label, tax_content, tax_inclusive, amount, total, trans_type, tld, processor_account_history_id, refund_expiry, refund_grace, refund_amount, exdate, previous_expiry_date)
-		VALUES ($1, 'Membership Fee', 'KES', 16, 'VAT', v_tax, true, v_amount, v_amount, 'Application', 'ke', '2', now(), now(), 0, recb.exdate, recb.billingdate);
-
+		VALUES (myid, 'Membership Fee', 'KES', 16, 'VAT', v_tax, true, v_amount, v_amount, 'Application', 'ke', '2', now(), now(), 0, now(), now());
+		
 		NEW.clid := myid;
 	END IF;
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE TRIGGER updclient BEFORE UPDATE ON applicants
     FOR EACH ROW EXECUTE PROCEDURE updclient();

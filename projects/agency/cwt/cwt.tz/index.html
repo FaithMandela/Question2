@@ -1,6 +1,7 @@
 <html>
 <head>
 	<title>CWT Corporate Script</title>
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 	<script>
 		var VP = new ActiveXObject("Viewpoint.ViewpointSrv");
 
@@ -12,14 +13,23 @@
 			XMLDoc.async = false;
 			XMLDoc.loadXML(PNR);
 	
-			var AirSeg = XMLDoc.getElementsByTagName("AirSeg");
-			var HotelSeg = XMLDoc.getElementsByTagName("HtlSeg");
+			var AirSegs = XMLDoc.getElementsByTagName("AirSeg");
+			var HotelSegs = XMLDoc.getElementsByTagName("HtlSeg");
 
-			cwtScript.remark1seg.value = AirSeg.length;
-			cwtScript.remark2seg.value = HotelSeg.length;
-			if(AirSeg.length>0) cwtScript.remark1ckb.checked = true;
-			if(HotelSeg.length>0) cwtScript.remark2ckb.checked = true;
-
+			var $xmlDoc = $.parseXML(PNR);
+			var $xml = $($xmlDoc);
+			
+			if(AirSegs.length>0) {
+				cwtScript.remark1ckb.checked = true;
+				var lastAirSegNum = $xml.find('AirSeg').last().find('SegNum').text();				
+				cwtScript.remark1seg.value = lastAirSegNum;
+			}
+			if(HotelSegs.length>0) {
+				cwtScript.remark2ckb.checked = true;
+				var lastHotelSegNum = $xml.find('HtlSeg').last().find('SegNum').text();				
+				cwtScript.remark1seg.value = lastHotelSegNum;
+			}
+			
 			var txt1 = DisplayTE("*R");
 			var txt2 = DisplayTE("*RI");
 			cwtScript.resultarea.value = txt1 + txt2;
@@ -102,7 +112,8 @@
 			</tr>
 
 			<tr>
-				<td colspan="3"><input type="button" id="btnExe" name="btnExe" value="Execute" onclick="addPNRInfor()"/></td>
+				<td colspan="2"><input type="button" id="btnExe" name="btnExe" value="Execute" onclick="addPNRInfor()"/></td>
+				<td ><input type="button" id="btnExe" name="btnPNR" value="ExecutePNR" onclick="getPNRXML()"/></td>
 			</tr>
 
 			<tr>

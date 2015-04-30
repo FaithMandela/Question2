@@ -803,6 +803,20 @@
 						<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
+				<GRID name="Projects" keyfield="project_staff_cost_id" linkfield="employee_month_id" table="vw_project_staff_costs">
+					<TEXTFIELD w="75" title="Project ID">project_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Project Account">project_account</TEXTFIELD>
+					<TEXTFIELD w="75" title="Project Role">project_role</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Payroll %">payroll_ps</TEXTDECIMAL>
+					<FORM name="Project Staff Costs" keyfield="project_staff_cost_id" linkfield="employee_month_id" table="project_staff_costs">
+						<COMBOBOX w="430" title="Project" lptable="projects" y="10" h="20" x="10" lpfield="project_name">project_id</COMBOBOX>
+						<TEXTFIELD w="430" title="Project Role" y="30" h="20" x="10">project_role</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Payroll %" y="50" h="20" x="10">payroll_ps</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Staff Cost" y="50" h="20" x="290">staff_cost</TEXTDECIMAL>
+						<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
 			</GRID>
 			<GRID name="Tax Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_key = 1)">
 				<TEXTFIELD w="75" title="ID">tax_type_id</TEXTFIELD>

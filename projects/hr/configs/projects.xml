@@ -84,13 +84,16 @@
 				<TEXTFIELD w="75" title="Staff ID">staff_id</TEXTFIELD>
 				<TEXTFIELD w="175" title="Staff Name">staff_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Project Role">project_role</TEXTFIELD>
+				<TEXTFIELD w="75" title="Payroll %">payroll_ps</TEXTFIELD>
 				<FORM name="Project Staff" keyfield="project_staff_id" linkfield="project_id" table="project_staff">
 					<COMBOBOX w="430" title="Staff" lptable="entitys" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTFIELD w="430" title="Project Role" y="30" h="20" x="10">project_role</TEXTFIELD>
 					<CHECKBOX w="150" title="Monthly Cost" y="50" h="20" x="10">monthly_cost</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Payroll %" y="50" h="20" x="290">payroll_ps</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Staff Cost" y="70" h="20" x="10">staff_cost</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Tax Cost" y="70" h="20" x="290">tax_cost</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="90" h="90" x="10">details</TEXTAREA>
+					<CHECKBOX w="50" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="110" h="90" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Add Staff" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">
@@ -103,26 +106,6 @@
 				<ACTIONS>
 					<ACTION fnct="add_project_staff">Add to Project</ACTION>
 				</ACTIONS>
-			</GRID>
-			<GRID name="Project Staff Costs" keyfield="project_staff_cost_id" linkfield="project_id" table="vw_project_staff_costs">
-				<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Bank">bank_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Bank Branch">bank_branch_name</TEXTFIELD>
-				<TEXTDATE w="75" title="Year">period_year</TEXTDATE>
-				<TEXTDATE w="75" title="Month">period_month</TEXTDATE>
-				<TEXTFIELD w="75" title="Project Staff Cost ID">project_staff_cost_id</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Staff Cost">staff_cost</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Tax Cost">tax_cost</TEXTDECIMAL>
-				<FORM name="Project Staff Costs" keyfield="project_staff_cost_id" linkfield="project_id" table="project_staff_costs">
-					<COMBOBOX w="430" title="Staff" lptable="entitys" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-					<COMBOBOX w="430" title="Period" lptable="vw_periods" cmb_fnct="(period_year || ' - ' || period_month)" y="30" h="20" x="10" lpfield="period">period_id</COMBOBOX>
-					<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ' - ' || bank_branch_name)" y="50" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
-					<COMBOBOX w="430" title="Pay Group" lptable="pay_groups" y="70" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
-					<TEXTDECIMAL w="150" title="Staff Cost" y="110" h="20" x="10">staff_cost</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Tax Cost" y="110" h="20" x="290">tax_cost</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<FORM name="Projects" keyfield="project_id" table="projects">
 				<COMBOBOX w="430" title="Project Type" lptable="project_types" y="10" h="20" x="10" lpfield="project_type_name">project_type_id</COMBOBOX>
@@ -191,7 +174,7 @@
 				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
 				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="entitys">table_name</DEFAULT>
-					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
