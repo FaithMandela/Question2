@@ -1429,8 +1429,9 @@ CREATE VIEW ws_students AS
 		students.studentname, students.surname, students.firstname, students.othernames, students.sex,
 		students.Nationality, students.MaritalStatus, students.birthdate, students.address,
 		students.zipcode, students.town, students.countrycodeid, students.stateid,
-		students.telno, students.mobile, students.email
-	FROM students;
+		students.telno, students.mobile, students.email,
+		entitys.entity_id, entitys.entity_password
+	FROM students INNER JOIN entitys ON students.studentid = entitys.user_name;
 
 CREATE VIEW ws_student_grades AS
 	SELECT quarterid, studentid, studyLevel, credit, gpa, cummcredit, cummgpa, qstudentid

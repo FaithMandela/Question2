@@ -543,7 +543,7 @@ BEGIN
 		mystr := 'You must first make full payment before submiting the application.';
 	ELSIF (myrec.exam_date_id is null) THEN
 		mystr := 'Select exam center date';
-	ELSIF (myrec.app_age < '15 years'::interval) THEN
+	ELSIF (myrec.app_age < '14 years'::interval) THEN
 		mystr := 'You need to be older than 16 years to apply for this programme';
 	ELSIF (myrec.firstchoiceid is null) THEN
 		mystr := 'Select First Programme Choice';

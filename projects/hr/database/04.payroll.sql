@@ -861,7 +861,7 @@ BEGIN
 	FROM vw_loans WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true);
 
 	INSERT INTO loan_monthly (org_id, period_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_org_id, v_period_id, loan_id, monthly_repayment, (principle * interest / 1200), 0
+	SELECT v_org_id, v_period_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
 	FROM vw_loans WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false);
 
 	PERFORM updTax(employee_month_id, Period_id)
@@ -1181,7 +1181,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_employee_adjustments AFTER INSERT OR UPDATE ON employee_adjustments
     FOR EACH ROW EXECUTE PROCEDURE upd_employee_adjustments();
 
-CREATE OR REPLACE FUNCTION upd_Employee_Per_Diem() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION upd_employee_per_diem() RETURNS trigger AS $$
 DECLARE
 	periodid integer;
 	taxLimit real;

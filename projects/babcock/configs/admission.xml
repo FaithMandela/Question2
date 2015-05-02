@@ -332,9 +332,6 @@
 			<CHECKBOX w="75" title="Reported">isreported</CHECKBOX>
 			<JASPER name="Admision Letter" reportfile="admissions_letter.jasper"></JASPER>
 			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes">entry_form_id</BROWSER>
-			<ACTIONS>
-				<ACTION fnct="admit_applicant">Admit Applicant</ACTION>
-			</ACTIONS>
 			<FORM new="false" name="Official Details" keyfield="registrationid" delete="false" table="registrations">
 				<COMBOBOX w="200" title="Programme" lptable="majors" lw="120" noorg="true" lpkey="majorid" y="10" h="20" x="10" lpfield="majorname">majorid</COMBOBOX>
 				<COMBOLIST w="150" title="Admission Status" lw="130" y="30" h="20" x="10">admissionstatus

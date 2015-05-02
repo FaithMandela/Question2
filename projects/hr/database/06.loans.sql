@@ -189,6 +189,12 @@ CREATE VIEW vw_period_loans AS
 		sum(vw_loan_monthly.interest_paid) as sum_interest_paid, sum(vw_loan_monthly.loan_balance) as sum_loan_balance
 	FROM vw_loan_monthly
 	GROUP BY vw_loan_monthly.org_id, vw_loan_monthly.period_id;
+	
+CREATE VIEW vw_loan_projection AS
+	SELECT org_id, loan_id, loan_type_name, entity_name, principle, monthly_repayment, loan_date, 
+		(EXTRACT(YEAR FROM age(current_date, '2010-05-01')) * 12) + EXTRACT(MONTH FROM age(current_date, loan_date)) as loan_months,
+		get_total_repayment(loan_id, CAST((EXTRACT(YEAR FROM age(current_date, '2010-05-01')) * 12) + EXTRACT(MONTH FROM age(current_date, loan_date)) as integer)) as loan_paid
+	FROM vw_loans;
 
 CREATE OR REPLACE FUNCTION process_loans(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -241,11 +247,31 @@ CREATE OR REPLACE FUNCTION get_total_repayment(integer, integer) RETURNS double 
 	WHERE (loan_id = $1) and (months <= $2);
 $$ LANGUAGE SQL;
 
-CREATE VIEW vw_loan_projection AS
-	SELECT org_id, loan_id, loan_type_name, entity_name, principle, monthly_repayment, loan_date, 
-		(EXTRACT(YEAR FROM age(current_date, '2010-05-01')) * 12) + EXTRACT(MONTH FROM age(current_date, loan_date)) as loan_months,
-		get_total_repayment(loan_id, CAST((EXTRACT(YEAR FROM age(current_date, '2010-05-01')) * 12) + EXTRACT(MONTH FROM age(current_date, loan_date)) as integer)) as loan_paid
-	FROM vw_loans;
 
+CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
+BEGIN
 
+	IF(NEW.principle is null) OR (NEW.interest is null)THEN
+		RAISE EXCEPTION 'You have to enter a principle and interest amount';
+	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is null)THEN
+		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
+	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is not null)THEN
+		IF(NEW.repayment_period > 0)THEN
+			NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
+		ELSE
+			RAISE EXCEPTION 'The repayment period should be greater than 0';
+		END IF;
+	ELSIF(NEW.monthly_repayment is not null) AND (NEW.repayment_period is null)THEN
+		IF(NEW.monthly_repayment > 0)THEN
+			NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
+		ELSE
+			RAISE EXCEPTION 'The monthly repayment should be greater than 0';
+		END IF;
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER ins_loans BEFORE INSERT ON loans
+    FOR EACH ROW EXECUTE PROCEDURE ins_loans();

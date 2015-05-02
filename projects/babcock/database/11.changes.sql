@@ -8,4 +8,3 @@ GROUP BY studentdegreeid
 HAVING count(studentmajorid) > 1;
 
 
-

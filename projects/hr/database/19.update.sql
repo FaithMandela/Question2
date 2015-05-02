@@ -126,4 +126,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
+BEGIN
 
+	IF(NEW.principle is null) OR (NEW.interest is null)THEN
+		RAISE EXCEPTION 'You have to enter a principle and interest amount';
+	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is null)THEN
+		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
+	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is not null)THEN
+		IF(NEW.repayment_period > 0)THEN
+			NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
+		ELSE
+			RAISE EXCEPTION 'The repayment period should be greater than 0';
+		END IF;
+	ELSIF(NEW.monthly_repayment is not null) AND (NEW.repayment_period is null)THEN
+		IF(NEW.monthly_repayment > 0)THEN
+			NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
+		ELSE
+			RAISE EXCEPTION 'The monthly repayment should be greater than 0';
+		END IF;
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_loans BEFORE INSERT ON loans
+    FOR EACH ROW EXECUTE PROCEDURE ins_loans();
+    
