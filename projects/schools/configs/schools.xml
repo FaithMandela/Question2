@@ -174,7 +174,6 @@
 				<TEXTFIELD w="75" title="Term Name">term_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Start Date">start_date</TEXTFIELD>
 				<TEXTFIELD w="75" title="End Date">end_date</TEXTFIELD>
-				<#comment></#comment>
 				<FORM name="Term Students" keyfield="term_student_id" linkfield="term_id" table="term_students">
 					<COMBOBOX w="430" title="Entity ID" lptable="entitys" where="(entity_type_id=4)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Class Name" lptable="class" y="30" h="20" x="10" lpfield="class_name">class_id</COMBOBOX>
@@ -193,7 +192,6 @@
 					</FORM>
 				</GRID>
 			</GRID>
-			<#comment></#comment>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Teachers Subjects" key="75" h="550">
@@ -207,7 +205,6 @@
 			<TEXTFIELD w="75" title="Adm No">adm_no</TEXTFIELD>
 			<TEXTDATE w="75" title="Dob">dob</TEXTDATE>
 			<FORM name="Students" keyfield="entity_id" table="students">
-				<#comment></#comment>
 				<COMBOBOX w="430" title="Org ID" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Surname" y="50" h="20" x="10">surname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="70" h="20" x="290">middle_name</TEXTFIELD>
@@ -320,14 +317,10 @@
 			<GRID name="Student Dormitory" keyfield="dormitory_student_id" linkfield="entity_id" table="vw_dormitory_students">
 				<TEXTFIELD w="75" title="Dormitory Name">dormitory_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Capacity">capacity</TEXTFIELD>
-				<#comment></#comment>
 				<FORM name="Dormitory Students" keyfield="dormitory_student_id" linkfield="entity_id" table="dormitory_students">
 					<COMBOBOX w="430" title="Dormitory ID" lptable="dormitorys" y="10" h="20" x="10" lpfield="dormitory_name">dormitory_id</COMBOBOX>
 				</FORM>
 			</GRID>
-			<#comment></#comment>
-			<#comment></#comment>
-			<#comment></#comment>
 			<GRID name="Student Exam" keyfield="student_exam_id" linkfield="entity_id" table="vw_student_exam">
 				<TEXTFIELD w="75" title="Exam Name">exam_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
