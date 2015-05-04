@@ -230,6 +230,10 @@ CREATE VIEW vw_studentdegrees AS
 		degrees.degreeid, degrees.degreename,
 		studentdegrees.studentdegreeid, studentdegrees.completed, studentdegrees.started, studentdegrees.cleared, studentdegrees.clearedate,
 		studentdegrees.graduated, studentdegrees.graduatedate, studentdegrees.dropout, studentdegrees.transferin, studentdegrees.transferout,
+		
+		studentdegrees.grad_apply, studentdegrees.grad_apply_date, studentdegrees.grad_finance, studentdegrees.grad_finance_date,
+		studentdegrees.grad_accept, studentdegrees.grad_accept_date,
+		
 		studentdegrees.mathplacement, studentdegrees.englishplacement, studentdegrees.details
 	FROM ((studentview INNER JOIN studentdegrees ON studentview.studentid = studentdegrees.studentid)
 		INNER JOIN sublevelview ON studentdegrees.sublevelid = sublevelview.sublevelid)

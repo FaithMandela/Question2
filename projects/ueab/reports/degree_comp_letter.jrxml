@@ -2,9 +2,12 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="192"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["16571"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT studentid, studentname, degreelevelid, degreelevelname,
@@ -50,7 +53,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 			</staticText>
 			<image hAlign="Center">
 				<reportElement x="204" y="0" width="148" height="110" uuid="9cae2485-2eb1-4068-9b68-11fea5b6ff8c"/>
-				<imageExpression><![CDATA["/opt/ueab/resources/images/UEAB logo.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "baraza_logo.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</title>

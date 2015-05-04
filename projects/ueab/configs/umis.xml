@@ -694,6 +694,108 @@
 				</GRID>
 			</GRID>
 		</GRID>
+		<GRID limit="200" name="Graduation Application" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true)">
+			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
+			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Denomination">denominationname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
+			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
+			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
+			<FORM name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegrees" noorg="true">
+				<COMBOBOX w="430" title="Degree" lptable="degrees" noorg="true" y="10" h="20" x="10" lpfield="degreename">degreeid</COMBOBOX>
+				<COMBOBOX w="430" title="Sub Level" lptable="sublevels" noorg="true" y="30" h="20" x="10" lpfield="sublevelname">sublevelid</COMBOBOX>
+				<COMBOBOX w="350" title="Bulleting" lptable="bulleting" noorg="true" y="50" h="20" x="10" lpfield="bulletingname">bulletingid</COMBOBOX>
+				<TEXTDATE w="150" title="Started" y="70" h="20" x="10">started</TEXTDATE>
+				<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
+				<CHECKBOX w="50" title="Drop Out" y="90" h="20" x="10">dropout</CHECKBOX>
+				<CHECKBOX w="50" title="Transfer In" y="90" h="20" x="190">transferin</CHECKBOX>
+				<CHECKBOX w="50" title="Transfer Out" y="90" h="20" x="370">transferout</CHECKBOX>
+				<CHECKBOX w="50" title="Trancripted" y="110" h="20" x="10">transcripted</CHECKBOX>
+				<TEXTDATE w="150" title="Transcrit Date" y="110" h="20" x="290">transcriptdate</TEXTDATE>
+				<TEXTFIELD w="50" title="Math Placement" y="130" h="20" x="10">mathplacement</TEXTFIELD>
+				<TEXTFIELD w="50" title="English Placement" y="130" h="20" x="190">englishplacement</TEXTFIELD>
+				<TEXTFIELD w="50" title="Kiswahili Placement" lw="130" y="130" h="20" x="380">kiswahiliplacement</TEXTFIELD>
+				<CHECKBOX w="150" title="Application" tab="Graduating" y="10" h="20" x="10">grad_apply</CHECKBOX>
+				<TEXTDATE w="150" title="Application Date" tab="Graduating" y="10" h="20" x="290">grad_apply_date</TEXTDATE>
+				<CHECKBOX w="150" title="Finance Clearance" tab="Graduating" y="30" h="20" x="10">grad_finance</CHECKBOX>
+				<TEXTDATE w="150" title="Finance Date" tab="Graduating" y="30" h="20" x="290">grad_finance_date</TEXTDATE>
+				<CHECKBOX w="150" title="Accepted" tab="Graduating" y="50" h="20" x="10">grad_accept</CHECKBOX>
+				<TEXTDATE w="150" title="Accepted Date" tab="Graduating" y="50" h="20" x="290">grad_accept_date</TEXTDATE>
+				<CHECKBOX w="150" title="Cleared" tab="Graduating" y="70" h="20" x="10">cleared</CHECKBOX>
+				<TEXTDATE w="150" title="Cleared Date" tab="Graduating" y="70" h="20" x="290">clearedate</TEXTDATE>
+				<CHECKBOX w="150" title="Graduated" tab="Graduating" y="90" h="20" x="10">graduated</CHECKBOX>
+				<TEXTDATE w="150" title="Graduation Date" tab="Graduating" y="90" h="20" x="290">graduatedate</TEXTDATE>
+				<TEXTAREA w="530" tab="Details" y="150" h="120" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
+				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
+				<TEXTFIELD w="140" title="Major Name">majorname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Core Major">major</TEXTFIELD>
+				<TEXTFIELD w="40" title="Pre Major">premajor</TEXTFIELD>
+				<FORM name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajors" noorg="true">
+					<COMBOBOX w="250" title="Major" lptable="majors" lw="70" noorg="true" y="10" h="20" x="10" lpfield="majorname">majorid</COMBOBOX>
+					<COMBOBOX w="150" title="Option" lptable="majoroptions" lw="70" noorg="true" y="10" h="20" x="340" lpfield="majoroptionname">majoroptionid</COMBOBOX>
+					<CHECKBOX w="150" title="Major" lw="70" y="30" h="20" x="10">major</CHECKBOX>
+					<CHECKBOX w="150" title="Pre Major" lw="70" y="30" h="20" x="190">premajor</CHECKBOX>
+					<CHECKBOX w="150" title="Non Degree Major" y="30" h="20" x="350">nondegree</CHECKBOX>
+					<CHECKBOX w="150" title="Primary Major" lw="120" y="50" h="20" x="10">primarymajor</CHECKBOX>
+					<TEXTAREA w="480" title="Details" lw="70" y="70" h="120" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcreditsview" noorg="true">
+				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
+				<TEXTFIELD w="140" title="Course Title">coursetitle</TEXTFIELD>
+				<TEXTFIELD w="140" title="Credit Hours">credithours</TEXTFIELD>
+				<TEXTFIELD w="40" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcredits" noorg="true">
+					<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
+						<GRID name="Courses" keyfield="courseid" gridfilter="true" table="courseview" noorg="true" key="2" pos="top">
+							<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
+							<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
+						</GRID>
+					</GRIDBOX>
+					<TEXTFIELD w="50" title="Credit Hours" default="3" y="30" h="20" x="10">credithours</TEXTFIELD>
+					<TEXTFIELD w="480" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+				</FORM>
+			</GRID>
+			<GRID name="Printed" keyfield="transcriptprintid" updatetable="transcriptprint" linkfield="studentdegreeid" table="transcriptprintview" noorg="true" key="9">
+				<TEXTFIELD w="15" title="Date Printed">printdate</TEXTFIELD>
+				<TEXTFIELD w="15" title="Printed By">entity_name</TEXTFIELD>
+				<TEXTFIELD w="35" title="Narrative" edit="true">narrative</TEXTFIELD>
+			</GRID>
+		</GRID>
+		<GRID limit="200" name="Completed Students" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(cleared = true)">
+			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
+			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Denomination">denominationname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
+			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
+			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
+			<JASPER name="Completion Letter" reportfile="degree_comp_letter.jasper"></JASPER>
+			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
+				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
+				<TEXTFIELD w="140" title="Major Name">majorname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Core Major">major</TEXTFIELD>
+				<TEXTFIELD w="40" title="Pre Major">premajor</TEXTFIELD>
+			</GRID>
+			<GRID name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcreditsview" noorg="true">
+				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
+				<TEXTFIELD w="140" title="Course Title">coursetitle</TEXTFIELD>
+				<TEXTFIELD w="140" title="Credit Hours">credithours</TEXTFIELD>
+				<TEXTFIELD w="40" title="Narrative">narrative</TEXTFIELD>
+			</GRID>
+			<GRID name="Printed" keyfield="transcriptprintid" updatetable="transcriptprint" linkfield="studentdegreeid" table="transcriptprintview" noorg="true" key="9">
+				<TEXTFIELD w="15" title="Date Printed">printdate</TEXTFIELD>
+				<TEXTFIELD w="15" title="Printed By">entity_name</TEXTFIELD>
+				<TEXTFIELD w="35" title="Narrative" edit="true">narrative</TEXTFIELD>
+			</GRID>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Students Halted" type="vert" key="41" h="560">
 		<GRID name="Students" keyfield="studentid" updatetable="students" table="studentview">
