@@ -1,7 +1,7 @@
 <APPLIST loglevel="info" dbpassword="invent" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
 	<APP dbpath="jdbc:postgresql://localhost/accounts" dbname="accounts" path="accounts" xmlfile="accounts.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Accounts</APP>
-	<APP dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Human Resources</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Human Resources</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="payroll.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Payroll</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="projects.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Projects</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Finance</APP>
@@ -15,32 +15,32 @@
 	<APP dbpath="jdbc:postgresql://localhost/booking" dbname="booking" path="booking" xmlfile="booking.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Booking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/agency" dbname="agency" path="agency" xmlfile="agency.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="db">Agency</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">SACCO</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Finance</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="admission.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Admissions</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="faculty.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Faculty</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="studentdean.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Student Dean</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="chaplaincy.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Chaplaincy</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Admin</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="services.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Services</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock General</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="web/admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Applicant</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="web/students.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Students</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="web/guardians.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Guardian</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="web/lecturers.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Lecturer</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="web/alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Alumnae</APP>
-	<APP dbpath="jdbc:postgresql://localhost/babcock" dbname="babcock" path="babcock" xmlfile="web/industry.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Babcock Industry</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Admin</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Admissions</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Alumnae</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="dos.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB DOS</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="exams.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Exams</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Finance</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web General</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="web/admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web Applicant</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="web/students.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web Student</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="web/lecturers.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web Lecturer</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Finance</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="admission.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Admissions</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="faculty.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Faculty</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="studentdean.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Student Dean</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="chaplaincy.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Chaplaincy</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Admin</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="services.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Services</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock General</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Applicant</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/students.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Students</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/guardians.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Guardian</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/lecturers.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Lecturer</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Alumnae</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/industry.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Babcock Industry</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Admin</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Admissions</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Alumnae</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="dos.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB DOS</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="exams.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Exams</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Finance</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web General</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="web/admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web Applicant</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="web/students.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web Student</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="web/lecturers.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Web Lecturer</APP>
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="aua.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA Web General</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mysa" dbname="mysa" path="mysa" xmlfile="mysa.xml" dbclass="org.postgresql.Driver" dbusername="root">MYSA</APP>
