@@ -38,8 +38,8 @@ jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore ../build/lib/dewcisk
 #jarsigner -keystore ../build/lib/dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO baraza.jar dewciskeystore
 #jarsigner -keystore ../build/lib/dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO baraza.app.jar dewciskeystore
 
-cp baraza.jar /opt/tomcat/webapps/babcock/WEB-INF/lib/baraza.jar -f
-cp baraza.app.jar /opt/tomcat/webapps/babcock/app/baraza.jar -f
+cp baraza.jar /opt/tomcat/webapps/hr/WEB-INF/lib/baraza.jar -f
+cp baraza.app.jar /opt/tomcat/webapps/hr/app/baraza.jar -f
 mv baraza.jar ../build/
 mv baraza.app.jar ../build/
 
