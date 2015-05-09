@@ -444,7 +444,7 @@ public class BWebBody extends BQuery {
 				if(el.getAttribute("style") != null) response.append(" style='" + el.getAttribute("style") + "'");
 				if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 				if(el.getAttribute("tooltip") != null) response.append(" title='" + el.getAttribute("tooltip") + "'");
-				if(el.getAttribute("placeholder") != null) response.append(" class='placeholder' placeholder='" + el.getAttribute("placeholder") + "'");				
+				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 				if(el.getAttribute("data-instant") != null) response.append(" data-instant='" + el.getAttribute("data-instant") + "'");
 				if(el.getAttribute("data-min") != null) response.append(" data-min='" + el.getAttribute("data-min") + "'");
 				if(el.getAttribute("data-max") != null) response.append(" data-max='" + el.getAttribute("data-max") + "'");
@@ -478,6 +478,7 @@ public class BWebBody extends BQuery {
 				else fieldValue = defaultvalue;
 
 				response.append("<textarea name='" + el.getValue() + "'");
+				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
 				response.append(" cols='50' rows='10'>");
@@ -490,6 +491,7 @@ public class BWebBody extends BQuery {
 
 				response.append("<div class='wysiwyg'>");//style='width: 740px;'>");
 				response.append("<textarea class='html' name='" + el.getValue() + "'");
+				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 				response.append(" cols='50' rows='10'>");
 				response.append(fieldValue);
@@ -628,6 +630,7 @@ public class BWebBody extends BQuery {
 				response.append("<input class='datepicker' name='" + el.getValue() + "'");
 				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
 				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 				if(eof) {
 					SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy");
 					if(getString(el.getValue())!=null) {
@@ -645,7 +648,8 @@ public class BWebBody extends BQuery {
 			} else if(el.getName().equals("TEXTDECIMAL")) {
 				response.append("<input class='numerictextbox' type='text' name='" + el.getValue() + "'");
 
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = true ");	
+				if(el.getAttribute("required","false").equals("true")) response.append(" required = true ");
+				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 
 				if(el.getAttribute("js_function") != null) {			
 					String tgt = el.getAttribute("target","");

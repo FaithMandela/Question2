@@ -11,6 +11,8 @@
 			<MENU name="Internships" role="applicant">15</MENU>
 			<MENU name="Claims Requests" role="staff">36</MENU>
 			<MENU name="Pay Slip" role="staff">16</MENU>
+			<MENU name="Petty Cash Request">92</MENU>
+			<MENU name="Petty Cash" role="pettycash">90</MENU>
 			<MENU name="Client Forms" role="forms">72</MENU>
 			<MENU name="Approvals">83</MENU>
 		</MENU>
@@ -59,8 +61,9 @@
 			<MENU name="Staff Contracts" role="hr">155</MENU>
 			<MENU name="Review Reports" role="admin,hr">160</MENU>
 		</MENU>
-		<MENU name="Payroll" role="admin,payroll" xml="payroll.xml">0</MENU>
-		<MENU name="Projects" role="staff" xml="projects.xml">0</MENU>
+		<MENU name="Payroll" role="admin,payroll,hr" xml="payroll.xml">0</MENU>
+		<MENU name="Projects" role="staff,admin,payroll,hr" xml="projects.xml">0</MENU>
+		<MENU name="Finance" role="finance" xml="finance.xml">0</MENU>
 	</MENU>
 	<DESK w="700" name="News" key="1" h="500">
 		<GRID name="News" keyfield="sys_news_id" table="sys_news" where="(publish = true)">
@@ -643,14 +646,14 @@
 				</FORM>
 			</GRID>
 			<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
-				<TEXTFIELD w="350" title="Organisation" y="10" h="20" x="10">org_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Default" y="30" h="20" x="10">is_default</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
-				<TEXTFIELD w="350" title="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
+				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
 				<COMBOBOX w="430" title="Base Currency" lptable="currency" noorg="true" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="true" lpkey="org_id" y="90" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
-				<TEXTFIELD w="50" title="Sufix" y="110" h="20" x="10">org_sufix</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="50" title="Sufix" placeholder="Organisation Sufix" y="110" h="20" x="10">org_sufix</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" placeholder="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Currency" keyfield="currency_id" table="currency">
@@ -735,11 +738,11 @@
 			<TEXTFIELD w="75" title="Unit">department_name</TEXTFIELD>
 			<GRID name="Department Roles" keyfield="department_role_id" linkfield="department_id" table="vw_department_roles">
 				<TEXTFIELD w="75" title="Department Role ID">department_role_id</TEXTFIELD>
-				<TEXTFIELD w="275" title="Line Manager">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Designation">department_role_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Reporting To">parent_role_name</TEXTFIELD>
 				<FORM tw="570" name="Department Roles" keyfield="department_role_id" linkfield="department_id" table="department_roles" th="320">
 					<COMBOBOX w="430" title="Reporting To" lptable="Department_Roles" lpkey="Department_Role_ID" y="10" h="20" x="10" lpfield="Department_Role_Name">LN_Department_Role_ID</COMBOBOX>
-					<TEXTFIELD w="430" title="Line Manager" y="30" h="20" x="10">department_role_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Designation" y="30" h="20" x="10">department_role_name</TEXTFIELD>
 					<EDITOR w="550" tab="Job Description" y="1" h="280" x="10">job_description</EDITOR>
 					<EDITOR w="550" tab="Duties" y="1" h="280" x="10">duties</EDITOR>
 					<EDITOR w="550" tab="Requirements" y="1" h="280" x="10">Job_Requirements</EDITOR>
@@ -759,11 +762,11 @@
 		</GRID>
 		<GRID name="Department Role" keyfield="department_role_id" linkfield="department_id" table="vw_department_roles">
 			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
-			<TEXTFIELD w="275" title="Line Manager">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Designation">department_role_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Reporting To">parent_role_name</TEXTFIELD>
 			<FORM tw="570" name="Department Role" keyfield="department_role_id" linkfield="department_id" table="department_roles" th="320">
 				<COMBOBOX w="430" title="Department" lptable="departments" lpkey="department_id" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
-				<COMBOBOX w="430" title="Reporting To" lptable="Department_Roles" lpkey="Department_Role_ID" y="30" h="20" x="10" lpfield="Department_Role_Name">LN_Department_Role_ID</COMBOBOX>
+				<COMBOBOX w="430" title="Designation" lptable="Department_Roles" lpkey="Department_Role_ID" y="30" h="20" x="10" lpfield="Department_Role_Name">LN_Department_Role_ID</COMBOBOX>
 				<TEXTFIELD w="430" title="Department Role" y="50" h="20" x="10">department_role_name</TEXTFIELD>
 				<EDITOR w="550" tab="Job Description" y="1" h="280" x="10">job_description</EDITOR>
 				<EDITOR w="550" tab="Duties" y="1" h="280" x="10">duties</EDITOR>
@@ -988,7 +991,6 @@
 				<COMBOBOX w="150" title="Birth Nation" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
 				<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
 				<COMBOBOX w="430" title="Location" lptable="locations" y="130" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
-				<COMBOBOX w="430" title="Pay Grade" lptable="pay_scales" y="150" h="20" x="10" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10">identity_card</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
@@ -1002,7 +1004,9 @@
 				<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10">basic_salary</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Employment Terms" tab="Terms" y="110" h="20" x="10">employment_terms</TEXTFIELD>
+				<COMBOBOX w="430" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+				<COMBOBOX w="430" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Employment Terms" tab="Terms" y="150" h="20" x="10">employment_terms</TEXTFIELD>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
@@ -1267,7 +1271,7 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<FORM new="false" tw="570" name="Details" keyfield="entity_id" delete="false" table="employees" th="180">
@@ -1300,7 +1304,6 @@
 				<COMBOBOX w="150" title="Birth Nation" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
 				<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
 				<COMBOBOX w="430" title="Location" lptable="locations" y="130" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
-				<COMBOBOX w="430" title="Pay Grade" lptable="pay_scales" y="150" h="20" x="10" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10">identity_card</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
@@ -1312,9 +1315,11 @@
 				<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
 				<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10">contract</CHECKBOX>
 				<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Basic Salary" tab="Terms" y="70" h="20" x="10">basic_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10">basic_salary</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Employment Terms" tab="Terms" y="110" h="20" x="10">employment_terms</TEXTFIELD>
+				<COMBOBOX w="430" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+				<COMBOBOX w="430" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Employment Terms" tab="Terms" y="150" h="20" x="10">employment_terms</TEXTFIELD>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
@@ -2434,21 +2439,30 @@
 		<GRID name="Pay Grade" keyfield="pay_scale_id" table="pay_scales">
 			<TEXTFIELD w="75" title="Pay Grade ID">pay_scale_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pay Grade Name">pay_scale_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Min Pay">min_pay</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Max Pay">max_pay</TEXTDECIMAL>
-			<GRID name="Pay Scale" keyfield="pay_scale_year_id" orderby="pay_year" linkfield="pay_scale_id" table="pay_scale_years">
-				<TEXTFIELD w="75" title="Pay Grade Step">pay_year</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Pay Amount">pay_amount</TEXTDECIMAL>
-				<FORM name="Pay Scale" keyfield="pay_scale_year_id" linkfield="pay_scale_id" table="pay_scale_years">
-					<TEXTFIELD w="150" title="Pay Grade Step" y="10" h="20" x="10">pay_year</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Min Pay" pattern="###,###,###.##">min_pay</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Max Pay" pattern="###,###,###.##">max_pay</TEXTDECIMAL>
+			<GRID name="Pay Steps" keyfield="pay_scale_step_id" linkfield="pay_scale_id" table="vw_pay_scale_steps">
+				<TEXTFIELD w="75" title="Pay Step">pay_step</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Pay Amount" pattern="###,###,###.##">pay_amount</TEXTDECIMAL>
+				<FORM name="Pay Steps" keyfield="pay_scale_step_id" linkfield="pay_scale_id" table="pay_scale_steps">
+					<TEXTFIELD w="150" title="Pay Step" y="10" h="20" x="10">pay_step</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Pay Amount" y="10" h="20" x="290">pay_amount</TEXTDECIMAL>
+				</FORM>
+			</GRID>
+			<GRID name="Pay Year" keyfield="pay_scale_year_id" orderby="pay_year" linkfield="pay_scale_id" table="pay_scale_years">
+				<TEXTFIELD w="75" title="Pay Year">pay_year</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Pay Amount" pattern="###,###,###.##">pay_amount</TEXTDECIMAL>
+				<FORM name="Pay Year" keyfield="pay_scale_year_id" linkfield="pay_scale_id" table="pay_scale_years">
+					<TEXTFIELD w="150" title="Pay Year" y="10" h="20" x="10">pay_year</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Pay Amount" y="10" h="20" x="290">pay_amount</TEXTDECIMAL>
 				</FORM>
 			</GRID>
 			<FORM name="Pay Scales" keyfield="pay_scale_id" table="pay_scales">
-				<TEXTFIELD w="350" title="Pay Grade Name" y="10" h="20" x="10">pay_scale_name</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Min Pay" y="30" h="20" x="10">min_pay</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Max Pay" y="30" h="20" x="290">max_pay</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Currency ID" lptable="currency" y="10" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTFIELD w="350" title="Pay Grade Name" y="30" h="20" x="10">pay_scale_name</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Min Pay" y="50" h="20" x="10">min_pay</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Max Pay" y="50" h="20" x="290">max_pay</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Pay Groups" keyfield="pay_group_id" table="pay_groups">
@@ -2458,6 +2472,174 @@
 				<TEXTFIELD w="430" title="Pay Group Name" y="10" h="20" x="10">pay_group_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Petty Cash" key="90" h="500">
+		<GRID name="Requests" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="vw_pc_expenditure" where="(is_request = true) and (approve_status = 'Approved')">
+			<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item Name">pc_item_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+			<TEXTDATE w="75" title="Date">exp_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="By">entity_name</TEXTFIELD>
+			<FORM name="Expenditure" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="pc_expenditure">
+				<COMBOBOX w="430" title="Item" lptable="pc_items" y="10" h="20" x="10" lpfield="pc_item_name">pc_item_id</COMBOBOX>
+				<COMBOBOX w="430" title="Type" lptable="pc_types" y="30" h="20" x="10" lpfield="pc_type_name">pc_type_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Units" y="50" h="20" x="10">units</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Unit Price" y="50" h="20" x="290">unit_price</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Receipt Number" y="70" h="20" x="10">receipt_number</TEXTFIELD>
+				<TEXTDATE w="150" title="Exp Date" y="70" h="20" x="290">exp_date</TEXTDATE>
+				<CHECKBOX w="150" title="Request" y="90" h="20" x="10">is_request</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Periods" keyfield="period_id" orderby="period_id desc" table="vw_periods" where="(closed = false)">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Active">activated</CHECKBOX>
+			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+			<GRID name="Allocations" keyfield="pc_allocation_id" linkfield="period_id" table="vw_pc_allocations">
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Budget">sum_budget</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Expenditure">sum_expenditure</TEXTDECIMAL>
+				<GRID name="Expenditure" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="vw_pc_expenditure" where="(approve_status = 'Approved')">
+					<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Item Name">pc_item_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+					<TEXTDATE w="75" title="Date">exp_date</TEXTDATE>
+					<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
+					<CHECKBOX w="75" title="Request">is_request</CHECKBOX>
+					<FORM name="Expenditure" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="pc_expenditure">
+						<DEFAULT default="Approved">approve_status</DEFAULT>
+						<COMBOBOX w="430" title="Item" lptable="pc_items" y="10" h="20" x="10" lpfield="pc_item_name">pc_item_id</COMBOBOX>
+						<COMBOBOX w="430" title="Type" lptable="pc_types" y="30" h="20" x="10" lpfield="pc_type_name">pc_type_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Units" y="50" h="20" x="10">units</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Unit Price" y="50" h="20" x="290">unit_price</TEXTDECIMAL>
+						<TEXTFIELD w="150" title="Receipt Number" y="70" h="20" x="10">receipt_number</TEXTFIELD>
+						<TEXTDATE w="150" title="Exp Date" y="70" h="20" x="290">exp_date</TEXTDATE>
+						<CHECKBOX w="150" title="Request" y="90" h="20" x="10">is_request</CHECKBOX>
+						<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Budget" keyfield="pc_budget_id" linkfield="pc_allocation_id" table="vw_pc_budget">
+					<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Item">pc_item_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Units">budget_units</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Price">budget_price</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Cost">budget_cost</TEXTDECIMAL>
+					<FORM name="Budget" keyfield="pc_budget_id" linkfield="pc_allocation_id" table="pc_budget">
+						<COMBOBOX w="430" title="Item" lptable="pc_items" y="10" h="20" x="10" lpfield="pc_item_name">pc_item_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Units" y="30" h="20" x="10">budget_units</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Price" y="30" h="20" x="290">budget_price</TEXTDECIMAL>
+						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Banking" keyfield="pc_banking_id" linkfield="pc_allocation_id" table="pc_banking">
+					<TEXTDATE w="75" title="Banking Date">banking_date</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<FORM name="Banking" keyfield="pc_banking_id" linkfield="pc_allocation_id" table="pc_banking">
+						<TEXTDATE w="150" title="Banking Date" y="10" h="20" x="10">banking_date</TEXTDATE>
+						<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="290">amount</TEXTDECIMAL>
+						<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<FORM name="Allocations" keyfield="pc_allocation_id" linkfield="period_id" table="pc_allocations">
+					<COMBOBOX w="430" title="Department" lptable="departments" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+		</GRID>
+		<GRID name="Items" keyfield="pc_category_id" table="pc_category">
+			<TEXTFIELD w="75" title="Category ID">pc_category_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Category Name">pc_category_name</TEXTFIELD>
+			<GRID name="Items" keyfield="pc_item_id" linkfield="pc_category_id" table="vw_pc_items">
+				<TEXTFIELD w="75" title="Item ID">pc_item_id</TEXTFIELD>
+				<TEXTFIELD w="175" title="Item Name">pc_item_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Default Price">default_price</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Default Units">default_units</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Default Cost">default_cost</TEXTDECIMAL>
+				<FORM name="Items" keyfield="pc_item_id" linkfield="pc_category_id" table="pc_items">
+					<TEXTFIELD w="350" title="Item Name" y="10" h="20" x="10">pc_item_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Default Units" y="30" h="20" x="10">default_units</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Default Price" y="30" h="20" x="290">default_price</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Category" keyfield="pc_category_id" table="pc_category">
+				<TEXTFIELD w="350" title="Category Name" y="10" h="20" x="10">pc_category_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Items List" keyfield="pc_category_id" orderby="pc_item_name" table="vw_pc_items">
+			<TEXTFIELD w="75" title="Item ID">pc_item_id</TEXTFIELD>
+			<TEXTFIELD w="175" title="Category">pc_category_name</TEXTFIELD>
+			<TEXTFIELD w="175" title="Item Name">pc_item_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Default Price">default_price</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Default Units">default_units</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Default Cost">default_cost</TEXTDECIMAL>
+			<FORM name="Item" keyfield="pc_item_id" table="pc_items">
+				<COMBOBOX w="430" title="Category" lptable="pc_category" y="10" h="20" x="10" lpfield="pc_category_name">pc_category_id</COMBOBOX>
+				<TEXTFIELD w="350" title="Item Name" y="30" h="20" x="10">pc_item_name</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Default Price" y="50" h="20" x="10">default_price</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Default Units" y="50" h="20" x="290">default_units</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Types" keyfield="pc_type_id" table="pc_types">
+			<TEXTFIELD w="75" title="Type ID">pc_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Type Name">pc_type_name</TEXTFIELD>
+			<FORM name="Types" keyfield="pc_type_id" table="pc_types">
+				<TEXTFIELD w="350" title="Type Name" y="10" h="20" x="10">pc_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Petty Cash Request" key="92" h="500">
+		<GRID name="Allocations" keyfield="pc_allocation_id" linkfield="period_id" table="vw_pc_allocations" where="(closed = false)">
+			<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Budget">sum_budget</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Expenditure">sum_expenditure</TEXTDECIMAL>
+			<GRID name="Request" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="vw_pc_expenditure" where="(is_request = true) and (approve_status='Completed')">
+				<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Item Name">pc_item_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
+				<FORM name="Expenditure" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="pc_expenditure">
+					<DEFAULT default="Completed">approve_status</DEFAULT>
+					<DEFAULT default="true">is_request</DEFAULT>
+					<USERFIELD>entity_id</USERFIELD>
+					<COMBOBOX w="430" title="Item" lptable="pc_items" y="10" h="20" x="10" lpfield="pc_item_name">pc_item_id</COMBOBOX>
+					<COMBOBOX w="430" title="Type" lptable="pc_types" y="30" h="20" x="10" lpfield="pc_type_name">pc_type_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Units" y="50" h="20" x="10">units</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Unit Price" y="50" h="20" x="290">unit_price</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Expenditure" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="vw_pc_expenditure" user="entity_id">
+				<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Item Name">pc_item_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+				<TEXTDATE w="75" title="Date">exp_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Forms" key="71" h="500">
@@ -2801,6 +2983,16 @@
 				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
 				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
 			</ACTIONS>
+			<GRID name="Petty Cash" keyfield="pc_expenditure_id" table="vw_pc_expenditure" viewfilter="table_name=pc_expenditure" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Item Name">pc_item_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+				<TEXTDATE w="75" title="Date">exp_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Request">is_request</CHECKBOX>
+			</GRID>
 			<GRID name="Payroll" keyfield="period_id" orderby="start_date desc" table="periods" viewfilter="table_name=periods" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
