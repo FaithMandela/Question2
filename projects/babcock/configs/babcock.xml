@@ -1251,7 +1251,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="800" name="Checklist" type="horl" key="135" h="500">
-		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" key="1">
+		<GRID limit="200" name="Students" keyfield="studentdegreeid" table="studentdegreeview">
 			<TEXTFIELD w="15" title="Matric Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
@@ -1264,7 +1264,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Outstanding Courses" type="horl" key="136" h="500">
-		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" key="1">
+		<GRID limit="200" name="Students" keyfield="studentdegreeid" table="studentdegreeview">
 			<TEXTFIELD w="15" title="Matric Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
