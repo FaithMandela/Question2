@@ -694,7 +694,7 @@
 				</GRID>
 			</GRID>
 		</GRID>
-		<GRID limit="200" name="Graduation Application" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true)">
+		<GRID limit="200" name="Graduation Application" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true) AND (graduated = false)">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
@@ -703,7 +703,9 @@
 			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
 			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
+			<TEXTFIELD w="45" title="Completed">completed</TEXTFIELD>
+			<TEXTFIELD w="45" title="Credit" pattern="###.#">cumm_credits</TEXTFIELD>
+			<TEXTFIELD w="45" title="GPA" pattern="###.#">cumm_gpa</TEXTFIELD>
 			<FORM name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegrees" noorg="true">
 				<COMBOBOX w="430" title="Degree" lptable="degrees" noorg="true" y="10" h="20" x="10" lpfield="degreename">degreeid</COMBOBOX>
 				<COMBOBOX w="430" title="Sub Level" lptable="sublevels" noorg="true" y="30" h="20" x="10" lpfield="sublevelname">sublevelid</COMBOBOX>
@@ -777,6 +779,8 @@
 			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
+			<TEXTFIELD w="45" title="Credit" pattern="###.#">cumm_credits</TEXTFIELD>
+			<TEXTFIELD w="45" title="GPA" pattern="###.#">cumm_gpa</TEXTFIELD>
 			<JASPER name="Completion Letter" reportfile="degree_comp_letter.jasper"></JASPER>
 			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>

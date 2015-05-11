@@ -28,6 +28,7 @@ public class BServer extends Thread {
 	ServerSocket serverSocket = null;
 	List<BServerTimed> stl = null;
 	String greeting;
+	Integer portNumber;
 	BLogHandle logHandle;
 
 	public BServer(String configDir) {
@@ -36,6 +37,7 @@ public class BServer extends Thread {
 		root = xml.getRoot();
 
 		greeting = root.getAttribute("greeting");
+		portNumber = new Integer(root.getAttribute("port", "7777"));
 		logHandle = new BLogHandle(root);
 		logHandle.config(log);
 
@@ -47,13 +49,13 @@ public class BServer extends Thread {
 				stl.add(st);
 			}
 		}
-
-        try {
-            serverSocket = new ServerSocket(7777);
+		
+		try {
+			serverSocket = new ServerSocket(portNumber.intValue());
 			log.info("Server started");
-        } catch (IOException e) {
-            log.severe("Could not listen on port: 7777.");
-        }
+		} catch (IOException e) {
+			log.severe("Could not listen on port: " + portNumber.toString());
+		}
 	}
 
 	public void run() {

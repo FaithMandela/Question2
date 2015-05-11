@@ -213,6 +213,23 @@ CREATE VIEW studentdegreeview AS
 	FROM ((studentview INNER JOIN studentdegrees ON studentview.studentid = studentdegrees.studentid)
 		INNER JOIN sublevelview ON studentdegrees.sublevelid = sublevelview.sublevelid)
 		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid;
+
+CREATE OR REPLACE FUNCTION getcummcredit(int) RETURNS float AS $$
+	SELECT sum(qgrades.credit)
+	FROM (qgrades INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid)
+		INNER JOIN grades ON qgrades.gradeid = grades.gradeid
+	WHERE (qstudents.studentdegreeid = $1) AND (qstudents.approved = true) AND (qgrades.dropped = false)
+		AND (grades.gpacount = true) AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getcummgpa(int) RETURNS float AS $$
+	SELECT (CASE sum(qgrades.credit) WHEN 0 THEN 0 ELSE (sum(grades.gradeweight * qgrades.credit)/sum(qgrades.credit)) END)
+	FROM (qgrades INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid)
+		INNER JOIN grades ON qgrades.gradeid = grades.gradeid
+	WHERE (qstudents.studentdegreeid = $1) AND (qstudents.approved = true)
+		AND (qgrades.dropped = false) AND (grades.gpacount = true) 
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
 		
 CREATE VIEW vw_studentdegrees AS
 	SELECT studentview.religionid, studentview.religionname, studentview.denominationid, studentview.denominationname,
@@ -234,7 +251,10 @@ CREATE VIEW vw_studentdegrees AS
 		studentdegrees.grad_apply, studentdegrees.grad_apply_date, studentdegrees.grad_finance, studentdegrees.grad_finance_date,
 		studentdegrees.grad_accept, studentdegrees.grad_accept_date,
 		
-		studentdegrees.mathplacement, studentdegrees.englishplacement, studentdegrees.details
+		studentdegrees.mathplacement, studentdegrees.englishplacement, studentdegrees.details,
+		
+		getcummcredit(studentdegrees.studentdegreeid) as cumm_credits,
+		getcummgpa(studentdegrees.studentdegreeid) as cumm_gpa
 	FROM ((studentview INNER JOIN studentdegrees ON studentview.studentid = studentdegrees.studentid)
 		INNER JOIN sublevelview ON studentdegrees.sublevelid = sublevelview.sublevelid)
 		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid;

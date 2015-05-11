@@ -15,11 +15,4 @@ INSERT INTO category VALUES(1, 0, 'Food Stuffs', 'Chama Food stuffs for employee
 INSERT INTO category VALUES(2, 0, 'Electronics', 'Office Electronics');
 INSERT INTO category VALUES(3, 0, 'Furniture', 'Office Furniture');
 
-<GRIDBOX w="430" title="GL Account" default="70005" lptable="vw_accounts" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">account_id
-				<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-					<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-					<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-					<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-				</GRID>
-</GRIDBOX>
+

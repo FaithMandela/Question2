@@ -18,22 +18,29 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.baraza.xml.BXML;
+import org.baraza.xml.BElement;
+
 public class BClient {
 
-    public BClient(String comm, boolean readFirst) {
+    public BClient(String comm, boolean readFirst, String configDir) {
 		Logger log = Logger.getLogger(BClient.class.getName());
-        Socket kkSocket = null;
-        PrintWriter out = null;
-        BufferedReader in = null;
+		Socket kkSocket = null;
+		PrintWriter out = null;
+		BufferedReader in = null;
 		BufferedReader stdIn = null;
 
-        String fromServer;
-        String fromClient;
-
-        try {
-            kkSocket = new Socket("localhost", 7777);
-            out = new PrintWriter(kkSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
+		String fromServer;
+		String fromClient;
+        
+		BXML xml = new BXML(configDir + "config.xml", false);
+		BElement root = xml.getRoot();
+		Integer portNumber = new Integer(root.getAttribute("port", "7777"));
+        
+		try {
+			kkSocket = new Socket("localhost", portNumber.intValue());
+			out = new PrintWriter(kkSocket.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(kkSocket.getInputStream()));
 			stdIn = new BufferedReader(new InputStreamReader(System.in));
 
 			if(readFirst) {
