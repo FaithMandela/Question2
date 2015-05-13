@@ -43,7 +43,7 @@ public class BServer extends Thread {
 
 		stl = new ArrayList<BServerTimed>();
 		for(BElement el : root.getElements()) {
-			if(el.getName().equals("SERVER") && el.getAttribute("disable", "false").equals("false")) {				
+			if(el.getName().equals("SERVER") && el.getAttribute("disable", "false").equals("false")) {
 				BServerTimed st = new BServerTimed(configDir, el, logHandle);
 				st.start();
 				stl.add(st);

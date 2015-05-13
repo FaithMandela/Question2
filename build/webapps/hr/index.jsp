@@ -16,9 +16,12 @@
 		session.invalidate();
   	}
 
+	String projectDir = context.getInitParameter("projectDir");
+	if(projectDir == null) projectDir = context.getRealPath("WEB-INF");
+
 	String ps = System.getProperty("file.separator");
-	String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
-	String reportPath = context.getRealPath("reports") + ps;
+	String xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
+	String reportPath = projectDir + ps + "reports" + ps;
 
 	String userIP = request.getRemoteAddr();
 	String userName = request.getRemoteUser();

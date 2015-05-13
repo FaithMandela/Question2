@@ -81,7 +81,7 @@ public class BServerTimed extends Thread {
 		if(type.equals("SMS")) sms = new BSMS(db, root, logHandle);
 		if(type.equals("KANNEL")) kannel = new BKannel(db, root, logHandle);
 		if(type.equals("SOAPSMS")) soapSMS = new BSoapSMS(db, root, logHandle);
-		if(type.equals("TOMCAT")) tomcat = new BTomcat(db, root, logHandle);
+		if(type.equals("TOMCAT")) tomcat = new BTomcat(db, root, logHandle, configDir + el.getAttribute("path"));
 		if(type.equals("SQLCRON")) sqlcron = new BSQLCron(db, root, logHandle);
 	}
 
