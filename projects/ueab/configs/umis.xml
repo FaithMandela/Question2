@@ -617,6 +617,11 @@
 					<DATA>M</DATA>
 					<DATA>F</DATA>
 				</COMBOLIST>
+				<COMBOLIST w="50" title="Disability" y="210" h="20" x="10">disability
+					<DATA>N</DATA>
+					<DATA>Y</DATA>
+				</COMBOLIST>
+				<TEXTAREA w="430" title="Details if Yes" y="250" h="40" x="10">dis_details</TEXTAREA>
 				<COMBOLIST w="50" title="Marital Status" y="210" h="20" x="290">MaritalStatus
 					<DATA>S</DATA>
 					<DATA>M</DATA>
