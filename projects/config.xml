@@ -75,4 +75,5 @@
 	<SERVER dbpassword="Imis2goke" dbpath="jdbc:oracle:thin:@172.100.3.30:1542:timis" noaudit="true" dbname="timis" path="ob" xmlfile="mail.xml" disable="true" dbclass="oracle.jdbc.driver.OracleDriver" dbusername="erpdbuser">CCKIMIS Mailing Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="false" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/agency" dbname="agency" path="agency" xmlfile="email.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="root">Agency Emails</SERVER>
+	<APP dbpath="jdbc:postgresql://localhost/myclinic" dbname="myclinic" path="myclinic" xmlfile="myclinic.xml" dbclass="org.postgresql.Driver" dbusername="postgres">myclinic</APP>
 </APPLIST>
