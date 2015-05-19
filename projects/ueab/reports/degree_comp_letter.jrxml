@@ -2,7 +2,11 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
+<<<<<<< HEAD
 	<property name="ireport.y" value="348"/>
+=======
+	<property name="ireport.y" value="215"/>
+>>>>>>> 4129d2c35cb3c158d15e7014ba09127da3eaaedc
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -50,9 +54,16 @@ ORDER BY majors.major desc;]]>
 		<![CDATA[SELECT studentid, studentname, degreelevelid, degreelevelname,
 	sublevelid, sublevelname, degreeid, degreename, studentdegreeid,
 	completed, started, cleared, clearedate, graduated, graduatedate,
+<<<<<<< HEAD
 	(CASE WHEN degreeid = 'CERT' THEN 'Certificate in '
 	WHEN degreeid = 'DIPL' THEN 'Diploma In '
 	ELSE ' degree of <b>'  || upper (Degreename) || '</b>' END)::varchar as degree_type
+=======
+	(CASE WHEN degreeid = 'CERT' THEN 'CERTIFICATE IN '
+	WHEN degreeid = 'DIPL' THEN 'DIPLOMA IN '
+	ELSE 'DEGREE OF '  || degreename END)::varchar as degree_type
+
+>>>>>>> 4129d2c35cb3c158d15e7014ba09127da3eaaedc
 
 FROM studentdegreeview
 WHERE studentdegreeid = '$P!{filterid}';]]>
@@ -143,8 +154,20 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				</textElement>
 				<text><![CDATA[TO WHOM IT MAY CONCERN]]></text>
 			</staticText>
+<<<<<<< HEAD
 			<staticText>
 				<reportElement x="0" y="247" width="555" height="29" uuid="ce63ed2b-2e9d-4d6c-b4a6-23e60c26ba65"/>
+=======
+			<textField>
+				<reportElement x="55" y="197" width="500" height="20" uuid="30216448-9ed9-4c22-bad5-b94d6ef7a5fe"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{degree_type}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="271" width="555" height="29" uuid="ce63ed2b-2e9d-4d6c-b4a6-23e60c26ba65"/>
+>>>>>>> 4129d2c35cb3c158d15e7014ba09127da3eaaedc
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="12" isUnderline="false" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -195,9 +218,15 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				<text><![CDATA[254-20-8023084]]></text>
 			</staticText>
 			<componentElement>
+<<<<<<< HEAD
 				<reportElement key="table" mode="Transparent" x="41" y="192" width="462" height="54" uuid="74f4f9d5-08e2-49aa-a588-239ee1ca9f32"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="DS1" uuid="a412a06b-3232-4d9c-8921-e19612df4515">
+=======
+				<reportElement key="table" style="table" x="55" y="217" width="500" height="54" uuid="74f4f9d5-08e2-49aa-a588-239ee1ca9f32"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DS1" uuid="39f2b265-093a-402d-a799-ffd8156f066a">
+>>>>>>> 4129d2c35cb3c158d15e7014ba09127da3eaaedc
 						<datasetParameter name="filterid">
 							<datasetParameterExpression><![CDATA[$P{filterid}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -205,6 +234,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 					</datasetRun>
 					<jr:column width="90" uuid="802eb229-953f-43b8-b18c-d706d4da2885">
 						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+<<<<<<< HEAD
 							<box>
 								<topPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.0"/>
@@ -213,6 +243,12 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 								<reportElement x="0" y="0" width="90" height="20" uuid="a185cb9d-6a34-47ac-b93d-99d64e00c73a"/>
 								<textElement textAlignment="Justified" verticalAlignment="Bottom">
 									<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+=======
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="a185cb9d-6a34-47ac-b93d-99d64e00c73a"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+>>>>>>> 4129d2c35cb3c158d15e7014ba09127da3eaaedc
 								</textElement>
 								<textFieldExpression><![CDATA[$F{major_type} + ':']]></textFieldExpression>
 							</textField>
@@ -220,6 +256,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 					</jr:column>
 					<jr:column width="339" uuid="12080b8a-4cfd-420c-b914-a859a2fab5ca">
 						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+<<<<<<< HEAD
 							<box>
 								<topPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.0"/>
@@ -230,11 +267,20 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 									<font fontName="Times New Roman" size="13" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{majorname}]]></textFieldExpression>
+=======
+							<textField>
+								<reportElement x="0" y="0" width="317" height="20" uuid="3f7d43d7-89f1-4a4d-8665-65be0711b2ac"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[ $F{majorname}]]></textFieldExpression>
+>>>>>>> 4129d2c35cb3c158d15e7014ba09127da3eaaedc
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 				</jr:table>
 			</componentElement>
+<<<<<<< HEAD
 			<staticText>
 				<reportElement x="0" y="337" width="555" height="15" uuid="a3a2ff35-aff6-48a2-a371-a97736140686"/>
 				<textElement verticalAlignment="Middle">
@@ -242,6 +288,8 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				</textElement>
 				<text><![CDATA[Sincerely,]]></text>
 			</staticText>
+=======
+>>>>>>> 4129d2c35cb3c158d15e7014ba09127da3eaaedc
 		</band>
 	</pageHeader>
 	<pageFooter>

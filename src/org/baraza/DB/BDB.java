@@ -108,6 +108,20 @@ public class BDB {
 			log.severe("Database connection SQL Error : " + ex);
 		}
 	}
+	
+	public void setSchema(String dbSchema) {
+		this.dbschema = dbSchema;
+
+		if(dbschema != null) {
+			try {
+				Statement exst = db.createStatement();
+				exst.execute("ALTER session set current_schema=" + dbschema);
+				exst.close();
+			} catch (SQLException ex) {
+				log.severe("Database connection SQL Error : " + ex);
+			}
+		}
+	}
 
 	public void reconnect() {
 		close();

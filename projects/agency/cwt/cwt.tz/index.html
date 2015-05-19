@@ -27,7 +27,7 @@
 			if(HotelSegs.length>0) {
 				cwtScript.remark2ckb.checked = true;
 				var lastHotelSegNum = $xml.find('HtlSeg').last().find('SegNum').text();				
-				cwtScript.remark1seg.value = lastHotelSegNum;
+				cwtScript.remark2seg.value = lastHotelSegNum;
 			}
 			
 			var txt1 = DisplayTE("*R");
@@ -114,6 +114,7 @@
 			<tr>
 				<td colspan="2"><input type="button" id="btnExe" name="btnExe" value="Execute" onclick="addPNRInfor()"/></td>
 				<td ><input type="button" id="btnExe" name="btnPNR" value="ExecutePNR" onclick="getPNRXML()"/></td>
+
 			</tr>
 
 			<tr>

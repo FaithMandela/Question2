@@ -19,6 +19,7 @@ import org.apache.catalina.core.StandardServer;
 import org.apache.catalina.core.AprLifecycleListener;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
+import org.apache.catalina.deploy.ApplicationParameter;
 
 import org.baraza.DB.BDB;
 import org.baraza.xml.BElement;
@@ -28,7 +29,7 @@ public class BTomcat extends Thread {
 	Logger log = Logger.getLogger(BTomcat.class.getName());
 	Tomcat tomcat = null;
 
-	public BTomcat(BDB db, BElement root, BLogHandle logHandle) {
+	public BTomcat(BDB db, BElement root, BLogHandle logHandle, String projectDir) {
 		String ps = System.getProperty("file.separator");
 		String baseDir = getCurrentDir() + ps + root.getAttribute("baseDir") + ps;
 		String appBase = baseDir + root.getAttribute("appBase") + ps;
@@ -49,7 +50,9 @@ public class BTomcat extends Thread {
 
 			Context context = tomcat.addWebapp(contextPath, appBase);
 			File configFile = new File(appBase + "META-INF" + ps + "context.xml");
-			context.setConfigFile(configFile.toURI().toURL());
+			context.setConfigFile(configFile.toURI().toURL());			
+			context.addParameter("projectDir", projectDir);
+			
 
 			if(repository != null) {
 				Context rpContext = tomcat.addWebapp("/repository", baseDir + repository);

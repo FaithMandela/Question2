@@ -1,0 +1,42 @@
+<?php
+header('Content-type: text/plain');
+//header('Content-type: text/xml');
+//header('Content-type: text/html; charset=utf-8');
+
+$params["arg0"] = getStudentRequest("06/0382");
+$params["arg1"] = "test123";
+
+$client = new SoapClient("http://demo.dewcis.com/babcock/webservice?wsdl");
+
+try{
+	if ($client->_soap_version == 1){
+		//echo "version 1";
+		$params = array($params);
+	}
+	$response = $client->__soapCall('getWsData',$params);
+} catch(SoapFault $exception) {
+	echo 'ERROR ::: ' . $exception->getMessage();
+} catch(Exception $ex) {
+	echo 'PHP ERROR ::: ' . $ex->getMessage();
+}
+
+print_r($response);
+
+function getStudentRequest($studentId) {	
+	$xml = "<QUERY>\n";
+	$xml .= "<GRID name=\"student\" keyfield=\"studentid\" table=\"ws_students\" where=\"studentid = '06/0382'\">\n";
+	$xml .= "	<TEXTFIELD>studentid</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>firstname</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>othernames</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>surname</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>birthdate</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>mobile</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>email</TEXTFIELD>\n";
+	$xml .= "</GRID>\n";
+	$xml .= "</QUERY>\n";
+	
+	
+	return $xml;
+}
+
+?>

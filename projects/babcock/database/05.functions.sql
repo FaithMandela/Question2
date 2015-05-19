@@ -186,7 +186,10 @@ DECLARE
 	mynarrative VARCHAR(120);
 BEGIN
 	SELECT s.org_id, s.onprobation, s.residenceid, s.blockname, s.roomnumber,
-		s.currentbalance, s.accountnumber, s.newstudent, s.seeregistrar,
+		s.currentbalance, s.accountnumber, s.newstudent, s.seeregistrar,		
+		s.sex, s.nationality, s.maritalstatus, s.birthdate, s.address, s.zipcode, s.town, s.countrycodeid, 
+		s.stateid, s.telno, s.mobile, s.email,  s.guardianname, s.gaddress, s.gzipcode, s.gtown, 
+		s.gcountrycodeid, s.gtelno, s.gemail, 
 		entitys.entity_password, entitys.first_password
 		INTO mystud
 	FROM students as s INNER JOIN entitys ON s.studentid = entitys.user_name
@@ -244,6 +247,16 @@ BEGIN
 
 	IF (myquarter.qlastdrop < current_date) THEN
 		RAISE EXCEPTION 'The registration is closed for this session.';
+	ELSIF (mystud.sex is null) or (mystud.nationality is null) or (mystud.maritalstatus is null) or (mystud.birthdate is null) THEN
+		RAISE EXCEPTION 'Your students details are in complete and need to be updated by registry';
+	ELSIF (mystud.address is null) or (mystud.zipcode is null) or (mystud.town is null) or (mystud.countrycodeid is null) or (mystud.stateid is null) THEN
+		RAISE EXCEPTION 'Your students address details are in complete and need to be updated by registry';
+	ELSIF (mystud.telno is null) or (mystud.mobile is null) or (mystud.email is null) THEN
+		RAISE EXCEPTION 'Your students contact details are in complete and need to be updated by registry';
+	ELSIF (mystud.guardianname is null) THEN
+		RAISE EXCEPTION 'Your guardian details are in complete and need to be updated by registry';
+	ELSIF (mystud.gaddress is null) or (mystud.gzipcode is null) or (mystud.gtown is null) or (mystud.gcountrycodeid is null) or (mystud.gtelno is null) or (mystud.gemail is null) THEN
+		RAISE EXCEPTION 'Your guardian address details are in complete and need to be updated by registry';
 	ELSIF (mystud.onprobation = true) THEN
 		RAISE EXCEPTION 'Student on Probation cannot proceed.';
 	ELSIF (mystud.seeregistrar = true) THEN
@@ -1047,25 +1060,29 @@ CREATE TRIGGER updcourses BEFORE UPDATE ON qcourses
 -- update students email address
 CREATE OR REPLACE FUNCTION insstudentname() RETURNS trigger AS $$
 DECLARE
-	v_entity_id		integer;
+	v_entity_id			integer;
+	v_guardian_id		integer;
 BEGIN
 	NEW.studentname := UPPER(NEW.surname)	|| ', ' || UPPER(NEW.firstname) || ' ' || UPPER(COALESCE(NEW.othernames, ''));
 	NEW.accountnumber := trim(upper(NEW.accountnumber));
 	NEW.emailuser := lower(NEW.surname) || lower(replace(NEW.studentid, '/', ''));
+	
+	SELECT v_guardian_id INTO v_entity_id FROM entitys WHERE user_name = 'G' || NEW.studentid;
 
 	IF(TG_OP = 'INSERT')THEN
 		NEW.firstpasswd = first_password();
 
 		SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = NEW.studentid;
 		IF(v_entity_id is null)THEN
-			
 			INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, 
 				mail_user, primary_email, 
 				function_role, first_password, entity_password)
 			VALUES (NEW.org_id, 21, NEW.studentname, NEW.studentid, 
 				NEW.emailuser, NEW.emailuser || '@std.babcock.edu.ng', 
 				'student', NEW.firstpasswd, md5(NEW.firstpasswd));
-				
+		END IF;
+		
+		IF(v_guardian_id is null)THEN
 			INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, 
 				mail_user, primary_email, 
 				function_role, first_password, entity_password)
@@ -1078,8 +1095,17 @@ BEGIN
 		WHERE user_name = NEW.studentid;
 		
 		IF (OLD.guardianname IS NULL) and (NEW.guardianname IS NOT NULL) THEN
-			UPDATE entitys SET entity_name = NEW.guardianname
-			WHERE user_name = ('G' || NEW.studentid);
+			IF(v_guardian_id is null)THEN
+				INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, 
+					mail_user, primary_email, 
+					function_role, first_password, entity_password)
+				VALUES (NEW.org_id, 22, COALESCE(NEW.guardianname, NEW.studentname), ('G' || NEW.studentid), 
+					NEW.emailuser, NEW.emailuser || '@std.babcock.edu.ng', 
+					'student', NEW.firstpasswd, md5(NEW.firstpasswd));
+			ELSE
+				UPDATE entitys SET entity_name = NEW.guardianname
+				WHERE user_name = ('G' || NEW.studentid);
+			END IF;
 		END IF;
 	END IF;
 

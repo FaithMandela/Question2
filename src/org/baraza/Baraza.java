@@ -53,11 +53,13 @@ public class Baraza extends JApplet implements WindowListener {
 		if(mode == null) mode = "run";
 
 		Baraza baraza = null;
-		if(mode.equals("server")) {
+		if (args.length < 2) {
+			System.out.println("Enter the proper comman arguments");
+		} else if(mode.equals("server")) {
 			BServer lserver = new BServer(configDir);
 			lserver.start();
 		} else if(mode.equals("stop")) {
-			BClient lclient =  new BClient("stop", true);
+			BClient lclient =  new BClient("stop", true, configDir);
 		} else {
 			baraza = new Baraza();
 			baraza.run(configDir, mode, dbpath, configFile, encryptionKey);
@@ -160,7 +162,7 @@ public class Baraza extends JApplet implements WindowListener {
 				server.start();
 				break;
 			case 3:
-				client =  new BClient("stop", true);
+				client =  new BClient("stop", true, configDir);
 				break;
 		}
 
