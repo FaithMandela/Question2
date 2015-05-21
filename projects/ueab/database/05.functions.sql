@@ -61,7 +61,7 @@ BEGIN
 	
 	UPDATE students SET org_id = v_org_id WHERE studentid = NEW.studentid;
 	UPDATE entitys SET org_id = v_org_id WHERE user_name = NEW.studentid;
-
+		
 	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;

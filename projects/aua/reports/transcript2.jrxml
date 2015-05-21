@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="191"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -384,26 +384,12 @@ WHERE (studentdegreeid = '$P!{filterid}');]]>
 				<textFieldExpression class="java.lang.String"><![CDATA[$F{project}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="2" width="61" height="20"/>
+				<reportElement x="1" y="2" width="61" height="27"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Project]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="10" y="29" width="46" height="20"/>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Advisor]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="63" y="28" width="174" height="20"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{instructorname}]]></textFieldExpression>
-			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>

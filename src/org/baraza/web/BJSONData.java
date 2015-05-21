@@ -42,7 +42,9 @@ public class BJSONData extends HttpServlet {
 		web.init(request);
 		
 		BElement view = web.getView();
+		
 		//System.out.println("BASE 1010 : " + view.toString());
+		
 		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, null, null);
 		String JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
 
