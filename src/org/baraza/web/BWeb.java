@@ -301,9 +301,15 @@ public class BWeb {
 		
 		BElement mel = root.getFirst();
 
-		String mymenu = "<ul id='panelbar'>\n";
+		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
+		mymenu += "		<li class='start active '>\n";
+		mymenu += "			<a href='index.jsp'>\n";
+		mymenu += "			<i class='icon-home'></i>\n";
+		mymenu += "			<span class='title'>Dashboard</span>\n";
+		mymenu += "			</a>\n";
+		mymenu += "		</li>\n";
 		mymenu += getSubMenu(mel, 0);
-		mymenu += "</ul>\n";
+		mymenu += "	</ul>\n";
 
 		return mymenu;
 	}
@@ -333,20 +339,25 @@ public class BWeb {
 					String link = "";
 					if(smel.getAttribute("xml") == null) {
 						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
+						link += " <i class='icon-tag'></i> ";
 						link += smel.getAttribute("name") + "</a>";
 					} else {
-						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">"; 
+						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
+						link += " <i class='icon-tag'></i> ";
 						link += smel.getAttribute("name") + "</a>";
 					}
-					submenu += "<li>" + link + "</li>\n";
+					
+					submenu += "\t\t<li>\n";
+					submenu += "\t\t\t" + link + "\n";
+					submenu += "\t\t</li>\n";
 				} else {
-					submenu += "<li";
-					if(level== 0) {
-						if(locateMenu(smel, viewKeys.get(0)))
-							submenu += " class='k-state-active'";
-					}
-					submenu +=  ">" + smel.getAttribute("name");
-					submenu += "<ul>" + getSubMenu(smel, level+1) + "</ul></li>";
+					submenu += "\t<li>\n";
+					submenu += "\t\t<a href='javascript:;'>";
+					submenu += "<i class='icon-basket'></i>";
+					submenu += "<span class='title'>" + smel.getAttribute("name") + "</span>";
+					submenu += "<span class='arrow '></span>";
+					submenu += "</a>\n";
+					submenu += "\t\t<ul class='sub-menu'>\n" + getSubMenu(smel, level+1) + "</ul>\n";
 				}
 			}
 		}
@@ -408,7 +419,7 @@ public class BWeb {
 		for(int k=0; k <= i; k++) keyV += viewKeys.get(k) + ":";
 		String keyD = viewData.get(i+1);
 
-		String tabs = "<div class='tab ui-tabs ui-widget ui-widget-content ui-corner-all'><ul class='ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all'>";
+		String tabs = "\t\t<ul class='nav nav-tabs'>\n";
 		Integer j = 0;
 		for(BElement el : desk.getElements()) {
 			String elName = el.getName();
@@ -429,9 +440,9 @@ public class BWeb {
 
 				if(show) {
 					if(viewKeys.get(i+1).equals(j.toString()))
-						tabs += "\n<li class='ui-state-default ui-corner-top ui-tabs-selected ui-state-active'>";
+						tabs += "\t\t\t<li class='active'>";
 					else
-						tabs += "\n<li class='ui-state-default ui-corner-top'>";
+						tabs += "\t\t\t<li>";
 					tabs += "<a href='?view=" + keyV +  j.toString();
 					if(keyD.equals("{new}") && (elName.equals("FORM"))) {
 						tabs += "&data=" + keyD + "'>New " + el.getAttribute("name") + "</a></li>\n";
@@ -444,7 +455,7 @@ public class BWeb {
 				j++;
 			}
 		}
-		tabs += "</ul>\n</div>\n";
+		tabs += "\t\t</ul>\n";
 
 		return tabs;
 	}
@@ -1660,7 +1671,7 @@ public class BWeb {
 		jshd.add("mtype", "GET");
 		jshd.add("colNames", jsColNames);
 		jshd.add("colModel", jsColModel);
-		jshd.add("pager", "#pager");
+		jshd.add("pager", "#jqpager");
 		jshd.add("rowNum", 10);
 		jshd.add("sortname", "C0");
 		jshd.add("sortorder", "desc");
