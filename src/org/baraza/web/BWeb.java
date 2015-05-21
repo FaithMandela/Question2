@@ -1692,6 +1692,7 @@ public class BWeb {
 	public String executeFunction(String mysql) { return db.executeFunction(mysql); }
 	public String getUserID() { return db.getUserID(); }
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
+	public void setSchema(String dbSchema) { db.setSchema(dbSchema); }
 
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }
