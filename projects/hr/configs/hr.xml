@@ -3399,6 +3399,22 @@
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report.jasper"></JASPER>
 			<JASPER name="Leave Summary 2" reportfile="employee_leave.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="Leave Summary ( Type )" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
+				<COMBOLIST w="150" title="Status" y="30" h="20" x="10">approve_status
+					<DATA>Completed</DATA>
+					<DATA>Draft</DATA>
+					<DATA>Approved</DATA>
+					<DATA>Rejected</DATA>
+				</COMBOLIST>
+				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Leave Summary 1" reportfile="employee_leave_report2.jasper"></JASPER>
+			<JASPER name="Leave Summary 2" reportfile="employee_leave2.jasper"></JASPER>
+		</FILTER>
 		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
 	</DESK>
