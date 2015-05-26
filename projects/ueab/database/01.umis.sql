@@ -380,6 +380,7 @@ CREATE TABLE students (
 	offcampus			boolean not null default false,
 	hallseats			integer not null default 1,
 	fullbursary			boolean default false not null,
+	disabled			boolean default false not null,
 	currentcontact		text,
 	currentemail		varchar(120),
 	currenttel			varchar(120),

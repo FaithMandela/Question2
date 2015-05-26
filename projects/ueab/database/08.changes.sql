@@ -1,4 +1,4 @@
-
+ALTER TABLE students ADD disabled boolean default false not null;
 
 CREATE OR REPLACE FUNCTION getcummcredit(int) RETURNS float AS $$
 	SELECT sum(qgrades.credit)

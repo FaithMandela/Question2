@@ -77,7 +77,7 @@ public class BSoapSMS {
 		smsOrgs =  new HashMap<String, String[]>();
 		BQuery orgRS = new BQuery(db, orgSQL);
 		while(orgRS.moveNext()) {
-System.out.println("org_id : " + orgRS.getString("org_id"));
+			System.out.println("org_id : " + orgRS.getString("org_id"));
 
 			String orgID = orgRS.getString("org_id");
 			String[] orgParams = new String[4];
@@ -136,8 +136,6 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 				else numberError = true;
 
 				if(numbers != null) {
-					if(number.length() < 2) numberError = false;
-					
 					String[] nums = numbers.split(",");
 					for(String num : nums) {
 						num = num.replace(" ", "").replace("-", "").trim();
@@ -145,6 +143,7 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 						if((num.length() > 11) && (num.length() < 15)) isSent = sendSMS(num, msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 						else numberError = true;
 					}
+					isSent = true;
 				}
 			}
 
@@ -159,6 +158,7 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 				
 				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 				else numberError = true;
+				isSent = true;
 			}
 			rsa.close();
 
@@ -174,6 +174,7 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 				
 				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 				else numberError = true;
+				isSent = true;
 			}
 			rsg.close();
 
@@ -217,7 +218,7 @@ System.out.println("org_id : " + orgRS.getString("org_id"));
 				if(retry < 2) retry++;
 				else retry = 0;
 			} else if(sendResults.equals("SVC0901")) { // retry twice for a error on the sending
-				if(retry < 3) retry++;
+				if(retry < 4) retry++;
 				else retry = 0;
 			} else {
 				db.executeUpdate("UPDATE sms_queue SET send_results = '" + sendResults + "' WHERE sms_queue_id = " + correlator);

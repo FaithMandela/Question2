@@ -96,6 +96,9 @@ CREATE TABLE Clients (
 	contractend			date,
 	DateClosed			date,
 	createdate			timestamp default now(),
+	
+	firstpasswd			varchar(32),
+	
 	Details				text
 );
 CREATE INDEX Clients_UserID ON Clients (UserID);

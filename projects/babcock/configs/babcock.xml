@@ -121,6 +121,7 @@
 				<MENU name="Statistical Enrolment ">452</MENU>
 				<MENU name="Enrolment By Department">450</MENU>
 				<MENU name="Enrolment By Programme">451</MENU>
+				<MENU name="Enrolment By State">778</MENU>
 			</MENU>
 			<MENU name="Summaries">
 				<MENU name="Gender">201</MENU>
@@ -2161,5 +2162,13 @@
 				<EDITOR w="530" tab="News" y="2" h="170" x="10">details</EDITOR>
 			</FORM>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Enrolment By State" type="horl" key="778" h="500">
+		<FILTER location="250" name="Enrolment By Programme" type="horl">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
+				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="Quarter" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Semester State Summary" reportfile="stats_summary.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

@@ -617,19 +617,15 @@
 					<DATA>M</DATA>
 					<DATA>F</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="50" title="Disability" y="230" h="20" x="10">disability
-					<DATA>N</DATA>
-					<DATA>Y</DATA>
-				</COMBOLIST>
-				<TEXTAREA w="430" title="Details if Yes" y="250" h="40" x="10">dis_details</TEXTAREA>
-				<COMBOLIST w="50" title="Marital Status" y="270" h="20" x="290">MaritalStatus
+				<COMBOLIST w="50" title="Marital Status" y="210" h="20" x="290">MaritalStatus
 					<DATA>S</DATA>
 					<DATA>M</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="150" title="Account Number" y="300" h="20" x="10">accountnumber</TEXTFIELD>
-				<CHECKBOX w="50" title="Alumnae" lw="70" y="320" h="20" x="290">alumnae</CHECKBOX>
-				<CHECKBOX w="50" title="Staff" lw="70" y="350" h="20" x="440">staff</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="370" h="40" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="Account Number" y="230" h="20" x="10">accountnumber</TEXTFIELD>
+				<CHECKBOX w="50" title="Alumnae" lw="70" y="230" h="20" x="290">alumnae</CHECKBOX>
+				<CHECKBOX w="50" title="Staff" lw="70" y="230" h="20" x="440">staff</CHECKBOX>
+				<CHECKBOX w="50" title="Disabled" y="250" h="20" x="10">disabled</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="270" h="40" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>

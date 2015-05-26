@@ -481,7 +481,9 @@ public class BWebBody extends BQuery {
 				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
-				response.append(" cols='50' rows='10'>");
+				String taCols = el.getAttribute("cols", "50");
+				String taRows = el.getAttribute("rows", "10");
+				response.append(" cols='" + taCols + "' rows='" + taRows + "'>");
 				response.append(fieldValue);
 				response.append("</textarea>");
 			} else if(el.getName().equals("EDITOR")) {
