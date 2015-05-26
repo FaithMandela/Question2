@@ -367,7 +367,7 @@ public class BWebBody extends BQuery {
 		}
 
 		int i = 0;
-		response.append("<div class='ui-widget ui-widget-content ui-corner-all form_content'>\n");
+		response.append("<div class='form-body'>\n");
 		response.append("<table id='formtable'>\n");
      	for(BElement el : view.getElements()) {
 			if(!(el.getName().equals("USERFIELD")|| (el.getName().equals("DEFAULT"))) || (el.getName().equals("FUNCTION"))) {

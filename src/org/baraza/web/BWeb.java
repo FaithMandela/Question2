@@ -675,10 +675,13 @@ public class BWeb {
 		}
 
 		if(view.getName().equals("GRID")) {
-			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
-			if(selectAll) webbody.setSelectAll();
-			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
-			webbody.close();
+			//BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
+			//if(selectAll) webbody.setSelectAll();
+			body += "\t<div class='table-scrollable'>\n";
+			body += "\t\t<table id='jqlist' class='table table-striped table-bordered table-hover'></table>\n";
+			body += "\t\t<div id='jqpager'></div>\n";
+			body += "\t</div>\n";
+			//webbody.close();
 		} else if(view.getName().equals("FILES")) {
 			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 			if(selectAll) webbody.setSelectAll();
@@ -1654,6 +1657,10 @@ public class BWeb {
 		JsonArrayBuilder jsColNames = Json.createArrayBuilder();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
 		
+		boolean hasAction = false;
+		boolean hasSubs = false;
+		boolean hasTitle = false;
+		boolean hasFilter = false;
 		int col = 0;
 		for(BElement el : view.getElements()) {
 			if(!el.getValue().equals("")) {
@@ -1662,9 +1669,22 @@ public class BWeb {
 				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title"));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
-				jsColModel.add(jsColEl);				
+				jsColModel.add(jsColEl);
 			}
+			
+			if(el.getName().equals("ACTIONS")) hasAction = true;
+			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
+			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
+			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
+		
+		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
+		jsColNames.add("CL");
+		jsColEl.add("name", "CL");
+		jsColEl.add("width", 5);
+		jsColEl.add("hidden", true);
+		jsColModel.add(jsColEl);
 		
 		jshd.add("url", "jsondata");
 		jshd.add("datatype", "json");
@@ -1678,12 +1698,18 @@ public class BWeb {
 		jshd.add("viewrecords", true);
 		jshd.add("gridview", true);
 		jshd.add("autoencode", true);
+		jshd.add("autowidth", true);
 		
 		JsonObject jsObj = jshd.build();
 		
-		System.out.println("BASE 2030 : " + jsObj.toString());
+		//System.out.println("BASE 2030 : " + jsObj.toString());
 
 		return jsObj.toString();
+	}
+	
+	public String getViewName() { 
+		if(view == null) return "";
+		return view.getAttribute("name", ""); 
 	}
 
 	public String getPictureField() { return pictureField; }
