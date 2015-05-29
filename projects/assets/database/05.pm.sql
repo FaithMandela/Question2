@@ -220,11 +220,14 @@ CREATE VIEW vw_pm_schedule_a AS
 	ORDER BY vw_pm_schedule.start_date;
 
 CREATE VIEW vw_pm_assets AS
-	SELECT checklistid, pm_schedule_id, asset_type_id, serial_number
+	SELECT checklistid, pm_schedule_id, pm_asset_type_id, pm_serial_number
 	FROM
 		((SELECT checklistid, pm_schedule_id, 1::integer as pm_asset_type_id, cpusn as pm_serial_number
 		FROM pm_checklist
 		WHERE cpusn is not null) UNION
+		(SELECT checklistid, pm_schedule_id, 2::integer as pm_asset_type_id, monitorsn as pm_serial_number
+		FROM pm_checklist
+		WHERE monitorsn is not null) UNION
 		(SELECT checklistid, pm_schedule_id, 3::integer as pm_asset_type_id, laptopsn
 		FROM pm_checklist
 		WHERE laptopsn is not null) UNION
@@ -253,21 +256,51 @@ CREATE VIEW vw_pms_assets AS
 		INNER JOIN pm_schedule ON vw_pm_assets.pm_schedule_id = pm_schedule.pm_schedule_id;
 		
 		
-SELECT *
+SELECT aa.checklistid, aa.pm_schedule_id, aa.date_done,
+	aa.asset_type_name,  aa.pm_serial_number,
+	bb.asset_type_name, bb.asset_serial,
+	bb.client_id, bb.client_name
 FROM
 (SELECT a.asset_type_id, a.asset_type_name,
 	a.checklistid, a.pm_schedule_id, a.pm_serial_number,
 	a.pm_quarter_id, a.client_id, a.date_done
 FROM vw_pms_assets as a) as aa
-FULL OUTER JOIN
+LEFT JOIN
 (SELECT b.client_id, b.client_name, b.asset_type_id, b.asset_type_name, b.asset_serial,
 c.pm_schedule_id
 FROM vw_client_assets as b INNER JOIN pm_schedule c ON b.client_id = c.client_id
 WHERE (b.is_issued = true) AND (b.is_retrived = false)) as bb
-ON (aa.pm_schedule_id = bb.pm_schedule_id) AND (aa.asset_type_id = bb.asset_type_id)
+
+	ON (aa.pm_schedule_id = bb.pm_schedule_id) AND (aa.asset_type_id = bb.asset_type_id)
+		AND (trim(upper(aa.pm_serial_number)) = trim(upper(bb.asset_serial)))
 
 
-WHERE aa.pm_schedule_id = 948
-ORDER BY aa.asset_type_id
+WHERE aa.pm_schedule_id = 956
+ORDER BY aa.asset_type_id;
+
+
+SELECT bb.client_id, bb.client_name,
+	bb.asset_type_name, bb.asset_serial,
+	aa.asset_type_name,  aa.pm_serial_number,
+	aa.checklistid, aa.pm_schedule_id, aa.date_done
+FROM
+(SELECT b.client_id, b.client_name, b.asset_type_id, b.asset_type_name, b.asset_serial,
+c.pm_schedule_id
+FROM vw_client_assets as b INNER JOIN pm_schedule c ON b.client_id = c.client_id
+WHERE (b.is_issued = true) AND (b.is_retrived = false)) as bb
+
+LEFT OUTER JOIN
+
+(SELECT a.asset_type_id, a.asset_type_name,
+	a.checklistid, a.pm_schedule_id, a.pm_serial_number,
+	a.pm_quarter_id, a.client_id, a.date_done
+FROM vw_pms_assets as a) as aa
+
+	ON (aa.pm_schedule_id = bb.pm_schedule_id) AND (aa.asset_type_id = bb.asset_type_id)
+		AND (trim(upper(aa.pm_serial_number)) = trim(upper(bb.asset_serial)))
+
+
+WHERE bb.pm_schedule_id = 956
+ORDER BY bb.asset_type_id;
 
 
