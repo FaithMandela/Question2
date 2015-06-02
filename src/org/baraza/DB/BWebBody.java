@@ -356,6 +356,7 @@ public class BWebBody extends BQuery {
 		boolean eof = false;
 		boolean isTabs = false;
 		StringBuilder response = new StringBuilder();
+		StringBuilder tabs = new StringBuilder();
 
 		String formname = view.getAttribute("name");
 		String canedit = view.getAttribute("canedit");
@@ -365,375 +366,424 @@ public class BWebBody extends BQuery {
 			beforeFirst();
 			eof = moveNext();
 		}
-
+		
+		String tab = "";
+		boolean hasTabs = false;
+		tabs.append("<div class='row'>\n");
+		tabs.append("	<div class='col-md-12'>\n");
+		tabs.append("		<div class='tabbable portlet-tabs'>\n");
+		tabs.append("			<ul class='nav nav-tabs'>\n");
+		for(BElement el : view.getElements()) {
+			if(el.getAttribute("tab") != null) {				
+				if(!tab.equals(el.getAttribute("tab"))) {
+					tab = el.getAttribute("tab");
+					if(!hasTabs) tabs.append("<li class='active'>");
+					else tabs.append("<li>");
+					tabs.append("<a href='#" + tab + "' data-toggle='tab'>" + tab + " </a></li>\n");
+				}
+				hasTabs = true;
+			}
+		}
+		tabs.append("			</ul>\n");
+		tabs.append("		<div>\n");
+		tabs.append("	<div>\n");
+		tabs.append("<div>\n");
+		tabs.append("<div class='tab-content'>\n");
+			
 		int i = 0;
 		response.append("<div class='form-body'>\n");
-		response.append("<table id='formtable'>\n");
+		
+		boolean noSpan = true;
+		boolean tabNotDone = true;
+		tab = "";
      	for(BElement el : view.getElements()) {
-			if(!(el.getName().equals("USERFIELD")|| (el.getName().equals("DEFAULT"))) || (el.getName().equals("FUNCTION"))) {
-				if(el.getAttribute("tab") != null) {
-					if(!isTabs) {
-						response.append("\n<tr>\n<td width='120' colspan='2'>\n<div class='tabstrip'><ul>");
-						String ctab = "";
-						for(int j = i; j < view.getNodeSize(); j++) {
-							BElement tel = view.getElement(j);
-							if(tel.getAttribute("tab")==null) break;
-							else {
-								if(j==i) response.append("\n<li class='k-state-active'>" + tel.getAttribute("tab") + "</li>");
-								else if(!ctab.equals(tel.getAttribute("tab"))) response.append("\n<li>" + tel.getAttribute("tab") + "</li>");
-								ctab = tel.getAttribute("tab");
-							}
-						}
-						response.append("\n</ul>");
-					}
-
-					if(currentTab.equals(el.getAttribute("tab"))) {
-						response.append("\n<tr><td>");
-					} else {
-						if(isTabs) response.append("</table></div>");
-						response.append("\n<div><table><tr><td>");
-					}
-					currentTab = el.getAttribute("tab");
-					isTabs = true;
-				} else if((el.getAttribute("title") != null) && (isTabs)) {
-					response.append("\n</table></div></div>");
-					response.append("\n</td></tr>");
-					currentTab = "";
-					isTabs = false;
+			if(el.getAttribute("tab") != null) {
+				if(!tabNotDone && !tab.equals(el.getAttribute("tab"))) response.append("</div>");
+				if(tabNotDone && hasTabs) { 
+					response.append(tabs); 
+					tabNotDone = false; 
 				}
-
-				if(el.getAttribute("title") != null) {
-					if(el.getAttribute("titlepos","left").equals("top")) {
-						response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'></td>\n<td><b>" + el.getAttribute("title")  + "</b>\n</td></tr>\n<tr>\n<td>");
-					} else {
-						response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'>" + el.getAttribute("title"));
-					}
-
-					if(el.getName().equals("GRIDBOX")) {
-						response.append("<a  class='btn i_magnifying_glass icon small' href='#'");
-						if(el.getAttribute("webgrid") == null) {
-							response.append(" onClick=\"myClientWin('b_combolist.jsp");
-							response.append("?field=" + el.getValue());
-						} else {
-							response.append(" onClick=\"myClientWin('b_searchlist.jsp");
-							response.append("?view=" + el.getAttribute("webgrid") + ":0");
-						}
-						if(formLinkData != null) response.append("&formlinkdata=" + formLinkData);
-						response.append("','win2')\"");
-						response.append("name=\"anchor1\" id=\"anchor1\"> select </a>");
-					}
-					response.append(" : </td><td>");
+				if(!tab.equals(el.getAttribute("tab"))) {
+					tab = el.getAttribute("tab");
+					response.append("<div class='tab-pane' id='" + tab + "'>\n");
 				}
+			} else if(!tabNotDone) {
+				response.append("</div>\n</div>\n");
+				tabNotDone = true;
 			}
-			String defaultvalue = el.getAttribute("default", "");
-			String default_fnct = view.getAttribute("default_fnct");
-			if(default_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
-
-			if(el.getName().equals("HTML")) {
-				response.append(el.getAttribute("html",""));
-			} else if(el.getName().equals("TEXTFIELD")) {
-				response.append("<input name='" + el.getValue() + "'");
-
-				//whitelabel additions - using whitelabel syntax/semantics
-				if(el.getAttribute("type") == null) response.append(" type='text'");
-				else response.append(" type='" + el.getAttribute("type") + "'");
-
-				if(el.getAttribute("class") == null) response.append(" class='w_50'");					 
-				else response.append(" class='" + el.getAttribute("class") + "'");
-
-				if(el.getAttribute("style") != null) response.append(" style='" + el.getAttribute("style") + "'");
-				if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
-				if(el.getAttribute("tooltip") != null) response.append(" title='" + el.getAttribute("tooltip") + "'");
-				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
-				if(el.getAttribute("data-instant") != null) response.append(" data-instant='" + el.getAttribute("data-instant") + "'");
-				if(el.getAttribute("data-min") != null) response.append(" data-min='" + el.getAttribute("data-min") + "'");
-				if(el.getAttribute("data-max") != null) response.append(" data-max='" + el.getAttribute("data-max") + "'");
-				if(el.getAttribute("data-step","") != null) response.append(" data-step='" + el.getAttribute("data-step") + "'");
-				if(el.getAttribute("data-start") != null) response.append(" data-start='" + el.getAttribute("data-start") + "'");
-				if(el.getAttribute("data-regex") != null) response.append(" data-regex='" + el.getAttribute("data-regex") + "'");
-				if(el.getAttribute("data-timeformat") != null) response.append(" data-timeformat='" + el.getAttribute("data-timeformat") + "'");
-				if(el.getAttribute("data-errortext") != null) response.append(" data-errortext='" + el.getAttribute("data-errortext") + "'");
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
-				//whitelabel end
-
-				//custom javascript when needed
-				if(el.getAttribute("js_function") != null) {
-					String tgt = el.getAttribute("target","");
-					response.append(" onblur=\"custom_javascript(this,\'" + el.getAttribute("js_function") + "\',\'" + tgt +"\')\" ");
-				}
-
-				//call PL/SQL function when needed - ajax
-				if(el.getAttribute("ajaxfunction") != null) {
-					String ajx_fxn = el.getAttribute("ajaxfunction");
-					response.append(" onBlur=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");
-				}
-
-				if(eof) response.append(" value='" + formatData(el).replace("'", "&#39;") + "'");
-				else response.append(" value='" + defaultvalue + "'");
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				response.append(" class='w_50' size='50'/>");
-			} else if(el.getName().equals("TEXTAREA")) {
-				String fieldValue = "";
-				if(eof) fieldValue = formatData(el).replace("'", "&#39;");
-				else fieldValue = defaultvalue;
-
-				response.append("<textarea name='" + el.getValue() + "'");
-				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
-				String taCols = el.getAttribute("cols", "50");
-				String taRows = el.getAttribute("rows", "10");
-				response.append(" cols='" + taCols + "' rows='" + taRows + "'>");
-				response.append(fieldValue);
-				response.append("</textarea>");
-			} else if(el.getName().equals("EDITOR")) {
-				String fieldValue = "";
-				if(eof) fieldValue = formatData(el).replace("'", "&#39;");
-				else fieldValue = el.getAttribute("default", "");
-
-				response.append("<div class='wysiwyg'>");//style='width: 740px;'>");
-				response.append("<textarea class='html' name='" + el.getValue() + "'");
-				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				response.append(" cols='50' rows='10'>");
-				response.append(fieldValue);
-				response.append("</textarea>");
-				response.append("</div>");
-			} else if(el.getName().equals("PASSWORD")) {
-				response.append("<input type='password' name='" + el.getValue() + "' class='w_50' size='50'/>");
-			} else if(el.getName().equals("GRIDBOX")) {
-				String myval = null;
-				if(eof) myval = getString(el.getValue());
-				else myval = el.getAttribute("default", "");
-
-				response.append("<input type='hidden' name='" + el.getValue() + "'");
-				if(myval != null) response.append(" value='" + myval + "'");
-				response.append(">");
-
-				response.append("<input type='text' name='" + el.getValue() + "_name'");
-
-				//call PL/SQL function when needed - ajax
-				if(el.getAttribute("ajaxfunction") != null) {
-					String ajx_fxn = el.getAttribute("ajaxfunction");
-					response.append(" autocomplete=\"off\" ");
-					response.append(" onkeypress=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");
-				}
-
-				if(myval != null) {
-					String mysql = "SELECT " + el.getAttribute("lpfield") + " FROM " + el.getAttribute("lptable");
-					if(el.getAttribute("lpkey") == null) mysql += " WHERE " + el.getValue();
-					else mysql += " WHERE " + el.getAttribute("lpkey");
-					mysql += " = '" + myval + "'";
-
-					String orderBySql = el.getAttribute("orderby");
-					if(orderBySql == null) mysql += " ORDER BY " + el.getAttribute("lpfield");
-					else mysql += " ORDER BY " + orderBySql;
-
-					myval = db.executeFunction(mysql);
-				}
-				if(myval != null) response.append(" value='" + myval + "'");
-				response.append(" class='w_50' size='75'/>");
-				if(el.getAttribute("ajaxfunction") != null) {
-					response.append("<br/><div id='ajaxDiv'><div/>");
-				}
-			} else if(el.getName().equals("COMBOBOX")) {
-				response.append("<select class='combobox' name='" + el.getValue() + "'>");
-
-				String nodefault = el.getAttribute("nodefault");
-				String lptable = el.getAttribute("lptable");
-				String lpfield = el.getAttribute("lpfield");
-				String lpkey = el.getAttribute("lpkey");
-				String cmb_fnct = el.getAttribute("cmb_fnct");
-				if(lpkey == null) lpkey = el.getValue();
-
-				String mysql = "";
-				if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
-				else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
-				else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
-
-				String cmbWhereSql = el.getAttribute("where");
-				if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
-					if(cmbWhereSql == null) cmbWhereSql = "(";
-					else cmbWhereSql += " AND (";
-					cmbWhereSql += orgID + "=" + userOrg + ")";
-				}
-
-				if(el.getAttribute("user") != null) {
-					String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
-					if(cmbWhereSql == null) cmbWhereSql = userFilter;
-					else cmbWhereSql += " AND " + userFilter;
-				}
-
-				String tableFilter = null;
-				String linkField = el.getAttribute("linkfield");
-				if((linkField != null) && (formLinkData != null)) {
-					if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
-					else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
-
-					if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
-					else cmbWhereSql += " AND (" + tableFilter + ")";
-				}
-
-				if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
-
-				String orderBySql = el.getAttribute("orderby");
-				if(orderBySql == null) mysql += " ORDER BY " + lpfield;
-				else mysql += " ORDER BY " + orderBySql;
-
-				if(nodefault != null) response.append("<option></option>");
-
-				BQuery cmbrs = new BQuery(db, mysql);
-				while (cmbrs.moveNext()) {
-					response.append("<option");
-					if(eof) {
-						if(getString(el.getValue())!=null) {
-							if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
-								response.append(" selected='selected'");
-						}
-					} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
-						response.append(" selected='selected'");
-					}
-					response.append(" value='" + cmbrs.getString(lpkey));
-					response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
-				}
-				cmbrs.close();
-				response.append("</select>");
-			} else if(el.getName().equals("COMBOLIST")) {
-				response.append("<select class='combobox' name='" + el.getValue() + "'>");
-				String myval = null;
-				String mykey = "";
-				if(eof) myval = getString(el.getValue());
-				else myval = defaultvalue;
-
-				for(BElement ell : el.getElements()) {
-					if(ell.getAttribute("key") == null) mykey = ell.getValue();
-					else mykey = ell.getAttribute("key");
-					response.append("<option"); 
-					if(ell.getAttribute("key") != null) response.append(" value='" + mykey + "'");
-					if(mykey.equals(myval)) response.append(" selected='selected'");
-					response.append(">" +  ell.getValue() + "</option>");	
-				}
-				response.append("</select>");
-			} else if(el.getName().equals("CHECKBOX")) {
-				response.append("<input type='checkbox' name='" + el.getValue());
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				response.append("' value='true'");
-				if(eof) {
-					if(getBoolean(el.getValue())) response.append(" checked");
-				} else if(el.getAttribute("default", "").equals("true")) {
-					response.append(" checked");
-				}
 			
-				response.append("/>");
-			} else if(el.getName().equals("FILE")) {
-					response.append("<input type='file' name='" + el.getValue() + "' size='50'/></td>");
-			} else if(el.getName().equals("TEXTDATE")) {
-
-				response.append("<input class='datepicker' name='" + el.getValue() + "'");
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
-				if(eof) {
-					SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy");
-					if(getString(el.getValue())!=null) {
-						String mydate = dateformatter.format(getDate(el.getValue()));				
-						response.append(" value='" + mydate + "'");
-					}
-				} else if(el.getAttribute("default", "").equals("now")) {
-					SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
-					response.append(" value='" + dateParse.format(new Date()) + "'");
-				}  else if(el.getAttribute("default", "").equals("today")) {
-					SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
-					response.append(" value='" + dateParse.format(new Date()) + "'");
-				}
-				response.append(" size='50'/>");
-			} else if(el.getName().equals("TEXTDECIMAL")) {
-				response.append("<input class='numerictextbox' type='text' name='" + el.getValue() + "'");
-
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = true ");
-				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
-
-				if(el.getAttribute("js_function") != null) {			
-					String tgt = el.getAttribute("target","");
-					response.append ( " onblur=\"custom_javascript(this,\'" + el.getAttribute("js_function") + "\',\'" + tgt +"\')\" ");					
-				}
-
-				if(el.getAttribute("ajaxfunction") != null){
-					String ajx_fxn = el.getAttribute("ajaxfunction");															
-					response.append ( " onBlur=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");					
-				}
-
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				if(eof) response.append(" value=\"" + formatData(el) + "\"");
-				else response.append(" value='" + el.getAttribute("default", "") + "'");
-				response.append(" size='50'/>");
-			} else if(el.getName().equals("TEXTTIMESTAMP")) {
-				response.append("<input class='datetimepicker' type='text' name='" + el.getValue() + "'");
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
-				if(eof) {
-					SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
-					if(getString(el.getValue()) != null) {
-						String mydate = dateformatter.format(getDate(el.getValue()));				
-						response.append(" value=\"" + mydate + "\"");
-					}
-				}
-				response.append(" size='50'/>");
-			} else if(el.getName().equals("SPINTIME")) {
-				response.append("<input class='timepicker' type='text' name='" + el.getValue() + "'");
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
-				if(eof) {
-					SimpleDateFormat dateformatter = new SimpleDateFormat("hh:mm a");
-					if(getString(el.getValue())!=null) {
-						String mydate = dateformatter.format(getTime(el.getValue()));				
-						response.append(" value=\"" + mydate + "\"");
-					}
-				} else if(el.getAttribute("default", "").equals("now")) {
-					SimpleDateFormat dateParse = new SimpleDateFormat("hh:mm a");
-					response.append(" value='" + dateParse.format(new Date()) + "'");
-				}
-				response.append(" size='50'/>");
-			} else if(el.getName().equals("PICTURE")) {
-				String mypic = null;
-				
-				response.append("<div style='width:" + el.getAttribute("w") + "px; height:" + el.getAttribute("h") + "px;'>");
-				response.append("<a href=\"javascript:myPictureWin('" + el.getValue() + "')\">");
-				if(eof) {
-					mypic = getString(el.getValue());
-					if(mypic == null) {
-						response.append("<img src='resources/images/add.png'>");
-					} else {
-						response.append("<img height='" + el.getAttribute("h") + "px' width='auto' src='");
-						response.append(el.getAttribute("pictures") + "?access=" + el.getAttribute("access"));
-						response.append("&picture=" + mypic + "'>");
-					}
+			// Get the elements and determine creation of rows
+			if(noSpan) response.append("	<div class='row'>\n");
+			response.append(getField(el, formLinkData, eof));
+			if(el.getAttribute("span") == null) { response.append("	</div>\n"); noSpan = true; }
+			else noSpan = false;
+			
+			/*if(el.getAttribute("titlepos","left").equals("top")) {
+				response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'></td>\n<td><b>" + el.getAttribute("title")  + "</b>\n</td></tr>\n<tr>\n<td>");
 				} else {
-					response.append("<img src='resources/images/add.png'>");
+					response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'>" + el.getAttribute("title"));
 				}
 
-				response.append("</a></div>\n");
-				response.append("<input type='hidden' name='" + el.getValue() + "'");
-				if(mypic != null) response.append(" value='" + mypic + "'");
-				else response.append(" value=''");
-				response.append(" />");
-			}
-
-
-			if(!(el.getName().equals("USERFIELD")|| (el.getName().equals("DEFAULT"))) || (el.getName().equals("FUNCTION"))) {
-				response.append("</td></tr>");
-			}
-
-			i++;
+				if(el.getName().equals("GRIDBOX")) {
+					response.append("<a  class='btn i_magnifying_glass icon small' href='#'");
+					if(el.getAttribute("webgrid") == null) {
+						response.append(" onClick=\"myClientWin('b_combolist.jsp");
+						response.append("?field=" + el.getValue());
+					} else {
+						response.append(" onClick=\"myClientWin('b_searchlist.jsp");
+						response.append("?view=" + el.getAttribute("webgrid") + ":0");
+					}
+					if(formLinkData != null) response.append("&formlinkdata=" + formLinkData);
+					response.append("','win2')\"");
+					response.append("name=\"anchor1\" id=\"anchor1\"> select </a>");
+				}
+				response.append(" : </td><td>");
+			}*/
 		}
-		if(isTabs) {
-			response.append("</table></div>");
-			response.append("\n</div></td></tr>");
-		}
-		response.append("</table></div>");
+		
+		// Close and open span and tabs
+		if(!noSpan) response.append("</div>\n");
+		if(!tabNotDone && tab.equals("")) response.append("</div>\n");
+		if(!tabNotDone) response.append("</div>\n");
+
+		response.append("</div>\n");
 		
 		return response.toString();
     }
+    
+    
+    public String getField(BElement el, String formLinkData, boolean eof) {
+		StringBuilder response = new StringBuilder();
+		
+		String defaultvalue = el.getAttribute("default", "");
+		String default_fnct = view.getAttribute("default_fnct");
+		if(default_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
+		
+		response.append("<div class='col-md-6'>\n");
+		response.append("	<div class='form-group'>\n");
+		response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
+		response.append("			<div class='col-md-9'>\n");
+		
+		if(el.getName().equals("HTML")) {
+			response.append(el.getAttribute("html",""));
+		} else if(el.getName().equals("TEXTFIELD")) {
+			response.append("<input name='" + el.getValue() + "'");
+
+			//whitelabel additions - using whitelabel syntax/semantics
+			if(el.getAttribute("type") == null) response.append(" type='text'");
+			else response.append(" type='" + el.getAttribute("type") + "'");
+
+			if(el.getAttribute("class") == null) response.append(" class='form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("w") != null) response.append(" size='" + el.getAttribute("w") + "'");
+			else response.append(" size='50'");
+
+			if(el.getAttribute("style") != null) response.append(" style='" + el.getAttribute("style") + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
+			if(el.getAttribute("tooltip") != null) response.append(" title='" + el.getAttribute("tooltip") + "'");
+			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+			if(el.getAttribute("data-instant") != null) response.append(" data-instant='" + el.getAttribute("data-instant") + "'");
+			if(el.getAttribute("data-min") != null) response.append(" data-min='" + el.getAttribute("data-min") + "'");
+			if(el.getAttribute("data-max") != null) response.append(" data-max='" + el.getAttribute("data-max") + "'");
+			if(el.getAttribute("data-step") != null) response.append(" data-step='" + el.getAttribute("data-step") + "'");
+			if(el.getAttribute("data-start") != null) response.append(" data-start='" + el.getAttribute("data-start") + "'");
+			if(el.getAttribute("data-regex") != null) response.append(" data-regex='" + el.getAttribute("data-regex") + "'");
+			if(el.getAttribute("data-timeformat") != null) response.append(" data-timeformat='" + el.getAttribute("data-timeformat") + "'");
+			if(el.getAttribute("data-errortext") != null) response.append(" data-errortext='" + el.getAttribute("data-errortext") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
+			
+			//whitelabel end
+
+			//custom javascript when needed
+			if(el.getAttribute("js_function") != null) {
+				String tgt = el.getAttribute("target","");
+				response.append(" onblur=\"custom_javascript(this,\'" + el.getAttribute("js_function") + "\',\'" + tgt +"\')\" ");
+			}
+
+			//call PL/SQL function when needed - ajax
+			if(el.getAttribute("ajaxfunction") != null) {
+				String ajx_fxn = el.getAttribute("ajaxfunction");
+				response.append(" onBlur=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");
+			}
+
+			if(eof) response.append(" value='" + formatData(el).replace("'", "&#39;") + "'");
+			else response.append(" value='" + defaultvalue + "'");
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			response.append("/>\n");
+		} else if(el.getName().equals("TEXTAREA")) {
+			String fieldValue = "";
+			if(eof) fieldValue = formatData(el).replace("'", "&#39;");
+			else fieldValue = defaultvalue;
+
+			response.append("<textarea name='" + el.getValue() + "'");
+			if(el.getAttribute("class") == null) response.append(" class='form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
+			String taCols = el.getAttribute("cols", "50");
+			String taRows = el.getAttribute("rows", "10");
+			response.append(" cols='" + taCols + "' rows='" + taRows + "'>");
+			response.append(fieldValue);
+			response.append("</textarea>\n");
+		} else if(el.getName().equals("EDITOR")) {
+			String fieldValue = "";
+			if(eof) fieldValue = formatData(el).replace("'", "&#39;");
+			else fieldValue = el.getAttribute("default", "");
+
+			response.append("<div class='wysiwyg'>");//style='width: 740px;'>");
+			response.append("<textarea class='form-control' name='" + el.getValue() + "'");
+			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			response.append(" cols='50' rows='10'>");
+			response.append(fieldValue);
+			response.append("</textarea>");
+			response.append("</div>\n");
+		} else if(el.getName().equals("PASSWORD")) {
+			response.append("<input type='password' name='" + el.getValue() + "' class='form-control' size='50'/>\n");
+		} else if(el.getName().equals("GRIDBOX")) {
+			String myval = null;
+			if(eof) myval = getString(el.getValue());
+			else myval = el.getAttribute("default", "");
+
+			response.append("<input type='hidden' name='" + el.getValue() + "'");
+			if(myval != null) response.append(" value='" + myval + "'");
+			response.append(">");
+
+			response.append("<input type='text' name='" + el.getValue() + "_name'");
+			
+			if(el.getAttribute("class") == null) response.append(" class='form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("w") != null) response.append(" size='" + el.getAttribute("w") + "'");
+			else response.append(" size='50'");
+
+			//call PL/SQL function when needed - ajax
+			if(el.getAttribute("ajaxfunction") != null) {
+				String ajx_fxn = el.getAttribute("ajaxfunction");
+				response.append(" autocomplete=\"off\" ");
+				response.append(" onkeypress=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");
+			}
+
+			if(myval != null) {
+				String mysql = "SELECT " + el.getAttribute("lpfield") + " FROM " + el.getAttribute("lptable");
+				if(el.getAttribute("lpkey") == null) mysql += " WHERE " + el.getValue();
+				else mysql += " WHERE " + el.getAttribute("lpkey");
+				mysql += " = '" + myval + "'";
+
+				String orderBySql = el.getAttribute("orderby");
+				if(orderBySql == null) mysql += " ORDER BY " + el.getAttribute("lpfield");
+				else mysql += " ORDER BY " + orderBySql;
+
+				myval = db.executeFunction(mysql);
+			}
+			if(myval != null) response.append(" value='" + myval + "'");
+			response.append(" />\n");
+			if(el.getAttribute("ajaxfunction") != null) {
+				response.append("<br/><div id='ajaxDiv'><div/>\n");
+			}
+		} else if(el.getName().equals("COMBOBOX")) {
+			response.append("<select name='" + el.getValue() + "'");
+			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			response.append(">");
+
+			String nodefault = el.getAttribute("nodefault");
+			String lptable = el.getAttribute("lptable");
+			String lpfield = el.getAttribute("lpfield");
+			String lpkey = el.getAttribute("lpkey");
+			String cmb_fnct = el.getAttribute("cmb_fnct");
+			if(lpkey == null) lpkey = el.getValue();
+
+			String mysql = "";
+			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
+			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
+			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
+
+			String cmbWhereSql = el.getAttribute("where");
+			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
+				if(cmbWhereSql == null) cmbWhereSql = "(";
+				else cmbWhereSql += " AND (";
+				cmbWhereSql += orgID + "=" + userOrg + ")";
+			}
+
+			if(el.getAttribute("user") != null) {
+				String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
+				if(cmbWhereSql == null) cmbWhereSql = userFilter;
+				else cmbWhereSql += " AND " + userFilter;
+			}
+
+			String tableFilter = null;
+			String linkField = el.getAttribute("linkfield");
+			if((linkField != null) && (formLinkData != null)) {
+				if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
+				else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
+
+				if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
+				else cmbWhereSql += " AND (" + tableFilter + ")";
+			}
+
+			if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
+
+			String orderBySql = el.getAttribute("orderby");
+			if(orderBySql == null) mysql += " ORDER BY " + lpfield;
+			else mysql += " ORDER BY " + orderBySql;
+
+			if(nodefault != null) response.append("<option></option>");
+
+			BQuery cmbrs = new BQuery(db, mysql);
+			while (cmbrs.moveNext()) {
+				response.append("<option");
+				if(eof) {
+					if(getString(el.getValue())!=null) {
+						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
+							response.append(" selected='selected'");
+					}
+				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
+					response.append(" selected='selected'");
+				}
+				response.append(" value='" + cmbrs.getString(lpkey));
+				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
+			}
+			cmbrs.close();
+			response.append("</select>\n");
+		} else if(el.getName().equals("COMBOLIST")) {
+			response.append("<select name='" + el.getValue() + "'");
+			if(el.getAttribute("class") == null) response.append(" class='form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			response.append(">");
+			
+			String myval = null;
+			String mykey = "";
+			if(eof) myval = getString(el.getValue());
+			else myval = defaultvalue;
+
+			for(BElement ell : el.getElements()) {
+				if(ell.getAttribute("key") == null) mykey = ell.getValue();
+				else mykey = ell.getAttribute("key");
+				response.append("<option"); 
+				if(ell.getAttribute("key") != null) response.append(" value='" + mykey + "'");
+				if(mykey.equals(myval)) response.append(" selected='selected'");
+				response.append(">" +  ell.getValue() + "</option>");	
+			}
+			response.append("</select>\n");
+		} else if(el.getName().equals("CHECKBOX")) {
+			response.append("<input type='checkbox' name='" + el.getValue());
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			response.append("' value='true'");
+			if(eof) {
+				if(getBoolean(el.getValue())) response.append(" checked");
+			} else if(el.getAttribute("default", "").equals("true")) {
+				response.append(" checked");
+			}
+		
+			response.append("/>\n");
+		} else if(el.getName().equals("FILE")) {
+				response.append("<input class='form-control' type='file' name='" + el.getValue() + "' size='50'/></td>\n");
+		} else if(el.getName().equals("TEXTDATE")) {
+			response.append("<div class='input-group input-medium date date-picker' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>\n");
+
+			response.append("<input class='form-control' name='" + el.getValue() + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+			if(eof) {
+				SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy");
+				if(getString(el.getValue())!=null) {
+					String mydate = dateformatter.format(getDate(el.getValue()));				
+					response.append(" value='" + mydate + "'");
+				}
+			} else if(el.getAttribute("default", "").equals("now")) {
+				SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
+				response.append(" value='" + dateParse.format(new Date()) + "'");
+			}  else if(el.getAttribute("default", "").equals("today")) {
+				SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
+				response.append(" value='" + dateParse.format(new Date()) + "'");
+			}
+			response.append(" size='50'/>");
+			
+			response.append("<span class='input-group-btn'>");
+			response.append("<button class='btn default' type='button'><i class='fa fa-calendar'></i></button>");
+			response.append("</span>\n");
+			response.append("</div>\n");
+		} else if(el.getName().equals("TEXTDECIMAL")) {
+			response.append("<input class='form-control mask_currency' type='text' name='" + el.getValue() + "'");
+
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = true ");
+			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+
+			if(el.getAttribute("js_function") != null) {			
+				String tgt = el.getAttribute("target","");
+				response.append ( " onblur=\"custom_javascript(this,\'" + el.getAttribute("js_function") + "\',\'" + tgt +"\')\" ");					
+			}
+
+			if(el.getAttribute("ajaxfunction") != null){
+				String ajx_fxn = el.getAttribute("ajaxfunction");															
+				response.append ( " onBlur=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");					
+			}
+
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(eof) response.append(" value=\"" + formatData(el) + "\"");
+			else response.append(" value='" + el.getAttribute("default", "") + "'");
+			response.append(" size='50'/>\n");
+		} else if(el.getName().equals("TEXTTIMESTAMP")) {
+			response.append("<input class='form-control' type='text' name='" + el.getValue() + "'");
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
+			if(eof) {
+				SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
+				if(getString(el.getValue()) != null) {
+					String mydate = dateformatter.format(getDate(el.getValue()));				
+					response.append(" value=\"" + mydate + "\"");
+				}
+			}
+			response.append(" size='50'/>\n");
+		} else if(el.getName().equals("SPINTIME")) {
+			response.append("<input class='form-control' type='text' name='" + el.getValue() + "'");
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
+			if(eof) {
+				SimpleDateFormat dateformatter = new SimpleDateFormat("hh:mm a");
+				if(getString(el.getValue())!=null) {
+					String mydate = dateformatter.format(getTime(el.getValue()));				
+					response.append(" value=\"" + mydate + "\"");
+				}
+			} else if(el.getAttribute("default", "").equals("now")) {
+				SimpleDateFormat dateParse = new SimpleDateFormat("hh:mm a");
+				response.append(" value='" + dateParse.format(new Date()) + "'");
+			}
+			response.append(" size='50'/>\n");
+		} else if(el.getName().equals("PICTURE")) {
+			String mypic = null;
+			
+			response.append("<div style='width:" + el.getAttribute("w") + "px; height:" + el.getAttribute("h") + "px;'>");
+			response.append("<a href=\"javascript:myPictureWin('" + el.getValue() + "')\">");
+			if(eof) {
+				mypic = getString(el.getValue());
+				if(mypic == null) {
+					response.append("<img src='resources/images/add.png'>");
+				} else {
+					response.append("<img height='" + el.getAttribute("h") + "px' width='auto' src='");
+					response.append(el.getAttribute("pictures") + "?access=" + el.getAttribute("access"));
+					response.append("&picture=" + mypic + "'>");
+				}
+			} else {
+				response.append("<img src='resources/images/add.png'>");
+			}
+
+			response.append("</a></div>\n");
+			response.append("<input type='hidden' name='" + el.getValue() + "'");
+			if(mypic != null) response.append(" value='" + mypic + "'");
+			else response.append(" value=''");
+			response.append(" />\n");
+		} else if(el.getName().equals("USERFIELD") || el.getName().equals("DEFAULT") || el.getName().equals("FUNCTION")) {
+		}
+		
+		response.append("		</div>\n");
+		response.append("	</div>\n");
+		response.append("</div>\n");
+		
+		return response.toString();
+	}
 
 	public void setSelectAll() {
 		selectAll = true;

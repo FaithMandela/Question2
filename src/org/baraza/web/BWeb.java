@@ -463,7 +463,7 @@ public class BWeb {
 	public String getButtons() {
 		if((root == null) || (db == null)) return "";	// error check
 		
-		String buttons = "";
+		String buttons = "<div class='actions'>\n";
 
 		boolean showButtons = false;
 
@@ -471,6 +471,7 @@ public class BWeb {
 			if(view.getAttribute("display", "grid").equals("grid")) showButtons = true;
 			if(view.getAttribute("buttons", "noshow").equals("show")) showButtons = true;
 		}
+		
 
 		if(showButtons) {
 			int j = -1;
@@ -487,14 +488,22 @@ public class BWeb {
 
 			String did = "";
 			if(dataItem!=null) did = "&data=" + dataItem;
-
-			buttons = "<div class='ui-widget ui-widget-content ui-corner-all'>\n";
-			if(hasForm) buttons += "<a class='btn i_plus icon small' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'>New</a>\n";
-			buttons += "<a class='btn i_refresh_4 icon small' title='Refresh' href='?view=" + viewKey + did + "'>Refresh</a>\n";
-			buttons += "<a class='btn i_outgoing icon small' title='Export'  target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'>Export</a>\n";
-			buttons += "<a class='btn i_printer icon small' title='Print' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'>Print</a>\n";
-			buttons += "</div>\n";
+			
+			if(hasForm) buttons += "<a class='btn btn-default btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>New</a>\n";
+			buttons += "<a class='btn btn-default btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-plus'></i>Refresh</a>\n";
+			buttons += "<a class='btn btn-default btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-plus'></i>Export</a>\n";
+			buttons += "<a class='btn btn-default btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-plus'></i>Print</a>\n";
 		}
+		
+		
+		if(isForm()) {
+			buttons += getFormButtons();
+			//buttons += getAudit();
+		} else if(isEditField()) {
+			buttons += "<button class='submit' name='process' value='Submit'>Submit</button>\n";
+		}
+
+		buttons += "</div>\n";
 
 		return buttons;
 	}
@@ -505,7 +514,6 @@ public class BWeb {
 		String buttons = "";
 
 		if(view.getName().equals("FORM")) {
-			buttons = "<div class='ui-widget ui-widget-content ui-corner-all'>\n";
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
 				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
