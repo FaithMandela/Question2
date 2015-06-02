@@ -173,10 +173,9 @@ public class BJSONQuery extends BQuery {
 				if(hasSubs && (keyField != null)) {
 					String sk = getSelectKey();
 					if(sk != null) {
-						mydv = "<a href='?view=" + viewKey + ":" + sk + "&amp;data=" + rs.getString(keyField);
-						if(hasFilter) mydv += "&amp;gridfilter=true";
-						mydv += "'><img src='resources/images/go.png'></img></a>";
-						mydn = "C" + String.valueOf(col++);
+						mydv = "?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField);
+						if(hasFilter) mydv += "&gridfilter=true";
+						mydn = "CL"; 
 						myjo.add(mydn, mydv);
 					}
 

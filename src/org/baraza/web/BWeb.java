@@ -463,7 +463,7 @@ public class BWeb {
 	public String getButtons() {
 		if((root == null) || (db == null)) return "";	// error check
 		
-		String buttons = "";
+		String buttons = "<div class='actions'>\n";
 
 		boolean showButtons = false;
 
@@ -471,6 +471,7 @@ public class BWeb {
 			if(view.getAttribute("display", "grid").equals("grid")) showButtons = true;
 			if(view.getAttribute("buttons", "noshow").equals("show")) showButtons = true;
 		}
+		
 
 		if(showButtons) {
 			int j = -1;
@@ -487,14 +488,22 @@ public class BWeb {
 
 			String did = "";
 			if(dataItem!=null) did = "&data=" + dataItem;
-
-			buttons = "<div class='ui-widget ui-widget-content ui-corner-all'>\n";
-			if(hasForm) buttons += "<a class='btn i_plus icon small' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'>New</a>\n";
-			buttons += "<a class='btn i_refresh_4 icon small' title='Refresh' href='?view=" + viewKey + did + "'>Refresh</a>\n";
-			buttons += "<a class='btn i_outgoing icon small' title='Export'  target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'>Export</a>\n";
-			buttons += "<a class='btn i_printer icon small' title='Print' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'>Print</a>\n";
-			buttons += "</div>\n";
+			
+			if(hasForm) buttons += "<a class='btn btn-default btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>New</a>\n";
+			buttons += "<a class='btn btn-default btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-plus'></i>Refresh</a>\n";
+			buttons += "<a class='btn btn-default btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-plus'></i>Export</a>\n";
+			buttons += "<a class='btn btn-default btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-plus'></i>Print</a>\n";
 		}
+		
+		
+		if(isForm()) {
+			buttons += getFormButtons();
+			//buttons += getAudit();
+		} else if(isEditField()) {
+			buttons += "<button class='submit' name='process' value='Submit'>Submit</button>\n";
+		}
+
+		buttons += "</div>\n";
 
 		return buttons;
 	}
@@ -505,7 +514,6 @@ public class BWeb {
 		String buttons = "";
 
 		if(view.getName().equals("FORM")) {
-			buttons = "<div class='ui-widget ui-widget-content ui-corner-all'>\n";
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
 				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
@@ -675,10 +683,13 @@ public class BWeb {
 		}
 
 		if(view.getName().equals("GRID")) {
-			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
-			if(selectAll) webbody.setSelectAll();
-			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
-			webbody.close();
+			//BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
+			//if(selectAll) webbody.setSelectAll();
+			body += "\t<div class='table-scrollable'>\n";
+			body += "\t\t<table id='jqlist' class='table table-striped table-bordered table-hover'></table>\n";
+			body += "\t\t<div id='jqpager'></div>\n";
+			body += "\t</div>\n";
+			//webbody.close();
 		} else if(view.getName().equals("FILES")) {
 			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 			if(selectAll) webbody.setSelectAll();
@@ -1654,6 +1665,10 @@ public class BWeb {
 		JsonArrayBuilder jsColNames = Json.createArrayBuilder();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
 		
+		boolean hasAction = false;
+		boolean hasSubs = false;
+		boolean hasTitle = false;
+		boolean hasFilter = false;
 		int col = 0;
 		for(BElement el : view.getElements()) {
 			if(!el.getValue().equals("")) {
@@ -1662,9 +1677,22 @@ public class BWeb {
 				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title"));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
-				jsColModel.add(jsColEl);				
+				jsColModel.add(jsColEl);
 			}
+			
+			if(el.getName().equals("ACTIONS")) hasAction = true;
+			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
+			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
+			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
+		
+		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
+		jsColNames.add("CL");
+		jsColEl.add("name", "CL");
+		jsColEl.add("width", 5);
+		jsColEl.add("hidden", true);
+		jsColModel.add(jsColEl);
 		
 		jshd.add("url", "jsondata");
 		jshd.add("datatype", "json");
@@ -1678,12 +1706,18 @@ public class BWeb {
 		jshd.add("viewrecords", true);
 		jshd.add("gridview", true);
 		jshd.add("autoencode", true);
+		jshd.add("autowidth", true);
 		
 		JsonObject jsObj = jshd.build();
 		
-		System.out.println("BASE 2030 : " + jsObj.toString());
+		//System.out.println("BASE 2030 : " + jsObj.toString());
 
 		return jsObj.toString();
+	}
+	
+	public String getViewName() { 
+		if(view == null) return "";
+		return view.getAttribute("name", ""); 
 	}
 
 	public String getPictureField() { return pictureField; }

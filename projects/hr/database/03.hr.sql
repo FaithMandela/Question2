@@ -599,6 +599,8 @@ CREATE TABLE objectives (
 	objective_name			varchar(320) not null,
 	objective_completed		boolean default false not null,
 	
+	objective_maditory		boolean default false not null,
+	
 	supervisor_comments		text,
 	details					text
 );
@@ -2048,6 +2050,21 @@ BEGIN
 	return v_approver;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insa_employee_objectives() RETURNS trigger AS $$
+BEGIN
+
+	INSERT INTO objectives (employee_objective_id, org_id, objective_type_id,
+		date_set, objective_ps, objective_name, objective_maditory)
+	VALUES (NEW.employee_objective_id, NEW.org_id, 1,
+		current_date, 0, 'Community service', true);
+
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insa_employee_objectives AFTER INSERT ON employee_objectives
+    FOR EACH ROW EXECUTE PROCEDURE insa_employee_objectives();
 
 CREATE OR REPLACE FUNCTION ins_objectives() RETURNS trigger AS $$
 DECLARE
