@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qgradeviewtrans" pageWidth="361" pageHeight="838" whenNoDataType="BlankPage" columnWidth="361" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8562419a-0db6-479f-99f5-ece96f6efdb6">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qgradeviewtrans" pageWidth="361" pageHeight="838" whenNoDataType="BlankPage" columnWidth="361" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -58,7 +58,7 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 	<columnHeader>
 		<band height="11" splitType="Stretch">
 			<staticText>
-				<reportElement key="element-90" x="3" y="3" width="48" height="8" forecolor="#000000" uuid="cc6d5790-ea32-46ae-9571-95b4efb31f02"/>
+				<reportElement key="element-90" x="0" y="3" width="51" height="8" forecolor="#000000"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
@@ -71,7 +71,7 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<text><![CDATA[COURSE CODE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="50" y="3" width="176" height="8" forecolor="#000000" uuid="c1847b63-46e7-49fa-afac-e5573731fa5a"/>
+				<reportElement key="element-90" x="50" y="3" width="176" height="8" forecolor="#000000"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -84,7 +84,7 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<text><![CDATA[COURSE TITLE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="226" y="3" width="22" height="8" forecolor="#000000" uuid="eea8f4b3-3045-4d5a-8fd9-bdbe0b607985"/>
+				<reportElement key="element-90" x="226" y="3" width="22" height="8" forecolor="#000000"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -97,7 +97,7 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<text><![CDATA[Credits]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="247" y="3" width="21" height="8" forecolor="#000000" uuid="eddcefc2-11f5-40ee-b2ae-369f2c74fa1e"/>
+				<reportElement key="element-90" x="247" y="3" width="21" height="8" forecolor="#000000"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -110,7 +110,7 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-91" x="267" y="3" width="20" height="8" forecolor="#000000" uuid="b9d2a816-bfec-4705-986b-7fd054e56723"/>
+				<reportElement key="element-91" x="267" y="3" width="20" height="8" forecolor="#000000"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -127,7 +127,7 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 	<detail>
 		<band height="9" splitType="Stretch">
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="268" y="0" width="19" height="9" uuid="18bf296b-f3fa-4a2a-9317-98fb03e4d4b7"/>
+				<reportElement key="textField-1" x="268" y="0" width="19" height="9"/>
 				<box leftPadding="2" rightPadding="2">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
@@ -138,10 +138,10 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial" size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{repeated}.booleanValue() ? "*" : "" + $F{gpa})]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{repeated}.booleanValue() ? "*" : "" + $F{gpa})]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="247" y="0" width="21" height="9" uuid="5a44a582-e12c-4d9d-a96b-20334808ea8d"/>
+				<reportElement key="textField" x="247" y="0" width="21" height="9"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -151,10 +151,10 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial" size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{gradeid}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{gradeid}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="3" y="0" width="48" height="9" uuid="3ab5d3d3-69cb-48e2-a9de-c522bc112181"/>
+				<reportElement key="textField" x="0" y="0" width="51" height="9"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
@@ -164,10 +164,10 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial" size="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{courseid}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{courseid}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="50" y="0" width="176" height="9" uuid="fed01d88-390f-43f1-9855-d880718c8643"/>
+				<reportElement key="textField" x="50" y="0" width="176" height="9"/>
 				<box leftPadding="0" rightPadding="0">
 					<pen lineWidth="0.5" lineColor="#7F7878"/>
 					<topPen lineWidth="0.5" lineColor="#7F7878"/>
@@ -178,10 +178,10 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{coursetitle}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{coursetitle}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="226" y="0" width="22" height="9" uuid="c6d4f6a5-3ab0-4461-acf0-3609013b3282"/>
+				<reportElement key="textField" x="226" y="0" width="22" height="9"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -191,7 +191,7 @@ WHERE vwsgrades.sstudentid=$P!{sstudentid};]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Arial" size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{hours}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
