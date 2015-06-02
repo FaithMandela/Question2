@@ -618,10 +618,10 @@
 					<DATA>F</DATA>
 				</COMBOLIST>
 				<COMBOLIST w="50" title="Disability" y="230" h="20" x="10">disability
-					<DATA>N</DATA>
-					<DATA>Y</DATA>
+					<DATA>No</DATA>
+					<DATA>Yes</DATA>
 				</COMBOLIST>
-				<TEXTAREA w="430" title="Details if Yes" y="250" h="40" x="10">dis_details</TEXTAREA>
+				<TEXTAREA w="430" title="if yes, give details" y="250" h="40" x="10">dis_details</TEXTAREA>
 				<COMBOLIST w="50" title="Marital Status" y="270" h="20" x="290">MaritalStatus
 					<DATA>S</DATA>
 					<DATA>M</DATA>
