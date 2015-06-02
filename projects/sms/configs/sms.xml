@@ -19,10 +19,9 @@
 			<FORM name="SMS" keyfield="sms_id" table="sms">
 				<DEFAULT default="0">folder_id</DEFAULT>
 				<USERFIELD>entity_id</USERFIELD>
-				<TEXTFIELD w="250" title="Tel. Number" y="10" h="20" x="10">sms_number</TEXTFIELD>
-				<CHECKBOX w="150" title="Message Ready" y="30" h="20" x="10">message_ready</CHECKBOX>
+				<TEXTAREA w="430" title="Numbers" y="120" h="40" x="10">sms_numbers</TEXTAREA>
+				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10" rows="4">message_ready</CHECKBOX>
 				<TEXTAREA w="430" tab="Message" y="50" h="70" x="10">message</TEXTAREA>
-				<TEXTAREA w="430" tab="Numbers" y="120" h="70" x="10">sms_numbers</TEXTAREA>
 				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">

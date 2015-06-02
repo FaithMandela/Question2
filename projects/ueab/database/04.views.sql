@@ -1323,3 +1323,29 @@ CREATE VIEW studentmarkview AS
 		students.studentname
 	FROM (registrations INNER JOIN marks ON registrations.markid = marks.markid)
 		INNER JOIN students ON registrations.existingid = students.studentid;
+
+		
+---- webservice functions
+CREATE VIEW ws_students AS
+	SELECT students.studentid, students.schoolid, students.denominationid, students.org_id,
+		students.studentname, students.sex,
+		students.Nationality, students.MaritalStatus, students.birthdate, students.address,
+		students.zipcode, students.town, students.countrycodeid, 
+		students.telno,  students.email,
+		entitys.entity_id, entitys.entity_password
+	FROM students INNER JOIN entitys ON students.studentid = entitys.user_name;
+
+CREATE VIEW ws_qstudents AS
+	SELECT students.studentid, students.schoolid, students.denominationid, students.org_id,
+		students.studentname, students.sex,
+		students.Nationality, students.MaritalStatus, students.birthdate, students.address,
+		students.zipcode, students.town, students.countrycodeid, 
+		students.telno,  students.email,
+		entitys.entity_id, entitys.entity_password
+	FROM students INNER JOIN entitys ON students.studentid = entitys.user_name
+		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid
+		INNER JOIN qstudents ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
+		INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid
+	WHERE (quarters.active = true) AND (qstudents.approved = true);
+	
+	
