@@ -1202,7 +1202,21 @@ CREATE VIEW vw_evaluation_objectives AS
 		evaluation_points.narrative, evaluation_points.details
 	FROM evaluation_points INNER JOIN vw_job_reviews ON evaluation_points.job_review_id = vw_job_reviews.job_review_id
 		INNER JOIN vw_objectives ON evaluation_points.objective_id = vw_objectives.objective_id;
-
+		
+CREATE VIEW vw_review_reporting AS
+	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name, 
+		reporting.reporting_id, reporting.date_from, 
+		reporting.date_to, reporting.primary_report, reporting.is_active, reporting.ps_reporting, 
+		reporting.reporting_level, 
+		job_reviews.job_review_id, job_reviews.total_points, 
+		job_reviews.org_id, job_reviews.review_date, job_reviews.review_done, 
+		job_reviews.approve_status, job_reviews.workflow_table_id, job_reviews.application_date, job_reviews.action_date,
+		job_reviews.recomendation, job_reviews.reviewer_comments, job_reviews.pl_comments,
+		EXTRACT(YEAR FROM job_reviews.review_date) as review_year
+	FROM reporting INNER JOIN entitys ON reporting.entity_id = entitys.entity_id
+		INNER JOIN entitys as rpt ON reporting.report_to_id = rpt.entity_id
+		INNER JOIN job_reviews ON reporting.entity_id = job_reviews.entity_id;
+		
 CREATE VIEW vw_career_development AS
 	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
 		vw_job_reviews.review_date, vw_job_reviews.review_done, vw_job_reviews.recomendation, vw_job_reviews.reviewer_comments,

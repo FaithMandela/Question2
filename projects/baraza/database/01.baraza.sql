@@ -530,7 +530,7 @@ CREATE VIEW vw_reporting AS
 	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name, 
 		reporting.org_id, reporting.reporting_id, reporting.date_from, 
 		reporting.date_to, reporting.primary_report, reporting.is_active, reporting.ps_reporting, 
-		reporting.details
+		reporting.reporting_level, reporting.details
 	FROM reporting INNER JOIN entitys ON reporting.entity_id = entitys.entity_id
 		INNER JOIN entitys as rpt ON reporting.report_to_id = rpt.entity_id;
 

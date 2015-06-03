@@ -1,3 +1,26 @@
+DROP VIEW vw_reporting;
+CREATE VIEW vw_reporting AS
+	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name, 
+		reporting.org_id, reporting.reporting_id, reporting.date_from, 
+		reporting.date_to, reporting.primary_report, reporting.is_active, reporting.ps_reporting, 
+		reporting.reporting_level, reporting.details
+	FROM reporting INNER JOIN entitys ON reporting.entity_id = entitys.entity_id
+		INNER JOIN entitys as rpt ON reporting.report_to_id = rpt.entity_id;
+		
+CREATE VIEW vw_review_reporting AS
+	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name, 
+		reporting.reporting_id, reporting.date_from, 
+		reporting.date_to, reporting.primary_report, reporting.is_active, reporting.ps_reporting, 
+		reporting.reporting_level, 
+		job_reviews.job_review_id, job_reviews.total_points, 
+		job_reviews.org_id, job_reviews.review_date, job_reviews.review_done, 
+		job_reviews.approve_status, job_reviews.workflow_table_id, job_reviews.application_date, job_reviews.action_date,
+		job_reviews.recomendation, job_reviews.reviewer_comments, job_reviews.pl_comments,
+		EXTRACT(YEAR FROM job_reviews.review_date) as review_year
+	FROM reporting INNER JOIN entitys ON reporting.entity_id = entitys.entity_id
+		INNER JOIN entitys as rpt ON reporting.report_to_id = rpt.entity_id
+		INNER JOIN job_reviews ON reporting.entity_id = job_reviews.entity_id;
+		
 ALTER TABLE pay_scales ADD 	currency_id				integer references currency;
 CREATE INDEX pay_scales_currency_id ON pay_scales(currency_id);
 UPDATE pay_scales SET currency_id = 1;
