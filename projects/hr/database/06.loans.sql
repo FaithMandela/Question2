@@ -190,6 +190,12 @@ CREATE VIEW vw_period_loans AS
 	FROM vw_loan_monthly
 	GROUP BY vw_loan_monthly.org_id, vw_loan_monthly.period_id;
 	
+CREATE OR REPLACE FUNCTION get_total_repayment(integer, integer) RETURNS double precision AS $$
+	SELECT sum(monthly_repayment + loan_intrest)
+	FROM vw_loan_payments 
+	WHERE (loan_id = $1) and (months <= $2);
+$$ LANGUAGE SQL;
+	
 CREATE VIEW vw_loan_projection AS
 	SELECT org_id, loan_id, loan_type_name, entity_name, principle, monthly_repayment, loan_date, 
 		(EXTRACT(YEAR FROM age(current_date, '2010-05-01')) * 12) + EXTRACT(MONTH FROM age(current_date, loan_date)) as loan_months,
@@ -240,13 +246,6 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION get_total_repayment(integer, integer) RETURNS double precision AS $$
-	SELECT sum(monthly_repayment + loan_intrest)
-	FROM vw_loan_payments 
-	WHERE (loan_id = $1) and (months <= $2);
-$$ LANGUAGE SQL;
-
 
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 BEGIN

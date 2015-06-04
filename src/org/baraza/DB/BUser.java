@@ -24,6 +24,19 @@ public class BUser {
 	List<String> groupRole;
 	List<String> userRole;
 	boolean superUser = false;
+	
+	public BUser(BDB db, String userIP, String userName, boolean newUser) {
+		this.userIP = userIP;
+		this.userName = userName;
+		groupRole = new ArrayList<String>();
+		userRole = new ArrayList<String>();
+
+		userID = "0";
+		orgID = "0";
+		orgName = "default";
+		entityName = "root";
+		entityType = "0";
+	}
 
 	public BUser(BDB db, String userIP, String userName) {
 		this.userIP = userIP;
