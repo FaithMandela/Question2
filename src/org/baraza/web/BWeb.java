@@ -199,6 +199,7 @@ public class BWeb {
 	
 	public int checkRole(String deskKey) {
 		if((root == null) || (db == null)) return 0;	// error check
+		if(db.getUser() == null) return 1;
 
 		int toShow = 0;
 		
@@ -278,6 +279,14 @@ public class BWeb {
 		if(db != null) {
 			if(userName == null) userName = "root";
 			db.setUser(userIP, userName);
+			userID = db.getUserID();
+		}
+	}
+	
+	public void newUser(String userIP, String userName) {
+		if(db != null) {
+			if(userName == null) userName = "root";
+			db.newUser(userIP, userName);
 			userID = db.getUserID();
 		}
 	}
@@ -724,6 +733,7 @@ public class BWeb {
 		} else if(view.getName().equals("DIARY")) {
 			body += "\t\t<div id='calendar'></div>\n";
 		} else if(view.getName().equals("JASPER")) {
+System.out.println("BASE 1010 ");
 			BWebReport report = new BWebReport(view, db.getUserID(), null, request);
 			BElement flt = views.get(views.size()-2);
 
@@ -1725,6 +1735,7 @@ public class BWeb {
 	public BDB getDB() { return db; }
 	public String executeFunction(String mysql) { return db.executeFunction(mysql); }
 	public String getUserID() { return db.getUserID(); }
+	public void setReadOnly(boolean readOnly) { db.setReadOnly(readOnly); }
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
 
 	public BElement getRoot() { return root; }

@@ -235,6 +235,8 @@ public class BQuery {
 			BLogHandle lh = db.getLogHandle();
 			if(lh != null) lh.config(log);
 		}
+		
+		if(db.getReadOnly()) readonly = true;
 
 		try {
 			if(readonly) st = db.getDB().createStatement();

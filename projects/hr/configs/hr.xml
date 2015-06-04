@@ -15,6 +15,7 @@
 			<MENU name="Petty Cash" role="pettycash">90</MENU>
 			<MENU name="Client Forms" role="forms">72</MENU>
 			<MENU name="Approvals">83</MENU>
+			<MENU name="Supervisor Review Report">165</MENU>
 		</MENU>
 		<MENU name="Internship" role="admin,hr">
 			<MENU name="Applicant">23</MENU>
@@ -3479,6 +3480,27 @@
 				<TEXTFIELD w="75" title="Objective Name">employee_objective_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Objective Date">objective_date</TEXTDATE>
 				<JASPER name="Objective Report" reportfile="vw_employee_currentobjectives.jasper"></JASPER>
+			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="707" name="Supervisor Review Reports" key="165" h="590">
+		<GRID name="Review Report" keyfield="review_year" table="vw_review_year">
+			<TEXTFIELD w="75" title="Review Year">review_year</TEXTFIELD>
+			<GRID name="Completed Reviews" keyfield="job_review_id" orderby="entity_name" linkfield="review_year" table="vw_review_reporting" where="(approve_status='Completed')" user="rpt_id">
+				<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Total Points">total_points</TEXTFIELD>
+				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
+				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+			</GRID>
+			<GRID name="Approved Reviews" keyfield="job_review_id" orderby="entity_name" linkfield="review_year" table="vw_review_reporting" where="(approve_status='Approved')" user="rpt_id">
+				<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Total Points">total_points</TEXTFIELD>
+				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
+				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			</GRID>
 		</GRID>
 	</DESK>

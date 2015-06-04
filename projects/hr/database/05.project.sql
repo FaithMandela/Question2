@@ -64,7 +64,7 @@ CREATE TABLE project_staff (
 	org_id					integer references orgs,
 	project_role			varchar(240),
 	monthly_cost			boolean default true not null,
-	is_active				boolean default true not null
+	is_active				boolean default true not null,
 	payroll_ps				real default 0 not null,
 	staff_cost				real default 0 not null,
 	tax_cost				real default 0 not null,

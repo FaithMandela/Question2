@@ -31,7 +31,7 @@ public class BDB {
 	String dbschema = null;
 	int dbType = 1;
 	String orgID = null;
-	BUser user;
+	BUser user = null;
 	BLogHandle logHandle = null;
 
 	private String lastErrorMsg = null;
@@ -39,6 +39,7 @@ public class BDB {
 	private String lDBpath;
 	private String lDBuser;
 	private String lDBpassword;
+	private boolean readOnly = false;
 	
 	public BDB(BElement dbconfig) {
 		String dbclass = dbconfig.getAttribute("dbclass", "");
@@ -127,6 +128,10 @@ public class BDB {
 		close();
 		connectDB(lDBclass, lDBpath, lDBuser, lDBpassword);
 	}
+	
+	public void newUser(String userIP, String userName) {
+		user = new BUser(this, userIP, userName, true);
+	}
 
 	public void setUser(String userIP, String userName) {
 		user = new BUser(this, userIP, userName);
@@ -178,6 +183,25 @@ public class BDB {
 
 		try {
 			Statement st = db.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet rs = st.executeQuery(mysql);
+
+			if(rs.next()) ans = rs.getString(1);
+			rs.close();
+			st.close();
+		} catch (SQLException ex) {
+			ans = null;
+			lastErrorMsg = ex.getMessage();
+			log.severe("Database executeFunction error : " + ex);
+		}
+
+		return ans;
+	}
+	
+	public String executeFunction(String mysql, boolean readOnly) {
+		String ans = null;
+
+		try {
+			Statement st = db.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
 			ResultSet rs = st.executeQuery(mysql);
 
 			if(rs.next()) ans = rs.getString(1);
@@ -541,6 +565,9 @@ public class BDB {
 	public String getStartView() { return user.getStartView(); }
 
 	public String getLastErrorMsg() { return lastErrorMsg; }
+	
+	public void setReadOnly(boolean readOnly) { this.readOnly = readOnly; }
+	public boolean getReadOnly() { return readOnly; }
 
 	public void close() {
 		try {
