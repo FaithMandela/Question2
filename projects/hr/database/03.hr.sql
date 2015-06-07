@@ -659,6 +659,8 @@ CREATE TABLE job_reviews (
 	review_category_id		integer references review_category,
 	org_id					integer references orgs,
 	total_points			integer,
+	self_rating				integer,
+	supervisor_rating		integer,
 	review_date				date not null,
 	review_done				boolean default false not null,
 	
