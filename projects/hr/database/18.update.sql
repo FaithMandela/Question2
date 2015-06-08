@@ -63,7 +63,8 @@ FROM pay_scale_years
 ORDER BY pay_scale_id, pay_year;
 
 
-
+ALTER TABLE job_reviews ADD		self_rating				integer;
+ALTER TABLE job_reviews ADD		supervisor_rating		integer;
 
 CREATE OR REPLACE FUNCTION increment_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
