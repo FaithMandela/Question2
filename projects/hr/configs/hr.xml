@@ -2147,7 +2147,6 @@
 				<CHECKBOX w="150" title="Review Done" y="30" h="20" x="290">review_done</CHECKBOX>
 				<TEXTFIELD w="150" title="Self Rating" y="50" h="20" x="10">self_rating</TEXTFIELD>
 				<TEXTAREA w="530" tab="Overall Comments" y="2" h="170" x="10">details</TEXTAREA>
-				<TEXTAREA w="530" tab="Supervisor Comments" y="2" h="170" x="10">recomendation</TEXTAREA>
 			</FORM>
 			<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			<ACTIONS>
@@ -3105,6 +3104,7 @@
 					<TEXTDATE w="150" title="Review Date" y="10" h="20" x="10">review_date</TEXTDATE>
 					<CHECKBOX w="150" title="Review Done" y="10" h="20" x="290">review_done</CHECKBOX>
 					<TEXTFIELD w="150" title="Supervisor Rating" y="30" h="20" x="10">supervisor_rating</TEXTFIELD>
+					<TEXTAREA w="530" tab="Supervisor Comments" y="2" h="170" x="10">recomendation</TEXTAREA>
 					<TEXTAREA w="530" tab="Overall Comments" y="2" h="170" x="10">reviewer_comments</TEXTAREA>
 				</FORM>
 				<FORM new="false" name="Program Leader" keyfield="job_review_id" linkfield="entity_id" table="job_reviews" th="210">
