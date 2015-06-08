@@ -928,6 +928,8 @@
 					<TEXTFIELD w="150" title="Contact Person" y="90" h="20" x="10">contact_person</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
+				<JASPER name="PM System" reportfile="pm_system.jasper"></JASPER>
+				<JASPER name="System PM" reportfile="system_pm.jasper"></JASPER>
 			</GRID>
 			<FORM name="Quarters" keyfield="pm_quarter_id" table="pm_quarters">
 				<TEXTDATE w="150" title="Date" y="10" h="20" x="10">qstart_date</TEXTDATE>
