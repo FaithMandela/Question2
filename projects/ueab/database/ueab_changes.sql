@@ -1,8 +1,3 @@
-ALTER TABLE students 
-ADD COLUMN disability char(5),
-ADD COLUMN dis_details text,
-ADD COLUMN county char(2) references countys;
-
 
 CREATE TABLE countys(
 
@@ -11,6 +6,13 @@ county_name		varchar(50)
 
 
 );
+
+ALTER TABLE students 
+ADD COLUMN disability char(5),
+ADD COLUMN dis_details text,
+ADD COLUMN county_id char(2) references countys;
+
+CREATE INDEX students_county_id ON students (county_id);
 
 INSERT INTO countys(county_id, county_name)
 VALUES	('MO', 'Mombasa'),
@@ -46,7 +48,15 @@ VALUES	('MO', 'Mombasa'),
 		('LP','Laikipia'),
 		('NK','Nakuru'),
 		('NO','Narok'),
-		('KJ','kajiado'),
+		('KJ','kajiado');
+		
+	
+	ALTER TABLE grades
+	ADD COLUMN p_minrange integer,
+	ADD COLUMN p_maxrange integer;
+		
+		
+	
 
 
 

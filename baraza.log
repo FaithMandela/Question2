@@ -15354,3 +15354,13 @@ Wed May 28 07:42:13 EAT 2014 org.baraza.server.escalation.BEscalation task
 INFO : SELECT sys_emailed_id, vw_workflow_approvals.org_primary_email as emailaddress, vw_workflow_approvals.workflow_narrative as emailsubject, vw_workflow_approvals.reject_email FROM sys_emailed, vw_workflow_approvals  WHERE (vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 2)
 Fri Oct 24 09:34:47 EAT 2014 org.baraza.server.BServer <init>
 INFO : Server started
+Sun Jun 07 13:17:53 EAT 2015 org.baraza.DB.BDB connectDB
+SEVERE : Database connection SQL Error : org.postgresql.util.PSQLException: FATAL: database "agency" does not exist
+Sun Jun 07 13:17:53 EAT 2015 org.baraza.server.data.BData process
+INFO : ---------- Transfer Thread Started
+Sun Jun 07 13:17:53 EAT 2015 org.baraza.DB.BDB connectDB
+SEVERE : Database connection SQL Error : org.postgresql.util.PSQLException: FATAL: database "agency" does not exist
+Sun Jun 07 13:18:08 EAT 2015 org.baraza.DB.BDB connectDB
+SEVERE : Database connection SQL Error : com.microsoft.sqlserver.jdbc.SQLServerException: The TCP/IP connection to the host 192.168.0.78, port 1433 has failed. Error: "Network is unreachable. Verify the connection properties, check that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port, and that no firewall is blocking TCP connections to the port.".
+Sun Jun 07 13:18:08 EAT 2015 org.baraza.server.data.BData process
+INFO : ---------- Transfer Thread completed
