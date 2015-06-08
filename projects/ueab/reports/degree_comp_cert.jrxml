@@ -52,7 +52,7 @@ ORDER BY majors.major desc;]]>
 	completed, started, cleared, clearedate, graduated, graduatedate,
 	(CASE WHEN degreeid = 'CERT' THEN 'Certificate in '
 	WHEN degreeid = 'DIPL' THEN 'Diploma In '
-	ELSE 'The degree of <br/><b><i>' ||  (Degreename) || '</i></b>' END)::varchar as degree_type
+	ELSE '<b>The degree of</b> <br/><b><i>' ||  (Degreename) || '</i></b>' END)::varchar as degree_type
 
 FROM studentdegreeview
 WHERE studentdegreeid = '$P!{filterid}';]]>
@@ -82,14 +82,14 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 	<pageHeader>
 		<band height="395">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="62" y="142" width="739" height="41" uuid="2b98eaff-a352-44cf-8c5d-332c2441bfaf"/>
+				<reportElement x="62" y="145" width="739" height="41" uuid="2b98eaff-a352-44cf-8c5d-332c2441bfaf"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="html">
 					<font fontName="Utopia" size="21" isBold="false" isItalic="true" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{studentname}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement key="table" mode="Transparent" x="260" y="220" width="403" height="46" uuid="74f4f9d5-08e2-49aa-a588-239ee1ca9f32"/>
+				<reportElement key="table" mode="Transparent" x="260" y="221" width="403" height="46" uuid="74f4f9d5-08e2-49aa-a588-239ee1ca9f32"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="DS1" uuid="a412a06b-3232-4d9c-8921-e19612df4515">
 						<datasetParameter name="filterid">
@@ -123,16 +123,16 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 								<textElement verticalAlignment="Bottom">
 									<font fontName="Utopia" size="15" isBold="true" isItalic="true" pdfFontName="Times-BoldItalic" isPdfEmbedded="true"/>
 								</textElement>
-								<textFieldExpression><![CDATA[  $F{majorname}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{majorname}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 				</jr:table>
 			</componentElement>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="62" y="185" width="739" height="30" uuid="46387d4c-7d82-4110-9982-57b459e223b1"/>
+				<reportElement x="62" y="189" width="739" height="30" uuid="46387d4c-7d82-4110-9982-57b459e223b1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
-					<font fontName="Utopia" size="15" isBold="true" isItalic="true" isPdfEmbedded="true"/>
+					<font fontName="Utopia" size="15" isBold="false" isItalic="false" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{degree_type}]]></textFieldExpression>
 			</textField>
