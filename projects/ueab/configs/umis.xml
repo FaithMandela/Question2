@@ -167,9 +167,11 @@
 				<TEXTFIELD w="150" title="Grade Weight" y="10" h="20" x="290">gradeweight</TEXTFIELD>
 				<TEXTFIELD w="150" title="Minimum Range" y="30" h="20" x="10">minrange</TEXTFIELD>
 				<TEXTFIELD w="150" title="Maximum Range" y="30" h="20" x="290">maxrange</TEXTFIELD>
-				<CHECKBOX w="150" title="GPA Count" y="50" h="20" x="10">gpacount</CHECKBOX>
-				<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="P_Minimum Range" y="50" h="20" x="10">p_minrange</TEXTFIELD>
+				<TEXTFIELD w="150" title="P_Maximum Range" y="50" h="20" x="290">p_maxrange</TEXTFIELD>
+				<CHECKBOX w="150" title="GPA Count" y="70" h="20" x="10">gpacount</CHECKBOX>
+				<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
