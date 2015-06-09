@@ -194,7 +194,8 @@
 				<TEXTFIELD w="50" title="Course Code">courseid</TEXTFIELD>
 				<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
 				<ACTIONS jumpview="20:0">
-					<ACTION fnct="updComputeGrade">Compute Grade</ACTION>
+					<ACTION fnct="updComputeGrade" phase="1">Compute Grade</ACTION>
+					<ACTION fnct="updComputeGrade" phase="2">Compute PG Grade</ACTION>
 					<ACTION fnct="updqcoursegrade">Submit Grade</ACTION>
 				</ACTIONS>
 			</GRID>

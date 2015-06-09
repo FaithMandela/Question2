@@ -1,4 +1,4 @@
-ALTER TABLE students ADD disabled boolean default false not null;
+
 
 CREATE OR REPLACE FUNCTION getcummcredit(int) RETURNS float AS $$
 	SELECT sum(qgrades.credit)
@@ -294,6 +294,43 @@ BEGIN
 	END IF;
 
     RETURN mystr;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION getPGgradeid(integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(gradeid) is null THEN 'NG' ELSE max(gradeid) END
+	FROM grades 
+	WHERE (p_minrange <= $1) AND (p_maxrange > $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION updComputeGrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+DECLARE
+	v_qgradeid		integer;
+	msg				varchar(240);
+BEGIN
+	SELECT qgradeid INTO v_qgradeid
+	FROM qgrades
+	WHERE (qcourseid = CAST($1 as int)) AND ((lecture_marks + lecture_cat_mark) > 100);
+
+	IF(v_qgradeid is null)THEN
+		IF($3 = '1')THEN
+			UPDATE qgrades SET lecture_gradeid = getdbgradeid(round((lecture_marks + lecture_cat_mark)::double precision)::integer)
+			WHERE (qcourseid = CAST($1 as int));
+
+			msg := 'Lecturer Grade Computed Correctly';
+		END IF;
+		IF($3 = '2')THEN
+			UPDATE qgrades SET lecture_gradeid = getPGgradeid(round((lecture_marks + lecture_cat_mark)::double precision)::integer)
+			WHERE (qcourseid = CAST($1 as int));
+
+			msg := 'Lecturer Grade Computed Correctly';
+		END IF;
+	ELSE
+		msg := 'Some marks add up to more than 100';
+		RAISE EXCEPTION 'Some marks add up to more than 100';
+	END IF;
+	
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 

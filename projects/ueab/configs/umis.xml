@@ -36,6 +36,7 @@
 		</MENU>
 		<MENU name="Students" role="records,dvc">
 			<MENU name="Students">11</MENU>
+			<MENU name="Students Graduation">51</MENU>
 			<MENU name="Students Requests">21</MENU>
 			<MENU name="Students Halted">41</MENU>
 			<MENU name="Reports">
@@ -161,14 +162,16 @@
 			<TEXTFIELD w="240" title="grade Weight">gradeweight</TEXTFIELD>
 			<TEXTFIELD w="240" title="Min-Range">minrange</TEXTFIELD>
 			<TEXTFIELD w="240" title="Max-Range">maxrange</TEXTFIELD>
+			<TEXTFIELD w="150" title="PG Minimum">p_minrange</TEXTFIELD>
+			<TEXTFIELD w="150" title="PG Maximum">p_maxrange</TEXTFIELD>
 			<TEXTFIELD w="240" title="GPA Count">gpacount</TEXTFIELD>
 			<FORM name="Grades" keyfield="gradeid" table="grades" noorg="true">
 				<TEXTFIELD w="150" title="Grade ID" y="10" h="20" x="10">gradeid</TEXTFIELD>
 				<TEXTFIELD w="150" title="Grade Weight" y="10" h="20" x="290">gradeweight</TEXTFIELD>
 				<TEXTFIELD w="150" title="Minimum Range" y="30" h="20" x="10">minrange</TEXTFIELD>
 				<TEXTFIELD w="150" title="Maximum Range" y="30" h="20" x="290">maxrange</TEXTFIELD>
-				<TEXTFIELD w="150" title="P_Minimum Range" y="50" h="20" x="10">p_minrange</TEXTFIELD>
-				<TEXTFIELD w="150" title="P_Maximum Range" y="50" h="20" x="290">p_maxrange</TEXTFIELD>
+				<TEXTFIELD w="150" title="PG Minimum" y="50" h="20" x="10">p_minrange</TEXTFIELD>
+				<TEXTFIELD w="150" title="PG Maximum" y="50" h="20" x="290">p_maxrange</TEXTFIELD>
 				<CHECKBOX w="150" title="GPA Count" y="70" h="20" x="10">gpacount</CHECKBOX>
 				<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="120" h="70" x="10">details</TEXTAREA>
@@ -604,7 +607,7 @@
 				<TEXTFIELD w="150" title="Zipcode" y="70" h="20" x="10">zipcode</TEXTFIELD>
 				<TEXTFIELD w="150" title="Town" y="70" h="20" x="290">town</TEXTFIELD>
 				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="90" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
-				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county</COMBOBOX>
+				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
 				<TEXTFIELD w="150" title="Email" y="130" h="20" x="10">email</TEXTFIELD>
 				<TEXTDATE w="150" title="Birth Date" y="130" h="20" x="290">birthdate</TEXTDATE>
@@ -701,6 +704,8 @@
 				</GRID>
 			</GRID>
 		</GRID>
+	</DESK>
+	<DESK w="725" name="Students Graduation" key="51" h="650">
 		<GRID limit="200" name="Graduation Application" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true) AND (graduated = false)">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
@@ -789,6 +794,7 @@
 			<TEXTFIELD w="45" title="Credit" pattern="###.#">cumm_credits</TEXTFIELD>
 			<TEXTFIELD w="45" title="GPA" pattern="###.#">cumm_gpa</TEXTFIELD>
 			<JASPER name="Completion Letter" reportfile="degree_comp_letter.jasper"></JASPER>
+			<JASPER name="Degree Certificate" reportfile="degree_comp_cert.jasper"></JASPER>
 			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
 				<TEXTFIELD w="140" title="Major Name">majorname</TEXTFIELD>
