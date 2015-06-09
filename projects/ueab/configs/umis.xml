@@ -605,7 +605,7 @@
 				<TEXTFIELD w="150" title="Town" y="70" h="20" x="290">town</TEXTFIELD>
 				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="90" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
 				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county</COMBOBOX>
-                <TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
+				<TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
 				<TEXTFIELD w="150" title="Email" y="130" h="20" x="10">email</TEXTFIELD>
 				<TEXTDATE w="150" title="Birth Date" y="130" h="20" x="290">birthdate</TEXTDATE>
 				<TEXTFIELD w="150" title="Guardian Name" y="150" h="20" x="10">guardianname</TEXTFIELD>
@@ -632,7 +632,6 @@
 				<TEXTFIELD w="150" title="Account Number" y="330" h="20" x="10">accountnumber</TEXTFIELD>
 				<CHECKBOX w="50" title="Alumnae" lw="70" y="350" h="20" x="50">alumnae</CHECKBOX>
 				<CHECKBOX w="50" title="Staff" lw="70" y="350" h="20" x="200">staff</CHECKBOX>
-			
 			</FORM>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
@@ -1210,12 +1209,12 @@
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 			<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
 			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
-			<ACTIONS name="Semesters" keyfield="quarterid" table="quarters" key="2" isString="true">
+			<ACTIONS name="Trimester" keyfield="quarterid" table="quarters">
 				<ACTION fnct="updStudentAdd">Add Addresses</ACTION>
-				<ACTION fnct="grade_updates" phase="1">Change NG to F or UE</ACTION>
-				<ACTION fnct="grade_updates" phase="2">Change UE to F</ACTION>
-				<ACTION fnct="grade_updates" phase="3">Change DG to AW</ACTION>
-				<ACTION fnct="grade_updates" phase="4">Change IW TO F</ACTION>
+				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="1">Change NG to F or UE</ACTION>
+				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="2">Change UE to F</ACTION>
+				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="3">Change DG to AW</ACTION>
+				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="4">Change IW TO F</ACTION>
 			</ACTIONS>
 		</GRID>
 	</DESK>

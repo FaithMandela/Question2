@@ -1456,36 +1456,36 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION grade_updates(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+CREATE OR REPLACE FUNCTION grade_updates(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
 BEGIN
 	IF($3 = '1')THEN
-		UPDATE qgrades SET gradeid = 'F'
+		UPDATE qgrades SET gradeid = 'F', sys_audit_trail_id = $4::integer
 		FROM qstudents WHERE (qgrades.qstudentid = qstudents.qstudentid) 
 			AND (qgrades.dropped = false) AND (qgrades.gradeid = 'NG')
 			AND (qstudents.exam_clear = true) AND (qstudents.quarterid = $1);
 
-		UPDATE qgrades SET gradeid = 'UE'
+		UPDATE qgrades SET gradeid = 'UE', sys_audit_trail_id = $4::integer
 		FROM qstudents WHERE (qgrades.qstudentid = qstudents.qstudentid) 
 			AND (qgrades.dropped = false) AND (qgrades.gradeid = 'NG')
 			AND (qstudents.finaceapproval = true) AND (qstudents.exam_clear = false) AND (qstudents.quarterid = $1);
 	END IF;
 
 	IF($3 = '2')THEN
-		UPDATE qgrades SET gradeid = 'F'
+		UPDATE qgrades SET gradeid = 'F', sys_audit_trail_id = $4::integer
 		FROM qstudents WHERE (qgrades.qstudentid = qstudents.qstudentid) 
 			AND (qgrades.dropped = false) AND (qgrades.gradeid = 'UE')
 			AND (qstudents.quarterid = $1);
 	END IF;
 
 	IF($3 = '3')THEN
-		UPDATE qgrades SET gradeid = 'AW'
+		UPDATE qgrades SET gradeid = 'AW', sys_audit_trail_id = $4::integer
 		FROM qstudents WHERE (qgrades.qstudentid = qstudents.qstudentid) 
 			AND (qgrades.dropped = false) AND (gradeid = 'DG')
 			AND (qstudents.quarterid = $1);
 	END IF;
 	
 	IF($3 = '4')THEN
-		UPDATE qgrades SET gradeid = 'F'
+		UPDATE qgrades SET gradeid = 'F', sys_audit_trail_id = $4::integer
 		FROM qstudents WHERE (qgrades.qstudentid = qstudents.qstudentid) 
 			AND (qgrades.dropped = false) AND (gradeid = 'IW')
 			AND (qstudents.quarterid = $1);
