@@ -524,18 +524,18 @@ public class BWeb {
 
 		if(view.getName().equals("FORM")) {
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
-				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>Save</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
-				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>Save</button>\n";
 			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>Save</button>\n";
 			boolean canDel = true;
 			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false"))
 				canDel = false;
 			if(canDel && (!"{new}".equals(dataItem)))
-				buttons += "<button class='i_cross icon small' name='process' value='Delete'>Delete</button>\n";
+				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'>Delete</button>\n";
 			if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='i_key icon small' name='process' value='Audit'>Audit</button>\n";
+				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";
 		}
 
 		return buttons;
