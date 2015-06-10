@@ -345,14 +345,15 @@ public class BWeb {
 
 			if(toShow) {
 				if(smel.isLeaf()) {
+                    String icon = smel.getAttribute("icon", "fa fa-arrow-right");
 					String link = "";
 					if(smel.getAttribute("xml") == null) {
 						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
-						link += " <i class='icon-tag'></i> ";
+						link += " <i class='" + icon + "'></i> ";
 						link += smel.getAttribute("name") + "</a>";
 					} else {
 						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
-						link += " <i class='icon-tag'></i> ";
+						link += " <i class='" + icon + "'></i> ";
 						link += smel.getAttribute("name") + "</a>";
 					}
 					
@@ -362,7 +363,7 @@ public class BWeb {
 				} else {
 					submenu += "\t<li>\n";
 					submenu += "\t\t<a href='javascript:;'>";
-					submenu += "<i class='icon-basket'></i>";
+					submenu += "<i class='" + smel.getAttribute("icon", "icon-list") + "'></i>";
 					submenu += "<span class='title'>" + smel.getAttribute("name") + "</span>";
 					submenu += "<span class='arrow '></span>";
 					submenu += "</a>\n";
