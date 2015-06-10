@@ -1684,7 +1684,7 @@ System.out.println("BASE 1010 ");
 			if(!el.getValue().equals("")) {
 				JsonObjectBuilder jsColEl = Json.createObjectBuilder();
 				String mydn = "C" + String.valueOf(col++);
-				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title"));
+				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title", ""));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
 				jsColModel.add(jsColEl);
