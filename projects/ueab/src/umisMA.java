@@ -35,6 +35,7 @@ public class umisMA {
 		xml += "	<TEXTFIELD>studentname</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>birthdate</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>email</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
 		xml += "</GRID>\n";
 		xml += "</QUERY>\n";
 		
@@ -49,6 +50,7 @@ public class umisMA {
 		xml += "	<TEXTFIELD>studentname</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>birthdate</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>email</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
 		xml += "</GRID>\n";
 		xml += "</QUERY>\n";
 		
