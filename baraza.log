@@ -15364,3 +15364,60 @@ Sun Jun 07 13:18:08 EAT 2015 org.baraza.DB.BDB connectDB
 SEVERE : Database connection SQL Error : com.microsoft.sqlserver.jdbc.SQLServerException: The TCP/IP connection to the host 192.168.0.78, port 1433 has failed. Error: "Network is unreachable. Verify the connection properties, check that an instance of SQL Server is running on the host and accepting TCP/IP connections at the port, and that no firewall is blocking TCP connections to the port.".
 Sun Jun 07 13:18:08 EAT 2015 org.baraza.server.data.BData process
 INFO : ---------- Transfer Thread completed
+Wed Jun 10 10:32:35 EAT 2015 org.baraza.server.data.BData process
+INFO : ---------- Transfer Thread Started
+Wed Jun 10 10:32:36 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Wed Jun 10 10:32:36 EAT 2015 org.baraza.server.mail.BMail <init>
+SEVERE : Mail User sysadmin
+Wed Jun 10 10:32:36 EAT 2015 org.baraza.server.mail.BMail <init>
+SEVERE : Mail exception! javax.mail.MessagingException: Connection refused;
+  nested exception is:
+	java.net.ConnectException: Connection refused
+Wed Jun 10 10:32:36 EAT 2015 org.baraza.DB.BQuery makeQuery
+SEVERE : Get Table read and Metadata Error : org.postgresql.util.PSQLException: ERROR: relation "email" does not exist
+  Position: 124
+Wed Jun 10 10:32:36 EAT 2015 org.baraza.DB.BQuery makeQuery
+SEVERE : SQL SELECT email_id, travelorderidentifier, pcc, son, phonenbr, passangername, recordlocator, hosteventtimestamp, message
+FROM email
+ORDER BY email_id
+Wed Jun 10 10:33:23 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Wed Jun 10 10:33:23 EAT 2015 org.baraza.server.mail.BMail <init>
+SEVERE : Mail User sysadmin
+Wed Jun 10 10:33:23 EAT 2015 org.baraza.server.mail.BMail <init>
+SEVERE : Mail exception! javax.mail.MessagingException: Connection refused;
+  nested exception is:
+	java.net.ConnectException: Connection refused
+Wed Jun 10 10:34:23 EAT 2015 org.baraza.server.mail.BMail <init>
+SEVERE : Mail User sysadmin
+Wed Jun 10 10:34:23 EAT 2015 org.baraza.server.mail.BMail <init>
+SEVERE : Mail exception! javax.mail.MessagingException: Connection refused;
+  nested exception is:
+	java.net.ConnectException: Connection refused
+Wed Jun 10 10:34:50 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Wed Jun 10 10:34:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : ---------- Escalation Client Run for : UMIS Mail
+Wed Jun 10 10:34:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, sys_emails.title as emailsubject, entitys.user_name as emailaddress, entitys.entity_name, entitys.user_name, entitys.first_password, sys_emails.details FROM sys_emails, sys_emailed, entitys  WHERE (entitys.entity_id = sys_emailed.table_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.emailed = false)
+Wed Jun 10 10:34:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, get_phase_email(vw_approvals.approval_entity_id) as emailaddress, vw_approvals.phase_narrative as emailsubject, vw_approvals.advice_email, vw_approvals.table_id, vw_approvals.notice_file FROM sys_emailed, vw_approvals  WHERE (vw_approvals.approval_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'approvals') AND (sys_emailed.email_type = 1)
+Wed Jun 10 10:34:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, vw_approvals.org_primary_email as emailaddress, vw_approvals.phase_narrative as emailsubject, vw_approvals.notice_email FROM sys_emailed, vw_approvals  WHERE (vw_approvals.approval_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)      AND (sys_emailed.table_name = 'approvals') AND (sys_emailed.email_type = 2)
+Wed Jun 10 10:34:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, vw_workflow_approvals.org_primary_email as emailaddress, vw_workflow_approvals.workflow_narrative as emailsubject, vw_workflow_approvals.approve_email FROM sys_emailed, vw_workflow_approvals  WHERE (vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 1)
+Wed Jun 10 10:34:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, vw_workflow_approvals.org_primary_email as emailaddress, vw_workflow_approvals.workflow_narrative as emailsubject, vw_workflow_approvals.reject_email FROM sys_emailed, vw_workflow_approvals  WHERE (vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 2)
+Wed Jun 10 10:35:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : ---------- Escalation Client Run for : UMIS Mail
+Wed Jun 10 10:35:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, sys_emails.title as emailsubject, entitys.user_name as emailaddress, entitys.entity_name, entitys.user_name, entitys.first_password, sys_emails.details FROM sys_emails, sys_emailed, entitys  WHERE (entitys.entity_id = sys_emailed.table_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.emailed = false)
+Wed Jun 10 10:35:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, get_phase_email(vw_approvals.approval_entity_id) as emailaddress, vw_approvals.phase_narrative as emailsubject, vw_approvals.advice_email, vw_approvals.table_id, vw_approvals.notice_file FROM sys_emailed, vw_approvals  WHERE (vw_approvals.approval_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'approvals') AND (sys_emailed.email_type = 1)
+Wed Jun 10 10:35:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, vw_approvals.org_primary_email as emailaddress, vw_approvals.phase_narrative as emailsubject, vw_approvals.notice_email FROM sys_emailed, vw_approvals  WHERE (vw_approvals.approval_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)      AND (sys_emailed.table_name = 'approvals') AND (sys_emailed.email_type = 2)
+Wed Jun 10 10:35:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, vw_workflow_approvals.org_primary_email as emailaddress, vw_workflow_approvals.workflow_narrative as emailsubject, vw_workflow_approvals.approve_email FROM sys_emailed, vw_workflow_approvals  WHERE (vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 1)
+Wed Jun 10 10:35:51 EAT 2015 org.baraza.server.escalation.BEscalation task
+INFO : SELECT sys_emailed_id, vw_workflow_approvals.org_primary_email as emailaddress, vw_workflow_approvals.workflow_narrative as emailsubject, vw_workflow_approvals.reject_email FROM sys_emailed, vw_workflow_approvals  WHERE (vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 2)
