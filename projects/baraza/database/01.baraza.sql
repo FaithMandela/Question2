@@ -650,7 +650,7 @@ CREATE VIEW tomcat_users AS
 	FROM (Entity_subscriptions 
 		INNER JOIN entitys ON Entity_subscriptions.entity_id = entitys.entity_id)
 		INNER JOIN entity_types ON Entity_subscriptions.entity_type_id = entity_types.entity_type_id
-	WHERE entitys.is_Active = true;
+	WHERE entitys.is_active = true;
 
 CREATE OR REPLACE FUNCTION default_currency(varchar(16)) RETURNS integer AS $$
 	SELECT orgs.currency_id
