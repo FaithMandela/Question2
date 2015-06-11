@@ -399,14 +399,13 @@ public class BWebBody extends BQuery {
      	for(BElement el : view.getElements()) {
 			if(el.getAttribute("tab") != null) {
 				if(!tabNotDone && !tab.equals(el.getAttribute("tab"))) response.append("</div>");
-				if(tabNotDone && hasTabs) { 
-					response.append(tabs); 
-					tabNotDone = false; 
-				}
+				if(tabNotDone && hasTabs) response.append(tabs);
 				if(!tab.equals(el.getAttribute("tab"))) {
 					tab = el.getAttribute("tab");
-					response.append("<div class='tab-pane' id='" + tab + "'>\n");
+                    if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab + "'>\n"); 
+                    else response.append("<div class='tab-pane' id='" + tab + "'>\n");
 				}
+                if(tabNotDone && hasTabs) tabNotDone = false; 
 			} else if(!tabNotDone) {
 				response.append("</div>\n</div>\n");
 				tabNotDone = true;
