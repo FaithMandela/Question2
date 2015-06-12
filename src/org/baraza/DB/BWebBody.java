@@ -385,9 +385,9 @@ public class BWebBody extends BQuery {
 			}
 		}
 		tabs.append("			</ul>\n");
-		tabs.append("		<div>\n");
-		tabs.append("	<div>\n");
-		tabs.append("<div>\n");
+		tabs.append("		</div>\n");
+		tabs.append("	</div>\n");
+		tabs.append("</div>\n");
 		tabs.append("<div class='tab-content'>\n");
 			
 		int i = 0;
@@ -395,6 +395,7 @@ public class BWebBody extends BQuery {
 		
 		boolean noSpan = true;
 		boolean tabNotDone = true;
+		Integer formCols = new Integer(view.getAttribute("cols", "1"));
 		tab = "";
      	for(BElement el : view.getElements()) {
 			if(el.getAttribute("tab") != null) {
@@ -413,31 +414,9 @@ public class BWebBody extends BQuery {
 			
 			// Get the elements and determine creation of rows
 			if(noSpan) response.append("	<div class='row'>\n");
-			response.append(getField(el, formLinkData, eof));
+			response.append(getField(el, formLinkData, eof, formCols));
 			if(el.getAttribute("span") == null) { response.append("	</div>\n"); noSpan = true; }
 			else noSpan = false;
-			
-			/*if(el.getAttribute("titlepos","left").equals("top")) {
-				response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'></td>\n<td><b>" + el.getAttribute("title")  + "</b>\n</td></tr>\n<tr>\n<td>");
-				} else {
-					response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'>" + el.getAttribute("title"));
-				}
-
-				if(el.getName().equals("GRIDBOX")) {
-					response.append("<a  class='btn i_magnifying_glass icon small' href='#'");
-					if(el.getAttribute("webgrid") == null) {
-						response.append(" onClick=\"myClientWin('b_combolist.jsp");
-						response.append("?field=" + el.getValue());
-					} else {
-						response.append(" onClick=\"myClientWin('b_searchlist.jsp");
-						response.append("?view=" + el.getAttribute("webgrid") + ":0");
-					}
-					if(formLinkData != null) response.append("&formlinkdata=" + formLinkData);
-					response.append("','win2')\"");
-					response.append("name=\"anchor1\" id=\"anchor1\"> select </a>");
-				}
-				response.append(" : </td><td>");
-			}*/
 		}
 		
 		// Close and open span and tabs
@@ -451,14 +430,14 @@ public class BWebBody extends BQuery {
     }
     
     
-    public String getField(BElement el, String formLinkData, boolean eof) {
+    public String getField(BElement el, String formLinkData, boolean eof, Integer formCols) {
 		StringBuilder response = new StringBuilder();
 		
 		String defaultvalue = el.getAttribute("default", "");
 		String default_fnct = view.getAttribute("default_fnct");
 		if(default_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
 		
-		response.append("<div class='col-md-6'>\n");
+		if(formCols > 1) response.append("<div class='col-md-6'>\n");
 		response.append("	<div class='form-group'>\n");
 		response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
 		response.append("			<div class='col-md-9'>\n");
@@ -584,6 +563,7 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 
 			String nodefault = el.getAttribute("nodefault");
@@ -649,6 +629,7 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 			
 			String myval = null;
@@ -779,7 +760,7 @@ public class BWebBody extends BQuery {
 		
 		response.append("		</div>\n");
 		response.append("	</div>\n");
-		response.append("</div>\n");
+		if(formCols > 1) response.append("</div>\n");
 		
 		return response.toString();
 	}

@@ -503,15 +503,15 @@ public class BWeb {
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-refresh'></i>   Refresh</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
+			
+			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'>Submit</button>\n";			
 		}
 		
 		
 		if(isForm()) {
 			buttons += getFormButtons();
 			//buttons += getAudit();
-		} else if(isEditField()) {
-			buttons += "<button class='submit' name='process' value='Submit'>Submit</button>\n";
-		}
+		} 
 
 		buttons += "</div>\n";
 
@@ -524,12 +524,13 @@ public class BWeb {
 		String buttons = "";
 
 		if(view.getName().equals("FORM")) {
+			String saveBtn = view.getAttribute("save.button", "Save");
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
 			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
 			boolean canDel = true;
 			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false"))
 				canDel = false;

@@ -962,7 +962,7 @@
 			<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
-			<FORM tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
+			<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
 				<COMBOBOX w="430" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>

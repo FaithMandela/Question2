@@ -986,14 +986,49 @@ INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automa
 UPDATE ledger SET print_time = null, is_printed = false, is_filled = false
 WHERE cast(print_time as date) = '2011-05-26' AND (vat_sign is null);
 
+DROP FUNCTION get_ChequeNo(int);
 
 CREATE FUNCTION get_ChequeNo(int) RETURNS varchar(50) AS $$
-	SELECT chequenumber 
-	FROM receipts
-	WHERE (ledgerid = $1)
-$$ LANGUAGE SQL;
+DECLARE
+	v_ctid		int;
+	v_chno		varchar(50);
+BEGIN
+	
+	SELECT credit_transaction_id INTO v_ctid
+	FROM ledger
+	WHERE (id = $1);
+	
+	IF(v_ctid is null)THEN
+		SELECT chequenumber INTO v_chno
+		FROM receipts
+		WHERE (ledgerid = $1);
+	ELSE
+		SELECT  trim(replace(substring(description from position('txncd :' in description) for 25), 'txncd :', '')) INTO v_chno
+		FROM external_payment_detail
+		WHERE (id = v_ctid);
+	END IF;
+	
+	RETURN v_chno;
+END;
+$$ LANGUAGE plpgsql;
+
 
 
 -------------------- update ledger balance
 
+
+CREATE OR REPLACE FUNCTION tg_insert_ledger() RETURNS trigger AS $$
+BEGIN
+
+	NEW.balance := (SELECT (-1 * (NEW.total + COALESCE((SELECT SUM(l.total)
+	FROM ledger AS l
+	WHERE l.created < NEW.created AND l.client_roid = NEW.client_roid), 0.0))));
+	
+	IF(NEW.credit_transaction_id is not null)THEN
+		NEW.documentnumber := NEW.credit_transaction_id;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 

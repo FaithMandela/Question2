@@ -10,18 +10,18 @@
 		</MENU>
 	</MENU>
 	<DESK w="700" name="SMS" key="1" h="500">
-		<GRID name="Outbox" keyfield="sms_id" orderby="sms_id desc" table="vw_sms" where="(folder_id = 0) AND (address_group_id is null)">
+		<GRID name="Outbox" keyfield="sms_id" orderby="sms_id desc" table="sms" where="(folder_id = 0) AND (address_group_id is null)">
 			<TEXTFIELD w="75" title="SMS ID">sms_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Tel. Number">sms_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tel. Number">sms_numbers</TEXTFIELD>
 			<CHECKBOX w="75" title="Message Ready" format="boolean">message_ready</CHECKBOX>
 			<CHECKBOX w="75" title="Sent" format="boolean">sent</CHECKBOX>
 			<TEXTAREA w="175" title="message">message</TEXTAREA>
-			<FORM name="SMS" keyfield="sms_id" table="sms">
+			<FORM save.button="Send" name="SMS" keyfield="sms_id" table="sms">
 				<DEFAULT default="0">folder_id</DEFAULT>
 				<USERFIELD>entity_id</USERFIELD>
-				<TEXTAREA w="430" title="Numbers" y="120" h="40" x="10">sms_numbers</TEXTAREA>
-				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10" rows="4">message_ready</CHECKBOX>
-				<TEXTAREA w="430" tab="Message" y="50" h="70" x="10">message</TEXTAREA>
+				<TEXTAREA w="430" title="Numbers" placeholder="Enter a list of numbers separate with a comma" required="true" y="120" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
+				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10">message_ready</CHECKBOX>
+				<TEXTAREA w="430" placeholder="Enter the message" tab="Message" required="true" y="50" h="70" x="10" rows="8">message</TEXTAREA>
 				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">
@@ -52,12 +52,12 @@
 			<CHECKBOX w="75" title="Sent" format="boolean">sent</CHECKBOX>
 			<TEXTFIELD w="75" title="Address Group Name">address_group_name</TEXTFIELD>
 			<TEXTAREA w="175" title="message">message</TEXTAREA>
-			<FORM name="SMS" keyfield="sms_id" table="sms">
+			<FORM save.button="Send" name="SMS" keyfield="sms_id" table="sms">
 				<DEFAULT default="0">folder_id</DEFAULT>
 				<USERFIELD>entity_id</USERFIELD>
-				<COMBOBOX w="430" title="Group" lptable="address_groups" y="30" h="20" x="10" lpfield="address_group_name">address_group_id</COMBOBOX>
-				<CHECKBOX w="150" title="Message Ready" y="30" h="20" x="10">message_ready</CHECKBOX>
-				<TEXTAREA w="430" tab="Message" y="50" h="70" x="10">message</TEXTAREA>
+				<COMBOBOX w="430" title="Group" lptable="address_groups" required="true" y="30" h="20" x="10" lpfield="address_group_name">address_group_id</COMBOBOX>
+				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10">message_ready</CHECKBOX>
+				<TEXTAREA w="430" placeholder="Enter the message" tab="Message" required="true" y="50" h="70" x="10">message</TEXTAREA>
 				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -123,7 +123,7 @@
 				</FORM>
 			</GRID>
 			<FORM name="Address" keyfield="address_id" table="address">
-				<DEFAULT title="Table Name" default="sms">table_name</DEFAULT>
+				<DEFAULT default="sms">table_name</DEFAULT>
 				<COMBOBOX w="430" title="Address Type" lptable="address_types" y="10" h="20" x="10" lpfield="address_type_name">address_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="30" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Name" y="50" h="20" x="10">address_name</TEXTFIELD>
