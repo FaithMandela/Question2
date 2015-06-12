@@ -854,7 +854,7 @@ System.out.println("BASE 1010 ");
 		}
 
 		if(operations != null)
-			operations = "<select class='fnctcombobox' name='operation'>" + operations + "</select>";
+			operations = "<select class='fnctcombobox form-control ' name='operation'>" + operations + "</select>";
 
 		return operations;
 	}
@@ -1219,14 +1219,14 @@ System.out.println("BASE 1010 ");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
 
 		if(view.getName().equals("GRID") && view.getAttribute("display", "grid").equals("grid")) {
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : view.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
 			}
 			fieldTitles += "</select>";
 		} else if (comboField != null) {
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : sview.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1243,7 +1243,7 @@ System.out.println("BASE 1010 ");
 		String field = request.getParameter("field");
 
 		if(view.getName().equals("GRID")) {
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : view.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1251,7 +1251,7 @@ System.out.println("BASE 1010 ");
 			fieldTitles += "</select>";
 		} else if(view.getName().equals("FORM") && (field != null)) {
 			BElement sview = view.getElement(field).getElement(0);
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : sview.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
