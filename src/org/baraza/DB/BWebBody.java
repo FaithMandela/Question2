@@ -625,6 +625,72 @@ public class BWebBody extends BQuery {
 			}
 			cmbrs.close();
 			response.append("</select>\n");
+		} else if(el.getName().equals("MULTISELECT")) {
+			response.append("<select name='" + el.getValue() + "' multiple='multiple' ");
+			if(el.getAttribute("class") == null) response.append(" class='multi-select form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
+			response.append(">");
+
+			String nodefault = el.getAttribute("nodefault");
+			String lptable = el.getAttribute("lptable");
+			String lpfield = el.getAttribute("lpfield");
+			String lpkey = el.getAttribute("lpkey");
+			String cmb_fnct = el.getAttribute("cmb_fnct");
+			if(lpkey == null) lpkey = el.getValue();
+
+			String mysql = "";
+			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
+			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
+			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
+
+			String cmbWhereSql = el.getAttribute("where");
+			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
+				if(cmbWhereSql == null) cmbWhereSql = "(";
+				else cmbWhereSql += " AND (";
+				cmbWhereSql += orgID + "=" + userOrg + ")";
+			}
+
+			if(el.getAttribute("user") != null) {
+				String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
+				if(cmbWhereSql == null) cmbWhereSql = userFilter;
+				else cmbWhereSql += " AND " + userFilter;
+			}
+
+			String tableFilter = null;
+			String linkField = el.getAttribute("linkfield");
+			if((linkField != null) && (formLinkData != null)) {
+				if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
+				else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
+
+				if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
+				else cmbWhereSql += " AND (" + tableFilter + ")";
+			}
+
+			if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
+
+			String orderBySql = el.getAttribute("orderby");
+			if(orderBySql == null) mysql += " ORDER BY " + lpfield;
+			else mysql += " ORDER BY " + orderBySql;
+
+			if(nodefault != null) response.append("<option></option>");
+
+			BQuery cmbrs = new BQuery(db, mysql);
+			while (cmbrs.moveNext()) {
+				response.append("<option");
+				if(eof) {
+					if(getString(el.getValue())!=null) {
+						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
+							response.append(" selected='selected'");
+					}
+				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
+					response.append(" selected='selected'");
+				}
+				response.append(" value='" + cmbrs.getString(lpkey));
+				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
+			}
+			cmbrs.close();
+			response.append("</select>\n");
 		} else if(el.getName().equals("COMBOLIST")) {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='form-control'");

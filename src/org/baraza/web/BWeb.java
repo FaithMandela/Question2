@@ -477,7 +477,7 @@ public class BWeb {
 
 		boolean showButtons = false;
 
-		if(view.getName().equals("GRID") ) {
+		if(view.getName().equals("GRID")) {
 			if(view.getAttribute("display", "grid").equals("grid")) showButtons = true;
 			if(view.getAttribute("buttons", "noshow").equals("show")) showButtons = true;
 		}
@@ -907,12 +907,12 @@ System.out.println("BASE 1010 ");
 		return mystr;
 	}
 
-	public String setOperations(String operation, HttpServletRequest request) {
+	public String setOperations(String operation, String ids, HttpServletRequest request) {
 		String mystr = "";
 		boolean fnctError = false;
 		String mysql;
 
-		String[] values = request.getParameterValues("keyfield");
+		String[] values = ids.split(",");
 
 		if((values != null) && (view.getElementByName("ACTIONS") != null)) {
 			BElement opt = view.getElementByName("ACTIONS");
@@ -1049,6 +1049,7 @@ System.out.println("BASE 1010 ");
 					qForm.updateField(el.getValue(),  dataValue);
 				} else if(el.getName().equals("COMBOLIST")) {
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
+				} else if(el.getName().equals("MULTISELECT")) {
 				} else if(el.getName().equals("TEXTDECIMAL")) {
 					dataValue = dataValue.replace(",", "");
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
@@ -1732,6 +1733,7 @@ System.out.println("BASE 1010 ");
 		return view.getAttribute("name", ""); 
 	}
 
+	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }
 	public String getPictureURL() { return pictureURL; }
 	public BDB getDB() { return db; }
