@@ -854,7 +854,7 @@ System.out.println("BASE 1010 ");
 		}
 
 		if(operations != null)
-			operations = "<select class='fnctcombobox form-control ' name='operation'>" + operations + "</select>";
+			operations = "<select class='fnctcombobox form-control ' id='operation' name='operation'>" + operations + "</select>";
 
 		return operations;
 	}

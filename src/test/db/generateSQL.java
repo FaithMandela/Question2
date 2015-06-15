@@ -20,8 +20,10 @@ public class generateSQL {
     	JFrame frame = new JFrame("Database Metadata");
 
 		try{
+			Class.forName("interbase.interclient.Driver");
+			
 			//Connection con = DriverManager.getConnection("jdbc:mysql://192.168.0.20:3306/acordhr", "root", "");
-			Connection con = DriverManager.getConnection("jdbc:postgresql://192.168.0.3/avreporting", "root", "invent2k");
+			Connection con = DriverManager.getConnection("jdbc:interbase://192.168.1.104/C:/Programs/Database/UEABPAYROLL.GDB", "SYSDBA", "masterkey");
 			
 			DatabaseMetaData dbmd = con.getMetaData();
 			String[] types = {"TABLE"};
@@ -39,9 +41,9 @@ public class generateSQL {
 				int numberOfCols = rsmd.getColumnCount();
 
 				String fieldCons = "";				
-				//System.out.println("CREATE TABLE " + table_name + " (");
-				System.out.println("CREATE FOREIGN TABLE " + table_name + "_i (");
-				//System.out.println("	id						serial primary key,");
+				System.out.println("CREATE TABLE import." + table_name + " (");
+				//System.out.println("CREATE FOREIGN TABLE " + table_name + "_i (");
+				System.out.println("	id						serial primary key,");
 				for(int i = 1; i <= numberOfCols; i++) {
 					String field_name = rsmd.getColumnName(i);
 					String column_type = rsmd.getColumnTypeName(i);
@@ -66,10 +68,10 @@ public class generateSQL {
 
 					System.out.println(fieldCons);
 				}
-				//System.out.println(");\n");
-				System.out.println(")\nSERVER myserver1 OPTIONS(table_name '" + table_name + "');");
-				System.out.println("\n" + inStr + ")");
-				System.out.println(invStr + "\nFROM " + table_name + "_i;\n");
+				System.out.println(");\n");
+				//System.out.println(")\nSERVER myserver1 OPTIONS(table_name '" + table_name + "');");
+				//System.out.println("\n" + inStr + ")");
+				//System.out.println(invStr + "\nFROM " + table_name + "_i;\n");
 				
 				rst.close();
 				stmt.close();
@@ -98,8 +100,10 @@ public class generateSQL {
 			frame.setSize(550, 200);
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
-    	} catch (SQLException e) {
-			log.severe("Error in Query : " + e.toString());
+		} catch (ClassNotFoundException ex) {
+			log.severe("Cannot find the database driver classes. : " + ex);
+    	} catch (SQLException ex) {
+			log.severe("Error in Query : " + ex.toString());
        	}
       
     }
