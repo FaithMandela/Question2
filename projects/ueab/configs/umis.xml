@@ -155,6 +155,9 @@
 			<MENU name="Reset Password">28</MENU>
 			<MENU name="Trimester Corrections" role="records">525</MENU>
 		</MENU>
+		<MENU name="Alumni" role="records,dvc">
+			<MENU name="Graduated Students">780</MENU>
+		</MENU>
 	</MENU>
 	<DESK w="700" name="Grades" key="1" h="500">
 		<GRID name="Grades" keyfield="gradeid" orderby="gradeweight desc, gradeid" table="grades" noorg="true">
@@ -744,6 +747,7 @@
 				<TEXTDATE w="150" title="Graduation Date" tab="Graduating" y="90" h="20" x="290">graduatedate</TEXTDATE>
 				<TEXTAREA w="530" tab="Details" y="150" h="120" x="10">details</TEXTAREA>
 			</FORM>
+			<JASPER name="Grade Summary" reportfile="degree_comp_letter.jasper"></JASPER>
 			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
 				<TEXTFIELD w="140" title="Major Name">majorname</TEXTFIELD>
@@ -793,7 +797,7 @@
 			<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
 			<TEXTFIELD w="45" title="Credit" pattern="###.#">cumm_credits</TEXTFIELD>
 			<TEXTFIELD w="45" title="GPA" pattern="###.#">cumm_gpa</TEXTFIELD>
-			<JASPER name="Completion Letter" reportfile="degree_comp_letter.jasper"></JASPER>
+			<JASPER name="Grade Status" reportfile="gradesummary_d.jasper"></JASPER>
 			<JASPER name="Degree Certificate" reportfile="degree_comp_cert.jasper"></JASPER>
 			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
