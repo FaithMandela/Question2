@@ -1,0 +1,5 @@
+#ignore report binaries
+/projects/sacco/reports/*.jasper
+
+#ignore documents folder
+/projects/sacco/docs
