@@ -760,8 +760,11 @@ public class BQuery {
 				else addNewBlock.put(orgID, "0");
 			}
 		}
+		
+		
 
 		String usql = "INSERT INTO " + tableName + " (";
+		if(db.getDBSchema() != null) usql = "INSERT INTO " + db.getDBSchema() + "." + tableName + " (";
 		String psql = ") VALUES (";
 		boolean ff = true;
 		for (String field : addNewBlock.keySet()) {
@@ -1375,13 +1378,13 @@ public class BQuery {
 		try {
 			imp.setAttribute("name", initCap(tableName));
 			imp.setAttribute("keyfield", rsmd.getColumnLabel(1));
-			imp.setAttribute("table", tableName);
 			imp.setAttribute("noaudit", "true");
+			imp.setAttribute("table", tableName);
 
 			exp.setAttribute("name", initCap(tableName));
 			exp.setAttribute("keyfield", rsmd.getColumnLabel(1));
 			exp.setAttribute("table", tableName);
-
+			
 			for(int column=1; column<=colnum; column++) {
 				String colType = getFormField(column);
 				BElement fel = new BElement(colType);

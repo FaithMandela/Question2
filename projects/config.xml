@@ -74,6 +74,5 @@
 	<SERVER dbpath="jdbc:postgresql://localhost/metropol" dbname="metropol" path="metropol" xmlfile="sms.metropol.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Metropol SMS Server</SERVER>
 	<SERVER dbpassword="Imis2goke" dbpath="jdbc:oracle:thin:@172.100.3.30:1542:timis" noaudit="true" dbname="timis" path="ob" xmlfile="mail.xml" disable="true" dbclass="oracle.jdbc.driver.OracleDriver" dbusername="erpdbuser">CCKIMIS Mailing Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="true" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
-
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
 </APPLIST>

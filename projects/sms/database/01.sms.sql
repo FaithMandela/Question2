@@ -108,6 +108,7 @@ CREATE TABLE sms (
 	retries					integer default 0 not null,
 	last_retry				timestamp default now(),
 	
+	addresses				text,
 	senderAddress			varchar(64),
 	serviceId				varchar(64), 
 	spRevpassword			varchar(64), 
@@ -277,20 +278,20 @@ CREATE TRIGGER ins_sms_trans BEFORE INSERT ON sms_trans
 
 CREATE OR REPLACE FUNCTION ins_sms() RETURNS trigger AS $$
 BEGIN
-	IF(NEW.message is not null) THEN
-		IF(upper(substr(NEW.message, 1, 2)) = '.C') THEN
-			NEW.folder_id := 4;
-		END IF;
-		IF (NEW.sms_number is null) AND (NEW.senderAddress is not null) THEN
-			NEW.sms_number := '254' || replace(NEW.senderAddress, 'tel:', '');
+	
+	IF(NEW.addresses is not null)THEN
+		IF(NEW.sms_numbers is null) THEN
+			NEW.sms_numbers := NEW.addresses;
+		ELSE
+			NEW.sms_numbers := NEW.sms_numbers || ',' || NEW.addresses;
 		END IF;
 	END IF;
-
+	
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_sms BEFORE INSERT ON sms
+CREATE TRIGGER ins_sms BEFORE INSERT OR UPDATE ON sms
     FOR EACH ROW EXECUTE PROCEDURE ins_sms();
 
 CREATE OR REPLACE FUNCTION aft_sms() RETURNS trigger AS $$

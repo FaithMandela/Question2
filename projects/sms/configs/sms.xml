@@ -19,9 +19,10 @@
 			<FORM save.button="Send" name="SMS" keyfield="sms_id" table="sms">
 				<DEFAULT default="0">folder_id</DEFAULT>
 				<USERFIELD>entity_id</USERFIELD>
-				<TEXTAREA w="430" title="Numbers" placeholder="Enter a list of numbers separate with a comma" required="true" y="120" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
+				<TEXTAREA w="430" title="Numbers" placeholder="Enter a list of numbers separate with a comma" y="120" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
 				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10">message_ready</CHECKBOX>
 				<TEXTAREA w="430" placeholder="Enter the message" tab="Message" required="true" y="50" h="70" x="10" rows="8">message</TEXTAREA>
+				<MULTISELECT w="430" lptable="address" tab="Addresses" lpkey="mobile" y="50" h="70" x="10" rows="8" lpfield="address_name">addresses</MULTISELECT>
 				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">

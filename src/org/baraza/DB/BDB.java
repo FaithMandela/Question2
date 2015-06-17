@@ -49,6 +49,7 @@ public class BDB {
 		dbTemplate = dbconfig.getAttribute("dbtemplate");
 		dbschema = dbconfig.getAttribute("dbschema");
 		orgID = dbconfig.getAttribute("org");
+		if(dbconfig.getAttribute("readonly", "false").equals("true")) readOnly = true;
 
 		connectDB(dbclass, dbpath, dbusername, dbpassword);
 	}
@@ -561,6 +562,7 @@ public class BDB {
 	public void setOrgID(String orgID) { this.orgID = orgID; }
 	public String getOrgWhere() { return user.getOrgWhere(); }
 	public String getOrgAnd() { return user.getOrgAnd(); }
+	public String getDBSchema() { return dbschema; }
 
 	public String getStartView() { return user.getStartView(); }
 

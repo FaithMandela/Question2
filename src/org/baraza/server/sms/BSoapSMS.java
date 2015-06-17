@@ -72,6 +72,7 @@ public class BSoapSMS {
 		serverIP = node.getAttribute("serverip", "192.168.9.177");
 		smsReceiver = node.getAttribute("smsreceiver");
 		startCorrelator = node.getAttribute("startCorrelator", "12345");
+		processdelay = Integer.valueOf(node.getAttribute("processdelay", "10000")).intValue();
 
 		String orgSQL = "SELECT org_id, sp_id, service_id, sender_name, sms_rate FROM orgs WHERE (is_active = true) ORDER BY org_id";
 		smsOrgs =  new HashMap<String, String[]>();
@@ -215,9 +216,11 @@ public class BSoapSMS {
 			String sendResults = sendSMS(number, message, linkId, smsID, orgID, correlator);
 			
 			if(sendResults == null) {	// retry once for a error on the sending
-				if(retry < 2) retry++;
+				try { Thread.sleep(200); } catch(InterruptedException ex) {}
+				if(retry < 4) retry++;
 				else retry = 0;
 			} else if(sendResults.equals("SVC0901")) { // retry twice for a error on the sending
+				try { Thread.sleep(200); } catch(InterruptedException ex) {}
 				if(retry < 4) retry++;
 				else retry = 0;
 			} else {

@@ -792,7 +792,7 @@ CREATE VIEW vw_department_roles AS
 	FROM department_roles INNER JOIN departments ON department_roles.department_id = departments.department_id
 		LEFT JOIN department_roles as ln_department_roles ON department_roles.ln_department_role_id = ln_department_roles.department_role_id;
 		
-CREATE TABLE vw_pay_scales AS
+CREATE VIEW vw_pay_scales AS
 	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
 		pay_scales.org_id, pay_scales.pay_scale_id, pay_scales.pay_scale_name,
 		pay_scales.min_pay, pay_scales.max_pay, pay_scales.details

@@ -23,20 +23,22 @@ public class generateSQL {
 			Class.forName("interbase.interclient.Driver");
 			
 			//Connection con = DriverManager.getConnection("jdbc:mysql://192.168.0.20:3306/acordhr", "root", "");
-			Connection con = DriverManager.getConnection("jdbc:interbase://192.168.1.104/C:/Programs/Database/UEABPAYROLL.GDB", "SYSDBA", "masterkey");
-			
+			Connection con = DriverManager.getConnection("jdbc:interbase://192.168.0.179/C:/Programs/Database/UEABPAYROLL.GDB", "SYSDBA", "masterkey");
+
 			DatabaseMetaData dbmd = con.getMetaData();
 			String[] types = {"TABLE"};
-			ResultSet rs = dbmd.getTables(null, null,"%",types);
-			
+			ResultSet rs = dbmd.getTables(null, null, "%", types);
+
     	    while(rs.next()) {
 				String table_schema = rs.getString("TABLE_SCHEM");
 				String table_name = rs.getString("TABLE_NAME");
 				String inStr = "INSERT INTO " + table_name + "(";
 				String invStr = "SELECT ";
 
+				if(table_schema == null) table_schema = "";
+				else table_schema += ".";
 				Statement stmt = con.createStatement();
-				ResultSet rst = stmt.executeQuery("SELECT * FROM " + table_schema + "." + table_name);
+				ResultSet rst = stmt.executeQuery("SELECT * FROM " + table_schema + table_name);
 				ResultSetMetaData rsmd = rst.getMetaData();
 				int numberOfCols = rsmd.getColumnCount();
 

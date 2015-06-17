@@ -1050,6 +1050,14 @@ System.out.println("BASE 1010 ");
 				} else if(el.getName().equals("COMBOLIST")) {
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
 				} else if(el.getName().equals("MULTISELECT")) {
+					String msv = null;
+					if(request.getParameterValues(el.getValue()) != null) {
+						for(String msvs : request.getParameterValues(el.getValue())) {
+							if(msv == null) msv = msvs;
+							else msv += "," + msvs;
+						}
+					}
+					saveMsg += qForm.updateField(el.getValue(), msv);
 				} else if(el.getName().equals("TEXTDECIMAL")) {
 					dataValue = dataValue.replace(",", "");
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
