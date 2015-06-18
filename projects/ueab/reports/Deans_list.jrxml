@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Deans_list" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="47822f84-908a-4262-b861-08ce107f3dd1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="240"/>
+	<parameter name="award_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT studentname, quarter, quarteryear, gpa
+FROM studentquarterlist
+WHERE gpa >= 3.5 limit 4;]]>
+	</queryString>
+	<field name="studentname" class="java.lang.String"/>
+	<field name="quarter" class="java.lang.String"/>
+	<field name="quarteryear" class="java.lang.String"/>
+	<field name="gpa" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="211" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="319" y="108" width="135" height="103" uuid="e1f31d0d-c88d-40bf-81d3-8b67d26d0875"/>
+				<imageExpression><![CDATA["/opt/baraza/projects/ueab/reports/baraza_logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="1" y="37" width="752" height="60" uuid="86f8229e-4f38-4d48-b6a7-4191c08b81b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIVERSITY OF EASTERN AFRICA, BARATON]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="239" splitType="Stretch">
+			<line>
+				<reportElement x="231" y="196" width="310" height="1" uuid="2fa9b934-ccad-463c-b544-6145405fe6c1"/>
+			</line>
+			<staticText>
+				<reportElement x="-1" y="197" width="752" height="19" uuid="e79d8964-d2ee-408e-8605-82ccc4082d82"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prof. Mwangi Wa-Githumo ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="1" y="23" width="752" height="141" uuid="ae9a1c0e-5178-408b-82fc-de09ee11218e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="Times New Roman" size="18" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PRESENTS TO<br>" + $F{studentname}  + "<br>Certificate of academic achievement</br>"+ "<br>For <b><i>Dean's List</b></i><br>" + "With a Current G.P.A of 3.50, <br> "  + $F{quarter} + " Quarter " +  $F{quarteryear}  + " Awarded on this " + $P{award_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="216" width="752" height="23" uuid="207af874-d685-4353-a6b1-71d2b9d8f549"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Deputy Vice Chancellor]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

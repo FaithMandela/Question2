@@ -155,9 +155,6 @@
 			<MENU name="Reset Password">28</MENU>
 			<MENU name="Trimester Corrections" role="records">525</MENU>
 		</MENU>
-		<MENU name="Alumni" role="records,dvc">
-			<MENU name="Graduated Students">780</MENU>
-		</MENU>
 	</MENU>
 	<DESK w="700" name="Grades" key="1" h="500">
 		<GRID name="Grades" keyfield="gradeid" orderby="gradeweight desc, gradeid" table="grades" noorg="true">
@@ -747,7 +744,7 @@
 				<TEXTDATE w="150" title="Graduation Date" tab="Graduating" y="90" h="20" x="290">graduatedate</TEXTDATE>
 				<TEXTAREA w="530" tab="Details" y="150" h="120" x="10">details</TEXTAREA>
 			</FORM>
-			<JASPER name="Grade Summary" reportfile="degree_comp_letter.jasper"></JASPER>
+			<JASPER name="Grade Summary" reportfile="gradesummary_d.jasper"></JASPER>
 			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
 				<TEXTFIELD w="140" title="Major Name">majorname</TEXTFIELD>
@@ -1499,8 +1496,12 @@
 	</DESK>
 	<DESK w="700" name="Students Degrees" type="horl" key="133" h="500">
 		<FILTER location="250" name="Students Degrees" type="horl">
-			<DRILLDOWN name="Degrees" keyfield="degreeid" table="Degrees" listfield="degreename"></DRILLDOWN>
+			<DRILLDOWN name="Degrees" keyfield="degreeid" table="Degrees" noorg="true" listfield="degreename"></DRILLDOWN>
 			<JASPER name="Students Degrees" reportfile="studentdegreeview.jasper"></JASPER>
+		</FILTER>
+		<FILTER location="250" name="Graduated Students" type="horl">
+			<DRILLDOWN name="Degrees" keyfield="degreeid" table="Degrees" noorg="true" listfield="degreename"></DRILLDOWN>
+			<JASPER name="Students Degrees" reportfile="studentdegreeview_c.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Students Majors" type="horl" key="134" h="500">
