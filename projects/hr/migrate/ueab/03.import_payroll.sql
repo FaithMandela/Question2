@@ -129,9 +129,45 @@ FROM import.employeemonth as e LEFT JOIN import.bankbranch as b
 	ON (e.bankid = b.bankid) AND (e.branchid = b.branchid)
 ORDER BY employeemonthid;
 
+ALTER TABLE employee_adjustments DISABLE TRIGGER upd_employee_adjustments;
+
+INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount)
+SELECT employeeid, allowanceid, 0, amount
+FROM import.allowdefault;
+
+INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount)
+SELECT employeemonthid, allowanceid, 0, paydate, amount
+FROM import.employeeallow;
+
+INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount)
+SELECT employeeid, 20 + deductionid, 0, amount
+FROM import.deductdefault;
+
+INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount)
+SELECT employeemonthid, 20 + deductionid, 0, paydate, amount
+FROM import.employeededuct;
 
 
+ALTER TABLE employee_adjustments ENABLE TRIGGER upd_employee_adjustments;
 
+DELETE FROM employee_tax_types;
 
+INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, exchange_rate)
+SELECT employeemonthid, 1, 0, tax, 1
+FROM import.employeemonth
+WHERE (tax > 0)
+ORDER BY employeemonthid;
+
+INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, employer, exchange_rate)
+SELECT employeemonthid, 2, 0, nssf, nssf, 1
+FROM import.employeemonth
+WHERE (nssf > 0) AND (isnssf = 'Yes')
+ORDER BY employeemonthid;
+
+INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, exchange_rate)
+SELECT employeemonthid, 2, 0, nhif, 1
+FROM import.employeemonth
+WHERE (nhif > 0) AND (isnhif = 'Yes')
+ORDER BY employeemonthid;
 
 
