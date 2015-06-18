@@ -8,9 +8,13 @@
  */
 package org.baraza.web;
 
+
+import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
+import javax.servlet.ServletContext;
 
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
@@ -20,21 +24,30 @@ import org.baraza.xml.BElement;
 @WebService
 public class BWebService {
 	Logger log = Logger.getLogger(BWebService.class.getName());
+	
+	List<String> allowedTables;
 
 	@WebMethod
 	public String addWsData(String xmldata, String verification) {
 System.out.println("WEB SERVICE GET DATA : " + verification);
 System.out.println(xmldata);
-		String key = "test123";		
+
+		allowedTables = new ArrayList<String>();
+		String key = "baratonElections";		
 		if(key.equals(verification)) return addData(xmldata);
 		else return("<ERROR>100</ERROR>");
 	}
 	
 	@WebMethod
 	public String getWsData(String xmldata, String verification) {
+
 System.out.println("WEB SERVICE GET DATA : " + verification);
 System.out.println(xmldata);
-		String key = "test123";		
+
+		allowedTables = new ArrayList<String>();
+		allowedTables.add("ws_students");
+		allowedTables.add("ws_qstudents");
+		String key = "baratonElections";		
 		if(key.equals(verification)) return getData(xmldata);
 		else return("<ERROR>100</ERROR>");
 	}
@@ -47,8 +60,10 @@ System.out.println(xmldata);
 		BDB db = new BDB("java:/comp/env/jdbc/database");
 
 		for(BElement el : root.getElements()) {
-			if(el.getName().equals("TRANSFER")) result = getTransfer(db, el);
-			else if (el.getName().equals("FUNCTION")) result = getFunction(db, el);
+			if(allowedTables.contains(el.getAttribute("table"))) {
+				if(el.getName().equals("TRANSFER")) result = getTransfer(db, el);
+				else if (el.getName().equals("FUNCTION")) result = getFunction(db, el);
+			}
 		}
 
 		db.close();
@@ -65,24 +80,26 @@ System.out.println(xmldata);
 		BDB db = new BDB("java:/comp/env/jdbc/database");
 
 		for(BElement el : root.getElements()) {
-			BQuery query =  new BQuery(db, el, null, null, false);
+			if(allowedTables.contains(el.getAttribute("table"))) {
+				BQuery query =  new BQuery(db, el, null, null, false);
 
-			int ColNum = query.getColumnCount();
-			int i = 1;
-			int j = 1;
-			String cname;
-			result += "\t<transfer name=\"" + el.getAttribute("name") + "\">\n";
+				int ColNum = query.getColumnCount();
+				int i = 1;
+				int j = 1;
+				String cname;
+				result += "\t<transfer name=\"" + el.getAttribute("name") + "\">\n";
 
-			while(query.moveNext()) {
-				result += "\t\t<record item=\"" + cleanData(query.getString(el.getAttribute("keyfield"))) + "\">\n";
-				for(BElement ell : el.getElements()) {
-					cname = ell.getValue();
-					result += "\t\t\t<" + cname + ">" + cleanData(query.getString(cname)) + "</" + cname + ">\n";
+				while(query.moveNext()) {
+					result += "\t\t<record item=\"" + cleanData(query.getString(el.getAttribute("keyfield"))) + "\">\n";
+					for(BElement ell : el.getElements()) {
+						cname = ell.getValue();
+						result += "\t\t\t<" + cname + ">" + cleanData(query.getString(cname)) + "</" + cname + ">\n";
+					}
+					result += "\t\t</record>\n";
 				}
-				result += "\t\t</record>\n";
+				result += "\t</transfer>\n";
+				query.close();
 			}
-			result += "\t</transfer>\n";
-			query.close();
 		}
 
 		result += "</transaction>";
