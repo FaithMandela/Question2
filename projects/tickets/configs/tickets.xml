@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<APP database="tickets" name="Tickets" reportpath="/root/baraza/projects/tickets/reports/">
+	<TREE name="Tickets">
+		<NODE name="Entries">
+			<NODE key="1" name="Logs"></NODE>
+			<NODE key="2" name="Tickets"></NODE>
+			<NODE key="3" name="Segments"></NODE>
+			<NODE key="4" name="Imports"></NODE>
+			<NODE key="5" name="Analysis"></NODE>
+			<NODE key="6" name="Comparison"></NODE>
+		</NODE>
+
+		<NODE name="Report">
+			<NODE key="101" name="Logs"></NODE>
+			<NODE key="102" name="Pccs"></NODE>
+			<NODE key="103" name="Tes"></NODE>
+			<NODE key="104" name="Tickets"></NODE>
+		</NODE>
+
+	</TREE>
+
+	<DESK h="500" key="1" name="Logs" splitloc="250" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="pcc" name="PCCs" ordersql="agencyname" pos="top" table="pccs">
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency Name" w="240">agencyname</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="2" keyfield="logid" linkfield="pcc" linkkey="1" name="Logs" ordersql="logdate desc" pos="bottom" table="vwlogs">
+			<TEXTFIELD title="Ticket Date" w="80">logdate</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency" w="140">agencyname</TEXTFIELD>
+			<TEXTFIELD title="Currency" w="40">currency</TEXTFIELD>
+			<TEXTFIELD title="Process Date" w="40">processdate</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="logid" key="3" layout="grid" linkfield="logid" linkkey="2" name="Logs" pos="bottom" table="logdetails">
+			<TEXTAREA h="70" title="" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="2" name="Tickets" splitloc="250" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="pcc" name="PCCs" pos="top" table="pccs">
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency Name" w="40">agencyname</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="2" keyfield="ticketid" linkfield="pcc" linkkey="1" name="Tickets" ordersql="ticketdate desc" pos="bottom" table="vwtickets">
+			<TEXTFIELD title="Ticket Date" w="40">ticketdate</TEXTFIELD>
+			<TEXTFIELD title="Ticket" w="140">ticketid</TEXTFIELD>
+			<TEXTFIELD title="Ticket PCC" w="40">ticketpcc</TEXTFIELD>
+			<TEXTFIELD title="Book PCC" w="40">bookpcc</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="segs" w="40">segs</TEXTFIELD>
+			<TEXTFIELD title="Active Segs" w="40">activesegs</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="ticketid" key="3" layout="grid" linkfield="ticketid" linkkey="2" name="Ticket Details" pos="bottom" table="tes">
+			<TEXTAREA h="70" title="" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="550" key="3" name="Segments" splitloc="250" splittype="vert" w="700">
+		<GRID gridfilter="true" key="1" keyfield="ticketperiod" name="Month" ordersql="ticketperiod desc" pos="top" table="vwperiods">
+			<TEXTFIELD title="Year" w="40">ticketyear</TEXTFIELD>
+			<TEXTFIELD title="Month" w="40">ticketmonth</TEXTFIELD>
+			<TEXTFIELD title="Tickets" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="2" keyfield="pcc" linkfield="ticketperiod" linkkey="1" name="Agency Segments" pos="bottom" table="vwbookedsegs">
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency Name" w="140">agencyname</TEXTFIELD>
+			<TEXTFIELD title="Ticket Segments" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="3" keyfield="pcc" linkfield="ticketperiod" linkkey="1" name="Consultant Segments" pos="bottom" table="vwsonsegs">
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency Name" w="140">agencyname</TEXTFIELD>
+			<TEXTFIELD title="SON" w="40">son</TEXTFIELD>
+			<TEXTFIELD title="Ticket Segments" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="4" keyfield="pcc" linkfield="ticketperiod" linkkey="1" name="Export Segments" pos="bottom" table="vwsonsegs">
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="SON" w="40">son</TEXTFIELD>
+			<TEXTFIELD title="Ticket Segments" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="5" keyfield="bpcc" linkfield="ticketperiod" linkkey="1" name="Un Allocated Segments" pos="bottom" table="vwunallocated">
+			<TEXTFIELD title="PCC" w="40">bpcc</TEXTFIELD>
+			<TEXTFIELD title="Ticket Segments" w="40">segements</TEXTFIELD>
+		</GRID>
+
+	</DESK>
+
+	<DESK h="500" key="4" name="Imports" splitloc="0" splittype="vert" w="675">
+		<IMPORT autofield="segmentid" filetype="text" key="1" keyfield="segmentid" name="Segments" pos="bottom" procedure="insTransactions" table="Segments">
+			<TEXTFIELD title="YearMonth" w="40">YearMonth</TEXTFIELD>
+			<TEXTFIELD title="City" w="40">City</TEXTFIELD>
+			<TEXTFIELD title="ISO" w="40">ISO</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">PCC</TEXTFIELD>
+			<TEXTFIELD title="Agency" w="40">Agency</TEXTFIELD>
+			<TEXTFIELD title="NASegs" w="40">NASegs</TEXTFIELD>
+			<TEXTFIELD title="NPSegs" w="40">NPSegs</TEXTFIELD>
+			<TEXTFIELD title="NFASegs" w="40">NFASegs</TEXTFIELD>
+			<TEXTFIELD title="NBBSegs" w="40">NBBSegs</TEXTFIELD>
+			<TEXTFIELD title="NRSegs" w="40">NRSegs</TEXTFIELD>
+			<TEXTFIELD title="BCT" w="40">BCT</TEXTFIELD>
+			<TEXTFIELD title="AOTSegs" w="40">AOTSegs</TEXTFIELD>
+			<TEXTFIELD title="PTSegs" w="40">PTSegs</TEXTFIELD>
+		</IMPORT>
+
+	</DESK>
+
+	<DESK h="500" key="5" name="Analysis" splitloc="250" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="ticketperiod" name="Month" ordersql="ticketperiod desc" pos="top" table="vwperiods">
+			<TEXTFIELD title="Year" w="40">ticketyear</TEXTFIELD>
+			<TEXTFIELD title="Month" w="40">ticketmonth</TEXTFIELD>
+			<TEXTFIELD title="Tickets" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="2" keyfield="ticketdate" linkfield="ticketperiod" linkkey="1" name="Days Tickets" ordersql="ticketdate" pos="bottom" table="vwdayssegs">
+			<TEXTFIELD title="Ticket Date" w="40">ticketdate</TEXTFIELD>
+			<TEXTFIELD title="Segments" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="3" keyfield="pcc" linkfield="ticketdate" linkkey="2" name="Agency Days Tickets" ordersql="agencyname" pos="bottom" table="vwdaysagencysegs">
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency Name" w="40">agencyname</TEXTFIELD>
+			<TEXTFIELD title="Tickets" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="4" keyfield="ticketid" linkfield="ticketdate" linkkey="2" name="Tickets" ordersql="pcc" pos="bottom" table="vwtickets">
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Ticket" w="140">ticketid</TEXTFIELD>
+			<TEXTFIELD title="Ticket PCC" w="40">ticketpcc</TEXTFIELD>
+			<TEXTFIELD title="Book PCC" w="40">bookpcc</TEXTFIELD>
+			<TEXTFIELD title="segs" w="40">segs</TEXTFIELD>
+			<TEXTFIELD title="Active Segs" w="40">activesegs</TEXTFIELD>
+		</GRID>
+
+		<FORM autofield="ticketid" key="5" layout="grid" linkfield="ticketid" linkkey="4" name="Ticket Details" pos="bottom" table="tes">
+			<TEXTAREA h="70" title="" w="430" x="10" y="30">details</TEXTAREA>
+		</FORM>
+
+	</DESK>
+
+	<DESK h="500" key="6" name="Comparison" splitloc="250" splittype="vert" w="585">
+		<GRID gridfilter="true" key="1" keyfield="segperiod" name="Month" ordersql="ticketperiod desc" pos="top" table="vwperiods">
+			<TEXTFIELD title="Year" w="40">ticketyear</TEXTFIELD>
+			<TEXTFIELD title="Month" w="40">ticketmonth</TEXTFIELD>
+			<TEXTFIELD title="Tickets" w="40">totalsegs</TEXTFIELD>
+		</GRID>
+
+		<GRID gridfilter="true" key="2" keyfield="yearmonth" linkfield="yearmonth" linkkey="1" name="Segements" pos="bottom" table="vwsegements">
+			<TEXTFIELD title="Segment PCC" w="40">spcc</TEXTFIELD>
+			<TEXTFIELD title="Segment Agency" w="40">agency</TEXTFIELD>
+			<TEXTFIELD title="PCC" w="40">pcc</TEXTFIELD>
+			<TEXTFIELD title="Agency Name" w="40">agencyname</TEXTFIELD>
+			<TEXTFIELD title="Tp Tickets" w="40">aotsegs</TEXTFIELD>
+			<TEXTFIELD title="Tickets" w="40">totalsegs</TEXTFIELD>
+			<TEXTFIELD title="Variance" w="40">variance</TEXTFIELD>
+		</GRID>
+
+	</DESK>
+
+</APP>
+

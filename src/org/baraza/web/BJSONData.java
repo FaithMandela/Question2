@@ -43,9 +43,32 @@ public class BJSONData extends HttpServlet {
 		
 		BElement view = web.getView();
 		
+		String wheresql = null;
+		String sortby = null;
+
+		String wherefilter = request.getParameter("wherefilter");
+		String sortfilter = request.getParameter("sortfilter");
+		if(request.getParameter("and") != null) {
+			if(wherefilter != null) wheresql = wherefilter;
+			if(sortfilter != null) sortby = sortfilter;
+		} else if(request.getParameter("or") != null) {
+			if(wherefilter != null) wheresql = wherefilter;
+			if(sortfilter != null) sortby = sortfilter;
+		}
+
+		if(request.getParameter("sortasc") != null) {
+			if(sortby == null) sortby = "";
+			sortby += request.getParameter("fieldname");
+		} else if(request.getParameter("sortdesc") != null) {
+			if(sortby == null) sortby = "";
+			sortby = request.getParameter("fieldname") + " desc";
+		}
+
+		wheresql = web.getJSONWhere(request, wheresql);
+		
 		//System.out.println("BASE 1010 : " + view.toString());
 		
-		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, null, null);
+		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, wheresql, sortby);
 		String JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
 
 		try {

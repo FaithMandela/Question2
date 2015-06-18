@@ -89,7 +89,7 @@ public class BMigration {
 
 		BDB sdb = new BDB(node);
 		if(!node.getAttribute("noaudit", "false").equals("true")) sdb.setUser("127.0.0.1", "root");
-
+		
 		for(BElement el : node.getElements()) {
 			BQuery rs = new BQuery(sdb, "*", el.getValue(), 1);
 			source.addNode(rs.getMigrateConfig());

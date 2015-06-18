@@ -1050,6 +1050,14 @@ System.out.println("BASE 1010 ");
 				} else if(el.getName().equals("COMBOLIST")) {
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
 				} else if(el.getName().equals("MULTISELECT")) {
+					String msv = null;
+					if(request.getParameterValues(el.getValue()) != null) {
+						for(String msvs : request.getParameterValues(el.getValue())) {
+							if(msv == null) msv = msvs;
+							else msv += "," + msvs;
+						}
+					}
+					saveMsg += qForm.updateField(el.getValue(), msv);
 				} else if(el.getName().equals("TEXTDECIMAL")) {
 					dataValue = dataValue.replace(",", "");
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
@@ -1728,7 +1736,54 @@ System.out.println("BASE 1010 ");
 		return jsObj.toString();
 	}
 	
-	public String getViewName() { 
+	public String getJSONWhere(HttpServletRequest request, String JWheresql) {
+	
+		String linkData = "";
+		String linkParam = null;
+		String formLinkData = "";
+	
+		BElement sview = null;
+		String comboField = request.getParameter("field");
+		if(comboField != null) sview = view.getElement(comboField).getElement(0);
+				
+		int vds = viewKeys.size();
+		if(vds > 2) {
+			linkData = viewData.get(vds - 1);
+			formLinkData = viewData.get(vds - 2);
+
+			if((!linkData.equals("{new}")) && (comboField == null)) {
+				if(view.getName().equals("FORM")) {
+					if(JWheresql != null) JWheresql += " AND (";
+					else JWheresql = "(";
+					JWheresql += view.getAttribute("keyfield") + " = '" + linkData + "')";
+				} else if(view.getAttribute("linkfield") != null) {
+					if(JWheresql != null) JWheresql += " AND (";
+					else JWheresql = "(";
+					JWheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
+				}
+			}
+
+			// Table linking on parameters
+			String paramLinkData = linkData;
+			String linkParams = view.getAttribute("linkparams");
+			if(sview != null) { linkParams = sview.getAttribute("linkparams"); paramLinkData =  formLinkData; }
+			if(linkParams != null) {
+				BElement fView = views.get(vds - 2);
+				if(sview != null) fView = views.get(vds - 3);
+				String lp[] = linkParams.split("=");
+				linkParam = params.get(lp[0].trim());
+
+				if(JWheresql != null) JWheresql += " AND (";
+				else JWheresql = "(";
+				if(linkParam == null) JWheresql += lp[1] + " = null)";
+				else JWheresql += lp[1] + " = '" + linkParam + "')";
+			}
+		}
+		
+		return JWheresql;
+	}
+	
+	public String getViewName() {
 		if(view == null) return "";
 		return view.getAttribute("name", ""); 
 	}
