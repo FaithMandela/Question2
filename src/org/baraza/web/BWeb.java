@@ -345,14 +345,15 @@ public class BWeb {
 
 			if(toShow) {
 				if(smel.isLeaf()) {
+                    String icon = smel.getAttribute("icon", "fa fa-arrow-right");
 					String link = "";
 					if(smel.getAttribute("xml") == null) {
 						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
-						link += " <i class='icon-tag'></i> ";
+						link += " <i class='" + icon + "'></i> ";
 						link += smel.getAttribute("name") + "</a>";
 					} else {
 						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
-						link += " <i class='icon-tag'></i> ";
+						link += " <i class='" + icon + "'></i> ";
 						link += smel.getAttribute("name") + "</a>";
 					}
 					
@@ -362,7 +363,7 @@ public class BWeb {
 				} else {
 					submenu += "\t<li>\n";
 					submenu += "\t\t<a href='javascript:;'>";
-					submenu += "<i class='icon-basket'></i>";
+					submenu += "<i class='" + smel.getAttribute("icon", "icon-list") + "'></i>";
 					submenu += "<span class='title'>" + smel.getAttribute("name") + "</span>";
 					submenu += "<span class='arrow '></span>";
 					submenu += "</a>\n";
@@ -476,7 +477,7 @@ public class BWeb {
 
 		boolean showButtons = false;
 
-		if(view.getName().equals("GRID") ) {
+		if(view.getName().equals("GRID")) {
 			if(view.getAttribute("display", "grid").equals("grid")) showButtons = true;
 			if(view.getAttribute("buttons", "noshow").equals("show")) showButtons = true;
 		}
@@ -498,19 +499,19 @@ public class BWeb {
 			String did = "";
 			if(dataItem!=null) did = "&data=" + dataItem;
 			
-			if(hasForm) buttons += "<a class='btn btn-default btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>New</a>\n";
-			buttons += "<a class='btn btn-default btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-plus'></i>Refresh</a>\n";
-			buttons += "<a class='btn btn-default btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-plus'></i>Export</a>\n";
-			buttons += "<a class='btn btn-default btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-plus'></i>Print</a>\n";
+			if(hasForm) buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   New</a>\n";
+			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-refresh'></i>   Refresh</a>\n";
+			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
+			buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
+			
+			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'>Submit</button>\n";			
 		}
 		
 		
 		if(isForm()) {
 			buttons += getFormButtons();
 			//buttons += getAudit();
-		} else if(isEditField()) {
-			buttons += "<button class='submit' name='process' value='Submit'>Submit</button>\n";
-		}
+		} 
 
 		buttons += "</div>\n";
 
@@ -523,19 +524,20 @@ public class BWeb {
 		String buttons = "";
 
 		if(view.getName().equals("FORM")) {
+			String saveBtn = view.getAttribute("save.button", "Save");
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
-				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
-				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
 			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='i_tick icon small' name='process' value='Update'>Save</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
 			boolean canDel = true;
 			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false"))
 				canDel = false;
 			if(canDel && (!"{new}".equals(dataItem)))
-				buttons += "<button class='i_cross icon small' name='process' value='Delete'>Delete</button>\n";
+				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'>Delete</button>\n";
 			if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='i_key icon small' name='process' value='Audit'>Audit</button>\n";
+				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";
 		}
 
 		return buttons;
@@ -852,7 +854,7 @@ System.out.println("BASE 1010 ");
 		}
 
 		if(operations != null)
-			operations = "<select class='fnctcombobox' name='operation'>" + operations + "</select>";
+			operations = "<select class='fnctcombobox form-control ' id='operation' name='operation'>" + operations + "</select>";
 
 		return operations;
 	}
@@ -905,12 +907,12 @@ System.out.println("BASE 1010 ");
 		return mystr;
 	}
 
-	public String setOperations(String operation, HttpServletRequest request) {
+	public String setOperations(String operation, String ids, HttpServletRequest request) {
 		String mystr = "";
 		boolean fnctError = false;
 		String mysql;
 
-		String[] values = request.getParameterValues("keyfield");
+		String[] values = ids.split(",");
 
 		if((values != null) && (view.getElementByName("ACTIONS") != null)) {
 			BElement opt = view.getElementByName("ACTIONS");
@@ -1047,6 +1049,15 @@ System.out.println("BASE 1010 ");
 					qForm.updateField(el.getValue(),  dataValue);
 				} else if(el.getName().equals("COMBOLIST")) {
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
+				} else if(el.getName().equals("MULTISELECT")) {
+					String msv = null;
+					if(request.getParameterValues(el.getValue()) != null) {
+						for(String msvs : request.getParameterValues(el.getValue())) {
+							if(msv == null) msv = msvs;
+							else msv += "," + msvs;
+						}
+					}
+					saveMsg += qForm.updateField(el.getValue(), msv);
 				} else if(el.getName().equals("TEXTDECIMAL")) {
 					dataValue = dataValue.replace(",", "");
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
@@ -1217,14 +1228,14 @@ System.out.println("BASE 1010 ");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
 
 		if(view.getName().equals("GRID") && view.getAttribute("display", "grid").equals("grid")) {
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : view.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
 			}
 			fieldTitles += "</select>";
 		} else if (comboField != null) {
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : sview.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1241,7 +1252,7 @@ System.out.println("BASE 1010 ");
 		String field = request.getParameter("field");
 
 		if(view.getName().equals("GRID")) {
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : view.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1249,7 +1260,7 @@ System.out.println("BASE 1010 ");
 			fieldTitles += "</select>";
 		} else if(view.getName().equals("FORM") && (field != null)) {
 			BElement sview = view.getElement(field).getElement(0);
-			fieldTitles = "<select class='fnctcombobox' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
 			for(BElement el : sview.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1684,7 +1695,7 @@ System.out.println("BASE 1010 ");
 			if(!el.getValue().equals("")) {
 				JsonObjectBuilder jsColEl = Json.createObjectBuilder();
 				String mydn = "C" + String.valueOf(col++);
-				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title"));
+				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title", ""));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
 				jsColModel.add(jsColEl);
@@ -1725,11 +1736,59 @@ System.out.println("BASE 1010 ");
 		return jsObj.toString();
 	}
 	
-	public String getViewName() { 
+	public String getJSONWhere(HttpServletRequest request, String JWheresql) {
+	
+		String linkData = "";
+		String linkParam = null;
+		String formLinkData = "";
+	
+		BElement sview = null;
+		String comboField = request.getParameter("field");
+		if(comboField != null) sview = view.getElement(comboField).getElement(0);
+				
+		int vds = viewKeys.size();
+		if(vds > 2) {
+			linkData = viewData.get(vds - 1);
+			formLinkData = viewData.get(vds - 2);
+
+			if((!linkData.equals("{new}")) && (comboField == null)) {
+				if(view.getName().equals("FORM")) {
+					if(JWheresql != null) JWheresql += " AND (";
+					else JWheresql = "(";
+					JWheresql += view.getAttribute("keyfield") + " = '" + linkData + "')";
+				} else if(view.getAttribute("linkfield") != null) {
+					if(JWheresql != null) JWheresql += " AND (";
+					else JWheresql = "(";
+					JWheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
+				}
+			}
+
+			// Table linking on parameters
+			String paramLinkData = linkData;
+			String linkParams = view.getAttribute("linkparams");
+			if(sview != null) { linkParams = sview.getAttribute("linkparams"); paramLinkData =  formLinkData; }
+			if(linkParams != null) {
+				BElement fView = views.get(vds - 2);
+				if(sview != null) fView = views.get(vds - 3);
+				String lp[] = linkParams.split("=");
+				linkParam = params.get(lp[0].trim());
+
+				if(JWheresql != null) JWheresql += " AND (";
+				else JWheresql = "(";
+				if(linkParam == null) JWheresql += lp[1] + " = null)";
+				else JWheresql += lp[1] + " = '" + linkParam + "')";
+			}
+		}
+		
+		return JWheresql;
+	}
+	
+	public String getViewName() {
 		if(view == null) return "";
 		return view.getAttribute("name", ""); 
 	}
 
+	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }
 	public String getPictureURL() { return pictureURL; }
 	public BDB getDB() { return db; }

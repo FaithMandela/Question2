@@ -3,19 +3,6 @@ ALTER TABLE entitys ADD selection_id integer;
 ALTER TABLE entitys ADD admision_payment real default 2000;
 ALTER TABLE entitys ADD admision_paid boolean default false not null;
 
-CREATE OR REPLACE FUNCTION ins_application() RETURNS trigger AS $$
-BEGIN	
-	IF(NEW.selection_id is not null) THEN
-		INSERT INTO entry_forms (org_id, entity_id, entered_by_id, form_id)
-		VALUES(NEW.org_id, NEW.entity_id, NEW.entity_id, NEW.selection_id);
-	END IF;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_application AFTER INSERT ON entitys
-    FOR EACH ROW EXECUTE PROCEDURE ins_application();
 
 DROP VIEW vw_entitys;
 CREATE VIEW vw_entitys AS
@@ -265,6 +252,66 @@ CREATE OR REPLACE VIEW vw_adm_semesters AS
 			FROM generate_series(date_part('year'::text, 'now'::text::date)::integer - 7, date_part('year'::text, 'now'::text::date)::integer + 2) s(a)) adm_semesters
 		ORDER BY adm_semesters.semester_id;
 
+		
+CREATE OR REPLACE FUNCTION ins_application() RETURNS trigger AS $$
+DECLARE
+	reca			RECORD;
+	v_org_id		INTEGER;
+BEGIN	
+	IF(NEW.selection_id is not null) THEN
+		IF(TG_WHEN = 'BEFORE')THEN
+			IF((NEW.user_name is null) OR (NEW.primary_email is null))THEN
+				RAISE EXCEPTION 'You need to enter the email address';
+			END IF;
+
+			IF(NEW.user_name != NEW.primary_email)THEN
+				RAISE EXCEPTION 'The email and confirmation email should match.';
+			END IF;
+
+			SELECT org_id INTO v_org_id
+			FROM forms WHERE (form_id = NEW.selection_id);
+
+			NEW.user_name := lower(trim(NEW.user_name));
+			NEW.primary_email := lower(trim(NEW.user_name));
+
+			NEW.first_password := upper(substring(md5(random()::text) from 3 for 9));
+			NEW.entity_password := md5(NEW.first_password);
+
+			NEW.org_id = v_org_id;
+
+			RETURN NEW;
+		END IF;
+
+		IF(TG_WHEN = 'AFTER')THEN
+			INSERT INTO entry_forms (org_id, entity_id, entered_by_id, form_id)
+			VALUES(NEW.org_id, NEW.entity_id, NEW.entity_id, NEW.selection_id);
+
+			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
+			VALUES(NEW.org_id, 1, NEW.entity_id, 'entitys');
+
+			SELECT quarterid INTO reca
+			FROM quarters 
+			WHERE (quarterid IN (SELECT max(quarterid) FROM quarters));
+
+			INSERT INTO applications (org_id, applicationid, quarterid)
+			VALUES(NEW.org_id, NEW.entity_id, reca.quarterid, reca.applicationfees);
+		END IF;
+	ELSE
+		IF(TG_WHEN = 'BEFORE')THEN
+			RETURN NEW;
+		END IF;
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_bf_application BEFORE INSERT ON entitys
+    FOR EACH ROW EXECUTE PROCEDURE ins_application();
+
+CREATE TRIGGER ins_application AFTER INSERT ON entitys
+    FOR EACH ROW EXECUTE PROCEDURE ins_application();
+		
 CREATE OR REPLACE FUNCTION ins_registrations() RETURNS trigger AS $$
 DECLARE
 	v_org_id			INTEGER;	

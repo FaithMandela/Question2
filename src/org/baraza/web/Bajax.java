@@ -10,6 +10,7 @@ package org.baraza.web;
 
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.util.Enumeration;
 
 import java.io.PrintWriter;
 import java.io.OutputStream;
@@ -59,6 +60,7 @@ public class Bajax extends HttpServlet {
 
 		String fnct = request.getParameter("fnct");
 		String id = request.getParameter("id");
+		String ids = request.getParameter("ids");
 		String startDate = request.getParameter("startdate");
 		String startTime = request.getParameter("starttime");
 		String endDate = request.getParameter("enddate");
@@ -66,6 +68,7 @@ public class Bajax extends HttpServlet {
 
 		if("calresize".equals(fnct)) resp = calResize(id, endDate, endTime);
 		if("calmove".equals(fnct)) resp = calMove(id, startDate, startTime, endDate, endTime);
+		if("operation".equals(fnct)) resp = calOperation(id, ids, request);
 
 		web.close();	// close DB commections
 		out.println(resp);
@@ -116,6 +119,12 @@ public class Bajax extends HttpServlet {
 	public String escapeSQL(String str){				
 		String escaped = str.replaceAll("'","\'");						
 		return escaped;
+	}
+	
+	public String calOperation(String id, String ids, HttpServletRequest request) {
+		String resp = web.setOperations(id, ids, request);
+		
+		return resp;
 	}
  
 }

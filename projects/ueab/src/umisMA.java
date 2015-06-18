@@ -10,7 +10,6 @@ public class umisMA {
 	public static void main(String args[]) {
 	
 		try {
-	
 			URL wsURL = new URL("http://demo.dewcis.com/ueab/webservice?wsdl");
 		
 			BWebServiceService bws = new BWebServiceService(wsURL);
@@ -51,6 +50,7 @@ public class umisMA {
 		xml += "	<TEXTFIELD>birthdate</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>email</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>quarterid</TEXTFIELD>\n";
 		xml += "</GRID>\n";
 		xml += "</QUERY>\n";
 		

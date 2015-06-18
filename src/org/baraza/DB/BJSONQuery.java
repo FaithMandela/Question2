@@ -72,16 +72,6 @@ public class BJSONQuery extends BQuery {
 				
 				row++;
 				int col = 0;
-				
-				if((!hasTitle) && hasAction && (keyField != null)) {
-					mydv = "<input type='checkbox' name='keyfield' ";
-					if(selectAll) mydv += "checked ";
-					mydv += "size='10' value='" + rs.getString(keyField) + "'/>";
-					mydn = "C" + String.valueOf(col);
-					myjo.add(mydn, mydv);
-					
-					col++;
-				}
 
 				dispStr = "";
 				for(BElement el : view.getElements()) {

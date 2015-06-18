@@ -385,9 +385,9 @@ public class BWebBody extends BQuery {
 			}
 		}
 		tabs.append("			</ul>\n");
-		tabs.append("		<div>\n");
-		tabs.append("	<div>\n");
-		tabs.append("<div>\n");
+		tabs.append("		</div>\n");
+		tabs.append("	</div>\n");
+		tabs.append("</div>\n");
 		tabs.append("<div class='tab-content'>\n");
 			
 		int i = 0;
@@ -395,18 +395,18 @@ public class BWebBody extends BQuery {
 		
 		boolean noSpan = true;
 		boolean tabNotDone = true;
+		Integer formCols = new Integer(view.getAttribute("cols", "1"));
 		tab = "";
      	for(BElement el : view.getElements()) {
 			if(el.getAttribute("tab") != null) {
 				if(!tabNotDone && !tab.equals(el.getAttribute("tab"))) response.append("</div>");
-				if(tabNotDone && hasTabs) { 
-					response.append(tabs); 
-					tabNotDone = false; 
-				}
+				if(tabNotDone && hasTabs) response.append(tabs);
 				if(!tab.equals(el.getAttribute("tab"))) {
 					tab = el.getAttribute("tab");
-					response.append("<div class='tab-pane' id='" + tab + "'>\n");
+                    if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab + "'>\n"); 
+                    else response.append("<div class='tab-pane' id='" + tab + "'>\n");
 				}
+                if(tabNotDone && hasTabs) tabNotDone = false; 
 			} else if(!tabNotDone) {
 				response.append("</div>\n</div>\n");
 				tabNotDone = true;
@@ -414,31 +414,9 @@ public class BWebBody extends BQuery {
 			
 			// Get the elements and determine creation of rows
 			if(noSpan) response.append("	<div class='row'>\n");
-			response.append(getField(el, formLinkData, eof));
+			response.append(getField(el, formLinkData, eof, formCols));
 			if(el.getAttribute("span") == null) { response.append("	</div>\n"); noSpan = true; }
 			else noSpan = false;
-			
-			/*if(el.getAttribute("titlepos","left").equals("top")) {
-				response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'></td>\n<td><b>" + el.getAttribute("title")  + "</b>\n</td></tr>\n<tr>\n<td>");
-				} else {
-					response.append("\n<tr>\n<td style='width: 150px; align:right; vertical-align:top;'>" + el.getAttribute("title"));
-				}
-
-				if(el.getName().equals("GRIDBOX")) {
-					response.append("<a  class='btn i_magnifying_glass icon small' href='#'");
-					if(el.getAttribute("webgrid") == null) {
-						response.append(" onClick=\"myClientWin('b_combolist.jsp");
-						response.append("?field=" + el.getValue());
-					} else {
-						response.append(" onClick=\"myClientWin('b_searchlist.jsp");
-						response.append("?view=" + el.getAttribute("webgrid") + ":0");
-					}
-					if(formLinkData != null) response.append("&formlinkdata=" + formLinkData);
-					response.append("','win2')\"");
-					response.append("name=\"anchor1\" id=\"anchor1\"> select </a>");
-				}
-				response.append(" : </td><td>");
-			}*/
 		}
 		
 		// Close and open span and tabs
@@ -452,14 +430,14 @@ public class BWebBody extends BQuery {
     }
     
     
-    public String getField(BElement el, String formLinkData, boolean eof) {
+    public String getField(BElement el, String formLinkData, boolean eof, Integer formCols) {
 		StringBuilder response = new StringBuilder();
 		
 		String defaultvalue = el.getAttribute("default", "");
 		String default_fnct = view.getAttribute("default_fnct");
 		if(default_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
 		
-		response.append("<div class='col-md-6'>\n");
+		if(formCols > 1) response.append("<div class='col-md-6'>\n");
 		response.append("	<div class='form-group'>\n");
 		response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
 		response.append("			<div class='col-md-9'>\n");
@@ -585,6 +563,73 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
+			response.append(">");
+
+			String nodefault = el.getAttribute("nodefault");
+			String lptable = el.getAttribute("lptable");
+			String lpfield = el.getAttribute("lpfield");
+			String lpkey = el.getAttribute("lpkey");
+			String cmb_fnct = el.getAttribute("cmb_fnct");
+			if(lpkey == null) lpkey = el.getValue();
+
+			String mysql = "";
+			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
+			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
+			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
+
+			String cmbWhereSql = el.getAttribute("where");
+			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
+				if(cmbWhereSql == null) cmbWhereSql = "(";
+				else cmbWhereSql += " AND (";
+				cmbWhereSql += orgID + "=" + userOrg + ")";
+			}
+
+			if(el.getAttribute("user") != null) {
+				String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
+				if(cmbWhereSql == null) cmbWhereSql = userFilter;
+				else cmbWhereSql += " AND " + userFilter;
+			}
+
+			String tableFilter = null;
+			String linkField = el.getAttribute("linkfield");
+			if((linkField != null) && (formLinkData != null)) {
+				if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
+				else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
+
+				if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
+				else cmbWhereSql += " AND (" + tableFilter + ")";
+			}
+
+			if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
+
+			String orderBySql = el.getAttribute("orderby");
+			if(orderBySql == null) mysql += " ORDER BY " + lpfield;
+			else mysql += " ORDER BY " + orderBySql;
+
+			if(nodefault != null) response.append("<option></option>");
+
+			BQuery cmbrs = new BQuery(db, mysql);
+			while (cmbrs.moveNext()) {
+				response.append("<option");
+				if(eof) {
+					if(getString(el.getValue())!=null) {
+						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
+							response.append(" selected='selected'");
+					}
+				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
+					response.append(" selected='selected'");
+				}
+				response.append(" value='" + cmbrs.getString(lpkey));
+				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
+			}
+			cmbrs.close();
+			response.append("</select>\n");
+		} else if(el.getName().equals("MULTISELECT")) {
+			response.append("<select name='" + el.getValue() + "' multiple='multiple' ");
+			if(el.getAttribute("class") == null) response.append(" class='multi-select form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 
 			String nodefault = el.getAttribute("nodefault");
@@ -650,6 +695,7 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 			
 			String myval = null;
@@ -780,7 +826,7 @@ public class BWebBody extends BQuery {
 		
 		response.append("		</div>\n");
 		response.append("	</div>\n");
-		response.append("</div>\n");
+		if(formCols > 1) response.append("</div>\n");
 		
 		return response.toString();
 	}

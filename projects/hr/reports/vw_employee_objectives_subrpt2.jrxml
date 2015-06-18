@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_objectives_subrpt2" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="25" bottomMargin="25" uuid="867ee53a-7493-4bac-902a-d91582454e3e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="208"/>
+	<property name="ireport.y" value="172"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -362,32 +362,4 @@ ORDER BY objective_id ASC]]>
 			</textField>
 		</band>
 	</detail>
-	<pageFooter>
-		<band height="36">
-			<frame>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="12" width="555" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="b56ecab8-8e42-4b0d-b6f3-c867ec010937"/>
-				<textField evaluationTime="Report">
-					<reportElement x="515" y="0" width="40" height="20" forecolor="#736343" uuid="83bf5b56-840a-4497-8970-5035ef603545"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="435" y="0" width="80" height="20" forecolor="#736343" uuid="680293ef-7b31-4a34-b723-25acce61e1ff"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-				</textField>
-				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement x="5" y="1" width="197" height="20" forecolor="#736343" uuid="9a7c05e3-5f5b-4fae-b07b-7d90ac320356"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
-			</frame>
-		</band>
-	</pageFooter>
 </jasperReport>
