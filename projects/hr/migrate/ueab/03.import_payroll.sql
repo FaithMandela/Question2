@@ -8,6 +8,10 @@ SELECT departmentid, 0, 0, departmentname, accountnumber, depfunction, deptproje
 FROM import.departments
 ORDER BY departmentid;
 
+INSERT INTO department_roles(department_role_id, department_id, ln_department_role_id, org_id, department_role_name)
+SELECT department_id, department_id, 0, org_id, department_name
+FROM departments
+WHERE department_id <> 0;
 
 INSERT INTO banks(bank_id, sys_country_id, org_id, bank_name)
 SELECT bankid, 'KE', 0, bankname
@@ -83,6 +87,50 @@ SELECT pg_catalog.setval('education_class_education_class_id_seq', 9, true);
 INSERT INTO pay_scales (org_id, pay_scale_id, pay_scale_name, min_pay, max_pay) VALUES (0, 0, 'Basic', 0, 1000000);
 INSERT INTO pay_groups (org_id, pay_group_id, pay_group_name) VALUES (0, 0, 'Default');
 INSERT INTO locations (org_id, location_id, location_name) VALUES (0, 0, 'Main office');
+INSERT INTO disability (org_id, disability_id, disability_name) VALUES (0, 0, 'None');
+
+UPDATE import.employees SET employeename = trim(replace(employeename, '  ',  ''));
+UPDATE import.employees SET employeename = trim(replace(employeename, '  ',  ''));
+UPDATE import.employees SET employeename = trim(replace(employeename, ',',  ''));
+UPDATE import.employees SET employeename = trim(replace(employeename, ',',  ''));
+
+UPDATE import.employees SET employeename = 'Obunga Ernest' WHERE id = 126;
+UPDATE import.employees SET employeename = 'Obey Jackie' WHERE id = 289;
+UPDATE import.employees SET employeename = 'Musyoki Danson' WHERE id = 629;
+UPDATE import.employees SET employeename = 'Kibor David' WHERE id = 798;
+
+DELETE FROM entity_subscriptions WHERE entity_id = 1;
+DELETE FROM entitys WHERE entity_id = 1;
+
+INSERT INTO entitys(entity_id, entity_type_id, org_id, entity_name, user_name)
+SELECT employeeid, 1, 0, employeename, employeeid
+FROM import.employees
+ORDER BY employeeid;
+
+INSERT INTO employees(entity_id, department_role_id, bank_branch_id, disability_id, 
+	employee_id, pay_scale_id, pay_group_id, location_id, 
+	currency_id, org_id, person_title, surname, first_name, middle_name, 
+	date_of_birth, gender, phone, nationality,
+	identity_card, basic_salary, 
+	bank_account, contract_period)
+SELECT e.employeeid, e.departmentid, COALESCE(b.id, 0), 0, e.employeeid, 0, 0, 0, 1, 0, '',
+	trim(split_part(employeename, ' ', 1)), trim(split_part(employeename, ' ', 2)),
+	trim(split_part(employeename, ' ', 3)),
+	birthdate, employeesex, telephone, 'KE', idnumber, basicsalary, bankaccount, 36
+FROM import.employees as e LEFT JOIN import.bankbranch as b
+ON (e.bankid = b.bankid) AND (e.branchid = b.branchid);
+
+
+INSERT INTO employee_month(employee_month_id, entity_id, period_id, bank_branch_id, pay_group_id, 
+	department_role_id, currency_id, org_id, exchange_rate, basic_pay)
+SELECT employeemonthid, employeeid, monthrateid, COALESCE(b.id, 0), 0,
+	departmentid, 1, 0, 1, basicpay
+FROM import.employeemonth as e LEFT JOIN import.bankbranch as b
+	ON (e.bankid = b.bankid) AND (e.branchid = b.branchid)
+ORDER BY employeemonthid;
+
+
+
 
 
 
