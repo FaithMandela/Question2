@@ -953,7 +953,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Employees" key="24" h="650">
-		<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">
+		<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" tab.count="count(entity_id)" where="(active = true)">
 			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
