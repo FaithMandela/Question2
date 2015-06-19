@@ -2131,8 +2131,9 @@
 	<DESK w="700" name="Deans List" type="horl" key="331" h="500">
 		<FILTER location="250" name="Deans List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
+			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Deans List" reportfile="deanslist.jasper"></JASPER>
 		</FILTER>
 	</DESK>
