@@ -464,10 +464,15 @@ public class BWeb {
 							else tcWhere += " AND ";
 							tcWhere += el.getAttribute("linkfield") + " = " + keyD;
 						}
+                        if(el.getAttribute("where") != null) {
+							if(tcWhere == null) tcWhere = " WHERE ";
+							else tcWhere += " AND ";
+							tcWhere += el.getAttribute("where");
+						}
 						if(tcWhere != null) tcSql += tcWhere;
 System.out.println("BASE 2121 : " + tcSql);
 						String tcVal = db.executeFunction(tcSql);
-						if(tcVal != null) tabName += " (" + tcVal + ")";
+						if(tcVal != null) tabName += " <span class=\"badge badge-success\">" + tcVal + "</span>";
 					}
 					
 					if(viewKeys.get(i+1).equals(j.toString()))
