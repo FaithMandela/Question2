@@ -7,7 +7,9 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT studentname, quarter, quarteryear, gpa
+		<![CDATA[SELECT studentname, quarter, quarteryear, gpa,
+(CASE WHEN quarter = '1' THEN 'st' WHEN quarter = '2' THEN 'nd'
+WHEN quarter = '3' THEN 'rd' WHEN quarter = '4' THEN 'st' END) as qend
 FROM studentquarterlist
 WHERE gpa >= 3.5 limit 4;]]>
 	</queryString>
@@ -15,6 +17,7 @@ WHERE gpa >= 3.5 limit 4;]]>
 	<field name="quarter" class="java.lang.String"/>
 	<field name="quarteryear" class="java.lang.String"/>
 	<field name="gpa" class="java.lang.Double"/>
+	<field name="qend" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -49,7 +52,7 @@ WHERE gpa >= 3.5 limit 4;]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="18" isBold="false" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["PRESENTS TO<br>" + $F{studentname}  + "<br>Certificate of academic achievement</br>"+ "<br>For <b><i>Dean's List</b></i><br>" + "With a Current G.P.A of 3.50, <br> "  + $F{quarter} + " Quarter " +  $F{quarteryear}  + " Awarded on this " + $P{award_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Presents to<br>" + $F{studentname}  + "<br>Certificate of academic achievement</br>"+ "<br>For <b><i>Dean's List</b></i><br>" + "With a Current G.P.A of 3.50, <br> "  + $F{quarter} + $F{qend} + " Quarter " +  $F{quarteryear}  + " Awarded on this " + $P{award_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="2" y="203" width="752" height="23" uuid="207af874-d685-4353-a6b1-71d2b9d8f549"/>
