@@ -449,17 +449,38 @@ public class BWeb {
 				}
 
 				if(show) {
+					String tabName = el.getAttribute("name");
+					if(el.getAttribute("tab.count") != null) {
+						String tcSql = "SELECT " + el.getAttribute("tab.count") + " FROM " + el.getAttribute("table");
+						String tcWhere = null;
+						if(el.getAttribute("noorg") == null) tcWhere = db.getOrgWhere();
+						if(el.getAttribute("user") != null) {
+							if(tcWhere == null) tcWhere = " WHERE ";
+							else tcWhere += " AND ";
+							tcWhere += el.getAttribute("user") + " = " + db.getUserID();
+						}
+						if(el.getAttribute("linkfield") != null) {
+							if(tcWhere == null) tcWhere = " WHERE ";
+							else tcWhere += " AND ";
+							tcWhere += el.getAttribute("linkfield") + " = " + keyD;
+						}
+						if(tcWhere != null) tcSql += tcWhere;
+System.out.println("BASE 2121 : " + tcSql);
+						String tcVal = db.executeFunction(tcSql);
+						if(tcVal != null) tabName += " (" + tcVal + ")";
+					}
+					
 					if(viewKeys.get(i+1).equals(j.toString()))
 						tabs += "\t\t\t<li class='active'>";
 					else
 						tabs += "\t\t\t<li>";
 					tabs += "<a href='?view=" + keyV +  j.toString();
 					if(keyD.equals("{new}") && (elName.equals("FORM"))) {
-						tabs += "&data=" + keyD + "'>New " + el.getAttribute("name") + "</a></li>\n";
+						tabs += "&data=" + keyD + "'>New " + tabName + "</a></li>\n";
 					} else if (elName.equals("FORM") && (!el.getAttribute("edit", "true").equals("false"))) {
-						tabs += "&data=" + keyD + "'>Edit " + el.getAttribute("name") + "</a></li>\n";
+						tabs += "&data=" + keyD + "'>Edit " + tabName + "</a></li>\n";
 					} else {
-						tabs += "&data=" + keyD + "'>" + el.getAttribute("name") + "</a></li>\n";
+						tabs += "&data=" + keyD + "'>" + tabName + "</a></li>\n";
 					}
 				}
 				j++;

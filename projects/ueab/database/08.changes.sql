@@ -334,3 +334,34 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE VIEW ws_students AS
+	SELECT students.studentid, students.schoolid, students.denominationid, students.org_id,
+		students.studentname, students.sex,
+		students.Nationality, students.MaritalStatus, students.birthdate, students.address,
+		students.zipcode, students.town, students.countrycodeid, 
+		students.telno,  students.email,
+		entitys.entity_id, entitys.entity_password,
+		studentdegrees.studentdegreeid, studentmajors.studentmajorid,
+		majors.majorid, majors.majorname, majors.departmentid
+	FROM students INNER JOIN entitys ON students.studentid = entitys.user_name
+		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid
+		INNER JOIN studentmajors ON studentdegrees.studentdegreeid = studentmajors.studentdegreeid
+		INNER JOIN majors ON studentmajors.majorid = majors.majorid
+	WHERE (studentdegrees.completed = false) AND (studentmajors.primarymajor = true);
+
+CREATE VIEW ws_qstudents AS
+	SELECT ws_students.studentid, ws_students.schoolid, ws_students.denominationid, ws_students.org_id,
+		ws_students.studentname, ws_students.sex,
+		ws_students.Nationality, ws_students.MaritalStatus, ws_students.birthdate, ws_students.address,
+		ws_students.zipcode, ws_students.town, ws_students.countrycodeid, 
+		ws_students.telno,  ws_students.email,
+		ws_students.entity_id, ws_students.entity_password,
+		ws_students.studentdegreeid, ws_students.studentmajorid,
+		ws_students.majorid, ws_students.majorname, ws_students.departmentid,
+		qstudents.qstudentid, quarters.quarterid
+	FROM ws_students INNER JOIN qstudents ON ws_students.studentdegreeid = qstudents.studentdegreeid
+		INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid
+	WHERE (quarters.active = true) AND (qstudents.approved = true);
+	
+	

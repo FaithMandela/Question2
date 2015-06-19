@@ -89,7 +89,7 @@ DECLARE
 BEGIN
 	q := $3/1200;
 	
-	IF ($2 = 0) OR (q = -1) OR (($2 - (q * $1)) = 0) THEN
+	IF ($2 = 0) OR (q = -1) OR ((q * $1) >= $2) THEN
 		paymentperiod := 1;
 	ELSIF (log(q + 1) = 0) THEN
 		paymentperiod := 1;
