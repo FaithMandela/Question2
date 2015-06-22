@@ -7,6 +7,7 @@
 			<MENU name="Client Forms">25</MENU>
 			<MENU name="Applied Forms">30</MENU>
 			<MENU name="Approvals">45</MENU>
+			<MENU name="Id Types">85</MENU>
 		</MENU>
 		<MENU name="Configurations" role="admin">
 			<MENU name="Countrys" role="admin">5</MENU>
@@ -688,22 +689,22 @@
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 			<FORM name="Clients" keyfield="entity_id" table="clients">
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" h="20" y="10" lpfield="entity_name" x="10">entity_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Person Title" h="20" y="30" x="10">person_title</TEXTFIELD>
-				<TEXTFIELD w="150" title="Surname" h="20" y="30" x="290">surname</TEXTFIELD>
-				<TEXTFIELD w="150" title="First Name" h="20" y="50" x="10">first_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Middle Name" h="20" y="50" x="290">middle_name</TEXTFIELD>
-				<TEXTDATE w="150" title="Date Of Birth" h="20" y="70" x="10">date_of_birth</TEXTDATE>
-				<CHECKBOX w="150" title="Gender" ischar="true" h="20" y="70" x="290">gender</CHECKBOX>
-				<TEXTFIELD w="430" title="Phone" h="20" y="90" x="10">phone</TEXTFIELD>
-				<COMBOBOX w="430" title="Nationality" lptable="sys_countrys" lpkey="sys_country_id" h="20" y="110" lpfield="sys_country_name" x="10">nationality</COMBOBOX>
-				<COMBOBOX w="430" title="Nation Of Birth" lptable="sys_countrys" lpkey="sys_country_id" h="20" y="130" lpfield="sys_country_name" x="10">nation_of_birth</COMBOBOX>
-				<TEXTFIELD w="150" title="Place Of Birth" h="20" y="150" x="10">place_of_birth</TEXTFIELD>
-				<TEXTFIELD w="150" title="Approve Status" h="20" y="150" x="290">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Workflow Table ID" h="20" y="170" x="10">workflow_table_id</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" title="Application Date" h="20" y="170" x="290">application_date</TEXTTIMESTAMP>
-				<TEXTTIMESTAMP w="150" title="Action Date" h="20" y="190" x="10">action_date</TEXTTIMESTAMP>
-				<TEXTAREA w="430" title="Details" h="70" y="210" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Person Title" y="30" h="20" x="10">person_title</TEXTFIELD>
+				<TEXTFIELD w="150" title="Surname" y="30" h="20" x="290">surname</TEXTFIELD>
+				<TEXTFIELD w="150" title="First Name" y="50" h="20" x="10">first_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Middle Name" y="50" h="20" x="290">middle_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10">date_of_birth</TEXTDATE>
+				<CHECKBOX w="150" title="Gender" y="70" ischar="true" h="20" x="290">gender</CHECKBOX>
+				<TEXTFIELD w="430" title="Phone" y="90" h="20" x="10">phone</TEXTFIELD>
+				<COMBOBOX w="430" title="Nationality" lptable="sys_countrys" lpkey="sys_country_id" y="110" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
+				<COMBOBOX w="430" title="Nation Of Birth" lptable="sys_countrys" lpkey="sys_country_id" y="130" h="20" x="10" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
+				<TEXTFIELD w="150" title="Place Of Birth" y="150" h="20" x="10">place_of_birth</TEXTFIELD>
+				<TEXTFIELD w="150" title="Approve Status" y="150" h="20" x="290">approve_status</TEXTFIELD>
+				<TEXTFIELD w="150" title="Workflow Table ID" y="170" h="20" x="10">workflow_table_id</TEXTFIELD>
+				<TEXTTIMESTAMP w="150" title="Application Date" y="170" h="20" x="290">application_date</TEXTTIMESTAMP>
+				<TEXTTIMESTAMP w="150" title="Action Date" y="190" h="20" x="10">action_date</TEXTTIMESTAMP>
+				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -714,8 +715,19 @@
 			<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Default Interest">default_interest</TEXTFIELD>
 			<FORM name="Loan Types" keyfield="loan_type_id" table="loan_types">
-				<TEXTFIELD w="150" title="Loan Type Name" h="20" y="10" x="10">loan_type_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Default Interest" h="20" y="10" x="290">default_interest</TEXTFIELD>
+				<TEXTFIELD w="150" title="Loan Type Name" y="10" h="20" x="10">loan_type_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Default Interest" y="10" h="20" x="290">default_interest</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Id Types" key="85" h="550">
+		<GRID name="ID Types" keyfield="id_type_id" table="id_types">
+			<TEXTFIELD w="75" title="ID Type ID">id_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="ID Type Name">id_type_name</TEXTFIELD>
+			<FORM name="ID Types" keyfield="id_type_id" table="id_types">
+				<TEXTFIELD w="150" title="ID Type Name" h="20" y="10" x="10">id_type_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" h="70" y="30" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
