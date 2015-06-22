@@ -1,6 +1,9 @@
 ---Project Database File
 
 ALTER TABLE orgs ADD credit_limit real not null default 0;
+ALTER TABLE orgs ADD pcc varchar(4);
+ALTER TABLE address ADD CONSTRAINT address_org_id_mobile_key UNIQUE (org_id, mobile);
+ALTER TABLE entitys ADD son varchar(6);
 
 CREATE TABLE rate_types(
     rate_type_id        serial primary key,
@@ -42,6 +45,10 @@ CREATE TABLE payments(
     details                 text
 ); 
 CREATE INDEX payments_org_id ON payments(org_id);
+
+
+
+
 
 
 
