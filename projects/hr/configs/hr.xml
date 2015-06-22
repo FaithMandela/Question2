@@ -273,7 +273,7 @@
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees" user="entity_id">
+			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
 				<TEXTFIELD w="100" title="Name">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
@@ -282,7 +282,7 @@
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="cv_referees">table_name</DEFAULT>
+					<DEFAULT default="referees">table_name</DEFAULT>
 					<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
@@ -1175,7 +1175,7 @@
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="cv_referees">table_name</DEFAULT>
+					<DEFAULT default="referees">table_name</DEFAULT>
 					<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>

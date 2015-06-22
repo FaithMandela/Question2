@@ -1,3 +1,4 @@
+
 DROP VIEW vw_reporting;
 CREATE VIEW vw_reporting AS
 	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name, 
