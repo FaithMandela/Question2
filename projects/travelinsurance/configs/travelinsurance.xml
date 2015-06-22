@@ -1,0 +1,73 @@
+<APP name="Travel Insurance" org="org_id" password="change_password">
+	<MENU name="Travel Insurance">
+		<MENU name="Rates">1</MENU>
+		<MENU name="Rate Types">5</MENU>
+		<MENU name="Orgs" role="admin">30</MENU>
+	</MENU>
+	<DESK w="700" name="Rate Types" key="5" h="550">
+		<GRID name="Rate Types" keyfield="rate_type_id" table="rate_types">
+			<TEXTFIELD w="75" title="Rate Type ID">rate_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Type Name">rate_type_name</TEXTFIELD>
+			<FORM name="Rate Types" keyfield="rate_type_id" table="rate_types">
+				<TEXTFIELD w="150" title="Rate Type Name" y="10" h="20" x="10">rate_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Rates" key="1" h="550">
+		<GRID name="Rates" keyfield="rate_id" table="rates">
+			<TEXTFIELD w="75" title="Rate ID">rate_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Type ID">rate_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Standard Rate">standard_rate</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="North America Rate">north_america_rate</TEXTDECIMAL>
+			<FORM name="Rates" keyfield="rate_id" table="rates">
+				<COMBOBOX w="430" title="Rate Type ID" lptable="rate_types" y="10" h="20" x="10" lpfield="rate_type_name">rate_type_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Days From" y="30" h="20" x="10">days_from</TEXTFIELD>
+				<TEXTFIELD w="150" title="Days To" y="30" h="20" x="290">days_to</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Standard Rate" y="50" h="20" x="10">standard_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="North America Rate" y="50" h="20" x="290">north_america_rate</TEXTDECIMAL>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Orgs" key="30" h="550">
+		<GRID name="Orgs" keyfield="org_id" table="vw_orgs" noorg="true">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<GRID name="Entitys" keyfield="entity_id" linkfield="org_id" table="vw_entitys" noorg="true">
+				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Date Enroled">date_enroled</TEXTTIMESTAMP>
+				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<FORM name="Entity" keyfield="entity_id" linkfield="org_id" table="entitys" noorg="true">
+					<COMBOBOX w="430" title="Entity Type ID" lptable="entity_types" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+					<TEXTFIELD w="430" title="Entity Name" y="10" h="20" x="10">entity_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="User Name" y="30" h="20" x="10">user_name</TEXTFIELD>
+					<CHECKBOX w="150" title="Super User" y="70" h="20" x="290">super_user</CHECKBOX>
+					<CHECKBOX w="150" title="Entity Leader" y="90" h="20" x="10">entity_leader</CHECKBOX>
+					<TEXTFIELD w="430" title="Function Role" y="110" h="20" x="10">function_role</TEXTFIELD>
+					<CHECKBOX w="150" title="Active" y="130" h="20" x="290">is_active</CHECKBOX>
+					<TEXTFIELD w="150" title="First Password" y="150" h="20" x="290">first_password</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+					<TEXTFIELD w="150" title="Son" y="280" h="20" x="10">son</TEXTFIELD>
+				</FORM>
+			</GRID>
+			<FORM name="Org" keyfield="org_id" table="orgs" noorg="true">
+				<COMBOBOX w="430" title="Currency ID" lptable="currency" y="10" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="Parent Org ID" lptable="orgs" lpkey="org_id" y="30" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Org Name" y="50" h="20" x="10">org_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Pcc" y="180" h="20" x="10">pcc</TEXTFIELD>
+				<TEXTFIELD w="150" title="Org Sufix" y="50" h="20" x="290">org_sufix</TEXTFIELD>
+				<CHECKBOX w="150" title="Default" y="70" h="20" x="10">is_default</CHECKBOX>
+				<CHECKBOX w="150" title="Active" y="70" h="20" x="290">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="Logo" y="90" h="20" x="10">logo</TEXTFIELD>
+				<TEXTFIELD w="150" title="Pin" y="90" h="20" x="290">pin</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+</APP>
