@@ -2136,6 +2136,14 @@
 			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Deans List" reportfile="deanslist.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="Deans List" split="250" h="550">
+			<FILTERGRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" noorg="true">
+				<TEXTFIELD w="15" title="Student ID">studentid</TEXTFIELD>
+				<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
+				<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
+			</FILTERGRID>
+			<JASPER name="Transcript" audit="transcriptprint" reportfile="transcript2.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Deanlist Year" type="horl" key="341" h="500">
 		<FILTER location="250" name="Deanlist Year" type="horl">

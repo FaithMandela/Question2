@@ -92,7 +92,7 @@ ORDER BY a.majorname, a.studentyear;]]>
 	<summary>
 		<band height="50" splitType="Stretch">
 			<crosstab>
-				<reportElement x="0" y="0" width="782" height="46" uuid="ae168cbd-0740-4f9a-a4db-e8471dbcc514"/>
+				<reportElement x="0" y="0" width="782" height="50" uuid="ae168cbd-0740-4f9a-a4db-e8471dbcc514"/>
 				<rowGroup name="majorname" width="119" totalPosition="End">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{majorname}]]></bucketExpression>
