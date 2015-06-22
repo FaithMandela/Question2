@@ -460,6 +460,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE VIEW deans_list AS
+	SELECT quarterid, studentid, studentname, degreelevelid, degreelevelname, 
+		schoolid, schoolname, sublevelid, sublevelname, sex, 
+		degreeid, degreename,
+		studentdegreeid, qstudentid,
+		credit, gpa, cummcredit, cummgpa,
+		getcoremajor(studentdegreeid) as coremajor
+	FROM studentquartersummary
+	WHERE (credit >= 12) AND (gpa >= 3.5)
+		AND (checkincomplete(qstudentid) = 0) AND (checkgrade(qstudentid, 2.67) = 0)
+		AND (degreelevelid = 'UDG');
+
 CREATE VIEW honorslist AS
 	SELECT studentid, studentname, Sex, Nationality, MaritalStatus, birthdate, studentdegreeid, degreeid, sublevelid,
 		academicyear, quartersdone, qstudent1, qstudent2, qstudent3, qstudent4,

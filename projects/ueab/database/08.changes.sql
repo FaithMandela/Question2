@@ -365,3 +365,14 @@ CREATE VIEW ws_qstudents AS
 	WHERE (quarters.active = true) AND (qstudents.approved = true);
 	
 	
+CREATE VIEW deans_list AS
+	SELECT quarterid, studentid, studentname, degreelevelid, degreelevelname, schoolname,
+		sublevelid, sublevelname, sex, 
+		studentdegreeid, qstudentid,
+		credit, gpa, cummcredit, cummgpa,
+		getcoremajor(studentdegreeid) as coremajor
+	FROM studentquartersummary
+	WHERE (credit >= 12) AND (gpa >= 3.5)
+		AND (checkincomplete(qstudentid) = 0) AND (checkgrade(qstudentid, 2.67) = 0)
+		AND (degreelevelid = 'UDG');		
+		
