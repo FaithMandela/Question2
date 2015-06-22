@@ -48,24 +48,24 @@ where (studentdegreeid = '$P!{studentdegreeid}');]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="18" isBold="false" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Presents to<br>" + $F{studentname}  + "<br>Certificate of academic achievement</br> <br>For <b><i>Special Award</b></i><br> for Current and Cumulative G.P.A of not less than 3.50<br> In all quarters in " + $F{academicyear} +  " Academic Year<br> Awarded on this " + $P{award_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Presents to<br><i> " + $F{studentname} + "</i><br>Certificate of academic achievement</br> <br>For <b><i>Special Award</b></i><br> for Current and Cumulative G.P.A of not less than 3.50<br> In all quarters in " + $F{academicyear} +  " Academic Year<br> Awarded on this " + $P{award_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="184" width="752" height="20" uuid="64b62ad5-8158-4ff5-999b-06953d9bcf92"/>
+				<reportElement x="0" y="190" width="752" height="20" uuid="64b62ad5-8158-4ff5-999b-06953d9bcf92"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Prof. Mwangi Wa-Githumo ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="204" width="752" height="23" uuid="7c5bef13-f7a0-4dc5-bcbb-6197461bcc01"/>
+				<reportElement x="0" y="210" width="752" height="23" uuid="7c5bef13-f7a0-4dc5-bcbb-6197461bcc01"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Deputy Vice Chancellor]]></text>
 			</staticText>
 			<line>
-				<reportElement x="230" y="184" width="310" height="1" uuid="095abfe1-3292-4f50-a709-3b5dc557ec58"/>
+				<reportElement x="230" y="190" width="310" height="1" uuid="095abfe1-3292-4f50-a709-3b5dc557ec58"/>
 			</line>
 		</band>
 	</detail>
