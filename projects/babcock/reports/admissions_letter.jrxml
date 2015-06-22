@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="432"/>
+	<property name="ireport.y" value="363"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -149,12 +149,11 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" isItalic="true" pdfFontName="Times-Italic" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Babcock...... the future is bright!<br/>
-<p><i>Jonathan C. Nwosu<br/></p>
-<p>Registrar <br/></p>
-registrar@babcock.edu.ng<br/>
-admissions@babcock.edu.ng<br/>
-Hot Lines: 0816 283 5333; 0812 645 6667; 0818 3277727<i/>]]></text>
+				<text><![CDATA[
+ <i><br>Babcock, The furture is bright!</br>
+ <p><i>Jonathan C. Nwosu<br/></p>
+ <p>Registrar <br/></p>
+]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="2" y="107" width="509" height="30" uuid="1baee416-8a69-43aa-8a94-18cc3f2416f3"/>
@@ -282,7 +281,7 @@ Hot Lines: 0816 283 5333; 0812 645 6667; 0818 3277727<i/>]]></text>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Pay <u>A NON REFUNDABLE ACCEPTANCE FEE</u> OF <i>N150,000 (one hundred and fifty thousand naira only).</i><b> UBA, Diamond and GTB using your Application ID number for E-tranzact OR Remita Number.
+				<text><![CDATA[Pay <u>A NON REFUNDABLE ACCEPTANCE FEE</u> OF <i>N150,000 (one hundred and fifty thousand naira only).</i><b> UBA, Diamond and GTB using your Application ID number for E-tranzact.
 ]]></text>
 			</staticText>
 			<staticText>
