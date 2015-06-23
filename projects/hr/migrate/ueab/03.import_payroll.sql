@@ -57,7 +57,7 @@ ORDER BY nhisrateid;
 ALTER TABLE periods ADD acc_period	varchar(12);
 
 UPDATE import.monthrates SET startdate = '2013-04-01'::date WHERE monthrateid = 144;
-INSERT INTO periods(period_id, org_id, start_date, end_date, acc_period)
+INSERT INTO periods(period_id, 0, org_id, start_date, end_date, acc_period)
 SELECT monthrateid, startdate, enddate, accperiod
 FROM import.monthrates
 ORDER BY monthrateid;

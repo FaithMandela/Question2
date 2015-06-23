@@ -2,14 +2,17 @@
 	<MENU name="Travel Insurance">
 		<MENU name="Service Desk">
 			<MENU name="Dashboard">1</MENU>
+			<MENU name="My Insurance">82</MENU>
+			<MENU name="My Payments">87</MENU>
 			<MENU name="Client Forms">25</MENU>
-			<MENU name="Applied Forms">30</MENU>
 			<MENU name="Approvals">45</MENU>
 		</MENU>
-		<MENU name="Configurations" role="admin">
-			<MENU name="Insurance">80</MENU>
-			<MENU name="Payments">85</MENU>
+		<MENU name="Transactions" role="admin">
+			<MENU name="Insurance" role="admin">80</MENU>
+			<MENU name="Payments" role="admin">85</MENU>
 			<MENU name="Travel Agencies" role="admin">10</MENU>
+		</MENU>
+		<MENU name="Configurations" role="admin">
 			<MENU name="Rates">75</MENU>
 			<MENU name="Countrys" role="admin">5</MENU>
 			<MENU name="Entitys" role="admin">15</MENU>
@@ -39,25 +42,47 @@
 				<TEXTFIELD w="75" title="Country Code">sys_country_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Country Number">sys_country_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Country Name">sys_country_name</TEXTFIELD>
-				<GRID name="City Codes" keyfield="city_code" linkfield="sys_country_id" table="city_codes">
+				<GRID name="City Codes" keyfield="city_code" linkfield="sys_country_id" table="city_codes" noorg="true">
 					<TEXTFIELD w="75" title="City Code">city_code</TEXTFIELD>
 					<TEXTFIELD w="75" title="City Name">city_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Country">country</TEXTFIELD>
-					<TEXTFIELD w="75" title="Sys Country ID">sys_country_id</TEXTFIELD>
-					<FORM name="City Codes" keyfield="city_code" linkfield="sys_country_id" table="city_codes">
+					<FORM name="City Codes" keyfield="city_code" linkfield="sys_country_id" table="city_codes" noorg="true">
 						<TEXTFIELD w="150" title="City Code" y="10" h="20" x="10">city_code</TEXTFIELD>
 						<TEXTFIELD w="150" title="Country" y="10" h="20" x="290">country</TEXTFIELD>
-						<COMBOBOX w="430" title="Sys Country ID" lptable="sys_countrys" y="30" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 					</FORM>
 				</GRID>
 			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Travel Agencies" key="10" h="500">
-		<GRID name="Travel Agencies" keyfield="org_id" table="orgs">
+		<GRID name="Travel Agencies" keyfield="org_id" table="orgs" noorg="true">
 			<TEXTFIELD w="75" title="ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="PCC">pcc</TEXTFIELD>
+			<TEXTDECIMAL w="150" title="Credit Limit">credit_limit</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<GRID name="Consultant" keyfield="entity_id" linkfield="org_id" table="vw_entitys" noorg="true">
+				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
+				<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+				<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+				<FORM name="Consultant" keyfield="entity_id" linkfield="org_id" table="entitys" noorg="true">
+					<DEFAULT default="user">function_role</DEFAULT>
+					<COMBOBOX w="430" title="Entity Type" lptable="entity_types" y="30" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
+					<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
+					<TEXTFIELD w="150" title="SON" y="130" h="20" x="290">son</TEXTFIELD>
+					<CHECKBOX w="150" title="Active" y="150" h="20" x="10">is_active</CHECKBOX>
+					<TEXTFIELD w="150" title="First Password" y="150" h="20" x="290">first_password</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'orgs'">
 				<TEXTFIELD w="140" title="Country">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="80" title="Postal Code">postal_code</TEXTFIELD>
@@ -81,12 +106,13 @@
 					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Travel Agencies" keyfield="org_id" table="orgs">
+			<FORM name="Travel Agencies" keyfield="org_id" table="orgs" noorg="true">
 				<TEXTFIELD w="350" title="Name" y="10" h="20" x="10">org_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
 				<TEXTFIELD w="350" title="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
 				<COMBOBOX w="430" title="Base Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Parent Org" lptable="orgs" lpkey="org_id" y="90" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+				<TEXTFIELD w="350" title="PCC" y="50" h="20" x="10">pcc</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Credit Limit" y="90" h="20" x="10">credit_limit</TEXTDECIMAL>
 				<TEXTFIELD w="50" title="Sufix" y="110" h="20" x="10">org_sufix</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -712,10 +738,18 @@
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID name="Benefit Types" keyfield="benefit_type_id" table="benefit_types" noorg="true">
+			<TEXTFIELD w="75" title="Benefit Type ID">benefit_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Benefit Type Name">benefit_type_name</TEXTFIELD>
+			<FORM name="Benefit Types" keyfield="benefit_type_id" table="benefit_types" noorg="true">
+				<TEXTFIELD w="150" title="Benefit Type Name" y="10" h="20" x="10">benefit_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Insurance" key="80" h="550">
-		<GRID name="Insurance" keyfield="passenger_id" table="vw_passengers">
-			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+		<GRID name="Insurance" keyfield="passenger_id" table="vw_passengers" noorg="true">
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -731,8 +765,8 @@
 			<TEXTFIELD w="75" title="National ID">nok_national_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
-			<FORM name="Insurance" keyfield="passenger_id" table="passengers">
-				<COMBOBOX w="430" title="Rate" lptable="rates" y="10" h="20" x="10" lpfield="rate_id">rate_id</COMBOBOX>
+			<JASPER name="Policy" reportfile="vw_passengers"></JASPER>
+			<FORM name="Insurance" keyfield="passenger_id" table="passengers" noorg="true">
 				<TEXTFIELD w="150" title="Passenger Name" y="50" h="20" x="10">passenger_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Passenger Mobile" y="50" h="20" x="290">passenger_mobile</TEXTFIELD>
 				<TEXTFIELD w="150" title="Passenger Email" y="70" h="20" x="10">passenger_email</TEXTFIELD>
@@ -747,25 +781,50 @@
 			</FORM>
 		</GRID>
 	</DESK>
+	<DESK w="700" name="My Insurance" key="82" h="550">
+		<GRID name="Insurance" keyfield="passenger_id" table="vw_passengers">
+			<TEXTFIELD w="75" title="Rate Type Name">rate_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Standard Rate">standard_rate</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="North America Rate">north_america_rate</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Age">passenger_age</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days Covered">days_covered</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">nok_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile">nok_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="National ID">nok_national_id</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
+			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
+			<JASPER name="Policy" reportfile="vw_passengers"></JASPER>
+		</GRID>
+	</DESK>
 	<DESK w="700" name="Payments" key="85" h="550">
-		<GRID name="Payments" keyfield="payment_id" table="vw_payments">
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Payment Type ID">payment_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Payment Type Name">payment_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Payment ID">payment_id</TEXTFIELD>
+		<GRID name="Pending Payments" keyfield="payment_id" table="vw_payments" noorg="true" where="(approved = false)">
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Transaction Reference">transaction_reference</TEXTFIELD>
 			<TEXTDATE w="75" title="Payment Date">payment_date</TEXTDATE>
 			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
 			<FORM name="Payments" keyfield="payment_id" table="payments">
-				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" y="10" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" noorg="true" y="10" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Payment Amount" y="30" h="20" x="10">payment_amount</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Transaction Reference" y="30" h="20" x="290">transaction_reference</TEXTFIELD>
 				<TEXTDATE w="150" title="Payment Date" y="50" h="20" x="10">payment_date</TEXTDATE>
 				<CHECKBOX w="150" title="Approved" y="50" h="20" x="290">approved</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID name="Payments" keyfield="payment_id" table="vw_payments" noorg="true">
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Transaction Reference">transaction_reference</TEXTFIELD>
+			<TEXTDATE w="75" title="Payment Date">payment_date</TEXTDATE>
+			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
 		</GRID>
 		<GRID name="Payment Types" keyfield="payment_type_id" table="payment_types" noorg="true">
 			<TEXTFIELD w="75" title="Payment Type ID">payment_type_id</TEXTFIELD>
@@ -774,6 +833,31 @@
 				<TEXTFIELD w="150" title="Payment Type Name" y="10" h="20" x="10">payment_type_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="My Payments" key="87" h="550">
+		<GRID name="Payments" keyfield="payment_id" table="vw_payments" where="(approved = false)">
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Transaction Reference">transaction_reference</TEXTFIELD>
+			<TEXTDATE w="75" title="Payment Date">payment_date</TEXTDATE>
+			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
+			<FORM name="Payments" keyfield="payment_id" table="payments">
+				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" noorg="true" y="10" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Payment Amount" y="30" h="20" x="10">payment_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Transaction Reference" y="30" h="20" x="290">transaction_reference</TEXTFIELD>
+				<TEXTDATE w="150" title="Payment Date" y="50" h="20" x="10">payment_date</TEXTDATE>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Payments" keyfield="payment_id" table="vw_payments">
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Transaction Reference">transaction_reference</TEXTFIELD>
+			<TEXTDATE w="75" title="Payment Date">payment_date</TEXTDATE>
+			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
 		</GRID>
 	</DESK>
 </APP>
