@@ -765,7 +765,7 @@
 			<TEXTFIELD w="75" title="National ID">nok_national_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
-			<JASPER name="Policy" reportfile="vw_passengers"></JASPER>
+			<JASPER name="Policy" reportfile="vw_passengers.jasper"></JASPER>
 			<FORM name="Insurance" keyfield="passenger_id" table="passengers" noorg="true">
 				<TEXTFIELD w="150" title="Passenger Name" y="50" h="20" x="10">passenger_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Passenger Mobile" y="50" h="20" x="290">passenger_mobile</TEXTFIELD>
@@ -798,7 +798,7 @@
 			<TEXTFIELD w="75" title="National ID">nok_national_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
-			<JASPER name="Policy" reportfile="vw_passengers"></JASPER>
+			<JASPER name="Policy" reportfile="vw_passengers.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Payments" key="85" h="550">
