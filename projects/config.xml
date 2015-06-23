@@ -17,12 +17,9 @@
 	<APP dbpath="jdbc:postgresql://localhost/agency" dbname="agency" path="agency" xmlfile="agency.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="db">Agency</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">SACCO</APP>
 	<APP dbpath="jdbc:postgresql://localhost/galileo" dbname="galileo" path="galileo" xmlfile="galileo.xml" dbclass="org.postgresql.Driver" dbusername="root">Galileo</APP>
-<<<<<<< HEAD
 	<APP dbpath="jdbc:postgresql://localhost/fidelity" dbname="fidelity" path="fidelity" xmlfile="fidelity.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Fidelity</APP>
-=======
 	<APP dbpath="jdbc:postgresql://umisdb/fidelity" dbname="fidelity" path="fidelity" xmlfile="fidelity.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Fidelity</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
->>>>>>> 0085cd415387d43db0498756c1fb20b9f0655051
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Finance</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="admission.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Admissions</APP>
