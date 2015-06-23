@@ -2310,7 +2310,9 @@
 		<FILTER location="250" name="Study Year by Semester" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
-			</DRILLDOWN>
+				</DRILLDOWN>
+				<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
+			
 			<JASPER filtered="true" name="Study Year by Semester - Summary" reportfile="studyyearb.jasper"></JASPER>
 			<JASPER filtered="true" name="Study Year by Semester" reportfile="studyyeara.jasper"></JASPER>
 		</FILTER>
