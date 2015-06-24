@@ -62,7 +62,7 @@ CREATE TABLE accounts (
 	activity				varchar(10),
 	other_banks				varchar(50),
 	
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
@@ -91,7 +91,7 @@ CREATE TABLE directors (
     email					varchar(50),
 	gsm_no					varchar(20),
 	
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
@@ -121,7 +121,7 @@ CREATE TABLE loans (
 	monthly_repayment		real not null,
 	repayment_period		integer not null CHECK (repayment_period > 0),
 	
-    approve_status			varchar(16) default 'draft' not null,
+    approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
@@ -211,12 +211,11 @@ BEGIN
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES (1, v_org_id, NEW.entity_id, 'student');
 		
-		INSERT INTO accounts(
-            org_id, account_type_id, corporate_type_id, currency_id, 
+		INSERT INTO accounts(org_id, account_type_id, corporate_type_id, currency_id, 
             entity_id, account_name, business_address, city, state, 
-            phone, email, website)
-            VALUES (v_org_id,NEW.account_type_id,NEW.corporate_type_id,NEW.currency_id,NEW.entity_id,NEW.account_name,NEW.business_address,NEW.city,
-            NEW.state,NEW.phone,NEW.email,NEW.website);
+            phone, email, website, approve_status)
+        VALUES (v_org_id,NEW.account_type_id,NEW.corporate_type_id,NEW.currency_id,NEW.entity_id,NEW.account_name,NEW.business_address,NEW.city,
+            NEW.state,NEW.phone,NEW.email,NEW.website, 'Draft');
 	
 	
 	END IF;
@@ -229,3 +228,35 @@ CREATE TRIGGER ins_account_openings BEFORE INSERT ON account_openings
     FOR EACH ROW EXECUTE PROCEDURE ins_account_openings();
  
 
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON accounts
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+CREATE OR REPLACE FUNCTION account_completion(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 		varchar(120);
+BEGIN
+
+	UPDATE accounts SET approve_status = 'Completed' WHERE org_id = $1::integer;
+	
+	msg := 'Account completed and forwarded for approval';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION loan_completion(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 		varchar(120);
+BEGIN
+
+	UPDATE loan SET approve_status = 'Completed' WHERE org_id = $1::integer;
+	
+	msg := 'Loan completed and forwarded for approval';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;

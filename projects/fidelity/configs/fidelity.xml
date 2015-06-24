@@ -2,7 +2,8 @@
 	<MENU name="Fidelity">
 		<MENU name="Service Desk" role="admin">
 			<MENU name="Clients">75</MENU>
-			<MENU name="Dashboard">1</MENU>
+			<MENU name="My Accounts">95</MENU>
+			<MENU name="My Loans">100</MENU>
 			<MENU name="Client Forms">25</MENU>
 			<MENU name="Applied Forms">30</MENU>
 			<MENU name="Approvals">45</MENU>
@@ -727,7 +728,7 @@
 		</FORM>
 	</DESK>
 	<DESK w="700" name="Accounts" key="90" h="550">
-		<GRID name="Accounts" keyfield="org_id" table="vw_accounts">
+		<GRID name="Accounts" keyfield="org_id" table="vw_accounts" user="entity_id" norg="true">
 			<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Corporate Type Name">corporate_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
@@ -788,6 +789,84 @@
 					<TEXTAREA w="430" title="Details" y="380" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="My Accounts" key="95" h="550">
+		<GRID name="My Accounts" keyfield="org_id" table="vw_accounts">
+			<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Corporate Type Name">corporate_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country Name">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="State">state</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phone">phone</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+			<TEXTFIELD w="150" title="Approve Status">approve_status</TEXTFIELD>
+			<FORM name="Accounts" keyfield="org_id" table="accounts">
+				<COMBOBOX w="430" title="Account Type" lptable="account_types" noorg="true" y="10" h="20" x="10" lpfield="account_type_name">account_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Corporate Type" lptable="corporate_types" noorg="true" y="30" h="20" x="10" lpfield="corporate_type_name">corporate_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="10" lpfield="sys_country_name">country_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Account Name" y="110" h="20" x="10">account_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Business Address" y="110" h="20" x="290">business_address</TEXTFIELD>
+				<TEXTFIELD w="150" title="City" y="130" h="20" x="10">city</TEXTFIELD>
+				<TEXTFIELD w="150" title="Lga" y="130" h="20" x="290">lga</TEXTFIELD>
+				<TEXTFIELD w="150" title="State" y="150" h="20" x="10">state</TEXTFIELD>
+				<TEXTFIELD w="150" title="Phone" y="150" h="20" x="290">phone</TEXTFIELD>
+				<TEXTFIELD w="430" title="Email" y="170" h="20" x="10">email</TEXTFIELD>
+				<TEXTFIELD w="430" title="Website" y="190" h="20" x="10">website</TEXTFIELD>
+				<TEXTDATE w="150" title="Commencement Date" y="210" h="20" x="10">commencement_date</TEXTDATE>
+				<TEXTDATE w="150" title="Incorporation Date" y="210" h="20" x="290">incorporation_date</TEXTDATE>
+				<TEXTFIELD w="150" title="Incorporation No" y="230" h="20" x="10">incorporation_no</TEXTFIELD>
+				<TEXTFIELD w="150" title="Industry Sector" y="230" h="20" x="290">industry_sector</TEXTFIELD>
+				<TEXTFIELD w="150" title="Line Of Business" y="250" h="20" x="10">line_of_business</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Annual Revenue" y="250" h="20" x="290">annual_revenue</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Tax ID Number" y="270" h="20" x="10">tax_id_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Employees No" y="270" h="20" x="290">employees_no</TEXTFIELD>
+				<TEXTFIELD w="150" title="Activity" y="290" h="20" x="10">activity</TEXTFIELD>
+				<TEXTFIELD w="150" title="Other Banks" y="290" h="20" x="290">other_banks</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="350" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<ACTIONS>
+				<ACTION fnct="account_completion" phase="1">Complete</ACTION>
+			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="My Loans" key="100" h="550">
+		<GRID name="Loans" keyfield="loan_id" table="vw_loans">
+			<TEXTFIELD w="75" title="Applicant">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Loan Date">loan_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<FORM name="Loans" keyfield="loan_id" table="loans">
+				<COMBOBOX w="430" title="Loan Type ID" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
+				<USERFIELD>entity_id</USERFIELD>
+				<TEXTDATE w="150" title="Loan Date" y="50" h="20" x="10">loan_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Principle" y="50" h="20" x="290">principle</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Interest" y="70" h="20" x="10">interest</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Monthly Repayment" y="70" h="20" x="290">monthly_repayment</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Repayment Period" y="90" h="20" x="10">repayment_period</TEXTFIELD>
+				<TEXTFIELD w="150" title="Approve Status" y="90" h="20" x="290">approve_status</TEXTFIELD>
+				<TEXTFIELD w="150" title="Workflow Table ID" y="110" h="20" x="10">workflow_table_id</TEXTFIELD>
+				<TEXTTIMESTAMP w="150" title="Application Date" y="110" h="20" x="290">application_date</TEXTTIMESTAMP>
+				<TEXTTIMESTAMP w="150" title="Action Date" y="130" h="20" x="10">action_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="150" title="Guarantor1 Name" tab="Guarantor" y="130" h="20" x="290">guarantor1_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guarantor1 Address" tab="Guarantor" y="150" h="20" x="10">guarantor1_address</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guarantor2 Name" tab="Guarantor" y="150" h="20" x="290">guarantor2_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guarantor2 Address" tab="Guarantor" y="170" h="20" x="10">guarantor2_address</TEXTFIELD>
+				<TEXTAREA w="430" title="Security1 Desc" tab="Security" y="190" h="70" x="10">security1_desc</TEXTAREA>
+				<TEXTAREA w="430" title="Security2 Desc" tab="Security" y="260" h="70" x="10">security2_desc</TEXTAREA>
+				<TEXTAREA w="430" title="Security3 Desc" tab="Security" y="330" h="70" x="10">security3_desc</TEXTAREA>
+				<TEXTAREA w="430" tab="Details" y="400" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<ACTIONS>
+				<ACTION fnct="loan_completion" phase="1">Complete</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 </APP>
