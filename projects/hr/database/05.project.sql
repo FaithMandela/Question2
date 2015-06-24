@@ -224,6 +224,33 @@ CREATE VIEW vw_project_staff_costs AS
 		project_staff_costs.staff_cost, project_staff_costs.tax_cost, project_staff_costs.details
 	FROM project_staff_costs INNER JOIN vw_employee_month ON project_staff_costs.employee_month_id = vw_employee_month.employee_month_id
 		INNER JOIN projects ON project_staff_costs.project_id = projects.project_id;
+		
+CREATE VIEW vw_project_staff_adjustments AS
+	SELECT vw_employee_month.employee_month_id, vw_employee_month.period_id, vw_employee_month.start_date, 
+		vw_employee_month.month_id, vw_employee_month.period_year, vw_employee_month.period_month,
+		vw_employee_month.end_date, 
+		vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.employee_id,
+		adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, adjustments.account_number, 
+		adjustments.earning_code,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		employee_adjustments.org_id, employee_adjustments.employee_adjustment_id, employee_adjustments.pay_date, employee_adjustments.amount, 
+		employee_adjustments.in_payroll, employee_adjustments.in_tax, employee_adjustments.visible, employee_adjustments.exchange_rate,
+		employee_adjustments.paid_amount, employee_adjustments.balance, employee_adjustments.narrative,
+		employee_adjustments.tax_relief_amount,
+		
+		projects.project_id, projects.project_name, projects.project_account,
+		project_staff_costs.project_staff_cost_id, 
+		project_staff_costs.project_role, project_staff_costs.payroll_ps,
+		project_staff_costs.staff_cost, project_staff_costs.tax_cost, 
+		
+		(employee_adjustments.exchange_rate * employee_adjustments.amount) as base_amount,
+		(employee_adjustments.exchange_rate * employee_adjustments.amount * project_staff_costs.payroll_ps / 100) as project_amount
+		
+	FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
+		INNER JOIN vw_employee_month ON employee_adjustments.employee_month_id = vw_employee_month.employee_month_id
+		INNER JOIN currency ON adjustments.currency_id = currency.currency_id
+		INNER JOIN project_staff_costs ON vw_employee_month.employee_month_id = project_staff_costs.employee_month_id
+		INNER JOIN projects ON project_staff_costs.project_id = projects.project_id;
 
 CREATE VIEW vw_phases AS
 	SELECT vw_projects.client_id, vw_projects.client_name, vw_projects.project_type_id, vw_projects.project_type_name, 

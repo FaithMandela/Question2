@@ -1,12 +1,28 @@
 <?xml version="1.0"?>
-<SOAPSMS sppassword="DewCIS7SMS" 
+<SOAPSMS sppassword="Bar*z#2015" 
 	endpoint="http://172.31.183.242:9090/kannel/smsnotice" 
 	smsreceiver="http://172.31.183.242:9090/kannel/smslisten" 
-	duration="10000">
+	duration="30000">
 
-	<COMM orgid="7" dbpassword="20f10884040bc" dbpath="jdbc:mysql://62.24.122.52:3306/faida_sms" dbclass="com.mysql.jdbc.Driver" dbusername="faida_sms">
+	<COMM orgid="7" dbpassword="20f10884040bc" dbpath="jdbc:mysql://62.24.122.52:3306/faida_sms" 
+		dbclass="com.mysql.jdbc.Driver" dbusername="faida_sms">
 		<PROCESS sql="SELECT id_sms_outgoing, recipient_number, message FROM sms_outgoing" where="(status = '0')" 
-			update="UPDATE sms_outgoing SET status = '1' WHERE id_sms_outgoing = "></PROCESS>
+			update="UPDATE sms_outgoing SET status = '1' WHERE id_sms_outgoing = "
+			error="UPDATE sms_outgoing SET status = '2' WHERE id_sms_outgoing = "></PROCESS>
+	</COMM>
+
+	<COMM orgid="8" dbpassword="galileo" dbpath="jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_BTS;selectMethod=cursor" 
+		dbclass="com.mysql.jdbc.Driver" dbusername="sa">
+		<PROCESS sql="SELECT sms_id, PhoneNbr, message FROM vw_sms" where="(is_sent = '0')" 
+			update="UPDATE sms SET is_sent = '1' WHERE sms_id = "
+			error="UPDATE sms SET is_sent = '2' WHERE sms_id = "></PROCESS>
+	</COMM>
+
+	<COMM orgid="21" dbpassword="galileo" dbpath="jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_FCM;selectMethod=cursor" 
+		dbclass="com.mysql.jdbc.Driver" dbusername="sa">
+		<PROCESS sql="SELECT sms_id, PhoneNbr, message FROM vw_sms" where="(is_sent = '0')" 
+			update="UPDATE sms SET is_sent = '1' WHERE sms_id = "
+			error="UPDATE sms SET is_sent = '2' WHERE sms_id = "></PROCESS>
 	</COMM>
 
 </SOAPSMS>
