@@ -133,6 +133,7 @@ public class BSoapSMS {
 			if(number == null) number = "";
 			if(rs.getString("address_group_id") ==  null) {
 				number = number.replace(" ", "").replace("-", "").trim();
+				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 				else numberError = true;
 
@@ -140,6 +141,7 @@ public class BSoapSMS {
 					String[] nums = numbers.split(",");
 					for(String num : nums) {
 						num = num.replace(" ", "").replace("-", "").trim();
+						if(num.startsWith("0")) num = "254" + num.substring(1, num.length());
 						
 						if((num.length() > 11) && (num.length() < 15)) isSent = sendSMS(num, msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 						else numberError = true;
@@ -156,6 +158,7 @@ public class BSoapSMS {
 				number = rsa.getString("mobile");
 				if(number == null) number = "";
 				number = number.replace(" ", "").replace("-", "").trim();
+				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				
 				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 				else numberError = true;
@@ -172,6 +175,7 @@ public class BSoapSMS {
 				number = rsg.getString("mobile");
 				if(number == null) number = "";
 				number = number.replace(" ", "").replace("-", "").trim();
+				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				
 				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 				else numberError = true;
