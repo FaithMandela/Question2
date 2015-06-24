@@ -282,9 +282,9 @@ BEGIN
     IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1600'::time )) THEN
         v_message := 'An Emergency Transfer Has Been Issued'::text;
         
-        v_send_res := sendMessage('254725987342', v_message);
-        -- v_send_res := sendMessage('254701772272', , v_message);
-        -- v_send_res := sendMessage('254738772272', , v_message);
+        -- v_send_res := sendMessage('254725987342', v_message);
+        v_send_res := sendMessage('254701772272', v_message);
+        v_send_res := sendMessage('254738772272', v_message);
 
     END IF;
     RETURN NULL;
