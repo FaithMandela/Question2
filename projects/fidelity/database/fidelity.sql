@@ -164,8 +164,8 @@ CREATE VIEW vw_accounts AS
 		accounts.details
 	FROM accounts INNER JOIN account_types ON accounts.account_type_id = account_types.account_type_id
 	INNER JOIN corporate_types ON accounts.corporate_type_id = corporate_types.corporate_type_id
-	INNER JOIN currency ON accounts.currency_id = currency.currency_id
 	INNER JOIN orgs ON accounts.org_id = orgs.org_id
+	INNER JOIN currency ON accounts.currency_id = currency.currency_id
 	LEFT JOIN sys_countrys ON accounts.country_id = sys_countrys.sys_country_id;
 	
 CREATE VIEW vw_directors AS
@@ -235,7 +235,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON accounts
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-CREATE OR REPLACE FUNCTION account_completion(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION account_completion(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg 		varchar(120);
 BEGIN
@@ -248,7 +248,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION loan_completion(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION loan_completion(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg 		varchar(120);
 BEGIN

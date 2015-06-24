@@ -311,6 +311,8 @@ public class BQuery {
 			}
 		}
 		if(wheresql != null) mysql += wheresql;
+		// SQL view debug point
+		//System.out.println("SQL : " + wheresql);
 
 		// Group by
 		if(view != null) {
