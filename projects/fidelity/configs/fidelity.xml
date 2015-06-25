@@ -460,7 +460,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Approvals" key="45" h="500">
-		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status = 'Completed')" user="entity_id">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" noorg="true" where="(approve_status = 'Completed')" user="entity_id">
 			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
@@ -470,9 +470,9 @@
 			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Date">completion_date</TEXTTIMESTAMP>
 			<ACTIONS>
-				<ACTION fnct="upd_approvals" phase="2">Approve</ACTION>
-				<ACTION fnct="upd_approvals" phase="3">Reject</ACTION>
-				<ACTION fnct="upd_approvals" phase="4">Review</ACTION>
+				<ACTION fnct="upd_approvals" approval="2">Approve</ACTION>
+				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
+				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
 			</ACTIONS>
 			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
@@ -843,17 +843,13 @@
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 			<FORM name="Loans" keyfield="loan_id" table="loans">
-				<COMBOBOX w="430" title="Loan Type ID" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Loan Type" lptable="loan_types" noorg="true" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
 				<USERFIELD>entity_id</USERFIELD>
 				<TEXTDATE w="150" title="Loan Date" y="50" h="20" x="10">loan_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Principle" y="50" h="20" x="290">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Interest" y="70" h="20" x="10">interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Monthly Repayment" y="70" h="20" x="290">monthly_repayment</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Repayment Period" y="90" h="20" x="10">repayment_period</TEXTFIELD>
-				<TEXTFIELD w="150" title="Approve Status" y="90" h="20" x="290">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Workflow Table ID" y="110" h="20" x="10">workflow_table_id</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" title="Application Date" y="110" h="20" x="290">application_date</TEXTTIMESTAMP>
-				<TEXTTIMESTAMP w="150" title="Action Date" y="130" h="20" x="10">action_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="150" title="Guarantor1 Name" tab="Guarantor" y="130" h="20" x="290">guarantor1_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Guarantor1 Address" tab="Guarantor" y="150" h="20" x="10">guarantor1_address</TEXTFIELD>
 				<TEXTFIELD w="150" title="Guarantor2 Name" tab="Guarantor" y="150" h="20" x="290">guarantor2_name</TEXTFIELD>

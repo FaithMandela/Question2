@@ -76,7 +76,7 @@
 <!-- BEGIN HEAD -->
 <head>
 	<meta charset="utf-8"/>
-	<title>Baraza | HR</title>
+	<title><%= pageContext.getServletContext().getInitParameter("web_title") %></title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta content="width=device-width, initial-scale=1" name="viewport"/>
 	<meta content="" name="description"/>
@@ -150,7 +150,7 @@
 	<div class="page-header-inner">
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
-			<a href="index.html">
+			<a href="index.jsp">
 			<img src="./assets/admin/layout4/img/logo-light.png" alt="logo" class="logo-default"/>
 			</a>
 			<div class="menu-toggler sidebar-toggler">
@@ -258,8 +258,7 @@
                         <button id="btnTest" type="button">Check values</button>
                         
 -->
-                        
-                        
+
 						<div class="portlet-title">
 							<div class="caption">
 								<i class="fa fa-cogs"></i><%= web.getViewName() %>
@@ -302,7 +301,7 @@
 							<table class="table" style="margin-bottom:0px;"><tr>
 								<td ><%= fieldTitles %></td>
 								<td >
-									<select class='fnctcombobox form-control' name='filtertype'>
+									<select class='fnctcombobox form-control' name='filtertype' id='filtertype'>
 										<option value='ilike'>Contains (case insensitive)</option>
 										<option value='like'>Contains (case sensitive)</option>
 										<option value='='>Equal to</option>
@@ -312,13 +311,11 @@
 										<option value='>='>Greater or Equal</option>
 									</select>
 								</td>
-								<td ><input class="form-control" name="reportfilter" type="text" id="search" /></td>
-								<td ><input class="form-control" name='and' type='checkbox'/> And</td>
-								<td ><input class="form-control" name='or' type='checkbox' /> Or</td>
-								<td ><button class="form-control" class="i_magnifying_glass icon small" name="search" value="Search">Search</button></td>
+								<td ><input class="form-control" name="filtervalue" type="text" id="filtervalue" /></td>
+								<td ><input class="form-control" name='filterand' id='filterand' type='checkbox'/> And</td>
+								<td ><input class="form-control" name='filteror' id='filteror' type='checkbox' /> Or</td>
+								<td ><button type="button" class="form-control" name="btSearch" id="btSearch" value="Search">Search</button></td>
 								<td ></td>
-								<td ><button class="btn btn-sm green" name="sortasc" id="ascending" value=" "><i class="fa fa-angle-up"></i>&nbsp;&nbsp;ASC</button></td>
-								<td ><button class="btn btn-sm blue" name="sortdesc" id="descending" value=" "><i class="fa fa-angle-down"></i>&nbsp;&nbsp;DESC</button></td>
 							</tr></table>
 						<% } %>
 
@@ -437,7 +434,20 @@
 	    <% } %>
 
 		jQuery("#jqlist").jqGrid(jqcf);
-		jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false,add:false,del:false});  
+		jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false,add:false,del:false});
+
+        $('#btSearch').click(function(){
+            var filtername = $("#filtername").val();
+			var filtertype = $("#filtertype").val();
+			var filtervalue = $("#filtervalue").val();
+			var filterand = $("#filterand").is(':checked');
+			var filteror = $("#filteror").is(':checked');
+
+			console.log(filterand);
+			$.post("ajax?fnct=filter", {filtername: filtername, filtertype: filtertype, filtervalue: filtervalue, filterand: filterand, filteror: filteror}, function(data){
+				$('#jqlist').trigger('reloadGrid');
+            });
+		});
         
 		$("#jqlist").dblclick(function(){
 			var rowId =$("#jqlist").jqGrid('getGridParam','selrow');  
@@ -448,8 +458,7 @@
 		});                                 
         
         $('#btnAction').click(function(){
-            var operation = $("#operation");
-            console.log(operation);
+            var operation = $("#operation").val();
 
             var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
             for (i = 0, n = selIds.length; i < n; i++) {
@@ -464,9 +473,10 @@
             } else {
                 //alert(cellValues.join(",")); 
                 //cellValues.join(",") returns 1,2,3,4
-                $.post("ajax?fnct=operation&id=0", {ids: cellValues.join(",")}, function(data){
-
+                $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
+					$('#jqlist').trigger('reloadGrid');
                 }, "JSON");
+
             }            
         });
 	<% } %>

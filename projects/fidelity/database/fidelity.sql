@@ -253,7 +253,7 @@ DECLARE
 	msg 		varchar(120);
 BEGIN
 
-	UPDATE loan SET approve_status = 'Completed' WHERE org_id = $1::integer;
+	UPDATE loans SET approve_status = 'Completed' WHERE org_id = $1::integer;
 	
 	msg := 'Loan completed and forwarded for approval';
 

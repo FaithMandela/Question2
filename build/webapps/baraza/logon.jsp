@@ -12,7 +12,7 @@
 <head>
 <meta charset="utf-8"/>
 
-<title>Login | Open Baraza HR </title>
+<title><%= pageContext.getServletContext().getInitParameter("web_title") %></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -60,7 +60,7 @@
 <div class="content">
 	<!-- BEGIN LOGIN FORM -->
 	<form class="login-form" method="POST" action="j_security_check" method="post">
-		<h3 class="form-title">Baraza HRM</h3>
+		<h3 class="form-title"><%= pageContext.getServletContext().getInitParameter("login_title") %></h3>
 		<div class="alert alert-danger display-hide">
 			<button class="close" data-close="alert"></button>
 			<span>

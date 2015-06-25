@@ -75,7 +75,7 @@ public class BJSONQuery extends BQuery {
 
 				dispStr = "";
 				for(BElement el : view.getElements()) {
-					mydn = "C" + String.valueOf(col);
+					mydn = el.getValue();//"C" + String.valueOf(col);
 
 					if(!el.getValue().equals(""))  {
 						String cellData = formatData(el);
@@ -144,6 +144,16 @@ public class BJSONQuery extends BQuery {
 						col++;
 					}
 				}
+				
+				if(hasSubs && (keyField != null)) {
+					String sk = getSelectKey();
+					if(sk != null) {
+						mydv = "?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField);
+						if(hasFilter) mydv += "&gridfilter=true";
+						mydn = "CL"; 
+						myjo.add(mydn, mydv);
+					}
+				}
 
 				if(view.getName().equals("FILES")) {
 					mydv = "";
@@ -156,33 +166,6 @@ public class BJSONQuery extends BQuery {
 					}
 					mydv += "\n<a href='barazafiles?view=" + viewKey + "&fileid=" + getString(keyField);
 					mydv += "' target='_blank'>View</a>";
-					mydn = "C" + String.valueOf(col++);
-					myjo.add(mydn, mydv);
-				}
-
-				if(hasSubs && (keyField != null)) {
-					String sk = getSelectKey();
-					if(sk != null) {
-						mydv = "?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField);
-						if(hasFilter) mydv += "&gridfilter=true";
-						mydn = "CL"; 
-						myjo.add(mydn, mydv);
-					}
-
-				}
-
-				if(view.getName().equals("FILTERGRID") && (keyField != null) && !hasFilter) {
-					mydv = "\n<a href='#' OnClick=\"updateField('";
-					mydv += filterName + "', '" + getString(keyField) + "')\">";
-					mydv += "<img src='resources/images/go.png'></img></a>";
-					mydn = "C" + String.valueOf(col++);
-					myjo.add(mydn, mydv);
-				}
-
-				if(sfield) {
-					mydv = "\n<input type='button' VALUE='Select' ";
-					mydv += "onClick=\"updateForm('" + getString(keyField) + "', '";
-					mydv += dispStr + "')\">";
 					mydn = "C" + String.valueOf(col++);
 					myjo.add(mydn, mydv);
 				}
