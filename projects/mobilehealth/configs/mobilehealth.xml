@@ -2,6 +2,8 @@
 	<MENU name="Mobile Health">
 		<MENU name="Entitys">1</MENU>
 		<MENU name="Orgs">5</MENU>
+		<MENU name="Countys">10</MENU>
+		<MENU name="Surveys">15</MENU>
 	</MENU>
 	<DESK w="700" name="Entitys" key="1" h="550">
 		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">ESTAMP>
@@ -39,7 +41,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Orgs" key="5" h="550">
-		<GRID name="Orgs" keyfield="org_id" table="vw_orgs">
+		<GRID name="Orgs" keyfield="org_id" table="vw_orgs" noorg="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -82,7 +84,7 @@
 					<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
 				</FORM>
 			</GRID>
-			<FORM name="Org" keyfield="org_id" table="orgs">
+			<FORM name="Org" keyfield="org_id" table="orgs" noorg="true">
 				<COMBOBOX w="430" title="Currency ID" lptable="currency" y="10" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Parent Org ID" lptable="orgs" lpkey="org_id" y="30" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Org Name" y="50" h="20" x="10">org_name</TEXTFIELD>
@@ -93,6 +95,69 @@
 				<TEXTFIELD w="150" title="Pin" y="90" h="20" x="290">pin</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Countys" noorg="true" key="10" h="550">
+		<GRID name="Countys" keyfield="county_id" table="countys" noorg="true">
+			<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+			<GRID name="Sub Countys" keyfield="sub_county_id" linkfield="county_id" table="vw_sub_countys" noorg="true">
+				<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub County ID">sub_county_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+				<FORM name="Sub Countys" keyfield="sub_county_id" linkfield="county_id" table="sub_countys" noorg="true">
+					<TEXTFIELD w="150" title="Sub County Name" y="10" h="20" x="10">sub_county_name</TEXTFIELD>
+				</FORM>
+			</GRID>
+			<FORM name="County" keyfield="county_id" table="countys" noorg="true">
+				<TEXTFIELD w="150" title="County Name" y="10" h="20" x="10">county_name</TEXTFIELD>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Surveys" key="15" h="550">
+		<GRID name="Countys" keyfield="county_id" table="countys" noorg="true">
+			<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+			<GRID name="Sub Countys" keyfield="sub_county_id" linkfield="county_id" table="vw_sub_countys" noorg="true">
+				<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub County ID">sub_county_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+				<GRID name="Surveys" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys">
+					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Village Name">village_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Household Number">household_number</TEXTFIELD>
+					<TEXTFIELD w="75" title="Household Member">household_member</TEXTFIELD>
+					<TEXTTIMESTAMP w="75" title="Survey Time">survey_time</TEXTTIMESTAMP>
+					<TEXTFIELD w="75" title="Location Lat">location_lat</TEXTFIELD>
+					<TEXTFIELD w="75" title="Location Lng">location_lng</TEXTFIELD>
+					<GRID name="Survey Mother" keyfield="survey_mother_id" linkfield="survey_id" table="vw_survey_mother" noorg="true">
+						<TEXTFIELD w="75" title="Mother Info Def ID">mother_info_def_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Survey Mother ID">survey_mother_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Response">response</TEXTFIELD>
+						<FORM name="Survey Mother" keyfield="survey_mother_id" linkfield="survey_id" table="survey_mother" noorg="true">
+							<COMBOBOX w="430" title="Mother Info Def ID" lptable="mother_info_defs" noorg="true" y="10" h="20" x="10" lpfield="question">mother_info_def_id</COMBOBOX>
+							<TEXTFIELD w="150" title="Response" y="30" h="20" x="10">response</TEXTFIELD>
+						</FORM>
+					</GRID>
+					<FORM name="Surveys" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
+						<COMBOBOX w="430" title="Sub County ID" lptable="sub_countys" noorg="true" y="10" h="20" x="10" lpfield="sub_county_name">sub_county_id</COMBOBOX>
+						<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
+						<TEXTFIELD w="430" title="Village Name" y="50" h="20" x="10">village_name</TEXTFIELD>
+						<TEXTFIELD w="150" title="Household Number" y="70" h="20" x="10">household_number</TEXTFIELD>
+						<TEXTFIELD w="430" title="Household Member" y="90" h="20" x="10">household_member</TEXTFIELD>
+						<TEXTFIELD w="150" title="Location Lat" y="110" h="20" x="290">location_lat</TEXTFIELD>
+						<TEXTFIELD w="150" title="Location Lng" y="130" h="20" x="10">location_lng</TEXTFIELD>
+						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
 		</GRID>
 	</DESK>
 </APP>

@@ -65,9 +65,45 @@ CREATE TABLE sub_locations(
 CREATE INDEX sub_locations_location_id ON sub_locations(location_id);
 
 
+CREATE TABLE mother_info_defs(
+    mother_info_def_id       serial primary key,
+    question                 text,
+    details                  text
+);
+
+CREATE TABLE child_info_defs(
+    child_info_def_id        serial primary key,
+    question                 text,
+    details                  text
+);
+
+
 CREATE TABLE surveys(
     survey_id           serial primary key,
-    county_id           
+    org_id              integer references orgs,
+    sub_county_id       integer references sub_countys,
+    health_worker_id    integer references health_workers,
+    village_name        varchar(225),
+    household_number    varchar(100),
+    household_member    varchar(225),
+    survey_time         timestamp default CURRENT_TIMESTAMP,
+    location_lat        varchar(30),
+    location_lng	    varchar(30),
+    remarks             text,
+);
+
+CREATE TABLE survey_mother(
+    survey_mother_id        serial primary key,
+    survey_id               integer references surveys,
+    mother_info_def_id      integer references mother_info_defs,
+    response                integer
+);
+
+CREATE TABLE survey_child(
+    survey_child_id        serial primary key,
+    survey_id              integer references surveys,
+    child_info_def_id      integer references child_info_defs,
+    response               integer
 );
 
 
@@ -89,5 +125,39 @@ CREATE VIEW vw_health_workers AS
 	INNER JOIN devices ON health_workers.device_id = devices.device_id
 	INNER JOIN orgs ON health_workers.org_id = orgs.org_id;
 
+CREATE VIEW vw_sub_countys AS
+	SELECT countys.county_id, countys.county_name, sub_countys.sub_county_id, sub_countys.sub_county_name
+	FROM sub_countys
+	INNER JOIN countys ON sub_countys.county_id = countys.county_id;
 
+
+
+
+CREATE VIEW vw_surveys AS
+	SELECT health_workers.health_worker_id, health_workers.worker_name, 
+	orgs.org_id, orgs.org_name, 
+	countys.county_id, countys.county_name,
+	sub_countys.sub_county_id, sub_countys.sub_county_name, surveys.survey_id, surveys.village_name, surveys.household_number, surveys.household_member, surveys.survey_time, surveys.location_lat, surveys.location_lng, surveys.remarks
+	FROM surveys
+	INNER JOIN health_workers ON surveys.health_worker_id = health_workers.health_worker_id
+	INNER JOIN orgs ON surveys.org_id = orgs.org_id
+	INNER JOIN sub_countys ON surveys.sub_county_id = sub_countys.sub_county_id
+	INNER JOIN countys ON sub_countys.county_id = countys.county_id;
+
+
+CREATE VIEW vw_survey_mother AS
+	SELECT mother_info_defs.mother_info_def_id, mother_info_defs.question, mother_info_defs.details ,
+	surveys.survey_id,  survey_mother.survey_mother_id, survey_mother.response
+	FROM survey_mother
+	INNER JOIN mother_info_defs ON survey_mother.mother_info_def_id = mother_info_defs.mother_info_def_id
+	INNER JOIN surveys ON survey_mother.survey_id = surveys.survey_id;
+
+
+
+CREATE VIEW vw_survey_child AS
+	SELECT child_info_defs.child_info_def_id, child_info_defs.question,child_info_defs.details, 
+	surveys.survey_id, survey_child.survey_child_id, survey_child.response
+	FROM survey_child
+	INNER JOIN child_info_defs ON survey_child.child_info_def_id = child_info_defs.child_info_def_id
+	INNER JOIN surveys ON survey_child.survey_id = surveys.survey_id;
 
