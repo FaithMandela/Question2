@@ -33,6 +33,9 @@
 				<CHECKBOX w="150" title="Picked" y="210" h="20" x="10">is_picked</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 			</FORM>
+			<ACTIONS>
+				<ACTION fnct="change_password">Reset Password</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Orgs" key="5" h="550">
