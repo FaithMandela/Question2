@@ -10,6 +10,7 @@ package org.baraza.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -28,43 +29,39 @@ public class BJSONData extends HttpServlet {
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		ServletContext context = getServletContext();
-		HttpSession session = request.getSession(true);
-		String xmlcnf = (String)session.getAttribute("xmlcnf");
+		HttpSession webSession = request.getSession(true);
+		String xmlcnf = (String)webSession.getAttribute("xmlcnf");
 		String ps = System.getProperty("file.separator");
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 		String dbconfig = "java:/comp/env/jdbc/database";
 
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();
-
+		
 		BWeb web = new BWeb(dbconfig, xmlfile);
 		web.setUser(userIP, userName);
 		web.init(request);
-		
 		BElement view = web.getView();
 		
+		String sortby = request.getParameter("sidx");
+		if(sortby != null) {
+			if(sortby.equals("CL")) sortby = view.getAttribute("keyfield") + "  " + request.getParameter("sord");
+			else if(sortby.trim().equals("")) sortby = null;
+			else sortby = sortby + "  " + request.getParameter("sord");
+		}
+		if(sortby != null && webSession.getAttribute("JSONfilter2") != null) {
+			webSession.setAttribute("JSONfilter1", webSession.getAttribute("JSONfilter2"));
+		}
+		System.out.println("JSON sort : " + sortby);
+		
 		String wheresql = null;
-		String sortby = null;
-
-		String wherefilter = request.getParameter("wherefilter");
-		String sortfilter = request.getParameter("sortfilter");
-		if(request.getParameter("and") != null) {
-			if(wherefilter != null) wheresql = wherefilter;
-			if(sortfilter != null) sortby = sortfilter;
-		} else if(request.getParameter("or") != null) {
-			if(wherefilter != null) wheresql = wherefilter;
-			if(sortfilter != null) sortby = sortfilter;
+		if(webSession.getAttribute("JSONfilter1") != null) {
+			wheresql = (String)webSession.getAttribute("JSONfilter1");
+			webSession.removeAttribute("JSONfilter1");
 		}
-
-		if(request.getParameter("sortasc") != null) {
-			if(sortby == null) sortby = "";
-			sortby += request.getParameter("fieldname");
-		} else if(request.getParameter("sortdesc") != null) {
-			if(sortby == null) sortby = "";
-			sortby = request.getParameter("fieldname") + " desc";
-		}
-
 		wheresql = web.getJSONWhere(request, wheresql);
+		System.out.println("BASE 1010 : " + wheresql);
+
 		
 		//System.out.println("BASE 1010 : " + view.toString());
 		

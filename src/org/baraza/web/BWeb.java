@@ -470,7 +470,7 @@ public class BWeb {
 							tcWhere += el.getAttribute("where");
 						}
 						if(tcWhere != null) tcSql += tcWhere;
-System.out.println("BASE 2121 : " + tcSql);
+
 						String tcVal = db.executeFunction(tcSql);
 						if(tcVal != null) tabName += " <span class=\"badge badge-success\">" + tcVal + "</span>";
 					}
@@ -613,7 +613,10 @@ System.out.println("BASE 2121 : " + tcSql);
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-
+		
+		session.removeAttribute("JSONfilter1");
+		session.removeAttribute("JSONfilter2");
+		
 		String wherefilter = request.getParameter("wherefilter");
 		String sortfilter = request.getParameter("sortfilter");
 		if(request.getParameter("and") != null) {
@@ -660,14 +663,6 @@ System.out.println("BASE 2121 : " + tcSql);
 				else
 					wheresql += "(" + fieldName + " " + filterType + " '" + reportFilter + "')";
 			}
-		}
-
-		if(request.getParameter("sortasc") != null) {
-			if(sortby == null) sortby = "";
-			sortby += request.getParameter("fieldname");
-		} else if(request.getParameter("sortdesc") != null) {
-			if(sortby == null) sortby = "";
-			sortby = request.getParameter("fieldname") + " desc";
 		}
 
 		int vds = viewKeys.size();
@@ -1254,14 +1249,14 @@ System.out.println("BASE 1010 ");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
 
 		if(view.getName().equals("GRID") && view.getAttribute("display", "grid").equals("grid")) {
-			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='filtername' id='filtername'>";
 			for(BElement el : view.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
 			}
 			fieldTitles += "</select>";
 		} else if (comboField != null) {
-			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='filtername' id='filtername'>";
 			for(BElement el : sview.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1278,7 +1273,7 @@ System.out.println("BASE 1010 ");
 		String field = request.getParameter("field");
 
 		if(view.getName().equals("GRID")) {
-			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='filtername' id='filtername'>";
 			for(BElement el : view.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1286,7 +1281,7 @@ System.out.println("BASE 1010 ");
 			fieldTitles += "</select>";
 		} else if(view.getName().equals("FORM") && (field != null)) {
 			BElement sview = view.getElement(field).getElement(0);
-			fieldTitles = "<select class='fnctcombobox form-control' name='fieldname'>";
+			fieldTitles = "<select class='fnctcombobox form-control' name='filtername' id='filtername'>";
 			for(BElement el : sview.getElements()) {
 				if(!el.getValue().equals(""))
 					fieldTitles += "<option value='" +  el.getValue() + "'>" + el.getAttribute("title") + "</option>\n";
@@ -1720,7 +1715,7 @@ System.out.println("BASE 1010 ");
 		for(BElement el : view.getElements()) {
 			if(!el.getValue().equals("")) {
 				JsonObjectBuilder jsColEl = Json.createObjectBuilder();
-				String mydn = "C" + String.valueOf(col++);
+				String mydn = el.getValue();
 				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title", ""));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
@@ -1748,8 +1743,6 @@ System.out.println("BASE 1010 ");
 		jshd.add("colModel", jsColModel);
 		jshd.add("pager", "#jqpager");
 		jshd.add("rowNum", 10);
-		jshd.add("sortname", "C0");
-		jshd.add("sortorder", "desc");
 		jshd.add("viewrecords", true);
 		jshd.add("gridview", true);
 		jshd.add("autoencode", true);

@@ -23,9 +23,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.baraza.DB.BDB;
+
 public class Bajax extends HttpServlet {
 
 	BWeb web = null;
+	BDB db = null;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)  {
 		doGet(request, response);
@@ -50,9 +53,11 @@ public class Bajax extends HttpServlet {
 		web = new BWeb(dbconfig, xmlfile);
 		web.init(request);
 		web.setUser(userIP, userName);
+		
+		db = web.getDB();
 
-		System.out.println("AJAX Reached");
-
+		System.out.println("AJAX Reached : " + request.getParameter("fnct"));		
+		
 		String function = request.getParameter("ajaxfunction");			// function to execute
 		String params = request.getParameter("ajaxparams");				// function params
 		String from = request.getParameter("from");						// from function
@@ -69,6 +74,7 @@ public class Bajax extends HttpServlet {
 		if("calresize".equals(fnct)) resp = calResize(id, endDate, endTime);
 		if("calmove".equals(fnct)) resp = calMove(id, startDate, startTime, endDate, endTime);
 		if("operation".equals(fnct)) resp = calOperation(id, ids, request);
+		if("filter".equals(fnct)) resp = filterJSON(request);
 
 		web.close();	// close DB commections
 		out.println(resp);
@@ -125,6 +131,46 @@ public class Bajax extends HttpServlet {
 		String resp = web.setOperations(id, ids, request);
 		
 		return resp;
+	}
+	
+	public String filterJSON(HttpServletRequest request) {
+		String filterName = request.getParameter("filtername");
+		String filterType = request.getParameter("filtertype");
+		String filterValue = request.getParameter("filtervalue");
+		String filterAnd = request.getParameter("filterand");
+		String filterOr = request.getParameter("filteror");
+		
+		if(filterValue == null) return "";
+		if(filterValue.equals("")) return "";
+		if(filterAnd == null) filterAnd = "false";
+		if(filterOr == null) filterOr = "false";
+		
+		// Only postgres supports ilike so for the others turn to like
+		String wheresql = "";
+		if((db.getDBType()!=1) && (filterType.startsWith("ilike"))) filterType = "like";
+
+		if(filterType.startsWith("like"))
+			if(db.getDBType()==1) wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
+			else wheresql += "(lower(" + filterName + ") " + filterType + " lower('%" + filterValue + "%'))";
+		else if(filterType.startsWith("ilike"))
+			wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
+		else
+			wheresql += "(" + filterName + " " + filterType + " '" + filterValue + "')";
+		
+		HttpSession webSession = request.getSession(true);
+		if(webSession.getAttribute("JSONfilter2") != null) {
+			if(filterAnd.equals("true")) {
+				wheresql = (String)webSession.getAttribute("JSONfilter2") + " AND " + wheresql;
+			} else if(filterOr.equals("true")) {
+				wheresql = (String)webSession.getAttribute("JSONfilter2") + " OR " + wheresql;
+			}
+		}
+		webSession.setAttribute("JSONfilter1", wheresql);
+		webSession.setAttribute("JSONfilter2", wheresql);	
+		
+		System.out.println(wheresql + " : " + filterAnd);
+		
+		return wheresql;
 	}
  
 }

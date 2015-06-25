@@ -470,9 +470,9 @@
 			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Date">completion_date</TEXTTIMESTAMP>
 			<ACTIONS>
-				<ACTION fnct="upd_approvals" phase="2">Approve</ACTION>
-				<ACTION fnct="upd_approvals" phase="3">Reject</ACTION>
-				<ACTION fnct="upd_approvals" phase="4">Review</ACTION>
+				<ACTION fnct="upd_approvals" approval="2">Approve</ACTION>
+				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
+				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
 			</ACTIONS>
 			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
