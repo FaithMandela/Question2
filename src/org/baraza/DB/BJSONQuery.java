@@ -144,6 +144,16 @@ public class BJSONQuery extends BQuery {
 						col++;
 					}
 				}
+				
+				if(hasSubs && (keyField != null)) {
+					String sk = getSelectKey();
+					if(sk != null) {
+						mydv = "?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField);
+						if(hasFilter) mydv += "&gridfilter=true";
+						mydn = "CL"; 
+						myjo.add(mydn, mydv);
+					}
+				}
 
 				if(view.getName().equals("FILES")) {
 					mydv = "";

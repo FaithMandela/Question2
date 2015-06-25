@@ -1750,7 +1750,7 @@ System.out.println("BASE 1010 ");
 		
 		JsonObject jsObj = jshd.build();
 		
-		//System.out.println("BASE 2030 : " + jsObj.toString());
+		System.out.println("BASE 2030 : " + jsObj.toString());
 
 		return jsObj.toString();
 	}
