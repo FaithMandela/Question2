@@ -483,6 +483,7 @@ CREATE TABLE contract_types (
 	contract_type_id		serial primary key,
 	org_id					integer references orgs,
 	contract_type_name		varchar(50) not null,
+	contract_text			text,
 	details					text
 );
 CREATE INDEX contract_types_org_id ON contract_types(org_id);
@@ -1066,7 +1067,7 @@ CREATE VIEW vw_contracting AS
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, 
 		
-		contract_types.contract_type_id, contract_types.contract_type_name,
+		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
 		contract_status.contract_status_id, contract_status.contract_status_name,
 		
 		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 

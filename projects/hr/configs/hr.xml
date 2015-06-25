@@ -1818,7 +1818,8 @@
 			<TEXTFIELD w="75" title="Contract Status Name">contract_status_name</TEXTFIELD>
 			<FORM name="Contract Status" keyfield="contract_status_id" table="contract_status">
 				<TEXTFIELD w="150" title="Contract Status Name" y="10" h="20" x="10">contract_status_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<EDITOR w="430" tab="Contract Text" y="2" h="170" x="10">contract_text</EDITOR>
+				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -2112,11 +2113,11 @@
 					<TEXTDATE w="75" title="Target Date">target_date</TEXTDATE>
 					<TEXTDATE w="75" title="Completion Date">completion_date</TEXTDATE>
 					<FORM new="false" name="Objective Details" keyfield="objective_detail_id" delete="false" table="objective_details" th="210">
-						<TEXTFIELD w="430" title="Achievements" y="10" h="20" x="10">achievements</TEXTFIELD>
-						<CHECKBOX w="150" title="Completed" y="30" h="20" x="10">completed</CHECKBOX>
-						<TEXTDATE w="150" title="Completion Date" y="30" h="20" x="290">completion_date</TEXTDATE>
-						<TEXTFIELD w="150" title="Points" y="50" h="20" x="10">ods_points</TEXTFIELD>
-						<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+						<CHECKBOX w="150" title="Completed" y="10" h="20" x="10">completed</CHECKBOX>
+						<TEXTDATE w="150" title="Completion Date" y="10" h="20" x="290">completion_date</TEXTDATE>
+						<TEXTFIELD w="150" title="Points" y="30" h="20" x="10">ods_points</TEXTFIELD>
+						<TEXTAREA w="530" tab="Achievements" y="2" h="70" x="10">achievements</TEXTAREA>
+						<TEXTAREA w="530" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 					</FORM>
 				</GRID>
 			</GRID>
