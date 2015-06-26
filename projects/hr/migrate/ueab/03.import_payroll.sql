@@ -29,6 +29,9 @@ SELECT allowanceid, 1, 0, allowancename, 1
 FROM import.allowances
 ORDER BY allowanceid;
 
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 15, 'Tax Allowance', true, true);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 16, 'NHIF Allowance', true, true);
+
 INSERT INTO adjustments(adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, account_number)
 SELECT 20 + deductionid, 1, 0, deductionname, 2, accountnumber
 FROM import.deductions
@@ -135,18 +138,29 @@ INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount)
 SELECT employeeid, allowanceid, 0, amount
 FROM import.allowdefault;
 
-INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount)
-SELECT employeemonthid, allowanceid, 0, paydate, amount
+INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount, adjustment_type, adjustment_factor)
+SELECT employeemonthid, allowanceid, 0, paydate, amount, 1, 1
 FROM import.employeeallow;
+
+INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount, adjustment_type, adjustment_factor)
+SELECT a.employeemonthid, 15, 0, b.enddate, a.taxallow, 1, 1
+FROM import.employeemonth as a INNER JOIN import.monthrates as b ON a.monthrateid = b.monthrateid
+WHERE (a.taxallow > 0)
+ORDER BY a.employeemonthid;
+
+INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount, adjustment_type, adjustment_factor)
+SELECT a.employeemonthid, 15, 0, b.enddate, nhifallow, 1, 1
+FROM import.employeemonth as a INNER JOIN import.monthrates as b ON a.monthrateid = b.monthrateid
+WHERE (nhifallow > 0)
+ORDER BY a.employeemonthid;
 
 INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount)
 SELECT employeeid, 20 + deductionid, 0, amount
 FROM import.deductdefault;
 
-INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount)
-SELECT employeemonthid, 20 + deductionid, 0, paydate, amount
+INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount, adjustment_type, adjustment_factor)
+SELECT employeemonthid, 20 + deductionid, 0, paydate, amount, 2, -1
 FROM import.employeededuct;
-
 
 ALTER TABLE employee_adjustments ENABLE TRIGGER upd_employee_adjustments;
 

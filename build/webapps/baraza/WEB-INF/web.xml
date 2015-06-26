@@ -45,70 +45,71 @@
 		<servlet-name>ImageServlet</servlet-name>
 		<servlet-class>net.sf.jasperreports.j2ee.servlets.ImageServlet</servlet-class>
 	</servlet>
-
-	<servlet>
-		<servlet-name>BJSONData</servlet-name>
-		<servlet-class>org.baraza.web.BJSONData</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>BAppLauncher</servlet-name>
-		<servlet-class>org.baraza.web.BAppLauncher</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ShowReport</servlet-name>
-		<servlet-class>org.baraza.web.BShowReport</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>GridExport</servlet-name>
-		<servlet-class>org.baraza.web.BGridExport</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>BarazaFiles</servlet-name>
-		<servlet-class>org.baraza.web.BWebFiles</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>BJSONData</servlet-name>
-		<url-pattern>/jsondata</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>BAppLauncher</servlet-name>
-		<url-pattern>/app.hr</url-pattern>
-	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>ImageServlet</servlet-name>
 		<url-pattern>/image</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>BJSONData</servlet-name>
+		<servlet-class>org.baraza.web.BJSONData</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>BJSONData</servlet-name>
+		<url-pattern>/jsondata</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>BAppLauncher</servlet-name>
+		<servlet-class>org.baraza.web.BAppLauncher</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>BAppLauncher</servlet-name>
+		<url-pattern>/app.hr</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>ShowReport</servlet-name>
+		<servlet-class>org.baraza.web.BShowReport</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>ShowReport</servlet-name>
 		<url-pattern>/show_report</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>GridExport</servlet-name>
+		<servlet-class>org.baraza.web.BGridExport</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>GridExport</servlet-name>
 		<url-pattern>/grid_export</url-pattern>
 	</servlet-mapping>
 
+	<servlet>
+		<servlet-name>BarazaFiles</servlet-name>
+		<servlet-class>org.baraza.web.BWebFiles</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>BarazaFiles</servlet-name>
 		<url-pattern>/barazafiles</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>BarazaFiles</servlet-name>
 		<url-pattern>/putbarazafiles</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>BarazaFiles</servlet-name>
 		<url-pattern>/delbarazafiles</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>BarazaAJAX</servlet-name>
+		<servlet-class>org.baraza.web.Bajax</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>BarazaAJAX</servlet-name>
+		<url-pattern>/ajax</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>
@@ -124,7 +125,11 @@
 			<url-pattern>/form.jsp</url-pattern>
 			<url-pattern>/form.report.jsp</url-pattern>
 			<url-pattern>/index.jsp</url-pattern>
-			
+			<url-pattern>/show_report</url-pattern>
+			<url-pattern>/grid_export</url-pattern>
+			<url-pattern>/jsondata</url-pattern>
+			<url-pattern>/ajax</url-pattern>
+
 			<http-method>DELETE</http-method>
 			<http-method>GET</http-method>
 			<http-method>POST</http-method>
