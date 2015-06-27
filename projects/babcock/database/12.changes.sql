@@ -1,51 +1,63 @@
 
 
-CREATE OR REPLACE FUNCTION submitapplication(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
+-- update students email address
+CREATE OR REPLACE FUNCTION deldupstudent(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	myrec				RECORD;
-	v_approve_status	VARCHAR(16);
-	mystr 				VARCHAR(120);
+	myrec RECORD;
+	myreca RECORD;
+	myrecb RECORD;
+	myrecc RECORD;
+	myqtr RECORD;
+	newid VARCHAR(16);
+	mystr VARCHAR(120);
 BEGIN
-	SELECT applications.applicationid, applications.exam_date_id, applications.paid, 
-		entitys.entity_id, entitys.picture_file,
-		registrations.registrationid, registrations.firstchoiceid, registrations.secondchoiceid,
-		registrations.denominationid, age(registrations.birthdate) as app_age
-	INTO myrec
-	FROM applications INNER JOIN registrations ON applications.applicationid = registrations.registrationid
-		INNER JOIN entitys ON applications.applicationid = entitys.entity_id
-	WHERE (applications.applicationid = CAST($1 as integer));
-
-	SELECT approve_status INTO v_approve_status
-	FROM entry_forms
-	WHERE (entity_id = myrec.entity_id);
-
-	IF (myrec.picture_file is null) THEN
-		mystr := 'You must upload your photo before submission';
-	ELSIF (myrec.paid = false) THEN
-		mystr := 'You must first make full payment before submiting the application.';
-	ELSIF (myrec.exam_date_id is null) THEN
-		mystr := 'Select exam center date';
-	ELSIF (myrec.app_age < '14 years'::interval) THEN
-		mystr := 'You need to be older than 16 years to apply for this programme';
-	ELSIF (myrec.firstchoiceid is null) THEN
-		mystr := 'Select First Programme Choice';
-	ELSIF (myrec.secondchoiceid is null) THEN
-		mystr := 'Select Second Programme Choice';
-	ELSIF (myrec.denominationid is null) THEN
-		mystr := 'Select Denomination';
-	ELSIF (v_approve_status = 'Draft') THEN
-		mystr := 'You need the form submited first';
+	IF($2 is null) THEN 
+		newid := $3 || substring($1 from 3 for 5);
 	ELSE
-		UPDATE applications SET openapplication = false
-		WHERE (applicationid = myrec.applicationid);
-
-		UPDATE registrations SET submitapplication = true, submitdate = now(), majorid = firstchoiceid
-		WHERE (registrationid = myrec.applicationid);
-
-		mystr := 'Submitted the application.';
+		newid := $2;
 	END IF;
-
+	
+	SELECT INTO myrec studentid, studentname FROM students WHERE (studentid = newid);
+	SELECT INTO myreca studentdegreeid, studentid FROM studentdegrees WHERE (studentid = $2);
+	SELECT INTO myrecb studentdegreeid, studentid FROM studentdegrees WHERE (studentid = $1);
+	SELECT INTO myrecc a.studentdegreeid, a.quarterid FROM
+	((SELECT studentdegreeid, quarterid FROM qstudents WHERE studentdegreeid = myreca.studentdegreeid)
+	EXCEPT (SELECT studentdegreeid, quarterid FROM qstudents WHERE studentdegreeid = myrecb.studentdegreeid)) as a;
+	
+	IF ($1 = $2) THEN
+		mystr := 'That the same ID no change';
+	ELSIF (myrecc.quarterid IS NOT NULL) THEN
+		mystr := 'Conflict in quarter ' || myrecc.quarterid;
+	ELSIF (myreca.studentdegreeid IS NOT NULL) AND (myrecb.studentdegreeid IS NOT NULL) THEN
+		UPDATE qstudents SET studentdegreeid = myreca.studentdegreeid WHERE studentdegreeid = myrecb.studentdegreeid;
+		UPDATE studentrequests SET studentid = $2 WHERE studentid = $1;
+		DELETE FROM studentmajors WHERE studentdegreeid = myrecb.studentdegreeid;
+		DELETE FROM studentdegrees WHERE studentdegreeid = myrecb.studentdegreeid;
+		DELETE FROM students WHERE studentid = $1;	
+		mystr := 'Changes to ' || $2;
+	ELSIF (myrec.studentid is not null) THEN
+		UPDATE studentdegrees SET studentid = $2 WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = $2 WHERE studentid = $1;
+		DELETE FROM students WHERE studentid = $1;
+		mystr := 'Changes to ' || $2;
+	ELSIF ($2 is null) THEN
+		DELETE FROM studentdegrees WHERE studentid is null;
+		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
+		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
+		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE entitys SET user_name = newid WHERE studentid user_name = $1;
+		mystr := 'Changes to ' || newid;
+	END IF;
+	
 	RETURN mystr;
 END;
 $$ LANGUAGE plpgsql;
+
+
+SELECT deldupstudent(studentid, null, '14') FROM students WHERE studentid like 'NV/%' ORDER BY studentid;
+
+
+
 
