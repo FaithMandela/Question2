@@ -40,7 +40,8 @@ CREATE TABLE sub_countys(
 );
 CREATE INDEX sub_countys_county_id ON sub_countys(county_id);
 
-INSERT INTO sub_countys(sub_county_id, county_id, sub_county_name) VALUES(1, 1, 'Makadara'),(2, 1, 'Ruaraka');
+INSERT INTO sub_countys(sub_county_id, county_id, sub_county_name) VALUES(1, 1, 'Makadara'),
+(2, 1, 'Ruaraka');
 
 
 CREATE TABLE divisions(
@@ -77,6 +78,30 @@ CREATE TABLE child_info_defs(
     details                  text
 );
 
+CREATE TABLE referral_info_defs(
+    referral_info_def_id     serial primary key,
+    question                 text,
+    details                  text
+);
+
+CREATE TABLE defaulters_info_defs(
+    defaulters_info_def_id        serial primary key,
+    question                 text,
+    details                  text
+);
+
+CREATE TABLE death_info_defs(
+    death_info_def_id        serial primary key,
+    question                 text,
+    details                  text
+);
+
+
+CREATE TABLE household_info_defs(
+    household_info_def_id        serial primary key,
+    question                 text,
+    details                  text
+);
 
 CREATE TABLE surveys(
     survey_id           serial primary key,
@@ -102,9 +127,41 @@ CREATE TABLE survey_mother(
 CREATE TABLE survey_child(
     survey_child_id        serial primary key,
     survey_id              integer references surveys,
-    child_info_def_id      integer references child_info_defs,
+    household_info_def_id      integer references child_info_defs,
     response               integer
 );
+
+CREATE TABLE survey_referrals(
+    survey_referral_id          serial primary key,
+    survey_id                   integer references surveys,
+    referral_info_defs_id       integer references referral_info_defs,
+    response                    varchar(225)
+);
+
+
+
+CREATE TABLE survey_defaulters(
+    survey_defaulter_id         serial primary key,
+    survey_id                   integer references surveys,
+    defaulters_info_def_id      integer references defaulters_info_defs,
+    response                    integer
+);
+
+CREATE TABLE survey_death(
+    survey_death_id             serial primary key,
+    survey_id                   integer references surveys,
+    death_info_def_id           integer references death_info_defs,
+    response                    varchar(225)
+);
+
+
+CREATE TABLE survey_household(
+    survey_household_id    serial primary key,
+    survey_id              integer references surveys,
+    household_info_def_id  integer references household_info_defs,
+    response               integer
+);
+
 
 
 
@@ -145,19 +202,73 @@ CREATE VIEW vw_surveys AS
 	INNER JOIN countys ON sub_countys.county_id = countys.county_id;
 
 
+-- DROP VIEW vw_survey_mother;
 CREATE VIEW vw_survey_mother AS
 	SELECT mother_info_defs.mother_info_def_id, mother_info_defs.question, mother_info_defs.details ,
-	surveys.survey_id,  survey_mother.survey_mother_id, survey_mother.response
+	surveys.survey_id,  survey_mother.survey_mother_id, survey_mother.response,
+	(CASE survey_mother.response WHEN '1' THEN 'YES'
+		WHEN '2' THEN 'NO'
+		WHEN '3' THEN 'N/A' ELSE 'N/A' END ) AS response_name
+	
 	FROM survey_mother
 	INNER JOIN mother_info_defs ON survey_mother.mother_info_def_id = mother_info_defs.mother_info_def_id
 	INNER JOIN surveys ON survey_mother.survey_id = surveys.survey_id;
 
 
-
+-- DROP VIEW vw_survey_child;
 CREATE VIEW vw_survey_child AS
 	SELECT child_info_defs.child_info_def_id, child_info_defs.question,child_info_defs.details, 
-	surveys.survey_id, survey_child.survey_child_id, survey_child.response
+	surveys.survey_id, survey_child.survey_child_id, survey_child.response,
+    (CASE survey_child.response WHEN '1' THEN 'YES'
+            WHEN '2' THEN 'NO'
+            WHEN '3' THEN 'N/A' ELSE 'N/A' END ) AS response_name
 	FROM survey_child
 	INNER JOIN child_info_defs ON survey_child.child_info_def_id = child_info_defs.child_info_def_id
 	INNER JOIN surveys ON survey_child.survey_id = surveys.survey_id;
+
+
+-- DROP VIEW vw_survey_referrals ;
+CREATE VIEW vw_survey_referrals AS
+	SELECT referral_info_defs.referral_info_def_id, referral_info_defs.question, referral_info_defs.details , 
+	surveys.survey_id,  survey_referrals.survey_referral_id, survey_referrals.referral_info_defs_id, survey_referrals.response,
+	(CASE survey_referrals.response WHEN '1' THEN 'YES'
+            WHEN '2' THEN 'NO'
+            WHEN '3' THEN 'N/A' ELSE survey_referrals.response END ) AS response_name
+	FROM survey_referrals
+	INNER JOIN referral_info_defs ON survey_referrals.referral_info_defs_id = referral_info_defs.referral_info_def_id
+	INNER JOIN surveys ON survey_referrals.survey_id = surveys.survey_id;
+
+-- DROP VIEW vw_survey_defaulters;
+CREATE VIEW vw_survey_defaulters AS
+	SELECT defaulters_info_defs.defaulters_info_def_id, defaulters_info_defs.question, defaulters_info_defs.details,
+	surveys.survey_id, survey_defaulters.survey_defaulter_id, survey_defaulters.response,
+	(CASE survey_defaulters.response WHEN '1' THEN 'YES'
+		WHEN '2' THEN 'NO'
+		WHEN '3' THEN 'N/A' ELSE 'N/A' END ) AS response_name
+	FROM survey_defaulters
+	INNER JOIN defaulters_info_defs ON survey_defaulters.defaulters_info_def_id = defaulters_info_defs.defaulters_info_def_id
+	INNER JOIN surveys ON survey_defaulters.survey_id = surveys.survey_id;
+
+-- DROP VIEW vw_survey_death;
+CREATE VIEW vw_survey_death AS
+	SELECT death_info_defs.death_info_def_id, death_info_defs.question, death_info_defs.details,
+	surveys.survey_id, survey_death.survey_death_id, survey_death.response
+	FROM survey_death
+	INNER JOIN death_info_defs ON survey_death.death_info_def_id = death_info_defs.death_info_def_id
+	INNER JOIN surveys ON survey_death.survey_id = surveys.survey_id;
+
+-- DROP VIEW vw_survey_household ;
+CREATE VIEW vw_survey_household AS
+	SELECT household_info_defs.household_info_def_id,  household_info_defs.question, household_info_defs.details,
+	surveys.survey_id, survey_household.survey_household_id, survey_household.response,
+    (CASE survey_household.response WHEN '1' THEN 'YES'
+            WHEN '2' THEN 'NO'
+            WHEN '3' THEN 'N/A' ELSE 'N/A' END ) AS response_name
+	FROM survey_household
+	INNER JOIN household_info_defs ON survey_household.household_info_def_id = household_info_defs.household_info_def_id
+	INNER JOIN surveys ON survey_household.survey_id = surveys.survey_id;
+
+
+
+	
 
