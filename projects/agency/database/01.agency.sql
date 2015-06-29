@@ -47,22 +47,6 @@ CREATE TABLE galileo_queues (
 );
 CREATE INDEX galileo_queues_org_id ON galileo_queues (org_id);
 
-CREATE TABLE email (
-	email_id				serial primary key,
-	org_id					integer references orgs,
-	TravelOrderIdentifier	int,
-	pcc						varchar(10),
-	son						varchar(10),
-	PhoneNbr				varchar(50),
-	PassangerName			varchar(150),
-	message					text,
-	RecordLocator			varchar(10),
-	HostEventTimeStamp		timestamp,
-	is_picked				boolean default false,
-	is_sent					boolean default false
-);
-CREATE INDEX email_org_id ON email (org_id);
-
 CREATE VIEW vw_client_requests AS
 	SELECT entitys.entity_id as client_id, entitys.entity_name as client_name, client_requests.client_request_id, 
 		client_requests.request_date, client_requests.passanger, client_requests.travel_date, client_requests.return_date, 
@@ -102,7 +86,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE FUNCTION ticket_emailed(integer, varchar(64)) RETURNS void AS $$
-    UPDATE email SET is_sent = true WHERE (email_id = CAST($2 as int));
-$$ LANGUAGE SQL;
 

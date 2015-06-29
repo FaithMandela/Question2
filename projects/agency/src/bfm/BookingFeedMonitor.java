@@ -8,10 +8,17 @@ import java.util.Calendar;
 
 public class BookingFeedMonitor {
 
+	String dbName = "";
+
 	public static void main(String[] args) {
 		Calendar calendar = Calendar.getInstance();
 		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 		int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+		
+		if(args.length != 1) {
+			System.out.println("USAGE java -jar bfm.jar <<database name>>");
+			return;
+		}
                 
 		if(dayOfWeek >= 2 && dayOfWeek <= 6){
 			System.out.println("Working Day  : YES" );
@@ -19,14 +26,18 @@ public class BookingFeedMonitor {
 			if(hourOfDay >= 8 && hourOfDay <= 18){
 				System.out.println("Working Hours  : YES" );
 				
-				BookingFeedMonitor bfm = new BookingFeedMonitor();
-				bfm.run();
+				BookingFeedMonitor bf = new BookingFeedMonitor(args[0]);
+				bf.run();
 			}else{
 				System.out.println("Working Hours  : NO" );
 			}
-		}else{
+		} else {
 			System.out.println("Working Day  : NO" );
 		}
+	}
+	
+	public BookingFeedMonitor(String dbName) {
+		this.dbName = dbName;
 	}
 
     public Connection getConnection(String type){
@@ -37,10 +48,9 @@ public class BookingFeedMonitor {
 				Class.forName("org.postgresql.Driver");
 				conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/agency","postgres","");
 			} else if(type.equals("mssql")) {
-			// creating database connection
-				String myUrl = "jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor;user=sa;password=invent";
+				String myUrl = "jdbc:sqlserver://192.168.0.14:1433;databaseName=" + dbName + ";selectMethod=cursor;user=sa;password=galileo";
 				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-				conn = DriverManager.getConnection(myUrl,"sa", "invent");
+				conn = DriverManager.getConnection(myUrl, "sa", "galileo");
 			}
 		}catch (ClassNotFoundException e) {
 			System.err.println("Error Getting Connection : CNF > " + e.getMessage());
@@ -74,13 +84,14 @@ public class BookingFeedMonitor {
 			
 			if(conn == null) {//failed to connect				
 				stmt = pgconn.createStatement();
-				String sql = "INSERT INTO sys_emailed (sys_email_id,org_id, narrative)" + "VALUES (1, 0, 'Booking Feeds Serve Connection Failed...')";
+				String sql = "INSERT INTO sys_emailed (sys_email_id, org_id, narrative)";
+				sql += " VALUES (2, 0, 'Serve Connection Failed...')";
 				stmt.executeUpdate(sql);
 				System.out.println("Serve Connection Failed..." );
 
 			} else {//Connected
 				System.out.println("Server Connection Successfull..." );
-				String query= "SELECT  TravelOrderIdentifier ,DatabaseTimeStamp,CURRENT_TIMESTAMP AS today, DATEDIFF(MINUTE, DatabaseTimeStamp, CURRENT_TIMESTAMP) AS difference  FROM TravelOrderEvent WHERE TravelOrderIdentifier = (select max(TravelOrderIdentifier) FROM TravelOrderEvent )";
+				String query= "SELECT  TravelOrderIdentifier, DatabaseTimeStamp, CURRENT_TIMESTAMP AS today, DATEDIFF(MINUTE, DatabaseTimeStamp, CURRENT_TIMESTAMP) AS difference  FROM TravelOrderEvent WHERE TravelOrderIdentifier = (select max(TravelOrderIdentifier) FROM TravelOrderEvent )";
 				Statement st = conn.createStatement();
 				ResultSet rs = st.executeQuery(query);
 				
@@ -98,7 +109,7 @@ public class BookingFeedMonitor {
 				System.out.format("\nTravelOrderIdentifier : %s, \nDatabaseTimeStamp : %s, \nNow  : %s, \ndifference : %s\n",TravelOrderIdentifier, DatabaseTimeStamp, now,difference );
 					
 				//get holidays : postress db dates
-				String sqlQuery = "SELECT holiday_date from holidays WHERE holiday_date = CURRENT_TIMESTAMP::date"; 
+				String sqlQuery = "SELECT holiday_date from holidays WHERE holiday_date = CURRENT_TIMESTAMP::date"; //where dte = CAST(CURRENT_TIMESTAMP AS DATE)"
 				Statement stt = pgconn.createStatement();
 				ResultSet res = stt.executeQuery(sqlQuery);
 				boolean isHoliday = res.isBeforeFirst();
@@ -114,7 +125,7 @@ public class BookingFeedMonitor {
 						//create email
 						System.out.println("Time Difference Ok? : NO \nCreating Email...." );
 						stmt = pgconn.createStatement();
-						String sql = "INSERT INTO sys_emailed (sys_email_id,org_id, narrative)" + "VALUES (2,0, 'No Booking dropped in " + diff + " from " + DatabaseTimeStamp +"')";
+						String sql = "INSERT INTO sys_emailed (sys_email_id, org_id, narrative)" + "VALUES (2, 0, 'No Booking dropped in " + diff + " from " + DatabaseTimeStamp +"')";
 
 						int isEmailCreated = stmt.executeUpdate(sql);
 						
