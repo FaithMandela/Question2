@@ -67,6 +67,42 @@ ORDER BY pay_scale_id, pay_year;
 ALTER TABLE job_reviews ADD		self_rating				integer;
 ALTER TABLE job_reviews ADD		supervisor_rating		integer;
 
+ALTER TABLE contract_types ADD contract_text			text;
+
+DROP VIEW vw_contracting;
+CREATE VIEW vw_contracting AS
+	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
+		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.job_description, 
+		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
+		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
+		entitys.entity_id, entitys.entity_name, 
+		
+		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
+		contract_status.contract_status_id, contract_status.contract_status_name,
+		
+		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 
+		applications.contract_start, applications.contract_period, applications.contract_terms, applications.initial_salary, 
+		applications.application_date, applications.approve_status, applications.workflow_table_id, applications.action_date, 
+		applications.applicant_comments, applications.review, applications.org_id,
+
+		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
+		vw_education_max.name_of_school, vw_education_max.examination_taken, 
+		vw_education_max.grades_obtained, vw_education_max.certificate_number,
+
+		vw_employment_max.employment_id, vw_employment_max.employers_name, vw_employment_max.position_held,
+		vw_employment_max.date_from as emp_date_from, vw_employment_max.date_to as emp_date_to, 
+		
+		vw_employment_max.employment_duration, vw_employment_max.employment_experince,
+		round((date_part('year', vw_employment_max.employment_duration) + date_part('month', vw_employment_max.employment_duration)/12)::numeric, 1) as emp_duration,
+		round((date_part('year', vw_employment_max.employment_experince) + date_part('month', vw_employment_max.employment_experince)/12)::numeric, 1) as emp_experince
+
+	FROM applications INNER JOIN entitys ON applications.employee_id = entitys.entity_id
+		LEFT JOIN vw_intake ON applications.intake_id = vw_intake.intake_id
+		LEFT JOIN contract_types ON applications.contract_type_id = contract_types.contract_type_id
+		LEFT JOIN contract_status ON applications.contract_status_id = contract_status.contract_status_id
+		LEFT JOIN vw_education_max ON entitys.entity_id = vw_education_max.entity_id
+		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id;
+
 CREATE OR REPLACE FUNCTION increment_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_entity_id		integer;

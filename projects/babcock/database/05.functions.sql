@@ -1253,8 +1253,7 @@ DECLARE
 	mystr VARCHAR(120);
 BEGIN
 	IF($2 is null) THEN 
-		SELECT INTO myqtr substring(quarterid from 3 for 2) as qid, quarterid FROM quarters WHERE active = true;
-		newid := myqtr.qid || substring($1 from 3 for 5);
+		newid := $3 || substring($1 from 3 for 5);
 	ELSE
 		newid := $2;
 	END IF;
@@ -1289,6 +1288,7 @@ BEGIN
 		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
 		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
 		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE entitys SET user_name = newid WHERE user_name = $1;
 		mystr := 'Changes to ' || newid;
 	END IF;
 	

@@ -1089,6 +1089,14 @@ BEGIN
 	
 	IF(NEW.exchange_rate is null) THEN NEW.exchange_rate = 1; END IF;
 	IF(NEW.exchange_rate = 0) THEN NEW.exchange_rate = 1; END IF;
+
+	SELECT adjustment_type INTO NEW.adjustment_type
+	FROM adjustments 
+	WHERE (adjustments.adjustment_id = NEW.adjustment_id);
+	
+	IF(NEW.adjustment_type = 2)THEN
+		NEW.adjustment_factor = -1;
+	END IF;
 	
 	IF(NEW.Amount = 0)THEN
 		SELECT formural INTO v_formural
