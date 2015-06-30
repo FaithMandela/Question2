@@ -260,6 +260,8 @@ public class BWeb {
 	}
 
 	public BElement getSub(BElement subs, String substr) {
+		if(subs == null) return null;
+		
 		BElement subel = null;
 		int subno = Integer.valueOf(substr);
 		
@@ -388,6 +390,8 @@ public class BWeb {
 	}
 
 	public void getParams() {
+		if(views == null) return;
+		
 		for(int i = 0; i < views.size()-1; i++) {
 			BElement desk = views.get(i);
 
@@ -402,6 +406,7 @@ public class BWeb {
 	}
 
 	public void getParams(BElement elParam, String paramKey) {
+		if(elParam == null) return;
 
 		String paramStr = elParam.getAttribute("params");
 		if((paramStr != null) && (!paramKey.equals("{new}"))) {
@@ -1244,6 +1249,8 @@ System.out.println("BASE 1010 ");
 
 	public String getFieldTitles() {
 		String fieldTitles = null;
+		
+		if(view == null) return "";
 
 		BElement sview = null;
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
@@ -1742,7 +1749,6 @@ System.out.println("BASE 1010 ");
 		jshd.add("colNames", jsColNames);
 		jshd.add("colModel", jsColModel);
 		jshd.add("pager", "#jqpager");
-		jshd.add("rowNum", 10);
 		jshd.add("viewrecords", true);
 		jshd.add("gridview", true);
 		jshd.add("autoencode", true);
@@ -1750,7 +1756,7 @@ System.out.println("BASE 1010 ");
 		
 		JsonObject jsObj = jshd.build();
 		
-		System.out.println("BASE 2030 : " + jsObj.toString());
+		//System.out.println("BASE 2030 : " + jsObj.toString());
 
 		return jsObj.toString();
 	}

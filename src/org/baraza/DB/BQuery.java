@@ -58,6 +58,9 @@ public class BQuery {
 	boolean readonly = false;
 	boolean iforg = false;
 	int errCode = 0;
+	
+	Integer rowStart = null;
+	Integer fertchSize = null;
 
 	String orgID = null;
 	String userOrg = null;
@@ -73,6 +76,13 @@ public class BQuery {
 
 	public BQuery(BDB db, BElement view, String wheresql, String orderby, boolean ff) {
 		firstFetch = ff;
+		buildQuery(db, view, wheresql, orderby);
+	}
+	
+	public BQuery(BDB db, BElement view, String wheresql, String orderby, boolean ff, Integer rowStart, Integer fertchSize) {
+		this.firstFetch = ff;
+		this.rowStart = rowStart;
+		this.fertchSize = fertchSize;
 		buildQuery(db, view, wheresql, orderby);
 	}
 
@@ -331,6 +341,10 @@ public class BQuery {
 				orderby = "\nORDER BY " + keyField;
 		}
 		if(orderby != null) mysql += orderby;
+		
+		/*if((rowStart != null) && (fertchSize != null)) {
+			mysql += "\nOFFSET " + rowStart.toString() + " LIMIT " + fertchSize.toString();
+		}*/
 
 		// SQL view debug point
 		//System.out.println("SQL : " + mysql);
