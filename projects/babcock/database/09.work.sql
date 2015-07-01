@@ -147,3 +147,11 @@ UPDATE registrations  SET af_amount = '150000.00', af_success = '0', af_payment_
 
 
 
+---------------- Matriculation
+
+ALTER TABLE studentdegrees ALTER COLUMN studentid DROP NOT NULL;
+
+SELECT deldupstudent(studentid, null, '14') FROM students WHERE studentid like 'NV/%' ORDER BY studentid;
+
+ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
+

@@ -11,6 +11,7 @@ package org.baraza.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,7 @@ import org.baraza.xml.BElement;
 import org.baraza.DB.BJSONQuery;
 
 public class BJSONData extends HttpServlet {
+	Logger log = Logger.getLogger(BJSONData.class.getName());
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)  {
 		doGet(request, response);
@@ -38,6 +40,12 @@ public class BJSONData extends HttpServlet {
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();
 		
+		Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+			String ce = (String)e.nextElement();
+			System.out.println(ce + ":" + request.getParameter(ce));
+		}
+		
 		BWeb web = new BWeb(dbconfig, xmlfile);
 		web.setUser(userIP, userName);
 		web.init(request);
@@ -52,7 +60,7 @@ public class BJSONData extends HttpServlet {
 		if(sortby != null && webSession.getAttribute("JSONfilter2") != null) {
 			webSession.setAttribute("JSONfilter1", webSession.getAttribute("JSONfilter2"));
 		}
-		System.out.println("JSON sort : " + sortby);
+		//System.out.println("JSON sort : " + sortby);
 		
 		String wheresql = null;
 		if(webSession.getAttribute("JSONfilter1") != null) {
@@ -65,7 +73,19 @@ public class BJSONData extends HttpServlet {
 		
 		//System.out.println("BASE 1010 : " + view.toString());
 		
-		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, wheresql, sortby);
+		String pageNum = request.getParameter("page");
+		if(pageNum == null) pageNum = "0";
+		Integer pageStart = new Integer(0);
+		Integer pageSize = new Integer(0);
+		try {
+			if(request.getParameter("rows") == null) pageSize = new Integer(30);
+			else pageSize = new Integer(request.getParameter("rows"));
+			pageStart = new Integer(pageNum) * pageSize;
+		} catch(NumberFormatException ex) { 
+			log.severe("Page size error " + ex);
+		}
+		
+		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, wheresql, sortby, pageStart, pageSize);
 		String JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
 
 		try {

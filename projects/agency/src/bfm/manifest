@@ -1,2 +1,2 @@
-Main-Class: tvtoap
-Class-Path: lib/postgresql-9.3-1101.jdbc4.jar lib/sqljdbc4.jar
+Main-Class: BookingFeedMonitor
+Class-Path: ../../../../build/lib/postgresql-9.3-1101.jdbc4.jar ../../../../build/lib/sqljdbc4.jar 

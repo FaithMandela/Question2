@@ -70,6 +70,7 @@ public class BWebFiles extends HttpServlet {
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();
+		String webPath = "http://" + request.getLocalAddr() + ":" + request.getLocalPort();
 
 System.out.println("BASE 1010 : " + userName);
 
@@ -84,13 +85,13 @@ System.out.println("BASE 1010 : " + userName);
 		linkField = view.getAttribute("linkfield");
 		linkValue = web.getDataItem();
 
-		String repository = view.getAttribute("repository");
+		String repository = webPath + view.getAttribute("repository");
 		String username = view.getAttribute("username");
 		String password = view.getAttribute("password");
 		folder = view.getAttribute("folder");
 		if(repository != null) webdav = new BWebdav(repository, username, password);
 
-System.out.println("BASE 1110 : " + repository);
+System.out.println("BASE 1020 : " + repository);
 
 		db = web.getDB();
 		query = new BQuery(db, view, null, null, false);
@@ -103,6 +104,8 @@ System.out.println("BASE 1110 : " + repository);
 
 		int yourMaxMemorySize = 262144;
 		File yourTempDirectory = new File("/var/tmp/baraza.tmp");
+		
+System.out.println("BASE 1210 " + request.getServletContext().getContextPath());
 		
 		// Create a factory for disk-based file items
 		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
