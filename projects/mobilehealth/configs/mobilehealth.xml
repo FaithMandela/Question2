@@ -137,9 +137,7 @@
 					<TEXTFIELD w="75" title="Location Lat">location_lat</TEXTFIELD>
 					<TEXTFIELD w="75" title="Location Lng">location_lng</TEXTFIELD>
 					<GRID name="Mother Info" keyfield="survey_mother_id" linkfield="survey_id" table="vw_survey_mother" noorg="true">
-						<TEXTFIELD w="75" title="Mother Info Def ID">mother_info_def_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey Mother ID">survey_mother_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Variable">mother_info_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response_name</TEXTFIELD>
@@ -149,9 +147,7 @@
 						</FORM>
 					</GRID>
 					<GRID name="Child Info" keyfield="survey_child_id" linkfield="survey_id" table="vw_survey_child" noorg="true">
-						<TEXTFIELD w="75" title="Child Info Def ID">child_info_def_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey Child ID">survey_child_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Variable">child_info_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response_name</TEXTFIELD>
@@ -161,10 +157,7 @@
 						</FORM>
 					</GRID>
 					<GRID name="Referrals Info" keyfield="survey_referral_id" linkfield="survey_id" table="vw_survey_referrals" noorg="true">
-						<TEXTFIELD w="75" title="Referral Info Def ID">referral_info_def_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey Referral ID">survey_referral_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Referral Info Defs ID">referral_info_defs_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Variable">referral_info_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response Name">response_name</TEXTFIELD>
@@ -174,9 +167,7 @@
 						</FORM>
 					</GRID>
 					<GRID name="Defaulters Info" keyfield="survey_defaulter_id" linkfield="survey_id" table="vw_survey_defaulters" noorg="true">
-						<TEXTFIELD w="75" title="Defaulters Info Def ID">defaulters_info_def_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey Defaulter ID">survey_defaulter_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Variable">defaulters_info_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response_name</TEXTFIELD>
@@ -186,9 +177,7 @@
 						</FORM>
 					</GRID>
 					<GRID name="Household Info" keyfield="survey_household_id" linkfield="survey_id" table="vw_survey_household" noorg="true">
-						<TEXTFIELD w="75" title="Household Info Def ID">household_info_def_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey Household ID">survey_household_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Variable">household_info_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response</TEXTFIELD>
 						<TEXTFIELD w="75" title="Response">response_name</TEXTFIELD>
@@ -198,9 +187,7 @@
 						</FORM>
 					</GRID>
 					<GRID name="Death Info" keyfield="survey_death_id" linkfield="survey_id" table="vw_survey_death" noorg="true">
-						<TEXTFIELD w="75" title="Death Info Def ID">death_info_def_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
-						<TEXTFIELD w="75" title="Survey Death ID">survey_death_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Variable">death_info_def_id</TEXTFIELD>
 						<TEXTFIELD w="75" title="Question">question</TEXTFIELD>
 						<TEXTFIELD w="75" title="Death Count">response</TEXTFIELD>
 						<FORM name="Survey Death" keyfield="survey_death_id" linkfield="survey_id" table="survey_death" noorg="true">
