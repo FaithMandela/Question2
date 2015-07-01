@@ -2162,13 +2162,15 @@
 	</DESK>
 	<DESK w="700" name="Honors Roll" type="horl" key="332" h="500">
 		<FILTER location="250" name="Honors Roll" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
+			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Honors Roll" reportfile="honorsroll.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Special Awards" type="horl" key="333" h="500">
 		<FILTER location="250" name="Special Awards" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
+			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Special Awards" reportfile="specialawards.jasper"></JASPER>
 		</FILTER>
 	</DESK>
@@ -2310,9 +2312,8 @@
 		<FILTER location="250" name="Study Year by Semester" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
-				</DRILLDOWN>
-				<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
-			
+			</DRILLDOWN>
+			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Study Year by Semester - Summary" reportfile="studyyearb.jasper"></JASPER>
 			<JASPER filtered="true" name="Study Year by Semester" reportfile="studyyeara.jasper"></JASPER>
 		</FILTER>
