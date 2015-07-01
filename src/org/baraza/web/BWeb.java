@@ -1814,6 +1814,11 @@ System.out.println("BASE 1010 ");
 		if(view == null) return "";
 		return view.getAttribute("name", ""); 
 	}
+	
+	public String getViewType() {
+		if(view == null) return "";
+		return view.getName(); 
+	}
 
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }

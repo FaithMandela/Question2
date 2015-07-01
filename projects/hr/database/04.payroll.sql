@@ -9,7 +9,7 @@ CREATE TABLE adjustments (
 	formural				varchar(430),
 	monthly_update			boolean default true not null,
 	in_payroll				boolean default true not null,
-	in_Tax					boolean default true not null,
+	in_tax					boolean default true not null,
 	visible					boolean default true not null,
 	running_balance			boolean default false not null,
 	reduce_balance			boolean default false not null,
@@ -563,8 +563,9 @@ CREATE VIEW vw_employee_month_list AS
 		employees.employee_id, employees.surname, employees.first_name, employees.middle_name, employees.date_of_birth, 
 		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
 		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
-		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name
-
+		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
+		
+		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay
 	FROM employee_month INNER JOIN vw_periods ON employee_month.period_id = vw_periods.period_id
 		INNER JOIN entitys ON employee_month.entity_id = entitys.entity_id
 		INNER JOIN employees ON employee_month.entity_id = employees.entity_id;
@@ -1268,6 +1269,9 @@ DECLARE
 BEGIN
 	DELETE FROM loan_monthly WHERE period_id = $1;
 	
+	DELETE FROM advance_deductions WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
+	DELETE FROM employee_advances WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
+	DELETE FROM employee_banking WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
 	DELETE FROM employee_adjustments WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
 	DELETE FROM employee_tax_types WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
 	DELETE FROM period_tax_rates WHERE (period_tax_type_id IN (SELECT period_tax_type_id FROM period_tax_types WHERE period_id = $1));

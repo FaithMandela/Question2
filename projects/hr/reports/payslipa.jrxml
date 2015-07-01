@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="43"/>
+	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -18,7 +18,7 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_employee_month.employee_month_id, vw_employee_month.period_year, vw_employee_month.period_month, vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.identity_card, 	vw_employee_month.start_date, vw_employee_month.bank_name,  vw_employee_month.bank_branch_name, vw_employee_month.bank_account, vw_employee_month.basic_pay, vw_employee_month.net_pay, vw_employee_month.advance,  vw_employee_month.advance_deduction, vw_employee_month.banked,
+		<![CDATA[SELECT vw_employee_month.employee_month_id, vw_employee_month.period_year, vw_employee_month.period_month, vw_employee_month.employee_id, vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.identity_card, vw_employee_month.start_date, vw_employee_month.bank_name,  vw_employee_month.bank_branch_name, vw_employee_month.bank_account, vw_employee_month.basic_pay, vw_employee_month.net_pay, vw_employee_month.advance, vw_employee_month.advance_deduction, vw_employee_month.banked,
 vw_employee_month.currency_symbol,
 
 true as is_inpayoll, false as not_inpayroll
@@ -29,6 +29,7 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 	<field name="employee_month_id" class="java.lang.Integer"/>
 	<field name="period_year" class="java.lang.String"/>
 	<field name="period_month" class="java.lang.String"/>
+	<field name="employee_id" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="identity_card" class="java.lang.String"/>
@@ -81,7 +82,7 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 	<detail>
 		<band height="301" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="61" y="2" width="50" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="47625af4-f729-48fa-811b-dd741fd63a93"/>
+				<reportElement key="textField" x="53" y="2" width="87" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="47625af4-f729-48fa-811b-dd741fd63a93"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -91,10 +92,10 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText" positionType="Float" x="8" y="2" width="53" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c0eb350d-fca5-4467-bdab-0f2578de9826"/>
+				<reportElement key="staticText" positionType="Float" x="8" y="2" width="45" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c0eb350d-fca5-4467-bdab-0f2578de9826"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -120,7 +121,7 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText" positionType="Float" x="127" y="2" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="0ff5863b-d7ce-44eb-9fe3-2acf5f4fd001"/>
+				<reportElement key="staticText" positionType="Float" x="140" y="2" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="0ff5863b-d7ce-44eb-9fe3-2acf5f4fd001"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -159,7 +160,7 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 				<text><![CDATA[ID Number]]></text>
 			</staticText>
 			<textField pattern="yyyy" isBlankWhenNull="true">
-				<reportElement key="textField" x="127" y="53" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c42f75b5-f072-4889-8daf-89756f1de4c7"/>
+				<reportElement key="textField" x="140" y="53" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c42f75b5-f072-4889-8daf-89756f1de4c7"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -185,7 +186,7 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 				<text><![CDATA[Year]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="127" y="19" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="51725ed6-0e2e-4c62-ba72-b5d8e91df27a"/>
+				<reportElement key="textField" x="140" y="19" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="51725ed6-0e2e-4c62-ba72-b5d8e91df27a"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -237,7 +238,7 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 				<text><![CDATA[Branch]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="127" y="36" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="0150af36-23f1-4c39-8ee3-d1e3211627db"/>
+				<reportElement key="textField" x="140" y="36" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="0150af36-23f1-4c39-8ee3-d1e3211627db"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -402,7 +403,7 @@ WHERE (employee_month_id = '$P!{filterid}');]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Gross Pay]]></text>
+				<text><![CDATA[Basic Pay]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-2" x="339" y="70" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="52375504-d671-48d2-aa43-6e9efb632b85"/>
