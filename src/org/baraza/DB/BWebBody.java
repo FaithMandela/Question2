@@ -52,17 +52,17 @@ public class BWebBody extends BQuery {
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
 
-		if(view.getAttribute("display", "grid").equals("form")) {
-			myhtml.append("<div class='gridtable'>\n");
-			myhtml.append("<table id='formtable'>\n");
+		if(view.getName().equals("FORMVIEW")) {
+			myhtml.append("<div class='table-scrollable'>\n");
+			myhtml.append("<table class='table table-striped table-hover'>\n");
 			myhtml.append("\n<thead>\n<tr>");
 
 			myhtml.append("\n<th width='150'></th>");
 			myhtml.append("\n<th width='350'></th>");
 			addJSc = false;
 		} else {
-			myhtml.append("<div id='gridtable'>\n");
-			myhtml.append("<table class='datagrid'>\n");
+			myhtml.append("<div class='table-scrollable'>\n");
+			myhtml.append("<table class='table table-striped table-hover'>\n");
 			myhtml.append("\n<thead>\n<tr>");
 			if(hasAction && (keyField != null)) {
 				myhtml.append("\n<th data-field='ID'>ID</th>");
@@ -307,22 +307,8 @@ public class BWebBody extends BQuery {
 		String htmlBody = "";
 		if(view.getName().equals("FILTERGRID"))
 			htmlBody += "\n<input type='hidden' name='" + filterName + "' id='" + filterName + "' value='0'/>";
-
-		htmlBody += "\n<script>";
-		htmlBody += "\n\t$(document).ready(function() {";
-		htmlBody += "\n\t\t$(\".datagrid\").kendoGrid({";
-		if(groupTable != null) htmlBody += "dataSource: {" + groupTable + "}},";
-		htmlBody += "\n\t\t\theight: 380, scrollable: true, filterable: true, pageable: false, sortable: true";
-
-		if(colWidths != null) htmlBody += colWidths + "]";
-
-		htmlBody += "\n\t\t});";
-		htmlBody += "\n\t});";
-		htmlBody += "\n</script>";
 	
-		htmlBody += "\n<div id='grid_content'>\n";
 		htmlBody += myhtml.toString();
-		htmlBody += "\n</div>";
 		
 		return htmlBody;
 	}
@@ -509,14 +495,12 @@ public class BWebBody extends BQuery {
 			if(eof) fieldValue = formatData(el).replace("'", "&#39;");
 			else fieldValue = el.getAttribute("default", "");
 
-			response.append("<div class='wysiwyg'>");//style='width: 740px;'>");
-			response.append("<textarea class='form-control' name='" + el.getValue() + "'");
+			response.append("<textarea class='ckeditor form-control' name='" + el.getValue() + "'");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			response.append(" cols='50' rows='10'>");
 			response.append(fieldValue);
 			response.append("</textarea>");
-			response.append("</div>\n");
 		} else if(el.getName().equals("PASSWORD")) {
 			response.append("<input type='password' name='" + el.getValue() + "' class='form-control' size='50'/>\n");
 		} else if(el.getName().equals("GRIDBOX")) {

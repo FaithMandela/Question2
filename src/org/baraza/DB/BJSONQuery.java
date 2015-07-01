@@ -29,8 +29,8 @@ public class BJSONQuery extends BQuery {
 
 	boolean selectAll = false;
 
-	public BJSONQuery(BDB db, BElement view, String wheresql, String orderby) {
-		super(db, view, wheresql, orderby, false);
+	public BJSONQuery(BDB db, BElement view, String wheresql, String orderby, Integer pageStart, Integer pageSize) {
+		super(db, view, wheresql, orderby, false, pageStart, pageSize);
 	}
 	
 	public String getJSONData(String viewKey, boolean sfield) {

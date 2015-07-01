@@ -1285,9 +1285,12 @@ BEGIN
 		DELETE FROM studentdegrees WHERE studentid is null;
 		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
 		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE sun_audits SET studentid = null WHERE studentid = $1;
+		
 		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
 		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
 		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE sun_audits SET studentid = newid WHERE studentid = null;
 		UPDATE entitys SET user_name = newid WHERE user_name = $1;
 		mystr := 'Changes to ' || newid;
 	END IF;
