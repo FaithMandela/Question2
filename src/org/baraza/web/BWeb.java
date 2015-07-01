@@ -62,7 +62,7 @@ public class BWeb {
 	Map<String, String> params;
 
 	boolean selectAll = false;
-	String[] deskTypes = {"DIARY", "FILES", "FILTER", "FORM", "GRID", "JASPER"};
+	String[] deskTypes = {"DIARY", "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};
 	String viewKey = null;
 	String dataItem = null;
 	String userID = null;
@@ -720,14 +720,16 @@ public class BWeb {
 		}
 
 		if(view.getName().equals("GRID")) {
-			//BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
-			//if(selectAll) webbody.setSelectAll();
 			body += "\t<div class='table-scrollable'>\n";
 			body += "\t\t<table id='jqlist' class='table table-striped table-bordered table-hover'></table>\n";
 			body += "\t\t<div id='jqpager'></div>\n";
 			body += "\t</div>\n";
-			//webbody.close();
 		} else if(view.getName().equals("FILES")) {
+			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
+			if(selectAll) webbody.setSelectAll();
+			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
+			webbody.close();
+		} else if(view.getName().equals("FORMVIEW")) {
 			BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 			if(selectAll) webbody.setSelectAll();
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
