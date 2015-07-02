@@ -143,7 +143,7 @@ public class BWebBody extends BQuery {
 			for(int k=0; k<colNums; k++) colspanfield[k] = "";
 
 			while (rs.next()) {
-				if(view.getAttribute("display", "grid").equals("form") && (row != 0)) {
+				if(view.getName().equals("FORMVIEW")) {
 					myhtml.append("\n<tr bgcolor='#000077'><td></td><td></td></tr>");
 				} else {
 					myhtml.append("\n<tr>");
@@ -161,7 +161,7 @@ public class BWebBody extends BQuery {
 				int col = 0;
 				dispStr = "";
 				for(BElement el : view.getElements()) {
-					if(view.getAttribute("display", "grid").equals("form") && !el.getValue().equals("")) {
+					if(view.getName().equals("FORMVIEW") && !el.getValue().equals("")) {
 						if(col != 0) myhtml.append("\n<tr>");
 						myhtml.append("<td>" + el.getAttribute("title") + "</td>");
 					}
@@ -233,7 +233,7 @@ public class BWebBody extends BQuery {
 							myhtml.append("><img src='resources/images/form.png'></a>");
 							myhtml.append("</td>");
 
-							if(view.getAttribute("display", "grid").equals("form")) {
+							if(view.getName().equals("FORMVIEW")) {
 								if(col != 0) myhtml.append("\n<tr>");
 							}
 							col++;
@@ -243,7 +243,7 @@ public class BWebBody extends BQuery {
 						}
 						myhtml.append("</td>");
 
-						if(view.getAttribute("display", "grid").equals("form")) {
+						if(view.getName().equals("FORMVIEW")) {
 							if(col != 0) myhtml.append("\n<tr>");
 						}
 						col++;
@@ -261,7 +261,7 @@ public class BWebBody extends BQuery {
 				}
 
 				if(hasSubs && (keyField != null)) {
-					if(view.getAttribute("display", "grid").equals("form")) {
+					if(view.getName().equals("FORMVIEW")) {
 						if(view.getAttribute("gohint") != null) myhtml.append("\n<td>" + view.getAttribute("gohint") +  "</td>"); 
 						else myhtml.append("\n<td>GO</td>");
 					}

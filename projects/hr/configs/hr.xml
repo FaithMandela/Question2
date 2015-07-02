@@ -1810,7 +1810,8 @@
 			<TEXTFIELD w="275" title="Contract Type Name">contract_type_name</TEXTFIELD>
 			<FORM name="Contract Types" keyfield="contract_type_id" table="contract_types">
 				<TEXTFIELD w="150" title="Contract Type Name" y="10" h="20" x="10">contract_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<EDITOR w="430" tab="Contract" y="30" h="70" x="10">contract_text</EDITOR>
+				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Contract Status" keyfield="contract_status_id" table="contract_status">

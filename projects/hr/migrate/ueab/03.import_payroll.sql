@@ -109,8 +109,8 @@ UPDATE import.employees SET employeename = 'Kibor David' WHERE id = 798;
 DELETE FROM entity_subscriptions WHERE entity_id = 1;
 DELETE FROM entitys WHERE entity_id = 1;
 
-INSERT INTO entitys(entity_id, entity_type_id, org_id, entity_name, user_name)
-SELECT employeeid, 1, 0, employeename, employeeid
+INSERT INTO entitys(entity_id, entity_type_id, org_id, entity_name, user_name, function_role)
+SELECT employeeid, 1, 0, employeename, accountno, 'staff'
 FROM import.employees
 ORDER BY employeeid;
 
