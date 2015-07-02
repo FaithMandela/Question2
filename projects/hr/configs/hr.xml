@@ -1781,10 +1781,12 @@
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="290">contract_start</TEXTDATE>
 					<TEXTFIELD w="150" title="Contract Period" y="70" h="20" x="10">contract_period</TEXTFIELD>
 					<TEXTDATE w="150" title="Contract Close" y="70" h="20" x="290">contract_close</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Initial Salary" y="90" h="20" x="10">initial_salary</TEXTDECIMAL>
 					<TEXTAREA w="430" tab="Contract Terms" y="2" h="170" x="10">contract_terms</TEXTAREA>
 					<TEXTAREA w="430" tab="Applicant Comments" y="2" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="430" tab="Review" y="2" h="170" x="10">review</TEXTAREA>
 				</FORM>
+				<JASPER name="Contract" reportfile="contract.jasper"></JASPER>
 			</GRID>
 			<GRID name="Reporting" keyfield="reporting_id" linkfield="entity_id" table="vw_reporting">
 				<TEXTFIELD w="75" title="Reporting">rpt_name</TEXTFIELD>
@@ -1819,7 +1821,6 @@
 			<TEXTFIELD w="75" title="Contract Status Name">contract_status_name</TEXTFIELD>
 			<FORM name="Contract Status" keyfield="contract_status_id" table="contract_status">
 				<TEXTFIELD w="150" title="Contract Status Name" y="10" h="20" x="10">contract_status_name</TEXTFIELD>
-				<EDITOR w="430" tab="Contract Text" y="2" h="170" x="10">contract_text</EDITOR>
 				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
