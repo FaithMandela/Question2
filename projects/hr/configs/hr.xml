@@ -556,6 +556,17 @@
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
 		</GRID>
+		<GRID name="Contract" keyfield="application_id" table="vw_contracting" user="entity_id">
+			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Contract Type">contract_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Contract Status">contract_status_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Contract Date">contract_date</TEXTDATE>
+			<TEXTDATE w="75" title="Contract Start">contract_start</TEXTDATE>
+			<TEXTFIELD w="75" title="Contract Period">contract_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			<JASPER name="Contract" reportfile="contract.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
 		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" user="entity_id">

@@ -107,19 +107,18 @@ WHERE (application_id = '$P!{filterid}');]]>
 	<summary>
 		<band height="101" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="12" y="13" width="543" height="20" uuid="fb2730e8-dd1f-4013-acba-b2b83ddc6353"/>
+				<reportElement positionType="Float" x="12" y="13" width="543" height="20" uuid="fb2730e8-dd1f-4013-acba-b2b83ddc6353"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<b>1. Appointment</b><br/><p>This is a term contract of one year effective from" + $F{date_from} + "It is subject to termination as provided under clause 13.</br><p>"
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<b>1. Appointment</b><br/><p>This is a term contract of one year effective from" + $F{date_from} + "It is subject to termination as provided under clause 13.</br><p>"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="12" y="65" width="543" height="20" uuid="6095ead1-89b0-4604-8efb-fd9fe453e168"/>
+				<reportElement positionType="Float" x="12" y="65" width="543" height="20" uuid="6095ead1-89b0-4604-8efb-fd9fe453e168"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[+"<br/><p>MANAGING DIRECTOR <br><p>"
+				<textFieldExpression><![CDATA["<br/><p>MANAGING DIRECTOR <br><p>"
 
 +"<br><p>I " + $F{entity_name} + " hereby accept the above offer as per the terms and conditions stipulated herein.</br></p>"
 
@@ -128,7 +127,7 @@ WHERE (application_id = '$P!{filterid}');]]>
 +"<br><p>Signed………………………….Date…………………"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="12" y="33" width="543" height="20" uuid="469eab1d-2832-4b94-b3e3-81e796ec1402"/>
+				<reportElement positionType="Float" x="12" y="33" width="543" height="20" uuid="469eab1d-2832-4b94-b3e3-81e796ec1402"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
