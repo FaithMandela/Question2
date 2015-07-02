@@ -785,26 +785,23 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("PICTURE")) {
 			String mypic = null;
 			
-			response.append("<div style='width:" + el.getAttribute("w") + "px; height:" + el.getAttribute("h") + "px;'>");
-			response.append("<a href=\"javascript:myPictureWin('" + el.getValue() + "')\">");
+			response.append("<span class='btn green fileinput-button'>");
+			response.append("<i class='glyphicon glyphicon-plus'></i>");
+			response.append("<span>Add files...</span>");
+			
 			if(eof) {
 				mypic = getString(el.getValue());
-				if(mypic == null) {
-					response.append("<img src='resources/images/add.png'>");
-				} else {
+				if(mypic != null) {
 					response.append("<img height='" + el.getAttribute("h") + "px' width='auto' src='");
 					response.append(el.getAttribute("pictures") + "?access=" + el.getAttribute("access"));
 					response.append("&picture=" + mypic + "'>");
 				}
-			} else {
-				response.append("<img src='resources/images/add.png'>");
 			}
-
-			response.append("</a></div>\n");
-			response.append("<input type='hidden' name='" + el.getValue() + "'");
-			if(mypic != null) response.append(" value='" + mypic + "'");
-			else response.append(" value=''");
-			response.append(" />\n");
+			
+			response.append("<input id='fileupload' name='" + el.getValue() + "' type='file' >");
+            response.append("</span>");
+			response.append("<div id='files' class='files'></div>");
+            response.append("<br>");
 		} else if(el.getName().equals("USERFIELD") || el.getName().equals("DEFAULT") || el.getName().equals("FUNCTION")) {
 		}
 		
