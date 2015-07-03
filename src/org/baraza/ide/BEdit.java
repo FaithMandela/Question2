@@ -39,14 +39,15 @@ public class BEdit implements ActionListener {
 	List<BFileEdit> fileEdit;
 	String dbDirName;
 	BDB db;
-
+    BLogHandle logHandle;
+    
 	public BEdit(String dbDirName, BDB db, BLogHandle logHandle) {
 		this.db = db;
 		this.dbDirName = dbDirName;
 		panel = new JPanel(new BorderLayout());
 		tabFileView = new JTabbedPane();
 		panel.add(tabFileView, BorderLayout.CENTER);
-
+        this.logHandle = logHandle;
 		logHandle.config(log);
 		controls = new JPanel();
 		String[] btArray = {"New", "Open", "Save", "Save As", "Close", "Execute", "Batch Execute", "Execute All", "Views", "Tables"};
@@ -69,7 +70,7 @@ public class BEdit implements ActionListener {
 				for (int i = 0; i<dbFiles.length; i++) {
 					if(dbFiles[i].isFile()) {
 						if(!dbFiles[i].getName().startsWith(".")) {
-							fileEdit.add(new BFileEdit(dbFiles[i]));
+							fileEdit.add(new BFileEdit(dbFiles[i], logHandle));
 							tabFileView.add(dbFiles[i].getName(), fileEdit.get(fileEdit.size()-1).scrollPanes);
 						}
 					}
@@ -83,13 +84,13 @@ public class BEdit implements ActionListener {
 
 		int i = tabFileView.getSelectedIndex();
 		if("New".equals(aKey)) {
-			fileEdit.add(new BFileEdit(dbDirName));
+			fileEdit.add(new BFileEdit(dbDirName, logHandle));
 			tabFileView.add("new.sql", fileEdit.get(fileEdit.size()-1).scrollPanes);
 		} else if("Open".equals(aKey)) {
 			JFileChooser fc = new JFileChooser(dbDirName);
 			int j = fc.showOpenDialog(panel);
 			if (j == JFileChooser.APPROVE_OPTION) {
-				fileEdit.add(new BFileEdit(fc.getSelectedFile()));
+				fileEdit.add(new BFileEdit(fc.getSelectedFile(), logHandle));
 				tabFileView.add(fc.getSelectedFile().getName(), fileEdit.get(fileEdit.size()-1).scrollPanes);
 			}
 		} else if("Save As".equals(aKey)) {
