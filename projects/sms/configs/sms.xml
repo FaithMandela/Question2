@@ -365,8 +365,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="SMS Report" key="105" h="550">
-		<JASPER name="Inbox" reportfile="sms.jasper"></JASPER>
-		<JASPER name="Sent" reportfile="sms_1.jasper"></JASPER>
+		<JASPER name="Sent" reportfile="sms.jasper"></JASPER>
+		<JASPER name="Inbox" reportfile="sms_1.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="SMS Summary" key="110" h="550">
 		<JASPER name="Inbox" reportfile="sms_count.jasper"></JASPER>

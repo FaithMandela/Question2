@@ -92,6 +92,7 @@ public class BWebReport  {
 			parameters.put("orgid", db.getOrgID());
 			parameters.put("orgwhere", db.getOrgWhere());
 			parameters.put("organd", db.getOrgAnd());
+System.out.println("AND ORG : " + db.getOrgAnd());
 
 			session.setAttribute("userfield", "");
 			session.setAttribute("groupfield", "");
