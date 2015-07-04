@@ -8,7 +8,8 @@
 			<MENU name="4. Exam Center">4</MENU>
 			<MENU name="5. Submit Details">115</MENU>
 			<MENU name="6. Print Registration">215</MENU>
-			<MENU name="7. Acceptance Fees">20</MENU>
+			<MENU name="7. Admisions Letter">20</MENU>
+			<MENU name="8. Acceptance Fees">22</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Application Form" key="1" h="500">
@@ -316,7 +317,18 @@
 			<PICTURE w="300" username="repository" repository="http://localhost:9090/repository/webdav/pictures/" tab="Passport Photo" pictures="../repository/barazapictures" access="enter2012" password="enterDHSrepository" y="1" h="300" x="10">picture_file</PICTURE>
 		</FORM>
 	</DESK>
-	<DESK w="700" name="Acceptance Fees" key="20" h="500">
+	<DESK w="700" name="Admisions Letter" key="20" h="500">
+		<GRID w="530" name="Admisions Letter" lw="120" keyfield="registrationid" display="form" table="registrations" where="(isaccepted = true)" user="registrationid">
+			<TEXTFIELD w="75" title="Application ID">registrationid</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">firstname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Maiden Name">maidenname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Former Names">formernames</TEXTFIELD>
+			<TEXTFIELD w="75" title="Other Names">othernames</TEXTFIELD>
+			<JASPER name="Admision Letter" reportfile="admissions_letter.jasper"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Acceptance Fees" key="22" h="500">
 		<GRID w="530" name="Acceptance Fees" lw="120" keyfield="registrationid" display="form" table="registrations" where="(isaccepted = true)" user="registrationid">
 			<TEXTFIELD w="75" title="Application ID">registrationid</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">firstname</TEXTFIELD>
@@ -325,7 +337,7 @@
 			<TEXTFIELD w="75" title="Former Names">formernames</TEXTFIELD>
 			<TEXTFIELD w="75" title="Other Names">othernames</TEXTFIELD>
 			<TEXTFIELD w="75" title="Acceptance Fees">acceptance_fees</TEXTFIELD>
-			<JASPER name="Admision Letter" reportfile="admissions_letter.jasper"></JASPER>
+			<TEXTFIELD w="75" fnct="(CASE WHEN af_success = '0' THEN 'Paid' ELSE 'Not yet paid' END)" title="Payment Status">payment_status</TEXTFIELD>
 		</GRID>
 	</DESK>
 </APP>
