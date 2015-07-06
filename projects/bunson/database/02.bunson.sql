@@ -148,6 +148,8 @@ CREATE TABLE transfer_assignments(
     no_show                     boolean default false,
     no_show_reason              text,
     closed                      boolean default false,
+    cancelled                   boolean default false,
+    cancel_reason               text,
     last_update                 timestamp default CURRENT_TIMESTAMP
 );
 CREATE INDEX transfer_assignments_passanger_id ON transfer_assignments(passanger_id);
@@ -248,6 +250,23 @@ $$ LANGUAGE plpgsql;
 
 
 
+CREATE OR REPLACE FUNCTION ins_transfers() RETURNS trigger AS $$
+DECLARE
+BEGIN
+
+    IF(NEW.booking_date = '' OR NEW.booking_date is null) THEN
+        NEW.booking_date :=  CURRENT_TIMESTAMP;
+    END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_transfers BEFORE INSERT ON transfers
+    FOR EACH ROW EXECUTE PROCEDURE ins_transfers();
+
+
+/* check null date */
+
 CREATE OR REPLACE FUNCTION ins_drivers() RETURNS trigger AS $$
 DECLARE
 	v_pin              varchar(4);
@@ -268,6 +287,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_drivers BEFORE INSERT ON drivers
     FOR EACH ROW EXECUTE PROCEDURE ins_drivers();
+
 
 /*check for past 4pm*/
 

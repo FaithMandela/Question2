@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contracts" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f1021072-8d7e-47a7-b534-15134ad53738">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT entity_id, entity_name, employment_id, date_from, date_to, org_id,
+       employers_name, position_held, details, employment_duration
+FROM vw_employment;]]>
+	</queryString>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="employment_id" class="java.lang.Integer"/>
+	<field name="date_from" class="java.sql.Date"/>
+	<field name="date_to" class="java.sql.Date"/>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="employers_name" class="java.lang.String"/>
+	<field name="position_held" class="java.lang.String"/>
+	<field name="details" class="java.lang.String"/>
+	<field name="employment_duration" class="org.postgresql.util.PGInterval"/>
+	<variable name="current date" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="105" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="0" y="0" width="555" height="105" uuid="36e2593e-6078-4faf-b4a5-926881081914"/>
+				<imageExpression><![CDATA["/opt/baraza/projects/hr/reports/logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="82" y="19" width="473" height="20" uuid="b7999197-f1ac-4de1-9db8-e096471eac0d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="19" width="82" height="20" uuid="75079705-2200-4183-a805-445aaefb9568"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Dear]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="53" width="22" height="20" uuid="0372be92-ca3c-44d1-bfb2-9e2fecc56edb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[RE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="23" y="53" width="532" height="20" uuid="4bcc96b6-3763-4829-968f-d4dc1be316ba"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[OFFER OF EMPLOYMENT]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
