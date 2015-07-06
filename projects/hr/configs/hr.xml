@@ -1,7 +1,6 @@
 <APP name="Human Resources" org="org_id" password="change_password">
 	<MENU name="Human Resources">
 		<MENU name="Service Desk">
-			<MENU name="News" role="staff">1</MENU>
 			<MENU name="My Details" role="staff">4</MENU>
 			<MENU name="Leave Application" role="staff">5</MENU>
 			<MENU name="Perfomance Management" role="staff">44</MENU>
@@ -66,16 +65,21 @@
 		<MENU name="Projects" role="staff,admin,payroll,hr" xml="projects.xml">0</MENU>
 		<MENU name="Finance" role="finance" xml="finance.xml">0</MENU>
 	</MENU>
-	<DESK w="700" name="News" key="1" h="500">
-		<GRID name="News" keyfield="sys_news_id" table="sys_news" where="(publish = true)">
-			<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
-			<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
-		</GRID>
-		<GRID name="Out of Office" keyfield="employee_leave_id" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
-			<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
-			<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
-		</GRID>
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Staff" role="staff" table="employees" where="(active = true)">
+				<TEXTFIELD w="75" fnct="count(entity_id)" title="Total Staff">total_staff</TEXTFIELD>
+			</TILE>
+			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
+				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</TILELIST>
+			<TILELIST name="Out of Office" keyfield="employee_leave_id" role="staff" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+			</TILELIST>
+		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Registration" key="2" h="500">
 		<FORM new="true" name="Applicant" keyfield="entity_id" edit="false" delete="false" audit="false" table="applicants">

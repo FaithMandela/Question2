@@ -62,7 +62,7 @@ public class BWeb {
 	Map<String, String> params;
 
 	boolean selectAll = false;
-	String[] deskTypes = {"DIARY", "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};
+	String[] deskTypes = {"DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
 	String userID = null;
@@ -132,10 +132,12 @@ public class BWeb {
 		views.add(root.getElementByKey(sv[0]));
 		viewData.add("");
 
-		if(checkRole(sv[0]) == 2) {		// Check is you have assess to the node
-			viewKey = db.getStartView();
-			setView(request, viewKey);
-			return;
+		if(views.get(0).getAttribute("access", "role").equals("role")) {
+			if(checkRole(sv[0]) == 2) {		// Check is you have assess to the node
+				viewKey = db.getStartView();
+				setView(request, viewKey);
+				return;
+			}
 		}
 
 		String dk = viewKeys.get(0) + ":";
@@ -143,13 +145,13 @@ public class BWeb {
 			dk += viewKeys.get(i);
 			String sItems = (String)webSession.getAttribute("d" + dk);
 			if(sItems == null) sItems = "";
-
+			
 			views.add(getSub(views.get(i-1), viewKeys.get(i)));
 			viewData.add(sItems);
 			dk += ":";
 		}
 		view = views.get(views.size() - 1);
-
+		
 		// Setting the main page from session
 		if(webSession.getAttribute("mainpage") != null) {
 			mainPage = (String)webSession.getAttribute("mainpage");
@@ -314,7 +316,7 @@ public class BWeb {
 
 		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
 		mymenu += "		<li class='start active '>\n";
-		mymenu += "			<a href='index.jsp'>\n";
+		mymenu += "			<a href='index.jsp?view=1:0'>\n";
 		mymenu += "			<i class='icon-home'></i>\n";
 		mymenu += "			<span class='title'>Dashboard</span>\n";
 		mymenu += "			</a>\n";
@@ -567,8 +569,8 @@ public class BWeb {
 				canDel = false;
 			if(canDel && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'>Delete</button>\n";
-			if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";
+			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
+				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";*/
 		}
 
 		return buttons;
@@ -763,7 +765,7 @@ public class BWeb {
 		} else if(view.getName().equals("DIARY")) {
 			body += "\t\t<div id='calendar'></div>\n";
 		} else if(view.getName().equals("JASPER")) {
-System.out.println("BASE 1010 ");
+	//System.out.println("BASE 1010 ");
 			BWebReport report = new BWebReport(view, db.getUserID(), null, request);
 			BElement flt = views.get(views.size()-2);
 
@@ -1031,7 +1033,7 @@ System.out.println("BASE 1010 ");
 					String pItems[] = param.split("=");
 					if(pItems.length == 2) {
 						qForm.updateField(pItems[0].trim(), params.get(pItems[1].trim()));
-						System.out.println("BASE 1010 " + pItems[0].trim() + " : " + params.get(pItems[1].trim()));
+						//System.out.println("BASE 1010 " + pItems[0].trim() + " : " + params.get(pItems[1].trim()));
 					}
 				}
 			}

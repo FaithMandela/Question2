@@ -1512,26 +1512,6 @@ BEGIN
 	
 	IF (NEW.approve_status = 'Approved') THEN
 		NEW.action_date := now();
-		
-		SELECT entity_type_id INTO typeid
-		FROM entitys WHERE entity_id = NEW.entity_id;
-
-		IF (typeid = 4) THEN
-			SELECT Department_Role_id INTO typeid
-			FROM intake WHERE intake_ID = NEW.intake_ID;
-
-			INSERT INTO employees (org_id, department_role_id, entity_id, surname, first_name, middle_name, date_of_birth, gender,
-				nationality, marital_status, appointment_date, contract_period, employment_terms, identity_card, basic_salary,
-				bank_branch_id, language, interests, objective, details)
-			SELECT org_id, typeid, entity_id, surname, first_name, middle_name, date_of_birth, gender,
-				nationality, marital_status, current_date, 3, 'Probation', identity_card, 10000, 0, 
-				language, interests, objective, details
-			FROM applicant
-			WHERE entity_id = NEW.entity_id;
-
-			UPDATE entitys SET entity_type_id  = 1 WHERE entity_id = NEW.entity_id;
-			UPDATE entity_subscriptions SET entity_type_id  = 1 WHERE entity_id = NEW.entity_id;
-		END IF;
 	END IF;
 	IF (NEW.approve_status = 'Rejected') THEN
 		NEW.action_date := now();
