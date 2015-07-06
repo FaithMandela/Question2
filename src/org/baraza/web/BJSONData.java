@@ -40,16 +40,17 @@ public class BJSONData extends HttpServlet {
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();
 		
-		Enumeration e = request.getParameterNames();
+		/*Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
 			String ce = (String)e.nextElement();
 			System.out.println(ce + ":" + request.getParameter(ce));
-		}
+		}*/
 		
 		BWeb web = new BWeb(dbconfig, xmlfile);
 		web.setUser(userIP, userName);
 		web.init(request);
 		BElement view = web.getView();
+		//System.out.println("BASE 1010 : " + view.toString());
 		
 		String sortby = request.getParameter("sidx");
 		if(sortby != null) {
@@ -68,10 +69,7 @@ public class BJSONData extends HttpServlet {
 			webSession.removeAttribute("JSONfilter1");
 		}
 		wheresql = web.getJSONWhere(request, wheresql);
-		System.out.println("BASE 1010 : " + wheresql);
-
-		
-		//System.out.println("BASE 1010 : " + view.toString());
+		//System.out.println("BASE 1010 : " + wheresql);
 		
 		String pageNum = request.getParameter("page");
 		if(pageNum == null) pageNum = "0";

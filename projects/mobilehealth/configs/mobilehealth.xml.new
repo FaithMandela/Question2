@@ -2,6 +2,8 @@
 	<MENU name="Mobile Health">
 		<MENU name="Entitys">1</MENU>
 		<MENU name="Orgs">5</MENU>
+		<MENU name="Countys">10</MENU>
+		<MENU name="Surveys">15</MENU>
 	</MENU>
 	<DESK w="700" name="Entitys" h="500">
 		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">ESTAMP>
@@ -33,6 +35,9 @@
 				<CHECKBOX w="150" title="Picked" h="20" y="210" x="10">is_picked</CHECKBOX>
 				<TEXTAREA w="430" title="Details" h="70" y="230" x="10">details</TEXTAREA>
 			</FORM>
+			<ACTIONS>
+				<ACTION fnct="change_password">Reset Password</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 </APP>

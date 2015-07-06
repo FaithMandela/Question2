@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,13 +34,15 @@ public class BWebPictures extends HttpServlet {
 		String dbconfig = "java:/comp/env/jdbc/database";
 		db = new BDB(dbconfig);
 
-		ServletConfig config = this.getServletConfig();
+		ServletContext config = this.getServletContext();
 		photo_access = config.getInitParameter("photo_access");
 		if(photo_access == null) photo_access = "";
 		String repository = config.getInitParameter("repository_url");
 		String username = config.getInitParameter("rep_username");
 		String password = config.getInitParameter("rep_password");
+System.out.println("repository : " + repository);
 		webdav = new BWebdav(repository, username, password);
+		
 
 		String sp = request.getServletPath();
 		if(sp.equals("/barazapictures")) showPhoto(request, response);

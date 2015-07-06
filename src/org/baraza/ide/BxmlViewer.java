@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+//import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JSplitPane;
@@ -45,7 +45,8 @@ public class BxmlViewer extends JTabbedPane implements ActionListener, TreeSelec
 	JPanel controls, nodeControls;
 	JTable table;
 	JScrollPane scrollPane, textScroll, xmlScroll;
-	JTextArea textArea;
+	//JTextArea textArea;
+    BTextArea textArea;
 	JButton[] button;
 	JButton btNewDesk, btNewLink, btNewNode, btMoveUp, btMoveDown, btRefresh;
 	JPanel xmlpanel;
@@ -95,7 +96,8 @@ public class BxmlViewer extends JTabbedPane implements ActionListener, TreeSelec
 
 		// Create the pannel that has the XML, attributes, new components and design
 		nodePane = new JTabbedPane();
-		textArea = new JTextArea();
+		//textArea = new JTextArea();
+        textArea = new BTextArea(logHandle);
 		textArea.setTabSize(4);
 		textScroll = new JScrollPane(textArea);
 		nodePane.add(textScroll, "XML");

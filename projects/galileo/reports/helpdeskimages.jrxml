@@ -2,18 +2,18 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="helpdeskimages"
+		 name="Helpdeskimages"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
 		 pageWidth="595"
 		 pageHeight="842"
-		 columnWidth="595"
+		 columnWidth="535"
 		 columnSpacing="0"
-		 leftMargin="0"
-		 rightMargin="0"
-		 topMargin="0"
-		 bottomMargin="0"
+		 leftMargin="30"
+		 rightMargin="30"
+		 topMargin="20"
+		 bottomMargin="20"
 		 whenNoDataType="NoPages"
 		 isTitleNewPage="false"
 		 isSummaryNewPage="false">
@@ -23,12 +23,8 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="problemlogid" isForPrompting="false" class="java.lang.Integer">
-		<defaultValueExpression ><![CDATA[0]]></defaultValueExpression>
-	</parameter>
-	<queryString><![CDATA[SELECT upload
-FROM Helpdeskimages
-WHERE (problemlogid = $P{problemlogid});]]></queryString>
+	<queryString><![CDATA[SELECT *
+FROM Helpdeskimages]]></queryString>
 
 	<field name="upload" class="java.lang.Object"/>
 
@@ -49,17 +45,17 @@ WHERE (problemlogid = $P{problemlogid});]]></queryString>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="78"  isSplitAllowed="true" >
+			<band height="77"  isSplitAllowed="true" >
 				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="4"
 						y="4"
-						width="582"
+						width="528"
 						height="70"
 						key="image-1"/>
 					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.awt.Image"><![CDATA[$F{upload}]]></imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[]]></imageExpression>
 				</image>
 			</band>
 		</detail>

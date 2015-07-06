@@ -52,17 +52,17 @@ public class BWebBody extends BQuery {
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
 
-		if(view.getAttribute("display", "grid").equals("form")) {
-			myhtml.append("<div class='gridtable'>\n");
-			myhtml.append("<table id='formtable'>\n");
+		if(view.getName().equals("FORMVIEW")) {
+			myhtml.append("<div class='table-scrollable'>\n");
+			myhtml.append("<table class='table table-striped table-hover'>\n");
 			myhtml.append("\n<thead>\n<tr>");
 
 			myhtml.append("\n<th width='150'></th>");
 			myhtml.append("\n<th width='350'></th>");
 			addJSc = false;
 		} else {
-			myhtml.append("<div id='gridtable'>\n");
-			myhtml.append("<table class='datagrid'>\n");
+			myhtml.append("<div class='table-scrollable'>\n");
+			myhtml.append("<table class='table table-striped table-hover'>\n");
 			myhtml.append("\n<thead>\n<tr>");
 			if(hasAction && (keyField != null)) {
 				myhtml.append("\n<th data-field='ID'>ID</th>");
@@ -143,7 +143,7 @@ public class BWebBody extends BQuery {
 			for(int k=0; k<colNums; k++) colspanfield[k] = "";
 
 			while (rs.next()) {
-				if(view.getAttribute("display", "grid").equals("form") && (row != 0)) {
+				if(view.getName().equals("FORMVIEW")) {
 					myhtml.append("\n<tr bgcolor='#000077'><td></td><td></td></tr>");
 				} else {
 					myhtml.append("\n<tr>");
@@ -161,7 +161,7 @@ public class BWebBody extends BQuery {
 				int col = 0;
 				dispStr = "";
 				for(BElement el : view.getElements()) {
-					if(view.getAttribute("display", "grid").equals("form") && !el.getValue().equals("")) {
+					if(view.getName().equals("FORMVIEW") && !el.getValue().equals("")) {
 						if(col != 0) myhtml.append("\n<tr>");
 						myhtml.append("<td>" + el.getAttribute("title") + "</td>");
 					}
@@ -233,7 +233,7 @@ public class BWebBody extends BQuery {
 							myhtml.append("><img src='resources/images/form.png'></a>");
 							myhtml.append("</td>");
 
-							if(view.getAttribute("display", "grid").equals("form")) {
+							if(view.getName().equals("FORMVIEW")) {
 								if(col != 0) myhtml.append("\n<tr>");
 							}
 							col++;
@@ -243,7 +243,7 @@ public class BWebBody extends BQuery {
 						}
 						myhtml.append("</td>");
 
-						if(view.getAttribute("display", "grid").equals("form")) {
+						if(view.getName().equals("FORMVIEW")) {
 							if(col != 0) myhtml.append("\n<tr>");
 						}
 						col++;
@@ -261,7 +261,7 @@ public class BWebBody extends BQuery {
 				}
 
 				if(hasSubs && (keyField != null)) {
-					if(view.getAttribute("display", "grid").equals("form")) {
+					if(view.getName().equals("FORMVIEW")) {
 						if(view.getAttribute("gohint") != null) myhtml.append("\n<td>" + view.getAttribute("gohint") +  "</td>"); 
 						else myhtml.append("\n<td>GO</td>");
 					}
@@ -307,22 +307,8 @@ public class BWebBody extends BQuery {
 		String htmlBody = "";
 		if(view.getName().equals("FILTERGRID"))
 			htmlBody += "\n<input type='hidden' name='" + filterName + "' id='" + filterName + "' value='0'/>";
-
-		htmlBody += "\n<script>";
-		htmlBody += "\n\t$(document).ready(function() {";
-		htmlBody += "\n\t\t$(\".datagrid\").kendoGrid({";
-		if(groupTable != null) htmlBody += "dataSource: {" + groupTable + "}},";
-		htmlBody += "\n\t\t\theight: 380, scrollable: true, filterable: true, pageable: false, sortable: true";
-
-		if(colWidths != null) htmlBody += colWidths + "]";
-
-		htmlBody += "\n\t\t});";
-		htmlBody += "\n\t});";
-		htmlBody += "\n</script>";
 	
-		htmlBody += "\n<div id='grid_content'>\n";
 		htmlBody += myhtml.toString();
-		htmlBody += "\n</div>";
 		
 		return htmlBody;
 	}
@@ -509,14 +495,12 @@ public class BWebBody extends BQuery {
 			if(eof) fieldValue = formatData(el).replace("'", "&#39;");
 			else fieldValue = el.getAttribute("default", "");
 
-			response.append("<div class='wysiwyg'>");//style='width: 740px;'>");
-			response.append("<textarea class='form-control' name='" + el.getValue() + "'");
+			response.append("<textarea class='ckeditor form-control' name='" + el.getValue() + "'");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			response.append(" cols='50' rows='10'>");
 			response.append(fieldValue);
 			response.append("</textarea>");
-			response.append("</div>\n");
 		} else if(el.getName().equals("PASSWORD")) {
 			response.append("<input type='password' name='" + el.getValue() + "' class='form-control' size='50'/>\n");
 		} else if(el.getName().equals("GRIDBOX")) {
@@ -801,26 +785,23 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("PICTURE")) {
 			String mypic = null;
 			
-			response.append("<div style='width:" + el.getAttribute("w") + "px; height:" + el.getAttribute("h") + "px;'>");
-			response.append("<a href=\"javascript:myPictureWin('" + el.getValue() + "')\">");
+			response.append("<span class='btn green fileinput-button'>");
+			response.append("<i class='glyphicon glyphicon-plus'></i>");
+			response.append("<span>Add files...</span>");
+			
 			if(eof) {
 				mypic = getString(el.getValue());
-				if(mypic == null) {
-					response.append("<img src='resources/images/add.png'>");
-				} else {
+				if(mypic != null) {
 					response.append("<img height='" + el.getAttribute("h") + "px' width='auto' src='");
 					response.append(el.getAttribute("pictures") + "?access=" + el.getAttribute("access"));
 					response.append("&picture=" + mypic + "'>");
 				}
-			} else {
-				response.append("<img src='resources/images/add.png'>");
 			}
-
-			response.append("</a></div>\n");
-			response.append("<input type='hidden' name='" + el.getValue() + "'");
-			if(mypic != null) response.append(" value='" + mypic + "'");
-			else response.append(" value=''");
-			response.append(" />\n");
+			
+			response.append("<input id='fileupload' name='" + el.getValue() + "' type='file' >");
+            response.append("</span>");
+			response.append("<div id='files' class='files'></div>");
+            response.append("<br>");
 		} else if(el.getName().equals("USERFIELD") || el.getName().equals("DEFAULT") || el.getName().equals("FUNCTION")) {
 		}
 		

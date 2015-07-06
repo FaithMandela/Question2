@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sms_count" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6e0227dd-1ff9-4852-8274-51d36720c284">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sms_delivery_count" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6e0227dd-1ff9-4852-8274-51d36720c284">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -20,14 +20,23 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT cast(sms_time as date) sms_date, count(sms.sms_id) as sms_no
-FROM sms
-WHERE (sms.folder_id = 2)
+		<![CDATA[SELECT s.sms_date, s.delivery_status, count(s.sms_id) as sms_no
+
+FROM (SELECT  sms.org_id, sms.sms_id, sms.folder_id, sms.sms_time::date as sms_date,
+ sms.message, sms.sent,
+ sms_queue.sms_number, sms_queue.delivery_status, sms_queue.message_parts
+
+FROM sms INNER JOIN sms_queue ON sms.sms_id = sms_queue.sms_id) as s
+
+WHERE (s.folder_id = 2)
 $P!{organd}
-GROUP BY cast(sms_time as date)
-ORDER BY cast(sms_time as date) DESC;]]>
+
+
+GROUP BY s.sms_date, s.delivery_status
+ORDER BY s.sms_date DESC, s.delivery_status;]]>
 	</queryString>
 	<field name="sms_date" class="java.sql.Date"/>
+	<field name="delivery_status" class="java.lang.String"/>
 	<field name="sms_no" class="java.lang.Long"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -39,7 +48,7 @@ ORDER BY cast(sms_time as date) DESC;]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[SMS Sent Summary]]></text>
+				<text><![CDATA[SMS Delivery Summary]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -55,18 +64,25 @@ ORDER BY cast(sms_time as date) DESC;]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="262" height="15" forecolor="#000000" uuid="36849c54-92eb-4411-b602-213be235a4f6"/>
+				<reportElement style="Column header" x="1" y="0" width="170" height="15" forecolor="#000000" uuid="36849c54-92eb-4411-b602-213be235a4f6"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[SMS Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="263" y="0" width="262" height="15" forecolor="#000000" uuid="e7ef04b4-9799-44e5-a070-2837fd904bdb"/>
+				<reportElement style="Column header" x="311" y="0" width="214" height="15" forecolor="#000000" uuid="e7ef04b4-9799-44e5-a070-2837fd904bdb"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="171" y="0" width="140" height="15" forecolor="#000000" uuid="c744b29d-caf1-4c64-a622-ae6f829513e5"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Delivery Status]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -75,14 +91,21 @@ ORDER BY cast(sms_time as date) DESC;]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="a5118d05-5f6c-40af-be6d-92e8f2e4f9f4"/>
 				<textField isStretchWithOverflow="true" pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="262" height="15" uuid="961d8716-2d74-4ac5-9720-96016f821dc0"/>
+					<reportElement style="Detail" x="171" y="0" width="140" height="15" uuid="6539fb33-c309-4896-b120-dc43fbfcf29a"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{delivery_status}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1" y="0" width="170" height="15" uuid="961d8716-2d74-4ac5-9720-96016f821dc0"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sms_date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="263" y="0" width="262" height="15" uuid="1c631238-17bb-4e12-9ff1-ba1ae6e86d07"/>
+					<reportElement style="Detail" x="311" y="0" width="214" height="15" uuid="1c631238-17bb-4e12-9ff1-ba1ae6e86d07"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>

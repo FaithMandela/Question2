@@ -29,8 +29,12 @@ SELECT allowanceid, 1, 0, allowancename, 1
 FROM import.allowances
 ORDER BY allowanceid;
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 15, 'Tax Allowance', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 16, 'NHIF Allowance', true, true);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax) VALUES (1, 15, 'Tax Allowance', true, true);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax) VALUES (1, 16, 'NHIF Allowance', true, true);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll) VALUES (1, 17, 'Value of Quarters .25', false, true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll) VALUES (1, 18, 'Value of Quarters .50', false, true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll) VALUES (1, 19, 'Value of Quarters .75', false, true, false);
+UPDATE adjustments SET org_id = 0, currency_id = 1;
 
 INSERT INTO adjustments(adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, account_number)
 SELECT 20 + deductionid, 1, 0, deductionname, 2, accountnumber
@@ -60,8 +64,8 @@ ORDER BY nhisrateid;
 ALTER TABLE periods ADD acc_period	varchar(12);
 
 UPDATE import.monthrates SET startdate = '2013-04-01'::date WHERE monthrateid = 144;
-INSERT INTO periods(period_id, 0, org_id, start_date, end_date, acc_period)
-SELECT monthrateid, startdate, enddate, accperiod
+INSERT INTO periods(period_id, org_id, start_date, end_date, acc_period)
+SELECT monthrateid, 0, startdate, enddate, accperiod
 FROM import.monthrates
 ORDER BY monthrateid;
 
@@ -105,8 +109,8 @@ UPDATE import.employees SET employeename = 'Kibor David' WHERE id = 798;
 DELETE FROM entity_subscriptions WHERE entity_id = 1;
 DELETE FROM entitys WHERE entity_id = 1;
 
-INSERT INTO entitys(entity_id, entity_type_id, org_id, entity_name, user_name)
-SELECT employeeid, 1, 0, employeename, employeeid
+INSERT INTO entitys(entity_id, entity_type_id, org_id, entity_name, user_name, function_role)
+SELECT employeeid, 1, 0, employeename, accountno, 'staff'
 FROM import.employees
 ORDER BY employeeid;
 
@@ -114,14 +118,32 @@ INSERT INTO employees(entity_id, department_role_id, bank_branch_id, disability_
 	employee_id, pay_scale_id, pay_group_id, location_id, 
 	currency_id, org_id, person_title, surname, first_name, middle_name, 
 	date_of_birth, gender, phone, nationality,
-	identity_card, basic_salary, 
-	bank_account, contract_period)
-SELECT e.employeeid, e.departmentid, COALESCE(b.id, 0), 0, e.employeeid, 0, 0, 0, 1, 0, '',
+	identity_card, basic_salary, bank_account, contract_period, 
+	active, contract)
+SELECT e.employeeid, e.departmentid, COALESCE(b.id, 0), 0, e.accountno, 0, 0, 0, 1, 0, '',
 	trim(split_part(employeename, ' ', 1)), trim(split_part(employeename, ' ', 2)),
 	trim(split_part(employeename, ' ', 3)),
-	birthdate, employeesex, telephone, 'KE', idnumber, basicsalary, bankaccount, 36
+	birthdate, employeesex, telephone, 'KE', idnumber, basicsalary, bankaccount, 36, 
+	iscurrent::boolean, not ispermanent::boolean
 FROM import.employees as e LEFT JOIN import.bankbranch as b
-ON (e.bankid = b.bankid) AND (e.branchid = b.branchid);
+	ON (e.bankid = b.bankid) AND (e.branchid = b.branchid);
+	
+DELETE FROM default_tax_types;
+
+INSERT INTO default_tax_types(entity_id, tax_type_id, org_id, tax_identification)
+SELECT employeeid, 1, 0, pin
+FROM import.employees
+WHERE pin is not null;
+
+INSERT INTO default_tax_types(entity_id, tax_type_id, org_id, tax_identification)
+SELECT employeeid, 2, 0, nssf
+FROM import.employees
+WHERE nssf is not null;
+
+INSERT INTO default_tax_types(entity_id, tax_type_id, org_id, tax_identification)
+SELECT employeeid, 3, 0, nhif
+FROM import.employees
+WHERE nhif is not null;
 
 
 INSERT INTO employee_month(employee_month_id, entity_id, period_id, bank_branch_id, pay_group_id, 
@@ -131,6 +153,7 @@ SELECT employeemonthid, employeeid, monthrateid, COALESCE(b.id, 0), 0,
 FROM import.employeemonth as e LEFT JOIN import.bankbranch as b
 	ON (e.bankid = b.bankid) AND (e.branchid = b.branchid)
 ORDER BY employeemonthid;
+
 
 ALTER TABLE employee_adjustments DISABLE TRIGGER upd_employee_adjustments;
 
@@ -166,22 +189,25 @@ ALTER TABLE employee_adjustments ENABLE TRIGGER upd_employee_adjustments;
 
 DELETE FROM employee_tax_types;
 
-INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, exchange_rate)
-SELECT employeemonthid, 1, 0, tax, 1
-FROM import.employeemonth
-WHERE (tax > 0)
-ORDER BY employeemonthid;
+INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, exchange_rate, tax_identification)
+SELECT a.employeemonthid, 1, 0, a.tax, 1, b.pin
+FROM import.employeemonth as a INNER JOIN import.employees  as b ON 
+	a.employeeid = b.employeeid
+WHERE (a.tax > 0)
+ORDER BY a.employeemonthid;
 
-INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, employer, exchange_rate)
-SELECT employeemonthid, 2, 0, nssf, nssf, 1
-FROM import.employeemonth
-WHERE (nssf > 0) AND (isnssf = 'Yes')
-ORDER BY employeemonthid;
+INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, employer, exchange_rate, tax_identification)
+SELECT a.employeemonthid, 2, 0, a.nssf, a.nssf, 1, b.nssf
+FROM import.employeemonth as a INNER JOIN import.employees  as b ON 
+	a.employeeid = b.employeeid
+WHERE (a.nssf > 0) AND (a.isnssf = 'Yes')
+ORDER BY a.employeemonthid;
 
-INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, exchange_rate)
-SELECT employeemonthid, 2, 0, nhif, 1
-FROM import.employeemonth
-WHERE (nhif > 0) AND (isnhif = 'Yes')
-ORDER BY employeemonthid;
+INSERT INTO employee_tax_types(employee_month_id, tax_type_id, org_id, amount, exchange_rate, tax_identification)
+SELECT a.employeemonthid, 3, 0, a.nhif, 1, b.nhif
+FROM import.employeemonth as a INNER JOIN import.employees  as b ON 
+	a.employeeid = b.employeeid
+WHERE (a.nhif > 0) AND (a.isnhif = 'Yes')
+ORDER BY a.employeemonthid;
 
 

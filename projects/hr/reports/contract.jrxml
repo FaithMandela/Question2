@@ -2,19 +2,31 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contract" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1ff63088-2519-4f4f-9e99-07de49d746ef">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="83"/>
+	<property name="ireport.y" value="0"/>
 	<style name="style1" fill="Solid"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT entity_id, entity_name, employment_id, date_from, date_to, org_id,
-       employers_name, position_held, details, employment_duration
-  FROM vw_employment;]]>
+       employers_name, position_held, contract_text, employment_duration
+
+FROM vw_contracting
+
+WHERE (application_id = '$P!{filterid}');]]>
 	</queryString>
+	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
+	<field name="employment_id" class="java.lang.Integer"/>
 	<field name="date_from" class="java.sql.Date"/>
 	<field name="date_to" class="java.sql.Date"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="employers_name" class="java.lang.String"/>
 	<field name="position_held" class="java.lang.String"/>
-	<field name="details" class="java.lang.String"/>
+	<field name="contract_text" class="java.lang.String"/>
 	<field name="employment_duration" class="org.postgresql.util.PGInterval"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -23,7 +35,7 @@
 		<band height="94" splitType="Stretch">
 			<image hAlign="Right" vAlign="Middle">
 				<reportElement x="0" y="0" width="555" height="94" uuid="6394eb2c-f103-4b75-907a-0ccc0edaf48e"/>
-				<imageExpression><![CDATA["/opt/baraza/projects/hr/reports/orgs/dewcis/dewcis-letterhead.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "orgs/dewcis/dewcis-letterhead.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -102,10 +114,11 @@
 	<summary>
 		<band height="101" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="12" y="13" width="543" height="20" uuid="fb2730e8-dd1f-4013-acba-b2b83ddc6353"/>
+				<reportElement positionType="Float" x="12" y="13" width="543" height="20" uuid="fb2730e8-dd1f-4013-acba-b2b83ddc6353"/>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
+<<<<<<< HEAD
 				<textFieldExpression><![CDATA["<b>1. Appointment</b><br/><p>This is a term contract of one year effective from" + $F{date_from} + "It is subject to termination as provided under clause 13.</br><p>"
 
 +"<br/><b><p>2. Duties and Responsibilities</br></p></b><p><br>Detailed duties and key tasks are outlined in the attached job description, marked ‘Schedule I’. Please study the job description carefully and consult for clarifications and guidance if necessary. The company reserves the right to alter them from time to time. <br><p>This is a highly demanding responsibility and a full time role that will leave no room for other business activities. You will therefore be expected to dedicate all your time and efforts to the work of DEW CIS. <br><p>You will during your service to the company  conduct yourself professionally, honestly, courteously and properly at all times and be of strictly sober and temperate habits. <br><p>If this agreement is terminated, you undertake to hand over to the Company all property of the Company for which you may be responsible, together with any files, lists and notes that were given to you, or compiled by you in the execution of your duties.</p>"
@@ -169,12 +182,29 @@
 +"<br/><p></p>"
 
 +"<br/><p>MANAGING DIRECTOR <br><p>"
+=======
+				<textFieldExpression><![CDATA["<b>1. Appointment</b><br/><p>This is a term contract of one year effective from" + $F{date_from} + "It is subject to termination as provided under clause 13.</br><p>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="12" y="65" width="543" height="20" uuid="6095ead1-89b0-4604-8efb-fd9fe453e168"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<br/><p>MANAGING DIRECTOR <br><p>"
+>>>>>>> 5ae9b025896655514dd7b687f96653f091af88b6
 
 +"<br><p>I " + $F{entity_name} + " hereby accept the above offer as per the terms and conditions stipulated herein.</br></p>"
 
 +"<br><p>I will report on duty on...............</br></p>"
 
 +"<br><p>Signed………………………….Date…………………"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="12" y="33" width="543" height="20" uuid="469eab1d-2832-4b94-b3e3-81e796ec1402"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contract_text}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

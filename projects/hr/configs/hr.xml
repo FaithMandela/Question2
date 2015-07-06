@@ -125,7 +125,7 @@
 		</FORM>
 	</DESK>
 	<DESK w="700" name="My Details" key="4" h="580">
-		<GRID new="false" name="My Details" keyfield="entity_id" display="form" table="vw_employees" user="entity_id">
+		<FORMVIEW new="false" name="My Details" keyfield="entity_id" table="vw_employees" user="entity_id">
 			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
@@ -306,7 +306,7 @@
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
-		</GRID>
+		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Leave Application" key="5" h="550">
 		<JASPER name="Leave Report" user="filterid" reportfile="vw_employee_leave_a.jasper"></JASPER>
@@ -555,6 +555,17 @@
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+		</GRID>
+		<GRID name="Contract" keyfield="application_id" table="vw_contracting" user="entity_id">
+			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Contract Type">contract_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Contract Status">contract_status_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Contract Date">contract_date</TEXTDATE>
+			<TEXTDATE w="75" title="Contract Start">contract_start</TEXTDATE>
+			<TEXTFIELD w="75" title="Contract Period">contract_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			<JASPER name="Contract" reportfile="contract.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
@@ -943,7 +954,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FILES username="repository" repository="http://localhost/repository/webdav/files/" name="Upload Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza">
+			<FILES username="repository" repository="/repository/webdav/files/" name="Upload Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza">
 				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 				<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
@@ -1781,10 +1792,12 @@
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="290">contract_start</TEXTDATE>
 					<TEXTFIELD w="150" title="Contract Period" y="70" h="20" x="10">contract_period</TEXTFIELD>
 					<TEXTDATE w="150" title="Contract Close" y="70" h="20" x="290">contract_close</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Initial Salary" y="90" h="20" x="10">initial_salary</TEXTDECIMAL>
 					<TEXTAREA w="430" tab="Contract Terms" y="2" h="170" x="10">contract_terms</TEXTAREA>
 					<TEXTAREA w="430" tab="Applicant Comments" y="2" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="430" tab="Review" y="2" h="170" x="10">review</TEXTAREA>
 				</FORM>
+				<JASPER name="Contract" reportfile="contract.jasper"></JASPER>
 			</GRID>
 			<GRID name="Reporting" keyfield="reporting_id" linkfield="entity_id" table="vw_reporting">
 				<TEXTFIELD w="75" title="Reporting">rpt_name</TEXTFIELD>
@@ -1810,7 +1823,8 @@
 			<TEXTFIELD w="275" title="Contract Type Name">contract_type_name</TEXTFIELD>
 			<FORM name="Contract Types" keyfield="contract_type_id" table="contract_types">
 				<TEXTFIELD w="150" title="Contract Type Name" y="10" h="20" x="10">contract_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<EDITOR w="430" tab="Contract" y="30" h="70" x="10">contract_text</EDITOR>
+				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Contract Status" keyfield="contract_status_id" table="contract_status">
@@ -1818,7 +1832,6 @@
 			<TEXTFIELD w="75" title="Contract Status Name">contract_status_name</TEXTFIELD>
 			<FORM name="Contract Status" keyfield="contract_status_id" table="contract_status">
 				<TEXTFIELD w="150" title="Contract Status Name" y="10" h="20" x="10">contract_status_name</TEXTFIELD>
-				<EDITOR w="430" tab="Contract Text" y="2" h="170" x="10">contract_text</EDITOR>
 				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>

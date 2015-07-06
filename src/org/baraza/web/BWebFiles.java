@@ -70,7 +70,7 @@ public class BWebFiles extends HttpServlet {
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();
-		String webPath = "http://" + request.getLocalAddr() + ":" + request.getLocalPort()  + "/";
+		String webPath = "http://" + request.getLocalAddr() + ":" + request.getLocalPort();
 
 System.out.println("BASE 1010 : " + userName);
 
@@ -104,6 +104,8 @@ System.out.println("BASE 1020 : " + repository);
 
 		int yourMaxMemorySize = 262144;
 		File yourTempDirectory = new File("/var/tmp/baraza.tmp");
+		
+System.out.println("BASE 1210 " + request.getServletContext().getContextPath());
 		
 		// Create a factory for disk-based file items
 		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
