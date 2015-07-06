@@ -31,56 +31,63 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="150" splitType="Stretch">
+		<band height="155" splitType="Stretch">
 			<staticText>
-				<reportElement x="12" y="20" width="38" height="20" uuid="8bf066e7-71b4-401e-84f3-ace297b2841b"/>
+				<reportElement x="12" y="49" width="38" height="20" uuid="8bf066e7-71b4-401e-84f3-ace297b2841b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Dear, ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="50" y="20" width="389" height="20" uuid="2b031761-f980-4a0e-9406-c830517f93e1"/>
+				<reportElement x="50" y="49" width="389" height="20" uuid="2b031761-f980-4a0e-9406-c830517f93e1"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="12" y="0" width="100" height="20" uuid="b07a467c-57e2-4a4b-a077-5d27f0532343"/>
+				<reportElement x="12" y="29" width="100" height="20" uuid="b07a467c-57e2-4a4b-a077-5d27f0532343"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="52" width="22" height="20" uuid="fd21e1b5-8b43-4de3-8cf9-570de44d6d5e"/>
+				<reportElement x="12" y="69" width="22" height="20" uuid="fd21e1b5-8b43-4de3-8cf9-570de44d6d5e"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[RE:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="34" y="52" width="521" height="20" uuid="80c03981-6997-4a08-a8c8-598e2302f33e"/>
+				<reportElement x="34" y="69" width="521" height="20" uuid="80c03981-6997-4a08-a8c8-598e2302f33e"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[OFFER OF EMPLOYMENT]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="12" y="85" width="543" height="39" uuid="74412b5a-72fd-40a3-9ec3-720aaad8d707"/>
+				<reportElement positionType="Float" x="12" y="92" width="543" height="40" uuid="74412b5a-72fd-40a3-9ec3-720aaad8d707"/>
 				<textElement markup="html">
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Further to the recent interviews held in our offices, I am on behalf of " + $F{employers_name} + " pleased to offer you employment as a " + $F{position_held} + " with effect from " + $F{date_from}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="127" width="543" height="23" uuid="855ef382-54a9-4e7f-8586-d0e72bc76ded"/>
+				<reportElement x="12" y="132" width="543" height="23" uuid="855ef382-54a9-4e7f-8586-d0e72bc76ded"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[GENERAL TERMS AND CONDITIONS OF EMPLOYMENT]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="12" y="6" width="543" height="20" uuid="f22eb41c-40ce-47d9-856a-cf7940e02dfb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -137,8 +144,8 @@
 +"<br/><b>b) Summary Dismissal</b><br/><p>If you commit any serious breach of your obligations under this agreement, which obligations include, but are not limited to those set out in Section 17 of the Employment Act, the Company may terminate your services forthwith without notice or salary in lieu thereof or other benefits then due to you except salary earned to date of dismissal.</p>"
 
 +"<br/> An employee may be summarily dismissed if he/she commits the following offences: <br/>"
-+"<ul>"
-+"<li> Absents herself/himself from duty without permission or for reasons of ill health caused by her/his own misconduct.</li>"
++"<ol type='i'>"
++"<li><p> Absents herself/himself from duty without permission or for reasons of ill health caused by her/his own misconduct.</p></li>"
 +"<li> Neglects, refuses or becomes unable to perform her/his duties (other than due to ill-health not caused by his/her own misconduct)</li>"
 +"<li> Uses abusive or insulting language or otherwise misbehaves towards any other member of staff.</li>"
 +"<li> Is convicted of a criminal offence (other than a minor offence or an offence connoting no moral turpitude).</li>"
@@ -152,7 +159,7 @@
 +"<li> Reports on duty or becomes so intoxicated while on duty as to be incapable of performing his/her normal duties.</li>"
 +"<li>Is guilty of any other act or default for which an employee may be dismissed summarily under the employment Act.</li>"
 +"<li> In the event of any breach or non-observance by you of any of the terms and conditions contained  in this agreement</li>"
-+"</ul>"
++"</ol>"
 
 +"<br/><b>15. Your Acceptance</b><br/><p>If you are in agreement with the above terms and conditions, please sign and return the enclosed copy  to signify your acceptance thereof as soon as possible. By signing this Agreement, you will be deemed to have read and understood, and agreed to be bound by the terms and conditions of the DEW CIS Human Resource Policies and Procedures Manual, and the Company’s portfolios, copies of which have already been availed to you.</p>"
 
