@@ -7,6 +7,7 @@
 		<MENU name="Reports">
 			<MENU name="SMS">105</MENU>
 			<MENU name="SMS Summary">110</MENU>
+			<MENU name="SMS Delivery">115</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="SMS" key="1" h="500">
@@ -365,11 +366,15 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="SMS Report" key="105" h="550">
-		<JASPER name="Inbox" reportfile="sms.jasper"></JASPER>
-		<JASPER name="Sent" reportfile="sms_1.jasper"></JASPER>
+		<JASPER name="Sent" reportfile="sms.jasper"></JASPER>
+		<JASPER name="Received" reportfile="sms_1.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="SMS Summary" key="110" h="550">
-		<JASPER name="Inbox" reportfile="sms_count.jasper"></JASPER>
-		<JASPER name="Sent" reportfile="sms_count_1.jasper"></JASPER>
+		<JASPER name="Sent" reportfile="sms_count.jasper"></JASPER>
+		<JASPER name="Received" reportfile="sms_count_1.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="SMS Delivery" key="115" h="550">
+		<JASPER name="Sent" reportfile="sms_delivery_1.jasper"></JASPER>
+		<JASPER name="Received" reportfile="sms_delivery_count.jasper"></JASPER>
 	</DESK>
 </APP>

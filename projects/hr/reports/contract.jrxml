@@ -43,56 +43,63 @@ WHERE (application_id = '$P!{filterid}');]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="150" splitType="Stretch">
+		<band height="155" splitType="Stretch">
 			<staticText>
-				<reportElement x="12" y="20" width="38" height="20" uuid="8bf066e7-71b4-401e-84f3-ace297b2841b"/>
+				<reportElement x="12" y="49" width="38" height="20" uuid="8bf066e7-71b4-401e-84f3-ace297b2841b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Dear, ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="50" y="20" width="389" height="20" uuid="2b031761-f980-4a0e-9406-c830517f93e1"/>
+				<reportElement x="50" y="49" width="389" height="20" uuid="2b031761-f980-4a0e-9406-c830517f93e1"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="12" y="0" width="100" height="20" uuid="b07a467c-57e2-4a4b-a077-5d27f0532343"/>
+				<reportElement x="12" y="29" width="100" height="20" uuid="b07a467c-57e2-4a4b-a077-5d27f0532343"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="52" width="22" height="20" uuid="fd21e1b5-8b43-4de3-8cf9-570de44d6d5e"/>
+				<reportElement x="12" y="69" width="22" height="20" uuid="fd21e1b5-8b43-4de3-8cf9-570de44d6d5e"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[RE:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="34" y="52" width="521" height="20" uuid="80c03981-6997-4a08-a8c8-598e2302f33e"/>
+				<reportElement x="34" y="69" width="521" height="20" uuid="80c03981-6997-4a08-a8c8-598e2302f33e"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[OFFER OF EMPLOYMENT]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="12" y="85" width="543" height="39" uuid="74412b5a-72fd-40a3-9ec3-720aaad8d707"/>
+				<reportElement positionType="Float" x="12" y="92" width="543" height="40" uuid="74412b5a-72fd-40a3-9ec3-720aaad8d707"/>
 				<textElement markup="html">
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Further to the recent interviews held in our offices, I am on behalf of " + $F{employers_name} + " pleased to offer you employment as a " + $F{position_held} + " with effect from " + $F{date_from}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="12" y="127" width="543" height="23" uuid="855ef382-54a9-4e7f-8586-d0e72bc76ded"/>
+				<reportElement x="12" y="132" width="543" height="23" uuid="855ef382-54a9-4e7f-8586-d0e72bc76ded"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[GENERAL TERMS AND CONDITIONS OF EMPLOYMENT]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="12" y="6" width="543" height="20" uuid="f22eb41c-40ce-47d9-856a-cf7940e02dfb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -111,6 +118,71 @@ WHERE (application_id = '$P!{filterid}');]]>
 				<textElement textAlignment="Justified" markup="html">
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
+<<<<<<< HEAD
+				<textFieldExpression><![CDATA["<b>1. Appointment</b><br/><p>This is a term contract of one year effective from" + $F{date_from} + "It is subject to termination as provided under clause 13.</br><p>"
+
++"<br/><b><p>2. Duties and Responsibilities</br></p></b><p><br>Detailed duties and key tasks are outlined in the attached job description, marked ‘Schedule I’. Please study the job description carefully and consult for clarifications and guidance if necessary. The company reserves the right to alter them from time to time. <br><p>This is a highly demanding responsibility and a full time role that will leave no room for other business activities. You will therefore be expected to dedicate all your time and efforts to the work of DEW CIS. <br><p>You will during your service to the company  conduct yourself professionally, honestly, courteously and properly at all times and be of strictly sober and temperate habits. <br><p>If this agreement is terminated, you undertake to hand over to the Company all property of the Company for which you may be responsible, together with any files, lists and notes that were given to you, or compiled by you in the execution of your duties.</p>"
+
++"<br/><b>3. Reporting</b><br/><p>You will be reporting to the Managing Director.</p>"
+
++"<br/><b>4. Duty Station</b><br/><p>The company’s principle place of work is Nairobi but you may be required to travel from time to time. You may also be assigned duties to a specific client site on a short term or long term basis.</p>"
+
++"<br/><b>5. Salary</b><br/><p>You will be paid a consolidated gross salary of KShs. 45000 per month. Except for the statutory deductions which will be made from your salary," + $F{employers_name}+ "will not be responsible for any other taxes that may be due on your income. The company may at its sole discretion review this salary based on performance.<br>"
+
++"<br/><b>6. Benefits</b><br/><p>"
+
++"<br><p><b>a) Medical Scheme</b><br/><p>You will be entitled to join the company’s Group medical scheme. The company will meet 100% of the premium payable on an AAR bronze category.</p>"
+
++"<p>The company will cover 75% of outpatient medical expenses of up to a maximum of KShs. 36,000/= per annum.</p>"
+
++"<br/><b>b) Personal Accident Insurance</b><br/><p>You will be entitled to join the Company’s Group Personal Accident Insurance scheme.</p>"
+
++"<br/><b>7. Annual Leave </b><br/><p>You will be entitled to 21 working days annual leave for every 12 months of continuous service. Leave will be taken subject to the exigencies of duty.</p>"
+
++"<br/><b>8. Copy Right</b><br/><p>The copyrights to any work written or produced by the employee in the course of the employment created by this contract vests in the company. If so required, the employee will sign any documents and perform any acts necessary to give effect to the acknowledgement by him or her in this clause and to protect the rights of the company in and to such copyright.In so far as any copyright or any other right in any work now or in future written or produced by him or her while in the course and scope of this employment with or engagement with the company may not vest with the company for any reason whatsoever, the employee hereby assigns to the company such copyright or other right and undertakes to sign ay documents and perform any acts necessary to give effect thereto.</p>"
+
++"<br/><b>9. Working Hours</b><br/><p>The normal working hours are 8.00 a.m. to 1.00 p.m. and 2.00 p.m. to 5.00 p.m. Monday to Friday and 9.00 a.m. to 1.00 p.m. on Saturdays. However, due to the nature of the company's operations and the nature of your work, you may be required to perform duties outside the normal working hours from time to time.</p>"
+
++"<br/><b>10. Code of Conduct </b><br/><p>During your service, you shall observe Company Staff Rules and Regulations as amended from time to time and diligently, professionally and faithfully discharge the duties of your post and such other assigned duties, which the company may call upon you to perform from time to time. You will devote the whole of your time, attention and abilities to the service of the company and conduct yourself at all times in a manner befitting your position.</p>"
+
++"<br/><b>11. Conflict of Interest</b><br/><p>Except with the written consent of the Managing Director, you shall not either directly or indirectly during your service, engage or be engaged in any other service or business or receive any reward or commission or profit by virtue of your office and shall devote the whole of your time and attention to the service of the company.</p>"
+
++"<br/><b>12. Confidentiality</b><br/><p>All systems and information relating to the Company, Principle and Associate Companies, Clients and Employees are classified as confidential. You will not, during the engagement or at any time thereafter, disclose any confidential matters of the company or its business affairs to any third party.</p>"
++"</b><p>Breach of this confidentiality will be subject to disciplinary procedures.</p>"
+
++"<br/><b>13. Employment Law and Staff Rules and Regulations</b><br/><p>You will at all times be subject to the provisions of the Employment Act (Cap 226) and to the Company’s Staff Rules and Regulations, as amended from time to time.</p>"
+
++"<br/><b>14. Termination of Employment </b><br/><p>a) <b>Termination by Notice</b><br/><p>This appointment may be terminated by either party giving seven days written notice or seven days’ salary in lieu of notice during the probation period and one month written notice or one months salary in lieu of notice after confirmation.</p>"
+
++"<br/><b>b) Summary Dismissal</b><br/><p>If you commit any serious breach of your obligations under this agreement, which obligations include, but are not limited to those set out in Section 17 of the Employment Act, the Company may terminate your services forthwith without notice or salary in lieu thereof or other benefits then due to you except salary earned to date of dismissal.</p>"
+
++"<br/> An employee may be summarily dismissed if he/she commits the following offences: <br/>"
++"<ol type='i'>"
++"<li><p> Absents herself/himself from duty without permission or for reasons of ill health caused by her/his own misconduct.</p></li>"
++"<li> Neglects, refuses or becomes unable to perform her/his duties (other than due to ill-health not caused by his/her own misconduct)</li>"
++"<li> Uses abusive or insulting language or otherwise misbehaves towards any other member of staff.</li>"
++"<li> Is convicted of a criminal offence (other than a minor offence or an offence connoting no moral turpitude).</li>"
++"<li> Is guilty of a grave misconduct by bringing his/her office and that of DEW CIS as employer into disrepute or is otherwise incompatible with his/her continued employment in that office.</li>"
++"<li> Discloses any information regarding the affairs of DEW CIS or its clients to any unauthorized person.</li>"
++"<li> Improperly receives or solicit any reward, fees, commission or valuable present or gift for services rendered in the course of his/her duties as a DEW CIS employee.</li>"
++"<li> Fails to disclose, when required to do so any personal interest in any business or transaction of DEW CIS with which she/he is concerned.</li>"
++"<li> Makes a willful false statement in any matter on which he/she is required by DEW CIS to furnish information.</li>"
++"<li> Misappropriates DEW CIS’s funds and/or property.</li>"
++"<li> Receives bribes or any other form of personal payment for services rendered in the name of DEW CIS.</li>"
++"<li> Reports on duty or becomes so intoxicated while on duty as to be incapable of performing his/her normal duties.</li>"
++"<li>Is guilty of any other act or default for which an employee may be dismissed summarily under the employment Act.</li>"
++"<li> In the event of any breach or non-observance by you of any of the terms and conditions contained  in this agreement</li>"
++"</ol>"
+
++"<br/><b>15. Your Acceptance</b><br/><p>If you are in agreement with the above terms and conditions, please sign and return the enclosed copy  to signify your acceptance thereof as soon as possible. By signing this Agreement, you will be deemed to have read and understood, and agreed to be bound by the terms and conditions of the DEW CIS Human Resource Policies and Procedures Manual, and the Company’s portfolios, copies of which have already been availed to you.</p>"
+
+
++"<br/><b>Yours sincerely</b>"
+
++"<br/><p></p>"
+
++"<br/><p>MANAGING DIRECTOR <br><p>"
+=======
 				<textFieldExpression><![CDATA["<b>1. Appointment</b><br/><p>This is a term contract of one year effective from" + $F{date_from} + "It is subject to termination as provided under clause 13.</br><p>"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -119,6 +191,7 @@ WHERE (application_id = '$P!{filterid}');]]>
 					<font fontName="Times New Roman" size="12" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["<br/><p>MANAGING DIRECTOR <br><p>"
+>>>>>>> 5ae9b025896655514dd7b687f96653f091af88b6
 
 +"<br><p>I " + $F{entity_name} + " hereby accept the above offer as per the terms and conditions stipulated herein.</br></p>"
 
