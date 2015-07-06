@@ -148,7 +148,7 @@
 				<CHECKBOX w="150" title="No Show" y="90" h="20" x="290">no_show</CHECKBOX>
 				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
 				<TEXTTIMESTAMP w="75" title="Last Update">last_update</TEXTTIMESTAMP>
-				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -249,7 +249,7 @@
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
 				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -345,7 +345,7 @@
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
 				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -441,7 +441,7 @@
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
 				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -544,7 +544,7 @@
 				<CHECKBOX w="150" title="No Show" y="90" h="20" x="290">no_show</CHECKBOX>
 				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
 				<TEXTTIMESTAMP w="75" title="Last Update">last_update</TEXTTIMESTAMP>
-				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+				<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -641,7 +641,7 @@
 					<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 					<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -706,7 +706,7 @@
 					<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 					<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -815,7 +815,7 @@
 					<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 					<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -878,7 +878,7 @@
 					<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 					<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='employees')" filetable="employees" password="baraza">
+					<FILES username="repository" repository="/repository/webdav/files/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
 						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
@@ -1077,6 +1077,9 @@
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
 				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+				<JASPER name="Voucher" reportfile="vw_transfer_assignments.jasper"></JASPER>
+				<JASPER name="Todays Transfer List" reportfile="vw_transfer_assignments_today.jasper"></JASPER>
+				<JASPER name="Todays No Show List" reportfile="vw_transfer_assignments_today_noshow.jasper"></JASPER>
 				<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
@@ -1135,12 +1138,12 @@
 				<CHECKBOX w="150" title="Processed" y="240" h="20" x="290">processed</CHECKBOX>
 			</FORM>
 		</GRID>
-		<GRID name="Create Transfer" keyfield="transfer_id" orderby="booking_date DESC" table="vw_transfers" tab.count="count(transfer_id)" noorg="true" where="(booking_date = CURRENT_TIMESTAMP::date)" user="entity_id">
+		<GRID name="Create Transfer" keyfield="transfer_id" orderby="booking_date DESC" table="vw_transfers" tab.count="count(transfer_id)" noorg="true" user="entity_id">
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Payment Type Name">payment_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Record Locator">record_locator</TEXTFIELD>
-			<TEXTFIELD w="75" title="Customer Code">customer_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Customer">customer_code</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
@@ -1289,10 +1292,9 @@
 				<DEFAULT default="KES">currency_id</DEFAULT>
 				<DEFAULT default="01">booking_location</DEFAULT>
 				<COMBOBOX w="430" title="Entity ID" lptable="entitys" user="entity_id" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Customer Code" y="30" h="20" x="290">customer_code</TEXTFIELD>
+				<TEXTFIELD w="150" title="Customer Name" y="30" h="20" x="290">customer_code</TEXTFIELD>
 				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" y="50" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Agreed Amount" y="70" h="20" x="290">agreed_amount</TEXTDECIMAL>
-				<TEXTDATE w="150" title="Booking Date" y="90" h="20" x="290">booking_date</TEXTDATE>
 				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 				<TEXTAREA w="430" title="Reference Data" y="180" h="70" x="10">reference_data</TEXTAREA>
 			</FORM>
