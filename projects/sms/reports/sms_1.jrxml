@@ -58,28 +58,28 @@ ORDER BY sms.sms_id desc;]]>
 			<staticText>
 				<reportElement style="Column header" x="1" y="0" width="48" height="15" forecolor="#000000" uuid="0be0c1e0-b2c9-479b-9549-82153d7f40b2"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Sms ID]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="49" y="0" width="121" height="15" forecolor="#000000" uuid="0257091a-bc43-47c1-84f6-510facce66a4"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Sms Number]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="170" y="0" width="153" height="15" forecolor="#000000" uuid="30b39c10-c136-456b-b20f-72d4ec863426"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Sms Time]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="323" y="0" width="229" height="15" forecolor="#000000" uuid="1d0c2c03-d7f5-4790-bb88-e727e10461b8"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Message]]></text>
 			</staticText>
@@ -92,28 +92,28 @@ ORDER BY sms.sms_id desc;]]>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="1" y="0" width="48" height="15" uuid="b504c6a4-5646-48e8-bbf5-ce71720c38cf"/>
 					<textElement>
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sms_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="49" y="0" width="121" height="15" uuid="b13c0c90-a301-4c73-b7e7-0b0d6a4a76d9"/>
 					<textElement>
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sms_number}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="true">
 					<reportElement style="Detail" x="170" y="0" width="153" height="15" uuid="88f6d71b-8c11-4be1-8e67-eebc4b6f391f"/>
 					<textElement>
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sms_time}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="323" y="0" width="229" height="15" uuid="2c169dff-4b5c-4b8d-abe6-d4223b33486d"/>
 					<textElement>
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{message}]]></textFieldExpression>
 				</textField>
