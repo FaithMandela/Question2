@@ -7,6 +7,7 @@
 		<MENU name="Reports">
 			<MENU name="SMS">105</MENU>
 			<MENU name="SMS Summary">110</MENU>
+			<MENU name="SMS Delivery">115</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="SMS" key="1" h="500">
@@ -19,7 +20,7 @@
 			<FORM save.button="Send" name="SMS" keyfield="sms_id" table="sms">
 				<DEFAULT default="0">folder_id</DEFAULT>
 				<USERFIELD>entity_id</USERFIELD>
-				<TEXTAREA w="430" title="Numbers" placeholder="Enter a list of numbers separate with a comma" y="120" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
+				<TEXTAREA w="430" title="Numbers" placeholder="e.g 0712838887,0733878787" y="120" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
 				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10">message_ready</CHECKBOX>
 				<TEXTAREA w="430" placeholder="Enter the message" tab="Message" required="true" y="50" h="70" x="10" rows="8">message</TEXTAREA>
 				<MULTISELECT w="430" lptable="address" tab="Addresses" lpkey="mobile" y="50" h="70" x="10" rows="8" lpfield="address_name">addresses</MULTISELECT>
@@ -364,12 +365,318 @@
 			</FORM>
 		</GRID>
 	</DESK>
+	<DESK w="700" name="Approvals" key="83" h="500">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status = 'Completed')" user="entity_id">
+			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approval_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Date">application_date</TEXTTIMESTAMP>
+			<ACTIONS>
+				<ACTION fnct="upd_approvals" approval="2">Approve</ACTION>
+				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
+				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
+			</ACTIONS>
+			<GRID name="Petty Cash" keyfield="pc_expenditure_id" table="vw_pc_expenditure" viewfilter="table_name=pc_expenditure" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Category">pc_category_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Item Name">pc_item_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+				<TEXTDATE w="75" title="Date">exp_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Request">is_request</CHECKBOX>
+			</GRID>
+			<GRID name="Payroll" keyfield="period_id" orderby="start_date desc" table="periods" viewfilter="table_name=periods" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+				<JASPER name="Payroll" reportfile="vw_employee_month_1.jasper"></JASPER>
+				<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
+				<JASPER name="Allowances" reportfile="vw_employee_allowances.jasper"></JASPER>
+				<JASPER name="Deductions" reportfile="vw_employee_deductions.jasper"></JASPER>
+			</GRID>
+			<GRID name="Leave Approvals" keyfield="employee_leave_id" table="vw_employee_leave" viewfilter="table_name=employee_leave" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Leave Type">leave_type_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM new="false" name="Employee Leave" keyfield="employee_leave_id" table="employee_leave">
+					<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
+					<TEXTDATE w="150" title="Leave From" y="30" h="20" x="10">leave_from</TEXTDATE>
+					<TEXTDATE w="150" title="Leave To" y="30" h="20" x="290">leave_to</TEXTDATE>
+					<CHECKBOX w="150" title="Start Half Day" y="50" h="20" x="10">Start_Half_Day</CHECKBOX>
+					<CHECKBOX w="150" title="End Half Day" y="50" h="20" x="290">End_Half_Day</CHECKBOX>
+					<TEXTFIELD w="150" title="Leave Days" y="70" h="20" x="10">Leave_days</TEXTFIELD>
+					<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
+					<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Employee Objectives" keyfield="employee_objective_id" table="vw_employee_objectives" viewfilter="table_name=employee_objectives" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="275" title="Objective Title">employee_objective_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Objective Date">objective_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+				<JASPER name="Objective Report" reportfile="vw_employee_currentobjectives.jasper"></JASPER>
+				<GRID new="false" name="Objectives" keyfield="objective_id" delete="false" orderby="objective_id" linkfield="employee_objective_id" table="vw_objectives">
+					<TEXTFIELD w="125" title="Objective Type">objective_type_name</TEXTFIELD>
+					<TEXTDATE w="75" title="Date Set">date_set</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Objective %">objective_ps</TEXTDECIMAL>
+					<TEXTFIELD w="175" title="Objective Name">objective_name</TEXTFIELD>
+					<CHECKBOX w="75" title="Completed">objective_completed</CHECKBOX>
+					<GRID new="false" name="Objective Details" keyfield="objective_detail_id" delete="false" linkfield="objective_id" table="vw_objective_details">
+						<TEXTFIELD w="75" title="Detail Name">objective_detail_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Success Indicator">success_indicator</TEXTFIELD>
+						<TEXTFIELD w="75" title="Achievements">achievements</TEXTFIELD>
+						<TEXTFIELD w="75" title="Resources Required">resources_required</TEXTFIELD>
+						<TEXTDATE w="75" title="Target Date">target_date</TEXTDATE>
+						<TEXTDATE w="75" title="Completion Date">completion_date</TEXTDATE>
+						<FORM new="false" name="Objective Details" keyfield="objective_detail_id" delete="false" linkfield="objective_id" table="objective_details">
+							<TEXTAREA w="430" tab="Comments" y="10" h="70" x="10">supervisor_comments</TEXTAREA>
+							<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+					<FORM new="false" name="Objectives" keyfield="objective_id" delete="false" linkfield="employee_objective_id" table="objectives">
+						<TEXTAREA w="430" tab="Overall Comments" y="2" h="70" x="10">supervisor_comments</TEXTAREA>
+						<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<FORM name="Employee Objectives" keyfield="employee_objective_id" linkfield="entity_id" table="employee_objectives">
+					<TEXTFIELD w="430" title="Objective Title" y="10" h="20" x="10">employee_objective_name</TEXTFIELD>
+					<TEXTDATE w="150" title="Objective Date" y="30" h="20" x="10">objective_date</TEXTDATE>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID new="false" name="Work Reviews" keyfield="job_review_id" table="vw_job_reviews" viewfilter="table_name=job_reviews" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Job Review ID">job_review_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Total Points">total_points</TEXTFIELD>
+				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
+				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<GRID name="Objective Evaluation" keyfield="evaluation_point_id" updatetable="evaluation_points" orderby="objective_id" linkfield="job_review_id" table="vw_evaluation_objectives" params="objective_id">
+					<TEXTFIELD w="150" title="Objective">objective_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Points">points</TEXTFIELD>
+					<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
+					<EDITFIELD w="75" title="Review Points" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">reviewer_points</EDITFIELD>
+					<EDITFIELD w="175" title="Review  Narrative" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">reviewer_narrative</EDITFIELD>
+					<FORM new="false" name="Objective Evaluation" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
+						<TEXTFIELD w="150" title="Points" y="30" h="20" x="10">reviewer_points</TEXTFIELD>
+						<TEXTAREA w="430" tab="Narrative" y="2" h="70" x="10">reviewer_narrative</TEXTAREA>
+						<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+					</FORM>
+					<GRID new="false" name="Objective Details" keyfield="objective_detail_id" delete="false" updatetable="objective_details" table="vw_objective_details" linkparams="objective_id=objective_id">
+						<TEXTFIELD w="75" title="Detail Name">objective_detail_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Success Indicator">success_indicator</TEXTFIELD>
+						<TEXTFIELD w="75" title="Achievements">achievements</TEXTFIELD>
+						<TEXTFIELD w="75" title="Resources Required">resources_required</TEXTFIELD>
+						<TEXTDATE w="75" title="Completion Date">completion_date</TEXTDATE>
+						<TEXTFIELD w="75" title="Points">ods_points</TEXTFIELD>
+						<TEXTFIELD w="100" title="Reviewer Points" editkey="objective_detail_id" edit="true" editvalue="objective_details">ods_reviewer_points</TEXTFIELD>
+						<FORM new="false" name="Objective Details" keyfield="objective_detail_id" delete="false" table="objective_details" th="210">
+							<TEXTAREA w="430" tab="Comments" y="2" h="70" x="10">supervisor_comments</TEXTAREA>
+						</FORM>
+					</GRID>
+				</GRID>
+				<GRID name="Competences Review" keyfield="evaluation_point_id" updatetable="evaluation_points" orderby="review_point_id" linkfield="job_review_id" table="vw_evaluation_points">
+					<TEXTFIELD w="150" title="Review Point">review_point_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Mark">grade</TEXTFIELD>
+					<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
+					<EDITFIELD w="75" title="Review Points" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">reviewer_grade</EDITFIELD>
+					<EDITFIELD w="175" title="Review Narrative" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">reviewer_narrative</EDITFIELD>
+					<FORM new="false" name="Evaluation Points" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
+						<TEXTFIELD w="150" title="Grade" y="10" h="20" x="10">reviewer_grade</TEXTFIELD>
+						<TEXTAREA w="430" tab="Narrative" y="2" h="70" x="10">reviewer_narrative</TEXTAREA>
+						<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<FORM new="false" name="Work Reviews" keyfield="job_review_id" linkfield="entity_id" table="job_reviews" th="210">
+					<TEXTDATE w="150" title="Review Date" y="10" h="20" x="10">review_date</TEXTDATE>
+					<CHECKBOX w="150" title="Review Done" y="10" h="20" x="290">review_done</CHECKBOX>
+					<TEXTFIELD w="150" title="Supervisor Rating" y="30" h="20" x="10">supervisor_rating</TEXTFIELD>
+					<TEXTAREA w="530" tab="Supervisor Comments" y="2" h="170" x="10">recomendation</TEXTAREA>
+					<TEXTAREA w="530" tab="Overall Comments" y="2" h="170" x="10">reviewer_comments</TEXTAREA>
+				</FORM>
+				<FORM new="false" name="Program Leader" keyfield="job_review_id" linkfield="entity_id" table="job_reviews" th="210">
+					<TEXTAREA w="530" tab="Comments" y="2" h="170" x="10">pl_comments</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="100" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTTIMESTAMP w="100" title="Completion Date">completion_date</TEXTTIMESTAMP>
+				<TEXTTIMESTAMP w="100" title="Approve Date">action_date</TEXTTIMESTAMP>
+				<BROWSER name="View Form" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes"></BROWSER>
+			</GRID>
+			<GRID name="Forwards" keyfield="approval_id" linkfield="forward_id" table="vw_approvals">
+				<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="To">app_entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+				<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
+				<FORM name="Forwards" keyfield="approval_id" linkfield="forward_id" table="approvals" th="210">
+					<USERFIELD>org_entity_id</USERFIELD>
+					<COMBOBOX w="430" title="Forward To" lptable="entitys" lpkey="entity_id" y="10" h="20" x="10" lpfield="entity_name">app_entity_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Escalation Days" default="0" y="30" h="20" x="10">escalation_days</TEXTFIELD>
+					<TEXTFIELD w="150" title="Escalation Hours" default="3" y="30" h="20" x="290">escalation_hours</TEXTFIELD>
+					<TEXTFIELD w="430" title="Approval Narrative" y="50" h="20" x="10">approval_narrative</TEXTFIELD>
+					<TEXTAREA w="530" tab="To Be Done" y="2" h="170" x="10">to_be_done</TEXTAREA>
+					<TEXTAREA w="530" tab="What is Done" y="2" h="170" disabled="true" x="10">what_is_done</TEXTAREA>
+					<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Checklists" keyfield="approval_checklist_id" linkfield="approval_id" table="approval_checklists">
+				<TEXTFIELD w="275" title="Requirement">requirement</TEXTFIELD>
+				<CHECKBOX w="75" title="Manditory">manditory</CHECKBOX>
+				<CHECKBOX w="75" title="Done">done</CHECKBOX>
+				<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="upd_checklist" phase="1">Approve</ACTION>
+					<ACTION fnct="upd_checklist" phase="2">Reject</ACTION>
+				</ACTIONS>
+			</GRID>
+			<FORM name="Review" keyfield="approval_id" table="approvals">
+				<TEXTAREA w="530" tab="To Be Done" y="2" h="170" x="10">to_be_done</TEXTAREA>
+				<TEXTAREA w="530" tab="What Done" y="2" h="170" x="10">what_is_done</TEXTAREA>
+				<TEXTAREA w="530" tab="Review Advice" y="2" h="170" x="10">review_advice</TEXTAREA>
+				<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Forwards" keyfield="approval_id" table="vw_approvals" params="table_name, table_id" where="(approve_status = 'Completed')" user="app_entity_id">
+			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approval_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Date">completion_date</TEXTTIMESTAMP>
+			<ACTIONS>
+				<ACTION fnct="upd_approvals" phase="2">Approve</ACTION>
+				<ACTION fnct="upd_approvals" phase="3">Reject</ACTION>
+				<ACTION fnct="upd_approvals" phase="4">Review</ACTION>
+			</ACTIONS>
+			<GRID name="Leave Approvals" keyfield="employee_leave_id" table="vw_employee_leave" viewfilter="table_name=employee_leave" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Leave Type">leave_type_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM new="false" name="Employee Leave" keyfield="employee_leave_id" table="employee_leave">
+					<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
+					<TEXTDATE w="150" title="Leave From" y="30" h="20" x="10">leave_from</TEXTDATE>
+					<TEXTDATE w="150" title="Leave To" y="30" h="20" x="290">leave_to</TEXTDATE>
+					<CHECKBOX w="150" title="Start Half Day" y="50" h="20" x="10">Start_Half_Day</CHECKBOX>
+					<CHECKBOX w="150" title="End Half Day" y="50" h="20" x="290">End_Half_Day</CHECKBOX>
+					<TEXTFIELD w="150" title="Leave Days" y="70" h="20" x="10">Leave_days</TEXTFIELD>
+					<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
+					<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTTIMESTAMP w="100" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTTIMESTAMP w="100" title="Completion Date">completion_date</TEXTTIMESTAMP>
+				<TEXTTIMESTAMP w="100" title="Approve Date">action_date</TEXTTIMESTAMP>
+				<BROWSER name="View Form" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes"></BROWSER>
+			</GRID>
+			<GRID name="Forwards" keyfield="approval_id" linkfield="forward_id" table="vw_approvals">
+				<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="To">app_entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+				<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
+				<FORM name="Forwards" keyfield="approval_id" linkfield="forward_id" table="approvals" th="210">
+					<USERFIELD>org_entity_id</USERFIELD>
+					<COMBOBOX w="430" title="Forward To" lptable="entitys" lpkey="entity_id" y="10" h="20" x="10" lpfield="entity_name">app_entity_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Escalation Days" default="0" y="30" h="20" x="10">escalation_days</TEXTFIELD>
+					<TEXTFIELD w="150" title="Escalation Hours" default="3" y="30" h="20" x="290">escalation_hours</TEXTFIELD>
+					<TEXTFIELD w="430" title="Approval Narrative" y="50" h="20" x="10">approval_narrative</TEXTFIELD>
+					<TEXTAREA w="530" tab="To Be Done" y="2" h="170" x="10">to_be_done</TEXTAREA>
+					<TEXTAREA w="530" tab="What is Done" y="2" h="170" disabled="true" x="10">what_is_done</TEXTAREA>
+					<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Checklists" keyfield="approval_checklist_id" linkfield="approval_id" table="approval_checklists">
+				<TEXTFIELD w="275" title="Requirement">requirement</TEXTFIELD>
+				<CHECKBOX w="75" title="Manditory">manditory</CHECKBOX>
+				<CHECKBOX w="75" title="Done">done</CHECKBOX>
+				<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="upd_checklist" phase="1">Approve</ACTION>
+					<ACTION fnct="upd_checklist" phase="2">Reject</ACTION>
+				</ACTIONS>
+			</GRID>
+			<FORM name="Review" keyfield="approval_id" table="approvals">
+				<TEXTAREA w="530" tab="To Be Done" y="2" h="170" x="10">to_be_done</TEXTAREA>
+				<TEXTAREA w="530" tab="What Done" y="2" h="170" x="10">what_is_done</TEXTAREA>
+				<TEXTAREA w="530" tab="Review Advice" y="2" h="170" x="10">review_advice</TEXTAREA>
+				<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="My Approvals" keyfield="approval_id" table="vw_approvals" params="table_name, table_id" user="app_entity_id">
+			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approval_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Date">application_date</TEXTTIMESTAMP>
+			<GRID name="Payroll" keyfield="period_id" orderby="start_date desc" table="periods" viewfilter="table_name=periods" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+				<JASPER name="Payroll" reportfile="vw_employee_month_1.jasper"></JASPER>
+				<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
+				<JASPER name="Allowances" reportfile="vw_employee_allowances.jasper"></JASPER>
+				<JASPER name="Deductions" reportfile="vw_employee_deductions.jasper"></JASPER>
+			</GRID>
+			<GRID name="Leave Approvals" keyfield="employee_leave_id" table="vw_employee_leave" viewfilter="table_name=employee_leave" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Leave Type">leave_type_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			</GRID>
+			<GRID name="Employee Objectives" keyfield="employee_objective_id" table="vw_employee_objectives" viewfilter="table_name=employee_objectives" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="275" title="Objective Title">employee_objective_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Objective Date">objective_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+				<JASPER name="Objective Report" reportfile="vw_employee_currentobjectives.jasper"></JASPER>
+			</GRID>
+			<GRID new="false" name="Work Reviews" keyfield="job_review_id" table="vw_job_reviews" viewfilter="table_name=job_reviews" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Job Review ID">job_review_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Total Points">total_points</TEXTFIELD>
+				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
+				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
+				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
+				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+			</GRID>
+		</GRID>
+	</DESK>
 	<DESK w="700" name="SMS Report" key="105" h="550">
 		<JASPER name="Sent" reportfile="sms.jasper"></JASPER>
-		<JASPER name="Inbox" reportfile="sms_1.jasper"></JASPER>
+		<JASPER name="Received" reportfile="sms_1.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="SMS Summary" key="110" h="550">
-		<JASPER name="Inbox" reportfile="sms_count.jasper"></JASPER>
-		<JASPER name="Sent" reportfile="sms_count_1.jasper"></JASPER>
+		<JASPER name="Sent" reportfile="sms_count.jasper"></JASPER>
+		<JASPER name="Received" reportfile="sms_count_1.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="SMS Delivery" key="115" h="550">
+		<JASPER name="Sent" reportfile="sms_delivery_1.jasper"></JASPER>
+		<JASPER name="Received" reportfile="sms_delivery_count.jasper"></JASPER>
 	</DESK>
 </APP>
