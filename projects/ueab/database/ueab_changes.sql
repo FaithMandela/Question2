@@ -112,6 +112,48 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_bf_application BEFORE INSERT ON entitys
     FOR EACH ROW EXECUTE PROCEDURE ins_application();
 
+    
+ ALTER TABLE quarters
+ ADD COLUMN dean_cert_date date default null,
+ ADD COLUMN hon_cert_date date default null,
+ ADD COLUMN grad_date date default null;
+ 
+ CREATE OR REPLACE VIEW studentcounty AS
+SELECT students.county_id, students.studentid, countys.county_name
+FROM students
+INNER JOIN countys ON students.county_id=countys.county_id;
+ 
+ CREATE OR REPLACE VIEW qstudentviewc AS
+SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.schoolid, 
+       q.schoolname, q.studentid, q.studentname, q.address, q.zipcode, q.town, q.addresscountry, 
+       q.telno, q.email, q.guardianname, q.gaddress, q.gzipcode, q.gtown, q.gaddresscountry, 
+       q.gtelno, q.gemail, q.accountnumber, q.nationality, q.nationalitycountry, 
+       q.sex, q.maritalstatus, q.birthdate, q.firstpass, q.alumnae, q.postcontacts, 
+       q.onprobation, q.offcampus, q.currentcontact, q.currentemail, q.currenttel, 
+       q.freshman, q.sophomore, q.junior, q.senior, q.degreeid, q.degreename, q.studentdegreeid, 
+       q.completed, q.started, q.cleared, q.clearedate, q.graduated, q.graduatedate, 
+       dropout, transferin, transferout, mathplacement, englishplacement, 
+       quarterid, qstart, qlatereg, qlatechange, qlastdrop, qend, active, 
+       chalengerate, feesline, resline, quarteryear, quarter, closed, 
+       q.quarter_name, q.degreelevelid, q.degreelevelname, q.charge_id, q.unit_charge, 
+       q.lab_charges, q.exam_fees, q.levellocationid, q.levellocationname, q.sublevelid, 
+       q.sublevelname, q.specialcharges, q.sun_posted, q.session_active, q.session_closed, 
+       q.general_fees, q.residence_stay, q.currency, q.exchange_rate, q.residenceid, 
+       q.residencename, q.capacity, q.defaultrate, q.residenceoffcampus, q.residencesex, 
+       q.residencedean, q.qresidenceid, q.residenceoption, q.org_id, q.qstudentid, 
+       q.additionalcharges, q.approved, q.probation, q.roomnumber, q.currbalance, 
+       q.finaceapproval, q.majorapproval, q.studentdeanapproval, q.intersession, 
+       q.exam_clear, q.exam_clear_date, q.exam_clear_balance, q.request_withdraw, 
+      q.request_withdraw_date, q.withdraw, q.ac_withdraw, q.withdraw_date, 
+       q.withdraw_rate, q.departapproval, q.overloadapproval, q.finalised, q.printed, 
+       q.details, q.ucharge, q.residencecharge, q.lcharge, q.feescharge,studentcounty.county_name,studentcounty.county_id
+  FROM qstudentview as q
+  INNER JOIN studentcounty ON q.studentid= studentcounty.county_id ;
+  
+  
+  
+  
+ 
 
 
 

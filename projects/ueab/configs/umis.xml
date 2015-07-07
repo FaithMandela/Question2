@@ -126,6 +126,7 @@
 				<MENU name="By Residence">214</MENU>
 				<MENU name="By Gender">215</MENU>
 				<MENU name="By Location">416</MENU>
+				<MENU name="By County">505</MENU>
 			</MENU>
 			<MENU name="Major Summary">
 				<MENU name="Students Majors">224</MENU>
@@ -938,7 +939,10 @@
 				<TEXTDECIMAL w="150" title="Mininal Fees" y="110" h="20" x="290">minimal_fees</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Off Campus Fees" y="130" h="20" x="10">feesline</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="On Campus Fees" y="130" h="20" x="290">resline</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+				<TEXTDATE w="150" title="Dean Certification Date" y="150" h="20" x="10">dean_cert_date</TEXTDATE>
+				<TEXTDATE w="150" title="Honors Certification Date" y="150" h="20" x="290">hon_cert_date</TEXTDATE>
+				<TEXTDATE w="150" title="Graduation Date" y="170" h="20" x="10">grad_date</TEXTDATE>
+				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<ACTIONS>
 				<ACTION fnct="OpenQuarter">Open Semester</ACTION>
@@ -2007,11 +2011,17 @@
 	</DESK>
 	<DESK w="700" name="Enrolment by Location" type="horl" key="416" h="500">
 		<FILTER location="250" name="Enrolment by Sub Levels" type="horl">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
+			<JASPER filtered="true" name="Enrolment By Location" reportfile="summaryenrolment.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Enrolment by County" type="horl" key="505" h="500">
+		<FILTER location="250" name="Enrolment by County" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Location" keyfield="levellocationid" table="levellocations" listfield="levellocationname" filter="levellocationid"></DRILLDOWN>
-			<JASPER filtered="true" name="Enrolment By Location" reportfile="qstudentviewk.jasper"></JASPER>
+			<DRILLDOWN name="County" keyfield="county_id" table="countys" noorg="true" listfield="county_name" filter="county_id"></DRILLDOWN>
+			<JASPER filtered="true" name="Enrolment by County" reportfile="qstudentviewrc.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Course List" type="horl" key="217" h="500">
@@ -2313,7 +2323,7 @@
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
+			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Study Year by Semester - Summary" reportfile="studyyearb.jasper"></JASPER>
 			<JASPER filtered="true" name="Study Year by Semester" reportfile="studyyeara.jasper"></JASPER>
 		</FILTER>

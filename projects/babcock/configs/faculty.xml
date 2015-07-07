@@ -28,6 +28,7 @@
 			<MENU name="Enrolment By Department">450</MENU>
 			<MENU name="Dept. Grade Summary">555</MENU>
 			<MENU name="GPA Ranking">769</MENU>
+			<MENU name="Semester Un Official">362</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="695" name="Accepted" type="vert" key="507" h="585">
@@ -322,4 +323,20 @@
 			<JASPER filtered="true" name="GPA Ranking" reportfile="vwqstudentmajors.jasper"></JASPER>
 		</FILTER>
 	</DESK>
+	
+	<DESK w="800" name="Semester Un Official" type="vert" key="362" h="500">
+		<GRID name="Semesters" keyfield="quarterid" table="quarterview" filterkey="9" key="1">
+			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
+			<GRID name="Student List" keyfield="studentdegreeid" updatetable="qstudents" orderby="departmentname" linkfield="quarterid" table="qstudentmajorview" key="4">
+				<TEXTFIELD w="25" title="Matric Num">studentid</TEXTFIELD>
+				<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
+				<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
+				<TEXTFIELD w="20" title="Department">departmentname</TEXTFIELD>
+				<JASPER filtered="true" name="Unofficial Record" printcopies="1" reportfile="studentquarterview.jasper" key="5"></JASPER>
+			</GRID>
+		</GRID>
+	</DESK>
+	
 </APP>
