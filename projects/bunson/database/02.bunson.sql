@@ -227,6 +227,25 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
     WHERE transfer_flights.tab = passangers.tab;
 
+CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
+	SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number,
+	cars.car_type_id, cars.registration_number,
+	car_types.car_type_name, car_types.car_type_code,
+	passangers.passanger_id, passangers.passanger_name,
+	passangers.transfer_id, passangers.passanger_mobile,passangers.passanger_email,
+	passangers.pickup_time, passangers.pickup, passangers.dropoff, passangers.other_preference,
+	passangers.amount, passangers.processed, passangers.pickup_date, passangers.tab,
+	transfer_assignments.transfer_assignment_id, 
+	transfer_assignments.car_id, transfer_assignments.kms_out, transfer_assignments.kms_in,
+    transfer_assignments.time_out, transfer_assignments.time_in, 
+    transfer_assignments.no_show, transfer_assignments.no_show_reason,
+    transfer_assignments.closed, transfer_assignments.last_update
+	FROM transfer_assignments
+	INNER JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
+	INNER JOIN cars ON cars.car_id = transfer_assignments.car_id
+	INNER JOIN car_types ON car_types.car_type_id = cars.car_type_id
+	INNER JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id;
+
 
 
 
@@ -300,11 +319,12 @@ BEGIN
     v_today := CURRENT_TIMESTAMP;
     
     IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1600'::time )) THEN
-        v_message := 'An Emergency Transfer Has Been Issued'::text;
-        
-        -- v_send_res := sendMessage('254725987342', v_message);
-        v_send_res := sendMessage('254701772272', v_message);
-        v_send_res := sendMessage('254738772272', v_message);
+        v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' || NEW.passanger_name || E'.\nFrom: ' || NEW.pickup || E'\nTo: ' || NEW.dropoff || E'\nAt: ' || NEW.pickup_time
+                  || E'\nTel: ' || NEW.passanger_mobile;
+                  
+        v_send_res := sendMessage('254725987342', v_message);
+        -- v_send_res := sendMessage('254701772272', v_message);
+        -- v_send_res := sendMessage('254738772272', v_message);
 
     END IF;
     RETURN NULL;
@@ -334,8 +354,7 @@ BEGIN
         start_time,end_time, flight_date, start_airport, end_airport, airline,flight_num
         INTO v_rec FROM vw_transfer_assignments WHERE transfer_assignment_id = NEW.transfer_assignment_id;
 
-    v_flight_text := E'\nFlight : '
-                    || E'\nDate : ' || v_rec.flight_date
+    v_flight_text := E'\nFlight Date : ' || v_rec.flight_date
                     || E'\nDep Time : ' || v_rec.start_time
                     || E'\nAirport : ' || v_rec.start_airport
                     || E'\nFlight No.: ' || v_rec.airline || ' '::text || v_rec.flight_num;
@@ -355,7 +374,8 @@ BEGIN
 
     v_send_res := sendMessage(v_rec.mobile_number, v_message);
     v_send_res := sendMessage(v_rec.passanger_mobile, v_client_sms);
-
+    
+    UPDATE passangers SET processed = true WHERE passanger_id = NEW.passanger_id;
 
 	RETURN NULL;
 END;
