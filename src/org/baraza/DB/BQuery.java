@@ -165,7 +165,7 @@ public class BQuery {
 		if((orgID != null) && (view.getAttribute("noorg") == null)) {
 			userOrg = db.getUserOrg();
 			if(view.getAttribute("orgid") != null) orgID = view.getAttribute("orgid");
-			colNames = addField(colNames, orgID);
+			if(view.getAttribute("noorg.query") == null) colNames = addField(colNames, orgID);
 		}
 		if(view.getAttribute("noorg") == null) iforg = true;
 		else iforg = false;
@@ -1038,7 +1038,7 @@ public class BQuery {
 		try {
 			rs.beforeFirst();
 			if(heading) {
-				mystr.append("<table id=\"alttable\">\n");
+				mystr.append("<table class='table table-hover'>\n");
 				mystr.append("<thead><tr>");
 				if(view == null) {
 					for(int column=0; column<titles.size(); column++)
@@ -1054,7 +1054,7 @@ public class BQuery {
 
 			boolean alt = true;
            	while (rs.next()) {
-				if(alt) {mystr.append("<tr class='alt'>"); alt = false;}
+				if(alt) {mystr.append("<tr>"); alt = false;}
 				else {mystr.append("<tr>"); alt = true;}
 				if(view == null) {
 					for(int column=1; column<=titles.size(); column++) {

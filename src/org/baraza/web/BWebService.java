@@ -16,6 +16,10 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.servlet.ServletContext;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.Context;
+
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
 import org.baraza.xml.BXML;
@@ -26,6 +30,16 @@ public class BWebService {
 	Logger log = Logger.getLogger(BWebService.class.getName());
 	
 	List<String> allowedTables;
+	
+	
+	public BWebService() {
+		try {
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+        } catch (NamingException ex) {
+         	System.err.println("Cannot pick on the name : " + ex);
+		}
+	}
 
 	@WebMethod
 	public String addWsData(String xmldata, String verification) {

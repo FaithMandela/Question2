@@ -67,8 +67,11 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE name="Staff" role="staff" table="employees" where="(active = true)">
-				<TEXTFIELD w="75" fnct="count(entity_id)" title="Total Staff">total_staff</TEXTFIELD>
+			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
+			</TILE>
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
 			</TILE>
 			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
 				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
