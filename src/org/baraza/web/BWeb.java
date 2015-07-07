@@ -605,6 +605,27 @@ public class BWeb {
 
 		return buttons;
 	}
+	
+	public String getDashboard() {
+		if((root == null) || (db == null)) return "";	// error check
+		
+		String body = "";
+		
+		BWebDashboard webDashboard = new BWebDashboard(db);
+		
+		body += "<div class='row margin-top-5'>\n";
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("TILE")) body += webDashboard.getTile(el);
+		}
+		body += "</div>\n";
+		body += "<div class='row'>\n";
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("TILELIST")) body += webDashboard.getTileList(el);
+		}
+		body += "</div>\n";
+		
+		return body;
+	}
 
 	public String getBody(HttpServletRequest request, String reportPath) {
 		if((root == null) || (db == null)) return "";	// error check
@@ -765,7 +786,7 @@ public class BWeb {
 		} else if(view.getName().equals("DIARY")) {
 			body += "\t\t<div id='calendar'></div>\n";
 		} else if(view.getName().equals("JASPER")) {
-	//System.out.println("BASE 1010 ");
+//System.out.println("BASE 1010 ");
 			BWebReport report = new BWebReport(view, db.getUserID(), null, request);
 			BElement flt = views.get(views.size()-2);
 
@@ -1821,7 +1842,12 @@ public class BWeb {
 		if(view == null) return "";
 		return view.getName(); 
 	}
-
+	
+	public String getViewColour() {
+		if(view == null) return "purple";
+		return view.getAttribute("color", "purple"); 
+	}
+	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }
 	public String getPictureURL() { return pictureURL; }
