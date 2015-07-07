@@ -485,7 +485,8 @@
 					<TEXTDECIMAL w="150" title="% Amount" y="50" h="20" x="290">ps_amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="70" h="20" x="10">final_date</TEXTDATE>
 					<CHECKBOX w="150" title="Active" y="70" h="20" x="290">active</CHECKBOX>
-					<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
+					<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
 			<GRID name="Claims" keyfield="claim_id" linkfield="entity_id" table="vw_claims">
@@ -787,20 +788,21 @@
 						<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 					</FORM>
 				</GRID>
-				<GRID name="Extra Banking" keyfield="default_banking_id" linkfield="employee_month_id" table="vw_employee_banking">
+				<GRID name="Extra Banking" keyfield="employee_banking_id" linkfield="employee_month_id" table="vw_employee_banking">
 					<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<CHECKBOX w="75" title="Active">active</CHECKBOX>
-					<FORM name="Extra Banking" keyfield="default_banking_id" linkfield="employee_month_id" table="employee_banking">
+					<FORM name="Extra Banking" keyfield="employee_banking_id" linkfield="employee_month_id" table="employee_banking">
 						<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="10" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
 						<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
 						<TEXTFIELD w="150" title="Exchange Rate" y="50" h="20" x="290">exchange_rate</TEXTFIELD>
 						<CHECKBOX w="150" title="Active" y="70" h="20" x="10">active</CHECKBOX>
-						<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
+						<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
 				<GRID name="Projects" keyfield="project_staff_cost_id" linkfield="employee_month_id" table="vw_project_staff_costs">
@@ -989,7 +991,7 @@
 					<TEXTDECIMAL w="75" title="Per Diem">per_diem</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Full Amount">full_amount</TEXTDECIMAL>
 				</GRID>
-				<GRID name="Extra Banking" keyfield="default_banking_id" linkfield="entity_id" table="vw_default_banking">
+				<GRID name="Extra Banking" keyfield="employee_banking_id" linkfield="entity_id" table="vw_default_banking">
 					<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
