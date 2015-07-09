@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<ESCALATION title="UMIS Mail" processdelay="1"
-	host="localhost" mailuser="sysadmin" mailpassword="invent2k" mailfrom="admissions@ueab.ac.ke"
-	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="false">
+<ESCALATION title="UMIS Mail" processdelay="2"
+	host="smtp.gmail.com" mailuser="online.admissions@ueab.ac.ke" mailpassword="Admission2014" mailfrom="online.admissions@ueab.ac.ke"
+	inbox="INBOX" sentbox="Sent" smtppauth="true" smtptls="true" imaphost="imap.gmail.com" imapssl="true">
 	
 	<REPORT name="Application" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, entitys"

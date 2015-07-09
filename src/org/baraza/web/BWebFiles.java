@@ -103,9 +103,10 @@ System.out.println("BASE 1020 : " + repository);
 		String response = "";
 
 		int yourMaxMemorySize = 262144;
-		File yourTempDirectory = new File("/var/tmp/baraza.tmp");
 		
-System.out.println("BASE 1210 " + request.getServletContext().getContextPath());
+		ServletContext sc = getServletContext();
+		String tmpPath = sc.getRealPath("/WEB-INF/tmp");
+		File yourTempDirectory = new File(tmpPath);
 		
 		// Create a factory for disk-based file items
 		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);

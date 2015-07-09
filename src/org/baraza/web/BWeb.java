@@ -8,6 +8,7 @@
  */
 package org.baraza.web;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -205,20 +206,17 @@ public class BWeb {
 
 		int toShow = 0;
 		
-		BUser user = db.getUser();
-		List<String> userRole = user.getUserRoles();
-		
-		if(user.getSuperUser()) {
+		if(db.getUser().getSuperUser()) {
 			toShow = 1;
 		} else {
 			BElement mel = root.getFirst();
-			toShow = checkRole(mel, deskKey, userRole);
+			toShow = checkRole(mel, deskKey);
 		}
 	
 		return toShow;
 	}
 	
-	public int checkRole(BElement mel, String deskKey, List<String> userRole) {
+	public int checkRole(BElement mel, String deskKey) {
 		int toShow = 0;
 
 		//System.out.println("BASE 2010 : " + mel.getAttribute("name"));
@@ -227,30 +225,15 @@ public class BWeb {
 						
 			if(toShow == 0) {
 				if(smel.isLeaf()) {
-					if(deskKey.equals(smel.getValue())) {
-						// System.out.println("BASE 2030 : " + smel.getValue());
-						
-						boolean hasAccess = true;
-						if(smel.getAttribute("role") != null) {
-							hasAccess = false;
-							String mRoles[] = smel.getAttribute("role").split(",");
-							for(String mRole : mRoles) { if(userRole.contains(mRole.trim())) hasAccess = true; }
-						}						
+					if(deskKey.equals(smel.getValue())) {						
+						boolean hasAccess  = checkAccess(smel.getAttribute("role"));
 						if(hasAccess) return 1;
 						else return 2;
 					}
 				} else {
-					toShow = checkRole(smel, deskKey, userRole);
+					toShow = checkRole(smel, deskKey);
 					if(toShow != 0) {
-						// System.out.println("BASE 2030 : " + smel.getAttribute("name"));
-						
-						boolean hasAccess = true;
-						if(smel.getAttribute("role") != null) {
-							hasAccess = false;
-							String mRoles[] = smel.getAttribute("role").split(",");
-							for(String mRole : mRoles) { if(userRole.contains(mRole.trim())) hasAccess = true; }
-						}
-						
+						boolean hasAccess  = checkAccess(smel.getAttribute("role"));
 						if(hasAccess) return toShow;
 						else return 2;
 					}
@@ -330,18 +313,9 @@ public class BWeb {
 	public String getSubMenu(BElement mel, int level) {
 		String submenu = "";
 		boolean toShow = true;
-		BUser user = db.getUser();
-		List<String> userRole = user.getUserRoles();
+		
 		for(BElement smel: mel.getElements()) {
-			toShow = true;
-			if(smel.getAttribute("role") != null) {
-				toShow = false;
-				String mRoles[] = smel.getAttribute("role").split(",");
-				for(String mRole : mRoles) {
-					if(userRole.contains(mRole.trim())) toShow = true;
-				}
-			}
-			if(user.getSuperUser()) toShow = true;
+			toShow = checkAccess(smel.getAttribute("role"));
 
 			String bodypage = smel.getAttribute("page", mainPage);
 			String blankpage = smel.getAttribute("blankpage", "");
@@ -361,17 +335,23 @@ public class BWeb {
 						link += smel.getAttribute("name") + "</a>";
 					}
 					
-					submenu += "\t\t<li>\n";
+					if(viewKeys.get(0).equals(smel.getValue())) submenu += "\t\t<li class='active'>\n";
+					else submenu += "\t\t<li>\n";
+					
 					submenu += "\t\t\t" + link + "\n";
 					submenu += "\t\t</li>\n";
 				} else {
-					submenu += "\t<li>\n";
+				
+					if(locateMenu(smel, viewKeys.get(0))) submenu += "\t<li class='active open'>\n";
+					else submenu += "\t<li>\n";
+					
 					submenu += "\t\t<a href='javascript:;'>";
 					submenu += "<i class='" + smel.getAttribute("icon", "icon-list") + "'></i>";
 					submenu += "<span class='title'>" + smel.getAttribute("name") + "</span>";
 					submenu += "<span class='arrow '></span>";
 					submenu += "</a>\n";
 					submenu += "\t\t<ul class='sub-menu'>\n" + getSubMenu(smel, level+1) + "</ul>\n";
+					submenu += "\t</li>\n";
 				}
 			}
 		}
@@ -613,18 +593,40 @@ public class BWeb {
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
 		
+		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
-			if(el.getName().equals("TILE")) body += webDashboard.getTile(el);
+			boolean hasAccess  = checkAccess(el.getAttribute("role"));
+			if(hasAccess && el.getName().equals("TILE")) body += webDashboard.getTile(el);
 		}
 		body += "</div>\n";
+		
 		body += "<div class='row'>\n";
 		for(BElement el : view.getElements()) {
+			boolean hasAccess  = checkAccess(el.getAttribute("role"));
 			if(el.getName().equals("TILELIST")) body += webDashboard.getTileList(el);
 		}
 		body += "</div>\n";
 		
 		return body;
+	}
+	
+	public boolean checkAccess(String role) {
+		if(db.getUser() == null) return true;
+		
+		boolean hasAccess  = false;
+		if(db.getUser().getSuperUser()) {
+			hasAccess = true;
+		} else if(role == null) {
+			hasAccess = true;
+		} else {
+			String mRoles[] = role.split(",");
+			for(String mRole : mRoles) {
+				if(db.getUser().getUserRoles().contains(mRole)) hasAccess = true;
+			}
+		}
+		
+		return hasAccess;
 	}
 
 	public String getBody(HttpServletRequest request, String reportPath) {
@@ -1018,8 +1020,91 @@ public class BWeb {
 
 		return mystr;
 	}
+	
+	public void updateMultiPart(HttpServletRequest request, ServletContext config, String tmpPath) {
+		if(!ServletFileUpload.isMultipartContent(request)) {
+			updateForm(request);
+			return;
+		}
+		
+		int yourMaxMemorySize = 262144;
+		File yourTempDirectory = new File(tmpPath);
+		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		
+		Map<String, String> reqParams = new HashMap<String, String>();
+		try {
+			List items = upload.parseRequest(request);
+			Iterator itr = items.iterator();
+			while(itr.hasNext()) {
+				FileItem item = (FileItem) itr.next();
+				if(item.isFormField()) {
+					reqParams.put(item.getFieldName(), item.getString());
+				} else if(item.getSize() > 0) {
+					String pictureFile = savePicture(item, config);
+					if(pictureFile != null) reqParams.put(item.getFieldName(), pictureFile);
+				}
+			}
+			
+			updateForm(request, reqParams);
+		} catch (FileUploadException ex) {
+			System.out.println("File upload exception " + ex);
+		}
+	}
+	
+	public String savePicture(FileItem item, ServletContext config) {
+		String pictureFile = null;
 
+		String repository = config.getInitParameter("repository_url");
+		String username = config.getInitParameter("rep_username");
+		String password = config.getInitParameter("rep_password");
+System.out.println("repository : " + repository);
+		BWebdav webdav = new BWebdav(repository, username, password);
+		
+		String contentType = item.getContentType();
+		String fieldName = item.getFieldName();
+		String fileName = item.getName();
+		long fs = item.getSize();
+		
+		BElement el = view.getElement(fieldName);
+		long maxfs = (Long.valueOf(el.getAttribute("maxfilesize", "4194304"))).longValue();
+
+		String ext = null;
+		int i = fileName.lastIndexOf('.');
+		if(i>0 && i<fileName.length()-1) ext = fileName.substring(i+1).toLowerCase();
+		if(ext == null) ext = "NAI";
+		String pictureName = db.executeFunction("SELECT nextval('picture_id_seq')") + "pic." + ext;
+
+		try {
+			String[] imageTypes = {"BMP", "GIF", "JFIF", "JPEG", "JPG", "PNG", "TIF", "TIFF"};
+			ext = ext.toUpperCase().trim();
+
+			if(Arrays.binarySearch(imageTypes, ext) >= 0) {
+				if(fs < maxfs) {
+					webdav.saveFile(item.getInputStream(), pictureName);
+					pictureFile = pictureName;
+				}
+			}
+		}  catch(IOException ex) {
+			log.severe("File saving failed Exception " + ex);
+		}
+
+		return pictureFile;
+	}
+	
 	public void updateForm(HttpServletRequest request) {
+		Map<String, String> reqParams = new HashMap<String, String>();
+		
+		Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+			String elName = (String)e.nextElement();
+			reqParams.put(elName, request.getParameter(elName));
+		}
+		
+		updateForm(request, reqParams);
+	}
+
+	public void updateForm(HttpServletRequest request, Map<String, String> reqParams) {
 		String linkData = null;
 		String formlink = null;
 		int vds = viewKeys.size();
@@ -1047,7 +1132,7 @@ public class BWeb {
 				qForm.recEdit();
 			}
 
-			Map inputParams = new HashMap<String, String>();
+			Map<String, String> inputParams = new HashMap<String, String>();
 			if(view.getAttribute("inputparams") != null) {
 				String paramArr[] = view.getAttribute("inputparams").toLowerCase().split(",");
 				for(String param : paramArr) {
@@ -1060,8 +1145,8 @@ public class BWeb {
 			}
 
 			for(BElement el : view.getElements()) {
-				log.fine(el.getValue() + " : " + request.getParameter(el.getValue()));
-				String dataValue = request.getParameter(el.getValue());
+				String dataValue = reqParams.get(el.getValue());
+				//System.out.println("BASE 1040 : " + el.getValue() + " : " + dataValue);
 				if(dataValue != null) {
 					if(dataValue.trim().equals("")) dataValue = null;
 				}
@@ -1099,6 +1184,8 @@ public class BWeb {
 				} else if(el.getName().equals("COMBOBOX")) {
 					qForm.updateField(el.getValue(),  dataValue);
 				} else if(el.getName().equals("COMBOLIST")) {
+					saveMsg += qForm.updateField(el.getValue(), dataValue);
+				} else if(el.getName().equals("PICTURE")) {
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
 				} else if(el.getName().equals("MULTISELECT")) {
 					String msv = null;
@@ -1647,11 +1734,11 @@ public class BWeb {
 		return events;
 	}
 
-	public String receivePhoto(HttpServletRequest request) {
+	public String receivePhoto(HttpServletRequest request, String tmpPath) {
 		String pictureFile = "";
 
 		int yourMaxMemorySize = 262144;
-		File yourTempDirectory = new File("/opt/tomcat/temp/baraza.tmp");
+		File yourTempDirectory = new File(tmpPath);
 		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
@@ -1707,7 +1794,7 @@ public class BWeb {
 		} catch (FileUploadException ex) {
 			pictureFile = "";
 			System.out.println("File upload exception " + ex);
-		}  catch(Exception ex) {
+		}  catch(IOException ex) {
 			pictureFile = "";
 			System.out.println("File saving failed Exception " + ex);
 		}
@@ -1846,6 +1933,13 @@ public class BWeb {
 	public String getViewColour() {
 		if(view == null) return "purple";
 		return view.getAttribute("color", "purple"); 
+	}
+	
+	public String getEncType() {
+		if(view == null) return "";
+		if(!view.getName().equals("FORM")) return "";
+		if(view.getElementByName("PICTURE") == null) return ""; 
+		return " enctype=\"multipart/form-data\" ";
 	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
