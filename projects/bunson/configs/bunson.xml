@@ -1,4 +1,4 @@
-<APP name="Bunson" org="org_id" password="change_password">
+<APP color="bunson" name="Bunson" org="org_id" password="change_password">
 	<MENU name="Bunson">
 		<MENU name="Consultant Transfers">1</MENU>
 		<MENU name="Orgs" role="admin">30</MENU>
@@ -99,7 +99,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Transfers" key="20" h="550">
-		<GRID color="green-meadow" name="Today's Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(pickup_date = CURRENT_TIMESTAMP::date)">
+		<GRID color="bunson" name="Today's Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(pickup_date = CURRENT_TIMESTAMP::date)">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
