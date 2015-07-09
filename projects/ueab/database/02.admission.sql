@@ -23,6 +23,38 @@ CREATE TABLE counties (
 	county_name			varchar(50)
 );
 
+CREATE TABLE applications (
+	applicationid			integer primary key,
+	quarterid				varchar(12) references quarters,
+	org_id					integer references orgs,
+	approved				boolean not null default false,
+	openapplication			boolean not null default false,
+	closed					boolean not null default false,
+	emailed					boolean not null default false,
+	paid					boolean not null default false,
+	receiptnumber			varchar(50),
+	confirmationno			varchar(75),
+	purchasecentre			varchar(50),
+	amount					real not null,
+	applicationdate    		date default current_date not null,
+	Picked					boolean default false not null,
+	Pickeddate				timestamp,
+	paydate					timestamp,
+	e_amount				real,
+	success					varchar(50),
+	payment_code			varchar(50),
+	trans_no				varchar(50),
+
+	card_type				varchar(50),
+	transaction_id			integer,
+
+	narrative				varchar(240)
+);
+CREATE INDEX applications_quarterid ON applications (quarterid);
+CREATE INDEX applications_org_id ON applications (org_id);
+
+CREATE SEQUENCE applications_transaction_id_seq;
+
 CREATE TABLE registrations (
 	registrationid		serial primary key,
 	markid				integer references marks,
@@ -210,6 +242,28 @@ CREATE INDEX registrymarks_registrationid ON registrymarks (registrationid);
 CREATE INDEX registrymarks_markid ON registrymarks (markid);
 CREATE INDEX registrymarks_subjectid ON registrymarks (subjectid);
 
+
+CREATE VIEW applicationview AS 
+	SELECT entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.primary_email,
+		entitys.primary_telephone, entitys.selection_id, 
+		(CASE WHEN entitys.selection_id = 4 THEN 'UNDERGRADUATE' ELSE 'POSTGRADUATE' END) as selection_name,
+
+		applications.applicationid, applications.confirmationno, applications.receiptnumber, 
+		applications.purchasecentre, applications.applicationdate, applications.amount, applications.paid,
+		applications.approved, applications.closed, applications.openapplication, applications.narrative,
+		applications.paydate, applications.card_type, applications.success,
+		applications.quarterid, applications.org_id,
+		'UEAB Application Responce'::varchar AS emailsubject,
+		(CASE WHEN applications.paid = true THEN 'The payment is completed and updated'
+		WHEN (applications.confirmationno is null) THEN applications.narrative
+		ELSE 'Make Payments' END) as makepayment,
+
+		(CASE WHEN applications.paid = true THEN 'The payment is completed' ELSE 'Payment has not been done' END) as paymentStatus,
+
+		(CASE WHEN applications.paid = false THEN applications.applicationid
+		ELSE 0 END) as payeditid
+	FROM entitys INNER JOIN applications ON entitys.entity_id = applications.applicationid;
+
 CREATE VIEW registrationview AS
 	SELECT registrations.registrationid, registrations.email, registrations.entrypass, registrations.firstpass,
 		registrations.applicationdate, sys_countrys.sys_country_name as nationality, registrations.sex,
@@ -293,8 +347,8 @@ BEGIN
 			FROM quarters 
 			WHERE (quarterid IN (SELECT max(quarterid) FROM quarters));
 
-			INSERT INTO applications (org_id, applicationid, quarterid)
-			VALUES(NEW.org_id, NEW.entity_id, reca.quarterid, reca.applicationfees);
+			INSERT INTO applications (org_id, applicationid, quarterid, amount)
+			VALUES(NEW.org_id, NEW.entity_id, reca.quarterid, 1000);
 		END IF;
 	ELSE
 		IF(TG_WHEN = 'BEFORE')THEN
