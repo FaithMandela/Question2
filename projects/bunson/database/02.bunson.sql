@@ -214,7 +214,7 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     transfer_assignments.time_out, transfer_assignments.time_in, 
     transfer_assignments.no_show, transfer_assignments.no_show_reason,
     transfer_assignments.closed, transfer_assignments.last_update,
-
+    transfer_assignments.cancelled, transfer_assignments.cancel_reason,
     transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
     transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num
 
@@ -348,17 +348,32 @@ DECLARE
     v_rec              record;
     v_rec_flight       record;
     v_flight_text      text;
+    v_flight_count     integer;
 BEGIN
+    v_flight_text := '';
 
-    SELECT transfer_assignment_id, driver_name, mobile_number, passanger_name, passanger_mobile, pickup, dropoff, pickup_time,
+    SELECT COUNT(transfer_flights.transfer_flight_id) INTO v_flight_count
+	FROM transfer_assignments 
+	INNER JOIN passangers ON passangers.passanger_id = transfer_assignments.passanger_id
+	INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
+	WHERE transfer_assignments.transfer_assignment_id = NEW.transfer_assignment_id;
+
+   
+    IF(v_flight_count = 0) THEN
+        SELECT * INTO v_rec FROM vw_transfer_assignments_create  WHERE transfer_assignment_id = NEW.transfer_assignment_id;
+
+    ELSE
+        SELECT transfer_assignment_id, driver_name, mobile_number, passanger_name, passanger_mobile, pickup, dropoff, pickup_time,
         start_time,end_time, flight_date, start_airport, end_airport, airline,flight_num
         INTO v_rec FROM vw_transfer_assignments WHERE transfer_assignment_id = NEW.transfer_assignment_id;
 
-    v_flight_text := E'\nFlight Date : ' || v_rec.flight_date
+        v_flight_text := E'\nFlight Date : ' || v_rec.flight_date
                     || E'\nDep Time : ' || v_rec.start_time
                     || E'\nAirport : ' || v_rec.start_airport
                     || E'\nFlight No.: ' || v_rec.airline || ' '::text || v_rec.flight_num;
 
+    END IF;
+    
     v_message := (E'Hello '::text || v_rec.driver_name || E'\nYou Have a new Transfer Ref : ' 
                   || v_rec.transfer_assignment_id 
                   || E'\nPick ' || v_rec.passanger_name || E'.\nFrom: ' || v_rec.pickup || E'\nTo: ' || v_rec.dropoff || E'\nAt: ' || v_rec.pickup_time

@@ -796,7 +796,7 @@
 				<TEXTFIELD w="75" title="Pickup Time">pickup_time</TEXTFIELD>
 				<TEXTFIELD w="75" title="Pickup">pickup</TEXTFIELD>
 				<TEXTFIELD w="75" title="Dropoff">dropoff</TEXTFIELD>
-				<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" where="(closed=false)">
+				<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments_create" noorg="true" where="(closed=false)">
 					<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
@@ -857,7 +857,7 @@
 				<TEXTFIELD w="75" title="Pickup Time">pickup_time</TEXTFIELD>
 				<TEXTFIELD w="75" title="Pickup">pickup</TEXTFIELD>
 				<TEXTFIELD w="75" title="Dropoff">dropoff</TEXTFIELD>
-				<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" where="(closed=false)">
+				<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments_create" noorg="true" where="(closed=false)">
 					<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -1067,6 +1067,12 @@
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
 				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+				<FILES username="repository" repository="/repository/webdav/pictures/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
+					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
+					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
+				</FILES>
 				<JASPER name="Voucher" reportfile="vw_transfer_assignments.jasper"></JASPER>
 				<JASPER name="Todays Transfer List" reportfile="vw_transfer_assignments_today.jasper"></JASPER>
 				<JASPER name="Todays No Show List" reportfile="vw_transfer_assignments_today_noshow.jasper"></JASPER>
@@ -1147,6 +1153,12 @@
 					<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 					<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+					<FILES username="repository" repository="/repository/webdav/pictures/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
+						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
+					</FILES>
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
@@ -1208,6 +1220,12 @@
 					<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 					<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+					<FILES username="repository" repository="/repository/webdav/pictures/" name="Maps" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='transfer_assignments')" filetable="transfer_assignments" password="baraza">
+						<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+						<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
+						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
+					</FILES>
 					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
