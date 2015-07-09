@@ -99,7 +99,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Transfers" key="20" h="550">
-		<GRID name="Today's Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(pickup_date = CURRENT_TIMESTAMP::date)">
+		<GRID color="green-meadow" name="Today's Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(pickup_date = CURRENT_TIMESTAMP::date)">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
@@ -491,7 +491,7 @@
 				<CHECKBOX w="150" title="Processed" y="240" h="20" x="290">processed</CHECKBOX>
 			</FORM>
 		</GRID>
-		<GRID name="Today's Past 6" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(booking_date::date = CURRENT_TIMESTAMP::date AND booking_date::time > '1600'::time)">
+		<GRID name="Today's Past 4" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(booking_date::date = CURRENT_TIMESTAMP::date AND booking_date::time > '1600'::time)">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
