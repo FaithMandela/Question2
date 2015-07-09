@@ -1232,7 +1232,10 @@ System.out.println("repository : " + repository);
 				}
 
 				if(jumpView != null) {
-					saveMsg = "<div style='color:#00FF00; font-size:16px; font-weight:bold;'>The record has been updated.</div>";
+					saveMsg = "<div class='Metronic-alerts alert alert-success fade in'>\n";
+					saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
+					saveMsg += view.getAttribute("save.msg", "The record has been updated.") + "\n</div>\n";
+					
 					viewKey = jumpView;
 					webSession.setAttribute("viewkey", jumpView);
 					webSession.setAttribute("loadviewkey", jumpView);
@@ -1245,7 +1248,11 @@ System.out.println("repository : " + repository);
 					viewKeys.add("0");
 					viewKey += ":0";
 				} else {
-					saveMsg = "<div style='color:#00FF00; font-size:16px; font-weight:bold;'>The record has been updated.</div>";
+								
+					saveMsg = "<div class='Metronic-alerts alert alert-success fade in'>\n";
+					saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
+					saveMsg += view.getAttribute("save.msg", "The record has been updated.") + "\n</div>\n";
+				
 					if(vds > 2) {
 						dataItem = viewData.get(vds - 2);
 						view = views.get(vds - 2);
@@ -1258,6 +1265,12 @@ System.out.println("repository : " + repository);
 						webSession.setAttribute("viewkey", viewKey);
 					}
 				}
+			} else {
+				String tmsg = saveMsg;
+				
+				saveMsg = "<div class='Metronic-alerts alert alert-danger fade in'>\n";
+				saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
+				saveMsg += tmsg + "\n</div>\n";
 			}
 			qForm.close();
 		}
@@ -1931,8 +1944,11 @@ System.out.println("repository : " + repository);
 	}
 	
 	public String getViewColour() {
-		if(view == null) return "purple";
-		return view.getAttribute("color", "purple"); 
+		String viewColor = "purple";
+		if(root == null) return viewColor;
+		viewColor = root.getAttribute("color", "purple");
+		if(view == null) return viewColor;
+		return view.getAttribute("color", viewColor); 
 	}
 	
 	public String getEncType() {
