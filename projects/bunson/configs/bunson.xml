@@ -1,6 +1,6 @@
 <APP color="bunson" name="Bunson" org="org_id" password="change_password">
 	<MENU name="Bunson">
-		<MENU icon="fa fa-arrows-h" name="Consultant Transfers" role="consultant">35</MENU>
+		<MENU icon="fa fa-arrows-h" name="Your Transfers" role="consultant,transport">35</MENU>
 		<MENU icon="fa fa-arrows-h" name="Transfers" role="admin,transport">20</MENU>
 		<MENU name="Administration" role="admin">
 			<MENU icon="fa fa-envelope-o" name="Sms" role="admin">25</MENU>
@@ -12,21 +12,15 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE name="Todays Pax Transfer" role="admin" noorg.query="true" table="vw_passangers" where="(pickup_date = CURRENT_TIMESTAMP::date)">
+			<TILE name="Todays Pax Transfer" role="admin" noorg.query="true" table="vw_passangers" noorg="true" where="(pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			<TILE name="Unprocessed Transfer" role="admin" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
-				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
-			</TILELIST>
-			<TILELIST name="Out of Office" keyfield="employee_leave_id" role="staff" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
-				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
-				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
-				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
-			</TILELIST>
+			<TILE name="Processed Transfer" role="admin" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Orgs" key="30" h="550">
@@ -534,6 +528,7 @@
 					<TEXTFIELD w="150" title="Tab" y="70" h="20" x="290">tab</TEXTFIELD>
 				</FORM>
 			</GRID>
+			<JASPER name="Voucher" reportfile="vw_transfer_assignments.jasper"></JASPER>
 			<FORM name="Passenger" keyfield="passanger_id" linkfield="transfer_id" table="passangers" noorg="true">
 				<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Passenger Mobile" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>

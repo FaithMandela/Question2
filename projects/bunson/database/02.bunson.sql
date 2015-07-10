@@ -218,7 +218,6 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
     transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num
 
-
 	FROM transfer_assignments
 	INNER JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
 	INNER JOIN cars ON cars.car_id = transfer_assignments.car_id
@@ -227,6 +226,7 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
     WHERE transfer_flights.tab = passangers.tab;
 
+DROP VIEW vw_transfer_assignments_create;
 CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
 	SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number,
 	cars.car_type_id, cars.registration_number,
@@ -239,7 +239,8 @@ CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
 	transfer_assignments.car_id, transfer_assignments.kms_out, transfer_assignments.kms_in,
     transfer_assignments.time_out, transfer_assignments.time_in, 
     transfer_assignments.no_show, transfer_assignments.no_show_reason,
-    transfer_assignments.closed, transfer_assignments.last_update
+    transfer_assignments.closed, transfer_assignments.last_update,
+    transfer_assignments.cancelled, transfer_assignments.cancel_reason
 	FROM transfer_assignments
 	INNER JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
 	INNER JOIN cars ON cars.car_id = transfer_assignments.car_id
