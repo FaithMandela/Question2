@@ -299,7 +299,7 @@ public class BWeb {
 
 		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
 		mymenu += "		<li class='start active '>\n";
-		mymenu += "			<a href='index.jsp?view=1:0'>\n";
+		mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
 		mymenu += "			<i class='icon-home'></i>\n";
 		mymenu += "			<span class='title'>Dashboard</span>\n";
 		mymenu += "			</a>\n";
@@ -826,35 +826,56 @@ public class BWeb {
 			body += report.getReport(db, linkData, request, reportPath);
 		} else if(view.getName().equals("FILTER")) {
 			boolean isFirst = true;
-			body += "<div class='tabstrip'><ul>\n";
+			StringBuilder tabs = new StringBuilder();
+			tabs.append("<div class='row'>\n");
+			tabs.append("	<div class='col-md-12'>\n");
+			tabs.append("		<div class='tabbable portlet-tabs'>\n");
+			tabs.append("			<ul class='nav nav-tabs'>\n");
 			for(BElement sv : view.getElements()) {
 				if(sv.getName().equals("FILTERGRID") || sv.getName().equals("DRILLDOWN") || sv.getName().equals("FILTERFORM")) {
-					if(isFirst) {body += "<li class='k-state-active'>"; isFirst = false;}
-					else {body += "<li>";}
-					body += sv.getAttribute("name") + "</li>\n";
+					if(isFirst) tabs.append("<li class='active'>");
+					else tabs.append("<li>");
+					isFirst = false;
+					String tab = sv.getAttribute("name");
+					tabs.append("<a href='#" + tab + "' data-toggle='tab'>" + tab + " </a></li>\n");
 				}
     		}
-			body += "</ul>";
+			tabs.append("			</ul>\n");
+			tabs.append("		</div>\n");
+			tabs.append("	</div>\n");
+			tabs.append("</div>\n");
+			tabs.append("<div class='tab-content'>\n");
+
+			body += tabs.toString();
 
 			boolean wgf = true;
+			isFirst = true;
 			for(BElement sv : view.getElements()) {
+				String tab = sv.getAttribute("name");
 				if(sv.getName().equals("FILTERGRID")) {
-					body += "<div>\n";
+					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
+					else body += "<div class='tab-pane' id='" + tab + "'>\n";
+					isFirst = false;
 					BWebBody webbody = new BWebBody(db, sv, wheresql, sortby);
 					body += webbody.getGrid(viewKeys, viewData, wgf, viewKey, false);
 					body += "</div>";
-					wgf = false;
+					wgf = false;					
 				} else if(sv.getName().equals("DRILLDOWN")) {
-					body += "<div>\n";
+					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
+					else body += "<div class='tab-pane' id='" + tab + "'>\n";
+					isFirst = false;
 					BDrillWeb drillweb = new BDrillWeb();
 					body += drillweb.getDrillDown(db, sv);
 					body += "</div>";
 				} else if(sv.getName().equals("FILTERFORM")) {
-					body += "<div>\n";
+					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
+					else body += "<div class='tab-pane' id='" + tab + "'>\n";
+					isFirst = false;
 					BWebBody webbody = new BWebBody(db, sv, wheresql, sortby);
 					body += webbody.getForm(true, formLinkData, request);
 					body += "</div>";
 				}
+				
 			}
 			body += "</div>\n";
 			body += "<input type='hidden' name='view' value='" + viewKey + ":0'/>\n";
