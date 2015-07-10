@@ -1,13 +1,34 @@
 <APP color="bunson" name="Bunson" org="org_id" password="change_password">
 	<MENU name="Bunson">
-		<MENU name="Consultant Transfers">1</MENU>
-		<MENU name="Orgs" role="admin">30</MENU>
-		<MENU icon="fa fa-support " name="Drivers" role="admin">5</MENU>
-		<MENU icon="fa fa-cab" name="Cars" role="admin">10</MENU>
-		<MENU name="Definitions" role="admin">15</MENU>
-		<MENU name="Transfers" role="admin">20</MENU>
-		<MENU name="Sms" role="admin">25</MENU>
+		<MENU icon="fa fa-arrows-h" name="Consultant Transfers" role="consultant">35</MENU>
+		<MENU icon="fa fa-arrows-h" name="Transfers" role="admin,transport">20</MENU>
+		<MENU name="Administration" role="admin">
+			<MENU icon="fa fa-envelope-o" name="Sms" role="admin">25</MENU>
+			<MENU icon="fa fa-sitemap" name="Organizations" role="admin">30</MENU>
+			<MENU icon="fa fa-support" name="Drivers" role="admin">5</MENU>
+			<MENU icon="fa fa-cab" name="Cars" role="admin">10</MENU>
+			<MENU icon="fa fa-gear" name="Definitions" role="admin">15</MENU>
+		</MENU>
 	</MENU>
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Todays Pax Transfer" role="admin" noorg.query="true" table="vw_passangers" where="(pickup_date = CURRENT_TIMESTAMP::date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			</TILE>
+			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
+				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</TILELIST>
+			<TILELIST name="Out of Office" keyfield="employee_leave_id" role="staff" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+			</TILELIST>
+		</DASHBOARD>
+	</DESK>
 	<DESK w="700" name="Orgs" key="30" h="550">
 		<GRID name="Orgs" keyfield="org_id" table="vw_orgs" noorg="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
@@ -44,6 +65,40 @@
 				<TEXTFIELD w="150" title="Logo" y="90" h="20" x="10">logo</TEXTFIELD>
 				<TEXTFIELD w="150" title="Pin" y="90" h="20" x="290">pin</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types">
+			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
+			<TEXTFIELD w="175" title="Entity Type Name">entity_type_name</TEXTFIELD>
+			<TEXTFIELD w="175" title="Entity Role">entity_role</TEXTFIELD>
+			<TEXTFIELD w="175" title="Group EMail">group_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Use Key">use_key</TEXTFIELD>
+			<GRID name="Entity Subscriptions" keyfield="entity_subscription_id" linkfield="entity_type_id" table="vw_entity_subscriptions">
+				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="275" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Level">subscription_level_name</TEXTFIELD>
+				<FORM name="Entity Subscriptions" keyfield="entity_subscription_id" linkfield="entity_type_id" table="entity_subscriptions">
+					<COMBOBOX w="430" title="Entity" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Subscription Level" lptable="subscription_levels" y="30" h="20" x="10" lpfield="subscription_level_name">subscription_level_id</COMBOBOX>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types" th="210">
+				<TEXTFIELD w="430" title="Entity Type Name" y="10" h="20" x="10">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Entity Role" y="30" h="20" x="10">entity_role</TEXTFIELD>
+				<TEXTFIELD w="150" title="Use Key" y="50" h="20" x="10">use_key</TEXTFIELD>
+				<TEXTFIELD w="150" title="Start View" y="50" h="20" x="290">start_view</TEXTFIELD>
+				<TEXTFIELD w="430" title="Group EMail" y="70" h="20" x="10">group_email</TEXTFIELD>
+				<TEXTAREA w="530" tab="Description" y="2" h="170" x="10">description</TEXTAREA>
+				<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
+			<TEXTFIELD w="75" title="Level ID">subscription_level_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level Name">subscription_level_name</TEXTFIELD>
+			<FORM name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
+				<TEXTFIELD w="430" title="Level" y="10" h="20" x="10">subscription_level_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -1034,7 +1089,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Consultant Transfers" key="1" h="550">
+	<DESK w="700" name="Consultant Transfers" key="35" h="550">
 		<GRID name="Transfer Passengers" keyfield="passanger_id" orderby="pickup_time ASC" linkfield="transfer_id" table="vw_passangers" noorg="true" user="entity_id">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
@@ -1122,7 +1177,7 @@
 				</FORM>
 			</GRID>
 		</GRID>
-		<GRID name="Create Transfer" keyfield="transfer_id" orderby="booking_date DESC" table="vw_transfers" tab.count="count(transfer_id)" noorg="true" user="entity_id">
+		<GRID name="Consultant Transfers" keyfield="transfer_id" orderby="booking_date DESC" table="vw_transfers" tab.count="count(transfer_id)" noorg="true" user="entity_id">
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Payment Type Name">payment_type_name</TEXTFIELD>

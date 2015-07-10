@@ -400,6 +400,11 @@ CREATE TRIGGER ins_transfer_assignments AFTER INSERT ON transfer_assignments
     FOR EACH ROW EXECUTE PROCEDURE ins_transfer_assignments();
     
 
+delete from transfer_flights ;
+delete from transfer_assignments ;
+delete from passangers ;
+delete from sms;
+delete from transfers; 
 
 
 
