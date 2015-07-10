@@ -298,7 +298,7 @@ public class BWeb {
 		BElement mel = root.getFirst();
 
 		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
-		mymenu += "		<li class='start active '>\n";
+		mymenu += "		<li class='start'>\n";
 		mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
 		mymenu += "			<i class='icon-home'></i>\n";
 		mymenu += "			<span class='title'>Dashboard</span>\n";
@@ -328,11 +328,11 @@ public class BWeb {
 					if(smel.getAttribute("xml") == null) {
 						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
 						link += " <i class='" + icon + "'></i> ";
-						link += smel.getAttribute("name") + "</a>";
+						link += "<span>" + smel.getAttribute("name") + "</span></a>";
 					} else {
 						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
 						link += " <i class='" + icon + "'></i> ";
-						link += smel.getAttribute("name") + "</a>";
+						link += "<span>" + smel.getAttribute("name") + "</span></a>";
 					}
 					
 					if(viewKeys.get(0).equals(smel.getValue())) submenu += "\t\t<li class='active'>\n";
@@ -348,7 +348,7 @@ public class BWeb {
 					submenu += "\t\t<a href='javascript:;'>";
 					submenu += "<i class='" + smel.getAttribute("icon", "icon-list") + "'></i>";
 					submenu += "<span class='title'>" + smel.getAttribute("name") + "</span>";
-					submenu += "<span class='arrow '></span>";
+					submenu += "<span class='arrow'></span>";
 					submenu += "</a>\n";
 					submenu += "\t\t<ul class='sub-menu'>\n" + getSubMenu(smel, level+1) + "</ul>\n";
 					submenu += "\t</li>\n";
