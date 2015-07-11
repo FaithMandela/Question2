@@ -1,4 +1,4 @@
-<APP name="Mobile Health" org="org_id" password="change_password">
+<APP color="blue" name="Mobile Health" org="org_id" password="change_password" material="true">
 	<MENU name="Mobile Health">
 		<MENU name="Entitys">1</MENU>
 		<MENU name="Orgs">5</MENU>

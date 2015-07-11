@@ -328,11 +328,15 @@ public class BWeb {
 					if(smel.getAttribute("xml") == null) {
 						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
 						link += " <i class='" + icon + "'></i> ";
-						link += "<span>" + smel.getAttribute("name") + "</span></a>";
+                        
+                        if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
+						else link += "<span>" + smel.getAttribute("name") + "</span></a>";
 					} else {
 						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
 						link += " <i class='" + icon + "'></i> ";
-						link += "<span>" + smel.getAttribute("name") + "</span></a>";
+                        
+                        if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
+						else link += "<span>" + smel.getAttribute("name") + "</span></a>";
 					}
 					
 					if(viewKeys.get(0).equals(smel.getValue())) submenu += "\t\t<li class='active'>\n";
@@ -517,7 +521,9 @@ public class BWeb {
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
 			
-			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'>Submit</button>\n";			
+			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'>Submit</button>\n";
+            
+            buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 		
 		
@@ -551,6 +557,8 @@ public class BWeb {
 				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'>Delete</button>\n";
 			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";*/
+            
+            buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 
 		return buttons;
@@ -1970,6 +1978,12 @@ System.out.println("repository : " + repository);
 		viewColor = root.getAttribute("color", "purple");
 		if(view == null) return viewColor;
 		return view.getAttribute("color", viewColor); 
+	}
+    
+    public boolean isMaterial() {
+		if(root == null) return false;
+		if(root.getAttribute("material", "false").equals("true")) return true;
+        return false;
 	}
 	
 	public String getEncType() {
