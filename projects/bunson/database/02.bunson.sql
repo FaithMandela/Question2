@@ -198,6 +198,25 @@ CREATE VIEW vw_passangers AS
     WHERE transfer_flights.tab = passangers.tab;
 
 
+CREATE VIEW vw_passangers_noflights AS
+	SELECT car_types.car_type_code, 
+	entitys.entity_id, entitys.entity_name, 
+	payment_types.payment_type_id, payment_types.payment_type_name, 
+	transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.currency_id, transfers.agreed_amount, transfers.booking_location, transfers.booking_date, transfers.payment_details, transfers.reference_data,
+    
+    transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
+    transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num,
+
+	passangers.passanger_id, passangers.passanger_name, passangers.passanger_mobile, passangers.passanger_email, passangers.pickup_time, passangers.pickup, passangers.dropoff, passangers.other_preference, passangers.tab,
+	passangers.amount, passangers.processed, passangers.pickup_date
+    FROM passangers
+	INNER JOIN car_types ON passangers.car_type_code = car_types.car_type_code
+	INNER JOIN transfers ON passangers.transfer_id = transfers.transfer_id
+	INNER JOIN entitys ON transfers.entity_id = entitys.entity_id
+	INNER JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id
+    INNER JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id;
+
+
 
 
 -- DROP VIEW vw_transfer_assignments;
@@ -319,13 +338,14 @@ DECLARE
 BEGIN
     v_today := CURRENT_TIMESTAMP;
     
-    IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1600'::time )) THEN
+    IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1500'::time )) THEN
         v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' || NEW.passanger_name || E'.\nFrom: ' || NEW.pickup || E'\nTo: ' || NEW.dropoff || E'\nAt: ' || NEW.pickup_time
                   || E'\nTel: ' || NEW.passanger_mobile;
                   
         v_send_res := sendMessage('254725987342', v_message);
-        -- v_send_res := sendMessage('254701772272', v_message);
-        -- v_send_res := sendMessage('254738772272', v_message);
+        v_send_res := sendMessage('254701772272', v_message);
+        v_send_res := sendMessage('254738772272', v_message);
+        v_send_res := sendMessage('254787847653', v_message);
 
     END IF;
     RETURN NULL;
