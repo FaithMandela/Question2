@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.baraza.DB.BDB;
+import org.baraza.xml.BElement;
 
 public class Bajax extends HttpServlet {
 
@@ -41,6 +42,12 @@ public class Bajax extends HttpServlet {
 		String ps = System.getProperty("file.separator");
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 		String dbconfig = "java:/comp/env/jdbc/database";
+		
+		/*Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+			String ce = (String)e.nextElement();
+			System.out.println(ce + ":" + request.getParameter(ce));
+		}*/
 
         response.setContentType("text/html");
 		PrintWriter out = null;
@@ -55,6 +62,13 @@ public class Bajax extends HttpServlet {
 		web.setUser(userIP, userName);
 		
 		db = web.getDB();
+		
+		String sp = request.getServletPath();
+		if(sp.equals("/ajaxupdate")) {
+			if("edit".equals(request.getParameter("oper"))) {
+				resp = updateGrid(request);
+			}
+		}
 
 		System.out.println("AJAX Reached : " + request.getParameter("fnct"));		
 		
@@ -78,6 +92,38 @@ public class Bajax extends HttpServlet {
 
 		web.close();	// close DB commections
 		out.println(resp);
+	}
+	
+	public String updateGrid(HttpServletRequest request) {
+		String resp = "";
+		
+		boolean hasEdit = false;
+		BElement view = web.getView();
+		String upSql = "UPDATE " + view.getAttribute("updatetable") + " SET ";
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("EDITFIELD")) {
+				if(hasEdit) upSql += ", ";
+				upSql += el.getValue() + " = '" + request.getParameter(el.getValue()) + "'";
+				hasEdit = true;
+			}
+		}
+		
+		if(hasEdit) {
+			String editKey = view.getAttribute("keyfield");
+			String id = request.getParameter("id");
+			String autoKeyID = db.insAudit(view.getAttribute("updatetable"), id, "EDIT");
+			
+			if(view.getAttribute("auditid") != null) upSql += ", " + view.getAttribute("auditid") + " = " + autoKeyID;
+			upSql += " WHERE " + editKey + " = '" + id + "'";
+			
+			resp = db.executeQuery(upSql);
+			
+			System.out.println("BASE GRID UPDATE : " + upSql);
+		}
+		
+		if(resp == null) resp = "OK";
+		
+		return resp;
 	}
 
 	public String calResize(String id, String endDate, String endTime) {

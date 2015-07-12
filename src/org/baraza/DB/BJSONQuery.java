@@ -85,12 +85,7 @@ public class BJSONQuery extends BQuery {
 						} else if(el.getName().equals("TITLEFIELD")) {
 							myjo.add(mydn, cellData);
 						} else if(el.getName().equals("EDITFIELD")) {
-							String editkey = el.getAttribute("editkey");
-							if(editkey == null) editkey = view.getAttribute("keyfield");
-							mydv = "<input type='text' name='" + el.getValue() + ":" + rs.getString(editkey) + "'";
-							mydv += " value='" + cellData + "'";
-							mydv += " class='w_50' size='" + el.getAttribute("w", "25") + "'>";
-							myjo.add(mydn, mydv);
+							myjo.add(mydn, cellData);
 						} else if(el.getName().equals("ACTION")) {
 							String myAction = el.getAttribute("action");
 							if(myAction == null) myAction = el.getAttribute("title");
