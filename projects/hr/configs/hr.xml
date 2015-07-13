@@ -10,11 +10,11 @@
 			<MENU name="Internships" role="applicant">15</MENU>
 			<MENU name="Claims Requests" role="staff">36</MENU>
 			<MENU name="Pay Slip" role="staff">16</MENU>
-			<MENU name="Petty Cash Request">92</MENU>
+			<MENU name="Petty Cash Request" role="staff">92</MENU>
 			<MENU name="Petty Cash" role="pettycash">90</MENU>
 			<MENU name="Client Forms" role="forms">72</MENU>
-			<MENU name="Approvals">83</MENU>
-			<MENU name="Supervisor Review Report">165</MENU>
+			<MENU name="Approvals" role="staff">83</MENU>
+			<MENU name="Supervisor Review Report" role="staff">165</MENU>
 		</MENU>
 		<MENU name="Internship" role="admin,hr">
 			<MENU name="Applicant">23</MENU>
@@ -72,6 +72,12 @@
 			</TILE>
 			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			</TILE>
+			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(intake_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
+			</TILE>
+			<TILE name="Available Internships" role="applicant" noorg.query="true" table="vw_internships" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(internship_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
 			</TILE>
 			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
 				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
@@ -368,7 +374,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Applicant Details" key="10" h="500">
-		<GRID new="false" name="Applicant" gohint="Click Go to edit your details" keyfield="entity_id" display="form" table="vw_applicants" user="entity_id">
+		<FORMVIEW new="false" name="Applicant" keyfield="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
@@ -538,7 +544,7 @@
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
 			<JASPER name="CV" reportfile="cv_applicant.jasper"></JASPER>
-		</GRID>
+		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Job Listing" key="14" h="550">
 		<GRID name="Available Posts" keyfield="intake_id" table="vw_intake" where="(closing_date > current_date)">
@@ -576,16 +582,6 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" user="entity_id">
-			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
-			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
-			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
-			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
-			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-		</GRID>
 		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" where="(closing_date > current_date)">
 			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
@@ -596,6 +592,16 @@
 			<ACTIONS>
 				<ACTION fnct="Ins_interns">Apply For Internship</ACTION>
 			</ACTIONS>
+		</GRID>
+		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" user="entity_id">
+			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
+			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
+			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Pay Slip" key="16" h="550">
@@ -994,9 +1000,9 @@
 				<TEXTFIELD w="100" title="Surname" lw="130" y="50" h="20" x="10">surname</TEXTFIELD>
 				<TEXTFIELD w="100" title="Middle Name" lw="90" y="50" h="20" x="250" span="true">middle_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="First Name" lw="70" y="50" h="20" x="440">first_name</TEXTFIELD>
-				<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10">date_of_birth</TEXTDATE>
+				<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
-				<COMBOLIST w="150" title="Gender" y="90" ischar="true" h="20" x="10">gender
+				<COMBOLIST w="150" title="Gender" y="90" ischar="true" h="20" x="10" span="true">gender
 					<DATA key="M">Male</DATA>
 					<DATA key="F">Female</DATA>
 				</COMBOLIST>
@@ -1007,23 +1013,23 @@
 					<DATA key="W">Widowed</DATA>
 					<DATA key="X">Separated</DATA>
 				</COMBOLIST>
-				<COMBOBOX w="150" title="Birth Nation" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
+				<COMBOBOX w="150" title="Birth Nation" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
 				<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
-				<COMBOBOX w="430" title="Location" lptable="locations" y="130" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
+				<COMBOBOX w="430" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10">identity_card</TEXTFIELD>
+				<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10" span="true">identity_card</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
-				<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10">bank_account</TEXTFIELD>
+				<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10" span="true">bank_account</TEXTFIELD>
 				<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
 				<COMBOBOX w="430" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
-				<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10">appointment_date</TEXTDATE>
+				<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10" span="true">appointment_date</TEXTDATE>
 				<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
-				<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10">contract</CHECKBOX>
+				<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
 				<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10">basic_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+				<COMBOBOX w="430" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Employment Terms" tab="Terms" y="150" h="20" x="10">employment_terms</TEXTFIELD>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>

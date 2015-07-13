@@ -43,11 +43,11 @@ public class Bajax extends HttpServlet {
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 		String dbconfig = "java:/comp/env/jdbc/database";
 		
-		/*Enumeration e = request.getParameterNames();
+		Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
 			String ce = (String)e.nextElement();
 			System.out.println(ce + ":" + request.getParameter(ce));
-		}*/
+		}
 
         response.setContentType("text/html");
 		PrintWriter out = null;

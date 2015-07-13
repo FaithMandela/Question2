@@ -89,7 +89,9 @@ public class BWeb {
 			if(root.getAttribute("dbclass") != null) db = new BDB(root);
 			else if(root.getAttribute("dbconfig") != null) db = new BDB(root.getAttribute("dbconfig"));
 			else db = new BDB(dbconfig);
-
+			
+			if(root.getAttribute("readonly", "false").equals("true")) db.setReadOnly(true);
+			
 			db.setOrgID(root.getAttribute("org"));
 		}
 
