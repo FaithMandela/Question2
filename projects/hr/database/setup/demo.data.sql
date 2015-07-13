@@ -15,7 +15,7 @@ VALUES (0, '7551', 2, 0, 0, 0, 0, 'Ondero', 'Stanley', 'Makori', '2012-11-03', '
 UPDATE employees SET currency_id = 1;
 
 INSERT INTO applicants (org_id, surname, first_name, middle_name, applicant_email, date_of_birth, gender, nationality, marital_status, picture_file, identity_card, language, interests, objective, details) 
-VALUES (0, 'Joseph', 'Kamau', 'Karanja', 'joseph.kamau@gmail.com', '1974-07-05', 'M', 'KE', 'M', NULL, '79798797998', 'English', 'Programming, study, novels', 'Career development', NULL);
+VALUES (0, 'Joseph', 'Kamau', 'Karanja', 'joseph.kamau@obmails.com', '1974-07-05', 'M', 'KE', 'M', NULL, '79798797998', 'English', 'Programming, study, novels', 'Career development', NULL);
 INSERT INTO applicants (org_id, surname, first_name, middle_name, applicant_email, date_of_birth, gender, nationality, marital_status, picture_file, identity_card, language, interests, objective, details) 
-VALUES (0, 'Gichangi', 'Dennis', 'Wachira', 'dennis.aaron@gmail.com', '1979-03-29', 'M', 'KE', 'M', NULL, '7878787', 'English', NULL, NULL, NULL);
+VALUES (0, 'Gichangi', 'Dennis', 'Wachira', 'dennisgichangi@gmail.com', '1979-03-29', 'M', 'KE', 'M', NULL, '7878787', 'English', NULL, NULL, NULL);
 UPDATE entitys SET first_password = 'baraza';

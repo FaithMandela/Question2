@@ -87,6 +87,7 @@ public class BWeb {
 		} else {
 			root = xml.getRoot();
 			if(root.getAttribute("dbclass") != null) db = new BDB(root);
+			else if(root.getAttribute("dbconfig") != null) db = new BDB(root.getAttribute("dbconfig"));
 			else db = new BDB(dbconfig);
 
 			db.setOrgID(root.getAttribute("org"));
@@ -1248,7 +1249,7 @@ System.out.println("repository : " + repository);
 			saveMsg += qForm.recSave();
 			if("".equals(saveMsg)) {
 				String jumpView = view.getAttribute("jumpview");
-				BElement fView = view.getElementByName("GRID");
+				BElement fView = view.getElementByName("FORMVIEW");
 				dataItem = qForm.getKeyField();
 				viewData.set(vds - 1, dataItem);
 
@@ -1880,6 +1881,7 @@ System.out.println("repository : " + repository);
 				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title", ""));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
+				if(el.getName().equals("EDITFIELD")) jsColEl.add("editable", true);
 				jsColModel.add(jsColEl);
 			}
 			

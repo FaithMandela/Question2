@@ -33,8 +33,8 @@
 			<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>
 			<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10">field_of_study</TEXTAREA>
 			<TEXTAREA w="550" tab="Details" y="2" h="120" x="10">details</TEXTAREA>
-			<GRID name="Applicant" keyfield="entity_id" linkfield="entity_id" display="form" table="applicants">
-				<TEXTFIELD w="430" fnct="CAST('Data submited check your email for details' as varchar)" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
+			<FORMVIEW name="Applicant" keyfield="entity_id" linkfield="entity_id" table="applicants">
+				<TEXTFIELD w="430" fnct="'Data submited check your email for details'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
 				<TEXTFIELD w="150" title="Surname" y="10" h="20" x="10">surname</TEXTFIELD>
 				<TEXTFIELD w="150" title="First Name" y="10" h="20" x="290">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="30" h="20" x="10">middle_name</TEXTFIELD>
@@ -43,16 +43,16 @@
 				<TEXTDATE w="150" title="Date Of Birth" y="50" h="20" x="10">date_of_birth</TEXTDATE>
 				<TEXTFIELD w="150" title="Identity Card" y="90" h="20" x="10">identity_card</TEXTFIELD>
 				<TEXTFIELD w="430" title="Language" y="110" h="20" x="10">language</TEXTFIELD>
-			</GRID>
+			</FORMVIEW>
 		</FORM>
 	</DESK>
 
 	<DESK w="700" name="Reset Passwords" key="2" h="500">
 		<FORM name="Reset Passwords" keyfield="sys_reset_id" table="sys_reset" edit="false" delete="false" audit="false" fornew="true" noorg="true">
 			<TEXTFIELD w="430" title="Request Email" h="20" y="30" x="10">request_email</TEXTFIELD>
-			<GRID name="Sys Reset" keyfield="sys_reset_id" table="sys_reset" linkfield="sys_reset_id" display="form" noorg="true">
+			<FORMVIEW name="Sys Reset" keyfield="sys_reset_id" table="sys_reset" linkfield="sys_reset_id" display="form" noorg="true">
 				<TEXTFIELD w="430" fnct="'Your email has been sent to your email.'::text)" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
-			</GRID>		
+			</FORMVIEW>		
 		</FORM>
 	</DESK>
 

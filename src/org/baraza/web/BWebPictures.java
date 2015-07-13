@@ -43,7 +43,6 @@ public class BWebPictures extends HttpServlet {
 System.out.println("repository : " + repository);
 		webdav = new BWebdav(repository, username, password);
 		
-
 		String sp = request.getServletPath();
 		if(sp.equals("/barazapictures")) showPhoto(request, response);
 		if(sp.equals("/delbarazapictures")) delPhoto(request, response);
