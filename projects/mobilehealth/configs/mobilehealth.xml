@@ -1,7 +1,7 @@
 <APP color="blue" name="Mobile Health" org="org_id" password="change_password" material="true">
 	<MENU name="Mobile Health">
 		<MENU name="Entitys">1</MENU>
-		<MENU name="Orgs">5</MENU>
+		<MENU icon="fa fa-sitemap" name="Organizations">5</MENU>
 		<MENU name="Countys">10</MENU>
 		<MENU name="Surveys ( MOH 514 )">15</MENU>
 		<MENU name="Surveys ( MOH 515)">20</MENU>
