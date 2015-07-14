@@ -8,6 +8,7 @@
  */
 package org.baraza.web;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -86,8 +87,11 @@ public class BWeb {
 		} else {
 			root = xml.getRoot();
 			if(root.getAttribute("dbclass") != null) db = new BDB(root);
+			else if(root.getAttribute("dbconfig") != null) db = new BDB(root.getAttribute("dbconfig"));
 			else db = new BDB(dbconfig);
-
+			
+			if(root.getAttribute("readonly", "false").equals("true")) db.setReadOnly(true);
+			
 			db.setOrgID(root.getAttribute("org"));
 		}
 
@@ -205,20 +209,17 @@ public class BWeb {
 
 		int toShow = 0;
 		
-		BUser user = db.getUser();
-		List<String> userRole = user.getUserRoles();
-		
-		if(user.getSuperUser()) {
+		if(db.getUser().getSuperUser()) {
 			toShow = 1;
 		} else {
 			BElement mel = root.getFirst();
-			toShow = checkRole(mel, deskKey, userRole);
+			toShow = checkRole(mel, deskKey);
 		}
 	
 		return toShow;
 	}
 	
-	public int checkRole(BElement mel, String deskKey, List<String> userRole) {
+	public int checkRole(BElement mel, String deskKey) {
 		int toShow = 0;
 
 		//System.out.println("BASE 2010 : " + mel.getAttribute("name"));
@@ -227,30 +228,15 @@ public class BWeb {
 						
 			if(toShow == 0) {
 				if(smel.isLeaf()) {
-					if(deskKey.equals(smel.getValue())) {
-						// System.out.println("BASE 2030 : " + smel.getValue());
-						
-						boolean hasAccess = true;
-						if(smel.getAttribute("role") != null) {
-							hasAccess = false;
-							String mRoles[] = smel.getAttribute("role").split(",");
-							for(String mRole : mRoles) { if(userRole.contains(mRole.trim())) hasAccess = true; }
-						}						
+					if(deskKey.equals(smel.getValue())) {						
+						boolean hasAccess  = checkAccess(smel.getAttribute("role"));
 						if(hasAccess) return 1;
 						else return 2;
 					}
 				} else {
-					toShow = checkRole(smel, deskKey, userRole);
+					toShow = checkRole(smel, deskKey);
 					if(toShow != 0) {
-						// System.out.println("BASE 2030 : " + smel.getAttribute("name"));
-						
-						boolean hasAccess = true;
-						if(smel.getAttribute("role") != null) {
-							hasAccess = false;
-							String mRoles[] = smel.getAttribute("role").split(",");
-							for(String mRole : mRoles) { if(userRole.contains(mRole.trim())) hasAccess = true; }
-						}
-						
+						boolean hasAccess  = checkAccess(smel.getAttribute("role"));
 						if(hasAccess) return toShow;
 						else return 2;
 					}
@@ -315,8 +301,8 @@ public class BWeb {
 		BElement mel = root.getFirst();
 
 		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
-		mymenu += "		<li class='start active '>\n";
-		mymenu += "			<a href='index.jsp?view=1:0'>\n";
+		mymenu += "		<li class='start'>\n";
+		mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
 		mymenu += "			<i class='icon-home'></i>\n";
 		mymenu += "			<span class='title'>Dashboard</span>\n";
 		mymenu += "			</a>\n";
@@ -330,18 +316,9 @@ public class BWeb {
 	public String getSubMenu(BElement mel, int level) {
 		String submenu = "";
 		boolean toShow = true;
-		BUser user = db.getUser();
-		List<String> userRole = user.getUserRoles();
+		
 		for(BElement smel: mel.getElements()) {
-			toShow = true;
-			if(smel.getAttribute("role") != null) {
-				toShow = false;
-				String mRoles[] = smel.getAttribute("role").split(",");
-				for(String mRole : mRoles) {
-					if(userRole.contains(mRole.trim())) toShow = true;
-				}
-			}
-			if(user.getSuperUser()) toShow = true;
+			toShow = checkAccess(smel.getAttribute("role"));
 
 			String bodypage = smel.getAttribute("page", mainPage);
 			String blankpage = smel.getAttribute("blankpage", "");
@@ -354,24 +331,34 @@ public class BWeb {
 					if(smel.getAttribute("xml") == null) {
 						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
 						link += " <i class='" + icon + "'></i> ";
-						link += smel.getAttribute("name") + "</a>";
+                        
+                        if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
+						else link += "<span>" + smel.getAttribute("name") + "</span></a>";
 					} else {
 						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
 						link += " <i class='" + icon + "'></i> ";
-						link += smel.getAttribute("name") + "</a>";
+                        
+                        if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
+						else link += "<span>" + smel.getAttribute("name") + "</span></a>";
 					}
 					
-					submenu += "\t\t<li>\n";
+					if(viewKeys.get(0).equals(smel.getValue())) submenu += "\t\t<li class='active'>\n";
+					else submenu += "\t\t<li>\n";
+					
 					submenu += "\t\t\t" + link + "\n";
 					submenu += "\t\t</li>\n";
 				} else {
-					submenu += "\t<li>\n";
+				
+					if(locateMenu(smel, viewKeys.get(0))) submenu += "\t<li class='active open'>\n";
+					else submenu += "\t<li>\n";
+					
 					submenu += "\t\t<a href='javascript:;'>";
 					submenu += "<i class='" + smel.getAttribute("icon", "icon-list") + "'></i>";
 					submenu += "<span class='title'>" + smel.getAttribute("name") + "</span>";
-					submenu += "<span class='arrow '></span>";
+					submenu += "<span class='arrow'></span>";
 					submenu += "</a>\n";
 					submenu += "\t\t<ul class='sub-menu'>\n" + getSubMenu(smel, level+1) + "</ul>\n";
+					submenu += "\t</li>\n";
 				}
 			}
 		}
@@ -537,7 +524,9 @@ public class BWeb {
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
 			
-			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'>Submit</button>\n";			
+			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
+            
+            buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 		
 		
@@ -559,18 +548,20 @@ public class BWeb {
 		if(view.getName().equals("FORM")) {
 			String saveBtn = view.getAttribute("save.button", "Save");
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			boolean canDel = true;
 			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false"))
 				canDel = false;
 			if(canDel && (!"{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'>Delete</button>\n";
+				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'> <i class='fa fa-trash-o'></i> &nbsp; Delete</button>\n";
 			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";*/
+            
+            buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 
 		return buttons;
@@ -613,18 +604,40 @@ public class BWeb {
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
 		
+		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
-			if(el.getName().equals("TILE")) body += webDashboard.getTile(el);
+			boolean hasAccess  = checkAccess(el.getAttribute("role"));
+			if(hasAccess && el.getName().equals("TILE")) body += webDashboard.getTile(el);
 		}
 		body += "</div>\n";
+		
 		body += "<div class='row'>\n";
 		for(BElement el : view.getElements()) {
+			boolean hasAccess  = checkAccess(el.getAttribute("role"));
 			if(el.getName().equals("TILELIST")) body += webDashboard.getTileList(el);
 		}
 		body += "</div>\n";
 		
 		return body;
+	}
+	
+	public boolean checkAccess(String role) {
+		if(db.getUser() == null) return true;
+		
+		boolean hasAccess  = false;
+		if(db.getUser().getSuperUser()) {
+			hasAccess = true;
+		} else if(role == null) {
+			hasAccess = true;
+		} else {
+			String mRoles[] = role.split(",");
+			for(String mRole : mRoles) {
+				if(db.getUser().getUserRoles().contains(mRole)) hasAccess = true;
+			}
+		}
+		
+		return hasAccess;
 	}
 
 	public String getBody(HttpServletRequest request, String reportPath) {
@@ -824,35 +837,56 @@ public class BWeb {
 			body += report.getReport(db, linkData, request, reportPath);
 		} else if(view.getName().equals("FILTER")) {
 			boolean isFirst = true;
-			body += "<div class='tabstrip'><ul>\n";
+			StringBuilder tabs = new StringBuilder();
+			tabs.append("<div class='row'>\n");
+			tabs.append("	<div class='col-md-12'>\n");
+			tabs.append("		<div class='tabbable portlet-tabs'>\n");
+			tabs.append("			<ul class='nav nav-tabs'>\n");
 			for(BElement sv : view.getElements()) {
 				if(sv.getName().equals("FILTERGRID") || sv.getName().equals("DRILLDOWN") || sv.getName().equals("FILTERFORM")) {
-					if(isFirst) {body += "<li class='k-state-active'>"; isFirst = false;}
-					else {body += "<li>";}
-					body += sv.getAttribute("name") + "</li>\n";
+					if(isFirst) tabs.append("<li class='active'>");
+					else tabs.append("<li>");
+					isFirst = false;
+					String tab = sv.getAttribute("name");
+					tabs.append("<a href='#" + tab + "' data-toggle='tab'>" + tab + " </a></li>\n");
 				}
     		}
-			body += "</ul>";
+			tabs.append("			</ul>\n");
+			tabs.append("		</div>\n");
+			tabs.append("	</div>\n");
+			tabs.append("</div>\n");
+			tabs.append("<div class='tab-content'>\n");
+
+			body += tabs.toString();
 
 			boolean wgf = true;
+			isFirst = true;
 			for(BElement sv : view.getElements()) {
+				String tab = sv.getAttribute("name");
 				if(sv.getName().equals("FILTERGRID")) {
-					body += "<div>\n";
+					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
+					else body += "<div class='tab-pane' id='" + tab + "'>\n";
+					isFirst = false;
 					BWebBody webbody = new BWebBody(db, sv, wheresql, sortby);
 					body += webbody.getGrid(viewKeys, viewData, wgf, viewKey, false);
 					body += "</div>";
-					wgf = false;
+					wgf = false;					
 				} else if(sv.getName().equals("DRILLDOWN")) {
-					body += "<div>\n";
+					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
+					else body += "<div class='tab-pane' id='" + tab + "'>\n";
+					isFirst = false;
 					BDrillWeb drillweb = new BDrillWeb();
 					body += drillweb.getDrillDown(db, sv);
 					body += "</div>";
 				} else if(sv.getName().equals("FILTERFORM")) {
-					body += "<div>\n";
+					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
+					else body += "<div class='tab-pane' id='" + tab + "'>\n";
+					isFirst = false;
 					BWebBody webbody = new BWebBody(db, sv, wheresql, sortby);
 					body += webbody.getForm(true, formLinkData, request);
 					body += "</div>";
 				}
+				
 			}
 			body += "</div>\n";
 			body += "<input type='hidden' name='view' value='" + viewKey + ":0'/>\n";
@@ -1018,8 +1052,91 @@ public class BWeb {
 
 		return mystr;
 	}
+	
+	public void updateMultiPart(HttpServletRequest request, ServletContext config, String tmpPath) {
+		if(!ServletFileUpload.isMultipartContent(request)) {
+			updateForm(request);
+			return;
+		}
+		
+		int yourMaxMemorySize = 262144;
+		File yourTempDirectory = new File(tmpPath);
+		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		
+		Map<String, String> reqParams = new HashMap<String, String>();
+		try {
+			List items = upload.parseRequest(request);
+			Iterator itr = items.iterator();
+			while(itr.hasNext()) {
+				FileItem item = (FileItem) itr.next();
+				if(item.isFormField()) {
+					reqParams.put(item.getFieldName(), item.getString());
+				} else if(item.getSize() > 0) {
+					String pictureFile = savePicture(item, config);
+					if(pictureFile != null) reqParams.put(item.getFieldName(), pictureFile);
+				}
+			}
+			
+			updateForm(request, reqParams);
+		} catch (FileUploadException ex) {
+			System.out.println("File upload exception " + ex);
+		}
+	}
+	
+	public String savePicture(FileItem item, ServletContext config) {
+		String pictureFile = null;
 
+		String repository = config.getInitParameter("repository_url");
+		String username = config.getInitParameter("rep_username");
+		String password = config.getInitParameter("rep_password");
+System.out.println("repository : " + repository);
+		BWebdav webdav = new BWebdav(repository, username, password);
+		
+		String contentType = item.getContentType();
+		String fieldName = item.getFieldName();
+		String fileName = item.getName();
+		long fs = item.getSize();
+		
+		BElement el = view.getElement(fieldName);
+		long maxfs = (Long.valueOf(el.getAttribute("maxfilesize", "4194304"))).longValue();
+
+		String ext = null;
+		int i = fileName.lastIndexOf('.');
+		if(i>0 && i<fileName.length()-1) ext = fileName.substring(i+1).toLowerCase();
+		if(ext == null) ext = "NAI";
+		String pictureName = db.executeFunction("SELECT nextval('picture_id_seq')") + "pic." + ext;
+
+		try {
+			String[] imageTypes = {"BMP", "GIF", "JFIF", "JPEG", "JPG", "PNG", "TIF", "TIFF"};
+			ext = ext.toUpperCase().trim();
+
+			if(Arrays.binarySearch(imageTypes, ext) >= 0) {
+				if(fs < maxfs) {
+					webdav.saveFile(item.getInputStream(), pictureName);
+					pictureFile = pictureName;
+				}
+			}
+		}  catch(IOException ex) {
+			log.severe("File saving failed Exception " + ex);
+		}
+
+		return pictureFile;
+	}
+	
 	public void updateForm(HttpServletRequest request) {
+		Map<String, String> reqParams = new HashMap<String, String>();
+		
+		Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+			String elName = (String)e.nextElement();
+			reqParams.put(elName, request.getParameter(elName));
+		}
+		
+		updateForm(request, reqParams);
+	}
+
+	public void updateForm(HttpServletRequest request, Map<String, String> reqParams) {
 		String linkData = null;
 		String formlink = null;
 		int vds = viewKeys.size();
@@ -1047,7 +1164,7 @@ public class BWeb {
 				qForm.recEdit();
 			}
 
-			Map inputParams = new HashMap<String, String>();
+			Map<String, String> inputParams = new HashMap<String, String>();
 			if(view.getAttribute("inputparams") != null) {
 				String paramArr[] = view.getAttribute("inputparams").toLowerCase().split(",");
 				for(String param : paramArr) {
@@ -1060,8 +1177,8 @@ public class BWeb {
 			}
 
 			for(BElement el : view.getElements()) {
-				log.fine(el.getValue() + " : " + request.getParameter(el.getValue()));
-				String dataValue = request.getParameter(el.getValue());
+				String dataValue = reqParams.get(el.getValue());
+				//System.out.println("BASE 1040 : " + el.getValue() + " : " + dataValue);
 				if(dataValue != null) {
 					if(dataValue.trim().equals("")) dataValue = null;
 				}
@@ -1100,6 +1217,8 @@ public class BWeb {
 					qForm.updateField(el.getValue(),  dataValue);
 				} else if(el.getName().equals("COMBOLIST")) {
 					saveMsg += qForm.updateField(el.getValue(), dataValue);
+				} else if(el.getName().equals("PICTURE")) {
+					saveMsg += qForm.updateField(el.getValue(), dataValue);
 				} else if(el.getName().equals("MULTISELECT")) {
 					String msv = null;
 					if(request.getParameterValues(el.getValue()) != null) {
@@ -1132,7 +1251,7 @@ public class BWeb {
 			saveMsg += qForm.recSave();
 			if("".equals(saveMsg)) {
 				String jumpView = view.getAttribute("jumpview");
-				BElement fView = view.getElementByName("GRID");
+				BElement fView = view.getElementByName("FORMVIEW");
 				dataItem = qForm.getKeyField();
 				viewData.set(vds - 1, dataItem);
 
@@ -1145,7 +1264,10 @@ public class BWeb {
 				}
 
 				if(jumpView != null) {
-					saveMsg = "<div style='color:#00FF00; font-size:16px; font-weight:bold;'>The record has been updated.</div>";
+					saveMsg = "<div class='Metronic-alerts alert alert-success fade in'>\n";
+					saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
+					saveMsg += view.getAttribute("save.msg", "The record has been updated.") + "\n</div>\n";
+					
 					viewKey = jumpView;
 					webSession.setAttribute("viewkey", jumpView);
 					webSession.setAttribute("loadviewkey", jumpView);
@@ -1158,7 +1280,11 @@ public class BWeb {
 					viewKeys.add("0");
 					viewKey += ":0";
 				} else {
-					saveMsg = "<div style='color:#00FF00; font-size:16px; font-weight:bold;'>The record has been updated.</div>";
+								
+					saveMsg = "<div class='Metronic-alerts alert alert-success fade in'>\n";
+					saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
+					saveMsg += view.getAttribute("save.msg", "The record has been updated.") + "\n</div>\n";
+				
 					if(vds > 2) {
 						dataItem = viewData.get(vds - 2);
 						view = views.get(vds - 2);
@@ -1171,6 +1297,12 @@ public class BWeb {
 						webSession.setAttribute("viewkey", viewKey);
 					}
 				}
+			} else {
+				String tmsg = saveMsg;
+				
+				saveMsg = "<div class='Metronic-alerts alert alert-danger fade in'>\n";
+				saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
+				saveMsg += tmsg + "\n</div>\n";
 			}
 			qForm.close();
 		}
@@ -1647,11 +1779,11 @@ public class BWeb {
 		return events;
 	}
 
-	public String receivePhoto(HttpServletRequest request) {
+	public String receivePhoto(HttpServletRequest request, String tmpPath) {
 		String pictureFile = "";
 
 		int yourMaxMemorySize = 262144;
-		File yourTempDirectory = new File("/opt/tomcat/temp/baraza.tmp");
+		File yourTempDirectory = new File(tmpPath);
 		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
@@ -1707,7 +1839,7 @@ public class BWeb {
 		} catch (FileUploadException ex) {
 			pictureFile = "";
 			System.out.println("File upload exception " + ex);
-		}  catch(Exception ex) {
+		}  catch(IOException ex) {
 			pictureFile = "";
 			System.out.println("File saving failed Exception " + ex);
 		}
@@ -1751,6 +1883,7 @@ public class BWeb {
 				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title", ""));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
+				if(el.getName().equals("EDITFIELD")) jsColEl.add("editable", true);
 				jsColModel.add(jsColEl);
 			}
 			
@@ -1844,8 +1977,34 @@ public class BWeb {
 	}
 	
 	public String getViewColour() {
-		if(view == null) return "purple";
-		return view.getAttribute("color", "purple"); 
+		String viewColor = "purple";
+		if(root == null) return viewColor;
+		viewColor = root.getAttribute("color", "purple");
+		if(view == null) return viewColor;
+		return view.getAttribute("color", viewColor); 
+	}
+    
+    public String getViewIcon() {
+		String viewIcon = "icon-list";
+		if(root == null) return viewIcon;
+		if(view == null) return viewIcon;
+        if(view.getName().equals("GRID")) viewIcon = "icon-list";
+        if(view.getName().equals("FORM")) viewIcon = "icon-note";
+        if(view.getName().equals("JASPER")) viewIcon = "icon-doc";
+		return view.getAttribute("icon", viewIcon); 
+	}
+    
+    public boolean isMaterial() {
+		if(root == null) return false;
+		if(root.getAttribute("material", "false").equals("true")) return true;
+        return false;
+	}
+	
+	public String getEncType() {
+		if(view == null) return "";
+		if(!view.getName().equals("FORM")) return "";
+		if(view.getElementByName("PICTURE") == null) return ""; 
+		return " enctype=\"multipart/form-data\" ";
 	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }

@@ -115,7 +115,10 @@ CREATE TABLE surveys(
     location_lat        varchar(30),
     location_lng	    varchar(30),
     remarks             text,
+    survey_status       integer not null default 0 -- 0 not approved, 1 approved, 2 returned, 3 redone
 );
+
+
 
 CREATE TABLE survey_mother(
     survey_mother_id        serial primary key,
@@ -163,9 +166,148 @@ CREATE TABLE survey_household(
 );
 
 
+-- MOH 515 ----------------------------------------------
+
+CREATE TABLE demograpics_515_defs(
+    demograpics_515_def_id       serial primary key,
+    demograpics_question                 text,
+    demograpics_details                  text
+);
+
+CREATE TABLE household_515_defs(
+    household_515_def_id        serial primary key,
+    household_question                 text,
+    household_details                  text
+);
+
+CREATE TABLE motherchild_515_defs(
+    motherchild_515_def_id        serial primary key,
+    motherchild_question                 text,
+    motherchild_details                  text
+);
+
+CREATE TABLE treatment_515_defs(
+    treatment_515_def_id        serial primary key,
+    treatment_question                 text,
+    treatment_details                  text
+);
+
+CREATE TABLE referrals_515_defs(
+    referrals_515_defs_id        serial primary key,
+    referrals_question                 text,
+    referrals_details                  text
+);
+
+CREATE TABLE defaulters_515_defs(
+    defaulters_515_def_id        serial primary key,
+    defaulters_question                 text,
+    defaulters_details                  text
+);
+
+CREATE TABLE death_515_defs(
+    death_515_def_id        serial primary key,
+    death_question                 text,
+    death_details                  text
+);
+
+CREATE TABLE commodities_515_defs(
+    commodity_515_def_id        serial primary key,
+    commodity_question                 text,
+    commodity_details                  text
+);
+
+CREATE TABLE others_515_defs(
+    others_515_def_id        serial primary key,
+    others_question                 text,
+    others_details                  text
+);
 
 
 
+CREATE TABLE surveys_515(
+    surveys_515_id       serial primary key,
+    org_id               integer references orgs,
+    CHU_Name 		     varchar(225),
+    MCLU_Code		     varchar(225),
+    link_facility		 varchar(225),
+    CHEW_name		     varchar(225),
+    no_of_chvs		     integer default 0,
+    total_chws_reported  integer default 0,
+    county			     varchar(225),
+    subcounty		     varchar(225),
+    division			 varchar(225),
+    location			 varchar(225),
+    sublocation		     varchar(225),
+    total_vilages		 integer default 0,
+    month			     varchar(10),
+    year				 integer default 0,
+    survey_date          timestamp default CURRENT_TIMESTAMP
+);
+
+CREATE TABLE survey_515_demograpics(
+    survey_515_demograpic_id    serial primary key,
+    surveys_515_id              integer references surveys_515,
+    demograpics_515_def_id      integer references demograpics_515_defs,
+    response                    integer
+);
+
+     
+
+CREATE TABLE survey_515_households(
+    survey_515_household_id     serial primary key,
+    surveys_515_id              integer references surveys_515,
+    household_515_def_id        integer references  household_515_defs,
+    response                    integer
+);
+
+CREATE TABLE survey_515_motherchild(
+    survey_515_motherchild_id      serial primary key,
+    surveys_515_id              integer references surveys_515,
+    motherchild_515_def_id      integer references motherchild_515_defs,
+    response                    integer
+);
+
+CREATE TABLE survey_515_treatments(
+    survey_515_treatment_id        serial primary key,
+    surveys_515_id              integer references surveys_515,
+    treatment_515_def_id        integer references treatment_515_defs,
+    response                    integer
+);
+
+CREATE TABLE survey_515_referrals(
+    survey_515_referral_id        serial primary key,
+    surveys_515_id              integer references surveys_515,
+    referrals_515_defs_id       integer references  referrals_515_defs,
+    response                    integer
+);
+
+CREATE TABLE survey_515_defaulters(
+    survey_515_defaulter_id        serial primary key,
+    surveys_515_id              integer references surveys_515,
+    defaulters_515_def_id       integer references defaulters_515_defs, 
+    response                    integer         
+);
+
+CREATE TABLE survey_515_death(
+    survey_515_death_id            serial primary key,
+    surveys_515_id              integer references surveys_515,
+    death_515_def_id            integer references death_515_defs, 
+    response                    integer
+);
+
+CREATE TABLE survey_515_commodities(
+    survey_515_commodity_id      serial primary key,
+    surveys_515_id              integer references surveys_515,
+    commodity_515_def_id        integer references commodities_515_defs,
+    response                    integer
+);
+
+CREATE TABLE survey_515_others(
+    survey_515_other_id           serial primary key,
+    surveys_515_id              integer references surveys_515,
+    others_515_def_id           integer references others_515_defs,
+    response                    integer
+);
 
 
 
@@ -194,7 +336,7 @@ CREATE VIEW vw_surveys AS
 	SELECT health_workers.health_worker_id, health_workers.worker_name, 
 	orgs.org_id, orgs.org_name, 
 	countys.county_id, countys.county_name,
-	sub_countys.sub_county_id, sub_countys.sub_county_name, surveys.survey_id, surveys.village_name, surveys.household_number, surveys.household_member, surveys.survey_time, surveys.location_lat, surveys.location_lng, surveys.remarks
+	sub_countys.sub_county_id, sub_countys.sub_county_name, surveys.survey_id, surveys.village_name, surveys.household_number, surveys.household_member, surveys.survey_time, surveys.location_lat, surveys.location_lng, surveys.remarks, surveys.survey_status
 	FROM surveys
 	INNER JOIN health_workers ON surveys.health_worker_id = health_workers.health_worker_id
 	INNER JOIN orgs ON surveys.org_id = orgs.org_id
@@ -269,6 +411,16 @@ CREATE VIEW vw_survey_household AS
 	INNER JOIN surveys ON survey_household.survey_id = surveys.survey_id;
 
 
+
+
+CREATE VIEW vw_survey_515_demograpics AS
+	SELECT 
+	demograpics_515_defs.demograpics_515_def_id, demograpics_515_defs.demograpics_question, demograpics_515_defs.demograpics_details,
+	surveys_515.surveys_515_id,  
+	survey_515_demograpics.survey_515_demograpic_id, survey_515_demograpics.response
+	FROM survey_515_demograpics
+	INNER JOIN demograpics_515_defs ON survey_515_demograpics.demograpics_515_def_id = demograpics_515_defs.demograpics_515_def_id
+	INNER JOIN surveys_515 ON survey_515_demograpics.surveys_515_id = surveys_515.surveys_515_id;
 
 	
 

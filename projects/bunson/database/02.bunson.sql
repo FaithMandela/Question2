@@ -198,6 +198,25 @@ CREATE VIEW vw_passangers AS
     WHERE transfer_flights.tab = passangers.tab;
 
 
+CREATE VIEW vw_passangers_noflights AS
+	SELECT car_types.car_type_code, 
+	entitys.entity_id, entitys.entity_name, 
+	payment_types.payment_type_id, payment_types.payment_type_name, 
+	transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.currency_id, transfers.agreed_amount, transfers.booking_location, transfers.booking_date, transfers.payment_details, transfers.reference_data,
+    
+    transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
+    transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num,
+
+	passangers.passanger_id, passangers.passanger_name, passangers.passanger_mobile, passangers.passanger_email, passangers.pickup_time, passangers.pickup, passangers.dropoff, passangers.other_preference, passangers.tab,
+	passangers.amount, passangers.processed, passangers.pickup_date
+    FROM passangers
+	INNER JOIN car_types ON passangers.car_type_code = car_types.car_type_code
+	INNER JOIN transfers ON passangers.transfer_id = transfers.transfer_id
+	INNER JOIN entitys ON transfers.entity_id = entitys.entity_id
+	INNER JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id
+    INNER JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id;
+
+
 
 
 -- DROP VIEW vw_transfer_assignments;
@@ -214,10 +233,9 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     transfer_assignments.time_out, transfer_assignments.time_in, 
     transfer_assignments.no_show, transfer_assignments.no_show_reason,
     transfer_assignments.closed, transfer_assignments.last_update,
-
+    transfer_assignments.cancelled, transfer_assignments.cancel_reason,
     transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
     transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num
-
 
 	FROM transfer_assignments
 	INNER JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
@@ -227,6 +245,7 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
     WHERE transfer_flights.tab = passangers.tab;
 
+DROP VIEW vw_transfer_assignments_create;
 CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
 	SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number,
 	cars.car_type_id, cars.registration_number,
@@ -239,7 +258,8 @@ CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
 	transfer_assignments.car_id, transfer_assignments.kms_out, transfer_assignments.kms_in,
     transfer_assignments.time_out, transfer_assignments.time_in, 
     transfer_assignments.no_show, transfer_assignments.no_show_reason,
-    transfer_assignments.closed, transfer_assignments.last_update
+    transfer_assignments.closed, transfer_assignments.last_update,
+    transfer_assignments.cancelled, transfer_assignments.cancel_reason
 	FROM transfer_assignments
 	INNER JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
 	INNER JOIN cars ON cars.car_id = transfer_assignments.car_id
@@ -318,13 +338,14 @@ DECLARE
 BEGIN
     v_today := CURRENT_TIMESTAMP;
     
-    IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1600'::time )) THEN
+    IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1500'::time )) THEN
         v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' || NEW.passanger_name || E'.\nFrom: ' || NEW.pickup || E'\nTo: ' || NEW.dropoff || E'\nAt: ' || NEW.pickup_time
                   || E'\nTel: ' || NEW.passanger_mobile;
                   
         v_send_res := sendMessage('254725987342', v_message);
-        -- v_send_res := sendMessage('254701772272', v_message);
-        -- v_send_res := sendMessage('254738772272', v_message);
+        v_send_res := sendMessage('254701772272', v_message);
+        v_send_res := sendMessage('254738772272', v_message);
+        v_send_res := sendMessage('254787847653', v_message);
 
     END IF;
     RETURN NULL;
@@ -348,17 +369,32 @@ DECLARE
     v_rec              record;
     v_rec_flight       record;
     v_flight_text      text;
+    v_flight_count     integer;
 BEGIN
+    v_flight_text := '';
 
-    SELECT transfer_assignment_id, driver_name, mobile_number, passanger_name, passanger_mobile, pickup, dropoff, pickup_time,
+    SELECT COUNT(transfer_flights.transfer_flight_id) INTO v_flight_count
+	FROM transfer_assignments 
+	INNER JOIN passangers ON passangers.passanger_id = transfer_assignments.passanger_id
+	INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
+	WHERE transfer_assignments.transfer_assignment_id = NEW.transfer_assignment_id;
+
+   
+    IF(v_flight_count = 0) THEN
+        SELECT * INTO v_rec FROM vw_transfer_assignments_create  WHERE transfer_assignment_id = NEW.transfer_assignment_id;
+
+    ELSE
+        SELECT transfer_assignment_id, driver_name, mobile_number, passanger_name, passanger_mobile, pickup, dropoff, pickup_time,
         start_time,end_time, flight_date, start_airport, end_airport, airline,flight_num
         INTO v_rec FROM vw_transfer_assignments WHERE transfer_assignment_id = NEW.transfer_assignment_id;
 
-    v_flight_text := E'\nFlight Date : ' || v_rec.flight_date
+        v_flight_text := E'\nFlight Date : ' || v_rec.flight_date
                     || E'\nDep Time : ' || v_rec.start_time
                     || E'\nAirport : ' || v_rec.start_airport
                     || E'\nFlight No.: ' || v_rec.airline || ' '::text || v_rec.flight_num;
 
+    END IF;
+    
     v_message := (E'Hello '::text || v_rec.driver_name || E'\nYou Have a new Transfer Ref : ' 
                   || v_rec.transfer_assignment_id 
                   || E'\nPick ' || v_rec.passanger_name || E'.\nFrom: ' || v_rec.pickup || E'\nTo: ' || v_rec.dropoff || E'\nAt: ' || v_rec.pickup_time
@@ -385,6 +421,11 @@ CREATE TRIGGER ins_transfer_assignments AFTER INSERT ON transfer_assignments
     FOR EACH ROW EXECUTE PROCEDURE ins_transfer_assignments();
     
 
+delete from transfer_flights ;
+delete from transfer_assignments ;
+delete from passangers ;
+delete from sms;
+delete from transfers; 
 
 
 

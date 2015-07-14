@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="363"/>
+	<property name="ireport.y" value="517"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -28,20 +28,20 @@ WHERE (registrationid = '$P!{filterid}')]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="105" splitType="Stretch">
+		<band height="119" splitType="Stretch">
 			<image hAlign="Right">
-				<reportElement x="-121" y="39" width="181" height="66" uuid="b48b6d22-ff0b-42db-aa5c-7a8327ce4dec"/>
+				<reportElement x="2" y="48" width="85" height="71" uuid="b48b6d22-ff0b-42db-aa5c-7a8327ce4dec"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "baraza_logo.jpg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement mode="Opaque" x="60" y="55" width="142" height="30" uuid="54bb4289-6f41-4dce-9f92-db3e138c293f"/>
+				<reportElement mode="Opaque" x="87" y="63" width="142" height="30" uuid="54bb4289-6f41-4dce-9f92-db3e138c293f"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom" markup="none">
 					<font fontName="Times New Roman" size="25" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[BABCOCK]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="60" y="81" width="142" height="23" uuid="005c78c8-ecef-4886-bb27-f81455575a9e"/>
+				<reportElement mode="Opaque" x="87" y="93" width="142" height="23" uuid="005c78c8-ecef-4886-bb27-f81455575a9e"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" markup="none">
 					<font fontName="Times New Roman" size="20" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -58,7 +58,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="599" splitType="Stretch">
+		<band height="601" splitType="Stretch">
 			<staticText>
 				<reportElement x="2" y="141" width="70" height="15" uuid="a19cca92-13e1-466c-a38f-5b1fcf387e6e"/>
 				<textElement verticalAlignment="Middle">
@@ -137,7 +137,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<text><![CDATA[The confirmation of this offer of admission is subject to your submitting the required entry qualifications for the above degree programme for which you have been, or will be admitted.  You shall also meet the following conditions:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="425" width="511" height="36" uuid="51497d93-d9dd-4852-86ec-4e502db858c4"/>
+				<reportElement positionType="Float" x="1" y="449" width="511" height="36" uuid="51497d93-d9dd-4852-86ec-4e502db858c4"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -145,14 +145,14 @@ WHERE (registrationid = '$P!{filterid}')]]>
 <b>2. A candidate does not attain the age of sixteen (16) by 26<sup>th</sup> November 2015</b>]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-1" y="476" width="511" height="123" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
+				<reportElement positionType="Float" x="-1" y="527" width="513" height="59" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" isItalic="true" pdfFontName="Times-Italic" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[
  <i><br>Babcock, The furture is bright!</br>
- <p><i>Jonathan C. Nwosu<br/></p>
- <p>Registrar <br/></p>
+ <i><br>Jonathan C. Nwosu </i> <font size="1">PhD, FCIA,FNIM,FCPA</font><br>
+ <i>Registrar
 ]]></text>
 			</staticText>
 			<staticText>
@@ -221,7 +221,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textFieldExpression><![CDATA["<u><b>Beginning from Monday 13<sup>th</sup> July, 2015,</b></u> " + " you are to:"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="408" width="511" height="17" uuid="afa6de77-34bd-48a4-ab8d-04e9a786fcdd"/>
+				<reportElement positionType="Float" x="1" y="408" width="511" height="37" uuid="afa6de77-34bd-48a4-ab8d-04e9a786fcdd"/>
 				<textElement verticalAlignment="Bottom" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -291,6 +291,10 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				</textElement>
 				<text><![CDATA[At the time of registration, you will be required to present: Original(s) and four (4) photocopies of 2015 UTME results slips,8 recent passport-size photographs, birth certificates, SSCE results or their equivalents, if you are not awaiting result(s), official receipts of acceptance fees and balance of the school fees paid, evidence of payment for Babcock Post-UTME online form.<mm]]></text>
 			</staticText>
+			<image>
+				<reportElement x="2" y="498" width="227" height="29" uuid="ed7131e2-cc0b-4186-b022-0d6046557fca"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "registrar_signature.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</summary>
 </jasperReport>

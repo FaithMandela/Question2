@@ -16,6 +16,9 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name, vw_transfer_assignments.car_type_code, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num
 FROM vw_transfer_assignments
@@ -63,607 +66,308 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="71" splitType="Stretch">
+		<band height="115" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="80f54397-8f23-440b-b36d-e2b65627fe84"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement style="Title" x="64" y="81" width="696" height="34" uuid="80f54397-8f23-440b-b36d-e2b65627fe84"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Transfer Assignments Report]]></text>
+				<text><![CDATA[Transfer Voucher]]></text>
 			</staticText>
+			<image>
+				<reportElement x="5" y="6" width="250" height="75" uuid="65d41721-5d43-4a16-8026-cdbafa738982"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
 		<band splitType="Stretch"/>
 	</pageHeader>
-	<columnHeader>
-		<band height="16" splitType="Stretch">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="a9269670-d111-4cd6-bd8b-5c63978bdce4"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
-			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="20" height="15" forecolor="#000000" uuid="2221d7e8-a694-435c-939a-1da838e9a4c5"/>
+	<detail>
+		<band height="317" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="204" width="180" height="15" uuid="236e5b0f-dad3-4c47-aa30-3f93d8316b8e"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Driver ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="0" width="20" height="15" forecolor="#000000" uuid="1ef53e90-a5a3-46ff-8751-2e037be028cd"/>
+				<textFieldExpression><![CDATA[$F{driver_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="204" width="129" height="15" uuid="7114c2ba-e8d9-4b12-a55d-6e88dc32a3e3"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Driver Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="41" y="0" width="20" height="15" forecolor="#000000" uuid="d92e5c4a-7170-4813-9baf-3b0e039fa29e"/>
+				<textFieldExpression><![CDATA[$F{mobile_number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="302" width="129" height="15" uuid="371adc46-380f-4721-bb49-2f9561751541"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Mobile Number]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="61" y="0" width="20" height="15" forecolor="#000000" uuid="2f748f01-d3c5-4a8c-a508-7b8acaf5d471"/>
+				<textFieldExpression><![CDATA[$F{registration_number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="302" width="180" height="15" uuid="fdf0c107-f813-4df0-adb5-a0423cac553a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Car Type ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="81" y="0" width="20" height="15" forecolor="#000000" uuid="338cf808-78f7-4560-91e2-76454bb2b33a"/>
+				<textFieldExpression><![CDATA[$F{car_type_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="62" width="180" height="15" uuid="c4557fe7-22d9-4623-b7d8-5bce5c44e13c"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Registration Number]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="101" y="0" width="20" height="15" forecolor="#000000" uuid="63a95a98-5090-4e94-b65b-fc6c0cf83b8d"/>
+				<textFieldExpression><![CDATA[$F{passanger_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="82" width="180" height="15" uuid="fb4413b5-5b0b-491b-a96a-bf532be64024"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Car Type Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="121" y="0" width="20" height="15" forecolor="#000000" uuid="f0a966e7-ebc5-49a3-8213-a74eb41dbb54"/>
+				<textFieldExpression><![CDATA[$F{passanger_mobile}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="113" width="129" height="15" uuid="57c4b194-d5ab-46f9-96e9-5f31af4935ce"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Car Type Code]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="141" y="0" width="20" height="15" forecolor="#000000" uuid="b9429cad-b14f-4214-b1f0-2c59a9f21298"/>
+				<textFieldExpression><![CDATA[$F{pickup_time}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="155" width="180" height="15" uuid="3fae3b87-2f2d-4ff6-94de-4e4304ce8178"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Passanger ID]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{pickup}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="155" width="129" height="15" uuid="e86128a1-0a98-4b3c-b2b7-0492d140d053"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dropoff}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="113" width="180" height="15" uuid="330b5e66-1835-46a2-b67e-05556eac6b03"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pickup_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="263" width="180" height="15" uuid="c2ad7251-5b25-4061-b9fd-154af7f5cd4f"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kms_out}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="202" y="232" width="180" height="15" uuid="6e94000f-c4e5-4824-adb4-fa1389b7be1c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kms_in}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="263" width="129" height="15" uuid="90f73399-9a46-4752-95d3-717eacef1de2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{time_out}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="232" width="129" height="15" uuid="db215640-352c-439b-8f5f-6d995055e334"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{time_in}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="62" width="129" height="15" uuid="e194e0f6-1c6a-451c-82a0-1b85c55a0ad6"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{airline}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="562" y="82" width="129" height="15" uuid="88c3a9ea-d179-4011-9beb-ed3625bde05e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{flight_num}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement style="Column header" x="161" y="0" width="20" height="15" forecolor="#000000" uuid="e07db9a6-f510-4576-911a-ef0d96ec224f"/>
+				<reportElement style="Column header" x="82" y="62" width="120" height="15" forecolor="#000000" uuid="e07db9a6-f510-4576-911a-ef0d96ec224f"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Passanger Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="181" y="0" width="20" height="15" forecolor="#000000" uuid="877538df-f599-4f39-bc63-688218278558"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Transfer ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="201" y="0" width="20" height="15" forecolor="#000000" uuid="4ae3d7b9-5ea1-45a2-9b15-e2b1d2bafabd"/>
+				<reportElement style="Column header" x="82" y="82" width="120" height="15" forecolor="#000000" uuid="4ae3d7b9-5ea1-45a2-9b15-e2b1d2bafabd"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Passanger Mobile]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="221" y="0" width="20" height="15" forecolor="#000000" uuid="13a2bb0a-aa91-429a-9e61-f5aa17b611be"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Passanger Email]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="241" y="0" width="20" height="15" forecolor="#000000" uuid="82f86b23-5370-44ec-9413-d08c625e7df8"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Pickup Time]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="261" y="0" width="20" height="15" forecolor="#000000" uuid="449d96e1-b145-4ed8-bddb-1de4c7c4ded4"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Pickup]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="281" y="0" width="20" height="15" forecolor="#000000" uuid="81013ab0-dabc-40fa-a81e-f9efd901a25a"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Dropoff]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="301" y="0" width="20" height="15" forecolor="#000000" uuid="29d86c8a-14df-4467-97af-12c0504dafa9"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Other Preference]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="321" y="0" width="20" height="15" forecolor="#000000" uuid="85a2c81c-885c-418e-a6d9-4b81368b5c91"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Amount]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="341" y="0" width="20" height="15" forecolor="#000000" uuid="df341907-c071-4a21-936d-f3b3637d9edf"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Processed]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="361" y="0" width="20" height="15" forecolor="#000000" uuid="838b1a0d-d5eb-48d9-995e-34dc8af823b1"/>
+				<reportElement style="Column header" x="82" y="113" width="120" height="15" forecolor="#000000" uuid="838b1a0d-d5eb-48d9-995e-34dc8af823b1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Pickup Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="381" y="0" width="20" height="15" forecolor="#000000" uuid="ed25247d-292e-4ace-8ac7-d784a6a2985c"/>
+				<reportElement style="Column header" x="442" y="113" width="120" height="15" forecolor="#000000" uuid="82f86b23-5370-44ec-9413-d08c625e7df8"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Tab]]></text>
+				<text><![CDATA[Pickup Time]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="401" y="0" width="20" height="15" forecolor="#000000" uuid="9a0f0067-817b-4fc5-bb6a-65c71a8a9701"/>
+				<reportElement style="Column header" x="82" y="155" width="120" height="15" forecolor="#000000" uuid="449d96e1-b145-4ed8-bddb-1de4c7c4ded4"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Transfer Assignment ID]]></text>
+				<text><![CDATA[Pickup Point]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="421" y="0" width="20" height="15" forecolor="#000000" uuid="62f886c5-5d82-4685-b8bc-b82eebcaa9ac"/>
+				<reportElement style="Column header" x="442" y="155" width="120" height="15" forecolor="#000000" uuid="81013ab0-dabc-40fa-a81e-f9efd901a25a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Car ID]]></text>
+				<text><![CDATA[Dropoff Point]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="441" y="0" width="20" height="15" forecolor="#000000" uuid="8cd20e24-5d47-444d-859c-6324c07d20c1"/>
+				<reportElement style="Column header" x="82" y="204" width="120" height="15" forecolor="#000000" uuid="1ef53e90-a5a3-46ff-8751-2e037be028cd"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Kms Out]]></text>
+				<text><![CDATA[Driver Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="461" y="0" width="20" height="15" forecolor="#000000" uuid="6f120601-0693-4675-bd61-cd685fd44c79"/>
+				<reportElement style="Column header" x="82" y="232" width="120" height="15" forecolor="#000000" uuid="6f120601-0693-4675-bd61-cd685fd44c79"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Kms In]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="481" y="0" width="20" height="15" forecolor="#000000" uuid="f9773365-5293-45be-90cb-d0b8d2b613c4"/>
+				<reportElement style="Column header" x="442" y="263" width="120" height="15" forecolor="#000000" uuid="f9773365-5293-45be-90cb-d0b8d2b613c4"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Time Out]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="501" y="0" width="20" height="15" forecolor="#000000" uuid="d3c13829-c524-46c7-8ea8-45d73e0ef6b1"/>
+				<reportElement style="Column header" x="442" y="232" width="120" height="15" forecolor="#000000" uuid="d3c13829-c524-46c7-8ea8-45d73e0ef6b1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Time In]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="521" y="0" width="20" height="15" forecolor="#000000" uuid="85669411-2a96-42db-8c3a-090fa27aff82"/>
+				<reportElement style="Column header" x="82" y="263" width="120" height="15" forecolor="#000000" uuid="8cd20e24-5d47-444d-859c-6324c07d20c1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[No Show]]></text>
+				<text><![CDATA[Kms Out]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="541" y="0" width="20" height="15" forecolor="#000000" uuid="c537bdf2-bde1-4a03-8d6e-e2e56d3afc52"/>
+				<reportElement style="Column header" x="83" y="302" width="119" height="15" forecolor="#000000" uuid="63a95a98-5090-4e94-b65b-fc6c0cf83b8d"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[No Show Reason]]></text>
+				<text><![CDATA[Car Type Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="561" y="0" width="20" height="15" forecolor="#000000" uuid="ffdf5f0f-4024-48ff-9415-ea713948ea93"/>
+				<reportElement style="Column header" x="442" y="82" width="120" height="15" forecolor="#000000" uuid="edfc0357-c533-4bc3-b2d2-fdc7b65e6c18"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Closed]]></text>
+				<text><![CDATA[Flight Num]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="581" y="0" width="20" height="15" forecolor="#000000" uuid="e473f3b0-7344-41ce-b5e2-2f7bcd5938b3"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Last Update]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="601" y="0" width="20" height="15" forecolor="#000000" uuid="fe6d1865-eff0-4454-87e8-203d8285af05"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Transfer Flight ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="621" y="0" width="20" height="15" forecolor="#000000" uuid="57d59f25-1884-4be6-a6fc-c2e71c8bc4e2"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Start Time]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="641" y="0" width="20" height="15" forecolor="#000000" uuid="904ef103-6ec4-41fd-8db2-ee6e0b5c0813"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[End Time]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="661" y="0" width="20" height="15" forecolor="#000000" uuid="4677d361-915b-4418-a944-d3f53e17e27f"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Flight Date]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="681" y="0" width="20" height="15" forecolor="#000000" uuid="46b1f4df-c527-4d25-8a6b-8a468c029fcc"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Start Airport]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="701" y="0" width="20" height="15" forecolor="#000000" uuid="1e58a3f4-eaec-407a-94c1-13eab4430ada"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[End Airport]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="721" y="0" width="20" height="15" forecolor="#000000" uuid="0760b3bb-899d-4079-9ebc-b8558da0885b"/>
+				<reportElement style="Column header" x="442" y="62" width="120" height="15" forecolor="#000000" uuid="0760b3bb-899d-4079-9ebc-b8558da0885b"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Airline]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="741" y="0" width="20" height="15" forecolor="#000000" uuid="edfc0357-c533-4bc3-b2d2-fdc7b65e6c18"/>
+				<reportElement style="Column header" x="442" y="204" width="120" height="15" forecolor="#000000" uuid="d92e5c4a-7170-4813-9baf-3b0e039fa29e"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Flight Num]]></text>
+				<text><![CDATA[Driver Mobile]]></text>
 			</staticText>
-		</band>
-	</columnHeader>
-	<detail>
-		<band height="15" splitType="Stretch">
-			<frame>
-				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="70fff941-b439-4fac-b14f-9e7531cff2b8"/>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="20" height="15" uuid="00fb7160-ac20-494e-81ce-109b3825d0ec"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{driver_id}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="21" y="0" width="20" height="15" uuid="236e5b0f-dad3-4c47-aa30-3f93d8316b8e"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{driver_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="41" y="0" width="20" height="15" uuid="7114c2ba-e8d9-4b12-a55d-6e88dc32a3e3"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{mobile_number}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="61" y="0" width="20" height="15" uuid="387eb9f6-bb74-4c0c-84b9-d18df46be1c3"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{car_type_id}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="81" y="0" width="20" height="15" uuid="371adc46-380f-4721-bb49-2f9561751541"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{registration_number}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="101" y="0" width="20" height="15" uuid="fdf0c107-f813-4df0-adb5-a0423cac553a"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{car_type_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="121" y="0" width="20" height="15" uuid="cb6357ad-8a33-43b1-bb21-4f54837f84f3"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{car_type_code}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="141" y="0" width="20" height="15" uuid="41744975-1992-40fc-9212-e21fc7d3e897"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{passanger_id}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="161" y="0" width="20" height="15" uuid="c4557fe7-22d9-4623-b7d8-5bce5c44e13c"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{passanger_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="181" y="0" width="20" height="15" uuid="a663ea03-b88e-44b7-be06-2111ffc2ed82"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{transfer_id}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="201" y="0" width="20" height="15" uuid="fb4413b5-5b0b-491b-a96a-bf532be64024"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{passanger_mobile}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="221" y="0" width="20" height="15" uuid="27031304-f869-4cd4-b468-fc4a0d9c61ee"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{passanger_email}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="241" y="0" width="20" height="15" uuid="57c4b194-d5ab-46f9-96e9-5f31af4935ce"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{pickup_time}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="261" y="0" width="20" height="15" uuid="3fae3b87-2f2d-4ff6-94de-4e4304ce8178"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{pickup}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="281" y="0" width="20" height="15" uuid="e86128a1-0a98-4b3c-b2b7-0492d140d053"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{dropoff}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="301" y="0" width="20" height="15" uuid="e10ae8fd-f36f-4e4b-a5a5-9a0fec66f85c"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{other_preference}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="321" y="0" width="20" height="15" uuid="73b62867-4cf9-4a58-81c4-69892e95d35d"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="341" y="0" width="20" height="15" uuid="6130dfc9-0ea0-4bbc-893a-5ce4efbfc483"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{processed}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="361" y="0" width="20" height="15" uuid="330b5e66-1835-46a2-b67e-05556eac6b03"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{pickup_date}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="381" y="0" width="20" height="15" uuid="542c0858-972d-4ec2-ab65-f1fe546f0ee2"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{tab}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="401" y="0" width="20" height="15" uuid="00d77a16-c977-426e-862c-3c2b9fe7aece"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{transfer_assignment_id}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="421" y="0" width="20" height="15" uuid="27005c1d-2347-42d0-9d1e-957b902905d1"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{car_id}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="441" y="0" width="20" height="15" uuid="c2ad7251-5b25-4061-b9fd-154af7f5cd4f"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{kms_out}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="461" y="0" width="20" height="15" uuid="6e94000f-c4e5-4824-adb4-fa1389b7be1c"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{kms_in}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="481" y="0" width="20" height="15" uuid="90f73399-9a46-4752-95d3-717eacef1de2"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{time_out}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="501" y="0" width="20" height="15" uuid="db215640-352c-439b-8f5f-6d995055e334"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{time_in}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="521" y="0" width="20" height="15" uuid="104193de-1ef1-4c95-92bb-5b3c25781914"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{no_show}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="541" y="0" width="20" height="15" uuid="96131f8c-c5fb-4146-b930-5417ebf315d9"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{no_show_reason}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="561" y="0" width="20" height="15" uuid="6a737c5d-6d47-4b2a-9032-da9ddb9e67b1"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{closed}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="581" y="0" width="20" height="15" uuid="d191e591-5e8b-495a-a1c3-efdd8c5d353e"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{last_update}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="601" y="0" width="20" height="15" uuid="8f8e9b20-7af5-4f3a-ba4e-47e2954930bf"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{transfer_flight_id}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="621" y="0" width="20" height="15" uuid="7db652d4-0bcf-418d-8d9f-bed7be990a73"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{start_time}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="641" y="0" width="20" height="15" uuid="952c55f2-125b-4dce-b768-66a937119d03"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{end_time}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="661" y="0" width="20" height="15" uuid="b1f026de-966d-4267-9c28-e6e260fc1204"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{flight_date}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="681" y="0" width="20" height="15" uuid="71f34e4c-32ba-4c9c-8734-6441819b7dc4"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{start_airport}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="701" y="0" width="20" height="15" uuid="702362e1-5499-45fb-b1b8-1c5a3c8ac61e"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{end_airport}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="721" y="0" width="20" height="15" uuid="e194e0f6-1c6a-451c-82a0-1b85c55a0ad6"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{airline}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="741" y="0" width="20" height="15" uuid="88c3a9ea-d179-4011-9beb-ed3625bde05e"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{flight_num}]]></textFieldExpression>
-				</textField>
-			</frame>
+			<staticText>
+				<reportElement style="Column header" x="442" y="302" width="120" height="15" forecolor="#000000" uuid="338cf808-78f7-4560-91e2-76454bb2b33a"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Registration Number]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="630" y="28" width="181" height="15" uuid="41744975-1992-40fc-9212-e21fc7d3e897"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{transfer_id}+ "/" + $F{passanger_id} + "/" + $F{transfer_assignment_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="550" y="28" width="80" height="15" forecolor="#000000" uuid="f14f4036-4860-4a57-bca0-4e06d249274a"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Voucher Ref :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="0" y="1" width="802" height="27" uuid="542c0858-972d-4ec2-ab65-f1fe546f0ee2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? "Depature" : "Arrival"]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="15" splitType="Stretch">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="5ee6adae-76ed-4448-91c6-010bc46c8d4f"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
-		</band>
-	</columnFooter>
 	<pageFooter>
-		<band height="25" splitType="Stretch">
+		<band height="81" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="841" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="245b3d64-c940-4895-8fb3-0f77b02f29ce"/>
+				<reportElement mode="Opaque" x="0" y="54" width="802" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="245b3d64-c940-4895-8fb3-0f77b02f29ce"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="771" y="1" width="40" height="20" forecolor="#736343" uuid="4e090890-8be0-417d-857a-afa885aa31ed"/>
+					<reportElement style="Column header" x="750" y="2" width="40" height="20" forecolor="#736343" uuid="4e090890-8be0-417d-857a-afa885aa31ed"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="691" y="1" width="80" height="20" forecolor="#736343" uuid="6fe40f91-f7ae-4d88-997a-da32163e735e"/>
+					<reportElement style="Column header" x="691" y="2" width="80" height="20" forecolor="#736343" uuid="6fe40f91-f7ae-4d88-997a-da32163e735e"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="287b4078-7760-4b6d-b470-762c88a6f3a3"/>
+					<reportElement style="Column header" x="22" y="2" width="197" height="20" forecolor="#736343" uuid="287b4078-7760-4b6d-b470-762c88a6f3a3"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="802" height="44" forecolor="#000000" uuid="5c4b83bb-336f-41a3-b51b-fa3196ef2460"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[BUNSON TRAVEL SERVICE | P.O. BOX 45456 - 00100 NAIROBI | transport@carlsonwagonlit.co.ke]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="10" splitType="Stretch"/>
 	</summary>
 </jasperReport>

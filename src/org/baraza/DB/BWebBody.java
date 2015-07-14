@@ -784,24 +784,25 @@ public class BWebBody extends BQuery {
 			response.append(" size='50'/>\n");
 		} else if(el.getName().equals("PICTURE")) {
 			String mypic = null;
-			
-			response.append("<span class='btn green fileinput-button'>");
-			response.append("<i class='glyphicon glyphicon-plus'></i>");
-			response.append("<span>Add files...</span>");
-			
+			String mypiclink = "	<div class='fileinput-preview thumbnail' data-trigger='fileinput' style='width: 200px; height: 150px;'></div>";
 			if(eof) {
 				mypic = getString(el.getValue());
 				if(mypic != null) {
-					response.append("<img height='" + el.getAttribute("h") + "px' width='auto' src='");
-					response.append(el.getAttribute("pictures") + "?access=" + el.getAttribute("access"));
-					response.append("&picture=" + mypic + "'>");
+					mypiclink = "	<div><img height='" + el.getAttribute("h") + "px' width='auto' src='";
+					mypiclink += "barazapictures?access=" + el.getAttribute("access");
+					mypiclink += "&picture=" + mypic + "'></div>";
 				}
 			}
-			
-			response.append("<input id='fileupload' name='" + el.getValue() + "' type='file' >");
-            response.append("</span>");
-			response.append("<div id='files' class='files'></div>");
-            response.append("<br>");
+
+			response.append("<div class='fileinput fileinput-new' data-provides='fileinput'>");
+			response.append(mypiclink);
+			response.append("	<div>");
+			response.append("		<span class='btn default btn-file'>");
+			response.append("		<span class='fileinput-new'> Select image </span>");
+			response.append("		<span class='fileinput-exists'> Change </span> <input type='file' name='" + el.getValue() + "'> </span>");
+			response.append("		<a href='javascript:;' class='btn red fileinput-exists' data-dismiss='fileinput'> Remove </a>");
+			response.append("	</div>");
+			response.append("</div>");
 		} else if(el.getName().equals("USERFIELD") || el.getName().equals("DEFAULT") || el.getName().equals("FUNCTION")) {
 		}
 		

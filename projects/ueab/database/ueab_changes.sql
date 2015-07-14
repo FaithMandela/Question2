@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 CREATE TABLE countys(
 
 county_id		char(2) primary key,
@@ -52,68 +53,32 @@ VALUES	('MO', 'Mombasa'),
 		('NO','Narok'),
 		('KJ','kajiado');
 		
-	
-ALTER TABLE grades
-ADD COLUMN p_minrange integer,
-ADD COLUMN p_maxrange integer;
+=======
+>>>>>>> 8d1c3f0d61b931643b602460e3e1357f2de8eb2a
 	
 
-CREATE OR REPLACE FUNCTION ins_application() RETURNS trigger AS $$
-DECLARE
-	reca			RECORD;
-	v_org_id		INTEGER;
-BEGIN	
-	IF(NEW.selection_id is not null) THEN
-		IF(TG_WHEN = 'BEFORE')THEN
-			IF((NEW.user_name is null) OR (NEW.primary_email is null))THEN
-				RAISE EXCEPTION 'You need to enter the email address';
-			END IF;
 
-			IF(NEW.user_name != NEW.primary_email)THEN
-				RAISE EXCEPTION 'The email and confirmation email should match.';
-			END IF;
 
-			SELECT org_id INTO v_org_id
-			FROM forms WHERE (form_id = NEW.selection_id);
+UPDATE sys_emails SET details = 'Dear {{name}},<br/><br/>
 
-			NEW.user_name := lower(trim(NEW.user_name));
-			NEW.primary_email := lower(trim(NEW.user_name));
+Thank you for applying to the University of Eastern Africa, Baraton.<br/>
+To access form online use the the following information:<br/>
+Username: {{username}} Password: {{password}}<br/><br/>
 
-			NEW.first_password := upper(substring(md5(random()::text) from 3 for 9));
-			NEW.entity_password := md5(NEW.first_password);
 
-			NEW.org_id = v_org_id;
+Go to http://registration.ueab.ac.ke/a_admissions.jsp<br/>
+Using this link login with your username and password to complete your application.<br/>
+Note: You can "Save" your application, and continue later until you are ready to "Complete and Exit".<br/>
 
-			RETURN NEW;
-		END IF;
 
-		IF(TG_WHEN = 'AFTER')THEN
-			INSERT INTO entry_forms (org_id, entity_id, entered_by_id, form_id)
-			VALUES(NEW.org_id, NEW.entity_id, NEW.entity_id, NEW.selection_id);
+Regards,<br/>
+Admissions Office<br/>
+University of Eastern Africa, Baraton<br/>
+Eldoret<br/>
+(254) 053-522625<br/>
+admissions@ueab.ac.ke<br/>';
 
-			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
-			VALUES(NEW.org_id, 1, NEW.entity_id, 'entitys');
-
-			SELECT quarterid INTO reca
-			FROM quarters 
-			WHERE (quarterid IN (SELECT max(quarterid) FROM quarters));
-
-			INSERT INTO applications (org_id, applicationid, quarterid)
-			VALUES(NEW.org_id, NEW.entity_id, reca.quarterid, reca.applicationfees);
-		END IF;
-	ELSE
-		IF(TG_WHEN = 'BEFORE')THEN
-			RETURN NEW;
-		END IF;
-	END IF;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_bf_application BEFORE INSERT ON entitys
-    FOR EACH ROW EXECUTE PROCEDURE ins_application();
-
+<<<<<<< HEAD
     
  ALTER TABLE quarters
  ADD COLUMN dean_cert_date date default null,
@@ -181,3 +146,14 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
   
   
   
+=======
+UPDATE fields SET question = 'Parent or Guardians commitment: I agree that the applicant may be a student at the University of Eastern Africa, Baraton. I am
+ready to support the university in its effort to ensure that the applicant abides by the rules and principles of the university and
+accepts the authority of its administration.'
+WHERE field_id = 106;
+
+
+UPDATE fields SET field_size = 150 WHERE field_id = 106;
+
+   
+>>>>>>> 8d1c3f0d61b931643b602460e3e1357f2de8eb2a

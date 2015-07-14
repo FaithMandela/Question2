@@ -132,7 +132,7 @@ CREATE TABLE address_types (
 	address_type_name		varchar(50)
 );
 CREATE INDEX address_types_org_id ON address_types (org_id);
-	
+
 CREATE TABLE address (
 	address_id				serial primary key,
 	address_type_id			integer references address_types,
@@ -206,9 +206,9 @@ CREATE INDEX entitys_entity_type_id ON entitys (entity_type_id);
 CREATE INDEX entitys_org_id ON entitys (org_id);
 CREATE INDEX entitys_user_name ON entitys (user_name);
 
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)  
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
 VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false);
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)  
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
 VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false);
 SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
 
@@ -237,9 +237,9 @@ CREATE INDEX entity_subscriptions_entity_id ON entity_subscriptions (entity_id);
 CREATE INDEX entity_subscriptions_subscription_level_id ON entity_subscriptions (subscription_level_id);
 CREATE INDEX entity_subscriptions_org_id ON entity_subscriptions (org_id);
 
-INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)  
+INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
 VALUES (0, 0, 0, 0, 0);
-INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)  
+INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
 VALUES (0, 1, 0, 1, 0);
 SELECT pg_catalog.setval('entity_subscriptions_entity_subscription_id_seq', 1, true);
 
@@ -373,7 +373,7 @@ CREATE TABLE workflow_sql (
 	workflow_sql_id			integer primary key,
 	workflow_phase_id		integer not null references workflow_phases,
 	org_id					integer references orgs,
-	workflow_sql_name		varchar(50),	
+	workflow_sql_name		varchar(50),
 	is_condition			boolean default false,
 	is_action				boolean default false,
 	message_number			varchar(32),
@@ -448,25 +448,25 @@ CREATE VIEW vw_sys_emailed AS
 
 CREATE VIEW vw_sys_countrys AS
 	SELECT sys_continents.sys_continent_id, sys_continents.sys_continent_name,
-		sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_number, 
+		sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_number,
 		sys_countrys.sys_phone_code, sys_countrys.sys_country_name
 	FROM sys_continents INNER JOIN sys_countrys ON sys_continents.sys_continent_id = sys_countrys.sys_continent_id;
 
 CREATE VIEW vw_address AS
-	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name, 
-		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town, 
+	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name,
+		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town,
 		address.phone_number, address.extension, address.mobile, address.fax, address.email, address.is_default, address.website, address.details,
 		address_types.address_type_id, address_types.address_type_name
 	FROM address INNER JOIN sys_countrys ON address.sys_country_id = sys_countrys.sys_country_id
 		LEFT JOIN address_types ON address.address_type_id = address_types.address_type_id;
-	
+
 CREATE VIEW vw_org_address AS
-	SELECT vw_address.sys_country_id as org_sys_country_id, vw_address.sys_country_name as org_sys_country_name, 
+	SELECT vw_address.sys_country_id as org_sys_country_id, vw_address.sys_country_name as org_sys_country_name,
 		vw_address.address_id as org_address_id, vw_address.table_id as org_table_id, vw_address.table_name as org_table_name,
-		vw_address.post_office_box as org_post_office_box, vw_address.postal_code as org_postal_code, 
-		vw_address.premises as org_premises, vw_address.street as org_street, vw_address.town as org_town, 
-		vw_address.phone_number as org_phone_number, vw_address.extension as org_extension, 
-		vw_address.mobile as org_mobile, vw_address.fax as org_fax, vw_address.email as org_email, 
+		vw_address.post_office_box as org_post_office_box, vw_address.postal_code as org_postal_code,
+		vw_address.premises as org_premises, vw_address.street as org_street, vw_address.town as org_town,
+		vw_address.phone_number as org_phone_number, vw_address.extension as org_extension,
+		vw_address.mobile as org_mobile, vw_address.fax as org_fax, vw_address.email as org_email,
 		vw_address.website as org_website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'orgs') AND (vw_address.is_default = true);
@@ -474,52 +474,52 @@ CREATE VIEW vw_org_address AS
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
 
-		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name, 
+		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
-		vw_org_address.org_post_office_box, vw_org_address.org_postal_code, 
-		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town, 
-		vw_org_address.org_phone_number, vw_org_address.org_extension, 
+		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
+		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
+		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
 	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
 CREATE VIEW vw_entity_address AS
 	SELECT vw_address.address_id, vw_address.address_name,
-		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_id, vw_address.table_name, 
-		vw_address.is_default, vw_address.post_office_box, vw_address.postal_code, vw_address.premises, 
-		vw_address.street, vw_address.town, vw_address.phone_number, vw_address.extension, vw_address.mobile, 
+		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_id, vw_address.table_name,
+		vw_address.is_default, vw_address.post_office_box, vw_address.postal_code, vw_address.premises,
+		vw_address.street, vw_address.town, vw_address.phone_number, vw_address.extension, vw_address.mobile,
 		vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
 
 CREATE VIEW vw_entitys AS
-	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, 
-		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo, 
+	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
+		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
 
-		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name, 
+		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
 		vw_orgs.org_address_id, vw_orgs.org_table_name,
-		vw_orgs.org_post_office_box, vw_orgs.org_postal_code, 
-		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town, 
-		vw_orgs.org_phone_number, vw_orgs.org_extension, 
+		vw_orgs.org_post_office_box, vw_orgs.org_postal_code,
+		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town,
+		vw_orgs.org_phone_number, vw_orgs.org_extension,
 		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
 
 		vw_entity_address.address_id, vw_entity_address.address_name,
-		vw_entity_address.sys_country_id, vw_entity_address.sys_country_name, vw_entity_address.table_name, 
-		vw_entity_address.is_default, vw_entity_address.post_office_box, vw_entity_address.postal_code, 
-		vw_entity_address.premises, vw_entity_address.street, vw_entity_address.town, 
-		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile, 
+		vw_entity_address.sys_country_id, vw_entity_address.sys_country_name, vw_entity_address.table_name,
+		vw_entity_address.is_default, vw_entity_address.post_office_box, vw_entity_address.postal_code,
+		vw_entity_address.premises, vw_entity_address.street, vw_entity_address.town,
+		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile,
 		vw_entity_address.fax, vw_entity_address.email, vw_entity_address.website,
 
-		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
-		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
+		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
+		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
 		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
-		entity_types.entity_type_id, entity_types.entity_type_name, 
+		entity_types.entity_type_id, entity_types.entity_type_name,
 		entity_types.entity_role, entity_types.use_key
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
 
 CREATE VIEW vw_entity_subscriptions AS
-	SELECT entity_types.entity_type_id, entity_types.entity_type_name, entitys.entity_id, entitys.entity_name, 
+	SELECT entity_types.entity_type_id, entity_types.entity_type_name, entitys.entity_id, entitys.entity_name,
 		subscription_levels.subscription_level_id, subscription_levels.subscription_level_name,
 		entity_subscriptions.entity_subscription_id, entity_subscriptions.org_id, entity_subscriptions.details
 	FROM entity_subscriptions INNER JOIN entity_types ON entity_subscriptions.entity_type_id = entity_types.entity_type_id
@@ -527,27 +527,27 @@ CREATE VIEW vw_entity_subscriptions AS
 		INNER JOIN subscription_levels ON entity_subscriptions.subscription_level_id = subscription_levels.subscription_level_id;
 
 CREATE VIEW vw_reporting AS
-	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name, 
-		reporting.org_id, reporting.reporting_id, reporting.date_from, 
-		reporting.date_to, reporting.primary_report, reporting.is_active, reporting.ps_reporting, 
+	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name,
+		reporting.org_id, reporting.reporting_id, reporting.date_from,
+		reporting.date_to, reporting.primary_report, reporting.is_active, reporting.ps_reporting,
 		reporting.reporting_level, reporting.details
 	FROM reporting INNER JOIN entitys ON reporting.entity_id = entitys.entity_id
 		INNER JOIN entitys as rpt ON reporting.report_to_id = rpt.entity_id;
 
 CREATE VIEW vw_workflows AS
-	SELECT entity_types.entity_type_id as source_entity_id, entity_types.entity_type_name as source_entity_name, 
-		workflows.workflow_id, workflows.org_id, workflows.workflow_name, workflows.table_name, workflows.table_link_field, 
-		workflows.table_link_id, workflows.approve_email, workflows.reject_email, 
+	SELECT entity_types.entity_type_id as source_entity_id, entity_types.entity_type_name as source_entity_name,
+		workflows.workflow_id, workflows.org_id, workflows.workflow_name, workflows.table_name, workflows.table_link_field,
+		workflows.table_link_id, workflows.approve_email, workflows.reject_email,
 		workflows.approve_file, workflows.reject_file, workflows.details
 	FROM workflows INNER JOIN entity_types ON workflows.source_entity_id = entity_types.entity_type_id;
 
 CREATE VIEW vw_workflow_phases AS
-	SELECT vw_workflows.source_entity_id, vw_workflows.source_entity_name, vw_workflows.workflow_id, 
-		vw_workflows.workflow_name, vw_workflows.table_name, vw_workflows.table_link_field, vw_workflows.table_link_id, 
+	SELECT vw_workflows.source_entity_id, vw_workflows.source_entity_name, vw_workflows.workflow_id,
+		vw_workflows.workflow_name, vw_workflows.table_name, vw_workflows.table_link_field, vw_workflows.table_link_id,
 		vw_workflows.approve_email, vw_workflows.reject_email, vw_workflows.approve_file, vw_workflows.reject_file,
-		entity_types.entity_type_id as approval_entity_id, entity_types.entity_type_name as approval_entity_name, 
-		workflow_phases.workflow_phase_id, workflow_phases.org_id, workflow_phases.approval_level, 
-		workflow_phases.return_level, workflow_phases.escalation_days, workflow_phases.escalation_hours, 
+		entity_types.entity_type_id as approval_entity_id, entity_types.entity_type_name as approval_entity_name,
+		workflow_phases.workflow_phase_id, workflow_phases.org_id, workflow_phases.approval_level,
+		workflow_phases.return_level, workflow_phases.escalation_days, workflow_phases.escalation_hours,
 		workflow_phases.notice, workflow_phases.notice_email, workflow_phases.notice_file,
 		workflow_phases.advice, workflow_phases.advice_email, workflow_phases.advice_file,
 		workflow_phases.required_approvals, workflow_phases.use_reporting, workflow_phases.reporting_level,
@@ -557,23 +557,23 @@ CREATE VIEW vw_workflow_phases AS
 
 CREATE VIEW vw_workflow_entitys AS
 	SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.org_id, vw_workflow_phases.workflow_name, vw_workflow_phases.table_name,
-		vw_workflow_phases.table_link_id, vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name, 
-		vw_workflow_phases.approval_entity_id, vw_workflow_phases.approval_entity_name, 
-		vw_workflow_phases.workflow_phase_id, vw_workflow_phases.approval_level, 
-		vw_workflow_phases.return_level, vw_workflow_phases.escalation_days, vw_workflow_phases.escalation_hours, 
+		vw_workflow_phases.table_link_id, vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name,
+		vw_workflow_phases.approval_entity_id, vw_workflow_phases.approval_entity_name,
+		vw_workflow_phases.workflow_phase_id, vw_workflow_phases.approval_level,
+		vw_workflow_phases.return_level, vw_workflow_phases.escalation_days, vw_workflow_phases.escalation_hours,
 		vw_workflow_phases.notice, vw_workflow_phases.notice_email, vw_workflow_phases.notice_file,
 		vw_workflow_phases.advice, vw_workflow_phases.advice_email, vw_workflow_phases.advice_file,
-		vw_workflow_phases.required_approvals, vw_workflow_phases.use_reporting, vw_workflow_phases.phase_narrative, 
+		vw_workflow_phases.required_approvals, vw_workflow_phases.use_reporting, vw_workflow_phases.phase_narrative,
 		entity_subscriptions.entity_subscription_id, entity_subscriptions.entity_id, entity_subscriptions.subscription_level_id
 	FROM vw_workflow_phases INNER JOIN entity_subscriptions ON vw_workflow_phases.source_entity_id = entity_subscriptions.entity_type_id;
 
 CREATE VIEW vw_approvals AS
-	SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.workflow_name, 
+	SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.workflow_name,
 		vw_workflow_phases.approve_email, vw_workflow_phases.reject_email,
-		vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name, 
+		vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name,
 		vw_workflow_phases.approval_entity_id, vw_workflow_phases.approval_entity_name,
 		vw_workflow_phases.workflow_phase_id, vw_workflow_phases.approval_level, vw_workflow_phases.phase_narrative,
-		vw_workflow_phases.return_level, vw_workflow_phases.required_approvals, 
+		vw_workflow_phases.return_level, vw_workflow_phases.required_approvals,
 		vw_workflow_phases.notice, vw_workflow_phases.notice_email, vw_workflow_phases.notice_file,
 		vw_workflow_phases.advice, vw_workflow_phases.advice_email, vw_workflow_phases.advice_file,
 		vw_workflow_phases.use_reporting,
@@ -588,23 +588,23 @@ CREATE VIEW vw_approvals AS
 		LEFT JOIN entitys as ae ON approvals.app_entity_id = ae.entity_id;
 
 CREATE VIEW vw_workflow_approvals AS
-	SELECT vw_approvals.workflow_id, vw_approvals.org_id, vw_approvals.workflow_name, vw_approvals.approve_email, 
-		vw_approvals.reject_email, vw_approvals.source_entity_id, vw_approvals.source_entity_name, vw_approvals.table_name, 
-		vw_approvals.table_id, vw_approvals.org_entity_id, vw_approvals.org_entity_name, vw_approvals.org_user_name, 
+	SELECT vw_approvals.workflow_id, vw_approvals.org_id, vw_approvals.workflow_name, vw_approvals.approve_email,
+		vw_approvals.reject_email, vw_approvals.source_entity_id, vw_approvals.source_entity_name, vw_approvals.table_name,
+		vw_approvals.table_id, vw_approvals.org_entity_id, vw_approvals.org_entity_name, vw_approvals.org_user_name,
 		vw_approvals.org_primary_email, rt.rejected_count,
 		(CASE WHEN rt.rejected_count is null THEN vw_approvals.workflow_name || ' Approved'
 			ELSE vw_approvals.workflow_name || ' declined' END) as workflow_narrative
-	FROM vw_approvals LEFT JOIN 
+	FROM vw_approvals LEFT JOIN
 		(SELECT table_id, count(approval_id) as rejected_count FROM approvals WHERE (approve_status = 'Rejected') AND (approvals.forward_id is null)
 		GROUP BY table_id) as rt ON vw_approvals.table_id = rt.table_id
-	GROUP BY vw_approvals.workflow_id, vw_approvals.org_id, vw_approvals.workflow_name, vw_approvals.approve_email, 
-		vw_approvals.reject_email, vw_approvals.source_entity_id, vw_approvals.source_entity_name, vw_approvals.table_name, 
-		vw_approvals.table_id, vw_approvals.org_entity_id, vw_approvals.org_entity_name, vw_approvals.org_user_name, 
+	GROUP BY vw_approvals.workflow_id, vw_approvals.org_id, vw_approvals.workflow_name, vw_approvals.approve_email,
+		vw_approvals.reject_email, vw_approvals.source_entity_id, vw_approvals.source_entity_name, vw_approvals.table_name,
+		vw_approvals.table_id, vw_approvals.org_entity_id, vw_approvals.org_entity_name, vw_approvals.org_user_name,
 		vw_approvals.org_primary_email, rt.rejected_count;
 
 CREATE VIEW vw_approvals_entitys AS
-	(SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.workflow_name, 
-		vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name, 
+	(SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.workflow_name,
+		vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name,
 		vw_workflow_phases.approval_entity_id, vw_workflow_phases.approval_entity_name,
 		vw_workflow_phases.workflow_phase_id, vw_workflow_phases.approval_level,
 		vw_workflow_phases.notice, vw_workflow_phases.notice_email, vw_workflow_phases.notice_file,
@@ -623,8 +623,8 @@ CREATE VIEW vw_approvals_entitys AS
 		INNER JOIN entitys ON entity_subscriptions.entity_id = entitys.entity_id
 	WHERE (approvals.forward_id is null) AND (vw_workflow_phases.use_reporting = false))
 	UNION
-	(SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.workflow_name, 
-		vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name, 
+	(SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.workflow_name,
+		vw_workflow_phases.source_entity_id, vw_workflow_phases.source_entity_name,
 		vw_workflow_phases.approval_entity_id, vw_workflow_phases.approval_entity_name,
 		vw_workflow_phases.workflow_phase_id, vw_workflow_phases.approval_level,
 		vw_workflow_phases.notice, vw_workflow_phases.notice_email, vw_workflow_phases.notice_file,
@@ -645,9 +645,9 @@ CREATE VIEW vw_approvals_entitys AS
 	WHERE (approvals.forward_id is null) AND (reporting.primary_report = true) AND (reporting.is_active = true)
 		AND (vw_workflow_phases.use_reporting = true));
 
-CREATE VIEW tomcat_users AS 
+CREATE VIEW tomcat_users AS
 	SELECT entitys.user_name, entitys.Entity_password, entity_types.entity_role
-	FROM (Entity_subscriptions 
+	FROM (Entity_subscriptions
 		INNER JOIN entitys ON Entity_subscriptions.entity_id = entitys.entity_id)
 		INNER JOIN entity_types ON Entity_subscriptions.entity_type_id = entity_types.entity_type_id
 	WHERE entitys.is_active = true;
@@ -744,7 +744,7 @@ CREATE TRIGGER ins_password BEFORE INSERT OR UPDATE ON entitys
     FOR EACH ROW EXECUTE PROCEDURE ins_password();
 
 CREATE OR REPLACE FUNCTION ins_entitys() RETURNS trigger AS $$
-BEGIN	
+BEGIN
 	IF(NEW.entity_type_id is not null) THEN
 		INSERT INTO Entity_subscriptions (org_id, entity_type_id, entity_id, subscription_level_id)
 		VALUES (NEW.org_id, NEW.entity_type_id, NEW.entity_id, 0);
@@ -762,7 +762,7 @@ DECLARE
 	v_entity_id			integer;
 	v_org_id			integer;
 	v_password			varchar(32);
-BEGIN	
+BEGIN
 	SELECT entity_id, org_id INTO v_entity_id, v_org_id
 	FROM entitys
 	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email)));
@@ -795,7 +795,7 @@ BEGIN
 
 	IF (NEW.forward_id is not null) THEN
 		SELECT workflow_phase_id, org_entity_id, app_entity_id, approval_level, table_name, table_id INTO reca
-		FROM approvals 
+		FROM approvals
 		WHERE (approval_id = NEW.forward_id);
 
 		NEW.workflow_phase_id := reca.workflow_phase_id;
@@ -841,7 +841,7 @@ BEGIN
 	IF(TG_OP = 'INSERT') AND (NEW.forward_id is null) THEN
 		INSERT INTO approval_checklists (approval_id, checklist_id, requirement, manditory, org_id)
 		SELECT NEW.approval_id, checklist_id, requirement, manditory, org_id
-		FROM checklists 
+		FROM checklists
 		WHERE (workflow_phase_id = NEW.workflow_phase_id)
 		ORDER BY checklist_number;
 	END IF;
@@ -871,7 +871,7 @@ BEGIN
 			add_flow := true;
 		END IF;
 	END IF;
-	
+
 	IF(add_flow = true)THEN
 		wfid := nextval('workflow_table_id_seq');
 		NEW.workflow_table_id := wfid;
@@ -905,7 +905,7 @@ BEGIN
 				WHERE (table_name = TG_TABLE_NAME) AND (entity_id = NEW.entity_id) AND (workflow_id = reca.workflow_id)
 				ORDER BY approval_level, workflow_phase_id;
 
-				UPDATE approvals SET approve_status = 'Completed' 
+				UPDATE approvals SET approve_status = 'Completed'
 				WHERE (table_id = wfid) AND (approval_level = 1);
 			END IF;
 		END LOOP;
@@ -949,9 +949,9 @@ BEGIN
 		FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
 		WHERE (approvals.table_id = reca.table_id) AND (approvals.approve_status = 'Draft')
 			AND (workflow_phases.advice = false) AND (workflow_phases.notice = false);
-		
+
 		IF(min_level is null)THEN
-			mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Approved') 
+			mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Approved')
 			|| ', action_date = now()'
 			|| ' WHERE workflow_table_id = ' || reca.table_id;
 			EXECUTE mysql;
@@ -985,7 +985,7 @@ BEGIN
 		UPDATE approvals SET approve_status = 'Rejected',  action_date = now(), app_entity_id = CAST($2 as int)
 		WHERE approval_id = app_id;
 
-		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Rejected') 
+		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Rejected')
 		|| ', action_date = now()'
 		|| ' WHERE workflow_table_id = ' || reca.table_id;
 		EXECUTE mysql;
@@ -996,12 +996,12 @@ BEGIN
 	ELSIF ($3 = '4') AND (reca.return_level = 0) THEN
 		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
 		WHERE approval_id = app_id;
-		
-		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Draft') 
+
+		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Draft')
 		|| ', action_date = now()'
 		|| ' WHERE workflow_table_id = ' || reca.table_id;
 		EXECUTE mysql;
-		
+
 		msg := 'Forwarded for review';
 	ELSIF ($3 = '4') AND (reca.return_level <> 0) THEN
 		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
@@ -1012,9 +1012,9 @@ BEGIN
 		FROM vw_workflow_entitys
 		WHERE (workflow_id = reca.workflow_id) AND (approval_level = reca.return_level)
 		ORDER BY workflow_phase_id;
-		
+
 		UPDATE approvals SET approve_status = 'Draft' WHERE approval_id = app_id;
-		
+
 		msg := 'Forwarded to owner for review';
 	END IF;
 
@@ -1030,7 +1030,7 @@ DECLARE
 	msg 		varchar(120);
 BEGIN
 	cl_id := CAST($1 as int);
-	
+
 	SELECT approval_checklist_id, approval_id, checklist_id, requirement, manditory, done INTO reca
 	FROM approval_checklists
 	WHERE (approval_checklist_id = cl_id);
@@ -1096,4 +1096,3 @@ BEGIN
 	RETURN myemail;
 END;
 $$ LANGUAGE plpgsql;
-

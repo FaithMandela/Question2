@@ -631,7 +631,7 @@ public class BQuery {
 		    } else {
 				type = getFieldType(columnindex);
 	
-				log.finer(fname + " = " + fvalue + " type = " + type);
+				//System.out.println("BASE 4010 : " + fname + " = " + fvalue + " type = " + type);
 				switch(type) {
         			case Types.CHAR:
         			case Types.VARCHAR:

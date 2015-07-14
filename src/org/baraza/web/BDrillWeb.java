@@ -21,9 +21,11 @@ public class BDrillWeb {
 		filterName = view.getAttribute("filter", "filterid");
 
 		String mymenu = "<input type='hidden' name='" + filterName + "' id='" + filterName + "' value='0'/>\n";
-		mymenu += "<ul class='treeview'>\n";
+		mymenu += "<div id='" + filterName + "_1' class='ui-tree'>\n";
+		mymenu += "<ul>\n";
 		mymenu += getSubDrill(db, view, null);
 		mymenu += "</ul>\n";
+		mymenu += "</div>\n";
 
 		return mymenu;
 	} 

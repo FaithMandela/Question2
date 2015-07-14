@@ -64,6 +64,8 @@ CREATE TABLE default_banking (
 	ps_amount				float default 0 not null,
 	final_date				date,
 	active					boolean default true,
+	
+	bank_account			varchar(64),
 
 	Narrative				varchar(240)
 );
@@ -262,7 +264,7 @@ CREATE INDEX employee_per_diem_currency_id ON employee_per_diem (currency_id);
 CREATE INDEX employee_per_diem_org_id ON employee_per_diem(org_id);
 
 CREATE TABLE employee_banking (
-	default_banking_id		serial primary key,
+	employee_banking_id		serial primary key,
 	employee_month_id		integer references employee_month not null,
 	bank_branch_id			integer references bank_branch,
 	currency_id				integer references currency,
@@ -271,6 +273,8 @@ CREATE TABLE employee_banking (
 	amount					float default 0 not null,
 	exchange_rate			real default 1 not null,
 	active					boolean default true,
+	
+	bank_account			varchar(64),
 
 	Narrative				varchar(240)
 );
@@ -664,8 +668,9 @@ CREATE VIEW vw_employee_banking AS
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
-		employee_banking.org_id, employee_banking.default_banking_id, employee_banking.amount, 
-		employee_banking.exchange_rate, employee_banking.active, employee_banking.narrative,
+		employee_banking.org_id, employee_banking.employee_banking_id, employee_banking.amount, 
+		employee_banking.exchange_rate, employee_banking.active, employee_banking.bank_account,
+		employee_banking.narrative,
 		(employee_banking.exchange_rate * employee_banking.amount) as base_amount
 	FROM employee_banking INNER JOIN vw_employee_month as eml ON employee_banking.employee_month_id = eml.employee_month_id
 		INNER JOIN vw_bank_branch ON employee_banking.bank_branch_id = vw_bank_branch.bank_branch_id

@@ -1,4 +1,44 @@
 
+
+ALTER TABLE default_banking ADD bank_account varchar(64);
+
+DROP VIEW vw_employee_banking;
+DROP TABLE employee_banking;
+CREATE TABLE employee_banking (
+	employee_banking_id		serial primary key,
+	employee_month_id		integer references employee_month not null,
+	bank_branch_id			integer references bank_branch,
+	currency_id				integer references currency,
+	org_id					integer references orgs,
+	
+	amount					float default 0 not null,
+	exchange_rate			real default 1 not null,
+	active					boolean default true,
+	
+	bank_account			varchar(64),
+
+	Narrative				varchar(240)
+);
+CREATE INDEX employee_banking_employee_month_id ON employee_banking (employee_month_id);
+CREATE INDEX employee_banking_bank_branch_id ON employee_banking (bank_branch_id);
+CREATE INDEX employee_banking_currency_id ON employee_banking (currency_id);
+CREATE INDEX employee_banking_org_id ON employee_banking(org_id);
+
+CREATE VIEW vw_employee_banking AS
+	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
+		eml.month_id, eml.period_year, eml.period_month,
+		eml.entity_id, eml.entity_name, eml.employee_id,
+		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
+		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		
+		employee_banking.org_id, employee_banking.employee_banking_id, employee_banking.amount, 
+		employee_banking.exchange_rate, employee_banking.active, employee_banking.narrative,
+		(employee_banking.exchange_rate * employee_banking.amount) as base_amount
+	FROM employee_banking INNER JOIN vw_employee_month as eml ON employee_banking.employee_month_id = eml.employee_month_id
+		INNER JOIN vw_bank_branch ON employee_banking.bank_branch_id = vw_bank_branch.bank_branch_id
+		INNER JOIN currency ON employee_banking.currency_id = currency.currency_id;
+
 DROP VIEW vw_reporting;
 CREATE VIEW vw_reporting AS
 	SELECT entitys.entity_id, entitys.entity_name, rpt.entity_id as rpt_id, rpt.entity_name as rpt_name, 
