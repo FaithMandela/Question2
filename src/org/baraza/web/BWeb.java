@@ -524,7 +524,7 @@ public class BWeb {
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
 			
-			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'>Submit</button>\n";
+			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
             
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
@@ -548,16 +548,16 @@ public class BWeb {
 		if(view.getName().equals("FORM")) {
 			String saveBtn = view.getAttribute("save.button", "Save");
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			if(view.getAttribute("fornew", "false").equals("true"))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'>" + saveBtn + "</button>\n";
+				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			boolean canDel = true;
 			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false"))
 				canDel = false;
 			if(canDel && (!"{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'>Delete</button>\n";
+				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'> <i class='fa fa-trash-o'></i> &nbsp; Delete</button>\n";
 			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";*/
             
@@ -1982,6 +1982,16 @@ System.out.println("repository : " + repository);
 		viewColor = root.getAttribute("color", "purple");
 		if(view == null) return viewColor;
 		return view.getAttribute("color", viewColor); 
+	}
+    
+    public String getViewIcon() {
+		String viewIcon = "icon-list";
+		if(root == null) return viewIcon;
+		if(view == null) return viewIcon;
+        if(view.getName().equals("GRID")) viewIcon = "icon-list";
+        if(view.getName().equals("FORM")) viewIcon = "icon-note";
+        if(view.getName().equals("JASPER")) viewIcon = "icon-doc";
+		return view.getAttribute("icon", viewIcon); 
 	}
     
     public boolean isMaterial() {
