@@ -610,11 +610,8 @@
 				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="90" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
 				<TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
 				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county_id</COMBOBOX>
-				<COMBOLIST w="100" title="Identification Type" y="110" h="20" x="290">identification_type
-					<DATA>passport</DATA>
-					<DATA>id_card</DATA>
-					<DATA>none</DATA>
-				</COMBOLIST>
+				<CHECKBOX w="50" title="National ID" lw="70" y="110" h="20" x="290">national_id</CHECKBOX>
+				<CHECKBOX w="50" title="Passport" lw="70" y="110" h="20" x="440">passport</CHECKBOX>
 				<TEXTFIELD w="150" title="Email" y="130" h="20" x="10">email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification No" y="130" h="20" x="290">identification_no</TEXTFIELD>
 				<TEXTDATE w="150" title="Birth Date" y="150" h="20" x="290">birthdate</TEXTDATE>

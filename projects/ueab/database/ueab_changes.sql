@@ -118,7 +118,8 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
   INNER JOIN studentcounty ON q.studentid= studentcounty.county_id ;
   
   ALTER TABLE students
-  ADD COLUMN identification_type varchar(20) default 'none',
+  ADD COLUMN passport boolean DEFAULT false,
+  ADD COLUMN national-id  boolean DEFAULT false,
   ADD COLUMN identification_no varchar(20);
   
   
@@ -139,7 +140,8 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
     qstudentview.sublevelname,
     qstudentview.approved,
 	students.identification_no,
-	students.identification_type,
+	students.passport,
+	students.national_id,
 	qstudentview.nationality
     FROM qstudentview
     INNER JOIN students ON qstudentview.studentid=students.studentid;
