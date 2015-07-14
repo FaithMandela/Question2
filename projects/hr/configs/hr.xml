@@ -14,7 +14,6 @@
 			<MENU name="Petty Cash" role="pettycash">90</MENU>
 			<MENU name="Client Forms" role="forms">72</MENU>
 			<MENU name="Approvals" role="staff">83</MENU>
-			<MENU name="Supervisor Review Report" role="staff">165</MENU>
 		</MENU>
 		<MENU name="Internship" role="admin,hr">
 			<MENU name="Applicant">23</MENU>
@@ -42,6 +41,9 @@
 			<MENU name="EMails">81</MENU>
 			<MENU name="Workflows">82</MENU>
 			<MENU name="All Approvals">84</MENU>
+		</MENU>
+		<MENU name="Staff Reports" role="staff">
+			<MENU name="Supervisor Review Report" role="staff">165</MENU>
 		</MENU>
 		<MENU name="Reports" role="admin,hr">
 			<MENU name="Summary Reports" role="hr">150</MENU>

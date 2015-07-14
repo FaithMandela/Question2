@@ -1017,8 +1017,9 @@ CREATE VIEW vw_leave_work_days AS
 	FROM leave_work_days INNER JOIN vw_employee_leave ON leave_work_days.employee_leave_id = vw_employee_leave.employee_leave_id;
 
 CREATE VIEW vw_intake AS
-	SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_Description, 
-		vw_department_roles.department_Duties, vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
+	SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_description, 
+		vw_department_roles.department_duties, vw_department_roles.department_role_id, vw_department_roles.department_role_name,
+		vw_department_roles.parent_role_name,
 		vw_department_roles.job_description, vw_department_roles.job_requirements, vw_department_roles.duties, 
 		vw_department_roles.performance_measures, 
 		
@@ -1034,8 +1035,8 @@ CREATE VIEW vw_intake AS
 
 CREATE VIEW vw_applications AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
-		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.job_description, 
-		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
+		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
+		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, 
 		
@@ -1062,7 +1063,8 @@ CREATE VIEW vw_applications AS
 		
 CREATE VIEW vw_contracting AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
-		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.job_description, 
+		vw_intake.department_role_id, vw_intake.department_role_name, 
+		vw_intake.job_description, vw_intake.parent_role_name,
 		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, 

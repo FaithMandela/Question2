@@ -170,7 +170,23 @@ Your password is {{password}}<br><br>
 Regards<br>
 Human Resources Manager<br>
 ');
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 3, true);
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (4, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
+Welcome to OpenBaraza SaaS Platform<br><br>
+Your password is:<br><br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards,<br>
+OpenBaraza<br>
+');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (5, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
+Your OpenBaraza SaaS Platform application has been approved<br><br>
+Welcome to OpenBaraza SaaS Platform<br><br>
+Regards,<br>
+OpenBaraza<br>
+');
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 5, true);
 
 
 
