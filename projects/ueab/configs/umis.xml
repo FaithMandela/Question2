@@ -608,34 +608,40 @@
 				<TEXTFIELD w="150" title="Zipcode" y="70" h="20" x="10">zipcode</TEXTFIELD>
 				<TEXTFIELD w="150" title="Town" y="70" h="20" x="290">town</TEXTFIELD>
 				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="90" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
-				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
+				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county_id</COMBOBOX>
+				<COMBOLIST w="100" title="Identification Type" y="110" h="20" x="290">identification_type
+					<DATA>passport</DATA>
+					<DATA>id_card</DATA>
+					<DATA>none</DATA>
+				</COMBOLIST>
 				<TEXTFIELD w="150" title="Email" y="130" h="20" x="10">email</TEXTFIELD>
-				<TEXTDATE w="150" title="Birth Date" y="130" h="20" x="290">birthdate</TEXTDATE>
-				<TEXTFIELD w="150" title="Guardian Name" y="150" h="20" x="10">guardianname</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Address" y="150" h="20" x="290">gaddress</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Zip Code" y="170" h="20" x="10">gzipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Town" y="170" h="20" x="290">gtown</TEXTFIELD>
-				<COMBOBOX w="150" title="G. Country" lptable="countrys" noorg="true" lpkey="countryid" y="190" h="20" x="10" lpfield="countryname">gcountrycodeid</COMBOBOX>
-				<TEXTFIELD w="150" title="G. Tel No" y="190" h="20" x="290">gtelno</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Email" y="210" h="20" x="10">gemail</TEXTFIELD>
-				<COMBOBOX w="150" title="Nationality" lptable="countrys" noorg="true" lpkey="countryid" y="210" h="20" x="290" lpfield="countryname">Nationality</COMBOBOX>
-				<COMBOLIST w="50" title="Sex" y="230" h="20" x="10">sex
+				<TEXTFIELD w="150" title="Identification No" y="130" h="20" x="290">identification_no</TEXTFIELD>
+				<TEXTDATE w="150" title="Birth Date" y="150" h="20" x="290">birthdate</TEXTDATE>
+				<TEXTFIELD w="150" title="Guardian Name" y="170" h="20" x="10">guardianname</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Address" y="170" h="20" x="290">gaddress</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Zip Code" y="190" h="20" x="10">gzipcode</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Town" y="190" h="20" x="290">gtown</TEXTFIELD>
+				<COMBOBOX w="150" title="G. Country" lptable="countrys" noorg="true" lpkey="countryid" y="210" h="20" x="10" lpfield="countryname">gcountrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" title="G. Tel No" y="210" h="20" x="290">gtelno</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Email" y="230" h="20" x="10">gemail</TEXTFIELD>
+				<COMBOBOX w="150" title="Nationality" lptable="countrys" noorg="true" lpkey="countryid" y="230" h="20" x="290" lpfield="countryname">Nationality</COMBOBOX>
+				<COMBOLIST w="50" title="Sex" y="250" h="20" x="10">sex
 					<DATA>M</DATA>
 					<DATA>F</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="80" title="Disability" y="250" h="20" x="10">disability
+				<COMBOLIST w="80" title="Disability" y="270" h="20" x="10">disability
 					<DATA>No</DATA>
 					<DATA>Yes</DATA>
 				</COMBOLIST>
-				<TEXTAREA w="430" title="if yes, give details" y="270" h="40" x="10">dis_details</TEXTAREA>
-				<COMBOLIST w="50" title="Marital Status" y="310" h="20" x="10">MaritalStatus
+				<TEXTAREA w="430" title="if yes, give details" y="290" h="40" x="10">dis_details</TEXTAREA>
+				<COMBOLIST w="50" title="Marital Status" y="330" h="20" x="10">MaritalStatus
 					<DATA>S</DATA>
 					<DATA>M</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="150" title="Account Number" y="330" h="20" x="10">accountnumber</TEXTFIELD>
-				<CHECKBOX w="50" title="Alumnae" lw="70" y="350" h="20" x="50">alumnae</CHECKBOX>
-				<CHECKBOX w="50" title="Staff" lw="70" y="350" h="20" x="200">staff</CHECKBOX>
+				<TEXTFIELD w="150" title="Account Number" y="350" h="20" x="10">accountnumber</TEXTFIELD>
+				<CHECKBOX w="50" title="Alumnae" lw="70" y="370" h="20" x="50">alumnae</CHECKBOX>
+				<CHECKBOX w="50" title="Staff" lw="70" y="370" h="20" x="200">staff</CHECKBOX>
 			</FORM>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>

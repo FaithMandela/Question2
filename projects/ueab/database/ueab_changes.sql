@@ -12,6 +12,8 @@ ADD COLUMN disability varchar(5),
 ADD COLUMN dis_details text,
 ADD COLUMN county_id char(2) references countys;
 
+
+
 CREATE INDEX students_county_id ON students (county_id);
 
 INSERT INTO countys(county_id, county_name)
@@ -150,10 +152,32 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
   FROM qstudentview as q
   INNER JOIN studentcounty ON q.studentid= studentcounty.county_id ;
   
+  ALTER TABLE students
+  ADD COLUMN identification_type varchar(20) default 'none',
+  ADD COLUMN identification_no varchar(20);
   
   
   
- 
-
-
-
+   CREATE OR REPLACE VIEW qstudentviewid AS 
+	SELECT
+	qstudentview.denominationname,
+	qstudentview.schoolname,
+    qstudentview.studentid,
+	qstudentview.studentname,
+    qstudentview.nationalitycountry,
+    qstudentview.sex,
+    qstudentview.maritalstatus,
+	qstudentview.degreename,
+    qstudentview.studentdegreeid,
+    qstudentview.quarterid,
+    qstudentview.degreelevelname,
+    qstudentview.sublevelname,
+    qstudentview.approved,
+	students.identification_no,
+	students.identification_type,
+	qstudentview.nationality
+    FROM qstudentview
+    INNER JOIN students ON qstudentview.studentid=students.studentid;
+  
+  
+  
