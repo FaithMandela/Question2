@@ -45,12 +45,12 @@
 		<MENU name="Staff Reports" role="staff">
 			<MENU name="Supervisor Review Report" role="staff">165</MENU>
 		</MENU>
-		<MENU name="Reports" role="admin,hr">
+		<MENU name="Reports" role="admin,hr,reports">
 			<MENU name="Summary Reports" role="hr">150</MENU>
 			<MENU name="Employee List" role="hr">106</MENU>
-			<MENU name="Banks" role="hr">101</MENU>
-			<MENU name="Departments" role="hr">102</MENU>
-			<MENU name="Definations" role="hr">103</MENU>
+			<MENU name="Banks" role="hr,reports">101</MENU>
+			<MENU name="Departments" role="hr,reports">102</MENU>
+			<MENU name="Definations" role="hr,reports">103</MENU>
 			<MENU name="Applicants" role="hr">104</MENU>
 			<MENU name="CV Applicant" role="hr">105</MENU>
 			<MENU name="CV Employees" role="hr">107</MENU>
@@ -63,7 +63,7 @@
 			<MENU name="Staff Contracts" role="hr">155</MENU>
 			<MENU name="Review Reports" role="admin,hr">160</MENU>
 		</MENU>
-		<MENU name="Payroll" role="admin,payroll,hr" xml="payroll.xml">0</MENU>
+		<MENU name="Payroll" role="admin,payroll,hr,reports" xml="payroll.xml">0</MENU>
 		<MENU name="Projects" role="staff,admin,payroll,hr" xml="projects.xml">0</MENU>
 		<MENU name="Finance" role="finance" xml="finance.xml">0</MENU>
 	</MENU>

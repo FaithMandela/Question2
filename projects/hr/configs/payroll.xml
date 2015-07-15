@@ -22,7 +22,7 @@
 			<MENU name="Approvals">75</MENU>
 			<MENU name="Forms">70</MENU>
 		</MENU>
-		<MENU name="Reports" role="admin,payroll">
+		<MENU name="Reports" role="admin,payroll,reports">
 			<MENU name="Definations">101</MENU>
 			<MENU name="Statutory Deductions">102</MENU>
 			<MENU name="Employee List">103</MENU>
@@ -37,7 +37,7 @@
 			<MENU name="P10">112</MENU>
 			<MENU name="Payroll Ledger">115</MENU>
 		</MENU>
-		<MENU name="HR" role="admin,payroll" xml="hr.xml">0</MENU>
+		<MENU name="HR" role="admin,payroll,reports" xml="hr.xml">0</MENU>
 	</MENU>
 	<DESK w="715" name="Definations" key="4" h="500">
 		<GRID name="Allowances" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 1)">
