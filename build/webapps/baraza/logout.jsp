@@ -38,7 +38,7 @@
 <link href="${contextPath}/assets/admin/layout/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
 <link href="${contextPath}/assets/admin/layout/css/custom.css" rel="stylesheet" type="text/css"/>
 <!-- END THEME STYLES -->
-<link rel="shortcut icon" href="favicon.ico"/>
+<link rel="shortcut icon" href="./assets/logos/favicon.png"/>
 </head>
     
 <!-- END HEAD -->
@@ -47,8 +47,7 @@
 <div class="page-lock">
 	<div class="page-logo">
 		<a class="brand" href="index.html">
-        <img src="${contextPath}/resources/themes/default/images/logo.png" alt="logo"/>
-        
+        <img src="${contextPath}/assets/logos/logo.png" alt=""/>
             <!--<img src="${contextPath}/assets/admin/layout4/img/logo-big.png" alt="logo"/>-->
 
 		</a>

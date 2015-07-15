@@ -106,7 +106,7 @@ WHERE (application_id = '$P!{filterid}');]]>
 
 +"<b>3. Duty Station</b><br/><p>The company's principle place of work is Nairobi but you may be required to travel from time to time. You may also be assigned duties to a specific client site on a short term or long term basis.<br></p>"
 
-+"<b>4. Salary</b><br/><p>You will be paid a consolidated gross salary of " + $F{contract_salary} + " per month. Except for the statutory deductions which will be made from your salary, " + $F{org_name} + " will not be responsible for any other taxes that may be due on your income. The company may at its sole discretion review this salary based on performance.<br></p>"]]></textFieldExpression>
++"<b>4. Salary</b><br/><p>You will be paid a consolidated gross salary of KES " + $F{contract_salary} + " per month. Except for the statutory deductions which will be made from your salary, " + $F{org_name} + " will not be responsible for any other taxes that may be due on your income. The company may at its sole discretion review this salary based on performance.<br></p>"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="151" width="555" height="20" uuid="3f24f944-deae-4c65-861e-9520304eded0"/>

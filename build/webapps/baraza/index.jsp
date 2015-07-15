@@ -36,9 +36,18 @@
 	if(actionprocess != null) process = "actionProcess";
 	String reportexport = request.getParameter("reportexport");
 	String excelexport = request.getParameter("excelexport");
+	String actionOp = null;
 
 	String fieldTitles = web.getFieldTitles();
 	String auditTable = null;
+
+	String contentType = request.getContentType();
+	if(contentType != null) {
+		if ((contentType.indexOf("multipart/form-data") >= 0)) {
+System.out.println("BASE 2030 : Has an image");
+			web.updateMultiPart(request, context, context.getRealPath("WEB-INF" + ps + "tmp"));
+		}
+	}
 
 	String opResult = null;
 	if(process != null) {
@@ -79,8 +88,9 @@
 	<title><%= pageContext.getServletContext().getInitParameter("web_title") %></title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta content="width=device-width, initial-scale=1" name="viewport"/>
-	<meta content="" name="description"/>
-	<meta content="" name="author"/>
+	<meta content="Open Baraza Framework" name="description"/>
+	<meta content="Open Baraza" name="author"/>
+
 	<!-- BEGIN GLOBAL MANDATORY STYLES -->
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
 	<link href="./assets/global/plugins/font-awesome/css/font-awesome.min.css"  rel="stylesheet" type="text/css"/>
@@ -107,29 +117,45 @@
     <link href="./assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="./assets/global/plugins/jquery-multi-select/css/multi-select.css" rel="stylesheet" type="text/css" />
 
+    <link href="./assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
+    <link href="./assets/admin/pages/css/profile.css" rel="stylesheet" type="text/css"/>
+
+	<link href="./assets/global/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css"/>
+
+
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link href="./assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet">
 
 	<!-- END PAGE STYLES -->
 	<!-- BEGIN THEME STYLES -->
 	<!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
-	<link href="./assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css"/>
-	<link href="./assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+	
+    <% if(web.isMaterial()) { %>
+        <script >console.info("Material Design") </script>
+        <link href="./assets/global/css/components-md.css" id="style_components" rel="stylesheet" type="text/css"/>
+        <link href="./assets/global/css/plugins-md.css" rel="stylesheet" type="text/css"/>
+
+    <% } else { %>
+        <script >console.info("Default Design") </script>
+        <link href="./assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css"/>
+	    <link href="./assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+    <% } %>    
+    
 	<link href="./assets/admin/layout4/css/layout.css" rel="stylesheet" type="text/css"/>
 	<link href="./assets/admin/layout4/css/themes/light.css" rel="stylesheet" type="text/css" id="style_color"/>
 	
 	<!-- END THEME STYLES -->
-	<link rel="shortcut icon" href="favicon.ico"/>
+	<link rel="shortcut icon" href="./assets/logos/favicon.png"/>
 
-	<link rel="stylesheet" type="text/css" media="screen" href="assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css" />
-    <link href="./jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="search" type="text/css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/jqgrid/css/ui.jqgrid.css" />
+	<link href="./assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="./assets/jqgrid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" media="screen" />
 
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
+        
+        <style type="text/css">
+        
+        </style>
     
-<!--
-    <link href="jquery-ui-1.11.4.custom/jquery-ui.min.css" rel="search" type="text/css" />
-    <link href="jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" rel="search" type="text/css" />
-    <link href="jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="search" type="text/css" />
--->
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -151,7 +177,7 @@
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
 			<a href="index.jsp">
-			<img src="./assets/admin/layout4/img/logo-light.png" alt="logo" class="logo-default"/>
+			<img src="./assets/logos/logo_header.png" alt="logo" style="margin: 20px 10px 0 10px; width: 107px;" class="logo-default"/>
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -180,17 +206,8 @@
 						</a>
 						<ul class="dropdown-menu dropdown-menu-default">
 							<li>
-								<a href="extra_profile.html">
-								<i class="icon-user"></i> My Profile </a>
-							</li>
-							<li>
-								<a href="page_calendar.html">
-								<i class="icon-calendar"></i> My Calendar </a>
-							</li>
-							<li>
-								<a href="page_todo.html">
-								<i class="icon-rocket"></i> My Tasks <span class="badge badge-success">
-								7 </span>
+								<a href="index.jsp?view=83:0">
+								<i class="icon-rocket"></i> My Tasks
 								</a>
 							</li>
 							<li class="divider">
@@ -240,8 +257,14 @@
 	<div class="page-content-wrapper">
 		<div class="page-content">
 
+<% if(web.getViewType().equals("DASHBOARD")) { %>
+
+		<%= web.getDashboard() %>
+
+<% } else { %>
+
 			<!-- BEGIN PAGE CONTENT-->
-			<form id="baraza" name="baraza" method="post" action="index.jsp" data-confirm-send="false" data-ajax="false">
+			<form id="baraza" name="baraza" method="post" action="index.jsp" data-confirm-send="false" data-ajax="false" <%= web.getEncType() %> >
 				<%= web.getHiddenValues() %>
 			<div class="row">
 				<div class="col-md-12" >
@@ -249,42 +272,30 @@
 					<% if(opResult != null) out.println("<div style='color:#FF0000'>" + opResult + "</div>"); %>
 					<%= web.getSaveMsg() %>
 
-					<div class="portlet box purple">
-                        
-<!--
-                        <input class="mask_currency" data-mask="999,999.99" style="text-align: right;">
-                        <input class="mask_currency" data-mask="999.99" style="text-align: right;">
-                        <input class="mask_currency" data-mask="999,999,99999.99" style="text-align: right;">
-                        <button id="btnTest" type="button">Check values</button>
-                        
--->
-
+					<div class="portlet box <%= web.getViewColour() %>">
 						<div class="portlet-title">
 							<div class="caption">
-								<i class="fa fa-cogs"></i><%= web.getViewName() %>
+								<i class="<%= web.getViewIcon() %>"></i><%= web.getViewName() %>
 							</div>
 							<div class="tools">
-								<a href="javascript:;" class="collapse">
+								<!--<a href="javascript:;" class="collapse">
 								</a>
 								<a href="javascript:;" class="reload">
 								</a>
 								<a href="javascript:;" class="remove">
-								</a>
+								</a>-->
 							</div>
 							<%= web.getButtons() %>
 						</div>
-						<div class="portlet-body">
-							<div class="table-scrollable">
+
+						<div class="portlet-body" style="min-height:360px;">
 								<%= web.getBody(request, reportPath) %>
-							</div>
 						</div>
 
 						<%= web.getFilters() %>
 
-						<% String actionOp = web.getOperations();
+						<% actionOp = web.getOperations();
 						if(actionOp != null) {	%>
-							
-                               
                             <div class="row" style="">
                                 <div class="col-md-2" >
                                     <%= actionOp %>
@@ -294,7 +305,6 @@
                                     <button type="button" id="btnAction" name="process" value="Action" class="btn btn-sm green">Action</button>
                                 </div>
                             </div>
-						  	
 						<%	} %>
 
 						<% if(fieldTitles != null) { %>
@@ -322,8 +332,29 @@
 						<%= web.showFooter() %>
 					</div>
 				</div>
-			</div>
+			    <% if(web.getViewType().equals("FILES")){ %>
+                    <div class="row"> <!-- file upload row -->
+                        <div class="col-md-12">
+                            <span class="btn green fileinput-button"> 
+                                <i class="glyphicon glyphicon-plus"></i>
+                            <span>Add files...</span>
+                            <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files[]" multiple>
+                            </span>
+                            <br>
+                            <br>
+                            <div id="progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-success" style="width:0%;">
+                                </div>
+                            </div>
+                            <!-- The container for the uploaded files -->
+                            <div id="files" class="files"></div>
+                            <br>
+                        </div>
+                    </div><!-- end file upload row -->
+                <% } %> 
 			</form>
+<% } %>
 		</div>
 	</div>
 	<!-- END CONTENT -->
@@ -369,6 +400,7 @@
 <script src="./assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript" ></script>
+<script src="./assets/global/plugins/ckeditor/ckeditor.js" type="text/javascript" ></script>
 
 <script src="./assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/select2/select2.min.js" type="text/javascript"></script>
@@ -378,7 +410,29 @@
 <script src="./assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
+<script src="./assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<!--<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>-->
+<script src="./assets/global/plugins/jquery-file-upload/js/vendor/load-image.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="./assets/global/plugins/jquery-file-upload/js/vendor/canvas-to-blob.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
+
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="./assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
 <script src="./assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="./assets/admin/layout4/scripts/layout.js" type="text/javascript"></script>
 <script src="./assets/admin/layout4/scripts/demo.js" type="text/javascript"></script>
@@ -386,101 +440,260 @@
 <script src="./assets/admin/pages/scripts/tasks.js" type="text/javascript"></script>
 <script src="./assets/admin/pages/scripts/components-pickers.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript" ></script>
+<script src="./assets/global/plugins/jquery-multi-select/js/jquery.quicksearch.js" type="text/javascript"></script>
+
+<script src="./assets/global/plugins/jstree/dist/jstree.min.js"></script>
+<script src="./assets/admin/pages/scripts/ui-tree.js"></script>
 
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
 
-	<script>
-		jQuery(document).ready(function() {    
-            
-		   Metronic.init(); // init metronic core componets
-		   Layout.init(); // init layout
-		   //Demo.init(); // init demo features 
-		   //Index.init(); // init index page
-		   //Tasks.initDashboardWidget(); // init tash dashboard widget  
-		   //ComponentsPickers.init();
-            
-            $('.date-picker').datepicker();
-            
-            //alert($(".mask_currency").length);
-            
-            $('.multi-select').multiSelect();
-            
-            /*$(".mask_currency").each(function(i, obj){
-                var mask = $(this).attr('data-mask');
-                $(this).inputmask(mask, {
-                    numericInput: true
-                });
-            });*/
 
-            $('.select2me').select2({
-                placeholder: "Select an option",
-                allowClear: true
-            });
-		});
-	</script>
+<script>
+    jQuery(document).ready(function() {    
+        Metronic.init(); // init metronic core componets
+        Layout.init(); // init layout
 
-	<script>
-	<% if(web.isGrid()) { %>
-		var jqcf = <%= web.getJSONHeader() %>;
-
-        jqcf.rowNum = 20;
-        jqcf.height = 300;
-        
-        <% if(actionOp != null) {	%>
-		  jqcf.multiselect = true;
-	    <% } %>
-
-		jQuery("#jqlist").jqGrid(jqcf);
-		jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false,add:false,del:false});
-
-        $('#btSearch').click(function(){
-            var filtername = $("#filtername").val();
-			var filtertype = $("#filtertype").val();
-			var filtervalue = $("#filtervalue").val();
-			var filterand = $("#filterand").is(':checked');
-			var filteror = $("#filteror").is(':checked');
-
-			console.log(filterand);
-			$.post("ajax?fnct=filter", {filtername: filtername, filtertype: filtertype, filtervalue: filtervalue, filterand: filterand, filteror: filteror}, function(data){
-				$('#jqlist').trigger('reloadGrid');
-            });
-		});
-        
-		$("#jqlist").dblclick(function(){
-			var rowId =$("#jqlist").jqGrid('getGridParam','selrow');  
-			var rowData = jQuery("#jqlist").getRowData(rowId);
-			var colData = rowData['CL'];
-
-			location.replace(colData);
-		});                                 
-        
-        $('#btnAction').click(function(){
-            var operation = $("#operation").val();
-
-            var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
-            for (i = 0, n = selIds.length; i < n; i++) {
-                var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
-                var begin = coldata.lastIndexOf("=");
-                var end = coldata.length;
-                var id = coldata.substring(begin + 1, end);
-                cellValues.push(id);
-            }
-            if(cellValues.join(",") == ""){
-                alert('No row Selected');
-            } else {
-                //alert(cellValues.join(",")); 
-                //cellValues.join(",") returns 1,2,3,4
-                $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
-					$('#jqlist').trigger('reloadGrid');
-                }, "JSON");
-
-            }            
+        $('.date-picker').datepicker({
+            autoclose: true
         });
-	<% } %>
-	</script>
+
+        $('.select2me').select2({
+            placeholder: "Select an option",
+            allowClear: true
+        });
+        
+		UITree.init();
+        
+        //alert('<%= web.getView().getName().equals("FILES") %>');
+    });
+</script>
+
+<script>
+   	function updateField(valueid, valuename) {
+		document.getElementsByName(valueid)[0].value = valuename;
+	}
+    
+    <% if(web.isGrid()) { %>
+	var lastsel2;
+
+    var jqcf = <%= web.getJSONHeader() %>;
+
+    jqcf.rowNum = 30;
+    jqcf.height = 300;
+    jqcf.rowList=[10,20,30,40,50];
+    jqcf.datatype = "json";
+    jqcf.pgbuttons = true;
+	jqcf.loadonce = true;
+	jqcf.autoencode = false;
+                         
+    jqcf.jsonReader = {
+        repeatitems: false,
+        root: function (obj) { return obj; },
+        page: function (obj) { return jQuery("#jqlist").jqGrid('getGridParam', 'page'); },
+        total: function (obj) { return Math.ceil(obj.length / jQuery("#jqlist").jqGrid('getGridParam', 'rowNum')); },
+        records: function (obj) { return obj.length; }
+    }
+                         
+    <% if(actionOp != null) {	%>
+      jqcf.multiselect = true;
+    <% } %>
+
+    jqcf.ondblClickRow = function(rowid) { 
+        console.log(rowid);
+        var data = jQuery("#jqlist").jqGrid('getRowData',rowid);
+        location.replace(data.CL);
+    };
+
+	jqcf.onSelectRow = function(id){
+      if(id && id!==lastsel2){
+        jQuery('#jqlist').restoreRow(lastsel2);
+        jQuery('#jqlist').editRow(id,true);
+        lastsel2=id;
+      }
+    };
+
+	jqcf.editurl = "ajaxupdate";
+
+    //console.log(jqcf);
+    
+    jQuery("#jqlist").jqGrid(jqcf);
+    jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false, add:false, del:false, search:false});
+
+    $('#btSearch').click(function(){
+        var filtername = $("#filtername").val();
+        var filtertype = $("#filtertype").val();
+        var filtervalue = $("#filtervalue").val();
+        var filterand = $("#filterand").is(':checked');
+        var filteror = $("#filteror").is(':checked');
+
+        $.post("ajax?fnct=filter", {filtername: filtername, filtertype: filtertype, filtervalue: filtervalue, filterand: filterand, filteror: filteror}, function(data){
+            $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
+        });
+    });
+    
+    $('.reload').click(function(){
+        $('#jqlist').trigger('reloadGrid');               
+    });                            
+
+    $('#btnAction').click(function(){
+        var operation = $("#operation").val();
+
+        var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
+        for (i = 0, n = selIds.length; i < n; i++) {
+            var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
+            var begin = coldata.lastIndexOf("=");
+            var end = coldata.length;
+            var id = coldata.substring(begin + 1, end);
+            cellValues.push(id);
+        }
+        if(cellValues.join(",") == ""){
+            alert('No row Selected');
+        } else {
+            $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
+                $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
+            });
+        }            
+    });
+    <% } %>
+
+    // MULTISELECT INITIALIZE
+    $('.multi-select').multiSelect({
+            selectableHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder='Search Address'>",
+            selectionHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder='Search Address'>",
+            selectableFooter: "<div style='text-align: center;padding: 3px;color: #fff;' class='list-group-item bg-blue'>Selectable Items</div>",
+            selectionFooter: "<div style='text-align: center;padding: 3px;color: #fff;' class='list-group-item bg-green'>Selected</div>",
+            afterInit: function(ms){
+            var that = this,
+                $selectableSearch = that.$selectableUl.prev(),
+                $selectionSearch = that.$selectionUl.prev(),
+                selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+                selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+
+            that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+            .on('keydown', function(e){
+              if (e.which === 40){
+                that.$selectableUl.focus();
+                return false;
+              }
+            });
+
+            that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+            .on('keydown', function(e){
+              if (e.which == 40){
+                that.$selectionUl.focus();
+                return false;
+              }
+            });
+            },
+            afterSelect: function(){
+                this.qs1.cache();
+                this.qs2.cache();
+            },
+            afterDeselect: function(){
+                this.qs1.cache();
+                this.qs2.cache();
+            }
+        });
+                             
+        
+        CKEDITOR.config.toolbar = [
+           ['Styles','Format','Font','FontSize'],
+           '/',
+           ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Paste','Find','Replace','-','Outdent','Indent','-','Print'],
+           '/',
+           ['NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+           ['Image','Table','-','Link','Flash','Smiley','TextColor','BGColor','Source']
+        ] ;
+
+
+</script>
+<script>
+/*jslint unparam: true, regexp: true */
+/*global window, $ */
+$(function () {
+    'use strict';
+    
+    $('#fileupload').fileupload({
+        url: 'putbarazafiles',
+        dataType: 'json',
+        autoUpload: true,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize: 999000,
+        // Enable image resizing, except for Android and Opera,
+        // which actually support image resizing, but fail to
+        // send Blob objects via XHR requests:
+        disableImageResize: /Android(?!.*Chrome)|Opera/
+            .test(window.navigator.userAgent),
+        previewMaxWidth: 100,
+        previewMaxHeight: 100,
+        previewCrop: true
+    }).on('fileuploadadd', function (e, data) {
+        data.context = $('<div/>').appendTo('#files');
+        $.each(data.files, function (index, file) {
+            var node = $('<p/>')
+                    .append($('<span/>').text(file.name));
+            if (!index) {
+                node
+                    .append('<br>')
+                   // .append(uploadButton.clone(true).data(data));
+            }
+            node.appendTo(data.context);
+        });
+    }).on('fileuploadprocessalways', function (e, data) {
+        var index = data.index,
+            file = data.files[index],
+            node = $(data.context.children()[index]);
+        if (file.preview) {
+            node
+                .prepend('<br>')
+                .prepend(file.preview);
+        }
+        if (file.error) {
+            node
+                .append('<br>')
+                .append($('<span class="text-danger"/>').text(file.error));
+        }
+        if (index + 1 === data.files.length) {
+            data.context.find('button')
+                .text('Upload')
+                .prop('disabled', !!data.files.error);
+        }
+    }).on('fileuploadprogressall', function (e, data) {
+        var progress = parseInt(data.loaded / data.total * 100, 10);
+        $('#progress .progress-bar').css(
+            'width',
+            progress + '%'
+        );
+    }).on('fileuploaddone', function (e, data) {
+        $.each(data.result.files, function (index, file) {
+            if (file.url) {
+                var link = $('<a>')
+                    .attr('target', '_blank')
+                    .prop('href', file.url);
+                $(data.context.children()[index])
+                    .wrap(link);
+            } else if (file.error) {
+                var error = $('<span class="text-danger"/>').text(file.error);
+                $(data.context.children()[index])
+                    .append('<br>')
+                    .append(error);
+            }
+            $('#jqlist').trigger('reloadGrid');
+        });
+    }).on('fileuploadfail', function (e, data) {
+        $.each(data.files, function (index) {
+            var error = $('<span class="text-danger"/>').text('File upload failed.');
+            $(data.context.children()[index])
+                .append('<br>')
+                .append(error);
+        });
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+});
+</script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
