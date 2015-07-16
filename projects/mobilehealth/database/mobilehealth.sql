@@ -115,7 +115,8 @@ CREATE TABLE surveys(
     location_lat        varchar(30),
     location_lng	    varchar(30),
     remarks             text,
-    survey_status       integer not null default 0 -- 0 not approved, 1 approved, 2 returned, 3 redone
+    survey_status       integer not null default 0, -- 0 not approved, 1 approved, 2 returned, 3 redone
+    return_reason       text
 );
 
 
@@ -331,12 +332,12 @@ CREATE VIEW vw_sub_countys AS
 
 
 
-
+-- DROP VIEW vw_surveys;
 CREATE VIEW vw_surveys AS
 	SELECT health_workers.health_worker_id, health_workers.worker_name, 
 	orgs.org_id, orgs.org_name, 
 	countys.county_id, countys.county_name,
-	sub_countys.sub_county_id, sub_countys.sub_county_name, surveys.survey_id, surveys.village_name, surveys.household_number, surveys.household_member, surveys.survey_time, surveys.location_lat, surveys.location_lng, surveys.remarks, surveys.survey_status
+	sub_countys.sub_county_id, sub_countys.sub_county_name, surveys.survey_id, surveys.village_name, surveys.household_number, surveys.household_member, surveys.survey_time, surveys.location_lat, surveys.location_lng, surveys.remarks, surveys.survey_status,surveys.return_reason
 	FROM surveys
 	INNER JOIN health_workers ON surveys.health_worker_id = health_workers.health_worker_id
 	INNER JOIN orgs ON surveys.org_id = orgs.org_id
