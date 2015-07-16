@@ -12,7 +12,7 @@ Features
 
 Setup
 
-1. install Postgresql http://www.postgresql.org/ version 8.4 and above
+1. install Postgresql http://www.postgresql.org/ version 9.0 and above
 	Linux
 	yum install postgresql-server
 	service postgresql initdb - (Optional - wull clear all databases)
@@ -21,7 +21,7 @@ Setup
 	Windows
 	Download the setup file and install
 
-2. install Java http://www.oracle.com/technetwork/java/javase/downloads/index.html version 1.6.18 and above
+2. install Java http://www.oracle.com/technetwork/java/javase/downloads/index.html version 1.6.30 and above
 
 3. install Tomcat http://tomcat.apache.org version 6.0.21
 	edit TOMCAT_HOME/bin/catalina.sh
@@ -64,7 +64,7 @@ Running
 
 USER PASSWORDS
 username root
-password enter
+password baraza
 
 DEMO Accounts
 

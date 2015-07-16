@@ -22,6 +22,22 @@
 		<param-name>app_db</param-name>
 		<param-value>hr</param-value>
 	</context-param>
+	<context-param>
+		<param-name>repository_url</param-name>
+		<param-value>http://localhost:8080/repository/webdav/pictures/</param-value>
+	</context-param>
+	<context-param>
+		<param-name>rep_username</param-name>
+		<param-value>repository</param-value>
+	</context-param>
+	<context-param>
+		<param-name>rep_password</param-name>
+		<param-value>baraza</param-value>
+	</context-param>
+	<context-param>
+		<param-name>photo_access</param-name>
+		<param-value>ob</param-value>
+	</context-param>
 
 	<resource-ref>
 		<description>postgreSQL Datasource for Baraza</description>
@@ -104,12 +120,29 @@
 	</servlet-mapping>
 
 	<servlet>
+		<servlet-name>WebPictures</servlet-name>
+		<servlet-class>org.baraza.web.BWebPictures</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WebPictures</servlet-name>
+		<url-pattern>/barazapictures</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>WebPictures</servlet-name>
+		<url-pattern>/delbarazapictures</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>BarazaAJAX</servlet-name>
 		<servlet-class>org.baraza.web.Bajax</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>BarazaAJAX</servlet-name>
 		<url-pattern>/ajax</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>BarazaAJAX</servlet-name>
+		<url-pattern>/ajaxupdate</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>
@@ -141,7 +174,7 @@
 			<role-name>staff</role-name>
 			<role-name>applicant</role-name>
 			<role-name>director</role-name>
-			<role-name>manager</role-name>
+			<role-name>subscription</role-name>
 		</auth-constraint>
 	</security-constraint>
 
@@ -162,12 +195,30 @@
 		<role-name>staff</role-name>
 		<role-name>applicant</role-name>
 		<role-name>director</role-name>
-		<role-name>manager</role-name>
+		<role-name>subscription</role-name>
 	</security-role>
 
 	<error-page>
 		<error-code>403</error-code>
 		<location>/logonError.jsp</location>
+	</error-page>
+    
+    <error-page>
+		<error-code>404</error-code>
+		<location>/assets/error/404.jsp</location>
+	</error-page>
+    <error-page>
+		<error-code>408</error-code>
+		<location>/assets/error/408.jsp</location>
+	</error-page>
+    <error-page>
+		<error-code>500</error-code>
+		<location>/assets/error/500.jsp</location>
+	</error-page>
+    
+    <error-page>
+		<error-code>401</error-code>
+		<location>/assets/error/401.jsp</location>
 	</error-page>
 
 </web-app>

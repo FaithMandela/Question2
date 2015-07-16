@@ -22,7 +22,7 @@
 			<MENU name="Approvals">75</MENU>
 			<MENU name="Forms">70</MENU>
 		</MENU>
-		<MENU name="Reports" role="admin,payroll">
+		<MENU name="Reports" role="admin,payroll,reports">
 			<MENU name="Definations">101</MENU>
 			<MENU name="Statutory Deductions">102</MENU>
 			<MENU name="Employee List">103</MENU>
@@ -37,7 +37,7 @@
 			<MENU name="P10">112</MENU>
 			<MENU name="Payroll Ledger">115</MENU>
 		</MENU>
-		<MENU name="HR" role="admin,payroll" xml="hr.xml">0</MENU>
+		<MENU name="HR" role="admin,payroll,reports" xml="hr.xml">0</MENU>
 	</MENU>
 	<DESK w="715" name="Definations" key="4" h="500">
 		<GRID name="Allowances" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 1)">
@@ -637,10 +637,10 @@
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
-				<ACTION fnct="generate_payroll" approval="1" role="hr">Generate Payroll</ACTION>
+				<ACTION fnct="generate_payroll" approval="1">Generate Payroll</ACTION>
 				<ACTION fnct="process_payroll" approval="1" role="payroll">Process Payroll</ACTION>
 				<ACTION fnct="process_loans" role="payroll">Process Loans</ACTION>
-				<ACTION fnct="process_payroll" approval="2" role="payroll">Approve Payroll</ACTION>
+				<ACTION fnct="process_payroll" approval="2" role="payroll">Request Approval</ACTION>
 				<ACTION fnct="process_ledger" role="payroll">Process Ledger</ACTION>
 			</ACTIONS>
 			<GRID name="Employee Month" keyfield="employee_month_id" orderby="entity_name" linkfield="period_id" table="vw_employee_month">

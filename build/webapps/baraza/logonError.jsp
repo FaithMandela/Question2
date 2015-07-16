@@ -47,7 +47,7 @@
 <div class="page-lock">
 	<div class="page-logo">
 		<a class="brand" href="index.html">
-        <img src="${contextPath}/resources/themes/default/images/logo.png" alt="logo"/>
+        <img src="${contextPath}/assets/logos/logo.png" alt=""/>
         
             <!--<img src="${contextPath}/assets/admin/layout4/img/logo-big.png" alt="logo"/>-->
 

@@ -1,2 +1,0 @@
-<MIGRATE_TABLES dbpath="jdbc:postgresql://localhost/hr_old" dbclass="org.postgresql.Driver" dbusername="root" dbpassword="invent">
-</MIGRATE_TABLES>

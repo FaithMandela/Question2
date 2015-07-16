@@ -1094,7 +1094,7 @@ BEGIN
 		UPDATE entitys SET entity_name = NEW.studentname, mail_user = NEW.emailuser, primary_email = NEW.emailuser || '@std.babcock.edu.ng'
 		WHERE user_name = NEW.studentid;
 		
-		IF (OLD.guardianname IS NULL) and (NEW.guardianname IS NOT NULL) THEN
+		IF (NEW.guardianname IS NOT NULL) THEN
 			IF(v_guardian_id is null)THEN
 				INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, 
 					mail_user, primary_email, 
