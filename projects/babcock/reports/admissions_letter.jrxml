@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="288"/>
+	<property name="ireport.y" value="166"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -62,70 +62,70 @@ WHERE (registrationid = '$P!{filterid}')]]>
 	<summary>
 		<band height="601" splitType="Stretch">
 			<staticText>
-				<reportElement x="2" y="141" width="70" height="15" uuid="a19cca92-13e1-466c-a38f-5b1fcf387e6e"/>
+				<reportElement x="2" y="127" width="70" height="15" uuid="a19cca92-13e1-466c-a38f-5b1fcf387e6e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[SCHOOL:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="156" width="69" height="15" uuid="7f6a0398-2c4a-4d43-bacf-5264ca3b012f"/>
+				<reportElement x="2" y="143" width="69" height="15" uuid="7f6a0398-2c4a-4d43-bacf-5264ca3b012f"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[DEGREE:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="244" y="156" width="47" height="15" uuid="8ff3989c-8b82-4496-aa2e-b41072a47aa3"/>
+				<reportElement x="244" y="143" width="47" height="15" uuid="8ff3989c-8b82-4496-aa2e-b41072a47aa3"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[LEVEL:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="244" y="141" width="92" height="15" uuid="05e3a0ad-bab0-4065-9298-0b7ef8ff4906"/>
+				<reportElement x="244" y="127" width="83" height="15" uuid="05e3a0ad-bab0-4065-9298-0b7ef8ff4906"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[DEPARTMENT:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="291" y="156" width="36" height="15" uuid="92338511-a339-4f19-8b41-0136c99cdae4"/>
+				<reportElement x="291" y="143" width="36" height="15" uuid="92338511-a339-4f19-8b41-0136c99cdae4"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["100"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="74" y="141" width="170" height="15" uuid="3cff5569-34f0-4948-a460-e801083e0922"/>
+				<reportElement x="74" y="127" width="170" height="15" uuid="3cff5569-34f0-4948-a460-e801083e0922"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{schoolname}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="75" y="156" width="169" height="15" uuid="f000d3a6-6ef2-43a1-93b7-51bf429c5db5"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="143" width="169" height="31" uuid="f000d3a6-6ef2-43a1-93b7-51bf429c5db5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{major_title}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="336" y="141" width="175" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
+				<reportElement x="328" y="127" width="175" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{departmentname}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="331" y="156" width="73" height="15" uuid="8d7b5b82-99c8-40b4-b429-3d21b088ae2c"/>
+				<reportElement x="331" y="143" width="73" height="15" uuid="8d7b5b82-99c8-40b4-b429-3d21b088ae2c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[DURATION:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="404" y="156" width="107" height="15" uuid="02bf9f67-d0cf-4f09-a77d-68570ff12668"/>
+				<reportElement x="404" y="143" width="107" height="15" uuid="02bf9f67-d0cf-4f09-a77d-68570ff12668"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -158,28 +158,28 @@ WHERE (registrationid = '$P!{filterid}')]]>
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="107" width="509" height="30" uuid="1baee416-8a69-43aa-8a94-18cc3f2416f3"/>
+				<reportElement x="2" y="93" width="509" height="30" uuid="1baee416-8a69-43aa-8a94-18cc3f2416f3"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[As a result of your recent application for admission and performance in our screening exercises, you have been offered <b><i> a provisional admission</b></i> into an <b><i>undergraduate programme</b></i>, as follows:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="86" width="511" height="15" uuid="283a7ddb-c330-4103-86de-eac066d4927f"/>
+				<reportElement x="0" y="72" width="511" height="15" uuid="283a7ddb-c330-4103-86de-eac066d4927f"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[<b>PROVISIONAL UNDERGRADUATE ADMISSION</b>]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="62" width="511" height="15" uuid="93c3055c-e953-4b97-b276-be7112e66da0"/>
+				<reportElement x="0" y="48" width="511" height="15" uuid="93c3055c-e953-4b97-b276-be7112e66da0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" isItalic="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Dear, " + $F{fullname}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="286" y="28" width="225" height="15" uuid="3b8e4486-1ea2-41af-8589-f433a2a7670c"/>
+				<reportElement x="286" y="12" width="225" height="15" uuid="3b8e4486-1ea2-41af-8589-f433a2a7670c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -258,7 +258,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textFieldExpression><![CDATA["25<sup>th</sup> - 31 <sup>th</sup> August, 2015"]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd MMMMM, yyyy" isBlankWhenNull="true">
-				<reportElement x="2" y="28" width="143" height="15" uuid="6863410f-8b7f-4012-a408-c9a3c23da958"/>
+				<reportElement x="2" y="12" width="143" height="15" uuid="6863410f-8b7f-4012-a408-c9a3c23da958"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
