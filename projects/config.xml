@@ -63,8 +63,8 @@
 	<APP dbpath="jdbc:postgresql://localhost/hot" dbname="hot" path="hot" xmlfile="hot.xml" dbclass="org.postgresql.Driver" dbusername="root">HOT</APP>
 	<APP dbpath="jdbc:postgresql://localhost/yu" dbname="yu" path="yu" xmlfile="yu.xml" dbclass="org.postgresql.Driver" dbusername="root">YU</APP>
 	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Baraza</APP>
-	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.aphrc.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Baraza Mailing Server</SERVER>
-	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.aphrc.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
+
+	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.server.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Modem Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.soap.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Soap Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/cases" noaudit="false" dbname="cases" path="cases" xmlfile="reports.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Cases Reports Server</SERVER>
@@ -74,10 +74,9 @@
 	<SERVER dbpath="jdbc:postgresql://localhost/mhealth" dbname="mhealth" path="mhealth" xmlfile="sms.server.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">MHealth Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/galileo" dbname="galileo" path="galileo" xmlfile="galileo.mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Galileo Escalation Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/tamshi" dbname="tamshi" path="tamshi" xmlfile="sms.tamshi.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Tamshi SMS Server</SERVER>
-	<SERVER dbpath="jdbc:postgresql://localhost/metropol" dbname="metropol" path="metropol" xmlfile="sms.metropol.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Metropol SMS Server</SERVER>
-	<SERVER dbpassword="Imis2goke" dbpath="jdbc:oracle:thin:@172.100.3.30:1542:timis" noaudit="true" dbname="timis" path="ob" xmlfile="mail.xml" disable="true" dbclass="oracle.jdbc.driver.OracleDriver" dbusername="erpdbuser">CCKIMIS Mailing Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="true" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://192.168.0.4:5432/fidelity" dbname="fidelity" path="fidelity" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Fidelity Emails</SERVER>
+
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 </APPLIST>

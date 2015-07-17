@@ -470,6 +470,14 @@ CREATE VIEW vw_org_address AS
 		vw_address.website as org_website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'orgs') AND (vw_address.is_default = true);
+	
+CREATE VIEW vw_address_entitys AS
+	SELECT vw_address.address_id, vw_address.address_name, vw_address.table_id, vw_address.table_name,
+		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.is_default,
+		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
+		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
+	FROM vw_address
+	WHERE (vw_address.table_name = 'entitys');
 
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,

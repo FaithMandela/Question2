@@ -63,7 +63,7 @@ public class BWebReport  {
 
 		name = view.getAttribute("name");
 		reportfile = view.getAttribute("reportfile");
-		userfilter = view.getAttribute("user");
+		userfilter = view.getAttribute("user", "entity_id");
 		groupfilter = view.getAttribute("group");
 		filterkey = view.getAttribute("filterkey");
 		filtervalue = request.getParameter("filtervalue");

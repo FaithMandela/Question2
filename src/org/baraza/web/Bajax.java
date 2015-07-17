@@ -41,6 +41,8 @@ public class Bajax extends HttpServlet {
 		String xmlcnf = (String)session.getAttribute("xmlcnf");
 		String ps = System.getProperty("file.separator");
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
+		String projectDir = context.getInitParameter("projectDir");
+		if(projectDir != null) xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
 		String dbconfig = "java:/comp/env/jdbc/database";
 		
 		Enumeration e = request.getParameterNames();

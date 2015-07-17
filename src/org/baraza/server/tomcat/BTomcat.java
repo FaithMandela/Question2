@@ -31,8 +31,9 @@ public class BTomcat extends Thread {
 
 	public BTomcat(BDB db, BElement root, BLogHandle logHandle, String projectDir) {
 		String ps = System.getProperty("file.separator");
-		String baseDir = getCurrentDir() + ps + root.getAttribute("baseDir") + ps;
-		String appBase = baseDir + root.getAttribute("appBase") + ps;
+		String basePath = root.getAttribute("base.path", getCurrentDir());
+		String baseDir = basePath + ps + root.getAttribute("base.dir") + ps;
+		String appBase = baseDir + root.getAttribute("app.base") + ps;
 		String repository = root.getAttribute("repository") + ps;
 		String contextPath = root.getAttribute("contextPath");
 		Integer port = new Integer(root.getAttribute("port", "9876"));
@@ -53,7 +54,6 @@ public class BTomcat extends Thread {
 			context.setConfigFile(configFile.toURI().toURL());			
 			context.addParameter("projectDir", projectDir);
 			
-
 			if(repository != null) {
 				Context rpContext = tomcat.addWebapp("/repository", baseDir + repository);
 				File rpConfigFile = new File(baseDir + repository + "META-INF" + ps + "context.xml");
