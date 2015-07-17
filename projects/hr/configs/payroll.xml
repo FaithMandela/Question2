@@ -637,7 +637,7 @@
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
-				<ACTION fnct="generate_payroll" approval="1">Generate Payroll</ACTION>
+				<ACTION fnct="generate_payroll" approval="1" role="hr">Generate Payroll</ACTION>
 				<ACTION fnct="process_payroll" approval="1" role="payroll">Process Payroll</ACTION>
 				<ACTION fnct="process_loans" role="payroll">Process Loans</ACTION>
 				<ACTION fnct="process_payroll" approval="2" role="payroll">Request Approval</ACTION>

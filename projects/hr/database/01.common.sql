@@ -123,14 +123,6 @@ CREATE VIEW vw_orgs AS
 	FROM orgs INNER JOIN vw_address ON orgs.org_id = vw_address.table_id
 		INNER JOIN currency ON orgs.currency_id = currency.currency_id
 	WHERE (vw_address.table_name = 'orgs') AND (vw_address.is_default = true) AND (orgs.is_active = true);
-	
-CREATE VIEW vw_address_entitys AS
-	SELECT vw_address.address_id, vw_address.address_name, vw_address.table_id, vw_address.table_name,
-		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.is_default,
-		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
-		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
-	FROM vw_address
-	WHERE (vw_address.table_name = 'entitys');
 
 CREATE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 

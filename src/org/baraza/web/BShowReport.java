@@ -33,6 +33,8 @@ public class BShowReport extends HttpServlet {
 		String ps = System.getProperty("file.separator");
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 		String dbconfig = "java:/comp/env/jdbc/database";
+		String projectDir = context.getInitParameter("projectDir");
+		if(projectDir != null) xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
 
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();

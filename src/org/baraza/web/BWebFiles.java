@@ -68,6 +68,9 @@ public class BWebFiles extends HttpServlet {
 		String xmlcnf = xmlcnf = (String)session.getAttribute("xmlcnf");
 		String ps = System.getProperty("file.separator");
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
+		String projectDir = context.getInitParameter("projectDir");
+		if(projectDir != null) xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
+		
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();
 		String webPath = "http://" + request.getLocalAddr() + ":" + request.getLocalPort();

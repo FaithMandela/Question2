@@ -17,8 +17,9 @@
 			<TEXTFIELD w="430" title="Website" h="20" y="150" x="10">website</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Primary Contact *" h="20" y="170" x="10" span="true">primary_contact</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Job Title *" h="20" y="190" x="10">job_title</TEXTFIELD>
-			<TEXTFIELD w="430" required="true" title="Primary Email *" h="20" y="210" x="10">primary_email</TEXTFIELD>
+			<TEXTFIELD w="430" required="true" title="Primary Email *" h="20" y="210" x="10" span="true">primary_email</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Confirm Email *" h="20" y="210" x="10">confirm_email</TEXTFIELD>
+			<TEXTAREA w="430" title="Details" h="70" y="290" x="10">details</TEXTAREA>
 			<FORMVIEW name="Subscription" keyfield="subscription_id" linkfield="subscription_id" table="vw_subscriptions">
 				<TEXTFIELD w="430" fnct="'Data submited check your email for details'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
 				<TEXTFIELD w="150" title="Business Name" h="20" y="70" x="10">business_name</TEXTFIELD>
