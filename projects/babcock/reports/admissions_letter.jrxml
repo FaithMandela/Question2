@@ -96,21 +96,21 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				</textElement>
 				<textFieldExpression><![CDATA["100"]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="74" y="141" width="170" height="15" uuid="3cff5569-34f0-4948-a460-e801083e0922"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{schoolname}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="75" y="156" width="169" height="15" uuid="f000d3a6-6ef2-43a1-93b7-51bf429c5db5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{major_title}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="336" y="141" width="175" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -124,7 +124,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				</textElement>
 				<text><![CDATA[DURATION:]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="404" y="156" width="107" height="15" uuid="02bf9f67-d0cf-4f09-a77d-68570ff12668"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
