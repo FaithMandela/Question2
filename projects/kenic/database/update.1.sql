@@ -19,3 +19,13 @@ CREATE TRIGGER updprice
   ON ledger
   FOR EACH ROW
   EXECUTE PROCEDURE updprice();
+
+  
+CREATE TRIGGER upd_domain_refund BEFORE INSERT OR UPDATE ON ledger
+FOR EACH ROW EXECUTE PROCEDURE upd_domain_refund();
+  
+CREATE TRIGGER tg_insert_ledger BEFORE INSERT ON ledger
+FOR EACH ROW EXECUTE PROCEDURE tg_insert_ledger();
+
+CREATE TRIGGER tg_audit_ledger AFTER INSERT OR UPDATE OR DELETE ON ledger
+FOR EACH ROW EXECUTE PROCEDURE tg_audit_ledger();
