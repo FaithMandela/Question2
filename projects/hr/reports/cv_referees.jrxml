@@ -16,6 +16,8 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT  address_name, 'P.O. Box '::text || post_office_box || '-'::text || postal_code AS posta,  town || ', ':: text || sys_country_name AS location,
 phone_number, email, position_held || ', '::text ||  company_name AS title

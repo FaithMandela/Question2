@@ -16,6 +16,8 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_evaluation_points.job_review_id, vw_evaluation_points.entity_name, vw_evaluation_points.total_points, vw_evaluation_points.review_date, vw_evaluation_points.review_done, vw_evaluation_points.recomendation, vw_evaluation_points.review_category_name, vw_evaluation_points.review_point_name, vw_evaluation_points.review_points, vw_evaluation_points.points, vw_evaluation_points.narrative
 FROM vw_evaluation_points

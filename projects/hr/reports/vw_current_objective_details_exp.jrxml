@@ -19,6 +19,8 @@
 	<parameter name="objective_detail_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_objective_details.objective_id, vw_objective_details.objective_name, vw_objective_details.objective_completed, vw_objective_details.objective_detail_id,
 vw_objective_details.objective_detail_name, vw_objective_details.success_indicator,

@@ -29,6 +29,8 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT employees.entity_id, employees.employee_id,
 (((employees.surname::text || ' '::text) || employees.first_name::text) || ' '::text) ||    COALESCE(employees.middle_name, ''::character varying)::text AS employee_name,

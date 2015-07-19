@@ -16,6 +16,8 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_leave.entity_name, vw_employee_leave.leave_type_name, vw_employee_leave.leave_from, vw_employee_leave.leave_to, vw_employee_leave.approve_status, vw_employee_leave.Leave_days, vw_employee_leave.narrative,
 (EXTRACT(YEAR FROM leave_from)) AS leave_year

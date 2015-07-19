@@ -33,6 +33,7 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
+
 	<subDataset name="ds_objective_details" uuid="2e0f62c4-b8cb-448b-8843-a7cefe55aed0">
 		<queryString language="SQL">
 			<![CDATA[SELECT vw_objectives.objective_id, vw_objectives.objective_name,
@@ -57,6 +58,8 @@ WHERE vw_objective_details.objective_id = vw_objectives.objective_id ;]]>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_objectives.employee_objective_id,
 vw_objectives.objective_type_id, vw_objectives.objective_type_name, vw_objectives.objective_id, vw_objectives.date_set, vw_objectives.objective_ps, vw_objectives.objective_name,vw_objectives. objective_completed,

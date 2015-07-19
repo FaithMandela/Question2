@@ -9,6 +9,8 @@
 	<parameter name="maxDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2013-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[select vw_employee_leave.* ,
 entitys.entity_name AS approver

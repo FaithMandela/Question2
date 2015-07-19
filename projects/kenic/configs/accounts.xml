@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
-<DATA dbclass="com.mysql.jdbc.Driver" dbpath="jdbc:mysql://localhost/kenic" dbusername="root" dbpassword="" noaudit="true">
-	<EXPORT name="Clients" table="client" keyfield="clid" marker="ispicked" psql="INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');">
+<DATA dbclass="com.mysql.jdbc.Driver" dbpath="jdbc:mysql://localhost/accounts" dbusername="root" dbpassword="invent2k" noaudit="true"
+	  processdelay="3">
+	<EXPORT name="Clients" table="client" keyfield="clid" marker="(ispicked=false)" marked="ispicked = true" psql="INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');">
 		<TEXTFIELD w="75" title="Clid">clid</TEXTFIELD>
 		<TEXTFIELD w="75" title="Name">name</TEXTFIELD>
 		<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
@@ -19,7 +20,7 @@
 		</INTO>
 	</EXPORT>
 
-	<EXPORT name="ledger" table="ledger" keyfield="id" marker="ispicked" psql="INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');">
+	<EXPORT name="ledger" table="ledger" keyfield="id" marker="(ispicked=false)" marked="ispicked = true" psql="INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');">
 		<TEXTFIELD w="75" title="ID">id</TEXTFIELD>
 		<TEXTFIELD w="75" title="Client Roid">client_roid</TEXTFIELD>
 		<TEXTFIELD w="75" title="Description">description</TEXTFIELD>

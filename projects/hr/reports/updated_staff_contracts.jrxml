@@ -6,6 +6,8 @@
 	<parameter name="fromDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2011-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_contracting.entity_id, vw_contracting.contract_type_name, vw_contracting.entity_name, vw_contracting.job_description,
 vw_contracting.opening_date,

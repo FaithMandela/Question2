@@ -17,6 +17,8 @@
 	<parameter name="employeeid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.period_year, vw_employee_month.period_month,
 (vw_employee_month.basic_pay + vw_employee_month.tax_allowance + getAdjustment(vw_employee_month.employee_month_id, 4, 32)) as grosspay,
