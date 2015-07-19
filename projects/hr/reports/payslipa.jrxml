@@ -26,7 +26,8 @@ vw_employee_month.currency_symbol,
 true as is_inpayoll, false as not_inpayroll
 
 FROM vw_employee_month
-WHERE (employee_month_id = '$P!{filterid}');]]>
+WHERE (employee_month_id = '$P!{filterid}')
+$P!{organd};]]>
 	</queryString>
 	<field name="employee_month_id" class="java.lang.Integer"/>
 	<field name="period_year" class="java.lang.String"/>

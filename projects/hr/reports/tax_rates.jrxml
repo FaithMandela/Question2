@@ -23,6 +23,7 @@
 		<![CDATA[SELECT tax_rates.tax_range, tax_rates.tax_rate, tax_rates.narrative
 FROM tax_rates
 WHERE (tax_rates.tax_type_id = $P{tax_type_id})
+$P!{organd}
 ORDER BY tax_rates.tax_range;]]>
 	</queryString>
 	<field name="tax_range" class="java.lang.Double"/>

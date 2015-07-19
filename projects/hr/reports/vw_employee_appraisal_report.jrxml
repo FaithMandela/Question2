@@ -50,6 +50,7 @@ INNER JOIN job_reviews ON employees.entity_id = job_reviews.entity_id
 LEFT JOIN vw_reporting ON vw_reporting.entity_id = job_reviews.entity_id
 LEFT JOIN applications ON applications.employee_id = employees.entity_id
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
+$P!{organd}
 AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is null));]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

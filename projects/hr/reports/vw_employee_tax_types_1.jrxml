@@ -24,6 +24,7 @@
 currency_symbol, base_amount
 FROM vw_employee_tax_types
 WHERE (employee_month_id = $P{employee_month_id})
+$P!{organd}
 ORDER BY vw_employee_tax_types.tax_type_id]]>
 	</queryString>
 	<field name="tax_type_name" class="java.lang.String"/>

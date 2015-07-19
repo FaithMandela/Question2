@@ -8,7 +8,8 @@
 	<queryString>
 		<![CDATA[SELECT sys_country_name, employee_name, department_name,
 department_role_name, nationality
-FROM  vw_employees]]>
+FROM  vw_employees
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="sys_country_name" class="java.lang.String"/>
 	<field name="employee_name" class="java.lang.String"/>

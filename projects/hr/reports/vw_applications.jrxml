@@ -21,6 +21,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_applications.intake_id, vw_applications.department_name, vw_applications.department_role_name, vw_applications.opening_date, vw_applications.closing_date, vw_applications.positions, vw_applications.entity_name, vw_applications.application_date, vw_applications.approve_status
 FROM vw_applications
+$P!{orgwhere}
 ORDER BY vw_applications.intake_id;]]>
 	</queryString>
 	<field name="intake_id" class="java.lang.Integer"/>

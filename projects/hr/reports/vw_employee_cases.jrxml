@@ -22,6 +22,7 @@
 		<![CDATA[SELECT vw_employee_cases.case_type_name, vw_employee_cases.entity_name, vw_employee_cases.case_date,
 vw_employee_cases.Completed,  vw_employee_cases.narrative
 FROM vw_employee_cases
+$P!{orgwhere}
 ORDER BY vw_employee_cases.case_date;]]>
 	</queryString>
 	<field name="case_type_name" class="java.lang.String"/>

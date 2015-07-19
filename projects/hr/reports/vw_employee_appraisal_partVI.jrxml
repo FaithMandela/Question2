@@ -14,6 +14,7 @@
 	<queryString>
 		<![CDATA[SELECT * FROM vw_career_development
 WHERE (job_review_id = '$P!{filterid}')
+$P!{organd}
 ORDER BY career_development_id ASC;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

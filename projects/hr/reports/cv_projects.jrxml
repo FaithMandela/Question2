@@ -21,7 +21,8 @@
 	<queryString>
 		<![CDATA[SELECT cv_projects.cv_project_date, cv_projects.cv_project_name
 FROM cv_projects
-WHERE (cv_projects.entity_id = '$P!{filterid}');]]>
+WHERE (cv_projects.entity_id = '$P!{filterid}')
+$P!{organd};]]>
 	</queryString>
 	<field name="cv_project_date" class="java.sql.Date"/>
 	<field name="cv_project_name" class="java.lang.String"/>

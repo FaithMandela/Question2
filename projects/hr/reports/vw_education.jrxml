@@ -23,6 +23,7 @@
 vw_education.date_to, vw_education.name_of_school, vw_education.examination_taken, vw_education.grades_obtained
 FROM vw_education
 WHERE (vw_education.entity_id = '$P!{filterid}')
+$P!{organd}
 ORDER BY vw_education.education_class_id]]>
 	</queryString>
 	<field name="education_class_name" class="java.lang.String"/>

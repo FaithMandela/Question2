@@ -79,6 +79,7 @@ WHERE (entity_id = '$P!{filterid}')]]>
 EXTRACT(YEAR FROM vw_employee_leave.leave_from) as leave_year
 FROM vw_employee_leave
 WHERE (vw_employee_leave.approve_status <> 'Rejected') AND (vw_employee_leave.entity_id = '$P!{filterid}')
+$P!{organd}
 ORDER BY EXTRACT(YEAR FROM vw_employee_leave.leave_from) desc, vw_employee_leave.leave_type_id, vw_employee_leave.leave_from desc;]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>

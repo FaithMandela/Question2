@@ -31,6 +31,7 @@ tax_relief_amount
 FROM vw_employee_adjustments
 WHERE (employee_month_id = $P{employee_month_id}) AND (Visible = true)
 AND (vw_employee_adjustments.In_payroll = '$P!{is_inpayroll}'::boolean)
+$P!{organd}
 ORDER BY vw_employee_adjustments.adjustment_type;]]>
 	</queryString>
 	<field name="adjustment_name" class="java.lang.String"/>

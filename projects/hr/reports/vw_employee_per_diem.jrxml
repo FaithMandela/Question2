@@ -23,7 +23,8 @@
 		<![CDATA[SELECT vw_employee_per_diem.travel_date, vw_employee_per_diem.days_travelled, vw_employee_per_diem.per_diem, vw_employee_per_diem.tax_amount, vw_employee_per_diem.full_amount
 FROM vw_employee_per_diem
 WHERE (vw_employee_per_diem.approve_status = 'Approved')
-	AND (employee_month_id = $P{employee_month_id})]]>
+	AND (employee_month_id = $P{employee_month_id})
+	$P!{organd}]]>
 	</queryString>
 	<field name="travel_date" class="java.sql.Date"/>
 	<field name="days_travelled" class="java.lang.Integer"/>

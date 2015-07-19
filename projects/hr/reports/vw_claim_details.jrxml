@@ -35,7 +35,8 @@
 	(amount * exchange_rate) as base_amount
 
   FROM vw_claim_details
-  WHERE claim_id = '$P!{filterid}';]]>
+  WHERE claim_id = '$P!{filterid}'
+	$P!{organd};]]>
 	</queryString>
 	<field name="claim_type_id" class="java.lang.Integer"/>
 	<field name="claim_type_name" class="java.lang.String"/>

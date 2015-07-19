@@ -12,12 +12,13 @@
 	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
-		<![CDATA[select vw_employee_leave.* ,
+		<![CDATA[SELECT vw_employee_leave.* ,
 entitys.entity_name AS approver
-from vw_employee_leave
-inner join approvals on approvals.table_id = vw_employee_leave.workflow_table_id
-inner join entitys on entitys.entity_id = approvals.app_entity_id
-where (vw_employee_leave.leave_from >= '$P!{minDate}' AND vw_employee_leave.leave_from <= '$P!{maxDate}')]]>
+FROM vw_employee_leave
+INNER JOIN approvals on approvals.table_id = vw_employee_leave.workflow_table_id
+INNER JOIN entitys on entitys.entity_id = approvals.app_entity_id
+WHERE (vw_employee_leave.leave_from >= '$P!{minDate}' AND vw_employee_leave.leave_from <= '$P!{maxDate}')
+$P!{organd}]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>

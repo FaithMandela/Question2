@@ -34,7 +34,8 @@ FROM orgs, (vw_employee_month INNER JOIN Employee_Tax_Types ON vw_employee_month
 	INNER JOIN Period_Tax_Types ON (vw_employee_month.Period_ID = Period_Tax_Types.Period_ID)
 	AND (Employee_Tax_Types.Tax_Type_ID = Period_Tax_Types.Tax_Type_ID))
 
-WHERE ((Employee_Tax_Types.Tax_Type_ID = 1) OR (Employee_Tax_Types.Tax_Type_ID = 4)) AND (vw_employee_month.period_year = '$P!{periodyear}') AND (vw_employee_month.quarter = '$P!{quarter}') AND (orgs.org_id = 0)
+WHERE ((Employee_Tax_Types.Tax_Type_ID = 1) OR (Employee_Tax_Types.Tax_Type_ID = 4)) AND (vw_employee_month.period_year = '$P!{periodyear}') AND (vw_employee_month.quarter = '$P!{quarter}') 
+$P!{organd}
 
 GROUP BY vw_employee_month.entity_id, vw_employee_month.entity_name, Employee_Tax_Types.tax_identification, vw_employee_month.period_year, orgs.org_name, orgs.pin;]]>
 	</queryString>

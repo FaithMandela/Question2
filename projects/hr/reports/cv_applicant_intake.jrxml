@@ -32,7 +32,8 @@
 FROM (vw_applicants LEFT JOIN address ON vw_applicants.entity_id = address.table_id)
 INNER JOIN applications ON vw_applicants.entity_id = applications.entity_id
 
-WHERE ((address.table_name is null) OR (address.table_name = 'applicant')) AND (applications.application_id = '$P!{filterid}');]]>
+WHERE ((address.table_name is null) OR (address.table_name = 'applicant')) AND (applications.application_id = '$P!{filterid}')
+$P!{organd};]]>
 	</queryString>
 	<field name="applicant_name" class="java.lang.String"/>
 	<field name="date_of_birth" class="java.sql.Date"/>

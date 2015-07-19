@@ -21,6 +21,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_review_points.review_category_name, vw_review_points.review_point_name, vw_review_points.review_category_details, vw_review_points.review_points, vw_review_points.details
 FROM vw_review_points
+$P!{orgwhere}
 ORDER BY vw_review_points.review_category_id;]]>
 	</queryString>
 	<field name="review_category_name" class="java.lang.String"/>

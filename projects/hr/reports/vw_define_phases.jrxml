@@ -21,6 +21,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_define_phases.project_type_name, vw_define_phases.entity_type_name, vw_define_phases.define_phase_name, vw_define_phases.define_phase_time, vw_define_phases.define_phase_cost, vw_define_phases.details
 FROM vw_define_phases
+$P!{orgwhere}
 ORDER BY vw_define_phases.project_type_name]]>
 	</queryString>
 	<field name="project_type_name" class="java.lang.String"/>

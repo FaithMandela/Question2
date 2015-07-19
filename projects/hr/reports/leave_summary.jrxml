@@ -30,6 +30,7 @@
 		<![CDATA[SELECT entity_id, entity_name, leave_type_name,sum(leave_days) as total_leave_days
 FROM vw_employee_leave
 WHERE (approve_status = 'Approved') AND (EXTRACT(YEAR FROM leave_from) = '$P!{filterid}')
+$P!{organd}
 GROUP BY entity_id, entity_name, leave_type_name, (EXTRACT(YEAR FROM leave_from) )
 ORDER BY entity_name, leave_type_name]]>
 	</queryString>

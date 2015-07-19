@@ -18,6 +18,7 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT vw_departments.department_id, vw_departments.ln_department_name, vw_departments.department_name, vw_departments.active
 FROM vw_departments
+$P!{orgwhere}
 ORDER BY vw_departments.ln_department_id]]>
 	</queryString>
 	<field name="department_id" class="java.lang.Integer"/>

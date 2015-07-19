@@ -17,7 +17,8 @@
 	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_applicants.entity_id, vw_applicants.surname, vw_applicants.first_name, vw_applicants.middle_name, vw_applicants.date_of_birth, vw_applicants.sys_country_name, vw_applicants.identity_card, vw_applicants.gender_name, vw_applicants.marital_status_name
-FROM vw_applicants]]>
+FROM vw_applicants
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="surname" class="java.lang.String"/>

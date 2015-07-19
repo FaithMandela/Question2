@@ -26,7 +26,8 @@
 	<queryString>
 		<![CDATA[SELECT bank_name, bank_account, amount, base_amount, currency_symbol
 FROM vw_employee_banking
-WHERE (employee_month_id = $P{employee_month_id});]]>
+WHERE (employee_month_id = $P{employee_month_id})
+$P!{organd};]]>
 	</queryString>
 	<field name="bank_name" class="java.lang.String"/>
 	<field name="bank_account" class="java.lang.String"/>

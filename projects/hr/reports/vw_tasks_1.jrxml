@@ -18,6 +18,7 @@ SELECT project_id, client_name, project_type_name,
        task_dead_line, task_end_date, task_completed, hours_taken, task_details
   FROM vw_tasks
   WHERE entity_id = '$P!{filterid}'
+	$P!{organd}
 GROUP BY project_id, project_type_name, project_name, start_date, ending_date,client_name,
 	phase_id, phase_name, phase_start_date, phase_end_date, phase_completed,
 	entity_name,

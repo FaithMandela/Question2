@@ -72,6 +72,7 @@ EXTRACT(YEAR FROM objective_date) as year_set
 FROM vw_objectives
 
 WHERE (vw_objectives.employee_objective_id = '$P!{filterid}')
+$P!{organd}
 
 ORDER BY vw_objectives.objective_id ASC]]>
 	</queryString>

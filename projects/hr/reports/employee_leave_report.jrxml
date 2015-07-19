@@ -23,6 +23,7 @@
 WHERE leave_from >='$P!{minDate}'::date AND leave_from <= '$P!{maxDate}'::date
 AND entity_id = '$P!{entity_id}'::integer
 AND approve_status = '$P!{approve_status}'
+$P!{organd}
 ORDER BY leave_from ASC]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>

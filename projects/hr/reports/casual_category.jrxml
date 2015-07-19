@@ -20,7 +20,8 @@
 	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT casual_category.casual_category_id, casual_category.casual_category_name, casual_category.details
-FROM casual_category]]>
+FROM casual_category
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="casual_category_id" class="java.lang.Integer"/>
 	<field name="casual_category_name" class="java.lang.String"/>

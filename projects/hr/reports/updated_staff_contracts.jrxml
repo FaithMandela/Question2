@@ -29,6 +29,7 @@ INNER JOIN vw_departments ON vw_departments.department_id = vw_employees.departm
 INNER JOIN locations ON locations.location_id = employees.location_id
 
 WHERE vw_contracting.contract_start >= '$P!{fromDate}'::date
+$P!{organd}
 
 GROUP BY vw_contracting.entity_id,
 vw_contracting.contract_type_name, vw_contracting.entity_name, vw_contracting.job_description, vw_contracting.opening_date,

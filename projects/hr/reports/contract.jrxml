@@ -24,7 +24,8 @@ to_char(initial_salary, '999,999,999D99') as contract_salary
 
 FROM vw_contracting
 
-WHERE (application_id = '$P!{filterid}');]]>
+WHERE (application_id = '$P!{filterid}')
+$P!{organd};]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>

@@ -49,6 +49,7 @@ FROM job_reviews INNER JOIN vw_objectives
 ON job_reviews.entity_id = vw_objectives.entity_id
 
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
+$P!{organd}
 AND ((EXTRACT(YEAR FROM vw_objectives.objective_date) = EXTRACT(YEAR FROM job_reviews.review_date)))
 ORDER BY vw_objectives.objective_id ASC;]]>
 	</queryString>

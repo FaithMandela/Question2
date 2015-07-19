@@ -21,6 +21,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_casual_application.casual_category_name, vw_casual_application.department_name, vw_casual_application.position, vw_casual_application.application_date, vw_casual_application.approve_status, vw_casual_application.work_duration
 FROM vw_casual_application
+$P!{orgwhere}
 ORDER BY vw_casual_application.casual_category_name]]>
 	</queryString>
 	<field name="casual_category_name" class="java.lang.String"/>

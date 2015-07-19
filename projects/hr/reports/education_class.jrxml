@@ -17,7 +17,8 @@
 	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT education_class.education_class_id, education_class.education_class_name, education_class.details
-FROM education_class]]>
+FROM education_class
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="education_class_id" class="java.lang.Integer"/>
 	<field name="education_class_name" class="java.lang.String"/>

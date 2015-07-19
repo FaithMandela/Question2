@@ -6,7 +6,7 @@
 	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString language="SQL">
-		<![CDATA[select * from vw_employees]]>
+		<![CDATA[select * from vw_employees $P!{orgwhere}]]>
 	</queryString>
 	<background>
 		<band splitType="Stretch"/>

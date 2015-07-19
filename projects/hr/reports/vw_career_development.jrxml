@@ -14,6 +14,7 @@
   FROM vw_career_development
 
   WHERE EXTRACT(YEAR FROM review_date) = '$P!{filterid}'::integer
+	$P!{organd}
   GROUP BY entity_id, entity_name, career_development_id,career_development_name,narrative
   ORDER BY entity_id, entity_name, career_development_id ASC]]>
 	</queryString>

@@ -20,7 +20,8 @@
 	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_intake.department_name, vw_intake.department_role_name, vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, vw_intake.location
-FROM vw_intake]]>
+FROM vw_intake
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="department_name" class="java.lang.String"/>
 	<field name="department_role_name" class="java.lang.String"/>

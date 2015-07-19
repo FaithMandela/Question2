@@ -29,7 +29,8 @@ vw_objective_details.ods_points,
 vw_objective_details.details,vw_objective_details.achievements
 
 FROM vw_objective_details
-WHERE vw_objective_details.objective_id = $P{objective_id};]]>
+WHERE vw_objective_details.objective_id = $P{objective_id}
+$P!{organd};]]>
 	</queryString>
 	<field name="objective_id" class="java.lang.Integer"/>
 	<field name="objective_name" class="java.lang.String"/>
