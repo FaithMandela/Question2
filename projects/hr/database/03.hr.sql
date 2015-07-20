@@ -550,6 +550,7 @@ CREATE TABLE interns (
 	payment_amount			real,
 	start_date				date,
 	end_date				date,
+	phone_mobile			varchar(50),
 
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
@@ -1109,6 +1110,7 @@ CREATE VIEW vw_interns AS
 		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date,
 		interns.org_id, interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, 
 		interns.application_date, interns.approve_status, interns.action_date, interns.workflow_table_id,
+		interns.phone_mobile,
 		interns.applicant_comments, interns.review,
 
 		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
