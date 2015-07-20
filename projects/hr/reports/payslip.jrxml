@@ -28,7 +28,8 @@
 getAdvanceBalance(entity_id, end_date) as AdvanceBalance
 FROM vw_employee_month
 
-WHERE (entity_id = '$P!{filterid}') AND (period_id = '$P!{periodid}')]]>
+WHERE (entity_id = '$P!{filterid}') AND (period_id = '$P!{periodid}')
+$P!{organd}]]>
 	</queryString>
 	<field name="employee_month_id" class="java.lang.Integer"/>
 	<field name="period_year" class="java.lang.String"/>

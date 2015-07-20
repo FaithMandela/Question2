@@ -13,9 +13,12 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT vw_skill_types.skill_category_name, vw_skill_types.skill_type_name, vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced
 FROM vw_skill_types
+$P!{orgwhere}
 ORDER BY vw_skill_types.skill_category_id]]>
 	</queryString>
 	<field name="skill_category_name" class="java.lang.String"/>

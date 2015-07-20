@@ -18,9 +18,10 @@
 	</parameter>
 	<parameter name="employee_month_id" class="java.lang.Integer"/>
 	<parameter name="is_inpayroll" class="java.lang.Boolean">
-		<parameterDescription><![CDATA[false]]></parameterDescription>
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_adjustments.adjustment_name, vw_employee_adjustments.amount, vw_employee_adjustments.balance,
 (CASE WHEN adjustment_type = 1 THEN 'Allowance' WHEN adjustment_type = 2 THEN 'Deductions' ELSE 'Expense' END) as adjustment_type_name,
@@ -30,6 +31,7 @@ tax_relief_amount
 FROM vw_employee_adjustments
 WHERE (employee_month_id = $P{employee_month_id}) AND (Visible = true)
 AND (vw_employee_adjustments.In_payroll = '$P!{is_inpayroll}'::boolean)
+$P!{organd}
 ORDER BY vw_employee_adjustments.adjustment_type;]]>
 	</queryString>
 	<field name="adjustment_name" class="java.lang.String"/>

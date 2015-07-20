@@ -17,6 +17,8 @@
 	<parameter name="employeeid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.period_year, vw_employee_month.period_month,
 (vw_employee_month.basic_pay + vw_employee_month.tax_allowance + getAdjustment(vw_employee_month.employee_month_id, 4, 32)) as grosspay,
@@ -32,8 +34,8 @@ FROM orgs, (vw_employee_month INNER JOIN Employee_Tax_Types ON vw_employee_month
 	AND (Employee_Tax_Types.Tax_Type_ID = Period_Tax_Types.Tax_Type_ID))
 
 WHERE ((Period_Tax_Types.Tax_Type_ID = 1) OR (Period_Tax_Types.Tax_Type_ID = 4)) AND
-(vw_employee_month.entity_id = '$P!{employeeid}') AND (vw_employee_month.period_year = '$P!{filterid}') AND
-(orgs.org_id = 0)]]>
+(vw_employee_month.entity_id = '$P!{employeeid}') AND (vw_employee_month.period_year = '$P!{filterid}') 
+$P!{organd}]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>

@@ -1,5 +1,6 @@
 
 
+
 DROP VIEW vw_approvals_entitys;
 CREATE VIEW vw_approvals_entitys AS
 	(SELECT vw_workflow_phases.workflow_id, vw_workflow_phases.workflow_name,

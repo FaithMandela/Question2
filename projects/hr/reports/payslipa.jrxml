@@ -17,6 +17,8 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_month.employee_month_id, vw_employee_month.period_year, vw_employee_month.period_month, vw_employee_month.employee_id, vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.identity_card, vw_employee_month.start_date, vw_employee_month.bank_name,  vw_employee_month.bank_branch_name, vw_employee_month.bank_account, vw_employee_month.basic_pay, vw_employee_month.net_pay, vw_employee_month.advance, vw_employee_month.advance_deduction, vw_employee_month.banked,
 vw_employee_month.currency_symbol,
@@ -24,7 +26,8 @@ vw_employee_month.currency_symbol,
 true as is_inpayoll, false as not_inpayroll
 
 FROM vw_employee_month
-WHERE (employee_month_id = '$P!{filterid}');]]>
+WHERE (employee_month_id = '$P!{filterid}')
+$P!{organd};]]>
 	</queryString>
 	<field name="employee_month_id" class="java.lang.Integer"/>
 	<field name="period_year" class="java.lang.String"/>

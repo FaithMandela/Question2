@@ -522,7 +522,9 @@ public class BWeb {
 			if(hasForm) buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   New</a>\n";
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-refresh'></i>   Refresh</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
-			buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
+			
+			if(view.getAttribute("grid.print", "false").equals("true"))
+				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
 			
 			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
             

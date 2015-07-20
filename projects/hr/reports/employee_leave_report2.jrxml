@@ -18,6 +18,8 @@
 	<parameter name="leave_type_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[select entity_name, leave_type_name, leave_from, leave_to, leave_days,approve_status from vw_employee_leave
 
@@ -25,6 +27,7 @@ WHERE leave_from >='$P!{minDate}'::date AND leave_from <= '$P!{maxDate}'::date
 AND entity_id = '$P!{entity_id}'::integer
 AND approve_status = '$P!{approve_status}'
 AND vw_employee_leave.leave_type_id = '$P!{leave_type_id}'
+$P!{organd}
 ORDER BY leave_from ASC]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>

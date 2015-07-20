@@ -15,12 +15,15 @@
 	<parameter name="approve_status" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[select entity_name, leave_type_name, leave_from, leave_to, leave_days,approve_status from vw_employee_leave
 
 WHERE leave_from >='$P!{minDate}'::date AND leave_from <= '$P!{maxDate}'::date
 AND entity_id = '$P!{entity_id}'::integer
 AND approve_status = '$P!{approve_status}'
+$P!{organd}
 ORDER BY leave_from ASC]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>

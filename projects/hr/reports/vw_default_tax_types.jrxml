@@ -23,7 +23,6 @@
 	<queryString>
 		<![CDATA[SELECT vw_default_tax_types.tax_type_name, vw_default_tax_types.entity_name, vw_default_tax_types.tax_identification
 FROM vw_default_tax_types
-
 $P!{orgwhere}]]>
 	</queryString>
 	<field name="tax_type_name" class="java.lang.String"/>

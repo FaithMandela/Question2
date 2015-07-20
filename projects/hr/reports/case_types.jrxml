@@ -16,9 +16,12 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT case_types.case_type_id, case_types.case_type_name, case_types.details
-FROM case_types]]>
+FROM case_types
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="case_type_id" class="java.lang.Integer"/>
 	<field name="case_type_name" class="java.lang.String"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ESCALATION dbclass="org.postgresql.Driver" dbpath="jdbc:postgresql://localhost/epp" 
 	username="root" password="invent" title="KENIC Registry" processdelay="5"
-	host="localhost" mailuser="sysadmin" mailpassword="Invent2k" mailfrom="Registry@kenic.or.ke"
+	host="localhost" mailuser="sysadmin" mailpassword="Dew20!3NBO" mailfrom="registry@kenic.or.ke"
 	inbox="INBOX" sentbox="Sent">
 	
 	<REPORT name="Application Confirmation" keyfield="applicantid" action="ApplicantEmailed"

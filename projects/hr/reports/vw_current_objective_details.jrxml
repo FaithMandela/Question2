@@ -25,6 +25,8 @@
 	<parameter name="objective_ps" class="java.lang.Float">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_objective_details.objective_id, vw_objective_details.objective_name, vw_objective_details.objective_completed, vw_objective_details.objective_detail_id,
 vw_objective_details.objective_detail_name, vw_objective_details.success_indicator,
@@ -33,6 +35,7 @@ vw_objective_details.ods_ps AS ods_ps_float,
 COALESCE(vw_objective_details.ods_ps || ' %'::text, '0%'::text) AS ods_ps
 FROM vw_objective_details
 WHERE (vw_objective_details.objective_id = $P{objective_id}) AND (vw_objective_details.ln_objective_detail_id is null)
+$P!{organd}
 ORDER BY vw_objective_details.objective_detail_id ASC ;]]>
 	</queryString>
 	<field name="objective_id" class="java.lang.Integer"/>

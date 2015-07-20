@@ -6,12 +6,15 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT entity_id, entity_name, career_development_id,
        career_development_name,narrative
   FROM vw_career_development
 
   WHERE EXTRACT(YEAR FROM review_date) = '$P!{filterid}'::integer
+	$P!{organd}
   GROUP BY entity_id, entity_name, career_development_id,career_development_name,narrative
   ORDER BY entity_id, entity_name, career_development_id ASC]]>
 	</queryString>

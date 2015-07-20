@@ -6,11 +6,14 @@
 	<parameter name="fromDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2011-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT employee_name,appointment_date, department_name, department_role_name, date_of_birth,
 age(CURRENT_TIMESTAMP, date_of_birth::Timestamp) AS age,
  active FROM vw_employees
-WHERE appointment_date >= '$P!{fromDate}'::date]]>
+WHERE appointment_date >= '$P!{fromDate}'::date
+$P!{organd}]]>
 	</queryString>
 	<field name="employee_name" class="java.lang.String"/>
 	<field name="appointment_date" class="java.sql.Date"/>

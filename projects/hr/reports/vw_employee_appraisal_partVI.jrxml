@@ -9,9 +9,12 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/opt/baraza/projects/hr/reports/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT * FROM vw_career_development
 WHERE (job_review_id = '$P!{filterid}')
+$P!{organd}
 ORDER BY career_development_id ASC;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

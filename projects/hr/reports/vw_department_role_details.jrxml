@@ -28,7 +28,8 @@
 	<queryString>
 		<![CDATA[SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_description, vw_department_roles.department_duties, vw_department_roles.parent_role_name, vw_department_roles.org_id, vw_department_roles.department_role_id, vw_department_roles.ln_department_role_id, vw_department_roles.department_role_name, vw_department_roles.job_description, vw_department_roles.job_requirements, vw_department_roles.duties, vw_department_roles.performance_measures, vw_department_roles.active, vw_department_roles.details
 FROM vw_department_roles
-WHERE vw_department_roles.department_role_id = '$P!{filterid}';]]>
+WHERE vw_department_roles.department_role_id = '$P!{filterid}'
+$P!{organd};]]>
 	</queryString>
 	<field name="department_id" class="java.lang.Integer"/>
 	<field name="department_name" class="java.lang.String"/>

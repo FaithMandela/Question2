@@ -13,9 +13,12 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT vw_bank_branch.bank_name, vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code, vw_bank_branch.narrative
 FROM vw_bank_branch
+$P!{orgwhere}
 ORDER BY vw_bank_branch.bank_name]]>
 	</queryString>
 	<field name="bank_name" class="java.lang.String"/>
