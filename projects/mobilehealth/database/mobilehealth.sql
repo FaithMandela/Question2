@@ -1,5 +1,7 @@
 ---Project Database File
 
+CREATE EXTENSION tablefunc;
+
 CREATE TABLE devices(
     device_id               serial primary key,
     org_id                  integer references orgs,
@@ -166,9 +168,17 @@ CREATE TABLE survey_household(
     response               integer
 );
 
+/*
+DELETE FROM survey_mother;
+DELETE FROM survey_child;
+DELETE FROM survey_referrals;
+DELETE FROM survey_defaulters;
+DELETE FROM survey_death;
+DELETE FROM survey_household;
+DELETE FROM surveys;*/
 
 -- MOH 515 ----------------------------------------------
-
+/*
 CREATE TABLE demograpics_515_defs(
     demograpics_515_def_id       serial primary key,
     demograpics_question                 text,
@@ -223,7 +233,13 @@ CREATE TABLE others_515_defs(
     others_details                  text
 );
 
+*/
 
+CREATE TABLE indicators_defs(
+    indicators_def_id          serial primary key,
+    indicator                  varchar(255),
+    indicator_details          text
+);
 
 CREATE TABLE surveys_515(
     surveys_515_id       serial primary key,
@@ -245,6 +261,105 @@ CREATE TABLE surveys_515(
     survey_date          timestamp default CURRENT_TIMESTAMP
 );
 
+
+
+CREATE TABLE surveys_515_details(
+    surveys_515_detail_id       serial primary key,
+    surveys_515_id              integer references surveys_515,
+    org_id               integer references orgs,
+    indicator_1			integer NOT NULL default 0,
+    indicator_2			integer NOT NULL default 0,
+    indicator_3			integer NOT NULL default 0,
+    indicator_4			integer NOT NULL default 0,
+    indicator_5			integer NOT NULL default 0,
+    indicator_6			integer NOT NULL default 0,
+    indicator_7			integer NOT NULL default 0,
+    indicator_8			integer NOT NULL default 0,
+    indicator_9			integer NOT NULL default 0,
+    indicator_10			integer NOT NULL default 0,
+    indicator_11			integer NOT NULL default 0,
+    indicator_12			integer NOT NULL default 0,
+    indicator_13			integer NOT NULL default 0,
+    indicator_14			integer NOT NULL default 0,
+    indicator_15			integer NOT NULL default 0,
+    indicator_16			integer NOT NULL default 0,
+    indicator_17			integer NOT NULL default 0,
+    indicator_18			integer NOT NULL default 0,
+    indicator_19			integer NOT NULL default 0,
+    indicator_20			integer NOT NULL default 0,
+    indicator_21			integer NOT NULL default 0,
+    indicator_22			integer NOT NULL default 0,
+    indicator_23			integer NOT NULL default 0,
+    indicator_24			integer NOT NULL default 0,
+    indicator_25			integer NOT NULL default 0,
+    indicator_26			integer NOT NULL default 0,
+    indicator_27			integer NOT NULL default 0,
+    indicator_28			integer NOT NULL default 0,
+    indicator_29			integer NOT NULL default 0,
+    indicator_30			integer NOT NULL default 0,
+    indicator_31			integer NOT NULL default 0,
+    indicator_32			integer NOT NULL default 0,
+    indicator_33			integer NOT NULL default 0,
+    indicator_34			integer NOT NULL default 0,
+    indicator_35			integer NOT NULL default 0,
+    indicator_36			integer NOT NULL default 0,
+    indicator_37			integer NOT NULL default 0,
+    indicator_38			integer NOT NULL default 0,
+    indicator_39			integer NOT NULL default 0,
+    indicator_40			integer NOT NULL default 0,
+    indicator_41			integer NOT NULL default 0,
+    indicator_42			integer NOT NULL default 0,
+    indicator_43			integer NOT NULL default 0,
+    indicator_44			integer NOT NULL default 0,
+    indicator_45			integer NOT NULL default 0,
+    indicator_46			integer NOT NULL default 0,
+    indicator_47			integer NOT NULL default 0,
+    indicator_48			integer NOT NULL default 0,
+    indicator_49			integer NOT NULL default 0,
+    indicator_50			integer NOT NULL default 0,
+    indicator_51			integer NOT NULL default 0,
+    indicator_52			integer NOT NULL default 0,
+    indicator_53			integer NOT NULL default 0,
+    indicator_54			integer NOT NULL default 0,
+    indicator_55			integer NOT NULL default 0,
+    indicator_56			integer NOT NULL default 0,
+    indicator_57			integer NOT NULL default 0,
+    indicator_58			integer NOT NULL default 0,
+    indicator_59			integer NOT NULL default 0,
+    indicator_60			integer NOT NULL default 0,
+    indicator_61			integer NOT NULL default 0,
+    indicator_62			integer NOT NULL default 0,
+    indicator_63		    varchar(5),
+    indicator_64_a			varchar(5),
+    indicator_64_b			varchar(5),
+    indicator_64_c			varchar(5),
+    indicator_64_d			varchar(5),
+    indicator_64_e			varchar(5),
+    indicator_64_f			varchar(5),
+    indicator_64_g			varchar(5),
+    indicator_64_h			varchar(5),
+    indicator_64_i			varchar(5),
+    indicator_64_j			varchar(5),
+    indicator_64_k			varchar(5),
+    remarks                 text
+);
+
+
+CREATE OR REPLACE FUNCTION ins_surveys_515() RETURNS trigger AS $$
+DECLARE
+BEGIN
+
+    INSERT INTO surveys_515_details(surveys_515_id,org_id ) VALUES (NEW.surveys_515_id, NEW.org_id);
+
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_surveys_515 AFTER INSERT ON surveys_515
+    FOR EACH ROW EXECUTE PROCEDURE ins_surveys_515();
+
+
+/*
 CREATE TABLE survey_515_demograpics(
     survey_515_demograpic_id    serial primary key,
     surveys_515_id              integer references surveys_515,
@@ -252,7 +367,6 @@ CREATE TABLE survey_515_demograpics(
     response                    integer
 );
 
-     
 
 CREATE TABLE survey_515_households(
     survey_515_household_id     serial primary key,
@@ -309,7 +423,7 @@ CREATE TABLE survey_515_others(
     others_515_def_id           integer references others_515_defs,
     response                    integer
 );
-
+*/
 
 
 CREATE VIEW vw_devices AS
@@ -412,6 +526,27 @@ CREATE VIEW vw_survey_household AS
 	INNER JOIN surveys ON survey_household.survey_id = surveys.survey_id;
 
 
+CREATE VIEW vw_surveys_515_details AS
+	SELECT orgs.org_id, orgs.org_name, 
+	surveys_515.surveys_515_id, surveys_515.chu_name, surveys_515.mclu_code, surveys_515.link_facility, 
+	surveys_515.chew_name, surveys_515.no_of_chvs, surveys_515.total_chws_reported, surveys_515.county, 
+	surveys_515.subcounty, surveys_515.division, surveys_515.location, surveys_515.sublocation, surveys_515.total_vilages, 
+	surveys_515.month, surveys_515.year, surveys_515.survey_date,
+	surveys_515_details.indicator_1, surveys_515_details.indicator_2, surveys_515_details.indicator_3, surveys_515_details.indicator_4, surveys_515_details.indicator_5, surveys_515_details.indicator_6, surveys_515_details.indicator_7, surveys_515_details.indicator_8, surveys_515_details.indicator_9, surveys_515_details.indicator_10, surveys_515_details.indicator_11, surveys_515_details.indicator_12, surveys_515_details.indicator_13, surveys_515_details.indicator_14, surveys_515_details.indicator_15, surveys_515_details.indicator_16, surveys_515_details.indicator_17, surveys_515_details.indicator_18, surveys_515_details.indicator_19, surveys_515_details.indicator_20, surveys_515_details.indicator_21, surveys_515_details.indicator_22, surveys_515_details.indicator_23, surveys_515_details.indicator_24, surveys_515_details.indicator_25, surveys_515_details.indicator_26, surveys_515_details.indicator_27, surveys_515_details.indicator_28, surveys_515_details.indicator_29, surveys_515_details.indicator_30, surveys_515_details.indicator_31, surveys_515_details.indicator_32, surveys_515_details.indicator_33, surveys_515_details.indicator_34, surveys_515_details.indicator_35, surveys_515_details.indicator_36, surveys_515_details.indicator_37, surveys_515_details.indicator_38, surveys_515_details.indicator_39, surveys_515_details.indicator_40, surveys_515_details.indicator_41, surveys_515_details.indicator_42, surveys_515_details.indicator_43, surveys_515_details.indicator_44, surveys_515_details.indicator_45, surveys_515_details.indicator_46, surveys_515_details.indicator_47, surveys_515_details.indicator_48, surveys_515_details.indicator_49, surveys_515_details.indicator_50, surveys_515_details.indicator_51, surveys_515_details.indicator_52, surveys_515_details.indicator_53, surveys_515_details.indicator_54, surveys_515_details.indicator_55, surveys_515_details.indicator_56, surveys_515_details.indicator_57, surveys_515_details.indicator_58, surveys_515_details.indicator_59, surveys_515_details.indicator_60, surveys_515_details.indicator_61, surveys_515_details.indicator_62, surveys_515_details.indicator_63, surveys_515_details.indicator_64_a, surveys_515_details.indicator_64_b, surveys_515_details.indicator_64_c, surveys_515_details.indicator_64_d, surveys_515_details.indicator_64_e, surveys_515_details.indicator_64_f, surveys_515_details.indicator_64_g, surveys_515_details.indicator_64_h, surveys_515_details.indicator_64_i, surveys_515_details.indicator_64_j, surveys_515_details.indicator_64_k, surveys_515_details.remarks
+	FROM surveys_515_details
+	INNER JOIN orgs ON surveys_515_details.org_id = orgs.org_id
+	INNER JOIN surveys_515 ON surveys_515_details.surveys_515_id = surveys_515.surveys_515_id;
+
+CREATE VIEW vw_surveys_515_details AS
+	SELECT orgs.org_id, orgs.org_name, 
+	surveys_515.surveys_515_id, surveys_515.chu_name, surveys_515.mclu_code, surveys_515.link_facility, 
+	surveys_515.chew_name, surveys_515.no_of_chvs, surveys_515.total_chws_reported, surveys_515.county, 
+	surveys_515.subcounty, surveys_515.division, surveys_515.location, surveys_515.sublocation, surveys_515.total_vilages, 
+	surveys_515.month, surveys_515.year, surveys_515.survey_date,
+	surveys_515_details.indicator_1, surveys_515_details.indicator_2, surveys_515_details.indicator_3, surveys_515_details.indicator_4, surveys_515_details.indicator_5, surveys_515_details.indicator_6, surveys_515_details.indicator_7, surveys_515_details.indicator_8, surveys_515_details.indicator_9, surveys_515_details.indicator_10, surveys_515_details.indicator_11, surveys_515_details.indicator_12, surveys_515_details.indicator_13, surveys_515_details.indicator_14, surveys_515_details.indicator_15, surveys_515_details.indicator_16, surveys_515_details.indicator_17, surveys_515_details.indicator_18, surveys_515_details.indicator_19, surveys_515_details.indicator_20, surveys_515_details.indicator_21, surveys_515_details.indicator_22, surveys_515_details.indicator_23, surveys_515_details.indicator_24, surveys_515_details.indicator_25, surveys_515_details.indicator_26, surveys_515_details.indicator_27, surveys_515_details.indicator_28, surveys_515_details.indicator_29, surveys_515_details.indicator_30, surveys_515_details.indicator_31, surveys_515_details.indicator_32, surveys_515_details.indicator_33, surveys_515_details.indicator_34, surveys_515_details.indicator_35, surveys_515_details.indicator_36, surveys_515_details.indicator_37, surveys_515_details.indicator_38, surveys_515_details.indicator_39, surveys_515_details.indicator_40, surveys_515_details.indicator_41, surveys_515_details.indicator_42, surveys_515_details.indicator_43, surveys_515_details.indicator_44, surveys_515_details.indicator_45, surveys_515_details.indicator_46, surveys_515_details.indicator_47, surveys_515_details.indicator_48, surveys_515_details.indicator_49, surveys_515_details.indicator_50, surveys_515_details.indicator_51, surveys_515_details.indicator_52, surveys_515_details.indicator_53, surveys_515_details.indicator_54, surveys_515_details.indicator_55, surveys_515_details.indicator_56, surveys_515_details.indicator_57, surveys_515_details.indicator_58, surveys_515_details.indicator_59, surveys_515_details.indicator_60, surveys_515_details.indicator_61, surveys_515_details.indicator_62, surveys_515_details.indicator_63, surveys_515_details.indicator_64_a, surveys_515_details.indicator_64_b, surveys_515_details.indicator_64_c, surveys_515_details.indicator_64_d, surveys_515_details.indicator_64_e, surveys_515_details.indicator_64_f, surveys_515_details.indicator_64_g, surveys_515_details.indicator_64_h, surveys_515_details.indicator_64_i, surveys_515_details.indicator_64_j, surveys_515_details.indicator_64_k, surveys_515_details.remarks
+	FROM surveys_515_details
+	INNER JOIN orgs ON surveys_515_details.org_id = orgs.org_id
+	INNER JOIN surveys_515 ON surveys_515_details.surveys_515_id = surveys_515.surveys_515_id;
 
 
 CREATE VIEW vw_survey_515_demograpics AS
