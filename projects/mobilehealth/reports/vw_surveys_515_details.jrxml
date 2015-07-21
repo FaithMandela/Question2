@@ -1,0 +1,1474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_515_details" language="groovy" pageWidth="842" pageHeight="1190" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e6d19df4-6960-4863-8726-b677eb660f8e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="56"/>
+	<property name="ireport.y" value="302"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgid" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organd" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT vw_surveys_515_details.org_name, vw_surveys_515_details.surveys_515_id, vw_surveys_515_details.chu_name, vw_surveys_515_details.mclu_code, vw_surveys_515_details.link_facility, vw_surveys_515_details.chew_name, vw_surveys_515_details.no_of_chvs, vw_surveys_515_details.total_chws_reported, vw_surveys_515_details.county, vw_surveys_515_details.subcounty, vw_surveys_515_details.division, vw_surveys_515_details.location, vw_surveys_515_details.sublocation, vw_surveys_515_details.total_vilages, vw_surveys_515_details.month, vw_surveys_515_details.year, vw_surveys_515_details.survey_date, vw_surveys_515_details.indicator_1, vw_surveys_515_details.indicator_2, vw_surveys_515_details.indicator_3, vw_surveys_515_details.indicator_4, vw_surveys_515_details.indicator_5, vw_surveys_515_details.indicator_6, vw_surveys_515_details.indicator_7, vw_surveys_515_details.indicator_8, vw_surveys_515_details.indicator_9, vw_surveys_515_details.indicator_10, vw_surveys_515_details.indicator_11, vw_surveys_515_details.indicator_12, vw_surveys_515_details.indicator_13, vw_surveys_515_details.indicator_14, vw_surveys_515_details.indicator_15, vw_surveys_515_details.indicator_16, vw_surveys_515_details.indicator_17, vw_surveys_515_details.indicator_18, vw_surveys_515_details.indicator_19, vw_surveys_515_details.indicator_20, vw_surveys_515_details.indicator_21, vw_surveys_515_details.indicator_22, vw_surveys_515_details.indicator_23, vw_surveys_515_details.indicator_24, vw_surveys_515_details.indicator_25, vw_surveys_515_details.indicator_26, vw_surveys_515_details.indicator_27, vw_surveys_515_details.indicator_28, vw_surveys_515_details.indicator_29, vw_surveys_515_details.indicator_30, vw_surveys_515_details.indicator_31, vw_surveys_515_details.indicator_32, vw_surveys_515_details.indicator_33, vw_surveys_515_details.indicator_34, vw_surveys_515_details.indicator_35, vw_surveys_515_details.indicator_36, vw_surveys_515_details.indicator_37, vw_surveys_515_details.indicator_38, vw_surveys_515_details.indicator_39, vw_surveys_515_details.indicator_40, vw_surveys_515_details.indicator_41, vw_surveys_515_details.indicator_42, vw_surveys_515_details.indicator_43, vw_surveys_515_details.indicator_44, vw_surveys_515_details.indicator_45, vw_surveys_515_details.indicator_46, vw_surveys_515_details.indicator_47, vw_surveys_515_details.indicator_48, vw_surveys_515_details.indicator_49, vw_surveys_515_details.indicator_50, vw_surveys_515_details.indicator_51, vw_surveys_515_details.indicator_52, vw_surveys_515_details.indicator_53, vw_surveys_515_details.indicator_54, vw_surveys_515_details.indicator_55, vw_surveys_515_details.indicator_56, vw_surveys_515_details.indicator_57, vw_surveys_515_details.indicator_58, vw_surveys_515_details.indicator_59, vw_surveys_515_details.indicator_60, vw_surveys_515_details.indicator_61, vw_surveys_515_details.indicator_62, vw_surveys_515_details.indicator_63, vw_surveys_515_details.indicator_64_a, vw_surveys_515_details.indicator_64_b, vw_surveys_515_details.indicator_64_c, vw_surveys_515_details.indicator_64_d, vw_surveys_515_details.indicator_64_e, vw_surveys_515_details.indicator_64_j, vw_surveys_515_details.indicator_64_k, vw_surveys_515_details.remarks
+FROM vw_surveys_515_details WHERE vw_surveys_515_details.surveys_515_id = '$P!{filterid}']]>
+	</queryString>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="surveys_515_id" class="java.lang.Integer"/>
+	<field name="chu_name" class="java.lang.String"/>
+	<field name="mclu_code" class="java.lang.String"/>
+	<field name="link_facility" class="java.lang.String"/>
+	<field name="chew_name" class="java.lang.String"/>
+	<field name="no_of_chvs" class="java.lang.Integer"/>
+	<field name="total_chws_reported" class="java.lang.Integer"/>
+	<field name="county" class="java.lang.String"/>
+	<field name="subcounty" class="java.lang.String"/>
+	<field name="division" class="java.lang.String"/>
+	<field name="location" class="java.lang.String"/>
+	<field name="sublocation" class="java.lang.String"/>
+	<field name="total_vilages" class="java.lang.Integer"/>
+	<field name="month" class="java.lang.String"/>
+	<field name="year" class="java.lang.Integer"/>
+	<field name="survey_date" class="java.sql.Timestamp"/>
+	<field name="indicator_1" class="java.lang.Integer"/>
+	<field name="indicator_2" class="java.lang.Integer"/>
+	<field name="indicator_3" class="java.lang.Integer"/>
+	<field name="indicator_4" class="java.lang.Integer"/>
+	<field name="indicator_5" class="java.lang.Integer"/>
+	<field name="indicator_6" class="java.lang.Integer"/>
+	<field name="indicator_7" class="java.lang.Integer"/>
+	<field name="indicator_8" class="java.lang.Integer"/>
+	<field name="indicator_9" class="java.lang.Integer"/>
+	<field name="indicator_10" class="java.lang.Integer"/>
+	<field name="indicator_11" class="java.lang.Integer"/>
+	<field name="indicator_12" class="java.lang.Integer"/>
+	<field name="indicator_13" class="java.lang.Integer"/>
+	<field name="indicator_14" class="java.lang.Integer"/>
+	<field name="indicator_15" class="java.lang.Integer"/>
+	<field name="indicator_16" class="java.lang.Integer"/>
+	<field name="indicator_17" class="java.lang.Integer"/>
+	<field name="indicator_18" class="java.lang.Integer"/>
+	<field name="indicator_19" class="java.lang.Integer"/>
+	<field name="indicator_20" class="java.lang.Integer"/>
+	<field name="indicator_21" class="java.lang.Integer"/>
+	<field name="indicator_22" class="java.lang.Integer"/>
+	<field name="indicator_23" class="java.lang.Integer"/>
+	<field name="indicator_24" class="java.lang.Integer"/>
+	<field name="indicator_25" class="java.lang.Integer"/>
+	<field name="indicator_26" class="java.lang.Integer"/>
+	<field name="indicator_27" class="java.lang.Integer"/>
+	<field name="indicator_28" class="java.lang.Integer"/>
+	<field name="indicator_29" class="java.lang.Integer"/>
+	<field name="indicator_30" class="java.lang.Integer"/>
+	<field name="indicator_31" class="java.lang.Integer"/>
+	<field name="indicator_32" class="java.lang.Integer"/>
+	<field name="indicator_33" class="java.lang.Integer"/>
+	<field name="indicator_34" class="java.lang.Integer"/>
+	<field name="indicator_35" class="java.lang.Integer"/>
+	<field name="indicator_36" class="java.lang.Integer"/>
+	<field name="indicator_37" class="java.lang.Integer"/>
+	<field name="indicator_38" class="java.lang.Integer"/>
+	<field name="indicator_39" class="java.lang.Integer"/>
+	<field name="indicator_40" class="java.lang.Integer"/>
+	<field name="indicator_41" class="java.lang.Integer"/>
+	<field name="indicator_42" class="java.lang.Integer"/>
+	<field name="indicator_43" class="java.lang.Integer"/>
+	<field name="indicator_44" class="java.lang.Integer"/>
+	<field name="indicator_45" class="java.lang.Integer"/>
+	<field name="indicator_46" class="java.lang.Integer"/>
+	<field name="indicator_47" class="java.lang.Integer"/>
+	<field name="indicator_48" class="java.lang.Integer"/>
+	<field name="indicator_49" class="java.lang.Integer"/>
+	<field name="indicator_50" class="java.lang.Integer"/>
+	<field name="indicator_51" class="java.lang.Integer"/>
+	<field name="indicator_52" class="java.lang.Integer"/>
+	<field name="indicator_53" class="java.lang.Integer"/>
+	<field name="indicator_54" class="java.lang.Integer"/>
+	<field name="indicator_55" class="java.lang.Integer"/>
+	<field name="indicator_56" class="java.lang.Integer"/>
+	<field name="indicator_57" class="java.lang.Integer"/>
+	<field name="indicator_58" class="java.lang.Integer"/>
+	<field name="indicator_59" class="java.lang.Integer"/>
+	<field name="indicator_60" class="java.lang.Integer"/>
+	<field name="indicator_61" class="java.lang.Integer"/>
+	<field name="indicator_62" class="java.lang.Integer"/>
+	<field name="indicator_63" class="java.lang.String"/>
+	<field name="indicator_64_a" class="java.lang.String"/>
+	<field name="indicator_64_b" class="java.lang.String"/>
+	<field name="indicator_64_c" class="java.lang.String"/>
+	<field name="indicator_64_d" class="java.lang.String"/>
+	<field name="indicator_64_e" class="java.lang.String"/>
+	<field name="indicator_64_j" class="java.lang.String"/>
+	<field name="indicator_64_k" class="java.lang.String"/>
+	<field name="remarks" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="63" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="0" y="0" width="802" height="62" uuid="062daf0d-0f52-460a-9644-d8898cd14d2e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="20" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[COMMUNITY HEALTH EXTENTION WORKER SUMMARY]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="590" y="0" width="60" height="15" uuid="b8df568f-fbad-4973-83a5-cb93a3751c49"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{surveys_515_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="655" y="0" width="147" height="15" uuid="2133282e-5e47-4acf-a0bc-c7523f63c80d"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{survey_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="1095" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="136" y="0" width="155" height="15" uuid="715f1442-4047-420b-ac5e-6b89d6d450e1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chu_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="136" y="15" width="155" height="15" uuid="3c116e49-0bb4-4d30-9110-7913e1ddc2fc"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mclu_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="136" y="30" width="155" height="15" uuid="1bddb0e0-ad6c-4e37-b4a9-ed5abed8c4f5"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{link_facility}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="136" y="45" width="155" height="15" uuid="e0a6a8cd-f304-4f4e-a4f5-cf22a946d4e6"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chew_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="136" y="60" width="155" height="15" uuid="50e6772e-0205-4144-9112-f564fd62acd1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_of_chvs}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="136" y="75" width="155" height="15" uuid="f05ccf7b-a41d-4864-a27e-f450aac8f411"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_chws_reported}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="431" y="0" width="147" height="15" uuid="0c41a4e7-c660-421f-9e28-892219019f08"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{county}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="431" y="15" width="147" height="15" uuid="0cf05790-ab3c-4808-8866-1b15079e39aa"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{subcounty}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="431" y="30" width="147" height="15" uuid="9d038c62-f338-4751-a875-5e54b47539a8"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{division}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="431" y="45" width="147" height="15" uuid="2802ea46-3393-44dd-a01e-d471b6f9d98e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="431" y="60" width="147" height="15" uuid="77f0fdf6-7f5a-4b29-9512-c928b25abee7"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sublocation}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="431" y="75" width="147" height="15" uuid="f9f3f095-c232-48b2-9b04-993459b6e6e7"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_vilages}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="660" y="1" width="142" height="15" uuid="54301e16-63eb-4d22-9a2a-33b24ff2841b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="660" y="16" width="142" height="15" uuid="47a0a9ff-0497-4729-8a42-45fcc61a26ab"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="125" width="40" height="15" uuid="3817ddf7-f7c6-4078-91a4-01442c6260b8"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_1}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="140" width="40" height="15" uuid="b99f697c-e077-4df3-97b1-3b23d79e6602"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_2}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="155" width="40" height="15" uuid="632ce831-517d-4d5f-8f61-75640c4effb9"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_3}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="170" width="40" height="15" uuid="45e33ff4-9bbe-4329-b579-2755e3d13e24"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_4}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="185" width="40" height="15" uuid="6fc4915a-f470-44c4-ad3b-9640328c03fa"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_5}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="200" width="40" height="15" uuid="922f0761-5e7c-4380-bee6-91d9e8fbf7d5"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_6}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="215" width="40" height="15" uuid="a4b60ffe-338f-4dac-9890-0a1df278f19b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_7}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="230" width="40" height="15" uuid="a3a886ba-0cd1-45fb-8bd2-d4a5e5f01d6b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_8}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="245" width="40" height="15" uuid="66442b7a-b297-4d64-b55f-0d52e3826726"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_9}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="260" width="40" height="15" uuid="ab7da88f-138a-4b53-a75c-37b4afa8a76f"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_10}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="275" width="40" height="15" uuid="0e53e0e9-2387-4fee-9fd0-f7472a17fc8f"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_11}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="290" width="40" height="15" uuid="b9eae906-0dd3-4b52-bf6c-a92c36598b26"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_12}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="305" width="40" height="15" uuid="fd258185-ee7f-4e8e-8e5d-0dc430429904"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_13}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="320" width="40" height="15" uuid="e8ac17b5-3ab0-4971-858a-6037b0327a22"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_14}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="335" width="40" height="15" uuid="9b58d090-3917-46ff-9950-018fedf9d4b1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_15}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="350" width="40" height="15" uuid="5c21c314-5493-4431-917e-2e798a2607c9"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_16}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="365" width="40" height="15" uuid="94cdfe12-190e-41c9-a5c7-35decedb643f"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_17}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="380" width="40" height="15" uuid="e35e837d-39ed-4c99-8478-228a88f365e3"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_18}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="395" width="40" height="15" uuid="fe76bd7b-bc13-4d39-a832-1e8e3c40c407"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_19}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="410" width="40" height="15" uuid="8be96b0f-704d-4217-a6dc-728fa0e6cd4f"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_20}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="425" width="40" height="15" uuid="ecf17c0d-227c-4bde-bc88-5028af6c5732"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_21}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="440" width="40" height="15" uuid="edebf8a3-5007-4089-afd1-19384101b4ac"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_22}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="455" width="40" height="15" uuid="1095e10f-304e-4ad9-b1a8-5bbdbfb787e1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_23}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="470" width="40" height="15" uuid="b8e1922f-6b3c-482a-a8d8-183ad0ef5977"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_24}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="485" width="40" height="15" uuid="9eb0f94c-650b-4a31-9ad1-d1f8a99d1f34"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_25}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="500" width="40" height="15" uuid="8fe794c2-bada-4fd2-8edd-82bd8cbdb216"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_26}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="515" width="40" height="15" uuid="1fcee54d-4a9b-48b9-b6fd-3145df69c266"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_27}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="530" width="40" height="15" uuid="c92c8be0-1df1-4460-af04-5870601a693e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_28}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="545" width="40" height="15" uuid="2b9bd0ce-77a9-41a9-8158-9b348ee4d1a7"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_29}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="560" width="40" height="15" uuid="7b25dbbe-6f3a-41cc-80a9-b8a0821c60fc"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_30}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="575" width="40" height="15" uuid="cf392a7c-1080-44eb-961e-5662f4dbc415"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_31}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="590" width="40" height="15" uuid="a68c6ef2-9826-4a34-ab9a-7dbfc1c58a7f"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_32}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="605" width="40" height="15" uuid="cd31007e-47d0-4c38-a2c9-dff790fa74ed"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_33}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="362" y="620" width="40" height="15" uuid="dd2269d4-552a-487f-a1bb-788d82d26526"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_34}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="125" width="40" height="15" uuid="9a3db538-4555-4d0d-bac2-6c5a4fdff40b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_35}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="140" width="40" height="15" uuid="c5066491-bc1d-4655-8c39-d437a4a25b7c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_36}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="155" width="40" height="15" uuid="12bdba3e-c150-4571-8477-53b720dcce55"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_37}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="170" width="40" height="15" uuid="c67015c2-5ffe-467f-a3c7-97e4b8584e2b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_38}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="185" width="40" height="15" uuid="38eb45e3-8928-4932-a9b9-d58a898457a9"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_39}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="200" width="40" height="15" uuid="36323814-93dd-41d1-a2e4-abafb387fbd1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_40}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="215" width="40" height="15" uuid="ad776216-7b7c-4cc4-97f8-5a48566e93be"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_41}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="230" width="40" height="15" uuid="214d0cda-5189-4961-9414-f32c58960eae"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_42}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="245" width="40" height="15" uuid="fec6e1c7-e9f6-4cc3-8192-a86eaa86cbc3"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_43}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="758" y="260" width="40" height="15" uuid="b334f77a-fadf-4411-a5d6-77032f2a458e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_44}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="506" y="886" width="99" height="15" uuid="451f78f3-f109-4ce7-b1ab-774a01066ccb"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_45}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="511" y="886" width="99" height="15" uuid="82f0dc2b-0edf-4e56-8312-1515d3f20465"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_46}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="516" y="886" width="99" height="15" uuid="454858c6-49fd-48a7-a771-0999c52675df"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_47}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="521" y="886" width="99" height="15" uuid="ed1bde05-dfcb-45b2-bef8-6b8d6498cd3f"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_48}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="526" y="886" width="99" height="15" uuid="9428315f-e406-4431-9616-be07afd836f5"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_49}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="531" y="886" width="99" height="15" uuid="c38656b8-f123-4ed7-ae39-e5ee6a2789a2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_50}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="536" y="886" width="99" height="15" uuid="3a3a9ec1-a229-4077-9cad-ef0b423ab0aa"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_51}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="541" y="886" width="99" height="15" uuid="d8a89bb4-7a76-4c33-a942-9b644934876e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_52}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="546" y="886" width="99" height="15" uuid="2903a0fa-f845-4d3a-a35f-1b8c2e66179a"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_53}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="551" y="886" width="99" height="15" uuid="13f75b01-bf43-4326-9715-6aacfd4c2290"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_54}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="556" y="886" width="99" height="15" uuid="70166a17-714f-4bd5-8f72-0d9a1a1c8ed5"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_55}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="561" y="886" width="99" height="15" uuid="1ec08c4c-e77c-4eaf-93ab-3fbce8551ef1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_56}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="566" y="886" width="99" height="15" uuid="d4231294-6c1e-47aa-a4e7-ba58e424728c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_57}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="571" y="886" width="99" height="15" uuid="a51b3f4a-3704-40a0-a718-1c61ed2e09a0"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_58}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="576" y="886" width="99" height="15" uuid="e07795bf-f237-4ead-9faa-32a3e247444d"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_59}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="581" y="886" width="99" height="15" uuid="d38ffce5-4453-48e1-a7a0-15041abcfcb1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_60}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="586" y="886" width="99" height="15" uuid="c3af3e91-9563-4a15-9604-edd9bd1c87fb"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_61}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="591" y="886" width="99" height="15" uuid="fd6e067b-0729-4dc2-831a-89233efd81de"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_62}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="596" y="886" width="99" height="15" uuid="d74e575f-732f-4fb5-b763-c9fb2cfb4e24"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_63}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="601" y="886" width="99" height="15" uuid="487e0fd8-9d35-4f97-b6a9-9369c98eada3"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_64_a}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="606" y="886" width="99" height="15" uuid="bc787388-3d37-4f33-b570-304c6e08960b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_64_b}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="611" y="886" width="99" height="15" uuid="c90df840-5c5b-4bd6-97a0-574112fa930e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_64_c}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="616" y="886" width="99" height="15" uuid="c009c27e-0d2e-4eed-9ead-9d496900374d"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_64_d}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="621" y="886" width="99" height="15" uuid="fd9f1f6e-cfa5-4328-81d2-f7c91d0d8083"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_64_e}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="626" y="886" width="99" height="15" uuid="734498d5-2af9-4e3a-9dba-27f6f460c2f4"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_64_j}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="631" y="886" width="99" height="15" uuid="aeb37f91-d9e6-4e60-9bfa-64d856b0a86c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{indicator_64_k}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="780" y="901" width="0" height="15" uuid="6f972248-fa8c-423f-ad60-05ce195898a2"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="21" y="0" width="115" height="15" forecolor="#000000" uuid="6455aaaf-1f9e-4883-b287-f0acd97f4a7e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Name Of CHU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="578" y="0" width="82" height="15" forecolor="#000000" uuid="82fbe22b-4bff-4eab-bec3-6f914f898ea6"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="578" y="15" width="82" height="15" forecolor="#000000" uuid="821e8244-b0f4-46a1-9b92-2451f1cd9434"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Year]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="346" y="0" width="85" height="15" forecolor="#000000" uuid="20a8188b-df60-4084-b7e8-4d5e73ae1921"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[County]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="15" width="115" height="15" forecolor="#000000" uuid="f6b21967-ee7c-458e-b163-732c1bff17e1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Mclu Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="30" width="115" height="15" forecolor="#000000" uuid="618245ad-1354-488e-9f8a-6ce70e21a4f3"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Link Facility]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="45" width="115" height="15" forecolor="#000000" uuid="f97f97ac-1d01-482e-ae71-7460b1545fcc"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Chew Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="22" y="60" width="114" height="15" forecolor="#000000" uuid="c2674228-fe07-4296-b23f-0c0181eb841c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No Of Chvs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="22" y="75" width="114" height="15" forecolor="#000000" uuid="344748d5-c610-4519-a404-105c99becd65"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Total Chws Reported]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="346" y="60" width="85" height="15" forecolor="#000000" uuid="a5fb4c81-dfdd-4ea3-a9bb-acc5902d9b76"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Sublocation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="346" y="15" width="85" height="15" forecolor="#000000" uuid="9b16e63b-ab3c-418e-a46e-9b31bad0805c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Subcounty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="346" y="30" width="85" height="15" forecolor="#000000" uuid="7b3732fa-397f-4ac2-9c1a-a0e1546df2bd"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Division]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="346" y="45" width="85" height="15" forecolor="#000000" uuid="cced38d5-6bf9-42b3-a002-a75c7d6fda64"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="346" y="75" width="85" height="15" forecolor="#000000" uuid="6e751dbf-1182-4d0a-a513-666bd7078a3c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Total Vilages]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="21" y="110" width="24" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="cb3a5950-0cd0-4932-aae5-226bf136a49b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="45" y="110" width="317" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="9dc2010f-214b-40ef-8a12-8f91b4f11fc1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Indicators]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="362" y="110" width="40" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="0ea968f8-76b5-4112-8163-ed22c3a6d91a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="441" y="110" width="317" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="9d3cc6e4-bc8d-4f49-b63f-8d00cf17eed3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Indicators]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="758" y="110" width="40" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="7263dc5d-5440-4b1b-a110-c8e45bba2340"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="417" y="110" width="24" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="524b5166-07dc-4c17-898a-412d7ca69282"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="125" width="24" height="15" forecolor="#000000" uuid="069da7f1-c392-4954-849a-ab63a23b0bd9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="140" width="24" height="15" forecolor="#000000" uuid="55918d0f-b302-49f1-ad25-bb056688433c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="155" width="24" height="15" forecolor="#000000" uuid="f5908e72-f103-4c7c-bdf3-d31704c7e63e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[3]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="170" width="24" height="15" forecolor="#000000" uuid="8182d4d1-f133-4473-9d29-b1f04e746b8d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[4]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="185" width="24" height="15" forecolor="#000000" uuid="4ea6ffd5-ce10-4f1c-87ff-512a0c7e0a0b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[5]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="200" width="24" height="15" forecolor="#000000" uuid="46f483ad-4cb6-44e7-a617-e87482e0e0a7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[6]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="290" width="24" height="15" forecolor="#000000" uuid="1fa6c20c-f3be-4209-899c-d09a4c78f3ec"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[12]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="215" width="24" height="15" forecolor="#000000" uuid="d8ada483-f123-45ea-a673-9aac4d0caa01"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[7]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="245" width="24" height="15" forecolor="#000000" uuid="ebdabfaf-f420-401a-baff-d2928334c2ed"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[9]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="230" width="24" height="15" forecolor="#000000" uuid="71a573b2-0261-4879-b23a-bab87ed98e93"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[8]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="275" width="24" height="15" forecolor="#000000" uuid="535116b7-c65b-4e21-aad1-92a054ea92a7"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[11]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="260" width="24" height="15" forecolor="#000000" uuid="ab1909c5-5a83-42b5-a73b-b178f6fbd923"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[10]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="425" width="24" height="15" forecolor="#000000" uuid="2e08cf22-5024-47a5-9687-d45cb4ccc1b3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[21]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="410" width="24" height="15" forecolor="#000000" uuid="ef31ba11-dd98-4510-ae0c-f62a51520ff5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[20]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="380" width="24" height="15" forecolor="#000000" uuid="f2a71c68-323a-4f79-b729-c20ae6470ec1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[18]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="440" width="24" height="15" forecolor="#000000" uuid="1469f228-11e7-49b4-84bd-a1f62c137f95"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[22]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="305" width="24" height="15" forecolor="#000000" uuid="efc71a2c-b215-4e61-a42e-cd71083f8a35"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[13]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="455" width="24" height="15" forecolor="#000000" uuid="e5c57ca7-7821-4aac-bc5c-12c71787dc80"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[23]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="335" width="24" height="15" forecolor="#000000" uuid="b77d910b-1ab8-4124-9f9f-6e979975a60b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[15]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="395" width="24" height="15" forecolor="#000000" uuid="af62b765-7261-4054-9558-35dc116b0ede"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[19]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="320" width="24" height="15" forecolor="#000000" uuid="ac2a3b21-b855-4f39-99ed-0006ebd77afd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[14]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="365" width="24" height="15" forecolor="#000000" uuid="5d034daa-4593-44ce-82e0-fc1163d2cdb4"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[17]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="470" width="24" height="15" forecolor="#000000" uuid="e402e01d-db52-46fa-a451-1cea3b5a8fb5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[24]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="350" width="24" height="15" forecolor="#000000" uuid="4790de03-a7db-4b27-b7ee-d56543ed6edf"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[16]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="605" width="24" height="15" forecolor="#000000" uuid="94a4b2c9-5f1c-48b4-938c-fd28361db62e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[33]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="714" width="24" height="15" forecolor="#000000" uuid="06139a97-4eca-4777-b470-49150c3b7bcc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="834" width="24" height="15" forecolor="#000000" uuid="e893a90f-2ad3-475f-94ce-651fd65f5530"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="789" width="24" height="15" forecolor="#000000" uuid="c84c1a1c-9c3c-4c26-b334-50a5d8dcea1b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="744" width="24" height="15" forecolor="#000000" uuid="34147802-d0d2-4e93-9d74-fa712bfb7b94"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="774" width="24" height="15" forecolor="#000000" uuid="69872fee-0a62-4e80-bc24-290f871e56bc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="590" width="24" height="15" forecolor="#000000" uuid="c8ece7c1-4260-4e81-8dbc-63cdfa00a5ba"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[32]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="849" width="24" height="15" forecolor="#000000" uuid="d56655fe-c899-43e9-9973-b015d0047952"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="684" width="24" height="15" forecolor="#000000" uuid="9ccd4feb-1732-4b50-86d5-5f239c0ae9ce"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="804" width="24" height="15" forecolor="#000000" uuid="fbac2cde-ea80-40bb-b300-834ca66c3e6f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="560" width="24" height="15" forecolor="#000000" uuid="9c857466-d8e7-49c0-9778-fa4e839beaf9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[30]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="620" width="24" height="15" forecolor="#000000" uuid="6412c7eb-4d1f-44a3-aac7-228e2a15e713"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[34]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="485" width="24" height="15" forecolor="#000000" uuid="91489ba1-7056-47c8-af68-723dd0e08045"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[25]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="729" width="24" height="15" forecolor="#000000" uuid="877f655c-1c62-4ff6-864f-e8e2f6dc423d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="654" width="24" height="15" forecolor="#000000" uuid="b2223d2e-d4ef-42ec-942d-973406645ba8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="515" width="24" height="15" forecolor="#000000" uuid="7ca58643-7df7-493c-982f-b6dbd2ee5541"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[27]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="575" width="24" height="15" forecolor="#000000" uuid="c755edf7-6648-4366-9fc1-330716a8d69d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[31]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="500" width="24" height="15" forecolor="#000000" uuid="fa72bab3-3b9b-4881-b2d7-913e449e6bf9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[26]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="545" width="24" height="15" forecolor="#000000" uuid="cc8188f4-8afb-4fb4-9120-58dc4b78989c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[29]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="819" width="24" height="15" forecolor="#000000" uuid="77286002-6a05-4a4c-9756-677a6476e6a5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="669" width="24" height="15" forecolor="#000000" uuid="a0526b75-a491-45c7-9b82-b38871e54a8c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="699" width="24" height="15" forecolor="#000000" uuid="149bf5dd-cc77-422a-abe0-7567bd77aa23"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="759" width="24" height="15" forecolor="#000000" uuid="3a84b2fc-a68d-424d-91fd-182134d1e58e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="21" y="530" width="24" height="15" forecolor="#000000" uuid="3f7db8a7-fcf5-4d0d-a1bd-bdc22d36300c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[28]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="45" y="640" width="317" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="c2728b3f-2673-4f6e-b86f-1f9846eeddbb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Indicators]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="362" y="640" width="39" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="f5d129c6-57ea-4199-ab1f-4ba60e85a2e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="21" y="640" width="24" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="46d6c21d-8dc7-4421-9225-3592d60d7279"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="45" y="125" width="317" height="15" forecolor="#000000" uuid="3d856b16-314c-40e5-8266-4d3331c97560"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Indicator 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="45" y="140" width="317" height="15" forecolor="#000000" uuid="9df39d81-ad27-4055-97a4-b48aef17090e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Indicator 1]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="245" width="24" height="15" forecolor="#000000" uuid="6ba1f4eb-cd85-4472-a79e-0f05c29ffa69"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[43]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="125" width="24" height="15" forecolor="#000000" uuid="2f7cf8d7-6576-4c03-bfad-0bdcdc92199c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[35]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="200" width="24" height="15" forecolor="#000000" uuid="d4f31b68-08d8-4b98-9343-36e40fc6e712"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[40]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="170" width="24" height="15" forecolor="#000000" uuid="4a3a114d-def6-475e-a196-c7f83347906b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[38]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="230" width="24" height="15" forecolor="#000000" uuid="2651f4b8-33b3-4422-9762-a5176ef1b9bc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[42]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="155" width="24" height="15" forecolor="#000000" uuid="a7f2df47-cc5b-4919-8a86-d5baed7e8f1a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[37]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="140" width="24" height="15" forecolor="#000000" uuid="36ccc498-6076-4f22-b83d-ccca3ae454e6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[36]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="260" width="24" height="15" forecolor="#000000" uuid="3cc7bb61-3ef0-4f0c-a431-fa55940d6405"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[44]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="185" width="24" height="15" forecolor="#000000" uuid="64f2f4c9-7d19-4d61-9c7a-a53f68ce72e9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[39]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="215" width="24" height="15" forecolor="#000000" uuid="7e63c9e1-1e8e-407e-bb9f-9f928a01f131"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[41]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="441" y="290" width="317" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="e1d198b5-7b19-4a43-b728-7dd3b5f384a7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Indicators]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="758" y="290" width="39" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="51c6f756-546a-456a-8fb8-90ab1d1cf181"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="417" y="290" width="24" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="ac4023fe-e397-4a29-a3b1-f4d7918a05e4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="441" y="395" width="317" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="40abf58a-a866-4da1-ab2d-7033406c3739"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Indicators]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="758" y="395" width="40" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="859c7a89-9024-4030-9e32-a2e6d228a9f3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="417" y="395" width="24" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="c327a22d-7719-47cb-a442-e0a1f869caff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="335" width="24" height="15" forecolor="#000000" uuid="fec98d07-da2a-4ee7-8343-6cacd0ae9771"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[47]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="350" width="24" height="15" forecolor="#000000" uuid="0aaaf7a4-9672-44ed-8b5a-9b787be13c63"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[48]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="320" width="24" height="15" forecolor="#000000" uuid="12f60d21-8e69-466e-a971-0151194e5278"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[46]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="365" width="24" height="15" forecolor="#000000" uuid="c95d4db5-a965-4924-bdf4-fade9dc86d24"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[49]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="305" width="24" height="15" forecolor="#000000" uuid="ed080b87-3403-4e74-83ac-fc1b2cceba31"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[45]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="440" width="24" height="15" forecolor="#000000" uuid="0129727d-556e-4bb4-9810-100f34653c87"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[52]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="410" width="24" height="15" forecolor="#000000" uuid="3185b7c5-1e44-4ab7-8802-f6a7830f7ad0"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[50]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="455" width="24" height="15" forecolor="#000000" uuid="56a27d92-7fef-4c4e-9954-cd07a58c41f5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[53]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="417" y="425" width="24" height="15" forecolor="#000000" uuid="50e5c7d4-a52a-4914-8187-53c9c817bca1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[51]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="96e6f67c-7dee-4a2f-9303-911d7172b805"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="753" y="3" width="40" height="20" forecolor="#736343" uuid="7bde1e3c-4352-4da6-b3d5-2d949d38ad8f"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="673" y="3" width="80" height="20" forecolor="#736343" uuid="8299e55f-ed26-492a-ac69-d2fca03c1f3b"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="fa33cece-7744-411c-8712-4c117ca148a0"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

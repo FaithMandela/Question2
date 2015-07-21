@@ -230,7 +230,7 @@ public class BWebBody extends BQuery {
 							else myhtml.append("'");
 
 							if(el.getAttribute("hint") != null) myhtml.append(" title='" + getString(el.getAttribute("hint")) +  "'"); 
-							myhtml.append("><img src='resources/images/form.png'></a>");
+							myhtml.append("><img src='assets/images/form.png'></a>");
 							myhtml.append("</td>");
 
 							if(view.getName().equals("FORMVIEW")) {
@@ -275,7 +275,7 @@ public class BWebBody extends BQuery {
 						
 						if(view.getAttribute("gohint") != null) myhtml.append(" title='" + view.getAttribute("gohint") +  "'"); 
 						
-						myhtml.append("><img src='resources/images/go.png'></a>");
+						myhtml.append("><img src='assets/images/go.png'></a>");
 					}
 					myhtml.append("</td>");
 				}
@@ -283,7 +283,7 @@ public class BWebBody extends BQuery {
 				if(view.getName().equals("FILTERGRID") && (keyField != null) && !hasFilter) {
 					myhtml.append("\n<td><a href='#' OnClick=\"updateField('");
 					myhtml.append(filterName + "', '" + getString(keyField) + "')\">");
-					myhtml.append("<img src='resources/images/go.png'></a></td>");
+					myhtml.append("<img src='assets/images/go.png'></a></td>");
 				}
 
 				if(sfield) {

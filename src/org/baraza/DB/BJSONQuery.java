@@ -131,7 +131,7 @@ public class BJSONQuery extends BQuery {
 							else mydv += "'";
 
 							if(el.getAttribute("hint") != null) mydv += " title='" + getString(el.getAttribute("hint")) +  "'"; 
-							mydv += "><img src='resources/images/form.png'></a>";
+							mydv += "><img src='assets/images/form.png'></a>";
 							myjo.add(mydn, mydv);
 						} else {
 							myjo.add(mydn, cellData);

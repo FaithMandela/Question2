@@ -108,18 +108,22 @@ public class BForms {
 		if(entryformid != null) readClientData(entryformid);	// Read the client database for values
 
 		if ((entryformid != null) && (disabled == null)) {
-			mystr += "<form id='baraza' name='baraza' method='post' action='form.jsp'>\n";
+		    mystr+= "<div class='portlet-body form'>";
+			mystr += "<form id='baraza' class='form-horizontal' name='baraza' method='post' action='form.jsp'>\n";
 			mystr += "<input type='hidden' name='action' value='ENTRYFORM'/>\n";
-			mystr += "<input type='hidden' name='actionvalue' value='" + entryformid + "'/>\n";
+			mystr += "<input type='hidden' name='actionvalue' value='" + entryformid + "'/>";
+			mystr += "</div>\n";
 		}
 
 		if(!"Draft".equals(approveStatus)) mystr += "<fieldset><label>FORM SUBMITTED AND CANNOT BE EDITED</label></fieldset>\n";
-
+        mystr +="<div class='navbar navbar-fixed-top'>";
 		mystr += "<fieldset>\n";
 		mystr += "<label>" + fname + "</label>\n";
-		mystr += "</fieldset>\n";
+		mystr += "</fieldset>";
+		mystr += "</div>\n";
 
-		if(hidehead == null) mystr += fhead;
+		if(hidehead == null) 
+		mystr += fhead;
 
  		if(submit != null) mystr += "<section>" + submitForm(formid, entryformid) + "</section>\n";
 
@@ -336,34 +340,40 @@ public class BForms {
 			    isTabs = false;
 			}
 
-			label = "<label for='F" + rs.getString("field_id") +  "'> " + question + "</label>";
-
+			label ="<label for='F" + rs.getString("field_id") +  "' class='control-label col-md-3'> " + question + "</label>"; 
+           
 			if(fieldType.equals("TEXTFIELD")) {
+			    input="<div class='col-md-9'>";
 				input = "<input " + disabled + " type='text' ";
-				input += " style='width:" + rs.getString("field_size") + "0px' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
 				input += " id ='F" + rs.getString("field_id") +  "'";
+				input += " class ='form-control'";
 				input += getAnswer(rs.getString("field_id"));
 				input += " placeholder=\"" + details +"\"";
 				input += " class='placeholder fillout' />";
+				input+="</div>";
 			} else if(fieldType.equals("DATE")) {
+			    input="<div class='col-md-9'>";
 			    input = "<input " + disabled + " type='text' ";
-			    input += " style='width:" + rs.getString("field_size") + "0px' ";
 			    input += " name='F" + rs.getString("field_id") +  "'";
 			    input += " id ='F" + rs.getString("field_id") +  "'";
 				input += getAnswer(rs.getString("field_id"));
 			    input += " class='datepicker' />";
+			    input+="</div>";
 			} else if(fieldType.equals("TIME")) {
+			    input="<div class='col-md-9'>";
 				input = "<input " + disabled + " type='text' ";
-				input += " style='width:" + rs.getString("field_size") + "0px' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
 				input += " id ='F" + rs.getString("field_id") +  "'";
 				input += getAnswer(rs.getString("field_id"));
 				input += " class='timepicker' />";
+				input+="</div>";
 			} else if(fieldType.equals("LIST")) {
-				input = "<select class='formcombobox' ";
+			    input="<div class='col-md-9'>";
+				input = "<select class='form-control' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
 				input += " id='F" + rs.getString("field_id") +  "'";
+				input+="</div>";
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
@@ -382,11 +392,13 @@ public class BForms {
 				}
 
 				input += "</select>";
-				input += "<span " + " id='list" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'>" + listVal + "</span>";
+				//input += "<span " + " id='list" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'>" + listVal + "</span>";
 			} else if(fieldType.equals("SELECT")) {
-				input = "<select class='formcombobox' ";
+			    input="<div class='col-md-9'>";
+				input = "<select class='form-control' ";
 				input += " name='F" + rs.getString("field_id") + "'";
 				input += " id='F" + rs.getString("field_id") + "'";
+				input+="</div>";
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
@@ -419,26 +431,37 @@ public class BForms {
 					lprs.close();
 				}
 				input += "</select>";
-				input += "<span " + " id='select" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'> " + spanVal + "</span>";
+				//input += "<span " + " id='select" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'> " + spanVal + "</span>";
 			} else if(fieldType.equals("TITLE")) {
 				cnt_title ++;
+				input="<div class='col-md-6'>";
+				input="<div class='col-md-9'>";
 				input = "";
-				myhtml += "\n<fieldset><label><strong>" + question + "</strong></label></fieldset>";
+				input+="</div>";
+				input+="</div>";
+
+				//myhtml += "\n<fieldset><label class='control-label col-md-3'><strong>"+ "<div class='col-md-6'>" + question +"</div>" + "</strong></label></fieldset>";
 			} else if(fieldType.equals("SUBGRID")) {
+			   input="<div class='col-md-9'>";
 				input = "";
+				input+="</div>";
 				myhtml += printSubForm(rs.getString("field_id"), disabled);
 			} else if(fieldType.equals("TABLE")) {
+			    input="<div class='navbar navbar-fixed-top'>";
 				input = "";
+				//input+="</div>";
 			    table_count ++;
 			    myhtml += printSubTable(rs.getString("field_id"), disabled, question, table_count);
 			}
 
 			// Label position L = left, T = Top, B = Bottom, R = Left
-			if(input.equals("")) input = "";
-			else if(label_position.equals("L")) input = question + " " + input + "\n";
-			else if(label_position.equals("T"))	input = "<label>" + question + "<br>" + input +"</label>\n";
-			else if(label_position.equals("B"))	input = "<label>" + input + "<br>" + question +"</label>\n";
-			else if(label_position.equals("R"))	input = input + " " + question + "\n";
+			if(input.equals(""))
+			
+			input = "";
+			else if(label_position.equals("L")) input ="<div class='portlet-body form'>"+ "<div class='col-md-6'>"+ question + " "+"<div class='col-md-9'>" + input + "\n" +"</div>" + "</div>" + "</div>";
+			else if(label_position.equals("T"))	input ="<div class='portlet-body form'>"+"<div class='row'>"+"<div class='col-md-6'>"+ "<label class='control-label col-md-3'>" + question +"</label>" + "<br>" + "<div class='col-md-9'>" + input +"</div>"+ "</div>"+ "</div>" + "</div>\n";
+			else if(label_position.equals("B"))	input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+"<div class='col-md-9'>" + input +"</div>" + "<br>" + "<label class='control-label col-md-3'>" + question +"</label>"+ "</div>" + "</div>\n";
+			else if(label_position.equals("R"))	input = "<div class='portlet-body form'>"+"<div class='row'>"+ "<div class='col-md-6'>" +"<div class='col-md-9'>"+ input +"</div>" + " " + question + "</div>" +"</div>" + "\n";
 
 			//SHARELINE/SECTION PROCESSING
 			if(input.equals("")) {
