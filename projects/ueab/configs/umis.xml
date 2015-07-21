@@ -47,6 +47,7 @@
 					<MENU name="Students Degrees">133</MENU>
 					<MENU name="Students Majors">134</MENU>
 					<MENU name="Students Sub Levels">633</MENU>
+					<MENU name="Graduated Students">640</MENU>
 					<MENU name="New Students ID List">330</MENU>
 				</MENU>
 				<MENU name="Students GPA">157</MENU>
@@ -2201,9 +2202,9 @@
 	<DESK w="700" name="Admision Marks Summary" type="horl" key="441" h="500">
 		<JASPER filtered="false" name="Admision Marks Summary" reportfile="studentmarks.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Graduations List" type="horl" key="442" h="500">
+	<DESK w="700" name="Graduations List" noorg="true" type="horl" key="442" h="500">
 		<FILTER location="250" name="Graduations List" type="horl">
-			<DRILLDOWN name="Graduation Year" keyfield="gradyear" table="vwgradyear" listfield="gradyear"></DRILLDOWN>
+			<DRILLDOWN name="Graduation Year" keyfield="gradyear" table="vwgradyear" noorg="true" listfield="gradyear"></DRILLDOWN>
 			<JASPER filtered="true" name="Graduations List" reportfile="graduates.jasper"></JASPER>
 		</FILTER>
 	</DESK>
