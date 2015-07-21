@@ -3,8 +3,8 @@
 		<MENU name="Entitys">1</MENU>
 		<MENU icon="fa fa-sitemap" name="Organizations">5</MENU>
 		<MENU name="Countys">10</MENU>
-		<MENU name="Surveys ( MOH 514 )">15</MENU>
-		<MENU name="Surveys ( MOH 515)">20</MENU>
+		<MENU name="Reports ( MOH 514 )">15</MENU>
+		<MENU name="Reports ( MOH 515)">20</MENU>
 	</MENU>
 	<DESK w="700" name="Entitys" key="1" h="550">
 		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">ESTAMP>
@@ -42,31 +42,30 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Orgs" key="5" h="550">
-		<GRID name="Orgs" keyfield="org_id" table="vw_orgs" noorg="true">
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+		<GRID name="Organizations" keyfield="org_id" table="vw_orgs" noorg="true">
+			<TEXTFIELD w="75" title="Organization ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organization Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<GRID name="Health Workers" keyfield="health_worker_id" linkfield="org_id" table="health_workers">
-				<TEXTFIELD w="75" title="Health Worker ID">health_worker_id</TEXTFIELD>
+			<GRID name="Community Health Volunteers" keyfield="health_worker_id" linkfield="org_id" table="health_workers">
+				<TEXTFIELD w="75" title="Community Health Volunteer ID">health_worker_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Worker National ID">worker_national_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Worker Mobile Num">worker_mobile_num</TEXTFIELD>
-				<TEXTFIELD w="75" title="Worker Pass">worker_pass</TEXTFIELD>
+				<TEXTFIELD w="75" title="CHV Name">worker_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="CHV National ID">worker_national_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="CHV Mobile Num">worker_mobile_num</TEXTFIELD>
+				<TEXTFIELD w="75" title="CHV Pass">worker_pass</TEXTFIELD>
 				<CHECKBOX w="75" title="First Login">is_first_login</CHECKBOX>
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 				<TEXTFIELD w="75" title="Device ID">device_id</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Date Enrolled">date_enrolled</TEXTTIMESTAMP>
-				<FORM name="Health Worker" keyfield="health_worker_id" linkfield="org_id" table="health_workers">
-					<TEXTFIELD w="150" title="Worker Name" y="10" h="20" x="10">worker_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Worker National ID" y="10" h="20" x="290">worker_national_id</TEXTFIELD>
-					<TEXTFIELD w="150" title="Worker Mobile Num" y="30" h="20" x="10">worker_mobile_num</TEXTFIELD>
-					<TEXTFIELD w="150" title="Worker Pass" y="30" h="20" x="290">worker_pass</TEXTFIELD>
+				<FORM name="Community Health Volunteer" keyfield="health_worker_id" linkfield="org_id" table="health_workers">
+					<TEXTFIELD w="150" title="CHV Name" y="10" h="20" x="10">worker_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="CHV National ID" y="10" h="20" x="290">worker_national_id</TEXTFIELD>
+					<TEXTFIELD w="150" title="CHV Mobile Num" y="30" h="20" x="10">worker_mobile_num</TEXTFIELD>
+					<TEXTFIELD w="150" title="CHV Pass" y="30" h="20" x="290">worker_pass</TEXTFIELD>
 					<CHECKBOX w="150" title="First Login" y="50" h="20" x="10">is_first_login</CHECKBOX>
 					<CHECKBOX w="150" title="Active" y="50" h="20" x="290">is_active</CHECKBOX>
 					<COMBOBOX w="430" title="Device Name" lptable="devices" y="70" h="20" x="10" lpfield="device_name">device_id</COMBOBOX>
-					<TEXTTIMESTAMP w="150" title="Date Enrolled" y="90" h="20" x="10">date_enrolled</TEXTTIMESTAMP>
 				</FORM>
 			</GRID>
 			<GRID name="Devices" keyfield="device_id" linkfield="org_id" table="devices">
@@ -85,9 +84,9 @@
 					<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
 				</FORM>
 			</GRID>
-			<FORM name="Org" keyfield="org_id" table="orgs" noorg="true">
+			<FORM name="Organization" keyfield="org_id" table="orgs" noorg="true">
 				<COMBOBOX w="430" title="Currency ID" lptable="currency" y="10" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Parent Org ID" lptable="orgs" lpkey="org_id" y="30" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+				<COMBOBOX w="430" title="Parent Organization" lptable="orgs" lpkey="org_id" y="30" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Org Name" y="50" h="20" x="10">org_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Org Sufix" y="50" h="20" x="290">org_sufix</TEXTFIELD>
 				<CHECKBOX w="150" title="Default" y="70" h="20" x="10">is_default</CHECKBOX>
@@ -116,7 +115,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Surveys 514" key="15" h="550">
+	<DESK w="700" name="Reports 514" key="15" h="550">
 		<GRID name="Countys" keyfield="county_id" table="countys" noorg="true">
 			<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
@@ -125,7 +124,7 @@
 				<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Sub County ID">sub_county_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
-				<GRID name="Pending Surveys" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='0' )">
+				<GRID name="Pending Reports" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='0' )">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
@@ -196,7 +195,7 @@
 							<TEXTFIELD w="430" title="Response" y="30" h="20" x="10">response</TEXTFIELD>
 						</FORM>
 					</GRID>
-					<FORM name="Survey" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
+					<FORM name="Report" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
 						<COMBOBOX w="430" title="Sub County ID" lptable="sub_countys" noorg="true" y="10" h="20" x="10" lpfield="sub_county_name">sub_county_id</COMBOBOX>
 						<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
 						<TEXTFIELD w="430" title="Village Name" y="50" h="20" x="10">village_name</TEXTFIELD>
@@ -211,9 +210,10 @@
 							<DATA key="3">Redone</DATA>
 						</COMBOLIST>
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
+						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
 				</GRID>
-				<GRID name="Approved Surveys" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='1' )">
+				<GRID name="Approved Reports" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='1' )">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
@@ -284,7 +284,7 @@
 							<TEXTFIELD w="430" title="Response" y="30" h="20" x="10">response</TEXTFIELD>
 						</FORM>
 					</GRID>
-					<FORM name="Survey" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
+					<FORM name="Report" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
 						<COMBOBOX w="430" title="Sub County ID" lptable="sub_countys" noorg="true" y="10" h="20" x="10" lpfield="sub_county_name">sub_county_id</COMBOBOX>
 						<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
 						<TEXTFIELD w="430" title="Village Name" y="50" h="20" x="10">village_name</TEXTFIELD>
@@ -299,9 +299,10 @@
 							<DATA key="3">Redone</DATA>
 						</COMBOLIST>
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
+						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
 				</GRID>
-				<GRID name="Returned Surveys" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='2' )">
+				<GRID name="Returned Reports" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='2' )">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
@@ -372,7 +373,7 @@
 							<TEXTFIELD w="430" title="Response" y="30" h="20" x="10">response</TEXTFIELD>
 						</FORM>
 					</GRID>
-					<FORM name="Survey" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
+					<FORM name="Report" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
 						<COMBOBOX w="430" title="Sub County ID" lptable="sub_countys" noorg="true" y="10" h="20" x="10" lpfield="sub_county_name">sub_county_id</COMBOBOX>
 						<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
 						<TEXTFIELD w="430" title="Village Name" y="50" h="20" x="10">village_name</TEXTFIELD>
@@ -387,9 +388,10 @@
 							<DATA key="3">Redone</DATA>
 						</COMBOLIST>
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
+						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
 				</GRID>
-				<GRID name="Redone Surveys" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='3' )">
+				<GRID name="Redone Reports" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='3' )">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
@@ -460,7 +462,7 @@
 							<TEXTFIELD w="430" title="Response" y="30" h="20" x="10">response</TEXTFIELD>
 						</FORM>
 					</GRID>
-					<FORM name="Survey" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
+					<FORM name="Report" keyfield="survey_id" linkfield="sub_county_id" table="surveys">
 						<COMBOBOX w="430" title="Sub County ID" lptable="sub_countys" noorg="true" y="10" h="20" x="10" lpfield="sub_county_name">sub_county_id</COMBOBOX>
 						<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
 						<TEXTFIELD w="430" title="Village Name" y="50" h="20" x="10">village_name</TEXTFIELD>
@@ -475,55 +477,318 @@
 							<DATA key="3">Redone</DATA>
 						</COMBOLIST>
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
+						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
 				</GRID>
+				<JASPER name="County Report " reportfile="vw_surveys.jasper"></JASPER>
+				<FILTER w="700" name="Worker Reports" split="150" type="vert" h="550">
+					<FILTERFORM name="Worker">
+						<COMBOBOX w="430" title="Health Worker " lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
+					</FILTERFORM>
+					<JASPER name="Health Worker Reports" reportfile="vw_surveys_detailed.jasper"></JASPER>
+				</FILTER>
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Surveys 515" key="20" h="550">
-		<GRID name="Surveys 515" keyfield="surveys_515_id" table="surveys_515">
-			<TEXTFIELD w="75" title="Surveys 515 ID">surveys_515_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Chu Name">chu_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Mclu Code">mclu_code</TEXTFIELD>
+	<DESK w="700" name="Reports 515" key="20" h="550">
+		<GRID name="Reports 515" keyfield="surveys_515_id" table="surveys_515">
+			<TEXTFIELD w="75" title="Report 515 ID">surveys_515_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name of CHU">chu_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="MCUL Code">mclu_code</TEXTFIELD>
 			<TEXTFIELD w="75" title="Link Facility">link_facility</TEXTFIELD>
-			<TEXTFIELD w="75" title="Chew Name">chew_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="No Of Chvs">no_of_chvs</TEXTFIELD>
-			<TEXTFIELD w="75" title="Total Chws Reported">total_chws_reported</TEXTFIELD>
+			<TEXTFIELD w="75" title="CHEW Name">chew_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="No. of CHVs">no_of_chvs</TEXTFIELD>
+			<TEXTFIELD w="75" title="Total CHVs Reported">total_chws_reported</TEXTFIELD>
 			<TEXTFIELD w="75" title="County">county</TEXTFIELD>
-			<TEXTFIELD w="75" title="Subcounty">subcounty</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sub County">subcounty</TEXTFIELD>
 			<TEXTFIELD w="75" title="Division">division</TEXTFIELD>
 			<TEXTFIELD w="75" title="Location">location</TEXTFIELD>
-			<TEXTFIELD w="75" title="Sublocation">sublocation</TEXTFIELD>
-			<TEXTFIELD w="75" title="Total Vilages">total_vilages</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sub location">sublocation</TEXTFIELD>
+			<TEXTFIELD w="75" title="Total Villages">total_vilages</TEXTFIELD>
 			<TEXTFIELD w="75" title="Month">month</TEXTFIELD>
 			<TEXTFIELD w="75" title="Year">year</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Survey Date">survey_date</TEXTTIMESTAMP>
-			<FORM name="Surveys 515" keyfield="surveys_515_id" table="surveys_515">
-				<TEXTFIELD w="430" title="Chu Name" y="10" h="20" x="10">chu_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Mclu Code" y="30" h="20" x="10">mclu_code</TEXTFIELD>
-				<TEXTFIELD w="430" title="Link Facility" y="50" h="20" x="10">link_facility</TEXTFIELD>
-				<TEXTFIELD w="430" title="Chew Name" y="70" h="20" x="10">chew_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="No Of Chvs" y="90" h="20" x="10">no_of_chvs</TEXTFIELD>
-				<TEXTFIELD w="150" title="Total Chws Reported" y="90" h="20" x="290">total_chws_reported</TEXTFIELD>
-				<TEXTFIELD w="430" title="County" y="110" h="20" x="10">county</TEXTFIELD>
-				<TEXTFIELD w="430" title="Subcounty" y="130" h="20" x="10">subcounty</TEXTFIELD>
-				<TEXTFIELD w="430" title="Division" y="150" h="20" x="10">division</TEXTFIELD>
-				<TEXTFIELD w="430" title="Location" y="170" h="20" x="10">location</TEXTFIELD>
-				<TEXTFIELD w="430" title="Sublocation" y="190" h="20" x="10">sublocation</TEXTFIELD>
-				<TEXTFIELD w="150" title="Total Vilages" y="210" h="20" x="10">total_vilages</TEXTFIELD>
-				<TEXTFIELD w="150" title="Month" y="210" h="20" x="290">month</TEXTFIELD>
-				<TEXTFIELD w="150" title="Year" y="230" h="20" x="10">year</TEXTFIELD>
-			</FORM>
-			<GRID name="Demograpics" keyfield="survey_515_demograpic_id" linkfield="surveys_515_id" table="vw_survey_515_demograpics" noorg="true">
-				<TEXTFIELD w="75" title="Demograpics 515 Def ID">demograpics_515_def_id</TEXTFIELD>
+			<FORMVIEW name="Details" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+				<TEXTFIELD w="75" title="Surveys 515 Detail ID">surveys_515_detail_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Surveys 515 ID">surveys_515_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Survey 515 Demograpic ID">survey_515_demograpic_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Response">response</TEXTFIELD>
-				<FORM name="Survey 515 Demograpics" keyfield="survey_515_demograpic_id" linkfield="surveys_515_id" table="survey_515_demograpics" noorg="true">
-					<COMBOBOX w="430" title="Variable" lptable="demograpics_515_defs" noorg="true" y="10" h="20" x="10" lpfield="demograpics_question">demograpics_515_def_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Response" y="30" h="20" x="10">response</TEXTFIELD>
+				<TEXTFIELD w="150" title="1 - Total households">indicator_1</TEXTFIELD>
+				<TEXTFIELD w="150" title="2 - Total number of households visited">indicator_2</TEXTFIELD>
+				<TEXTFIELD w="150" title="3 - Total population">indicator_3</TEXTFIELD>
+				<TEXTFIELD w="150" title="4 - Total women 15-49 years">indicator_4</TEXTFIELD>
+				<TEXTFIELD w="150" title="5 - Total pregnant women">indicator_5</TEXTFIELD>
+				<TEXTFIELD w="150" title="6 - Total children 0-28 days">indicator_6</TEXTFIELD>
+				<TEXTFIELD w="150" title="7 - Total children 29 days-11 months age">indicator_7</TEXTFIELD>
+				<TEXTFIELD w="150" title="8 - Total children 12-59 months age">indicator_8</TEXTFIELD>
+				<TEXTFIELD w="150" title="9 - Total children 5-12 years age">indicator_9</TEXTFIELD>
+				<TEXTFIELD w="150" title="10 - Total adolescent and youth - Girls (13 - 24 years)">indicator_10</TEXTFIELD>
+				<TEXTFIELD w="150" title="11 - Total adolescent and youth - Boys (13 - 24 years)">indicator_11</TEXTFIELD>
+				<TEXTFIELD w="150" title="12 - Total Population 25-59 years">indicator_12</TEXTFIELD>
+				<TEXTFIELD w="150" title="13 - Total population of the elderly (60+ years)">indicator_13</TEXTFIELD>
+				<TEXTFIELD w="150" title="14 - Number of households using  treated water">indicator_14</TEXTFIELD>
+				<TEXTFIELD w="150" title="15 - Number of households with hand washing facilities e.g. leaky tins in use">indicator_15</TEXTFIELD>
+				<TEXTFIELD w="150" title="16 - Number of households with functional latrines">indicator_16</TEXTFIELD>
+				<TEXTFIELD w="150" title="17 - Number of new-borns visited at home within 48 hours of birth">indicator_17</TEXTFIELD>
+				<TEXTFIELD w="150" title="18- Number of mothers with new-borns counselled on Exclusive Breastfeeding">indicator_18</TEXTFIELD>
+				<TEXTFIELD w="150" title="19 - Number of children of 0-59 months  participating in  growth monitoring">indicator_19</TEXTFIELD>
+				<TEXTFIELD w="150" title="20 - Total Deliveries">indicator_20</TEXTFIELD>
+				<TEXTFIELD w="150" title="21 - Number of deliveries by skilled birth attendants">indicator_21</TEXTFIELD>
+				<TEXTFIELD w="150" title="22 - Number of uder-age pregnancies (under 18 years)">indicator_22</TEXTFIELD>
+				<TEXTFIELD w="150" title="23 - Number of women (15-49yrs) provided with Family Planning commodities ">indicator_23</TEXTFIELD>
+				<TEXTFIELD w="150" title="24 - Number of children 12-59 months dewormed">indicator_24</TEXTFIELD>
+				<TEXTFIELD w="150" title="25 - Number of fever cases  managed">indicator_25</TEXTFIELD>
+				<TEXTFIELD w="150" title="26 - Number of fever cases less than 7 days with RDT done">indicator_26</TEXTFIELD>
+				<TEXTFIELD w="150" title="27 - Number of fever casesless than 7 days with RDT +ve">indicator_27</TEXTFIELD>
+				<TEXTFIELD w="150" title="28 - Number of under 5 years Malaria Cases (RDT +ve) treated with ACT">indicator_28</TEXTFIELD>
+				<TEXTFIELD w="150" title="29 - Number of over 5 years Malaria Cases (RDT +ve) treated with ACT">indicator_29</TEXTFIELD>
+				<TEXTFIELD w="150" title="30 - Number of cases of diarrhoea identified in children 0-59 months age">indicator_30</TEXTFIELD>
+				<TEXTFIELD w="150" title="31 - Number of children of 12-59 months with diarrhoea treated with Zinc and ORS">indicator_31</TEXTFIELD>
+				<TEXTFIELD w="150" title="32 - Number of children 0-59 months age presenting with fast breathing">indicator_32</TEXTFIELD>
+				<TEXTFIELD w="150" title="33 - Number of children 0-59 months age presenting with fast breathing treated with Amoxycillin">indicator_33</TEXTFIELD>
+				<TEXTFIELD w="150" title="34 -Number of injuries and wounds managed">indicator_34</TEXTFIELD>
+				<TEXTFIELD w="150" title="35 - Number of new referrals - ANC " y="370" h="20" x="10">indicator_35</TEXTFIELD>
+				<TEXTFIELD w="150" title="36 - Number of new referrals - Skilled delivery" y="370" h="20" x="290">indicator_36</TEXTFIELD>
+				<TEXTFIELD w="150" title="37 - Number of new referrals - New-borns with danger signs  referred" y="390" h="20" x="10">indicator_37</TEXTFIELD>
+				<TEXTFIELD w="150" title="38 - Number of new referrals - Children of 0-11 months referred for immunization" y="390" h="20" x="290">indicator_38</TEXTFIELD>
+				<TEXTFIELD w="150" title="39 - Number of new referrals - Children 6 - 59 Months referred for Vitamin A supplementation" y="410" h="20" x="10">indicator_39</TEXTFIELD>
+				<TEXTFIELD w="150" title="40 - Number of new referrals - Severe malnutrition" y="410" h="20" x="290">indicator_40</TEXTFIELD>
+				<TEXTFIELD w="150" title="41 - Number of new referrals - Moderate malnutrition" y="430" h="20" x="10">indicator_41</TEXTFIELD>
+				<TEXTFIELD w="150" title="42 - Number of new referrals - Cough for 2 or more weeks" y="430" h="20" x="290">indicator_42</TEXTFIELD>
+				<TEXTFIELD w="150" title="43 - Number of new referrals - HIV Counselling and Testing (HCT)" y="450" h="20" x="10">indicator_43</TEXTFIELD>
+				<TEXTFIELD w="150" title="44 - Number of new referrals - Routine check-ups for the elderly (60+)" y="450" h="20" x="290">indicator_44</TEXTFIELD>
+				<TEXTFIELD w="150" title="45 - Number of people with known chronic illness  referred - Diabetes" y="470" h="20" x="10">indicator_45</TEXTFIELD>
+				<TEXTFIELD w="150" title="46 - Number of people with known chronic illness  referred - Cancer" y="470" h="20" x="290">indicator_46</TEXTFIELD>
+				<TEXTFIELD w="150" title="47 - Number of people with known chronic illness  referred - Mental Illness" y="490" h="20" x="10">indicator_47</TEXTFIELD>
+				<TEXTFIELD w="150" title="48 - Number of people with known chronic illness  referred - Hypertension" y="490" h="20" x="290">indicator_48</TEXTFIELD>
+				<TEXTFIELD w="150" title="49 - Number of people with known chronic illness  referred - Chronic Cough" y="510" h="20" x="10">indicator_49</TEXTFIELD>
+				<TEXTFIELD w="150" title="50 - Number of defaulters referred - ANC" y="510" h="20" x="290">indicator_50</TEXTFIELD>
+				<TEXTFIELD w="150" title="51 - Number of defaulters referred - Immunization" y="530" h="20" x="10">indicator_51</TEXTFIELD>
+				<TEXTFIELD w="150" title="52 - Number of defaulters referred - Tuberculosis treatment" y="530" h="20" x="290">indicator_52</TEXTFIELD>
+				<TEXTFIELD w="150" title="53 - Number of defaulters referred - ART" y="550" h="20" x="10">indicator_53</TEXTFIELD>
+				<TEXTFIELD w="150" title="54 - Number of deaths in the month - 0-28 days" y="550" h="20" x="290">indicator_54</TEXTFIELD>
+				<TEXTFIELD w="150" title="55 - Number of deaths in the month - 29 days-11 months" y="570" h="20" x="10">indicator_55</TEXTFIELD>
+				<TEXTFIELD w="150" title="56 - Number of deaths in the month - 12-59 months" y="570" h="20" x="290">indicator_56</TEXTFIELD>
+				<TEXTFIELD w="150" title="57 - Number of deaths in the month - Maternal " y="590" h="20" x="10">indicator_57</TEXTFIELD>
+				<TEXTFIELD w="150" title="58 - Number of deaths in the month - Other deaths" y="590" h="20" x="290">indicator_58</TEXTFIELD>
+				<TEXTFIELD w="150" title="59 - Number of deaths in the month - Total deaths" y="610" h="20" x="10">indicator_59</TEXTFIELD>
+				<TEXTFIELD w="150" title="60 - Total number of community dialogue days  held" y="630" h="20" x="10">indicator_60</TEXTFIELD>
+				<TEXTFIELD w="150" title="61 - Total number of community Action Days held" y="630" h="20" x="10">indicator_61</TEXTFIELD>
+				<TEXTFIELD w="150" title="62 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_62</TEXTFIELD>
+				<COMBOLIST w="150" title="63 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_63
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="64 - Did the community health unit experience stock-outs of more than 7 days for any of the following commodities? - Antimalarial (ACTs 6s and 12s)" y="650" h="20" x="290">indicator_64_a
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="b- Oral Rehydration Salt" y="670" h="20" x="10">indicator_64_b
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="c - Zinc" y="670" h="20" x="290">indicator_64_c
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="d - Rapid Diagnostic Test Kit" y="690" h="20" x="10">indicator_64_d
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="e - Condoms" y="690" h="20" x="290">indicator_64_e
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="f - Oral Contraceptives" y="710" h="20" x="10">indicator_64_f
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="g - Iodine Solution" y="710" h="20" x="290">indicator_64_g
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="h - Chlorine Tablets" y="730" h="20" x="10">indicator_64_h
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="i - Albedazole Tablets" y="730" h="20" x="290">indicator_64_i
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="j - Tetracycline Eye Ointment" y="750" h="20" x="10">indicator_64_j
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="k- Paracetamol" y="750" h="20" x="290">indicator_64_k
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<TEXTAREA w="430" title="Remarks" y="770" h="70" x="10">remarks</TEXTAREA>
+				<FORM name="Indicators 1-34" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTFIELD w="150" title="1 - Total households" y="30" h="20" x="10">indicator_1</TEXTFIELD>
+					<TEXTFIELD w="150" title="2 - Total number of households visited" y="30" h="20" x="290">indicator_2</TEXTFIELD>
+					<TEXTFIELD w="150" title="3 - Total population" y="50" h="20" x="10">indicator_3</TEXTFIELD>
+					<TEXTFIELD w="150" title="4 - Total women 15-49 years" y="50" h="20" x="290">indicator_4</TEXTFIELD>
+					<TEXTFIELD w="150" title="5 - Total pregnant women" y="70" h="20" x="10">indicator_5</TEXTFIELD>
+					<TEXTFIELD w="150" title="6 - Total children 0-28 days" y="70" h="20" x="290">indicator_6</TEXTFIELD>
+					<TEXTFIELD w="150" title="7 - Total children 29 days-11 months age" y="90" h="20" x="10">indicator_7</TEXTFIELD>
+					<TEXTFIELD w="150" title="8 - Total children 12-59 months age" y="90" h="20" x="290">indicator_8</TEXTFIELD>
+					<TEXTFIELD w="150" title="9 - Total children 5-12 years age" y="110" h="20" x="10">indicator_9</TEXTFIELD>
+					<TEXTFIELD w="150" title="10 - Total adolescent and youth - Girls (13 - 24 years)" y="110" h="20" x="290">indicator_10</TEXTFIELD>
+					<TEXTFIELD w="150" title="11 - Total adolescent and youth - Boys (13 - 24 years)" y="130" h="20" x="10">indicator_11</TEXTFIELD>
+					<TEXTFIELD w="150" title="12 - Total Population 25-59 years" y="130" h="20" x="290">indicator_12</TEXTFIELD>
+					<TEXTFIELD w="150" title="13 - Total population of the elderly (60+ years)" y="150" h="20" x="10">indicator_13</TEXTFIELD>
+					<TEXTFIELD w="150" title="14 - Number of households using  treated water" y="150" h="20" x="290">indicator_14</TEXTFIELD>
+					<TEXTFIELD w="150" title="15 - Number of households with hand washing facilities e.g. leaky tins in use" y="170" h="20" x="10">indicator_15</TEXTFIELD>
+					<TEXTFIELD w="150" title="16 - Number of households with functional latrines" y="170" h="20" x="290">indicator_16</TEXTFIELD>
+					<TEXTFIELD w="150" title="17 - Number of new-borns visited at home within 48 hours of birth" y="190" h="20" x="10">indicator_17</TEXTFIELD>
+					<TEXTFIELD w="150" title="18- Number of mothers with new-borns counselled on Exclusive Breastfeeding" y="190" h="20" x="290">indicator_18</TEXTFIELD>
+					<TEXTFIELD w="150" title="19 - Number of children of 0-59 months  participating in  growth monitoring" y="210" h="20" x="10">indicator_19</TEXTFIELD>
+					<TEXTFIELD w="150" title="20 - Total Deliveries" y="210" h="20" x="290">indicator_20</TEXTFIELD>
+					<TEXTFIELD w="150" title="21 - Number of deliveries by skilled birth attendants" y="230" h="20" x="10">indicator_21</TEXTFIELD>
+					<TEXTFIELD w="150" title="22 - Number of uder-age pregnancies (under 18 years)" y="230" h="20" x="290">indicator_22</TEXTFIELD>
+					<TEXTFIELD w="150" title="23 - Number of women (15-49yrs) provided with Family Planning commodities " y="250" h="20" x="10">indicator_23</TEXTFIELD>
+					<TEXTFIELD w="150" title="24 - Number of children 12-59 months dewormed" y="250" h="20" x="290">indicator_24</TEXTFIELD>
+					<TEXTFIELD w="150" title="25 - Number of fever cases  managed" y="270" h="20" x="10">indicator_25</TEXTFIELD>
+					<TEXTFIELD w="150" title="26 - Number of fever cases less than 7 days with RDT done" y="270" h="20" x="290">indicator_26</TEXTFIELD>
+					<TEXTFIELD w="150" title="27 - Number of fever casesless than 7 days with RDT +ve" y="290" h="20" x="10">indicator_27</TEXTFIELD>
+					<TEXTFIELD w="150" title="28 - Number of under 5 years Malaria Cases (RDT +ve) treated with ACT" y="290" h="20" x="290">indicator_28</TEXTFIELD>
+					<TEXTFIELD w="150" title="29 - Number of over 5 years Malaria Cases (RDT +ve) treated with ACT" y="310" h="20" x="10">indicator_29</TEXTFIELD>
+					<TEXTFIELD w="150" title="30 - Number of cases of diarrhoea identified in children 0-59 months age" y="310" h="20" x="290">indicator_30</TEXTFIELD>
+					<TEXTFIELD w="150" title="31 - Number of children of 12-59 months with diarrhoea treated with Zinc and ORS" y="330" h="20" x="10">indicator_31</TEXTFIELD>
+					<TEXTFIELD w="150" title="32 - Number of children 0-59 months age presenting with fast breathing" y="330" h="20" x="290">indicator_32</TEXTFIELD>
+					<TEXTFIELD w="150" title="33 - Number of children 0-59 months age presenting with fast breathing treated with Amoxycillin" y="350" h="20" x="10">indicator_33</TEXTFIELD>
+					<TEXTFIELD w="150" title="34 -Number of injuries and wounds managed" y="350" h="20" x="290">indicator_34</TEXTFIELD>
 				</FORM>
-			</GRID>
+				<FORM name="Indicators 35-44" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTFIELD w="150" title="35 - Number of new referrals - ANC " y="370" h="20" x="10">indicator_35</TEXTFIELD>
+					<TEXTFIELD w="150" title="36 - Number of new referrals - Skilled delivery" y="370" h="20" x="290">indicator_36</TEXTFIELD>
+					<TEXTFIELD w="150" title="37 - Number of new referrals - New-borns with danger signs  referred" y="390" h="20" x="10">indicator_37</TEXTFIELD>
+					<TEXTFIELD w="150" title="38 - Number of new referrals - Children of 0-11 months referred for immunization" y="390" h="20" x="290">indicator_38</TEXTFIELD>
+					<TEXTFIELD w="150" title="39 - Number of new referrals - Children 6 - 59 Months referred for Vitamin A supplementation" y="410" h="20" x="10">indicator_39</TEXTFIELD>
+					<TEXTFIELD w="150" title="40 - Number of new referrals - Severe malnutrition" y="410" h="20" x="290">indicator_40</TEXTFIELD>
+					<TEXTFIELD w="150" title="41 - Number of new referrals - Moderate malnutrition" y="430" h="20" x="10">indicator_41</TEXTFIELD>
+					<TEXTFIELD w="150" title="42 - Number of new referrals - Cough for 2 or more weeks" y="430" h="20" x="290">indicator_42</TEXTFIELD>
+					<TEXTFIELD w="150" title="43 - Number of new referrals - HIV Counselling and Testing (HCT)" y="450" h="20" x="10">indicator_43</TEXTFIELD>
+					<TEXTFIELD w="150" title="44 - Number of new referrals - Routine check-ups for the elderly (60+)" y="450" h="20" x="290">indicator_44</TEXTFIELD>
+				</FORM>
+				<FORM name="Indicators 45-49" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTFIELD w="150" title="45 - Number of people with known chronic illness  referred - Diabetes" y="470" h="20" x="10">indicator_45</TEXTFIELD>
+					<TEXTFIELD w="150" title="46 - Number of people with known chronic illness  referred - Cancer" y="470" h="20" x="290">indicator_46</TEXTFIELD>
+					<TEXTFIELD w="150" title="47 - Number of people with known chronic illness  referred - Mental Illness" y="490" h="20" x="10">indicator_47</TEXTFIELD>
+					<TEXTFIELD w="150" title="48 - Number of people with known chronic illness  referred - Hypertension" y="490" h="20" x="290">indicator_48</TEXTFIELD>
+					<TEXTFIELD w="150" title="49 - Number of people with known chronic illness  referred - Chronic Cough" y="510" h="20" x="10">indicator_49</TEXTFIELD>
+				</FORM>
+				<FORM name="Indicators 50-53" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTFIELD w="150" title="50 - Number of defaulters referred - ANC" y="510" h="20" x="290">indicator_50</TEXTFIELD>
+					<TEXTFIELD w="150" title="51 - Number of defaulters referred - Immunization" y="530" h="20" x="10">indicator_51</TEXTFIELD>
+					<TEXTFIELD w="150" title="52 - Number of defaulters referred - Tuberculosis treatment" y="530" h="20" x="290">indicator_52</TEXTFIELD>
+					<TEXTFIELD w="150" title="53 - Number of defaulters referred - ART" y="550" h="20" x="10">indicator_53</TEXTFIELD>
+				</FORM>
+				<FORM name="Indicators 54-59" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTFIELD w="150" title="54 - Number of deaths in the month - 0-28 days" y="550" h="20" x="290">indicator_54</TEXTFIELD>
+					<TEXTFIELD w="150" title="55 - Number of deaths in the month - 29 days-11 months" y="570" h="20" x="10">indicator_55</TEXTFIELD>
+					<TEXTFIELD w="150" title="56 - Number of deaths in the month - 12-59 months" y="570" h="20" x="290">indicator_56</TEXTFIELD>
+					<TEXTFIELD w="150" title="57 - Number of deaths in the month - Maternal " y="590" h="20" x="10">indicator_57</TEXTFIELD>
+					<TEXTFIELD w="150" title="58 - Number of deaths in the month - Other deaths" y="590" h="20" x="290">indicator_58</TEXTFIELD>
+					<TEXTFIELD w="150" title="59 - Number of deaths in the month - Total deaths" y="610" h="20" x="10">indicator_59</TEXTFIELD>
+				</FORM>
+				<FORM name="Indicators 60-62" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTFIELD w="150" title="60 - Total number of community dialogue days  held" y="630" h="20" x="10">indicator_60</TEXTFIELD>
+					<TEXTFIELD w="150" title="61 - Total number of community Action Days held" y="630" h="20" x="10">indicator_61</TEXTFIELD>
+					<TEXTFIELD w="150" title="62 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_62</TEXTFIELD>
+				</FORM>
+				<FORM name="Indicators 63-64" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<COMBOLIST w="150" title="63 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_63
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="64 - Did the community health unit experience stock-outs of more than 7 days for any of the following commodities? - Antimalarial (ACTs 6s and 12s)" y="650" h="20" x="290">indicator_64_a
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="b- Oral Rehydration Salt" y="670" h="20" x="10">indicator_64_b
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="c - Zinc" y="670" h="20" x="290">indicator_64_c
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="d - Rapid Diagnostic Test Kit" y="690" h="20" x="10">indicator_64_d
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="e - Condoms" y="690" h="20" x="290">indicator_64_e
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="f - Oral Contraceptives" y="710" h="20" x="10">indicator_64_f
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="g - Iodine Solution" y="710" h="20" x="290">indicator_64_g
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="h - Chlorine Tablets" y="730" h="20" x="10">indicator_64_h
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="i - Albedazole Tablets" y="730" h="20" x="290">indicator_64_i
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="j - Tetracycline Eye Ointment" y="750" h="20" x="10">indicator_64_j
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="k- Paracetamol" y="750" h="20" x="290">indicator_64_k
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+				</FORM>
+				<FORM name="Remarks/ Others " keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTAREA w="430" title="Remarks" y="770" h="70" x="10">remarks</TEXTAREA>
+				</FORM>
+			</FORMVIEW>
+			<FORM cols="2" name="Basic Info" keyfield="surveys_515_id" table="surveys_515">
+				<TEXTFIELD w="330" title="Name of CHU" y="10" h="20" x="10" span="true">chu_name</TEXTFIELD>
+				<TEXTFIELD w="330" title="County" y="10" h="20" x="290">county</TEXTFIELD>
+				<TEXTFIELD w="430" title="MCUL Code" y="30" h="20" x="10" span="true">mclu_code</TEXTFIELD>
+				<TEXTFIELD w="430" title="Sub County" y="30" h="20" x="290">subcounty</TEXTFIELD>
+				<TEXTFIELD w="430" title="Link Facility" y="50" h="20" x="10" span="true">link_facility</TEXTFIELD>
+				<TEXTFIELD w="430" title="Division" y="10" h="50" x="290">division</TEXTFIELD>
+				<TEXTFIELD w="430" title="CHEW Name" y="70" h="20" x="10" span="true">chew_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Location" y="70" h="20" x="10">location</TEXTFIELD>
+				<TEXTFIELD w="150" title="No of CHVs" y="90" h="20" x="10" span="true">no_of_chvs</TEXTFIELD>
+				<TEXTFIELD w="430" title="Sub location" y="90" h="20" x="290">sublocation</TEXTFIELD>
+				<TEXTFIELD w="150" title="Total CHVs Reported" y="90" h="20" x="290" span="true">total_chws_reported</TEXTFIELD>
+				<TEXTFIELD w="150" title="Total Villages" y="90" h="20" x="290">total_vilages</TEXTFIELD>
+				<TEXTFIELD w="150" title="Month" y="210" h="20" x="290" span="true">month</TEXTFIELD>
+				<TEXTFIELD w="150" title="Year" y="210" h="20" x="290">year</TEXTFIELD>
+			</FORM>
+			<JASPER name="Report 515 Report " reportfile="vw_surveys_515_details.jasper"></JASPER>
 		</GRID>
 	</DESK>
 </APP>

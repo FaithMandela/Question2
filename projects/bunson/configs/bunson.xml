@@ -454,7 +454,7 @@
 				<CHECKBOX w="150" title="Processed" y="240" h="20" x="290">processed</CHECKBOX>
 			</FORM>
 		</GRID>
-		<GRID name="Processed Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(processed = true)">
+		<GRID new="false" name="Processed Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(processed = true)">
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>

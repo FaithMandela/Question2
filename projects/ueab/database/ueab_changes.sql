@@ -1,5 +1,4 @@
 
-<<<<<<< HEAD
 CREATE TABLE countys(
 
 county_id		char(2) primary key,
@@ -53,8 +52,6 @@ VALUES	('MO', 'Mombasa'),
 		('NO','Narok'),
 		('KJ','kajiado');
 		
-=======
->>>>>>> 8d1c3f0d61b931643b602460e3e1357f2de8eb2a
 	
 
 
@@ -78,7 +75,6 @@ Eldoret<br/>
 (254) 053-522625<br/>
 admissions@ueab.ac.ke<br/>';
 
-<<<<<<< HEAD
     
  ALTER TABLE quarters
  ADD COLUMN dean_cert_date date default null,
@@ -118,7 +114,8 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
   INNER JOIN studentcounty ON q.studentid= studentcounty.county_id ;
   
   ALTER TABLE students
-  ADD COLUMN identification_type varchar(20) default 'none',
+  ADD COLUMN passport boolean DEFAULT false,
+  ADD COLUMN national-id  boolean DEFAULT false,
   ADD COLUMN identification_no varchar(20);
   
   
@@ -139,14 +136,14 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
     qstudentview.sublevelname,
     qstudentview.approved,
 	students.identification_no,
-	students.identification_type,
+	students.passport,
+	students.national_id,
 	qstudentview.nationality
     FROM qstudentview
     INNER JOIN students ON qstudentview.studentid=students.studentid;
   
   
-  
-=======
+
 UPDATE fields SET question = 'Parent or Guardians commitment: I agree that the applicant may be a student at the University of Eastern Africa, Baraton. I am
 ready to support the university in its effort to ensure that the applicant abides by the rules and principles of the university and
 accepts the authority of its administration.'
@@ -155,5 +152,7 @@ WHERE field_id = 106;
 
 UPDATE fields SET field_size = 150 WHERE field_id = 106;
 
+
+
+
    
->>>>>>> 8d1c3f0d61b931643b602460e3e1357f2de8eb2a
