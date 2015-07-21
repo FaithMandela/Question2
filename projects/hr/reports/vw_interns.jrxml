@@ -16,9 +16,12 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_interns.internship_id, vw_interns.department_name, vw_interns.positions, vw_interns.opening_date, vw_interns.closing_date, vw_interns.entity_name, vw_interns.start_date, vw_interns.end_date, vw_interns.payment_amount, vw_interns.approve_status, vw_interns.application_date
 FROM vw_interns
+$P!{orgwhere}
 ORDER BY vw_interns.internship_id]]>
 	</queryString>
 	<field name="internship_id" class="java.lang.Integer"/>

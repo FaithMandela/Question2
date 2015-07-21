@@ -16,10 +16,13 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_skills.skill_category_name, vw_skills.skill_type_name, vw_skills.skill_level_name
 FROM vw_skills
 WHERE (vw_skills.entity_id = '$P!{filterid}')
+$P!{organd}
 ORDER BY vw_skills.skill_category_name]]>
 	</queryString>
 	<field name="skill_category_name" class="java.lang.String"/>

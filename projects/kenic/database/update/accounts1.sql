@@ -1,5 +1,3 @@
-
-
 DROP TRIGGER IF EXISTS ins_debtors_master;
 
 delimiter $$
@@ -76,6 +74,7 @@ BEGIN
 	RETURN alloc_amount;
 END;$$
 delimiter ;
+
 
 DROP FUNCTION IF EXISTS set_allocation;
 delimiter $$
@@ -338,5 +337,31 @@ BEGIN
 	IF(NEW.src_id = 0) THEN
 		SET NEW.src_id = NEW.id;
 	END IF;
+END;$$
+delimiter ;
+
+DROP FUNCTION IF EXISTS get_item_type;
+delimiter $$
+CREATE FUNCTION get_item_type(description varchar(240)) RETURNS varchar(32) deterministic
+BEGIN
+	DECLARE item_type varchar(32);
+
+	IF(LOCATE('Registration', description)>0) THEN
+		SET item_type = 'Registration';
+	END IF;
+	IF(LOCATE('registering', description)>0) THEN
+		SET item_type = 'Registration';
+	END IF;
+	IF(LOCATE('Renewal', description)>0) THEN
+		SET item_type = 'Renewal';
+	END IF;
+	IF(LOCATE('registered', description)>0) THEN
+		SET item_type = 'Registration';
+	END IF;
+	IF(LOCATE('renewed', description)>0) THEN
+		SET item_type = 'Renewal';
+	END IF;
+
+	RETURN item_type;
 END;$$
 delimiter ;

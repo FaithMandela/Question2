@@ -16,10 +16,13 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employment.date_from, vw_employment.date_to, vw_employment.employers_name, vw_employment.position_held, vw_employment.details
 FROM vw_employment
 WHERE (vw_employment.entity_id = '$P!{filterid}')
+$P!{organd}
 ORDER BY vw_employment.date_from;]]>
 	</queryString>
 	<field name="date_from" class="java.sql.Date"/>

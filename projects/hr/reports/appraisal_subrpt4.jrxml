@@ -16,6 +16,8 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT a.job_review_id, a.recomendation, a.reviewer_comments,a.approve_status, a.review_date,a.action_date, b.self_rating,
 SUM(comp_emp_points)  AS comp_emp_points,

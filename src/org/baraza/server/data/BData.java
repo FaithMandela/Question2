@@ -42,7 +42,8 @@ public class BData {
 		executing = true;
 
 		// Create the data transfer class
-System.out.println("BASE is valid : " + rdb.isValid());
+		System.out.println("BASE is valid : " + rdb.isValid());
+		
 		// validate the databases then run process
 		if(!db.isValid()) {
 			db.reconnect();

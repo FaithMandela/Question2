@@ -26,8 +26,9 @@ CREATE TABLE subscriptions (
 	primary_contact			varchar(120),
 	job_title				varchar(120),
 	primary_email			varchar(120),
+	confirm_email			varchar(120),
 	
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,
@@ -45,12 +46,17 @@ CREATE TABLE products (
 	org_id					integer references orgs,
 	product_name			varchar(50),
 	is_montly_bill			boolean default false not null,
-	montly_cost				real,
+	montly_cost				real default 0 not null,
 	is_annual_bill			boolean default true not null,
-	annual_cost				real,
+	annual_cost				real default 0 not null,
+	
+	transaction_limit		integer not null,
+	
 	details					text
 );
 CREATE INDEX products_org_id ON products(org_id);
+
+INSERT INTO products (org_id, product_name, transaction_limit) VALUES (0, 'HCM Hosting', 5);
 
 CREATE TABLE productions (
 	production_id			serial primary key,
@@ -92,7 +98,8 @@ CREATE VIEW vw_subscriptions AS
 		LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;	
 		
 CREATE VIEW vw_productions AS
-	SELECT orgs.org_id, orgs.org_name, products.product_id, products.product_name, 
+	SELECT orgs.org_id, orgs.org_name, 
+		products.product_id, products.product_name, products.transaction_limit,
 		subscriptions.subscription_id, subscriptions.business_name, 
 		
 		productions.production_id, productions.approve_status, productions.workflow_table_id, productions.application_date, 
@@ -118,16 +125,23 @@ BEGIN
 		
 		NEW.entity_id := nextval('entitys_entity_id_seq');
 		INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role)
-		VALUES (NEW.entity_id, 0, 2, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription');
+		VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription');
+		
+		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
+		VALUES (4, 0, NEW.entity_id, 'subscription');
+		
+		NEW.approve_status := 'Completed';
 		
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix)
 		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id);
+		
+		UPDATE entitys SET org_id = NEW.org_id WHERE entity_id = NEW.entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES (1, v_org_id, NEW.entity_id, 'subscription');
+		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
 			
 	END IF;
 

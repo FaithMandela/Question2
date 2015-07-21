@@ -230,7 +230,7 @@ public class BWebBody extends BQuery {
 							else myhtml.append("'");
 
 							if(el.getAttribute("hint") != null) myhtml.append(" title='" + getString(el.getAttribute("hint")) +  "'"); 
-							myhtml.append("><img src='resources/images/form.png'></a>");
+							myhtml.append("><img src='assets/images/form.png'></a>");
 							myhtml.append("</td>");
 
 							if(view.getName().equals("FORMVIEW")) {
@@ -275,7 +275,7 @@ public class BWebBody extends BQuery {
 						
 						if(view.getAttribute("gohint") != null) myhtml.append(" title='" + view.getAttribute("gohint") +  "'"); 
 						
-						myhtml.append("><img src='resources/images/go.png'></a>");
+						myhtml.append("><img src='assets/images/go.png'></a>");
 					}
 					myhtml.append("</td>");
 				}
@@ -283,7 +283,7 @@ public class BWebBody extends BQuery {
 				if(view.getName().equals("FILTERGRID") && (keyField != null) && !hasFilter) {
 					myhtml.append("\n<td><a href='#' OnClick=\"updateField('");
 					myhtml.append(filterName + "', '" + getString(keyField) + "')\">");
-					myhtml.append("<img src='resources/images/go.png'></a></td>");
+					myhtml.append("<img src='assets/images/go.png'></a></td>");
 				}
 
 				if(sfield) {
@@ -504,45 +504,71 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("PASSWORD")) {
 			response.append("<input type='password' name='" + el.getValue() + "' class='form-control' size='50'/>\n");
 		} else if(el.getName().equals("GRIDBOX")) {
-			String myval = null;
-			if(eof) myval = getString(el.getValue());
-			else myval = el.getAttribute("default", "");
-
-			response.append("<input type='hidden' name='" + el.getValue() + "'");
-			if(myval != null) response.append(" value='" + myval + "'");
+			response.append("<select name='" + el.getValue() + "'");
+			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
+			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 
-			response.append("<input type='text' name='" + el.getValue() + "_name'");
-			
-			if(el.getAttribute("class") == null) response.append(" class='form-control'");
-			else response.append(" class='" + el.getAttribute("class") + "'");
-			if(el.getAttribute("w") != null) response.append(" size='" + el.getAttribute("w") + "'");
-			else response.append(" size='50'");
+			String nodefault = el.getAttribute("nodefault");
+			String lptable = el.getAttribute("lptable");
+			String lpfield = el.getAttribute("lpfield");
+			String lpkey = el.getAttribute("lpkey");
+			String cmb_fnct = el.getAttribute("cmb_fnct");
+			if(lpkey == null) lpkey = el.getValue();
 
-			//call PL/SQL function when needed - ajax
-			if(el.getAttribute("ajaxfunction") != null) {
-				String ajx_fxn = el.getAttribute("ajaxfunction");
-				response.append(" autocomplete=\"off\" ");
-				response.append(" onkeypress=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");
+			String mysql = "";
+			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
+			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
+			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
+
+			String cmbWhereSql = el.getAttribute("where");
+			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
+				if(cmbWhereSql == null) cmbWhereSql = "(";
+				else cmbWhereSql += " AND (";
+				cmbWhereSql += orgID + "=" + userOrg + ")";
 			}
 
-			if(myval != null) {
-				String mysql = "SELECT " + el.getAttribute("lpfield") + " FROM " + el.getAttribute("lptable");
-				if(el.getAttribute("lpkey") == null) mysql += " WHERE " + el.getValue();
-				else mysql += " WHERE " + el.getAttribute("lpkey");
-				mysql += " = '" + myval + "'";
-
-				String orderBySql = el.getAttribute("orderby");
-				if(orderBySql == null) mysql += " ORDER BY " + el.getAttribute("lpfield");
-				else mysql += " ORDER BY " + orderBySql;
-
-				myval = db.executeFunction(mysql);
+			if(el.getAttribute("user") != null) {
+				String userFilter = "(" + el.getAttribute("user") + " = '" + db.getUserID() + "')";
+				if(cmbWhereSql == null) cmbWhereSql = userFilter;
+				else cmbWhereSql += " AND " + userFilter;
 			}
-			if(myval != null) response.append(" value='" + myval + "'");
-			response.append(" />\n");
-			if(el.getAttribute("ajaxfunction") != null) {
-				response.append("<br/><div id='ajaxDiv'><div/>\n");
+
+			String tableFilter = null;
+			String linkField = el.getAttribute("linkfield");
+			if((linkField != null) && (formLinkData != null)) {
+				if(el.getAttribute("linkfnct") == null) tableFilter = linkField + " = '" + formLinkData + "'";
+				else tableFilter = linkField + " = " + el.getAttribute("linkfnct") + "('" + formLinkData + "')";
+
+				if(cmbWhereSql == null) cmbWhereSql = "(" + tableFilter + ")";
+				else cmbWhereSql += " AND (" + tableFilter + ")";
 			}
+
+			if(cmbWhereSql != null) mysql += " WHERE " + cmbWhereSql;
+
+			String orderBySql = el.getAttribute("orderby");
+			if(orderBySql == null) mysql += " ORDER BY " + lpfield;
+			else mysql += " ORDER BY " + orderBySql;
+
+			if(nodefault != null) response.append("<option></option>");
+
+			BQuery cmbrs = new BQuery(db, mysql);
+			while (cmbrs.moveNext()) {
+				response.append("<option");
+				if(eof) {
+					if(getString(el.getValue())!=null) {
+						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
+							response.append(" selected='selected'");
+					}
+				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
+					response.append(" selected='selected'");
+				}
+				response.append(" value='" + cmbrs.getString(lpkey));
+				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
+			}
+			cmbrs.close();
+			response.append("</select>\n");
 		} else if(el.getName().equals("COMBOBOX")) {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");

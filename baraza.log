@@ -12,3 +12,23 @@ Sat Jun 27 11:28:34 EAT 2015 org.baraza.server.escalation.BEscalation task
 INFO : SELECT sys_emailed_id, vw_workflow_approvals.org_primary_email as emailaddress, vw_workflow_approvals.workflow_narrative as emailsubject, vw_workflow_approvals.approve_email FROM sys_emailed, vw_workflow_approvals  WHERE (vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 1)
 Sat Jun 27 11:28:34 EAT 2015 org.baraza.server.escalation.BEscalation task
 INFO : SELECT sys_emailed_id, vw_workflow_approvals.org_primary_email as emailaddress, vw_workflow_approvals.workflow_narrative as emailsubject, vw_workflow_approvals.reject_email FROM sys_emailed, vw_workflow_approvals  WHERE (vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)       AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 2)
+Fri Jul 17 10:10:01 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 10:39:48 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 10:40:38 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 10:45:03 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 10:57:27 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 11:10:43 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 12:41:50 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 12:45:05 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 12:57:13 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started
+Fri Jul 17 13:09:16 EAT 2015 org.baraza.server.BServer <init>
+INFO : Server started

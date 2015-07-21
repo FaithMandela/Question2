@@ -134,19 +134,20 @@ CREATE VIEW vw_entitys AS
 		vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
 		vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
 		vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
-		vw_address.address_id, vw_address.address_name,
-		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_name, vw_address.is_default,
-		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
-		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website,
+		
+		addr.address_id, addr.address_name,
+		addr.sys_country_id, addr.sys_country_name, addr.table_name, addr.is_default,
+		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
+		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
+		
 		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
 		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone,
 		entity_types.entity_type_id, entity_types.entity_type_name, 
 		entity_types.entity_role, entity_types.use_key
-	FROM (entitys LEFT JOIN vw_address ON entitys.entity_id = vw_address.table_id)
+	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id 
-	WHERE ((vw_address.table_name = 'entitys') OR (vw_address.table_name is null));
+		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
 
 CREATE VIEW vw_bank_branch AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_name,

@@ -216,13 +216,18 @@ INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, '
 UPDATE tax_types SET currency_id = 1;
 UPDATE tax_types SET account_id = 90000;
 
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 5, 'Subscription', 'subscription');
+SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
+
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
 VALUES (1, 0, 0, 'Budget', 'budgets', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
 VALUES (2, 0, 0, 'Requisition', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
 VALUES (3, 0, 3, 'Transactions', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflows_workflow_id_seq', 2, true);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (4, 0, 5, 'subscriptions', 'subscriptions', NULL, NULL, 'subscription approved', 'subscription rejected', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflows_workflow_id_seq', 4, true);
 
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
 VALUES (1, 0, 1, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
@@ -230,8 +235,9 @@ INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_en
 VALUES (2, 0, 2, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
 VALUES (3, 0, 3, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 2, true);
-
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (4, 0, 4, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 4, true);
 
 
 INSERT INTO contract_status (contract_status_name) VALUES ('Active');
@@ -239,7 +245,7 @@ INSERT INTO contract_status (contract_status_name) VALUES ('Resigned');
 INSERT INTO contract_status (contract_status_name) VALUES ('Deceased');
 INSERT INTO contract_status (contract_status_name) VALUES ('Terminated');
 INSERT INTO contract_status (contract_status_name) VALUES ('Transferred');
-
+UPDATE contract_status SET org_id = 0;
 
 
 

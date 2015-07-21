@@ -24,7 +24,6 @@
 		<![CDATA[SELECT vw_default_adjustments.entity_name, vw_default_adjustments.adjustment_name, vw_default_adjustments.amount
 FROM vw_default_adjustments
 WHERE (vw_default_adjustments.active = true) AND (vw_default_adjustments.adjustment_type = 3)
-
 $P!{organd}]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>

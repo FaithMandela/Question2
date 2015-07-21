@@ -16,6 +16,11 @@
 	String ps = System.getProperty("file.separator");
 	String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 	String reportPath = context.getRealPath("reports") + ps;
+	String projectDir = context.getInitParameter("projectDir");
+	if(projectDir != null) {
+		xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
+		reportPath = projectDir + ps + "reports" + ps;
+	}
 
 	String userIP = request.getRemoteAddr();
 	String userName = request.getRemoteUser();
@@ -148,8 +153,8 @@
 	<div class="page-header-inner">
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
-			<a href="index.jsp">
-			<img src="./assets/admin/layout4/img/logo-light.png" alt="logo" class="logo-default"/>
+			<a href="index.jsp?xml=hr.xml">
+			<img src="./assets/logos/logo_header.png" alt="logo" style="margin: 20px 10px 0 10px; width: 107px;" class="logo-default"/>
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -192,31 +197,12 @@
 
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-	<!-- BEGIN SIDEBAR -->
-	<div class="page-sidebar-wrapper">
-		<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-		<!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-		<div class="page-sidebar navbar-collapse collapse">
-			<!-- BEGIN SIDEBAR MENU -->
-			<!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
-			<!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
-			<!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
-			<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
-			<!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
-			<!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
-
-			<%= web.getMenu() %>
-
-			<!-- END SIDEBAR MENU -->
-		</div>
-	</div>
-	<!-- END SIDEBAR -->
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
 		<div class="page-content">
 
 			<!-- BEGIN PAGE CONTENT-->
-			<form id="baraza" name="baraza" method="post" action="index.jsp" data-confirm-send="false" data-ajax="false">
+			<form id="baraza" name="baraza" method="post" action="application.jsp" data-confirm-send="false" data-ajax="false">
 				<%= web.getHiddenValues() %>
 			<div class="row">
 				<div class="col-md-12" >
@@ -225,15 +211,6 @@
 					<%= web.getSaveMsg() %>
 
 					<div class="portlet box purple">
-                        
-<!--
-                        <input class="mask_currency" data-mask="999,999.99" style="text-align: right;">
-                        <input class="mask_currency" data-mask="999.99" style="text-align: right;">
-                        <input class="mask_currency" data-mask="999,999,99999.99" style="text-align: right;">
-                        <button id="btnTest" type="button">Check values</button>
-                        
--->
-
 						<div class="portlet-title">
 							<div class="caption">
 								<i class="fa fa-cogs"></i><%= web.getViewName() %>
@@ -403,6 +380,7 @@
 
         jqcf.rowNum = 20;
         jqcf.height = 300;
+		jqcf.autoencode = false;
         
         <% if(actionOp != null) {	%>
 		  jqcf.multiselect = true;

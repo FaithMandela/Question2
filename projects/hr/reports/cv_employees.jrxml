@@ -16,6 +16,8 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -25,7 +27,8 @@
 	vw_employees.objective, vw_employees.interests,
 	address.post_office_box, address.postal_code, address.town, address.mobile, address.email
 FROM  vw_employees LEFT JOIN address ON vw_employees.entity_id = address.table_id
-WHERE ((address.table_name is null) OR (address.table_name = 'employees')) AND (vw_employees.entity_id = '$P!{filterid}');]]>
+WHERE ((address.table_name is null) OR (address.table_name = 'employees')) AND (vw_employees.entity_id = '$P!{filterid}')
+$P!{organd};]]>
 	</queryString>
 	<field name="employee_name" class="java.lang.String"/>
 	<field name="date_of_birth" class="java.sql.Date"/>

@@ -61,7 +61,8 @@ public class BMail {
 		inbox = root.getAttribute("inbox", "");
 		sentbox = root.getAttribute("sentbox", "");
 
-		String smtppauth = root.getAttribute("smtppauth", "false");
+		String smtppauth = root.getAttribute("smtpauth", "false");
+		smtppauth = root.getAttribute("smtppauth", smtppauth);
 		String smtptls = root.getAttribute("smtptls", "false");
 		String ntlm = root.getAttribute("ntlm", "false");
 		String imapssl = root.getAttribute("imapssl", "false");

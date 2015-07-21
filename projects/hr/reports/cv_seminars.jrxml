@@ -16,10 +16,13 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT cv_seminars.cv_seminar_name, cv_seminars.cv_seminar_date
 FROM cv_seminars
-WHERE (cv_seminars.entity_id = '$P!{filterid}');]]>
+WHERE (cv_seminars.entity_id = '$P!{filterid}')
+$P!{organd};]]>
 	</queryString>
 	<field name="cv_seminar_name" class="java.lang.String"/>
 	<field name="cv_seminar_date" class="java.sql.Date"/>

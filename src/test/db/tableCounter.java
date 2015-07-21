@@ -18,7 +18,7 @@ public class tableCounter {
     	
 		try{
 			//Connection con = DriverManager.getConnection("jdbc:mysql://192.168.0.20:3306/acordhr", "root", "");
-			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/avreporting", "root", "invent2k");
+			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/hr", "root", "invent2k");
 			
 			DatabaseMetaData dbmd = con.getMetaData();
 			String[] types = {"TABLE"};

@@ -29,6 +29,8 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT employees.entity_id, employees.employee_id,
 (((employees.surname::text || ' '::text) || employees.first_name::text) || ' '::text) ||    COALESCE(employees.middle_name, ''::character varying)::text AS employee_name,
@@ -48,6 +50,7 @@ INNER JOIN job_reviews ON employees.entity_id = job_reviews.entity_id
 LEFT JOIN vw_reporting ON vw_reporting.entity_id = job_reviews.entity_id
 LEFT JOIN applications ON applications.employee_id = employees.entity_id
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
+$P!{organd}
 AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is null));]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

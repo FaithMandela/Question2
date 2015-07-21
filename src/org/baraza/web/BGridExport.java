@@ -35,6 +35,11 @@ public class BGridExport extends HttpServlet {
 		String ps = System.getProperty("file.separator");
 		String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
 		String reportPath = context.getRealPath("reports") + ps;
+		String projectDir = context.getInitParameter("projectDir");
+		if(projectDir != null) {
+			xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
+			reportPath = projectDir + ps + "reports" + ps;
+		}
 
 		String userIP = request.getRemoteAddr();
 		String userName = request.getRemoteUser();

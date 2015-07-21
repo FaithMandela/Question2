@@ -16,6 +16,8 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -31,8 +33,8 @@ FROM vw_objective_details INNER JOIN job_reviews
 ON vw_objective_details.entity_id = job_reviews.entity_id
 
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
-      AND (EXTRACT(YEAR FROM vw_objective_details.objective_date) = (EXTRACT(YEAR FROM job_reviews.review_date))+1)
-
+	AND (EXTRACT(YEAR FROM vw_objective_details.objective_date) = (EXTRACT(YEAR FROM job_reviews.review_date))+1)
+	$P!{organd}
 GROUP BY
 
 

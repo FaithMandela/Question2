@@ -550,6 +550,7 @@ CREATE TABLE interns (
 	payment_amount			real,
 	start_date				date,
 	end_date				date,
+	phone_mobile			varchar(50),
 
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
@@ -1017,8 +1018,9 @@ CREATE VIEW vw_leave_work_days AS
 	FROM leave_work_days INNER JOIN vw_employee_leave ON leave_work_days.employee_leave_id = vw_employee_leave.employee_leave_id;
 
 CREATE VIEW vw_intake AS
-	SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_Description, 
-		vw_department_roles.department_Duties, vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
+	SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_description, 
+		vw_department_roles.department_duties, vw_department_roles.department_role_id, vw_department_roles.department_role_name,
+		vw_department_roles.parent_role_name,
 		vw_department_roles.job_description, vw_department_roles.job_requirements, vw_department_roles.duties, 
 		vw_department_roles.performance_measures, 
 		
@@ -1034,8 +1036,8 @@ CREATE VIEW vw_intake AS
 
 CREATE VIEW vw_applications AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
-		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.job_description, 
-		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
+		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
+		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, 
 		
@@ -1062,10 +1064,13 @@ CREATE VIEW vw_applications AS
 		
 CREATE VIEW vw_contracting AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
-		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.job_description, 
+		vw_intake.department_role_id, vw_intake.department_role_name, 
+		vw_intake.job_description, vw_intake.parent_role_name,
 		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, 
+		
+		orgs.org_id, orgs.org_name,
 		
 		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
 		contract_status.contract_status_id, contract_status.contract_status_name,
@@ -1073,7 +1078,7 @@ CREATE VIEW vw_contracting AS
 		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 
 		applications.contract_start, applications.contract_period, applications.contract_terms, applications.initial_salary, 
 		applications.application_date, applications.approve_status, applications.workflow_table_id, applications.action_date, 
-		applications.applicant_comments, applications.review, applications.org_id,
+		applications.applicant_comments, applications.review, 
 
 		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
 		vw_education_max.name_of_school, vw_education_max.examination_taken, 
@@ -1087,12 +1092,12 @@ CREATE VIEW vw_contracting AS
 		round((date_part('year', vw_employment_max.employment_experince) + date_part('month', vw_employment_max.employment_experince)/12)::numeric, 1) as emp_experince
 
 	FROM applications INNER JOIN entitys ON applications.employee_id = entitys.entity_id
+		INNER JOIN orgs ON applications.org_id = orgs.org_id
 		LEFT JOIN vw_intake ON applications.intake_id = vw_intake.intake_id
 		LEFT JOIN contract_types ON applications.contract_type_id = contract_types.contract_type_id
 		LEFT JOIN contract_status ON applications.contract_status_id = contract_status.contract_status_id
 		LEFT JOIN vw_education_max ON entitys.entity_id = vw_education_max.entity_id
 		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id;
-		
 
 CREATE VIEW vw_internships AS
 	SELECT departments.department_id, departments.department_name, internships.internship_id, internships.opening_date, 
@@ -1105,6 +1110,7 @@ CREATE VIEW vw_interns AS
 		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date,
 		interns.org_id, interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, 
 		interns.application_date, interns.approve_status, interns.action_date, interns.workflow_table_id,
+		interns.phone_mobile,
 		interns.applicant_comments, interns.review,
 
 		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 

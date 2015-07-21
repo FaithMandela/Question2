@@ -16,12 +16,15 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="employee_month_id" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT vw_employee_tax_types.tax_type_name, vw_employee_tax_types.tax_identification, vw_employee_tax_types.amount,
 currency_symbol, base_amount
 FROM vw_employee_tax_types
 WHERE (employee_month_id = $P{employee_month_id})
+$P!{organd}
 ORDER BY vw_employee_tax_types.tax_type_id]]>
 	</queryString>
 	<field name="tax_type_name" class="java.lang.String"/>

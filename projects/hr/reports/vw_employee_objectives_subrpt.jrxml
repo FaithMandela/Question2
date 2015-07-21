@@ -39,6 +39,8 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<queryString>
 		<![CDATA[SELECT vw_objectives.objective_type_id, vw_objectives.objective_type_name, vw_objectives.objective_id, vw_objectives.date_set, vw_objectives.objective_ps, vw_objectives.objective_name,vw_objectives. objective_completed,
 job_reviews.job_review_id, job_reviews.review_date
@@ -47,6 +49,7 @@ FROM job_reviews INNER JOIN vw_objectives
 ON job_reviews.entity_id = vw_objectives.entity_id
 
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
+$P!{organd}
 AND ((EXTRACT(YEAR FROM vw_objectives.objective_date) = EXTRACT(YEAR FROM job_reviews.review_date)))
 ORDER BY vw_objectives.objective_id ASC;]]>
 	</queryString>
