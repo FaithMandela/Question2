@@ -526,11 +526,11 @@
 					<TEXTFIELD w="150" title="Share Line" y="190" h="20" x="10">share_line</TEXTFIELD>
 					<TEXTFIELD w="150" title="Field Size" default="25" y="190" h="20" x="290">field_size</TEXTFIELD>
 					<TEXTFIELD w="150" title="Field Class" y="210" h="20" x="10">field_class</TEXTFIELD>
-					<TEXTFIELD w="150" title="Field Name" y="210" h="20" x="10">field_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Field Function" y="210" h="20" x="10">field_fnct</TEXTFIELD>
-					<CHECKBOX w="150" title="Manditory" y="210" ischar="true" h="20" x="290">manditory</CHECKBOX>
-					<CHECKBOX w="150" title="Field Bold" y="230" ischar="true" h="20" x="10">field_bold</CHECKBOX>
-					<CHECKBOX w="150" title="Field Italics" y="230" ischar="true" h="20" x="290">field_italics</CHECKBOX>
+					<TEXTFIELD w="150" title="Field Name" y="210" h="20" x="290">field_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Field Function" y="230" h="20" x="10">field_fnct</TEXTFIELD>
+					<CHECKBOX w="150" title="Manditory" y="230" ischar="true" h="20" x="290">manditory</CHECKBOX>
+					<CHECKBOX w="150" title="Field Bold" y="250" ischar="true" h="20" x="10">field_bold</CHECKBOX>
+					<CHECKBOX w="150" title="Field Italics" y="250" ischar="true" h="20" x="290">field_italics</CHECKBOX>
 				</FORM>
 				<GRID name="Sub Fields" keyfield="sub_field_id" orderby="sub_field_order" linkfield="field_id" table="vw_sub_fields">
 					<TEXTFIELD w="75" title="Sub Field Order">sub_field_order</TEXTFIELD>
