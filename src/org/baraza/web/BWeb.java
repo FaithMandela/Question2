@@ -2008,6 +2008,15 @@ System.out.println("repository : " + repository);
 		if(view.getElementByName("PICTURE") == null) return ""; 
 		return " enctype=\"multipart/form-data\" ";
 	}
+
+	public boolean hasChildren() {
+		boolean hasSubs = false;
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
+			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+		}
+		return hasSubs;
+	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }

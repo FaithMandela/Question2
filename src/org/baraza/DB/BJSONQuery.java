@@ -140,7 +140,7 @@ public class BJSONQuery extends BQuery {
 					}
 				}
 				
-				if(hasSubs && (keyField != null)) {
+				if(keyField != null) {
 					String sk = getSelectKey();
 					if(sk != null) {
 						mydv = "?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField);
@@ -183,7 +183,7 @@ public class BJSONQuery extends BQuery {
 		Integer i = 0;
 		for(BElement sview : view.getElements()) {
 			String sviewName = sview.getName();
-			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") ||  sviewName.equals("JASPER")) {
+			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") ||  sviewName.equals("JASPER") ||  sviewName.equals("ACTIONS")) {
 				String viewFilter = sview.getAttribute("viewfilter");
 				if(viewFilter == null) {
 					return i.toString();
