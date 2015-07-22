@@ -301,12 +301,16 @@ public class BWeb {
 		BElement mel = root.getFirst();
 
 		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
-		mymenu += "		<li class='start'>\n";
-		mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
-		mymenu += "			<i class='icon-home'></i>\n";
-		mymenu += "			<span class='title'>Dashboard</span>\n";
-		mymenu += "			</a>\n";
-		mymenu += "		</li>\n";
+		
+		if(root.getAttribute("dashboard", "true").equals("true")) {
+			mymenu += "		<li class='start'>\n";
+			mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
+			mymenu += "			<i class='icon-home'></i>\n";
+			mymenu += "			<span class='title'>Dashboard</span>\n";
+			mymenu += "			</a>\n";
+			mymenu += "		</li>\n";
+		}
+		
 		mymenu += getSubMenu(mel, 0);
 		mymenu += "	</ul>\n";
 

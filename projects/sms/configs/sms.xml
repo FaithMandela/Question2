@@ -1,4 +1,4 @@
-<APP name="Baraza SMS" org="org_id" password="change_password">
+<APP name="Baraza SMS" org="org_id" password="change_password" dashboard="false">
 	<MENU name="Baraza SMS">
 		<MENU name="SMS">1</MENU>
 		<MENU name="Address">5</MENU>

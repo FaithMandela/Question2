@@ -475,14 +475,12 @@
 				<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Ps Amount">ps_amount</TEXTDECIMAL>
 				<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
 				<FORM name="Extra Banking" keyfield="default_banking_id" linkfield="entity_id" table="default_banking">
 					<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="10" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="% Amount" y="50" h="20" x="290">ps_amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="70" h="20" x="10">final_date</TEXTDATE>
 					<CHECKBOX w="150" title="Active" y="70" h="20" x="290">active</CHECKBOX>
 					<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
@@ -622,7 +620,6 @@
 				<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Ps Amount">ps_amount</TEXTDECIMAL>
 				<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			</GRID>
