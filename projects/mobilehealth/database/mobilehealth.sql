@@ -345,6 +345,35 @@ CREATE TABLE surveys_515_details(
 );
 
 
+-- DROP TABLE survey_100;
+CREATE TABLE survey_100(
+    survey_100_id                   serial primary key,
+    org_id                          integer references orgs,
+    
+    health_worker_id                integer references health_workers,
+    patient_gender                  varchar(2),
+    patient_name                    varchar(200),
+    patient_age                     varchar(3),
+    community_healt_unit            varchar(200),
+    link_health_facility            varchar(200),
+    referral_reason                 varchar(200),
+    treatment                       text,
+    comments                        text,
+    sub_location                    varchar(200),
+    village                         varchar(200),
+    community_unit                  varchar(200),
+    receiving_officer_name          varchar(200),
+    receiving_officer_profession    varchar(200),
+    health_facility_name            varchar(200),
+    action_taken                    text,
+    receiving_officer_date          date,
+    receiving_officer_time          time,
+    referral_time                   timestamp default CURRENT_TIMESTAMP
+);
+
+
+
+
 CREATE OR REPLACE FUNCTION ins_surveys_515() RETURNS trigger AS $$
 DECLARE
 BEGIN
@@ -548,7 +577,7 @@ CREATE VIEW vw_surveys_515_details AS
 	INNER JOIN orgs ON surveys_515_details.org_id = orgs.org_id
 	INNER JOIN surveys_515 ON surveys_515_details.surveys_515_id = surveys_515.surveys_515_id;
 
-
+-- NOT IN USE BUT RETAINED FOR GENERIC IMPLEMENTATION
 CREATE VIEW vw_survey_515_demograpics AS
 	SELECT 
 	demograpics_515_defs.demograpics_515_def_id, demograpics_515_defs.demograpics_question, demograpics_515_defs.demograpics_details,
@@ -557,6 +586,19 @@ CREATE VIEW vw_survey_515_demograpics AS
 	FROM survey_515_demograpics
 	INNER JOIN demograpics_515_defs ON survey_515_demograpics.demograpics_515_def_id = demograpics_515_defs.demograpics_515_def_id
 	INNER JOIN surveys_515 ON survey_515_demograpics.surveys_515_id = surveys_515.surveys_515_id;
+
+CREATE VIEW vw_survey_100 AS
+	SELECT health_workers.health_worker_id, health_workers.worker_name, health_workers.worker_mobile_num, 
+    orgs.org_id, orgs.org_name, 
+	survey_100.survey_100_id, survey_100.patient_gender, survey_100.patient_name, survey_100.patient_age, 
+	survey_100.community_healt_unit, survey_100.link_health_facility, survey_100.referral_reason, survey_100.treatment, 
+	survey_100.comments, survey_100.sub_location, survey_100.village, survey_100.community_unit, survey_100.receiving_officer_name, 
+	survey_100.receiving_officer_profession, survey_100.health_facility_name, survey_100.action_taken, survey_100.receiving_officer_date, 
+	survey_100.receiving_officer_time,
+	survey_100.referral_time
+	FROM survey_100
+	INNER JOIN health_workers ON survey_100.health_worker_id = health_workers.health_worker_id
+	INNER JOIN orgs ON survey_100.org_id = orgs.org_id;
 
 	
 

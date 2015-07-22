@@ -277,8 +277,8 @@ CREATE OR REPLACE FUNCTION sendMessage( v_sms_number varchar(20), v_message varc
 DECLARE
 
 BEGIN
-    INSERT INTO sms_i(org_id,folder_id,  sms_origin,sms_number,number_error,message_ready, retries, serviceid, sprevpassword,correlator, sprevid, spid,sent, message)
-        VALUES (1,0,'Dewcis',v_sms_number,false, true, 0, '6015202000075606','Abcd1234', '3540809','Etiqet','601520',false,v_message);
+    -- INSERT INTO sms_i(org_id,folder_id,  sms_origin,sms_number,number_error,message_ready, retries, serviceid, sprevpassword,correlator, sprevid, spid,sent, message)
+       --  VALUES (1,0,'Dewcis',v_sms_number,false, true, 0, '6015202000075606','Abcd1234', '3540809','Etiqet','601520',false,v_message);
 
     INSERT INTO sms( org_id,folder_id,  sms_origin,sms_number,number_error,message_ready, retries, serviceid, sprevpassword,correlator, sprevid, spid,sent, message)
         VALUES (0,0,'Dewcis',v_sms_number,false, true, 0, '6015202000075606','Abcd1234', '3540809','Etiqet','601520',false,v_message);
