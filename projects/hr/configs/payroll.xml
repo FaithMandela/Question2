@@ -404,7 +404,7 @@
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
-				<PICTURE w="550" username="repository" repository="http://localhost:9090/repository/webdav/pictures/" tab="Picture" pictures="../repository/barazapictures" access="enter2012" password="baraza" y="1" h="150" x="10">picture_file</PICTURE>
+				<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
 				<TEXTDECIMAL w="150" title="Height" tab="Medical" y="2" h="20" x="10">height</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Weight" tab="Medical" y="2" h="20" x="290">weight</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Blood Group" tab="Medical" y="22" h="20" x="10">blood_group</TEXTFIELD>
@@ -1481,9 +1481,9 @@
 		<FILTER w="700" name="P10" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" filter="periodyear" pos="top"></DRILLDOWN>
 			<DRILLDOWN name="Quarter" keyfield="quarter" table="vw_Period_Quarter" listfield="quarter" filter="quarter" pos="top"></DRILLDOWN>
-			<JASPER name="P10" reportfile="P10.jasper"></JASPER>
-			<JASPER name="P10A" reportfile="P10A.jasper"></JASPER>
-			<JASPER name="P10D" reportfile="P10D.jasper"></JASPER>
+			<JASPER name="P10" org.table="orgs" reportfile="P10.jasper"></JASPER>
+			<JASPER name="P10A" org.table="orgs" reportfile="P10A.jasper"></JASPER>
+			<JASPER name="P10D" org.table="orgs" reportfile="P10D.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Payroll Ledger" key="115" h="750">

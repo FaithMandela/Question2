@@ -8,6 +8,7 @@
 	String xmlcnf = request.getParameter("xml");
 	if(request.getParameter("logoff") == null) {
 		if(xmlcnf == null) xmlcnf = (String)session.getAttribute("xmlcnf");
+		if(xmlcnf == null) xmlcnf = context.getInitParameter("init_xml");
 		if(xmlcnf == null) xmlcnf = context.getInitParameter("config_file");
 		if(xmlcnf != null) session.setAttribute("xmlcnf", xmlcnf);
 	} else {

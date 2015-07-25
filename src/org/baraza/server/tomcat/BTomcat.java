@@ -50,9 +50,13 @@ public class BTomcat extends Thread {
 			server.addLifecycleListener(listener);
 
 			Context context = tomcat.addWebapp(contextPath, appBase);
-			File configFile = new File(appBase + "META-INF" + ps + "context.xml");
-			context.setConfigFile(configFile.toURI().toURL());			
+			String contextFile = appBase + "META-INF" + ps + "context.xml";
+			if(root.getAttribute("context") != null) contextFile = projectDir + ps + "configs" + ps + root.getAttribute("context");
+			File configFile = new File(contextFile);
+			context.setConfigFile(configFile.toURI().toURL());
 			context.addParameter("projectDir", projectDir);
+			if(root.getAttribute("init.xml") != null) 
+				context.addParameter("init_xml", root.getAttribute("init.xml"));
 			
 			if(repository != null) {
 				Context rpContext = tomcat.addWebapp("/repository", baseDir + repository);

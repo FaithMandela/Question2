@@ -3332,19 +3332,17 @@
 		<JASPER name="Applicant" reportfile="vw_applicant.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="CV Applicant" key="105" h="750">
-		<FILTER w="700" name="CV" split="250" key="6" h="550">
-			<FILTERGRID name="Applicants" keyfield="entity_id" orderby="entity_id" table="vw_applicants">
-				<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
-				<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Age">applicant_age</TEXTFIELD>
-				<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			</FILTERGRID>
-			<JASPER name="CV Applicant" reportfile="cv_applicant.jasper"></JASPER>
-		</FILTER>
+		<GRID name="Applicants" keyfield="entity_id" orderby="entity_id" table="vw_applicants">
+			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Age">applicant_age</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+			<JASPER name="CV Applicant" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Employee List" key="106" h="550">
 		<JASPER name="Staff List" reportfile="staff_list.jasper"></JASPER>
@@ -3357,21 +3355,18 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="CV Employees" key="107" h="750">
-		<FILTER w="700" name="CV" split="250" key="6" h="550">
-			<FILTERGRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees">
-				<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
-				<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
-				<CHECKBOX w="75" title="Active">active</CHECKBOX>
-			</FILTERGRID>
-			<JASPER name="CV Employees" reportfile="cv_employees.jasper"></JASPER>
-		</FILTER>
-		<JASPER name="All CV Employees" reportfile="cv_employees_all.jasper"></JASPER>
+		<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees">
+			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			<JASPER name="CV Employees" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Casuals" key="108" h="550">
 		<JASPER name="Casuals Applications" reportfile="vw_casual_application.jasper"></JASPER>
@@ -3396,7 +3391,7 @@
 				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report.jasper"></JASPER>
-			<JASPER name="Leave Summary 2" reportfile="employee_leave.jasper"></JASPER>
+			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Leave Summary ( Type )" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
@@ -3412,7 +3407,7 @@
 				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report2.jasper"></JASPER>
-			<JASPER name="Leave Summary 2" reportfile="employee_leave2.jasper"></JASPER>
+			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave2.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
@@ -3456,7 +3451,7 @@
 				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
 				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="Staff Contracts" reportfile="updated_staff_contracts.jasper"></JASPER>
+			<JASPER name="Staff Contracts" org.table="vw_contracting" reportfile="updated_staff_contracts.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="707" name="Review Reports" key="160" h="590">
