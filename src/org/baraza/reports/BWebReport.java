@@ -48,6 +48,7 @@ public class BWebReport  {
 	String userid, userfilter;
 	String groupid, groupfilter;
 	String linkField;
+	String orgTable = null;
 	Map<String, Object> parameters;
 
 	public BWebReport() {
@@ -67,6 +68,7 @@ public class BWebReport  {
 		groupfilter = view.getAttribute("group");
 		filterkey = view.getAttribute("filterkey");
 		filtervalue = request.getParameter("filtervalue");
+		orgTable = view.getAttribute("org.table");
 
 		linkField = view.getAttribute("linkfield", "filterid");
 	}
@@ -90,8 +92,8 @@ public class BWebReport  {
 			parameters.put("SUBREPORT_DIR", reportFile.getParent() + "/");
 
 			parameters.put("orgid", db.getOrgID());
-			parameters.put("orgwhere", db.getOrgWhere());
-			parameters.put("organd", db.getOrgAnd());
+			parameters.put("orgwhere", db.getOrgWhere(orgTable));
+			parameters.put("organd", db.getOrgAnd(orgTable));
 
 			session.setAttribute("userfield", "");
 			session.setAttribute("groupfield", "");
@@ -173,8 +175,8 @@ public class BWebReport  {
 			parameters.put("SUBREPORT_DIR", reportFile.getParent() + "/");
 
 			parameters.put("orgid", db.getOrgID());
-			parameters.put("orgwhere", db.getOrgWhere());
-			parameters.put("organd", db.getOrgAnd());
+			parameters.put("orgwhere", db.getOrgWhere(orgTable));
+			parameters.put("organd", db.getOrgAnd(orgTable));
 
 			String reportFilters = (String)session.getAttribute("reportfilters");
 			String reportFilter[] = reportFilters.split(",");
@@ -253,8 +255,8 @@ public class BWebReport  {
 			parameters.put("SUBREPORT_DIR", reportPath);
 
 			parameters.put("orgid", db.getOrgID());
-			parameters.put("orgwhere", db.getOrgWhere());
-			parameters.put("organd", db.getOrgAnd());
+			parameters.put("orgwhere", db.getOrgWhere(orgTable));
+			parameters.put("organd", db.getOrgAnd(orgTable));
 
 			String reportFilters = request.getParameter("reportfilters");
 			String reportFilter[] = reportFilters.split(",");

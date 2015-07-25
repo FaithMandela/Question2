@@ -94,18 +94,22 @@ public class BUser {
 		if(userID == null) userID = "0";
 	}
 
-	public String getOrgWhere() {
+	public String getOrgWhere(String orgTable) {
 		String ow = "";
+		if(orgTable == null) orgTable = "";
+		else orgTable = orgTable + ".";
 		if(orgID != null) {
-			ow = " WHERE (org_id = " + orgID + ")";
+			ow = " WHERE (" + orgTable + "org_id = " + orgID + ")";
 		}
 		return ow;
 	}
 
-	public String getOrgAnd() {
+	public String getOrgAnd(String orgTable) {
 		String ow = "";
+		if(orgTable == null) orgTable = "";
+		else orgTable = orgTable + ".";
 		if(orgID != null) {
-			ow = " AND (org_id = " + orgID + ")";
+			ow = " AND (" + orgTable + "org_id = " + orgID + ")";
 		}
 		return ow;
 	}

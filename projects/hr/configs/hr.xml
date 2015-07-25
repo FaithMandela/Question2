@@ -149,7 +149,7 @@
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
-			<JASPER name="CV" reportfile="cv_employees.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
 			<FORM new="false" tw="570" name="Details" keyfield="entity_id" table="employees" user="entity_id" th="200">
 				<COMBOLIST w="150" title="Marital Status" y="10" h="20" x="290">marital_status
 					<DATA key="M">Married</DATA>
@@ -266,15 +266,7 @@
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
-					<GRIDBOX w="430" title="Skill Type" lptable="skill_types" webgrid="8" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id
-						<GRID name="Skill Types" keyfield="skill_type_id" orderby="skill_category_id" table="vw_skill_types">
-							<TEXTFIELD w="75" title="Skill Category">skill_category_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Basic">basic</TEXTFIELD>
-							<TEXTFIELD w="75" title="Intermediate">intermediate</TEXTFIELD>
-							<TEXTFIELD w="75" title="Advanced">advanced</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
 					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
 						<DATA key="1">Basic</DATA>
 						<DATA key="2">Intermediate</DATA>
@@ -494,15 +486,7 @@
 				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
-					<GRIDBOX w="430" title="Skill Type" lptable="skill_types" webgrid="8" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id
-						<GRID name="Skill Types" keyfield="skill_type_id" orderby="skill_category_id" table="vw_skill_types">
-							<TEXTFIELD w="75" title="Skill Category">skill_category_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Basic">basic</TEXTFIELD>
-							<TEXTFIELD w="75" title="Intermediate">intermediate</TEXTFIELD>
-							<TEXTFIELD w="75" title="Advanced">advanced</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
 					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
 						<DATA key="1">Basic</DATA>
 						<DATA key="2">Intermediate</DATA>
@@ -545,7 +529,7 @@
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
-			<JASPER name="CV" reportfile="cv_applicant.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Job Listing" key="14" h="550">
@@ -816,7 +800,7 @@
 			<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 			<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 			<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
-			<JASPER name="CV Applicant" reportfile="cv_applicant.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
 			<FORM tw="570" name="Details" keyfield="entity_id" table="applicants" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
@@ -924,15 +908,7 @@
 				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
-					<GRIDBOX w="430" title="Skill Type" lptable="skill_types" webgrid="8" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id
-						<GRID name="Skill Types" keyfield="skill_type_id" orderby="skill_category_id" table="vw_skill_types">
-							<TEXTFIELD w="75" title="Skill Category">skill_category_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Basic">basic</TEXTFIELD>
-							<TEXTFIELD w="75" title="Intermediate">intermediate</TEXTFIELD>
-							<TEXTFIELD w="75" title="Advanced">advanced</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
 					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
 						<DATA key="1">Basic</DATA>
 						<DATA key="2">Intermediate</DATA>
@@ -975,7 +951,6 @@
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
-			<JASPER name="CV" reportfile="cv_employees.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Employees" key="24" h="650">
@@ -1170,15 +1145,7 @@
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
-					<GRIDBOX w="430" title="Skill Type" lptable="skill_types" webgrid="8" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id
-						<GRID name="Skill Types" keyfield="skill_type_id" orderby="skill_category_id" table="vw_skill_types">
-							<TEXTFIELD w="75" title="Skill Category">skill_category_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Basic">basic</TEXTFIELD>
-							<TEXTFIELD w="75" title="Intermediate">intermediate</TEXTFIELD>
-							<TEXTFIELD w="75" title="Advanced">advanced</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
 					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
 						<DATA key="1">Basic</DATA>
 						<DATA key="2">Intermediate</DATA>
@@ -1242,7 +1209,7 @@
 				<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 			</FILES>
-			<JASPER name="CV" reportfile="cv_employees.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
 		</GRID>
 		<GRID name="Education Class" keyfield="education_class_id" table="education_class">
 			<TEXTFIELD w="75" title="Education Class ID">education_class_id</TEXTFIELD>
@@ -1536,7 +1503,7 @@
 				<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 			</FILES>
-			<JASPER name="CV" reportfile="cv_employees.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Casuals" key="25" h="550">

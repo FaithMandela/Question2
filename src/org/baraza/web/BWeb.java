@@ -451,7 +451,7 @@ public class BWeb {
 					if(el.getAttribute("tab.count") != null) {
 						String tcSql = "SELECT " + el.getAttribute("tab.count") + " FROM " + el.getAttribute("table");
 						String tcWhere = null;
-						if(el.getAttribute("noorg") == null) tcWhere = db.getOrgWhere();
+						if(el.getAttribute("noorg") == null) tcWhere = db.getOrgWhere(null);
 						if(el.getAttribute("user") != null) {
 							if(tcWhere == null) tcWhere = " WHERE ";
 							else tcWhere += " AND ";

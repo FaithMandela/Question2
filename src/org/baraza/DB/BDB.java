@@ -560,8 +560,8 @@ public class BDB {
 
 	public String getOrgID() { return orgID; }
 	public void setOrgID(String orgID) { this.orgID = orgID; }
-	public String getOrgWhere() { return user.getOrgWhere(); }
-	public String getOrgAnd() { return user.getOrgAnd(); }
+	public String getOrgWhere(String orgTable) { return user.getOrgWhere(orgTable); }
+	public String getOrgAnd(String orgTable) { return user.getOrgAnd(orgTable); }
 	public String getDBSchema() { return dbschema; }
 
 	public String getStartView() { return user.getStartView(); }
