@@ -1,4 +1,8 @@
 
+ALTER TABLE orgs ADD employee_limit integer default 5 not null;
+ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
+
+
 CREATE TABLE industry (
 	industry_id				serial primary key,
 	org_id					integer references orgs,
@@ -114,7 +118,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
-    
+
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
 	v_org_id		integer;
@@ -138,7 +142,8 @@ BEGIN
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix)
 		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id);
 		
-		UPDATE entitys SET org_id = NEW.org_id WHERE entity_id = NEW.entity_id;
+		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff'
+		WHERE entity_id = NEW.entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
@@ -152,3 +157,54 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  
+
+CREATE OR REPLACE FUNCTION ins_employee_limit() RETURNS trigger AS $$
+DECLARE
+	v_employee_count	integer;
+	v_employee_limit	integer;
+BEGIN
+
+	SELECT count(entity_id) INTO v_employee_count
+	FROM employees
+	WHERE (org_id = NEW.org_id);
+	
+	SELECT employee_limit INTO v_employee_limit
+	FROM orgs
+	WHERE (org_id = NEW.org_id);
+	
+	IF(v_employee_count > v_employee_limit)THEN
+		RAISE EXCEPTION 'You have reached the maximum staff limit, request for a quite for more';
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_employee_limit BEFORE INSERT ON employees
+    FOR EACH ROW EXECUTE PROCEDURE ins_employee_limit();
+
+	
+CREATE OR REPLACE FUNCTION ins_transactions_limit() RETURNS trigger AS $$
+DECLARE
+	v_transaction_count	integer;
+	v_transaction_limit	integer;
+BEGIN
+
+	SELECT count(transaction_id) INTO v_transaction_count
+	FROM transactions
+	WHERE (org_id = NEW.org_id);
+	
+	SELECT transaction_limit INTO v_transaction_limit
+	FROM orgs
+	WHERE (org_id = NEW.org_id);
+	
+	IF(v_transaction_count > v_transaction_limit)THEN
+		RAISE EXCEPTION 'You have reached the maximum transaction limit, request for a quite for more';
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_transactions_limit BEFORE INSERT ON transactions
+    FOR EACH ROW EXECUTE PROCEDURE ins_transactions_limit();

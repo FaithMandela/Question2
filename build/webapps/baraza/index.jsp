@@ -215,8 +215,13 @@
 								<i class="icon-rocket"></i> My Tasks
 								</a>
 							</li>
-							<li class="divider">
+							<li class="divider"></li>
+							<li>
+								<a class="btn default" data-toggle="modal" href="#basic">
+									<i class="icon-rocket"></i> Change Password
+								</a>
 							</li>
+							<li class="divider"></li>
 							<li>
 								<a href="logout.jsp?logoff=yes">
 								<i class="icon-key"></i> Log Out </a>
@@ -360,6 +365,11 @@
                 <% } %>
 			</form>
 <% } %>
+
+
+<%@ include file="./assets/include/password_change.jsp" %>
+
+
 		</div>
 	</div>
 	<!-- END CONTENT -->

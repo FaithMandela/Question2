@@ -436,6 +436,12 @@ public class BWeb {
 				boolean show = true;
 				if(keyD.equals("{new}") && (!elName.equals("FORM"))) show = false;
 				if(keyD.equals("{new}") && (el.getAttribute("new", "true").equals("false"))) show = false;
+				
+				if(el.getAttribute("superuser", "false").equals("true")) {
+					if(!db.getUser().getSuperUser()) show = false;
+				} else {
+					if(!checkAccess(el.getAttribute("role"))) show = false;
+				}
 
 				String viewFilter = el.getAttribute("viewfilter");
 				if(viewFilter != null) {
@@ -1877,6 +1883,10 @@ System.out.println("repository : " + repository);
 		JsonArrayBuilder jsColNames = Json.createArrayBuilder();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
 		
+		if(view.getAttribute("superuser", "false").equals("true")) {
+			if(!db.getUser().getSuperUser()) return "";
+		}
+		
 		boolean hasAction = false;
 		boolean hasSubs = false;
 		boolean hasTitle = false;
@@ -2028,6 +2038,7 @@ System.out.println("repository : " + repository);
 	public BDB getDB() { return db; }
 	public String executeFunction(String mysql) { return db.executeFunction(mysql); }
 	public String getUserID() { return db.getUserID(); }
+	public BUser getUser() { return db.getUser(); }
 	public void setReadOnly(boolean readOnly) { db.setReadOnly(readOnly); }
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
 

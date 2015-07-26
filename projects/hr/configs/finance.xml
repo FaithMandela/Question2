@@ -1021,9 +1021,7 @@
 				<COMBOBOX w="430" title="Org" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Full Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
-				<CHECKBOX w="50" title="Super User" y="70" h="20" x="10">super_user</CHECKBOX>
 				<CHECKBOX w="50" title="Entity Leader" y="70" h="20" x="190">entity_leader</CHECKBOX>
-				<CHECKBOX w="50" title="No Org" y="70" h="20" x="390">no_org</CHECKBOX>
 				<TEXTFIELD w="430" title="Function Role" default="user" y="90" h="20" x="10">function_role</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="110" h="20" x="10">is_active</CHECKBOX>
 				<TEXTFIELD w="150" title="First Password" y="110" h="20" x="290">first_password</TEXTFIELD>
@@ -1430,7 +1428,7 @@
 		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" noorg="true" user="entity_id">
 			<COMBOBOX w="150" title="Org" lptable="orgs" noorg="true" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 		</FORM>
-		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true">
+		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>

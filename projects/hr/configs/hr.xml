@@ -32,6 +32,7 @@
 		</MENU>
 		<MENU name="Administration" role="admin">
 			<MENU name="Organisation">20</MENU>
+			<MENU name="Subscriptions" role="master">94</MENU>
 			<MENU name="Banks">21</MENU>
 			<MENU name="Departments">22</MENU>
 			<MENU name="Salary Scales">55</MENU>
@@ -625,9 +626,9 @@
 	</DESK>
 	<DESK w="700" name="Organisation" key="20" h="500">
 		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" noorg="true" user="entity_id">
-			<COMBOBOX w="150" title="Org" lptable="orgs" noorg="true" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+			<COMBOBOX w="150" title="Org" lptable="orgs" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 		</FORM>
-		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true">
+		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -714,6 +715,38 @@
 			<FORM name="Locations" keyfield="location_id" table="locations">
 				<TEXTFIELD w="430" title="Location Name" y="10" h="20" x="10">location_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Subscriptions" key="94" h="550">
+		<GRID name="Subscriptions" keyfield="subscription_id" table="vw_subscriptions" noorg="true">
+			<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Industry Name">industry_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Manager Name">account_manager_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="City">city</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country Name">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Number Of Employees">number_of_employees</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Contact">primary_contact</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<FORM name="Subscriptions" keyfield="subscription_id" table="subscriptions" noorg="true">
+				<COMBOBOX w="430" title="Industry" lptable="industry" y="10" h="20" x="10" lpfield="industry_name">industry_id</COMBOBOX>
+				<COMBOBOX w="430" title="Entity" lptable="entitys" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Business Name" y="70" h="20" x="10">business_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Business Address" y="70" h="20" x="290">business_address</TEXTFIELD>
+				<TEXTFIELD w="150" title="City" y="90" h="20" x="10">city</TEXTFIELD>
+				<TEXTFIELD w="150" title="State" y="90" h="20" x="290">state</TEXTFIELD>
+				<COMBOBOX w="430" title="Country" lptable="sys_countrys" lpkey="sys_country_id" y="110" h="20" x="10" lpfield="sys_country_name">country_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Number Of Employees" y="130" h="20" x="10">number_of_employees</TEXTFIELD>
+				<TEXTFIELD w="150" title="Telephone" y="130" h="20" x="290">telephone</TEXTFIELD>
+				<TEXTFIELD w="430" title="Website" y="150" h="20" x="10">website</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Contact" y="170" h="20" x="10">primary_contact</TEXTFIELD>
+				<TEXTFIELD w="430" title="Job Title" y="190" h="20" x="10">job_title</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" y="210" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="290" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -2824,9 +2857,7 @@
 				<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
 				<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
-				<CHECKBOX w="150" title="Super User" y="110" h="20" x="10">super_user</CHECKBOX>
 				<CHECKBOX w="150" title="Entity Leader" y="110" h="20" x="290">entity_leader</CHECKBOX>
-				<CHECKBOX w="150" title="No Org" y="130" h="20" x="10">no_org</CHECKBOX>
 				<TEXTFIELD w="150" title="Function Role" y="130" h="20" x="290">function_role</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="150" h="20" x="10">is_active</CHECKBOX>
 				<TEXTFIELD w="150" title="First Password" y="150" h="20" x="290">first_password</TEXTFIELD>
@@ -3106,6 +3137,19 @@
 				<FORM new="false" name="Program Leader" keyfield="job_review_id" linkfield="entity_id" table="job_reviews" th="210">
 					<TEXTAREA w="530" tab="Comments" y="2" h="170" x="10">pl_comments</TEXTAREA>
 				</FORM>
+			</GRID>
+			<GRID name="Subscriptions" keyfield="subscription_id" table="vw_subscriptions" viewfilter="table_name=subscriptions" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Industry Name">industry_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="City">city</TEXTFIELD>
+				<TEXTFIELD w="75" title="Country Name">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Number Of Employees">number_of_employees</TEXTFIELD>
+				<TEXTFIELD w="75" title="Primary Contact">primary_contact</TEXTFIELD>
+				<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			</GRID>
 			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
