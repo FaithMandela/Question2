@@ -109,14 +109,14 @@ public class BForms {
 
 		if ((entryformid != null) && (disabled == null)) {
 		    mystr+= "<div class='portlet-body form'>";
-			mystr += "<form id='baraza' class='form-horizontal' name='baraza' method='post' action='form.jsp'>\n";
+			mystr += "<form id='baraza' class='page-content-wrapper' name='baraza' method='post' action='form.jsp'>\n";
 			mystr += "<input type='hidden' name='action' value='ENTRYFORM'/>\n";
 			mystr += "<input type='hidden' name='actionvalue' value='" + entryformid + "'/>";
 			mystr += "</div>\n";
 		}
 
 		if(!"Draft".equals(approveStatus)) mystr += "<fieldset><label>FORM SUBMITTED AND CANNOT BE EDITED</label></fieldset>\n";
-        mystr +="<div class='navbar navbar-fixed-top'>";
+        mystr +="<div class='navbar navbar-fixed-top portlet box green '>";
 		mystr += "<fieldset>\n";
 		mystr += "<label>" + fname + "</label>\n";
 		mystr += "</fieldset>";
@@ -134,9 +134,9 @@ public class BForms {
 		if ((entryformid != null) && (disabled == null)) {
 			mystr += "<hr>\n";
 			if(nosave == null) {
-				mystr += "\n<section><input type='submit' name='update' value='Save' class='altProcessButtonFormat'/>";
+				mystr += "\n<section><input type='submit' name='update' value='Save' class='btn btn-circle blue altProcessButtonFormat'/>";
 				mystr += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-				mystr += "<input type='submit' name='submit' value='Complete and Exit' class='altProcessButtonFormat'/>";
+				mystr += "<input type='submit' name='submit' value='Complete and Exit' class='btn btn-circle default altProcessButtonFormat'/>";
 				mystr += "</section>\n";
 			}
 
@@ -179,10 +179,10 @@ public class BForms {
 		rs.close();
 
 		if(fhead == null) fhead = "";
-		else fhead = "<section>\n" + fhead + "</section>\n";
+		else fhead = "<section >\n" + fhead + "</section>\n";
 
 		if(ffoot == null) ffoot = "";
-		else ffoot = "<section>\n" + ffoot + "</section>\n";
+		else ffoot = "<section class='portlet box green'>\n" + ffoot + "</section>\n";
 
 		return mystr;
 	}
@@ -315,14 +315,14 @@ public class BForms {
 			if(rs.getString("tab") != null){
 				//if its the first one..
 				if(tab.equals("")){
-					tab_head = "<fieldset><div id=\"tab\" class=\"tabstrip k-widget k-header k-tabstrip\">";
-					tab_head += "<ul class=\"k-tabstrip-items k-reset\">";
-					tab_head += "<li class=\"k-item k-state-default k-first k-tab-on-top k-state-active\"><a classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//title
-					tab_body = "<div class=\"k-content k-state-active\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
+					tab_head = "<div class='col-md-12'>"+ "<fieldset><div id=\"tab\" class='tabbable tabbable-custom tabbable-noborder tabbable-reversed'>";
+					tab_head += "<ul class='nav nav-tabs'>";
+					tab_head += "<li class='active'><a  classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//title
+					tab_body = "<div class=\"tab-pane\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
 				} else if(!tab.equals("") && !tab.equals(rs.getString("tab"))) {
 					//log.info("Tab has changed from " + tab + " to " + rs.getString("tab"));
-					tab_head += "<li class=\"k-item k-state-default\"><a classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//another tab title
-					tab_body += "</div><div class=\"k-content\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
+					tab_head += "<li class=\"k-item k-state-default\"><a  classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//another tab title
+					//tab_body += "</div><div class=\"tab-pane\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
 				} else if(tab.equals(rs.getString("tab"))){
 					//log.info("Tab continues...." + tab);
 				}
@@ -344,17 +344,17 @@ public class BForms {
            
 			if(fieldType.equals("TEXTFIELD")) {
 			    input="<div class='col-md-9'>";
-				input = "<input " + disabled + " type='text' ";
+				input = "<input " + disabled + " type='text' placeholder='Enter text' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
 				input += " id ='F" + rs.getString("field_id") +  "'";
-				input += " class ='form-control'";
+				input += " class ='form-control input-circle'";
 				input += getAnswer(rs.getString("field_id"));
 				input += " placeholder=\"" + details +"\"";
 				input += " class='placeholder fillout' />";
 				input+="</div>";
 			} else if(fieldType.equals("DATE")) {
 			    input="<div class='col-md-9'>";
-			    input = "<input " + disabled + " type='text' ";
+			    input = "<input " + disabled + " type='text'placeholder='dd/mm/yyyy' ";
 			    input += " name='F" + rs.getString("field_id") +  "'";
 			    input += " id ='F" + rs.getString("field_id") +  "'";
 				input += getAnswer(rs.getString("field_id"));
@@ -447,7 +447,6 @@ public class BForms {
 				input+="</div>";
 				myhtml += printSubForm(rs.getString("field_id"), disabled);
 			} else if(fieldType.equals("TABLE")) {
-			    input="<div class='navbar navbar-fixed-top'>";
 				input = "";
 				//input+="</div>";
 			    table_count ++;
@@ -456,12 +455,11 @@ public class BForms {
 
 			// Label position L = left, T = Top, B = Bottom, R = Left
 			if(input.equals(""))
-			
-			input = "";
-			else if(label_position.equals("L")) input ="<div class='portlet-body form'>"+ "<div class='col-md-6'>"+ question + " "+"<div class='col-md-9'>" + input + "\n" +"</div>" + "</div>" + "</div>";
-			else if(label_position.equals("T"))	input ="<div class='portlet-body form'>"+"<div class='row'>"+"<div class='col-md-6'>"+ "<label class='control-label col-md-3'>" + question +"</label>" + "<br>" + "<div class='col-md-9'>" + input +"</div>"+ "</div>"+ "</div>" + "</div>\n";
-			else if(label_position.equals("B"))	input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+"<div class='col-md-9'>" + input +"</div>" + "<br>" + "<label class='control-label col-md-3'>" + question +"</label>"+ "</div>" + "</div>\n";
-			else if(label_position.equals("R"))	input = "<div class='portlet-body form'>"+"<div class='row'>"+ "<div class='col-md-6'>" +"<div class='col-md-9'>"+ input +"</div>" + " " + question + "</div>" +"</div>" + "\n";
+			input = ""; 
+			input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+ "<label class='control-label col-md-3'>" + question +"</label>" + "<div class='col-md-9'>" + input +"</div>"+ "</div>" + "</div>\n";
+			//input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+ "<label class='control-label col-md-3'>" + question +"</label>" + "<div class='col-md-9'>" + input +"</div>"+ "</div>" + "</div>\n";
+			//else if(label_position.equals("B"))	input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+"<div class='col-md-9'>" + input +"</div>" + "<br>" + "<label class='control-label col-md-3'>" + question +"</label>"+ "</div>" + "</div>\n";
+			//else if(label_position.equals("R"))	input = "<div class='portlet-body form'>"+"<div class='row'>"+ "<div class='col-md-6'>" +"<div class='col-md-9'>"+ input +"</div>" + " " + question + "</div>" +"</div>" + "\n";
 
 			//SHARELINE/SECTION PROCESSING
 			if(input.equals("")) {
