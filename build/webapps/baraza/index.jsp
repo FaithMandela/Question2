@@ -217,7 +217,7 @@
 							</li>
 							<li class="divider"></li>
 							<li>
-								<a class="btn default" data-toggle="modal" href="#basic">
+								<a data-toggle="modal" href="#basic">
 									<i class="icon-rocket"></i> Change Password
 								</a>
 							</li>
@@ -367,7 +367,7 @@
 <% } %>
 
 
-<%@ include file="./assets/include/password_change.jsp" %>
+
 
 
 		</div>
@@ -729,6 +729,7 @@ $(function () {
 });
 </script>
 <!-- END JAVASCRIPTS -->
+<%@ include file="./assets/include/password_change.jsp" %>
 </body>
 <!-- END BODY -->
 </html>
