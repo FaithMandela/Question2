@@ -963,7 +963,16 @@ BEGIN
 		project_staff.project_id, project_staff.project_role, project_staff.payroll_ps, project_staff.staff_cost, project_staff.tax_cost
 	FROM project_staff
 	WHERE (project_staff.entity_id = NEW.entity_id) AND (project_staff.monthly_cost = true);
-
+	
+	INSERT INTO employee_banking (org_id, employee_month_id, bank_branch_id, currency_id, 
+		bank_account, amount, 
+		exchange_rate)
+	SELECT NEW.org_id, NEW.employee_month_id, bank_branch_id, currency_id,
+		bank_account, amount,
+		(CASE WHEN default_banking.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END)
+	FROM default_banking 
+	WHERE (default_banking.entity_id = NEW.entity_id) AND (default_banking.active = true)
+		AND (amount > 0);
 
 	RETURN NULL;
 END;

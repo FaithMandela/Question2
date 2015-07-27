@@ -198,6 +198,7 @@ INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Reseller');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Services and Consultancy');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Manufacturer');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Software Development');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Investments');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Education');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Electronics');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Finance, Banking, Insurance');

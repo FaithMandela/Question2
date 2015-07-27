@@ -125,7 +125,7 @@
 		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" noorg="true" user="entity_id">
 			<COMBOBOX w="150" title="Org" lptable="orgs" noorg="true" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 		</FORM>
-		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true">
+		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -404,7 +404,7 @@
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
-				<PICTURE w="550" username="repository" repository="http://localhost:9090/repository/webdav/pictures/" tab="Picture" pictures="../repository/barazapictures" access="enter2012" password="baraza" y="1" h="150" x="10">picture_file</PICTURE>
+				<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">picture_file</PICTURE>
 				<TEXTDECIMAL w="150" title="Height" tab="Medical" y="2" h="20" x="10">height</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Weight" tab="Medical" y="2" h="20" x="290">weight</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Blood Group" tab="Medical" y="22" h="20" x="10">blood_group</TEXTFIELD>
@@ -475,14 +475,12 @@
 				<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Ps Amount">ps_amount</TEXTDECIMAL>
 				<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
 				<FORM name="Extra Banking" keyfield="default_banking_id" linkfield="entity_id" table="default_banking">
 					<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="10" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="% Amount" y="50" h="20" x="290">ps_amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="70" h="20" x="10">final_date</TEXTDATE>
 					<CHECKBOX w="150" title="Active" y="70" h="20" x="290">active</CHECKBOX>
 					<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
@@ -622,7 +620,6 @@
 				<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Ps Amount">ps_amount</TEXTDECIMAL>
 				<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			</GRID>
@@ -1484,9 +1481,9 @@
 		<FILTER w="700" name="P10" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" filter="periodyear" pos="top"></DRILLDOWN>
 			<DRILLDOWN name="Quarter" keyfield="quarter" table="vw_Period_Quarter" listfield="quarter" filter="quarter" pos="top"></DRILLDOWN>
-			<JASPER name="P10" reportfile="P10.jasper"></JASPER>
-			<JASPER name="P10A" reportfile="P10A.jasper"></JASPER>
-			<JASPER name="P10D" reportfile="P10D.jasper"></JASPER>
+			<JASPER name="P10" org.table="orgs" reportfile="P10.jasper"></JASPER>
+			<JASPER name="P10A" org.table="orgs" reportfile="P10A.jasper"></JASPER>
+			<JASPER name="P10D" org.table="orgs" reportfile="P10D.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Payroll Ledger" key="115" h="750">

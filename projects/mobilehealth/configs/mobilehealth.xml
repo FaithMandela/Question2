@@ -1,12 +1,26 @@
 <APP color="blue" name="Mobile Health" org="org_id" password="change_password" material="true">
 	<MENU name="Mobile Health">
-		<MENU name="Entitys">1</MENU>
+		<MENU icon="icon-users" name="Entitys">35</MENU>
 		<MENU icon="fa fa-sitemap" name="Organizations">5</MENU>
-		<MENU name="Countys">10</MENU>
-		<MENU name="Reports ( MOH 514 )">15</MENU>
-		<MENU name="Reports ( MOH 515)">20</MENU>
+		<MENU icon="icon-map" name="Countys">10</MENU>
+		<MENU icon="icon-book-open" name="Reports ( MOH 514 )">15</MENU>
+		<MENU icon="icon-book-open" name="Reports ( MOH 515 )">20</MENU>
+		<MENU icon="icon-book-open" name="Reports ( MOH 100 )">40</MENU>
 	</MENU>
-	<DESK w="700" name="Entitys" key="1" h="550">
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Total 514 Reports" role="admin" noorg.query="true" table="surveys" noorg="true">
+				<TEXTFIELD w="75" fnct="COALESCE(count(survey_id), 0)" title="Total 514">survey_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Total 515 Reports" role="admin" noorg.query="true" table="surveys_515" noorg="true">
+				<TEXTFIELD w="75" fnct="COALESCE(count(surveys_515_id), 0)" title="Total 515">surveys_515_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Total 100 Reports" role="admin" noorg.query="true" table="survey_100" noorg="true">
+				<TEXTFIELD w="75" fnct="COALESCE(count(survey_100_id), 0)" title="Total 100">survey_100_id</TEXTFIELD>
+			</TILE>
+		</DASHBOARD>
+	</DESK>
+	<DESK w="700" name="Entitys" key="35" h="550">
 		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">ESTAMP>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
@@ -789,6 +803,50 @@
 				<TEXTFIELD w="150" title="Year" y="210" h="20" x="290">year</TEXTFIELD>
 			</FORM>
 			<JASPER name="Report 515 Report " reportfile="vw_surveys_515_details.jasper"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Reports 100" key="40" h="550">
+		<GRID name="Reports 100" keyfield="survey_100_id" table="vw_survey_100">
+			<TEXTFIELD w="75" title="Health Worker ID">health_worker_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Survey 100 ID">survey_100_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Patient Gender">patient_gender</TEXTFIELD>
+			<TEXTFIELD w="75" title="Patient Name">patient_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Patient Age">patient_age</TEXTFIELD>
+			<TEXTFIELD w="75" title="Community Healt Unit">community_healt_unit</TEXTFIELD>
+			<TEXTFIELD w="75" title="Link Health Facility">link_health_facility</TEXTFIELD>
+			<TEXTFIELD w="75" title="Referral Reason">referral_reason</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sub Location">sub_location</TEXTFIELD>
+			<TEXTFIELD w="75" title="Village">village</TEXTFIELD>
+			<TEXTFIELD w="75" title="Community Unit">community_unit</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receiving Officer Name">receiving_officer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receiving Officer Profession">receiving_officer_profession</TEXTFIELD>
+			<TEXTFIELD w="75" title="Health Facility Name">health_facility_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Receiving Officer Date">receiving_officer_date</TEXTDATE>
+			<SPINTIME w="75" title="Receiving Officer Time">receiving_officer_time</SPINTIME>
+			<FORM name="Report 100" keyfield="survey_100_id" table="survey_100">
+				<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="10" h="20" x="10" lpfield="health_worker_id">health_worker_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Patient Gender" y="30" h="20" x="10">patient_gender</TEXTFIELD>
+				<TEXTFIELD w="430" title="Patient Name" y="50" h="20" x="10">patient_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Patient Age" y="70" h="20" x="10">patient_age</TEXTFIELD>
+				<TEXTFIELD w="430" title="Community Healt Unit" y="90" h="20" x="10">community_healt_unit</TEXTFIELD>
+				<TEXTFIELD w="430" title="Link Health Facility" y="110" h="20" x="10">link_health_facility</TEXTFIELD>
+				<TEXTFIELD w="430" title="Referral Reason" y="130" h="20" x="10">referral_reason</TEXTFIELD>
+				<TEXTAREA w="430" title="Treatment" y="150" h="70" x="10">treatment</TEXTAREA>
+				<TEXTAREA w="430" title="Comments" y="220" h="70" x="10">comments</TEXTAREA>
+				<TEXTFIELD w="430" title="Sub Location" y="290" h="20" x="10">sub_location</TEXTFIELD>
+				<TEXTFIELD w="430" title="Village" y="310" h="20" x="10">village</TEXTFIELD>
+				<TEXTFIELD w="430" title="Community Unit" y="330" h="20" x="10">community_unit</TEXTFIELD>
+				<TEXTFIELD w="430" title="Receiving Officer Name" y="350" h="20" x="10">receiving_officer_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Receiving Officer Profession" y="370" h="20" x="10">receiving_officer_profession</TEXTFIELD>
+				<TEXTFIELD w="430" title="Health Facility Name" y="390" h="20" x="10">health_facility_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Action Taken" y="410" h="70" x="10">action_taken</TEXTAREA>
+				<TEXTDATE w="150" title="Receiving Officer Date" y="480" h="20" x="10">receiving_officer_date</TEXTDATE>
+				<SPINTIME w="150" title="Receiving Officer Time" y="480" h="20" x="290">receiving_officer_time</SPINTIME>
+			</FORM>
+			<JASPER name="Report 100 report" reportfile="vw_survey_100.jasper"></JASPER>
 		</GRID>
 	</DESK>
 </APP>

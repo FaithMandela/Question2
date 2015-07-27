@@ -62,8 +62,8 @@ public class BReport extends JPanel {
 		parameters.put("SUBREPORT_DIR", reportpath);
 
 		parameters.put("orgid", db.getOrgID());
-		parameters.put("orgwhere", db.getOrgWhere());
-		parameters.put("organd", db.getOrgAnd());
+		parameters.put("orgwhere", db.getOrgWhere(null));
+		parameters.put("organd", db.getOrgAnd(null));
 
 		viewFilter[0] = null;
 		viewFilter[1] = null;
@@ -86,8 +86,8 @@ public class BReport extends JPanel {
 		parameters.put("SUBREPORT_DIR", reportpath);
 
 		parameters.put("orgid", db.getOrgID());
-		parameters.put("orgwhere", db.getOrgWhere());
-		parameters.put("organd", db.getOrgAnd());
+		parameters.put("orgwhere", db.getOrgWhere(fielddef.getAttribute("org.table")));
+		parameters.put("organd", db.getOrgAnd(fielddef.getAttribute("org.table")));
 
 		if(fielddef.getAttribute("user") != null)
 			parameters.put(fielddef.getAttribute("user"), db.getUserID());

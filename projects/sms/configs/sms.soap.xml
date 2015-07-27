@@ -25,6 +25,13 @@
 			error="UPDATE sms SET is_sent = '2' WHERE sms_id = "></PROCESS>
 	</COMM>
 
+	<COMM orgid="8"  dbclass="org.postgresql.Driver" dbpath="jdbc:postgresql://62.24.116.55:5432/bunson"
+		dbusername="root" dbpassword="invent">
+		<PROCESS sql="SELECT sms_id, sms_number, message FROM sms" where="(sent = false)" 
+			update="UPDATE sms SET sent = true WHERE sms_id = "
+			error="UPDATE sms SET sent = false WHERE sms_id = "></PROCESS>
+	</COMM>
+
 </SOAPSMS>
 
 

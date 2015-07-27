@@ -301,12 +301,16 @@ public class BWeb {
 		BElement mel = root.getFirst();
 
 		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
-		mymenu += "		<li class='start'>\n";
-		mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
-		mymenu += "			<i class='icon-home'></i>\n";
-		mymenu += "			<span class='title'>Dashboard</span>\n";
-		mymenu += "			</a>\n";
-		mymenu += "		</li>\n";
+		
+		if(root.getAttribute("dashboard", "true").equals("true")) {
+			mymenu += "		<li class='start'>\n";
+			mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
+			mymenu += "			<i class='icon-home'></i>\n";
+			mymenu += "			<span class='title'>Dashboard</span>\n";
+			mymenu += "			</a>\n";
+			mymenu += "		</li>\n";
+		}
+		
 		mymenu += getSubMenu(mel, 0);
 		mymenu += "	</ul>\n";
 
@@ -432,6 +436,12 @@ public class BWeb {
 				boolean show = true;
 				if(keyD.equals("{new}") && (!elName.equals("FORM"))) show = false;
 				if(keyD.equals("{new}") && (el.getAttribute("new", "true").equals("false"))) show = false;
+				
+				if(el.getAttribute("superuser", "false").equals("true")) {
+					if(!db.getUser().getSuperUser()) show = false;
+				} else {
+					if(!checkAccess(el.getAttribute("role"))) show = false;
+				}
 
 				String viewFilter = el.getAttribute("viewfilter");
 				if(viewFilter != null) {
@@ -447,7 +457,7 @@ public class BWeb {
 					if(el.getAttribute("tab.count") != null) {
 						String tcSql = "SELECT " + el.getAttribute("tab.count") + " FROM " + el.getAttribute("table");
 						String tcWhere = null;
-						if(el.getAttribute("noorg") == null) tcWhere = db.getOrgWhere();
+						if(el.getAttribute("noorg") == null) tcWhere = db.getOrgWhere(null);
 						if(el.getAttribute("user") != null) {
 							if(tcWhere == null) tcWhere = " WHERE ";
 							else tcWhere += " AND ";
@@ -1873,6 +1883,10 @@ System.out.println("repository : " + repository);
 		JsonArrayBuilder jsColNames = Json.createArrayBuilder();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
 		
+		if(view.getAttribute("superuser", "false").equals("true")) {
+			if(!db.getUser().getSuperUser()) return "";
+		}
+		
 		boolean hasAction = false;
 		boolean hasSubs = false;
 		boolean hasTitle = false;
@@ -2008,6 +2022,15 @@ System.out.println("repository : " + repository);
 		if(view.getElementByName("PICTURE") == null) return ""; 
 		return " enctype=\"multipart/form-data\" ";
 	}
+
+	public boolean hasChildren() {
+		boolean hasSubs = false;
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
+			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+		}
+		return hasSubs;
+	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }
@@ -2015,6 +2038,7 @@ System.out.println("repository : " + repository);
 	public BDB getDB() { return db; }
 	public String executeFunction(String mysql) { return db.executeFunction(mysql); }
 	public String getUserID() { return db.getUserID(); }
+	public BUser getUser() { return db.getUser(); }
 	public void setReadOnly(boolean readOnly) { db.setReadOnly(readOnly); }
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
 

@@ -53,8 +53,6 @@ public class BReportFile {
 		parameters.put("SUBREPORT_DIR", root.getAttribute("reportpath"));
 
 		parameters.put("orgid", db.getOrgID());
-		parameters.put("orgwhere", db.getOrgWhere());
-		parameters.put("organd", db.getOrgAnd());
 
 		// Get the main XMl configs
 		processdelay = Integer.valueOf(root.getAttribute("delay", "1")).intValue()*60*1000;
@@ -73,6 +71,9 @@ public class BReportFile {
 		
 			if(el.getName().equals("JASPER")) {
 				outputPath = root.getAttribute("output") + el.getAttribute("output");
+				parameters.put("orgwhere", db.getOrgWhere(el.getAttribute("org.table")));
+				parameters.put("organd", db.getOrgAnd(el.getAttribute("org.table")));
+
 				getReport(root.getAttribute("reportpath"), el.getAttribute("reportfile"), isPdf);
 			} else if(el.getName().equals("GRID")) {
 				String where = "(" + el.getAttribute("marker") + " = false)";
@@ -107,8 +108,8 @@ public class BReportFile {
 		parameters.put("filterid", keyfield);
 
 		parameters.put("orgid", db.getOrgID());
-		parameters.put("orgwhere", db.getOrgWhere());
-		parameters.put("organd", db.getOrgAnd());
+		parameters.put("orgwhere", db.getOrgWhere(null));
+		parameters.put("organd", db.getOrgAnd(null));
 
 		for(String rptParam : rptParams.keySet()) parameters.put(rptParam, rptParams.get(rptParam));
 

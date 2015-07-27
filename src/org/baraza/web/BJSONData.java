@@ -85,6 +85,10 @@ public class BJSONData extends HttpServlet {
 			log.severe("Page size error " + ex);
 		}
 		
+		if(view.getAttribute("superuser", "false").equals("true")) {
+			if(!web.getUser().getSuperUser()) return;
+		}
+		
 		BJSONQuery JSONQuery = new BJSONQuery(web.getDB(), view, wheresql, sortby, pageStart, pageSize);
 		String JSONStr = JSONQuery.getJSONData(web.getViewKey(), false);
 
