@@ -237,8 +237,8 @@ public class Bajax extends HttpServlet {
 		String mysql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
 		String myoutput = web.executeFunction(mysql);
 		
-		if(myoutput == null) resp = "{'success': 0, 'message': 'Old Password Is incorrect'}";
-		else resp = "{'success': 1, 'message': 'Password Changed Successfully'}";
+		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
+		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
 
 		System.out.println("PASS3 : " + resp);
 		
