@@ -1,6 +1,6 @@
 ---Project Database File
 
-CREATE EXTENSION postgres_fdw;
+/*CREATE EXTENSION postgres_fdw;
 CREATE SERVER dot2 FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '192.168.0.2', dbname 'sms', port '5432');
 CREATE USER MAPPING FOR root SERVER dot2 OPTIONS(user 'sms_user', password 'Invent2k');
 CREATE USER MAPPING FOR postgres SERVER dot2 OPTIONS(user 'sms_user', password 'Invent2k');
@@ -34,7 +34,7 @@ CREATE FOREIGN TABLE sms_i(
 	message					text,
 	details					text
 ) SERVER dot2 OPTIONS(table_name 'sms')
-
+*/
 
 
 
