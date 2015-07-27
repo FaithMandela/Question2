@@ -724,7 +724,7 @@ BEGIN
 		UPDATE entitys SET Entity_password = md5($3) WHERE (entity_id = entityID);
 		passchange := 'Password Changed';
 	ELSE
-		passchange := 'Password Changing Error Ensure you have correct details';
+		passchange := null;
 	END IF;
 
 	return passchange;

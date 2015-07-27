@@ -91,7 +91,12 @@ public class Bajax extends HttpServlet {
 		if("calmove".equals(fnct)) resp = calMove(id, startDate, startTime, endDate, endTime);
 		if("operation".equals(fnct)) resp = calOperation(id, ids, request);
 		if("filter".equals(fnct)) resp = filterJSON(request);
-
+		
+		if("password".equals(fnct)) { 
+			resp = changePassword(request.getParameter("oldpass"), request.getParameter("newpass"));
+			response.setContentType("application/json;charset=\"utf-8\"");
+		}
+		
 		web.close();	// close DB commections
 		out.println(resp);
 	}
@@ -219,6 +224,25 @@ public class Bajax extends HttpServlet {
 		System.out.println(wheresql + " : " + filterAnd);
 		
 		return wheresql;
+	}
+	
+	public String changePassword(String oldPass, String newPass) {
+		String resp = "";
+		
+		System.out.println("PASS1 : " + oldPass);
+		System.out.println("PASS2 : " + newPass);
+			
+		
+		String fnct = web.getRoot().getAttribute("password");
+		String mysql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
+		String myoutput = web.executeFunction(mysql);
+		
+		if(myoutput == null) resp = "{'success': 0, 'message': 'Old Password Is incorrect'}";
+		else resp = "{'success': 1, 'message': 'Password Changed Successfully'}";
+
+		System.out.println("PASS3 : " + resp);
+		
+		return resp;
 	}
  
 }

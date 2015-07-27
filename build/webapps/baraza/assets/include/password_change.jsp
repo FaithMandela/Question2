@@ -89,7 +89,7 @@ $('#btnChangePass').click(function(){
     
     if(ok){
         runAlert('Please Wait', 'info', 'info');
-        $.post('../', {oldpass:oldpass, newpass:newpass}, function(data){
+        $.post('ajax', {fnct:'password', oldpass:oldpass, newpass:newpass}, function(data){
             if(data.success == 1){
                 runAlert(data.message, 'success', 'info');
             }else if(data.success == 0){
