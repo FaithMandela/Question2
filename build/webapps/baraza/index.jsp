@@ -215,12 +215,14 @@
 								<i class="icon-rocket"></i> My Tasks
 								</a>
 							</li>
+					<% if(web.hasPasswordChange()) { %>
 							<li class="divider"></li>
 							<li>
 								<a data-toggle="modal" href="#basic">
 									<i class="icon-rocket"></i> Change Password
 								</a>
 							</li>
+					<% } %>
 							<li class="divider"></li>
 							<li>
 								<a href="logout.jsp?logoff=yes">
@@ -729,7 +731,9 @@ $(function () {
 });
 </script>
 <!-- END JAVASCRIPTS -->
-<%@ include file="./assets/include/password_change.jsp" %>
+<% if(web.hasPasswordChange()) { %>
+	<%@ include file="./assets/include/password_change.jsp" %>
+<% } %>
 </body>
 <!-- END BODY -->
 </html>

@@ -228,19 +228,15 @@ public class Bajax extends HttpServlet {
 	
 	public String changePassword(String oldPass, String newPass) {
 		String resp = "";
-		
-		System.out.println("PASS1 : " + oldPass);
-		System.out.println("PASS2 : " + newPass);
-			
-		
+				
 		String fnct = web.getRoot().getAttribute("password");
+		if(fnct == null) return "{\"success\": 0, \"message\": \"Cannot change Password\"}";
+		
 		String mysql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
 		String myoutput = web.executeFunction(mysql);
 		
 		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Old Password Is incorrect\"}";
 		else resp = "{\"success\": 1, \"message\": \"Password Changed Successfully\"}";
-
-		System.out.println("PASS3 : " + resp);
 		
 		return resp;
 	}

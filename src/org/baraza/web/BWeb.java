@@ -2010,10 +2010,16 @@ System.out.println("repository : " + repository);
 		return view.getAttribute("icon", viewIcon); 
 	}
     
-    public boolean isMaterial() {
+	public boolean isMaterial() {
 		if(root == null) return false;
 		if(root.getAttribute("material", "false").equals("true")) return true;
         return false;
+	}
+	
+	public boolean hasPasswordChange() {
+		if(root == null) return false;
+		if(root.getAttribute("password") == null) return false;
+        return true;
 	}
 	
 	public String getEncType() {

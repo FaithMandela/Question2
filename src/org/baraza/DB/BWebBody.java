@@ -521,12 +521,14 @@ public class BWebBody extends BQuery {
 			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
 			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
-
+			
 			String cmbWhereSql = el.getAttribute("where");
 			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
 				if(cmbWhereSql == null) cmbWhereSql = "(";
 				else cmbWhereSql += " AND (";
-				cmbWhereSql += orgID + "=" + userOrg + ")";
+				
+				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
+				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
 			}
 
 			if(el.getAttribute("user") != null) {
@@ -587,12 +589,15 @@ public class BWebBody extends BQuery {
 			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
 			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
+			
 
 			String cmbWhereSql = el.getAttribute("where");
 			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
 				if(cmbWhereSql == null) cmbWhereSql = "(";
 				else cmbWhereSql += " AND (";
-				cmbWhereSql += orgID + "=" + userOrg + ")";
+				
+				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
+				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
 			}
 
 			if(el.getAttribute("user") != null) {
