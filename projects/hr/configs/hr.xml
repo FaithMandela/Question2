@@ -3090,7 +3090,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 				<GRID name="Objective Evaluation" keyfield="evaluation_point_id" updatetable="evaluation_points" orderby="objective_id" linkfield="job_review_id" table="vw_evaluation_objectives" params="objective_id">
 					<TEXTFIELD w="150" title="Objective">objective_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Points">points</TEXTFIELD>
@@ -3100,7 +3100,7 @@
 					<FORM new="false" name="Objective Evaluation" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
 						<TEXTFIELD w="150" title="Points" y="30" h="20" x="10">reviewer_points</TEXTFIELD>
 						<TEXTAREA w="430" tab="Narrative" y="2" h="70" x="10">reviewer_narrative</TEXTAREA>
-						<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+						<TEXTAREA w="430" tab="Discussion Area" y="2" h="70" x="10">details</TEXTAREA>
 					</FORM>
 					<GRID new="false" name="Objective Details" keyfield="objective_detail_id" delete="false" updatetable="objective_details" table="vw_objective_details" linkparams="objective_id=objective_id">
 						<TEXTFIELD w="75" title="Detail Name">objective_detail_name</TEXTFIELD>
@@ -3453,6 +3453,7 @@
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report2.jasper"></JASPER>
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave2.jasper"></JASPER>
 		</FILTER>
+		<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
 		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
 	</DESK>
