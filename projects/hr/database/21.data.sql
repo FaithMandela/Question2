@@ -107,7 +107,7 @@ INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visibl
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 31, 'Trainining', true, false);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 32, 'per diem', true, false);
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 32, true);
-UPDATE adjustments SET org_id = 0;
+UPDATE adjustments SET org_id = 0, currency_id = 1;
 
 INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (1, 1, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, NULL);
 INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (1, 2, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, NULL);

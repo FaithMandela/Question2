@@ -365,7 +365,7 @@ public class BWebBody extends BQuery {
 					tab = el.getAttribute("tab");
 					if(!hasTabs) tabs.append("<li class='active'>");
 					else tabs.append("<li>");
-					tabs.append("<a href='#" + tab + "' data-toggle='tab'>" + tab + " </a></li>\n");
+					tabs.append("<a href='#" + tab.replace(" ", "") + "' data-toggle='tab'>" + tab + " </a></li>\n");
 				}
 				hasTabs = true;
 			}
@@ -389,8 +389,8 @@ public class BWebBody extends BQuery {
 				if(tabNotDone && hasTabs) response.append(tabs);
 				if(!tab.equals(el.getAttribute("tab"))) {
 					tab = el.getAttribute("tab");
-                    if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab + "'>\n"); 
-                    else response.append("<div class='tab-pane' id='" + tab + "'>\n");
+                    if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab.replace(" ", "") + "'>\n"); 
+                    else response.append("<div class='tab-pane' id='" + tab.replace(" ", "") + "'>\n");
 				}
                 if(tabNotDone && hasTabs) tabNotDone = false; 
 			} else if(!tabNotDone) {

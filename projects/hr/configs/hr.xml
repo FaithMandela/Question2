@@ -605,9 +605,9 @@
 				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Statutory">payroll_tax</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
-				<JASPER name="Payroll" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
+				<JASPER name="Payroll" linkfield="filterid" reportfile="payslipb.jasper"></JASPER>
 			</GRID>
-			<JASPER name="P9A" linkfield="periodyear" user="employeeid" reportfile="P9A.jasper"></JASPER>
+			<JASPER name="P9A" org.table="orgs" linkfield="periodyear" user="employeeid" reportfile="P9Aa.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="News Admin" key="19" h="500">
@@ -2006,7 +2006,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="upd_reviews" approval="2">Open For Review</ACTION>
 				</ACTIONS>
@@ -2177,7 +2177,7 @@
 				<TEXTFIELD w="150" title="Self Rating" y="50" h="20" x="10">self_rating</TEXTFIELD>
 				<TEXTAREA w="530" tab="Overall Comments" y="2" h="170" x="10">details</TEXTAREA>
 			</FORM>
-			<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+			<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			<ACTIONS>
 				<ACTION fnct="job_review_check">Apply For review</ACTION>
 				<ACTION fnct="upd_reviews" approval="4">Delete Review</ACTION>

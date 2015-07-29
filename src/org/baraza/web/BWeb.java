@@ -856,11 +856,11 @@ public class BWeb {
 			tabs.append("			<ul class='nav nav-tabs'>\n");
 			for(BElement sv : view.getElements()) {
 				if(sv.getName().equals("FILTERGRID") || sv.getName().equals("DRILLDOWN") || sv.getName().equals("FILTERFORM")) {
-					if(isFirst) tabs.append("<li class='active'>");
-					else tabs.append("<li>");
+					if(isFirst) tabs.append("<li class='active'>\n");
+					else tabs.append("<li>\n");
 					isFirst = false;
 					String tab = sv.getAttribute("name");
-					tabs.append("<a href='#" + tab + "' data-toggle='tab'>" + tab + " </a></li>\n");
+					tabs.append("<a href='#" + tab.replace(" ", "") + "' data-toggle='tab'>" + tab + " </a></li>\n");
 				}
     		}
 			tabs.append("			</ul>\n");
@@ -874,7 +874,7 @@ public class BWeb {
 			boolean wgf = true;
 			isFirst = true;
 			for(BElement sv : view.getElements()) {
-				String tab = sv.getAttribute("name");
+				String tab = sv.getAttribute("name", "").replace(" ", "");
 				if(sv.getName().equals("FILTERGRID")) {
 					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
 					else body += "<div class='tab-pane' id='" + tab + "'>\n";

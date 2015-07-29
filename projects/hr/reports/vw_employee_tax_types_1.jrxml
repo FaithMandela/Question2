@@ -16,8 +16,12 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="employee_month_id" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT vw_employee_tax_types.tax_type_name, vw_employee_tax_types.tax_identification, vw_employee_tax_types.amount,
@@ -60,13 +64,6 @@ ORDER BY vw_employee_tax_types.tax_type_id]]>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tax_type_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="74" y="0" width="112" height="15" uuid="e55b27a5-d935-46f3-ba86-87c9758f60c7"/>
-				<textElement>
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{tax_identification}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
 				<reportElement style="Detail" x="299" y="0" width="78" height="15" uuid="16b223a7-4e41-4851-bfcd-e0f695f3c4bb"/>
