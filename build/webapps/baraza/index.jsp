@@ -121,6 +121,7 @@
 	<link href="./assets/global/plugins/jquery-tags-input/jquery.tagsinput.css" rel="stylesheet" type="text/css"/>
     <link href="./assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="./assets/global/plugins/jquery-multi-select/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet"/>
 
     <link href="./assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
     <link href="./assets/admin/pages/css/profile.css" rel="stylesheet" type="text/css"/>
@@ -344,6 +345,10 @@
 						<%= web.showFooter() %>
 					</div>
 				</div>
+                            
+                            
+                <%@ include file="./assets/include/calendar.jsp" %>            
+            
 			    <% if(web.getViewType().equals("FILES")){ %>
                     <div class="row"> <!-- file upload row -->
                         <div class="col-md-12">
@@ -467,12 +472,18 @@
 <script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
 
+<!-- calendar-->
+<!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
+<script src="./assets/global/plugins/moment.min.js"></script>
+<script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
+                            
+<script src="./assets/admin/pages/scripts/calendar.js"></script>
 
 <script>
     jQuery(document).ready(function() {
         Metronic.init(); // init metronic core componets
         Layout.init(); // init layout
-
+        Calendar.init();
         $('.date-picker').datepicker({
             autoclose: true
         });
