@@ -1227,6 +1227,7 @@
 			<ACTIONS name="Trimester" keyfield="quarterid" table="quarters">
 				<ACTION fnct="updStudentAdd">Add Addresses</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="1">Change NG to F or UE</ACTION>
+				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="5">Change UE to AW</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="2">Change UE to F</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="3">Change DG to AW</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="4">Change IW TO F</ACTION>
