@@ -345,9 +345,6 @@
 						<%= web.showFooter() %>
 					</div>
 				</div>
-                            
-                            
-                <%@ include file="./assets/include/calendar.jsp" %>            
             
 			    <% if(web.getViewType().equals("FILES")){ %>
                     <div class="row"> <!-- file upload row -->
@@ -372,9 +369,6 @@
                 <% } %>
 			</form>
 <% } %>
-
-
-
 
 
 		</div>
@@ -476,8 +470,6 @@
 <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
 <script src="./assets/global/plugins/moment.min.js"></script>
 <script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
-                            
-<script src="./assets/admin/pages/scripts/calendar.js"></script>
 
 <script>
     jQuery(document).ready(function() {
@@ -582,7 +574,6 @@
     $('.reload').click(function(){
         $('#jqlist').trigger('reloadGrid');
     });
-
 
 	$('#btnAction').click(function(){
 	    var operation = $("#operation").val();
@@ -742,6 +733,11 @@ $(function () {
 });
 </script>
 <!-- END JAVASCRIPTS -->
+<% if(web.getViewType().equals("DIARY")){ 
+	String diaryJSON = web.getCalendar();
+%>
+	<%@ include file="./assets/include/calendar.jsp" %>
+<% } %>
 <% if(web.hasPasswordChange()) { %>
 	<%@ include file="./assets/include/password_change.jsp" %>
 <% } %>

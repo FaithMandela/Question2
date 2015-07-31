@@ -29,7 +29,7 @@
 		dbusername="root" dbpassword="invent">
 		<PROCESS sql="SELECT sms_id, sms_number, message FROM sms" where="(sent = false)" 
 			update="UPDATE sms SET sent = true WHERE sms_id = "
-			error="UPDATE sms SET sent = false WHERE sms_id = "></PROCESS>
+			error="UPDATE sms SET number_error = true, sent = true WHERE sms_id = "></PROCESS>
 	</COMM>
 
 </SOAPSMS>

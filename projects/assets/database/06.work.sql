@@ -238,3 +238,11 @@ SELECT to_char(vw_pm_schedule.start_date, 'DD/MM/YYYY') as schedule_date, vw_pm_
 FROM vw_pm_schedule
 ORDER BY vw_pm_schedule.start_date
 
+
+
+-------- Asset disposal
+
+UPDATE assets SET asset_status_id = 8, disposal_amount = 0, disposal_date = '2015-07-30'::date WHERE asset_serial = '';
+
+	
+	
