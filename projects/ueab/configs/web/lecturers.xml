@@ -176,7 +176,7 @@
 	</DESK>
 	<DESK w="700" name="Grading" key="20" h="500">
 		<GRID name="Grading" keyfield="qcourseid" orderby="quarterid, courseid" table="qcourseview" noorg="true" where="(submit_grades = false)" user="instructorid">
-			<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
@@ -204,12 +204,12 @@
 	</DESK>
 	<DESK w="700" name="Grade Book" key="23" h="500">
 		<GRID name="Grade Book" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="250" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="250" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting" format="date">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending" format="date">qend</TEXTFIELD>
 			<CHECKBOX w="90" title="active" format="boolean" ischar="true">active</CHECKBOX>
 			<GRID name="Grade Book" keyfield="qcourseid" orderby="courseid" linkfield="quarterid" table="qcourseview" noorg="true" user="instructorid">
-				<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 				<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
@@ -240,7 +240,7 @@
 	</DESK>
 	<DESK w="700" name="Department Grading" key="30" h="500">
 		<GRID user_field="departmentid" name="Grading" keyfield="qcourseid" orderby="quarterid, courseid" user_fnct="get_instructor_department" table="qcourseview" noorg="true" where="(submit_grades = true) AND (approved_grades = false) AND (department_head = false)">
-			<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
@@ -259,7 +259,7 @@
 	</DESK>
 	<DESK w="700" name="School Grading" key="32" h="500">
 		<GRID user_field="schoolid" name="Department Head Grading" keyfield="qcourseid" orderby="quarterid, courseid" user_fnct="get_instructor_school" table="qcourseview" noorg="true" where="(submit_grades = true) AND (approved_grades = false) AND (department_head = true)">
-			<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
@@ -276,7 +276,7 @@
 			<JASPER name="Lecturers Grade Report" showpdf="true" linkfield="filterid" reportfile="qgradeviewinsturctor.jasper"></JASPER>
 		</GRID>
 		<GRID user_field="schoolid" name="School Grading" keyfield="qcourseid" orderby="quarterid, courseid" user_fnct="get_instructor_school" table="qcourseview" noorg="true" where="(submit_grades = true) AND (approved_grades = false) ">
-			<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
@@ -295,12 +295,12 @@
 	</DESK>
 	<DESK w="700" name="Grade Book" key="33" h="500">
 		<GRID name="Grade Book" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="250" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="250" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting" format="date">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending" format="date">qend</TEXTFIELD>
 			<CHECKBOX w="90" title="active" format="boolean" ischar="true">active</CHECKBOX>
 			<GRID user_field="departmentid" name="Grade Book" keyfield="qcourseid" orderby="courseid" linkfield="quarterid" user_fnct="get_instructor_department" table="qcourseview">
-				<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 				<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
@@ -332,9 +332,9 @@
 			<JASPER name="Check List" showpdf="false" linkfield="filterid" reportfile="studentdegreeviewb.jasper"></JASPER>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Semester List" key="52" h="500">
-		<GRID name="Semester List" table="qstudentsummary" filterkey="studentdegreeid" reporttitle="studentname">
-			<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+	<DESK w="700" name="Trimester List" key="52" h="500">
+		<GRID name="Trimester List" table="qstudentsummary" filterkey="studentdegreeid" reporttitle="studentname">
+			<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 			<CHECKBOX w="50" title="Approved" format="boolean" ischar="true">approved</CHECKBOX>
 			<TEXTFIELD w="40" title="Hours">credit</TEXTFIELD>
 			<TEXTFIELD w="40" title="gpa" format="double">gpa</TEXTFIELD>
@@ -345,7 +345,7 @@
 	</DESK>
 	<DESK w="700" name="Course List" key="53" h="500">
 		<GRID name="Course List" table="studentgradeview" filterkey="studentdegreeid" reporttitle="studentname">
-			<TEXTFIELD w="40" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="50" title="Instuctor">instructorname</TEXTFIELD>
@@ -399,12 +399,12 @@
 	</DESK>
 	<DESK w="700" name="Grade Book" key="60" h="500">
 		<GRID name="Grade Book" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="250" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="250" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting" format="date">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending" format="date">qend</TEXTFIELD>
 			<CHECKBOX w="90" title="active" format="boolean" ischar="true">active</CHECKBOX>
 			<GRID user_field="schoolid" name="Grade Book" keyfield="qcourseid" orderby="courseid" linkfield="quarterid" user_fnct="get_instructor_school" table="qcourseview">
-				<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 				<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>

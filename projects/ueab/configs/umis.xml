@@ -486,8 +486,8 @@
 			<TEXTFIELD w="40" title="Elective Credit">electivecredit</TEXTFIELD>
 			<GRID name="Bulletings" keyfield="bulletingid" orderby="startingquarter desc" table="bulleting" noorg="true">
 				<TEXTFIELD w="75" title="Bulleting">bulletingname</TEXTFIELD>
-				<TEXTFIELD w="75" title="Starting Semester">startingquarter</TEXTFIELD>
-				<TEXTFIELD w="75" title="Ending Semester">endingquarter</TEXTFIELD>
+				<TEXTFIELD w="75" title="Starting Trimester">startingquarter</TEXTFIELD>
+				<TEXTFIELD w="75" title="Ending Trimester">endingquarter</TEXTFIELD>
 				<CHECKBOX w="75" title="Is Current">iscurrent</CHECKBOX>
 				<GRID name="Major Contents" keyfield="majorcontentid" orderby="courseid" linkfield="bulletingid" table="majorcontentview" noorg="true" linkparams="majorid=majorid">
 					<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
@@ -513,8 +513,8 @@
 				<TEXTFIELD w="140" title="Major Option">majoroptionname</TEXTFIELD>
 				<GRID name="Bulletings" keyfield="majoroptionid" linkfield="majoroptionid" table="vw_majoroption_bulletings" params="bulletingid" noorg="true">
 					<TEXTFIELD w="75" title="Bulleting">bulletingname</TEXTFIELD>
-					<TEXTFIELD w="75" title="Starting Semester">startingquarter</TEXTFIELD>
-					<TEXTFIELD w="75" title="Ending Semester">endingquarter</TEXTFIELD>
+					<TEXTFIELD w="75" title="Starting Trimester">startingquarter</TEXTFIELD>
+					<TEXTFIELD w="75" title="Ending Trimester">endingquarter</TEXTFIELD>
 					<CHECKBOX w="75" title="Is Current">iscurrent</CHECKBOX>
 					<GRID name="Major Option Contents" keyfield="majoroptcontentid" orderby="courseid" linkfield="majoroptionid" table="majoroptcontentview" noorg="true" linkparams="bulletingid=bulletingid">
 						<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
@@ -581,13 +581,13 @@
 			<TEXTFIELD w="40" title="Bulleting ID">bulletingid</TEXTFIELD>
 			<TEXTFIELD w="140" title="Bulleting Name">bulletingname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Current">iscurrent</TEXTFIELD>
-			<TEXTFIELD w="80" title="Starting Semester">startingquarter</TEXTFIELD>
-			<TEXTFIELD w="80" title="Ending Semester">endingquarter</TEXTFIELD>
+			<TEXTFIELD w="80" title="Starting Trimester">startingquarter</TEXTFIELD>
+			<TEXTFIELD w="80" title="Ending Trimester">endingquarter</TEXTFIELD>
 			<FORM name="Bulleting" keyfield="bulletingid" table="bulleting" noorg="true">
 				<TEXTFIELD w="150" title="Bulleting Name" y="10" h="20" x="10">bulletingname</TEXTFIELD>
 				<CHECKBOX w="50" title="Current" y="10" h="20" x="290">iscurrent</CHECKBOX>
-				<TEXTFIELD w="150" title="Starting Semester" y="30" h="20" x="10">startingquarter</TEXTFIELD>
-				<TEXTFIELD w="150" title="Ending Semester" y="30" h="20" x="290">endingquarter</TEXTFIELD>
+				<TEXTFIELD w="150" title="Starting Trimester" y="30" h="20" x="10">startingquarter</TEXTFIELD>
+				<TEXTFIELD w="150" title="Ending Trimester" y="30" h="20" x="290">endingquarter</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -872,7 +872,7 @@
 	</DESK>
 	<DESK w="750" name="Trimester" type="vert" key="12" h="500">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="40" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 			<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
@@ -908,15 +908,15 @@
 					<ACTION fnct="SunPosted" auditid="sys_audit_trail_id">Sun Posted</ACTION>
 				</ACTIONS>
 			</GRID>
-			<GRID name="Semester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview">
+			<GRID name="Trimester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview">
 				<TEXTFIELD w="40" title="Residence ID">Residenceid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Residence Name">residencename</TEXTFIELD>
 				<TEXTFIELD w="40" title="Residence Option">residenceoption</TEXTFIELD>
-				<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Charges">charges</TEXTFIELD>
-				<FORM name="Semester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidences">
+				<FORM name="Trimester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidences">
 					<COMBOBOX w="150" title="Residence" lptable="residences" y="10" h="20" x="10" lpfield="residencename">residenceid</COMBOBOX>
-					<TEXTFIELD w="150" enabled="false" title="Semester ID" y="10" h="20" x="290">quarterid</TEXTFIELD>
+					<TEXTFIELD w="150" enabled="false" title="Trimester ID" y="10" h="20" x="290">quarterid</TEXTFIELD>
 					<TEXTFIELD w="150" title="Charges" y="30" h="20" x="10">charges</TEXTFIELD>
 					<COMBOLIST w="150" title="Residence Option" y="30" h="20" editable="true" x="290">residenceoption
 						<DATA>Full</DATA>
@@ -928,13 +928,13 @@
 					<TEXTAREA w="430" title="Details" y="70" h="120" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Semesters" keyfield="quarterid" table="quarters" noorg="true">
-				<TEXTFIELD w="150" title="Semester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
+			<FORM name="Trimesters" keyfield="quarterid" table="quarters" noorg="true">
+				<TEXTFIELD w="150" title="Trimester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
 				<TEXTFIELD w="150" title="Name" default="Trimester" y="10" h="20" x="290">quarter_name</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="30" h="20" x="10">active</CHECKBOX>
 				<CHECKBOX w="50" title="Closed" y="30" h="20" x="290">closed</CHECKBOX>
-				<TEXTDATE w="150" title="Semester Start" y="50" h="20" x="10">qstart</TEXTDATE>
-				<TEXTDATE w="150" title="Semester End" y="50" h="20" x="290">qend</TEXTDATE>
+				<TEXTDATE w="150" title="Trimester Start" y="50" h="20" x="10">qstart</TEXTDATE>
+				<TEXTDATE w="150" title="Trimester End" y="50" h="20" x="290">qend</TEXTDATE>
 				<TEXTDATE w="150" title="Last Drop" y="70" h="20" x="10">qlastdrop</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exam Balance" y="70" h="20" x="290">exam_line</TEXTDECIMAL>
 				<TEXTDATE w="150" title="Late Registration" y="90" h="20" x="10">qlatereg</TEXTDATE>
@@ -949,37 +949,37 @@
 				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<ACTIONS>
-				<ACTION fnct="OpenQuarter">Open Semester</ACTION>
-				<ACTION fnct="CloseQuarter">Close Semester</ACTION>
+				<ACTION fnct="OpenQuarter">Open Trimester</ACTION>
+				<ACTION fnct="CloseQuarter">Close Trimester</ACTION>
 				<ACTION fnct="ExamBalances">Exam Balances</ACTION>
 			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="750" name="Trimester Calendar" type="vert" key="52" h="500">
 		<GRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="40" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 			<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
 			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
-			<GRID name="Semester Calendar" keyfield="qcalendarid" linkfield="quarterid" table="qcalendarview" key="3">
-				<TEXTFIELD w="40" title="Semester ID">quarterid</TEXTFIELD>
+			<GRID name="Trimester Calendar" keyfield="qcalendarid" linkfield="quarterid" table="qcalendarview" key="3">
+				<TEXTFIELD w="40" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Degree Level">sublevelname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Sub Level">degreelevelname</TEXTFIELD>
-				<TEXTFIELD w="40" title="Semester Date">qdate</TEXTFIELD>
+				<TEXTFIELD w="40" title="Trimester Date">qdate</TEXTFIELD>
 				<TEXTFIELD w="40" title="Event">event</TEXTFIELD>
-				<FORM name="Semester Calendar" keyfield="qcalendarid" linkfield="quarterid" table="qcalendar" key="4" inputkey="1">
-					<TEXTDATE w="150" title="Semester Date" y="10" h="20" x="290">qdate</TEXTDATE>
+				<FORM name="Trimester Calendar" keyfield="qcalendarid" linkfield="quarterid" table="qcalendar" key="4" inputkey="1">
+					<TEXTDATE w="150" title="Trimester Date" y="10" h="20" x="290">qdate</TEXTDATE>
 					<COMBOBOX w="350" title="Sub Level Name" lptable="sublevels" y="30" h="20" x="10" lpfield="sublevelname">sublevelid</COMBOBOX>
 					<TEXTFIELD w="350" title="Event" y="50" h="20" x="10">event</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Semesters" keyfield="quarterid" table="quarters" noorg="true">
-				<TEXTFIELD w="150" title="Semester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
-				<TEXTDATE w="150" title="Semester Start" y="10" h="20" x="290">qstart</TEXTDATE>
-				<TEXTDATE w="150" title="Semester last Drop" y="30" h="20" x="10">qlastdrop</TEXTDATE>
-				<TEXTDATE w="150" title="Semester End" y="30" h="20" x="290">qend</TEXTDATE>
+			<FORM name="Trimesters" keyfield="quarterid" table="quarters" noorg="true">
+				<TEXTFIELD w="150" title="Trimester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
+				<TEXTDATE w="150" title="Trimester Start" y="10" h="20" x="290">qstart</TEXTDATE>
+				<TEXTDATE w="150" title="Trimester last Drop" y="30" h="20" x="10">qlastdrop</TEXTDATE>
+				<TEXTDATE w="150" title="Trimester End" y="30" h="20" x="290">qend</TEXTDATE>
 				<TEXTDATE w="150" title="Late Registration" y="50" h="20" x="10">qlatereg</TEXTDATE>
 				<TEXTDATE w="150" title="Late Change" y="50" h="20" x="290">qlatechange</TEXTDATE>
 				<CHECKBOX w="150" title="Active" y="70" h="20" x="10">active</CHECKBOX>
@@ -992,7 +992,7 @@
 	</DESK>
 	<DESK w="750" name="Trimester Grades" type="vert" key="14" h="570">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" orderby="courseid" linkfield="quarterid" table="qcourseview">
@@ -1085,7 +1085,7 @@
 	</DESK>
 	<DESK w="750" name="Trimester Timetable" type="vert" key="22" h="550">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" linkfield="quarterid" table="qcourseview">
@@ -1153,7 +1153,7 @@
 	</DESK>
 	<DESK w="750" name="Trimester Students" type="vert" key="15" h="610">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID limit="100" auditid="sys_audit_trail_id" name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="qstudentview">
@@ -1219,7 +1219,7 @@
 	</DESK>
 	<DESK w="750" name="Trimester Adjusments" type="vert" key="25" h="500">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="40" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 			<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
@@ -1227,6 +1227,7 @@
 			<ACTIONS name="Trimester" keyfield="quarterid" table="quarters">
 				<ACTION fnct="updStudentAdd">Add Addresses</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="1">Change NG to F or UE</ACTION>
+				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="5">Change UE to AW</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="2">Change UE to F</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="3">Change DG to AW</ACTION>
 				<ACTION fnct="grade_updates" auditid="sys_audit_trail_id" phase="4">Change IW TO F</ACTION>
@@ -1547,7 +1548,7 @@
 	<DESK w="700" name="Charges" type="horl" key="150" h="500">
 		<FILTER location="250" name="Charges" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Charges" reportfile="vw_sub_charges.jasper"></JASPER>
 			<JASPER name="Residence" reportfile="qresidenceview.jasper"></JASPER>
@@ -1556,7 +1557,7 @@
 	<DESK w="700" name="Calendar" type="horl" key="151" h="500">
 		<FILTER location="250" name="Calendar" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Calendar" reportfile="qcalendarview.jasper"></JASPER>
 		</FILTER>
@@ -1564,16 +1565,16 @@
 	<DESK w="700" name="Courses" type="horl" key="152" h="500">
 		<FILTER location="250" name="Courses" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Quater Courses" reportfile="qcourseview.jasper"></JASPER>
-			<JASPER filtered="true" name="Semester instructors" reportfile="qcoursevieww.jasper"></JASPER>
+			<JASPER filtered="true" name="Trimester instructors" reportfile="qcoursevieww.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="770" name="Department Courses" type="horl" key="153" h="500">
 		<FILTER location="250" name="Department Courses" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Department Courses" reportfile="qcourseviewa.jasper"></JASPER>
 			<JASPER name="Lab Courses" reportfile="qcourseviewa_2.jasper"></JASPER>
@@ -1583,8 +1584,8 @@
 	</DESK>
 	<DESK w="800" name="Class List" type="horl" key="154" h="700">
 		<FILTER w="700" name="ETR Printing" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Sem. Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vw_course_load">
 					<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
@@ -1599,8 +1600,8 @@
 	</DESK>
 	<DESK w="800" name="Detailed Class List" type="horl" key="254" h="700">
 		<FILTER w="700" name="ETR Printing" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Sem. Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vw_course_load">
 					<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
@@ -1615,8 +1616,8 @@
 	</DESK>
 	<DESK w="800" name="Instructor's Grade Report" type="horl" key="255" h="500">
 		<FILTER w="700" name="Instructor's Grade Report" split="250" type="vert" h="750">
-			<FILTERGRID orderdb="quarterid desc" name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<FILTERGRID orderdb="quarterid desc" name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Q Courses" keyfield="qcourseid" orderby="instructorname" linkfield="quarterid" table="vw_course_load">
 					<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
@@ -1631,8 +1632,8 @@
 	</DESK>
 	<DESK w="800" name="Instructor's Grade-Credit Report" type="horl" key="455" h="500">
 		<FILTER w="700" name="Instructor's Grade-Credit Report" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vw_course_load">
 					<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
@@ -1736,14 +1737,14 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Semester Charges" type="horl" key="158" h="500">
-		<FILTER location="250" name="Semester Charges" type="horl">
+	<DESK w="700" name="Trimester Charges" type="horl" key="158" h="500">
+		<FILTER location="250" name="Trimester Charges" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
-			<JASPER filtered="true" name="Semester Charges" reportfile="studentchargeview.jasper"></JASPER>
-			<JASPER filtered="true" name="Semester Charges - Intersession" reportfile="studentchargeviewb.jasper"></JASPER>
+			<JASPER filtered="true" name="Trimester Charges" reportfile="studentchargeview.jasper"></JASPER>
+			<JASPER filtered="true" name="Trimester Charges - Intersession" reportfile="studentchargeviewb.jasper"></JASPER>
 			<JASPER filtered="true" name="Additional Charges" reportfile="additionalcharges.jasper"></JASPER>
 		</FILTER>
 	</DESK>
@@ -1751,15 +1752,15 @@
 		<FILTER location="250" name="Seemster Students Details" type="horl">
 			<DRILLDOWN name="Schools" keyfield="schoolid" table="Schools" listfield="schoolname" filtername="schoolid"></DRILLDOWN>
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Quater Students Details" reportfile="studentdetails.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="Students Semester GPA" type="horl" key="203" h="585">
-		<FILTER w="700" name="Students Semester GPA" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+	<DESK w="800" name="Students Trimester GPA" type="horl" key="203" h="585">
+		<FILTER w="700" name="Students Trimester GPA" split="250" type="vert" h="750">
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Student List" keyfield="qstudentid" updatetable="qstudents" orderby="studentname" linkfield="quarterid" table="qstudentmajorview" where="(sublevelid != 'EAUP')">
 					<TEXTFIELD w="25" title="Student ID">studentid</TEXTFIELD>
@@ -1771,10 +1772,10 @@
 			<JASPER filtered="true" name="GPA Courses" printcopies="1" reportfile="qstudentviewc.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="Students Semester GPA Address" type="horl" key="204" h="585">
-		<FILTER w="700" name="Students Semester GPA Address" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+	<DESK w="800" name="Students Trimester GPA Address" type="horl" key="204" h="585">
+		<FILTER w="700" name="Students Trimester GPA Address" split="250" type="vert" h="750">
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Student List" keyfield="qstudentid" updatetable="qstudents" orderby="studentname" linkfield="quarterid" table="qstudentmajorview" where="(sublevelid != 'EAUP')">
 					<TEXTFIELD w="25" title="Student ID">studentid</TEXTFIELD>
@@ -1786,10 +1787,10 @@
 			<JASPER filtered="true" name="GPA Address" printcopies="1" reportfile="qstudentgpadd.jasper" key="3"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="EAU Semester GPA" type="horl" key="340" h="500">
-		<FILTER w="700" name="EAU Semester GPA" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+	<DESK w="800" name="EAU Trimester GPA" type="horl" key="340" h="500">
+		<FILTER w="700" name="EAU Trimester GPA" split="250" type="vert" h="750">
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Student List" keyfield="qstudentid" updatetable="qstudents" orderby="studentname" linkfield="quarterid" table="qstudentmajorview" where="(sublevelid='EAUP')" key="2">
 					<TEXTFIELD w="25" title="Student ID">studentid</TEXTFIELD>
@@ -1803,8 +1804,8 @@
 	</DESK>
 	<DESK w="800" name="Course Registration" type="vert" key="162" h="500">
 		<FILTER w="700" name="Course Registration" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 				<FILTERGRID name="Student List" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="qstudentview" noorg="true">
@@ -1819,10 +1820,10 @@
 			<JASPER filtered="true" name="Student Details" printcopies="1" reportfile="studentdetailsa.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="Semester Un Official" type="vert" key="362" h="500">
+	<DESK w="800" name="Trimester Un Official" type="vert" key="362" h="500">
 		<FILTER w="700" name="Instructor's Grade Report" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 				<FILTERGRID name="Student List" keyfield="studentdegreeid" updatetable="qstudents" orderby="departmentname" linkfield="quarterid" table="qstudentmajorview">
@@ -1838,7 +1839,7 @@
 	<DESK w="700" name="Probations" type="horl" key="240" h="500">
 		<FILTER location="250" name="Probations" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Probations List" reportfile="probations.jasper"></JASPER>
 			<JASPER filtered="true" name="Probations Summary" reportfile="probationsummary.jasper"></JASPER>
@@ -1848,7 +1849,7 @@
 		<FILTER location="250" name="2 CT  Probations" type="horl">
 			<DRILLDOWN name="Degree Levels" keyfield="degreelevelid" table="degreelevels" listfield="degreelevelname" filter="degreelevelid"></DRILLDOWN>
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="2 CT  Probations List" reportfile="probation_list2.jasper"></JASPER>
 		</FILTER>
@@ -1860,7 +1861,7 @@
 	<DESK w="700" name="Class Timetable" type="horl" key="164" h="500">
 		<FILTER location="250" name="Class Timetable" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Final - Class Timetable" reportfile="qtimetable.jasper"></JASPER>
 			<JASPER filtered="true" name="Tentative - Class Timetable" reportfile="qtimetableb.jasper"></JASPER>
@@ -1869,7 +1870,7 @@
 	<DESK w="700" name="Exam Timetable" type="horl" key="220" h="500">
 		<FILTER location="250" name="Exam Timetable" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Final - Exam Timetable" reportfile="qetimetable.jasper"></JASPER>
 			<JASPER filtered="true" name="Tentative - Exam Timetable" reportfile="qetimetableb.jasper"></JASPER>
@@ -1878,7 +1879,7 @@
 	<DESK w="700" name="Venue Check Timetable" type="horl" key="229" h="500">
 		<FILTER location="250" name="Venue Check Timetable" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Venue Timetable Check" reportfile="qtimetablec.jasper"></JASPER>
 		</FILTER>
@@ -1886,7 +1887,7 @@
 	<DESK w="700" name="Full Summary" type="horl" key="216" h="500">
 		<FILTER location="250" name="Full Summary" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Quater Students" reportfile="fullsummary.jasper"></JASPER>
 		</FILTER>
@@ -1894,7 +1895,7 @@
 	<DESK w="700" name="Enrolment - Full List" type="horl" key="155" h="500">
 		<FILTER location="250" name="Enrolment - Full List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Approved Students" reportfile="qstudentviewd.jasper"></JASPER>
 			<JASPER name="Not Approved Students" reportfile="qstudentviewdd.jasper"></JASPER>
@@ -1904,7 +1905,7 @@
 	<DESK w="700" name="Un Approved List" type="horl" key="655" h="500">
 		<FILTER location="250" name="Enrolment - Full List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Approved Students" reportfile="qstudentviewh.jasper"></JASPER>
@@ -1914,7 +1915,7 @@
 	<DESK w="700" name="Enrolment" type="horl" key="205" h="500">
 		<FILTER location="250" name="Enrolment" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Quater Students" reportfile="qstudentview.jasper"></JASPER>
 		</FILTER>
@@ -1922,7 +1923,7 @@
 	<DESK w="700" name="Enrolment By Schools" type="horl" key="206" h="500">
 		<FILTER location="250" name="Enrolment By Schools" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Schools" keyfield="schoolid" table="schools" noorg="true" listfield="schoolname" filter="schoolid"></DRILLDOWN>
 			<JASPER filtered="true" name="Enrolment By Schools" reportfile="qstudentviewe.jasper"></JASPER>
@@ -1931,7 +1932,7 @@
 	<DESK w="700" name="Enrolment By Major" type="horl" key="406" h="500">
 		<FILTER location="250" name="Enrolment By Major" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Major" keyfield="majorid" table="majors" noorg="true" listfield="majorname" filter="majorid"></DRILLDOWN>
 			<JASPER filtered="true" name="Enrolment By Major" reportfile="qstudentmajorviewe.jasper"></JASPER>
@@ -1940,7 +1941,7 @@
 	<DESK w="700" name="Enrolment by Sub Levels" type="horl" key="207" h="500">
 		<FILTER location="250" name="Enrolment by Sub Levels" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filter="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Enrolment by Sub Levels" reportfile="qstudentviewf.jasper"></JASPER>
@@ -1949,7 +1950,7 @@
 	<DESK w="700" name="Enrolment by School Levels" type="horl" key="208" h="500">
 		<FILTER location="250" name="Enrolment by School Levels" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" noorg="true" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<DRILLDOWN name="Schools" keyfield="schoolid" table="schools" noorg="true" listfield="schoolname" filtername="schoolid"></DRILLDOWN>
@@ -1959,7 +1960,7 @@
 	<DESK w="700" name="New Students Enrolment" type="horl" key="209" h="500">
 		<FILTER location="250" name="New Students Enrolment" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="New Students Enrolment" reportfile="qstudentviewn.jasper"></JASPER>
 		</FILTER>
@@ -1967,7 +1968,7 @@
 	<DESK w="700" name="Enrolment by Religion" type="horl" key="210" h="500">
 		<FILTER location="250" name="Enrolment by Religion" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Religion" keyfield="religionid" table="religions" noorg="true" listfield="religionname" filter="religionid"></DRILLDOWN>
 			<JASPER filtered="true" name="Enrolment by Religion" reportfile="qstudentviewr.jasper"></JASPER>
@@ -1976,7 +1977,7 @@
 	<DESK w="700" name="Enrolment by Denomination" type="horl" key="211" h="500">
 		<FILTER location="250" name="Enrolment by Denomination" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Denomination" keyfield="denominationid" table="denominations" noorg="true" listfield="denominationname" filter="denominationid"></DRILLDOWN>
 			<JASPER name="Enrolment by Denomination" reportfile="qstudentviewrd.jasper"></JASPER>
@@ -1985,16 +1986,16 @@
 	<DESK w="700" name="Enrolment by Nationality" type="horl" key="212" h="500">
 		<FILTER location="250" name="Enrolment by Nationality" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Nationality" keyfield="nationality" table="vwnationality" noorg="true" listfield="countryname" filter="nationality"></DRILLDOWN>
 			<JASPER name="Enrolment by Nationality" reportfile="qstudentviewnat.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Enrolment by Residence" type="horl" key="214" h="595">
-		<FILTER w="700" name="Students Semester GPA" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+		<FILTER w="700" name="Students Trimester GPA" split="250" type="vert" h="750">
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<FILTERGRID name="Q Residence" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview" noorg="true">
 					<TEXTFIELD w="40" title="Residence">residencename</TEXTFIELD>
@@ -2007,7 +2008,7 @@
 	<DESK w="700" name="Enrolment by Gender" type="horl" key="215" h="500">
 		<FILTER location="250" name="Enrolment by Gender" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Gender" keyfield="sex" table="sexview" noorg="true" listfield="sex" filter="sex"></DRILLDOWN>
 			<JASPER filtered="true" name="Enrolment by Gender" reportfile="qstudentviews.jasper"></JASPER>
@@ -2022,7 +2023,7 @@
 	<DESK w="700" name="Enrolment by County" type="horl" key="505" h="500">
 		<FILTER location="250" name="Enrolment by County" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="County" keyfield="county_id" table="countys" noorg="true" listfield="county_name" filter="county_id"></DRILLDOWN>
 			<JASPER filtered="true" name="Enrolment by County" reportfile="qstudentviewrc.jasper"></JASPER>
@@ -2031,7 +2032,7 @@
 	<DESK w="700" name="Course List" type="horl" key="217" h="500">
 		<FILTER location="250" name="Course List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Course List - Regural" reportfile="courselist.jasper"></JASPER>
 			<JASPER filtered="true" name="Course List - Intersesion" reportfile="courselistb.jasper"></JASPER>
@@ -2040,7 +2041,7 @@
 	<DESK w="700" name="Department Course List" type="horl" key="417" h="500">
 		<FILTER location="250" name="Department Course List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Course List - Regural" reportfile="courselistc.jasper"></JASPER>
 			<JASPER filtered="true" name="Course List - Intersesion" reportfile="courselistd.jasper"></JASPER>
@@ -2050,7 +2051,7 @@
 	<DESK w="700" name="Grade Status" type="horl" key="222" h="500">
 		<FILTER location="250" name="Grade Status" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Grades" keyfield="gradeid" table="grades" listfield="gradeid" filter="gradeid"></DRILLDOWN>
 			<JASPER name="Grade Summary" reportfile="gradesummary.jasper"></JASPER>
@@ -2060,7 +2061,7 @@
 		</FILTER>
 		<FILTER location="250" name="Grade Status By Department" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Department" keyfield="departmentid" table="departments" noorg="true" listfield="departmentname" filter="departmentid"></DRILLDOWN>
 			<JASPER name="Grade Summary" reportfile="gradesummaryc.jasper"></JASPER>
@@ -2070,7 +2071,7 @@
 	<DESK w="700" name="Withdrawn Courses List" type="horl" key="223" h="500">
 		<FILTER location="250" name="Withdrawn Courses List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Withdrawn Courses List" reportfile="withdrawncourses.jasper"></JASPER>
 		</FILTER>
@@ -2083,7 +2084,7 @@
 				</DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER name="Students Majors Summary" reportfile="qstudentmajorsummary.jasper"></JASPER>
@@ -2098,7 +2099,7 @@
 				</DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="New Students Majors Summary" reportfile="qstudentmajorsummarya.jasper"></JASPER>
@@ -2107,7 +2108,7 @@
 	</DESK>
 	<DESK w="700" name="Hour Load" type="vert" key="225" h="500">
 		<FILTER name="Filter" key="14">
-			<COMBOBOX w="150" title="Semester ID" lptable="quarterview" lw="90" y="10" h="20" x="10" lpfield="quarterid">quarterid</COMBOBOX>
+			<COMBOBOX w="150" title="Trimester ID" lptable="quarterview" lw="90" y="10" h="20" x="10" lpfield="quarterid">quarterid</COMBOBOX>
 			<TEXTFIELD w="100" title="Hours From" lw="90" defaultvalue="190" y="10" h="20" x="290">datefrom</TEXTFIELD>
 			<TEXTFIELD w="100" title="Hours To" lw="90" defaultvalue="500" y="10" h="20" x="490">dateto</TEXTFIELD>
 			<JASPER name="Hours Load" reportfile="hoursload.jasper"></JASPER>
@@ -2125,7 +2126,7 @@
 	<DESK w="700" name="Quater Admin. List" type="horl" key="160" h="500">
 		<FILTER location="250" name="Quater Admin. List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Quater Admin. List" reportfile="administrationlista.jasper"></JASPER>
 		</FILTER>
@@ -2133,7 +2134,7 @@
 	<DESK w="700" name="Guardian adddress" type="horl" key="509" h="500">
 		<FILTER location="250" name="Guardian adddress" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Guardian adddress - Kenya" reportfile="guardianmail.jasper"></JASPER>
 			<JASPER filtered="true" name="Guardian adddress - Foreign" reportfile="guardianmaila.jasper"></JASPER>
@@ -2145,14 +2146,14 @@
 	<DESK w="700" name="Deans List" type="horl" key="331" h="500">
 		<FILTER location="250" name="Deans List" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" where="(degreelevelid='UDG')" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Deans List" reportfile="deanslist.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Certificates" split="250" h="550">
 			<FILTERGRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="40" title="Semester ID">quarterid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Start">qstart</TEXTFIELD>
 				<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 				<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
@@ -2191,7 +2192,7 @@
 	<DESK w="700" name="Exam Time Table Clashing" type="horl" key="334" h="500">
 		<FILTER location="250" name="Exam Time Table Clashing" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Exam Time Table clashing" reportfile="examtimetableclash.jasper"></JASPER>
 		</FILTER>
@@ -2208,21 +2209,21 @@
 			<JASPER filtered="true" name="Graduations List" reportfile="graduates.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Semester Students Residence" type="horl" key="445" h="500">
-		<FILTER location="250" name="Semester Students Residence" type="horl">
+	<DESK w="700" name="Trimester Students Residence" type="horl" key="445" h="500">
+		<FILTER location="250" name="Trimester Students Residence" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER filtered="true" name="Semester Students Residence Summary" reportfile="qstudentresidenceviewa.jasper"></JASPER>
-			<JASPER filtered="true" name="Semester Students Residence" reportfile="qstudentresidenceview.jasper"></JASPER>
+			<JASPER filtered="true" name="Trimester Students Residence Summary" reportfile="qstudentresidenceviewa.jasper"></JASPER>
+			<JASPER filtered="true" name="Trimester Students Residence" reportfile="qstudentresidenceview.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Semester Enrolment Summary" type="horl" key="446" h="500">
-		<FILTER location="250" name="Semester Enrolment Summary" type="horl">
+	<DESK w="700" name="Trimester Enrolment Summary" type="horl" key="446" h="500">
+		<FILTER location="250" name="Trimester Enrolment Summary" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER filtered="true" name="Semester Enrolment Summary" reportfile="sublevelenrolment.jasper"></JASPER>
+			<JASPER filtered="true" name="Trimester Enrolment Summary" reportfile="sublevelenrolment.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Year Enrolment Summary" type="horl" key="447" h="500">
@@ -2234,7 +2235,7 @@
 	<DESK w="700" name="Dual Course Levels" type="horl" key="448" h="500">
 		<FILTER location="250" name="Dual Course Levels" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Dual Course Levels" reportfile="vwdualcourselevels.jasper"></JASPER>
 		</FILTER>
@@ -2247,7 +2248,7 @@
 				</DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Students Primary Majors Summary" reportfile="qstudentmajorsummaryb.jasper"></JASPER>
@@ -2262,7 +2263,7 @@
 				</DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="New Students Primary Majors Summary" reportfile="qstudentmajorsummaryc.jasper"></JASPER>
@@ -2272,7 +2273,7 @@
 	<DESK w="700" name="Students Primary Departments" type="horl" key="451" h="500">
 		<FILTER location="250" name="Students Primary Departments" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Levels" keyfield="sublevelid" table="sublevels" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
 			<JASPER filtered="true" name="Students Primary Departments" reportfile="qstudentmajorsummaryd.jasper"></JASPER>
@@ -2283,7 +2284,7 @@
 	<DESK w="700" name="Corrections" type="horl" key="525" h="500">
 		<FILTER location="250" name="Corrections" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Corrections List" reportfile="school.jasper"></JASPER>
 		</FILTER>
@@ -2291,7 +2292,7 @@
 	<DESK w="700" name="Post Graduate Probations" type="horl" key="457" h="500">
 		<FILTER location="250" name="Post Graduate Probations" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Masters Probations List" reportfile="probationsa.jasper"></JASPER>
 			<JASPER filtered="true" name="PHD Probations List" reportfile="probationsb.jasper"></JASPER>
@@ -2309,7 +2310,7 @@
 	<DESK w="700" name="Graded Courses" type="horl" key="460" h="500">
 		<FILTER location="250" name="Graded Courses" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Graded Courses" reportfile="qcoursegrading.jasper"></JASPER>
 			<JASPER filtered="true" name="Un Graded Courses" reportfile="qcourseungrading.jasper"></JASPER>
@@ -2317,19 +2318,19 @@
 	</DESK>
 	<DESK w="700" name="Deans Load Range" type="vert" key="345" h="500">
 		<FILTER name="Filter" key="14">
-			<TEXTFIELD w="100" title="Semester From" lw="90" defaultvalue="190" y="10" h="20" x="150">datefrom</TEXTFIELD>
+			<TEXTFIELD w="100" title="Trimester From" lw="90" defaultvalue="190" y="10" h="20" x="150">datefrom</TEXTFIELD>
 			<TEXTFIELD w="100" title="Qaurter To" lw="90" defaultvalue="500" y="10" h="20" x="350">dateto</TEXTFIELD>
 			<JASPER name="Hours Load Range" reportfile="deanslist3.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Study Year by Semester" type="horl" key="771" h="500">
-		<FILTER location="250" name="Study Year by Semester" type="horl">
+	<DESK w="700" name="Study Year by Trimester" type="horl" key="771" h="500">
+		<FILTER location="250" name="Study Year by Trimester" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
-			<JASPER filtered="true" name="Study Year by Semester - Summary" reportfile="studyyearb.jasper"></JASPER>
-			<JASPER filtered="true" name="Study Year by Semester" reportfile="studyyeara.jasper"></JASPER>
+			<JASPER filtered="true" name="Study Year by Trimester - Summary" reportfile="studyyearb.jasper"></JASPER>
+			<JASPER filtered="true" name="Study Year by Trimester" reportfile="studyyeara.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Study Year by Year" type="horl" key="772" h="500">
@@ -2340,8 +2341,8 @@
 		</FILTER>
 	</DESK>
 	<DESK w="800" name="Students Exam Pass" type="horl" key="403" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+		<GRID name="Trimesters" keyfield="quarterid" table="quarterview">
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<GRID name="Student List" keyfield="qstudentid" updatetable="qstudents" orderby="studentname" linkfield="quarterid" table="qstudentmajorview" where="(approved = true) and (currbalance >= -10000)">
 				<TEXTFIELD w="25" title="Student ID">studentid</TEXTFIELD>
@@ -2367,13 +2368,13 @@
 	<DESK w="700" name="Registration Statistics" type="horl" key="569" h="500">
 		<FILTER location="250" name="Registration Statistics" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Registration Statistics" reportfile="quarterstats.jasper"></JASPER>
 		</FILTER>
 		<FILTER location="250" name="Registration Statistics By Sub Level" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Registration Statistics By Sub Level" reportfile="qlocation_stats.jasper"></JASPER>
 		</FILTER>
@@ -2381,7 +2382,7 @@
 	<DESK w="700" name="Charge Summary" type="horl" key="425" h="500">
 		<FILTER location="250" name="Charge Summary" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Charge Summary" reportfile="charge_summary.jasper"></JASPER>
 		</FILTER>

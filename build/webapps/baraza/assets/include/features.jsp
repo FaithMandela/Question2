@@ -1,9 +1,10 @@
 <h4><b>Features:</h4></b> <br>
 <b>Access to:</b></i>  <br>
+
+
+<b><i>Self Service Desk:</b></i><br>
 <ul>
 <li>Dashboard</li>
-<li>Self Service Desk:<br>
-<ul>
 <li>Employee Details</li>
 <li>Staff out of office/on leave</li>
 <li>Apply For Leave</li>
@@ -12,9 +13,7 @@
 <li>Generate Payslips</li>
 <li>Petty Cash Requests</li>
 <li>Employee Tasks on Projects</li>
-</li>
 </ul>
-
 
 <p>
 <b><i>Human Resource Management for </b></i><br>
@@ -24,6 +23,7 @@
 <li>Performance management</li>
 <li>Posting of available vacancies</li>
 <li>Training scheduling</li>
+<li>disciplinary issues and their actions </li></ul>
 <li>Defitions of:
 <ul>
 <li>Organizations and Locations/Branches</li>
@@ -33,7 +33,7 @@
 <li>Entities and Salary Scales</li>
 <li>Approvals actioned by admin</li>
 </ul>
-</li>
+</ul>
 </p>
 
 <p>
@@ -47,6 +47,7 @@
 <li>claims and reimbursements </li>
 </ul>
 </p>
+
 <p><b><i>Projects: </b></i><br>
 <ul>
 <li>Definitions of Projects</li>
@@ -59,6 +60,7 @@
 
 <p>
 <b><i>Finance: </b></i><br>
+<ul>
 <li>Asset Management</li>
 <li>Budget Allocation</li>
 <li>Raise Invoices </li>
@@ -72,22 +74,12 @@
 
 
 <p>
-<b><i>Disciplinary: </b></i><br>
-<ul>
-<li>disciplinary issues and their actions </li></ul>
-</p>
-
-
-
-<p>
 <b><i>Reports:</b></i><br>
 <ul>
-<li>Customisable reports for ease of audit:<br>
-<ul>
+<li>Customisable reports</li>
 <li>Staff Reports</li>
 <li>Review Reports</li>
 <li>Leave, Employees, Contracts, Arbitration etc</li>
-</li>
 </ul>
-
 </p>
+

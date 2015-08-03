@@ -142,7 +142,7 @@ BEGIN
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix)
 		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id);
 		
-		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff'
+		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)

@@ -809,7 +809,13 @@ public class BWeb {
 				webbody.close();
 			}
 		} else if(view.getName().equals("DIARY")) {
-			body += "\t\t<div id='calendar'></div>\n";
+			body += "<div class='portlet-body'>\n";
+			body += "	<div class='row'>\n";
+			body += "		<div class='col-md-12 col-sm-12'>\n";
+			body += "			<div id='calendar' class='as-toolbar'></div>\n";
+			body += "		</div>\n";
+			body += "	</div>\n";
+			body += "</div>\n";
 		} else if(view.getName().equals("JASPER")) {
 //System.out.println("BASE 1010 ");
 			BWebReport report = new BWebReport(view, db.getUserID(), null, request);
@@ -1739,21 +1745,21 @@ System.out.println("repository : " + repository);
 
 	public String getCalendar() {
 
-		String events = "eventSources: [\n";
+		String events = " events: [";
 
 		events += getEvents(view);
 		for(BElement el : view.getElements()) {
-			if(el.getName().equals("DIARY")) 
+			if(el.getName().equals("DIARY"))
 				events += ", " + getEvents(el);
 		}
 
-		events += "]";
+		events += "] \n";
 
 		return events;
 	}
 
 	public String getEvents(BElement eventView) {
-		String events = " { events: [";
+		String events = "";
 
 		String wherefilter = null;
 		if((eventView.getAttribute("linkfield") != null) && (dataItem != null)) 
@@ -1774,19 +1780,12 @@ System.out.println("repository : " + repository);
 			events += "', start: '" + crs.readField(3) + " " + crs.readField(4);
 			events += "', end: '" + crs.readField(5) + " " + crs.readField(6);
 			events += "', allDay: " + crs.readField(7);
-			events += ", editable: " + crs.readField(8);
+			
+			if(eventView.getAttribute("color")==null) events += ", backgroundColor: Metronic.getBrandColor('silver'), ";
+			else  events += ", backgroundColor: Metronic.getBrandColor('" + eventView.getAttribute("color") + "'), ";
+
 			events += "}";
 		}
-
-		events += "], \n";
-
-		if(eventView.getAttribute("color")==null) events += " color: 'silver', ";
-		else  events += " color: '" + eventView.getAttribute("color") + "', ";
-		if(eventView.getAttribute("textcolor")==null) events += " textColor: 'black' ";
-		else  events += " textColor: '" + eventView.getAttribute("textcolor") + "' ";
-
-		if(isFf) events = "";
-		else events += "} \n";
 
 		return events;
 	}

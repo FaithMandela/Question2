@@ -4,13 +4,13 @@
 			<MENU name="Student Details">1</MENU>
 			<MENU name="School">10</MENU>
 			<MENU name="Current Timetable">9</MENU>
-			<MENU name="Semester GPA">19</MENU>
+			<MENU name="Trimester GPA">19</MENU>
 			<MENU name="Unofficial Transcript">21</MENU>
 			<MENU name="Queries" table="studentrequests">31</MENU>
 		</MENU>
 		<MENU name="Registration">
 			<MENU page="a_statement.jsp" name="Finance Statement">22</MENU>
-			<MENU name="Semester Register">22</MENU>
+			<MENU name="Trimester Register">22</MENU>
 			<MENU name="Sabath Classes">49</MENU>
 			<MENU name="Residence Selection">23</MENU>
 			<MENU name="Select Courses">24</MENU>
@@ -228,15 +228,15 @@
 			<TEXTFIELD w="50" title="Building">building</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Semester List" key="19" h="500">
-		<GRID name="Semester List" keyfield="qstudentid" table="qstudentsummary" noorg="true" where="(approved = true)" user="studentid">
-			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+	<DESK w="700" name="Trimester List" key="19" h="500">
+		<GRID name="Trimester List" keyfield="qstudentid" table="qstudentsummary" noorg="true" where="(approved = true)" user="studentid">
+			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Hours">credit</TEXTFIELD>
 			<TEXTFIELD w="75" title="gpa" format="double">gpa</TEXTFIELD>
 			<TEXTFIELD w="75" title="C. Hours">cummcredit</TEXTFIELD>
 			<TEXTFIELD w="75" title="C. gpa" format="double">cummgpa</TEXTFIELD>
-			<GRID name="Semester Course List" linkfield="qstudentid" table="qgradeview" noorg="true">
-				<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
+			<GRID name="Trimester Course List" linkfield="qstudentid" table="qgradeview" noorg="true">
+				<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 				<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="120" title="Instuctor">instructorname</TEXTFIELD>
@@ -248,7 +248,7 @@
 	</DESK>
 	<DESK w="700" name="Course List" key="21" h="500">
 		<GRID name="Course List" table="studentgradeview" noorg="true" user="studentid">
-			<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="120" title="Instuctor">instructorname</TEXTFIELD>
@@ -257,12 +257,12 @@
 			<TEXTFIELD w="50" title="GP" format="double">gpa</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Semester Register" key="22" h="500">
-		<GRID name="Semester Register" keyfield="quarterid" display="form" table="activequarter" noorg="true">
-			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+	<DESK w="700" name="Trimester Register" key="22" h="500">
+		<GRID name="Trimester Register" keyfield="quarterid" display="form" table="activequarter" noorg="true">
+			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending">qend</TEXTFIELD>
-			<ACTION fnct="insQStudent" title="Register" action="Registrer for the semester" jumpview="49:0">quarterid</ACTION>
+			<ACTION fnct="insQStudent" title="Register" action="Registrer for the Trimester" jumpview="49:0">quarterid</ACTION>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Residence Selection" key="23" h="500">
@@ -357,7 +357,7 @@
 	</DESK>
 	<DESK w="700" name="Selected Course List" key="27" h="500">
 		<GRID name="Selected Course List" keyfield="qgradeid" table="selectedgradeview" user="studentid">
-			<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="150" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="75" title="Instuctor">instructorname</TEXTFIELD>
@@ -392,7 +392,7 @@
 	</DESK>
 	<DESK w="700" name="Close Registration" key="29" h="500">
 		<GRID name="Close Registration" keyfield="quarterid" display="form" table="activequarter" noorg="true">
-			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending">qend</TEXTFIELD>
 			<ACTION fnct="insQClose" title="Close Registration">quarterid</ACTION>
@@ -400,7 +400,7 @@
 	</DESK>
 	<DESK w="700" name="Registration Status" key="30" h="500">
 		<GRID name="Registration Status" display="form" table="qcurrstudentdegreeview" user="studentid">
-			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Residence">residencename</TEXTFIELD>
 			<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 			<CHECKBOX w="55" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
@@ -448,7 +448,7 @@
 	</DESK>
 	<DESK w="700" name="Full Charges" key="34" h="500">
 		<GRID name="Full Charges" table="studentquarterview" user="studentid">
-			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Total Units">hours</TEXTFIELD>
 			<TEXTFIELD w="40" title="Units Charge" format="double">unitcharge</TEXTFIELD>
 			<TEXTFIELD w="40" title="Lab Charge" format="double">labcharge</TEXTFIELD>
@@ -460,7 +460,7 @@
 	</DESK>
 	<DESK w="700" name="Selected Course List" key="57" h="500">
 		<GRID name="Selected Course List" table="selectedgradeview" filterkey="qstudentid" reporttitle="studentname">
-			<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="75" title="Instuctor">instructorname</TEXTFIELD>
@@ -472,7 +472,7 @@
 	</DESK>
 	<DESK w="700" name="Registration Confirmation" key="80" h="500">
 		<GRID name="Registration Confirmation" keyfield="qstudentid" display="form" table="qcurrstudentdegreeview" where="(finalised = true) AND (studentdeanapproval = true) AND (finaceapproval = true) AND (majorapproval = true)" user="studentid">
-			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 			<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 			<CHECKBOX w="75" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
 			<CHECKBOX w="75" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
@@ -480,7 +480,7 @@
 			<CHECKBOX w="75" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
 			<ACTION fnct="setConfirmation" title="Registration Confirmation">qstudentid</ACTION>
 			<GRID name="Registration Confirmation" keyfield="qstudentid" table="qcurrstudentdegreeview" where="(approved = true)" user="studentid">
-				<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 				<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 				<CHECKBOX w="75" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
 				<CHECKBOX w="75" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
@@ -489,7 +489,7 @@
 				<JASPER name="Selections" showpdf="true" linkfield="filterid" reportfile="studentdetailsa.jasper"></JASPER>
 			</GRID>
 			<GRID name="Exam Pass" keyfield="qstudentid" table="qcurrstudentdegreeview" where="(exam_clear = true)" user="studentid">
-				<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 				<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 				<CHECKBOX w="75" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
 				<CHECKBOX w="75" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
