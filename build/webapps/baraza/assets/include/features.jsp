@@ -1,9 +1,10 @@
 <h4><b>Features:</h4></b> <br>
 <b>Access to:</b></i>  <br>
+
+
+<b><i>Self Service Desk:</b></i><br>
 <ul>
 <li>Dashboard</li>
-<li>Self Service Desk:<br>
-<ul>
 <li>Employee Details</li>
 <li>Staff out of office/on leave</li>
 <li>Apply For Leave</li>
@@ -33,7 +34,7 @@
 <li>Entities and Salary Scales</li>
 <li>Approvals actioned by admin</li>
 </ul>
-</li>
+</ul>
 </p>
 
 <p>
