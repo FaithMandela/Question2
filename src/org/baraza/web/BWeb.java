@@ -1916,6 +1916,13 @@ System.out.println("repository : " + repository);
 		jsColEl.add("hidden", true);
 		jsColModel.add(jsColEl);
 		
+		JsonObjectBuilder jsColKF = Json.createObjectBuilder();
+		jsColNames.add("KF");
+		jsColKF.add("name", "KF");
+		jsColKF.add("width", 5);
+		jsColKF.add("hidden", true);
+		jsColModel.add(jsColKF);
+		
 		jshd.add("url", "jsondata");
 		jshd.add("datatype", "json");
 		jshd.add("mtype", "GET");

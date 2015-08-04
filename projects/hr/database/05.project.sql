@@ -321,8 +321,8 @@ BEGIN
 		ORDER BY define_phases.phase_order 
 	LOOP
 
-		INSERT INTO Phases (project_id, entity_type_id, phase_name, start_date, end_date, phase_cost)
-		VALUES(NEW.project_id, myrec.entity_type_id, myrec.Define_phase_name, 
+		INSERT INTO Phases (org_id, project_id, entity_type_id, phase_name, start_date, end_date, phase_cost)
+		VALUES(NEW.org_id, NEW.project_id, myrec.entity_type_id, myrec.Define_phase_name, 
 			NEW.start_date + start_days, 
 			NEW.start_date + myrec.date_range + start_days, 
 			myrec.phase_cost);

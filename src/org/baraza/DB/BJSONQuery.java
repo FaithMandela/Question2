@@ -150,6 +150,10 @@ public class BJSONQuery extends BQuery {
 						myjo.add(mydn, mydv);
 					}
 				}
+				
+				if(keyField != null) {
+					myjo.add("KF", rs.getString(keyField));
+				}
 
 				if(view.getName().equals("FILES")) {
 					mydv = "";

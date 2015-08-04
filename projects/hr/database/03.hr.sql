@@ -373,6 +373,16 @@ CREATE INDEX casuals_entity_id ON casuals (entity_id);
 CREATE INDEX casuals_casual_application_id ON casuals (casual_application_id);
 CREATE INDEX casuals_org_id ON casuals(org_id);
 
+CREATE TABLE org_events (
+	org_event_id			serial primary key,
+	org_id					integer references orgs,
+	org_event_name			varchar(50) not null,
+	start_date				date,
+	end_date				date,
+	details					text
+);
+CREATE INDEX org_events_id ON org_events (org_id);
+
 CREATE TABLE leave_types (
 	leave_type_id			serial primary key,
 	org_id					integer references orgs,

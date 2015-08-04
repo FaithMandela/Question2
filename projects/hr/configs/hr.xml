@@ -344,13 +344,23 @@
 		</GRID>
 		<DIARY name="Leave Diary" keyfield="employee_leave_id" orderby="leave_from" table="vw_employee_leave" where="(leave_from > current_date-360)" user="entity_id">
 			<TEXTFIELD w="75" title="Leave ID">employee_leave_id</TEXTFIELD>
-			<TEXTFIELD w="75" fnct="leave_type_name || ' : ' || narrative" title="Title">leave_disp</TEXTFIELD>
+			<TEXTFIELD w="75" fnct="leave_type_name || ' : ' || COALESCE(narrative, '')" title="Title">leave_disp</TEXTFIELD>
 			<TEXTDATE w="75" title="Activity Date">leave_from</TEXTDATE>
 			<SPINTIME w="75" title="Activity Time">activity_time</SPINTIME>
 			<TEXTDATE w="75" title="Finish Date">leave_to</TEXTDATE>
 			<SPINTIME w="75" title="Finish Time">finish_time</SPINTIME>
 			<TEXTFIELD w="75" fnct="'false'" title="All Day">all_day</TEXTFIELD>
 			<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			<DIARY name="Events" keyfield="org_event_id" table="org_events" where="(start_date > current_date-360)">
+				<TEXTFIELD w="75" title="Event ID">org_event_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Event Name">org_event_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'08:00'::time" title="Start Time">start_time</TEXTFIELD>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'17:00'::time" title="End Time">end_time</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'true'" title="All Day">all_day</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			</DIARY>
 		</DIARY>
 		<GRID name="Leave Types" keyfield="employee_leave_type_id" table="vw_employee_leave_types" user="entity_id">
 			<TEXTFIELD w="75" title="Leave Type Name">leave_type_name</TEXTFIELD>
@@ -1707,6 +1717,18 @@
 				<ACTION fnct="leave_special" approval="2">Approval</ACTION>
 				<ACTION fnct="leave_special" approval="3">Reject</ACTION>
 			</ACTIONS>
+		</GRID>
+		<GRID name="Events" keyfield="org_event_id" table="org_events">
+			<TEXTFIELD w="75" title="Event ID">org_event_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Event Name">org_event_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<FORM name="Events" keyfield="org_event_id" table="org_events">
+				<TEXTFIELD w="150" title="Event Name" y="10" h="20" x="10">org_event_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Start Date" y="10" h="20" x="290">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="30" h="20" x="10">end_date</TEXTDATE>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 		<GRID name="Holidays" keyfield="holiday_id" table="holidays">
 			<TEXTFIELD w="75" title="Holiday Name">holiday_name</TEXTFIELD>

@@ -457,9 +457,9 @@
 <script src="./assets/admin/pages/scripts/components-pickers.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript" ></script>
 <script src="./assets/global/plugins/jquery-multi-select/js/jquery.quicksearch.js" type="text/javascript"></script>
-
-<script src="./assets/global/plugins/jstree/dist/jstree.min.js"></script>
-<script src="./assets/admin/pages/scripts/ui-tree.js"></script>
+<script src="./assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/jstree/dist/jstree.min.js" type="text/javascript"></script>
+<script src="./assets/admin/pages/scripts/ui-tree.js" type="text/javascript"></script>
 
 <!-- END PAGE LEVEL SCRIPTS -->
 
@@ -486,6 +486,11 @@
         });
 
 		UITree.init();
+
+		$('.clockface').clockface({
+            format: 'HH:mm',
+            trigger: 'manual'
+        });
 
         //alert('<%= web.getView().getName().equals("FILES") %>');
     });
@@ -580,11 +585,8 @@
 
 	    var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
 	    for (i = 0, n = selIds.length; i < n; i++) {
-	        var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
-	        var begin = coldata.lastIndexOf("=");
-	        var end = coldata.length;
-	        var id = coldata.substring(begin + 1, end);
-	        cellValues.push(id);
+	        var coldata = $grid.jqGrid("getCell", selIds[i], "KF");
+	        cellValues.push(coldata);
 	    }
 	    if(cellValues.join(",") == ""){
 	        alert('No row Selected');
@@ -733,11 +735,12 @@ $(function () {
 });
 </script>
 <!-- END JAVASCRIPTS -->
-<% if(web.getViewType().equals("DIARY")){ 
-	String diaryJSON = web.getCalendar();
+<% 
+	String diaryJSON = "";
+	if(web.getViewType().equals("DIARY")) diaryJSON = web.getCalendar();
 %>
-	<%@ include file="./assets/include/calendar.jsp" %>
-<% } %>
+<%@ include file="./assets/include/calendar.jsp" %>
+
 <% if(web.hasPasswordChange()) { %>
 	<%@ include file="./assets/include/password_change.jsp" %>
 <% } %>
