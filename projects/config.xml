@@ -1,7 +1,7 @@
 <APPLIST loglevel="info" dbpassword="invent" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
 	<APP dbpath="jdbc:postgresql://localhost:5432/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
 	<APP dbpath="jdbc:postgresql://192.168.0.4:5432/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
-	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root">UEAB</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
 	<APP dbpath="jdbc:postgresql://localhost/accounts" dbname="accounts" path="accounts" xmlfile="accounts.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Accounts</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Human Resources</APP>

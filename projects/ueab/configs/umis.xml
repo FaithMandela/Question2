@@ -1869,7 +1869,9 @@
 	<DESK w="700" name="Exam Timetable" type="horl" key="220" h="500">
 		<FILTER location="250" name="Exam Timetable" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter">
+					<DRILLDOWN name="Location" keyfield="levellocationid" table="levellocations" noorg="true" listfield="levellocationname"></DRILLDOWN>
+				</DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Final - Exam Timetable" reportfile="qetimetable.jasper"></JASPER>
 			<JASPER filtered="true" name="Tentative - Exam Timetable" reportfile="qetimetableb.jasper"></JASPER>
