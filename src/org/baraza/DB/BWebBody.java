@@ -799,8 +799,8 @@ public class BWebBody extends BQuery {
 			}
 			response.append(" size='50'/>\n");
 		} else if(el.getName().equals("SPINTIME")) {
-			response.append("<div class='input-group'>\n");
-			response.append("	<input type='text' class='form-control clockface' readonly='' name='" + el.getValue() + "' ");
+			response.append("<div class='input-group input-medium'>\n");
+			response.append("	<input type='text' class='form-control clockface' readonly='' id='" + el.getValue() + "'  name='" + el.getValue() + "' ");
 
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
@@ -817,7 +817,7 @@ public class BWebBody extends BQuery {
 			response.append("/>\n");
 			
 			response.append("	<span class='input-group-btn'>\n");
-			response.append("		<button class='btn default' type='button' id='clockface_2_toggle'><i class='fa fa-clock-o'></i></button>\n");
+			response.append("		<button class='btn default clockface-toggle' data-target='" + el.getValue() + "' type='button'><i class='fa fa-clock-o'></i></button>\n");
 			response.append("	</span>\n");
 			response.append("</div>\n");
 		} else if(el.getName().equals("PICTURE")) {

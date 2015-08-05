@@ -344,30 +344,33 @@
 
 						<%= web.showFooter() %>
 					</div>
-				</div>
+				
             
-			    <% if(web.getViewType().equals("FILES")){ %>
-                    <div class="row"> <!-- file upload row -->
-                        <div class="col-md-12">
-                            <span class="btn green fileinput-button">
-                                <i class="glyphicon glyphicon-plus"></i>
-                            <span>Add files...</span>
-                            <!-- The file input field used as target for the file upload widget -->
-                                <input id="fileupload" type="file" name="files[]" multiple>
-                            </span>
-                            <br>
-                            <br>
-                            <div id="progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar progress-bar-success" style="width:0%;">
+                    <% if(web.getViewType().equals("FILES")){ %>
+                        <div class="row"> <!-- file upload row -->
+                            <div class="col-md-12">
+                                <span class="btn green fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                <span>Add files...</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                    <input id="fileupload" type="file" name="files[]" multiple>
+                                </span>
+                                <br>
+                                <br>
+                                <div id="progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;">
+                                    </div>
                                 </div>
+                                <!-- The container for the uploaded files -->
+                                <div id="files" class="files"></div>
+                                <br>
                             </div>
-                            <!-- The container for the uploaded files -->
-                            <div id="files" class="files"></div>
-                            <br>
-                        </div>
-                    </div><!-- end file upload row -->
-                <% } %>
-			</form>
+                        </div><!-- end file upload row -->
+                    <% } %>
+                </div>
+            </form>
+                    
+            
 <% } %>
 
 
@@ -488,11 +491,18 @@
 		UITree.init();
 
 		$('.clockface').clockface({
-            format: 'HH:mm',
+            format: 'hh:mm a',
             trigger: 'manual'
         });
+        
+        //$('.clockface').closest(".col-md-9").removeClass('col-md-9').addClass('col-md-3')
+        
+        $('.clockface-toggle').click(function (e) {
+            e.stopPropagation();
+            var target = $(this).attr('data-target');
+            $('#' + target ).clockface('toggle');
+        });
 
-        //alert('<%= web.getView().getName().equals("FILES") %>');
     });
 </script>
 
