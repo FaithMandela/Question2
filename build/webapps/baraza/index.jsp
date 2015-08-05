@@ -495,8 +495,6 @@
             trigger: 'manual'
         });
         
-        //$('.clockface').closest(".col-md-9").removeClass('col-md-9').addClass('col-md-3')
-        
         $('.clockface-toggle').click(function (e) {
             e.stopPropagation();
             var target = $(this).attr('data-target');
