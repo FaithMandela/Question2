@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_month_1" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d50a54db-3243-4334-9e70-d08f231c8244">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -23,7 +23,7 @@
 		<![CDATA[SELECT
 vw_employee_month.period_year, vw_employee_month.period_month,
 vw_employee_month.entity_id, vw_employee_month.entity_name,
- vw_employee_month.overtime,
+vw_employee_month.employee_id, vw_employee_month.overtime,
  vw_employee_month.basic_pay, vw_employee_month.payroll_allowance, vw_employee_month.payroll_deduction, vw_employee_month.payroll_expense, vw_employee_month.payroll_tax, vw_employee_month.net_pay,
 per_diem, advance, advance_deduction, banked, cost,
 vw_employee_month.currency_id, vw_employee_month.currency_name, vw_employee_month.currency_symbol
@@ -37,6 +37,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 	<field name="period_month" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
+	<field name="employee_id" class="java.lang.String"/>
 	<field name="overtime" class="java.lang.Double"/>
 	<field name="basic_pay" class="java.lang.Double"/>
 	<field name="payroll_allowance" class="java.lang.Double"/>
@@ -99,14 +100,14 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement style="Column header" x="1" y="20" width="22" height="15" forecolor="#000000" uuid="6e76fb68-cfd1-4386-bc88-d9b99cde579d"/>
+					<reportElement style="Column header" x="1" y="20" width="32" height="15" forecolor="#000000" uuid="6e76fb68-cfd1-4386-bc88-d9b99cde579d"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[ID]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="23" y="20" width="146" height="15" forecolor="#000000" uuid="e4c1e368-f552-45d2-a5c0-2707701d3746"/>
+					<reportElement style="Column header" x="33" y="20" width="136" height="15" forecolor="#000000" uuid="e4c1e368-f552-45d2-a5c0-2707701d3746"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -197,7 +198,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<text><![CDATA[Advance]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="23" y="0" width="146" height="15" uuid="9c9018f4-b1a0-4483-922b-40373bd9c62f"/>
+					<reportElement style="Detail" x="33" y="0" width="136" height="15" uuid="9c9018f4-b1a0-4483-922b-40373bd9c62f"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -274,7 +275,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{net_pay_1}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="23" y="0" width="146" height="15" forecolor="#000000" uuid="6780f339-aa60-47fd-8eeb-bdeed9592d71"/>
+					<reportElement style="Column header" x="33" y="0" width="136" height="15" forecolor="#000000" uuid="6780f339-aa60-47fd-8eeb-bdeed9592d71"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -388,14 +389,14 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="d591e711-a189-4cd4-a773-6f8ac94c606f"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="22" height="15" uuid="c70e5703-8bcd-402f-9bcb-374b85b8c486"/>
+					<reportElement style="Detail" x="1" y="0" width="32" height="15" uuid="c70e5703-8bcd-402f-9bcb-374b85b8c486"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{entity_id}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="23" y="0" width="146" height="15" uuid="cc14d829-4e43-4b8b-8226-a08ceeb72006"/>
+					<reportElement style="Detail" x="33" y="0" width="136" height="15" uuid="cc14d829-4e43-4b8b-8226-a08ceeb72006"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>

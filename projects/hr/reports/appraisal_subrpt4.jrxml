@@ -16,15 +16,19 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT a.job_review_id, a.recomendation, a.reviewer_comments,a.approve_status, a.review_date,a.action_date, b.self_rating,
+		<![CDATA[SELECT a.job_review_id, a.recomendation, a.reviewer_comments,a.approve_status, a.review_date,a.action_date, b.self_rating, a.details AS overall_comments,
 SUM(comp_emp_points)  AS comp_emp_points,
 SUM(comp_reviewer_points)  AS comp_reviewer_points FROM (
 
 SELECT
-job_reviews.job_review_id,job_reviews.recomendation, job_reviews.reviewer_comments, job_reviews.approve_status, job_reviews.review_date, job_reviews.action_date, job_reviews.self_rating,
+job_reviews.job_review_id,job_reviews.recomendation, job_reviews.reviewer_comments, job_reviews.approve_status, job_reviews.review_date, job_reviews.action_date, job_reviews.self_rating, job_reviews.details,
 SUM(((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.points))  AS comp_emp_points,
 SUM(((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.reviewer_points))  AS comp_reviewer_points
 FROM job_reviews
@@ -35,10 +39,9 @@ GROUP BY vw_evaluation_objectives.job_review_id,job_reviews.recomendation, job_r
 vw_evaluation_objectives.objective_id,job_reviews.self_rating, job_reviews.job_review_id
 ORDER BY objective_id ASC) AS a
 FULL OUTER JOIN
-(SELECT job_review_id, self_rating FROM job_reviews WHERE (job_reviews.job_review_id = '$P!{filterid}' )) AS b
+(SELECT job_review_id, self_rating FROM job_reviews WHERE (job_reviews.job_review_id = '$P!{filterid}')) AS b
 ON a.job_review_id = b.job_review_id
-GROUP BY recomendation, reviewer_comments,approve_status, review_date, action_date, a.job_review_id,  b.self_rating
-]]>
+GROUP BY recomendation, reviewer_comments,approve_status, review_date, action_date, a.job_review_id,  b.self_rating, a.details]]>
 	</queryString>
 	<field name="job_review_id" class="java.lang.Integer"/>
 	<field name="recomendation" class="java.lang.String"/>
@@ -47,6 +50,7 @@ GROUP BY recomendation, reviewer_comments,approve_status, review_date, action_da
 	<field name="review_date" class="java.sql.Date"/>
 	<field name="action_date" class="java.sql.Timestamp"/>
 	<field name="self_rating" class="java.lang.Integer"/>
+	<field name="overall_comments" class="java.lang.String"/>
 	<field name="comp_emp_points" class="java.lang.Double"/>
 	<field name="comp_reviewer_points" class="java.lang.Double"/>
 	<background>
@@ -144,7 +148,7 @@ GROUP BY recomendation, reviewer_comments,approve_status, review_date, action_da
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{recomendation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{overall_comments}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="12" y="98" width="533" height="20" uuid="22b0cf32-0b88-429b-b4d9-e6d85b2b505e"/>

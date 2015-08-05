@@ -578,13 +578,17 @@ CREATE VIEW vw_employee_tax_types AS
 	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
 		eml.month_id, eml.period_year, eml.period_month,
 		eml.end_date, eml.gl_payroll_account,
-		eml.entity_id, eml.entity_name, eml.employee_id,
+		eml.entity_id, eml.entity_name, eml.employee_id, eml.identity_card,
 		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, 
 		employee_tax_types.org_id, employee_tax_types.employee_tax_type_id, employee_tax_types.tax_identification, 
 		employee_tax_types.amount, 
 		employee_tax_types.additional, employee_tax_types.employer, employee_tax_types.narrative,
 		currency.currency_id, currency.currency_name, currency.currency_symbol, employee_tax_types.exchange_rate,
-		(employee_tax_types.exchange_rate * employee_tax_types.amount) as base_amount
+		
+		(employee_tax_types.exchange_rate * employee_tax_types.amount) as base_amount,
+		(employee_tax_types.exchange_rate * employee_tax_types.employer) as base_employer,
+		(employee_tax_types.exchange_rate * employee_tax_types.additional) as base_additional
+		
 	FROM employee_tax_types INNER JOIN vw_employee_month_list as eml ON employee_tax_types.employee_month_id = eml.employee_month_id
 		INNER JOIN tax_types ON (employee_tax_types.tax_type_id = Tax_Types.tax_type_id)
 		INNER JOIN currency ON tax_types.currency_id = currency.currency_id;
@@ -940,14 +944,16 @@ BEGIN
 	FROM Default_Tax_Types INNER JOIN Tax_Types ON Default_Tax_Types.Tax_Type_id = Tax_Types.Tax_Type_id
 	WHERE (Default_Tax_Types.active = true) AND (Default_Tax_Types.entity_ID = NEW.entity_ID);
 
-	INSERT INTO employee_adjustments (org_id, employee_month_id, adjustment_id, amount, adjustment_type, in_payroll, in_tax, visible, adjustment_factor, balance, tax_relief_amount, exchange_rate)
+	INSERT INTO employee_adjustments (org_id, employee_month_id, adjustment_id, amount, adjustment_type, in_payroll, in_tax, visible, adjustment_factor, 
+		balance, tax_relief_amount, exchange_rate, narrative)
 	SELECT NEW.org_id, NEW.employee_month_id, default_adjustments.adjustment_id, default_adjustments.amount,
 		adjustments.adjustment_type, adjustments.in_payroll, adjustments.in_tax, adjustments.visible,
 		(CASE WHEN adjustments.adjustment_type = 2 THEN -1 ELSE 1 END),
 		(CASE WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = false) THEN (default_adjustments.balance + default_adjustments.amount)
 			WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = true) THEN (default_adjustments.balance - default_adjustments.amount) END),
 		(default_adjustments.amount * adjustments.tax_relief_ps / 100),
-		(CASE WHEN adjustments.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END)
+		(CASE WHEN adjustments.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END),
+		narrative
 	FROM default_adjustments INNER JOIN adjustments ON default_adjustments.adjustment_id = adjustments.adjustment_id
 	WHERE ((default_adjustments.final_date is null) OR (default_adjustments.final_date > current_date))
 		AND (default_adjustments.active = true) AND (default_adjustments.entity_id = NEW.entity_id);

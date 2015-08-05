@@ -318,7 +318,7 @@ public class BWebBody extends BQuery {
 		Integer i = 0;
 		for(BElement sview : view.getElements()) {
 			String sviewName = sview.getName();
-			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") ||  sviewName.equals("JASPER")) {
+			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") || sviewName.equals("JASPER") || sviewName.equals("ACTIONS")) {
 				String viewFilter = sview.getAttribute("viewfilter");
 				if(viewFilter == null) {
 					return i.toString();
@@ -365,7 +365,7 @@ public class BWebBody extends BQuery {
 					tab = el.getAttribute("tab");
 					if(!hasTabs) tabs.append("<li class='active'>");
 					else tabs.append("<li>");
-					tabs.append("<a href='#" + tab + "' data-toggle='tab'>" + tab + " </a></li>\n");
+					tabs.append("<a href='#" + tab.replace(" ", "") + "' data-toggle='tab'>" + tab + " </a></li>\n");
 				}
 				hasTabs = true;
 			}
@@ -389,8 +389,8 @@ public class BWebBody extends BQuery {
 				if(tabNotDone && hasTabs) response.append(tabs);
 				if(!tab.equals(el.getAttribute("tab"))) {
 					tab = el.getAttribute("tab");
-                    if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab + "'>\n"); 
-                    else response.append("<div class='tab-pane' id='" + tab + "'>\n");
+                    if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab.replace(" ", "") + "'>\n"); 
+                    else response.append("<div class='tab-pane' id='" + tab.replace(" ", "") + "'>\n");
 				}
                 if(tabNotDone && hasTabs) tabNotDone = false; 
 			} else if(!tabNotDone) {
@@ -521,12 +521,14 @@ public class BWebBody extends BQuery {
 			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
 			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
-
+			
 			String cmbWhereSql = el.getAttribute("where");
 			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
 				if(cmbWhereSql == null) cmbWhereSql = "(";
 				else cmbWhereSql += " AND (";
-				cmbWhereSql += orgID + "=" + userOrg + ")";
+				
+				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
+				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
 			}
 
 			if(el.getAttribute("user") != null) {
@@ -587,12 +589,15 @@ public class BWebBody extends BQuery {
 			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
 			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
+			
 
 			String cmbWhereSql = el.getAttribute("where");
 			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
 				if(cmbWhereSql == null) cmbWhereSql = "(";
 				else cmbWhereSql += " AND (";
-				cmbWhereSql += orgID + "=" + userOrg + ")";
+				
+				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
+				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
 			}
 
 			if(el.getAttribute("user") != null) {
@@ -794,20 +799,27 @@ public class BWebBody extends BQuery {
 			}
 			response.append(" size='50'/>\n");
 		} else if(el.getName().equals("SPINTIME")) {
-			response.append("<input class='form-control' type='text' name='" + el.getValue() + "'");
+			response.append("<div class='input-group input-medium'>\n");
+			response.append("	<input type='text' class='form-control clockface' readonly='' id='" + el.getValue() + "'  name='" + el.getValue() + "' ");
+
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
 			if(eof) {
 				SimpleDateFormat dateformatter = new SimpleDateFormat("hh:mm a");
 				if(getString(el.getValue())!=null) {
 					String mydate = dateformatter.format(getTime(el.getValue()));				
-					response.append(" value=\"" + mydate + "\"");
+					response.append(" value='" + mydate + "'");
 				}
 			} else if(el.getAttribute("default", "").equals("now")) {
 				SimpleDateFormat dateParse = new SimpleDateFormat("hh:mm a");
 				response.append(" value='" + dateParse.format(new Date()) + "'");
 			}
-			response.append(" size='50'/>\n");
+			response.append("/>\n");
+			
+			response.append("	<span class='input-group-btn'>\n");
+			response.append("		<button class='btn default clockface-toggle' data-target='" + el.getValue() + "' type='button'><i class='fa fa-clock-o'></i></button>\n");
+			response.append("	</span>\n");
+			response.append("</div>\n");
 		} else if(el.getName().equals("PICTURE")) {
 			String mypic = null;
 			String mypiclink = "	<div class='fileinput-preview thumbnail' data-trigger='fileinput' style='width: 200px; height: 150px;'></div>";

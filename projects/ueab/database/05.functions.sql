@@ -807,24 +807,24 @@ BEGIN
 		IF(studentrec.probationdetail != null) THEN
 			mystr := '<br/>' || studentrec.probationdetail;
 		END IF;
-		RAISE EXCEPTION 'Student on Probation, See the Dean of Students % ', mystr;
+		RAISE EXCEPTION 'See your major adviser for courses you need to pick, get financial approval and the visit records office for approval % ', mystr;
 	ELSIF (studentrec.seeregistrar = true) THEN
 		IF(studentrec.probationdetail != null) THEN
 			mystr := '<br/>' || studentrec.probationdetail;
 		END IF;
-		RAISE EXCEPTION 'Cannot Proceed, Go to records office for clearance  % ', mystr;
+		RAISE EXCEPTION 'Go to records office for clearance  % ', mystr;
 	ELSIF (myrec.qstudentid IS NULL) THEN 
 		RAISE EXCEPTION 'Please register for the trimester, residence first before closing';
 	ELSIF (myrec.finalised = true) THEN
 		RAISE EXCEPTION 'The trimester is closed for registration';
     ELSIF (studentrec.gaddress IS NULL) THEN
-		RAISE EXCEPTION 'Cannot Proceed, See Records office, Wrong Guardian Address';
+		RAISE EXCEPTION 'Go to records office for clearance, Wrong Guardian Address';
 	ELSIF (studentrec.address IS NULL) THEN
-		RAISE EXCEPTION 'Cannot Proceed, See Records office, Wrong Student Address';
+		RAISE EXCEPTION 'Go to records office for clearance, Wrong Student Address';
 	ELSIF (myrec.finalised = true) THEN
 		RAISE EXCEPTION 'The trimester is closed for registration';
 	ELSIF (myprobation = true) THEN
-		RAISE EXCEPTION 'Your Cumm. GPA is below the required level, you need to see the registrar for apporval.';
+		RAISE EXCEPTION 'See your major adviser for courses you need to pick, get financial approval and the visit records office for approval';
 	ELSIF (v_last_reg = true) THEN
 		RAISE EXCEPTION 'You need to clear for late registration with the Registars office';
 	ELSIF (myqrec.qresidenceid is null) THEN
@@ -1502,6 +1502,13 @@ BEGIN
 		UPDATE qgrades SET gradeid = 'F', sys_audit_trail_id = $4::integer
 		FROM qstudents WHERE (qgrades.qstudentid = qstudents.qstudentid) 
 			AND (qgrades.dropped = false) AND (gradeid = 'IW')
+			AND (qstudents.quarterid = $1);
+	END IF;
+	
+	IF($3 = '5')THEN
+		UPDATE qgrades SET gradeid = 'AW', sys_audit_trail_id = $4::integer
+		FROM qstudents WHERE (qgrades.qstudentid = qstudents.qstudentid) 
+			AND (qgrades.dropped = false) AND (gradeid = 'UE')
 			AND (qstudents.quarterid = $1);
 	END IF;
 

@@ -49,7 +49,7 @@
 <!-- BEGIN LOGO -->
 <div class="logo">
 	<a href="index.jsp">
-    <img src="${contextPath}/resources/themes/default/images/logo.png" alt=""/>
+    <img src="${contextPath}/assets/logos/logo.png" alt=""/>
 	</a>
 </div>
 <!-- END LOGO -->

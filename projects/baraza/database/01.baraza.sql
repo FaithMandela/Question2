@@ -478,6 +478,15 @@ CREATE VIEW vw_address_entitys AS
 		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'entitys');
+	
+CREATE VIEW vw_org_select AS
+	(SELECT org_id, parent_org_id, org_name
+	FROM orgs
+	WHERE (is_active = true) AND (org_id <> parent_org_id))
+	UNION
+	(SELECT org_id, org_id, org_name
+	FROM orgs
+	WHERE (is_active = true));
 
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
@@ -724,7 +733,7 @@ BEGIN
 		UPDATE entitys SET Entity_password = md5($3) WHERE (entity_id = entityID);
 		passchange := 'Password Changed';
 	ELSE
-		passchange := 'Password Changing Error Ensure you have correct details';
+		passchange := null;
 	END IF;
 
 	return passchange;

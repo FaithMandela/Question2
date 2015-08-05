@@ -17,8 +17,12 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_month.employee_month_id, vw_employee_month.period_year, vw_employee_month.period_month, vw_employee_month.employee_id, vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.identity_card, vw_employee_month.start_date, vw_employee_month.bank_name,  vw_employee_month.bank_branch_name, vw_employee_month.bank_account, vw_employee_month.basic_pay, vw_employee_month.net_pay, vw_employee_month.advance, vw_employee_month.advance_deduction, vw_employee_month.banked,
 vw_employee_month.currency_symbol,
@@ -476,7 +480,7 @@ $P!{organd};]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[   Payments Made By Employer]]></text>
+				<text><![CDATA[Other details]]></text>
 			</staticText>
 			<subreport>
 				<reportElement positionType="Float" x="7" y="200" width="524" height="18" uuid="6f8be001-7f66-47b8-8655-55ecf4706261"/>

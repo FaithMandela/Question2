@@ -67,12 +67,11 @@ public class BDrillWeb {
 				subdrill += query.getString(listfield) + "</a>";
 				subdrill += "</span></li>\n";
 			} else {
-				subdrill += "<li>" + query.getString(listfield) + "<ul>\n";
-
 				// Add the sub tree elements
 				for(BElement el : fielddef.getElements()) {
+					subdrill += "<li>" + query.getString(listfield) + "\n<ul>\n";
 					subdrill += getSubDrill(db, el, query.getString(keyfield));
-					subdrill += "</ul></li>";
+					subdrill += "\n</ul>\n</li>";
 				}
 			}
 		}

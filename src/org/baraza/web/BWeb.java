@@ -809,7 +809,13 @@ public class BWeb {
 				webbody.close();
 			}
 		} else if(view.getName().equals("DIARY")) {
-			body += "\t\t<div id='calendar'></div>\n";
+			body += "<div class='portlet-body'>\n";
+			body += "	<div class='row'>\n";
+			body += "		<div class='col-md-12 col-sm-12'>\n";
+			body += "			<div id='calendar' class='as-toolbar'></div>\n";
+			body += "		</div>\n";
+			body += "	</div>\n";
+			body += "</div>\n";
 		} else if(view.getName().equals("JASPER")) {
 //System.out.println("BASE 1010 ");
 			BWebReport report = new BWebReport(view, db.getUserID(), null, request);
@@ -856,11 +862,11 @@ public class BWeb {
 			tabs.append("			<ul class='nav nav-tabs'>\n");
 			for(BElement sv : view.getElements()) {
 				if(sv.getName().equals("FILTERGRID") || sv.getName().equals("DRILLDOWN") || sv.getName().equals("FILTERFORM")) {
-					if(isFirst) tabs.append("<li class='active'>");
-					else tabs.append("<li>");
+					if(isFirst) tabs.append("<li class='active'>\n");
+					else tabs.append("<li>\n");
 					isFirst = false;
 					String tab = sv.getAttribute("name");
-					tabs.append("<a href='#" + tab + "' data-toggle='tab'>" + tab + " </a></li>\n");
+					tabs.append("<a href='#" + tab.replace(" ", "") + "' data-toggle='tab'>" + tab + " </a></li>\n");
 				}
     		}
 			tabs.append("			</ul>\n");
@@ -874,7 +880,7 @@ public class BWeb {
 			boolean wgf = true;
 			isFirst = true;
 			for(BElement sv : view.getElements()) {
-				String tab = sv.getAttribute("name");
+				String tab = sv.getAttribute("name", "").replace(" ", "");
 				if(sv.getName().equals("FILTERGRID")) {
 					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
 					else body += "<div class='tab-pane' id='" + tab + "'>\n";
@@ -1739,21 +1745,21 @@ System.out.println("repository : " + repository);
 
 	public String getCalendar() {
 
-		String events = "eventSources: [\n";
+		String events = " events: [";
 
 		events += getEvents(view);
 		for(BElement el : view.getElements()) {
-			if(el.getName().equals("DIARY")) 
+			if(el.getName().equals("DIARY"))
 				events += ", " + getEvents(el);
 		}
 
-		events += "]";
+		events += "] \n";
 
 		return events;
 	}
 
 	public String getEvents(BElement eventView) {
-		String events = " { events: [";
+		String events = "";
 
 		String wherefilter = null;
 		if((eventView.getAttribute("linkfield") != null) && (dataItem != null)) 
@@ -1774,19 +1780,12 @@ System.out.println("repository : " + repository);
 			events += "', start: '" + crs.readField(3) + " " + crs.readField(4);
 			events += "', end: '" + crs.readField(5) + " " + crs.readField(6);
 			events += "', allDay: " + crs.readField(7);
-			events += ", editable: " + crs.readField(8);
+			
+			if(eventView.getAttribute("color")==null) events += ", backgroundColor: Metronic.getBrandColor('silver'), ";
+			else  events += ", backgroundColor: Metronic.getBrandColor('" + eventView.getAttribute("color") + "'), ";
+
 			events += "}";
 		}
-
-		events += "], \n";
-
-		if(eventView.getAttribute("color")==null) events += " color: 'silver', ";
-		else  events += " color: '" + eventView.getAttribute("color") + "', ";
-		if(eventView.getAttribute("textcolor")==null) events += " textColor: 'black' ";
-		else  events += " textColor: '" + eventView.getAttribute("textcolor") + "' ";
-
-		if(isFf) events = "";
-		else events += "} \n";
 
 		return events;
 	}
@@ -1917,6 +1916,13 @@ System.out.println("repository : " + repository);
 		jsColEl.add("hidden", true);
 		jsColModel.add(jsColEl);
 		
+		JsonObjectBuilder jsColKF = Json.createObjectBuilder();
+		jsColNames.add("KF");
+		jsColKF.add("name", "KF");
+		jsColKF.add("width", 5);
+		jsColKF.add("hidden", true);
+		jsColModel.add(jsColKF);
+		
 		jshd.add("url", "jsondata");
 		jshd.add("datatype", "json");
 		jshd.add("mtype", "GET");
@@ -2010,10 +2016,16 @@ System.out.println("repository : " + repository);
 		return view.getAttribute("icon", viewIcon); 
 	}
     
-    public boolean isMaterial() {
+	public boolean isMaterial() {
 		if(root == null) return false;
 		if(root.getAttribute("material", "false").equals("true")) return true;
         return false;
+	}
+	
+	public boolean hasPasswordChange() {
+		if(root == null) return false;
+		if(root.getAttribute("password") == null) return false;
+        return true;
 	}
 	
 	public String getEncType() {

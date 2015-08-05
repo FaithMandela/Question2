@@ -161,7 +161,7 @@ label {
 .input-group-btn:last-child>.btn, .input-group-btn:last-child>.btn-group {
   margin-left: -1px;
   height: 27px;
-  margin-top: 1px;
+  margin-top: 3px;
 }
 
 select.form-control{
@@ -251,6 +251,9 @@ ui-widget-content {
   border: 0px solid #ddd; 
 }
 
+.btn{
+    padding: 6px 14px 8px 14px;
+}
 
 
 /*  begin total ui widget overwrite */

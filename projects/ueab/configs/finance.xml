@@ -110,7 +110,7 @@
 	</DESK>
 	<DESK w="750" name="Trimester" type="vert" key="12" h="500">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="40" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 			<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
@@ -145,15 +145,15 @@
 					<ACTION fnct="SunPosted" auditid="sys_audit_trail_id">Sun Posted</ACTION>
 				</ACTIONS>
 			</GRID>
-			<GRID name="Semester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview" key="7">
+			<GRID name="Trimester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview" key="7">
 				<TEXTFIELD w="40" title="Residence ID">Residenceid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Residence Name">residencename</TEXTFIELD>
 				<TEXTFIELD w="40" title="Residence Option">residenceoption</TEXTFIELD>
-				<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Trimester">quarterid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Charges">charges</TEXTFIELD>
-				<FORM name="Semester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidences" key="8" inputkey="1">
+				<FORM name="Trimester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidences" key="8" inputkey="1">
 					<COMBOBOX w="150" title="Residence" lptable="residences" y="10" h="20" x="10" lpfield="residencename">residenceid</COMBOBOX>
-					<TEXTFIELD w="150" enabled="false" title="Semester ID" y="10" h="20" x="290">quarterid</TEXTFIELD>
+					<TEXTFIELD w="150" enabled="false" title="Trimester ID" y="10" h="20" x="290">quarterid</TEXTFIELD>
 					<TEXTFIELD w="150" title="Charges" y="30" h="20" x="10">charges</TEXTFIELD>
 					<COMBOLIST w="150" title="Residence Option" y="30" h="20" editable="true" x="290">residenceoption
 						<DATA>Full</DATA>
@@ -164,13 +164,13 @@
 					<TEXTAREA w="430" title="Details" y="50" h="120" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Semesters" keyfield="quarterid" table="quarters" noorg="true">
-				<TEXTFIELD w="150" title="Semester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
-				<TEXTFIELD w="150" title="Name" default="Semester" y="10" h="20" x="290">quarter_name</TEXTFIELD>
+			<FORM name="Trimesters" keyfield="quarterid" table="quarters" noorg="true">
+				<TEXTFIELD w="150" title="Trimester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
+				<TEXTFIELD w="150" title="Name" default="Trimester" y="10" h="20" x="290">quarter_name</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="30" h="20" x="10">active</CHECKBOX>
 				<CHECKBOX w="50" title="Closed" y="30" h="20" x="290">closed</CHECKBOX>
-				<TEXTDATE w="150" title="Semester Start" y="50" h="20" x="10">qstart</TEXTDATE>
-				<TEXTDATE w="150" title="Semester End" y="50" h="20" x="290">qend</TEXTDATE>
+				<TEXTDATE w="150" title="Trimester Start" y="50" h="20" x="10">qstart</TEXTDATE>
+				<TEXTDATE w="150" title="Trimester End" y="50" h="20" x="290">qend</TEXTDATE>
 				<TEXTDATE w="150" title="Last Drop" y="70" h="20" x="10">qlastdrop</TEXTDATE>
 				<TEXTDATE w="150" title="Late Registration" y="90" h="20" x="10">qlatereg</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Late Change" y="90" h="20" x="290">qlatechange</TEXTDECIMAL>
@@ -181,15 +181,15 @@
 				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<ACTIONS>
-				<ACTION fnct="OpenQuarter">Open Semester</ACTION>
-				<ACTION fnct="CloseQuarter">Close Semester</ACTION>
+				<ACTION fnct="OpenQuarter">Open Trimester</ACTION>
+				<ACTION fnct="CloseQuarter">Close Trimester</ACTION>
 				<ACTION fnct="ExamBalances">Exam Balances</ACTION>
 			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="750" name="Trimester Courses" key="14" h="570">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID name="Courses" keyfield="qcourseid" orderby="courseid" linkfield="quarterid" table="qcourseview">
@@ -202,7 +202,7 @@
 	</DESK>
 	<DESK w="810" name="Trimester Students" type="vert" key="1" h="590">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true" where="(closed = false)">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID limit="100" auditid="sys_audit_trail_id" name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="qstudentdegreeview">
@@ -255,7 +255,7 @@
 	</DESK>
 	<DESK w="810" name="Trimester Students Report" type="vert" key="16" h="590">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true" where="(closed = false)">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID limit="100" auditid="sys_audit_trail_id" name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="studentquarterview">
@@ -307,7 +307,7 @@
 	</DESK>
 	<DESK w="810" name="Trimester Students Open" type="vert" key="17" h="590">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID limit="100" auditid="sys_audit_trail_id" name="Q. Students" keyfield="qstudentid" linkfield="quarterid" table="studentquarterview">
@@ -351,7 +351,7 @@
 	</DESK>
 	<DESK w="810" name="Trimester Exam Clearance" type="vert" key="18" h="590">
 		<GRID name="Trimester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true" where="(closed = false)">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID limit="100" auditid="sys_audit_trail_id" name="Q. Students" keyfield="qstudentid" linkfield="quarterid" table="studentquarterview" where="(finaceapproval=true)">
@@ -493,7 +493,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="750" name="Trimester Charges" type="horl" key="158" h="500">
-		<FILTER location="250" name="Semester Charges" type="horl">
+		<FILTER location="250" name="Trimester Charges" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Trimester" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
@@ -504,7 +504,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Trimester Withdrawal" type="horl" key="159" h="500">
-		<FILTER location="250" name="Semester Withdrawal" type="horl">
+		<FILTER location="250" name="Trimester Withdrawal" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Trimester" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
@@ -514,8 +514,8 @@
 	</DESK>
 	<DESK w="800" name="Course Registration" type="vert" key="162" h="600">
 		<FILTER w="700" name="Course Registration" split="250" type="vert" h="750">
-			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<FILTERGRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+				<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 				<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 				<FILTERGRID name="Student List" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="qstudentview" noorg="true">
@@ -617,7 +617,7 @@
 	<DESK w="700" name="Charge Summary" type="horl" key="425" h="500">
 		<FILTER location="250" name="Charge Summary" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Charge Summary" reportfile="charge_summary.jasper"></JASPER>
 		</FILTER>

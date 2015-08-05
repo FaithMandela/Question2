@@ -344,13 +344,23 @@
 		</GRID>
 		<DIARY name="Leave Diary" keyfield="employee_leave_id" orderby="leave_from" table="vw_employee_leave" where="(leave_from > current_date-360)" user="entity_id">
 			<TEXTFIELD w="75" title="Leave ID">employee_leave_id</TEXTFIELD>
-			<TEXTFIELD w="75" fnct="leave_type_name || ' : ' || narrative" title="Title">leave_disp</TEXTFIELD>
+			<TEXTFIELD w="75" fnct="leave_type_name || ' : ' || COALESCE(narrative, '')" title="Title">leave_disp</TEXTFIELD>
 			<TEXTDATE w="75" title="Activity Date">leave_from</TEXTDATE>
 			<SPINTIME w="75" title="Activity Time">activity_time</SPINTIME>
 			<TEXTDATE w="75" title="Finish Date">leave_to</TEXTDATE>
 			<SPINTIME w="75" title="Finish Time">finish_time</SPINTIME>
 			<TEXTFIELD w="75" fnct="'false'" title="All Day">all_day</TEXTFIELD>
 			<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			<DIARY name="Events" keyfield="org_event_id" table="org_events" where="(start_date > current_date-360)">
+				<TEXTFIELD w="75" title="Event ID">org_event_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Event Name">org_event_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'08:00'::time" title="Start Time">start_time</TEXTFIELD>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'17:00'::time" title="End Time">end_time</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'true'" title="All Day">all_day</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			</DIARY>
 		</DIARY>
 		<GRID name="Leave Types" keyfield="employee_leave_type_id" table="vw_employee_leave_types" user="entity_id">
 			<TEXTFIELD w="75" title="Leave Type Name">leave_type_name</TEXTFIELD>
@@ -605,9 +615,9 @@
 				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Statutory">payroll_tax</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
-				<JASPER name="Payroll" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
+				<JASPER name="Payroll" linkfield="filterid" reportfile="payslipb.jasper"></JASPER>
 			</GRID>
-			<JASPER name="P9A" linkfield="periodyear" user="employeeid" reportfile="P9A.jasper"></JASPER>
+			<JASPER name="P9A" org.table="orgs" linkfield="periodyear" user="employeeid" reportfile="P9Aa.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="News Admin" key="19" h="500">
@@ -625,8 +635,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Organisation" key="20" h="500">
-		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" noorg="true" user="entity_id">
-			<COMBOBOX w="150" title="Org" lptable="orgs" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" user="entity_id">
+			<COMBOBOX w="150" title="Org" lptable="vw_org_select" y="10" org.id="parent_org_id" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 		</FORM>
 		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
@@ -1708,6 +1718,18 @@
 				<ACTION fnct="leave_special" approval="3">Reject</ACTION>
 			</ACTIONS>
 		</GRID>
+		<GRID name="Events" keyfield="org_event_id" table="org_events">
+			<TEXTFIELD w="75" title="Event ID">org_event_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Event Name">org_event_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<FORM name="Events" keyfield="org_event_id" table="org_events">
+				<TEXTFIELD w="150" title="Event Name" y="10" h="20" x="10">org_event_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Start Date" y="10" h="20" x="290">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="30" h="20" x="10">end_date</TEXTDATE>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
 		<GRID name="Holidays" keyfield="holiday_id" table="holidays">
 			<TEXTFIELD w="75" title="Holiday Name">holiday_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Holiday Date">holiday_date</TEXTDATE>
@@ -2006,7 +2028,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="upd_reviews" approval="2">Open For Review</ACTION>
 				</ACTIONS>
@@ -2177,7 +2199,7 @@
 				<TEXTFIELD w="150" title="Self Rating" y="50" h="20" x="10">self_rating</TEXTFIELD>
 				<TEXTAREA w="530" tab="Overall Comments" y="2" h="170" x="10">details</TEXTAREA>
 			</FORM>
-			<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+			<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			<ACTIONS>
 				<ACTION fnct="job_review_check">Apply For review</ACTION>
 				<ACTION fnct="upd_reviews" approval="4">Delete Review</ACTION>
@@ -3090,7 +3112,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 				<GRID name="Objective Evaluation" keyfield="evaluation_point_id" updatetable="evaluation_points" orderby="objective_id" linkfield="job_review_id" table="vw_evaluation_objectives" params="objective_id">
 					<TEXTFIELD w="150" title="Objective">objective_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Points">points</TEXTFIELD>
@@ -3100,7 +3122,7 @@
 					<FORM new="false" name="Objective Evaluation" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
 						<TEXTFIELD w="150" title="Points" y="30" h="20" x="10">reviewer_points</TEXTFIELD>
 						<TEXTAREA w="430" tab="Narrative" y="2" h="70" x="10">reviewer_narrative</TEXTAREA>
-						<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+						<TEXTAREA w="430" tab="Discussion Area" y="2" h="70" x="10">details</TEXTAREA>
 					</FORM>
 					<GRID new="false" name="Objective Details" keyfield="objective_detail_id" delete="false" updatetable="objective_details" table="vw_objective_details" linkparams="objective_id=objective_id">
 						<TEXTFIELD w="75" title="Detail Name">objective_detail_name</TEXTFIELD>
@@ -3453,6 +3475,7 @@
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report2.jasper"></JASPER>
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave2.jasper"></JASPER>
 		</FILTER>
+		<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
 		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
 	</DESK>

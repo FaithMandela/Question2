@@ -1,7 +1,8 @@
 <APP color="bunson" name="Bunson" org="org_id" password="change_password">
 	<MENU name="Bunson">
-		<MENU icon="fa fa-arrows-h" name="Your Transfers" role="consultant,transport">35</MENU>
+		<MENU icon="fa fa-arrows-h" name="My Transfers" role="consultant,transport">35</MENU>
 		<MENU icon="fa fa-arrows-h" name="Transfers" role="admin,transport">20</MENU>
+		<MENU icon="fa fa-envelope-o" name="Sms">40</MENU>
 		<MENU name="Administration" role="admin">
 			<MENU icon="fa fa-envelope-o" name="Sms" role="admin">25</MENU>
 			<MENU icon="fa fa-sitemap" name="Organizations" role="admin">30</MENU>
@@ -12,13 +13,13 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE name="Todays Pax Transfer" role="admin" noorg.query="true" table="vw_passangers" noorg="true" where="(pickup_date = CURRENT_TIMESTAMP::date)">
+			<TILE name="Todays Pax Transfer" noorg.query="true" table="vw_passangers" noorg="true" where="(pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Unprocessed Transfer" role="admin" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false)">
+			<TILE name="Unprocessed Transfer" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Processed Transfer" role="admin" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true)">
+			<TILE name="Processed Transfer" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
@@ -30,7 +31,6 @@
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<GRID name="Entitys" keyfield="entity_id" linkfield="org_id" table="vw_entitys" noorg="true">
-				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Date Enroled">date_enroled</TEXTTIMESTAMP>
@@ -62,7 +62,6 @@
 			</FORM>
 		</GRID>
 		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types">
-			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 			<TEXTFIELD w="175" title="Entity Type Name">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Entity Role">entity_role</TEXTFIELD>
 			<TEXTFIELD w="175" title="Group EMail">group_email</TEXTFIELD>
@@ -1172,7 +1171,7 @@
 				</FORM>
 			</GRID>
 		</GRID>
-		<GRID name="Consultant Transfers" keyfield="transfer_id" orderby="booking_date DESC" table="vw_transfers" tab.count="count(transfer_id)" noorg="true" user="entity_id">
+		<GRID name="My Transfers" keyfield="transfer_id" orderby="booking_date DESC" table="vw_transfers" tab.count="count(transfer_id)" noorg="true" user="entity_id">
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Payment Type Name">payment_type_name</TEXTFIELD>
@@ -1325,6 +1324,83 @@
 				<TEXTDECIMAL w="150" title="Agreed Amount" y="70" h="20" x="290">agreed_amount</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 				<TEXTAREA w="430" title="Reference Data" y="180" h="70" x="10">reference_data</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="SMS" key="40" h="500">
+		<GRID name="Outbox" keyfield="sms_id" orderby="sms_id desc" table="vw_sms" where="(folder_id = 0) AND (address_group_id is null)">
+			<TEXTFIELD w="75" title="SMS ID">sms_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tel. Number">sms_number</TEXTFIELD>
+			<CHECKBOX w="75" title="Message Ready" format="boolean">message_ready</CHECKBOX>
+			<CHECKBOX w="75" title="Sent" format="boolean">sent</CHECKBOX>
+			<TEXTAREA w="175" title="message">message</TEXTAREA>
+			<FORM name="SMS" keyfield="sms_id" table="sms">
+				<DEFAULT default="0">folder_id</DEFAULT>
+				<TEXTFIELD w="250" title="Tel. Number" y="10" h="20" x="10">sms_number</TEXTFIELD>
+				<CHECKBOX w="150" title="Message Ready" y="30" h="20" x="10">message_ready</CHECKBOX>
+				<TEXTAREA w="430" tab="Message" y="50" h="70" x="10">message</TEXTAREA>
+				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">
+				<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Mobile Number">mobile</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="sms_address">
+					<GRIDBOX w="430" title="Address" lptable="address" y="10" h="20" x="10" lpfield="address_id">address_id
+						<GRID name="Address" keyfield="address_id" table="vw_address" where="table_name = 'sms'">
+							<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
+							<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
+						</GRID>
+					</GRIDBOX>
+					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+				</FORM>
+			</GRID>
+			<GRID name="Add Address" keyfield="address_id" table="vw_address" where="table_name = 'sms'">
+				<TEXTFIELD w="175" title="Name">address_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="ins_sms_address">Add</ACTION>
+				</ACTIONS>
+			</GRID>
+		</GRID>
+		<GRID name="Group SMS" keyfield="sms_id" orderby="sms_id desc" table="vw_sms" where="(folder_id = 0) AND (address_group_id is not null)">
+			<TEXTFIELD w="75" title="SMS ID">sms_id</TEXTFIELD>
+			<CHECKBOX w="75" title="Message Ready" format="boolean">message_ready</CHECKBOX>
+			<CHECKBOX w="75" title="Sent" format="boolean">sent</CHECKBOX>
+			<TEXTFIELD w="75" title="Address Group Name">address_group_name</TEXTFIELD>
+			<TEXTAREA w="175" title="message">message</TEXTAREA>
+			<FORM name="SMS" keyfield="sms_id" table="sms">
+				<DEFAULT default="0">folder_id</DEFAULT>
+				<COMBOBOX w="430" title="Group" lptable="address_groups" y="30" h="20" x="10" lpfield="address_group_name">address_group_id</COMBOBOX>
+				<CHECKBOX w="150" title="Message Ready" y="30" h="20" x="10">message_ready</CHECKBOX>
+				<TEXTAREA w="430" tab="Message" y="50" h="70" x="10">message</TEXTAREA>
+				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Sent" keyfield="sms_id" orderby="sms_id desc" table="vw_sms" where="folder_id = 2">
+			<TEXTFIELD w="75" title="SMS Id">sms_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tel. Number">sms_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Sent">sent</CHECKBOX>
+			<TEXTAREA w="175" title="message">message</TEXTAREA>
+			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">
+				<TEXTFIELD w="75" title="Entity Name">address_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Mobile Number">mobile</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			</GRID>
+			<GRID name="SMS Groups" keyfield="sms_groups_id" linkfield="sms_id" table="vw_sms_groups">
+				<TEXTFIELD w="75" title="Entity Type">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			</GRID>
+		</GRID>
+		<GRID name="Action" keyfield="sms_id" orderby="sms_id desc" table="vw_sms" where="folder_id = 4">
+			<TEXTFIELD w="75" title="SMS Id">sms_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tel. Number">sms_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
+			<TEXTAREA w="275" title="message">message</TEXTAREA>
+			<FORM name="SMS" keyfield="sms_id" table="sms">
+				<TEXTAREA w="430" title="Message" y="10" h="110" disabled="true" x="10">message</TEXTAREA>
+				<TEXTAREA w="430" title="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

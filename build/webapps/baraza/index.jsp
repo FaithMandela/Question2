@@ -121,6 +121,7 @@
 	<link href="./assets/global/plugins/jquery-tags-input/jquery.tagsinput.css" rel="stylesheet" type="text/css"/>
     <link href="./assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="./assets/global/plugins/jquery-multi-select/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet"/>
 
     <link href="./assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
     <link href="./assets/admin/pages/css/profile.css" rel="stylesheet" type="text/css"/>
@@ -215,12 +216,14 @@
 								<i class="icon-rocket"></i> My Tasks
 								</a>
 							</li>
+					<% if(web.hasPasswordChange()) { %>
 							<li class="divider"></li>
 							<li>
-								<a class="btn default" data-toggle="modal" href="#basic">
+								<a data-toggle="modal" href="#basic">
 									<i class="icon-rocket"></i> Change Password
 								</a>
 							</li>
+					<% } %>
 							<li class="divider"></li>
 							<li>
 								<a href="logout.jsp?logoff=yes">
@@ -341,33 +344,34 @@
 
 						<%= web.showFooter() %>
 					</div>
-				</div>
-			    <% if(web.getViewType().equals("FILES")){ %>
-                    <div class="row"> <!-- file upload row -->
-                        <div class="col-md-12">
-                            <span class="btn green fileinput-button">
-                                <i class="glyphicon glyphicon-plus"></i>
-                            <span>Add files...</span>
-                            <!-- The file input field used as target for the file upload widget -->
-                                <input id="fileupload" type="file" name="files[]" multiple>
-                            </span>
-                            <br>
-                            <br>
-                            <div id="progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar progress-bar-success" style="width:0%;">
+				
+            
+                    <% if(web.getViewType().equals("FILES")){ %>
+                        <div class="row"> <!-- file upload row -->
+                            <div class="col-md-12">
+                                <span class="btn green fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                <span>Add files...</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                    <input id="fileupload" type="file" name="files[]" multiple>
+                                </span>
+                                <br>
+                                <br>
+                                <div id="progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-success" style="width:0%;">
+                                    </div>
                                 </div>
+                                <!-- The container for the uploaded files -->
+                                <div id="files" class="files"></div>
+                                <br>
                             </div>
-                            <!-- The container for the uploaded files -->
-                            <div id="files" class="files"></div>
-                            <br>
-                        </div>
-                    </div><!-- end file upload row -->
-                <% } %>
-			</form>
+                        </div><!-- end file upload row -->
+                    <% } %>
+                </div>
+            </form>
+                    
+            
 <% } %>
-
-
-<%@ include file="./assets/include/password_change.jsp" %>
 
 
 		</div>
@@ -456,21 +460,25 @@
 <script src="./assets/admin/pages/scripts/components-pickers.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript" ></script>
 <script src="./assets/global/plugins/jquery-multi-select/js/jquery.quicksearch.js" type="text/javascript"></script>
-
-<script src="./assets/global/plugins/jstree/dist/jstree.min.js"></script>
-<script src="./assets/admin/pages/scripts/ui-tree.js"></script>
+<script src="./assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/jstree/dist/jstree.min.js" type="text/javascript"></script>
+<script src="./assets/admin/pages/scripts/ui-tree.js" type="text/javascript"></script>
 
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
 
+<!-- calendar-->
+<!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
+<script src="./assets/global/plugins/moment.min.js"></script>
+<script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
 
 <script>
     jQuery(document).ready(function() {
         Metronic.init(); // init metronic core componets
         Layout.init(); // init layout
-
+        Calendar.init();
         $('.date-picker').datepicker({
             autoclose: true
         });
@@ -482,7 +490,19 @@
 
 		UITree.init();
 
-        //alert('<%= web.getView().getName().equals("FILES") %>');
+		$('.clockface').clockface({
+            format: 'hh:mm a',
+            trigger: 'manual'
+        });
+        
+        //$('.clockface').closest(".col-md-9").removeClass('col-md-9').addClass('col-md-3')
+        
+        $('.clockface-toggle').click(function (e) {
+            e.stopPropagation();
+            var target = $(this).attr('data-target');
+            $('#' + target ).clockface('toggle');
+        });
+
     });
 </script>
 
@@ -570,17 +590,13 @@
         $('#jqlist').trigger('reloadGrid');
     });
 
-
 	$('#btnAction').click(function(){
 	    var operation = $("#operation").val();
 
 	    var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
 	    for (i = 0, n = selIds.length; i < n; i++) {
-	        var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
-	        var begin = coldata.lastIndexOf("=");
-	        var end = coldata.length;
-	        var id = coldata.substring(begin + 1, end);
-	        cellValues.push(id);
+	        var coldata = $grid.jqGrid("getCell", selIds[i], "KF");
+	        cellValues.push(coldata);
 	    }
 	    if(cellValues.join(",") == ""){
 	        alert('No row Selected');
@@ -729,6 +745,15 @@ $(function () {
 });
 </script>
 <!-- END JAVASCRIPTS -->
+<% 
+	String diaryJSON = "";
+	if(web.getViewType().equals("DIARY")) diaryJSON = web.getCalendar();
+%>
+<%@ include file="./assets/include/calendar.jsp" %>
+
+<% if(web.hasPasswordChange()) { %>
+	<%@ include file="./assets/include/password_change.jsp" %>
+<% } %>
 </body>
 <!-- END BODY -->
 </html>
