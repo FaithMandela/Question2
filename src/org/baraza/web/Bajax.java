@@ -89,8 +89,12 @@ public class Bajax extends HttpServlet {
 
 		if("calresize".equals(fnct)) resp = calResize(id, endDate, endTime);
 		if("calmove".equals(fnct)) resp = calMove(id, startDate, startTime, endDate, endTime);
-		if("operation".equals(fnct)) resp = calOperation(id, ids, request);
 		if("filter".equals(fnct)) resp = filterJSON(request);
+		
+		if("operation".equals(fnct)) {
+			resp = calOperation(id, ids, request);
+			response.setContentType("application/json;charset=\"utf-8\"");
+		}
 		
 		if("password".equals(fnct)) { 
 			resp = changePassword(request.getParameter("oldpass"), request.getParameter("newpass"));

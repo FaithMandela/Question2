@@ -1011,6 +1011,8 @@ public class BWeb {
 	}
 
 	public String setOperations(String operation, String ids, HttpServletRequest request) {
+		JsonObjectBuilder jshd = Json.createObjectBuilder();
+		
 		String mystr = "";
 		boolean fnctError = false;
 		String mysql;
@@ -1052,23 +1054,30 @@ public class BWeb {
 				}
 			
 				if(fnctError) {
-					mystr = "<div style='color:#FF0000 font-size:14px; font-weight:bold;'>" + mystr + "</div><br>\n";
+					jshd.add("msg", mystr);
+					jshd.add("error", true);
 				} else {
+					jshd.add("error", false);
 					String jumpView = opt.getAttribute("jumpview");
 					if(jumpView != null) {
 						viewKey = jumpView;
 						webSession.setAttribute("viewkey", jumpView);
 						webSession.setAttribute("loadviewkey", jumpView);
 						init(request);
+						jshd.add("jump", true);
 					}
-					mystr = "<div style='color:#00FF00; font-size:14px;'>" + mystr + "</div>";
+					jshd.add("msg", mystr);
 				}
 			} else {
-				mystr = "<div style='color:#FF0000 font-size:14px; font-weight:bold;'>No access allowed for function</div><br>\n";
+				jshd.add("error", true);
+				jshd.add("msg", "No access allowed for function");
 			}
 		}
-
-		return mystr;
+		
+		JsonObject jsObj = jshd.build();
+		
+		System.out.println("BASE 2030 : " + jsObj.toString());
+		return jsObj.toString();
 	}
 	
 	public void updateMultiPart(HttpServletRequest request, ServletContext config, String tmpPath) {

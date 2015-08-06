@@ -2676,8 +2676,8 @@ BEGIN
 		ORDER BY define_phases.phase_order 
 	LOOP
 
-		INSERT INTO Phases (project_id, entity_type_id, phase_name, start_date, end_date, phase_cost)
-		VALUES(NEW.project_id, myrec.entity_type_id, myrec.Define_phase_name, 
+		INSERT INTO Phases (org_id, project_id, entity_type_id, phase_name, start_date, end_date, phase_cost)
+		VALUES(NEW.org_id, NEW.project_id, myrec.entity_type_id, myrec.Define_phase_name, 
 			NEW.start_date + start_days, 
 			NEW.start_date + myrec.date_range + start_days, 
 			myrec.phase_cost);
@@ -18465,14 +18465,14 @@ SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
 
 INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (0, 0, 0, 'root', 'root', 'root@localhost', NULL, true, true, false, NULL, '2015-08-04 07:59:06.015224', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
 INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', NULL, false, true, false, NULL, '2015-08-04 07:59:06.015224', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (2, 1, 0, 'Patibandla Ramya sree', 'dc.ramya.patibandla', NULL, NULL, false, false, false, 'staff', '2015-08-04 08:37:47.292312', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (3, 1, 0, 'Pusapati Varma Narasimha', 'dc.varma.pusapati', NULL, NULL, false, false, false, 'staff', '2015-08-04 08:37:47.341151', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (4, 1, 0, 'Kamanda Edwin Geke', 'dc.edwin.kamanda', NULL, NULL, false, false, false, 'staff', '2015-08-04 08:37:47.349529', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (5, 1, 0, 'Kamau Joseph Wanjoki', 'dc.joseph.kamau', NULL, NULL, false, false, false, 'staff', '2015-08-04 08:37:47.357854', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (6, 1, 0, 'blackshamrat Sazzadur  Rahman', 'dc.sazzadur .blackshamrat', NULL, NULL, false, false, false, 'staff', '2015-08-04 08:37:47.366273', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (7, 1, 0, 'Ondero Stanley Makori', 'dc.stanley.ondero', NULL, NULL, false, false, false, 'staff', '2015-08-04 08:37:47.374537', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (8, 4, 0, 'Joseph Kamau Karanja', 'joseph.kamau@obmails.com', 'joseph.kamau@obmails.com', NULL, false, false, false, 'applicant', '2015-08-04 08:37:47.391323', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (9, 4, 0, 'Gichangi Dennis Wachira', 'dennisgichangi@gmail.com', 'dennisgichangi@gmail.com', NULL, false, false, false, 'applicant', '2015-08-04 08:37:47.399764', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (2, 1, 0, 'Patibandla Ramya sree', 'dc.ramya.patibandla', NULL, NULL, false, false, false, 'staff', '2015-08-05 12:30:09.91634', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (3, 1, 0, 'Pusapati Varma Narasimha', 'dc.varma.pusapati', NULL, NULL, false, false, false, 'staff', '2015-08-05 12:30:09.9447', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (4, 1, 0, 'Kamanda Edwin Geke', 'dc.edwin.kamanda', NULL, NULL, false, false, false, 'staff', '2015-08-05 12:30:09.952999', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (5, 1, 0, 'Kamau Joseph Wanjoki', 'dc.joseph.kamau', NULL, NULL, false, false, false, 'staff', '2015-08-05 12:30:09.96135', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (6, 1, 0, 'blackshamrat Sazzadur  Rahman', 'dc.sazzadur .blackshamrat', NULL, NULL, false, false, false, 'staff', '2015-08-05 12:30:09.969741', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (7, 1, 0, 'Ondero Stanley Makori', 'dc.stanley.ondero', NULL, NULL, false, false, false, 'staff', '2015-08-05 12:30:09.978136', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (8, 4, 0, 'Joseph Kamau Karanja', 'joseph.kamau@obmails.com', 'joseph.kamau@obmails.com', NULL, false, false, false, 'applicant', '2015-08-05 12:30:09.994841', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (9, 4, 0, 'Gichangi Dennis Wachira', 'dennisgichangi@gmail.com', 'dennisgichangi@gmail.com', NULL, false, false, false, 'applicant', '2015-08-05 12:30:10.003342', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
 
 
 --
@@ -18924,14 +18924,13 @@ SELECT pg_catalog.setval('objectives_objective_id_seq', 1, false);
 -- Data for Name: org_events; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO org_events (org_event_id, org_id, org_event_name, start_date, end_date, details) VALUES (1, 0, 'Main event', '2015-07-01', '2015-07-10', NULL);
 
 
 --
 -- Name: org_events_org_event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('org_events_org_event_id_seq', 1, true);
+SELECT pg_catalog.setval('org_events_org_event_id_seq', 1, false);
 
 
 --
@@ -19526,14 +19525,13 @@ SELECT pg_catalog.setval('sys_audit_details_sys_audit_detail_id_seq', 1, false);
 -- Data for Name: sys_audit_trail; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (1, '0', '127.0.0.1', '2015-08-04 08:32:22.355754', 'org_events', '1', 'INSERT', NULL);
 
 
 --
 -- Name: sys_audit_trail_sys_audit_trail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
-SELECT pg_catalog.setval('sys_audit_trail_sys_audit_trail_id_seq', 1, true);
+SELECT pg_catalog.setval('sys_audit_trail_sys_audit_trail_id_seq', 1, false);
 
 
 --
@@ -19907,31 +19905,14 @@ SELECT pg_catalog.setval('sys_files_sys_file_id_seq', 1, false);
 -- Data for Name: sys_logins; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2015-08-04 07:59:37.77729', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (2, 0, '2015-08-04 08:18:49.066068', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3, 0, '2015-08-04 08:30:13.356367', 'joto.dewcis.co.ke/127.0.0.1', 'TOMCAT');
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (4, 0, '2015-08-04 08:30:58.628264', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (5, 0, '2015-08-04 08:31:03.818753', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (6, 0, '2015-08-04 08:31:04.412713', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (7, 0, '2015-08-04 08:31:06.427424', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (8, 0, '2015-08-04 08:31:07.068391', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (9, 0, '2015-08-04 08:31:12.270528', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (10, 0, '2015-08-04 08:31:12.811372', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (11, 0, '2015-08-04 08:31:16.522791', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (12, 0, '2015-08-04 08:31:17.049189', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (13, 0, '2015-08-04 08:31:18.635155', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (14, 0, '2015-08-04 08:32:22.314918', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (15, 0, '2015-08-04 08:32:22.914443', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (16, 0, '2015-08-04 08:32:39.212333', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (17, 0, '2015-08-04 08:37:29.166983', '127.0.0.1', NULL);
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (18, 0, '2015-08-04 08:37:29.718532', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2015-08-05 12:20:19.607701', '127.0.0.1', NULL);
 
 
 --
 -- Name: sys_logins_sys_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
-SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 18, true);
+SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 1, true);
 
 
 --

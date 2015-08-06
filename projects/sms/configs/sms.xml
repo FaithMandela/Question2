@@ -4,7 +4,7 @@
 		<MENU name="Address">5</MENU>
 		<MENU name="Users" role="manager">20</MENU>
 		<MENU name="Organisation" role="admin">10</MENU>
-		<MENU name="Entitys" role="admin">15</MENU>
+		<MENU name="Entities" role="admin">15</MENU>
 		<MENU name="Reports">
 			<MENU name="SMS">105</MENU>
 			<MENU name="SMS Summary">110</MENU>
@@ -276,8 +276,8 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Entitys" key="15" h="500">
-		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">
+	<DESK w="700" name="Entities" key="15" h="500">
+		<GRID name="Entities" keyfield="entity_id" table="vw_entitys">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
