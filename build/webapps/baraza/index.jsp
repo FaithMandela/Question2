@@ -122,7 +122,7 @@
     <link href="./assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="./assets/global/plugins/jquery-multi-select/css/multi-select.css" rel="stylesheet" type="text/css" />
     <link href="./assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet"/>
-
+    <link href="./assets/global/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css"/>
     <link href="./assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
     <link href="./assets/admin/pages/css/profile.css" rel="stylesheet" type="text/css"/>
 
@@ -424,6 +424,8 @@
 <script src="./assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/select2/select2.min.js" type="text/javascript"></script>
 
+
+
 <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
 <script src="./assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
@@ -463,6 +465,7 @@
 <script src="./assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jstree/dist/jstree.min.js" type="text/javascript"></script>
 <script src="./assets/admin/pages/scripts/ui-tree.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/bootstrap-toastr/toastr.min.js"></script>
 
 <!-- END PAGE LEVEL SCRIPTS -->
 
@@ -596,12 +599,31 @@
 	        var coldata = $grid.jqGrid("getCell", selIds[i], "KF");
 	        cellValues.push(coldata);
 	    }
+        toastr.options = {
+                    "closeButton": true,
+                    "debug": false,
+                    "positionClass": "toast-top-right",
+                    "onclick": null,
+                    "showDuration": "1000",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
 	    if(cellValues.join(",") == ""){
-	        alert('No row Selected');
+	        toastr['info']('No row Selected', "");
 	    } else {
 	        $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
-	            $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
-	        });
+                if(data.error == true){
+                    toastr['error'](data.msg, "Error");
+                }else if(data.error == false){
+                    toastr['success'](data.msg, "Ok");
+                    $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
+                }
+	        }, "JSON");
 	    }
 	});
 
