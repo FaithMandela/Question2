@@ -73,7 +73,7 @@ License: You must have a valid license purchased only from themeforest(the above
         
         <br/>
         
-        <a href="${contextPath}/" class="btn btn-success">
+        <a href="${contextPath}/?view=1:0" class="btn btn-success">
 		Return home </a>
 	</div>
 </div>
