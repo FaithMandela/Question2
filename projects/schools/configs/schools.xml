@@ -1,24 +1,7 @@
 <APP name="schools">
 	<MENU name="schools">
-		<MENU name="Administration">
-			<MENU name="Students">1</MENU>
-			<MENU name="Teachers">10</MENU>
-		</MENU>
-		<MENU name="School Session">
-			<MENU name="Session">70</MENU>
-			<MENU name="Time Tabling">95</MENU>
-			<MENU name="View Time Table">100</MENU>
-			<MENU name="Class">50</MENU>
-			<MENU name="Prefects">125</MENU>
-			<MENU name="Subjects">55</MENU>
-			<MENU name="Exams">65</MENU>
-		</MENU>
-		<MENU name="Teachers Subject">75</MENU>
-		<MENU name="Achievements">25</MENU>
-		<MENU name="Co-curricular"></MENU>
-		<MENU name="Absents">60</MENU>
-		<MENU name="New Applicant" role="applicant">80</MENU>
-		<MENU name="Definitions">
+		<MENU name="Control Panel">
+			<MENU name="Grades">140</MENU>
 			<MENU name="Disciplinarys">110</MENU>
 			<MENU name="Guardian Types">115</MENU>
 			<MENU name="Dormitorys">120</MENU>
@@ -26,10 +9,30 @@
 			<MENU name="Clubs">40</MENU>
 			<MENU name="Scholarships">45</MENU>
 		</MENU>
-		<MENU name="Grading">130</MENU>
+		<MENU name="Administration">
+			<MENU name="Students">1</MENU>
+			<MENU name="Instructors">10</MENU>
+		</MENU>
+		<MENU name="School Trimester">
+			<MENU name="Trimester">70</MENU>
+			<MENU name="Trimester Timetable">95</MENU>
+			<MENU name="View Time Table">100</MENU>
+			<MENU name="Class">50</MENU>
+			<MENU name="Prefects">125</MENU>
+			<MENU name="Subjects">55</MENU>
+			<MENU name="Exams">65</MENU>
+		</MENU>
+		<MENU name="Instructors Subject">75</MENU>
+		<MENU name="Achievements">25</MENU>
+		<MENU name="Co-curricular"></MENU>
+		<MENU name="Absents">60</MENU>
+		<MENU name="New Applicant" role="applicant">80</MENU>
+		<MENU name="Reports">
+			<MENU name="Students List">130</MENU>
+		</MENU>
 	</MENU>
-	<DESK w="700" name="Teachers" key="10" h="500">
-		<GRID name="Teachers" keyfield="teacher_id" table="teachers">
+	<DESK w="700" name="Instructors" key="10" h="500">
+		<GRID name="Instructors" keyfield="teacher_id" table="teachers">
 			<TEXTFIELD w="75" title="Title">title</TEXTFIELD>
 			<TEXTFIELD w="75" title="Name">name</TEXTFIELD>
 			<TEXTDATE w="75" title="Dob">dob</TEXTDATE>
@@ -38,7 +41,7 @@
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Salary">salary</TEXTDECIMAL>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-			<FORM name="Teachers" keyfield="teacher_id" table="teachers">
+			<FORM name="Instructors" keyfield="teacher_id" table="teachers">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">title
 					<DATA>Mr</DATA>
 					<DATA>Mrs</DATA>
@@ -151,18 +154,18 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Sessions" key="70" h="550">
-		<GRID name="Sessions" keyfield="term_id" table="terms">
+	<DESK w="700" name="Trimester" key="70" h="550">
+		<GRID name="Trimester" keyfield="term_id" table="terms">
 			<TEXTFIELD w="75" title="Term Name">term_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Year">year</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-			<FORM name="Sessions" keyfield="term_id" table="terms">
+			<FORM name="Trimester" keyfield="term_id" table="terms">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">term_name
-					<DATA>Term 1</DATA>
-					<DATA>Term 2</DATA>
-					<DATA>Term 3</DATA>
+					<DATA>1</DATA>
+					<DATA>2</DATA>
+					<DATA>3</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Year" y="30" h="20" x="10">year</TEXTFIELD>
 				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
@@ -194,8 +197,8 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Teachers Subjects" key="75" h="550">
-		<JASPER name="Teachers Subjects" reportfile="Teachers Subjects.jasper"></JASPER>
+	<DESK w="700" name="Instructors Subjects" key="75" h="550">
+		<JASPER name="Instructors Subjects" reportfile="Teachers Subjects.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Students" key="1" h="550">
 		<GRID name="Student" keyfield="entity_id" table="students">
@@ -327,15 +330,29 @@
 				<TEXTFIELD w="75" title="Cat 1">cat1</TEXTFIELD>
 				<TEXTFIELD w="75" title="Cat 2">cat2</TEXTFIELD>
 				<TEXTFIELD w="75" title="Main Exam">main_exam</TEXTFIELD>
-				<JASPER name="Report Book" reportfile="subjectsReport.jasper"></JASPER>
 				<FORM name="Student Exam" keyfield="student_exam_id" linkfield="entity_id" table="student_exam">
 					<COMBOBOX w="430" title="Exam Name" lptable="exams" y="10" h="20" x="10" lpfield="exam_name">exam_id</COMBOBOX>
 					<COMBOBOX w="430" title="Subject Name" lptable="subjects" y="50" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Cat1" y="70" h="20" x="10">cat1</TEXTFIELD>
 					<TEXTFIELD w="150" title="Cat2" y="70" h="20" x="290">cat2</TEXTFIELD>
 					<TEXTFIELD w="150" title="Main Exam" y="90" h="20" x="10">main_exam</TEXTFIELD>
+					<COMBOLIST w="150" title="Grade" y="110" h="20" x="10">grade
+						<DATA key="A">A(plain)</DATA>
+						<DATA key="A-">A-(minus)</DATA>
+						<DATA key="B+">B+(plus)</DATA>
+						<DATA key="B">B(plain)</DATA>
+						<DATA key="B-">B-(minus)</DATA>
+						<DATA key="C+">C+(plus)</DATA>
+						<DATA key="C">C(plain)</DATA>
+						<DATA key="C-">C-(minus)</DATA>
+						<DATA key="D+">D+(plus)</DATA>
+						<DATA key="D">D(plain)</DATA>
+						<DATA key="D-">D-(minus)</DATA>
+						<DATA key="E">E</DATA>
+					</COMBOLIST>
 				</FORM>
 			</GRID>
+			<JASPER name="Exam Report" reportfile="examReport.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Seminars" key="35" h="550">
@@ -433,10 +450,32 @@
 	<DESK w="700" name="Dormitorys" key="120" h="550">
 		<GRID name="Dormitorys" keyfield="dormitory_id" table="dormitorys">
 			<TEXTFIELD w="75" title="Dormitory Name">dormitory_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Dormitory Matron">matron</TEXTFIELD>
 			<TEXTFIELD w="75" title="Dormitory capacity">capacity</TEXTFIELD>
 			<FORM name="Dormitorys" keyfield="dormitory_id" table="dormitorys">
 				<TEXTFIELD w="150" title="Dormitory Name" y="10" h="20" x="10">dormitory_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Dormitory Capacity" y="30" h="20" x="10">capacity</TEXTFIELD>
+				<TEXTFIELD w="150" title="Dormitory Matron" y="50" h="20" x="10">matron</TEXTFIELD>
+				<TEXTFIELD w="150" title="Cubicle Capacity" y="70" h="20" x="10">cubicle_capacity</TEXTFIELD>
+				<COMBOLIST w="150" title="Grade" y="90" h="20" x="10">sex
+					<DATA key="M">Male</DATA>
+					<DATA key="F">Female</DATA>
+				</COMBOLIST>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Grades" key="140" h="550">
+		<GRID name="Grades" keyfield="grade_id" table="grades">
+			<TEXTFIELD w="75" title="Grade ID">grade_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Grade Name">grade_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Grade Weight">grade_weight</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Min Range">min_range</TEXTFIELD>
+			<TEXTFIELD w="75" title="Max Range">max_range</TEXTFIELD>
+			<FORM name="Grades" keyfield="grade_id" table="grades">
+				<TEXTFIELD w="150" title="Grade Name" y="10" h="20" x="10">grade_name</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Grade Weight" y="10" h="20" x="290">grade_weight</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Min Range" y="30" h="20" x="10">min_range</TEXTFIELD>
+				<TEXTFIELD w="150" title="Max Range" y="30" h="20" x="290">max_range</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -486,8 +525,8 @@
 	<DESK w="700" name="report_student" key="90" h="550">
 		<JASPER name="report_student" reportfile="report_student.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="timetable" key="95" h="550">
-		<GRID name="Timetable" keyfield="timetable_id" table="vw_timetable">
+	<DESK w="700" name="Trimester Timetable" key="95" h="550">
+		<GRID name="Trimester" keyfield="timetable_id" table="vw_timetable">
 			<TEXTFIELD w="75" title="Class Name">class_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Teacher Name">name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
@@ -497,10 +536,17 @@
 			<FORM name="Timetable" keyfield="timetable_id" table="timetable">
 				<COMBOBOX w="430" title="Class Name" lptable="class" y="10" h="20" x="10" lpfield="class_name">class_id</COMBOBOX>
 				<COMBOBOX w="430" title="Subject Name" lptable="subjects" y="30" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
-				<COMBOBOX w="430" title="Teacher Name" lptable="teachers" y="50" h="20" x="10" lpfield="name">teacher_id</COMBOBOX>
 				<SPINTIME w="150" title="Start Time" y="70" h="20" x="10">start_time</SPINTIME>
 				<SPINTIME w="150" title="End Time" y="70" h="20" x="290">end_time</SPINTIME>
-				<COMBOBOX w="430" title="Weekday Name" lptable="weekdays" y="90" h="20" x="10" lpfield="weekday_name">weekday_id</COMBOBOX>
+				<COMBOLIST w="50" title="Day" y="10" h="20" x="10">weekday_name
+					<DATA>monday</DATA>
+					<DATA>tuesday</DATA>
+					<DATA>wednesday</DATA>
+					<DATA>thursday</DATA>
+					<DATA>friday</DATA>
+					<DATA>saturday</DATA>
+					<DATA>sunday</DATA>
+				</COMBOLIST>
 			</FORM>
 		</GRID>
 		<GRID name="Weekdays" keyfield="weekday_id" table="weekdays">
@@ -511,7 +557,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Leave" key="130" h="550">
-		<JASPER name="Time Table" reportfile="gradingReport.jasper"></JASPER>
+	<DESK w="700" name="Students List" key="130" h="750">
+		<JASPER name="Student List" reportfile="student_list.jasper"></JASPER>
 	</DESK>
 </APP>
