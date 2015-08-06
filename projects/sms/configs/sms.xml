@@ -190,6 +190,7 @@
 			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
 			<FORM name="Entitys" keyfield="entity_id" table="entitys">
 				<DEFAULT default="0">entity_type_id</DEFAULT>
+				<DEFAULT default="user">function_role</DEFAULT>
 				<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>

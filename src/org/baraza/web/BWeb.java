@@ -529,7 +529,9 @@ public class BWeb {
 			String did = "";
 			if(dataItem!=null) did = "&data=" + dataItem;
 			
-			if(hasForm) buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   New</a>\n";
+			String newBtn = view.getAttribute("new.button", "New");
+			
+			if(hasForm) buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-refresh'></i>   Refresh</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			

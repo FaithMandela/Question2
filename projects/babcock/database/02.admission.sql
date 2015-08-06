@@ -413,8 +413,10 @@ BEGIN
 	FROM registrations
 	WHERE (registrationid = NEW.entity_id);
 
-	IF(v_submit_application = true) THEN
-		RAISE EXCEPTION 'You cannot make changed after submission of application.';
+	IF(NEW.first_password = OLD.first_password)THEN
+		IF(v_submit_application = true) THEN
+			RAISE EXCEPTION 'You cannot make changed after submission of application.';
+		END IF;
 	END IF;
 
 	RETURN NEW;
