@@ -309,6 +309,7 @@ CREATE TABLE sys_emailed (
 	table_name				varchar(50),
 	email_type				integer default 1 not null,
 	emailed					boolean default false not null,
+	created					timestamp default current_timestamp,
 	narrative				varchar(240)
 );
 CREATE INDEX sys_emailed_sys_email_id ON sys_emailed (sys_email_id);
@@ -746,8 +747,8 @@ BEGIN
 		NEW.first_password := first_password();
 	END IF;
 	IF(TG_OP = 'INSERT') THEN
-		IF (NEW.Entity_password is null) THEN
-			NEW.Entity_password := md5(NEW.first_password);
+		IF (NEW.entity_password is null) THEN
+			NEW.entity_password := md5(NEW.first_password);
 		END IF;
 	ELSIF(OLD.first_password <> NEW.first_password) THEN
 		NEW.Entity_password := md5(NEW.first_password);
