@@ -121,21 +121,28 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
 
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
+	v_entity_id		integer;
 	v_org_id		integer;
 	v_org_suffix    char(2);
 	rec 			RECORD;
 BEGIN
+
 	IF (TG_OP = 'INSERT') THEN
+		SELECT entity_id INTO v_entity_id
+		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
+
+		IF(v_entity_id is null)THEN
+			NEW.entity_id := nextval('entitys_entity_id_seq');
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
+			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
-		NEW.entity_id := nextval('entitys_entity_id_seq');
-		INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role)
-		VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription');
+			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
+			VALUES (4, 0, NEW.entity_id, 'subscription');
 		
-		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES (4, 0, NEW.entity_id, 'subscription');
-		
-		NEW.approve_status := 'Completed';
-		
+			NEW.approve_status := 'Completed';
+		ELSE
+			RAISE EXCEPTION 'You already have an account, login and request for services';
+		END IF;
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');

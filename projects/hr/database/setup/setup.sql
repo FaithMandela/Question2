@@ -2676,8 +2676,8 @@ BEGIN
 		ORDER BY define_phases.phase_order 
 	LOOP
 
-		INSERT INTO Phases (project_id, entity_type_id, phase_name, start_date, end_date, phase_cost)
-		VALUES(NEW.project_id, myrec.entity_type_id, myrec.Define_phase_name, 
+		INSERT INTO Phases (org_id, project_id, entity_type_id, phase_name, start_date, end_date, phase_cost)
+		VALUES(NEW.org_id, NEW.project_id, myrec.entity_type_id, myrec.Define_phase_name, 
 			NEW.start_date + start_days, 
 			NEW.start_date + myrec.date_range + start_days, 
 			myrec.phase_cost);
@@ -8243,6 +8243,43 @@ ALTER TABLE public.objectives_objective_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE objectives_objective_id_seq OWNED BY objectives.objective_id;
+
+
+--
+-- Name: org_events; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE org_events (
+    org_event_id integer NOT NULL,
+    org_id integer,
+    org_event_name character varying(50) NOT NULL,
+    start_date date,
+    end_date date,
+    details text
+);
+
+
+ALTER TABLE public.org_events OWNER TO postgres;
+
+--
+-- Name: org_events_org_event_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE org_events_org_event_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.org_events_org_event_id_seq OWNER TO postgres;
+
+--
+-- Name: org_events_org_event_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE org_events_org_event_id_seq OWNED BY org_events.org_event_id;
 
 
 --
@@ -16811,6 +16848,13 @@ ALTER TABLE ONLY objectives ALTER COLUMN objective_id SET DEFAULT nextval('objec
 
 
 --
+-- Name: org_event_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY org_events ALTER COLUMN org_event_id SET DEFAULT nextval('org_events_org_event_id_seq'::regclass);
+
+
+--
 -- Name: org_id; Type: DEFAULT; Schema: public; Owner: root
 --
 
@@ -18835,6 +18879,19 @@ SELECT pg_catalog.setval('objectives_objective_id_seq', 1, false);
 
 
 --
+-- Data for Name: org_events; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: org_events_org_event_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('org_events_org_event_id_seq', 1, false);
+
+
+--
 -- Data for Name: orgs; Type: TABLE DATA; Schema: public; Owner: root
 --
 
@@ -19804,7 +19861,7 @@ SELECT pg_catalog.setval('sys_files_sys_file_id_seq', 1, false);
 -- Data for Name: sys_logins; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2015-08-04 07:59:37.77729', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2015-08-05 12:20:19.607701', '127.0.0.1', NULL);
 
 
 --
@@ -21076,6 +21133,14 @@ ALTER TABLE ONLY objective_types
 
 ALTER TABLE ONLY objectives
     ADD CONSTRAINT objectives_pkey PRIMARY KEY (objective_id);
+
+
+--
+-- Name: org_events_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY org_events
+    ADD CONSTRAINT org_events_pkey PRIMARY KEY (org_event_id);
 
 
 --
@@ -23691,6 +23756,13 @@ CREATE INDEX objectives_objective_type_id ON objectives USING btree (objective_t
 --
 
 CREATE INDEX objectives_org_id ON objectives USING btree (org_id);
+
+
+--
+-- Name: org_events_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX org_events_id ON org_events USING btree (org_id);
 
 
 --
@@ -27367,6 +27439,14 @@ ALTER TABLE ONLY objectives
 
 ALTER TABLE ONLY objectives
     ADD CONSTRAINT objectives_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+
+
+--
+-- Name: org_events_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY org_events
+    ADD CONSTRAINT org_events_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
 
 
 --
