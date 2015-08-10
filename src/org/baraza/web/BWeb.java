@@ -527,10 +527,36 @@ public class BWeb {
 			}
 
 			String did = "";
-			if(dataItem!=null) did = "&data=" + dataItem;
-						
+			if(dataItem != null) did = "&data=" + dataItem;
 			
-			if(hasForm) {
+			boolean newShow = true;
+			if(view.getAttribute("new.show") != null) {
+				String tcSql = "SELECT " + view.getAttribute("new.show") + " FROM " + view.getAttribute("table");
+				String tcWhere = null;
+				if(view.getAttribute("noorg") == null) tcWhere = db.getOrgWhere(null);
+				if(view.getAttribute("user") != null) {
+					if(tcWhere == null) tcWhere = " WHERE ";
+					else tcWhere += " AND ";
+					tcWhere += view.getAttribute("user") + " = " + db.getUserID();
+				}
+				if((view.getAttribute("linkfield") != null) && (dataItem != null)) {
+					if(tcWhere == null) tcWhere = " WHERE ";
+					else tcWhere += " AND ";
+					tcWhere += view.getAttribute("linkfield") + " = " + dataItem;
+				}
+				if(view.getAttribute("where") != null) {
+					if(tcWhere == null) tcWhere = " WHERE ";
+					else tcWhere += " AND ";
+					tcWhere += view.getAttribute("where");
+				}
+				if(tcWhere != null) tcSql += tcWhere;
+
+				String tcVal = db.executeFunction(tcSql);
+				if(tcVal == null) newShow = false;
+				else if(tcVal.equals("false")) newShow = false;
+			}
+
+			if(hasForm && newShow) {
 				String newBtn = view.getAttribute("new.button", "New");
 				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			}
