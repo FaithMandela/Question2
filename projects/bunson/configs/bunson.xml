@@ -1075,15 +1075,6 @@
 				<JASPER name="Voucher" reportfile="vw_transfer_assignments.jasper"></JASPER>
 				<JASPER name="Todays Transfer List" reportfile="vw_transfer_assignments_today.jasper"></JASPER>
 				<JASPER name="Todays No Show List" reportfile="vw_transfer_assignments_today_noshow.jasper"></JASPER>
-				<FORM new="false" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
-					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
-					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
-					<SPINTIME w="150" title="Time In" y="90" h="20" x="10">time_in</SPINTIME>
-					<CHECKBOX w="150" title="Closed" y="90" h="20" x="290">closed</CHECKBOX>
-				</FORM>
 			</GRID>
 			<GRID name="Closed Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" display="form" table="vw_transfer_assignments" noorg="true" where="(closed=true)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>

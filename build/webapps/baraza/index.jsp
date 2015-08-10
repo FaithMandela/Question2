@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="mainPage" value="index.jsp" scope="page" />
 <%@ page import="org.baraza.web.*" %>
 <%@ page import="org.baraza.xml.BElement" %>
 
@@ -31,7 +34,8 @@
 	BWeb web = new BWeb(dbconfig, xmlfile);
 	web.setUser(userIP, userName);
 	web.init(request);
-	web.setMainPage("index.jsp");
+   
+	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
 
 	String entryformid = null;
 	String action = request.getParameter("action");
@@ -277,7 +281,7 @@
 <% } else { %>
 
 			<!-- BEGIN PAGE CONTENT-->
-			<form id="baraza" name="baraza" method="post" action="index.jsp" data-confirm-send="false" data-ajax="false" <%= web.getEncType() %> >
+			<form id="baraza" name="baraza" method="post" action="${mainPage}" data-confirm-send="false" data-ajax="false" <%= web.getEncType() %> >
 				<%= web.getHiddenValues() %>
 			<div class="row">
 				<div class="col-md-12" >
@@ -617,12 +621,23 @@
 	        toastr['info']('No row Selected', "");
 	    } else {
 	        $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
+                
                 if(data.error == true){
                     toastr['error'](data.msg, "Error");
                 }else if(data.error == false){
                     toastr['success'](data.msg, "Ok");
-                    $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
+                    
+                    if(data.jump != undefined && data.jump == true){
+                        location.replace("${mainPage}"); 
+                    }else{
+                        $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');   
+                    }
                 }
+                
+                
+                
+                
+                
 	        }, "JSON");
 	    }
 	});
