@@ -1,9 +1,9 @@
-<APP name="Travel Insurance" org="org_id" password="change_password">
+<APP color="purple" name="Travel Insurance" org="org_id" password="change_password" material="true">
 	<MENU name="Travel Insurance">
 		<MENU name="Service Desk">
 			<MENU name="Dashboard">1</MENU>
 			<MENU name="My Insurance">82</MENU>
-			<MENU name="My Payments">87</MENU>
+			<MENU icon="fa fa-money" name="My Payments">87</MENU>
 			<MENU name="Client Forms">25</MENU>
 			<MENU name="Approvals">45</MENU>
 		</MENU>
@@ -182,6 +182,7 @@
 				<COMBOBOX w="430" title="Entity Type" lptable="entity_types" y="30" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Son" y="300" h="20" x="10">son</TEXTFIELD>
 				<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
 				<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
 				<CHECKBOX w="150" title="Super User" y="110" h="20" x="10">super_user</CHECKBOX>
@@ -845,7 +846,7 @@
 			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
 			<FORM name="Payments" keyfield="payment_id" table="payments">
 				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" noorg="true" y="10" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Payment Amount" y="30" h="20" x="10">payment_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Payment Amount" required="true" y="30" h="20" x="10">payment_amount</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Transaction Reference" y="30" h="20" x="290">transaction_reference</TEXTFIELD>
 				<TEXTDATE w="150" title="Payment Date" y="50" h="20" x="10">payment_date</TEXTDATE>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
