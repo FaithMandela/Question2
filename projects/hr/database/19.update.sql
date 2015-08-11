@@ -1,4 +1,36 @@
+ALTER TABLE entitys ALTER COLUMN entity_password DROP DEFAULT;
+ALTER TABLE entitys ALTER COLUMN first_password DROP DEFAULT;
 
+
+CREATE OR REPLACE FUNCTION ins_password() RETURNS trigger AS $$
+DECLARE
+	v_entity_id		integer;
+BEGIN
+
+	SELECT entity_id INTO v_entity_id
+	FROM entitys
+	WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)))
+		AND entity_id <> NEW.entity_id;
+		
+	IF(v_entity_id is not null)THEN
+		RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
+	END IF;
+
+	IF(TG_OP = 'INSERT') THEN
+		IF(NEW.first_password is null)THEN
+			NEW.first_password := first_password();
+		END IF;
+
+		IF (NEW.entity_password is null) THEN
+			NEW.entity_password := md5(NEW.first_password);
+		END IF;
+	ELSIF(OLD.first_password <> NEW.first_password) THEN
+		NEW.Entity_password := md5(NEW.first_password);
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 
 CREATE TABLE org_events (

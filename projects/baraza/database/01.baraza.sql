@@ -185,7 +185,7 @@ CREATE TABLE entitys (
 	entity_type_id			integer not null references entity_types,
 	org_id					integer not null references orgs,
 	entity_name				varchar(120) not null,
-	user_name				varchar(120),
+	user_name				varchar(120) not null,
 	primary_email			varchar(120),
 	primary_telephone		varchar(50),
 	super_user				boolean default false not null,
@@ -194,8 +194,8 @@ CREATE TABLE entitys (
 	function_role			varchar(240),
 	date_enroled			timestamp default now(),
 	is_active				boolean default true,
-	entity_password			varchar(64) default md5('baraza') not null,
-	first_password			varchar(64) default 'baraza' not null,
+	entity_password			varchar(64) not null,
+	first_password			varchar(64) not null,
 	new_password			varchar(64),
 	start_url				varchar(64),
 	is_picked				boolean default false not null,
@@ -205,12 +205,6 @@ CREATE TABLE entitys (
 CREATE INDEX entitys_entity_type_id ON entitys (entity_type_id);
 CREATE INDEX entitys_org_id ON entitys (org_id);
 CREATE INDEX entitys_user_name ON entitys (user_name);
-
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
-VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false);
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
-VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false);
-SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
 
 CREATE TABLE subscription_levels (
 	subscription_level_id	serial primary key,
@@ -742,11 +736,24 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_password() RETURNS trigger AS $$
+DECLARE
+	v_entity_id		integer;
 BEGIN
-	IF(NEW.first_password is null) AND (TG_OP = 'INSERT') THEN
-		NEW.first_password := first_password();
+
+	SELECT entity_id INTO v_entity_id
+	FROM entitys
+	WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)))
+		AND entity_id <> NEW.entity_id;
+		
+	IF(v_entity_id is not null)THEN
+		RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 	END IF;
+
 	IF(TG_OP = 'INSERT') THEN
+		IF(NEW.first_password is null)THEN
+			NEW.first_password := first_password();
+		END IF;
+
 		IF (NEW.entity_password is null) THEN
 			NEW.entity_password := md5(NEW.first_password);
 		END IF;
@@ -1114,3 +1121,24 @@ BEGIN
 	RETURN myemail;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
+--- Data
+INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
+INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Manager');
+INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Consumer');
+
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
+VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false);
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
+VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false);
+SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
+
+INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
+VALUES (0, 0, 0, 0, 0);
+INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
+VALUES (0, 1, 0, 1, 0);
+SELECT pg_catalog.setval('entity_subscriptions_entity_subscription_id_seq', 1, true);
+
+
