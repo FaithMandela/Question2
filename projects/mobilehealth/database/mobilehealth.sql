@@ -351,6 +351,7 @@ CREATE TABLE survey_100(
     org_id                          integer references orgs,
     
     health_worker_id                integer references health_workers,
+    form_serial                     varchar(10),
     patient_gender                  varchar(2),
     patient_name                    varchar(200),
     patient_age                     varchar(3),
