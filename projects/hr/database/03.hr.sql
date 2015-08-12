@@ -93,6 +93,9 @@ CREATE TABLE applicants (
 	picture_file			varchar(32),
 	identity_card			varchar(50),
 	language				varchar(320),
+	
+	how_you_heard			varchar(320),
+	created					timestamp default current_timestamp,
 
 	field_of_study			text,
 	interests				text,
@@ -1302,20 +1305,30 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
 DECLARE
-	rec RECORD;
+	rec 			RECORD;
+	v_entity_id		integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
+		
 		IF(NEW.entity_id IS NULL) THEN
-			SELECT org_id INTO rec
-			FROM orgs WHERE (is_default = true);
+			SELECT entity_id INTO v_entity_id
+			FROM entitys
+			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
+				
+			IF(v_entity_id is null)THEN
+				SELECT org_id INTO rec
+				FROM orgs WHERE (is_default = true);
 
-			NEW.entity_id := nextval('entitys_entity_id_seq');
+				NEW.entity_id := nextval('entitys_entity_id_seq');
 
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
-				primary_email, primary_telephone, function_role)
-			VALUES (NEW.entity_id, rec.org_id, 4, 
-				(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
-				lower(NEW.Applicant_EMail), lower(NEW.Applicant_EMail), NEW.applicant_phone, 'applicant');
+				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
+					primary_email, primary_telephone, function_role)
+				VALUES (NEW.entity_id, rec.org_id, 4, 
+					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
+					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
+			ELSE
+				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
+			END IF;
 		END IF;
 
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
