@@ -771,6 +771,7 @@
 			<TEXTFIELD w="75" title="National ID">nok_national_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
+			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
 			<JASPER name="Policy" reportfile="vw_passengers.jasper"></JASPER>
 			<FORM name="Insurance" keyfield="passenger_id" table="passengers" noorg="true">
 				<TEXTFIELD w="150" title="Passenger Name" y="50" h="20" x="10">passenger_name</TEXTFIELD>
