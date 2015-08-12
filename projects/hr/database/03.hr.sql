@@ -93,6 +93,9 @@ CREATE TABLE applicants (
 	picture_file			varchar(32),
 	identity_card			varchar(50),
 	language				varchar(320),
+	
+	how_you_heard			varchar(320),
+	created					timestamp default current_timestamp,
 
 	field_of_study			text,
 	interests				text,
