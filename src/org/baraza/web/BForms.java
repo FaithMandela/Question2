@@ -108,22 +108,18 @@ public class BForms {
 		if(entryformid != null) readClientData(entryformid);	// Read the client database for values
 
 		if ((entryformid != null) && (disabled == null)) {
-		    mystr+= "<div class='portlet-body form'>";
-			mystr += "<form id='baraza' class='page-content-wrapper' name='baraza' method='post' action='form.jsp'>\n";
+			mystr += "<form id='baraza' name='baraza' method='post' action='form.jsp'>\n";
 			mystr += "<input type='hidden' name='action' value='ENTRYFORM'/>\n";
-			mystr += "<input type='hidden' name='actionvalue' value='" + entryformid + "'/>";
-			mystr += "</div>\n";
+			mystr += "<input type='hidden' name='actionvalue' value='" + entryformid + "'/>\n";
 		}
 
 		if(!"Draft".equals(approveStatus)) mystr += "<fieldset><label>FORM SUBMITTED AND CANNOT BE EDITED</label></fieldset>\n";
-        mystr +="<div class='navbar navbar-fixed-top portlet box green '>";
+
 		mystr += "<fieldset>\n";
 		mystr += "<label>" + fname + "</label>\n";
-		mystr += "</fieldset>";
-		mystr += "</div>\n";
+		mystr += "</fieldset>\n";
 
-		if(hidehead == null) 
-		mystr += fhead;
+		if(hidehead == null) mystr += fhead;
 
  		if(submit != null) mystr += "<section>" + submitForm(formid, entryformid) + "</section>\n";
 
@@ -134,9 +130,9 @@ public class BForms {
 		if ((entryformid != null) && (disabled == null)) {
 			mystr += "<hr>\n";
 			if(nosave == null) {
-				mystr += "\n<section><input type='submit' name='update' value='Save' class='btn btn-circle blue altProcessButtonFormat'/>";
+				mystr += "\n<section><input type='submit' name='update' value='Save' class='altProcessButtonFormat'/>";
 				mystr += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-				mystr += "<input type='submit' name='submit' value='Complete and Exit' class='btn btn-circle default altProcessButtonFormat'/>";
+				mystr += "<input type='submit' name='submit' value='Complete and Exit' class='altProcessButtonFormat'/>";
 				mystr += "</section>\n";
 			}
 
@@ -179,10 +175,10 @@ public class BForms {
 		rs.close();
 
 		if(fhead == null) fhead = "";
-		else fhead = "<section >\n" + fhead + "</section>\n";
+		else fhead = "<section>\n" + fhead + "</section>\n";
 
 		if(ffoot == null) ffoot = "";
-		else ffoot = "<section class='portlet box green'>\n" + ffoot + "</section>\n";
+		else ffoot = "<section>\n" + ffoot + "</section>\n";
 
 		return mystr;
 	}
@@ -315,14 +311,14 @@ public class BForms {
 			if(rs.getString("tab") != null){
 				//if its the first one..
 				if(tab.equals("")){
-					tab_head = "<div class='col-md-12'>"+ "<fieldset><div id=\"tab\" class='tabbable tabbable-custom tabbable-noborder tabbable-reversed'>";
-					tab_head += "<ul class='nav nav-tabs'>";
-					tab_head += "<li class='active'><a  classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//title
-					tab_body = "<div class=\"tab-pane\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
+					tab_head = "<fieldset><div id=\"tab\" class=\"tabstrip k-widget k-header k-tabstrip\">";
+					tab_head += "<ul class=\"k-tabstrip-items k-reset\">";
+					tab_head += "<li class=\"k-item k-state-default k-first k-tab-on-top k-state-active\"><a classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//title
+					tab_body = "<div class=\"k-content k-state-active\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
 				} else if(!tab.equals("") && !tab.equals(rs.getString("tab"))) {
 					//log.info("Tab has changed from " + tab + " to " + rs.getString("tab"));
-					tab_head += "<li class=\"k-item k-state-default\"><a  classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//another tab title
-					//tab_body += "</div><div class=\"tab-pane\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
+					tab_head += "<li class=\"k-item k-state-default\"><a classx=\"k-link\" hrefx=\"#" + rs.getString("tab").replace(" ","_") + "\">" + rs.getString("tab") + "</a></li>";	//another tab title
+					tab_body += "</div><div class=\"k-content\" id=\"" +rs.getString("tab").replace(" ","_") + "\">";
 				} else if(tab.equals(rs.getString("tab"))){
 					//log.info("Tab continues...." + tab);
 				}
@@ -340,40 +336,34 @@ public class BForms {
 			    isTabs = false;
 			}
 
-			label ="<label for='F" + rs.getString("field_id") +  "' class='control-label col-md-3'> " + question + "</label>"; 
-           
+			label = "<label for='F" + rs.getString("field_id") +  "'> " + question + "</label>";
+
 			if(fieldType.equals("TEXTFIELD")) {
-			    input="<div class='col-md-9'>";
-				input = "<input " + disabled + " type='text' placeholder='Enter text' ";
+				input = "<input " + disabled + " type='text' ";
+				input += " style='width:" + rs.getString("field_size") + "0px' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
 				input += " id ='F" + rs.getString("field_id") +  "'";
-				input += " class ='form-control input-circle'";
 				input += getAnswer(rs.getString("field_id"));
 				input += " placeholder=\"" + details +"\"";
 				input += " class='placeholder fillout' />";
-				input+="</div>";
 			} else if(fieldType.equals("DATE")) {
-			    input="<div class='col-md-9'>";
-			    input = "<input " + disabled + " type='text'placeholder='dd/mm/yyyy' ";
+			    input = "<input " + disabled + " type='text' ";
+			    input += " style='width:" + rs.getString("field_size") + "0px' ";
 			    input += " name='F" + rs.getString("field_id") +  "'";
 			    input += " id ='F" + rs.getString("field_id") +  "'";
 				input += getAnswer(rs.getString("field_id"));
 			    input += " class='datepicker' />";
-			    input+="</div>";
 			} else if(fieldType.equals("TIME")) {
-			    input="<div class='col-md-9'>";
 				input = "<input " + disabled + " type='text' ";
+				input += " style='width:" + rs.getString("field_size") + "0px' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
 				input += " id ='F" + rs.getString("field_id") +  "'";
 				input += getAnswer(rs.getString("field_id"));
 				input += " class='timepicker' />";
-				input+="</div>";
 			} else if(fieldType.equals("LIST")) {
-			    input="<div class='col-md-9'>";
-				input = "<select class='form-control' ";
+				input = "<select class='formcombobox' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
 				input += " id='F" + rs.getString("field_id") +  "'";
-				input+="</div>";
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
@@ -392,13 +382,11 @@ public class BForms {
 				}
 
 				input += "</select>";
-				//input += "<span " + " id='list" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'>" + listVal + "</span>";
+				input += "<span " + " id='list" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'>" + listVal + "</span>";
 			} else if(fieldType.equals("SELECT")) {
-			    input="<div class='col-md-9'>";
-				input = "<select class='form-control' ";
+				input = "<select class='formcombobox' ";
 				input += " name='F" + rs.getString("field_id") + "'";
 				input += " id='F" + rs.getString("field_id") + "'";
-				input+="</div>";
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
@@ -431,43 +419,34 @@ public class BForms {
 					lprs.close();
 				}
 				input += "</select>";
-				//input += "<span " + " id='select" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'> " + spanVal + "</span>";
+				input += "<span " + " id='select" + rs.getString("field_id") +  "' " + getAnswer(rs.getString("field_id")) + " class='noscreen'> " + spanVal + "</span>";
 			} else if(fieldType.equals("TITLE")) {
 				cnt_title ++;
-				input="<div class='col-md-6'>";
-				input="<div class='col-md-9'>";
 				input = "";
-				input+="</div>";
-				input+="</div>";
-
-				//myhtml += "\n<fieldset><label class='control-label col-md-3'><strong>"+ "<div class='col-md-6'>" + question +"</div>" + "</strong></label></fieldset>";
+				myhtml += "\n<fieldset><label><strong>" + question + "</strong></label></fieldset>";
 			} else if(fieldType.equals("SUBGRID")) {
-			   input="<div class='col-md-9'>";
 				input = "";
-				input+="</div>";
 				myhtml += printSubForm(rs.getString("field_id"), disabled);
 			} else if(fieldType.equals("TABLE")) {
 				input = "";
-				//input+="</div>";
 			    table_count ++;
 			    myhtml += printSubTable(rs.getString("field_id"), disabled, question, table_count);
 			}
 
 			// Label position L = left, T = Top, B = Bottom, R = Left
-			if(input.equals(""))
-			input = ""; 
-			input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+ "<label class='control-label col-md-3'>" + question +"</label>" + "<div class='col-md-9'>" + input +"</div>"+ "</div>" + "</div>\n";
-			//input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+ "<label class='control-label col-md-3'>" + question +"</label>" + "<div class='col-md-9'>" + input +"</div>"+ "</div>" + "</div>\n";
-			//else if(label_position.equals("B"))	input ="<div class='portlet-body form'>"+"<div class='col-md-6'>"+"<div class='col-md-9'>" + input +"</div>" + "<br>" + "<label class='control-label col-md-3'>" + question +"</label>"+ "</div>" + "</div>\n";
-			//else if(label_position.equals("R"))	input = "<div class='portlet-body form'>"+"<div class='row'>"+ "<div class='col-md-6'>" +"<div class='col-md-9'>"+ input +"</div>" + " " + question + "</div>" +"</div>" + "\n";
+			if(input.equals("")) input = "";
+			else if(label_position.equals("L")) input = question + " " + input + "\n";
+			else if(label_position.equals("T"))	input = "<label>" + question + "<br>" + input +"</label>\n";
+			else if(label_position.equals("B"))	input = "<label>" + input + "<br>" + question +"</label>\n";
+			else if(label_position.equals("R"))	input = input + " " + question + "\n";
 
 			//SHARELINE/SECTION PROCESSING
 			if(input.equals("")) {
 				input = "";
 			} else if (fieldOrder == shareLine) {
 				if(isTabs == false){
-					if(sl == -1) myhtml += "<section>" + input;		// if coming from an unshared line ..we start a section
-					else myhtml += "</section><section>" + input;	// otherwise we close first b4 starting a new section
+					if(sl == -1) myhtml += "<section class='row'>" + input;		// if coming from an unshared line ..we start a section
+					else myhtml += "</section><section class='row'>" + input;	// otherwise we close first b4 starting a new section
 				} else {
 					tab_body += input;
 				}
@@ -480,10 +459,10 @@ public class BForms {
 				}
 			} else if(shareLine == 0 ) {		//if no line to be shared
 				if(isTabs == false) {
-					if(sl == -1) myhtml += "<section>" + input + "</section>\n";
-					else myhtml += "</section><section>" + input + "</section>\n";
+					if(sl == -1) myhtml += "<section class='row'>" + input + "</section>\n";
+					else myhtml += "</section><section class='row'>" + input + "</section>\n";
 				} else {
-					tab_body += "<section>" + input + "</section>";
+					tab_body += "<section class='row'>" + input + "</section>";
 				}
 				sl = -1;
 			}

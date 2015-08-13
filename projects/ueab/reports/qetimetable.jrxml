@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qetimetable" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="8fd59eaa-0d81-4aef-8e2f-362e288f821f">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qetimetable" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="8fd59eaa-0d81-4aef-8e2f-362e288f821f">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5"/>
@@ -8,15 +8,18 @@
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
-	<parameter name="filterid" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["2006/2007.2"]]></defaultValueExpression>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2013/2014.1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="locationid" class="java.lang.String">
-		<defaultValueExpression><![CDATA["2"]]></defaultValueExpression>
+	<parameter name="levellocationid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="quarterid" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT a.assetid,a.assetname,a.location,a.building,a.capacity,a.qcourseid,a.courseid,a.coursetitle,
-a.instructorid,c.levellocationid,a.instructorname,a.quarterid,a.maxclass,a.classoption,a.optiontimeid,a.optiontimename,
+a.instructorid,a.instructorname,a.quarterid,a.maxclass,a.classoption,a.optiontimeid,a.optiontimename,
 a.org_id,a.qexamtimetableid,a.starttime,a.endtime,a.lab,a.examdate,a.details,b.exam_students
 FROM qetimetableview  as a LEFT JOIN
 (SELECT qgrades.qcourseid, count(qgrades.qgradeid) as exam_students
@@ -25,7 +28,7 @@ WHERE (qstudents.approved = true)
 GROUP BY qgrades.qcourseid)  as b
 
 ON a.qcourseid = b.qcourseid
-INNER JOIN studentgradeview as c  ON  a.qcourseid = c.qcourseid
+
 WHERE (a.quarterid='$P!{filterid}')
 ORDER BY a.examdate, a.starttime, a.coursetitle;]]>
 	</queryString>
@@ -38,7 +41,6 @@ ORDER BY a.examdate, a.starttime, a.coursetitle;]]>
 	<field name="courseid" class="java.lang.String"/>
 	<field name="coursetitle" class="java.lang.String"/>
 	<field name="instructorid" class="java.lang.String"/>
-	<field name="levellocationid" class="java.lang.Integer"/>
 	<field name="instructorname" class="java.lang.String"/>
 	<field name="quarterid" class="java.lang.String"/>
 	<field name="maxclass" class="java.lang.Integer"/>
