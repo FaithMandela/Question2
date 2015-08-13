@@ -812,6 +812,7 @@
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Survey 100 ID">survey_100_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Form Serial">form_serial</TEXTFIELD>
 			<TEXTFIELD w="75" title="Patient Gender">patient_gender</TEXTFIELD>
 			<TEXTFIELD w="75" title="Patient Name">patient_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Patient Age">patient_age</TEXTFIELD>
