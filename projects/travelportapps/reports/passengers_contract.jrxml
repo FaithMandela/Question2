@@ -17,14 +17,17 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.passenger_id, vw_passengers.passenger_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.rate_type_name
-FROM vw_passengers]]>
+		<![CDATA[SELECT vw_passengers.passenger_id, vw_passengers.passenger_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.rate_type_name,city_codes.country
+FROM vw_passengers
+
+INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown]]>
 	</queryString>
 	<field name="passenger_id" class="java.lang.Integer"/>
 	<field name="passenger_name" class="java.lang.String"/>
-	<field name="days_from" class="java.sql.Date"/>
-	<field name="days_to" class="java.sql.Date"/>
+	<field name="days_from" class="java.lang.String"/>
+	<field name="days_to" class="java.lang.String"/>
 	<field name="rate_type_name" class="java.lang.String"/>
+	<field name="country" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -58,7 +61,7 @@ FROM vw_passengers]]>
 				<text><![CDATA[Certificate Number:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="132" y="1" width="131" height="15" uuid="75d765bc-4f7e-4394-b24f-ec40eba89026"/>
+				<reportElement style="Detail" x="132" y="1" width="131" height="14" uuid="75d765bc-4f7e-4394-b24f-ec40eba89026"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -67,7 +70,7 @@ FROM vw_passengers]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="45" splitType="Stretch">
+		<band height="76" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="e8860502-841e-484a-a892-b5cbe927537d"/>
 			</frame>
@@ -86,14 +89,14 @@ FROM vw_passengers]]>
 				<textFieldExpression><![CDATA[$F{days_to}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="131" y="30" width="131" height="15" uuid="1a4e309f-3be2-4221-aa99-a82fc6b29c5f"/>
+				<reportElement style="Detail" x="131" y="49" width="131" height="15" uuid="1a4e309f-3be2-4221-aa99-a82fc6b29c5f"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rate_type_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="0" y="30" width="131" height="15" forecolor="#000000" uuid="8c7cc488-3e4f-4e37-ad3a-be19f192244a"/>
+				<reportElement style="Column header" x="0" y="49" width="131" height="15" forecolor="#000000" uuid="8c7cc488-3e4f-4e37-ad3a-be19f192244a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -114,19 +117,33 @@ FROM vw_passengers]]>
 				<text><![CDATA[Cover To:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="132" y="15" width="100" height="15" uuid="e9c2f2ad-7f02-42aa-b09d-bafd8896602e"/>
+				<reportElement x="132" y="15" width="130" height="15" uuid="e9c2f2ad-7f02-42aa-b09d-bafd8896602e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{passenger_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="15" width="100" height="15" uuid="aae062ce-ac5a-4b6f-ba81-b2820e164d7d"/>
+				<reportElement x="1" y="15" width="130" height="15" uuid="aae062ce-ac5a-4b6f-ba81-b2820e164d7d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Name :]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="131" height="19" uuid="16d08007-75f8-44de-94f2-30f9cdbf0f69"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Country of Travel:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="132" y="30" width="130" height="19" uuid="f622bd93-bc25-42bd-bbbb-8c4352e3cdb3"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{country}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

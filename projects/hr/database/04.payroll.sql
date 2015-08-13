@@ -964,7 +964,7 @@ BEGIN
 	WHERE (entity_ID = NEW.entity_ID) AND (Pay_Period > 0) AND (completed = false)
 		AND (Pay_upto >= current_date);
 		
-	INSERT INTO project_staff_costs (employee_month_id, org_id, project_id, project_role, payroll_ps, staff_cost, tax_cost)
+	INSERT INTO project_staff_costs (org_id, employee_month_id, project_id, project_role, payroll_ps, staff_cost, tax_cost)
 	SELECT NEW.org_id, NEW.employee_month_id, 
 		project_staff.project_id, project_staff.project_role, project_staff.payroll_ps, project_staff.staff_cost, project_staff.tax_cost
 	FROM project_staff
