@@ -3,7 +3,7 @@
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="122"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
@@ -11,7 +11,7 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2013/2014.1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="levellocationid" class="java.lang.String">
+	<parameter name="orgid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="quarterid" class="java.lang.String" isForPrompting="false">
@@ -29,7 +29,7 @@ GROUP BY qgrades.qcourseid)  as b
 
 ON a.qcourseid = b.qcourseid
 
-WHERE (a.quarterid='$P!{filterid}')
+WHERE (a.quarterid='$P!{filterid}') AND a.org_id='$P!{orgid}'
 ORDER BY a.examdate, a.starttime, a.coursetitle;]]>
 	</queryString>
 	<field name="assetid" class="java.lang.Integer"/>

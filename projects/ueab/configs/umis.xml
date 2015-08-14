@@ -1872,6 +1872,7 @@
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
+			<DRILLDOWN name="Campus" keyfield="org_id" table="orgs" noorg="true" listfield="org_name" filtername="orgid"></DRILLDOWN>
 			<JASPER filtered="true" name="Final - Exam Timetable" reportfile="qetimetable.jasper"></JASPER>
 			<JASPER filtered="true" name="Tentative - Exam Timetable" reportfile="qetimetableb.jasper"></JASPER>
 		</FILTER>
