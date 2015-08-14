@@ -1,4 +1,28 @@
 
+UPDATE studentdegrees SET bulletingid = 3
+WHERE studentdegreeid IN
+(SELECT studentdegreeid
+FROM (SELECT studentdegreeid, min(quarterid) as min_quarter
+FROM qstudents
+WHERE approved = true
+GROUP BY studentdegreeid) as a
+WHERE min_quarter >= '2012/2013.1'
+ORDER BY min_quarter);
+
+
+DROP VIEW qetimetableview;
+CREATE VIEW qetimetableview AS
+	SELECT assets.assetid, assets.assetname, assets.location, assets.building, assets.capacity, 
+		qcourseview.qcourseid, qcourseview.courseid, qcourseview.coursetitle, qcourseview.instructorid,
+		qcourseview.instructorname, qcourseview.quarterid, qcourseview.maxclass, qcourseview.classoption,
+		qcourseview.levellocationid, qcourseview.levellocationname,
+		optiontimes.optiontimeid, optiontimes.optiontimename,
+		qexamtimetable.org_id, qexamtimetable.qexamtimetableid, qexamtimetable.starttime, qexamtimetable.endtime, 
+		qexamtimetable.lab, qexamtimetable.examdate, qexamtimetable.details 
+	FROM ((assets INNER JOIN qexamtimetable ON assets.assetid = qexamtimetable.assetid)
+		INNER JOIN qcourseview ON qexamtimetable.qcourseid = qcourseview.qcourseid)
+		INNER JOIN optiontimes ON qexamtimetable.optiontimeid = optiontimes.optiontimeid
+	ORDER BY qexamtimetable.examdate, qexamtimetable.starttime;
 
 
 CREATE OR REPLACE FUNCTION grade_updates(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
