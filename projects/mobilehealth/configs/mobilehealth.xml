@@ -6,6 +6,10 @@
 		<MENU icon="icon-book-open" name="Reports ( MOH 514 )">15</MENU>
 		<MENU icon="icon-book-open" name="Reports ( MOH 515 )">20</MENU>
 		<MENU icon="icon-book-open" name="Reports ( MOH 100 )">40</MENU>
+		<MENU name="Health Facility Tool">
+			<MENU name="Configurations">45</MENU>
+			<MENU name="Health Falicity Data">50</MENU>
+		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
@@ -226,6 +230,11 @@
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
 						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
+					<ACTIONS>
+						<ACTION fnct="upd_514" approval="0">Pending</ACTION>
+						<ACTION fnct="upd_514" approval="1">Approve</ACTION>
+						<ACTION fnct="upd_514" approval="2">Return</ACTION>
+					</ACTIONS>
 				</GRID>
 				<GRID name="Approved Reports" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='1' )">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
@@ -315,6 +324,11 @@
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
 						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
+					<ACTIONS>
+						<ACTION fnct="upd_514" approval="0">Pending</ACTION>
+						<ACTION fnct="upd_514" approval="1">Approve</ACTION>
+						<ACTION fnct="upd_514" approval="2">Return</ACTION>
+					</ACTIONS>
 				</GRID>
 				<GRID name="Returned Reports" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='2' )">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
@@ -404,6 +418,11 @@
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
 						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
+					<ACTIONS>
+						<ACTION fnct="upd_514" approval="0">Pending</ACTION>
+						<ACTION fnct="upd_514" approval="1">Approve</ACTION>
+						<ACTION fnct="upd_514" approval="2">Return</ACTION>
+					</ACTIONS>
 				</GRID>
 				<GRID name="Redone Reports" keyfield="survey_id" linkfield="sub_county_id" table="vw_surveys" tab.count="count(survey_id)" where="( survey_status='3' )">
 					<TEXTFIELD w="75" title="Survey ID">survey_id</TEXTFIELD>
@@ -493,6 +512,11 @@
 						<TEXTAREA w="430" title="Remarks" y="150" h="70" x="10">remarks</TEXTAREA>
 						<TEXTAREA w="430" title="Return Reason" y="240" h="70" x="10">return_reason</TEXTAREA>
 					</FORM>
+					<ACTIONS>
+						<ACTION fnct="upd_514" approval="0">Pending</ACTION>
+						<ACTION fnct="upd_514" approval="1">Approve</ACTION>
+						<ACTION fnct="upd_514" approval="2">Return</ACTION>
+					</ACTIONS>
 				</GRID>
 				<JASPER name="County Report " reportfile="vw_surveys.jasper"></JASPER>
 				<FILTER w="700" name="Worker Reports" split="150" type="vert" h="550">
@@ -587,61 +611,64 @@
 				<TEXTFIELD w="150" title="60 - Total number of community dialogue days  held" y="630" h="20" x="10">indicator_60</TEXTFIELD>
 				<TEXTFIELD w="150" title="61 - Total number of community Action Days held" y="630" h="20" x="10">indicator_61</TEXTFIELD>
 				<TEXTFIELD w="150" title="62 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_62</TEXTFIELD>
-				<COMBOLIST w="150" title="63 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_63
+				<TEXTFIELD w="150" title="63 - Total number of community dialogue days  held" y="630" h="20" x="290">indicator_63</TEXTFIELD>
+				<TEXTFIELD w="150" title="64 - Total number of community Action Days held" y="630" h="20" x="290">indicator_64</TEXTFIELD>
+				<TEXTFIELD w="150" title="65 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_65</TEXTFIELD>
+				<COMBOLIST w="150" title="66 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_63
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="64 - Did the community health unit experience stock-outs of more than 7 days for any of the following commodities? - Antimalarial (ACTs 6s and 12s)" y="650" h="20" x="290">indicator_64_a
-					<DATA key="Yes">Yes</DATA>
-					<DATA key="No">No</DATA>
-					<DATA key="N/A">N/A</DATA>
-				</COMBOLIST>
-				<COMBOLIST w="150" title="b- Oral Rehydration Salt" y="670" h="20" x="10">indicator_64_b
-					<DATA key="Yes">Yes</DATA>
-					<DATA key="No">No</DATA>
-					<DATA key="N/A">N/A</DATA>
-				</COMBOLIST>
-				<COMBOLIST w="150" title="c - Zinc" y="670" h="20" x="290">indicator_64_c
+				<COMBOLIST w="150" title="67 - Did the community health unit experience stock-outs of more than 7 days for any of the following commodities? - Antimalarial (ACTs 6s and 12s)" y="650" h="20" x="290">indicator_67_a
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="d - Rapid Diagnostic Test Kit" y="690" h="20" x="10">indicator_64_d
+				<COMBOLIST w="150" title="b- Oral Rehydration Salt" y="670" h="20" x="10">indicator_67_b
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="e - Condoms" y="690" h="20" x="290">indicator_64_e
+				<COMBOLIST w="150" title="c - Zinc" y="670" h="20" x="290">indicator_67_c
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="f - Oral Contraceptives" y="710" h="20" x="10">indicator_64_f
+				<COMBOLIST w="150" title="d - Rapid Diagnostic Test Kit" y="690" h="20" x="10">indicator_67_d
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="g - Iodine Solution" y="710" h="20" x="290">indicator_64_g
+				<COMBOLIST w="150" title="e - Condoms" y="690" h="20" x="290">indicator_67_e
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="h - Chlorine Tablets" y="730" h="20" x="10">indicator_64_h
+				<COMBOLIST w="150" title="f - Oral Contraceptives" y="710" h="20" x="10">indicator_67_f
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="i - Albedazole Tablets" y="730" h="20" x="290">indicator_64_i
+				<COMBOLIST w="150" title="g - Iodine Solution" y="710" h="20" x="290">indicator_67_g
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="j - Tetracycline Eye Ointment" y="750" h="20" x="10">indicator_64_j
+				<COMBOLIST w="150" title="h - Chlorine Tablets" y="730" h="20" x="10">indicator_67_h
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
 				</COMBOLIST>
-				<COMBOLIST w="150" title="k- Paracetamol" y="750" h="20" x="290">indicator_64_k
+				<COMBOLIST w="150" title="i - Albedazole Tablets" y="730" h="20" x="290">indicator_67_i
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="j - Tetracycline Eye Ointment" y="750" h="20" x="10">indicator_67_j
+					<DATA key="Yes">Yes</DATA>
+					<DATA key="No">No</DATA>
+					<DATA key="N/A">N/A</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="k- Paracetamol" y="750" h="20" x="290">indicator_67_k
 					<DATA key="Yes">Yes</DATA>
 					<DATA key="No">No</DATA>
 					<DATA key="N/A">N/A</DATA>
@@ -721,62 +748,65 @@
 					<TEXTFIELD w="150" title="61 - Total number of community Action Days held" y="630" h="20" x="10">indicator_61</TEXTFIELD>
 					<TEXTFIELD w="150" title="62 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_62</TEXTFIELD>
 				</FORM>
-				<FORM name="Indicators 63-64" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
-					<COMBOLIST w="150" title="63 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_63
+				<FORM name="Indicators 63-67" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+					<TEXTFIELD w="150" title="63 - Total number of community dialogue days  held" y="650" h="20" x="10">indicator_63</TEXTFIELD>
+					<TEXTFIELD w="150" title="64 - Total number of community Action Days held" y="650" h="20" x="290">indicator_64</TEXTFIELD>
+					<TEXTFIELD w="150" title="65 - Total number of community monthly meetings held" y="670" h="20" x="10">indicator_65</TEXTFIELD>
+					<COMBOLIST w="150" title="66 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_66
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="64 - Did the community health unit experience stock-outs of more than 7 days for any of the following commodities? - Antimalarial (ACTs 6s and 12s)" y="650" h="20" x="290">indicator_64_a
-						<DATA key="Yes">Yes</DATA>
-						<DATA key="No">No</DATA>
-						<DATA key="N/A">N/A</DATA>
-					</COMBOLIST>
-					<COMBOLIST w="150" title="b- Oral Rehydration Salt" y="670" h="20" x="10">indicator_64_b
-						<DATA key="Yes">Yes</DATA>
-						<DATA key="No">No</DATA>
-						<DATA key="N/A">N/A</DATA>
-					</COMBOLIST>
-					<COMBOLIST w="150" title="c - Zinc" y="670" h="20" x="290">indicator_64_c
+					<COMBOLIST w="150" title="67 - Did the community health unit experience stock-outs of more than 7 days for any of the following commodities? - Antimalarial (ACTs 6s and 12s)" y="650" h="20" x="290">indicator_67_a
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="d - Rapid Diagnostic Test Kit" y="690" h="20" x="10">indicator_64_d
+					<COMBOLIST w="150" title="b- Oral Rehydration Salt" y="670" h="20" x="10">indicator_67_b
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="e - Condoms" y="690" h="20" x="290">indicator_64_e
+					<COMBOLIST w="150" title="c - Zinc" y="670" h="20" x="290">indicator_67_c
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="f - Oral Contraceptives" y="710" h="20" x="10">indicator_64_f
+					<COMBOLIST w="150" title="d - Rapid Diagnostic Test Kit" y="690" h="20" x="10">indicator_67_d
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="g - Iodine Solution" y="710" h="20" x="290">indicator_64_g
+					<COMBOLIST w="150" title="e - Condoms" y="690" h="20" x="290">indicator_67_e
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="h - Chlorine Tablets" y="730" h="20" x="10">indicator_64_h
+					<COMBOLIST w="150" title="f - Oral Contraceptives" y="710" h="20" x="10">indicator_67_f
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="i - Albedazole Tablets" y="730" h="20" x="290">indicator_64_i
+					<COMBOLIST w="150" title="g - Iodine Solution" y="710" h="20" x="290">indicator_67_g
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="j - Tetracycline Eye Ointment" y="750" h="20" x="10">indicator_64_j
+					<COMBOLIST w="150" title="h - Chlorine Tablets" y="730" h="20" x="10">indicator_67_h
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
 					</COMBOLIST>
-					<COMBOLIST w="150" title="k- Paracetamol" y="750" h="20" x="290">indicator_64_k
+					<COMBOLIST w="150" title="i - Albedazole Tablets" y="730" h="20" x="290">indicator_67_i
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="j - Tetracycline Eye Ointment" y="750" h="20" x="10">indicator_67_j
+						<DATA key="Yes">Yes</DATA>
+						<DATA key="No">No</DATA>
+						<DATA key="N/A">N/A</DATA>
+					</COMBOLIST>
+					<COMBOLIST w="150" title="k- Paracetamol" y="750" h="20" x="290">indicator_67_k
 						<DATA key="Yes">Yes</DATA>
 						<DATA key="No">No</DATA>
 						<DATA key="N/A">N/A</DATA>
@@ -812,6 +842,7 @@
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Survey 100 ID">survey_100_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Form Serial">form_serial</TEXTFIELD>
 			<TEXTFIELD w="75" title="Patient Gender">patient_gender</TEXTFIELD>
 			<TEXTFIELD w="75" title="Patient Name">patient_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Patient Age">patient_age</TEXTFIELD>
@@ -847,6 +878,92 @@
 				<SPINTIME w="150" title="Receiving Officer Time" y="480" h="20" x="290">receiving_officer_time</SPINTIME>
 			</FORM>
 			<JASPER name="Report 100 report" reportfile="vw_survey_100.jasper"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Configurations" key="45" h="550">
+		<GRID name="Health Falicities" keyfield="health_falicity_id" table="vw_health_falicities">
+			<TEXTFIELD w="75" title="Health Falicity ID">health_falicity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Health Falicity Name">health_falicity_name</TEXTFIELD>
+			<FORM name="Health Falicities" keyfield="health_falicity_id" table="health_falicities">
+				<TEXTFIELD w="430" title="Health Falicity Name" y="10" h="20" x="10">health_falicity_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Years" keyfield="year_id" table="years" noorg="true">
+			<TEXTFIELD w="75" title="Year Name">year_name</TEXTFIELD>
+			<FORM name="Years" keyfield="year_id" table="years">
+				<TEXTFIELD w="150" title="Year Name" y="10" h="20" x="10">year_name</TEXTFIELD>
+			</FORM>
+		</GRID>
+		<GRID name="Months" keyfield="month_id" table="months" noorg="true">
+			<TEXTFIELD w="75" title="Month ID">month_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Month Name">month_name</TEXTFIELD>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Health Falicity Data" key="50" h="550">
+		<GRID name="Health Falicities" keyfield="health_falicity_id" table="vw_health_falicities">
+			<TEXTFIELD w="75" title="Health Falicity ID">health_falicity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Health Falicity Name">health_falicity_name</TEXTFIELD>
+			<GRID name="Health Facility Data" keyfield="health_facility_data_id" linkfield="health_falicity_id" table="vw_health_facility_data">
+				<TEXTFIELD w="75" title="Data ID">health_facility_data_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Health Falicity Name">health_falicity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Month ">month_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Year ">year_name</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Creation Date">creation_date</TEXTTIMESTAMP>
+				<FORM name="Health Facility Data" keyfield="health_facility_data_id" linkfield="health_falicity_id" table="health_facility_data">
+					<COMBOBOX w="430" title="Year" order="year_id ASC" lptable="years" noorg="true" y="10" h="20" x="10" lpfield="year_name">year_id</COMBOBOX>
+					<COMBOBOX w="430" title="Month" order="month_id ASC" lptable="months" noorg="true" y="30" h="20" x="10" lpfield="month_name">month_id</COMBOBOX>
+					<TEXTFIELD w="150" title="1.No. of health workers in facility by cadre A) Clinical officer" y="50" h="20" x="10">indicator_1a</TEXTFIELD>
+					<TEXTFIELD w="150" title="B) Nurses/Midwives" y="50" h="20" x="290">indicator_1b</TEXTFIELD>
+					<TEXTFIELD w="150" title="C) Laboratory Technician" y="70" h="20" x="10">indicator_1c</TEXTFIELD>
+					<TEXTFIELD w="150" title="D) Pharmacists" y="70" h="20" x="290">indicator_1d</TEXTFIELD>
+					<TEXTFIELD w="150" title="E) CHVs Linked to the facility" y="90" h="20" x="10">indicator_1e</TEXTFIELD>
+					<TEXTFIELD w="150" title="F) Others (Comment/specify)" y="90" h="20" x="290">indicator_1f</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of new health workers trained on Emergency Obstetric and Neonatal Care (EmONC) and by who - comment below" y="110" h="20" x="10">indicator_2</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of new health workers trained on Integrated Management of Childhood Illness (IMCI), and by who - comment below " y="110" h="20" x="290">indicator_3</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of new health workers trained in Infection Prevention Control (I.P.C) , and by who - comment below." y="130" h="20" x="10">indicator_4</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of new health workers trained in Focused Antenatal Care (FANC), and by who - comment below" y="130" h="20" x="290">indicator_5</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of new health workers trained in Essential Newborn Care and by who - comment below" y="150" h="20" x="10">indicator_6</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of new health workers trained in Elimination of Mother to Child Transmission (EMTCT) and by who- comment below" y="150" h="20" x="290">indicator_7</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of new-borns initiating breastfeeding within 1 hour of birth" y="170" h="20" x="10">indicator_8</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children receiving Measles dose I ( 9 months )" y="170" h="20" x="290">indicator_9</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children receiving Measles   ( 12-23 months)" y="190" h="20" x="10">indicator_10</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children receiving BCG" y="190" h="20" x="290">indicator_11</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children receiving Penta 1" y="210" h="20" x="10">indicator_12</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children receiving Penta  2, 3 " y="210" h="20" x="290">indicator_13</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children with full vaccination (12-23 months)" y="230" h="20" x="10">indicator_14</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children receiving other vaccinations " y="230" h="20" x="290">indicator_15</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of sick children &lt; 5 years who seek care at a health facility" y="250" h="20" x="10">indicator_16</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children under 5 referred by CHVs" y="250" h="20" x="290">indicator_17</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women using contraceptives (obtained at health facility)" y="270" h="20" x="10">indicator_18</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women attending the 1st  ANC visits" y="270" h="20" x="290">indicator_19</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women attending the 2nd   and 3rd ANC visits" y="290" h="20" x="10">indicator_20</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women attending at least 4 ANC visits " y="290" h="20" x="290">indicator_21</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women whose blood pressure measurements taken during all ANC visits" y="310" h="20" x="10">indicator_22</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women receiving injections to control bleeding during the third stage of labour. " y="310" h="20" x="290">indicator_23</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of deliveries assisted by trained personnel (health facility deliveries)" y="330" h="20" x="10">indicator_24</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of still births" y="330" h="20" x="290">indicator_25</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of neonatal  deaths" y="350" h="20" x="10">indicator_26</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women attending PNC visits in the reporting month" y="350" h="20" x="290">indicator_27</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women attending 1st PNC visit" y="370" h="20" x="10">indicator_28</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women attending 2nd PNC visits" y="370" h="20" x="290">indicator_29</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women attending at least  3 PNC visits " y="390" h="20" x="10">indicator_30</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women with home deliveries at night reporting to facilities for PNC" y="390" h="20" x="290">indicator_31</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of obstetric night admissions at the selected facilities" y="410" h="20" x="10">indicator_32</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women seeking services from  the selected facilities" y="410" h="20" x="290">indicator_33</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of  women referred by CHWs to the selected facilities" y="430" h="20" x="10">indicator_34</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women using  APHRC ambulance" y="430" h="20" x="290">indicator_35</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children using APHRC ambulance" y="450" h="20" x="10">indicator_36</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women reporting to the facility with ambulance services (specify which)" y="450" h="20" x="290">indicator_37</TEXTFIELD>
+					<TEXTFIELD w="150" title="No.  of women reporting to have efficiently used the ambulance services (specify which service)" y="470" h="20" x="10">indicator_38</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of children referred to other facilities (specify where )  " y="470" h="20" x="290">indicator_39</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women referred to other facilities (specify where)" y="490" h="20" x="10">indicator_40</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of women reporting satisfaction with the quality of service provided in the upgraded facilities" y="490" h="20" x="10">indicator_41</TEXTFIELD>
+					<TEXTFIELD w="150" title="No. of supervisions/visits by DHMTs as reported by Health facilities" y="490" h="20" x="10">indicator_42</TEXTFIELD>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 </APP>
