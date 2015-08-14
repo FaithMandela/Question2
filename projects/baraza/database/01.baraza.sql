@@ -174,11 +174,6 @@ CREATE TABLE entity_types (
 	Details					text
 );
 CREATE INDEX entity_types_org_id ON entity_types (org_id);
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 3, 'Supplier', 'supplier');
-SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
 
 CREATE TABLE entitys (
 	entity_id				serial primary key,
@@ -213,9 +208,6 @@ CREATE TABLE subscription_levels (
 	details					text
 );
 CREATE INDEX subscription_levels_org_id ON subscription_levels (org_id);
-INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
-INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Manager');
-INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Consumer');
 
 CREATE TABLE entity_subscriptions (
 	entity_subscription_id	serial primary key,
@@ -230,12 +222,6 @@ CREATE INDEX entity_subscriptions_entity_type_id ON entity_subscriptions (entity
 CREATE INDEX entity_subscriptions_entity_id ON entity_subscriptions (entity_id);
 CREATE INDEX entity_subscriptions_subscription_level_id ON entity_subscriptions (subscription_level_id);
 CREATE INDEX entity_subscriptions_org_id ON entity_subscriptions (org_id);
-
-INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
-VALUES (0, 0, 0, 0, 0);
-INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
-VALUES (0, 1, 0, 1, 0);
-SELECT pg_catalog.setval('entity_subscriptions_entity_subscription_id_seq', 1, true);
 
 CREATE TABLE reporting (
 	reporting_id			serial primary key,
@@ -1125,20 +1111,21 @@ $$ LANGUAGE plpgsql;
 
 
 --- Data
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 3, 'Supplier', 'supplier');
+SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
+
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Manager');
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Consumer');
 
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
-VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false);
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, Entity_Leader, Super_User, no_org)
-VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false);
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
+VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
+VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false, 'baraza');
 SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
 
-INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
-VALUES (0, 0, 0, 0, 0);
-INSERT INTO entity_subscriptions (org_id, Entity_subscription_id, entity_type_id, entity_id, subscription_level_id)
-VALUES (0, 1, 0, 1, 0);
-SELECT pg_catalog.setval('entity_subscriptions_entity_subscription_id_seq', 1, true);
 
 

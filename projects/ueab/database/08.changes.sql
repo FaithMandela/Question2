@@ -1,4 +1,7 @@
+ALTER TABLE charges ADD charge_feesline		float not null default 70;
+ALTER TABLE charges ADD charge_resline		float not null default 70;
 
+	
 UPDATE studentdegrees SET bulletingid = 3
 WHERE studentdegreeid IN
 (SELECT studentdegreeid

@@ -1458,6 +1458,10 @@ CREATE OR REPLACE VIEW radcheck (id, username, attribute, op, value) AS
 GRANT ALL ON radcheck TO radius;
 
 
+CREATE VIEW ws_food_service AS
+	SELECT studentid, studentname, mealtype, studylevel, majorid, majorname
+	FROM vwqstudentbalances
+	WHERE (active = true) AND (finaceapproval = true);
 
 
 ----------- Creating radius server interface
