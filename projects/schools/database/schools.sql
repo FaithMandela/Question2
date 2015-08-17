@@ -472,13 +472,13 @@
 	
 	
 	
-	CREATE VIEW vw_timetable AS
-	SELECT class.class_id, class.class_name, subjects.subject_id, subjects.subject_name, teachers.teacher_id, teachers.teacher_name, weekdays.weekday_id, weekdays.weekday_name, timetable.timetable_id, timetable.start_time, timetable.end_time
+	CREATE OR REPLACE VIEW vw_timetable AS
+	SELECT class.class_id, class.class_name, subjects.subject_id, subjects.subject_name, weekdays.weekday_id, weekdays.weekday_name, timetable.timetable_id, timetable.start_time, timetable.end_time
 	FROM timetable
 	INNER JOIN class ON timetable.class_id = class.class_id
 	INNER JOIN subjects ON timetable.subject_id = subjects.subject_id
-	INNER JOIN teachers ON timetable.teacher_id = teachers.teacher_id
 	INNER JOIN weekdays ON timetable.weekday_id = weekdays.weekday_id;
+
 	
 	
 	CREATE VIEW vw_student_grading AS

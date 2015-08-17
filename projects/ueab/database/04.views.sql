@@ -638,6 +638,7 @@ CREATE VIEW qetimetableview AS
 	SELECT assets.assetid, assets.assetname, assets.location, assets.building, assets.capacity, 
 		qcourseview.qcourseid, qcourseview.courseid, qcourseview.coursetitle, qcourseview.instructorid,
 		qcourseview.instructorname, qcourseview.quarterid, qcourseview.maxclass, qcourseview.classoption,
+		qcourseview.levellocationid, qcourseview.levellocationname,
 		optiontimes.optiontimeid, optiontimes.optiontimename,
 		qexamtimetable.org_id, qexamtimetable.qexamtimetableid, qexamtimetable.starttime, qexamtimetable.endtime, 
 		qexamtimetable.lab, qexamtimetable.examdate, qexamtimetable.details 

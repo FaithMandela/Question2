@@ -573,6 +573,9 @@ CREATE TABLE charges (
 	lab_charges			float not null default 2000,
 	exam_fees			float not null default 500,
 	general_fees		float not null default 7500,
+	
+	charge_feesline		float not null default 70,
+	charge_resline		float not null default 70,
 
 	residence_stay		float not null default 100,			--- Give % of stay for group
 	currency			varchar(32) default 'KES' not null, --- to implement multi-currency

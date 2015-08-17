@@ -1,34 +1,35 @@
-<APP name="schools">
-	<MENU name="schools">
+<APP color="green" name="schools" password="change_password" material="true">
+	<MENU name="School IMIS">
 		<MENU name="Control Panel">
+			<MENU name="Class">50</MENU>
 			<MENU name="Grades">140</MENU>
+			<MENU name="Prefects">125</MENU>
+			<MENU name="Subjects">55</MENU>
+			<MENU name="Exams">65</MENU>
+			<MENU name="Trimester">70</MENU>
 			<MENU name="Disciplinarys">110</MENU>
 			<MENU name="Guardian Types">115</MENU>
 			<MENU name="Dormitorys">120</MENU>
 			<MENU name="Seminars">35</MENU>
 			<MENU name="Clubs">40</MENU>
 			<MENU name="Scholarships">45</MENU>
+			<MENU name="Achievements">25</MENU>
+			<MENU name="Co-curricular"></MENU>
+			<MENU name="Absents">60</MENU>
+			<MENU name="New Applicant" role="applicant">80</MENU>
+		</MENU>
+		<MENU icon="icon-users" name="Students">
+			<MENU icon="icon-users" name="Students">1</MENU>
+		</MENU>
+		<MENU name="Trimester">
+			<MENU icon="fa fa-clock-o" name="Timetable">95</MENU>
+			<MENU name="View Time Table">100</MENU>
+		</MENU>
+		<MENU name="Summaries">
+			<MENU name="Students List">130</MENU>
 		</MENU>
 		<MENU name="Administration">
-			<MENU name="Students">1</MENU>
 			<MENU name="Instructors">10</MENU>
-		</MENU>
-		<MENU name="School Trimester">
-			<MENU name="Trimester">70</MENU>
-			<MENU name="Trimester Timetable">95</MENU>
-			<MENU name="View Time Table">100</MENU>
-			<MENU name="Class">50</MENU>
-			<MENU name="Prefects">125</MENU>
-			<MENU name="Subjects">55</MENU>
-			<MENU name="Exams">65</MENU>
-		</MENU>
-		<MENU name="Instructors Subject">75</MENU>
-		<MENU name="Achievements">25</MENU>
-		<MENU name="Co-curricular"></MENU>
-		<MENU name="Absents">60</MENU>
-		<MENU name="New Applicant" role="applicant">80</MENU>
-		<MENU name="Reports">
-			<MENU name="Students List">130</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Instructors" key="10" h="500">
@@ -155,23 +156,18 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Trimester" key="70" h="550">
-		<GRID name="Trimester" keyfield="term_id" table="terms">
-			<TEXTFIELD w="75" title="Term Name">term_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Year">year</TEXTFIELD>
+		<GRID name="Trimester" keyfield="trimester_id" table="trimester">
+			<TEXTFIELD w="75" title="Trimester id">trimester_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
-			<FORM name="Trimester" keyfield="term_id" table="terms">
-				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">term_name
-					<DATA>1</DATA>
-					<DATA>2</DATA>
-					<DATA>3</DATA>
-				</COMBOLIST>
-				<TEXTFIELD w="150" title="Year" y="30" h="20" x="10">year</TEXTFIELD>
-				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+			<FORM name="Trimester" keyfield="trimester_id" table="trimester">
+				<TEXTFIELD w="150" title="Trimester id" y="10" h="20" x="10">trimester_id</TEXTFIELD>
+				<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="50" h="20" x="290">end_date</TEXTDATE>
-				<CHECKBOX w="150" title="Closed" y="70" h="20" x="10">closed</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Active" y="70" h="20" x="10">active</CHECKBOX>
+				<CHECKBOX w="150" title="Closed" y="90" h="20" x="10">closed</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Term Students" keyfield="term_student_id" linkfield="term_id" table="vw_term_students">
 				<TEXTFIELD w="75" title="Term Name">term_name</TEXTFIELD>
@@ -196,9 +192,6 @@
 				</GRID>
 			</GRID>
 		</GRID>
-	</DESK>
-	<DESK w="700" name="Instructors Subjects" key="75" h="550">
-		<JASPER name="Instructors Subjects" reportfile="Teachers Subjects.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Students" key="1" h="550">
 		<GRID name="Student" keyfield="entity_id" table="students">
@@ -404,9 +397,6 @@
 					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<GRID name="Class List">
-				<JASPER name="Class List" reportfile="class_lists.jasper"></JASPER>
-			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Exams" key="65" h="550">
@@ -526,30 +516,22 @@
 		<JASPER name="report_student" reportfile="report_student.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Trimester Timetable" key="95" h="550">
-		<GRID name="Trimester" keyfield="timetable_id" table="vw_timetable">
+		<GRID color="blue-steel" name="Trimester" keyfield="timetable_id" table="vw_timetable">
 			<TEXTFIELD w="75" title="Class Name">class_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Teacher Name">name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Weekday">weekday_name</TEXTFIELD>
 			<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
 			<SPINTIME w="75" title="End Time">end_time</SPINTIME>
 			<FORM name="Timetable" keyfield="timetable_id" table="timetable">
 				<COMBOBOX w="430" title="Class Name" lptable="class" y="10" h="20" x="10" lpfield="class_name">class_id</COMBOBOX>
-				<COMBOBOX w="430" title="Subject Name" lptable="subjects" y="30" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
-				<SPINTIME w="150" title="Start Time" y="70" h="20" x="10">start_time</SPINTIME>
-				<SPINTIME w="150" title="End Time" y="70" h="20" x="290">end_time</SPINTIME>
-				<COMBOLIST w="50" title="Day" y="10" h="20" x="10">weekday_name
-					<DATA>monday</DATA>
-					<DATA>tuesday</DATA>
-					<DATA>wednesday</DATA>
-					<DATA>thursday</DATA>
-					<DATA>friday</DATA>
-					<DATA>saturday</DATA>
-					<DATA>sunday</DATA>
-				</COMBOLIST>
+				<COMBOBOX w="430" title="Trimester" lptable="trimester" y="30" h="20" x="10" lpfield="trimester_id">trimester_id</COMBOBOX>
+				<COMBOBOX w="430" title="Subject Name" lptable="subjects" y="50" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
+				<TEXTDATE w="150" title="Exam Date" y="70" h="20" x="10">exam_date</TEXTDATE>
+				<SPINTIME w="150" title="Start Time" y="90" h="20" x="10">start_time</SPINTIME>
+				<SPINTIME w="150" title="End Time" y="90" h="20" x="290">end_time</SPINTIME>
+				<COMBOBOX w="430" title="weekday Name" lptable="weekdays" y="110" h="20" x="10" lpfield="weekday_name">weekday_id</COMBOBOX>
 			</FORM>
 		</GRID>
-		<GRID name="Weekdays" keyfield="weekday_id" table="weekdays">
+		<GRID color="blue" name="Weekdays" keyfield="weekday_id" table="weekdays">
 			<TEXTFIELD w="75" title="Weekday ID">weekday_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Weekday Name">weekday_name</TEXTFIELD>
 			<FORM name="Weekdays" keyfield="weekday_id" table="weekdays">
@@ -557,7 +539,10 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Students List" key="130" h="750">
-		<JASPER name="Student List" reportfile="student_list.jasper"></JASPER>
+	<DESK w="700" name="Timetable" key="100" h="750">
+		<FILTER location="250" name="Exam Timetable" type="horl">
+			<DRILLDOWN name="Trimesters " keyfield="trimester_id" table="trimester" listfield="trimester_id"></DRILLDOWN>
+			<JASPER filtered="true" name="Exam Timetable" reportfile="examtimetable.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

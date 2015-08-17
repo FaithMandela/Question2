@@ -657,7 +657,7 @@ public class BWeb {
 		body += "<div class='row'>\n";
 		for(BElement el : view.getElements()) {
 			boolean hasAccess  = checkAccess(el.getAttribute("role"));
-			if(el.getName().equals("TILELIST")) body += webDashboard.getTileList(el);
+			if(hasAccess && el.getName().equals("TILELIST")) body += webDashboard.getTileList(el);
 		}
 		body += "</div>\n";
 		

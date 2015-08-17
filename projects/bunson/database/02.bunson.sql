@@ -178,7 +178,7 @@ CREATE VIEW vw_transfers AS
 
 
 -- DROP VIEW vw_passangers;
-CREATE VIEW vw_passangers AS
+CREATE OR REPLACE VIEW vw_passangers AS
 	SELECT car_types.car_type_code, 
 	entitys.entity_id, entitys.entity_name, 
 	payment_types.payment_type_id, payment_types.payment_type_name, 
@@ -194,8 +194,8 @@ CREATE VIEW vw_passangers AS
 	INNER JOIN transfers ON passangers.transfer_id = transfers.transfer_id
 	INNER JOIN entitys ON transfers.entity_id = entitys.entity_id
 	INNER JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id
-    INNER JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id
-    WHERE transfer_flights.tab = passangers.tab;
+    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id
+    WHERE (transfer_flights.tab is null OR transfer_flights.tab = passangers.tab);
 
 
 CREATE VIEW vw_passangers_noflights AS
@@ -242,10 +242,10 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
 	INNER JOIN cars ON cars.car_id = transfer_assignments.car_id
 	INNER JOIN car_types ON car_types.car_type_id = cars.car_type_id
 	INNER JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id
-    INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
-    WHERE transfer_flights.tab = passangers.tab;
+    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
+    WHERE (transfer_flights.tab is null OR transfer_flights.tab = passangers.tab);
 
-DROP VIEW vw_transfer_assignments_create;
+-- DROP VIEW vw_transfer_assignments_create;
 CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
 	SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number,
 	cars.car_type_id, cars.registration_number,

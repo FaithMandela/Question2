@@ -262,7 +262,7 @@ CREATE TABLE surveys_515(
 );
 
 
-
+-- DROP TABLE surveys_515_details;
 CREATE TABLE surveys_515_details(
     surveys_515_detail_id       serial primary key,
     surveys_515_id              integer references surveys_515,
@@ -329,18 +329,22 @@ CREATE TABLE surveys_515_details(
     indicator_60			integer NOT NULL default 0,
     indicator_61			integer NOT NULL default 0,
     indicator_62			integer NOT NULL default 0,
-    indicator_63		    varchar(5),
-    indicator_64_a			varchar(5),
-    indicator_64_b			varchar(5),
-    indicator_64_c			varchar(5),
-    indicator_64_d			varchar(5),
-    indicator_64_e			varchar(5),
-    indicator_64_f			varchar(5),
-    indicator_64_g			varchar(5),
-    indicator_64_h			varchar(5),
-    indicator_64_i			varchar(5),
-    indicator_64_j			varchar(5),
-    indicator_64_k			varchar(5),
+    indicator_63			integer NOT NULL default 0,
+    indicator_64			integer NOT NULL default 0,
+    indicator_65			integer NOT NULL default 0,
+    indicator_66			varchar(5),
+    
+    indicator_67_a			varchar(5),
+    indicator_67_b			varchar(5),
+    indicator_67_c			varchar(5),
+    indicator_67_d			varchar(5),
+    indicator_67_e			varchar(5),
+    indicator_67_f			varchar(5),
+    indicator_67_g			varchar(5),
+    indicator_67_h			varchar(5),
+    indicator_67_i			varchar(5),
+    indicator_67_j			varchar(5),
+    indicator_67_k			varchar(5),
     remarks                 text
 );
 
@@ -351,6 +355,7 @@ CREATE TABLE survey_100(
     org_id                          integer references orgs,
     
     health_worker_id                integer references health_workers,
+    form_serial                     varchar(10),
     patient_gender                  varchar(2),
     patient_name                    varchar(200),
     patient_age                     varchar(3),
@@ -374,6 +379,108 @@ CREATE TABLE survey_100(
 
 
 
+-- Health Facility
+CREATE TABLE years (
+    year_id         serial primary key,
+    year_name       varchar(5)
+);
+
+INSERT INTO years(year_id, year_name) VALUES
+(1, '2013'),
+(2, '2014'),
+(3, '2015');
+
+CREATE TABLE months(
+    month_id        serial primary key,
+    month_name      varchar(15)
+);
+
+INSERT INTO months(month_id, month_name) VALUES
+(1, 'January'),
+(2, 'February'),
+(3, 'March'),
+(4, 'April'),
+(5, 'May'),
+(6, 'June'),
+(7, 'July'),
+(8, 'August'),
+(9, 'September'),
+(10, 'October'),
+(11, 'November'),
+(12, 'December');
+
+CREATE TABLE health_falicities(
+    health_falicity_id      serial primary key,
+    org_id                  integer references orgs,
+    health_falicity_name    varchar(255),
+    details                 text
+);
+
+
+CREATE TABLE health_facility_data(
+    health_facility_data_id serial primary key,
+    health_falicity_id      integer references health_falicities,
+    org_id                  integer references orgs,
+    year_id                 integer references years,
+    month_id                integer references months,
+    indicator_1a			integer NOT NULL default 0,
+    indicator_1b			integer NOT NULL default 0,
+    indicator_1c			integer NOT NULL default 0,
+    indicator_1d			integer NOT NULL default 0,
+    indicator_1e			integer NOT NULL default 0,
+    indicator_1f			integer NOT NULL default 0,
+    indicator_2			    integer NOT NULL default 0,
+    indicator_3			    integer NOT NULL default 0,
+    indicator_4			    integer NOT NULL default 0,
+    indicator_5			    integer NOT NULL default 0,
+    indicator_6			    integer NOT NULL default 0,
+    indicator_7			    integer NOT NULL default 0,
+    indicator_8			    integer NOT NULL default 0,
+    indicator_9			    integer NOT NULL default 0,
+    indicator_10			integer NOT NULL default 0,
+    indicator_11			integer NOT NULL default 0,
+    indicator_12			integer NOT NULL default 0,
+    indicator_13			integer NOT NULL default 0,
+    indicator_14			integer NOT NULL default 0,
+    indicator_15			integer NOT NULL default 0,
+    indicator_16			integer NOT NULL default 0,
+    indicator_17			integer NOT NULL default 0,
+    indicator_18			integer NOT NULL default 0,
+    indicator_19			integer NOT NULL default 0,
+    indicator_20			integer NOT NULL default 0,
+    indicator_21			integer NOT NULL default 0,
+    indicator_22			integer NOT NULL default 0,
+    indicator_23			integer NOT NULL default 0,
+    indicator_24			integer NOT NULL default 0,
+    indicator_25			integer NOT NULL default 0,
+    indicator_26			integer NOT NULL default 0,
+    indicator_27			integer NOT NULL default 0,
+    indicator_28			integer NOT NULL default 0,
+    indicator_29			integer NOT NULL default 0,
+    indicator_30			integer NOT NULL default 0,
+    indicator_31			integer NOT NULL default 0,
+    indicator_32			integer NOT NULL default 0,
+    indicator_33			integer NOT NULL default 0,
+    indicator_34			integer NOT NULL default 0,
+    indicator_35			integer NOT NULL default 0,
+    indicator_36			integer NOT NULL default 0,
+    indicator_37			integer NOT NULL default 0,
+    indicator_38			integer NOT NULL default 0,
+    indicator_39			integer NOT NULL default 0,
+    indicator_40			integer NOT NULL default 0,
+    indicator_41			integer NOT NULL default 0,
+    indicator_42			integer NOT NULL default 0,
+    creation_date           timestamp default CURRENT_TIMESTAMP
+);
+
+
+
+
+
+
+
+
+
 CREATE OR REPLACE FUNCTION ins_surveys_515() RETURNS trigger AS $$
 DECLARE
 BEGIN
@@ -386,6 +493,30 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_surveys_515 AFTER INSERT ON surveys_515
     FOR EACH ROW EXECUTE PROCEDURE ins_surveys_515();
+
+
+-- FUNCTIO TO change status for 514 surveys
+
+CREATE OR REPLACE FUNCTION upd_514(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 		varchar(120);
+BEGIN
+    msg := 'Error Updating ';
+    UPDATE surveys SET survey_status = CAST($3 as int)  WHERE survey_id = CAST($1 as int);
+    msg := '<br/> Report ' || CAST($1 as int) ||  ' Actioned Successfully';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+
+
 
 
 /*
@@ -587,10 +718,36 @@ CREATE VIEW vw_survey_515_demograpics AS
 	INNER JOIN demograpics_515_defs ON survey_515_demograpics.demograpics_515_def_id = demograpics_515_defs.demograpics_515_def_id
 	INNER JOIN surveys_515 ON survey_515_demograpics.surveys_515_id = surveys_515.surveys_515_id;
 
+
+
+
+
+
+CREATE VIEW vw_surveys_515_details AS
+	SELECT orgs.org_id, orgs.org_name, surveys_515.surveys_515_id, surveys_515_details.surveys_515_detail_id, surveys_515_details.indicator_1, 
+surveys_515_details.indicator_2, surveys_515_details.indicator_3, surveys_515_details.indicator_4, surveys_515_details.indicator_5, surveys_515_details.indicator_6, 
+surveys_515_details.indicator_7, surveys_515_details.indicator_8, surveys_515_details.indicator_9, surveys_515_details.indicator_10, surveys_515_details.indicator_11, 
+surveys_515_details.indicator_12, surveys_515_details.indicator_13, surveys_515_details.indicator_14, surveys_515_details.indicator_15, surveys_515_details.indicator_16, 
+surveys_515_details.indicator_17, surveys_515_details.indicator_18, surveys_515_details.indicator_19, surveys_515_details.indicator_20, surveys_515_details.indicator_21, 
+surveys_515_details.indicator_22, surveys_515_details.indicator_23, surveys_515_details.indicator_24, surveys_515_details.indicator_25, surveys_515_details.indicator_26, surveys_515_details.indicator_27,
+ surveys_515_details.indicator_28, surveys_515_details.indicator_29, surveys_515_details.indicator_30, surveys_515_details.indicator_31, surveys_515_details.indicator_32, surveys_515_details.indicator_33,
+ surveys_515_details.indicator_34, surveys_515_details.indicator_35, surveys_515_details.indicator_36, surveys_515_details.indicator_37, surveys_515_details.indicator_38, surveys_515_details.indicator_39, 
+surveys_515_details.indicator_40, surveys_515_details.indicator_41, surveys_515_details.indicator_42, surveys_515_details.indicator_43, surveys_515_details.indicator_44, surveys_515_details.indicator_45,
+ surveys_515_details.indicator_46, surveys_515_details.indicator_47, surveys_515_details.indicator_48, surveys_515_details.indicator_49, surveys_515_details.indicator_50, surveys_515_details.indicator_51, 
+surveys_515_details.indicator_52, surveys_515_details.indicator_53, surveys_515_details.indicator_54, surveys_515_details.indicator_55, surveys_515_details.indicator_56, surveys_515_details.indicator_57,
+ surveys_515_details.indicator_58, surveys_515_details.indicator_59, surveys_515_details.indicator_60, surveys_515_details.indicator_61, surveys_515_details.indicator_62, surveys_515_details.indicator_63,
+ surveys_515_details.indicator_64, surveys_515_details.indicator_65, surveys_515_details.indicator_66, surveys_515_details.indicator_67_a, surveys_515_details.indicator_67_b, 
+surveys_515_details.indicator_67_c, surveys_515_details.indicator_67_d, surveys_515_details.indicator_67_e, surveys_515_details.indicator_67_f, surveys_515_details.indicator_67_g, 
+surveys_515_details.indicator_67_h, surveys_515_details.indicator_67_i, surveys_515_details.indicator_67_j, surveys_515_details.indicator_67_k, surveys_515_details.remarks
+	FROM surveys_515_details
+	INNER JOIN orgs ON surveys_515_details.org_id = orgs.org_id
+	INNER JOIN surveys_515 ON surveys_515_details.surveys_515_id = surveys_515.surveys_515_id;
+
+-- DROP VIEW vw_survey_100 ;
 CREATE VIEW vw_survey_100 AS
 	SELECT health_workers.health_worker_id, health_workers.worker_name, health_workers.worker_mobile_num, 
     orgs.org_id, orgs.org_name, 
-	survey_100.survey_100_id, survey_100.patient_gender, survey_100.patient_name, survey_100.patient_age, 
+	survey_100.survey_100_id, survey_100.patient_gender, form_serial, survey_100.patient_name, survey_100.patient_age, 
 	survey_100.community_healt_unit, survey_100.link_health_facility, survey_100.referral_reason, survey_100.treatment, 
 	survey_100.comments, survey_100.sub_location, survey_100.village, survey_100.community_unit, survey_100.receiving_officer_name, 
 	survey_100.receiving_officer_profession, survey_100.health_facility_name, survey_100.action_taken, survey_100.receiving_officer_date, 
@@ -599,6 +756,38 @@ CREATE VIEW vw_survey_100 AS
 	FROM survey_100
 	INNER JOIN health_workers ON survey_100.health_worker_id = health_workers.health_worker_id
 	INNER JOIN orgs ON survey_100.org_id = orgs.org_id;
+
+
+-- Health Facility
+
+CREATE VIEW vw_health_falicities AS
+	SELECT orgs.org_id, orgs.org_name, health_falicities.health_falicity_id, health_falicities.health_falicity_name, health_falicities.details
+	FROM health_falicities
+	INNER JOIN orgs ON health_falicities.org_id = orgs.org_id;
+
+
+
+
+CREATE VIEW vw_health_facility_data AS
+	SELECT health_falicities.health_falicity_id, health_falicities.health_falicity_name, months.month_id, months.month_name, 
+orgs.org_id, orgs.org_name, years.year_id, years.year_name, health_facility_data.health_facility_data_id, health_facility_data.indicator_1a, 
+health_facility_data.indicator_1b, health_facility_data.indicator_1c, health_facility_data.indicator_1d, health_facility_data.indicator_1e, 
+health_facility_data.indicator_1f, health_facility_data.indicator_2, health_facility_data.indicator_3, health_facility_data.indicator_4, health_facility_data.indicator_5, 
+health_facility_data.indicator_6, health_facility_data.indicator_7, health_facility_data.indicator_8, health_facility_data.indicator_9, health_facility_data.indicator_10, 
+health_facility_data.indicator_11, health_facility_data.indicator_12, health_facility_data.indicator_13, health_facility_data.indicator_14, health_facility_data.indicator_15, 
+health_facility_data.indicator_16, health_facility_data.indicator_17, health_facility_data.indicator_18, health_facility_data.indicator_19, health_facility_data.indicator_20, 
+health_facility_data.indicator_21, health_facility_data.indicator_22, health_facility_data.indicator_23, health_facility_data.indicator_24, health_facility_data.indicator_25, 
+health_facility_data.indicator_26, health_facility_data.indicator_27, health_facility_data.indicator_28, health_facility_data.indicator_29, health_facility_data.indicator_30, 
+health_facility_data.indicator_31, health_facility_data.indicator_32, health_facility_data.indicator_33, health_facility_data.indicator_34, health_facility_data.indicator_35, 
+health_facility_data.indicator_36, health_facility_data.indicator_37, health_facility_data.indicator_38, health_facility_data.indicator_39, health_facility_data.indicator_40, 
+health_facility_data.creation_date
+	FROM health_facility_data
+	INNER JOIN health_falicities ON health_facility_data.health_falicity_id = health_falicities.health_falicity_id
+	INNER JOIN months ON health_facility_data.month_id = months.month_id
+	INNER JOIN orgs ON health_facility_data.org_id = orgs.org_id
+	INNER JOIN years ON health_facility_data.year_id = years.year_id;
+
+
 
 	
 

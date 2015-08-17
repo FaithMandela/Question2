@@ -34,7 +34,7 @@
 	BWeb web = new BWeb(dbconfig, xmlfile);
 	web.setUser(userIP, userName);
 	web.init(request);
-   
+
 	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
 
 	String entryformid = null;
@@ -348,8 +348,8 @@
 
 						<%= web.showFooter() %>
 					</div>
-				
-            
+
+
                     <% if(web.getViewType().equals("FILES")){ %>
                         <div class="row"> <!-- file upload row -->
                             <div class="col-md-12">
@@ -373,8 +373,8 @@
                     <% } %>
                 </div>
             </form>
-                    
-            
+
+
 <% } %>
 
 
@@ -490,10 +490,7 @@
             autoclose: true
         });
 
-        $('.select2me').select2({
-            placeholder: "Select an option",
-            allowClear: true
-        });
+
 
 		UITree.init();
 
@@ -501,11 +498,16 @@
             format: 'hh:mm a',
             trigger: 'manual'
         });
-        
+
         $('.clockface-toggle').click(function (e) {
             e.stopPropagation();
             var target = $(this).attr('data-target');
             $('#' + target ).clockface('toggle');
+        });
+
+		$('.select2me').select2({
+            placeholder: "Select an option",
+            allowClear: true
         });
 
     });
@@ -621,23 +623,23 @@
 	        toastr['info']('No row Selected', "");
 	    } else {
 	        $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
-                
+
                 if(data.error == true){
                     toastr['error'](data.msg, "Error");
                 }else if(data.error == false){
                     toastr['success'](data.msg, "Ok");
-                    
+
                     if(data.jump != undefined && data.jump == true){
-                        location.replace("${mainPage}"); 
+                        location.replace("${mainPage}");
                     }else{
-                        $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');   
+                        $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
                     }
                 }
-                
-                
-                
-                
-                
+
+
+
+
+
 	        }, "JSON");
 	    }
 	});
@@ -780,7 +782,7 @@ $(function () {
 });
 </script>
 <!-- END JAVASCRIPTS -->
-<% 
+<%
 	String diaryJSON = "";
 	if(web.getViewType().equals("DIARY")) diaryJSON = web.getCalendar();
 %>

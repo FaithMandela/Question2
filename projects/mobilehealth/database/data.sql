@@ -39,7 +39,8 @@ INSERT INTO defaulters_info_defs( defaulters_info_def_id, question, details ) VA
 (1, 'ANC defaulter referred', 'Record by marking a tick (✔ ) if  ANC defaulter is referred to a health facility or (X) if not. Record N/A if the member is not an ANC defaulter'),
 (2, 'Immunization defaulter referred', 'Record by marking a tick (✔ ) if Child 0-59 months of age who defaulted on immunization has been referred for immunization or (X) if not. Record N/A if the member is not a child of 0-59 months or is a child of 0-59 months but did not default on immunization'),
 (3, 'TB treatment defaulter traced and referred', 'Record by marking a tick (✔ ) if a Tuberculosis (TB) defaulter is referred to a health facility or (X) if not. Record N/A if the member has not had TB or has had TB but did not default'),
-(4, 'ART defaulter referred', 'Record by marking a tick (✔ ) if an ART defaulter is referred to a health facility or (X) if not. Record N/A if the member has not been on ART or has been on ART but has not defaulted');
+(4, 'ART defaulter referred', 'Record by marking a tick (✔ ) if an ART defaulter is referred to a health facility or (X) if not. Record N/A if the member has not been on ART or has been on ART but has not defaulted'),
+(5, 'HIV exposed infant (HEI) defaulters traced and referred','Record by marking a tick (✔ ) if an HIV exposed infant (HEI) defaulter is traced and referred to a health facility or (X) if not. Record N/A if the member is not an HIV exposed infant (HEI) defaulter');
 
 
 

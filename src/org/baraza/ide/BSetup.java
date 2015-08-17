@@ -99,7 +99,7 @@ public class BSetup implements ActionListener {
 		cfgxml.saveFile();
 
 		String webXML = "..";
-		if(root.getAttribute("web") == null) webXML = "webapps" + ps + root.getAttribute("path");
+		if(root.getAttribute("web") == null) webXML = "webapps" + ps +"baraza";
 		webXML += ps + "META-INF" + ps + "context.xml";
 		BXML webxml = new BXML(webXML, false);
 		BElement web = webxml.getRoot();
