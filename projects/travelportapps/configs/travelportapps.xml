@@ -874,14 +874,26 @@
 	</DESK>
 	<DESK w="700" name="Travel Insurance Report" key="91" h="550">
 		<JASPER name="Insurance Sold" reportfile="vw_passengers.jasper"></JASPER>
-		<JASPER name="Passenger Contract" reportfile="passengers_contract.jasper"></JASPER>
-	</DESK>
-	<DESK w="700" name="Sales Report" key="92" h="550">
-		<FILTER w="700" name="Sale Per Agency" split="150" type="vert" h="550">
-			<FILTERFORM name="Sale Per Agency ">
-				<COMBOBOX w="150" title="Agency" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+		<FILTER w="700" name="Passenger Contract" split="150" type="vert" h="550">
+			<FILTERFORM name="Passenger Contract ">
+				<COMBOBOX w="150" title="Agency" lptable="vw_passengers" noorg="true" y="10" h="20" x="10" lpfield="passenger_name">passenger_id</COMBOBOX>
 			</FILTERFORM>
-			<JASPER name="Sales Per Agency" reportfile="vw_payments.jasper"></JASPER>
+			<JASPER name="Passenger Contract" reportfile="passengers_contract.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Insurance Sales Per Agency" split="150" type="vert" h="550">
+			<FILTERFORM name="Sales Per Agency ">
+				<COMBOBOX w="150" title="Agency Sales" lptable="vw_passengers" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Sales Per Agency " reportfile="agencysales.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Payment Report" key="92" h="550">
+		<JASPER name="Insurance Payment" reportfile="vw_payments.jasper"></JASPER>
+		<FILTER w="700" name="Payment Per Agency" split="150" type="vert" h="550">
+			<FILTERFORM name="Payment Per Agency ">
+				<COMBOBOX w="150" title="Payment" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Payment Per Agency" reportfile="agencypayments.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>

@@ -13,14 +13,20 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<subDataset name="dataset1" uuid="5e2be992-82f7-4d85-b617-3f6ebcf66f1a"/>
+	<subDataset name="dataset2" uuid="eed82caa-2e70-47f3-87ed-997e7b80bf3e"/>
 	<parameter name="orgid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="passenger_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_passengers.passenger_id, vw_passengers.passenger_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.rate_type_name,city_codes.country
 FROM vw_passengers
 
-INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown]]>
+INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown
+WHERE vw_passengers.passenger_id = $P!{passenger_id}]]>
 	</queryString>
 	<field name="passenger_id" class="java.lang.Integer"/>
 	<field name="passenger_name" class="java.lang.String"/>
@@ -28,6 +34,9 @@ INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown]]>
 	<field name="days_to" class="java.lang.String"/>
 	<field name="rate_type_name" class="java.lang.String"/>
 	<field name="country" class="java.lang.String"/>
+	<variable name="policy" class="java.io.InputStream">
+		<variableExpression><![CDATA[$V{policy}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -61,7 +70,7 @@ INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown]]>
 				<text><![CDATA[Certificate Number:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="132" y="1" width="131" height="14" uuid="75d765bc-4f7e-4394-b24f-ec40eba89026"/>
+				<reportElement style="Detail" x="132" y="0" width="131" height="14" uuid="75d765bc-4f7e-4394-b24f-ec40eba89026"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -70,7 +79,7 @@ INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="76" splitType="Stretch">
+		<band height="373" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="e8860502-841e-484a-a892-b5cbe927537d"/>
 			</frame>
@@ -144,6 +153,86 @@ INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{country}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="1" y="93" width="131" height="20" uuid="d2e1453a-b43f-4c10-9936-91bf83e76288"/>
+				<text><![CDATA[SPECIALTY ASSIST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="113" width="100" height="20" uuid="6ee9e702-977a-4f39-b461-bc59a399b6b7"/>
+				<text><![CDATA[London, UK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="133" width="130" height="20" uuid="838536b7-92ca-4733-bea1-1cf79f79dad6"/>
+				<text><![CDATA[Tel +44(0)20 7902 7405]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="153" width="131" height="20" uuid="b34523e7-38d2-43d6-af89-b0e4fdf16c5d"/>
+				<text><![CDATA[Fax:+44(0)20 7928 4748]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="153" width="131" height="20" uuid="56d4b3f8-0c74-4e6a-8bae-b856b72cf6da"/>
+				<text><![CDATA[Fax:+2710 209 8405]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="113" width="100" height="20" uuid="9874cc86-d1c0-4465-a949-07180a3bd7b0"/>
+				<text><![CDATA[Johnnnesburg,South Africa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="93" width="131" height="20" uuid="b1485459-ddf9-4100-9122-8156a7abb4c3"/>
+				<text><![CDATA[SPECIALTY ASSIST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="133" width="130" height="20" uuid="bc3e8fe5-a924-4cd9-9ab0-581eb905a18a"/>
+				<text><![CDATA[Tel +2710 209 8300]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="193" width="100" height="20" uuid="a5a46173-bda3-45dc-a8e1-7e8232bad78d"/>
+				<text><![CDATA[SPECIALTY ASSIST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="193" width="100" height="20" uuid="148434f3-a797-4f44-b715-538633c839c3"/>
+				<text><![CDATA[SPECIALTY ASSIST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="213" width="100" height="20" uuid="7a87d718-2f96-4167-abee-3b9a50ffcb00"/>
+				<text><![CDATA[Bangkok, Thailand]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="213" width="100" height="20" uuid="5c270547-0e74-446f-95de-19797daede77"/>
+				<text><![CDATA[Philadelphia, USA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="233" width="100" height="20" uuid="800c9350-6574-4e4d-a98a-45f0495aef6f"/>
+				<text><![CDATA[Tel:+662 645 3932]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="253" width="100" height="20" uuid="3cf25a7f-dcbb-4a51-b630-258f344f64fb"/>
+				<text><![CDATA[Fax:+1215 489 8525]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="253" width="100" height="20" uuid="1491fb73-e34d-4b89-97b5-582b961ed37d"/>
+				<text><![CDATA[Fax:+662 645 3732]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="233" width="100" height="20" uuid="4adda1d3-a75e-479a-8c00-cc018edb5f43"/>
+				<text><![CDATA[Tel:+1215 489 3785]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="331" width="131" height="20" uuid="f65a3aef-ec42-41a3-afd6-e2561b75be23"/>
+				<text><![CDATA[Fax:33 1 3062 11 21]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="311" width="131" height="20" uuid="33efd49e-d124-4c8b-a831-2e16ddfbf314"/>
+				<text><![CDATA[Tel:+33 1 3062 11 22]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="351" width="185" height="20" uuid="36624886-8abe-4c56-ab53-e3436d92d7b4"/>
+				<text><![CDATA[Email:ogs@saxeassistance.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="291" width="130" height="20" uuid="3ded229f-2540-420a-a85c-59cf3aaa2bca"/>
+				<text><![CDATA[SAVE ASSISTANCE]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<columnFooter>
