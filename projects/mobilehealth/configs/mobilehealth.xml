@@ -1,14 +1,13 @@
 <APP color="blue" name="Mobile Health" org="org_id" password="change_password" material="true">
 	<MENU name="Mobile Health">
-		<MENU icon="icon-users" name="Entitys">35</MENU>
-		<MENU icon="fa fa-sitemap" name="Organizations">5</MENU>
-		<MENU icon="icon-map" name="Countys">10</MENU>
 		<MENU icon="icon-book-open" name="Reports ( MOH 514 )">15</MENU>
 		<MENU icon="icon-book-open" name="Reports ( MOH 515 )">20</MENU>
 		<MENU icon="icon-book-open" name="Reports ( MOH 100 )">40</MENU>
-		<MENU name="Health Facility Tool">
-			<MENU name="Configurations">45</MENU>
-			<MENU name="Health Falicity Data">50</MENU>
+		<MENU icon="fa fa-hospital-o" name="Health Falicity Data">50</MENU>
+		<MENU icon="icon-settings" name="Configurations">
+			<MENU icon="icon-settings" name="Definitions">45</MENU>
+			<MENU icon="icon-users" name="Entitys">35</MENU>
+			<MENU icon="fa fa-sitemap" name="Organizations">5</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
@@ -59,7 +58,7 @@
 			</ACTIONS>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Orgs" key="5" h="550">
+	<DESK w="700" name="Organizations" key="5" h="550">
 		<GRID name="Organizations" keyfield="org_id" table="vw_orgs" noorg="true">
 			<TEXTFIELD w="75" title="Organization ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Organization Name">org_name</TEXTFIELD>
@@ -112,24 +111,6 @@
 				<TEXTFIELD w="150" title="Logo" y="90" h="20" x="10">logo</TEXTFIELD>
 				<TEXTFIELD w="150" title="Pin" y="90" h="20" x="290">pin</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-	</DESK>
-	<DESK w="700" name="Countys" noorg="true" key="10" h="550">
-		<GRID name="Countys" keyfield="county_id" table="countys" noorg="true">
-			<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
-			<GRID name="Sub Countys" keyfield="sub_county_id" linkfield="county_id" table="vw_sub_countys" noorg="true">
-				<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Sub County ID">sub_county_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
-				<FORM name="Sub Countys" keyfield="sub_county_id" linkfield="county_id" table="sub_countys" noorg="true">
-					<TEXTFIELD w="150" title="Sub County Name" y="10" h="20" x="10">sub_county_name</TEXTFIELD>
-				</FORM>
-			</GRID>
-			<FORM name="County" keyfield="county_id" table="countys" noorg="true">
-				<TEXTFIELD w="150" title="County Name" y="10" h="20" x="10">county_name</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -880,7 +861,7 @@
 			<JASPER name="Report 100 report" reportfile="vw_survey_100.jasper"></JASPER>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Configurations" key="45" h="550">
+	<DESK w="700" icon="icon-settings" name="Configurations" key="45" h="550">
 		<GRID name="Health Falicities" keyfield="health_falicity_id" table="vw_health_falicities">
 			<TEXTFIELD w="75" title="Health Falicity ID">health_falicity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
@@ -888,6 +869,42 @@
 			<FORM name="Health Falicities" keyfield="health_falicity_id" table="health_falicities">
 				<TEXTFIELD w="430" title="Health Falicity Name" y="10" h="20" x="10">health_falicity_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Countys" keyfield="county_id" table="countys" noorg="true">
+			<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+			<GRID name="Sub Countys" keyfield="sub_county_id" linkfield="county_id" table="vw_sub_countys" noorg="true">
+				<TEXTFIELD w="75" title="Sub County ID">sub_county_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+				<GRID name="Divisions" keyfield="division_id" linkfield="sub_county_id" table="divisions" noorg="true">
+					<TEXTFIELD w="75" title="Division ID">division_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Division Name">division_name</TEXTFIELD>
+					<GRID name="Locations" keyfield="location_id" linkfield="division_id" table="locations" noorg="true">
+						<TEXTFIELD w="75" title="Location ID">location_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
+						<GRID name="Sub Locations" keyfield="sub_location_id" linkfield="location_id" table="sub_locations" noorg="true">
+							<TEXTFIELD w="75" title="Sub Location ID">sub_location_id</TEXTFIELD>
+							<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
+							<FORM name="Sub Location" keyfield="sub_location_id" linkfield="location_id" table="sub_locations" noorg="true">
+								<TEXTFIELD w="150" title="Location Name" y="10" h="20" x="10">location_name</TEXTFIELD>
+							</FORM>
+						</GRID>
+						<FORM name="Location" keyfield="location_id" linkfield="division_id" table="locations" noorg="true">
+							<TEXTFIELD w="150" title="Location Name" y="10" h="20" x="10">location_name</TEXTFIELD>
+						</FORM>
+					</GRID>
+					<FORM name="Division" keyfield="division_id" linkfield="sub_county_id" table="divisions" noorg="true">
+						<TEXTFIELD w="150" title="Division Name" y="10" h="20" x="10">division_name</TEXTFIELD>
+					</FORM>
+				</GRID>
+				<FORM name="Sub County" keyfield="sub_county_id" linkfield="county_id" table="sub_countys" noorg="true">
+					<TEXTFIELD w="150" title="Sub County Name" y="10" h="20" x="10">sub_county_name</TEXTFIELD>
+				</FORM>
+			</GRID>
+			<FORM name="County" keyfield="county_id" table="countys" noorg="true">
+				<TEXTFIELD w="150" title="County Name" y="10" h="20" x="10">county_name</TEXTFIELD>
 			</FORM>
 		</GRID>
 		<GRID name="Years" keyfield="year_id" table="years" noorg="true">
@@ -901,7 +918,7 @@
 			<TEXTFIELD w="75" title="Month Name">month_name</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Health Falicity Data" key="50" h="550">
+	<DESK w="700" icon="fa fa-hospital-o" name="Health Falicity Data" key="50" h="550">
 		<GRID name="Health Falicities" keyfield="health_falicity_id" table="vw_health_falicities">
 			<TEXTFIELD w="75" title="Health Falicity ID">health_falicity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
@@ -921,47 +938,47 @@
 					<TEXTFIELD w="150" title="D) Pharmacists" y="70" h="20" x="290">indicator_1d</TEXTFIELD>
 					<TEXTFIELD w="150" title="E) CHVs Linked to the facility" y="90" h="20" x="10">indicator_1e</TEXTFIELD>
 					<TEXTFIELD w="150" title="F) Others (Comment/specify)" y="90" h="20" x="290">indicator_1f</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of new health workers trained on Emergency Obstetric and Neonatal Care (EmONC) and by who - comment below" y="110" h="20" x="10">indicator_2</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of new health workers trained on Integrated Management of Childhood Illness (IMCI), and by who - comment below " y="110" h="20" x="290">indicator_3</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of new health workers trained in Infection Prevention Control (I.P.C) , and by who - comment below." y="130" h="20" x="10">indicator_4</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of new health workers trained in Focused Antenatal Care (FANC), and by who - comment below" y="130" h="20" x="290">indicator_5</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of new health workers trained in Essential Newborn Care and by who - comment below" y="150" h="20" x="10">indicator_6</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of new health workers trained in Elimination of Mother to Child Transmission (EMTCT) and by who- comment below" y="150" h="20" x="290">indicator_7</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of new-borns initiating breastfeeding within 1 hour of birth" y="170" h="20" x="10">indicator_8</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children receiving Measles dose I ( 9 months )" y="170" h="20" x="290">indicator_9</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children receiving Measles   ( 12-23 months)" y="190" h="20" x="10">indicator_10</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children receiving BCG" y="190" h="20" x="290">indicator_11</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children receiving Penta 1" y="210" h="20" x="10">indicator_12</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children receiving Penta  2, 3 " y="210" h="20" x="290">indicator_13</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children with full vaccination (12-23 months)" y="230" h="20" x="10">indicator_14</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children receiving other vaccinations " y="230" h="20" x="290">indicator_15</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of sick children &lt; 5 years who seek care at a health facility" y="250" h="20" x="10">indicator_16</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children under 5 referred by CHVs" y="250" h="20" x="290">indicator_17</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women using contraceptives (obtained at health facility)" y="270" h="20" x="10">indicator_18</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women attending the 1st  ANC visits" y="270" h="20" x="290">indicator_19</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women attending the 2nd   and 3rd ANC visits" y="290" h="20" x="10">indicator_20</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women attending at least 4 ANC visits " y="290" h="20" x="290">indicator_21</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women whose blood pressure measurements taken during all ANC visits" y="310" h="20" x="10">indicator_22</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women receiving injections to control bleeding during the third stage of labour. " y="310" h="20" x="290">indicator_23</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of deliveries assisted by trained personnel (health facility deliveries)" y="330" h="20" x="10">indicator_24</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of still births" y="330" h="20" x="290">indicator_25</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of neonatal  deaths" y="350" h="20" x="10">indicator_26</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women attending PNC visits in the reporting month" y="350" h="20" x="290">indicator_27</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women attending 1st PNC visit" y="370" h="20" x="10">indicator_28</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women attending 2nd PNC visits" y="370" h="20" x="290">indicator_29</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women attending at least  3 PNC visits " y="390" h="20" x="10">indicator_30</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women with home deliveries at night reporting to facilities for PNC" y="390" h="20" x="290">indicator_31</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of obstetric night admissions at the selected facilities" y="410" h="20" x="10">indicator_32</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women seeking services from  the selected facilities" y="410" h="20" x="290">indicator_33</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of  women referred by CHWs to the selected facilities" y="430" h="20" x="10">indicator_34</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women using  APHRC ambulance" y="430" h="20" x="290">indicator_35</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children using APHRC ambulance" y="450" h="20" x="10">indicator_36</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women reporting to the facility with ambulance services (specify which)" y="450" h="20" x="290">indicator_37</TEXTFIELD>
-					<TEXTFIELD w="150" title="No.  of women reporting to have efficiently used the ambulance services (specify which service)" y="470" h="20" x="10">indicator_38</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of children referred to other facilities (specify where )  " y="470" h="20" x="290">indicator_39</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women referred to other facilities (specify where)" y="490" h="20" x="10">indicator_40</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of women reporting satisfaction with the quality of service provided in the upgraded facilities" y="490" h="20" x="10">indicator_41</TEXTFIELD>
-					<TEXTFIELD w="150" title="No. of supervisions/visits by DHMTs as reported by Health facilities" y="490" h="20" x="10">indicator_42</TEXTFIELD>
+					<TEXTFIELD w="150" title="2. No. of new health workers trained on Emergency Obstetric and Neonatal Care (EmONC) and by who - comment below" y="110" h="20" x="10">indicator_2</TEXTFIELD>
+					<TEXTFIELD w="150" title="3. No. of new health workers trained on Integrated Management of Childhood Illness (IMCI), and by who - comment below " y="110" h="20" x="290">indicator_3</TEXTFIELD>
+					<TEXTFIELD w="150" title="4. No. of new health workers trained in Infection Prevention Control (I.P.C) , and by who - comment below." y="130" h="20" x="10">indicator_4</TEXTFIELD>
+					<TEXTFIELD w="150" title="5. No. of new health workers trained in Focused Antenatal Care (FANC), and by who - comment below" y="130" h="20" x="290">indicator_5</TEXTFIELD>
+					<TEXTFIELD w="150" title="6. No. of new health workers trained in Essential Newborn Care and by who - comment below" y="150" h="20" x="10">indicator_6</TEXTFIELD>
+					<TEXTFIELD w="150" title="7. No. of new health workers trained in Elimination of Mother to Child Transmission (EMTCT) and by who- comment below" y="150" h="20" x="290">indicator_7</TEXTFIELD>
+					<TEXTFIELD w="150" title="8. No. of new-borns initiating breastfeeding within 1 hour of birth" y="170" h="20" x="10">indicator_8</TEXTFIELD>
+					<TEXTFIELD w="150" title="9. No. of children receiving Measles dose I ( 9 months )" y="170" h="20" x="290">indicator_9</TEXTFIELD>
+					<TEXTFIELD w="150" title="10. No. of children receiving Measles   ( 12-23 months)" y="190" h="20" x="10">indicator_10</TEXTFIELD>
+					<TEXTFIELD w="150" title="11. No. of children receiving BCG" y="190" h="20" x="290">indicator_11</TEXTFIELD>
+					<TEXTFIELD w="150" title="12. No. of children receiving Penta 1" y="210" h="20" x="10">indicator_12</TEXTFIELD>
+					<TEXTFIELD w="150" title="13. No. of children receiving Penta  2, 3 " y="210" h="20" x="290">indicator_13</TEXTFIELD>
+					<TEXTFIELD w="150" title="14. No. of children with full vaccination (12-23 months)" y="230" h="20" x="10">indicator_14</TEXTFIELD>
+					<TEXTFIELD w="150" title="15. No. of children receiving other vaccinations " y="230" h="20" x="290">indicator_15</TEXTFIELD>
+					<TEXTFIELD w="150" title="16. No. of sick children &lt; 5 years who seek care at a health facility" y="250" h="20" x="10">indicator_16</TEXTFIELD>
+					<TEXTFIELD w="150" title="17. No. of children under 5 referred by CHVs" y="250" h="20" x="290">indicator_17</TEXTFIELD>
+					<TEXTFIELD w="150" title="18. No. of women using contraceptives (obtained at health facility)" y="270" h="20" x="10">indicator_18</TEXTFIELD>
+					<TEXTFIELD w="150" title="19. No. of women attending the 1st  ANC visits" y="270" h="20" x="290">indicator_19</TEXTFIELD>
+					<TEXTFIELD w="150" title="20. No. of women attending the 2nd   and 3rd ANC visits" y="290" h="20" x="10">indicator_20</TEXTFIELD>
+					<TEXTFIELD w="150" title="21. No. of women attending at least 4 ANC visits " y="290" h="20" x="290">indicator_21</TEXTFIELD>
+					<TEXTFIELD w="150" title="22. No. of women whose blood pressure measurements taken during all ANC visits" y="310" h="20" x="10">indicator_22</TEXTFIELD>
+					<TEXTFIELD w="150" title="23. No. of women receiving injections to control bleeding during the third stage of labour. " y="310" h="20" x="290">indicator_23</TEXTFIELD>
+					<TEXTFIELD w="150" title="24. No. of deliveries assisted by trained personnel (health facility deliveries)" y="330" h="20" x="10">indicator_24</TEXTFIELD>
+					<TEXTFIELD w="150" title="25. No. of still births" y="330" h="20" x="290">indicator_25</TEXTFIELD>
+					<TEXTFIELD w="150" title="26. No. of neonatal  deaths" y="350" h="20" x="10">indicator_26</TEXTFIELD>
+					<TEXTFIELD w="150" title="27. No. of women attending PNC visits in the reporting month" y="350" h="20" x="290">indicator_27</TEXTFIELD>
+					<TEXTFIELD w="150" title="28. No. of women attending 1st PNC visit" y="370" h="20" x="10">indicator_28</TEXTFIELD>
+					<TEXTFIELD w="150" title="29. No. of women attending 2nd PNC visits" y="370" h="20" x="290">indicator_29</TEXTFIELD>
+					<TEXTFIELD w="150" title="30. No. of women attending at least  3 PNC visits " y="390" h="20" x="10">indicator_30</TEXTFIELD>
+					<TEXTFIELD w="150" title="31. No. of women with home deliveries at night reporting to facilities for PNC" y="390" h="20" x="290">indicator_31</TEXTFIELD>
+					<TEXTFIELD w="150" title="32. No. of obstetric night admissions at the selected facilities" y="410" h="20" x="10">indicator_32</TEXTFIELD>
+					<TEXTFIELD w="150" title="33. No. of women seeking services from  the selected facilities" y="410" h="20" x="290">indicator_33</TEXTFIELD>
+					<TEXTFIELD w="150" title="34. No. of  women referred by CHWs to the selected facilities" y="430" h="20" x="10">indicator_34</TEXTFIELD>
+					<TEXTFIELD w="150" title="35. No. of women using  APHRC ambulance" y="430" h="20" x="290">indicator_35</TEXTFIELD>
+					<TEXTFIELD w="150" title="36. No. of children using APHRC ambulance" y="450" h="20" x="10">indicator_36</TEXTFIELD>
+					<TEXTFIELD w="150" title="37. No. of women reporting to the facility with ambulance services (specify which)" y="450" h="20" x="290">indicator_37</TEXTFIELD>
+					<TEXTFIELD w="150" title="38. No.  of women reporting to have efficiently used the ambulance services (specify which service)" y="470" h="20" x="10">indicator_38</TEXTFIELD>
+					<TEXTFIELD w="150" title="39. No. of children referred to other facilities (specify where )  " y="470" h="20" x="290">indicator_39</TEXTFIELD>
+					<TEXTFIELD w="150" title="40. No. of women referred to other facilities (specify where)" y="490" h="20" x="10">indicator_40</TEXTFIELD>
+					<TEXTFIELD w="150" title="41. No. of women reporting satisfaction with the quality of service provided in the upgraded facilities" y="490" h="20" x="10">indicator_41</TEXTFIELD>
+					<TEXTFIELD w="150" title="42. No. of supervisions/visits by DHMTs as reported by Health facilities" y="490" h="20" x="10">indicator_42</TEXTFIELD>
 				</FORM>
 			</GRID>
 		</GRID>

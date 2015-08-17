@@ -1,5 +1,6 @@
 <APPLIST loglevel="info" dbpassword="invent" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
 	<APP dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="schools.xml" dbclass="org.postgresql.Driver" dbusername="root">Schools</APP>
+	<APP dbpath="jdbc:postgresql://localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="travelportapps.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</APP>
 	<APP dbpath="jdbc:postgresql://192.168.0.4:5432/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
 	<APP dbpath="jdbc:postgresql://192.168.0.4:5432/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
@@ -79,6 +80,6 @@
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://192.168.0.4:5432/fidelity" dbname="fidelity" path="fidelity" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Fidelity Emails</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
-
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">Healthfacility Tomcat Server</SERVER>
 </APPLIST>
