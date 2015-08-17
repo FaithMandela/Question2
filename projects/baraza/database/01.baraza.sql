@@ -290,7 +290,8 @@ CREATE TABLE sys_emailed (
 	email_type				integer default 1 not null,
 	emailed					boolean default false not null,
 	created					timestamp default current_timestamp,
-	narrative				varchar(240)
+	narrative				varchar(240),
+	mail_body				text
 );
 CREATE INDEX sys_emailed_sys_email_id ON sys_emailed (sys_email_id);
 CREATE INDEX sys_emailed_org_id ON sys_emailed (org_id);
