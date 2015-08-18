@@ -339,6 +339,7 @@ public class BForms {
 			label = "<label for='F" + rs.getString("field_id") +  "'> " + question + "</label>";
 
 			if(fieldType.equals("TEXTFIELD")) {
+			    //input= "<div class='row'>";
 				input = "<input " + disabled + " type='text' ";
 				input += " style='width:" + rs.getString("field_size") + "0px' ";
 				input += " name='F" + rs.getString("field_id") +  "'";
@@ -346,6 +347,8 @@ public class BForms {
 				input += getAnswer(rs.getString("field_id"));
 				input += " placeholder=\"" + details +"\"";
 				input += " class='placeholder fillout' />";
+				//input+= "</div>";
+				
 			} else if(fieldType.equals("DATE")) {
 			    input = "<input " + disabled + " type='text' ";
 			    input += " style='width:" + rs.getString("field_size") + "0px' ";
@@ -459,10 +462,10 @@ public class BForms {
 				}
 			} else if(shareLine == 0 ) {		//if no line to be shared
 				if(isTabs == false) {
-					if(sl == -1) myhtml += "<section class='row'>" + input + "</section>\n";
+					if(sl == -1) myhtml += "<section class='row' >" + input + "</section>\n";
 					else myhtml += "</section><section class='row'>" + input + "</section>\n";
 				} else {
-					tab_body += "<section class='row'>" + input + "</section>";
+					tab_body += "<section>" + input + "</section>";
 				}
 				sl = -1;
 			}

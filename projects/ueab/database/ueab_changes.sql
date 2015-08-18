@@ -1,3 +1,16 @@
+CREATE OR REPLACE FUNCTION getdbgradeid(integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(gradeid) is null THEN 'NG' WHEN $1 = -1 THEN 'DG' ELSE max(gradeid) END
+	FROM grades 
+	WHERE (minrange <= $1) AND (maxrange > $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getPGgradeid(integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(gradeid) is null THEN 'NG' $1 = -1 THEN 'DG' ELSE max(gradeid) END
+	FROM grades 
+	WHERE (p_minrange <= $1) AND (p_maxrange > $1);
+$$ LANGUAGE SQL;
+
+
 
 CREATE TABLE countys(
 
