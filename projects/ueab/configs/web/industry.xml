@@ -9,7 +9,7 @@
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Company Details" key="30" h="500">
-		<GRID name="Company Details" keyfield="employerid" display="form" table="employers" user="employerid">
+		<FORMVIEW name="Company Details" keyfield="employerid" table="employers" user="employerid">
 			<TEXTFIELD w="15" title="Post New Vacancy" addlink="11">employerid</TEXTFIELD>
 			<TEXTFIELD w="15" title="Employer ID">employerid</TEXTFIELD>
 			<TEXTFIELD w="15" title="Company Name">companyname</TEXTFIELD>
@@ -58,59 +58,60 @@
 					<TEXTAREA w="15" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
-		</GRID>
+		</FORMVIEW>
 	</DESK>
+
 	<DESK w="700" name="School" key="10" h="500">
-		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools">
+		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true">
 			<TEXTFIELD w="75" title="School ID">schoolid</TEXTFIELD>
 			<TEXTFIELD w="250" title="School">schoolname</TEXTFIELD>
-			<GRID name="Department" keyfield="departmentid" orderby="departmentid" linkfield="schoolid" table="departmentview" reporttitle="schoolname">
+			<GRID name="Department" keyfield="departmentid" orderby="departmentid" linkfield="schoolid" table="departmentview" noorg="true" reporttitle="schoolname">
 				<TEXTFIELD w="75" title="Department ID">Departmentid</TEXTFIELD>
 				<TEXTFIELD w="250" title="Department">departmentname</TEXTFIELD>
-				<GRID name="Majors" keyfield="majorid" linkfield="departmentid" table="majorview" reporttitle="departmentname">
+				<GRID name="Majors" keyfield="majorid" linkfield="departmentid" table="majorview" noorg="true" reporttitle="departmentname">
 					<TEXTFIELD w="250" title="Majors Name">majorname</TEXTFIELD>
 					<CHECKBOX w="75" title="Core" format="boolean" ischar="true">major</CHECKBOX>
-					<GRID name="Majors Contents" keyfield="majorcontentid" orderby="courseid" linkfield="majorid" table="majorcontentview" where="(iscurrent = true)">
+					<GRID name="Majors Contents" keyfield="majorcontentid" orderby="courseid" linkfield="majorid" table="majorcontentview" noorg="true" where="(iscurrent = true)">
 						<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 						<TEXTFIELD w="250" title="Course Title">coursetitle</TEXTFIELD>
 						<TEXTFIELD w="75" title="Credit Hours">credithours</TEXTFIELD>
 						<TEXTFIELD w="75" title="Content Type">contenttypename</TEXTFIELD>
 						<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-						<GRID w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" display="form" table="majorcontentview">
+						<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" table="majorcontentview" noorg="true">
 							<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 							<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 							<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 							<TEXTFIELD w="70" title="Year Taken">yeartaken</TEXTFIELD>
 							<TEXTFIELD w="70" title="Details">course_details</TEXTFIELD>
-							<GRID name="Prerequisite" keyfield="prerequisiteid" linkfield="majorcontentid" table="vw_major_prereq">
+							<GRID name="Prerequisite" keyfield="prerequisiteid" linkfield="majorcontentid" table="vw_major_prereq" noorg="true">
 								<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 								<TEXTFIELD w="300" title="Course Title">coursetitle</TEXTFIELD>
 								<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 								<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 							</GRID>
-						</GRID>
+						</FORMVIEW>
 					</GRID>
 				</GRID>
-				<GRID name="Courses Listing" keyfield="courseid" orderby="courseid" linkfield="departmentid" table="courses" where="(iscurrent = true)">
+				<GRID name="Courses Listing" keyfield="courseid" orderby="courseid" linkfield="departmentid" table="courses" noorg="true" where="(iscurrent = true)">
 					<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 					<TEXTFIELD w="250" title="Course Title">coursetitle</TEXTFIELD>
 					<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 					<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-					<GRID w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" display="form" table="courses">
+					<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" table="courses" noorg="true">
 						<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 						<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 						<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 						<TEXTFIELD w="70" title="Year Taken">yeartaken</TEXTFIELD>
 						<TEXTFIELD w="70" title="Details">details</TEXTFIELD>
-						<GRID name="Prerequisite" linkfield="courseid" table="prereqview">
+						<GRID name="Prerequisite" linkfield="courseid" table="prereqview" noorg="true">
 							<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 							<TEXTFIELD w="300" title="Course Title">coursetitle</TEXTFIELD>
 							<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 							<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 						</GRID>
-					</GRID>
+					</FORMVIEW>
 				</GRID>
-				<GRID w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" display="form" table="departmentview">
+				<FORMVIEW w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" table="departmentview" noorg="true">
 					<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 					<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 					<TEXTFIELD title="Department Name">Departmentname</TEXTFIELD>
@@ -121,9 +122,9 @@
 					<TEXTFIELD title="Exposures">exposures</TEXTFIELD>
 					<TEXTFIELD title="Oppotunities">oppotunities</TEXTFIELD>
 					<TEXTFIELD title="Details">details</TEXTFIELD>
-				</GRID>
+				</FORMVIEW>
 			</GRID>
-			<GRID w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" display="form" table="schools">
+			<FORMVIEW w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" table="schools" noorg="true">
 				<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 				<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 				<TEXTFIELD title="Philosopy">philosopy</TEXTFIELD>
@@ -131,9 +132,10 @@
 				<TEXTFIELD title="Mission">mission</TEXTFIELD>
 				<TEXTFIELD title="Objectives">objectives</TEXTFIELD>
 				<TEXTFIELD title="Details">details</TEXTFIELD>
-			</GRID>
+			</FORMVIEW>
 		</GRID>
 	</DESK>
+
 	<DESK w="700" name="View Jobs Posted" key="50" h="500">
 		<GRID name="View Jobs Posted" keyfield="employerjobid" table="employerjobs" user="employerid">
 			<TEXTFIELD w="15" title="Job Title">jobdescription</TEXTFIELD>

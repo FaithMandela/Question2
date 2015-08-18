@@ -2078,7 +2078,7 @@ System.out.println("repository : " + repository);
 		boolean hasSubs = false;
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
-			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("FILES") || el.getName().equals("DIARY") || el.getName().equals("FORMVIEW")) hasSubs = true;
 		}
 		return hasSubs;
 	}

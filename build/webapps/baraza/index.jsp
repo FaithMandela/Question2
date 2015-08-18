@@ -2,6 +2,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <c:set var="mainPage" value="index.jsp" scope="page" />
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="org.baraza.web.*" %>
 <%@ page import="org.baraza.xml.BElement" %>
 
@@ -18,6 +20,9 @@
 		session.removeAttribute("xmlcnf");
 		session.invalidate();
   	}
+
+	List<String> allowXml = new ArrayList<String>();
+	allowXml.add("hr.xml");
 
 	String ps = System.getProperty("file.separator");
 	String xmlfile = context.getRealPath("WEB-INF") + ps + "configs" + ps + xmlcnf;
@@ -489,8 +494,6 @@
         $('.date-picker').datepicker({
             autoclose: true
         });
-
-
 
 		UITree.init();
 

@@ -133,6 +133,11 @@
     <link href="jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" rel="search" type="text/css" />
     <link href="jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="search" type="text/css" />
 -->
+<style type="text/css">
+    
+</style>
+        
+        
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -154,7 +159,7 @@
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
 			<a href="index.jsp?xml=hr.xml">
-			<img src="./assets/logos/logo_header.png" alt="logo" style="margin: 20px 10px 0 10px; width: 107px;" class="logo-default"/>
+			<img src="./assets/logos/logo_header.png" alt="logo" style="margin: 10px 10px 0 10px; height: 45px;" class="logo-default"/>
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -198,6 +203,23 @@
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
 	<!-- BEGIN CONTENT -->
+    
+    <div class="page-sidebar-wrapper">
+		<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+		<!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+		<div class="page-sidebar navbar-collapse collapse">
+            <%@ include file="./assets/include/application.jsp" %>
+			<!-- END SIDEBAR MENU -->
+		</div>
+	</div>
+    
+    
+    
+    
+    
+    
+    
+    
 	<div class="page-content-wrapper">
 		<div class="page-content">
 
@@ -210,7 +232,7 @@
 					<% if(opResult != null) out.println("<div style='color:#FF0000'>" + opResult + "</div>"); %>
 					<%= web.getSaveMsg() %>
 
-					<div class="portlet box purple">
+					<div class="portlet box green-seagreen">
 						<div class="portlet-title">
 							<div class="caption">
 								<i class="fa fa-cogs"></i><%= web.getViewName() %>
