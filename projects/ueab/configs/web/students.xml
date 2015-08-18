@@ -259,6 +259,11 @@
 			<TEXTFIELD w="50" title="Grade">gradeid</TEXTFIELD>
 			<TEXTFIELD w="50" title="GP" format="double">gpa</TEXTFIELD>
 		</GRID>
+		<GRID name="Transfered Credits" table="transferedcreditsview" noorg="true" user="studentid">
+			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
+			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
+			<TEXTFIELD w="50" title="Credit Hours">credithours</TEXTFIELD>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Trimester Register" key="22" h="500">
 		<FORMVIEW name="Trimester Register" keyfield="quarterid" table="activequarter" noorg="true">
