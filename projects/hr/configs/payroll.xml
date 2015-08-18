@@ -1362,7 +1362,7 @@
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Payroll" reportfile="vw_employee_month.jasper"></JASPER>
-			<JASPER name="Payroll" reportfile="vw_employee_month_1.jasper"></JASPER>
+			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
 	</DESK>
