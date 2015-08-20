@@ -155,3 +155,51 @@ SELECT deldupstudent(studentid, null, '14') FROM students WHERE studentid like '
 
 ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 
+
+--------------- Adding a new student
+
+SELECT app_students.majorid
+FROM app_students LEFT JOIN majors ON app_students.majorid = majors.majorid
+WHERE majors.majorid is null
+ORDER BY app_students.majorid;
+
+UPDATE app_students SET studentid = 'NR/' || lpad(student_number::varchar, 4, '0') WHERE studentid is null;
+UPDATE app_students SET guardianname = trim(substr(guardianname, 1, 50)) WHERE length(guardianname) > 50;
+
+
+INSERT INTO students (studentid, denominationid, 
+	surname, firstname, othernames, sex, nationality, maritalstatus, 
+	birthdate, address, zipcode, town, countrycodeid, stateid, telno, 
+	mobile, bloodgroup, email, guardianname, gaddress, gzipcode, 
+	gtown, gcountrycodeid, gtelno, gemail,
+	accountnumber, etranzact_card_no, firstpasswd,
+	org_id, departmentid, newstudent)
+	
+SELECT a.studentid,  a.denominationid, 
+	a.surname, a.firstname, a.othernames, a.sex, a.nationality, a.maritalstatus, 
+	a.birthdate, a.address, a.zipcode, a.town, a.countrycodeid, a.stateid, a.telno, 
+	a.mobile, a.bloodgroup, a.email, a.guardianname, a.gaddress, a.gzipcode, 
+	a.gtown, a.gcountrycodeid, a.gtelno, a.gemail,
+	a.account_number, a.e_tranzact_no, a.first_password,
+	'0'::integer, b.departmentid, true
+FROM app_students as a INNER JOIN majors as b ON a.majorid = b.majorid
+WHERE a.is_picked = false;
+       
+
+INSERT INTO studentdegrees (degreeid, studentid, sublevelid, bulletingid, org_id)
+SELECT 'B.A', studentid, 'UNDM', 3, 0
+FROM app_students 
+WHERE app_students.is_picked = false;
+
+
+INSERT INTO studentmajors (studentdegreeid, majorid, org_id)
+SELECT studentdegrees.studentdegreeid, app_students.majorid, 0
+FROM app_students INNER JOIN studentdegrees ON studentdegrees.studentid = app_students.studentid
+WHERE app_students.is_picked = false;
+
+
+UPDATE app_students SET is_picked = true;
+ 
+
+  
+  

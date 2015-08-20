@@ -125,7 +125,8 @@ CREATE VIEW vw_students AS
 		students.accountnumber, students.Nationality, c3.countryname as Nationalitycountry, students.Sex,
 		students.MaritalStatus, students.birthdate, students.firstpasswd, students.alumnae, students.postcontacts, students.onprobation,
 		students.offcampus, students.currentcontact, students.staff, students.fullbursary, students.newstudent, 
-		students.picturefile, students.emailuser, students.matriculate, students.details, 
+		students.picturefile, students.emailuser, students.matriculate, students.details,
+		students.student_edit,
 		students.etranzact_card_no, students.org_id,
 		entitys.first_password, ('G' || students.studentid) as gstudentid
 	FROM (((denominationview INNER JOIN students ON denominationview.denominationid = students.denominationid)

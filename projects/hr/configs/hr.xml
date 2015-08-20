@@ -308,7 +308,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FILES username="repository" repository="http://localhost/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" noorg="true" password="baraza">
+			<FILES username="repository" repository="/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" noorg="true" password="baraza">
 				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 				<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
@@ -534,7 +534,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FILES username="repository" repository="http://localhost/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza">
+			<FILES username="repository" repository="/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza">
 				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 				<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
@@ -1360,7 +1360,7 @@
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
-				<PICTURE w="550" username="repository" repository="http://localhost:9090/repository/webdav/pictures/" tab="Picture" pictures="../repository/barazapictures" access="enter2012" password="baraza" y="1" h="150" x="10">picture_file</PICTURE>
+				<PICTURE w="550" username="repository" repository="/repository/webdav/pictures/" tab="Picture" pictures="../repository/barazapictures" access="enter2012" password="baraza" y="1" h="150" x="10">picture_file</PICTURE>
 				<TEXTDECIMAL w="150" title="Height" tab="Medical" y="2" h="20" x="10">height</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Weight" tab="Medical" y="2" h="20" x="290">weight</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Blood Group" tab="Medical" y="22" h="20" x="10">blood_group</TEXTFIELD>
@@ -1540,7 +1540,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FILES edit="false" keyfield="sys_file_id" linkfield="table_id" params="table_name" table="sys_files" where="(table_name='employees')" password="enter" new="false" username="root" repository="http://localhost:9090/repository/webdav/files/" name="Documents" delete="false" filetable="employees">
+			<FILES edit="false" keyfield="sys_file_id" linkfield="table_id" params="table_name" table="sys_files" where="(table_name='employees')" password="enter" new="false" username="root" repository="/repository/webdav/files/" name="Documents" delete="false" filetable="employees">
 				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>

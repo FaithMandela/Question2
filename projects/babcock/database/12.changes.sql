@@ -1,62 +1,50 @@
 
 
-CREATE OR REPLACE FUNCTION insstudentname() RETURNS trigger AS $$
-DECLARE
-	v_entity_id			integer;
-	v_guardian_id		integer;
-BEGIN
-	NEW.studentname := UPPER(NEW.surname)	|| ', ' || UPPER(NEW.firstname) || ' ' || UPPER(COALESCE(NEW.othernames, ''));
-	NEW.accountnumber := trim(upper(NEW.accountnumber));
-	NEW.emailuser := lower(NEW.surname) || lower(replace(NEW.studentid, '/', ''));
+DROP TABLE app_students;
+CREATE TABLE app_students (
+	app_student_id		integer primary key,
+	student_number		serial,
+	studentid			varchar(12),
+	departmentid		varchar(12),
+	denominationid		varchar(12),
+	org_id				integer references orgs,
+	surname				varchar(50) not null,
+	firstname			varchar(50) not null,
+	othernames			varchar(50),
+	Sex					varchar(1),
+	Nationality			char(2) references countrys,
+	MaritalStatus		varchar(2),
+	birthdate			date,
+	address				varchar(240),
+	zipcode				varchar(50),
+	town				varchar(50),
+	countrycodeid		char(2) references countrys,
+	stateid				integer references states,
+	telno				varchar(50),
+	mobile				varchar(75),
+	BloodGroup			varchar(12),
+	email				varchar(240),
+	guardianname		varchar(150),
+	gaddress			varchar(250),
+	gzipcode			varchar(50),
+	gtown				varchar(50),
+	gcountrycodeid		char(2) references countrys,
+	gtelno				varchar(50),
+	gemail				varchar(240),
+
+	degreeid			varchar(12) references degrees,
+	sublevelid			varchar(12) references sublevels,
 	
-	SELECT v_guardian_id INTO v_entity_id FROM entitys WHERE user_name = 'G' || NEW.studentid;
-
-	IF(TG_OP = 'INSERT')THEN
-		NEW.firstpasswd = first_password();
-
-		SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = NEW.studentid;
-		IF(v_entity_id is null)THEN
-			INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, 
-				mail_user, primary_email, 
-				function_role, first_password, entity_password)
-			VALUES (NEW.org_id, 21, NEW.studentname, NEW.studentid, 
-				NEW.emailuser, NEW.emailuser || '@std.babcock.edu.ng', 
-				'student', NEW.firstpasswd, md5(NEW.firstpasswd));
-		END IF;
-		
-		IF(v_guardian_id is null)THEN
-			INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, 
-				mail_user, primary_email, 
-				function_role, first_password, entity_password)
-			VALUES (NEW.org_id, 22, COALESCE(NEW.guardianname, NEW.studentname), ('G' || NEW.studentid), 
-				NEW.emailuser, NEW.emailuser || '@std.babcock.edu.ng', 
-				'student', NEW.firstpasswd, md5(NEW.firstpasswd));
-		END IF;
-	ELSIF(TG_OP = 'UPDATE')THEN
-		UPDATE entitys SET entity_name = NEW.studentname, mail_user = NEW.emailuser, primary_email = NEW.emailuser || '@std.babcock.edu.ng'
-		WHERE user_name = NEW.studentid;
-		
-		IF (NEW.guardianname IS NOT NULL) THEN
-			IF(v_guardian_id is null)THEN
-				INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, 
-					mail_user, primary_email, 
-					function_role, first_password, entity_password)
-				VALUES (NEW.org_id, 22, COALESCE(NEW.guardianname, NEW.studentname), ('G' || NEW.studentid), 
-					NEW.emailuser, NEW.emailuser || '@std.babcock.edu.ng', 
-					'student', NEW.firstpasswd, md5(NEW.firstpasswd));
-			ELSE
-				UPDATE entitys SET entity_name = NEW.guardianname
-				WHERE user_name = ('G' || NEW.studentid);
-			END IF;
-		END IF;
-	END IF;
-
-	IF(NEW.org_id = 2)THEN
-		NEW.offcampus = true;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
+	majorid				varchar(12),
+	
+	account_number		varchar(50),
+	e_tranzact_no		varchar(50),
+	first_password		varchar(50),
+	
+	denomination_name	varchar(50),
+	state_name			varchar(50),
+	degree_name			varchar(50),
+	programme_name		varchar(50),
+	
+	is_picked			boolean default false
+);
