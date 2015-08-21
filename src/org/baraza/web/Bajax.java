@@ -66,7 +66,7 @@ public class Bajax extends HttpServlet {
 		db = web.getDB();
 		
 		String sp = request.getServletPath();
-		if(sp.equals("/ajaxupdate")) {
+		if(sp.equals("/ajaxupdate")) {		
 			if("edit".equals(request.getParameter("oper"))) {
 				resp = updateGrid(request);
 			}
@@ -121,7 +121,7 @@ public class Bajax extends HttpServlet {
 		
 		if(hasEdit) {
 			String editKey = view.getAttribute("keyfield");
-			String id = request.getParameter("id");
+			String id = request.getParameter("KF");
 			String autoKeyID = db.insAudit(view.getAttribute("updatetable"), id, "EDIT");
 			
 			if(view.getAttribute("auditid") != null) upSql += ", " + view.getAttribute("auditid") + " = " + autoKeyID;
