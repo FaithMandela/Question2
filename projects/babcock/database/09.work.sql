@@ -158,6 +158,11 @@ ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 
 --------------- Adding a new student
 
+UPDATE registrations SET is_newstudent = true,
+	account_number = adm_import1.bussary_code, e_tranzact_no = adm_import1.card_number, 
+	first_password = adm_import1.first_password, babcock_email = adm_import1.email_address
+FROM adm_import1 WHERE registrations.registrationid = adm_import1.app_id;
+
 SELECT app_students.majorid
 FROM app_students LEFT JOIN majors ON app_students.majorid = majors.majorid
 WHERE majors.majorid is null

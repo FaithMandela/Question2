@@ -2061,6 +2061,12 @@ System.out.println("repository : " + repository);
         return false;
 	}
 	
+	public String getButtonNav() {
+		if(root == null) return null;
+		if(view == null) return null;
+		return view.getAttribute("button.nav");
+	}
+	
 	public boolean hasPasswordChange() {
 		if(root == null) return false;
 		if(root.getAttribute("password") == null) return false;

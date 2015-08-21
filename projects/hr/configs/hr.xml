@@ -564,7 +564,7 @@
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
 		</GRID>
 		<GRID name="Contract" keyfield="application_id" table="vw_contracting" user="entity_id">
 			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
@@ -598,7 +598,7 @@
 			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Pay Slip" key="16" h="550">

@@ -28,7 +28,21 @@ public class umisRead {
 		} catch (MalformedURLException ex) {
 			System.out.println("URL access error : " + ex);
 		}
-
+	}
+	
+	private static String getFoodService(String studentId) {	
+		String xml = "<QUERY>\n";
+		xml += "<GRID name=\"Food Service\" keyfield=\"studentid\" table=\"ws_food_service\" where=\"studentid = '" + studentId + "'\">\n";
+		xml += "	<TEXTFIELD>studentid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>studentname</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>mealtype</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>studylevel</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>majorid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>majorname</TEXTFIELD>\n";
+		xml += "</GRID>\n";
+		xml += "</QUERY>\n";
+		
+		return xml;
 	}
 	
 	private static String getStudentRequest(String studentId) {	

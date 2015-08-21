@@ -43,7 +43,7 @@ public class umisRegistration {
 			stSql += "phonenumber, babcock_email, guardian, majorid, denominationid, ";
 			stSql += "account_number, e_tranzact_no, first_password ";
 			stSql += "FROM registrations ";
-			stSql += "WHERE is_newstudent = true;";
+			stSql += "WHERE is_newstudent = true and is_picked = false;";
 			
 			Connection db = DriverManager.getConnection("jdbc:postgresql://62.24.122.19/babcock", "root", "invent2k");
 			Statement st = db.createStatement();
@@ -88,6 +88,12 @@ public class umisRegistration {
 				// Writting data
 				String resp = port.addWsData(xml, "test123");
 				System.out.println("Add student data: \n" + resp);
+				
+				String updStr = "UPDATE registrations SET is_picked = true ";
+				updStr += "WHERE registrationid = " + rs.getString("registrationid");
+				Statement stUP = db.createStatement();
+				stUP.executeUpdate(updStr);
+				stUP.close();
 			}
 			rs.close();
 			st.close();
