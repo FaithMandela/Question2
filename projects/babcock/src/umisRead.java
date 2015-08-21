@@ -11,19 +11,22 @@ public class umisRead {
 	
 		try {
 	
-			URL wsURL = new URL("http://demo.dewcis.com/babcock/webservice?wsdl");
+			URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
 		
 			BWebServiceService bws = new BWebServiceService(wsURL);
 			BWebService port = bws.getBWebServicePort();
 			
-			String resp = port.getWsData(getStudentRequest("06/0382"), "test123");
+			String resp = port.getWsData(getFoodService("14/2961"), "test123");
+			System.out.println("Reading student data: \n" + resp);
+			
+			/*String resp = port.getWsData(getStudentRequest("06/0382"), "test123");
 			System.out.println("Reading student data: \n" + resp);
 						
 			resp = port.getWsData(getTimeTableRequest("06/0382"), "test123");
 			System.out.println("Reading timetable data: \n" + resp);
 			
 			resp = port.getWsData(getGradeRequest("06/0382", "2009/2010.3"), "test123");
-			System.out.println("Reading student data: \n" + resp);
+			System.out.println("Reading student data: \n" + resp);*/
 						
 		} catch (MalformedURLException ex) {
 			System.out.println("URL access error : " + ex);
@@ -41,6 +44,8 @@ public class umisRead {
 		xml += "	<TEXTFIELD>majorname</TEXTFIELD>\n";
 		xml += "</GRID>\n";
 		xml += "</QUERY>\n";
+		
+		System.out.println("XML : " + xml);
 		
 		return xml;
 	}

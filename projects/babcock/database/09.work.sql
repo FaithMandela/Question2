@@ -186,20 +186,21 @@ SELECT a.studentid,  a.denominationid,
 	a.mobile, a.bloodgroup, a.email, a.guardianname, a.gaddress, a.gzipcode, 
 	a.gtown, a.gcountrycodeid, a.gtelno, a.gemail,
 	a.account_number, a.e_tranzact_no, a.first_password,
-	'0'::integer, b.departmentid, true
+	b.org_id, b.departmentid, true
 FROM app_students as a INNER JOIN majors as b ON a.majorid = b.majorid
 WHERE a.is_picked = false;
        
 
 INSERT INTO studentdegrees (degreeid, studentid, sublevelid, bulletingid, org_id)
-SELECT 'B.A', studentid, 'UNDM', 3, 0
-FROM app_students 
+SELECT 'B.A', studentid, 'UNDM', 3, majors.org_id
+FROM app_students INNER JOIN majors ON app_students.majorid = majors.majorid
 WHERE app_students.is_picked = false;
 
 
 INSERT INTO studentmajors (studentdegreeid, majorid, org_id)
-SELECT studentdegrees.studentdegreeid, app_students.majorid, 0
+SELECT studentdegrees.studentdegreeid, app_students.majorid, majors.org_id
 FROM app_students INNER JOIN studentdegrees ON studentdegrees.studentid = app_students.studentid
+	INNER JOIN majors ON app_students.majorid = majors.majorid
 WHERE app_students.is_picked = false;
 
 
