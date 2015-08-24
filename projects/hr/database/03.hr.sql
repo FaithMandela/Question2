@@ -531,6 +531,9 @@ CREATE TABLE applications (
 	action_date				timestamp,
 	
 	short_listed			integer default 0 not null,
+	previous_salary			real,
+	expected_salary			real,
+	review_rating			integer,
 	
 	applicant_comments		text,
 	review					text
@@ -1052,13 +1055,14 @@ CREATE VIEW vw_applications AS
 		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
 		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
-		entitys.entity_id, entitys.entity_name, 
+		entitys.entity_id, entitys.entity_name, entitys.primary_email,
 		
+		applications.org_id,
 		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 
 		applications.contract_start, applications.contract_period, applications.contract_terms, applications.initial_salary, 
 		applications.application_date, applications.approve_status, applications.workflow_table_id, applications.action_date, 
 		applications.applicant_comments, applications.review, applications.short_listed,
-		applications.org_id,
+		applications.previous_salary, applications.expected_salary, applications.review_rating,
 
 		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
 		vw_education_max.name_of_school, vw_education_max.examination_taken, 

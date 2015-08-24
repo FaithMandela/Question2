@@ -1759,7 +1759,7 @@
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
-				<JASPER name="CV" reportfile="cv_applicant_intake.jasper"></JASPER>
+				<JASPER name="CV" org.table="applications" reportfile="cv_applicant_intake.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="add_shortlist" approval="1">Short List</ACTION>
 					<ACTION fnct="add_employee">Hire</ACTION>
@@ -1909,7 +1909,7 @@
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-				<JASPER name="CV" reportfile="cv_applicant.jasper"></JASPER>
+				<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
 			</GRID>
 			<FORM name="Internships" keyfield="internship_id" table="internships">
 				<COMBOBOX w="430" title="Department" lptable="departments" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
