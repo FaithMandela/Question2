@@ -442,14 +442,14 @@ public class BForms {
 			else if(label_position.equals("T"))	input = "<label>" + question + "<br>" + input +"</label>\n";
 			else if(label_position.equals("B"))	input = "<label>" + input + "<br>" + question +"</label>\n";
 			else if(label_position.equals("R"))	input = input + " " + question + "\n";
-
+             
 			//SHARELINE/SECTION PROCESSING
 			if(input.equals("")) {
 				input = "";
 			} else if (fieldOrder == shareLine) {
 				if(isTabs == false){
-					if(sl == -1) myhtml += "<section class='row'>" + input;		// if coming from an unshared line ..we start a section
-					else myhtml += "</section><section class='row'>" + input;	// otherwise we close first b4 starting a new section
+					if(sl == -1) myhtml += "<section>" + input;		// if coming from an unshared line ..we start a section
+					else myhtml += "</section><section>" + input;	// otherwise we close first b4 starting a new section
 				} else {
 					tab_body += input;
 				}
@@ -462,8 +462,8 @@ public class BForms {
 				}
 			} else if(shareLine == 0 ) {		//if no line to be shared
 				if(isTabs == false) {
-					if(sl == -1) myhtml += "<section class='row' >" + input + "</section>\n";
-					else myhtml += "</section><section class='row'>" + input + "</section>\n";
+					if(sl == -1) myhtml += "<section>" + input + "</section>\n";
+					else myhtml += "</section><section>" + input + "</section>\n";
 				} else {
 					tab_body += "<section>" + input + "</section>";
 				}

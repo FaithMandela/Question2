@@ -644,7 +644,7 @@ CREATE TRIGGER remaining_dorms BEFORE INSERT OR UPDATE ON dormitory_students
     
     IF(TG_OP = 'INSERT') THEN
     
-    SELECT ((((NEW.cat1 + NEW.cat2)/60) * 30):: integer + NEW.main_exam) INTO totals;
+    SELECT ((NEW.cat1 + NEW.cat2) * 0.5 + NEW.main_exam):: integer INTO totals;
      SELECT grade_name INTO v_grade FROM grades WHERE totals <= max_range AND totals >= min_range;
      NEW.grade= v_grade;
     
