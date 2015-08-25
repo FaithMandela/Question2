@@ -111,6 +111,7 @@
 	</DESK>
 	<DESK w="700" name="Address" key="5" h="550">
 		<GRID name="Address" keyfield="address_id" table="vw_address" where="(table_name = 'sms')">
+			<TEXTFIELD w="75" title="Firm">address_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country Name">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
@@ -127,7 +128,7 @@
 			</GRID>
 			<FORM name="Address" keyfield="address_id" table="address">
 				<DEFAULT default="sms">table_name</DEFAULT>
-				<COMBOBOX w="430" title="Address Type" lptable="address_types" y="10" h="20" x="10" lpfield="address_type_name">address_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Firm" lptable="address_types" y="10" h="20" x="10" lpfield="address_type_name">address_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="30" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Name" y="50" h="20" x="10">address_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Mobile" y="70" h="20" x="10">mobile</TEXTFIELD>
@@ -148,6 +149,7 @@
 			<TEXTFIELD w="75" title="Group ID">address_group_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Group Name">address_group_name</TEXTFIELD>
 			<GRID name="Members" keyfield="address_member_id" linkfield="address_group_id" table="vw_address_members">
+				<TEXTFIELD w="75" title="Firm">address_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
@@ -159,6 +161,7 @@
 				</FORM>
 			</GRID>
 			<GRID name="Add Members" keyfield="address_id" table="vw_address" where="table_name = 'sms'">
+				<TEXTFIELD w="75" title="Firm">address_type_name</TEXTFIELD>
 				<TEXTFIELD w="175" title="Name">address_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
 				<ACTIONS>
@@ -170,11 +173,11 @@
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Address Types" keyfield="address_type_id" table="address_types">
-			<TEXTFIELD w="75" title="Address Type ID">address_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Address Type Name">address_type_name</TEXTFIELD>
+		<GRID name="Firms" keyfield="address_type_id" table="address_types">
+			<TEXTFIELD w="75" title="Firm ID">address_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Firm Type Name">address_type_name</TEXTFIELD>
 			<FORM name="Address Types" keyfield="address_type_id" table="address_types">
-				<TEXTFIELD w="150" title="Address Type Name" y="10" h="20" x="10">address_type_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Firm Name" y="10" h="20" x="10">address_type_name</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>
