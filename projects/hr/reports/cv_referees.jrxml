@@ -16,11 +16,15 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT  address_name, 'P.O. Box '::text || post_office_box || '-'::text || postal_code AS posta,  town || ', ':: text || sys_country_name AS location,
-phone_number, email, position_held || ', '::text ||  company_name AS title
+phone_number, email, position_held,  company_name
 FROM vw_referees WHERE table_id = '$P!{filterid}'
 $P!{organd}]]>
 	</queryString>
@@ -29,7 +33,8 @@ $P!{organd}]]>
 	<field name="location" class="java.lang.String"/>
 	<field name="phone_number" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
-	<field name="title" class="java.lang.String"/>
+	<field name="position_held" class="java.lang.String"/>
+	<field name="company_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -53,46 +58,53 @@ $P!{organd}]]>
 	<detail>
 		<band height="123" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="4" y="4" width="250" height="15" uuid="5e9b71ac-0a35-4229-90a7-893c7ae3c45b"/>
+				<reportElement style="Detail" x="4" y="4" width="267" height="15" uuid="5e9b71ac-0a35-4229-90a7-893c7ae3c45b"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="4" y="19" width="250" height="15" uuid="e4ca6be2-1cc0-413e-bf9f-8e17934d9edf"/>
+				<reportElement style="Detail" x="4" y="19" width="267" height="15" uuid="e4ca6be2-1cc0-413e-bf9f-8e17934d9edf"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{position_held}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="4" y="34" width="250" height="15" uuid="e05396cd-f622-47d5-989d-81c6bd123f2d"/>
+				<reportElement style="Detail" x="4" y="49" width="267" height="15" uuid="e05396cd-f622-47d5-989d-81c6bd123f2d"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{posta}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="4" y="49" width="250" height="15" uuid="8caa9cfc-8e61-486e-ab2c-a87c5d111765"/>
+				<reportElement style="Detail" x="4" y="64" width="267" height="15" uuid="8caa9cfc-8e61-486e-ab2c-a87c5d111765"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="4" y="74" width="250" height="15" uuid="af52a492-78d2-405c-8301-9695229aa05a"/>
+				<reportElement style="Detail" x="4" y="79" width="267" height="15" uuid="af52a492-78d2-405c-8301-9695229aa05a"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{phone_number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="4" y="89" width="250" height="15" uuid="4686dae4-dba6-45b1-9308-4253f0e1be98"/>
+				<reportElement style="Detail" x="4" y="94" width="267" height="15" uuid="4686dae4-dba6-45b1-9308-4253f0e1be98"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="4" y="34" width="267" height="15" uuid="c2be398d-32ef-4051-ae04-116993bfc38b"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

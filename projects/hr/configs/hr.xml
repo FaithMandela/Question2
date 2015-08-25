@@ -171,7 +171,7 @@
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
 				<TEXTAREA w="550" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 			</FORM>
-			<GRID wheresql="table_name = 'employees'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'employees'">
 				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -419,7 +419,7 @@
 				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10">field_of_study</TEXTAREA>
 				<TEXTAREA w="550" tab="Details" y="2" h="120" x="10">details</TEXTAREA>
 			</FORM>
-			<GRID wheresql="table_name = 'applicant'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'applicant'">
 				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -429,7 +429,7 @@
 				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
 				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="applicant">table_name</DEFAULT>
-					<COMBOBOX w="430" title="Sys Country Id" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
@@ -516,7 +516,7 @@
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="cv_referees">table_name</DEFAULT>
+					<DEFAULT default="referees">table_name</DEFAULT>
 					<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
@@ -1762,7 +1762,6 @@
 				<JASPER name="CV" org.table="applications" reportfile="cv_applicant_intake.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="add_shortlist" approval="1">Short List</ACTION>
-					<ACTION fnct="add_employee">Hire</ACTION>
 				</ACTIONS>
 				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
 					<COMBOBOX w="430" title="Applicant" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
@@ -1784,11 +1783,22 @@
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
-				<JASPER name="CV" reportfile="cv_applicant_intake.jasper"></JASPER>
+				<JASPER name="CV" org.table="applications" reportfile="cv_applicant_intake.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="add_employee">Hire</ACTION>
 					<ACTION fnct="add_shortlist" approval="2">Un Short List</ACTION>
 				</ACTIONS>
+				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
+					<COMBOBOX w="430" title="Applicant" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
+					<TEXTDATE w="150" title="Contract Close" y="30" h="20" x="290">contract_close</TEXTDATE>
+					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="10">contract_start</TEXTDATE>
+					<TEXTFIELD w="150" title="Contract Period" y="50" h="20" x="290">contract_period</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Initial Salary" y="70" h="20" x="10">initial_salary</TEXTDECIMAL>
+					<TEXTAREA w="530" tab="Contract Terms" y="10" h="170" x="10">contract_terms</TEXTAREA>
+					<TEXTAREA w="530" tab="Comments" y="1" h="170" x="10">applicant_comments</TEXTAREA>
+					<TEXTAREA w="530" tab="Review" y="1" h="170" x="10">review</TEXTAREA>
+				</FORM>
 			</GRID>
 			<FORM name="Intake" keyfield="intake_id" table="intake">
 				<COMBOBOX w="430" title="Department Role" lptable="department_roles" y="10" h="20" x="10" lpfield="department_role_name">department_role_id</COMBOBOX>

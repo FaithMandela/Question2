@@ -1981,7 +1981,7 @@ BEGIN
 		WHERE application_id = CAST($1 as int);
 		msg := 'Added to short list';
 	ELSIF ($3 = '2') THEN
-		UPDATE applications SET short_listed = o
+		UPDATE applications SET short_listed = 0
 		WHERE application_id = CAST($1 as int);
 		msg := 'Removed from short list';
 	END IF;
