@@ -101,6 +101,12 @@ public class BSetup implements ActionListener {
 		String webXML = "..";
 		if(root.getAttribute("web") == null) webXML = "webapps" + ps +"baraza";
 		webXML += ps + "META-INF" + ps + "context.xml";
+		
+		if(root.getAttribute("context") != null) {
+			webXML = "projects" + ps + root.getAttribute("path") + ps;
+			webXML += "configs" + ps + root.getAttribute("context");
+		}
+		
 		BXML webxml = new BXML(webXML, false);
 		BElement web = webxml.getRoot();
 		for(BElement wel : web.getElements()) {

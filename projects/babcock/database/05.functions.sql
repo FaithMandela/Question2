@@ -249,7 +249,7 @@ BEGIN
 		RAISE EXCEPTION 'The registration is closed for this session.';
 	ELSIF (mystud.sex is null) or (mystud.nationality is null) or (mystud.maritalstatus is null) or (mystud.birthdate is null) THEN
 		RAISE EXCEPTION 'Your students details are in complete and need to be updated by registry';
-	ELSIF (mystud.address is null) or (mystud.zipcode is null) or (mystud.town is null) or (mystud.countrycodeid is null) or (mystud.stateid is null) THEN
+	ELSIF (mystud.address is null) or (mystud.town is null) or (mystud.countrycodeid is null) or (mystud.stateid is null) THEN
 		RAISE EXCEPTION 'Your students address details are in complete and need to be updated by registry';
 	ELSIF (mystud.telno is null) or (mystud.mobile is null) or (mystud.email is null) THEN
 		RAISE EXCEPTION 'Your students contact details are in complete and need to be updated by registry';
@@ -1070,8 +1070,20 @@ BEGIN
 	SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = trim(NEW.studentid);
 	SELECT entity_id INTO v_guardian_id FROM entitys WHERE user_name = trim('G' || NEW.studentid);
 
+	IF((NEW.birthdate is null) OR (NEW.guardianname is null) OR (NEW.gaddress is null))THEN
+		NEW.student_edit = 'allow';
+	ELSIF(NEW.address is null) or (NEW.town is null) or (NEW.countrycodeid is null) or (NEW.stateid is null) THEN
+		NEW.student_edit = 'allow';
+	ELSIF((NEW.telno is null) or (NEW.mobile is null) or (NEW.email is null))THEN
+		NEW.student_edit = 'allow';
+	ELSE
+		NEW.student_edit = 'none';
+	END IF;
+	
 	IF(TG_OP = 'INSERT')THEN
-		NEW.firstpasswd = first_password();
+		IF(NEW.firstpasswd is null)THEN
+			NEW.firstpasswd := first_password();
+		END IF;
 
 		SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = NEW.studentid;
 		IF(v_entity_id is null)THEN

@@ -197,9 +197,10 @@ CREATE TABLE pin_data (
 
 CREATE TABLE app_students (
 	app_student_id		integer primary key,
+	student_number		serial,
 	studentid			varchar(12),
-	departmentid		varchar(12) references departments,
-	denominationid		varchar(12) references denominations,
+	departmentid		varchar(12),
+	denominationid		varchar(12),
 	org_id				integer references orgs,
 	surname				varchar(50) not null,
 	firstname			varchar(50) not null,
@@ -217,7 +218,7 @@ CREATE TABLE app_students (
 	mobile				varchar(75),
 	BloodGroup			varchar(12),
 	email				varchar(240),
-	guardianname		varchar(50),
+	guardianname		varchar(150),
 	gaddress			varchar(250),
 	gzipcode			varchar(50),
 	gtown				varchar(50),
@@ -228,12 +229,18 @@ CREATE TABLE app_students (
 	degreeid			varchar(12) references degrees,
 	sublevelid			varchar(12) references sublevels,
 	
-	majorid				varchar(12) references majors,
+	majorid				varchar(12),
+	
+	account_number		varchar(50),
+	e_tranzact_no		varchar(50),
+	first_password		varchar(50),
 	
 	denomination_name	varchar(50),
 	state_name			varchar(50),
 	degree_name			varchar(50),
-	programme_name		varchar(50)
+	programme_name		varchar(50),
+	
+	is_picked			boolean default false
 );
 
 

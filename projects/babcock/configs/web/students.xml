@@ -30,11 +30,11 @@
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Student Details" key="1" h="500">
-		<GRID name="News" keyfield="sys_news_id" table="sys_news" where="(publish = true)" noorg="true">
+		<GRID name="News" keyfield="sys_news_id" table="sys_news" noorg="true" where="(publish = true)">
 			<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
 			<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 		</GRID>
-		<GRID w="530" name="Student Details" lw="150" keyfield="studentid" display="form" table="vw_students" user="studentid">
+		<GRID w="530" name="Student Details" lw="150" keyfield="studentid" display="form" table="vw_students" params="student_edit" user="studentid">
 			<TEXTFIELD w="40" title="Matric No.">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
@@ -63,7 +63,7 @@
 				<TEXTFIELD w="40" title="Programme">majorname</TEXTFIELD>
 				<CHECKBOX w="40" title="Core Area">major</CHECKBOX>
 			</GRID>
-			<FORM w="530" new="false" name="Review Details" lw="120" keyfield="studentid" delete="false" audit="false" table="students">
+			<FORM w="530" new="false" name="Review Details" lw="120" keyfield="studentid" delete="false" audit="false" table="students" user="studentid">
 				<TEXTFIELD w="40" title="Mobile No.">mobile</TEXTFIELD>
 				<TEXTFIELD w="40" title="Tel No.">telno</TEXTFIELD>
 				<TEXTFIELD w="40" title="E Mail">email</TEXTFIELD>
@@ -72,6 +72,33 @@
 				<TEXTFIELD w="40" title="Town">town</TEXTFIELD>
 				<COMBOBOX w="40" title="Religious Affiliation" lptable="denominations" noorg="true" lpkey="denominationid" lpfield="denominationname">denominationid</COMBOBOX>
 				<COMBOBOX w="40" title="Origin State/L.G.A" lptable="states" noorg="true" lpkey="stateid" lpfield="statename">stateid</COMBOBOX>
+			</FORM>
+			<FORM new="false" name="Edit Student Details" keyfield="studentid" delete="false" audit="false" table="students" user="studentid" viewfilter="student_edit=allow">
+				<COMBOBOX w="430" title="Denominationid" lptable="denominations" noorg="true" y="50" h="20" x="10" lpfield="denominationname">denominationid</COMBOBOX>
+				<COMBOBOX w="430" title="Nationality" default="NG" lptable="countrys" noorg="true" lpkey="countryid" y="130" h="20" x="10" lpfield="countryname">nationality</COMBOBOX>
+				<COMBOLIST w="50" title="Gender" y="250" h="20" x="10">sex
+					<DATA>M</DATA>
+					<DATA>F</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="50" title="Marital Status" lw="100" y="250" h="20" x="190">MaritalStatus
+					<DATA>S</DATA>
+					<DATA>M</DATA>
+				</COMBOLIST>
+				<TEXTDATE w="150" title="Birth Date" y="150" h="20" x="290">birthdate</TEXTDATE>
+				<TEXTFIELD w="150" title="Blood Group" y="270" h="20" x="10">bloodgroup</TEXTFIELD>
+				<TEXTFIELD w="150" title="Mobile" tab="Address" y="250" h="20" x="290">mobile</TEXTFIELD>
+				<TEXTFIELD w="430" title="Address" tab="Address" y="170" h="20" x="10">address</TEXTFIELD>
+				<TEXTFIELD w="150" title="Zipcode" tab="Address" y="190" h="20" x="10">zipcode</TEXTFIELD>
+				<TEXTFIELD w="150" title="Town" tab="Address" y="190" h="20" x="290">town</TEXTFIELD>
+				<COMBOBOX w="430" title="State" lptable="states" tab="Address" noorg="true" y="230" h="20" x="10" lpfield="statename">stateid</COMBOBOX>
+				<COMBOBOX w="430" title="Country" default="NG" lptable="countrys" tab="Address" noorg="true" lpkey="countryid" y="210" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" title="Name" tab="Guardian" y="310" h="20" x="10">guardianname</TEXTFIELD>
+				<TEXTFIELD w="430" title="Address" tab="Guardian" y="330" h="20" x="10">gaddress</TEXTFIELD>
+				<TEXTFIELD w="150" title="Zip Code" tab="Guardian" y="350" h="20" x="10">gzipcode</TEXTFIELD>
+				<TEXTFIELD w="150" title="Gtown" tab="Guardian" y="350" h="20" x="290">gtown</TEXTFIELD>
+				<COMBOBOX w="430" title="Country" default="NG" lptable="countrys" tab="Guardian" noorg="true" lpkey="countryid" y="370" h="20" x="10" lpfield="countryname">gcountrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" title="Phone No" tab="Guardian" y="390" h="20" x="10">gtelno</TEXTFIELD>
+				<TEXTFIELD w="430" title="Email" tab="Guardian" y="410" h="20" x="10">gemail</TEXTFIELD>
 			</FORM>
 			<FORM w="530" filepath="uploads" new="false" maxfilesize="100000" multipart="true" name="Edit Picture" lw="120" keyfield="studentid" delete="false" audit="false" table="students">
 				<PICTURE w="550" username="repository" repository="http://localhost:8080/repository/webdav/pictures/" tab="Picture" pictures="../repository/barazapictures" access="enter2012" password="enterBUrepository" y="1" h="150" x="10">picturefile</PICTURE>

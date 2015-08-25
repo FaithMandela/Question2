@@ -570,12 +570,61 @@
 
 	  <% if(web.isEditField()) { %>
         jqcf.onSelectRow = function(id){
-          if(id && id!==lastsel2){
-            jQuery('#jqlist').restoreRow(lastsel2);
-            jQuery('#jqlist').editRow(id,true);
-            lastsel2=id;
-          }
+			//console.log(" HAS web.isEditField()  : <%=web.isEditField()%>")
+          	if(id && id!==lastsel2){
+				//console.info('id : ' + id + '\nlastsel2 : ' + lastsel2);
+
+				var data = jQuery("#jqlist").jqGrid('getRowData',id);
+				//console.info(data);
+
+            	//jQuery('#jqlist').restoreRow(lastsel2);
+
+				var editparameters = {
+					"keys" : true,
+					"oneditfunc" : null,
+					"successfunc" : null,
+				    "extraparam" : {"KF":data.KF},
+					"aftersavefunc" :null,
+					"errorfunc":null,
+					"afterrestorefunc" :null,
+					"restoreAfterError" : true,
+					"mtype" : "POST"
+				}
+
+				jQuery("#jqlist").jqGrid('editRow',id,  editparameters);
+
+            	lastsel2=id;
+          	}
         };
+
+		/*
+		function(res) {
+			console.info(res);
+			toastr.options = {
+						"closeButton": true,
+						"debug": false,
+						"positionClass": "toast-top-right",
+						"onclick": null,
+						"showDuration": "1000",
+						"hideDuration": "1000",
+						"timeOut": "5000",
+						"extendedTimeOut": "1000",
+						"showEasing": "swing",
+						"hideEasing": "linear",
+						"showMethod": "fadeIn",
+						"hideMethod": "fadeOut"
+					}
+			var tp = res.status == 200 ? 'success' : 'error';
+			toastr[tp](res.responseText, "");
+			jQuery('#jqlist').restoreRow(lastsel2);
+		}*/
+
+
+
+
+
+
+
 	  <% } %>
     }
 <% } %>
@@ -583,6 +632,36 @@
 
     jQuery("#jqlist").jqGrid(jqcf);
     jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false, add:false, del:false, search:false});
+
+
+
+
+
+
+
+	/*navButton*/
+	<% if(web.getButtonNav() != null) { %>
+		console.log('has getButtonNav : <%= web.getButtonNav() %>' );
+		jQuery("#jqlist").jqGrid('navButtonAdd', '#jqpager', {
+			caption: "<%= web.getButtonNav() %> Test",
+			buttonicon: "ui-icon-bookmark",
+			onClickButton: navButtonAction,
+			position: "last"
+		});
+
+
+	<% } %>
+
+	function navButtonAction(){
+		console.info("Reached navButtonAction()");
+
+
+
+	}//navButtonAction
+
+	/* /nav button */
+
+
 
     $('#btSearch').click(function(){
         var filtername = $("#filtername").val();
@@ -710,7 +789,7 @@ $(function () {
         url: 'putbarazafiles',
         dataType: 'json',
         autoUpload: true,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|doc|docx|rtf|odt|pdf)$/i,
         maxFileSize: 999000,
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to

@@ -59,7 +59,7 @@ ORDER BY vw_employee_tax_types.tax_type_id]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="1" y="0" width="73" height="15" uuid="6f15876e-398b-469d-ad6d-c1f38034c5eb"/>
+				<reportElement style="Detail" x="1" y="0" width="185" height="15" uuid="6f15876e-398b-469d-ad6d-c1f38034c5eb"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -113,7 +113,7 @@ ORDER BY vw_employee_tax_types.tax_type_id]]>
 				<textFieldExpression><![CDATA[$V{tot_amount}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="0" width="100" height="20" uuid="847757df-f8d4-4121-865e-2043fcb94891"/>
+				<reportElement x="1" y="0" width="185" height="20" uuid="847757df-f8d4-4121-865e-2043fcb94891"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
