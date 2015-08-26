@@ -255,6 +255,10 @@ ui-widget-content {
     padding: 6px 14px 8px 14px;
 }
 
+.ms-container {
+	width: 650px;
+}
+
 
 /*  begin total ui widget overwrite */
 

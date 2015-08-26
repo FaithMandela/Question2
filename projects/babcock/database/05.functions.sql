@@ -1066,6 +1066,7 @@ BEGIN
 	NEW.studentname := UPPER(NEW.surname)	|| ', ' || UPPER(NEW.firstname) || ' ' || UPPER(COALESCE(NEW.othernames, ''));
 	NEW.accountnumber := trim(upper(NEW.accountnumber));
 	NEW.emailuser := lower(NEW.surname) || lower(replace(NEW.studentid, '/', ''));
+	NEW.studentid := trim(upper(NEW.studentid));
 	
 	SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = trim(NEW.studentid);
 	SELECT entity_id INTO v_guardian_id FROM entitys WHERE user_name = trim('G' || NEW.studentid);
@@ -1295,6 +1296,18 @@ BEGIN
 		DELETE FROM students WHERE studentid = $1;
 		mystr := 'Changes to ' || $2;
 	ELSIF ($2 is null) THEN
+		DELETE FROM studentdegrees WHERE studentid is null;
+		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE sun_audits SET studentid = null WHERE studentid = $1;
+		
+		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
+		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
+		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE sun_audits SET studentid = newid WHERE studentid = null;
+		UPDATE entitys SET user_name = newid WHERE user_name = $1;
+		mystr := 'Changes to ' || newid;
+	ELSIF ($2 is not null) AND (newid is not null) THEN
 		DELETE FROM studentdegrees WHERE studentid is null;
 		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
 		UPDATE studentrequests SET studentid = null WHERE studentid = $1;

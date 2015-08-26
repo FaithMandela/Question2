@@ -1751,7 +1751,7 @@
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<CHECKBOX w="75" title="Contract">contract</CHECKBOX>
-			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications">
+			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" where="(short_listed = 0)">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>

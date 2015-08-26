@@ -1,50 +1,73 @@
 
 
-DROP TABLE app_students;
-CREATE TABLE app_students (
-	app_student_id		integer primary key,
-	student_number		serial,
-	studentid			varchar(12),
-	departmentid		varchar(12),
-	denominationid		varchar(12),
-	org_id				integer references orgs,
-	surname				varchar(50) not null,
-	firstname			varchar(50) not null,
-	othernames			varchar(50),
-	Sex					varchar(1),
-	Nationality			char(2) references countrys,
-	MaritalStatus		varchar(2),
-	birthdate			date,
-	address				varchar(240),
-	zipcode				varchar(50),
-	town				varchar(50),
-	countrycodeid		char(2) references countrys,
-	stateid				integer references states,
-	telno				varchar(50),
-	mobile				varchar(75),
-	BloodGroup			varchar(12),
-	email				varchar(240),
-	guardianname		varchar(150),
-	gaddress			varchar(250),
-	gzipcode			varchar(50),
-	gtown				varchar(50),
-	gcountrycodeid		char(2) references countrys,
-	gtelno				varchar(50),
-	gemail				varchar(240),
+-- update students email address
+CREATE OR REPLACE FUNCTION deldupstudent(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	myrec RECORD;
+	myreca RECORD;
+	myrecb RECORD;
+	myrecc RECORD;
+	myqtr RECORD;
+	newid VARCHAR(16);
+	mystr VARCHAR(120);
+BEGIN
+	IF($2 is null) THEN 
+		newid := $3 || substring($1 from 3 for 5);
+	ELSE
+		newid := $2;
+	END IF;
+	
+	SELECT INTO myrec studentid, studentname FROM students WHERE (studentid = newid);
+	SELECT INTO myreca studentdegreeid, studentid FROM studentdegrees WHERE (studentid = $2);
+	SELECT INTO myrecb studentdegreeid, studentid FROM studentdegrees WHERE (studentid = $1);
+	SELECT INTO myrecc a.studentdegreeid, a.quarterid FROM
+	((SELECT studentdegreeid, quarterid FROM qstudents WHERE studentdegreeid = myreca.studentdegreeid)
+	EXCEPT (SELECT studentdegreeid, quarterid FROM qstudents WHERE studentdegreeid = myrecb.studentdegreeid)) as a;
+	
+	IF ($1 = $2) THEN
+		mystr := 'That the same ID no change';
+	ELSIF (myrecc.quarterid IS NOT NULL) THEN
+		mystr := 'Conflict in quarter ' || myrecc.quarterid;
+	ELSIF (myreca.studentdegreeid IS NOT NULL) AND (myrecb.studentdegreeid IS NOT NULL) THEN
+		UPDATE qstudents SET studentdegreeid = myreca.studentdegreeid WHERE studentdegreeid = myrecb.studentdegreeid;
+		UPDATE studentrequests SET studentid = $2 WHERE studentid = $1;
+		DELETE FROM studentmajors WHERE studentdegreeid = myrecb.studentdegreeid;
+		DELETE FROM studentdegrees WHERE studentdegreeid = myrecb.studentdegreeid;
+		DELETE FROM students WHERE studentid = $1;	
+		mystr := 'Changes to ' || $2;
+	ELSIF (myrec.studentid is not null) THEN
+		UPDATE studentdegrees SET studentid = $2 WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = $2 WHERE studentid = $1;
+		DELETE FROM students WHERE studentid = $1;
+		mystr := 'Changes to ' || $2;
+	ELSIF ($2 is null) THEN
+		DELETE FROM studentdegrees WHERE studentid is null;
+		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE sun_audits SET studentid = null WHERE studentid = $1;
+		
+		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
+		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
+		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE sun_audits SET studentid = newid WHERE studentid = null;
+		UPDATE entitys SET user_name = newid WHERE user_name = $1;
+		mystr := 'Changes to ' || newid;
+	ELSIF ($2 is not null) AND (newid is not null) THEN
+		DELETE FROM studentdegrees WHERE studentid is null;
+		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE sun_audits SET studentid = null WHERE studentid = $1;
+		
+		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
+		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
+		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE sun_audits SET studentid = newid WHERE studentid = null;
+		UPDATE entitys SET user_name = newid WHERE user_name = $1;
+		mystr := 'Changes to ' || newid;
+	END IF;
+	
+	RETURN mystr;
+END;
+$$ LANGUAGE plpgsql;
 
-	degreeid			varchar(12) references degrees,
-	sublevelid			varchar(12) references sublevels,
-	
-	majorid				varchar(12),
-	
-	account_number		varchar(50),
-	e_tranzact_no		varchar(50),
-	first_password		varchar(50),
-	
-	denomination_name	varchar(50),
-	state_name			varchar(50),
-	degree_name			varchar(50),
-	programme_name		varchar(50),
-	
-	is_picked			boolean default false
-);
+
