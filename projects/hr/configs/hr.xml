@@ -46,6 +46,10 @@
 		<MENU name="Staff Reports" role="staff">
 			<MENU name="Supervisor Review Report" role="staff">165</MENU>
 		</MENU>
+		<MENU name="Training" role="training">
+			<MENU name="Aptitude Tests">180</MENU>
+			<MENU name="Aptitude Test Report">185</MENU>
+		</MENU>
 		<MENU name="Reports" role="admin,hr,reports">
 			<MENU name="Summary Reports" role="hr">150</MENU>
 			<MENU name="Employee List" role="hr">106</MENU>
@@ -3573,5 +3577,55 @@
 				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			</GRID>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Aptitude Tests" key="180" h="550">
+		<GRID name="Aptitude Tests" keyfield="aptitude_test_id" table="aptitude_tests">
+			<TEXTFIELD w="75" title="Aptitude Test ID">aptitude_test_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Aptitude Test Name">aptitude_test_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Display">display</CHECKBOX>
+			<TEXTFIELD w="75" title="Pass Mark">pass_mark</TEXTFIELD>
+			<FORM name="Aptitude Tests" keyfield="aptitude_test_id" table="aptitude_tests">
+				<TEXTFIELD w="150" title="Aptitude Test Name" y="10" h="20" x="10">aptitude_test_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Display" y="10" h="20" x="290">display</CHECKBOX>
+				<TEXTFIELD w="150" title="Pass Mark" y="30" h="20" x="10">pass_mark</TEXTFIELD>
+				<TEXTAREA w="430" tab="Test Objectives" y="50" h="70" x="10">test_objectives</TEXTAREA>
+				<TEXTAREA w="430" tab="Sample Jsp" y="120" h="70" x="10">sample_jsp</TEXTAREA>
+				<TEXTAREA w="430" tab="Sample Js" y="190" h="70" x="10">sample_js</TEXTAREA>
+				<TEXTAREA w="430" tab="Sample Css" y="260" h="70" x="10">sample_css</TEXTAREA>
+				<TEXTAREA w="430" tab="Sample Sql" y="330" h="70" x="10">sample_sql</TEXTAREA>
+			</FORM>
+			<GRID name="Aptitude Grades" keyfield="aptitude_grade_id" linkfield="aptitude_test_id" table="vw_aptitude_grades" button.nav="Preview Code">
+				<TEXTFIELD w="75" title="Aptitude Test Name">aptitude_test_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Graded By">graded_by_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Grade">grade</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Taken">date_taken</TEXTDATE>
+				<TEXTDATE w="75" title="Date Graded">date_graded</TEXTDATE>
+				<FORM new="false" name="Aptitude Grades" keyfield="aptitude_grade_id" linkfield="aptitude_test_id" table="aptitude_grades">
+					<USERFIELD>graded_by</USERFIELD>
+					<TEXTDATE w="150" title="Date Graded" y="10" h="20" x="10">date_graded</TEXTDATE>
+					<TEXTFIELD w="150" title="Grade" y="10" h="20" x="290">grade</TEXTFIELD>
+					<TEXTAREA w="430" title="Review Comment" y="30" h="70" x="10">review_comment</TEXTAREA>
+				</FORM>
+			</GRID>
+		</GRID>
+		<GRID name="Aptitude Grades" keyfield="aptitude_grade_id" table="vw_aptitude_grades" button.nav="Preview Code">
+			<TEXTFIELD w="75" title="Aptitude Test Name">aptitude_test_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Graded By">graded_by_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Grade">grade</TEXTFIELD>
+			<TEXTDATE w="75" title="Date Taken">date_taken</TEXTDATE>
+			<TEXTDATE w="75" title="Date Graded">date_graded</TEXTDATE>
+			<FORM new="false" name="Aptitude Grades" keyfield="aptitude_grade_id" table="aptitude_grades">
+				<USERFIELD>graded_by</USERFIELD>
+				<TEXTDATE w="150" title="Date Graded" y="10" h="20" x="10">date_graded</TEXTDATE>
+				<TEXTFIELD w="150" title="Grade" y="10" h="20" x="290">grade</TEXTFIELD>
+				<TEXTAREA w="430" title="Review Comment" y="30" h="70" x="10">review_comment</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Aptitude Test Report" key="185" h="550">
+		<JASPER name="Aptitude Tests Report" reportfile="aptitude_test.jasper"></JASPER>
+		<JASPER name="Pass Report" reportfile="aptitude_grades.jasper"></JASPER>
 	</DESK>
 </APP>
