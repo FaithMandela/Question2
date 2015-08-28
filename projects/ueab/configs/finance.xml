@@ -137,9 +137,11 @@
 					<TEXTDECIMAL w="150" title="Exam Fees" y="90" h="20" x="10">exam_fees</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="General Fees" y="90" h="20" x="290">general_fees</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Residence Stay" y="110" h="20" x="10">residence_stay</TEXTDECIMAL>
-					<TEXTFIELD w="150" title="Currency" y="130" h="20" x="10">currency</TEXTFIELD>
-					<TEXTDECIMAL w="150" title="Exchange Rate" y="130" h="20" x="290">exchange_rate</TEXTDECIMAL>
-					<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTFIELD w="150" title="Off Campus Fees" y="130" h="20" x="10">charge_feesline</TEXTFIELD>
+					<TEXTFIELD w="150" title="On Campus Fees" y="130" h="20" x="290">charge_resline</TEXTFIELD>
+					<TEXTFIELD w="150" title="Currency" y="150" h="20" x="10">currency</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="150" h="20" x="290">exchange_rate</TEXTDECIMAL>
+					<TEXTFIELD w="430" title="Narrative" y="170" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 				<ACTIONS>
 					<ACTION fnct="SunPosted" auditid="sys_audit_trail_id">Sun Posted</ACTION>

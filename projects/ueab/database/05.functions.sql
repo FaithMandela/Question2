@@ -744,7 +744,7 @@ BEGIN
 		qstudents.overloadhours, qstudents.financenarrative, qstudents.firstinstalment, 
 		qstudents.firstdate, qstudents.secondinstalment, qstudents.seconddate, qstudents.registrarapproval, 
 		qstudents.approve_late_fee, qstudents.late_fee_date,
-		charges.last_reg_date,
+		charges.last_reg_date, charges.charge_feesline, charges.charge_resline,
 		sublevels.max_credits
 		INTO myqrec
 	FROM qstudents INNER JOIN charges ON qstudents.charge_id = charges.charge_id
@@ -767,10 +767,18 @@ BEGIN
 	myrepeatapprove := getrepeatapprove(myrec.qstudentid);
 
 	IF (myrec.offcampus = TRUE) THEN
-		myfeesline := myrec.totalfees * (100 - myrec.feesline) /100;
+		IF(myqrec.charge_feesline is not null)THEN
+			myfeesline := myrec.totalfees * (100 - myqrec.charge_feesline) / 100;
+		ELSE
+			myfeesline := myrec.totalfees * (100 - myrec.feesline) /100;
+		END IF;
 		mysabathclass := false;
 	ELSE
-		myfeesline := myrec.totalfees * (100 - myrec.resline) / 100;
+		IF(myqrec.charge_resline is not null)THEN
+			myfeesline := myrec.totalfees * (100 - myrec.charge_resline) / 100;
+		ELSE
+			myfeesline := myrec.totalfees * (100 - myrec.resline) / 100;
+		END IF;
 		IF (myqrec.sabathclassid is null) THEN
 			mysabathclass := true;
 		ELSIF (myqrec.sabathclassid = 0) THEN

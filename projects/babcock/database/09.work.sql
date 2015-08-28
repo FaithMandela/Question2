@@ -213,3 +213,15 @@ UPDATE app_students SET e_tranzact_no = '' WHERE app_student_id = ;
 
 UPDATE students SET etranzact_card_no = app_students.e_tranzact_no
 FROM app_students WHERE students.studentid = app_students.studentid;
+
+----- Ecceptance fees reconsilation
+UPDATE registrations SET af_date = pin_acc1.PAYMENT_DATE::timestamp, 
+	af_amount pin_acc1.AMOUNT_PAID,
+	af_success = '0',
+	af_payment_code = pin_acc1.RECEIPT_NO,
+	af_trans_no	= pin_acc1.CONFIRMATION_ORDER,
+	af_card_type = 'eTrazact'
+FROM pin_acc1 
+WHERE (registrations.af_success is null) AND (registrations.registrationid = pin_acc1.MATRIC_TELLER);
+
+

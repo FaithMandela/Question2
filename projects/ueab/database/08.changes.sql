@@ -1,17 +1,7 @@
-ALTER TABLE charges ADD charge_feesline		float not null default 70;
-ALTER TABLE charges ADD charge_resline		float not null default 70;
 
 	
-UPDATE studentdegrees SET bulletingid = 3
-WHERE studentdegreeid IN
-(SELECT studentdegreeid
-FROM (SELECT studentdegreeid, min(quarterid) as min_quarter
-FROM qstudents
-WHERE approved = true
-GROUP BY studentdegreeid) as a
-WHERE min_quarter >= '2012/2013.1'
-ORDER BY min_quarter);
-
+ALTER TABLE charges ADD charge_feesline		float;
+ALTER TABLE charges ADD charge_resline		float;
 
 DROP VIEW qetimetableview;
 CREATE VIEW qetimetableview AS
@@ -75,8 +65,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
-
 CREATE OR REPLACE FUNCTION insQClose(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(250) AS $$
 DECLARE
 	myrec 			RECORD;
@@ -116,7 +104,7 @@ BEGIN
 		qstudents.overloadhours, qstudents.financenarrative, qstudents.firstinstalment, 
 		qstudents.firstdate, qstudents.secondinstalment, qstudents.seconddate, qstudents.registrarapproval, 
 		qstudents.approve_late_fee, qstudents.late_fee_date,
-		charges.last_reg_date,
+		charges.last_reg_date, charges.charge_feesline, charges.charge_resline,
 		sublevels.max_credits
 		INTO myqrec
 	FROM qstudents INNER JOIN charges ON qstudents.charge_id = charges.charge_id
@@ -139,10 +127,18 @@ BEGIN
 	myrepeatapprove := getrepeatapprove(myrec.qstudentid);
 
 	IF (myrec.offcampus = TRUE) THEN
-		myfeesline := myrec.totalfees * (100 - myrec.feesline) /100;
+		IF(myqrec.charge_feesline is not null)THEN
+			myfeesline := myrec.totalfees * (100 - myqrec.charge_feesline) / 100;
+		ELSE
+			myfeesline := myrec.totalfees * (100 - myrec.feesline) /100;
+		END IF;
 		mysabathclass := false;
 	ELSE
-		myfeesline := myrec.totalfees * (100 - myrec.resline) / 100;
+		IF(myqrec.charge_resline is not null)THEN
+			myfeesline := myrec.totalfees * (100 - myrec.charge_resline) / 100;
+		ELSE
+			myfeesline := myrec.totalfees * (100 - myrec.resline) / 100;
+		END IF;
 		IF (myqrec.sabathclassid is null) THEN
 			mysabathclass := true;
 		ELSIF (myqrec.sabathclassid = 0) THEN
@@ -248,5 +244,4 @@ BEGIN
     RETURN mystr;
 END;
 $$ LANGUAGE plpgsql;
-
 

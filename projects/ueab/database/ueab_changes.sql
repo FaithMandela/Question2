@@ -128,7 +128,7 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
   
   ALTER TABLE students
   ADD COLUMN passport boolean DEFAULT false,
-  ADD COLUMN national-id  boolean DEFAULT false,
+  ADD COLUMN national_id  boolean DEFAULT false,
   ADD COLUMN identification_no varchar(20);
   
   
