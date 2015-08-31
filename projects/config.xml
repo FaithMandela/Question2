@@ -80,5 +80,7 @@
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://192.168.0.4:5432/fidelity" dbname="fidelity" path="fidelity" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Fidelity Emails</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
+	<SERVER dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</SERVER>
+
 </APPLIST>

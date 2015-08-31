@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_payments" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="970fbe8c-f894-400d-9284-627723ca2bed">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="79"/>
-	<property name="ireport.y" value="63"/>
+	<property name="ireport.x" value="255"/>
+	<property name="ireport.y" value="45"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -23,13 +23,10 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, vw_payments.payment_type_name, vw_payments.payment_id, SUM(vw_payments.payment_amount)AS amount, vw_payments.transaction_reference, vw_payments.payment_date, vw_payments.details, orgs.credit_limit, vw_passengers.cover_amount
+		<![CDATA[SELECT vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, vw_payments.payment_type_name, vw_payments.payment_id,(vw_payments.payment_amount)as amount ,vw_payments.transaction_reference, vw_payments.payment_date, vw_payments.details,  vw_passengers.cover_amount
 
 FROM vw_payments
-INNER JOIN orgs ON orgs.org_id = vw_payments.org_id
-INNER JOIN vw_passengers ON vw_passengers.org_id = vw_payments.org_id
-WHERE vw_payments.org_id = $P!{org_id}
-GROUP BY vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, vw_payments.payment_type_name, vw_payments.payment_id, vw_payments.transaction_reference, vw_payments.payment_date, vw_payments.details,orgs.credit_limit,vw_passengers.cover_amount]]>
+INNER JOIN vw_passengers ON vw_passengers.org_id = vw_payments.org_id]]>
 	</queryString>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
@@ -40,7 +37,6 @@ GROUP BY vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, 
 	<field name="transaction_reference" class="java.lang.String"/>
 	<field name="payment_date" class="java.sql.Date"/>
 	<field name="details" class="java.lang.String"/>
-	<field name="credit_limit" class="java.lang.Float"/>
 	<field name="cover_amount" class="java.lang.Float"/>
 	<variable name="tot_amount" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
@@ -52,7 +48,7 @@ GROUP BY vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, 
 	<group name="org_id">
 		<groupExpression><![CDATA[$F{org_id}]]></groupExpression>
 		<groupHeader>
-			<band height="81">
+			<band height="61">
 				<staticText>
 					<reportElement style="Column header" x="1" y="12" width="85" height="15" forecolor="#000000" uuid="da210319-4248-4794-b76f-258a8c482dd5"/>
 					<textElement>
@@ -68,39 +64,39 @@ GROUP BY vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, 
 					<text><![CDATA[Org Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="32" y="64" width="85" height="15" forecolor="#000000" uuid="b6748e10-6791-4582-b247-848ea69e0bed"/>
+					<reportElement style="Column header" x="32" y="43" width="85" height="15" forecolor="#000000" uuid="b6748e10-6791-4582-b247-848ea69e0bed"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Payment Type Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="117" y="64" width="108" height="15" forecolor="#000000" uuid="33197346-d869-4697-bd04-0ab1281ee6b6"/>
+					<reportElement style="Column header" x="117" y="43" width="108" height="15" forecolor="#000000" uuid="33197346-d869-4697-bd04-0ab1281ee6b6"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Payment Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="265" y="64" width="130" height="15" forecolor="#000000" uuid="5a9dc130-1b56-4738-9aba-03b26d2f220d"/>
+					<reportElement style="Column header" x="354" y="43" width="130" height="15" forecolor="#000000" uuid="5a9dc130-1b56-4738-9aba-03b26d2f220d"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Transaction Reference]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="395" y="64" width="85" height="15" forecolor="#000000" uuid="b041355b-5712-4856-b2be-3dee0684d513"/>
+					<reportElement style="Column header" x="484" y="43" width="85" height="15" forecolor="#000000" uuid="b041355b-5712-4856-b2be-3dee0684d513"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Payment Date]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="480" y="64" width="85" height="15" forecolor="#000000" uuid="f07ee3cc-401b-471d-83e0-4799f33182ef"/>
+					<reportElement style="Column header" x="225" y="43" width="114" height="15" forecolor="#000000" uuid="f07ee3cc-401b-471d-83e0-4799f33182ef"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<text><![CDATA[Credit Limit]]></text>
+					<text><![CDATA[Covered Amount]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="86" y="28" width="224" height="15" uuid="78304d53-999e-4507-b270-b8d35e5b8884"/>
@@ -119,30 +115,30 @@ GROUP BY vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, 
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="41">
+			<band height="34">
 				<textField>
-					<reportElement x="117" y="21" width="100" height="16" uuid="f29e70c0-188f-4a22-85c6-5e0d09e9b592"/>
+					<reportElement x="117" y="16" width="100" height="16" uuid="f29e70c0-188f-4a22-85c6-5e0d09e9b592"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{tot_amount}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="32" y="21" width="85" height="16" forecolor="#000000" uuid="05242bec-314a-4802-a3e3-1cf231999868"/>
+					<reportElement style="Column header" x="32" y="16" width="85" height="16" forecolor="#000000" uuid="05242bec-314a-4802-a3e3-1cf231999868"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Total Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="32" y="5" width="85" height="16" uuid="c3375f72-6491-4529-aaf1-f139c12157bc"/>
+					<reportElement x="32" y="0" width="85" height="16" uuid="c3375f72-6491-4529-aaf1-f139c12157bc"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="12" isBold="true"/>
 					</textElement>
 					<text><![CDATA[Balance]]></text>
 				</staticText>
 				<textField>
-					<reportElement mode="Opaque" x="117" y="5" width="100" height="16" uuid="df2fea28-c995-4dc6-bf13-d1ff3e24a53e"/>
+					<reportElement mode="Opaque" x="117" y="0" width="100" height="16" uuid="df2fea28-c995-4dc6-bf13-d1ff3e24a53e"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
@@ -172,7 +168,7 @@ GROUP BY vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, 
 		<band height="16" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="19" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="32" y="0" width="85" height="15" uuid="56a5d02f-7638-48c0-9f88-165adef565ba"/>
 				<textElement>
@@ -181,25 +177,25 @@ GROUP BY vw_payments.org_id, vw_payments.org_name, vw_payments.payment_type_id, 
 				<textFieldExpression><![CDATA[$F{payment_type_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="265" y="0" width="130" height="15" uuid="fccf0bad-f67c-4152-886a-21c4279852c2"/>
+				<reportElement style="Detail" x="354" y="0" width="130" height="15" uuid="fccf0bad-f67c-4152-886a-21c4279852c2"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{transaction_reference}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="395" y="0" width="85" height="15" uuid="0c0350ac-15af-45bd-911a-eb9a2b6c4dc7"/>
+				<reportElement style="Detail" x="484" y="0" width="85" height="15" uuid="0c0350ac-15af-45bd-911a-eb9a2b6c4dc7"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="480" y="0" width="85" height="15" uuid="1ab34269-4a23-4f90-aed1-4f225c1c5a0e"/>
+				<reportElement style="Detail" x="225" y="0" width="114" height="15" uuid="1ab34269-4a23-4f90-aed1-4f225c1c5a0e"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{credit_limit}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cover_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="117" y="0" width="108" height="15" uuid="25f25c9b-7801-4de7-8bd0-a9c25664e5b6"/>

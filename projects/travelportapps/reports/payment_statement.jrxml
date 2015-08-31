@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payment_statement" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f96b2982-4c41-4d2c-bbdb-60b7faf49ae2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[(SELECT org_id, passenger_name, approved_date::date, cover_amount as cr_amount, '0'::real as dr_amount
+FROM passengers WHERE approved = true )
+UNION
+(SELECT org_id, transaction_reference, payment_date, '0'::real as cr_amount, payment_amount as dr_amount
+  FROM payments)
+
+ORDER BY approved_date DESC
+  ;]]>
+	</queryString>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="passenger_name" class="java.lang.String"/>
+	<field name="approved_date" class="java.sql.Date"/>
+	<field name="cr_amount" class="java.lang.Float"/>
+	<field name="dr_amount" class="java.lang.Float"/>
+	<variable name="balance" class="java.lang.Double" resetType="Group" resetGroup="agency" calculation="Sum">
+		<variableExpression><![CDATA[$F{cr_amount}-$F{dr_amount}]]></variableExpression>
+	</variable>
+	<group name="agency">
+		<groupExpression><![CDATA[$F{org_id}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="0" y="20" width="100" height="20" uuid="5c5afc13-7e0f-41ee-987e-9a7f22e279ff"/>
+					<textElement>
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Passenger Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="20" width="100" height="20" uuid="8a8e75b7-56e3-4675-ad29-0a540150e64f"/>
+					<textElement>
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Transaction Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="200" y="20" width="100" height="20" uuid="313f46f9-17f2-470d-b40e-1f793d492227"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Credit Amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="20" width="100" height="20" uuid="b788ef6a-2231-457b-9b37-a862752b1166"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Debit Amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="0" width="100" height="20" uuid="a16d2220-8ae0-4ec5-840a-430c0e0f4dce"/>
+					<textElement>
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Org ID:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="114" y="0" width="100" height="20" uuid="835dfdf9-42a4-4229-b924-fd943a19a4e5"/>
+					<textElement>
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{org_id}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50">
+				<textField>
+					<reportElement x="300" y="8" width="100" height="20" uuid="28813c82-28fd-446d-ba7d-82a9334671e6"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{balance}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="188" y="8" width="100" height="20" uuid="e1887fe0-ee07-4f0c-b365-b787b3216480"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Balance :]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="135" y="0" width="290" height="20" uuid="136b40fb-7be6-4f67-be08-062e2a31b1e6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Statement]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="6" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="3" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="a0818521-1258-44da-bc0e-f1ecbd256efb"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{passenger_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="100" height="20" uuid="eaaecc2c-862d-4ce3-a457-c6c5dd381d08"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{approved_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="20" uuid="048cc431-d6dd-40db-82bd-7512a38abcf2"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cr_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="100" height="20" uuid="8bce31d0-febb-4a82-9ce2-f05af0caa061"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dr_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="52" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

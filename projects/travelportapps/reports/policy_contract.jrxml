@@ -26,7 +26,7 @@
 FROM vw_passengers
 
 INNER JOIN city_codes ON city_codes.city_code = vw_passengers.destown
-WHERE vw_passengers.passenger_id = $P!{passenger_id}]]>
+WHERE vw_passengers.passenger_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="passenger_id" class="java.lang.Integer"/>
 	<field name="passenger_name" class="java.lang.String"/>
@@ -47,7 +47,7 @@ WHERE vw_passengers.passenger_id = $P!{passenger_id}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Passengers Contract Report]]></text>
+				<text><![CDATA[Passenger Contract Policy]]></text>
 			</staticText>
 		</band>
 	</title>

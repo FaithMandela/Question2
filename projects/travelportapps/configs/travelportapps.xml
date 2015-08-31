@@ -28,8 +28,9 @@
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Rates">90</MENU>
-			<MENU name="Travel Insurance ">91</MENU>
-			<MENU name="Sales ">92</MENU>
+			<MENU name="Sales Report " role="admin">91</MENU>
+			<MENU name="Insurance Payment  Reports" role="admin">92</MENU>
+			<MENU name="Insurance Sales ">93</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
@@ -183,7 +184,7 @@
 				</FORM>
 			</GRID>
 			<FORM name="Entitys" keyfield="entity_id" table="entitys">
-				<COMBOBOX w="430" title="Org" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<COMBOBOX w="430" title="Org" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 				<COMBOBOX w="430" title="Entity Type" lptable="entity_types" y="30" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
@@ -754,13 +755,12 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Insurance" key="80" h="550">
-		<GRID name="Insurance" keyfield="passenger_id" table="vw_passengers" noorg="true">
+		<GRID new="false" name="Unapproved Insurance" keyfield="passenger_id" table="vw_passengers" noorg="true" where="(approved = false)">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Standard Rate">standard_rate</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="North America Rate">north_america_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
 			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
@@ -772,7 +772,7 @@
 			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
 			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
-			<JASPER name="Policy" reportfile="vw_passengers.jasper"></JASPER>
+			<JASPER name="Policy" reportfile="policy_contract.jasper"></JASPER>
 			<FORM name="Insurance" keyfield="passenger_id" table="passengers" noorg="true">
 				<TEXTFIELD w="150" title="Passenger Name" y="50" h="20" x="10">passenger_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Passenger Mobile" y="50" h="20" x="290">passenger_mobile</TEXTFIELD>
@@ -782,10 +782,29 @@
 				<TEXTFIELD w="150" title="Nok Name" y="90" h="20" x="290">nok_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Nok Mobile" y="110" h="20" x="10">nok_mobile</TEXTFIELD>
 				<TEXTFIELD w="150" title="Nok National ID" y="110" h="20" x="290">nok_national_id</TEXTFIELD>
-				<CHECKBOX w="150" title="North America" y="130" h="20" x="10">is_north_america</CHECKBOX>
+				<CHECKBOX w="150" title="Approved" y="130" h="20" x="10">approved</CHECKBOX>
 				<TEXTDECIMAL w="150" title="Cover Amount" y="130" h="20" x="290">cover_amount</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID name="Approved Insurance" keyfield="passenger_id" table="vw_passengers" noorg="true" where="(approved = true)">
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Type Name">rate_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
+			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Age">passenger_age</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days Covered">days_covered</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">nok_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile">nok_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="National ID">nok_national_id</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
+			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
+			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
+			<JASPER name="Policy" reportfile="policy_contract.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="My Insurance" key="82" h="550">
@@ -805,6 +824,7 @@
 			<TEXTFIELD w="75" title="National ID">nok_national_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Cover Amount">cover_amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="North America">is_north_america</CHECKBOX>
+			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
 			<JASPER name="Policy" reportfile="vw_passengers.jasper"></JASPER>
 		</GRID>
 	</DESK>
@@ -874,17 +894,17 @@
 	</DESK>
 	<DESK w="700" name="Travel Insurance Report" key="91" h="550">
 		<JASPER name="Insurance Sold" reportfile="vw_passengers.jasper"></JASPER>
-		<FILTER w="700" name="Passenger Contract" split="150" type="vert" h="550">
+		<FILTER w="700" name="Passenger Contract" role="admin" split="150" type="vert" h="550">
 			<FILTERFORM name="Passenger Contract ">
 				<COMBOBOX w="150" title="Agency" lptable="vw_passengers" noorg="true" y="10" h="20" x="10" lpfield="passenger_name">passenger_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER name="Passenger Contract" reportfile="passengers_contract.jasper"></JASPER>
 		</FILTER>
-		<FILTER w="700" name="Insurance Sales Per Agency" split="150" type="vert" h="550">
+		<FILTER w="700" name="Insurance Sales Per Agency" role="admin" split="150" type="vert" h="550">
 			<FILTERFORM name="Sales Per Agency ">
-				<COMBOBOX w="150" title="Agency Sales" lptable="vw_passengers" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<COMBOBOX w="150" title="Agency Sales" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 			</FILTERFORM>
-			<JASPER name="Sales Per Agency " reportfile="agencysales.jasper"></JASPER>
+			<JASPER name="Sales Per Agency " reportfile="salesperagency.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Payment Report" key="92" h="550">
@@ -895,5 +915,9 @@
 			</FILTERFORM>
 			<JASPER name="Payment Per Agency" reportfile="agencypayments.jasper"></JASPER>
 		</FILTER>
+		<JASPER name="Payment Statement" reportfile="payment_statement.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name=" Insurance Sold" key="93" h="550">
+		<JASPER name="Agency Sales " reportfile="agencysales.jasper"></JASPER>
 	</DESK>
 </APP>

@@ -123,6 +123,24 @@ CREATE VIEW vw_payments AS
 	INNER JOIN orgs ON payments.org_id = orgs.org_id
 	INNER JOIN payment_types ON payments.payment_type_id = payment_types.payment_type_id;
 
+CREATE OR REPLACE FUNCTION upd_passengers() RETURNS trigger AS $$
+DECLARE
+
+BEGIN
+	IF(NEW.approved = true) THEN
+		NEW.approved_date = CURRENT_TIMESTAMP; 
+	END IF;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER upd_passengers BEFORE UPDATE ON passengers 
+	FOR EACH ROW EXECUTE PROCEDURE upd_passengers();
+
+
+
+
 
 
 
