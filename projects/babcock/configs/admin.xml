@@ -13,6 +13,7 @@
 			<MENU name="Semester Student Courses">14</MENU>
 			<MENU name="Semester Registration Audit">24</MENU>
 			<MENU name="Dean Approvals">215</MENU>
+			<MENU name="Admissions List">125</MENU>
 		</MENU>
 		<MENU name="Extra Admin" role="superadm">
 			<MENU name="Grade Changes">558</MENU>
@@ -838,6 +839,34 @@
 				<TEXTFIELD w="150" title="Menu Name" y="10" h="20" x="290">menu_name</TEXTFIELD>
 				<EDITOR w="530" tab="Message" y="30" h="120" x="10">msg</EDITOR>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Admisions List" key="125" h="550">
+		<GRID name="Admisions List" keyfield="app_student_id" orderby="app_student_id" table="app_students">
+			<TEXTFIELD w="75" title="App ID">app_student_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Studentid">studentid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Departmentid">departmentid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Denominationid">denominationid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Firstname">firstname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Othernames">othernames</TEXTFIELD>
+			<CHECKBOX w="75" title="Sex">sex</CHECKBOX>
+			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
+			<TEXTFIELD w="75" title="Maritalstatus">maritalstatus</TEXTFIELD>
+			<TEXTDATE w="75" title="Birthdate">birthdate</TEXTDATE>
+			<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
+			<TEXTFIELD w="75" title="Zipcode">zipcode</TEXTFIELD>
+			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+			<TEXTFIELD w="75" title="Countrycodeid">countrycodeid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Stateid">stateid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Majorid">majorid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="E Tranzact No">e_tranzact_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Password">first_password</TEXTFIELD>
 		</GRID>
 	</DESK>
 </APP>

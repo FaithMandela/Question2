@@ -188,7 +188,7 @@ public class BJSONQuery extends BQuery {
 		Integer i = 0;
 		for(BElement sview : view.getElements()) {
 			String sviewName = sview.getName();
-			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") || sviewName.equals("JASPER")) {
+			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") || sviewName.equals("JASPER")  || sviewName.equals("FORMVIEW")) {
 				String viewFilter = sview.getAttribute("viewfilter");
 				
 				if(viewFilter == null) {

@@ -249,7 +249,7 @@ BEGIN
 		RAISE EXCEPTION 'The registration is closed for this session.';
 	ELSIF (mystud.sex is null) or (mystud.nationality is null) or (mystud.maritalstatus is null) or (mystud.birthdate is null) THEN
 		RAISE EXCEPTION 'Your students details are in complete and need to be updated by registry';
-	ELSIF (mystud.address is null) or (mystud.zipcode is null) or (mystud.town is null) or (mystud.countrycodeid is null) or (mystud.stateid is null) THEN
+	ELSIF (mystud.address is null) or (mystud.town is null) or (mystud.countrycodeid is null) or (mystud.stateid is null) THEN
 		RAISE EXCEPTION 'Your students address details are in complete and need to be updated by registry';
 	ELSIF (mystud.telno is null) or (mystud.mobile is null) or (mystud.email is null) THEN
 		RAISE EXCEPTION 'Your students contact details are in complete and need to be updated by registry';
@@ -1066,12 +1066,25 @@ BEGIN
 	NEW.studentname := UPPER(NEW.surname)	|| ', ' || UPPER(NEW.firstname) || ' ' || UPPER(COALESCE(NEW.othernames, ''));
 	NEW.accountnumber := trim(upper(NEW.accountnumber));
 	NEW.emailuser := lower(NEW.surname) || lower(replace(NEW.studentid, '/', ''));
+	NEW.studentid := trim(upper(NEW.studentid));
 	
 	SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = trim(NEW.studentid);
 	SELECT entity_id INTO v_guardian_id FROM entitys WHERE user_name = trim('G' || NEW.studentid);
 
+	IF((NEW.birthdate is null) OR (NEW.guardianname is null) OR (NEW.gaddress is null))THEN
+		NEW.student_edit = 'allow';
+	ELSIF(NEW.address is null) or (NEW.town is null) or (NEW.countrycodeid is null) or (NEW.stateid is null) THEN
+		NEW.student_edit = 'allow';
+	ELSIF((NEW.telno is null) or (NEW.mobile is null) or (NEW.email is null))THEN
+		NEW.student_edit = 'allow';
+	ELSE
+		NEW.student_edit = 'none';
+	END IF;
+	
 	IF(TG_OP = 'INSERT')THEN
-		NEW.firstpasswd = first_password();
+		IF(NEW.firstpasswd is null)THEN
+			NEW.firstpasswd := first_password();
+		END IF;
 
 		SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = NEW.studentid;
 		IF(v_entity_id is null)THEN
@@ -1283,6 +1296,18 @@ BEGIN
 		DELETE FROM students WHERE studentid = $1;
 		mystr := 'Changes to ' || $2;
 	ELSIF ($2 is null) THEN
+		DELETE FROM studentdegrees WHERE studentid is null;
+		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
+		UPDATE studentrequests SET studentid = null WHERE studentid = $1;
+		UPDATE sun_audits SET studentid = null WHERE studentid = $1;
+		
+		UPDATE students SET studentid = newid, newstudent = false  WHERE studentid = $1;
+		UPDATE studentdegrees SET studentid = newid WHERE studentid is null;
+		UPDATE studentrequests SET studentid = newid WHERE studentid is null;
+		UPDATE sun_audits SET studentid = newid WHERE studentid = null;
+		UPDATE entitys SET user_name = newid WHERE user_name = $1;
+		mystr := 'Changes to ' || newid;
+	ELSIF ($2 is not null) AND (newid is not null) THEN
 		DELETE FROM studentdegrees WHERE studentid is null;
 		UPDATE studentdegrees SET studentid = null WHERE studentid = $1;
 		UPDATE studentrequests SET studentid = null WHERE studentid = $1;

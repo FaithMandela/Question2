@@ -248,7 +248,7 @@ public class BDB {
 		} catch (SQLException ex) {
 			rst = null;
 			lastErrorMsg = ex.toString();
-			log.severe("Database executeQuery error : " + ex);
+			log.severe("Database executeAutoKey error : " + ex);
 		}
 
 		return rst;

@@ -555,7 +555,7 @@ public class BWeb {
 				if(tcVal == null) newShow = false;
 				else if(tcVal.equals("false")) newShow = false;
 			}
-
+			
 			if(hasForm && newShow) {
 				String newBtn = view.getAttribute("new.button", "New");
 				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
@@ -587,7 +587,7 @@ public class BWeb {
 		
 		String buttons = "";
 
-		if(view.getName().equals("FORM")) {
+		if(view.getName().equals("FORM")) {		
 			String saveBtn = view.getAttribute("save.button", "Save");
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
 				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
@@ -596,8 +596,10 @@ public class BWeb {
 			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			boolean canDel = true;
-			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false"))
-				canDel = false;
+			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false")) canDel = false;
+			if(canDel && view.getAttribute("delete.role") != null) {
+				if(!checkAccess(view.getAttribute("delete.role"))) canDel = false;
+			}
 			if(canDel && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'> <i class='fa fa-trash-o'></i> &nbsp; Delete</button>\n";
 			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
@@ -2061,6 +2063,12 @@ System.out.println("repository : " + repository);
         return false;
 	}
 	
+	public String getButtonNav() {
+		if(root == null) return null;
+		if(view == null) return null;
+		return view.getAttribute("button.nav");
+	}
+	
 	public boolean hasPasswordChange() {
 		if(root == null) return false;
 		if(root.getAttribute("password") == null) return false;
@@ -2078,7 +2086,7 @@ System.out.println("repository : " + repository);
 		boolean hasSubs = false;
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
-			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("FILES") || el.getName().equals("DIARY") || el.getName().equals("FORMVIEW")) hasSubs = true;
 		}
 		return hasSubs;
 	}

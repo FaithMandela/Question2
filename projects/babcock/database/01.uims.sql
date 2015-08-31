@@ -319,6 +319,7 @@ CREATE TABLE students (
 	fullbursary			boolean default false not null,
 	newstudent			boolean default false not null,
 	matriculate			boolean default false not null,
+	student_edit		varchar(50) default 'none' not null,
 
 	balance_time		timestamp,
 	currentbalance		real,

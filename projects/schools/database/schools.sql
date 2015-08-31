@@ -82,20 +82,14 @@
 		street			varchar(30)
 		
 		 );
-		 
-		 CREATE TABLE teachers(
+		CREATE TABLE teachers(
 		 
 		teacher_id 		serial primary key,
-		org_id			integer references orgs,
+		org_id			integer default 0,
 		title			varchar(20),
-		name 			varchar(20),
-		dob				date,
-		gender			gender,
-		marital_status	varchar(50)
-		languages		varchar(50),
-		start_date		date,
-		salary			float,
-		end_date		date			
+		surname			varchar(20),
+		firstname 		varchar(50),
+		middlename		varchar(50)		
 		 
 		 );
 		 
@@ -198,8 +192,10 @@
 	dormitory_id		serial primary key,
 	dormitory_name		varchar(50),
 	capacity			integer,
-	occupied			integer,
-	remaining			integer,
+	matron				varchar(30),
+	cubicles			integer,
+	cubicle_capacity	integer,
+	sex					char(10),
 	details				text
 	);
 	
@@ -237,6 +233,7 @@
     CREATE TABLE subjects(
 	  subject_id			serial primary key,
 	  subject_name			varchar(50),
+	  teacher_id			integer references teachers,
 	  details				text
 	
 	);
@@ -258,20 +255,21 @@
 	details			text
   );
   
-  CREATE TABLE terms (
-	term_id				serial primary key,
-	term_name			varchar(20),
-	start_date			date,
-	end_date			date,
-	closed				boolean default false not null,
-	details				text
+  CREATE TABLE trimester (
+	trimester_id		    varchar(50) primary key not null,
+	start_date				date,
+	end_date				date,
+	
+	active					boolean default true not null,
+	closed					boolean default false not null,
+	details					text
 );
 
 
-      CREATE TABLE term_students(
+      CREATE TABLE trimester_student(
 	
-		term_student_id			serial primary key,
-		term_id					integer references terms,
+		trimester_student_id	serial primary key,
+		trimester_id			varchar(20) references trimester,
 		entity_id				integer references students
 		
 	);
@@ -352,12 +350,13 @@
 		);
 		
 		
-		CREATE TABLE timetable (
+		 CREATE TABLE timetable (
 		
 		timetable_id				serial primary key,
 		class_id					integer references class,
+		trimester_id				varchar(50) references trimester,
 		subject_id					integer references subjects,
-		teacher_id					integer references teachers,
+		exam_date					date,
 		weekday_id 					integer references weekdays,
 		start_time					time,
 		end_time					time
@@ -387,7 +386,20 @@
 		subject_id					integer references subjects,
 		cat1						integer,
 		cat2						integer,
-		main_exam					integer
+		main_exam					integer,
+		grade                       varchar(20)
+		
+		
+		);
+		
+		
+		CREATE TABLE grades (
+		
+		grade_id				serial primary key,
+		grade_name				varchar(10),
+		grade_weight			float,
+		min_range			    integer,
+		max_range				integer
 		
 		
 		);
@@ -446,11 +458,11 @@
 	INNER JOIN dormitorys ON students.dormitory_id = dormitorys.dormitory_id
 	
 	
-	CREATE VIEW vw_term_students AS
-	SELECT students.entity_id, students.surname, terms.term_id, terms.term_name, terms.start_date, terms.end_date,terms.closed,terms.details, term_students.term_student_id
-	FROM term_students
-	INNER JOIN students ON term_students.entity_id = students.entity_id
-	INNER JOIN terms ON term_students.term_id = terms.term_id;
+	CREATE VIEW vw_trimester_student AS
+	SELECT students.entity_id, students.surname, trimester.trimester_id,trimester.start_date,trimester.end_date, trimester_student.trimester_student_id
+	FROM trimester_student
+	INNER JOIN students ON trimester_student.entity_id = students.entity_id
+	INNER JOIN trimester ON trimester_student.trimester_id = trimester.trimester_id;
 	
 	
 	
@@ -473,13 +485,15 @@
 	
 	
 	CREATE OR REPLACE VIEW vw_timetable AS
-	SELECT class.class_id, class.class_name, subjects.subject_id, subjects.subject_name, weekdays.weekday_id, weekdays.weekday_name, timetable.timetable_id, timetable.start_time, timetable.end_time
+	SELECT class.class_id, class.class_name,trimester.trimester_id, subjects.subject_id,weekdays.weekday_id,weekdays.weekday_name,
+	subjects.subject_name,timetable.timetable_id, timetable.start_time, timetable.end_time,timetable.exam_date
 	FROM timetable
+	INNER JOIN trimester ON timetable.trimester_id=trimester.trimester_id
 	INNER JOIN class ON timetable.class_id = class.class_id
-	INNER JOIN subjects ON timetable.subject_id = subjects.subject_id
-	INNER JOIN weekdays ON timetable.weekday_id = weekdays.weekday_id;
+	INNER JOIN weekdays ON weekdays.weekday_id=timetable.weekday_id
+	INNER JOIN subjects ON timetable.subject_id = subjects.subject_id;
 
-	
+
 	
 	CREATE VIEW vw_student_grading AS
 	SELECT exams.exam_id, exams.exam_name, students.entity_id, subjects.subject_id, subjects.subject_name, student_grading.student_grading_id, student_grading.marks, student_grading.grade
@@ -498,16 +512,36 @@
 	INNER JOIN subjects ON student_grading.subject_id = subjects.subject_id;
 	
 	CREATE VIEW vw_student_exam AS
-    SELECT students.entity_id, students.surname, subjects.subject_id, subjects.subject_name,exams.exam_name, student_exam.student_exam_id, student_exam.exam_id, student_exam.cat1, student_exam.cat2, student_exam.main_exam
+    SELECT vw_students.entity_id, vw_students.surname,vw_students.middle_name,vw_students.first_name,vw_students.class_name,vw_students.adm_no,
+    subjects.subject_id, subjects.subject_name,exams.exam_name, 
+    student_exam.student_exam_id, student_exam.exam_id, student_exam.cat1, student_exam.cat2, student_exam.main_exam, student_exam.grade
 	FROM student_exam
-	INNER JOIN students ON student_exam.entity_id = students.entity_id
+	INNER JOIN vw_students ON student_exam.entity_id = vw_students.entity_id
 	INNER JOIN subjects ON student_exam.subject_id = subjects.subject_id
 	INNER JOIN exams ON student_exam.exam_id = exams.exam_id;
 	
 	
 	
+	CREATE VIEW vw_subjects AS
+	SELECT teachers.teacher_id, teachers.surname, subjects.subject_id, subjects.subject_name, subjects.details
+	FROM subjects
+	INNER JOIN orgs ON subjects.org_id = orgs.org_id
+	INNER JOIN teachers ON subjects.teacher_id = teachers.teacher_id;
+
+CREATE VIEW vw_timetable AS
+	SELECT class.class_id, class.class_name, b.subject_id, b.subject_name,b.surname, trimester.trimester_id, 
+	 weekdays.weekday_id, weekdays.weekday_name, timetable.timetable_id, timetable.start_time, 
+	timetable.end_time, timetable.exam_date
+	FROM timetable
+	INNER JOIN class ON timetable.class_id = class.class_id
+	INNER JOIN vw_subjects as b ON timetable.subject_id = b.subject_id
+	INNER JOIN trimester ON timetable.trimester_id = trimester.trimester_id
+	INNER JOIN weekdays ON timetable.weekday_id = weekdays.weekday_id;
 	
-	CREATE OR REPLACE FUNCTION ins_students() RETURNS trigger AS $$
+	
+	
+	
+CREATE OR REPLACE FUNCTION ins_students() RETURNS trigger AS $$
       DECLARE
 	  rec RECORD;
 BEGIN
@@ -538,6 +572,9 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
     FOR EACH ROW EXECUTE PROCEDURE ins_students();
+    
+    
+
 		 
 	
 
@@ -546,7 +583,90 @@ CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
     insert into entity_types(org_id,entity_type_name,entity_role,use_key) VALUES (0,'teachers','teacher',0);
     insert into entity_types(org_id,entity_type_name,entity_role,use_key) VALUES (0,'guardians','guardian',0);
 	
-  
+
+	
+CREATE OR REPLACE FUNCTION getGradeName(marks integer) RETURNS varchar(2) AS $$
+DECLARE 
+	v_grade		varchar(2);
+BEGIN 
+	SELECT grade_name INTO v_grade FROM grades WHERE marks >= min_range AND marks <= max_range;
+	return v_grade;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION process_remaining_dorms() RETURNS TRIGGER AS $$
+DECLARE
+
+	v_curr_remaining		integer;
+	v_curr_remaining1		integer;
+BEGIN      
+     IF (TG_OP = 'INSERT') THEN
+	SELECT remaining INTO v_curr_remaining FROM dormitorys  WHERE dormitory_id = NEW.dormitory_id;
+	IF( v_curr_remaining > 0 ) THEN 
+		UPDATE dormitorys SET remaining = (v_curr_remaining -1) WHERE dormitory_id = NEW.dormitory_id;
+	ELSE
+		RAISE EXCEPTION 'Domitory is full';
+	END IF;
+	
+      END IF;  
+      
+       IF (TG_OP = 'UPDATE') THEN
+      
+      SELECT remaining INTO v_curr_remaining FROM dormitorys  WHERE dormitory_id = NEW.dormitory_id;
+      SELECT remaining INTO v_curr_remaining1 FROM dormitorys  WHERE dormitory_id = OLD.dormitory_id;
+	IF( v_curr_remaining > 0 ) THEN 
+		UPDATE dormitorys SET remaining = (v_curr_remaining -1) WHERE dormitory_id = NEW.dormitory_id;
+		UPDATE dormitorys SET remaining = (v_curr_remaining1 +1) WHERE dormitory_id = OLD.dormitory_id;
+	ELSE
+		RAISE EXCEPTION 'Domitory is full';
+	END IF;
+      
+       END IF;  
+      
+    RETURN NEW;
+END;
+    
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER remaining_dorms BEFORE INSERT OR UPDATE ON dormitory_students
+    FOR EACH ROW EXECUTE PROCEDURE process_remaining_dorms();
+    
+    
+ CREATE OR REPLACE function calculate_grades() RETURNS TRIGGER AS $$
+    
+    DECLARE
+    totals			integer;
+    v_grade			Varchar(30);
+    
+    BEGIN
+    
+    IF(TG_OP = 'INSERT') THEN
+    
+    SELECT ((NEW.cat1 + NEW.cat2) * 0.5 + NEW.main_exam):: integer INTO totals;
+     SELECT grade_name INTO v_grade FROM grades WHERE totals <= max_range AND totals >= min_range;
+     NEW.grade= v_grade;
+    
+    
+    END IF;
+    
+    RETURN NEW;
+    END;
+    
+    $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER calculate_grades BEFORE INSERT OR UPDATE ON student_exam
+    FOR EACH ROW EXECUTE PROCEDURE calculate_grades();
+    
+    
+    
+    
+    
+
+
+
+	
 	
 	
 	

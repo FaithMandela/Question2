@@ -14,6 +14,17 @@ ALTER TABLE entitys ADD phone_pa boolean default false;
 ALTER TABLE entitys ADD phone_pb boolean default false;
 ALTER TABLE entitys ADD phone_pt boolean default false;
 
+CREATE TABLE firms (
+	firm_id					serial primary key,
+	org_id					integer references orgs,
+	firm_name				varchar(120),
+	details					text
+);
+CREATE INDEX firms_org_id ON firms (org_id);
+
+ALTER TABLE address ADD firm_id	integer references firms;
+CREATE INDEX address_firm_id ON address (firm_id);
+
 CREATE TABLE mpesa_trxs (
 	mpesa_trx_id			serial primary key,
 	org_id					integer references orgs,
@@ -183,6 +194,26 @@ CREATE TABLE receipts (
 CREATE INDEX receipts_mpesa_trx_id ON receipts (mpesa_trx_id);
 CREATE INDEX receipts_org_id ON receipts (org_id);
 
+
+CREATE VIEW vw_address AS
+	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name,
+		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town,
+		address.phone_number, address.extension, address.mobile, address.fax, address.email, address.is_default, address.website, address.details,
+		address_types.address_type_id, address_types.address_type_name,
+		firms.firm_id, firms.firm_name,
+		(COALESCE(firms.firm_name || ', ', '') ||  address.address_name) as disp_name
+	FROM address INNER JOIN sys_countrys ON address.sys_country_id = sys_countrys.sys_country_id
+		LEFT JOIN address_types ON address.address_type_id = address_types.address_type_id
+		LEFT JOIN firms ON address.firm_id = firms.firm_id;
+
+CREATE VIEW vw_entity_address AS
+	SELECT vw_address.address_id, vw_address.address_name,
+		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_id, vw_address.table_name,
+		vw_address.is_default, vw_address.post_office_box, vw_address.postal_code, vw_address.premises,
+		vw_address.street, vw_address.town, vw_address.phone_number, vw_address.extension, vw_address.mobile,
+		vw_address.fax, vw_address.email, vw_address.website
+	FROM vw_address;
+
 CREATE VIEW vw_sms_entitys AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default as org_is_default, 
 		orgs.is_active as org_is_active, orgs.logo as org_logo, 
@@ -205,12 +236,19 @@ CREATE VIEW vw_sms_entitys AS
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
 
 CREATE VIEW vw_address_members AS
-	SELECT address.address_id, address.address_name, address.mobile,
+	SELECT address_types.address_type_id, address_types.address_type_name,
+		firms.firm_id, firms.firm_name,
+		sys_countrys.sys_country_id, sys_countrys.sys_country_name,
+		(COALESCE(firms.firm_name || ', ', '') ||  address.address_name) as disp_name,
+		address.address_id, address.address_name, address.mobile, address.email,
 		address_groups.address_group_id, address_groups.address_group_name, 
 		address_members.org_id, address_members.address_member_id, address_members.is_active, 
 		address_members.narrative
 	FROM address_members INNER JOIN address ON address_members.address_id = address.address_id
-		INNER JOIN address_groups ON address_members.address_group_id = address_groups.address_group_id;
+		INNER JOIN address_groups ON address_members.address_group_id = address_groups.address_group_id
+		INNER JOIN sys_countrys ON address.sys_country_id = sys_countrys.sys_country_id
+		LEFT JOIN address_types ON address.address_type_id = address_types.address_type_id
+		LEFT JOIN firms ON address.firm_id = firms.firm_id;
 
 CREATE VIEW vw_sms AS
 	SELECT folders.folder_id, folders.folder_name, sms.sms_id,

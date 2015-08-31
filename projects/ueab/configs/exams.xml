@@ -428,6 +428,10 @@
 				<TEXTFIELD w="40" title="Student">studentname</TEXTFIELD>
 				<TEXTFIELD w="20" title="Trimester">quarterid</TEXTFIELD>
 				<TEXTFIELD w="20" title="Approved">approved</TEXTFIELD>
+				<ACTIONS name="Trimester" keyfield="quarterid" table="quarters">
+					<ACTION fnct="upd_qapprove" auditid="sys_audit_trail_id" phase="1">Approve Student</ACTION>
+					<ACTION fnct="upd_qunapprove" auditid="sys_audit_trail_id" phase="1">Un Approve Student</ACTION>
+				</ACTIONS>
 				<GRID name="Q. Grades" keyfield="qgradeid" linkfield="qstudentid" table="vw_qgrades">
 					<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
 					<TEXTFIELD w="100" title="Course Title">coursetitle</TEXTFIELD>
@@ -465,7 +469,6 @@
 					</GRIDBOX>
 					<COMBOBOX w="430" title="Residence" lptable="qresidenceview" linkfield="quarterid" y="30" h="20" x="10" lpfield="residencename">qresidenceid</COMBOBOX>
 					<TEXTFIELD w="150" title="Charges" defaultvalue="0" y="50" h="20" x="10">charges</TEXTFIELD>
-					<CHECKBOX w="50" title="Approved" defaultvalue="true" y="70" h="20" x="10">approved</CHECKBOX>
 					<CHECKBOX w="50" title="Finalised" defaultvalue="true" y="70" h="20" x="190">finalised</CHECKBOX>
 					<CHECKBOX w="50" title="Major Approved" defaultvalue="true" y="70" h="20" x="360">majorapproval</CHECKBOX>
 					<CHECKBOX w="50" title="Depart Approval" defaultvalue="true" y="90" h="20" x="10">departapproval</CHECKBOX>

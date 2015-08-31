@@ -6,6 +6,7 @@
 			<MENU name="Employer Application">12</MENU>
 		</MENU>
 	</MENU>
+
 	<DESK w="700" name="School" key="1" h="500">
 		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true">
 			<TEXTFIELD w="75" title="School ID">schoolid</TEXTFIELD>
@@ -22,7 +23,7 @@
 						<TEXTFIELD w="75" title="Credit Hours">credithours</TEXTFIELD>
 						<TEXTFIELD w="75" title="Content Type">contenttypename</TEXTFIELD>
 						<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-						<GRID w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" display="form" table="majorcontentview" noorg="true">
+						<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" table="majorcontentview" noorg="true">
 							<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 							<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 							<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
@@ -34,7 +35,7 @@
 								<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 								<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 							</GRID>
-						</GRID>
+						</FORMVIEW>
 					</GRID>
 				</GRID>
 				<GRID name="Courses Listing" keyfield="courseid" orderby="courseid" linkfield="departmentid" table="courses" noorg="true" where="(iscurrent = true)">
@@ -42,7 +43,7 @@
 					<TEXTFIELD w="250" title="Course Title">coursetitle</TEXTFIELD>
 					<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 					<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-					<GRID w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" display="form" table="courses" noorg="true">
+					<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" table="courses" noorg="true">
 						<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 						<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 						<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
@@ -54,9 +55,9 @@
 							<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 							<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 						</GRID>
-					</GRID>
+					</FORMVIEW>
 				</GRID>
-				<GRID w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" display="form" table="departmentview" noorg="true">
+				<FORMVIEW w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" table="departmentview" noorg="true">
 					<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 					<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 					<TEXTFIELD title="Department Name">Departmentname</TEXTFIELD>
@@ -67,9 +68,9 @@
 					<TEXTFIELD title="Exposures">exposures</TEXTFIELD>
 					<TEXTFIELD title="Oppotunities">oppotunities</TEXTFIELD>
 					<TEXTFIELD title="Details">details</TEXTFIELD>
-				</GRID>
+				</FORMVIEW>
 			</GRID>
-			<GRID w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" display="form" table="schools" noorg="true">
+			<FORMVIEW w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" table="schools" noorg="true">
 				<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 				<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 				<TEXTFIELD title="Philosopy">philosopy</TEXTFIELD>
@@ -77,9 +78,10 @@
 				<TEXTFIELD title="Mission">mission</TEXTFIELD>
 				<TEXTFIELD title="Objectives">objectives</TEXTFIELD>
 				<TEXTFIELD title="Details">details</TEXTFIELD>
-			</GRID>
+			</FORMVIEW>
 		</GRID>
 	</DESK>
+
 	<DESK w="700" name="Application for Admission" key="11" h="500">
 		<FORM name="Application for Admission" keyfield="entity_id" audit="false" del="false" table="entitys" noorg="true">
 			<DEFAULT default="8">entity_type_id</DEFAULT>
@@ -87,9 +89,9 @@
 			<TEXTFIELD w="430" title="Email *" y="30" h="20" x="10">user_name</TEXTFIELD>
 			<COMBOBOX w="430" title="Application" lptable="forms" lpkey="form_id" where="(use_key = 1)" y="50" h="20" x="10" lpfield="form_name">selection_id</COMBOBOX>
 			<COMBOBOX w="430" title="Campus" lptable="orgs" y="70" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
-			<GRID name="News" keyfield="sys_news_id" display="form" table="sys_news" noorg="true" where="(sys_news_id = 1)">
+			<FORMVIEW name="News" keyfield="sys_news_id" table="sys_news" noorg="true" where="(sys_news_id = 1)">
 				<TEXTAREA w="530" title="Advice" y="2" h="170" x="10">details</TEXTAREA>
-			</GRID>
+			</FORMVIEW>
 		</FORM>
 	</DESK>
 	<DESK w="700" name="Employer Access" key="12" h="500">
@@ -110,9 +112,9 @@
 			<TEXTFIELD w="430" title="Website" y="210" h="20" x="10">website</TEXTFIELD>
 			<TEXTFIELD w="150" title="Password" y="230" h="20" x="10">first_password</TEXTFIELD>
 			<TEXTAREA w="430" title="Details" y="250" h="70" x="10">details</TEXTAREA>
-			<GRID name="News" keyfield="sys_news_id" display="form" table="sys_news" noorg="true" where="(sys_news_id = 2)">
+			<FORMVIEW name="News" keyfield="sys_news_id" table="sys_news" noorg="true" where="(sys_news_id = 2)">
 				<TEXTAREA w="530" title="Advice" y="2" h="170" x="10">details</TEXTAREA>
-			</GRID>
+			</FORMVIEW>
 		</FORM>
 	</DESK>
 </APP>

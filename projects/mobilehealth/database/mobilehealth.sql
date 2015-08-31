@@ -5,10 +5,13 @@ CREATE EXTENSION tablefunc;
 CREATE TABLE devices(
     device_id               serial primary key,
     org_id                  integer references orgs,
-    device_name		        varchar(100);
+    device_name		        varchar(100),
     device_model            varchar(100),
     device_imei_1           varchar(20),
     device_imei_2           varchar(20),
+    device_phone_1          varchar(15),
+    device_phone_2          varchar(15),
+    is_assigned             boolean default false,
     is_active               boolean default true
 );
 CREATE INDEX devices_org_id ON devices(org_id);
@@ -42,30 +45,43 @@ CREATE TABLE sub_countys(
 );
 CREATE INDEX sub_countys_county_id ON sub_countys(county_id);
 
-INSERT INTO sub_countys(sub_county_id, county_id, sub_county_name) VALUES(1, 1, 'Makadara'),
-(2, 1, 'Ruaraka');
-
+INSERT INTO sub_countys(sub_county_id, county_id, sub_county_name) VALUES
+(1, 1, 'Kasarani'),
+(2, 1, 'Makadara'),
+(3, 1, 'Ruaraka');
 
 CREATE TABLE divisions(
     division_id             serial primary key,
     sub_county_id           integer references sub_countys,
-    division_name           varchar(100)
+    division_name           varchar(200)
 );
 CREATE INDEX divisions_sub_county_id ON divisions(sub_county_id);
 
 CREATE TABLE locations(
     location_id             serial primary key,
     division_id             integer references divisions,
-    location_name           varchar(100)
+    location_name           varchar(200)
 );
 CREATE INDEX locations_division_id ON locations(division_id);
 
 CREATE TABLE sub_locations(
     sub_location_id         serial primary key,
     location_id             integer references divisions,
-    location_name           varchar(100)
+    location_name           varchar(200)
 );
 CREATE INDEX sub_locations_location_id ON sub_locations(location_id);
+
+
+CREATE TABLE villages(
+    village_id              serial primary key,
+    sub_location_id         integer references sub_locations,
+    village_name           varchar(200)
+);
+CREATE INDEX villages_sub_location_id ON villages(sub_location_id);
+
+-- CHANGE FROM HERE
+
+
 
 
 CREATE TABLE mother_info_defs(
@@ -470,6 +486,7 @@ CREATE TABLE health_facility_data(
     indicator_40			integer NOT NULL default 0,
     indicator_41			integer NOT NULL default 0,
     indicator_42			integer NOT NULL default 0,
+    remarks                 text,
     creation_date           timestamp default CURRENT_TIMESTAMP
 );
 

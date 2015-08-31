@@ -1161,6 +1161,10 @@
 				<TEXTFIELD w="40" title="Student">studentname</TEXTFIELD>
 				<TEXTFIELD w="20" title="Gender">sex</TEXTFIELD>
 				<TEXTFIELD w="20" title="Approved" edit="true">approved</TEXTFIELD>
+				<ACTIONS name="Trimester" keyfield="quarterid" table="quarters">
+					<ACTION fnct="upd_qapprove" auditid="sys_audit_trail_id" phase="1">Approve Student</ACTION>
+					<ACTION fnct="upd_qunapprove" auditid="sys_audit_trail_id" phase="1">Un Approve Student</ACTION>
+				</ACTIONS>
 				<GRID name="Q. Grades" keyfield="qgradeid" linkfield="qstudentid" table="vw_qgrades">
 					<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
 					<TEXTFIELD w="100" title="Course Title">coursetitle</TEXTFIELD>
@@ -1199,7 +1203,6 @@
 					</GRIDBOX>
 					<COMBOBOX w="430" title="Residence" lptable="qresidenceview" linkfield="quarterid" y="30" h="20" x="10" lpfield="residencename">qresidenceid</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Charges" default="0" y="50" h="20" x="10">charges</TEXTDECIMAL>
-					<CHECKBOX w="50" title="Approved" default="false" y="70" h="20" x="10">approved</CHECKBOX>
 					<CHECKBOX w="50" title="Finalised" default="false" y="70" h="20" x="190">finalised</CHECKBOX>
 					<CHECKBOX w="50" title="Major Approved" default="false" y="70" h="20" x="360">majorapproval</CHECKBOX>
 					<CHECKBOX w="50" title="Depart Approval" default="false" y="90" h="20" x="10">departapproval</CHECKBOX>
@@ -1214,6 +1217,12 @@
 					<COMBOBOX w="430" title="Sub Level" lptable="vw_charges" linkfield="quarterid" y="170" h="20" x="10" lpfield="sublevelname">charge_id</COMBOBOX>
 					<TEXTAREA w="430" title="Details" y="190" h="90" x="10">details</TEXTAREA>
 				</FORM>
+				<GRID name="Approval List" keyfield="approvalid" linkfield="qstudentid" table="approvallist" noorg="true">
+					<TEXTFIELD w="40" title="Approved By">approvedby</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approval Type">approvaltype</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approve Date">approvedate</TEXTFIELD>
+					<TEXTFIELD w="40" title="Client IP">clientid</TEXTFIELD>
+				</GRID>
 			</GRID>
 		</GRID>
 	</DESK>

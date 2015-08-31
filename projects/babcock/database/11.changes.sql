@@ -1,4 +1,5 @@
 
+
 -- update students email address
 CREATE OR REPLACE FUNCTION insstudentname() RETURNS trigger AS $$
 DECLARE
@@ -8,12 +9,25 @@ BEGIN
 	NEW.studentname := UPPER(NEW.surname)	|| ', ' || UPPER(NEW.firstname) || ' ' || UPPER(COALESCE(NEW.othernames, ''));
 	NEW.accountnumber := trim(upper(NEW.accountnumber));
 	NEW.emailuser := lower(NEW.surname) || lower(replace(NEW.studentid, '/', ''));
+	NEW.studentid := trim(upper(NEW.studentid));
 	
 	SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = trim(NEW.studentid);
 	SELECT entity_id INTO v_guardian_id FROM entitys WHERE user_name = trim('G' || NEW.studentid);
 
+	IF((NEW.birthdate is null) OR (NEW.guardianname is null) OR (NEW.gaddress is null))THEN
+		NEW.student_edit = 'allow';
+	ELSIF(NEW.address is null) or (NEW.town is null) or (NEW.countrycodeid is null) or (NEW.stateid is null) THEN
+		NEW.student_edit = 'allow';
+	ELSIF((NEW.telno is null) or (NEW.mobile is null) or (NEW.email is null))THEN
+		NEW.student_edit = 'allow';
+	ELSE
+		NEW.student_edit = 'none';
+	END IF;
+	
 	IF(TG_OP = 'INSERT')THEN
-		NEW.firstpasswd = first_password();
+		IF(NEW.firstpasswd is null)THEN
+			NEW.firstpasswd := first_password();
+		END IF;
 
 		SELECT entity_id INTO v_entity_id FROM entitys WHERE user_name = NEW.studentid;
 		IF(v_entity_id is null)THEN
@@ -59,6 +73,4 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-
 
