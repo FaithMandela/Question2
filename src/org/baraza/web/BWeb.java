@@ -2056,6 +2056,18 @@ System.out.println("repository : " + repository);
         if(view.getName().equals("JASPER")) viewIcon = "icon-doc";
 		return view.getAttribute("icon", viewIcon); 
 	}
+	
+    public boolean isFileImport() {
+		boolean fileImport = false;
+		if(root == null) return fileImport;
+		if(view == null) return fileImport;
+		if(view.getName().equals("FILES")) {
+			fileImport = true;
+        } else if(view.getName().equals("GRID")) {
+			if(view.getAttribute("import") != null) fileImport = true;
+        }
+		return fileImport; 
+	}
     
 	public boolean isMaterial() {
 		if(root == null) return false;

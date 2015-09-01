@@ -354,8 +354,7 @@
 						<%= web.showFooter() %>
 					</div>
 
-
-                    <% if(web.getViewType().equals("FILES")){ %>
+                    <% if(web.isFileImport()) { %>
                         <div class="row"> <!-- file upload row -->
                             <div class="col-md-12">
                                 <span class="btn green fileinput-button">
@@ -597,34 +596,6 @@
           	}
         };
 
-		/*
-		function(res) {
-			console.info(res);
-			toastr.options = {
-						"closeButton": true,
-						"debug": false,
-						"positionClass": "toast-top-right",
-						"onclick": null,
-						"showDuration": "1000",
-						"hideDuration": "1000",
-						"timeOut": "5000",
-						"extendedTimeOut": "1000",
-						"showEasing": "swing",
-						"hideEasing": "linear",
-						"showMethod": "fadeIn",
-						"hideMethod": "fadeOut"
-					}
-			var tp = res.status == 200 ? 'success' : 'error';
-			toastr[tp](res.responseText, "");
-			jQuery('#jqlist').restoreRow(lastsel2);
-		}*/
-
-
-
-
-
-
-
 	  <% } %>
     }
 <% } %>
@@ -632,11 +603,6 @@
 
     jQuery("#jqlist").jqGrid(jqcf);
     jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false, add:false, del:false, search:false});
-
-
-
-
-
 
 
 	/*navButton*/
@@ -717,11 +683,6 @@
                         $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
                     }
                 }
-
-
-
-
-
 	        }, "JSON");
 	    }
 	});
@@ -789,7 +750,7 @@ $(function () {
         url: 'putbarazafiles',
         dataType: 'json',
         autoUpload: true,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|doc|docx|rtf|odt|pdf)$/i,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|doc|docx|rtf|odt|pdf|csv|txt|xls)$/i,
         maxFileSize: 999000,
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
