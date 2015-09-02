@@ -7,7 +7,7 @@ INSERT INTO mother_info_defs( mother_info_def_id,question, details ) VALUES
 (5, 'New-born visited at home within 48 hours of delivery','Record  by  Indicating  with a tick (✔) if New-born was visited at home within 48 hours of delivery or (X) if not. Record N/A if the member is not a new-born'),
 (6, 'Mother with new-born counselled on Exclusive Breast Feeding (EBF)','Record  by  Indicating  with a tick (✔) if Mother with new-born (0-28 days) is counselled on Exclusive Breast Feeding (EBF) or (X) if not. Record N/A if the household member is not a mother of a new-born'),
 (7, 'Woman 15-49yrs provided with Family Planning commodities by CHVs','Record  by  Indicating  with a tick (✔) if a Woman 15-49 years is provided with Family Planning commodities by CHVs or (X) if a woman of 15-49 years was not provided. Record N/A if the member is not a woman of reproductive age (15-49 years)')
-     
+
 
 -- child information
 INSERT INTO child_info_defs( child_info_def_id, question, details ) VALUES
@@ -44,7 +44,7 @@ INSERT INTO defaulters_info_defs( defaulters_info_def_id, question, details ) VA
 
 
 
-INSERT INTO death_info_defs(death_info_def_id, question, details)VALUES 
+INSERT INTO death_info_defs(death_info_def_id, question, details)VALUES
 (1, 'A: 0-28 days', '(Record all deaths between zero to 28 days of age) which occurred in the month'),
 (2, 'b: 29 days-11 months', '(Record all deaths between 29 days to 11 months of age) which occurred in the month'),
 (3, 'c: 12-59 months', '(Record all deaths between 12-59 months of age) which occurred in the month'),
@@ -65,7 +65,7 @@ INSERT INTO household_info_defs( household_info_def_id, question, details ) VALU
 INSERT INTO demograpics_515_defs(demograpics_515_def_id, demograpics_question, demograpics_details) VALUES
 (1, 'Total households','Total number of households in the Community Health Unit'),
 (2, 'Total number of households visited','Total number of households visited in the month'),
-(3, 'Total population','Total number of people in the Community Health Unit'), 
+(3, 'Total population','Total number of people in the Community Health Unit'),
 (4, 'Total women 15-49 years','Total number of women aged 15 - 49 years in the CHU'),
 (5,' Total pregnant women','Total number of pregnant women in the CHU'),
 (6, 'Total children 0-28 days','Total number of children 0-28 days in the CHU'),
@@ -78,13 +78,13 @@ INSERT INTO demograpics_515_defs(demograpics_515_def_id, demograpics_question, d
 (13, 'Total population of the elderly (60+ years)','The number of people who are 60 and above in the CHU');
 
 
-INSERT INTO household_515_defs(household_515_def_id,household_question,household_details ) VALUES 
+INSERT INTO household_515_defs(household_515_def_id,household_question,household_details ) VALUES
 (1, 'Number of households using treated water','Total number of Households using treated water in the CHU '),
 (2, 'Number of households with hand washing facilities e.g. leaky tins in use','Total number of Households in the CHU having hand washing facilities'),
 (3,	'Number of households with functional latrines','Total number of Households in the CHU that are having a functional latrine in use');
 
 
-INSERT INTO motherchild_515_defs( motherchild_515_def_id ,motherchild_question,motherchild_details ) VALUES 
+INSERT INTO motherchild_515_defs( motherchild_515_def_id ,motherchild_question,motherchild_details ) VALUES
 (1, 'Number of new-borns 0-28 days visited at home within 48 hours of delivery','Total number of new-borns 0-28 days visited at home within 48 hours of birth'),
 (2, 'Number of Mothers with new-borns counselled on Exclusive Breastfeeding','Number of mothers with new born babies counselled on exclusive breastfeeding'),
 (3, 'Number of children 0-59 months  participating in  growth monitoring','The number of children 0-59 months using growth monitoring  services'),
@@ -94,7 +94,7 @@ INSERT INTO motherchild_515_defs( motherchild_515_def_id ,motherchild_question,m
 (7, 'Number of women(15-49yrs) provided with FP commodities','The total number of women between 15 - 49 years provided with family planning commodities by CHVs'),
 (8, 'Number of children 12-59 months dewormed','The total number of children of 12-59 months de-wormed');
 
-INSERT INTO treatment_515_defs(treatment_515_def_id, treatment_question, treatment_details  ) VALUES 
+INSERT INTO treatment_515_defs(treatment_515_def_id, treatment_question, treatment_details  ) VALUES
 (1, 'Number of fever cases managed','The total number of fever cases managed '),
 (2, 'Number of Fever cases less than 7 days RDT done','Total number of fever cases of less than 7 days for which Rapid Diagnostic Test has been done '),
 (3, 'Number of Fever cases less than 7 days RDT +ve','Total number of fever cases of less than 7 days for which Rapid Diagnostic Test has been done  and the result is positive'),
@@ -108,7 +108,7 @@ INSERT INTO treatment_515_defs(treatment_515_def_id, treatment_question, treatme
 
 
 
-INSERT INTO referrals_515_defs(referrals_515_defs_id ,referrals_question , referrals_details ) VALUES 
+INSERT INTO referrals_515_defs(referrals_515_defs_id ,referrals_question , referrals_details ) VALUES
 (1, 'Number of referrals for ANC','Total number of pregnant women in the CHU referred for ANC '),
 (2, 'Number of referrals for skilled delivery','Total number of pregnant women referred for skilled delivery '),
 (3, 'Number of new-borns with danger signs referred','Total number of new-borns with danger signs referred '),
@@ -119,14 +119,14 @@ INSERT INTO referrals_515_defs(referrals_515_defs_id ,referrals_question , refer
 (8, 'Number of referrals for cases with cough for 2 or more weeks','Total number of referrals for cases with cough for 2 or more weeks '),
 (9, 'Number of referrals for HIV Counselling and Testing (HCT)','Total number of referrals for HIV Counselling and Testing (HCT) '),
 (10,'Number of referrals for routine health check-ups for the elderly (60+ years)','Total number of referrals for routine health check-ups for the elderly (60+ years) '),
-(11,'Cases of known chronic illness referred - Diabetes', 'Total number of known cases with  a particular chronic illnesses referred. It should be recorded per illness i.e. Number of  Diabetes, cancer, mental illness, hypertension, chronic respiratory diseases referred. It is a chronic illness if someone has been unwell for 1 year or more without healing'), 
+(11,'Cases of known chronic illness referred - Diabetes', 'Total number of known cases with  a particular chronic illnesses referred. It should be recorded per illness i.e. Number of  Diabetes, cancer, mental illness, hypertension, chronic respiratory diseases referred. It is a chronic illness if someone has been unwell for 1 year or more without healing'),
 (12,'Cases of known chronic illness referred - Cancer', 'Total number of known cases with  a particular chronic illnesses referred. It should be recorded per illness i.e. Number of  Diabetes, cancer, mental illness, hypertension, chronic respiratory diseases referred. It is a chronic illness if someone has been unwell for 1 year or more without healing'),
 (13,'Cases of known chronic illness referred - Mental Illness', 'Total number of known cases with  a particular chronic illnesses referred. It should be recorded per illness i.e. Number of  Diabetes, cancer, mental illness, hypertension, chronic respiratory diseases referred. It is a chronic illness if someone has been unwell for 1 year or more without healing'),
 (14,'Cases of known chronic illness referred - Hypertension', 'Total number of known cases with  a particular chronic illnesses referred. It should be recorded per illness i.e. Number of  Diabetes, cancer, mental illness, hypertension, chronic respiratory diseases referred. It is a chronic illness if someone has been unwell for 1 year or more without healing'),
 (15,'Cases of known chronic illness referred - Chronic Respiratory Diseases ', 'Total number of known cases with  a particular chronic illnesses referred. It should be recorded per illness i.e. Number of  Diabetes, cancer, mental illness, hypertension, chronic respiratory diseases referred. It is a chronic illness if someone has been unwell for 1 year or more without healing');
 
 
-INSERT INTO defaulters_515_defs(defaulters_515_def_id ,defaulters_question, defaulters_details ) VALUES 
+INSERT INTO defaulters_515_defs(defaulters_515_def_id ,defaulters_question, defaulters_details ) VALUES
 (1 , 'Number of defaulters traced and referred for: - ANC', 'Total number of defaulters for the various health services traced and referred. The data should be recorded per service i.e. Tuberculosis treatment, ANC, ART and Immunization '),
 (2 , 'Number of defaulters traced and referred for: - Immunization', 'Total number of defaulters for the various health services traced and referred. The data should be recorded per service i.e. Tuberculosis treatment, ANC, ART and Immunization '),
 (3 , 'Number of defaulters traced and referred for: - Tuberculosis treatment', 'Total number of defaulters for the various health services traced and referred. The data should be recorded per service i.e. Tuberculosis treatment, ANC, ART and Immunization '),
@@ -134,7 +134,7 @@ INSERT INTO defaulters_515_defs(defaulters_515_def_id ,defaulters_question, defa
 
 
 
-INSERT INTO death_515_defs(death_515_def_id, death_question, death_details ) VALUES 
+INSERT INTO death_515_defs(death_515_def_id, death_question, death_details ) VALUES
 
 (1, 'Number of deaths in the month	0-28 days', 'record all deaths between zero to 28 days of age'),
 (2, 'Number of deaths in the month	29 days -11 months', 'record all deaths between zero to 11 months of age'),
@@ -149,7 +149,7 @@ INSERT INTO death_515_defs(death_515_def_id, death_question, death_details ) VAL
 
 
 
-INSERT INTO commodities_515_defs(commodity_515_def_id, commodity_question,commodity_details ) VALUES 
+INSERT INTO commodities_515_defs(commodity_515_def_id, commodity_question,commodity_details ) VALUES
 (1, 'CHU issued with any commodities?','Record Yes or No to indicate whether or not the CHU was issued with any commodities'),
 (2, 'Antimalarial (ACTs 6s and 12s)','Did the community health unit experience stock-outs of more than 7 days'),
 (3, 'Oral Rehydration Salt','Did the community health unit experience stock-outs of more than 7 days'),
@@ -164,14 +164,5 @@ INSERT INTO commodities_515_defs(commodity_515_def_id, commodity_question,commod
 (12, 'Paracetamol','Did the community health unit experience stock-outs of more than 7 days');
 
 
-INSERT INTO others_515_defs(others_515_def_id,  others_question, others_details ) VALUES 
+INSERT INTO others_515_defs(others_515_def_id,  others_question, others_details ) VALUES
 (1, 'Remarks/Others', 'Enter any general or specific remarks about the summary of indicators or any other services rendered and not summarized in the indicators above e.g. FP referrals, IPT (Intermittent Presumptive Treatment for pregnant women)');
-
-
-
-
-
-
-
-
-

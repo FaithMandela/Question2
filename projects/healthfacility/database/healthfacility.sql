@@ -79,16 +79,22 @@ CREATE INDEX villages_sub_location_id ON villages(sub_location_id);
 
 ALTER TABLE orgs ADD village_id              integer references villages;
 
+
+
+
 -- DROP TABLE indicators;
 CREATE TABLE indicators(
     indicator_id        serial primary key,
     indicator_label     varchar(10),
     indicator           varchar(255),
+    indicator_category  integer,
     details             text
 );
 
-DROP TABLE facility_data_response;
-DROP TABLE facility_data;
+
+
+-- DROP TABLE facility_data_response;
+-- DROP TABLE facility_data;
 
 CREATE TABLE facility_data(
     facility_data_id        serial primary key,
@@ -158,6 +164,7 @@ CREATE VIEW vw_facility_data AS
 	INNER JOIN orgs ON facility_data.org_id = orgs.org_id
 	INNER JOIN years ON facility_data.year_id = years.year_id;
 
+-- DROP VIEW vw_facility_data_response;
 CREATE VIEW vw_facility_data_response AS
 	SELECT
     villages.village_id, villages.village_name,
@@ -165,7 +172,7 @@ CREATE VIEW vw_facility_data_response AS
 	entitys.entity_id, entitys.entity_name,
 	months.month_id, months.month_name,
 	years.year_id, years.year_name, facility_data.facility_data_id, facility_data.data_time,
-	indicators.indicator_id, indicators.indicator_label, indicators.indicator, indicators.details,
+	indicators.indicator_id, indicators.indicator_label, indicators.indicator, indicators.details, indicators.indicator_category,
 	facility_data_response.facility_data_response_id, facility_data_response.response, facility_data_response.data_source
 	FROM facility_data_response
 	INNER JOIN facility_data ON facility_data_response.facility_data_id = facility_data.facility_data_id

@@ -169,8 +169,6 @@
 			<TEXTFIELD w="75" title="Facility Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Division Name">division_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Sub Location Name">sub_location_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Village Name">village_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -185,7 +183,7 @@
 				<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
 				<TEXTFIELD w="75" title="Use Key">use_key</TEXTFIELD>
-				<FORM name="Entitys" keyfield="entity_id" linkfield="org_id" table="entitys">
+				<FORM name="Entitys" keyfield="entity_id" linkfield="org_id" table="entitys" noorg="true">
 					<COMBOBOX w="430" title="Entity Type ID" lptable="entity_types" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 					<TEXTFIELD w="430" title="Entity Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 					<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
@@ -210,8 +208,6 @@
 			<TEXTFIELD w="75" title="Facility Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Division Name">division_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Sub Location Name">sub_location_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Village Name">village_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -236,6 +232,10 @@
 			<FORM name="Indicators" keyfield="indicator_id" table="indicators" noorg="true">
 				<TEXTFIELD w="150" title="Indicator Label" y="10" h="20" x="10">indicator_label</TEXTFIELD>
 				<TEXTFIELD w="430" title="Indicator" y="30" h="20" x="10">indicator</TEXTFIELD>
+				<COMBOLIST w="150" title="Category" y="70" h="20" x="10">indicator_category
+					<DATA key="0">Main</DATA>
+					<DATA key="1">Comment</DATA>
+				</COMBOLIST>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -248,15 +248,24 @@
 			<TEXTFIELD w="75" title="Month ">month_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Year Name">year_name</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Data Time">data_time</TEXTTIMESTAMP>
-			<GRID name="Facility Data Response" keyfield="facility_data_response_id" updatetable="facility_data_response" linkfield="facility_data_id" table="vw_facility_data_response">
+			<GRID name="Facility Data Response" keyfield="facility_data_response_id" updatetable="facility_data_response" linkfield="facility_data_id" table="vw_facility_data_response" where="(indicator_category = 0)">
 				<TEXTFIELD w="75" title="Indicator Label">indicator_label</TEXTFIELD>
 				<TEXTFIELD w="75" title="Indicator">indicator</TEXTFIELD>
-				<EDITFIELD w="75" title="Response" editkey="facility_data_response_id" edit="true" editvalue="facility_data_response">response</EDITFIELD>
+				<EDITFIELD w="75" title="No. Per Indicator" editkey="facility_data_response_id" edit="true" editvalue="facility_data_response">response</EDITFIELD>
 				<EDITFIELD w="175" title="Data Source" editkey="facility_data_response_id" edit="true" editvalue="facility_data_response">data_source</EDITFIELD>
 				<FORM name="Facility Data Response" keyfield="facility_data_response_id" linkfield="facility_data_id" table="facility_data_response">
 					<COMBOBOX w="430" title="Indicator ID" lptable="indicators" y="10" h="20" x="10" lpfield="indicator_id">indicator_id</COMBOBOX>
-					<TEXTFIELD w="430" title="Response" y="30" h="20" x="10">response</TEXTFIELD>
+					<TEXTFIELD w="430" title="No. Per Indicator" y="30" h="20" x="10">response</TEXTFIELD>
 					<TEXTFIELD w="430" title="Data Source" y="50" h="20" x="10">data_source</TEXTFIELD>
+				</FORM>
+			</GRID>
+			<GRID name="Facility Data Response Comments" keyfield="facility_data_response_id" updatetable="facility_data_response" orderby="indicator_id ASC" linkfield="facility_data_id" table="vw_facility_data_response" where="(indicator_category = 1)">
+				<TEXTFIELD w="75" title="Indicator Label">indicator_label</TEXTFIELD>
+				<TEXTFIELD w="75" title="Indicator">indicator</TEXTFIELD>
+				<EDITFIELD w="75" title="Remark" editkey="facility_data_response_id" edit="true" editvalue="facility_data_response">response</EDITFIELD>
+				<FORM name="Facility Data Response" keyfield="facility_data_response_id" linkfield="facility_data_id" table="facility_data_response">
+					<COMBOBOX w="430" title="Indicator ID" lptable="indicators" y="10" h="20" x="10" lpfield="indicator_id">indicator_id</COMBOBOX>
+					<TEXTFIELD w="430" title="Remark" y="30" h="20" x="10">response</TEXTFIELD>
 				</FORM>
 			</GRID>
 			<JASPER name="Facility Data" reportfile="vw_facility_data_response.jasper"></JASPER>

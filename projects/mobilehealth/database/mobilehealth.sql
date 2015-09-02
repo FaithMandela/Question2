@@ -124,9 +124,8 @@ CREATE TABLE household_info_defs(
 CREATE TABLE surveys(
     survey_id           serial primary key,
     org_id              integer references orgs,
-    sub_county_id       integer references sub_countys,
     health_worker_id    integer references health_workers,
-    village_name        varchar(225),
+    village_id          integer references villages,
     household_number    varchar(100),
     household_member    varchar(225),
     survey_time         timestamp default CURRENT_TIMESTAMP,
@@ -260,20 +259,15 @@ CREATE TABLE indicators_defs(
 CREATE TABLE surveys_515(
     surveys_515_id       serial primary key,
     org_id               integer references orgs,
+    village_id           integer references villages,
     CHU_Name 		     varchar(225),
     MCLU_Code		     varchar(225),
     link_facility		 varchar(225),
     CHEW_name		     varchar(225),
     no_of_chvs		     integer default 0,
     total_chws_reported  integer default 0,
-    county			     varchar(225),
-    subcounty		     varchar(225),
-    division			 varchar(225),
-    location			 varchar(225),
-    sublocation		     varchar(225),
-    total_vilages		 integer default 0,
-    month			     varchar(10),
-    year				 integer default 0,
+    start_date           date not null,
+    end_date             date not null,
     survey_date          timestamp default CURRENT_TIMESTAMP
 );
 
@@ -349,7 +343,7 @@ CREATE TABLE surveys_515_details(
     indicator_64			integer NOT NULL default 0,
     indicator_65			integer NOT NULL default 0,
     indicator_66			varchar(5),
-    
+
     indicator_67_a			varchar(5),
     indicator_67_b			varchar(5),
     indicator_67_c			varchar(5),
@@ -369,7 +363,7 @@ CREATE TABLE surveys_515_details(
 CREATE TABLE survey_100(
     survey_100_id                   serial primary key,
     org_id                          integer references orgs,
-    
+
     health_worker_id                integer references health_workers,
     form_serial                     varchar(10),
     patient_gender                  varchar(2),
@@ -393,102 +387,6 @@ CREATE TABLE survey_100(
 );
 
 
-
-
--- Health Facility
-CREATE TABLE years (
-    year_id         serial primary key,
-    year_name       varchar(5)
-);
-
-INSERT INTO years(year_id, year_name) VALUES
-(1, '2013'),
-(2, '2014'),
-(3, '2015');
-
-CREATE TABLE months(
-    month_id        serial primary key,
-    month_name      varchar(15)
-);
-
-INSERT INTO months(month_id, month_name) VALUES
-(1, 'January'),
-(2, 'February'),
-(3, 'March'),
-(4, 'April'),
-(5, 'May'),
-(6, 'June'),
-(7, 'July'),
-(8, 'August'),
-(9, 'September'),
-(10, 'October'),
-(11, 'November'),
-(12, 'December');
-
-CREATE TABLE health_falicities(
-    health_falicity_id      serial primary key,
-    org_id                  integer references orgs,
-    health_falicity_name    varchar(255),
-    details                 text
-);
-
-
-CREATE TABLE health_facility_data(
-    health_facility_data_id serial primary key,
-    health_falicity_id      integer references health_falicities,
-    org_id                  integer references orgs,
-    year_id                 integer references years,
-    month_id                integer references months,
-    indicator_1a			integer NOT NULL default 0,
-    indicator_1b			integer NOT NULL default 0,
-    indicator_1c			integer NOT NULL default 0,
-    indicator_1d			integer NOT NULL default 0,
-    indicator_1e			integer NOT NULL default 0,
-    indicator_1f			integer NOT NULL default 0,
-    indicator_2			    integer NOT NULL default 0,
-    indicator_3			    integer NOT NULL default 0,
-    indicator_4			    integer NOT NULL default 0,
-    indicator_5			    integer NOT NULL default 0,
-    indicator_6			    integer NOT NULL default 0,
-    indicator_7			    integer NOT NULL default 0,
-    indicator_8			    integer NOT NULL default 0,
-    indicator_9			    integer NOT NULL default 0,
-    indicator_10			integer NOT NULL default 0,
-    indicator_11			integer NOT NULL default 0,
-    indicator_12			integer NOT NULL default 0,
-    indicator_13			integer NOT NULL default 0,
-    indicator_14			integer NOT NULL default 0,
-    indicator_15			integer NOT NULL default 0,
-    indicator_16			integer NOT NULL default 0,
-    indicator_17			integer NOT NULL default 0,
-    indicator_18			integer NOT NULL default 0,
-    indicator_19			integer NOT NULL default 0,
-    indicator_20			integer NOT NULL default 0,
-    indicator_21			integer NOT NULL default 0,
-    indicator_22			integer NOT NULL default 0,
-    indicator_23			integer NOT NULL default 0,
-    indicator_24			integer NOT NULL default 0,
-    indicator_25			integer NOT NULL default 0,
-    indicator_26			integer NOT NULL default 0,
-    indicator_27			integer NOT NULL default 0,
-    indicator_28			integer NOT NULL default 0,
-    indicator_29			integer NOT NULL default 0,
-    indicator_30			integer NOT NULL default 0,
-    indicator_31			integer NOT NULL default 0,
-    indicator_32			integer NOT NULL default 0,
-    indicator_33			integer NOT NULL default 0,
-    indicator_34			integer NOT NULL default 0,
-    indicator_35			integer NOT NULL default 0,
-    indicator_36			integer NOT NULL default 0,
-    indicator_37			integer NOT NULL default 0,
-    indicator_38			integer NOT NULL default 0,
-    indicator_39			integer NOT NULL default 0,
-    indicator_40			integer NOT NULL default 0,
-    indicator_41			integer NOT NULL default 0,
-    indicator_42			integer NOT NULL default 0,
-    remarks                 text,
-    creation_date           timestamp default CURRENT_TIMESTAMP
-);
 
 
 
@@ -576,14 +474,14 @@ CREATE TABLE survey_515_referrals(
 CREATE TABLE survey_515_defaulters(
     survey_515_defaulter_id        serial primary key,
     surveys_515_id              integer references surveys_515,
-    defaulters_515_def_id       integer references defaulters_515_defs, 
-    response                    integer         
+    defaulters_515_def_id       integer references defaulters_515_defs,
+    response                    integer
 );
 
 CREATE TABLE survey_515_death(
     survey_515_death_id            serial primary key,
     surveys_515_id              integer references surveys_515,
-    death_515_def_id            integer references death_515_defs, 
+    death_515_def_id            integer references death_515_defs,
     response                    integer
 );
 
@@ -625,8 +523,8 @@ CREATE VIEW vw_sub_countys AS
 
 -- DROP VIEW vw_surveys;
 CREATE VIEW vw_surveys AS
-	SELECT health_workers.health_worker_id, health_workers.worker_name, 
-	orgs.org_id, orgs.org_name, 
+	SELECT health_workers.health_worker_id, health_workers.worker_name,
+	orgs.org_id, orgs.org_name,
 	countys.county_id, countys.county_name,
 	sub_countys.sub_county_id, sub_countys.sub_county_name, surveys.survey_id, surveys.village_name, surveys.household_number, surveys.household_member, surveys.survey_time, surveys.location_lat, surveys.location_lng, surveys.remarks, surveys.survey_status,surveys.return_reason
 	FROM surveys
@@ -643,7 +541,7 @@ CREATE VIEW vw_survey_mother AS
 	(CASE survey_mother.response WHEN '1' THEN 'YES'
 		WHEN '2' THEN 'NO'
 		WHEN '3' THEN 'N/A' ELSE 'N/A' END ) AS response_name
-	
+
 	FROM survey_mother
 	INNER JOIN mother_info_defs ON survey_mother.mother_info_def_id = mother_info_defs.mother_info_def_id
 	INNER JOIN surveys ON survey_mother.survey_id = surveys.survey_id;
@@ -651,7 +549,7 @@ CREATE VIEW vw_survey_mother AS
 
 -- DROP VIEW vw_survey_child;
 CREATE VIEW vw_survey_child AS
-	SELECT child_info_defs.child_info_def_id, child_info_defs.question,child_info_defs.details, 
+	SELECT child_info_defs.child_info_def_id, child_info_defs.question,child_info_defs.details,
 	surveys.survey_id, survey_child.survey_child_id, survey_child.response,
     (CASE survey_child.response WHEN '1' THEN 'YES'
             WHEN '2' THEN 'NO'
@@ -663,7 +561,7 @@ CREATE VIEW vw_survey_child AS
 
 -- DROP VIEW vw_survey_referrals ;
 CREATE VIEW vw_survey_referrals AS
-	SELECT referral_info_defs.referral_info_def_id, referral_info_defs.question, referral_info_defs.details , 
+	SELECT referral_info_defs.referral_info_def_id, referral_info_defs.question, referral_info_defs.details ,
 	surveys.survey_id,  survey_referrals.survey_referral_id, survey_referrals.referral_info_defs_id, survey_referrals.response,
 	(CASE survey_referrals.response WHEN '1' THEN 'YES'
             WHEN '2' THEN 'NO'
@@ -704,10 +602,10 @@ CREATE VIEW vw_survey_household AS
 
 
 CREATE VIEW vw_surveys_515_details AS
-	SELECT orgs.org_id, orgs.org_name, 
-	surveys_515.surveys_515_id, surveys_515.chu_name, surveys_515.mclu_code, surveys_515.link_facility, 
-	surveys_515.chew_name, surveys_515.no_of_chvs, surveys_515.total_chws_reported, surveys_515.county, 
-	surveys_515.subcounty, surveys_515.division, surveys_515.location, surveys_515.sublocation, surveys_515.total_vilages, 
+	SELECT orgs.org_id, orgs.org_name,
+	surveys_515.surveys_515_id, surveys_515.chu_name, surveys_515.mclu_code, surveys_515.link_facility,
+	surveys_515.chew_name, surveys_515.no_of_chvs, surveys_515.total_chws_reported, surveys_515.county,
+	surveys_515.subcounty, surveys_515.division, surveys_515.location, surveys_515.sublocation, surveys_515.total_vilages,
 	surveys_515.month, surveys_515.year, surveys_515.survey_date,
 	surveys_515_details.indicator_1, surveys_515_details.indicator_2, surveys_515_details.indicator_3, surveys_515_details.indicator_4, surveys_515_details.indicator_5, surveys_515_details.indicator_6, surveys_515_details.indicator_7, surveys_515_details.indicator_8, surveys_515_details.indicator_9, surveys_515_details.indicator_10, surveys_515_details.indicator_11, surveys_515_details.indicator_12, surveys_515_details.indicator_13, surveys_515_details.indicator_14, surveys_515_details.indicator_15, surveys_515_details.indicator_16, surveys_515_details.indicator_17, surveys_515_details.indicator_18, surveys_515_details.indicator_19, surveys_515_details.indicator_20, surveys_515_details.indicator_21, surveys_515_details.indicator_22, surveys_515_details.indicator_23, surveys_515_details.indicator_24, surveys_515_details.indicator_25, surveys_515_details.indicator_26, surveys_515_details.indicator_27, surveys_515_details.indicator_28, surveys_515_details.indicator_29, surveys_515_details.indicator_30, surveys_515_details.indicator_31, surveys_515_details.indicator_32, surveys_515_details.indicator_33, surveys_515_details.indicator_34, surveys_515_details.indicator_35, surveys_515_details.indicator_36, surveys_515_details.indicator_37, surveys_515_details.indicator_38, surveys_515_details.indicator_39, surveys_515_details.indicator_40, surveys_515_details.indicator_41, surveys_515_details.indicator_42, surveys_515_details.indicator_43, surveys_515_details.indicator_44, surveys_515_details.indicator_45, surveys_515_details.indicator_46, surveys_515_details.indicator_47, surveys_515_details.indicator_48, surveys_515_details.indicator_49, surveys_515_details.indicator_50, surveys_515_details.indicator_51, surveys_515_details.indicator_52, surveys_515_details.indicator_53, surveys_515_details.indicator_54, surveys_515_details.indicator_55, surveys_515_details.indicator_56, surveys_515_details.indicator_57, surveys_515_details.indicator_58, surveys_515_details.indicator_59, surveys_515_details.indicator_60, surveys_515_details.indicator_61, surveys_515_details.indicator_62, surveys_515_details.indicator_63, surveys_515_details.indicator_64_a, surveys_515_details.indicator_64_b, surveys_515_details.indicator_64_c, surveys_515_details.indicator_64_d, surveys_515_details.indicator_64_e, surveys_515_details.indicator_64_f, surveys_515_details.indicator_64_g, surveys_515_details.indicator_64_h, surveys_515_details.indicator_64_i, surveys_515_details.indicator_64_j, surveys_515_details.indicator_64_k, surveys_515_details.remarks
 	FROM surveys_515_details
@@ -715,10 +613,10 @@ CREATE VIEW vw_surveys_515_details AS
 	INNER JOIN surveys_515 ON surveys_515_details.surveys_515_id = surveys_515.surveys_515_id;
 
 CREATE VIEW vw_surveys_515_details AS
-	SELECT orgs.org_id, orgs.org_name, 
-	surveys_515.surveys_515_id, surveys_515.chu_name, surveys_515.mclu_code, surveys_515.link_facility, 
-	surveys_515.chew_name, surveys_515.no_of_chvs, surveys_515.total_chws_reported, surveys_515.county, 
-	surveys_515.subcounty, surveys_515.division, surveys_515.location, surveys_515.sublocation, surveys_515.total_vilages, 
+	SELECT orgs.org_id, orgs.org_name,
+	surveys_515.surveys_515_id, surveys_515.chu_name, surveys_515.mclu_code, surveys_515.link_facility,
+	surveys_515.chew_name, surveys_515.no_of_chvs, surveys_515.total_chws_reported, surveys_515.county,
+	surveys_515.subcounty, surveys_515.division, surveys_515.location, surveys_515.sublocation, surveys_515.total_vilages,
 	surveys_515.month, surveys_515.year, surveys_515.survey_date,
 	surveys_515_details.indicator_1, surveys_515_details.indicator_2, surveys_515_details.indicator_3, surveys_515_details.indicator_4, surveys_515_details.indicator_5, surveys_515_details.indicator_6, surveys_515_details.indicator_7, surveys_515_details.indicator_8, surveys_515_details.indicator_9, surveys_515_details.indicator_10, surveys_515_details.indicator_11, surveys_515_details.indicator_12, surveys_515_details.indicator_13, surveys_515_details.indicator_14, surveys_515_details.indicator_15, surveys_515_details.indicator_16, surveys_515_details.indicator_17, surveys_515_details.indicator_18, surveys_515_details.indicator_19, surveys_515_details.indicator_20, surveys_515_details.indicator_21, surveys_515_details.indicator_22, surveys_515_details.indicator_23, surveys_515_details.indicator_24, surveys_515_details.indicator_25, surveys_515_details.indicator_26, surveys_515_details.indicator_27, surveys_515_details.indicator_28, surveys_515_details.indicator_29, surveys_515_details.indicator_30, surveys_515_details.indicator_31, surveys_515_details.indicator_32, surveys_515_details.indicator_33, surveys_515_details.indicator_34, surveys_515_details.indicator_35, surveys_515_details.indicator_36, surveys_515_details.indicator_37, surveys_515_details.indicator_38, surveys_515_details.indicator_39, surveys_515_details.indicator_40, surveys_515_details.indicator_41, surveys_515_details.indicator_42, surveys_515_details.indicator_43, surveys_515_details.indicator_44, surveys_515_details.indicator_45, surveys_515_details.indicator_46, surveys_515_details.indicator_47, surveys_515_details.indicator_48, surveys_515_details.indicator_49, surveys_515_details.indicator_50, surveys_515_details.indicator_51, surveys_515_details.indicator_52, surveys_515_details.indicator_53, surveys_515_details.indicator_54, surveys_515_details.indicator_55, surveys_515_details.indicator_56, surveys_515_details.indicator_57, surveys_515_details.indicator_58, surveys_515_details.indicator_59, surveys_515_details.indicator_60, surveys_515_details.indicator_61, surveys_515_details.indicator_62, surveys_515_details.indicator_63, surveys_515_details.indicator_64_a, surveys_515_details.indicator_64_b, surveys_515_details.indicator_64_c, surveys_515_details.indicator_64_d, surveys_515_details.indicator_64_e, surveys_515_details.indicator_64_f, surveys_515_details.indicator_64_g, surveys_515_details.indicator_64_h, surveys_515_details.indicator_64_i, surveys_515_details.indicator_64_j, surveys_515_details.indicator_64_k, surveys_515_details.remarks
 	FROM surveys_515_details
@@ -727,9 +625,9 @@ CREATE VIEW vw_surveys_515_details AS
 
 -- NOT IN USE BUT RETAINED FOR GENERIC IMPLEMENTATION
 CREATE VIEW vw_survey_515_demograpics AS
-	SELECT 
+	SELECT
 	demograpics_515_defs.demograpics_515_def_id, demograpics_515_defs.demograpics_question, demograpics_515_defs.demograpics_details,
-	surveys_515.surveys_515_id,  
+	surveys_515.surveys_515_id,
 	survey_515_demograpics.survey_515_demograpic_id, survey_515_demograpics.response
 	FROM survey_515_demograpics
 	INNER JOIN demograpics_515_defs ON survey_515_demograpics.demograpics_515_def_id = demograpics_515_defs.demograpics_515_def_id
@@ -741,20 +639,20 @@ CREATE VIEW vw_survey_515_demograpics AS
 
 
 CREATE VIEW vw_surveys_515_details AS
-	SELECT orgs.org_id, orgs.org_name, surveys_515.surveys_515_id, surveys_515_details.surveys_515_detail_id, surveys_515_details.indicator_1, 
-surveys_515_details.indicator_2, surveys_515_details.indicator_3, surveys_515_details.indicator_4, surveys_515_details.indicator_5, surveys_515_details.indicator_6, 
-surveys_515_details.indicator_7, surveys_515_details.indicator_8, surveys_515_details.indicator_9, surveys_515_details.indicator_10, surveys_515_details.indicator_11, 
-surveys_515_details.indicator_12, surveys_515_details.indicator_13, surveys_515_details.indicator_14, surveys_515_details.indicator_15, surveys_515_details.indicator_16, 
-surveys_515_details.indicator_17, surveys_515_details.indicator_18, surveys_515_details.indicator_19, surveys_515_details.indicator_20, surveys_515_details.indicator_21, 
+	SELECT orgs.org_id, orgs.org_name, surveys_515.surveys_515_id, surveys_515_details.surveys_515_detail_id, surveys_515_details.indicator_1,
+surveys_515_details.indicator_2, surveys_515_details.indicator_3, surveys_515_details.indicator_4, surveys_515_details.indicator_5, surveys_515_details.indicator_6,
+surveys_515_details.indicator_7, surveys_515_details.indicator_8, surveys_515_details.indicator_9, surveys_515_details.indicator_10, surveys_515_details.indicator_11,
+surveys_515_details.indicator_12, surveys_515_details.indicator_13, surveys_515_details.indicator_14, surveys_515_details.indicator_15, surveys_515_details.indicator_16,
+surveys_515_details.indicator_17, surveys_515_details.indicator_18, surveys_515_details.indicator_19, surveys_515_details.indicator_20, surveys_515_details.indicator_21,
 surveys_515_details.indicator_22, surveys_515_details.indicator_23, surveys_515_details.indicator_24, surveys_515_details.indicator_25, surveys_515_details.indicator_26, surveys_515_details.indicator_27,
  surveys_515_details.indicator_28, surveys_515_details.indicator_29, surveys_515_details.indicator_30, surveys_515_details.indicator_31, surveys_515_details.indicator_32, surveys_515_details.indicator_33,
- surveys_515_details.indicator_34, surveys_515_details.indicator_35, surveys_515_details.indicator_36, surveys_515_details.indicator_37, surveys_515_details.indicator_38, surveys_515_details.indicator_39, 
+ surveys_515_details.indicator_34, surveys_515_details.indicator_35, surveys_515_details.indicator_36, surveys_515_details.indicator_37, surveys_515_details.indicator_38, surveys_515_details.indicator_39,
 surveys_515_details.indicator_40, surveys_515_details.indicator_41, surveys_515_details.indicator_42, surveys_515_details.indicator_43, surveys_515_details.indicator_44, surveys_515_details.indicator_45,
- surveys_515_details.indicator_46, surveys_515_details.indicator_47, surveys_515_details.indicator_48, surveys_515_details.indicator_49, surveys_515_details.indicator_50, surveys_515_details.indicator_51, 
+ surveys_515_details.indicator_46, surveys_515_details.indicator_47, surveys_515_details.indicator_48, surveys_515_details.indicator_49, surveys_515_details.indicator_50, surveys_515_details.indicator_51,
 surveys_515_details.indicator_52, surveys_515_details.indicator_53, surveys_515_details.indicator_54, surveys_515_details.indicator_55, surveys_515_details.indicator_56, surveys_515_details.indicator_57,
  surveys_515_details.indicator_58, surveys_515_details.indicator_59, surveys_515_details.indicator_60, surveys_515_details.indicator_61, surveys_515_details.indicator_62, surveys_515_details.indicator_63,
- surveys_515_details.indicator_64, surveys_515_details.indicator_65, surveys_515_details.indicator_66, surveys_515_details.indicator_67_a, surveys_515_details.indicator_67_b, 
-surveys_515_details.indicator_67_c, surveys_515_details.indicator_67_d, surveys_515_details.indicator_67_e, surveys_515_details.indicator_67_f, surveys_515_details.indicator_67_g, 
+ surveys_515_details.indicator_64, surveys_515_details.indicator_65, surveys_515_details.indicator_66, surveys_515_details.indicator_67_a, surveys_515_details.indicator_67_b,
+surveys_515_details.indicator_67_c, surveys_515_details.indicator_67_d, surveys_515_details.indicator_67_e, surveys_515_details.indicator_67_f, surveys_515_details.indicator_67_g,
 surveys_515_details.indicator_67_h, surveys_515_details.indicator_67_i, surveys_515_details.indicator_67_j, surveys_515_details.indicator_67_k, surveys_515_details.remarks
 	FROM surveys_515_details
 	INNER JOIN orgs ON surveys_515_details.org_id = orgs.org_id
@@ -762,12 +660,12 @@ surveys_515_details.indicator_67_h, surveys_515_details.indicator_67_i, surveys_
 
 -- DROP VIEW vw_survey_100 ;
 CREATE VIEW vw_survey_100 AS
-	SELECT health_workers.health_worker_id, health_workers.worker_name, health_workers.worker_mobile_num, 
-    orgs.org_id, orgs.org_name, 
-	survey_100.survey_100_id, survey_100.patient_gender, form_serial, survey_100.patient_name, survey_100.patient_age, 
-	survey_100.community_healt_unit, survey_100.link_health_facility, survey_100.referral_reason, survey_100.treatment, 
-	survey_100.comments, survey_100.sub_location, survey_100.village, survey_100.community_unit, survey_100.receiving_officer_name, 
-	survey_100.receiving_officer_profession, survey_100.health_facility_name, survey_100.action_taken, survey_100.receiving_officer_date, 
+	SELECT health_workers.health_worker_id, health_workers.worker_name, health_workers.worker_mobile_num,
+    orgs.org_id, orgs.org_name,
+	survey_100.survey_100_id, survey_100.patient_gender, form_serial, survey_100.patient_name, survey_100.patient_age,
+	survey_100.community_healt_unit, survey_100.link_health_facility, survey_100.referral_reason, survey_100.treatment,
+	survey_100.comments, survey_100.sub_location, survey_100.village, survey_100.community_unit, survey_100.receiving_officer_name,
+	survey_100.receiving_officer_profession, survey_100.health_facility_name, survey_100.action_taken, survey_100.receiving_officer_date,
 	survey_100.receiving_officer_time,
 	survey_100.referral_time
 	FROM survey_100
@@ -786,25 +684,20 @@ CREATE VIEW vw_health_falicities AS
 
 
 CREATE VIEW vw_health_facility_data AS
-	SELECT health_falicities.health_falicity_id, health_falicities.health_falicity_name, months.month_id, months.month_name, 
-orgs.org_id, orgs.org_name, years.year_id, years.year_name, health_facility_data.health_facility_data_id, health_facility_data.indicator_1a, 
-health_facility_data.indicator_1b, health_facility_data.indicator_1c, health_facility_data.indicator_1d, health_facility_data.indicator_1e, 
-health_facility_data.indicator_1f, health_facility_data.indicator_2, health_facility_data.indicator_3, health_facility_data.indicator_4, health_facility_data.indicator_5, 
-health_facility_data.indicator_6, health_facility_data.indicator_7, health_facility_data.indicator_8, health_facility_data.indicator_9, health_facility_data.indicator_10, 
-health_facility_data.indicator_11, health_facility_data.indicator_12, health_facility_data.indicator_13, health_facility_data.indicator_14, health_facility_data.indicator_15, 
-health_facility_data.indicator_16, health_facility_data.indicator_17, health_facility_data.indicator_18, health_facility_data.indicator_19, health_facility_data.indicator_20, 
-health_facility_data.indicator_21, health_facility_data.indicator_22, health_facility_data.indicator_23, health_facility_data.indicator_24, health_facility_data.indicator_25, 
-health_facility_data.indicator_26, health_facility_data.indicator_27, health_facility_data.indicator_28, health_facility_data.indicator_29, health_facility_data.indicator_30, 
-health_facility_data.indicator_31, health_facility_data.indicator_32, health_facility_data.indicator_33, health_facility_data.indicator_34, health_facility_data.indicator_35, 
-health_facility_data.indicator_36, health_facility_data.indicator_37, health_facility_data.indicator_38, health_facility_data.indicator_39, health_facility_data.indicator_40, 
+	SELECT health_falicities.health_falicity_id, health_falicities.health_falicity_name, months.month_id, months.month_name,
+orgs.org_id, orgs.org_name, years.year_id, years.year_name, health_facility_data.health_facility_data_id, health_facility_data.indicator_1a,
+health_facility_data.indicator_1b, health_facility_data.indicator_1c, health_facility_data.indicator_1d, health_facility_data.indicator_1e,
+health_facility_data.indicator_1f, health_facility_data.indicator_2, health_facility_data.indicator_3, health_facility_data.indicator_4, health_facility_data.indicator_5,
+health_facility_data.indicator_6, health_facility_data.indicator_7, health_facility_data.indicator_8, health_facility_data.indicator_9, health_facility_data.indicator_10,
+health_facility_data.indicator_11, health_facility_data.indicator_12, health_facility_data.indicator_13, health_facility_data.indicator_14, health_facility_data.indicator_15,
+health_facility_data.indicator_16, health_facility_data.indicator_17, health_facility_data.indicator_18, health_facility_data.indicator_19, health_facility_data.indicator_20,
+health_facility_data.indicator_21, health_facility_data.indicator_22, health_facility_data.indicator_23, health_facility_data.indicator_24, health_facility_data.indicator_25,
+health_facility_data.indicator_26, health_facility_data.indicator_27, health_facility_data.indicator_28, health_facility_data.indicator_29, health_facility_data.indicator_30,
+health_facility_data.indicator_31, health_facility_data.indicator_32, health_facility_data.indicator_33, health_facility_data.indicator_34, health_facility_data.indicator_35,
+health_facility_data.indicator_36, health_facility_data.indicator_37, health_facility_data.indicator_38, health_facility_data.indicator_39, health_facility_data.indicator_40,
 health_facility_data.creation_date
 	FROM health_facility_data
 	INNER JOIN health_falicities ON health_facility_data.health_falicity_id = health_falicities.health_falicity_id
 	INNER JOIN months ON health_facility_data.month_id = months.month_id
 	INNER JOIN orgs ON health_facility_data.org_id = orgs.org_id
 	INNER JOIN years ON health_facility_data.year_id = years.year_id;
-
-
-
-	
-

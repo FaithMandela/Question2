@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_515_details" language="groovy" pageWidth="842" pageHeight="1190" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e6d19df4-6960-4863-8726-b677eb660f8e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_515_details_sub_county" language="groovy" pageWidth="842" pageHeight="1190" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e6d19df4-6960-4863-8726-b677eb660f8e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -25,9 +25,43 @@
 	<parameter name="organd" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="start_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2015-08-31"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="sub_county_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT *
-  FROM vw_surveys_515_details WHERE vw_surveys_515_details.surveys_515_id = '$P!{filterid}']]>
+		<![CDATA[SELECT org_id, org_name, county_id, county_name, sub_county_id, sub_county_name,
+      SUM(no_of_chvs) AS no_of_chvs, SUM(total_chws_reported) AS total_chws_reported,
+SUM(indicator_1) AS indicator_1 ,SUM(indicator_2) AS indicator_2 ,SUM(indicator_3) AS indicator_3 ,
+SUM(indicator_4) AS indicator_4 ,SUM(indicator_5) AS indicator_5 ,SUM(indicator_6) AS indicator_6 ,SUM(indicator_7) AS indicator_7 ,
+SUM(indicator_8) AS indicator_8 ,SUM(indicator_9) AS indicator_9 ,SUM(indicator_10) AS indicator_10 ,SUM(indicator_11) AS indicator_11 ,
+SUM(indicator_12) AS indicator_12 ,SUM(indicator_13) AS indicator_13 ,SUM(indicator_14) AS indicator_14 ,SUM(indicator_15) AS indicator_15 ,
+SUM(indicator_16) AS indicator_16 ,SUM(indicator_17) AS indicator_17 ,SUM(indicator_18) AS indicator_18 ,SUM(indicator_19) AS indicator_19 ,
+SUM(indicator_20) AS indicator_20 ,SUM(indicator_21) AS indicator_21 ,SUM(indicator_22) AS indicator_22 ,SUM(indicator_23) AS indicator_23 ,
+SUM(indicator_24) AS indicator_24 ,SUM(indicator_25) AS indicator_25 ,SUM(indicator_26) AS indicator_26 ,SUM(indicator_27) AS indicator_27 ,
+SUM(indicator_28) AS indicator_28 ,SUM(indicator_29) AS indicator_29 ,SUM(indicator_30) AS indicator_30 ,SUM(indicator_31) AS indicator_31 ,
+SUM(indicator_32) AS indicator_32 ,SUM(indicator_33) AS indicator_33 ,SUM(indicator_34) AS indicator_34 ,SUM(indicator_35) AS indicator_35 ,
+SUM(indicator_36) AS indicator_36 ,SUM(indicator_37) AS indicator_37 ,SUM(indicator_38) AS indicator_38 ,SUM(indicator_39) AS indicator_39 ,
+SUM(indicator_40) AS indicator_40 ,SUM(indicator_41) AS indicator_41 ,SUM(indicator_42) AS indicator_42 ,SUM(indicator_43) AS indicator_43 ,
+SUM(indicator_44) AS indicator_44 ,SUM(indicator_45) AS indicator_45 ,SUM(indicator_46) AS indicator_46 ,SUM(indicator_47) AS indicator_47 ,
+SUM(indicator_48) AS indicator_48 ,SUM(indicator_49) AS indicator_49 ,SUM(indicator_50) AS indicator_50 ,SUM(indicator_51) AS indicator_51 ,
+SUM(indicator_52) AS indicator_52 ,SUM(indicator_53) AS indicator_53 ,SUM(indicator_54) AS indicator_54 ,SUM(indicator_55) AS indicator_55 ,
+SUM(indicator_56) AS indicator_56 ,SUM(indicator_57) AS indicator_57 ,SUM(indicator_58) AS indicator_58 ,SUM(indicator_59) AS indicator_59 ,
+SUM(indicator_60) AS indicator_60 ,SUM(indicator_61) AS indicator_61 ,SUM(indicator_62) AS indicator_62 ,SUM(indicator_63) AS indicator_63 ,
+SUM(indicator_64) AS indicator_64 ,SUM(indicator_65) AS indicator_65
+  FROM vw_surveys_515_details WHERE
+sub_county_id = '$P!{sub_county_id}'
+AND start_date >= '$P!{start_date}'::date
+AND start_date <= '$P!{start_date}'::date
+AND end_date >= '$P!{end_date}'::date
+AND end_date <= '$P!{end_date}'::date
+
+ GROUP BY org_id, org_name, county_id, county_name, sub_county_id, sub_county_name]]>
 	</queryString>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
@@ -35,103 +69,73 @@
 	<field name="county_name" class="java.lang.String"/>
 	<field name="sub_county_id" class="java.lang.Integer"/>
 	<field name="sub_county_name" class="java.lang.String"/>
-	<field name="division_id" class="java.lang.Integer"/>
-	<field name="division_name" class="java.lang.String"/>
-	<field name="location_id" class="java.lang.Integer"/>
-	<field name="location_name" class="java.lang.String"/>
-	<field name="sub_location_id" class="java.lang.Integer"/>
-	<field name="sub_location_name" class="java.lang.String"/>
-	<field name="village_id" class="java.lang.Integer"/>
-	<field name="village_name" class="java.lang.String"/>
-	<field name="surveys_515_id" class="java.lang.Integer"/>
-	<field name="chu_name" class="java.lang.String"/>
-	<field name="mclu_code" class="java.lang.String"/>
-	<field name="link_facility" class="java.lang.String"/>
-	<field name="chew_name" class="java.lang.String"/>
-	<field name="no_of_chvs" class="java.lang.Integer"/>
-	<field name="total_chws_reported" class="java.lang.Integer"/>
-	<field name="start_date" class="java.sql.Date"/>
-	<field name="end_date" class="java.sql.Date"/>
-	<field name="survey_date" class="java.sql.Timestamp"/>
-	<field name="surveys_515_detail_id" class="java.lang.Integer"/>
-	<field name="indicator_1" class="java.lang.Integer"/>
-	<field name="indicator_2" class="java.lang.Integer"/>
-	<field name="indicator_3" class="java.lang.Integer"/>
-	<field name="indicator_4" class="java.lang.Integer"/>
-	<field name="indicator_5" class="java.lang.Integer"/>
-	<field name="indicator_6" class="java.lang.Integer"/>
-	<field name="indicator_7" class="java.lang.Integer"/>
-	<field name="indicator_8" class="java.lang.Integer"/>
-	<field name="indicator_9" class="java.lang.Integer"/>
-	<field name="indicator_10" class="java.lang.Integer"/>
-	<field name="indicator_11" class="java.lang.Integer"/>
-	<field name="indicator_12" class="java.lang.Integer"/>
-	<field name="indicator_13" class="java.lang.Integer"/>
-	<field name="indicator_14" class="java.lang.Integer"/>
-	<field name="indicator_15" class="java.lang.Integer"/>
-	<field name="indicator_16" class="java.lang.Integer"/>
-	<field name="indicator_17" class="java.lang.Integer"/>
-	<field name="indicator_18" class="java.lang.Integer"/>
-	<field name="indicator_19" class="java.lang.Integer"/>
-	<field name="indicator_20" class="java.lang.Integer"/>
-	<field name="indicator_21" class="java.lang.Integer"/>
-	<field name="indicator_22" class="java.lang.Integer"/>
-	<field name="indicator_23" class="java.lang.Integer"/>
-	<field name="indicator_24" class="java.lang.Integer"/>
-	<field name="indicator_25" class="java.lang.Integer"/>
-	<field name="indicator_26" class="java.lang.Integer"/>
-	<field name="indicator_27" class="java.lang.Integer"/>
-	<field name="indicator_28" class="java.lang.Integer"/>
-	<field name="indicator_29" class="java.lang.Integer"/>
-	<field name="indicator_30" class="java.lang.Integer"/>
-	<field name="indicator_31" class="java.lang.Integer"/>
-	<field name="indicator_32" class="java.lang.Integer"/>
-	<field name="indicator_33" class="java.lang.Integer"/>
-	<field name="indicator_34" class="java.lang.Integer"/>
-	<field name="indicator_35" class="java.lang.Integer"/>
-	<field name="indicator_36" class="java.lang.Integer"/>
-	<field name="indicator_37" class="java.lang.Integer"/>
-	<field name="indicator_38" class="java.lang.Integer"/>
-	<field name="indicator_39" class="java.lang.Integer"/>
-	<field name="indicator_40" class="java.lang.Integer"/>
-	<field name="indicator_41" class="java.lang.Integer"/>
-	<field name="indicator_42" class="java.lang.Integer"/>
-	<field name="indicator_43" class="java.lang.Integer"/>
-	<field name="indicator_44" class="java.lang.Integer"/>
-	<field name="indicator_45" class="java.lang.Integer"/>
-	<field name="indicator_46" class="java.lang.Integer"/>
-	<field name="indicator_47" class="java.lang.Integer"/>
-	<field name="indicator_48" class="java.lang.Integer"/>
-	<field name="indicator_49" class="java.lang.Integer"/>
-	<field name="indicator_50" class="java.lang.Integer"/>
-	<field name="indicator_51" class="java.lang.Integer"/>
-	<field name="indicator_52" class="java.lang.Integer"/>
-	<field name="indicator_53" class="java.lang.Integer"/>
-	<field name="indicator_54" class="java.lang.Integer"/>
-	<field name="indicator_55" class="java.lang.Integer"/>
-	<field name="indicator_56" class="java.lang.Integer"/>
-	<field name="indicator_57" class="java.lang.Integer"/>
-	<field name="indicator_58" class="java.lang.Integer"/>
-	<field name="indicator_59" class="java.lang.Integer"/>
-	<field name="indicator_60" class="java.lang.Integer"/>
-	<field name="indicator_61" class="java.lang.Integer"/>
-	<field name="indicator_62" class="java.lang.Integer"/>
-	<field name="indicator_63" class="java.lang.Integer"/>
-	<field name="indicator_64" class="java.lang.Integer"/>
-	<field name="indicator_65" class="java.lang.Integer"/>
-	<field name="indicator_66" class="java.lang.String"/>
-	<field name="indicator_67_a" class="java.lang.String"/>
-	<field name="indicator_67_b" class="java.lang.String"/>
-	<field name="indicator_67_c" class="java.lang.String"/>
-	<field name="indicator_67_d" class="java.lang.String"/>
-	<field name="indicator_67_e" class="java.lang.String"/>
-	<field name="indicator_67_f" class="java.lang.String"/>
-	<field name="indicator_67_g" class="java.lang.String"/>
-	<field name="indicator_67_h" class="java.lang.String"/>
-	<field name="indicator_67_i" class="java.lang.String"/>
-	<field name="indicator_67_j" class="java.lang.String"/>
-	<field name="indicator_67_k" class="java.lang.String"/>
-	<field name="remarks" class="java.lang.String"/>
+	<field name="no_of_chvs" class="java.lang.Long"/>
+	<field name="total_chws_reported" class="java.lang.Long"/>
+	<field name="indicator_1" class="java.lang.Long"/>
+	<field name="indicator_2" class="java.lang.Long"/>
+	<field name="indicator_3" class="java.lang.Long"/>
+	<field name="indicator_4" class="java.lang.Long"/>
+	<field name="indicator_5" class="java.lang.Long"/>
+	<field name="indicator_6" class="java.lang.Long"/>
+	<field name="indicator_7" class="java.lang.Long"/>
+	<field name="indicator_8" class="java.lang.Long"/>
+	<field name="indicator_9" class="java.lang.Long"/>
+	<field name="indicator_10" class="java.lang.Long"/>
+	<field name="indicator_11" class="java.lang.Long"/>
+	<field name="indicator_12" class="java.lang.Long"/>
+	<field name="indicator_13" class="java.lang.Long"/>
+	<field name="indicator_14" class="java.lang.Long"/>
+	<field name="indicator_15" class="java.lang.Long"/>
+	<field name="indicator_16" class="java.lang.Long"/>
+	<field name="indicator_17" class="java.lang.Long"/>
+	<field name="indicator_18" class="java.lang.Long"/>
+	<field name="indicator_19" class="java.lang.Long"/>
+	<field name="indicator_20" class="java.lang.Long"/>
+	<field name="indicator_21" class="java.lang.Long"/>
+	<field name="indicator_22" class="java.lang.Long"/>
+	<field name="indicator_23" class="java.lang.Long"/>
+	<field name="indicator_24" class="java.lang.Long"/>
+	<field name="indicator_25" class="java.lang.Long"/>
+	<field name="indicator_26" class="java.lang.Long"/>
+	<field name="indicator_27" class="java.lang.Long"/>
+	<field name="indicator_28" class="java.lang.Long"/>
+	<field name="indicator_29" class="java.lang.Long"/>
+	<field name="indicator_30" class="java.lang.Long"/>
+	<field name="indicator_31" class="java.lang.Long"/>
+	<field name="indicator_32" class="java.lang.Long"/>
+	<field name="indicator_33" class="java.lang.Long"/>
+	<field name="indicator_34" class="java.lang.Long"/>
+	<field name="indicator_35" class="java.lang.Long"/>
+	<field name="indicator_36" class="java.lang.Long"/>
+	<field name="indicator_37" class="java.lang.Long"/>
+	<field name="indicator_38" class="java.lang.Long"/>
+	<field name="indicator_39" class="java.lang.Long"/>
+	<field name="indicator_40" class="java.lang.Long"/>
+	<field name="indicator_41" class="java.lang.Long"/>
+	<field name="indicator_42" class="java.lang.Long"/>
+	<field name="indicator_43" class="java.lang.Long"/>
+	<field name="indicator_44" class="java.lang.Long"/>
+	<field name="indicator_45" class="java.lang.Long"/>
+	<field name="indicator_46" class="java.lang.Long"/>
+	<field name="indicator_47" class="java.lang.Long"/>
+	<field name="indicator_48" class="java.lang.Long"/>
+	<field name="indicator_49" class="java.lang.Long"/>
+	<field name="indicator_50" class="java.lang.Long"/>
+	<field name="indicator_51" class="java.lang.Long"/>
+	<field name="indicator_52" class="java.lang.Long"/>
+	<field name="indicator_53" class="java.lang.Long"/>
+	<field name="indicator_54" class="java.lang.Long"/>
+	<field name="indicator_55" class="java.lang.Long"/>
+	<field name="indicator_56" class="java.lang.Long"/>
+	<field name="indicator_57" class="java.lang.Long"/>
+	<field name="indicator_58" class="java.lang.Long"/>
+	<field name="indicator_59" class="java.lang.Long"/>
+	<field name="indicator_60" class="java.lang.Long"/>
+	<field name="indicator_61" class="java.lang.Long"/>
+	<field name="indicator_62" class="java.lang.Long"/>
+	<field name="indicator_63" class="java.lang.Long"/>
+	<field name="indicator_64" class="java.lang.Long"/>
+	<field name="indicator_65" class="java.lang.Long"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -150,44 +154,16 @@
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
-		<band height="960" splitType="Stretch">
+		<band height="973" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="136" y="0" width="210" height="15" uuid="715f1442-4047-420b-ac5e-6b89d6d450e1"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{chu_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="136" y="15" width="210" height="15" uuid="3c116e49-0bb4-4d30-9110-7913e1ddc2fc"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{mclu_code}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="136" y="30" width="210" height="15" uuid="1bddb0e0-ad6c-4e37-b4a9-ed5abed8c4f5"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{link_facility}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="136" y="45" width="210" height="15" uuid="e0a6a8cd-f304-4f4e-a4f5-cf22a946d4e6"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{chew_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="136" y="60" width="210" height="15" uuid="50e6772e-0205-4144-9112-f564fd62acd1"/>
+				<reportElement style="Detail" x="136" y="1" width="210" height="15" uuid="50e6772e-0205-4144-9112-f564fd62acd1"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{no_of_chvs}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="136" y="75" width="210" height="15" uuid="f05ccf7b-a41d-4864-a27e-f450aac8f411"/>
+				<reportElement style="Detail" x="136" y="16" width="210" height="15" uuid="f05ccf7b-a41d-4864-a27e-f450aac8f411"/>
 				<box>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#BCBCBC"/>
 				</box>
@@ -210,50 +186,19 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sub_county_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="431" y="30" width="147" height="15" uuid="9d038c62-f338-4751-a875-5e54b47539a8"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{division_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="431" y="45" width="147" height="15" uuid="2802ea46-3393-44dd-a01e-d471b6f9d98e"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{location_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="431" y="60" width="147" height="15" uuid="77f0fdf6-7f5a-4b29-9512-c928b25abee7"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{sub_location_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="431" y="75" width="147" height="15" uuid="f9f3f095-c232-48b2-9b04-993459b6e6e7"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{village_name}]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="660" y="0" width="137" height="15" uuid="54301e16-63eb-4d22-9a2a-33b24ff2841b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="660" y="15" width="137" height="15" uuid="47a0a9ff-0497-4729-8a42-45fcc61a26ab"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{end_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="362" y="135" width="40" height="15" uuid="3817ddf7-f7c6-4078-91a4-01442c6260b8"/>
@@ -1123,139 +1068,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{indicator_65}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="752" width="40" height="15" uuid="d74e575f-732f-4fb5-b763-c9fb2cfb4e24"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_66}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="795" width="40" height="15" uuid="487e0fd8-9d35-4f97-b6a9-9369c98eada3"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_a}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="810" width="40" height="15" uuid="bc787388-3d37-4f33-b570-304c6e08960b"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_b}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="825" width="40" height="15" uuid="c90df840-5c5b-4bd6-97a0-574112fa930e"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_c}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="840" width="40" height="15" uuid="c009c27e-0d2e-4eed-9ead-9d496900374d"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_d}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="855" width="40" height="15" uuid="fd9f1f6e-cfa5-4328-81d2-f7c91d0d8083"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_e}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="930" width="40" height="15" uuid="734498d5-2af9-4e3a-9dba-27f6f460c2f4"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_j}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="945" width="40" height="15" uuid="aeb37f91-d9e6-4e60-9bfa-64d856b0a86c"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_k}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="417" y="794" width="380" height="90" uuid="6f972248-fa8c-423f-ad60-05ce195898a2"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement style="Column header" x="21" y="0" width="115" height="15" forecolor="#000000" uuid="6455aaaf-1f9e-4883-b287-f0acd97f4a7e"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Name Of CHU]]></text>
-			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="578" y="0" width="82" height="15" forecolor="#000000" uuid="82fbe22b-4bff-4eab-bec3-6f914f898ea6"/>
 				<textElement verticalAlignment="Middle">
@@ -1278,35 +1090,14 @@
 				<text><![CDATA[County]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="21" y="15" width="115" height="15" forecolor="#000000" uuid="f6b21967-ee7c-458e-b163-732c1bff17e1"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Mclu Code]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="30" width="115" height="15" forecolor="#000000" uuid="618245ad-1354-488e-9f8a-6ce70e21a4f3"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Link Facility]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="45" width="115" height="15" forecolor="#000000" uuid="f97f97ac-1d01-482e-ae71-7460b1545fcc"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Chew Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="60" width="115" height="15" forecolor="#000000" uuid="c2674228-fe07-4296-b23f-0c0181eb841c"/>
+				<reportElement style="Column header" x="21" y="1" width="115" height="15" forecolor="#000000" uuid="c2674228-fe07-4296-b23f-0c0181eb841c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[No Of Chvs]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="21" y="75" width="115" height="15" forecolor="#000000" uuid="344748d5-c610-4519-a404-105c99becd65"/>
+				<reportElement style="Column header" x="21" y="16" width="115" height="15" forecolor="#000000" uuid="344748d5-c610-4519-a404-105c99becd65"/>
 				<box>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#BCBCBC"/>
 				</box>
@@ -1316,42 +1107,11 @@
 				<text><![CDATA[Total Chws Reported]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="346" y="60" width="85" height="15" forecolor="#000000" uuid="a5fb4c81-dfdd-4ea3-a9bb-acc5902d9b76"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Sublocation]]></text>
-			</staticText>
-			<staticText>
 				<reportElement style="Column header" x="346" y="15" width="85" height="15" forecolor="#000000" uuid="9b16e63b-ab3c-418e-a46e-9b31bad0805c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Subcounty]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="346" y="30" width="85" height="15" forecolor="#000000" uuid="7b3732fa-397f-4ac2-9c1a-a0e1546df2bd"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Division]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="346" y="45" width="85" height="15" forecolor="#000000" uuid="cced38d5-6bf9-42b3-a002-a75c7d6fda64"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Location]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="346" y="75" width="85" height="15" forecolor="#000000" uuid="6e751dbf-1182-4d0a-a513-666bd7078a3c"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Village]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" mode="Opaque" x="21" y="103" width="24" height="32" forecolor="#FFFFFF" backcolor="#21497A" uuid="cb3a5950-0cd0-4932-aae5-226bf136a49b"/>
@@ -1746,76 +1506,6 @@
 				<text><![CDATA[33]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="21" y="825" width="24" height="15" forecolor="#000000" uuid="06139a97-4eca-4777-b470-49150c3b7bcc"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[c]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="945" width="24" height="15" forecolor="#000000" uuid="e893a90f-2ad3-475f-94ce-651fd65f5530"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[k]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="900" width="24" height="15" forecolor="#000000" uuid="c84c1a1c-9c3c-4c26-b334-50a5d8dcea1b"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[h]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="855" width="24" height="15" forecolor="#000000" uuid="34147802-d0d2-4e93-9d74-fa712bfb7b94"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[e]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="885" width="24" height="15" forecolor="#000000" uuid="69872fee-0a62-4e80-bc24-290f871e56bc"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[g]]></text>
-			</staticText>
-			<staticText>
 				<reportElement style="Column header" x="21" y="678" width="24" height="28" forecolor="#000000" uuid="c8ece7c1-4260-4e81-8dbc-63cdfa00a5ba"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
@@ -1828,34 +1518,6 @@
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[32]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="795" width="24" height="15" forecolor="#000000" uuid="9ccd4feb-1732-4b50-86d5-5f239c0ae9ce"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[a]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="915" width="24" height="15" forecolor="#000000" uuid="fbac2cde-ea80-40bb-b300-834ca66c3e6f"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[i]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="622" width="24" height="28" forecolor="#000000" uuid="9c857466-d8e7-49c0-9778-fa4e839beaf9"/>
@@ -1898,34 +1560,6 @@
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[25]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="840" width="24" height="15" forecolor="#000000" uuid="877f655c-1c62-4ff6-864f-e8e2f6dc423d"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[d]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="752" width="24" height="15" forecolor="#000000" uuid="b2223d2e-d4ef-42ec-942d-973406645ba8"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[66]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="577" width="24" height="15" forecolor="#000000" uuid="7ca58643-7df7-493c-982f-b6dbd2ee5541"/>
@@ -1984,62 +1618,6 @@
 				<text><![CDATA[29]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="21" y="930" width="24" height="15" forecolor="#000000" uuid="77286002-6a05-4a4c-9756-677a6476e6a5"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[j]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="767" width="24" height="28" forecolor="#000000" uuid="a0526b75-a491-45c7-9b82-b38871e54a8c"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[67]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="810" width="24" height="15" forecolor="#000000" uuid="149bf5dd-cc77-422a-abe0-7567bd77aa23"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[b]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="21" y="870" width="24" height="15" forecolor="#000000" uuid="3a84b2fc-a68d-424d-91fd-182134d1e58e"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[f]]></text>
-			</staticText>
-			<staticText>
 				<reportElement style="Column header" x="21" y="592" width="24" height="15" forecolor="#000000" uuid="3f7db8a7-fcf5-4d0d-a1bd-bdc22d36300c"/>
 				<box>
 					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
@@ -2052,20 +1630,6 @@
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[28]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="737" width="358" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="c2728b3f-2673-4f6e-b86f-1f9846eeddbb"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Commodities Indicators]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="21" y="737" width="24" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="46d6c21d-8dc7-4421-9225-3592d60d7279"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[No]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="45" y="135" width="317" height="15" forecolor="#000000" uuid="3d856b16-314c-40e5-8266-4d3331c97560"/>
@@ -3448,306 +3012,6 @@ ART	]]></text>
 					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Total number of community Action Days held]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="45" y="752" width="317" height="15" forecolor="#000000" uuid="1037461d-ba77-4462-ab9e-5ca78343d5d5"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[CHU issued with any commodities? ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="45" y="767" width="357" height="28" forecolor="#000000" uuid="0d0a336d-0042-4281-ab8c-be4fa847fab9"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Did the community health unit experience stock-outs of more than 7 days for any of the following commodities?]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="795" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="d87138de-7819-421c-b648-83cd28635d9c"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Antimalarial (ACTs 6s and 12s)]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="810" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="abd7725d-4bb4-4911-9fdd-56e8609f1f2f"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Oral Rehydration Salt]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="825" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="a47f712d-d054-4f2f-99bc-cbfa3bf2de8e"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Zinc]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="840" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="2f1a77c6-875e-4e6e-9203-7ad7a5f59458"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Rapid Diagnostic Test Kit]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="855" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="e1b377ea-80e5-4a4f-af6a-afe45c0691cc"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Condoms]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="870" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="2dd9fe0b-a7e3-40bd-b95e-a077cf452e51"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Oral Contraceptives]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="885" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="4153b884-7e4a-4bba-a647-1a7d9dbae6be"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Iodine Solution]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="900" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="201c399c-1f29-4812-a2b6-b28068c7c720"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Chlorine Tablets]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="915" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="d4453972-07ec-4001-aed9-c5c1d6ca01fd"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Albedazole Tablets]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="930" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="7acb93d3-b37f-4562-a55e-c061b956e7eb"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Tetracycline Eye Ointment]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="45" y="945" width="317" height="15" forecolor="#000000" backcolor="#EAEAEA" uuid="31d49f36-751b-4c52-9dc5-e21554b4b45d"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Paracetamol]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="870" width="40" height="15" uuid="ce618742-3801-4d56-823e-05706e94bc60"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_f}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="885" width="40" height="15" uuid="e07da8d2-d976-4cf3-9b1c-4686ce7371ca"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_g}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="900" width="40" height="15" uuid="d8dc6830-ae03-4d69-9a08-9f1fd9bde929"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_h}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="362" y="915" width="40" height="15" uuid="e5fdb579-f372-4780-a61b-a9ebf5041ea6"/>
-				<box>
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{indicator_67_i}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="417" y="779" width="380" height="15" forecolor="#FFFFFF" backcolor="#21497A" uuid="ebc05770-65ba-4630-ae41-fcdbd8147fa8"/>
-				<box leftPadding="5">
-					<pen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<topPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<leftPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<bottomPen lineWidth="0.5" lineColor="#BCBCBC"/>
-					<rightPen lineWidth="0.5" lineColor="#BCBCBC"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[ Remarks / Other]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="418" y="899" width="380" height="15" forecolor="#000000" uuid="0f58bb32-0905-4366-b8a9-54e1a598e11c"/>
-				<textElement>
-					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Signature           ...............................................................................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="418" y="929" width="380" height="15" forecolor="#000000" uuid="ce44fb84-04bf-4896-bf9f-153c131ff368"/>
-				<textElement>
-					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Date                   ...............................................................................................]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="660" y="60" width="137" height="15" uuid="b8df568f-fbad-4973-83a5-cb93a3751c49"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{surveys_515_id}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement style="Column header" x="578" y="60" width="82" height="15" forecolor="#000000" uuid="06e73120-5e64-4979-a0ad-4c8ba5547fc8"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Report Id : ]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="660" y="75" width="137" height="15" uuid="2133282e-5e47-4acf-a0bc-c7523f63c80d"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{survey_date}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement style="Column header" x="578" y="75" width="82" height="15" forecolor="#000000" uuid="c014ac84-2bc4-4e8e-a940-08822c29c8d1"/>
-				<box>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#BCBCBC"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Report Date : ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="417" y="132" width="24" height="35" forecolor="#000000" uuid="600491a9-804c-4494-b0da-cc2e5a0fc52b"/>
