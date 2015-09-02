@@ -533,6 +533,14 @@
 			</FILTERFORM>
 			<JASPER name="Health Worker Reports " reportfile="vw_surveys_detailed.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="MOH 514 summary For 515" split="150" type="vert" h="550">
+			<FILTERFORM name="Village Date Range">
+				<COMBOBOX w="430" title="Village" lptable="villages" noorg="true" y="30" h="20" x="10" lpfield="village_name">village_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="MOH 514 summary For 515" reportfile="vw_survey_514_for_515.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Reports 515" key="20" h="550">
 		<GRID name="Sub Countys" keyfield="sub_county_id" table="vw_sub_countys" noorg="true">

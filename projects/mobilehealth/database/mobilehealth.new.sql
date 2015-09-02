@@ -393,7 +393,7 @@ CREATE VIEW vw_surveys AS
 
 -- DROP VIEW vw_survey_mother;
 CREATE VIEW vw_survey_mother AS
-	SELECT mother_info_defs.mother_info_def_id, mother_info_defs.mother_info_defs.question, mother_info_defs.details ,
+	SELECT mother_info_defs.mother_info_def_id, mother_info_defs.for_515, mother_info_defs.question, mother_info_defs.details ,
 	surveys.survey_id,  survey_mother.survey_mother_id, survey_mother.response,
 	(CASE survey_mother.response WHEN '1' THEN 'YES'
 		WHEN '2' THEN 'NO'
@@ -406,7 +406,7 @@ CREATE VIEW vw_survey_mother AS
 
 -- DROP VIEW vw_survey_child;
 CREATE VIEW vw_survey_child AS
-	SELECT child_info_defs.child_info_def_id, child_info_defs.for_515 child_info_defs.question,child_info_defs.details,
+	SELECT child_info_defs.child_info_def_id, child_info_defs.for_515, child_info_defs.question,child_info_defs.details,
 	surveys.survey_id, survey_child.survey_child_id, survey_child.response,
     (CASE survey_child.response WHEN '1' THEN 'YES'
             WHEN '2' THEN 'NO'
@@ -439,14 +439,13 @@ CREATE VIEW vw_survey_defaulters AS
 	INNER JOIN surveys ON survey_defaulters.survey_id = surveys.survey_id;
 
 -- DROP VIEW vw_survey_death;
-CREATE VIEW vw_survey_death AS
+CREATE VIEW vw_survey_death AS 
 	SELECT death_info_defs.death_info_def_id, death_info_defs.for_515,  death_info_defs.question, death_info_defs.details,
 	surveys.survey_id, survey_death.survey_death_id, survey_death.response
 	FROM survey_death
 	INNER JOIN death_info_defs ON survey_death.death_info_def_id = death_info_defs.death_info_def_id
 	INNER JOIN surveys ON survey_death.survey_id = surveys.survey_id;
-
--- DROP VIEW vw_survey_household ;
+ -- DROP VIEW vw_survey_household ;
 CREATE VIEW vw_survey_household AS
 	SELECT household_info_defs.household_info_def_id,  household_info_defs.for_515, household_info_defs.question, household_info_defs.details,
 	surveys.survey_id, survey_household.survey_household_id, survey_household.response,
