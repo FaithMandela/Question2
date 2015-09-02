@@ -587,61 +587,61 @@
 						<TEXTFIELD w="150" title="9 - Total children 5-12 years age">indicator_9</TEXTFIELD>
 						<TEXTFIELD w="150" title="10 - Total adolescent and youth - Girls (13 - 24 years)">indicator_10</TEXTFIELD>
 						<TEXTFIELD w="150" title="11 - Total adolescent and youth - Boys (13 - 24 years)">indicator_11</TEXTFIELD>
-						<TEXTFIELD w="150" title="12 - Total Population 25-59 years">indicator_12</TEXTFIELD>
-						<TEXTFIELD w="150" title="13 - Total population of the elderly (60+ years)">indicator_13</TEXTFIELD>
-						<TEXTFIELD w="150" title="14 - Number of households using  treated water">indicator_14</TEXTFIELD>
-						<TEXTFIELD w="150" title="15 - Number of households with hand washing facilities e.g. leaky tins in use">indicator_15</TEXTFIELD>
-						<TEXTFIELD w="150" title="16 - Number of households with functional latrines">indicator_16</TEXTFIELD>
-						<TEXTFIELD w="150" title="17 - Number of new-borns visited at home within 48 hours of birth">indicator_17</TEXTFIELD>
-						<TEXTFIELD w="150" title="18- Number of mothers with new-borns counselled on Exclusive Breastfeeding">indicator_18</TEXTFIELD>
-						<TEXTFIELD w="150" title="19 - Number of children of 0-59 months  participating in  growth monitoring">indicator_19</TEXTFIELD>
-						<TEXTFIELD w="150" title="20 - Total Deliveries">indicator_20</TEXTFIELD>
-						<TEXTFIELD w="150" title="21 - Number of deliveries by skilled birth attendants">indicator_21</TEXTFIELD>
-						<TEXTFIELD w="150" title="22 - Number of uder-age pregnancies (under 18 years)">indicator_22</TEXTFIELD>
-						<TEXTFIELD w="150" title="23 - Number of women (15-49yrs) provided with Family Planning commodities ">indicator_23</TEXTFIELD>
-						<TEXTFIELD w="150" title="24 - Number of children 12-59 months dewormed">indicator_24</TEXTFIELD>
-						<TEXTFIELD w="150" title="25 - Number of fever cases  managed">indicator_25</TEXTFIELD>
-						<TEXTFIELD w="150" title="26 - Number of fever cases less than 7 days with RDT done">indicator_26</TEXTFIELD>
-						<TEXTFIELD w="150" title="27 - Number of fever casesless than 7 days with RDT +ve">indicator_27</TEXTFIELD>
-						<TEXTFIELD w="150" title="28 - Number of under 5 years Malaria Cases (RDT +ve) treated with ACT">indicator_28</TEXTFIELD>
-						<TEXTFIELD w="150" title="29 - Number of over 5 years Malaria Cases (RDT +ve) treated with ACT">indicator_29</TEXTFIELD>
-						<TEXTFIELD w="150" title="30 - Number of cases of diarrhoea identified in children 0-59 months age">indicator_30</TEXTFIELD>
-						<TEXTFIELD w="150" title="31 - Number of children of 12-59 months with diarrhoea treated with Zinc and ORS">indicator_31</TEXTFIELD>
-						<TEXTFIELD w="150" title="32 - Number of children 0-59 months age presenting with fast breathing">indicator_32</TEXTFIELD>
-						<TEXTFIELD w="150" title="33 - Number of children 0-59 months age presenting with fast breathing treated with Amoxycillin">indicator_33</TEXTFIELD>
-						<TEXTFIELD w="150" title="34 -Number of injuries and wounds managed">indicator_34</TEXTFIELD>
-						<TEXTFIELD w="150" title="35 - Number of new referrals - ANC " y="370" h="20" x="10">indicator_35</TEXTFIELD>
-						<TEXTFIELD w="150" title="36 - Number of new referrals - Skilled delivery" y="370" h="20" x="290">indicator_36</TEXTFIELD>
-						<TEXTFIELD w="150" title="37 - Number of new referrals - New-borns with danger signs  referred" y="390" h="20" x="10">indicator_37</TEXTFIELD>
-						<TEXTFIELD w="150" title="38 - Number of new referrals - Children of 0-11 months referred for immunization" y="390" h="20" x="290">indicator_38</TEXTFIELD>
-						<TEXTFIELD w="150" title="39 - Number of new referrals - Children 6 - 59 Months referred for Vitamin A supplementation" y="410" h="20" x="10">indicator_39</TEXTFIELD>
-						<TEXTFIELD w="150" title="40 - Number of new referrals - Severe malnutrition" y="410" h="20" x="290">indicator_40</TEXTFIELD>
-						<TEXTFIELD w="150" title="41 - Number of new referrals - Moderate malnutrition" y="430" h="20" x="10">indicator_41</TEXTFIELD>
-						<TEXTFIELD w="150" title="42 - Number of new referrals - Cough for 2 or more weeks" y="430" h="20" x="290">indicator_42</TEXTFIELD>
-						<TEXTFIELD w="150" title="43 - Number of new referrals - HIV Counselling and Testing (HCT)" y="450" h="20" x="10">indicator_43</TEXTFIELD>
-						<TEXTFIELD w="150" title="44 - Number of new referrals - Routine check-ups for the elderly (60+)" y="450" h="20" x="290">indicator_44</TEXTFIELD>
-						<TEXTFIELD w="150" title="45 - Number of people with known chronic illness  referred - Diabetes" y="470" h="20" x="10">indicator_45</TEXTFIELD>
-						<TEXTFIELD w="150" title="46 - Number of people with known chronic illness  referred - Cancer" y="470" h="20" x="290">indicator_46</TEXTFIELD>
-						<TEXTFIELD w="150" title="47 - Number of people with known chronic illness  referred - Mental Illness" y="490" h="20" x="10">indicator_47</TEXTFIELD>
-						<TEXTFIELD w="150" title="48 - Number of people with known chronic illness  referred - Hypertension" y="490" h="20" x="290">indicator_48</TEXTFIELD>
-						<TEXTFIELD w="150" title="49 - Number of people with known chronic illness  referred - Chronic Cough" y="510" h="20" x="10">indicator_49</TEXTFIELD>
-						<TEXTFIELD w="150" title="50 - Number of defaulters referred - ANC" y="510" h="20" x="290">indicator_50</TEXTFIELD>
-						<TEXTFIELD w="150" title="51 - Number of defaulters referred - Immunization" y="530" h="20" x="10">indicator_51</TEXTFIELD>
-						<TEXTFIELD w="150" title="52 - Number of defaulters referred - Tuberculosis treatment" y="530" h="20" x="290">indicator_52</TEXTFIELD>
-						<TEXTFIELD w="150" title="53 - Number of defaulters referred - ART" y="550" h="20" x="10">indicator_53</TEXTFIELD>
-						<TEXTFIELD w="150" title="54 - Number of deaths in the month - 0-28 days" y="550" h="20" x="290">indicator_54</TEXTFIELD>
-						<TEXTFIELD w="150" title="55 - Number of deaths in the month - 29 days-11 months" y="570" h="20" x="10">indicator_55</TEXTFIELD>
-						<TEXTFIELD w="150" title="56 - Number of deaths in the month - 12-59 months" y="570" h="20" x="290">indicator_56</TEXTFIELD>
-						<TEXTFIELD w="150" title="57 - Number of deaths in the month - Maternal " y="590" h="20" x="10">indicator_57</TEXTFIELD>
-						<TEXTFIELD w="150" title="58 - Number of deaths in the month - Other deaths" y="590" h="20" x="290">indicator_58</TEXTFIELD>
-						<TEXTFIELD w="150" title="59 - Number of deaths in the month - Total deaths" y="610" h="20" x="10">indicator_59</TEXTFIELD>
-						<TEXTFIELD w="150" title="60 - Total number of community dialogue days  held" y="630" h="20" x="10">indicator_60</TEXTFIELD>
-						<TEXTFIELD w="150" title="61 - Total number of community Action Days held" y="630" h="20" x="10">indicator_61</TEXTFIELD>
-						<TEXTFIELD w="150" title="62 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_62</TEXTFIELD>
-						<TEXTFIELD w="150" title="63 - Total number of community dialogue days  held" y="630" h="20" x="290">indicator_63</TEXTFIELD>
-						<TEXTFIELD w="150" title="64 - Total number of community Action Days held" y="630" h="20" x="290">indicator_64</TEXTFIELD>
+						<TEXTFIELD w="150" title="12 - Total Females 25-59 years">indicator_12</TEXTFIELD>
+						<TEXTFIELD w="150" title="13 - Total Males 25-59 years">indicator_13</TEXTFIELD>
+						<TEXTFIELD w="150" title="14 - Total elderly females (60+ years)">indicator_14</TEXTFIELD>
+						<TEXTFIELD w="150" title="15 - Total elderly males(60+ years)">indicator_15</TEXTFIELD>
+						<TEXTFIELD w="150" title="16 - Number of households using  treated water">indicator_16</TEXTFIELD>
+						<TEXTFIELD w="150" title="17 - Number of households with hand washing facilities e.g. leaky tins in use">indicator_17</TEXTFIELD>
+						<TEXTFIELD w="150" title="18 - Number of households with functional latrines">indicator_18</TEXTFIELD>
+						<TEXTFIELD w="150" title="19 - Number of new-borns visited at home within 48 hours of birth">indicator_19</TEXTFIELD>
+						<TEXTFIELD w="150" title="20- Number of mothers with new-borns counselled on Exclusive Breastfeeding">indicator_20</TEXTFIELD>
+						<TEXTFIELD w="150" title="21 - Number of children of 0-59 months  participating in  growth monitoring">indicator_21</TEXTFIELD>
+						<TEXTFIELD w="150" title="22 - Total Deliveries">indicator_22</TEXTFIELD>
+						<TEXTFIELD w="150" title="23 - Number of deliveries by skilled birth attendants">indicator_23</TEXTFIELD>
+						<TEXTFIELD w="150" title="24 - Number of uder-age pregnancies (under 18 years)">indicator_24</TEXTFIELD>
+						<TEXTFIELD w="150" title="25 - Number of women (15-49yrs) provided with Family Planning commodities ">indicator_25</TEXTFIELD>
+						<TEXTFIELD w="150" title="26 - Number of children 12-59 months dewormed">indicator_26</TEXTFIELD>
+						<TEXTFIELD w="150" title="27 - Number of fever cases  managed">indicator_27</TEXTFIELD>
+						<TEXTFIELD w="150" title="28 - Number of fever cases less than 7 days with RDT done">indicator_28</TEXTFIELD>
+						<TEXTFIELD w="150" title="29 - Number of fever casesless than 7 days with RDT +ve">indicator_29</TEXTFIELD>
+						<TEXTFIELD w="150" title="30 - Number of under 5 years Malaria Cases (RDT +ve) treated with ACT">indicator_30</TEXTFIELD>
+						<TEXTFIELD w="150" title="31 - Number of over 5 years Malaria Cases (RDT +ve) treated with ACT">indicator_31</TEXTFIELD>
+						<TEXTFIELD w="150" title="32 - Number of cases of diarrhoea identified in children 0-59 months age">indicator_32</TEXTFIELD>
+						<TEXTFIELD w="150" title="33 - Number of children of 12-59 months with diarrhoea treated with Zinc and ORS">indicator_33</TEXTFIELD>
+						<TEXTFIELD w="150" title="34 - Number of children 0-59 months age presenting with fast breathing">indicator_34</TEXTFIELD>
+						<TEXTFIELD w="150" title="35 - Number of children 0-59 months age presenting with fast breathing treated with Amoxycillin">indicator_35</TEXTFIELD>
+						<TEXTFIELD w="150" title="36 -Number of injuries and wounds managed">indicator_36</TEXTFIELD>
+						<TEXTFIELD w="150" title="37 - Number of new referrals - ANC " y="370" h="20" x="10">indicator_37</TEXTFIELD>
+						<TEXTFIELD w="150" title="38 - Number of new referrals - Skilled delivery" y="370" h="20" x="290">indicator_38</TEXTFIELD>
+						<TEXTFIELD w="150" title="39 - Number of new referrals - New-borns with danger signs  referred" y="390" h="20" x="10">indicator_39</TEXTFIELD>
+						<TEXTFIELD w="150" title="40 - Number of new referrals - Children of 0-11 months referred for immunization" y="390" h="20" x="290">indicator_40</TEXTFIELD>
+						<TEXTFIELD w="150" title="41 - Number of new referrals - Children 6 - 59 Months referred for Vitamin A supplementation" y="410" h="20" x="10">indicator_41</TEXTFIELD>
+						<TEXTFIELD w="150" title="42 - Number of new referrals - Severe malnutrition" y="410" h="20" x="290">indicator_42</TEXTFIELD>
+						<TEXTFIELD w="150" title="43 - Number of new referrals - Moderate malnutrition" y="430" h="20" x="10">indicator_43</TEXTFIELD>
+						<TEXTFIELD w="150" title="44 - Number of new referrals - Cough for 2 or more weeks" y="430" h="20" x="290">indicator_44</TEXTFIELD>
+						<TEXTFIELD w="150" title="45 - Number of new referrals - HIV Counselling and Testing (HCT)" y="450" h="20" x="10">indicator_45</TEXTFIELD>
+						<TEXTFIELD w="150" title="46 - Number of new referrals - Routine check-ups for the elderly (60+)" y="450" h="20" x="290">indicator_46</TEXTFIELD>
+						<TEXTFIELD w="150" title="47 - Number of people with known chronic illness  referred - Diabetes" y="470" h="20" x="10">indicator_47</TEXTFIELD>
+						<TEXTFIELD w="150" title="48 - Number of people with known chronic illness  referred - Cancer" y="470" h="20" x="290">indicator_48</TEXTFIELD>
+						<TEXTFIELD w="150" title="49 - Number of people with known chronic illness  referred - Mental Illness" y="490" h="20" x="10">indicator_49</TEXTFIELD>
+						<TEXTFIELD w="150" title="50 - Number of people with known chronic illness  referred - Hypertension" y="490" h="20" x="290">indicator_50</TEXTFIELD>
+						<TEXTFIELD w="150" title="51 - Number of people with known chronic illness  referred - Chronic Cough" y="510" h="20" x="10">indicator_51</TEXTFIELD>
+						<TEXTFIELD w="150" title="52 - Number of people with known chronic illness  referred - Total of the others" y="510" h="20" x="10">indicator_52</TEXTFIELD>
+						<TEXTFIELD w="150" title="53 - Number of defaulters referred - ANC" y="510" h="20" x="290">indicator_53</TEXTFIELD>
+						<TEXTFIELD w="150" title="54 - Number of defaulters referred - Immunization" y="530" h="20" x="10">indicator_54</TEXTFIELD>
+						<TEXTFIELD w="150" title="55 - Number of defaulters referred - Tuberculosis treatment" y="530" h="20" x="290">indicator_55</TEXTFIELD>
+						<TEXTFIELD w="150" title="56 - Number of defaulters referred - ART" y="550" h="20" x="10">indicator_56</TEXTFIELD>
+						<TEXTFIELD w="150" title="57 - Number of deaths in the month - 0-28 days" y="550" h="20" x="290">indicator_57</TEXTFIELD>
+						<TEXTFIELD w="150" title="58 - Number of deaths in the month - 29 days-11 months" y="570" h="20" x="10">indicator_58</TEXTFIELD>
+						<TEXTFIELD w="150" title="59 - Number of deaths in the month - 12-59 months" y="570" h="20" x="290">indicator_59</TEXTFIELD>
+						<TEXTFIELD w="150" title="60 - Number of deaths in the month - Maternal " y="590" h="20" x="10">indicator_60</TEXTFIELD>
+						<TEXTFIELD w="150" title="61 - Number of deaths in the month - Other deaths" y="590" h="20" x="290">indicator_61</TEXTFIELD>
+						<TEXTFIELD w="150" title="62 - Number of deaths in the month - Total deaths" y="610" h="20" x="10">indicator_62</TEXTFIELD>
+						<TEXTFIELD w="150" title="63 - Total number of community dialogue days  held" y="630" h="20" x="10">indicator_63</TEXTFIELD>
+						<TEXTFIELD w="150" title="64 - Total number of community Action Days held" y="630" h="20" x="10">indicator_64</TEXTFIELD>
 						<TEXTFIELD w="150" title="65 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_65</TEXTFIELD>
-						<COMBOLIST w="150" title="66 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_63
+						<COMBOLIST w="150" title="66 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_66
 							<DATA key="Yes">Yes</DATA>
 							<DATA key="No">No</DATA>
 						</COMBOLIST>
@@ -701,7 +701,7 @@
 							<DATA key="N/A">N/A</DATA>
 						</COMBOLIST>
 						<TEXTAREA w="430" title="Remarks" y="770" h="70" x="10">remarks</TEXTAREA>
-						<FORM name="Indicators 1-34" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+						<FORM name="Indicators 1-36" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
 							<TEXTFIELD w="150" title="1 - Total households" y="30" h="20" x="10">indicator_1</TEXTFIELD>
 							<TEXTFIELD w="150" title="2 - Total number of households visited" y="30" h="20" x="290">indicator_2</TEXTFIELD>
 							<TEXTFIELD w="150" title="3 - Total population" y="50" h="20" x="10">indicator_3</TEXTFIELD>
@@ -713,72 +713,72 @@
 							<TEXTFIELD w="150" title="9 - Total children 5-12 years age" y="110" h="20" x="10">indicator_9</TEXTFIELD>
 							<TEXTFIELD w="150" title="10 - Total adolescent and youth - Girls (13 - 24 years)" y="110" h="20" x="290">indicator_10</TEXTFIELD>
 							<TEXTFIELD w="150" title="11 - Total adolescent and youth - Boys (13 - 24 years)" y="130" h="20" x="10">indicator_11</TEXTFIELD>
-							<TEXTFIELD w="150" title="12 - Total Population 25-59 years" y="130" h="20" x="290">indicator_12</TEXTFIELD>
-							<TEXTFIELD w="150" title="13 - Total population of the elderly (60+ years)" y="150" h="20" x="10">indicator_13</TEXTFIELD>
-							<TEXTFIELD w="150" title="14 - Number of households using  treated water" y="150" h="20" x="290">indicator_14</TEXTFIELD>
-							<TEXTFIELD w="150" title="15 - Number of households with hand washing facilities e.g. leaky tins in use" y="170" h="20" x="10">indicator_15</TEXTFIELD>
-							<TEXTFIELD w="150" title="16 - Number of households with functional latrines" y="170" h="20" x="290">indicator_16</TEXTFIELD>
-							<TEXTFIELD w="150" title="17 - Number of new-borns visited at home within 48 hours of birth" y="190" h="20" x="10">indicator_17</TEXTFIELD>
-							<TEXTFIELD w="150" title="18- Number of mothers with new-borns counselled on Exclusive Breastfeeding" y="190" h="20" x="290">indicator_18</TEXTFIELD>
-							<TEXTFIELD w="150" title="19 - Number of children of 0-59 months  participating in  growth monitoring" y="210" h="20" x="10">indicator_19</TEXTFIELD>
-							<TEXTFIELD w="150" title="20 - Total Deliveries" y="210" h="20" x="290">indicator_20</TEXTFIELD>
-							<TEXTFIELD w="150" title="21 - Number of deliveries by skilled birth attendants" y="230" h="20" x="10">indicator_21</TEXTFIELD>
-							<TEXTFIELD w="150" title="22 - Number of uder-age pregnancies (under 18 years)" y="230" h="20" x="290">indicator_22</TEXTFIELD>
-							<TEXTFIELD w="150" title="23 - Number of women (15-49yrs) provided with Family Planning commodities " y="250" h="20" x="10">indicator_23</TEXTFIELD>
-							<TEXTFIELD w="150" title="24 - Number of children 12-59 months dewormed" y="250" h="20" x="290">indicator_24</TEXTFIELD>
-							<TEXTFIELD w="150" title="25 - Number of fever cases  managed" y="270" h="20" x="10">indicator_25</TEXTFIELD>
-							<TEXTFIELD w="150" title="26 - Number of fever cases less than 7 days with RDT done" y="270" h="20" x="290">indicator_26</TEXTFIELD>
-							<TEXTFIELD w="150" title="27 - Number of fever casesless than 7 days with RDT +ve" y="290" h="20" x="10">indicator_27</TEXTFIELD>
-							<TEXTFIELD w="150" title="28 - Number of under 5 years Malaria Cases (RDT +ve) treated with ACT" y="290" h="20" x="290">indicator_28</TEXTFIELD>
-							<TEXTFIELD w="150" title="29 - Number of over 5 years Malaria Cases (RDT +ve) treated with ACT" y="310" h="20" x="10">indicator_29</TEXTFIELD>
-							<TEXTFIELD w="150" title="30 - Number of cases of diarrhoea identified in children 0-59 months age" y="310" h="20" x="290">indicator_30</TEXTFIELD>
-							<TEXTFIELD w="150" title="31 - Number of children of 12-59 months with diarrhoea treated with Zinc and ORS" y="330" h="20" x="10">indicator_31</TEXTFIELD>
-							<TEXTFIELD w="150" title="32 - Number of children 0-59 months age presenting with fast breathing" y="330" h="20" x="290">indicator_32</TEXTFIELD>
-							<TEXTFIELD w="150" title="33 - Number of children 0-59 months age presenting with fast breathing treated with Amoxycillin" y="350" h="20" x="10">indicator_33</TEXTFIELD>
-							<TEXTFIELD w="150" title="34 -Number of injuries and wounds managed" y="350" h="20" x="290">indicator_34</TEXTFIELD>
+							<TEXTFIELD w="150" title="12 - Total Females 25-59 years" y="130" h="20" x="290">indicator_12</TEXTFIELD>
+							<TEXTFIELD w="150" title="13 - Total Males 25-59 years" y="130" h="20" x="290">indicator_13</TEXTFIELD>
+							<TEXTFIELD w="150" title="14 - Total elderly females (60+ years)" y="150" h="20" x="10">indicator_14</TEXTFIELD>
+							<TEXTFIELD w="150" title="15 - Total elderly males (60+ years)" y="150" h="20" x="10">indicator_15</TEXTFIELD>
+							<TEXTFIELD w="150" title="16 - Number of households using  treated water" y="150" h="20" x="290">indicator_16</TEXTFIELD>
+							<TEXTFIELD w="150" title="17 - Number of households with hand washing facilities e.g. leaky tins in use" y="170" h="20" x="10">indicator_17</TEXTFIELD>
+							<TEXTFIELD w="150" title="18 - Number of households with functional latrines" y="170" h="20" x="290">indicator_18</TEXTFIELD>
+							<TEXTFIELD w="150" title="19 - Number of new-borns visited at home within 48 hours of birth" y="190" h="20" x="10">indicator_19</TEXTFIELD>
+							<TEXTFIELD w="150" title="20- Number of mothers with new-borns counselled on Exclusive Breastfeeding" y="190" h="20" x="290">indicator_20</TEXTFIELD>
+							<TEXTFIELD w="150" title="21 - Number of children of 0-59 months  participating in  growth monitoring" y="210" h="20" x="10">indicator_21</TEXTFIELD>
+							<TEXTFIELD w="150" title="22 - Total Deliveries" y="210" h="20" x="290">indicator_22</TEXTFIELD>
+							<TEXTFIELD w="150" title="23 - Number of deliveries by skilled birth attendants" y="230" h="20" x="10">indicator_23</TEXTFIELD>
+							<TEXTFIELD w="150" title="24 - Number of uder-age pregnancies (under 18 years)" y="230" h="20" x="290">indicator_24</TEXTFIELD>
+							<TEXTFIELD w="150" title="25 - Number of women (15-49yrs) provided with Family Planning commodities " y="250" h="20" x="10">indicator_25</TEXTFIELD>
+							<TEXTFIELD w="150" title="26 - Number of children 12-59 months dewormed" y="250" h="20" x="290">indicator_26</TEXTFIELD>
+							<TEXTFIELD w="150" title="27 - Number of fever cases  managed" y="270" h="20" x="10">indicator_27</TEXTFIELD>
+							<TEXTFIELD w="150" title="28 - Number of fever cases less than 7 days with RDT done" y="270" h="20" x="290">indicator_28</TEXTFIELD>
+							<TEXTFIELD w="150" title="29 - Number of fever casesless than 7 days with RDT +ve" y="290" h="20" x="10">indicator_29</TEXTFIELD>
+							<TEXTFIELD w="150" title="30 - Number of under 5 years Malaria Cases (RDT +ve) treated with ACT" y="290" h="20" x="290">indicator_30</TEXTFIELD>
+							<TEXTFIELD w="150" title="31 - Number of over 5 years Malaria Cases (RDT +ve) treated with ACT" y="310" h="20" x="10">indicator_31</TEXTFIELD>
+							<TEXTFIELD w="150" title="32 - Number of cases of diarrhoea identified in children 0-59 months age" y="310" h="20" x="290">indicator_32</TEXTFIELD>
+							<TEXTFIELD w="150" title="33 - Number of children of 12-59 months with diarrhoea treated with Zinc and ORS" y="330" h="20" x="10">indicator_33</TEXTFIELD>
+							<TEXTFIELD w="150" title="34 - Number of children 0-59 months age presenting with fast breathing" y="330" h="20" x="290">indicator_34</TEXTFIELD>
+							<TEXTFIELD w="150" title="35 - Number of children 0-59 months age presenting with fast breathing treated with Amoxycillin" y="350" h="20" x="10">indicator_35</TEXTFIELD>
+							<TEXTFIELD w="150" title="36 -Number of injuries and wounds managed" y="350" h="20" x="290">indicator_36</TEXTFIELD>
 						</FORM>
-						<FORM name="Indicators 35-44" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
-							<TEXTFIELD w="150" title="35 - Number of new referrals - ANC " y="370" h="20" x="10">indicator_35</TEXTFIELD>
-							<TEXTFIELD w="150" title="36 - Number of new referrals - Skilled delivery" y="370" h="20" x="290">indicator_36</TEXTFIELD>
-							<TEXTFIELD w="150" title="37 - Number of new referrals - New-borns with danger signs  referred" y="390" h="20" x="10">indicator_37</TEXTFIELD>
-							<TEXTFIELD w="150" title="38 - Number of new referrals - Children of 0-11 months referred for immunization" y="390" h="20" x="290">indicator_38</TEXTFIELD>
-							<TEXTFIELD w="150" title="39 - Number of new referrals - Children 6 - 59 Months referred for Vitamin A supplementation" y="410" h="20" x="10">indicator_39</TEXTFIELD>
-							<TEXTFIELD w="150" title="40 - Number of new referrals - Severe malnutrition" y="410" h="20" x="290">indicator_40</TEXTFIELD>
-							<TEXTFIELD w="150" title="41 - Number of new referrals - Moderate malnutrition" y="430" h="20" x="10">indicator_41</TEXTFIELD>
-							<TEXTFIELD w="150" title="42 - Number of new referrals - Cough for 2 or more weeks" y="430" h="20" x="290">indicator_42</TEXTFIELD>
-							<TEXTFIELD w="150" title="43 - Number of new referrals - HIV Counselling and Testing (HCT)" y="450" h="20" x="10">indicator_43</TEXTFIELD>
-							<TEXTFIELD w="150" title="44 - Number of new referrals - Routine check-ups for the elderly (60+)" y="450" h="20" x="290">indicator_44</TEXTFIELD>
+						<FORM name="Indicators 37-46" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+							<TEXTFIELD w="150" title="37 - Number of new referrals - ANC " y="370" h="20" x="10">indicator_37</TEXTFIELD>
+							<TEXTFIELD w="150" title="38 - Number of new referrals - Skilled delivery" y="370" h="20" x="290">indicator_38</TEXTFIELD>
+							<TEXTFIELD w="150" title="39 - Number of new referrals - New-borns with danger signs  referred" y="390" h="20" x="10">indicator_39</TEXTFIELD>
+							<TEXTFIELD w="150" title="40 - Number of new referrals - Children of 0-11 months referred for immunization" y="390" h="20" x="290">indicator_40</TEXTFIELD>
+							<TEXTFIELD w="150" title="41 - Number of new referrals - Children 6 - 59 Months referred for Vitamin A supplementation" y="410" h="20" x="10">indicator_41</TEXTFIELD>
+							<TEXTFIELD w="150" title="42 - Number of new referrals - Severe malnutrition" y="410" h="20" x="290">indicator_42</TEXTFIELD>
+							<TEXTFIELD w="150" title="43 - Number of new referrals - Moderate malnutrition" y="430" h="20" x="10">indicator_43</TEXTFIELD>
+							<TEXTFIELD w="150" title="44 - Number of new referrals - Cough for 2 or more weeks" y="430" h="20" x="290">indicator_44</TEXTFIELD>
+							<TEXTFIELD w="150" title="45 - Number of new referrals - HIV Counselling and Testing (HCT)" y="450" h="20" x="10">indicator_45</TEXTFIELD>
+							<TEXTFIELD w="150" title="46 - Number of new referrals - Routine check-ups for the elderly (60+)" y="450" h="20" x="290">indicator_46</TEXTFIELD>
 						</FORM>
-						<FORM name="Indicators 45-49" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
-							<TEXTFIELD w="150" title="45 - Number of people with known chronic illness  referred - Diabetes" y="470" h="20" x="10">indicator_45</TEXTFIELD>
-							<TEXTFIELD w="150" title="46 - Number of people with known chronic illness  referred - Cancer" y="470" h="20" x="290">indicator_46</TEXTFIELD>
-							<TEXTFIELD w="150" title="47 - Number of people with known chronic illness  referred - Mental Illness" y="490" h="20" x="10">indicator_47</TEXTFIELD>
-							<TEXTFIELD w="150" title="48 - Number of people with known chronic illness  referred - Hypertension" y="490" h="20" x="290">indicator_48</TEXTFIELD>
-							<TEXTFIELD w="150" title="49 - Number of people with known chronic illness  referred - Chronic Cough" y="510" h="20" x="10">indicator_49</TEXTFIELD>
+						<FORM name="Indicators 47-52" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+							<TEXTFIELD w="150" title="47 - Number of people with known chronic illness  referred - Diabetes" y="470" h="20" x="10">indicator_47</TEXTFIELD>
+							<TEXTFIELD w="150" title="48 - Number of people with known chronic illness  referred - Cancer" y="470" h="20" x="290">indicator_48</TEXTFIELD>
+							<TEXTFIELD w="150" title="49 - Number of people with known chronic illness  referred - Mental Illness" y="490" h="20" x="10">indicator_49</TEXTFIELD>
+							<TEXTFIELD w="150" title="50 - Number of people with known chronic illness  referred - Hypertension" y="490" h="20" x="290">indicator_50</TEXTFIELD>
+							<TEXTFIELD w="150" title="51 - Number of people with known chronic illness  referred - Chronic Cough" y="510" h="20" x="10">indicator_51</TEXTFIELD>
+							<TEXTFIELD w="150" title="52 - Number of people with known chronic illness  referred - Total of the others" y="510" h="20" x="10">indicator_52</TEXTFIELD>
 						</FORM>
-						<FORM name="Indicators 50-53" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
-							<TEXTFIELD w="150" title="50 - Number of defaulters referred - ANC" y="510" h="20" x="290">indicator_50</TEXTFIELD>
-							<TEXTFIELD w="150" title="51 - Number of defaulters referred - Immunization" y="530" h="20" x="10">indicator_51</TEXTFIELD>
-							<TEXTFIELD w="150" title="52 - Number of defaulters referred - Tuberculosis treatment" y="530" h="20" x="290">indicator_52</TEXTFIELD>
-							<TEXTFIELD w="150" title="53 - Number of defaulters referred - ART" y="550" h="20" x="10">indicator_53</TEXTFIELD>
+						<FORM name="Indicators 53-56" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+							<TEXTFIELD w="150" title="53 - Number of defaulters referred - ANC" y="510" h="20" x="290">indicator_53</TEXTFIELD>
+							<TEXTFIELD w="150" title="54 - Number of defaulters referred - Immunization" y="530" h="20" x="10">indicator_54</TEXTFIELD>
+							<TEXTFIELD w="150" title="55 - Number of defaulters referred - Tuberculosis treatment" y="530" h="20" x="290">indicator_55</TEXTFIELD>
+							<TEXTFIELD w="150" title="56 - Number of defaulters referred - ART" y="550" h="20" x="10">indicator_56</TEXTFIELD>
 						</FORM>
-						<FORM name="Indicators 54-59" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
-							<TEXTFIELD w="150" title="54 - Number of deaths in the month - 0-28 days" y="550" h="20" x="290">indicator_54</TEXTFIELD>
-							<TEXTFIELD w="150" title="55 - Number of deaths in the month - 29 days-11 months" y="570" h="20" x="10">indicator_55</TEXTFIELD>
-							<TEXTFIELD w="150" title="56 - Number of deaths in the month - 12-59 months" y="570" h="20" x="290">indicator_56</TEXTFIELD>
-							<TEXTFIELD w="150" title="57 - Number of deaths in the month - Maternal " y="590" h="20" x="10">indicator_57</TEXTFIELD>
-							<TEXTFIELD w="150" title="58 - Number of deaths in the month - Other deaths" y="590" h="20" x="290">indicator_58</TEXTFIELD>
-							<TEXTFIELD w="150" title="59 - Number of deaths in the month - Total deaths" y="610" h="20" x="10">indicator_59</TEXTFIELD>
+						<FORM name="Indicators 57-62" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+							<TEXTFIELD w="150" title="57 - Number of deaths in the month - 0-28 days" y="550" h="20" x="290">indicator_57</TEXTFIELD>
+							<TEXTFIELD w="150" title="58 - Number of deaths in the month - 29 days-11 months" y="570" h="20" x="10">indicator_58</TEXTFIELD>
+							<TEXTFIELD w="150" title="59 - Number of deaths in the month - 12-59 months" y="570" h="20" x="290">indicator_59</TEXTFIELD>
+							<TEXTFIELD w="150" title="60 - Number of deaths in the month - Maternal " y="590" h="20" x="10">indicator_60</TEXTFIELD>
+							<TEXTFIELD w="150" title="61 - Number of deaths in the month - Other deaths" y="590" h="20" x="290">indicator_61</TEXTFIELD>
+							<TEXTFIELD w="150" title="62 - Number of deaths in the month - Total deaths" y="610" h="20" x="10">indicator_62</TEXTFIELD>
 						</FORM>
-						<FORM name="Indicators 60-62" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
-							<TEXTFIELD w="150" title="60 - Total number of community dialogue days  held" y="630" h="20" x="10">indicator_60</TEXTFIELD>
-							<TEXTFIELD w="150" title="61 - Total number of community Action Days held" y="630" h="20" x="10">indicator_61</TEXTFIELD>
-							<TEXTFIELD w="150" title="62 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_62</TEXTFIELD>
+						<FORM name="Indicators 63-65" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
+							<TEXTFIELD w="150" title="63 - Total number of community dialogue days  held" y="630" h="20" x="10">indicator_63</TEXTFIELD>
+							<TEXTFIELD w="150" title="64 - Total number of community Action Days held" y="630" h="20" x="10">indicator_64</TEXTFIELD>
+							<TEXTFIELD w="150" title="65 - Total number of community monthly meetings held" y="630" h="20" x="290">indicator_65</TEXTFIELD>
 						</FORM>
-						<FORM name="Indicators 63-67" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
-							<TEXTFIELD w="150" title="63 - Total number of community dialogue days  held" y="650" h="20" x="10">indicator_63</TEXTFIELD>
-							<TEXTFIELD w="150" title="64 - Total number of community Action Days held" y="650" h="20" x="290">indicator_64</TEXTFIELD>
-							<TEXTFIELD w="150" title="65 - Total number of community monthly meetings held" y="670" h="20" x="10">indicator_65</TEXTFIELD>
+						<FORM name="Indicators 66-67" keyfield="surveys_515_detail_id" linkfield="surveys_515_id" table="surveys_515_details">
 							<COMBOLIST w="150" title="66 - CHU issued with any commodities? " y="650" h="20" x="10">indicator_66
 								<DATA key="Yes">Yes</DATA>
 								<DATA key="No">No</DATA>
@@ -860,6 +860,30 @@
 		<FILTER w="700" name="Sub County - Report 515 Report " split="150" linkfield="sub_county_id" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<COMBOBOX w="430" title="Sub County " lptable="sub_countys" noorg="true" y="10" h="20" x="10" lpfield="sub_county_name">sub_county_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Report 515 Report " reportfile="vw_surveys_515_details_sub_county.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Division- Report 515 Report " split="150" linkfield="sub_county_id" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Division " lptable="divisions" noorg="true" y="10" h="20" x="10" lpfield="division_name">division_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Report 515 Report " reportfile="vw_surveys_515_details_division.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Location - Report 515 Report " split="150" linkfield="sub_county_id" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Location" lptable="locations" noorg="true" lpkey="location_id" y="10" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Report 515 Report " reportfile="vw_surveys_515_details_sub_county.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Sub Location - Report 515 Report " split="150" linkfield="sub_county_id" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Sub Location" lptable="sub_locations" noorg="true" y="10" h="20" x="10" lpfield="sub_location_name">sub_location_id</COMBOBOX>
 				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
 			</FILTERFORM>

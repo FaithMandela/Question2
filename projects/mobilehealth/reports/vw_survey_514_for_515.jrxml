@@ -223,7 +223,7 @@ UNION
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="1" y="0" width="27" height="15" uuid="f11117dd-07c2-45a4-b905-0ca7a47c1822"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="1" y="0" width="27" height="15" uuid="f11117dd-07c2-45a4-b905-0ca7a47c1822"/>
 				<box leftPadding="4">
 					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
@@ -237,7 +237,7 @@ UNION
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="28" y="0" width="404" height="15" uuid="1d95c5ee-35ea-4ceb-a41b-90fedc506b99"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="28" y="0" width="404" height="15" uuid="1d95c5ee-35ea-4ceb-a41b-90fedc506b99"/>
 				<box leftPadding="4">
 					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
@@ -251,7 +251,7 @@ UNION
 				<textFieldExpression><![CDATA[$F{question}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="432" y="0" width="105" height="15" uuid="c3a60db1-e9a0-4ded-9586-c3340ae985d2"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="432" y="0" width="105" height="15" uuid="c3a60db1-e9a0-4ded-9586-c3340ae985d2"/>
 				<box leftPadding="4">
 					<pen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
 					<topPen lineWidth="1.0" lineStyle="Dotted" lineColor="#BFBFBF"/>
