@@ -660,7 +660,6 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	
 	<DESK w="700" name="Aptitude Tests" key="180" h="550">
 		<GRID name="Aptitude Tests" keyfield="aptitude_test_id" table="aptitude_tests">
 			<TEXTFIELD w="75" title="Aptitude Test ID">aptitude_test_id</TEXTFIELD>
@@ -711,5 +710,4 @@
 		<JASPER name="Aptitude Tests Report" reportfile="aptitude_test.jasper"></JASPER>
 		<JASPER name="Pass Report" reportfile="aptitude_grades.jasper"></JASPER>
 	</DESK>
-	
 </APP>

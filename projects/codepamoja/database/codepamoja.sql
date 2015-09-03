@@ -22,7 +22,8 @@ CREATE TABLE aptitude_grades (
 	date_taken 				date,
 	date_graded 			date,
 	grade 					integer,
-	review_comment 			text
+	review_comment 			text,
+	UNIQUE(aptitude_test_id, user_id)
 );
 CREATE INDEX aptitude_grades_aptitude_test_id ON aptitude_grades (aptitude_test_id);
 CREATE INDEX aptitude_grades_user_id ON aptitude_grades (user_id);
