@@ -37,11 +37,10 @@ CREATE TABLE aptitude_ongoing (
 	UNIQUE (aptitude_test_id, user_id)
 );
 
-
 CREATE VIEW vw_aptitude_grades AS 
 	SELECT aptitude_tests.aptitude_test_id, aptitude_tests.aptitude_test_name,
 		aptitude_tests.pass_mark,
-		aptitude_grades.user_id, entitys.entity_name AS user_name,
+		aptitude_grades.user_id, entitys.user_name, entitys.entity_name,
 		aptitude_grades.graded_by, grader_entity.entity_name AS graded_by_name,
 		aptitude_grades.aptitude_grade_id, aptitude_grades.grade, 
 		aptitude_grades.date_taken, aptitude_grades.date_graded, aptitude_grades.org_id

@@ -78,8 +78,8 @@
 	<SERVER dbpath="jdbc:postgresql://localhost/tamshi" dbname="tamshi" path="tamshi" xmlfile="sms.tamshi.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Tamshi SMS Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="true" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</SERVER>
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mpamanech" path="mobilehealth" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">Mpamanech Tomcat Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mpamanech" path="mobilehealth" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Mpamanech Tomcat Server</SERVER>
 </APPLIST>
