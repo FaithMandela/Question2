@@ -47,7 +47,14 @@ CREATE VIEW vw_aptitude_grades AS
 	FROM aptitude_grades INNER JOIN aptitude_tests ON aptitude_grades.aptitude_test_id = aptitude_tests.aptitude_test_id
 		INNER JOIN entitys ON entitys.entity_id = aptitude_grades.user_id
 		LEFT JOIN entitys as grader_entity ON grader_entity.entity_id = aptitude_grades.user_id;
-     
+		
+CREATE VIEW vw_aptitude_ongoing AS 
+	SELECT aptitude_ongoing.aptitude_ongoing_id, aptitude_tests.aptitude_test_name AS aptitude_test_id,
+		entitys.entity_name AS user_id
+	FROM aptitude_ongoing JOIN entitys ON entitys.user_name::bpchar = aptitude_ongoing.user_id
+		JOIN aptitude_tests ON aptitude_tests.aptitude_test_id = aptitude_ongoing.aptitude_test_id;
+
+		
 CREATE OR REPLACE FUNCTION apt_grade_change() RETURNS trigger AS $$ 
 BEGIN
 
