@@ -24,6 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
+
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -61,7 +66,7 @@ public class BWebFiles extends HttpServlet {
 			
 			response.setContentType("application/json;charset=\"utf-8\"");
 			out.println(resp);
-		} if(view.getName().equals("FILE")) {
+		} if(view.getName().equals("FILES")) {
 			if(sp.equals("/barazafiles")) getFile(request, response);
 			if(sp.equals("/webdavfiles")) getWebDavFile(request, response);
 			if(sp.equals("/putbarazafiles")) receiveFile(request);
@@ -102,7 +107,7 @@ System.out.println("BASE 1010 : " + userName);
 		linkField = view.getAttribute("linkfield");
 		linkValue = web.getDataItem();
 
-		if(view.getName().equals("FILE")) {
+		if(view.getName().equals("FILES")) {
 			String repository = webPath + view.getAttribute("repository");
 			String username = view.getAttribute("username");
 			String password = view.getAttribute("password");
@@ -120,8 +125,9 @@ System.out.println("BASE 1020 : " + repository);
 	
 	
 	public String importFile(HttpServletRequest request) {
-		String response = "{\"success\": 1, \"message\": \"File uploaded\"";
-
+		String response = "{\"success\": 0, \"message\": \"File uploaded\"}";
+		JsonObjectBuilder jshd = Json.createObjectBuilder();
+		
 		int yourMaxMemorySize = 262144;
 		
 		ServletContext sc = getServletContext();
@@ -157,13 +163,20 @@ System.out.println("BASE 1410 : " + fileName);
 						String orgID = db.getOrgID();
 						String userOrg = db.getUserOrg();
 						
+						jshd.add("success", 1);
+						jshd.add("name", item.getName());
+						jshd.add("size", item.getSize());
+						jshd.add("message", "File uploaded");
+                        
+						JsonObject jsObj = jshd.build();
+						response = jsObj.toString();
+						
 						BImportVector iv = new BImportVector(view);
 						iv.getTextData(item.getInputStream());
 						query.importData(iv.getData());
 					}
 				}
 			}
-			response += ",\"fileuploadadd\" : true, \"file\" : " + fileName + "}";
 		} catch (FileUploadException ex) {
 			System.out.println("File upload exception " + ex);
 		} catch(IOException ex) {
@@ -172,7 +185,7 @@ System.out.println("BASE 1410 : " + fileName);
 			System.out.println("File saving failed Exception " + ex);
 		}
 		
-System.out.println("BASE 1420 : File uploaded");
+System.out.println("BASE 1420 : " + response);
 
 		return response;
 	}

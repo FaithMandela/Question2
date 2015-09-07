@@ -838,7 +838,8 @@
 	<DESK w="700" name="Applicant" key="23" h="650">
 		<GRID name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="150" title="Name">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="120" title="Name">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Age">applicant_age</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
@@ -1758,7 +1759,7 @@
 			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" where="(short_listed = 0)">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
@@ -1782,7 +1783,7 @@
 			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" where="(short_listed = 1)">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>

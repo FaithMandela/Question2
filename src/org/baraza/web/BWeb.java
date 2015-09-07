@@ -332,19 +332,19 @@ public class BWeb {
 				if(smel.isLeaf()) {
                     String icon = smel.getAttribute("icon", "fa fa-arrow-right");
 					String link = "";
-					if(smel.getAttribute("xml") == null) {
-						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
-						link += " <i class='" + icon + "'></i> ";
-                        
-                        if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
-						else link += "<span>" + smel.getAttribute("name") + "</span></a>";
-					} else {
+					if(smel.getAttribute("xml") != null) {
 						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
 						link += " <i class='" + icon + "'></i> ";
-                        
-                        if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
-						else link += "<span>" + smel.getAttribute("name") + "</span></a>";
+					} else if(smel.getAttribute("url") != null) {
+						link = "<a href=\"" + smel.getAttribute("url") + "\"" + blankpage + ">"; 
+						link += " <i class='" + icon + "'></i> ";
+					} else {
+						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
+						link += " <i class='" + icon + "'></i> ";
 					}
+					
+					if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
+					else link += "<span>" + smel.getAttribute("name") + "</span></a>";
 					
 					if(viewKeys.get(0).equals(smel.getValue())) submenu += "\t\t<li class='active'>\n";
 					else submenu += "\t\t<li>\n";

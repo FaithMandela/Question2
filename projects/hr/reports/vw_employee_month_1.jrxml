@@ -92,7 +92,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 	<group name="currency_name">
 		<groupExpression><![CDATA[$F{currency_name}]]></groupExpression>
 		<groupHeader>
-			<band height="50">
+			<band height="36">
 				<line>
 					<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="802" height="1" uuid="6391bab6-e5ed-4de1-89f6-a09e5451c8a3"/>
 					<graphicElement>
@@ -107,98 +107,98 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<text><![CDATA[ID]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="33" y="20" width="136" height="15" forecolor="#000000" uuid="e4c1e368-f552-45d2-a5c0-2707701d3746"/>
+					<reportElement style="Column header" x="33" y="20" width="164" height="15" forecolor="#000000" uuid="e4c1e368-f552-45d2-a5c0-2707701d3746"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Entity Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="169" y="20" width="50" height="15" forecolor="#000000" uuid="244308dc-a221-4ab1-ba66-f7b91c6ee3cb"/>
+					<reportElement style="Column header" x="197" y="20" width="50" height="15" forecolor="#000000" uuid="244308dc-a221-4ab1-ba66-f7b91c6ee3cb"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Basic Pay]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="269" y="20" width="50" height="15" forecolor="#000000" uuid="0d105781-d4d3-4297-b790-3896f98bdfaa"/>
+					<reportElement style="Column header" x="297" y="20" width="50" height="15" forecolor="#000000" uuid="0d105781-d4d3-4297-b790-3896f98bdfaa"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Allowance]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="319" y="20" width="50" height="15" forecolor="#000000" uuid="a51fab6f-215a-496a-8bad-c71bfc709b80"/>
+					<reportElement style="Column header" x="347" y="20" width="50" height="15" forecolor="#000000" uuid="a51fab6f-215a-496a-8bad-c71bfc709b80"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Deduction]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="369" y="20" width="50" height="15" forecolor="#000000" uuid="d236c552-cb11-48fd-b511-a34af3fa8870"/>
+					<reportElement style="Column header" x="397" y="20" width="50" height="15" forecolor="#000000" uuid="d236c552-cb11-48fd-b511-a34af3fa8870"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Expense]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="419" y="20" width="50" height="15" forecolor="#000000" uuid="90cc8583-b06c-4f08-8532-69605326f07b"/>
+					<reportElement style="Column header" x="447" y="20" width="50" height="15" forecolor="#000000" uuid="90cc8583-b06c-4f08-8532-69605326f07b"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Tax]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="469" y="20" width="50" height="15" forecolor="#000000" uuid="a1d97c80-1a1c-45d6-8901-277b78cefebc"/>
+					<reportElement style="Column header" x="497" y="20" width="50" height="15" forecolor="#000000" uuid="a1d97c80-1a1c-45d6-8901-277b78cefebc"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Net Pay]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="219" y="20" width="50" height="15" forecolor="#000000" uuid="06978b39-d103-48cf-8e14-c3c63ed4a406"/>
+					<reportElement style="Column header" x="247" y="20" width="50" height="15" forecolor="#000000" uuid="06978b39-d103-48cf-8e14-c3c63ed4a406"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Overtime]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="519" y="21" width="50" height="15" forecolor="#000000" uuid="d8dd76e2-c62b-4e30-93aa-e9547dda6002"/>
+					<reportElement style="Column header" x="547" y="20" width="50" height="15" forecolor="#000000" uuid="d8dd76e2-c62b-4e30-93aa-e9547dda6002"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Per Diem]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="619" y="21" width="50" height="15" forecolor="#000000" uuid="156eddea-91b1-4705-9fae-9c808e224abc"/>
+					<reportElement style="Column header" x="647" y="20" width="50" height="15" forecolor="#000000" uuid="156eddea-91b1-4705-9fae-9c808e224abc"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Recovery]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="669" y="21" width="50" height="15" forecolor="#000000" uuid="69aeb1bf-630e-4099-bf24-1425949a714c"/>
+					<reportElement style="Column header" x="697" y="20" width="50" height="15" forecolor="#000000" uuid="69aeb1bf-630e-4099-bf24-1425949a714c"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Banked]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="719" y="21" width="50" height="15" forecolor="#000000" uuid="772660af-95c5-412c-8a67-300d1b7209a8"/>
+					<reportElement style="Column header" x="747" y="20" width="50" height="15" forecolor="#000000" uuid="772660af-95c5-412c-8a67-300d1b7209a8"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Cost]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="569" y="21" width="50" height="15" forecolor="#000000" uuid="7d16faf0-d184-4349-b611-218c6bc1e6d1"/>
+					<reportElement style="Column header" x="597" y="20" width="50" height="15" forecolor="#000000" uuid="7d16faf0-d184-4349-b611-218c6bc1e6d1"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Advance]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="33" y="0" width="136" height="15" uuid="9c9018f4-b1a0-4483-922b-40373bd9c62f"/>
+					<reportElement style="Detail" x="33" y="0" width="164" height="15" uuid="9c9018f4-b1a0-4483-922b-40373bd9c62f"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -207,9 +207,9 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="22">
+			<band height="19">
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement x="169" y="0" width="50" height="15" uuid="c47f381d-59ec-40ea-b5a2-3b930d48a7f6"/>
+					<reportElement x="197" y="0" width="50" height="15" uuid="c47f381d-59ec-40ea-b5a2-3b930d48a7f6"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -220,7 +220,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{basic_pay_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement x="269" y="0" width="50" height="15" uuid="8ea70f77-76ef-4efa-b0fd-7de8822d3f3f"/>
+					<reportElement x="297" y="0" width="50" height="15" uuid="8ea70f77-76ef-4efa-b0fd-7de8822d3f3f"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -231,7 +231,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{payroll_allowance_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement x="319" y="0" width="50" height="15" uuid="9d0e9451-0a62-4897-a909-f4e826cd75f9"/>
+					<reportElement x="347" y="0" width="50" height="15" uuid="9d0e9451-0a62-4897-a909-f4e826cd75f9"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -242,7 +242,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{payroll_deduction_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement x="369" y="0" width="50" height="15" uuid="5c78b103-d674-4b36-b4d9-cc564a96d91c"/>
+					<reportElement x="397" y="0" width="50" height="15" uuid="5c78b103-d674-4b36-b4d9-cc564a96d91c"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -253,7 +253,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{payroll_expense_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement x="419" y="0" width="50" height="15" uuid="6a81c110-7f6f-4658-8490-b897e0ca3ba5"/>
+					<reportElement x="447" y="0" width="50" height="15" uuid="6a81c110-7f6f-4658-8490-b897e0ca3ba5"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -264,7 +264,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{payroll_tax_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement x="469" y="0" width="50" height="15" uuid="12e6e789-7dd0-4d4d-91ce-bd4f023e2a83"/>
+					<reportElement x="497" y="0" width="50" height="15" uuid="12e6e789-7dd0-4d4d-91ce-bd4f023e2a83"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -275,14 +275,14 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{net_pay_1}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="33" y="0" width="136" height="15" forecolor="#000000" uuid="6780f339-aa60-47fd-8eeb-bdeed9592d71"/>
+					<reportElement style="Column header" x="33" y="0" width="164" height="15" forecolor="#000000" uuid="6780f339-aa60-47fd-8eeb-bdeed9592d71"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Totals]]></text>
 				</staticText>
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement x="219" y="0" width="50" height="15" uuid="250e1abd-ee25-4477-aa50-d1ce32bee7ed"/>
+					<reportElement x="247" y="0" width="50" height="15" uuid="250e1abd-ee25-4477-aa50-d1ce32bee7ed"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -293,7 +293,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{overtime_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)">
-					<reportElement x="519" y="0" width="50" height="15" uuid="84f6f49e-1864-4b09-9c05-5a27c58b26bd"/>
+					<reportElement x="547" y="0" width="50" height="15" uuid="84f6f49e-1864-4b09-9c05-5a27c58b26bd"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -304,7 +304,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{per_diem_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)">
-					<reportElement x="569" y="0" width="50" height="15" uuid="f8e5d10c-4627-4255-8bdb-6ad9495d05d8"/>
+					<reportElement x="597" y="0" width="50" height="15" uuid="f8e5d10c-4627-4255-8bdb-6ad9495d05d8"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -315,7 +315,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{advance_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)">
-					<reportElement x="619" y="0" width="50" height="15" uuid="64be0601-9b38-41f7-af1a-fee45fded462"/>
+					<reportElement x="647" y="0" width="50" height="15" uuid="64be0601-9b38-41f7-af1a-fee45fded462"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -326,7 +326,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{advance_deduction_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)">
-					<reportElement x="669" y="0" width="50" height="15" uuid="e4f28ad1-ee20-45a6-8445-ddb673f3de42"/>
+					<reportElement x="697" y="0" width="50" height="15" uuid="e4f28ad1-ee20-45a6-8445-ddb673f3de42"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -337,7 +337,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$V{banked_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)">
-					<reportElement x="719" y="0" width="50" height="15" uuid="af23d9b2-74a6-4d41-b8d2-fdfacbd72a2f"/>
+					<reportElement x="747" y="0" width="50" height="15" uuid="af23d9b2-74a6-4d41-b8d2-fdfacbd72a2f"/>
 					<box>
 						<topPen lineWidth="1.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -396,91 +396,91 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="33" y="0" width="136" height="15" uuid="cc14d829-4e43-4b8b-8226-a08ceeb72006"/>
+					<reportElement style="Detail" x="33" y="0" width="164" height="15" uuid="cc14d829-4e43-4b8b-8226-a08ceeb72006"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="169" y="0" width="50" height="15" uuid="807592a0-3935-4c68-b899-91971b9f47eb"/>
+					<reportElement style="Detail" x="197" y="0" width="50" height="15" uuid="807592a0-3935-4c68-b899-91971b9f47eb"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{basic_pay}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="269" y="0" width="50" height="15" uuid="487b8a40-23d9-4498-8cf7-0219feead7eb"/>
+					<reportElement style="Detail" x="297" y="0" width="50" height="15" uuid="487b8a40-23d9-4498-8cf7-0219feead7eb"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{payroll_allowance}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="319" y="0" width="50" height="15" uuid="1b63ccdc-714f-4e60-a15c-b17ffea76d7a"/>
+					<reportElement style="Detail" x="347" y="0" width="50" height="15" uuid="1b63ccdc-714f-4e60-a15c-b17ffea76d7a"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{payroll_deduction}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="369" y="0" width="50" height="15" uuid="24cb6fbd-c360-4efe-9cd2-78d9a96a467e"/>
+					<reportElement style="Detail" x="397" y="0" width="50" height="15" uuid="24cb6fbd-c360-4efe-9cd2-78d9a96a467e"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{payroll_expense}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="419" y="0" width="50" height="15" uuid="3d93ee31-628e-498e-95b7-f9fbecbf10e2"/>
+					<reportElement style="Detail" x="447" y="0" width="50" height="15" uuid="3d93ee31-628e-498e-95b7-f9fbecbf10e2"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{payroll_tax}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="469" y="0" width="50" height="15" uuid="663bfe61-4f4e-4571-ad6d-b80d7eb75b3c"/>
+					<reportElement style="Detail" x="497" y="0" width="50" height="15" uuid="663bfe61-4f4e-4571-ad6d-b80d7eb75b3c"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{net_pay}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="219" y="0" width="50" height="15" uuid="328d5897-5e26-4277-b2a8-173f7422061d"/>
+					<reportElement style="Detail" x="247" y="0" width="50" height="15" uuid="328d5897-5e26-4277-b2a8-173f7422061d"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{overtime}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="569" y="0" width="50" height="15" uuid="bff07da3-c4e3-4352-9480-ea234535b633"/>
+					<reportElement style="Detail" x="597" y="0" width="50" height="15" uuid="bff07da3-c4e3-4352-9480-ea234535b633"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{advance}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="719" y="0" width="50" height="15" uuid="18313c11-0fe5-4197-a553-24a976161354"/>
+					<reportElement style="Detail" x="747" y="0" width="50" height="15" uuid="18313c11-0fe5-4197-a553-24a976161354"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{cost}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="619" y="0" width="50" height="15" uuid="8c1a4a63-5a6c-4925-8816-35e150abcaec"/>
+					<reportElement style="Detail" x="647" y="0" width="50" height="15" uuid="8c1a4a63-5a6c-4925-8816-35e150abcaec"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{advance_deduction}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="669" y="0" width="50" height="15" uuid="e7253998-7b66-4270-a16b-d66fab562d1c"/>
+					<reportElement style="Detail" x="697" y="0" width="50" height="15" uuid="e7253998-7b66-4270-a16b-d66fab562d1c"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{banked}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="519" y="0" width="50" height="15" uuid="c4fe921a-f992-439d-af36-a83fca74cab2"/>
+					<reportElement style="Detail" x="547" y="0" width="50" height="15" uuid="c4fe921a-f992-439d-af36-a83fca74cab2"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
