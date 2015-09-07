@@ -555,7 +555,7 @@
 				<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Sub Location Name">sub_location_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Village Name">village_name</TEXTFIELD>
-				<GRID name="Reports 515" keyfield="surveys_515_id" table="vw_surveys_515" linkfiled="village_id">
+				<GRID name="Reports 515" keyfield="surveys_515_id" linkfield="village_id" table="vw_surveys_515">
 					<TEXTFIELD w="75" title="Surveys 515 ID">surveys_515_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
@@ -844,12 +844,12 @@
 						</FORM>
 					</FORMVIEW>
 					<FORM cols="2" name="Basic Info" keyfield="surveys_515_id" linkfield="village_id" table="surveys_515">
-						<TEXTFIELD w="430" title="Chu Name" y="30" h="20" x="10">chu_name</TEXTFIELD>
-						<TEXTFIELD w="430" title="Mclu Code" y="50" h="20" x="10">mclu_code</TEXTFIELD>
+						<TEXTFIELD w="430" title="Name of CHU" y="30" h="20" x="10">chu_name</TEXTFIELD>
+						<TEXTFIELD w="430" title="CHEW Name" y="90" h="20" x="10">chew_name</TEXTFIELD>
 						<TEXTFIELD w="430" title="Link Facility" y="70" h="20" x="10">link_facility</TEXTFIELD>
-						<TEXTFIELD w="430" title="Chew Name" y="90" h="20" x="10">chew_name</TEXTFIELD>
-						<TEXTFIELD w="150" title="No Of Chvs" y="110" h="20" x="10">no_of_chvs</TEXTFIELD>
-						<TEXTFIELD w="150" title="Total Chws Reported" y="110" h="20" x="290">total_chws_reported</TEXTFIELD>
+						<TEXTFIELD w="430" title="MCUL Code" y="50" h="20" x="10">mclu_code</TEXTFIELD>
+						<TEXTFIELD w="150" title="Total CHVs Reported" y="110" h="20" x="290">total_chws_reported</TEXTFIELD>
+						<TEXTFIELD w="150" title="No Of CHVs" y="110" h="20" x="10">no_of_chvs</TEXTFIELD>
 						<TEXTDATE w="150" title="Start Date" y="130" h="20" x="10">start_date</TEXTDATE>
 						<TEXTDATE w="150" title="End Date" y="130" h="20" x="290">end_date</TEXTDATE>
 					</FORM>
@@ -913,7 +913,7 @@
 			<TEXTDATE w="75" title="Receiving Officer Date">receiving_officer_date</TEXTDATE>
 			<SPINTIME w="75" title="Receiving Officer Time">receiving_officer_time</SPINTIME>
 			<FORM name="Report 100" keyfield="survey_100_id" table="survey_100">
-				<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="10" h="20" x="10" lpfield="health_worker_id">health_worker_id</COMBOBOX>
+				<COMBOBOX w="430" title="Health Worker" lptable="health_workers" y="10" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Patient Gender" y="30" h="20" x="10">patient_gender</TEXTFIELD>
 				<TEXTFIELD w="430" title="Patient Name" y="50" h="20" x="10">patient_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Patient Age" y="70" h="20" x="10">patient_age</TEXTFIELD>

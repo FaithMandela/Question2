@@ -154,7 +154,7 @@
 		</GRID>
 		<GRID name="Years" keyfield="year_id" table="years" noorg="true">
 			<TEXTFIELD w="75" title="Year Name">year_name</TEXTFIELD>
-			<FORM name="Years" keyfield="year_id" table="years">
+			<FORM name="Years" keyfield="year_id" table="years" noorg="true">
 				<TEXTFIELD w="150" title="Year Name" y="10" h="20" x="10">year_name</TEXTFIELD>
 			</FORM>
 		</GRID>
@@ -259,12 +259,12 @@
 					<TEXTFIELD w="430" title="Data Source" y="50" h="20" x="10">data_source</TEXTFIELD>
 				</FORM>
 			</GRID>
-			<GRID name="Facility Data Response Comments" keyfield="facility_data_response_id" updatetable="facility_data_response" orderby="indicator_id ASC" linkfield="facility_data_id" table="vw_facility_data_response" where="(indicator_category = 1)">
+			<GRID name="Facility Data Comments" keyfield="facility_data_response_id" updatetable="facility_data_response" orderby="indicator_id ASC" linkfield="facility_data_id" table="vw_facility_data_response" where="(indicator_category = 1)">
 				<TEXTFIELD w="75" title="Indicator Label">indicator_label</TEXTFIELD>
 				<TEXTFIELD w="75" title="Indicator">indicator</TEXTFIELD>
 				<EDITFIELD w="75" title="Remark" editkey="facility_data_response_id" edit="true" editvalue="facility_data_response">response</EDITFIELD>
-				<FORM name="Facility Data Response" keyfield="facility_data_response_id" linkfield="facility_data_id" table="facility_data_response">
-					<COMBOBOX w="430" title="Indicator ID" lptable="indicators" y="10" h="20" x="10" lpfield="indicator_id">indicator_id</COMBOBOX>
+				<FORM name="Facility Data Comment" keyfield="facility_data_response_id" linkfield="facility_data_id" table="facility_data_response">
+					<COMBOBOX w="430" title="Indicator" lptable="indicators" noorg="true" y="10" h="20" x="10" lpfield="indicator">indicator_id</COMBOBOX>
 					<TEXTFIELD w="430" title="Remark" y="30" h="20" x="10">response</TEXTFIELD>
 				</FORM>
 			</GRID>
@@ -272,7 +272,7 @@
 			<FORM name="Facility Data" keyfield="facility_data_id" table="facility_data" user="entity_id">
 				<USERFIELD>entity_id</USERFIELD>
 				<COMBOBOX w="430" title="Year" order="year_id ASC" lptable="years" noorg="true" y="10" h="20" x="10" span="true" lpfield="year_name">year_id</COMBOBOX>
-				<COMBOBOX w="430" title="Month" order="month_id ASC" lptable="months" noorg="true" y="10" h="20" x="290" lpfield="month_name">month_id</COMBOBOX>
+				<COMBOBOX w="430" title="Month" lptable="months" orderby="month_id ASC" noorg="true" y="10" h="20" x="290" lpfield="month_name">month_id</COMBOBOX>
 			</FORM>
 		</GRID>
 	</DESK>
