@@ -786,6 +786,11 @@ $(function () {
         var progress = parseInt(data.loaded / data.total * 100, 10);
         $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function (e, data) {
+console.log('BASE 5');
+console.log(data.result);
+		var fileDone = $('<span class="text-danger"/>').append('<button>').text('process');
+        $(data.context.children()[0]).append('<br>').append(fileDone);
+
         $.each(data.result.files, function (index, file) {
             if (file.url) {
                 var link = $('<a>').attr('target', '_blank').prop('href', file.url);
