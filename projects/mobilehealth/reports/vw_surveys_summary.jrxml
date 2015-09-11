@@ -42,8 +42,7 @@ WHEN survey_status = 2 THEN 'Returned'
 WHEN survey_status = 3 THEN 'Redone' ELSE 'Pending' END) AS survey_status
 
 FROM vw_surveys WHERE vw_surveys.health_worker_id = '$P!{health_worker_id}'
-AND vw_surveys.survey_time >= '$P!{start_date}'::date
-AND vw_surveys.survey_time <= '$P!{end_date}'::date]]>
+AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_date}'::date]]>
 	</queryString>
 	<field name="health_worker_id" class="java.lang.Integer"/>
 	<field name="worker_name" class="java.lang.String"/>

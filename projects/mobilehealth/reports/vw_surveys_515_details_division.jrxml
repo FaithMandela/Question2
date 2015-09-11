@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_515_details_division" language="groovy" pageWidth="842" pageHeight="1190" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e6d19df4-6960-4863-8726-b677eb660f8e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="352"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -1094,7 +1094,7 @@ AND end_date <= '$P!{end_date}'::date
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[No Of Chvs]]></text>
+				<text><![CDATA[No Of CHVs]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="16" width="115" height="15" forecolor="#000000" uuid="344748d5-c610-4519-a404-105c99becd65"/>
@@ -1104,7 +1104,7 @@ AND end_date <= '$P!{end_date}'::date
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Total Chws Reported]]></text>
+				<text><![CDATA[Total CHVs Reported]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="346" y="15" width="85" height="15" forecolor="#000000" uuid="9b16e63b-ab3c-418e-a46e-9b31bad0805c"/>
