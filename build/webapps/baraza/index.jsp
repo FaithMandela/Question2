@@ -806,9 +806,17 @@ $(function () {
         $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function (e, data) {
 console.log('BASE 5');
-console.log(data.result);
-		var fileDone = $('<span class="text-danger"/>').append('<button>').text('process');
-        $(data.context.children()[0]).append('<br>').append(fileDone);
+console.log(data.result.message);
+		var fileDone = $('<button>').text(data.result.message);
+        $(data.context.children()[0]).append(fileDone).click(function(){ 
+			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {
+
+				if(adata.error == false){
+                    toastr['success'](adata.msg, "Ok");
+                     $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
+                }
+	        }, "JSON");
+			}).append('<br>');
 
         $.each(data.result.files, function (index, file) {
             if (file.url) {
@@ -831,7 +839,6 @@ console.log(data.result);
         });
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
-
 
 
 </script>

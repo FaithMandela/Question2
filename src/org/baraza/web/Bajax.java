@@ -66,7 +66,7 @@ public class Bajax extends HttpServlet {
 		db = web.getDB();
 		
 		String sp = request.getServletPath();
-		if(sp.equals("/ajaxupdate")) {		
+		if(sp.equals("/ajaxupdate")) {
 			if("edit".equals(request.getParameter("oper"))) {
 				resp = updateGrid(request);
 			}
@@ -87,21 +87,24 @@ public class Bajax extends HttpServlet {
 		String endDate = request.getParameter("enddate");
 		String endTime = request.getParameter("endtime");
 
-		if("calresize".equals(fnct)) resp = calResize(id, endDate, endTime);
-		if("calmove".equals(fnct)) resp = calMove(id, startDate, startTime, endDate, endTime);
-		if("filter".equals(fnct)) resp = filterJSON(request);
-		
-		if("operation".equals(fnct)) {
+		if("calresize".equals(fnct)) {
+			resp = calResize(id, endDate, endTime);
+		} else if("calmove".equals(fnct)) {
+			resp = calMove(id, startDate, startTime, endDate, endTime);
+		} else if("filter".equals(fnct)) {
+			resp = filterJSON(request);
+		} else if("operation".equals(fnct)) {
 			resp = calOperation(id, ids, request);
 			response.setContentType("application/json;charset=\"utf-8\"");
-		}
-		
-		if("password".equals(fnct)) { 
+		} else if("password".equals(fnct)) {
 			resp = changePassword(request.getParameter("oldpass"), request.getParameter("newpass"));
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("importprocess".equals(fnct)) {
+			resp = importProcess(web.getView().getAttribute("process"));
 			response.setContentType("application/json;charset=\"utf-8\"");
 		}
 		
-		web.close();	// close DB commections
+		web.close();			// close DB commections
 		out.println(resp);
 	}
 	
@@ -244,5 +247,20 @@ public class Bajax extends HttpServlet {
 		
 		return resp;
 	}
+	
+	public String importProcess(String sqlProcess) {
+		String resp = "";
+						
+		String mysql = "SELECT " + sqlProcess + "('0', '" + db.getUserID() + "', '')";
+System.out.println("BASE : " + mysql);
+		String myoutput = web.executeFunction(mysql);
+		
+		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
+		else resp = "{\"success\": 1, \"message\": \"Processing Successfull\"}";
+		
+		return resp;
+	}
+	
+	
  
 }
