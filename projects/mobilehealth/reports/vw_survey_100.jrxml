@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_100" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dd1516cf-ed5b-4546-bd31-d29492bc1c50">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="96"/>
+	<property name="ireport.y" value="48"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -29,7 +29,15 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_survey_100.worker_name,worker_mobile_num, vw_survey_100.org_name, vw_survey_100.survey_100_id, vw_survey_100.patient_gender, vw_survey_100.patient_name, vw_survey_100.patient_age, vw_survey_100.community_healt_unit, vw_survey_100.link_health_facility, vw_survey_100.referral_reason, vw_survey_100.treatment, vw_survey_100.comments, vw_survey_100.sub_location, vw_survey_100.village, vw_survey_100.community_unit, vw_survey_100.receiving_officer_name, vw_survey_100.receiving_officer_profession, vw_survey_100.health_facility_name, vw_survey_100.action_taken, vw_survey_100.receiving_officer_date, vw_survey_100.receiving_officer_time,  vw_survey_100.referral_time
+		<![CDATA[SELECT vw_survey_100.worker_name,worker_mobile_num, vw_survey_100.org_name, vw_survey_100.survey_100_id, vw_survey_100.patient_gender, vw_survey_100.patient_name, vw_survey_100.patient_age, vw_survey_100.patient_age_type, vw_survey_100.community_healt_unit, vw_survey_100.link_health_facility_name, vw_survey_100.referral_reason, vw_survey_100.treatment, vw_survey_100.comments,
+vw_survey_100.location_name,
+vw_survey_100.sub_location_name,
+vw_survey_100.village_name,
+vw_survey_100.community_unit,
+vw_survey_100.receiving_officer_name,
+vw_survey_100.receiving_officer_profession,
+vw_survey_100.health_facility_name,
+vw_survey_100.action_taken, vw_survey_100.receiving_officer_date, vw_survey_100.receiving_officer_time,  vw_survey_100.referral_time
 FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="worker_name" class="java.lang.String"/>
@@ -39,13 +47,15 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 	<field name="patient_gender" class="java.lang.String"/>
 	<field name="patient_name" class="java.lang.String"/>
 	<field name="patient_age" class="java.lang.String"/>
+	<field name="patient_age_type" class="java.lang.String"/>
 	<field name="community_healt_unit" class="java.lang.String"/>
-	<field name="link_health_facility" class="java.lang.String"/>
+	<field name="link_health_facility_name" class="java.lang.String"/>
 	<field name="referral_reason" class="java.lang.String"/>
 	<field name="treatment" class="java.lang.String"/>
 	<field name="comments" class="java.lang.String"/>
-	<field name="sub_location" class="java.lang.String"/>
-	<field name="village" class="java.lang.String"/>
+	<field name="location_name" class="java.lang.String"/>
+	<field name="sub_location_name" class="java.lang.String"/>
+	<field name="village_name" class="java.lang.String"/>
 	<field name="community_unit" class="java.lang.String"/>
 	<field name="receiving_officer_name" class="java.lang.String"/>
 	<field name="receiving_officer_profession" class="java.lang.String"/>
@@ -140,7 +150,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{link_health_facility}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{link_health_facility_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="1" y="157" width="551" height="15" uuid="5ce414a9-19e5-4f84-a603-78e9b624aad9"/>
@@ -172,7 +182,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sub_location}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sub_location_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="101" y="291" width="186" height="15" uuid="ef41ee1f-4841-4248-a199-03ff0e6fb902"/>
@@ -180,7 +190,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{village}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{village_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="169" y="328" width="383" height="15" uuid="0a361f5d-6efb-45d2-98ad-a3ff4922d9b0"/>
@@ -212,7 +222,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{health_facility_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{link_health_facility_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="1" y="467" width="551" height="15" uuid="efa7dad5-280c-48b3-8559-80fd0474fcd8"/>
@@ -500,7 +510,7 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Name of CHW : ]]></text>
+				<text><![CDATA[Name of CHV : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="364" y="527" width="188" height="15" uuid="3041efbc-4c31-4b9b-8834-258cbd1fd8b5"/>
@@ -542,6 +552,30 @@ FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
 				</textElement>
 				<text><![CDATA[Call Made By Referring officer : ]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="70" y="309" width="186" height="15" uuid="831ad8e6-33c6-45e7-8c4c-02ad982cc14c"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="241" y="81" width="52" height="15" forecolor="#000000" uuid="d97e18a1-0952-4c72-a1d2-1e2ccd8be3e2"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Age    : ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="293" y="81" width="254" height="15" uuid="0e9398f6-7a46-4aa0-9284-ee52a86a26b5"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patient_age} + " " + ($F{patient_age_type}.equals("M") ? "Months":"Years")]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed_village" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="128"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -459,17 +459,17 @@ ORDER BY vw_surveys.survey_time ASC]]>
 	<summary>
 		<band height="24" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="1" y="2" width="80" height="22" forecolor="#000000" uuid="48bdc9d2-cd67-4807-a166-e3c108ecfb7b"/>
+				<reportElement style="Column header" x="1" y="2" width="193" height="22" forecolor="#000000" uuid="48bdc9d2-cd67-4807-a166-e3c108ecfb7b"/>
 				<box>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Total Reports : ]]></text>
+				<text><![CDATA[Total number of households visited :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="81" y="2" width="1069" height="22" uuid="c12ff53d-79cb-47be-a6e8-b8971fff1ae1"/>
+				<reportElement style="Detail" x="194" y="2" width="956" height="22" uuid="c12ff53d-79cb-47be-a6e8-b8971fff1ae1"/>
 				<box>
 					<topPen lineWidth="0.5" lineColor="#CCCCCC"/>
 				</box>

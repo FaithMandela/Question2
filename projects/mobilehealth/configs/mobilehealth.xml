@@ -509,13 +509,6 @@
 						<ACTION fnct="upd_514" approval="2">Return</ACTION>
 					</ACTIONS>
 				</GRID>
-				<JASPER name="County Report " reportfile="vw_surveys.jasper"></JASPER>
-				<FILTER w="700" name="Worker Reports" split="150" type="vert" h="550">
-					<FILTERFORM name="Worker">
-						<COMBOBOX w="430" title="Health Worker " lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
-					</FILTERFORM>
-					<JASPER name="Health Worker Reports" reportfile="vw_surveys_detailed.jasper"></JASPER>
-				</FILTER>
 			</GRID>
 		</GRID>
 		<FILTER w="700" name="CHV Reports" split="150" type="vert" h="550">
@@ -958,6 +951,14 @@
 				</GRID>
 			</GRID>
 		</GRID>
+		<FILTER w="700" name="MOH 100 Village Summary" split="150" type="vert" h="550">
+			<FILTERFORM name="Village Date Range">
+				<COMBOBOX w="430" title="Village" lptable="villages" noorg="true" y="30" h="20" x="10" lpfield="village_name">village_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="MOH 100 Village Summary" reportfile="vw_survey_100_village.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" icon="icon-settings" name="Configurations" key="45" h="550">
 		<GRID name="Countys" keyfield="county_id" table="countys" noorg="true">

@@ -1282,7 +1282,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Mclu Code]]></text>
+				<text><![CDATA[MCUL Code]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="30" width="115" height="15" forecolor="#000000" uuid="618245ad-1354-488e-9f8a-6ce70e21a4f3"/>
@@ -1296,14 +1296,14 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Chew Name]]></text>
+				<text><![CDATA[CHEW Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="60" width="115" height="15" forecolor="#000000" uuid="c2674228-fe07-4296-b23f-0c0181eb841c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[No Of Chvs]]></text>
+				<text><![CDATA[No.of CHVs]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="75" width="115" height="15" forecolor="#000000" uuid="344748d5-c610-4519-a404-105c99becd65"/>
@@ -1313,7 +1313,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Total Chws Reported]]></text>
+				<text><![CDATA[Total CHVs Reported]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="346" y="60" width="85" height="15" forecolor="#000000" uuid="a5fb4c81-dfdd-4ea3-a9bb-acc5902d9b76"/>

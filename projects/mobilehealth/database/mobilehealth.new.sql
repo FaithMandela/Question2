@@ -327,7 +327,8 @@ CREATE TABLE survey_100(
     form_serial                     varchar(10),
     patient_gender                  varchar(2),
     patient_name                    varchar(200),
-    patient_age                     varchar(3),
+    patient_age_type                varchar(1),
+    patient_age                     varchar(5),
     community_healt_unit            varchar(200),
     referral_reason                 varchar(200),
     treatment                       text,
@@ -341,6 +342,9 @@ CREATE TABLE survey_100(
     receiving_officer_time          time,
     referral_time                   timestamp default CURRENT_TIMESTAMP
 );
+
+ALTER TABLE survey_100 ALTER COLUMN patient_age  TYPE varchar(5);
+
 
 
 -- VIEWS
@@ -533,16 +537,24 @@ CREATE VIEW vw_surveys_515 AS
 -- DROP VIEW vw_survey_100 ;
 
 CREATE VIEW vw_survey_100 AS
-    SELECT health_workers.health_worker_id, health_workers.worker_name, link_health_facilities.link_health_facility_id, link_health_facilities.link_health_facility_name,
-    orgs.org_id, orgs.org_name, villages.village_id, villages.village_name, survey_100.survey_100_id, survey_100.form_serial, survey_100.patient_gender,
-    survey_100.patient_name, survey_100.patient_age, survey_100.community_healt_unit, survey_100.referral_reason, survey_100.treatment,
+    SELECT health_workers.health_worker_id, health_workers.worker_name, health_workers.worker_national_id, health_workers.worker_mobile_num,
+    link_health_facilities.link_health_facility_id, link_health_facilities.link_health_facility_name,
+    orgs.org_id, orgs.org_name,
+    vw_villages.county_id, vw_villages.county_name,
+    vw_villages.sub_county_id, vw_villages.sub_county_name,
+    vw_villages.division_id, vw_villages.division_name,
+    vw_villages.location_id, vw_villages.location_name,
+    vw_villages.sub_location_id, vw_villages.sub_location_name,
+    vw_villages.village_id, vw_villages.village_name,
+    survey_100.survey_100_id, survey_100.form_serial, survey_100.patient_gender,
+    survey_100.patient_name, survey_100.patient_age_type, survey_100.patient_age, survey_100.community_healt_unit, survey_100.referral_reason, survey_100.treatment,
     survey_100.comments, survey_100.community_unit, survey_100.receiving_officer_name, survey_100.receiving_officer_profession,
     survey_100.health_facility_name, survey_100.action_taken, survey_100.receiving_officer_date, survey_100.receiving_officer_time, survey_100.referral_time
     FROM survey_100
     INNER JOIN health_workers ON survey_100.health_worker_id = health_workers.health_worker_id
     INNER JOIN link_health_facilities ON survey_100.link_health_facility_id = link_health_facilities.link_health_facility_id
     INNER JOIN orgs ON survey_100.org_id = orgs.org_id
-    INNER JOIN villages ON survey_100.village_id = villages.village_id;
+    INNER JOIN vw_villages ON vw_villages.village_id = survey_100.village_id;
 
 
 
