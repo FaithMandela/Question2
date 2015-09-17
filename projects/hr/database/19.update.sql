@@ -1,3 +1,88 @@
+
+
+ALTER TABLE employees ADD 	bio_metric_number		varchar(32);
+
+UPDATE employees SET bio_metric_number = '22736267004240' WHERE entity_id = 20;
+UPDATE employees SET bio_metric_number = '15035373000600' WHERE entity_id = 58;
+UPDATE employees SET bio_metric_number = '10734554004240' WHERE entity_id = 31;
+UPDATE employees SET bio_metric_number = '22553634000520' WHERE entity_id = 2;
+UPDATE employees SET bio_metric_number = '66474355004340' WHERE entity_id = 12;
+UPDATE employees SET bio_metric_number = '5650654004240' WHERE entity_id = 19;
+UPDATE employees SET bio_metric_number = '54642404000110' WHERE entity_id = 57;
+UPDATE employees SET bio_metric_number = '1715554004240' WHERE entity_id = 22;
+UPDATE employees SET bio_metric_number = '35717071004360' WHERE entity_id = 53;
+UPDATE employees SET bio_metric_number = '40447355004340' WHERE entity_id = 38;
+UPDATE employees SET bio_metric_number = '42401654004240' WHERE entity_id = 37;
+UPDATE employees SET bio_metric_number = '77022654004240' WHERE entity_id = 59;
+UPDATE employees SET bio_metric_number = '13675355004340' WHERE entity_id = 46;
+UPDATE employees SET bio_metric_number = '65352552004300' WHERE entity_id = 56;
+UPDATE employees SET bio_metric_number = '54444123000450' WHERE entity_id = 52;
+UPDATE employees SET bio_metric_number = '30132407604000' WHERE entity_id = 60;
+UPDATE employees SET bio_metric_number = '42510455004340' WHERE entity_id = 41;
+UPDATE employees SET bio_metric_number = '55102367004240' WHERE entity_id = 33;
+UPDATE employees SET bio_metric_number = '47045355004340' WHERE entity_id = 45;
+UPDATE employees SET bio_metric_number = '14325554004240' WHERE entity_id = 34;
+UPDATE employees SET bio_metric_number = '35724634000520' WHERE entity_id = 27;
+UPDATE employees SET bio_metric_number = '47415554004240' WHERE entity_id = 17;
+UPDATE employees SET bio_metric_number = '36650654004240' WHERE entity_id = 8;
+UPDATE employees SET bio_metric_number = '42016520000240' WHERE entity_id = 26;
+UPDATE employees SET bio_metric_number = '15146554004240' WHERE entity_id = 35;
+UPDATE employees SET bio_metric_number = '65142622000440' WHERE entity_id = 28;
+UPDATE employees SET bio_metric_number = '25603355004340' WHERE entity_id = 47;
+
+CREATE TABLE access_logs (
+	access_log_id			integer primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	log_time				timestamp,
+	log_name				varchar(50),
+	log_machine				varchar(50),
+	log_access				varchar(50),
+	log_id					varchar(50),
+	log_area				varchar(50),
+	log_in_out				varchar(50),
+
+	is_picked				boolean default false,
+	narrative				varchar(240)
+);
+CREATE INDEX access_logs_entity_id ON access_logs (entity_id);
+CREATE INDEX access_logs_org_id ON access_logs (org_id);
+
+CREATE OR REPLACE FUNCTION process_bio_imports1(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	msg		 				varchar(120);
+BEGIN
+
+	SELECT org_id INTO v_org_id FROM entitys
+	WHERE entity_id = $2::integer;
+
+	INSERT INTO access_logs (access_log_id, entity_id, org_id, log_time, log_name, log_machine, log_access, log_id, log_area, log_in_out)
+	SELECT bio_imports1_id, e.entity_id, v_org_id, to_timestamp(col1, 'DD/MM/YYYY hh:MI:SS pm'), col2, col4, col5, col6, col7, col10
+	FROM bio_imports1 LEFT JOIN access_logs ON bio_imports1.bio_imports1_id = access_logs.access_log_id
+		LEFT JOIN employees as e ON trim(bio_imports1.col6) = trim(e.bio_metric_number)
+	WHERE access_logs.access_log_id is null
+	ORDER BY to_timestamp(col1, 'DD/MM/YYYY hh:MI:SS pm');
+
+	DELETE FROM bio_imports1;
+
+	INSERT INTO attendance (entity_id, org_id, attendance_date, time_in, time_out)
+	SELECT entity_id, org_id, log_time::date, min(log_time::time), max(log_time::time)
+	FROM access_logs
+	WHERE (is_picked = false) AND (entity_id is not null)
+	GROUP BY entity_id, org_id, log_time::date
+	ORDER BY entity_id, log_time::date;
+
+	UPDATE access_logs SET is_picked = true
+	WHERE (is_picked = false) AND (entity_id is not null);
+
+	msg := 'Uploaded the file';
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
 ALTER TABLE entitys ALTER COLUMN entity_password DROP DEFAULT;
 ALTER TABLE entitys ALTER COLUMN first_password DROP DEFAULT;
 
