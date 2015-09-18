@@ -866,10 +866,11 @@ CREATE OR REPLACE FUNCTION generate_payroll(varchar(12), varchar(12), varchar(12
 DECLARE
 	v_period_id		integer;
 	v_org_id		integer;
+	v_month_name	varchar(50);
 
 	msg 			varchar(120);
 BEGIN
-	SELECT period_id, org_id INTO v_period_id, v_org_id
+	SELECT period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
 	FROM periods
 	WHERE (period_id = CAST($1 as integer));
 
@@ -896,6 +897,11 @@ BEGIN
 	PERFORM updTax(employee_month_id, Period_id)
 	FROM employee_month
 	WHERE (period_id = v_period_id);
+	
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, narrative, org_id)
+	SELECT 7, entity_id, 'periods', v_month_name, v_org_id
+	FROM entity_subscriptions
+	WHERE entity_type_id = 6;
 
 	msg := 'Payroll Generated';
 
