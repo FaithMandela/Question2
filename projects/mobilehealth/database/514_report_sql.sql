@@ -23,9 +23,20 @@ UNION
     	INNER JOIN vw_surveys ON vw_surveys.survey_id = vw_survey_referrals.survey_id
     	WHERE for_515 = true
     		AND vw_survey_referrals.response = '1'::varchar
+			AND vw_survey_referrals.referral_info_def_id NOT IN (10,11,12,13)
             AND vw_surveys.village_id = '$P!{village_id}'
             AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
     	GROUP BY vw_surveys.village_id, vw_surveys.village_name, vw_survey_referrals.referral_info_def_id, vw_survey_referrals.question)
+UNION
+	(SELECT  3 AS m_order, vw_survey_referrals.referral_info_def_id, vw_surveys.village_name, vw_survey_referrals.question,
+		(SUM( vw_survey_referrals.response::integer))::integer AS no_per_indicator
+    	FROM vw_survey_referrals
+    	INNER JOIN vw_surveys ON vw_surveys.survey_id = vw_survey_referrals.survey_id
+    	WHERE vw_survey_referrals.referral_info_def_id IN (10,11,12,13)
+            AND vw_surveys.village_id = '$P!{village_id}'
+            AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date
+    	GROUP BY vw_surveys.village_id, vw_surveys.village_name, vw_survey_referrals.referral_info_def_id, vw_survey_referrals.question
+        ORDER BY vw_survey_referrals.referral_info_def_id ASC)
 UNION
     (SELECT 4 AS m_order,  vw_survey_defaulters.defaulters_info_def_id,vw_surveys.village_name, vw_survey_defaulters.question,  COUNT( vw_survey_defaulters.defaulters_info_def_id) AS no_per_indicator
     	FROM vw_survey_defaulters

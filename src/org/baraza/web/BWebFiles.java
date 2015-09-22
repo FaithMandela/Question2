@@ -125,7 +125,7 @@ System.out.println("BASE 1020 : " + repository);
 	
 	
 	public String importFile(HttpServletRequest request) {
-		String response = "{\"success\": 0, \"message\": \"File uploaded\"}";
+		String response = "{\"success\": 0, \"message\": \"Upload Failed\"}";
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		
 		int yourMaxMemorySize = 262144;
@@ -166,7 +166,7 @@ System.out.println("BASE 1410 : " + fileName);
 						jshd.add("success", 1);
 						jshd.add("name", item.getName());
 						jshd.add("size", item.getSize());
-						jshd.add("message", "File uploaded");
+						jshd.add("message", "Proceess File");
                         
 						JsonObject jsObj = jshd.build();
 						response = jsObj.toString();

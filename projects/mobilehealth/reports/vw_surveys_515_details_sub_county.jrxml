@@ -1094,7 +1094,7 @@ AND end_date <= '$P!{end_date}'::date
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[No Of Chvs]]></text>
+				<text><![CDATA[No Of CHVs]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="16" width="115" height="15" forecolor="#000000" uuid="344748d5-c610-4519-a404-105c99becd65"/>
@@ -1104,7 +1104,7 @@ AND end_date <= '$P!{end_date}'::date
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Total Chws Reported]]></text>
+				<text><![CDATA[Total CHVs Reported]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="346" y="15" width="85" height="15" forecolor="#000000" uuid="9b16e63b-ab3c-418e-a46e-9b31bad0805c"/>

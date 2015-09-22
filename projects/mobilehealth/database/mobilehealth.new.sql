@@ -309,21 +309,30 @@ CREATE TABLE surveys_515_details(
 
 -- FORM 100
 -- DROP TABLE survey_100;
+
+CREATE TABLE link_health_facilities(
+    link_health_facility_id     serial primary key,
+    org_id                      integer references orgs,
+    sub_location_id             integer references sub_locations,
+    link_health_facility_name   varchar(225),
+    details                     text
+);
+-- DROP TABLE survey_100;
 CREATE TABLE survey_100(
     survey_100_id                   serial primary key,
     org_id                          integer references orgs,
     health_worker_id                integer references health_workers,
+    village_id                      integer references villages,
+    link_health_facility_id         integer references link_health_facilities,
     form_serial                     varchar(10),
     patient_gender                  varchar(2),
     patient_name                    varchar(200),
-    patient_age                     varchar(3),
+    patient_age_type                varchar(1),
+    patient_age                     varchar(5),
     community_healt_unit            varchar(200),
-    link_health_facility            varchar(200),
     referral_reason                 varchar(200),
     treatment                       text,
     comments                        text,
-    sub_location                    varchar(200),
-    village                         varchar(200),
     community_unit                  varchar(200),
     receiving_officer_name          varchar(200),
     receiving_officer_profession    varchar(200),
@@ -334,6 +343,9 @@ CREATE TABLE survey_100(
     referral_time                   timestamp default CURRENT_TIMESTAMP
 );
 
+ALTER TABLE survey_100 ALTER COLUMN patient_age  TYPE varchar(5);
+
+
 
 -- VIEWS
 
@@ -341,6 +353,19 @@ CREATE VIEW vw_sub_countys AS
 	SELECT countys.county_id, countys.county_name, sub_countys.sub_county_id, sub_countys.sub_county_name
 	FROM sub_countys
 	INNER JOIN countys ON sub_countys.county_id = countys.county_id;
+
+CREATE VIEW vw_sub_locations AS
+	SELECT countys.county_id, countys.county_name,
+    sub_countys.sub_county_id, sub_countys.sub_county_name,
+    divisions.division_id, divisions.division_name,
+    locations.location_id , locations.location_name,
+    sub_locations.sub_location_id, sub_locations.sub_location_name
+	FROM sub_locations
+    INNER JOIN locations ON locations.location_id = sub_locations.location_id
+	INNER JOIN divisions ON divisions.division_id = locations.division_id
+    INNER JOIN sub_countys ON sub_countys.sub_county_id = divisions.sub_county_id
+	INNER JOIN countys ON countys.county_id = sub_countys.county_id;
+
 CREATE VIEW vw_villages AS
 	SELECT
 		countys.county_id, countys.county_name,
@@ -439,7 +464,7 @@ CREATE VIEW vw_survey_defaulters AS
 	INNER JOIN surveys ON survey_defaulters.survey_id = surveys.survey_id;
 
 -- DROP VIEW vw_survey_death;
-CREATE VIEW vw_survey_death AS 
+CREATE VIEW vw_survey_death AS
 	SELECT death_info_defs.death_info_def_id, death_info_defs.for_515,  death_info_defs.question, death_info_defs.details,
 	surveys.survey_id, survey_death.survey_death_id, survey_death.response
 	FROM survey_death
@@ -510,18 +535,26 @@ CREATE VIEW vw_surveys_515 AS
 -- FORM 100 =======================================================
 
 -- DROP VIEW vw_survey_100 ;
+
 CREATE VIEW vw_survey_100 AS
-	SELECT health_workers.health_worker_id, health_workers.worker_name, health_workers.worker_mobile_num,
+    SELECT health_workers.health_worker_id, health_workers.worker_name, health_workers.worker_national_id, health_workers.worker_mobile_num,
+    link_health_facilities.link_health_facility_id, link_health_facilities.link_health_facility_name,
     orgs.org_id, orgs.org_name,
-	survey_100.survey_100_id, survey_100.patient_gender, form_serial, survey_100.patient_name, survey_100.patient_age,
-	survey_100.community_healt_unit, survey_100.link_health_facility, survey_100.referral_reason, survey_100.treatment,
-	survey_100.comments, survey_100.sub_location, survey_100.village, survey_100.community_unit, survey_100.receiving_officer_name,
-	survey_100.receiving_officer_profession, survey_100.health_facility_name, survey_100.action_taken, survey_100.receiving_officer_date,
-	survey_100.receiving_officer_time,
-	survey_100.referral_time
-	FROM survey_100
-	INNER JOIN health_workers ON survey_100.health_worker_id = health_workers.health_worker_id
-	INNER JOIN orgs ON survey_100.org_id = orgs.org_id;
+    vw_villages.county_id, vw_villages.county_name,
+    vw_villages.sub_county_id, vw_villages.sub_county_name,
+    vw_villages.division_id, vw_villages.division_name,
+    vw_villages.location_id, vw_villages.location_name,
+    vw_villages.sub_location_id, vw_villages.sub_location_name,
+    vw_villages.village_id, vw_villages.village_name,
+    survey_100.survey_100_id, survey_100.form_serial, survey_100.patient_gender,
+    survey_100.patient_name, survey_100.patient_age_type, survey_100.patient_age, survey_100.community_healt_unit, survey_100.referral_reason, survey_100.treatment,
+    survey_100.comments, survey_100.community_unit, survey_100.receiving_officer_name, survey_100.receiving_officer_profession,
+    survey_100.health_facility_name, survey_100.action_taken, survey_100.receiving_officer_date, survey_100.receiving_officer_time, survey_100.referral_time
+    FROM survey_100
+    INNER JOIN health_workers ON survey_100.health_worker_id = health_workers.health_worker_id
+    INNER JOIN link_health_facilities ON survey_100.link_health_facility_id = link_health_facilities.link_health_facility_id
+    INNER JOIN orgs ON survey_100.org_id = orgs.org_id
+    INNER JOIN vw_villages ON vw_villages.village_id = survey_100.village_id;
 
 
 
@@ -570,7 +603,7 @@ CREATE TRIGGER ins_surveys_515 AFTER INSERT ON surveys_515
 
 -- ===================================
 
-select * from vw_surveys_515_details WHERE sub_county_id = 1 AND
+/*select * from vw_surveys_515_details WHERE sub_county_id = 1 AND
 (start_date >= '2015-01-01':: date AND start_date <= '2015-01-01':: date)
 AND (end_date >= '2015-12-31':: date AND end_date <= '2015-12-31':: date)
 
@@ -597,4 +630,4 @@ SUM(indicator_64) AS indicator_64 ,SUM(indicator_65) AS indicator_65
 FROM vw_surveys_515_details
 
 WHERE sub_county_id = 1
-AND
+AND*/

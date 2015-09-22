@@ -109,6 +109,8 @@ CREATE INDEX facility_data_entity_id ON facility_data(entity_id);
 CREATE INDEX facility_data_org_id ON facility_data(org_id);
 CREATE INDEX facility_data_year_id ON facility_data(year_id);
 CREATE INDEX facility_data_month_id ON facility_data(month_id);
+ALTER TABLE facility_data ADD CONSTRAINT org_id_year_id_month_id UNIQUE (org_id, year_id, month_id);
+
 
 -- DROP TABLE facility_data_response;
 CREATE TABLE facility_data_response(

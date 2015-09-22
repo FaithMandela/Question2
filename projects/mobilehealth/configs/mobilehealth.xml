@@ -7,6 +7,7 @@
 			<MENU icon="icon-settings" name="Definitions">45</MENU>
 			<MENU icon="fa fa-sitemap" name="Organizations">5</MENU>
 			<MENU name="514 Indicators Definitions">50</MENU>
+			<MENU name="Link Health Facilities">55</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
@@ -508,13 +509,6 @@
 						<ACTION fnct="upd_514" approval="2">Return</ACTION>
 					</ACTIONS>
 				</GRID>
-				<JASPER name="County Report " reportfile="vw_surveys.jasper"></JASPER>
-				<FILTER w="700" name="Worker Reports" split="150" type="vert" h="550">
-					<FILTERFORM name="Worker">
-						<COMBOBOX w="430" title="Health Worker " lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
-					</FILTERFORM>
-					<JASPER name="Health Worker Reports" reportfile="vw_surveys_detailed.jasper"></JASPER>
-				</FILTER>
 			</GRID>
 		</GRID>
 		<FILTER w="700" name="CHV Reports" split="150" type="vert" h="550">
@@ -525,13 +519,29 @@
 			</FILTERFORM>
 			<JASPER name="Health Worker Reports" reportfile="vw_surveys_summary.jasper"></JASPER>
 		</FILTER>
-		<FILTER w="700" name="MOH 514 summary" split="150" type="vert" h="550">
+		<FILTER w="700" name="MOH 514 CHV summary" split="150" type="vert" h="550">
 			<FILTERFORM name="Worker">
 				<COMBOBOX w="430" title="CHV" lptable="health_workers" y="30" h="20" x="10" lpfield="worker_name">health_worker_id</COMBOBOX>
 				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Health Worker Reports " reportfile="vw_surveys_detailed.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="MOH 514 Village summary" split="150" type="vert" h="550">
+			<FILTERFORM name="Worker">
+				<COMBOBOX w="430" title="Village" lptable="villages" noorg="true" y="30" h="20" x="10" lpfield="village_name">village_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Health Worker Reports " reportfile="vw_surveys_detailed_village.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="MOH 514 Detailed Village Summary " split="150" type="vert" h="550">
+			<FILTERFORM name="Village Date Range">
+				<COMBOBOX w="430" title="Village" lptable="villages" noorg="true" y="30" h="20" x="10" lpfield="village_name">village_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="MMOH 514 Detailed Village Summary " reportfile="vw_survey_514_village_summary.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="MOH 514 summary For 515" split="150" type="vert" h="550">
 			<FILTERFORM name="Village Date Range">
@@ -555,7 +565,7 @@
 				<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Sub Location Name">sub_location_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Village Name">village_name</TEXTFIELD>
-				<GRID name="Reports 515" keyfield="surveys_515_id" table="vw_surveys_515" linkfiled="village_id">
+				<GRID name="Reports 515" keyfield="surveys_515_id" linkfield="village_id" table="vw_surveys_515">
 					<TEXTFIELD w="75" title="Surveys 515 ID">surveys_515_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
@@ -844,12 +854,12 @@
 						</FORM>
 					</FORMVIEW>
 					<FORM cols="2" name="Basic Info" keyfield="surveys_515_id" linkfield="village_id" table="surveys_515">
-						<TEXTFIELD w="430" title="Chu Name" y="30" h="20" x="10">chu_name</TEXTFIELD>
-						<TEXTFIELD w="430" title="Mclu Code" y="50" h="20" x="10">mclu_code</TEXTFIELD>
+						<TEXTFIELD w="430" title="Name of CHU" y="30" h="20" x="10">chu_name</TEXTFIELD>
+						<TEXTFIELD w="430" title="CHEW Name" y="90" h="20" x="10">chew_name</TEXTFIELD>
 						<TEXTFIELD w="430" title="Link Facility" y="70" h="20" x="10">link_facility</TEXTFIELD>
-						<TEXTFIELD w="430" title="Chew Name" y="90" h="20" x="10">chew_name</TEXTFIELD>
-						<TEXTFIELD w="150" title="No Of Chvs" y="110" h="20" x="10">no_of_chvs</TEXTFIELD>
-						<TEXTFIELD w="150" title="Total Chws Reported" y="110" h="20" x="290">total_chws_reported</TEXTFIELD>
+						<TEXTFIELD w="430" title="MCUL Code" y="50" h="20" x="10">mclu_code</TEXTFIELD>
+						<TEXTFIELD w="150" title="Total CHVs Reported" y="110" h="20" x="290">total_chws_reported</TEXTFIELD>
+						<TEXTFIELD w="150" title="No Of CHVs" y="110" h="20" x="10">no_of_chvs</TEXTFIELD>
 						<TEXTDATE w="150" title="Start Date" y="130" h="20" x="10">start_date</TEXTDATE>
 						<TEXTDATE w="150" title="End Date" y="130" h="20" x="290">end_date</TEXTDATE>
 					</FORM>
@@ -891,49 +901,64 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Reports 100" key="40" h="550">
-		<GRID name="Reports 100" keyfield="survey_100_id" table="vw_survey_100">
-			<TEXTFIELD w="75" title="Health Worker ID">health_worker_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Survey 100 ID">survey_100_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Form Serial">form_serial</TEXTFIELD>
-			<TEXTFIELD w="75" title="Patient Gender">patient_gender</TEXTFIELD>
-			<TEXTFIELD w="75" title="Patient Name">patient_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Patient Age">patient_age</TEXTFIELD>
-			<TEXTFIELD w="75" title="Community Healt Unit">community_healt_unit</TEXTFIELD>
-			<TEXTFIELD w="75" title="Link Health Facility">link_health_facility</TEXTFIELD>
-			<TEXTFIELD w="75" title="Referral Reason">referral_reason</TEXTFIELD>
-			<TEXTFIELD w="75" title="Sub Location">sub_location</TEXTFIELD>
-			<TEXTFIELD w="75" title="Village">village</TEXTFIELD>
-			<TEXTFIELD w="75" title="Community Unit">community_unit</TEXTFIELD>
-			<TEXTFIELD w="75" title="Receiving Officer Name">receiving_officer_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Receiving Officer Profession">receiving_officer_profession</TEXTFIELD>
-			<TEXTFIELD w="75" title="Health Facility Name">health_facility_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Receiving Officer Date">receiving_officer_date</TEXTDATE>
-			<SPINTIME w="75" title="Receiving Officer Time">receiving_officer_time</SPINTIME>
-			<FORM name="Report 100" keyfield="survey_100_id" table="survey_100">
-				<COMBOBOX w="430" title="Health Worker ID" lptable="health_workers" y="10" h="20" x="10" lpfield="health_worker_id">health_worker_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Patient Gender" y="30" h="20" x="10">patient_gender</TEXTFIELD>
-				<TEXTFIELD w="430" title="Patient Name" y="50" h="20" x="10">patient_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Patient Age" y="70" h="20" x="10">patient_age</TEXTFIELD>
-				<TEXTFIELD w="430" title="Community Healt Unit" y="90" h="20" x="10">community_healt_unit</TEXTFIELD>
-				<TEXTFIELD w="430" title="Link Health Facility" y="110" h="20" x="10">link_health_facility</TEXTFIELD>
-				<TEXTFIELD w="430" title="Referral Reason" y="130" h="20" x="10">referral_reason</TEXTFIELD>
-				<TEXTAREA w="430" title="Treatment" y="150" h="70" x="10">treatment</TEXTAREA>
-				<TEXTAREA w="430" title="Comments" y="220" h="70" x="10">comments</TEXTAREA>
-				<TEXTFIELD w="430" title="Sub Location" y="290" h="20" x="10">sub_location</TEXTFIELD>
-				<TEXTFIELD w="430" title="Village" y="310" h="20" x="10">village</TEXTFIELD>
-				<TEXTFIELD w="430" title="Community Unit" y="330" h="20" x="10">community_unit</TEXTFIELD>
-				<TEXTFIELD w="430" title="Receiving Officer Name" y="350" h="20" x="10">receiving_officer_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Receiving Officer Profession" y="370" h="20" x="10">receiving_officer_profession</TEXTFIELD>
-				<TEXTFIELD w="430" title="Health Facility Name" y="390" h="20" x="10">health_facility_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Action Taken" y="410" h="70" x="10">action_taken</TEXTAREA>
-				<TEXTDATE w="150" title="Receiving Officer Date" y="480" h="20" x="10">receiving_officer_date</TEXTDATE>
-				<SPINTIME w="150" title="Receiving Officer Time" y="480" h="20" x="290">receiving_officer_time</SPINTIME>
-			</FORM>
-			<JASPER name="Report 100 report" reportfile="vw_survey_100.jasper"></JASPER>
+		<GRID name="Sub Countys" keyfield="sub_county_id" table="vw_sub_countys" noorg="true">
+			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+			<GRID name="Villages" keyfield="village_id" linkfield="sub_county_id" table="vw_villages" noorg="true">
+				<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Division Name">division_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub Location Name">sub_location_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Village Name">village_name</TEXTFIELD>
+				<GRID name="Survey 100" keyfield="survey_100_id" linkfield="village_id" table="vw_survey_100">
+					<TEXTFIELD w="75" title="Survey 100 ID">survey_100_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Worker Name">worker_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Link Health Facility Name">link_health_facility_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Village Name">village_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Form Serial">form_serial</TEXTFIELD>
+					<TEXTFIELD w="75" title="Patient Gender">patient_gender</TEXTFIELD>
+					<TEXTFIELD w="75" title="Patient Name">patient_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Patient Age">patient_age</TEXTFIELD>
+					<TEXTFIELD w="75" title="Community Healt Unit">community_healt_unit</TEXTFIELD>
+					<TEXTFIELD w="75" title="Referral Reason">referral_reason</TEXTFIELD>
+					<TEXTFIELD w="75" title="Community Unit">community_unit</TEXTFIELD>
+					<TEXTFIELD w="75" title="Receiving Officer Name">receiving_officer_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Receiving Officer Profession">receiving_officer_profession</TEXTFIELD>
+					<TEXTFIELD w="75" title="Health Facility Name">health_facility_name</TEXTFIELD>
+					<TEXTDATE w="75" title="Receiving Officer Date">receiving_officer_date</TEXTDATE>
+					<SPINTIME w="75" title="Receiving Officer Time">receiving_officer_time</SPINTIME>
+					<TEXTTIMESTAMP w="75" title="Referral Time">referral_time</TEXTTIMESTAMP>
+					<FORM name="Survey 100" keyfield="survey_100_id" linkfield="village_id" table="survey_100">
+						<TEXTFIELD w="150" title="Form Serial" y="70" h="20" x="10">form_serial</TEXTFIELD>
+						<TEXTFIELD w="150" title="Patient Gender" y="70" h="20" x="290">patient_gender</TEXTFIELD>
+						<TEXTFIELD w="430" title="Patient Name" y="90" h="20" x="10">patient_name</TEXTFIELD>
+						<TEXTFIELD w="150" title="Patient Age" y="110" h="20" x="10">patient_age</TEXTFIELD>
+						<TEXTFIELD w="430" title="Community Healt Unit" y="130" h="20" x="10">community_healt_unit</TEXTFIELD>
+						<TEXTFIELD w="430" title="Referral Reason" y="150" h="20" x="10">referral_reason</TEXTFIELD>
+						<TEXTAREA w="430" title="Treatment" y="170" h="70" x="10">treatment</TEXTAREA>
+						<TEXTAREA w="430" title="Comments" y="240" h="70" x="10">comments</TEXTAREA>
+						<TEXTFIELD w="430" title="Community Unit" y="310" h="20" x="10">community_unit</TEXTFIELD>
+						<TEXTFIELD w="430" title="Receiving Officer Name" y="330" h="20" x="10">receiving_officer_name</TEXTFIELD>
+						<TEXTFIELD w="430" title="Receiving Officer Profession" y="350" h="20" x="10">receiving_officer_profession</TEXTFIELD>
+						<TEXTFIELD w="430" title="Health Facility Name" y="370" h="20" x="10">health_facility_name</TEXTFIELD>
+						<TEXTAREA w="430" title="Action Taken" y="390" h="70" x="10">action_taken</TEXTAREA>
+						<TEXTDATE w="150" title="Receiving Officer Date" y="460" h="20" x="10">receiving_officer_date</TEXTDATE>
+						<SPINTIME w="150" title="Receiving Officer Time" y="460" h="20" x="290">receiving_officer_time</SPINTIME>
+					</FORM>
+					<JASPER name="Report 100 report" reportfile="vw_survey_100.jasper"></JASPER>
+				</GRID>
+			</GRID>
 		</GRID>
+		<FILTER w="700" name="MOH 100 Village Summary" split="150" type="vert" h="550">
+			<FILTERFORM name="Village Date Range">
+				<COMBOBOX w="430" title="Village" lptable="villages" noorg="true" y="30" h="20" x="10" lpfield="village_name">village_id</COMBOBOX>
+				<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="MOH 100 Village Summary" reportfile="vw_survey_100_village.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" icon="icon-settings" name="Configurations" key="45" h="550">
 		<GRID name="Countys" keyfield="county_id" table="countys" noorg="true">
@@ -1045,6 +1070,28 @@
 				<TEXTAREA w="430" title="Question" y="10" h="70" x="10">question</TEXTAREA>
 				<TEXTAREA w="430" title="Details" y="80" h="70" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Link Health Facilities" key="55" h="550">
+		<GRID name="Sub Countys" keyfield="sub_county_id" table="vw_sub_countys" noorg="true">
+			<TEXTFIELD w="75" title="County ID">county_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+			<GRID name="Sub Locations" keyfield="sub_location_id" linkfield="sub_county_id" table="vw_sub_locations" noorg="true">
+				<TEXTFIELD w="75" title="County Name">county_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub County Name">sub_county_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Division Name">division_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sub Location Name">sub_location_name</TEXTFIELD>
+				<GRID name="Link Health Facilities" keyfield="link_health_facility_id" linkfield="sub_location_id" table="link_health_facilities">
+					<TEXTFIELD w="75" title="Link Health Facility ID">link_health_facility_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Link Health Facility Name">link_health_facility_name</TEXTFIELD>
+					<FORM name="Link Health Facilities" keyfield="link_health_facility_id" linkfield="sub_location_id" table="link_health_facilities">
+						<TEXTFIELD w="430" title="Link Health Facility Name" y="30" h="20" x="10">link_health_facility_name</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
 		</GRID>
 	</DESK>
 </APP>

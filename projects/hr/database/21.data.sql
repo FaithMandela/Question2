@@ -186,7 +186,13 @@ Welcome to OpenBaraza SaaS Platform<br><br>
 Regards,<br>
 OpenBaraza<br>
 ');
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 5, true);
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (7, 0, 'Payroll Generated', 'Payroll Generated', 'Hello {{name}},<br><br>
+They payroll has been generated for {{narrative}}<br><br>
+Regards,<br>
+HR Manager<br>
+');
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 7, true);
 
 
 

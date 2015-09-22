@@ -310,7 +310,7 @@
 							<%= web.getButtons() %>
 						</div>
 
-						<div class="portlet-body" style="min-height:360px;">
+						<div class="portlet-body" id="portletBody" style="min-height:360px;">
 								<%= web.getBody(request, reportPath) %>
 						</div>
 
@@ -519,6 +519,12 @@
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
+	function resizeJqGridWidth(grid_id, div_id, width){
+	    $(window).bind('resize', function() {
+	        $('#' + grid_id).setGridWidth(width, true); //Back to original width
+	        $('#' + grid_id).setGridWidth($('#' + div_id).width(), true); //Resized to new width as per window
+	     }).trigger('resize');
+	}
 
     <% if(web.isGrid()) { %>
 	var lastsel2;
@@ -545,6 +551,8 @@
     <% if(actionOp != null) {	%>
       jqcf.multiselect = true;
     <% } %>
+
+
 
 	/* check if user is using mobile*/
     var isMobile = false; //initiate as false
@@ -627,6 +635,17 @@
 
 	/* /nav button */
 
+	// $("#jqlist").setGridWidth($('.portlet-body').width());
+	//
+    // // Size me later...
+    // $('.portlet-body').bind('resize', function () {
+	// 	console.log($('.portlet-body').width());
+    //     $("#jqlist").setGridWidth($('.portlet-body').width());
+    // }).trigger('resize');
+
+
+
+	resizeJqGridWidth('jqlist', 'portletBody', $('.portlet-body').width());
 
 
     $('#btSearch').click(function(){
@@ -786,6 +805,19 @@ $(function () {
         var progress = parseInt(data.loaded / data.total * 100, 10);
         $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function (e, data) {
+console.log('BASE 5');
+console.log(data.result.message);
+		var fileDone = $('<button>').text(data.result.message);
+        $(data.context.children()[0]).append(fileDone).click(function(){ 
+			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {
+
+				if(adata.error == false){
+                    toastr['success'](adata.msg, "Ok");
+                     $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
+                }
+	        }, "JSON");
+			}).append('<br>');
+
         $.each(data.result.files, function (index, file) {
             if (file.url) {
                 var link = $('<a>').attr('target', '_blank').prop('href', file.url);
@@ -807,6 +839,8 @@ $(function () {
         });
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
+
+
 </script>
 <!-- END JAVASCRIPTS -->
 <%
