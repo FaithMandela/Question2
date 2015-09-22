@@ -69,63 +69,93 @@ on vw_approvals_entitys.entity_id=employee_leave.entity_id]]>
 	<title>
 		<band height="47" splitType="Stretch">
 			<staticText>
-				<reportElement x="213" y="25" width="100" height="20" uuid="ca009298-11f6-48d6-abc3-a2ca4545f2e0"/>
-				<text><![CDATA[List Of Approvers]]></text>
+				<reportElement x="0" y="0" width="752" height="47" uuid="ca009298-11f6-48d6-abc3-a2ca4545f2e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="33" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Leave Approvers Report]]></text>
 			</staticText>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="39" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="43" splitType="Stretch">
+		<band height="57" splitType="Stretch">
 			<staticText>
-				<reportElement x="53" y="0" width="100" height="40" uuid="12fc3699-631d-4992-8441-ff1b6d48ea02"/>
+				<reportElement x="264" y="37" width="96" height="20" uuid="a46825a1-0d1b-44d2-87bd-5fe0c88f60b2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Leave from:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="17" width="264" height="40" uuid="12fc3699-631d-4992-8441-ff1b6d48ea02"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="18"/>
+				</textElement>
 				<text><![CDATA[Employee Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="243" y="20" width="100" height="20" uuid="a46825a1-0d1b-44d2-87bd-5fe0c88f60b2"/>
-				<text><![CDATA[Start Date]]></text>
+				<reportElement x="360" y="37" width="103" height="20" uuid="941f99e2-b7dd-4157-b871-d3764c06fc2d"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Leave to:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="364" y="20" width="100" height="20" uuid="941f99e2-b7dd-4157-b871-d3764c06fc2d"/>
-				<text><![CDATA[End Date]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="508" y="0" width="118" height="40" uuid="c3fa1b3a-9c71-42da-9263-05de0b9e7a87"/>
+				<reportElement x="463" y="17" width="289" height="40" uuid="c3fa1b3a-9c71-42da-9263-05de0b9e7a87"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="18"/>
+				</textElement>
 				<text><![CDATA[Approvers name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="297" y="0" width="94" height="20" uuid="059581dc-1d50-49f5-be9e-93f4ff5cdab2"/>
+				<reportElement x="264" y="17" width="199" height="20" uuid="059581dc-1d50-49f5-be9e-93f4ff5cdab2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
 				<text><![CDATA[Leave Dates]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="125" splitType="Stretch">
+		<band height="40" splitType="Stretch">
 			<textField>
-				<reportElement x="53" y="10" width="100" height="20" uuid="843d6ecd-1645-4c70-b6f7-3eb183fecf0f"/>
+				<reportElement x="0" y="0" width="264" height="40" uuid="843d6ecd-1645-4c70-b6f7-3eb183fecf0f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isUnderline="false"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="243" y="10" width="100" height="20" uuid="78d8584e-1953-4d73-8244-633b474f2116"/>
+				<reportElement x="264" y="0" width="96" height="40" uuid="78d8584e-1953-4d73-8244-633b474f2116"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isUnderline="false"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{leave_from}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="364" y="10" width="100" height="20" uuid="e194e742-011e-4706-8c75-ef0043a6c7eb"/>
+				<reportElement x="360" y="0" width="103" height="40" uuid="e194e742-011e-4706-8c75-ef0043a6c7eb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isUnderline="false"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{leave_to}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="508" y="10" width="100" height="20" uuid="b622c8d6-4906-4494-9de6-08792a80327c"/>
+				<reportElement x="463" y="0" width="289" height="40" uuid="b622c8d6-4906-4494-9de6-08792a80327c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isUnderline="false"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{approval_entity_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band height="42" splitType="Stretch"/>
