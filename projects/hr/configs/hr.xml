@@ -3474,7 +3474,7 @@
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report.jasper"></JASPER>
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave.jasper"></JASPER>
 		</FILTER>
-		<FILTER w="700" name="Leave Summary ( Type )" split="150" type="vert" h="550">
+		<FILTER w="700" name="Leave Summary - Type" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
@@ -3491,6 +3491,7 @@
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave2.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
+		<JASPER name="Approvals" reportfile="leave_approvals.jasper"></JASPER>
 		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
 	</DESK>

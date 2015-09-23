@@ -67,9 +67,9 @@ ORDER BY entity_name, leave_type_name]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="e2a8c937-686e-47bd-bd0c-d406d5600ff6"/>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="e2a8c937-686e-47bd-bd0c-d406d5600ff6"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="76bc74bd-43d0-4aca-bf32-973470c12a97"/>
+					<reportElement style="Column header" x="512" y="0" width="40" height="20" forecolor="#736343" uuid="76bc74bd-43d0-4aca-bf32-973470c12a97"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>

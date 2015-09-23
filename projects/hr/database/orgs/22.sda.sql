@@ -150,10 +150,6 @@ BEGIN
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
 		
-		IF(reca.tax_type_id = 9)THEN	---- NHIF
-			UPDATE employee_adjustments SET amount = tax * .9
-			WHERE (employee_month_id = $1) AND (adjustment_id = 1);
-		END IF;
 		IF(reca.tax_type_id = 8)THEN 	---- PAYE
 			UPDATE employee_adjustments SET amount = tax * .9
 			WHERE (employee_month_id = $1) AND (adjustment_id = 2);
