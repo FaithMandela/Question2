@@ -3,6 +3,103 @@
 ALTER TABLE charges ADD charge_feesline		float;
 ALTER TABLE charges ADD charge_resline		float;
 
+UPDATE fields SET field_fnct = E'to_date(\'#\', \'DD/MM/YYYY\')'
+WHERE field_type = 'DATE';
+
+UPDATE fields SET field_type = 'DATE' WHERE field_id = 60;
+UPDATE fields SET field_lookup='Yes#No', field_type = 'LIST' WHERE field_id = 61;
+UPDATE fields SET field_lookup='SELECT denominationid,denominationname FROM denominations;', field_type = 'SELECT' 
+WHERE field_id = 88;
+UPDATE fields SET field_lookup='SELECT denominationid,denominationname FROM denominations;', field_type = 'SELECT' 
+WHERE field_id = 92;
+
+UPDATE forms SET table_name = 'application_forms' WHERE form_id = 1;
+
+
+CREATE TABLE application_forms (
+	application_form_id	serial primary key,
+	markid				integer references marks,
+	entity_id			integer references entitys,
+	degreeid			varchar(12) references degrees,
+	majorid				varchar(12) references majors,
+	sublevelid			varchar(12) references sublevels,
+	county_id			integer references counties,
+	org_id				integer references orgs,
+	entry_form_id		integer references entry_forms,
+	session_id			varchar(12),
+	email				varchar(120),
+	entrypass			varchar(32) not null default md5('enter'),
+	firstpass			varchar(32) not null default first_password(),
+	existingid			varchar(12),
+	scheduledate		date not null default current_date,
+	applicationdate     date not null default current_date,
+	accepted			boolean not null default false,
+	premajor			boolean not null default false,
+
+	submitapplication		boolean not null default false,
+	submitdate				timestamp,
+	isaccepted				boolean not null default false,
+	isreported				boolean not null default false,
+	isdeferred				boolean not null default false,
+	isrejected				boolean not null default false,
+	evaluationdate			date,
+
+	homeaddress			varchar(120),
+	phonenumber			varchar(50),
+
+	accepteddate		date,
+
+	reported			boolean not null default false,
+	reporteddate		date,
+	denominationid		varchar(12) references denominations,
+	mname				varchar(50),
+	fname				varchar(50),
+	fdenominationid		varchar(12) references denominations,
+	mdenominationid		varchar(12) references denominations,
+	foccupation         varchar(50),
+	fnationalityid      char(2) references countrys,
+	moccupation			varchar(50),
+	mnationalityid		char(2) references countrys,	
+	parentchurch		boolean,
+	parentemployer		varchar(120),
+	birthdate			date not null,
+	baptismdate			date,
+	lastname			varchar(50) not null,
+	firstname			varchar(50) not null,
+	middlename			varchar(50),
+	Sex					varchar(12),
+	MaritalStatus		varchar(12),
+	nationalityid		char(2) references countrys,
+	citizenshipid		char(2) references countrys,
+	residenceid			char(2) references countrys,
+	firstlanguage		varchar(50),
+	otherlanguages		varchar(120),
+	churchname			varchar(50),
+	churcharea			varchar(50),
+	churchaddress		text,
+	handicap			varchar(120),
+	personalhealth		varchar(50),
+	smoke				boolean,
+	drink				boolean,
+	drugs				boolean,
+	hsmoke				boolean,
+	hdrink				boolean,
+	hdrugs				boolean,
+	attendedprimary     varchar(50),
+	attendedsecondary   varchar(50),
+	expelled			boolean,
+	previousrecord		varchar(50),
+	workexperience	    varchar(50),
+	employername        varchar(50),
+	postion				varchar(50),
+	attendedueab		boolean not null default false,
+	attendeddate		date,
+	dateemployed        date,
+	campusresidence		varchar(50),
+	details				text
+);
+
+
 DROP VIEW qetimetableview;
 CREATE VIEW qetimetableview AS
 	SELECT assets.assetid, assets.assetname, assets.location, assets.building, assets.capacity, 
