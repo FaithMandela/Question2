@@ -3428,6 +3428,8 @@
 	<DESK w="700" name="Employee List" key="106" h="550">
 		<JASPER name="Staff List" reportfile="staff_list.jasper"></JASPER>
 		<JASPER name="Employee List" reportfile="vw_employees.jasper"></JASPER>
+		<JASPER name="Dependents" reportfile="dependents.jasper"></JASPER>
+		<JASPER name="Emergency Contacts" reportfile="emergency_contacts.jasper"></JASPER>
 		<FILTER w="700" name="New Employees" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
