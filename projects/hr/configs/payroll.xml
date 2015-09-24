@@ -1373,6 +1373,7 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Pay Groups" keyfield="pay_group_id" table="pay_groups" listfield="pay_group_name" filter="paygroupid" pos="top"></DRILLDOWN>
 			<JASPER name="Banking" reportfile="banking.jasper"></JASPER>
+			<JASPER name="Banking by Bank" reportfile="banking_2.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="770" name="Adjustments" key="107" h="750">

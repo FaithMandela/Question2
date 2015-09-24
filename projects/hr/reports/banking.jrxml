@@ -29,9 +29,13 @@
 FROM
 ((SELECT vw_employee_month.entity_id, vw_employee_month.employee_id, vw_employee_month.entity_name,
 	vw_employee_month.bank_name,
-	vw_employee_month.bank_branch_name, vw_employee_month.banked, vw_employee_month.bank_account,
-	vw_employee_month.period_id, vw_employee_month.period_year, vw_employee_month.period_month,
-	vw_employee_month.bank_Header, vw_employee_month.bank_address
+	vw_employee_month.bank_branch_name, vw_employee_month.banked,
+	vw_employee_month.bank_account,
+	vw_employee_month.period_id, vw_employee_month.period_year,
+	vw_employee_month.period_month,
+	vw_employee_month.bank_Header,
+	vw_employee_month.bank_address
+
 FROM vw_employee_month
 
 WHERE (vw_employee_month.period_id = '$P!{filterid}')
@@ -43,12 +47,13 @@ UNION
 
 (SELECT vw_employee_banking.entity_id, vw_employee_banking.employee_id, vw_employee_banking.entity_name,
 	vw_employee_banking.bank_name,
-	vw_employee_banking.bank_branch_name, vw_employee_banking.base_amount,
+	vw_employee_banking.bank_branch_name,
+	vw_employee_banking.base_amount,
 	vw_employee_banking.bank_account,
 	vw_employee_banking.period_id,
 	vw_employee_banking.period_year, vw_employee_banking.period_month,
-	vw_employee_banking.bank_address,
-	COALESCE(vw_employee_banking.bank_Header, '') as bank_heading
+	vw_employee_banking.bank_header,
+	vw_employee_banking.bank_address
 
 FROM vw_employee_banking
 
