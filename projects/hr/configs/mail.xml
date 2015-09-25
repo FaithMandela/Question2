@@ -12,6 +12,8 @@
 		<BODYFIELD reference="{{name}}" basetable="entitys">entity_name</BODYFIELD>
 		<BODYFIELD reference="{{username}}" basetable="entitys">user_name</BODYFIELD>
 		<BODYFIELD reference="{{password}}" basetable="entitys">first_password</BODYFIELD>
+		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
+		<BODYFIELD reference="{{mail_body}}" basetable="sys_emailed">mail_body</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
