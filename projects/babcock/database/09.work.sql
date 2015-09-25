@@ -209,9 +209,13 @@ UPDATE app_students SET is_picked = true;
 
 --- Update the maric numbers
 UPDATE app_students SET e_tranzact_no = '' WHERE app_student_id = ;
+UPDATE app_students SET account_number = '' WHERE app_student_id = ;
 
 
 UPDATE students SET etranzact_card_no = app_students.e_tranzact_no
+FROM app_students WHERE students.studentid = app_students.studentid;
+
+UPDATE students SET accountnumber = app_students.account_number
 FROM app_students WHERE students.studentid = app_students.studentid;
 
 ----- Ecceptance fees reconsilation

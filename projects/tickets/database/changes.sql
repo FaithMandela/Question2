@@ -67,7 +67,7 @@ ALTER TABLE tickets ADD incentive_updated	boolean default false;
 ALTER TABLE pccs ADD	agency_incentive	boolean default false;
 ALTER TABLE pccs ADD	incentive_son		varchar(12);
 
-UPDATE pccs SET agency_incentive = true, incentive_son = 'PS' WHERE pcc = '77QU';
+UPDATE pccs SET agency_incentive = false, incentive_son = 'PS' WHERE pcc = '77QU';
 UPDATE pccs SET agency_incentive = true, incentive_son = 'NN' WHERE pcc = '7GQ4';
 
 

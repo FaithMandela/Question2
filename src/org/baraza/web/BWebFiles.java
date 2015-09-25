@@ -14,14 +14,20 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.FileItem;
@@ -30,6 +36,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
+import org.baraza.DB.BImportVector;
 import org.baraza.utils.BWebdav;
 import org.baraza.xml.BElement;
 
@@ -50,11 +57,23 @@ public class BWebFiles extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 		String sp = request.getServletPath();
 		configure(request);
-
-		if(sp.equals("/barazafiles")) getFile(request, response);
-		if(sp.equals("/webdavfiles")) getWebDavFile(request, response);
-		if(sp.equals("/putbarazafiles")) receiveFile(request);
-		if(sp.equals("/delbarazafiles")) delFile(request, response);
+		
+		if(view.getName().equals("GRID")) {
+			String resp = importFile(request);
+			
+			PrintWriter out = null;
+			try { out = response.getWriter(); } catch(IOException ex) {}
+			
+			response.setContentType("application/json;charset=\"utf-8\"");
+			out.println(resp);
+		} if(view.getName().equals("FILES")) {
+			if(sp.equals("/barazafiles")) getFile(request, response);
+			if(sp.equals("/webdavfiles")) getWebDavFile(request, response);
+			if(sp.equals("/putbarazafiles")) receiveFile(request);
+			if(sp.equals("/delbarazafiles")) delFile(request, response);
+		}
+		
+		response.setContentType("application/json;charset=\"utf-8\"");
 
 		// Close initialisations
 		query.close();
@@ -88,18 +107,87 @@ System.out.println("BASE 1010 : " + userName);
 		linkField = view.getAttribute("linkfield");
 		linkValue = web.getDataItem();
 
-		String repository = webPath + view.getAttribute("repository");
-		String username = view.getAttribute("username");
-		String password = view.getAttribute("password");
-		folder = view.getAttribute("folder");
-		if(repository != null) webdav = new BWebdav(repository, username, password);
+		if(view.getName().equals("FILES")) {
+			String repository = webPath + view.getAttribute("repository");
+			String username = view.getAttribute("username");
+			String password = view.getAttribute("password");
+			folder = view.getAttribute("folder");
+			if(repository != null) webdav = new BWebdav(repository, username, password);
 
 System.out.println("BASE 1020 : " + repository);
+		}
 
 		db = web.getDB();
 		query = new BQuery(db, view, null, null, false);
 
 		System.out.println(linkValue);
+	}
+	
+	
+	public String importFile(HttpServletRequest request) {
+		String response = "{\"success\": 0, \"message\": \"Upload Failed\"}";
+		JsonObjectBuilder jshd = Json.createObjectBuilder();
+		
+		int yourMaxMemorySize = 262144;
+		
+		ServletContext sc = getServletContext();
+		String tmpPath = sc.getRealPath("/WEB-INF/tmp");
+		File yourTempDirectory = new File(tmpPath);
+		String fileName = null;
+		
+		// Create a factory for disk-based file items
+		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
+
+		// Create a new file upload handler
+		ServletFileUpload upload = new ServletFileUpload(factory);
+
+		try {
+			
+			List items = upload.parseRequest(request);
+			Iterator itr = items.iterator();
+			while(itr.hasNext()) {
+				FileItem item = (FileItem) itr.next();
+
+				if (item.isFormField()) {
+					String name = item.getFieldName();
+					String value = item.getString();
+					System.out.println(name + " = " + value);
+				} else {
+					String contentType = item.getContentType();
+					String fieldName = item.getFieldName();
+					fileName = item.getName();
+					long fs = item.getSize();
+
+					if(fs < maxfs) {
+System.out.println("BASE 1410 : " + fileName);
+						String orgID = db.getOrgID();
+						String userOrg = db.getUserOrg();
+						
+						jshd.add("success", 1);
+						jshd.add("name", item.getName());
+						jshd.add("size", item.getSize());
+						jshd.add("message", "Proceess File");
+                        
+						JsonObject jsObj = jshd.build();
+						response = jsObj.toString();
+						
+						BImportVector iv = new BImportVector(view);
+						iv.getTextData(item.getInputStream());
+						query.importData(iv.getData());
+					}
+				}
+			}
+		} catch (FileUploadException ex) {
+			System.out.println("File upload exception " + ex);
+		} catch(IOException ex) {
+			System.out.println("File saving failed IO Exception " + ex);
+		}  catch(Exception ex) {
+			System.out.println("File saving failed Exception " + ex);
+		}
+		
+System.out.println("BASE 1420 : " + response);
+
+		return response;
 	}
 
 	public String receiveFile(HttpServletRequest request) {

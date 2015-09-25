@@ -634,11 +634,11 @@
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
-				<ACTION fnct="generate_payroll" approval="1" role="hr">Generate Payroll</ACTION>
-				<ACTION fnct="process_payroll" approval="1" role="payroll">Process Payroll</ACTION>
-				<ACTION fnct="process_loans" role="payroll">Process Loans</ACTION>
-				<ACTION fnct="process_payroll" approval="2" role="payroll">Request Approval</ACTION>
-				<ACTION fnct="process_ledger" role="payroll">Process Ledger</ACTION>
+				<ACTION fnct="generate_payroll" approval="1" role="hr,admin">Generate Payroll</ACTION>
+				<ACTION fnct="process_payroll" approval="1" role="payroll,admin">Process Payroll</ACTION>
+				<ACTION fnct="process_loans" role="payroll,admin">Process Loans</ACTION>
+				<ACTION fnct="process_payroll" approval="2" role="payroll,admin">Request Approval</ACTION>
+				<ACTION fnct="process_ledger" role="payroll,admin">Process Ledger</ACTION>
 			</ACTIONS>
 			<GRID name="Employee Month" keyfield="employee_month_id" orderby="entity_name" linkfield="period_id" table="vw_employee_month">
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
@@ -1373,6 +1373,7 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Pay Groups" keyfield="pay_group_id" table="pay_groups" listfield="pay_group_name" filter="paygroupid" pos="top"></DRILLDOWN>
 			<JASPER name="Banking" reportfile="banking.jasper"></JASPER>
+			<JASPER name="Banking by Bank" reportfile="banking_2.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="770" name="Adjustments" key="107" h="750">

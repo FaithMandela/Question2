@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_515_details" language="groovy" pageWidth="842" pageHeight="1190" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e6d19df4-6960-4863-8726-b677eb660f8e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="783"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -26,30 +26,23 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT org_id, org_name, surveys_515_id, chu_name, mclu_code, link_facility,
-       chew_name, no_of_chvs, total_chws_reported, county, subcounty,
-       division, location, sublocation, total_vilages, month, year,
-       survey_date, surveys_515_detail_id, indicator_1, indicator_2,
-       indicator_3, indicator_4, indicator_5, indicator_6, indicator_7,
-       indicator_8, indicator_9, indicator_10, indicator_11, indicator_12,
-       indicator_13, indicator_14, indicator_15, indicator_16, indicator_17,
-       indicator_18, indicator_19, indicator_20, indicator_21, indicator_22,
-       indicator_23, indicator_24, indicator_25, indicator_26, indicator_27,
-       indicator_28, indicator_29, indicator_30, indicator_31, indicator_32,
-       indicator_33, indicator_34, indicator_35, indicator_36, indicator_37,
-       indicator_38, indicator_39, indicator_40, indicator_41, indicator_42,
-       indicator_43, indicator_44, indicator_45, indicator_46, indicator_47,
-       indicator_48, indicator_49, indicator_50, indicator_51, indicator_52,
-       indicator_53, indicator_54, indicator_55, indicator_56, indicator_57,
-       indicator_58, indicator_59, indicator_60, indicator_61, indicator_62,
-       indicator_63, indicator_64, indicator_65, indicator_66, indicator_67_a,
-       indicator_67_b, indicator_67_c, indicator_67_d, indicator_67_e,
-       indicator_67_f, indicator_67_g, indicator_67_h, indicator_67_i,
-       indicator_67_j, indicator_67_k, remarks
+		<![CDATA[SELECT *
   FROM vw_surveys_515_details WHERE vw_surveys_515_details.surveys_515_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
+	<field name="county_id" class="java.lang.Integer"/>
+	<field name="county_name" class="java.lang.String"/>
+	<field name="sub_county_id" class="java.lang.Integer"/>
+	<field name="sub_county_name" class="java.lang.String"/>
+	<field name="division_id" class="java.lang.Integer"/>
+	<field name="division_name" class="java.lang.String"/>
+	<field name="location_id" class="java.lang.Integer"/>
+	<field name="location_name" class="java.lang.String"/>
+	<field name="sub_location_id" class="java.lang.Integer"/>
+	<field name="sub_location_name" class="java.lang.String"/>
+	<field name="village_id" class="java.lang.Integer"/>
+	<field name="village_name" class="java.lang.String"/>
 	<field name="surveys_515_id" class="java.lang.Integer"/>
 	<field name="chu_name" class="java.lang.String"/>
 	<field name="mclu_code" class="java.lang.String"/>
@@ -57,14 +50,8 @@
 	<field name="chew_name" class="java.lang.String"/>
 	<field name="no_of_chvs" class="java.lang.Integer"/>
 	<field name="total_chws_reported" class="java.lang.Integer"/>
-	<field name="county" class="java.lang.String"/>
-	<field name="subcounty" class="java.lang.String"/>
-	<field name="division" class="java.lang.String"/>
-	<field name="location" class="java.lang.String"/>
-	<field name="sublocation" class="java.lang.String"/>
-	<field name="total_vilages" class="java.lang.Integer"/>
-	<field name="month" class="java.lang.String"/>
-	<field name="year" class="java.lang.Integer"/>
+	<field name="start_date" class="java.sql.Date"/>
+	<field name="end_date" class="java.sql.Date"/>
 	<field name="survey_date" class="java.sql.Timestamp"/>
 	<field name="surveys_515_detail_id" class="java.lang.Integer"/>
 	<field name="indicator_1" class="java.lang.Integer"/>
@@ -214,35 +201,35 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{county}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{county_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="431" y="15" width="147" height="15" uuid="0cf05790-ab3c-4808-8866-1b15079e39aa"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{subcounty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sub_county_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="431" y="30" width="147" height="15" uuid="9d038c62-f338-4751-a875-5e54b47539a8"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{division}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{division_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="431" y="45" width="147" height="15" uuid="2802ea46-3393-44dd-a01e-d471b6f9d98e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{location_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="431" y="60" width="147" height="15" uuid="77f0fdf6-7f5a-4b29-9512-c928b25abee7"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sublocation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sub_location_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="431" y="75" width="147" height="15" uuid="f9f3f095-c232-48b2-9b04-993459b6e6e7"/>
@@ -252,21 +239,21 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{total_vilages}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{village_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="660" y="0" width="137" height="15" uuid="54301e16-63eb-4d22-9a2a-33b24ff2841b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="660" y="15" width="137" height="15" uuid="47a0a9ff-0497-4729-8a42-45fcc61a26ab"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="362" y="135" width="40" height="15" uuid="3817ddf7-f7c6-4078-91a4-01442c6260b8"/>
@@ -1274,14 +1261,14 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Month]]></text>
+				<text><![CDATA[Start Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="578" y="15" width="82" height="15" forecolor="#000000" uuid="821e8244-b0f4-46a1-9b92-2451f1cd9434"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Year]]></text>
+				<text><![CDATA[End Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="346" y="0" width="85" height="15" forecolor="#000000" uuid="20a8188b-df60-4084-b7e8-4d5e73ae1921"/>
@@ -1295,7 +1282,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Mclu Code]]></text>
+				<text><![CDATA[MCUL Code]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="30" width="115" height="15" forecolor="#000000" uuid="618245ad-1354-488e-9f8a-6ce70e21a4f3"/>
@@ -1309,14 +1296,14 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Chew Name]]></text>
+				<text><![CDATA[CHEW Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="60" width="115" height="15" forecolor="#000000" uuid="c2674228-fe07-4296-b23f-0c0181eb841c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[No Of Chvs]]></text>
+				<text><![CDATA[No.of CHVs]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="21" y="75" width="115" height="15" forecolor="#000000" uuid="344748d5-c610-4519-a404-105c99becd65"/>
@@ -1326,7 +1313,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Total Chws Reported]]></text>
+				<text><![CDATA[Total CHVs Reported]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="346" y="60" width="85" height="15" forecolor="#000000" uuid="a5fb4c81-dfdd-4ea3-a9bb-acc5902d9b76"/>
@@ -1364,7 +1351,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Total Vilages]]></text>
+				<text><![CDATA[Village]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" mode="Opaque" x="21" y="103" width="24" height="32" forecolor="#FFFFFF" backcolor="#21497A" uuid="cb3a5950-0cd0-4932-aae5-226bf136a49b"/>

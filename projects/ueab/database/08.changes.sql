@@ -1,7 +1,188 @@
+CREATE OR REPLACE FUNCTION getdbgradeid(integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(gradeid) is null THEN 'NG' WHEN $1 = -1 THEN 'DG' ELSE max(gradeid) END
+	FROM grades 
+	WHERE (minrange <= $1) AND (maxrange > $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getPGgradeid(integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(gradeid) is null THEN 'NG' WHEN $1 = -1 THEN 'DG' ELSE max(gradeid) END
+	FROM grades 
+	WHERE (p_minrange <= $1) AND (p_maxrange > $1);
+$$ LANGUAGE SQL;
+
+ 
+CREATE OR REPLACE VIEW studentcounty AS
+SELECT students.county_id, students.studentid, countys.county_name
+FROM students
+INNER JOIN countys ON students.county_id=countys.county_id;
+ 
+ CREATE OR REPLACE VIEW qstudentviewc AS
+SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.schoolid, 
+       q.schoolname, q.studentid, q.studentname, q.address, q.zipcode, q.town, q.addresscountry, 
+       q.telno, q.email, q.guardianname, q.gaddress, q.gzipcode, q.gtown, q.gaddresscountry, 
+       q.gtelno, q.gemail, q.accountnumber, q.nationality, q.nationalitycountry, 
+       q.sex, q.maritalstatus, q.birthdate, q.firstpass, q.alumnae, q.postcontacts, 
+       q.onprobation, q.offcampus, q.currentcontact, q.currentemail, q.currenttel, 
+       q.freshman, q.sophomore, q.junior, q.senior, q.degreeid, q.degreename, q.studentdegreeid, 
+       q.completed, q.started, q.cleared, q.clearedate, q.graduated, q.graduatedate, 
+       dropout, transferin, transferout, mathplacement, englishplacement, 
+       quarterid, qstart, qlatereg, qlatechange, qlastdrop, qend, active, 
+       chalengerate, feesline, resline, quarteryear, quarter, closed, 
+       q.quarter_name, q.degreelevelid, q.degreelevelname, q.charge_id, q.unit_charge, 
+       q.lab_charges, q.exam_fees, q.levellocationid, q.levellocationname, q.sublevelid, 
+       q.sublevelname, q.specialcharges, q.sun_posted, q.session_active, q.session_closed, 
+       q.general_fees, q.residence_stay, q.currency, q.exchange_rate, q.residenceid, 
+       q.residencename, q.capacity, q.defaultrate, q.residenceoffcampus, q.residencesex, 
+       q.residencedean, q.qresidenceid, q.residenceoption, q.org_id, q.qstudentid, 
+       q.additionalcharges, q.approved, q.probation, q.roomnumber, q.currbalance, 
+       q.finaceapproval, q.majorapproval, q.studentdeanapproval, q.intersession, 
+       q.exam_clear, q.exam_clear_date, q.exam_clear_balance, q.request_withdraw, 
+      q.request_withdraw_date, q.withdraw, q.ac_withdraw, q.withdraw_date, 
+       q.withdraw_rate, q.departapproval, q.overloadapproval, q.finalised, q.printed, 
+       q.details, q.ucharge, q.residencecharge, q.lcharge, q.feescharge,studentcounty.county_name,studentcounty.county_id
+  FROM qstudentview as q
+  INNER JOIN studentcounty ON q.studentid= studentcounty.county_id ;
+  
+ALTER TABLE students
+  ADD COLUMN passport boolean DEFAULT false,
+  ADD COLUMN national_id  boolean DEFAULT false,
+  ADD COLUMN identification_no varchar(20);
+  
+  
+  
+CREATE OR REPLACE VIEW qstudentviewid AS 
+	SELECT
+	qstudentview.denominationname,
+	qstudentview.schoolname,
+    qstudentview.studentid,
+	qstudentview.studentname,
+    qstudentview.nationalitycountry,
+    qstudentview.sex,
+    qstudentview.maritalstatus,
+	qstudentview.degreename,
+    qstudentview.studentdegreeid,
+    qstudentview.quarterid,
+    qstudentview.degreelevelname,
+    qstudentview.sublevelname,
+    qstudentview.approved,
+	students.identification_no,
+	students.passport,
+	students.national_id,
+	qstudentview.nationality
+    FROM qstudentview
+    INNER JOIN students ON qstudentview.studentid=students.studentid;
+  
+  
+
+UPDATE fields SET question = 'Parent or Guardians commitment: I agree that the applicant may be a student at the University of Eastern Africa, Baraton. I am
+ready to support the university in its effort to ensure that the applicant abides by the rules and principles of the university and
+accepts the authority of its administration.'
+WHERE field_id = 106;
+
+
+UPDATE fields SET field_size = 150 WHERE field_id = 106;
+
 
 	
 ALTER TABLE charges ADD charge_feesline		float;
 ALTER TABLE charges ADD charge_resline		float;
+
+UPDATE fields SET field_fnct = E'to_date(\'#\', \'DD/MM/YYYY\')'
+WHERE field_type = 'DATE';
+
+UPDATE fields SET field_type = 'DATE' WHERE field_id = 60;
+UPDATE fields SET field_lookup='Yes#No', field_type = 'LIST' WHERE field_id = 61;
+UPDATE fields SET field_lookup='SELECT denominationid,denominationname FROM denominations;', field_type = 'SELECT' 
+WHERE field_id = 88;
+UPDATE fields SET field_lookup='SELECT denominationid,denominationname FROM denominations;', field_type = 'SELECT' 
+WHERE field_id = 92;
+
+UPDATE forms SET table_name = 'application_forms' WHERE form_id = 1;
+
+
+CREATE TABLE application_forms (
+	application_form_id	serial primary key,
+	markid				integer references marks,
+	entity_id			integer references entitys,
+	degreeid			varchar(12) references degrees,
+	majorid				varchar(12) references majors,
+	sublevelid			varchar(12) references sublevels,
+	county_id			integer references counties,
+	org_id				integer references orgs,
+	entry_form_id		integer references entry_forms,
+	session_id			varchar(12),
+	email				varchar(120),
+	entrypass			varchar(32) not null default md5('enter'),
+	firstpass			varchar(32) not null default first_password(),
+	existingid			varchar(12),
+	scheduledate		date not null default current_date,
+	applicationdate     date not null default current_date,
+	accepted			boolean not null default false,
+	premajor			boolean not null default false,
+
+	submitapplication		boolean not null default false,
+	submitdate				timestamp,
+	isaccepted				boolean not null default false,
+	isreported				boolean not null default false,
+	isdeferred				boolean not null default false,
+	isrejected				boolean not null default false,
+	evaluationdate			date,
+
+	homeaddress			varchar(120),
+	phonenumber			varchar(50),
+
+	accepteddate		date,
+
+	reported			boolean not null default false,
+	reporteddate		date,
+	denominationid		varchar(12) references denominations,
+	mname				varchar(50),
+	fname				varchar(50),
+	fdenominationid		varchar(12) references denominations,
+	mdenominationid		varchar(12) references denominations,
+	foccupation         varchar(50),
+	fnationalityid      char(2) references countrys,
+	moccupation			varchar(50),
+	mnationalityid		char(2) references countrys,	
+	parentchurch		boolean,
+	parentemployer		varchar(120),
+	birthdate			date not null,
+	baptismdate			date,
+	lastname			varchar(50) not null,
+	firstname			varchar(50) not null,
+	middlename			varchar(50),
+	Sex					varchar(12),
+	MaritalStatus		varchar(12),
+	nationalityid		char(2) references countrys,
+	citizenshipid		char(2) references countrys,
+	residenceid			char(2) references countrys,
+	firstlanguage		varchar(50),
+	otherlanguages		varchar(120),
+	churchname			varchar(50),
+	churcharea			varchar(50),
+	churchaddress		text,
+	handicap			varchar(120),
+	personalhealth		varchar(50),
+	smoke				boolean,
+	drink				boolean,
+	drugs				boolean,
+	hsmoke				boolean,
+	hdrink				boolean,
+	hdrugs				boolean,
+	attendedprimary     varchar(50),
+	attendedsecondary   varchar(50),
+	expelled			boolean,
+	previousrecord		varchar(50),
+	workexperience	    varchar(50),
+	employername        varchar(50),
+	postion				varchar(50),
+	attendedueab		boolean not null default false,
+	attendeddate		date,
+	dateemployed        date,
+	campusresidence		varchar(50),
+	details				text
+);
+
 
 DROP VIEW qetimetableview;
 CREATE VIEW qetimetableview AS

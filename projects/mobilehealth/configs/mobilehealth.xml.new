@@ -1,43 +1,19 @@
 <APP>
 	<MENU name="Mobile Health">
-		<MENU name="Entitys">1</MENU>
-		<MENU name="Orgs">5</MENU>
-		<MENU name="Countys">10</MENU>
-		<MENU name="Surveys">15</MENU>
+		<MENU icon="icon-book-open" name="Reports ( MOH 514 )">15</MENU>
+		<MENU icon="icon-book-open" name="Reports ( MOH 515 )">20</MENU>
+		<MENU icon="icon-book-open" name="Reports ( MOH 100 )">40</MENU>
+		<MENU icon="icon-settings" name="Configurations">
+			<MENU icon="icon-settings" name="Definitions">null</MENU>
+			<MENU icon="fa fa-sitemap" name="Organizations">null</MENU>
+			<MENU name="514 Indicators Definitions">null</MENU>
+		</MENU>
 	</MENU>
-	<DESK w="700" name="Entitys" h="500">
-		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">ESTAMP>
-			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
-			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
-			<TEXTFIELD w="75" title="Use Key">use_key</TEXTFIELD>
-			<FORM name="Entitys" keyfield="entity_id" table="entitys">
-				<COMBOBOX w="430" title="Entity Type ID" lptable="entity_types" h="20" y="10" lpfield="entity_type_name" x="10">entity_type_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Entity Name" h="20" y="30" x="10">entity_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="User Name" h="20" y="50" x="10">user_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Primary Email" h="20" y="70" x="10">primary_email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Primary Telephone" h="20" y="90" x="10">primary_telephone</TEXTFIELD>
-				<CHECKBOX w="150" title="Super User" h="20" y="90" x="290">super_user</CHECKBOX>
-				<CHECKBOX w="150" title="Entity Leader" h="20" y="110" x="10">entity_leader</CHECKBOX>
-				<CHECKBOX w="150" title="No Org" h="20" y="110" x="290">no_org</CHECKBOX>
-				<TEXTFIELD w="430" title="Function Role" h="20" y="130" x="10">function_role</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" title="Date Enroled" h="20" y="150" x="10">date_enroled</TEXTTIMESTAMP>
-				<CHECKBOX w="150" title="Active" h="20" y="150" x="290">is_active</CHECKBOX>
-				<TEXTFIELD w="150" title="Entity Password" h="20" y="170" x="10">entity_password</TEXTFIELD>
-				<TEXTFIELD w="150" title="First Password" h="20" y="170" x="290">first_password</TEXTFIELD>
-				<TEXTFIELD w="150" title="New Password" h="20" y="190" x="10">new_password</TEXTFIELD>
-				<TEXTFIELD w="150" title="Start Url" h="20" y="190" x="290">start_url</TEXTFIELD>
-				<CHECKBOX w="150" title="Picked" h="20" y="210" x="10">is_picked</CHECKBOX>
-				<TEXTAREA w="430" title="Details" h="70" y="230" x="10">details</TEXTAREA>
-			</FORM>
-			<ACTIONS>
-				<ACTION fnct="change_password">Reset Password</ACTION>
-			</ACTIONS>
-		</GRID>
+	<DESK w="700" name="Dashboard" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Health Workers" role="admin" noorg.query="true" noorg="true" table="health_workers">
+				<TEXTFIELD w="75" fnct="COALESCE(count(health_worker_id), 0)" title="Total CHVs">health_worker_id</TEXTFIELD>
+			</TILE>
+		</DASHBOARD>
 	</DESK>
 </APP>

@@ -1,5 +1,6 @@
 #ignore report binaries
-/projects/sacco/reports/*.jasper
+build/webapps/work/
+build/baraza.jar
+build/baraza.app.jar
+baraza.log
 
-#ignore documents folder
-/projects/sacco/docs

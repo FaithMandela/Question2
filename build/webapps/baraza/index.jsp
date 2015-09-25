@@ -310,7 +310,7 @@
 							<%= web.getButtons() %>
 						</div>
 
-						<div class="portlet-body" style="min-height:360px;">
+						<div class="portlet-body" id="portletBody" style="min-height:360px;">
 								<%= web.getBody(request, reportPath) %>
 						</div>
 
@@ -354,8 +354,7 @@
 						<%= web.showFooter() %>
 					</div>
 
-
-                    <% if(web.getViewType().equals("FILES")){ %>
+                    <% if(web.isFileImport()) { %>
                         <div class="row"> <!-- file upload row -->
                             <div class="col-md-12">
                                 <span class="btn green fileinput-button">
@@ -520,6 +519,12 @@
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
+	function resizeJqGridWidth(grid_id, div_id, width){
+	    $(window).bind('resize', function() {
+	        $('#' + grid_id).setGridWidth(width, true); //Back to original width
+	        $('#' + grid_id).setGridWidth($('#' + div_id).width(), true); //Resized to new width as per window
+	     }).trigger('resize');
+	}
 
     <% if(web.isGrid()) { %>
 	var lastsel2;
@@ -546,6 +551,8 @@
     <% if(actionOp != null) {	%>
       jqcf.multiselect = true;
     <% } %>
+
+
 
 	/* check if user is using mobile*/
     var isMobile = false; //initiate as false
@@ -597,34 +604,6 @@
           	}
         };
 
-		/*
-		function(res) {
-			console.info(res);
-			toastr.options = {
-						"closeButton": true,
-						"debug": false,
-						"positionClass": "toast-top-right",
-						"onclick": null,
-						"showDuration": "1000",
-						"hideDuration": "1000",
-						"timeOut": "5000",
-						"extendedTimeOut": "1000",
-						"showEasing": "swing",
-						"hideEasing": "linear",
-						"showMethod": "fadeIn",
-						"hideMethod": "fadeOut"
-					}
-			var tp = res.status == 200 ? 'success' : 'error';
-			toastr[tp](res.responseText, "");
-			jQuery('#jqlist').restoreRow(lastsel2);
-		}*/
-
-
-
-
-
-
-
 	  <% } %>
     }
 <% } %>
@@ -632,11 +611,6 @@
 
     jQuery("#jqlist").jqGrid(jqcf);
     jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false, add:false, del:false, search:false});
-
-
-
-
-
 
 
 	/*navButton*/
@@ -661,6 +635,17 @@
 
 	/* /nav button */
 
+	// $("#jqlist").setGridWidth($('.portlet-body').width());
+	//
+    // // Size me later...
+    // $('.portlet-body').bind('resize', function () {
+	// 	console.log($('.portlet-body').width());
+    //     $("#jqlist").setGridWidth($('.portlet-body').width());
+    // }).trigger('resize');
+
+
+
+	resizeJqGridWidth('jqlist', 'portletBody', $('.portlet-body').width());
 
 
     $('#btSearch').click(function(){
@@ -717,11 +702,6 @@
                         $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
                     }
                 }
-
-
-
-
-
 	        }, "JSON");
 	    }
 	});
@@ -789,24 +769,21 @@ $(function () {
         url: 'putbarazafiles',
         dataType: 'json',
         autoUpload: true,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|doc|docx|rtf|odt|pdf)$/i,
-        maxFileSize: 999000,
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|doc|docx|rtf|odt|pdf|csv|txt|xls)$/i,
+        maxFileSize: 4194304,
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
         // send Blob objects via XHR requests:
-        disableImageResize: /Android(?!.*Chrome)|Opera/
-            .test(window.navigator.userAgent),
+        disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
         previewMaxWidth: 100,
         previewMaxHeight: 100,
         previewCrop: true
     }).on('fileuploadadd', function (e, data) {
         data.context = $('<div/>').appendTo('#files');
         $.each(data.files, function (index, file) {
-            var node = $('<p/>')
-                    .append($('<span/>').text(file.name));
+            var node = $('<p/>').append($('<span/>').text(file.name));
             if (!index) {
-                node
-                    .append('<br>')
+                node.append('<br>')
                    // .append(uploadButton.clone(true).data(data));
             }
             node.appendTo(data.context);
@@ -816,34 +793,35 @@ $(function () {
             file = data.files[index],
             node = $(data.context.children()[index]);
         if (file.preview) {
-            node
-                .prepend('<br>')
-                .prepend(file.preview);
+            node.prepend('<br>').prepend(file.preview);
         }
         if (file.error) {
-            node
-                .append('<br>')
-                .append($('<span class="text-danger"/>').text(file.error));
+            node.append('<br>').append($('<span class="text-danger"/>').text(file.error));
         }
         if (index + 1 === data.files.length) {
-            data.context.find('button')
-                .text('Upload')
-                .prop('disabled', !!data.files.error);
+            data.context.find('button').text('Upload').prop('disabled', !!data.files.error);
         }
     }).on('fileuploadprogressall', function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress .progress-bar').css(
-            'width',
-            progress + '%'
-        );
+        $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function (e, data) {
+console.log('BASE 5');
+console.log(data.result.message);
+		var fileDone = $('<button>').text(data.result.message);
+        $(data.context.children()[0]).append(fileDone).click(function(){ 
+			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {
+
+				if(adata.error == false){
+                    toastr['success'](adata.msg, "Ok");
+                     $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
+                }
+	        }, "JSON");
+			}).append('<br>');
+
         $.each(data.result.files, function (index, file) {
             if (file.url) {
-                var link = $('<a>')
-                    .attr('target', '_blank')
-                    .prop('href', file.url);
-                $(data.context.children()[index])
-                    .wrap(link);
+                var link = $('<a>').attr('target', '_blank').prop('href', file.url);
+                $(data.context.children()[index]).wrap(link);
             } else if (file.error) {
                 var error = $('<span class="text-danger"/>').text(file.error);
                 $(data.context.children()[index])
@@ -859,9 +837,10 @@ $(function () {
                 .append('<br>')
                 .append(error);
         });
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+    }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
+
+
 </script>
 <!-- END JAVASCRIPTS -->
 <%

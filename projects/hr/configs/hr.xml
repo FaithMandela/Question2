@@ -838,7 +838,8 @@
 	<DESK w="700" name="Applicant" key="23" h="650">
 		<GRID name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="150" title="Name">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="120" title="Name">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Age">applicant_age</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
@@ -1758,7 +1759,7 @@
 			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" where="(short_listed = 0)">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
@@ -1782,7 +1783,7 @@
 			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" where="(short_listed = 1)">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
@@ -3427,6 +3428,8 @@
 	<DESK w="700" name="Employee List" key="106" h="550">
 		<JASPER name="Staff List" reportfile="staff_list.jasper"></JASPER>
 		<JASPER name="Employee List" reportfile="vw_employees.jasper"></JASPER>
+		<JASPER name="Dependents" reportfile="dependents.jasper"></JASPER>
+		<JASPER name="Emergency Contacts" reportfile="emergency_contacts.jasper"></JASPER>
 		<FILTER w="700" name="New Employees" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
@@ -3473,7 +3476,7 @@
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report.jasper"></JASPER>
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave.jasper"></JASPER>
 		</FILTER>
-		<FILTER w="700" name="Leave Summary ( Type )" split="150" type="vert" h="550">
+		<FILTER w="700" name="Leave Summary - Type" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
@@ -3490,6 +3493,7 @@
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave2.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
+		<JASPER name="Approvals" reportfile="leave_approvals.jasper"></JASPER>
 		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
 	</DESK>

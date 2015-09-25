@@ -150,6 +150,8 @@ CREATE TABLE employees (
 	current_sal_point		varchar(16),
 	halt_point				varchar(16),
 
+	bio_metric_number		varchar(32),
+
 	height					real, 
 	weight					real, 
 	blood_group				varchar(3),
