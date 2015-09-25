@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="11ea66f5-f79f-4de2-a086-5391bb14a03d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT * FROM vw_passengers
+  FULL OUTER JOIN address ON address.org_id = vw_passengers.org_id]]>
+	</queryString>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="rate_type_id" class="java.lang.Integer"/>
+	<field name="rate_type_name" class="java.lang.String"/>
+	<field name="rate_id" class="java.lang.Integer"/>
+	<field name="days_from" class="java.lang.String"/>
+	<field name="days_to" class="java.lang.String"/>
+	<field name="standard_rate" class="java.lang.Float"/>
+	<field name="north_america_rate" class="java.lang.Float"/>
+	<field name="approved" class="java.lang.Boolean"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="passenger_id" class="java.lang.Integer"/>
+	<field name="passenger_name" class="java.lang.String"/>
+	<field name="passenger_mobile" class="java.lang.String"/>
+	<field name="passenger_email" class="java.lang.String"/>
+	<field name="passenger_age" class="java.lang.Integer"/>
+	<field name="days_covered" class="java.lang.Integer"/>
+	<field name="nok_name" class="java.lang.String"/>
+	<field name="nok_mobile" class="java.lang.String"/>
+	<field name="nok_national_id" class="java.lang.String"/>
+	<field name="cover_amount" class="java.lang.Float"/>
+	<field name="is_north_america" class="java.lang.Boolean"/>
+	<field name="details" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="destown" class="java.lang.String"/>
+	<field name="approved_date" class="java.sql.Timestamp"/>
+	<field name="address_id" class="java.lang.Integer"/>
+	<field name="address_type_id" class="java.lang.Integer"/>
+	<field name="sys_country_id" class="java.lang.String"/>
+	<field name="address_name" class="java.lang.String"/>
+	<field name="table_name" class="java.lang.String"/>
+	<field name="table_id" class="java.lang.Integer"/>
+	<field name="post_office_box" class="java.lang.String"/>
+	<field name="postal_code" class="java.lang.String"/>
+	<field name="premises" class="java.lang.String"/>
+	<field name="street" class="java.lang.String"/>
+	<field name="town" class="java.lang.String"/>
+	<field name="phone_number" class="java.lang.String"/>
+	<field name="extension" class="java.lang.String"/>
+	<field name="mobile" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="website" class="java.lang.String"/>
+	<field name="is_default" class="java.lang.Boolean"/>
+	<field name="first_password" class="java.lang.String"/>
+	<variable name="total_amount" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{cover_amount}]]></variableExpression>
+	</variable>
+	<group name="invoiceno">
+		<groupExpression><![CDATA[$F{org_id}]]></groupExpression>
+		<groupFooter>
+			<band height="21">
+				<textField>
+					<reportElement x="443" y="0" width="100" height="20" uuid="ee438e8d-2c59-4bf6-8742-f5e9ada9deeb"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total_amount}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="323" y="0" width="100" height="20" uuid="7d6c0b74-bd8b-46b8-9e15-fd54bf19e1b2"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="151" splitType="Stretch">
+			<staticText>
+				<reportElement x="566" y="129" width="100" height="20" uuid="1697d8b0-c52b-4491-ae1c-f6e3c5c736c9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="702" y="129" width="104" height="20" uuid="bcc20956-c404-46ac-af23-4124d9294a1f"/>
+				<textFieldExpression><![CDATA[$F{org_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="32" width="256" height="16" uuid="49cb752c-1222-4e4b-ad53-734b49d5cdb1"/>
+				<text><![CDATA[The Heritage Insurance Cony Kenya Limited]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="48" width="256" height="21" uuid="77867488-d00f-46b5-91b4-3704e29cd474"/>
+				<text><![CDATA[CfC House, Mamlaka Road]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="109" width="256" height="20" uuid="7448a8e5-fd41-4016-860c-903a8a4ad169"/>
+				<text><![CDATA[m 07110390000, 0734101000]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="129" width="256" height="20" uuid="8e324269-82f1-4c2b-a7a5-32b47a5bc367"/>
+				<text><![CDATA[e info@heritage.co.ke w wwww.heritageinsurance.co.ke]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="89" width="256" height="20" uuid="5ce30373-23c4-455d-b95f-5ea1e817cdaf"/>
+				<text><![CDATA[t 254202783000 f 254202727800 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="69" width="256" height="20" uuid="25f1e8ff-0599-44e8-b25b-ac823dbae40c"/>
+				<text><![CDATA[-PO BOX , Nairobi,Kenya]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="256" y="28" width="100" height="20" uuid="0650f648-9597-469a-abb2-57f81963bb34"/>
+				<textFieldExpression><![CDATA[$F{address_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="48" width="100" height="20" uuid="15794af5-5f61-4366-824f-a79a9f70c389"/>
+				<textFieldExpression><![CDATA[$F{street}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="69" width="100" height="20" uuid="8a4f0963-43eb-4b6a-a178-dde3703beb00"/>
+				<textFieldExpression><![CDATA[$F{post_office_box}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="89" width="100" height="20" uuid="3c890dfb-3520-4066-adcc-91b91983e0e1"/>
+				<textFieldExpression><![CDATA[$F{phone_number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="109" width="100" height="20" uuid="e16a5c97-e0f0-470f-9a46-167caf424ed7"/>
+				<textFieldExpression><![CDATA[$F{mobile}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="256" y="129" width="100" height="20" uuid="c4a2c421-69d3-4dc8-bd16-c7bc9dcdac81"/>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="356" y="129" width="100" height="20" uuid="45fb07aa-7a82-4512-8e14-1c488cfaf994"/>
+				<textFieldExpression><![CDATA[$F{website}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="31b7c767-43f3-4dc1-980d-c693567d3e48"/>
+				<text><![CDATA[Bill To:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="200" height="20" uuid="9b6be22f-70c4-43d7-8879-8f42c35a228d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="40" width="100" height="20" uuid="1847594f-fc39-4a50-a1dc-e473fff19fec"/>
+				<text><![CDATA[Sale Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="585" y="37" width="100" height="20" uuid="cc8e7559-f84c-4af1-af3e-d57181ad1b45"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consultant]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="702" y="37" width="100" height="20" uuid="d69c733f-397d-4f6d-8418-b9c3312c8817"/>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="37" width="100" height="20" uuid="290a1cab-b03d-4d7b-a023-bc609fcb3322"/>
+				<textFieldExpression><![CDATA[$F{approved_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="b42d8b1c-79bf-4816-9275-061c8a06d8c6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Passenger Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="1" width="100" height="20" uuid="2aec149f-3c66-4484-a457-55251b8e7301"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Covered Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="443" y="1" width="100" height="20" uuid="3e0a088a-6d2d-46a1-9598-9f1b491b39c7"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="51cecd74-b904-4dee-96c7-e14725987f0e"/>
+				<textFieldExpression><![CDATA[$F{passenger_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="223" y="0" width="100" height="20" uuid="b2c8a3e0-0bf6-4ff4-81ba-5abbb1f65a90"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{cover_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="443" y="0" width="100" height="20" uuid="ea351b38-5166-4375-a416-1ce1a27e1a56"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{cover_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
