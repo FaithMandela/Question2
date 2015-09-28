@@ -80,7 +80,7 @@ ORDER BY eb.bank_name, eb.employee_id;]]>
 	<field name="period_month" class="java.lang.String"/>
 	<field name="bank_address" class="java.lang.String"/>
 	<field name="bank_heading" class="java.lang.String"/>
-	<variable name="sumbanked" class="java.lang.Double" calculation="Sum">
+	<variable name="sumbanked" class="java.lang.Double" resetType="Group" resetGroup="bank_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{banked}]]></variableExpression>
 	</variable>
 	<group name="bank_name">
