@@ -194,7 +194,16 @@ CREATE TABLE receipts (
 CREATE INDEX receipts_mpesa_trx_id ON receipts (mpesa_trx_id);
 CREATE INDEX receipts_org_id ON receipts (org_id);
 
-
+CREATE OR REPLACE VIEW vw_travdoc_user AS 
+ SELECT vw_orgs.org_id,vw_orgs.org_name,vw_orgs.pcc,vw_orgs.gds_free_field,vw_orgs.show_fare, vw_orgs.logo,vw_entity_address.table_id,
+    vw_entity_address.table_name, vw_entity_address.post_office_box, vw_entity_address.postal_code,vw_entity_address.premises,
+    vw_entity_address.street, vw_entity_address.town, vw_entity_address.phone_number, vw_entity_address.email,vw_entity_address.sys_country_name,
+    entitys.entity_id, entitys.entity_name, entitys.son, entitys.phone_ph, entitys.phone_pa, entitys.phone_pb,entitys.phone_pt
+   FROM entitys
+     LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id
+     JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
+     JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
+     
 CREATE VIEW vw_address AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name,
 		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town,
