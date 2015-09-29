@@ -150,7 +150,7 @@ ORDER BY entity_name]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="27" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
