@@ -41,9 +41,9 @@ WHERE vw_kins.beneficiary = true]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="47" splitType="Stretch">
+		<band height="33" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="0" y="0" width="555" height="42" uuid="cef4ccaa-7868-4a4d-9d42-0491eda88602"/>
+				<reportElement style="Title" x="0" y="0" width="555" height="33" uuid="cef4ccaa-7868-4a4d-9d42-0491eda88602"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="28" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -108,7 +108,7 @@ WHERE vw_kins.beneficiary = true]]>
 					<textFieldExpression><![CDATA[$F{full_names}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="2" y="1" width="80" height="15" uuid="957cdcf0-30cd-421c-91be-e118a77ffa9f"/>
+					<reportElement style="Detail" x="2" y="0" width="80" height="15" uuid="957cdcf0-30cd-421c-91be-e118a77ffa9f"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
