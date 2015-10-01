@@ -41,13 +41,13 @@ ORDER BY entity_name]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="71" splitType="Stretch">
+		<band height="43" splitType="Stretch">
 			<staticText>
-				<reportElement style="&lt;Different Values&gt;" x="66" y="0" width="446" height="62" uuid="f01dc75a-54d6-40bc-ba14-90e9c37e2d7f"/>
+				<reportElement x="0" y="0" width="555" height="43" uuid="07ad26d9-0b24-49c8-8f4d-0b17c0f02c9b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
+					<font fontName="Times New Roman" size="20" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Emergency Contacts Report]]></text>
+				<text><![CDATA[Emergency Contact Report]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -55,94 +55,129 @@ ORDER BY entity_name]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="18" splitType="Stretch">
+		<band height="27" splitType="Stretch">
 			<staticText>
-				<reportElement style="&lt;Different Values&gt;" x="116" y="0" width="133" height="15" forecolor="#000000" uuid="db6558fb-9dac-4f94-a51b-2f77e1bf5f55"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Kin Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="&lt;Different Values&gt;" x="250" y="0" width="56" height="15" forecolor="#000000" uuid="d5c852d9-023a-4e70-bbb5-010a94538018"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Kin Type ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="&lt;Different Values&gt;" x="307" y="0" width="72" height="15" forecolor="#000000" uuid="09bab945-28f9-48eb-b77f-0547b77d2a97"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Identification]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="&lt;Different Values&gt;" x="380" y="0" width="79" height="15" forecolor="#000000" uuid="efad4f52-70fa-4e22-aed7-f02849f630e5"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Relation to Staff]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="&lt;Different Values&gt;" x="460" y="0" width="95" height="15" forecolor="#000000" uuid="a560435c-0d22-4818-82af-e8c6a299eda8"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Emergency Contact]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="&lt;Different Values&gt;" x="0" y="0" width="116" height="16" uuid="8eb4b11f-6b30-4e00-bd9d-3b47557437e2"/>
-				<textElement>
+				<reportElement positionType="Float" x="2" y="6" width="125" height="20" isPrintWhenDetailOverflows="true" uuid="8e682895-8349-4914-b53a-1b92c2c1d22c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Employee Name]]></text>
 			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="135" y="6" width="120" height="20" isPrintWhenDetailOverflows="true" uuid="f81d54ea-cb68-4c6a-8435-2b25c77c66f4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kin Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="258" y="6" width="58" height="20" isPrintWhenDetailOverflows="true" uuid="c2c1f74e-8255-4a23-ae97-858e7ac5935b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kin Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="317" y="6" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="6610b1f6-ab7b-4dea-b931-832b8953732a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kin ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="382" y="6" width="80" height="20" isPrintWhenDetailOverflows="true" uuid="ec91ed59-b22a-4686-868e-22b2dfca899d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relation to Staff]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="462" y="6" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="ce6d27d1-c49e-4e75-8693-a55aa3e7efcb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Emergency Contact]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="26" width="555" height="1" uuid="46757c58-6b26-4e49-972f-436f4649d3a5"/>
+			</line>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
-			<frame>
-				<reportElement style="&lt;Different Values&gt;" mode="Opaque" x="0" y="1" width="555" height="15" uuid="2f126fa1-6bfc-4e86-b9b5-d6acb5e554e9"/>
-			</frame>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement positionType="Float" x="2" y="0" width="125" height="20" isPrintWhenDetailOverflows="true" uuid="0f60fc55-0c8d-4c01-97b8-c0b5d8535a77"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="135" y="0" width="120" height="20" isPrintWhenDetailOverflows="true" uuid="577cbd3c-445b-4e1e-9bc8-4c384edf82bc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{full_names}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="258" y="0" width="58" height="20" isPrintWhenDetailOverflows="true" uuid="c96afa17-d2e2-4de5-88d4-70485c350558"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kin_type_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="317" y="0" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="2d56208b-be83-40d0-bceb-ad9ff435b0a6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{identification}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="382" y="0" width="80" height="20" isPrintWhenDetailOverflows="true" uuid="15747bf4-8e1b-446e-add0-138b4a1cd5ff"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{relation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="462" y="0" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="6dccec60-21a3-4b37-9033-03c1e58f840c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{emergency_contact}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="27" splitType="Stretch">
-			<line>
-				<reportElement style="&lt;Different Values&gt;" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="7b6ab065-c72c-433b-b368-a31cf3c75291"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
-		</band>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="5" y="1" width="550" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="b4bed345-ba8c-4349-8c39-e0b0c963da48"/>
-				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="504" y="0" width="43" height="20" forecolor="#736343" uuid="67b2c57f-bb11-4ca4-b726-64c1942b20a5"/>
-					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-				</textField>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="b4bed345-ba8c-4349-8c39-e0b0c963da48"/>
 				<textField>
-					<reportElement style="Column header" x="455" y="0" width="49" height="20" forecolor="#736343" uuid="639340a2-f064-4d25-837f-c7bdb80538ee"/>
-					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
+					<reportElement x="407" y="4" width="80" height="20" uuid="3e9d3b0a-8daa-41c1-8163-224cf87fc82a"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
-				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="ab3ba62b-5425-46ef-b89a-fe9cf54a2edb"/>
-					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
+				<textField evaluationTime="Report">
+					<reportElement x="487" y="4" width="40" height="20" uuid="5dda3886-3f11-456d-b396-1dfb7b07ac91"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 			</frame>
+			<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
+				<reportElement x="2" y="5" width="186" height="20" uuid="c61c312a-e353-4687-bc58-f44f2e7fb629"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<summary>

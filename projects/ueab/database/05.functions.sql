@@ -128,9 +128,6 @@ BEGIN
 	FROM qstudents
 	WHERE (qstudentid = NEW.qstudentid);
 	
-	IF(v_approved = true)THEN
-		RAISE EXCEPTION 'You cannot add a course for an approved student';
-	END IF;
 
 	RETURN NEW;
 END;
