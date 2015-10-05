@@ -149,7 +149,7 @@ ORDER BY eb.employee_id;]]>
 	<columnHeader>
 		<band height="17" splitType="Stretch">
 			<staticText>
-				<reportElement key="element-90" x="1" y="1" width="58" height="16" forecolor="#000000" uuid="78b620c0-b926-452c-85fb-5f987cdbd2b9"/>
+				<reportElement key="element-90" x="1" y="1" width="69" height="16" forecolor="#000000" uuid="78b620c0-b926-452c-85fb-5f987cdbd2b9"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -162,7 +162,7 @@ ORDER BY eb.employee_id;]]>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="59" y="1" width="195" height="16" forecolor="#000000" uuid="b0e37a7d-8ed7-428b-be1b-ebc4b4f79fbb"/>
+				<reportElement key="element-90" x="70" y="1" width="184" height="16" forecolor="#000000" uuid="b0e37a7d-8ed7-428b-be1b-ebc4b4f79fbb"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -175,7 +175,7 @@ ORDER BY eb.employee_id;]]>
 				<text><![CDATA[Employee Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="254" y="1" width="169" height="16" forecolor="#000000" uuid="20f35f1a-56cf-48f5-a60b-2c6fe4b3245e"/>
+				<reportElement key="element-90" x="254" y="1" width="184" height="16" forecolor="#000000" uuid="20f35f1a-56cf-48f5-a60b-2c6fe4b3245e"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -188,7 +188,7 @@ ORDER BY eb.employee_id;]]>
 				<text><![CDATA[Bank]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="423" y="1" width="156" height="16" forecolor="#000000" uuid="fe197130-fd0e-49f4-8723-394619fca666"/>
+				<reportElement key="element-90" x="438" y="1" width="125" height="16" forecolor="#000000" uuid="fe197130-fd0e-49f4-8723-394619fca666"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -214,7 +214,7 @@ ORDER BY eb.employee_id;]]>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="579" y="1" width="138" height="16" forecolor="#000000" uuid="a92e5c6e-d27b-4422-88b2-0f5794515d80"/>
+				<reportElement key="element-90" x="563" y="1" width="154" height="16" forecolor="#000000" uuid="a92e5c6e-d27b-4422-88b2-0f5794515d80"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -231,7 +231,7 @@ ORDER BY eb.employee_id;]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="1" y="0" width="58" height="15" uuid="21ba6819-b4a8-42c9-bd7c-065924756434"/>
+				<reportElement key="textField" x="1" y="0" width="69" height="15" uuid="21ba6819-b4a8-42c9-bd7c-065924756434"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
@@ -244,7 +244,7 @@ ORDER BY eb.employee_id;]]>
 				<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="59" y="0" width="195" height="15" uuid="d29f6024-9450-474d-8963-2d3b846de47e"/>
+				<reportElement key="textField" x="70" y="0" width="184" height="15" uuid="d29f6024-9450-474d-8963-2d3b846de47e"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -257,7 +257,7 @@ ORDER BY eb.employee_id;]]>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="254" y="0" width="169" height="15" uuid="df03b957-0c68-4c1c-8deb-ff3acea0dd59"/>
+				<reportElement key="textField" x="254" y="0" width="184" height="15" uuid="df03b957-0c68-4c1c-8deb-ff3acea0dd59"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -270,7 +270,7 @@ ORDER BY eb.employee_id;]]>
 				<textFieldExpression><![CDATA[$F{bank_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="423" y="0" width="156" height="15" uuid="6583f7ec-db46-451f-9f72-66e1e26dde97"/>
+				<reportElement key="textField" x="438" y="0" width="125" height="15" uuid="6583f7ec-db46-451f-9f72-66e1e26dde97"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -296,7 +296,7 @@ ORDER BY eb.employee_id;]]>
 				<textFieldExpression><![CDATA[$F{banked}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="579" y="0" width="138" height="15" uuid="aa6438c1-3d70-4f16-bc08-83156e172453"/>
+				<reportElement key="textField" x="563" y="0" width="154" height="15" uuid="aa6438c1-3d70-4f16-bc08-83156e172453"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -332,7 +332,7 @@ ORDER BY eb.employee_id;]]>
 				<textFieldExpression><![CDATA[$V{sumbanked}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="element-91" x="59" y="0" width="195" height="16" forecolor="#000000" uuid="b239a11d-aec0-433a-82dc-80d454079218"/>
+				<reportElement key="element-91" x="70" y="0" width="184" height="16" forecolor="#000000" uuid="b239a11d-aec0-433a-82dc-80d454079218"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>

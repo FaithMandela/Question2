@@ -1025,7 +1025,7 @@ BEGIN
 	ELSE
 		UPDATE qstudents SET approved = true, sys_audit_trail_id = $4::int
 		WHERE qstudentid = myrec.qstudentid;
-		mystr := 'You have successful approvaled the student';
+		mystr := 'You have successful approved the student';
 	END IF;
 
     RETURN mystr;

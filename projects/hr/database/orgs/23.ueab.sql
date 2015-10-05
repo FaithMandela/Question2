@@ -4,10 +4,10 @@ UPDATE adjustments SET currency_id = 1 WHERE currency_id is null;
 
 
 INSERT INTO default_adjustments (entity_id, adjustment_id, org_id)
-SELECT entity_id, 15, 2
+SELECT entity_id, 15, 0
 FROM employees WHERE contract = false;
 INSERT INTO default_adjustments (entity_id, adjustment_id, org_id)
-SELECT entity_id, 16, 2
+SELECT entity_id, 16, 0
 FROM employees WHERE contract = false;
 
 
@@ -42,9 +42,6 @@ BEGIN
 	FROM vw_loans 
 	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
 
-	PERFORM updTax(employee_month_id, Period_id)
-	FROM employee_month
-	WHERE (period_id = v_period_id);
 
 	msg := 'Payroll Generated';
 
@@ -78,7 +75,7 @@ BEGIN
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));
-		PERFORM updTax(employee_month_id, period_id)
+		PERFORM upd_tax_net(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));
 		
@@ -160,5 +157,62 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION upd_tax_net(int, int) RETURNS float AS $$
+DECLARE
+	reca 				RECORD;
+	income 				REAL;
+	tax 				REAL;
+	InsuranceRelief 	REAL;
+BEGIN
 
+	FOR reca IN SELECT employee_tax_types.employee_tax_type_id, employee_tax_types.tax_type_id, period_tax_types.formural,
+			 period_tax_types.employer, period_tax_types.employer_ps
+		FROM employee_tax_types INNER JOIN period_tax_types ON (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
+		WHERE (employee_month_id = $1) AND (Period_Tax_Types.Period_ID = $2)
+		ORDER BY Period_Tax_Types.Tax_Type_order LOOP
+
+		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
+		INTO tax;
+
+		UPDATE employee_tax_types SET amount = tax, employer = reca.employer + (tax * reca.employer_ps / 100)
+		WHERE employee_tax_type_id = reca.employee_tax_type_id;
+	END LOOP;
+
+	RETURN tax;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION get_formula_adjustment(int, int, real) RETURNS float AS $$
+DECLARE
+	v_employee_month_id		integer;
+	v_basic_pay				float;
+	v_adjustment			float;
+	v_prof_allowance		float;
+BEGIN
+
+	SELECT employee_month.employee_month_id, employee_month.basic_pay INTO v_employee_month_id, v_basic_pay
+	FROM employee_month
+	WHERE (employee_month.employee_month_id = $1);
+
+	IF ($2 = 1) THEN
+		v_adjustment := v_basic_pay * $3;
+	ELSIF ($2 = 2) THEN
+		SELECT amount INTO v_prof_allowance
+		FROM employee_adjustments
+		WHERE (employee_month_id = v_employee_month_id) AND (adjustment_id = 5);
+		
+		v_adjustment := (v_basic_pay + v_prof_allowance) * $3;
+	ELSE
+		v_adjustment := 0;
+	END IF;
+
+	IF(v_adjustment is null) THEN
+		v_adjustment := 0;
+	END IF;
+
+	RETURN v_adjustment;
+END;
+$$ LANGUAGE plpgsql;
 
