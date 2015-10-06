@@ -31,9 +31,10 @@ ORDER BY allowanceid;
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax) VALUES (1, 15, 'Tax Allowance', true, true);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax) VALUES (1, 16, 'NHIF Allowance', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll) VALUES (1, 17, 'Value of Quarters .25', false, true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll) VALUES (1, 18, 'Value of Quarters .50', false, true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll) VALUES (1, 19, 'Value of Quarters .75', false, true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll) VALUES (1, 17, 'Value of Quarters', false, true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll, formural) VALUES (2, 41, 'House Rent 2.5', false, true, false, 'get_formula_adjustment(employee_month_id, 1, 0.025)');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll, formural) VALUES (2, 42, 'House Rent 5', false, true, false, 'get_formula_adjustment(employee_month_id, 1, 0.05)');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, in_tax, in_payroll, formural) VALUES (2, 43, 'House Rent 7.5', false, true, false, 'get_formula_adjustment(employee_month_id, 1, 0.075)');
 UPDATE adjustments SET org_id = 0, currency_id = 1;
 
 INSERT INTO adjustments(adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, account_number)
@@ -210,4 +211,24 @@ FROM import.employeemonth as a INNER JOIN import.employees  as b ON
 WHERE (a.nhif > 0) AND (a.isnhif = 'Yes')
 ORDER BY a.employeemonthid;
 
+UPDATE import.employees SET houserate = 0.075 WHERE houserate = 0.75;
 
+
+DELETE FROM Tax_Rates WHERE Tax_Type_ID = 3;
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 5999, 150.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 7999, 300.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 11999, 400.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 14999, 500.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 19999, 600.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 24999, 750.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 29999, 850.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 34999, 900.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 39999, 950.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 44999, 1000.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 49999, 1100.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 59999, 1200.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 69999, 1300.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 79999, 1400.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 89999, 1500.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 99999, 1600.00);
+INSERT INTO Tax_Rates (Tax_Type_ID, Tax_Range, Tax_Rate) VALUES (3, 10000000, 1700.00);

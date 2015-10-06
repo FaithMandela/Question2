@@ -10,6 +10,23 @@ INSERT INTO default_adjustments (entity_id, adjustment_id, org_id)
 SELECT entity_id, 16, 0
 FROM employees WHERE contract = false;
 
+INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount, active)
+SELECT a.employeeid, 41, 0, 0, true
+FROM import.employees as a 
+WHERE (a.houserate = 0.025);
+INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount, active)
+SELECT a.employeeid, 42, 0, 0, true
+FROM import.employees as a 
+WHERE (a.houserate = 0.05);
+INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount, active)
+SELECT a.employeeid, 43, 0, 0, true
+FROM import.employees as a 
+WHERE (a.houserate = 0.075);
+
+INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount, active)
+SELECT employeeid,  17, 0, 0, true
+FROM import.employees
+WHERE ishoused = 'Yes';
 
 CREATE OR REPLACE FUNCTION generate_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -57,7 +74,7 @@ BEGIN
 	IF ($3 = '1') THEN
 		UPDATE employee_adjustments SET amount = 0
 		FROM employee_month 
-		WHERE ((adjustment_id = 15) or (adjustment_id = 16))
+		WHERE (adjustment_id IN (15,16,17))
 			AND (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
 			AND (employee_month.period_id = CAST($1 as int));
 			
@@ -65,6 +82,19 @@ BEGIN
 		FROM employee_month 
 		WHERE (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
 			AND (employee_month.period_id = CAST($1 as int));
+			
+		UPDATE employee_adjustments SET amount = 0 
+		FROM employee_month 
+		WHERE (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
+			AND (employee_month.period_id = CAST($1 as int))
+			AND (adjustment_id IN (SELECT adjustment_id FROM adjustments WHERE formural is not null));
+
+		UPDATE employee_adjustments 
+			SET amount = ((vw_employee_month.basic_pay + vw_employee_month.full_allowance) * 0.15) - get_house_rent(vw_employee_month.employee_month_id)
+		FROM vw_employee_month 
+		WHERE (adjustment_id = 17)
+			AND (employee_adjustments.employee_month_id = vw_employee_month.employee_month_id) 
+			AND (vw_employee_month.period_id = CAST($1 as int));
 	
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
@@ -84,7 +114,7 @@ BEGIN
 		msg := 'Application for approval';
 	END IF;
 
-	return msg;
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -190,4 +220,11 @@ BEGIN
 	RETURN v_adjustment;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_house_rent(integer) RETURNS real AS $$
+    SELECT sum(amount)
+	FROM employee_adjustments
+	WHERE (adjustment_id IN (41,42,43))
+	AND (employee_adjustments.employee_month_id = $1);
+$$ LANGUAGE SQL;
 
