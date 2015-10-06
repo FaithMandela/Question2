@@ -75,9 +75,6 @@ BEGIN
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));
-		PERFORM upd_tax_net(employee_month_id, period_id)
-		FROM employee_month
-		WHERE (period_id = CAST($1 as int));
 		
 		msg := 'Payroll Processed';
 	ELSIF ($3 = '2') THEN
@@ -123,10 +120,11 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION updtax(int, int) RETURNS float AS $$
 DECLARE
-	reca 				RECORD;
-	income 				REAL;
-	tax 				REAL;
-	InsuranceRelief 	REAL;
+	reca 					RECORD;
+	income 					REAL;
+	tax 					REAL;
+	InsuranceRelief 		REAL;
+	v_income				real;
 BEGIN
 
 	FOR reca IN SELECT employee_tax_types.employee_tax_type_id, employee_tax_types.tax_type_id, period_tax_types.formural,
@@ -143,34 +141,11 @@ BEGIN
 			WHERE (employee_month_id = $1) AND (adjustment_id = 15);
 		END IF;
 		
-		IF(reca.tax_type_id = 2)THEN 	---- NSSF
+		IF(reca.tax_type_id = 3)THEN 	---- NHIF
 			UPDATE employee_adjustments SET amount = tax * .75
 			WHERE (employee_month_id = $1) AND (adjustment_id = 16);
 		END IF;
-
-		UPDATE employee_tax_types SET amount = tax, employer = reca.employer + (tax * reca.employer_ps / 100)
-		WHERE employee_tax_type_id = reca.employee_tax_type_id;
-	END LOOP;
-
-	RETURN tax;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION upd_tax_net(int, int) RETURNS float AS $$
-DECLARE
-	reca 				RECORD;
-	income 				REAL;
-	tax 				REAL;
-	InsuranceRelief 	REAL;
-BEGIN
-
-	FOR reca IN SELECT employee_tax_types.employee_tax_type_id, employee_tax_types.tax_type_id, period_tax_types.formural,
-			 period_tax_types.employer, period_tax_types.employer_ps
-		FROM employee_tax_types INNER JOIN period_tax_types ON (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
-		WHERE (employee_month_id = $1) AND (Period_Tax_Types.Period_ID = $2)
-		ORDER BY Period_Tax_Types.Tax_Type_order LOOP
-
+		
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
 
