@@ -43,7 +43,7 @@ $P!{organd}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Expences Report]]></text>
+				<text><![CDATA[Expenses Report]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -70,7 +70,7 @@ $P!{organd}]]>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Expence Name]]></text>
+				<text><![CDATA[Expense Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="248" y="0" width="41" height="30" forecolor="#000000" uuid="649f7962-3cd3-4aa8-a867-2ca13212435f"/>
