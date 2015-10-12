@@ -221,10 +221,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_house_rent(integer) RETURNS real AS $$
-    SELECT sum(amount)
+CREATE OR REPLACE FUNCTION get_house_rent(integer) RETURNS double precision AS $$
+	SELECT COALESCE(sum(amount), 0)
 	FROM employee_adjustments
 	WHERE (adjustment_id IN (41,42,43))
-	AND (employee_adjustments.employee_month_id = $1);
+		AND (employee_adjustments.employee_month_id = $1);
 $$ LANGUAGE SQL;
 

@@ -347,7 +347,7 @@ public class BQuery {
 		}*/
 
 		// SQL view debug point
-		//System.out.println("SQL : " + mysql);
+		System.out.println("SQL : " + mysql);
 	}
 
 	public void setSQL(String lsql) {
@@ -622,7 +622,11 @@ public class BQuery {
 			}
 		}
 		
+		System.out.println("BASE 4010 : " + fname + " = " + fvalue);
+		
         try {
+        System.out.println("BASE 4012 : " + rs.getString(fname));
+        
 			int columnindex = rs.findColumn(fname);
 			if(fvalue == null) {
 				rs.updateNull(fname);
@@ -631,7 +635,7 @@ public class BQuery {
 		    } else {
 				type = getFieldType(columnindex);
 	
-				//System.out.println("BASE 4010 : " + fname + " = " + fvalue + " type = " + type);
+				System.out.println("BASE 4015 : " + fname + " = " + fvalue + " type = " + type);
 				switch(type) {
         			case Types.CHAR:
         			case Types.VARCHAR:
@@ -777,8 +781,6 @@ public class BQuery {
 			}
 		}
 		
-		
-
 		String usql = "INSERT INTO " + tableName + " (";
 		if(db.getDBSchema() != null) usql = "INSERT INTO " + db.getDBSchema() + "." + tableName + " (";
 		String psql = ") VALUES (";

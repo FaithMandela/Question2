@@ -815,7 +815,6 @@ public class BWeb {
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
 			webbody.close();
 		} else if(view.getName().equals("FORM")) {
-
 			if(comboField == null) {
 				BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 				if(vds > 2) {
@@ -1206,7 +1205,7 @@ System.out.println("repository : " + repository);
 			if(linkData.equals("{new}")) formlink = view.getAttribute("keyfield") + " = null";
 			else formlink = view.getAttribute("keyfield") + " = '" + linkData + "'";
 		}
-
+System.out.println("BASE 2030 ");
 		if(view.getName().equals("FORM")) {
 			BQuery qForm = new BQuery(db, view, formlink, null);
 			if(view.getAttribute("foredit") != null) {
@@ -1222,7 +1221,7 @@ System.out.println("repository : " + repository);
 				qForm.movePos(1);
 				qForm.recEdit();
 			}
-
+System.out.println("BASE 2040 ");
 			Map<String, String> inputParams = new HashMap<String, String>();
 			if(view.getAttribute("inputparams") != null) {
 				String paramArr[] = view.getAttribute("inputparams").toLowerCase().split(",");
@@ -1234,7 +1233,7 @@ System.out.println("repository : " + repository);
 					}
 				}
 			}
-
+System.out.println("BASE 2050 ");
 			for(BElement el : view.getElements()) {
 				String dataValue = reqParams.get(el.getValue());
 				//System.out.println("BASE 1040 : " + el.getValue() + " : " + dataValue);
