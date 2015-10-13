@@ -394,11 +394,11 @@ BEGIN
 	WHERE entity_id = $2::integer;
 
 	INSERT INTO access_logs (access_log_id, entity_id, org_id, log_time, log_name, log_machine, log_access, log_id, log_area, log_in_out)
-	SELECT bio_imports1_id, e.entity_id, v_org_id, to_timestamp(col1, 'DD/MM/YYYY hh:MI:SS pm'), col2, col4, col5, col6, col7, col10
-	FROM bio_imports1 LEFT JOIN access_logs ON bio_imports1.bio_imports1_id = access_logs.access_log_id
+	SELECT bio_imports1_id, e.entity_id, v_org_id, to_timestamp(col1, 'MM/DD/YYYY hh:MI:SS pm'), col2, col4, col5, col6, col7, col10
+	FROM bio_imports1 LEFT JOIN access_logs ON to_timestamp(bio_imports1.col1, 'MM/DD/YYYY hh:MI:SS pm') = access_logs.log_time
 		LEFT JOIN employees as e ON trim(bio_imports1.col6) = trim(e.bio_metric_number)
 	WHERE access_logs.access_log_id is null
-	ORDER BY to_timestamp(col1, 'DD/MM/YYYY hh:MI:SS pm');
+	ORDER BY to_timestamp(col1, 'MM/DD/YYYY hh:MI:SS pm');
 
 	DELETE FROM bio_imports1;
 

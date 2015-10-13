@@ -1343,7 +1343,7 @@ CREATE VIEW ws_students AS
 	WHERE (studentdegrees.completed = false) AND (studentmajors.primarymajor = true);
 
 CREATE VIEW ws_qstudents AS
-	SELECT ws_students.studentid, ws_students.schoolid, ws_students.denominationid, ws_students.org_id,
+	SELECT ws_students.studentid, ws_students.schoolid, ws_students.denominationid,
 		ws_students.studentname, ws_students.sex,
 		ws_students.Nationality, ws_students.MaritalStatus, ws_students.birthdate, ws_students.address,
 		ws_students.zipcode, ws_students.town, ws_students.countrycodeid, 
@@ -1351,9 +1351,14 @@ CREATE VIEW ws_qstudents AS
 		ws_students.entity_id, ws_students.entity_password,
 		ws_students.studentdegreeid, ws_students.studentmajorid,
 		ws_students.majorid, ws_students.majorname, ws_students.departmentid,
-		qstudents.qstudentid, quarters.quarterid
+		qstudents.qstudentid, quarters.quarterid,
+		orgs.org_id, orgs.org_name,
+		residences.residenceid, residences.residencename
 	FROM ws_students INNER JOIN qstudents ON ws_students.studentdegreeid = qstudents.studentdegreeid
 		INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid
+		INNER JOIN orgs ON qstudents.org_id = orgs.org_id
+		INNER JOIN qresidences ON qstudents.qresidenceid = qresidences.qresidenceid
+		INNER JOIN residences ON qresidences.residenceid = residences.residenceid
 	WHERE (quarters.active = true) AND (qstudents.approved = true);
 	
 	

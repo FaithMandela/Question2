@@ -86,10 +86,6 @@ BEGIN
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
 		WHERE (period_id = CAST($1 as int));
-
-		PERFORM updTax(employee_month_id, period_id)
-		FROM employee_month
-		WHERE (period_id = CAST($1 as int));
 		
 		msg := 'Payroll Processed';
 	ELSIF ($3 = '2') THEN
@@ -150,10 +146,6 @@ BEGIN
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
 		
-		IF(reca.tax_type_id = 9)THEN	---- NHIF
-			UPDATE employee_adjustments SET amount = tax * .9
-			WHERE (employee_month_id = $1) AND (adjustment_id = 1);
-		END IF;
 		IF(reca.tax_type_id = 8)THEN 	---- PAYE
 			UPDATE employee_adjustments SET amount = tax * .9
 			WHERE (employee_month_id = $1) AND (adjustment_id = 2);

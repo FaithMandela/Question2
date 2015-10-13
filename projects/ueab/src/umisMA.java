@@ -35,6 +35,11 @@ public class umisMA {
 		xml += "	<TEXTFIELD>birthdate</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>email</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>sex</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>nationality</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>address</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>town</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>telno</TEXTFIELD>\n";
 		xml += "</GRID>\n";
 		xml += "</QUERY>\n";
 		
@@ -51,6 +56,14 @@ public class umisMA {
 		xml += "	<TEXTFIELD>email</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>quarterid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>org_name</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>sex</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>nationality</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>address</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>town</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>telno</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>residenceid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>residencename</TEXTFIELD>\n";
 		xml += "</GRID>\n";
 		xml += "</QUERY>\n";
 		

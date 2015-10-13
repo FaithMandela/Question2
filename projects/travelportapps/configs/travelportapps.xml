@@ -902,6 +902,8 @@
 		</FILTER>
 		<FILTER w="700" name="Insurance Sales Per Agency" role="admin" split="150" type="vert" h="550">
 			<FILTERFORM name="Sales Per Agency ">
+				<TEXTDATE w="150" title="Starting From" y="50" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
 				<COMBOBOX w="150" title="Agency Sales" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER name="Sales Per Agency " reportfile="salesperagency.jasper"></JASPER>
@@ -916,6 +918,7 @@
 			<JASPER name="Payment Per Agency" reportfile="agencypayments.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Payment Statement" reportfile="payment_statement.jasper"></JASPER>
+		<JASPER name="Receipt Statement" reportfile="receipt.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name=" Insurance Sold" key="93" h="550">
 		<JASPER name="Agency Sales " reportfile="agencysales.jasper"></JASPER>
