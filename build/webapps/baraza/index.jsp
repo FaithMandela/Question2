@@ -519,6 +519,7 @@
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
+
 	function resizeJqGridWidth(grid_id, div_id, width){
 	    $(window).bind('resize', function() {
 	        $('#' + grid_id).setGridWidth(width, true); //Back to original width

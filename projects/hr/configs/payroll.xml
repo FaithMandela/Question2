@@ -1365,6 +1365,28 @@
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
+		<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<CROSSTAB name="Payroll" keyfield="employee_month_id" orderby="employee_name" linkfield="period_id" table="vw_employee_month">
+				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Employee Name">employee_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
+				<CROSSTAB name="Allowances" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 1)">
+					<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				</CROSSTAB>
+				<TEXTDECIMAL w="75" title="Allowance">payroll_allowance</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Deduction">payroll_deduction</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
+			</CROSSTAB>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Banking" key="106" h="750">
 		<FILTER w="700" name="Payroll" split="150" type="horl" key="6" h="550">

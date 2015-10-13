@@ -45,6 +45,7 @@ import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
 import org.baraza.DB.BWebBody;
 import org.baraza.DB.BUser;
+import org.baraza.DB.BCrossTab;
 import org.baraza.reports.BWebReport;
 import org.baraza.utils.BWebdav;
 import org.baraza.xml.BXML;
@@ -63,7 +64,7 @@ public class BWeb {
 	Map<String, String> params;
 
 	boolean selectAll = false;
-	String[] deskTypes = {"DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
+	String[] deskTypes = {"CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
 	String userID = null;
@@ -814,6 +815,10 @@ public class BWeb {
 			if(selectAll) webbody.setSelectAll();
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
 			webbody.close();
+		} else if(view.getName().equals("CROSSTAB")) {
+			BCrossTab crossTab = new BCrossTab(db, view, wheresql, sortby);
+			body += crossTab.getGrid(viewKeys, viewData, true, viewKey, false);
+			crossTab.close();
 		} else if(view.getName().equals("FORM")) {
 			if(comboField == null) {
 				BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
@@ -1205,7 +1210,7 @@ System.out.println("repository : " + repository);
 			if(linkData.equals("{new}")) formlink = view.getAttribute("keyfield") + " = null";
 			else formlink = view.getAttribute("keyfield") + " = '" + linkData + "'";
 		}
-System.out.println("BASE 2030 ");
+
 		if(view.getName().equals("FORM")) {
 			BQuery qForm = new BQuery(db, view, formlink, null);
 			if(view.getAttribute("foredit") != null) {
@@ -1221,7 +1226,7 @@ System.out.println("BASE 2030 ");
 				qForm.movePos(1);
 				qForm.recEdit();
 			}
-System.out.println("BASE 2040 ");
+
 			Map<String, String> inputParams = new HashMap<String, String>();
 			if(view.getAttribute("inputparams") != null) {
 				String paramArr[] = view.getAttribute("inputparams").toLowerCase().split(",");
@@ -1233,7 +1238,7 @@ System.out.println("BASE 2040 ");
 					}
 				}
 			}
-System.out.println("BASE 2050 ");
+
 			for(BElement el : view.getElements()) {
 				String dataValue = reqParams.get(el.getValue());
 				//System.out.println("BASE 1040 : " + el.getValue() + " : " + dataValue);
@@ -1667,16 +1672,10 @@ System.out.println("BASE 2050 ");
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
 
-			if(!linkData.equals("{new}")) {
-				if(view.getName().equals("FORM")) {
-					if(wheresql != null) wheresql += " AND (";
-					else wheresql = "(";
-					wheresql += view.getAttribute("keyfield") + " = '" + linkData + "')";
-				} else if(view.getAttribute("linkfield") != null) {
-					if(wheresql != null) wheresql += " AND (";
-					else wheresql = "(";
-					wheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
-				}
+			if(view.getAttribute("linkfield") != null) {
+				if(wheresql != null) wheresql += " AND (";
+				else wheresql = "(";
+				wheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
 			}
 
 			// Table linking on parameters
@@ -2098,6 +2097,7 @@ System.out.println("BASE 2050 ");
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
 			if(el.getName().equals("FILES") || el.getName().equals("DIARY") || el.getName().equals("FORMVIEW")) hasSubs = true;
+			if(el.getName().equals("CROSSTAB")) hasSubs = true;
 		}
 		return hasSubs;
 	}
