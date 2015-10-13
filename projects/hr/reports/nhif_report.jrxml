@@ -56,42 +56,42 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 				<text><![CDATA[NHIF REPORT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="0" y="42" width="198" height="15" forecolor="#000000" uuid="74fe4a3e-1ab0-4339-81d4-0519cb4ffcfc"/>
+				<reportElement style="Column header" x="0" y="58" width="129" height="15" forecolor="#000000" uuid="74fe4a3e-1ab0-4339-81d4-0519cb4ffcfc"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Name of Organisation]]></text>
+				<text><![CDATA[Employer Name:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="198" y="42" width="357" height="15" uuid="b0fde87f-f357-4d72-8267-f5ff0858ff26"/>
+				<reportElement style="Detail" x="129" y="58" width="426" height="15" uuid="b0fde87f-f357-4d72-8267-f5ff0858ff26"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="0" y="73" width="198" height="15" forecolor="#000000" uuid="30c80396-5de5-4691-a293-09998878ba73"/>
+				<reportElement style="Column header" x="0" y="73" width="129" height="15" forecolor="#000000" uuid="30c80396-5de5-4691-a293-09998878ba73"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Month]]></text>
+				<text><![CDATA[Month of Contribution:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="198" y="58" width="357" height="15" uuid="9f4a9cf1-1e80-4359-becd-ad3a57ba2297"/>
+				<reportElement style="Detail" x="129" y="43" width="426" height="15" uuid="9f4a9cf1-1e80-4359-becd-ad3a57ba2297"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pin}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="0" y="58" width="198" height="15" forecolor="#000000" uuid="00dc968e-f64c-4f14-873c-18aff2f888ac"/>
+				<reportElement style="Column header" x="0" y="43" width="129" height="15" forecolor="#000000" uuid="00dc968e-f64c-4f14-873c-18aff2f888ac"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Organisation PIN]]></text>
+				<text><![CDATA[Employer Code:]]></text>
 			</staticText>
 			<textField pattern="MMMM-yyyy">
-				<reportElement x="198" y="73" width="357" height="15" uuid="c7c249ba-e7c5-43a4-94a5-da8818e6331a"/>
+				<reportElement x="129" y="73" width="426" height="15" uuid="c7c249ba-e7c5-43a4-94a5-da8818e6331a"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 		</band>
