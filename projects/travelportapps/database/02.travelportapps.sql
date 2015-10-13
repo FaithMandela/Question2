@@ -858,7 +858,63 @@ CREATE INDEX approval_checklists_checklist_id  ON approval_checklists  (checklis
 
 CREATE INDEX approval_checklists_org_id  ON approval_checklists (org_id);
 
+
+
+
+CREATE TABLE apps_list(
+  apps_list_id serial primary key,
+  org_id integer REFERENCES orgs,
+  app_name character varying(50),
+  query_date timestamp without time zone NOT NULL DEFAULT now(),
+   UNIQUE (app_name)
+);
+
+CREATE INDEX apps_list_org_id  ON apps_list   (org_id);
+
+CREATE TABLE apps_subscriptions(
+  app_subscriptions_id serial primary key,
+  org_id integer REFERENCES orgs,
+  apps_list_id integer REFERENCES apps_list,
+  subscription_date timestamp without time zone NOT NULL DEFAULT now()
+);
+
+CREATE INDEX apps_subscriptions_org_id  ON apps_subscriptions   (org_id);
+CREATE INDEX apps_subscriptions_list_id  ON apps_subscriptions   (apps_list_id);
+
+
 -- DROP VIEW tomcat_users;
+CREATE OR REPLACE VIEW vw_app_users AS 
+ SELECT vw_orgs.org_id,
+    vw_orgs.org_name,
+    vw_orgs.pcc,
+    vw_orgs.gds_free_field,
+    vw_orgs.show_fare,
+    vw_orgs.logo,
+    vw_entity_address.table_id,
+    vw_entity_address.table_name,
+    vw_entity_address.post_office_box,
+    vw_entity_address.postal_code,
+    vw_entity_address.premises,
+    vw_entity_address.street,
+    vw_entity_address.town,
+    vw_entity_address.phone_number,
+    vw_entity_address.email,
+    vw_entity_address.sys_country_name,
+    entitys.entity_id,
+    entitys.entity_name,
+    entitys.son,
+    entitys.phone_ph,
+    entitys.phone_pa,
+    entitys.phone_pb,
+    entitys.phone_pt,
+    apps_list.app_name
+   FROM entitys
+     LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id
+     JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
+     JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id
+     JOIN apps_subscriptions ON entitys.org_id = apps_subscriptions.org_id
+     JOIN apps_list ON apps_subscriptions.apps_list_id = apps_list.apps_list_id;
+  
 
 CREATE OR REPLACE VIEW tomcat_users AS 
  SELECT entitys.user_name,

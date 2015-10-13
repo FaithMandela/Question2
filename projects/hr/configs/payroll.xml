@@ -272,7 +272,7 @@
 			<FORM name="Deduction Type" keyfield="tax_type_id" table="tax_types">
 				<DEFAULT default="1">use_key</DEFAULT>
 				<TEXTFIELD w="430" title="Deduction Type" y="10" h="20" x="10">tax_type_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formula" y="30" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formula" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10">formural</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Deduction Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Linear" y="50" h="20" x="290">linear</CHECKBOX>
 				<CHECKBOX w="150" title="Percentage" y="70" h="20" x="10">percentage</CHECKBOX>

@@ -119,21 +119,20 @@
 
 	<link rel="stylesheet" type="text/css" media="screen" href="assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css" />
     <link href="./jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="search" type="text/css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/jqgrid/css/ui.jqgrid.css" />
+    <link href="assets/jqgrid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" media="screen"  />
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
      
     
-<script type="text/javascript" src="${pageContext.request.contextPath}/org/cometd.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/org/cometd/AckExtension.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/org/cometd/ReloadExtension.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-1.8.2.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery.cookie.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery.cometd.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery.cometd-reload.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/chat.window.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/comet.chat.js"></script>
+	<script type="text/javascript" src="./assets/chat/org/cometd.js"></script>
+	<script type="text/javascript" src="./assets/chat/cometd/AckExtension.js"></script>
+	<script type="text/javascript" src="./assets/chat/cometd/ReloadExtension.js"></script>
+	<script type="text/javascript" src="./assets/chat/jquery/jquery.cookie.js"></script>
+	<script type="text/javascript" src="./assets/chat/jquery/jquery.cometd.js"></script>
+	<script type="text/javascript" src="./assets/chat/jquery/jquery.cometd-reload.js"></script>
+	<script type="text/javascript" src="./assets/chat/chat.window.js"></script>
+	<script type="text/javascript" src="./assets/chat/comet.chat.js"></script>
 
-<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/comet.chat.css"/>
+	<link type="text/css" rel="stylesheet" href="./assets/chat/comet.chat.css"/>
 
 <script type="text/javascript">
 		 var chat = $.noConflict(true); 
