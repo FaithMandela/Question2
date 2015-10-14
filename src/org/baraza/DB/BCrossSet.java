@@ -8,8 +8,8 @@
  */
 package org.baraza.DB;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Vector;
@@ -20,27 +20,54 @@ public class BCrossSet {
 
 	Map<String, Integer> columns;
 	Map<String, Integer> rows;
-	Map<String, Object> setTable;
+	Map<Integer, Object> setTable;
 	
 	public BCrossSet(Vector<Vector<Object>> dataTable) {
 		columns = new HashMap<String, Integer>();
 		rows = new HashMap<String, Integer>();
-		setTable = new HashMap<String, Object>();
+		setTable = new HashMap<Integer, Object>();
 		
 		for(Vector<Object> data : dataTable) {
-			Sting col0 = "";
-			if(data.get(0) == 
+			String col0 = ""; if(data.get(0) != null) col0 = data.get(0).toString();
+			String col1 = ""; if(data.get(1) != null) col1 = data.get(1).toString();
+			String col2 = ""; if(data.get(2) != null) col2 = data.get(2).toString();
 			
 			Integer column = columns.size();
-			if(!columns.contains(data.get(0))) columns.put(data.get(0), column);
-			column = columns.get(data.get(0));
+			if(!columns.containsKey(col0)) columns.put(col0, column);
+			column = columns.get(col0);
 			
 			Integer row = rows.size();
-			if(!rows.contains(data.get(2))) rows.put(data.get(2), row);
-			row = rows.get(data.get(2));
+			if(!rows.containsKey(col2)) rows.put(col2, row);
+			row = rows.get(col2);
 			
-			setTable.put(column.toString() + ":" + row.toString(), data.get(1));
+			setTable.put((row * 64) + column, data.get(1));
 		}
+	}
+	
+	public Vector<Object> getRowData(String key) {
+		Vector<Object> data = new Vector<Object>();
+		Integer column = columns.get(key);
+		for(String rowKey : rows.keySet()) {
+			Integer row = rows.get(rowKey);
+			Object cellData = setTable.get((row * 64) + column);
+			data.add(cellData);
+		}
+		return data;
+	}
+	
+	public String getRowHtml(Object key) {
+		StringBuffer myhtml = new StringBuffer();
+		String sKey = "";
+		if(key != null) sKey = key.toString();
+		Integer column = columns.get(sKey);
+		for(String rowKey : rows.keySet()) {
+			Integer row = rows.get(rowKey);
+			Object cellData = setTable.get((row * 64) + column);
+			
+			if(cellData == null) myhtml.append("<td></td>");
+			else myhtml.append("<td>" + cellData.toString() + "</td>");
+		}
+		return myhtml.toString();
 	}
 	
 	public Map<String, Integer> getColumns() {

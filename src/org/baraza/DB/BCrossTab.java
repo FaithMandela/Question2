@@ -8,8 +8,10 @@
  */
 package org.baraza.DB;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.baraza.xml.BElement;
@@ -22,7 +24,7 @@ public class BCrossTab {
 	Vector<Vector<Object>> dataTable;
 	
 	BQuery baseRs;
-	List<BCrossSet> crosstabRs;
+	Map<String, BCrossSet> crosstabRs;
 	BElement view;
 	
 	public BCrossTab(BDB db, BElement view, String wheresql, String sortby) {
@@ -36,15 +38,16 @@ public class BCrossTab {
 		dataTable = new Vector<Vector<Object>>(); 
 		titles = new ArrayList<String>();
 		fieldNames = new ArrayList<String>();
-		crosstabRs = new ArrayList<BQuery>();
+		crosstabRs = new HashMap<String, BCrossSet>();
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("CROSSTAB")) {
 				BQuery ctq = new BQuery(db, el, wheresql, null);
 				ctq.readData();
 				BCrossSet cs = new BCrossSet(ctq.getData());
-				crosstabRs.add(cs);
+				crosstabRs.put(el.getAttribute("name"), cs);
+				ctq.close();
 				
-				for(String csc : getColumns().keySet()) titles.add(csc);
+				for(String csc : cs.getColumns().keySet()) titles.add(csc);
 			} else {
 				titles.add(el.getAttribute("title", ""));
 				fieldNames.add(el.getValue());
@@ -66,7 +69,8 @@ public class BCrossTab {
 			myhtml.append("<tr>");
 			for(BElement el : view.getElements()) {
 				if(el.getName().equals("CROSSTAB")) {
-					
+					BCrossSet cs = crosstabRs.get(el.getAttribute("name"));
+					myhtml.append(cs.getRowHtml(data.get(btSize-1)));
 				} else {
 					if(data.get(j) == null) {
 						myhtml.append("<td></td>");
@@ -88,6 +92,5 @@ public class BCrossTab {
 	// Close record sets
 	public void close() {
 		baseRs.close();
-		for(BQuery crosstabR : crosstabRs) crosstabR.close();
 	}
 }
