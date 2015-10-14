@@ -1137,7 +1137,7 @@ BEGIN
 	IF(NEW.exchange_rate is null) THEN NEW.exchange_rate = 1; END IF;
 	IF(NEW.exchange_rate = 0) THEN NEW.exchange_rate = 1; END IF;
 
-	SELECT adjustment_type INTO NEW.adjustment_type
+	SELECT adjustment_type, formural INTO NEW.adjustment_type, v_formural
 	FROM adjustments 
 	WHERE (adjustments.adjustment_id = NEW.adjustment_id);
 	
@@ -1145,15 +1145,10 @@ BEGIN
 		NEW.adjustment_factor = -1;
 	END IF;
 	
-	IF(NEW.Amount = 0)THEN
-		SELECT formural INTO v_formural
-		FROM adjustments
-		WHERE (adjustments.adjustment_id = NEW.adjustment_id);
-		IF(v_formural is not null)THEN
-			EXECUTE 'SELECT ' || v_formural || ' FROM employee_month WHERE employee_month_id = ' || NEW.employee_month_id
-			INTO NEW.Amount;
-			NEW.Amount := NEW.Amount / NEW.exchange_rate;
-		END IF;
+	IF(NEW.Amount = 0) and (v_formural is not null)THEN
+		EXECUTE 'SELECT ' || v_formural || ' FROM employee_month WHERE employee_month_id = ' || NEW.employee_month_id
+		INTO NEW.Amount;
+		NEW.Amount := NEW.Amount / NEW.exchange_rate;
 	END IF;
 
 	IF(NEW.in_tax = true)THEN

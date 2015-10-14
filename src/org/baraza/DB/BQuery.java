@@ -622,10 +622,8 @@ public class BQuery {
 			}
 		}
 		
-		System.out.println("BASE 4010 : " + fname + " = " + fvalue);
-		
         try {
-        System.out.println("BASE 4012 : " + rs.getString(fname));
+        //System.out.println("BASE 4012 : " + rs.getString(fname));
         
 			int columnindex = rs.findColumn(fname);
 			if(fvalue == null) {
@@ -1006,20 +1004,23 @@ public class BQuery {
 
            	while (rs.next()) {
 				Vector<Object> newRow = new Vector<Object>();
-				for(int column=1; column<=titles.size(); column++) {
-					if(view == null) {
+				if(view == null) {
+					for(int column=1; column<=titles.size(); column++)
 						newRow.addElement(rs.getObject(column));
-					} else {
-						String fldName = view.getElement(column-1).getValue();
-						if (view.getElement(column-1).getName().equals("CHECKBOX")) {
-							newRow.addElement(rs.getBoolean(fieldNames.get(column-1)));
-						} else if(view.getElement(column-1).getAttribute("java") != null) {
-							String javaCall = view.getElement(column-1).getAttribute("java");
-							if(javaCall.equals("password")) {
-								newRow.addElement(cp.password(rs.getString(fldName)));
+				} else {
+					for(BElement el : view.getElements()) {
+						String fldName = el.getValue();
+						if(!fldName.trim().equals("")) {
+							if (el.getName().equals("CHECKBOX")) {
+								newRow.addElement(rs.getBoolean(fldName));
+							} else if(el.getAttribute("java") != null) {
+								String javaCall = el.getAttribute("java");
+								if(javaCall.equals("password")) {
+									newRow.addElement(cp.password(rs.getString(fldName)));
+								}
+							} else {
+								newRow.addElement(rs.getObject(fldName));
 							}
-						} else {
-							newRow.addElement(rs.getObject(fldName));
 						}
 					}
 				}
@@ -1614,7 +1615,6 @@ public class BQuery {
 
 		return mystr;
 	}
-
 
     public String getcvsValueAt(int aRow, int aColumn) {
         Vector row = (Vector)data.elementAt(aRow);

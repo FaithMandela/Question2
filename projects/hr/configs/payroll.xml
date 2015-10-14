@@ -1018,6 +1018,11 @@
 				<TEXTFIELD w="75" title="Bank Account">bank_account</TEXTFIELD>
 				<TEXTDECIMAL w="75" fnct="round(cast(banked as numeric), 1)" title="Banked">banked_amount</TEXTDECIMAL>
 			</GRID>
+			<FORM tw="570" name="Period" keyfield="period_id" table="periods" th="210">
+				<CHECKBOX w="150" title="Activated" default="true" y="10" h="20" x="10">activated</CHECKBOX>
+				<CHECKBOX w="150" title="Closed" y="10" h="20" x="290">closed</CHECKBOX>
+				<TEXTAREA w="550" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 		<GRID name="Advances" keyfield="period_id" orderby="start_date desc" table="vw_periods">
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>

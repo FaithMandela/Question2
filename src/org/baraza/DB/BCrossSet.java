@@ -22,15 +22,19 @@ public class BCrossSet {
 	Map<String, Integer> rows;
 	Map<Integer, Object> setTable;
 	
-	public BCrossSet(Vector<Vector<Object>> dataTable) {
+	public BCrossSet(Vector<Vector<Object>> dataTable, Vector<String> keyData) {
 		columns = new HashMap<String, Integer>();
 		rows = new HashMap<String, Integer>();
 		setTable = new HashMap<Integer, Object>();
+
+		System.out.println("BASE : 3030 " + dataTable.size());
 		
+		int j = 0;
 		for(Vector<Object> data : dataTable) {
 			String col0 = ""; if(data.get(0) != null) col0 = data.get(0).toString();
 			String col1 = ""; if(data.get(1) != null) col1 = data.get(1).toString();
-			String col2 = ""; if(data.get(2) != null) col2 = data.get(2).toString();
+			String col2 = ""; if(keyData.get(j) != null) col2 = keyData.get(j);
+			j++;
 			
 			Integer column = columns.size();
 			if(!columns.containsKey(col0)) columns.put(col0, column);
@@ -47,10 +51,15 @@ public class BCrossSet {
 	public Vector<Object> getRowData(String key) {
 		Vector<Object> data = new Vector<Object>();
 		Integer column = columns.get(key);
-		for(String rowKey : rows.keySet()) {
-			Integer row = rows.get(rowKey);
-			Object cellData = setTable.get((row * 64) + column);
-			data.add(cellData);
+		if(column == null) {
+			for(String rowKey : rows.keySet()) 
+				data.add(null);
+		} else {
+			for(String rowKey : rows.keySet()) {
+				Integer row = rows.get(rowKey);
+				Object cellData = setTable.get((row * 64) + column);
+				data.add(cellData);
+			}
 		}
 		return data;
 	}
@@ -60,13 +69,20 @@ public class BCrossSet {
 		String sKey = "";
 		if(key != null) sKey = key.toString();
 		Integer column = columns.get(sKey);
-		for(String rowKey : rows.keySet()) {
-			Integer row = rows.get(rowKey);
-			Object cellData = setTable.get((row * 64) + column);
-			
-			if(cellData == null) myhtml.append("<td></td>");
-			else myhtml.append("<td>" + cellData.toString() + "</td>");
+
+		if(column == null) {
+			for(String rowKey : rows.keySet()) 
+				myhtml.append("<td></td>");
+		} else {
+			for(String rowKey : rows.keySet()) {
+				Integer row = rows.get(rowKey);
+				Object cellData = setTable.get((row * 64) + column);
+				
+				if(cellData == null) myhtml.append("<td></td>");
+				else myhtml.append("<td>" + cellData.toString() + "</td>");
+			}
 		}
+		
 		return myhtml.toString();
 	}
 	
