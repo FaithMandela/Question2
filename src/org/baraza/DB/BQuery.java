@@ -1582,8 +1582,8 @@ public class BQuery {
     	for(i=0; i<getRowCount(); i++) {
 			int colcount = getColumnCount()-1;
 			for(j=0;j<=colcount;j++) {
-				if(j==colcount) mystr += getcvsValueAt(i, j) + "\r\n";
-				else mystr += getcvsValueAt(i, j) + ",";
+				if(j==colcount) mystr += getCsvValueAt(i, j) + "\r\n";
+				else mystr += getCsvValueAt(i, j) + ",";
 			}
 		}
 
@@ -1591,7 +1591,7 @@ public class BQuery {
 		io.saveFile(filename, mystr);
 	}
 
-	public String getcvs() {
+	public String getCsv() {
 		int i, j;
 		String mystr = "";
 
@@ -1608,15 +1608,15 @@ public class BQuery {
     	for(i=0; i<getRowCount(); i++) {
 			int colcount = getColumnCount()-1;
 			for(j=0;j<=colcount;j++) {
-				if(j==colcount) mystr += getcvsValueAt(i, j) + "\r\n";
-				else mystr += getcvsValueAt(i, j) + ",";
+				if(j==colcount) mystr += getCsvValueAt(i, j) + "\r\n";
+				else mystr += getCsvValueAt(i, j) + ",";
 			}
 		}
 
 		return mystr;
 	}
 
-    public String getcvsValueAt(int aRow, int aColumn) {
+    public String getCsvValueAt(int aRow, int aColumn) {
         Vector row = (Vector)data.elementAt(aRow);
         Object myobj = row.elementAt(aColumn);
 		Class myclass = getColumnClass(aColumn);

@@ -512,6 +512,7 @@ public class BWeb {
 			if(view.getAttribute("display", "grid").equals("grid")) showButtons = true;
 			if(view.getAttribute("buttons", "noshow").equals("show")) showButtons = true;
 		}
+	
 		
 
 		if(showButtons) {
@@ -526,7 +527,7 @@ public class BWeb {
 					hasForm = true;
 				}
 			}
-
+			
 			String did = "";
 			if(dataItem != null) did = "&data=" + dataItem;
 			
@@ -572,6 +573,12 @@ public class BWeb {
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 		
+		if(view.getName().equals("CROSSTAB")) {
+			String did = "";
+			if(dataItem != null) did = "&data=" + dataItem;
+			
+			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
+		}
 		
 		if(isForm()) {
 			buttons += getFormButtons();
@@ -684,25 +691,11 @@ public class BWeb {
 		
 		return hasAccess;
 	}
-
-	public String getBody(HttpServletRequest request, String reportPath) {
-		if((root == null) || (db == null)) return "";	// error check
-		
-		HttpSession session = request.getSession(true);
-		String body = "";
+	
+	
+	public String getWhere(HttpServletRequest request) {
 		String linkData = "";
-		String linkParam = null;
-		String formLinkData = "";
-		wheresql = null;
-		sortby = null;
-
-		BElement sview = null;
-		comboField = request.getParameter("field");
-		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-		
-		session.removeAttribute("JSONfilter1");
-		session.removeAttribute("JSONfilter2");
-		
+			
 		String wherefilter = request.getParameter("wherefilter");
 		String sortfilter = request.getParameter("sortfilter");
 		if(request.getParameter("and") != null) {
@@ -750,11 +743,10 @@ public class BWeb {
 					wheresql += "(" + fieldName + " " + filterType + " '" + reportFilter + "')";
 			}
 		}
-
+		
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
-			formLinkData = viewData.get(vds - 2);
 
 			if((!linkData.equals("{new}")) && (comboField == null)) {
 				if(view.getName().equals("FORM")) {
@@ -767,7 +759,37 @@ public class BWeb {
 					wheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
 				}
 			}
+		}
 
+		return linkData;
+	}
+	
+
+	public String getBody(HttpServletRequest request, String reportPath) {
+		if((root == null) || (db == null)) return "";	// error check
+		
+		HttpSession session = request.getSession(true);
+		String body = "";
+		wheresql = null;
+		sortby = null;
+
+		BElement sview = null;
+		comboField = request.getParameter("field");
+		if(comboField != null) sview = view.getElement(comboField).getElement(0);
+		
+		session.removeAttribute("JSONfilter1");
+		session.removeAttribute("JSONfilter2");
+		
+		// Call the where create function
+		String linkData = getWhere(request);
+		String linkParam = null;
+		String formLinkData = "";
+
+		int vds = viewKeys.size();
+		if(vds > 2) {
+			linkData = viewData.get(vds - 1);
+			formLinkData = viewData.get(vds - 2);
+			
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
@@ -1643,76 +1665,52 @@ System.out.println("repository : " + repository);
 	public String getcsv(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(true);
 		String body = "";
-		String linkData = "";
-		String linkParam = null;
-		String formLinkData = "";
 		wheresql = null;
 		sortby = null;
 
-		String wherefilter = request.getParameter("wherefilter");
-		String sortfilter = request.getParameter("sortfilter");
-		if(request.getParameter("and") != null) {
-			if(wherefilter != null) wheresql = wherefilter;
-			if(sortfilter != null) sortby = sortfilter;
-		} else if(request.getParameter("or") != null) {
-			if(wherefilter != null) wheresql = wherefilter;
-			if(sortfilter != null) sortby = sortfilter;
-		}
-
-		if(request.getParameter("sortasc") != null) {
-			if(sortby == null) sortby = "";
-			sortby += request.getParameter("fieldname");
-		} else if(request.getParameter("sortdesc") != null) {
-			if(sortby == null) sortby = "";
-			sortby = request.getParameter("fieldname") + " desc";
-		}
+		// Call the where create function
+		String linkData = getWhere(request);
+		String linkParam = null;
+		String formLinkData = "";
+		
+		BElement sview = null;
+		comboField = request.getParameter("field");
+		if(comboField != null) sview = view.getElement(comboField).getElement(0);
 
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
-
-			if(view.getAttribute("linkfield") != null) {
-				if(wheresql != null) wheresql += " AND (";
-				else wheresql = "(";
-				wheresql += view.getAttribute("linkfield") + " = '" + linkData + "')";
-			}
-
+			
 			// Table linking on parameters
+			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
+			if(sview != null) { linkParams = sview.getAttribute("linkparams"); paramLinkData =  formLinkData; }
 			if(linkParams != null) {
 				BElement fView = views.get(vds - 2);
+				if(sview != null) fView = views.get(vds - 3);
 				String lp[] = linkParams.split("=");
-				linkParam = params.get(lp[0]);
+				linkParam = params.get(lp[0].trim());
 
 				if(wheresql != null) wheresql += " AND (";
 				else wheresql = "(";
 				if(linkParam == null) wheresql += lp[1] + " = null)";
 				else wheresql += lp[1] + " = '" + linkParam + "')";
 			}
-		} else if(request.getParameter("filterid") != null) {
-			linkData = request.getParameter("filterid");
-		} else if(request.getParameter("formlinkdata") != null) {
-			formLinkData = request.getParameter("formlinkdata");
-
-			String linkField = view.getAttribute("linkfield");
-			String linkFnct = view.getAttribute("linkfnct");
-			String tableFilter = null;
-			if((linkField != null) && (formLinkData != null)) {
-				if(linkFnct == null) tableFilter = linkField + " = '" + formLinkData + "'";
-				else tableFilter = linkField + " = " + linkFnct + "('" + formLinkData + "')";
-			
-				if(wheresql != null) wheresql += " AND (" + tableFilter + "')";
-				else wheresql = "(" + tableFilter + "')";
-			}
 		}
 
 		response.setContentType("text/x-csv");
 		response.setHeader("Content-Disposition", "attachment; filename=report.csv");
 
-		BQuery csvData = new BQuery(db, view, wheresql, sortby);
-		body = csvData.getcvs();
-		csvData.close();
+		if(view.getName().equals("GRID")) {
+			BQuery csvData = new BQuery(db, view, wheresql, sortby);
+			body = csvData.getCsv();
+			csvData.close();
+		} else if(view.getName().equals("CROSSTAB")) {
+			BCrossTab ct = new BCrossTab(db, view, wheresql, sortby);
+			body = ct.getCsv();
+			ct.close();
+		}
 
 		return body;
 	}

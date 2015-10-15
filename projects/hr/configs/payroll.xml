@@ -1370,25 +1370,41 @@
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
-		<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+		<GRID name="Full Payroll" keyfield="period_id" orderby="start_date desc" table="vw_periods">
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
-			<CROSSTAB name="Payroll" keyfield="employee_month_id" orderby="employee_name" linkfield="period_id" table="vw_employee_month">
+			<CROSSTAB name="Full Payroll" keyfield="employee_month_id" orderby="currency_id, employee_name" linkfield="period_id" table="vw_employee_month">
 				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Employee Name">employee_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
 				<CROSSTAB name="Allowances" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 1)">
 					<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
 				</CROSSTAB>
 				<TEXTDECIMAL w="75" title="Total Allowance">payroll_allowance</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Deduction">payroll_deduction</TEXTDECIMAL>
+				<CROSSTAB name="Deductions" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 2)">
+					<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+				</CROSSTAB>
+				<CROSSTAB name="Tax Types" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
+					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+				</CROSSTAB>
+				<TEXTDECIMAL w="75" title="Total Deduction">payroll_deduction</TEXTDECIMAL>
+				<CROSSTAB name="Expenses" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 3)">
+					<TEXTFIELD w="75" title="Expense">adjustment_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+				</CROSSTAB>
 				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
 			</CROSSTAB>

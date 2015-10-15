@@ -64,6 +64,13 @@ System.out.println("BASE : 2010 " + dataTable.size());
 		return data;
 	}
 	
+	public String getColTitles() {
+		StringBuffer myhtml = new StringBuffer();
+		for(String colKey : columns.keySet()) 
+			myhtml.append("<th>" + colKey + "</th>");
+		return myhtml.toString();
+	}
+	
 	public String getRowHtml(Object key) {
 		StringBuffer myhtml = new StringBuffer();
 		String sKey = "";
@@ -86,11 +93,30 @@ System.out.println("BASE : 2010 " + dataTable.size());
 		return myhtml.toString();
 	}
 	
-	public String getColTitle() {
-		StringBuffer myhtml = new StringBuffer();
+	public String getCsvTitles() {
+		StringBuffer myCsv = new StringBuffer();
 		for(String colKey : columns.keySet()) 
-			myhtml.append("<th>" + colKey + "</th>");
-		return myhtml.toString();
+			myCsv.append("," + getCsvValue(colKey));
+		return myCsv.toString();
+	}
+	
+	public String getRowCsv(Object key) {
+		StringBuffer myCsv = new StringBuffer();
+		String sKey = "";
+		if(key != null) sKey = key.toString();
+		Integer row = rows.get(key);
+		
+		if(row == null) {
+			for(String colKey : columns.keySet()) 
+				myCsv.append(",");
+		} else {
+			for(String colKey : columns.keySet()) { 
+				Integer column = columns.get(colKey);
+				myCsv.append("," + getCsvValue(setTable.get((row * 64) + column)));
+			}
+		}
+		
+		return myCsv.toString();
 	}
 	
 	public Map<String, Integer> getColumns() {
@@ -101,5 +127,13 @@ System.out.println("BASE : 2010 " + dataTable.size());
 		return rows;
 	}
 
-	
+	public String getCsvValue(Object cellVal) {
+		String mystr = "";
+		if(cellVal!=null) {
+			if(cellVal.toString().startsWith("0")) mystr = "\"'" + cellVal.toString() + "\"";
+			else mystr = "\"" + cellVal.toString() + "\"";
+		}
+
+		return mystr;
+    }
 }

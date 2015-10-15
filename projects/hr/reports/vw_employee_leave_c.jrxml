@@ -65,14 +65,13 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT entity_id, entity_name, leave_type_id, leave_type_name,
-get_leave_balance(entity_id, leave_type_id) as leave_balance
+get_leave_approved_balance(entity_id, leave_type_id) as leave_balance
+
 FROM vw_employee_leave_types
 
 $P!{orgwhere}
 
-ORDER BY entity_name, leave_type_name;
-
-]]>
+ORDER BY entity_name, leave_type_name;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>

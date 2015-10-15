@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_leave_d" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cf41e666-f5a4-4055-bc15-6660589338b8">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -59,8 +59,10 @@
 		</parameter>
 		<queryString>
 			<![CDATA[SELECT entity_id, entity_name, leave_type_id, leave_type_name,
-get_leave_balance(entity_id, leave_type_id) as leave_balance
+get_leave_approved_balance(entity_id, leave_type_id) as leave_balance
+
 FROM vw_employee_leave_types
+
 WHERE (entity_id = '$P!{filterid}')]]>
 		</queryString>
 		<field name="entity_id" class="java.lang.Integer"/>

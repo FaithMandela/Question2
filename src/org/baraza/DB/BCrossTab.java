@@ -68,7 +68,7 @@ System.out.println("BASE : size " + btSize);
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("CROSSTAB")) {
 				BCrossSet cs = crosstabRs.get(el.getAttribute("name"));
-				myhtml.append(cs.getColTitle());
+				myhtml.append(cs.getColTitles());
 			} else {
 				myhtml.append("<th>" + el.getAttribute("title") + "</th>");
 			}
@@ -104,6 +104,58 @@ System.out.println("BASE : size " + btSize);
 	
 		return myhtml.toString();
 	}
+	
+	public String getCsv() {
+		StringBuffer myCsv = new StringBuffer();
+		
+		int btSize = baseRs.getData().size();
+		Vector<String> keyData = baseRs.getKeyFieldData();
+System.out.println("BASE : size " + btSize);
+
+		int i = 0;
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("CROSSTAB")) {
+				BCrossSet cs = crosstabRs.get(el.getAttribute("name"));
+				myCsv.append(cs.getCsvTitles());
+			} else {
+				if(i!=0) myCsv.append(","); 
+				myCsv.append(getCsvValue(el.getAttribute("title")));
+			}
+			i++;
+		}
+		myCsv.append("\n");
+		
+		int j = 0;
+		for(Vector<Object> data : baseRs.getData()) {
+			Vector<Object> dataRow = new Vector<Object>();
+			i = 0;
+			for(BElement el : view.getElements()) {
+				if(el.getName().equals("CROSSTAB")) {
+					BCrossSet cs = crosstabRs.get(el.getAttribute("name"));
+					myCsv.append(cs.getRowCsv(keyData.get(j)));
+				} else {
+					if(i!=0) myCsv.append(","); 
+					myCsv.append(getCsvValue(data.get(i)));
+					i++;
+				}
+			}
+			j++;
+			myCsv.append("\n");
+			dataTable.add(data);//dataRow);
+		}
+	
+		return myCsv.toString();
+	}
+
+	public String getCsvValue(Object cellVal) {
+		String mystr = "";
+		if(cellVal!=null) {
+			if(cellVal.toString().startsWith("0")) mystr = "\"'" + cellVal.toString() + "\"";
+			else mystr = "\"" + cellVal.toString() + "\"";
+		}
+
+		return mystr;
+    }
 	
 	// Close record sets
 	public void close() {
