@@ -22,18 +22,18 @@ public class BCrossSet {
 	Map<String, Integer> rows;
 	Map<Integer, Object> setTable;
 	
-	public BCrossSet(Vector<Vector<Object>> dataTable, Vector<String> keyData) {
+	public BCrossSet(Vector<Vector<Object>> dataTable) {
 		columns = new HashMap<String, Integer>();
 		rows = new HashMap<String, Integer>();
 		setTable = new HashMap<Integer, Object>();
-
-		System.out.println("BASE : 3030 " + dataTable.size());
+		
+System.out.println("BASE : 2010 " + dataTable.size());
 		
 		int j = 0;
 		for(Vector<Object> data : dataTable) {
 			String col0 = ""; if(data.get(0) != null) col0 = data.get(0).toString();
 			String col1 = ""; if(data.get(1) != null) col1 = data.get(1).toString();
-			String col2 = ""; if(keyData.get(j) != null) col2 = keyData.get(j);
+			String col2 = ""; if(data.get(2) != null) col2 = data.get(2).toString();
 			j++;
 			
 			Integer column = columns.size();
@@ -41,22 +41,22 @@ public class BCrossSet {
 			column = columns.get(col0);
 			
 			Integer row = rows.size();
-			if(!rows.containsKey(col2)) rows.put(col2, row);
-			row = rows.get(col2);
+			if(!rows.containsKey(col1)) rows.put(col1, row);
+			row = rows.get(col1);
 			
-			setTable.put((row * 64) + column, data.get(1));
+			setTable.put((row * 64) + column, col2);
 		}
 	}
 	
 	public Vector<Object> getRowData(String key) {
 		Vector<Object> data = new Vector<Object>();
-		Integer column = columns.get(key);
-		if(column == null) {
-			for(String rowKey : rows.keySet()) 
+		Integer row = rows.get(key);
+		if(row == null) {
+			for(String colKey : columns.keySet()) 
 				data.add(null);
 		} else {
-			for(String rowKey : rows.keySet()) {
-				Integer row = rows.get(rowKey);
+			for(String colKey : columns.keySet()) {
+				Integer column = columns.get(colKey);
 				Object cellData = setTable.get((row * 64) + column);
 				data.add(cellData);
 			}
@@ -68,14 +68,14 @@ public class BCrossSet {
 		StringBuffer myhtml = new StringBuffer();
 		String sKey = "";
 		if(key != null) sKey = key.toString();
-		Integer column = columns.get(sKey);
-
-		if(column == null) {
-			for(String rowKey : rows.keySet()) 
+		Integer row = rows.get(key);
+		
+		if(row == null) {
+			for(String colKey : columns.keySet()) 
 				myhtml.append("<td></td>");
 		} else {
-			for(String rowKey : rows.keySet()) {
-				Integer row = rows.get(rowKey);
+			for(String colKey : columns.keySet()) { 
+				Integer column = columns.get(colKey);
 				Object cellData = setTable.get((row * 64) + column);
 				
 				if(cellData == null) myhtml.append("<td></td>");
@@ -83,6 +83,13 @@ public class BCrossSet {
 			}
 		}
 		
+		return myhtml.toString();
+	}
+	
+	public String getColTitle() {
+		StringBuffer myhtml = new StringBuffer();
+		for(String colKey : columns.keySet()) 
+			myhtml.append("<th>" + colKey + "</th>");
 		return myhtml.toString();
 	}
 	

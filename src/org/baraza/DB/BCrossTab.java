@@ -42,8 +42,7 @@ public class BCrossTab {
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("CROSSTAB")) {
 				BQuery ctq = new BQuery(db, el, wheresql, null);
-				ctq.readData();
-				BCrossSet cs = new BCrossSet(ctq.getData(), ctq.getKeyFieldData());
+				BCrossSet cs = new BCrossSet(ctq.getData());
 				crosstabRs.put(el.getAttribute("name"), cs);
 				ctq.close();
 				
@@ -58,14 +57,26 @@ public class BCrossTab {
 	public String getGrid(List<String> viewKeys, List<String> viewData, boolean addJSc, String viewKey, boolean sfield) {
 		StringBuffer myhtml = new StringBuffer();
 		
-		baseRs.readData();
 		int btSize = baseRs.getData().size();
 		Vector<String> keyData = baseRs.getKeyFieldData();
 System.out.println("BASE : size " + btSize);
+
+		myhtml.append("<div class='table-scrollable'>\n");
+		myhtml.append("<table id='crosstab' class='table table-striped table-bordered table-hover'>\n");
+
+		myhtml.append("<thead><tr>");
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("CROSSTAB")) {
+				BCrossSet cs = crosstabRs.get(el.getAttribute("name"));
+				myhtml.append(cs.getColTitle());
+			} else {
+				myhtml.append("<th>" + el.getAttribute("title") + "</th>");
+			}
+		}
+		myhtml.append("</tr></thead>\n");
 		
 		int j = 0;
-		myhtml.append("<div class='table-scrollable'>\n");
-		myhtml.append("<table class='table table-striped table-hover'>\n");
+
 		for(Vector<Object> data : baseRs.getData()) {
 			Vector<Object> dataRow = new Vector<Object>();
 			int i = 0;
