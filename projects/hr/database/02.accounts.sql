@@ -76,6 +76,7 @@ CREATE TABLE tax_types (
 	currency_id				integer references currency,
 	org_id					integer references orgs,
 	tax_type_name			varchar(50) not null,
+	tax_type_number			varchar(50),
 	formural				varchar(320),
 	tax_relief				real default 0 not null,
 	tax_type_order			integer default 0 not null,
@@ -266,7 +267,7 @@ CREATE VIEW vw_tax_types AS
 		tax_types.org_id, tax_types.tax_type_id, tax_types.tax_type_name, tax_types.formural, tax_types.tax_relief, 
 		tax_types.tax_type_order, tax_types.in_tax, tax_types.tax_rate, tax_types.tax_inclusive, tax_types.linear, 
 		tax_types.percentage, tax_types.employer, tax_types.employer_ps, tax_types.account_number, tax_types.active, 
-		tax_types.use_key, tax_types.details
+		tax_types.tax_type_number, tax_types.use_key, tax_types.details
 	FROM tax_types INNER JOIN currency ON tax_types.currency_id = currency.currency_id
 		LEFT JOIN vw_accounts ON tax_types.account_id = vw_accounts.account_id;
 

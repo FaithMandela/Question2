@@ -580,7 +580,7 @@ CREATE VIEW vw_employee_tax_types AS
 		eml.month_id, eml.period_year, eml.period_month,
 		eml.end_date, eml.gl_payroll_account,
 		eml.entity_id, eml.entity_name, eml.employee_id, eml.identity_card,
-		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, 
+		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, tax_types.tax_type_number,
 		employee_tax_types.org_id, employee_tax_types.employee_tax_type_id, employee_tax_types.tax_identification, 
 		employee_tax_types.amount, 
 		employee_tax_types.additional, employee_tax_types.employer, employee_tax_types.narrative,
