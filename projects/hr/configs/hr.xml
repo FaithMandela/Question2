@@ -3447,7 +3447,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<JASPER name="CV Employees" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
 		</GRID>
