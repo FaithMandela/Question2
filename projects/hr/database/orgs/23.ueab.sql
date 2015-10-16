@@ -188,7 +188,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
 CREATE OR REPLACE FUNCTION get_formula_adjustment(int, int, real) RETURNS float AS $$
 DECLARE
 	v_employee_month_id		integer;
@@ -207,6 +206,7 @@ BEGIN
 		SELECT amount INTO v_prof_allowance
 		FROM employee_adjustments
 		WHERE (employee_month_id = v_employee_month_id) AND (adjustment_id = 5);
+		IF(v_prof_allowance is null) THEN v_prof_allowance := 0; END IF;
 		
 		v_adjustment := (v_basic_pay + v_prof_allowance) * $3;
 	ELSE
@@ -221,10 +221,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION get_house_rent(integer) RETURNS real AS $$
-    SELECT sum(amount)
+CREATE OR REPLACE FUNCTION get_house_rent(integer) RETURNS double precision AS $$
+	SELECT COALESCE(sum(amount), 0)
 	FROM employee_adjustments
 	WHERE (adjustment_id IN (41,42,43))
-	AND (employee_adjustments.employee_month_id = $1);
+		AND (employee_adjustments.employee_month_id = $1);
 $$ LANGUAGE SQL;
 

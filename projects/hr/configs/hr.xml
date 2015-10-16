@@ -90,7 +90,7 @@
 				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</TILELIST>
-			<TILELIST name="Out of Office" keyfield="employee_leave_id" role="staff" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
+			<TILELIST name="Out of Office" keyfield="employee_leave_id" role="staff" orderby="leave_from" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
 				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
 				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
@@ -366,6 +366,7 @@
 				<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
 			</DIARY>
 		</DIARY>
+		<JASPER name="Monthly Report" user="filterid" reportfile="vw_employee_leave_d.jasper"></JASPER>
 		<GRID name="Leave Types" keyfield="employee_leave_type_id" table="vw_employee_leave_types" user="entity_id">
 			<TEXTFIELD w="75" title="Leave Type Name">leave_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Allowed Leave Days">allowed_leave_days</TEXTFIELD>
@@ -3446,7 +3447,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<JASPER name="CV Employees" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
 		</GRID>

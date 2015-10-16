@@ -11,7 +11,7 @@
 		<MENU name="Payroll" role="admin,payroll,hr">
 			<MENU name="Organisation">20</MENU>
 			<MENU name="Employees" role="admin,payroll,hr">3</MENU>
-			<MENU name="Monthly Payroll" role="admin,payroll,hr">1</MENU>
+			<MENU name="Monthly Payroll" role="admin,payroll,hr">10</MENU>
 			<MENU name="Payroll Archive" role="admin">5</MENU>
 		</MENU>
 		<MENU name="Loans" role="admin,payroll">
@@ -31,6 +31,7 @@
 			<MENU name="Banking">106</MENU>
 			<MENU name="Adjustments">107</MENU>
 			<MENU name="Employee Adjustments">108</MENU>
+			<MENU name="Employee Statutories">118</MENU>
 			<MENU name="Advance">109</MENU>
 			<MENU name="Payslip">110</MENU>
 			<MENU name="P9A">111</MENU>
@@ -39,6 +40,31 @@
 		</MENU>
 		<MENU name="HR" role="admin,payroll,reports" xml="hr.xml">0</MENU>
 	</MENU>
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
+			</TILE>
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			</TILE>
+			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(intake_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
+			</TILE>
+			<TILE name="Available Internships" role="applicant" noorg.query="true" table="vw_internships" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(internship_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
+			</TILE>
+			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
+				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</TILELIST>
+			<TILELIST name="Out of Office" keyfield="employee_leave_id" role="staff" orderby="leave_from" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+			</TILELIST>
+		</DASHBOARD>
+	</DESK>
 	<DESK w="715" name="Definations" key="4" h="500">
 		<GRID name="Allowances" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 1)">
 			<TEXTFIELD w="75" title="Allowance ID">adjustment_id</TEXTFIELD>
@@ -272,7 +298,7 @@
 			<FORM name="Deduction Type" keyfield="tax_type_id" table="tax_types">
 				<DEFAULT default="1">use_key</DEFAULT>
 				<TEXTFIELD w="430" title="Deduction Type" y="10" h="20" x="10">tax_type_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formula" y="30" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formula" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10">formural</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Deduction Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Linear" y="50" h="20" x="290">linear</CHECKBOX>
 				<CHECKBOX w="150" title="Percentage" y="70" h="20" x="10">percentage</CHECKBOX>
@@ -625,7 +651,7 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="770" name="Monthly Payroll" key="1" h="650">
+	<DESK w="770" name="Monthly Payroll" key="10" h="650">
 		<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods" where="(closed = false)">
 			<TEXTFIELD w="45" title="Period ID">period_id</TEXTFIELD>
 			<TEXTFIELD w="45" title="Period Code">period_code</TEXTFIELD>
@@ -1018,6 +1044,11 @@
 				<TEXTFIELD w="75" title="Bank Account">bank_account</TEXTFIELD>
 				<TEXTDECIMAL w="75" fnct="round(cast(banked as numeric), 1)" title="Banked">banked_amount</TEXTDECIMAL>
 			</GRID>
+			<FORM tw="570" name="Period" keyfield="period_id" table="periods" th="210">
+				<CHECKBOX w="150" title="Activated" default="true" y="10" h="20" x="10">activated</CHECKBOX>
+				<CHECKBOX w="150" title="Closed" y="10" h="20" x="290">closed</CHECKBOX>
+				<TEXTAREA w="550" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 		<GRID name="Advances" keyfield="period_id" orderby="start_date desc" table="vw_periods">
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
@@ -1365,6 +1396,45 @@
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
+		<GRID name="Full Payroll" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<CROSSTAB name="Full Payroll" keyfield="employee_month_id" orderby="currency_id, employee_name" linkfield="period_id" table="vw_employee_month">
+				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Employee Name">employee_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
+				<CROSSTAB name="Allowances" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 1)">
+					<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+				</CROSSTAB>
+				<TEXTDECIMAL w="75" title="Total Allowance">payroll_allowance</TEXTDECIMAL>
+				<CROSSTAB name="Deductions" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 2)">
+					<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+				</CROSSTAB>
+				<CROSSTAB name="Tax Types" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
+					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+				</CROSSTAB>
+				<TEXTDECIMAL w="75" title="Total Deduction">payroll_deduction</TEXTDECIMAL>
+				<CROSSTAB name="Expenses" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 3)">
+					<TEXTFIELD w="75" title="Expense">adjustment_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+				</CROSSTAB>
+				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
+			</CROSSTAB>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Banking" key="106" h="750">
 		<FILTER w="700" name="Payroll" split="150" type="horl" key="6" h="550">
@@ -1414,6 +1484,22 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Expense" keyfield="adjustment_ID" table="adjustments" where="(adjustment_type = 3)" listfield="adjustment_Name" filter="adjustmentid" pos="top"></DRILLDOWN>
 			<JASPER name="Expense" reportfile="vw_employee_expense.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="770" name="Employee Statutories" key="118" h="750">
+		<FILTER w="770" name="Statutory Deductions" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<DRILLDOWN name="Statutory  Deductions" keyfield="tax_type_id" table="tax_types" where="(use_key=1)" listfield="tax_type_name" filter="tax_type_id"></DRILLDOWN>
+			<JASPER name="Statutory  Deductions" reportfile="vw_employee_tax_types_2.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="770" name="NSSF and NHIF" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="NSSF" reportfile="nssf_report.jasper"></JASPER>
+			<JASPER name="NHIF" reportfile="nssf_report.jrxml"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Advance" key="109" h="550">

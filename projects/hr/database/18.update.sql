@@ -1,3 +1,64 @@
+INSERT INTO employee_tax_types (employee_month_id, tax_type_id, org_id)
+SELECT a.employee_month_id, 1, 0
+FROM employee_month as a LEFT JOIN 
+(SELECT employee_month_id, tax_type_id
+FROM employee_tax_types WHERE tax_type_id = 1) as b
+ON a.employee_month_id = b.employee_month_id
+WHERE period_id = 207 and b.tax_type_id is null;
+
+
+INSERT INTO employee_tax_types (employee_month_id, tax_type_id, org_id)
+SELECT a.employee_month_id, 2, 0
+FROM employee_month as a LEFT JOIN 
+(SELECT employee_month_id, tax_type_id
+FROM employee_tax_types WHERE tax_type_id = 2) as b
+ON a.employee_month_id = b.employee_month_id
+WHERE period_id = 207 and b.tax_type_id is null;
+
+INSERT INTO employee_tax_types (employee_month_id, tax_type_id, org_id)
+SELECT a.employee_month_id, 3, 0
+FROM employee_month as a LEFT JOIN 
+(SELECT employee_month_id, tax_type_id
+FROM employee_tax_types WHERE tax_type_id = 3) as b
+ON a.employee_month_id = b.employee_month_id
+WHERE period_id = 207 and b.tax_type_id is null;
+
+INSERT INTO employee_adjustments (employee_month_id, adjustment_id, org_id, adjustment_type, adjustment_factor, amount)
+SELECT a.employee_month_id, 15, 0, 1, 1, 0
+FROM vw_employee_month_list as a
+LEFT JOIN (SELECT employee_month_id, adjustment_id
+FROM employee_adjustments WHERE adjustment_id = 15) as b
+ON a.employee_month_id = b.employee_month_id
+WHERE period_id = 207 and contract = false and b.adjustment_id is null;
+
+INSERT INTO employee_adjustments (employee_month_id, adjustment_id, org_id, adjustment_type, adjustment_factor, amount)
+SELECT a.employee_month_id, 16, 0, 1, 1, 0
+FROM vw_employee_month_list as a
+LEFT JOIN (SELECT employee_month_id, adjustment_id
+FROM employee_adjustments WHERE adjustment_id = 16) as b
+ON a.employee_month_id = b.employee_month_id
+WHERE period_id = 207 and contract = false and b.adjustment_id is null;
+
+INSERT INTO employee_adjustments (employee_month_id, adjustment_id, org_id, adjustment_type, adjustment_factor, amount)
+SELECT a.employee_month_id, 25, 0, 2, -1, 0
+FROM vw_employee_month_list as a
+LEFT JOIN (SELECT employee_month_id, adjustment_id
+FROM employee_adjustments WHERE adjustment_id = 25) as b
+ON a.employee_month_id = b.employee_month_id
+WHERE period_id = 207 and b.adjustment_id is null;
+
+DELETE FROM employee_adjustments 
+WHERE adjustment_id = 25 AND employee_month_id IN
+(SELECT a.employee_month_id
+FROM employee_month as a
+WHERE a.period_id = 207);
+
+INSERT INTO default_adjustments(entity_id, adjustment_id, org_id, amount)
+SELECT a.entity_id, 25, 0, 0
+FROM employees as a LEFT JOIN 
+(SELECT entity_id FROM default_adjustments WHERE adjustment_id = 25) as b
+ON a.entity_id = b.entity_id
+WHERE b.entity_id is null;
 
 
 ALTER TABLE default_banking ADD bank_account varchar(64);

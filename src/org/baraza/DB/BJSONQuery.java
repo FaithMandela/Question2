@@ -51,7 +51,7 @@ public class BJSONQuery extends BQuery {
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("ACTIONS")) hasAction = true;
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
-			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("FILES") || el.getName().equals("DIARY") || el.getName().equals("CROSSTAB")) hasSubs = true;
 			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
@@ -188,7 +188,7 @@ public class BJSONQuery extends BQuery {
 		Integer i = 0;
 		for(BElement sview : view.getElements()) {
 			String sviewName = sview.getName();
-			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") || sviewName.equals("JASPER")  || sviewName.equals("FORMVIEW")) {
+			if(sviewName.equals("DIARY") || sviewName.equals("FILES") || sviewName.equals("FORM") || sviewName.equals("GRID") || sviewName.equals("JASPER") || sviewName.equals("FORMVIEW") || sviewName.equals("CROSSTAB")) {
 				String viewFilter = sview.getAttribute("viewfilter");
 				
 				if(viewFilter == null) {
