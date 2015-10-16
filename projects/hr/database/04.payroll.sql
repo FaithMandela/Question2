@@ -591,9 +591,43 @@ CREATE VIEW vw_employee_tax_types AS
 		(employee_tax_types.exchange_rate * employee_tax_types.additional) as base_additional
 		
 	FROM employee_tax_types INNER JOIN vw_employee_month_list as eml ON employee_tax_types.employee_month_id = eml.employee_month_id
-		INNER JOIN tax_types ON (employee_tax_types.tax_type_id = Tax_Types.tax_type_id)
+		INNER JOIN tax_types ON (employee_tax_types.tax_type_id = tax_types.tax_type_id)
 		INNER JOIN currency ON tax_types.currency_id = currency.currency_id;
+		
+CREATE VIEW vw_employee_tax_month AS
+	SELECT emp.period_id, emp.start_date, emp.end_date, emp.overtime_rate, 
+		emp.activated, emp.closed, emp.month_id, emp.period_year, emp.period_month,
+		emp.quarter, emp.semister, emp.bank_header, emp.bank_address,
+		emp.gl_payroll_account, emp.gl_bank_account, emp.is_posted,
+		emp.bank_id, emp.bank_name, emp.bank_branch_id, 
+		emp.bank_branch_name, emp.bank_branch_code,
+		emp.pay_group_id, emp.pay_group_name, emp.department_id, emp.department_name,
+		emp.department_role_id, emp.department_role_name, 
+		emp.entity_id, emp.entity_name,
+		emp.employee_id, emp.surname, emp.first_name, emp.middle_name, emp.date_of_birth, 
+		emp.gender, emp.nationality, emp.marital_status, emp.appointment_date, emp.exit_date, 
+		emp.contract, emp.contract_period, emp.employment_terms, emp.identity_card,
+		emp.employee_name,
+		emp.currency_id, emp.currency_name, emp.currency_symbol, emp.exchange_rate,
+		
+		emp.org_id, emp.employee_month_id, emp.bank_account, emp.basic_pay, emp.details,
+		emp.overtime, emp.full_allowance, emp.payroll_allowance, emp.tax_allowance,
+		emp.full_deduction, emp.payroll_deduction, emp.tax_deduction, emp.full_expense,
+		emp.payroll_expense, emp.tax_expense, emp.payroll_tax, emp.tax_tax,
+		emp.net_adjustment, emp.per_diem, emp.advance, emp.advance_deduction,
+		emp.net_pay, emp.banked, emp.cost,
+		
+		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, 
+		employee_tax_types.employee_tax_type_id, employee_tax_types.tax_identification, 
+		employee_tax_types.amount, employee_tax_types.exchange_rate as tax_exchange_rate,
+		employee_tax_types.additional, employee_tax_types.employer, employee_tax_types.narrative,
+		
+		(employee_tax_types.amount * employee_tax_types.exchange_rate) as tax_base_amount
 
+	FROM vw_employee_month as emp INNER JOIN employee_tax_types ON emp.employee_month_id = employee_tax_types.employee_month_id
+		INNER JOIN tax_types ON employee_tax_types.tax_type_id = tax_types.tax_type_id;
+
+	
 CREATE VIEW vw_employee_advances AS
 	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
 		eml.month_id, eml.period_year, eml.period_month,
@@ -1137,7 +1171,7 @@ BEGIN
 	IF(NEW.exchange_rate is null) THEN NEW.exchange_rate = 1; END IF;
 	IF(NEW.exchange_rate = 0) THEN NEW.exchange_rate = 1; END IF;
 
-	SELECT adjustment_type INTO NEW.adjustment_type
+	SELECT adjustment_type, formural INTO NEW.adjustment_type, v_formural
 	FROM adjustments 
 	WHERE (adjustments.adjustment_id = NEW.adjustment_id);
 	
@@ -1145,15 +1179,10 @@ BEGIN
 		NEW.adjustment_factor = -1;
 	END IF;
 	
-	IF(NEW.Amount = 0)THEN
-		SELECT formural INTO v_formural
-		FROM adjustments
-		WHERE (adjustments.adjustment_id = NEW.adjustment_id);
-		IF(v_formural is not null)THEN
-			EXECUTE 'SELECT ' || v_formural || ' FROM employee_month WHERE employee_month_id = ' || NEW.employee_month_id
-			INTO NEW.Amount;
-			NEW.Amount := NEW.Amount / NEW.exchange_rate;
-		END IF;
+	IF(NEW.Amount = 0) and (v_formural is not null)THEN
+		EXECUTE 'SELECT ' || v_formural || ' FROM employee_month WHERE employee_month_id = ' || NEW.employee_month_id
+		INTO NEW.Amount;
+		NEW.Amount := NEW.Amount / NEW.exchange_rate;
 	END IF;
 
 	IF(NEW.in_tax = true)THEN
