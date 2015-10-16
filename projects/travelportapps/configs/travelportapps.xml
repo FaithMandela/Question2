@@ -25,6 +25,7 @@
 			<MENU name="EMails" role="admin">60</MENU>
 			<MENU name="Files" role="admin">65</MENU>
 			<MENU name="Error Messages">70</MENU>
+			<MENU name="Travelport Apps">76</MENU>
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Rates">90</MENU>
@@ -922,5 +923,28 @@
 	</DESK>
 	<DESK w="700" name=" Insurance Sold" key="93" h="550">
 		<JASPER name="Agency Sales " reportfile="agencysales.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Travelport apps" role="Superadmin" key="76" h="550">
+		<GRID name="Application" keyfield="apps_list_id" table="vw_app_list" noorg="true">
+			<TEXTFIELD w="75" title="Application Id">apps_list_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Application Name :">descriptions</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organization Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Application Code Name :">app_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Date">query_date</TEXTDATE>
+			<FORM name="Add Application" keyfield="apps_list_id" table="apps_list">
+				<COMBOBOX w="430" title="Org" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Application Name :" y="30" h="20" x="290">descriptions</TEXTFIELD>
+				<TEXTFIELD w="150" title="Application Code Name :" y="30" h="20" x="290">app_name</TEXTFIELD>
+			</FORM>
+		</GRID>
+		<GRID name="Application Subscription" keyfield="app_subscriptions_id" table="vw_app_subscriptions" noorg="true">
+			<TEXTFIELD w="75" title="Application Subscriptions Id">app_subscriptions_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Application Name">descriptions</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<FORM name="Subscription" keyfield="app_subscriptions_id" table="apps_subscriptions" noorg="true">
+				<COMBOBOX w="430" title="Org" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<COMBOBOX w="430" title="Application Name" lptable="apps_list" noorg="true" y="10" h="20" x="10" lpfield="descriptions">apps_list_id</COMBOBOX>
+			</FORM>
+		</GRID>
 	</DESK>
 </APP>
