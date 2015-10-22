@@ -307,7 +307,8 @@
 				<TEXTDECIMAL w="150" title="Employer %" y="90" h="20" x="290">employer_ps</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order" default="0" y="110" h="20" x="10">Tax_Type_order</TEXTFIELD>
 				<CHECKBOX w="150" title="Tax" y="110" h="20" x="290">In_Tax</CHECKBOX>
-				<TEXTFIELD w="150" title="Account Number" default="0" y="130" h="20" x="10">account_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Registration Number" default="0" y="130" h="20" x="10">tax_type_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" default="0" y="130" h="290" x="10">account_number</TEXTFIELD>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="170" h="90" x="10">details</TEXTAREA>
 			</FORM>
