@@ -94,7 +94,7 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="87" splitType="Stretch">
+		<band height="86" splitType="Stretch">
 			<staticText>
 				<reportElement style="Title" x="0" y="0" width="123" height="30" isPrintWhenDetailOverflows="true" uuid="8da3e993-4b99-4a71-9865-2d7fd2062aab"/>
 				<textElement verticalAlignment="Bottom">
