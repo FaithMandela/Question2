@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="banking_report2" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6ea60bff-4640-4493-bd75-c7dd28a0125d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+     *,
+     vw_employees."employee_id" AS vw_employees_employee_id
+FROM
+     "vw_employees" vw_employees]]>
+	</queryString>
+	<field name="bank_id" class="java.lang.Integer"/>
+	<field name="bank_name" class="java.lang.String"/>
+	<field name="bank_branch_id" class="java.lang.Integer"/>
+	<field name="bank_branch_name" class="java.lang.String"/>
+	<field name="bank_branch_code" class="java.lang.String"/>
+	<field name="department_id" class="java.lang.Integer"/>
+	<field name="department_name" class="java.lang.String"/>
+	<field name="department_role_id" class="java.lang.Integer"/>
+	<field name="department_role_name" class="java.lang.String"/>
+	<field name="currency_id" class="java.lang.Integer"/>
+	<field name="currency_name" class="java.lang.String"/>
+	<field name="currency_symbol" class="java.lang.String"/>
+	<field name="sys_country_name" class="java.lang.String"/>
+	<field name="birth_nation_name" class="java.lang.String"/>
+	<field name="disability_id" class="java.lang.Integer"/>
+	<field name="disability_name" class="java.lang.String"/>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="employee_id" class="java.lang.String"/>
+	<field name="surname" class="java.lang.String"/>
+	<field name="first_name" class="java.lang.String"/>
+	<field name="middle_name" class="java.lang.String"/>
+	<field name="person_title" class="java.lang.String"/>
+	<field name="field_of_study" class="java.lang.String"/>
+	<field name="employee_name" class="java.lang.String"/>
+	<field name="date_of_birth" class="java.sql.Date"/>
+	<field name="place_of_birth" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="nationality" class="java.lang.String"/>
+	<field name="nation_of_birth" class="java.lang.String"/>
+	<field name="marital_status" class="java.lang.String"/>
+	<field name="appointment_date" class="java.sql.Date"/>
+	<field name="exit_date" class="java.sql.Date"/>
+	<field name="contract" class="java.lang.Boolean"/>
+	<field name="contract_period" class="java.lang.Integer"/>
+	<field name="employment_terms" class="java.lang.String"/>
+	<field name="identity_card" class="java.lang.String"/>
+	<field name="basic_salary" class="java.lang.Float"/>
+	<field name="bank_account" class="java.lang.String"/>
+	<field name="language" class="java.lang.String"/>
+	<field name="picture_file" class="java.lang.String"/>
+	<field name="active" class="java.lang.Boolean"/>
+	<field name="height" class="java.lang.Float"/>
+	<field name="weight" class="java.lang.Float"/>
+	<field name="blood_group" class="java.lang.String"/>
+	<field name="allergies" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="objective" class="java.lang.String"/>
+	<field name="interests" class="java.lang.String"/>
+	<field name="details" class="java.lang.String"/>
+	<field name="employee_age" class="java.lang.String"/>
+	<field name="gender_name" class="java.lang.String"/>
+	<field name="marital_status_name" class="java.lang.String"/>
+	<field name="education_class_name" class="java.lang.String"/>
+	<field name="date_from" class="java.sql.Date"/>
+	<field name="date_to" class="java.sql.Date"/>
+	<field name="name_of_school" class="java.lang.String"/>
+	<field name="examination_taken" class="java.lang.String"/>
+	<field name="grades_obtained" class="java.lang.String"/>
+	<field name="certificate_number" class="java.lang.String"/>
+	<field name="vw_employees_employee_id" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="15" width="802" height="56" uuid="3a3cbb1c-d8f0-4c18-947f-7f25c10b67c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="30"/>
+				</textElement>
+				<text><![CDATA[Banking Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="567ac2be-9f2f-4964-9f88-1f8126861a8d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Bank Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="20" uuid="61d14b9b-bcd7-4568-af2b-ee75b646dca7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Bank Account]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="20" uuid="ba9cc53a-0bad-4bd4-963d-0622a9a2dc3b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Branch Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="80" height="20" uuid="1e9f6f7e-2032-476b-9141-d9b2efe452c3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Bank Code 	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="0" width="120" height="20" uuid="58981bba-10c2-407e-a36a-e609c8fea8f2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Employee Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="0" width="118" height="20" uuid="97c2e329-ef75-4ad6-98e2-9cb326f941c8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Account Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="618" y="0" width="102" height="20" uuid="3c9a4e82-b94a-4245-abd5-19327989fca9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Bank Acc. Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="720" y="0" width="80" height="20" uuid="02da201d-96f8-4e52-85fb-ca8991d581cc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Banked Amount]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="100" height="20" uuid="6766a747-279c-4bb5-8fe2-fd6fd3f817aa"/>
+				<textFieldExpression><![CDATA[$F{bank_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="20" width="100" height="20" uuid="f8e36832-1b0a-44b1-be29-4180b23b3899"/>
+				<textFieldExpression><![CDATA[$F{bank_branch_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="20" width="80" height="20" uuid="da492dd5-dc48-4d8b-9e53-00c1d718fb6f"/>
+				<textFieldExpression><![CDATA[$F{bank_branch_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="20" width="120" height="20" uuid="cdc41a17-9802-4002-a578-de0fa95ba40d"/>
+				<textFieldExpression><![CDATA[$F{employee_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="20" width="118" height="20" uuid="cc892ed5-d048-41ef-b5b2-e41b41b549ef"/>
+				<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="618" y="20" width="102" height="20" uuid="b4bee8a9-7446-446e-87d3-231e37f300b3"/>
+				<textFieldExpression><![CDATA[$F{bank_account}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="350" y="17" width="100" height="20" uuid="a3a35b7c-f3c0-4522-8ddc-4b5aa362d8d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="613" y="17" width="184" height="20" uuid="5117238f-42b1-498d-ad9d-a7af73feee57"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="16" width="802" height="1" uuid="17389a21-5a79-4cbd-83f4-c03069ea61bd"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

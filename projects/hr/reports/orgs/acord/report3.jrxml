@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report3" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5616d49e-4150-4f58-9a95-04fa2d48b878">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT * FROM employees]]>
+	</queryString>
+	<field name="surname" class="java.lang.String"/>
+	<field name="first_name" class="java.lang.String"/>
+	<field name="middle_name" class="java.lang.String"/>
+	<field name="bank_branch_id" class="java.lang.Integer"/>
+	<field name="employee_id" class="java.lang.String"/>
+	<field name="bank_account" class="java.lang.String"/>
+	<field name="basic_salary" class="java.lang.Float"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="88" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="249" height="87" uuid="e80fc9de-794e-4a95-9ed5-3697e699e762"/>
+				<imageExpression><![CDATA["/opt/baraza/projects/hr/reports/orgs/acord/logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="215" splitType="Stretch">
+			<staticText>
+				<reportElement x="23" y="39" width="30" height="20" uuid="c84ac9a5-d860-43be-a951-2943c7397975"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Re:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="69" width="72" height="26" uuid="60a8bfb0-af74-4163-891a-7850f2de00ec"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Employee ID	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="81" y="69" width="142" height="26" uuid="ed3a4b5f-f915-444e-b6fa-d34c12709a77"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Employee Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="69" width="115" height="26" uuid="93ddb6ab-e3e1-460b-ab3a-c698b9c87f02"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Bank]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="338" y="69" width="100" height="26" uuid="cdf354eb-b08a-402b-84b6-546db42b8019"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Branch	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="69" width="126" height="26" uuid="d4bf69e4-c157-4d72-a3d0-4aa887a13727"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Account Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="564" y="69" width="120" height="26" uuid="447e23fb-9349-45bb-a6c5-1340b8b970c9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="-1" width="30" height="20" uuid="57bb5673-0af2-4e83-84c2-60daaec8a9a5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Date:	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="19" width="30" height="20" uuid="c0a1062b-d503-4287-925e-5ccf771a7b3c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="53" y="-1" width="197" height="20" uuid="e4641753-ff53-47bd-9373-e8435b1b1a80"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

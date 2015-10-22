@@ -144,27 +144,6 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="1" y="31" width="399" height="1" uuid="f1eabb15-e0a3-4e33-b8a9-1dda4578292d"/>
-			</line>
-			<line>
-				<reportElement x="0" y="47" width="399" height="1" uuid="56e0a9c3-d3a1-451d-80e9-a44175f076c5"/>
-			</line>
-			<line>
-				<reportElement x="0" y="65" width="399" height="1" uuid="ba99f1cd-7ea6-4f96-8f1a-1cd343718251"/>
-			</line>
-			<line>
-				<reportElement x="1" y="1" width="145" height="1" uuid="4ff2aef6-51f5-421a-923a-4bafe5d1ec18"/>
-			</line>
-			<line>
-				<reportElement x="399" y="31" width="1" height="51" uuid="8a6c9b05-4e1b-40be-8927-423c99533851"/>
-			</line>
-			<line>
-				<reportElement x="0" y="0" width="1" height="82" uuid="b51533b8-457e-4b07-b9c3-8a08278bb6ea"/>
-			</line>
-			<line>
-				<reportElement x="145" y="0" width="1" height="81" uuid="644e75c0-02a6-4998-8d8d-a7d2e4e4737a"/>
-			</line>
 		</band>
 	</title>
 	<pageHeader>
@@ -207,12 +186,6 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 				</textElement>
 				<text><![CDATA[FUND MEMBERSHIP NUMBER]]></text>
 			</staticText>
-			<line>
-				<reportElement x="1" y="1" width="398" height="1" uuid="2ea17ca2-85f0-4c7f-8d9c-6f9e155fdbb4"/>
-			</line>
-			<line>
-				<reportElement x="3" y="1" width="552" height="1" uuid="ecba1324-bb9b-49c2-9444-5182d8825809"/>
-			</line>
 		</band>
 	</columnHeader>
 	<detail>
