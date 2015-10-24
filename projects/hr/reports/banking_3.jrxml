@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="banking_2" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="db697c3e-fc91-4682-a78e-ba6431c9f64d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="banking_3" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="db697c3e-fc91-4682-a78e-ba6431c9f64d">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5"/>
@@ -22,8 +22,8 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT eb.entity_id, eb.employee_id, eb.entity_name,
-	eb.bank_name,
-	eb.bank_branch_name, eb.banked, eb.bank_account,
+	eb.bank_name, eb.bank_branch_name, eb.bank_account,
+	round(eb.banked::numeric, 1) as bank_amount,
 	eb.period_id, eb.period_year, eb.period_month, eb.bank_address,
 	COALESCE(eb.bank_header, '') as bank_heading
 
@@ -42,7 +42,6 @@ FROM vw_employee_month
 
 WHERE (vw_employee_month.period_id = '$P!{filterid}')
 AND (vw_employee_month.banked > 0)
-AND (vw_employee_month.pay_group_id = '$P!{paygroupid}')
 $P!{organd})
 
 UNION
@@ -62,7 +61,6 @@ FROM vw_employee_banking
 
 WHERE (vw_employee_banking.period_id = '$P!{filterid}')
 AND (vw_employee_banking.base_amount > 0)
-AND (vw_employee_banking.pay_group_id = '$P!{paygroupid}')
 $P!{organd})) as eb
 
 
@@ -73,15 +71,15 @@ ORDER BY eb.bank_name, eb.employee_id;]]>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="bank_name" class="java.lang.String"/>
 	<field name="bank_branch_name" class="java.lang.String"/>
-	<field name="banked" class="java.lang.Double"/>
 	<field name="bank_account" class="java.lang.String"/>
+	<field name="bank_amount" class="java.math.BigDecimal"/>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="period_year" class="java.lang.String"/>
 	<field name="period_month" class="java.lang.String"/>
 	<field name="bank_address" class="java.lang.String"/>
 	<field name="bank_heading" class="java.lang.String"/>
-	<variable name="sumbanked" class="java.lang.Double" resetType="Group" resetGroup="bank_name" calculation="Sum">
-		<variableExpression><![CDATA[$F{banked}]]></variableExpression>
+	<variable name="sumbanked" class="java.math.BigDecimal" resetType="Group" resetGroup="bank_name" calculation="Sum">
+		<variableExpression><![CDATA[$F{bank_amount}]]></variableExpression>
 	</variable>
 	<group name="bank_name">
 		<groupExpression><![CDATA[$F{bank_name}]]></groupExpression>
@@ -257,7 +255,7 @@ ORDER BY eb.bank_name, eb.employee_id;]]>
 		</groupHeader>
 		<groupFooter>
 			<band height="79">
-				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 					<reportElement key="textField-1" x="467" y="0" width="65" height="16" uuid="3d7dbfb9-632b-4a04-b01b-7f8456f4bd50"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -390,7 +388,7 @@ ORDER BY eb.bank_name, eb.employee_id;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bank_branch_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField" x="467" y="0" width="65" height="15" uuid="1b68a623-7da5-4a47-8264-c036076999d0"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -401,7 +399,7 @@ ORDER BY eb.bank_name, eb.employee_id;]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{banked}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{bank_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField" x="366" y="0" width="101" height="15" uuid="aa6438c1-3d70-4f16-bc08-83156e172453"/>

@@ -86,6 +86,7 @@ CREATE TABLE periods (
 	loan_approval			boolean default false not null,
 	gl_payroll_account		varchar(32),
 	gl_bank_account			varchar(32),
+	gl_advance_account		varchar(32),
 
 	bank_header				text,
 	bank_address			text,
@@ -169,8 +170,9 @@ CREATE VIEW vw_periods AS
 
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
-		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, periods.bank_header, 
-		periods.gl_payroll_account, periods.gl_bank_account, periods.bank_address, periods.details,
+		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
+		periods.gl_payroll_account, periods.gl_bank_account, periods.gl_advance_account,
+		periods.bank_header, periods.bank_address, periods.details,
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
 		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 

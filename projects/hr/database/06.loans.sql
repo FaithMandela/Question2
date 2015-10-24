@@ -243,7 +243,7 @@ BEGIN
 
 	msg := 'Payroll Processed';
 
-	return msg;
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 

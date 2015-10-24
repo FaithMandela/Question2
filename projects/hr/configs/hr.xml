@@ -419,6 +419,8 @@
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Identity Card" y="110" h="20" x="10">identity_card</TEXTFIELD>
 				<TEXTFIELD w="430" title="Language" y="130" h="20" x="10">language</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Previous Salary" y="150" h="20" x="10">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Expected Salary" y="150" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10">interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10">field_of_study</TEXTAREA>
@@ -571,7 +573,7 @@
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 			<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
 		</GRID>
-		<GRID name="Contract" keyfield="application_id" table="vw_contracting" user="entity_id">
+		<GRID name="Contract" keyfield="application_id" role="staff" table="vw_contracting" user="entity_id">
 			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Contract Type">contract_type_name</TEXTFIELD>
@@ -2085,6 +2087,12 @@
 					<ACTION fnct="upd_reviews" approval="2">Open For Review</ACTION>
 				</ACTIONS>
 			</GRID>
+			<GRID name="All Reviews" keyfield="org_id" orderby="employee_name" linkfield="review_year" table="vw_all_job_reviews">
+				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Job Review ID">employee_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Total Points">total_points</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			</GRID>
 		</GRID>
 		<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">
 			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
@@ -3469,7 +3477,7 @@
 		<JASPER name="Emergency Contacts" reportfile="emergency_contacts.jasper"></JASPER>
 		<FILTER w="700" name="New Employees" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">from_date</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="New Employees" reportfile="new_employees.jasper"></JASPER>
 		</FILTER>

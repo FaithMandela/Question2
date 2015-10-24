@@ -1,10 +1,10 @@
 <APP name="Projects" org="org_id" password="change_password">
 	<MENU name="Projects">
 		<MENU name="Project">
-			<MENU name="Project">1</MENU>
-			<MENU name="Clients">2</MENU>
-			<MENU name="Attendance">3</MENU>
-			<MENU name="My Tasks">5</MENU>
+			<MENU name="Project">5</MENU>
+			<MENU name="Clients">10</MENU>
+			<MENU name="Attendance">15</MENU>
+			<MENU name="My Tasks">20</MENU>
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Project Types">101</MENU>
@@ -14,7 +14,32 @@
 		</MENU>
 		<MENU name="HR" xml="hr.xml">0</MENU>
 	</MENU>
-	<DESK w="700" name="Projects" key="1" h="500">
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
+			</TILE>
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			</TILE>
+			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(intake_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
+			</TILE>
+			<TILE name="Available Internships" role="applicant" noorg.query="true" table="vw_internships" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(internship_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
+			</TILE>
+			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
+				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</TILELIST>
+			<TILELIST name="Out of Office" keyfield="employee_leave_id" role="staff" orderby="leave_from" table="vw_employee_leave" where="((approve_status = 'Approved') AND (leave_to >= current_date))">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+			</TILELIST>
+		</DASHBOARD>
+	</DESK>
+	<DESK w="700" name="Projects" key="5" h="500">
 		<GRID name="Projects" keyfield="project_id" table="vw_projects">
 			<TEXTFIELD w="75" title="Project ID">project_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client Name">client_name</TEXTFIELD>
@@ -157,7 +182,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Client" key="2" h="500">
+	<DESK w="700" name="Client" key="10" h="500">
 		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(entity_type_id = 2)">
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
@@ -200,7 +225,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Attendance" key="3" h="500">
+	<DESK w="700" name="Attendance" key="15" h="500">
 		<GRID name="Attendance" keyfield="attendance_id" orderby="attendance_date desc, entity_name" table="vw_attendance">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
@@ -230,7 +255,7 @@
 			<TEXTFIELD w="75" title="Col11">col11</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="My Tasks" key="5" h="550">
+	<DESK w="700" name="My Tasks" key="20" h="550">
 		<GRID name="Open Tasks" keyfield="task_id" linkfield="phase_id" table="vw_tasks" where="(task_completed = false)" user="entity_id">
 			<TEXTFIELD w="75" title="Project">project_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Phase">phase_name</TEXTFIELD>

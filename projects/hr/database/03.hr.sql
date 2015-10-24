@@ -94,6 +94,8 @@ CREATE TABLE applicants (
 	identity_card			varchar(50),
 	language				varchar(320),
 	
+	previous_salary			real,
+	expected_salary			real,
 	how_you_heard			varchar(320),
 	created					timestamp default current_timestamp,
 
@@ -888,6 +890,7 @@ CREATE VIEW vw_employees AS
 	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
 		vw_bank_branch.bank_branch_code, vw_department_roles.department_id, vw_department_roles.department_name, 
 		vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
+		locations.location_id, locations.location_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		sys_countrys.sys_country_name, nob.sys_country_name as birth_nation_name,  
 		disability.disability_id, disability.disability_name,		
@@ -910,6 +913,7 @@ CREATE VIEW vw_employees AS
 		vw_education_max.grades_obtained, vw_education_max.certificate_number
 	FROM employees INNER JOIN vw_bank_branch ON employees.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN vw_department_roles ON employees.department_role_id = vw_department_roles.department_role_id
+		INNER JOIN locations ON employees.location_id = locations.location_id
 		INNER JOIN currency ON employees.currency_id = currency.currency_id
 		INNER JOIN sys_countrys ON employees.nationality = sys_countrys.sys_country_id		
 		LEFT JOIN sys_countrys as nob ON employees.nation_of_birth = nob.sys_country_id
@@ -1187,7 +1191,7 @@ CREATE VIEW vw_review_points AS
 		review_points.org_id, review_points.review_point_id, review_points.review_point_name, 
 		review_points.review_points, review_points.details
 	FROM review_points INNER JOIN review_category ON review_points.review_category_id = review_category.review_category_id;
-
+	
 CREATE VIEW vw_job_reviews AS
 	SELECT entitys.entity_id, entitys.entity_name, job_reviews.job_review_id, job_reviews.total_points, 
 		job_reviews.org_id, job_reviews.review_date, job_reviews.review_done, 
@@ -1200,6 +1204,22 @@ CREATE VIEW vw_review_year AS
 	SELECT vw_job_reviews.org_id, vw_job_reviews.review_year
 	FROM vw_job_reviews
 	GROUP BY vw_job_reviews.org_id, vw_job_reviews.review_year;
+
+CREATE VIEW vw_all_job_reviews AS
+	SELECT a.org_id, a.review_year,  a.entity_id, a.employee_id, a.employee_name,
+		b.job_review_id, b.total_points, b.approve_status
+	FROM 
+		(SELECT vw_review_year.review_year, employees.org_id, employees.entity_id,
+			employees.employee_id, 
+			(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name
+		FROM vw_review_year INNER JOIN employees ON vw_review_year.org_id = employees.org_id
+		WHERE employees.active = true) as a
+	LEFT JOIN
+		(SELECT job_review_id, total_points, approve_status, entity_id, review_year
+		FROM vw_job_reviews) as b
+		
+	ON (a.entity_id = b.entity_id) AND (a.review_year = b.review_year);
+	
 
 CREATE VIEW vw_evaluation_points AS
 	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
@@ -1495,24 +1515,33 @@ CREATE TRIGGER ins_job_reviews AFTER INSERT ON job_reviews
 
 CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_org_id 				integer;
 	v_application_id		integer;
+	
+	reca					RECORD;
 	msg 					varchar(120);
 BEGIN
-	SELECT application_id, org_id INTO v_application_id
+	SELECT application_id INTO v_application_id
 	FROM applications 
-	WHERE (intake_ID = CAST($1 as int)) AND (entity_ID = CAST($2 as int));
+	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
+	
+	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
+	FROM applicants
+	WHERE (entity_id = $2::int);
 
-	SELECT org_id INTO v_org_id
-	FROM intake 
-	WHERE (intake_ID = CAST($1 as int));
+	IF(reca.entity_id is null) THEN
+		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
+		FROM employees
+		WHERE (entity_id = $2::int);
+	END IF;
 
-	IF v_application_id is null THEN
-		INSERT INTO applications (org_id, intake_id, entity_id, approve_status)
-		VALUES (v_org_id, CAST($1 as int), CAST($2 as int), 'Completed');
-		msg := 'Added Job application';
-	ELSE
+	IF v_application_id is not null THEN
 		msg := 'There is another application for the post.';
+	ELSIF (reca.previous_salary is null) OR (reca.expected_salary is null) THEN
+		msg := 'Kindly indicate your previous and expected salary';
+	ELSE
+		INSERT INTO applications (intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
+		VALUES ($1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		msg := 'Added Job application';
 	END IF;
 
 	return msg;

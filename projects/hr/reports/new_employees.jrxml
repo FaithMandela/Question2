@@ -3,16 +3,26 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="fromDate" class="java.lang.String">
+	<parameter name="from_date" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2011-01-01"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT employee_name,appointment_date, department_name, department_role_name, date_of_birth,
-age(CURRENT_TIMESTAMP, date_of_birth::Timestamp) AS age,
- active FROM vw_employees
-WHERE appointment_date >= '$P!{fromDate}'::date
+		<![CDATA[SELECT employee_name,appointment_date, department_name, department_role_name,
+	date_of_birth,
+	age(CURRENT_TIMESTAMP, date_of_birth::timestamp) AS age,
+	active,
+	'$P!{from_date}'::date as starting_from
+
+FROM vw_employees
+
+WHERE appointment_date >= '$P!{from_date}'::date
+
 $P!{organd}]]>
 	</queryString>
 	<field name="employee_name" class="java.lang.String"/>
@@ -22,6 +32,7 @@ $P!{organd}]]>
 	<field name="date_of_birth" class="java.sql.Date"/>
 	<field name="age" class="org.postgresql.util.PGInterval"/>
 	<field name="active" class="java.lang.Boolean"/>
+	<field name="starting_from" class="java.sql.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -30,7 +41,7 @@ $P!{organd}]]>
 			<staticText>
 				<reportElement x="0" y="17" width="802" height="20" uuid="ae8993ab-460b-43fa-be29-618bcccfe9b4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="13" isBold="true"/>
+					<font fontName="Times New Roman" size="13" isBold="true"/>
 				</textElement>
 				<text><![CDATA[New Employees Report]]></text>
 			</staticText>
@@ -39,72 +50,74 @@ $P!{organd}]]>
 	<pageHeader>
 		<band height="22">
 			<staticText>
-				<reportElement x="3" y="2" width="100" height="20" uuid="5e3ebcf1-7114-4175-bcbd-254ece741e13"/>
+				<reportElement x="3" y="2" width="129" height="20" uuid="5e3ebcf1-7114-4175-bcbd-254ece741e13"/>
 				<textElement verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Date From:]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="103" y="2" width="100" height="20" uuid="de7b8da8-07d4-4cbc-bf38-c6c7475d48a0"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{fromDate}]]></textFieldExpression>
+			<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
+				<reportElement x="132" y="2" width="223" height="20" uuid="de7b8da8-07d4-4cbc-bf38-c6c7475d48a0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{starting_from}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="31" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="36" y="0" width="89" height="30" backcolor="#FFE7CC" uuid="249d5edd-5ea1-4dea-a707-d116bec015da"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="36" y="0" width="96" height="30" backcolor="#FFE7CC" uuid="249d5edd-5ea1-4dea-a707-d116bec015da"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Employee]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="124" y="0" width="111" height="30" backcolor="#FFE7CC" uuid="4ad4609b-3be7-421e-9a17-e35b8baa0731"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="132" y="0" width="111" height="30" backcolor="#FFE7CC" uuid="4ad4609b-3be7-421e-9a17-e35b8baa0731"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Department]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="234" y="0" width="110" height="30" backcolor="#FFE7CC" uuid="686abd75-ff0d-4980-bbfd-a6a231dbc9f0"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="243" y="0" width="112" height="30" backcolor="#FFE7CC" uuid="686abd75-ff0d-4980-bbfd-a6a231dbc9f0"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Designation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="343" y="0" width="97" height="30" backcolor="#FFE7CC" uuid="c503e840-020f-402a-8a69-039bfb72ef05"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="355" y="0" width="100" height="30" backcolor="#FFE7CC" uuid="c503e840-020f-402a-8a69-039bfb72ef05"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Date Of Birth]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="439" y="0" width="97" height="30" backcolor="#FFE7CC" uuid="0cb5b3f9-7ce3-478f-b186-c4cfb0579b9f"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="455" y="0" width="113" height="30" backcolor="#FFE7CC" uuid="0cb5b3f9-7ce3-478f-b186-c4cfb0579b9f"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Employment Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="535" y="0" width="108" height="30" backcolor="#FFE7CC" uuid="337c1d1e-1283-4758-9300-0f3eb77ca7ae"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="568" y="0" width="88" height="30" backcolor="#FFE7CC" uuid="337c1d1e-1283-4758-9300-0f3eb77ca7ae"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Age today]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="642" y="0" width="110" height="30" backcolor="#FFE7CC" uuid="56484295-1e2f-40a4-8e19-4b0c7a775a1e"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement mode="Opaque" x="656" y="0" width="100" height="30" backcolor="#FFE7CC" uuid="56484295-1e2f-40a4-8e19-4b0c7a775a1e"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="3" y="0" width="34" height="30" backcolor="#FFE7CC" uuid="094f4b76-70ae-4ba8-a48d-af963ad888ba"/>
+				<reportElement mode="Opaque" x="3" y="0" width="33" height="30" backcolor="#FFE7CC" uuid="094f4b76-70ae-4ba8-a48d-af963ad888ba"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" isUnderline="false"/>
 				</textElement>
@@ -135,8 +148,8 @@ $P!{organd}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{department_name}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="468" y="0" width="100" height="20" uuid="6a194dd3-2ff1-4432-8f61-a2d67e56feac"/>
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
+				<reportElement x="455" y="0" width="113" height="20" uuid="6a194dd3-2ff1-4432-8f61-a2d67e56feac"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -164,7 +177,7 @@ $P!{organd}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{age}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
 				<reportElement x="355" y="0" width="100" height="20" uuid="727cf023-ffe4-4fdb-b95a-a41369a6a7f6"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>

@@ -78,7 +78,7 @@
 			<FORM name="Allowance" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="1">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Allowance Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formural" y="30" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formular" y="30" h="20" x="10">formural</TEXTFIELD>
 				<CHECKBOX w="150" title="Monthly Update" y="50" h="20" x="10">monthly_update</CHECKBOX>
 				<CHECKBOX w="150" title="In Payroll" default="true" y="50" h="20" x="290">in_payroll</CHECKBOX>
 				<CHECKBOX w="150" title="In Tax" default="true" y="70" h="20" x="10">in_tax</CHECKBOX>
@@ -100,7 +100,7 @@
 			<FORM name="Deduction" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="2">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Deduction Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formural" y="30" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formular" y="30" h="20" x="10">formural</TEXTFIELD>
 				<TEXTFIELD w="150" title="Order" default="0" y="50" h="20" x="10">adjustment_order</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" default="0" y="50" h="20" x="290">account_number</TEXTFIELD>
 				<CHECKBOX w="150" title="Monthly Update" y="70" h="20" x="10">monthly_update</CHECKBOX>
@@ -127,7 +127,7 @@
 			<FORM name="Expense" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="3">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Expense Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formural" y="30" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formular" y="30" h="20" x="10">formural</TEXTFIELD>
 				<CHECKBOX w="150" title="Monthly Update" y="50" h="20" x="10">monthly_update</CHECKBOX>
 				<CHECKBOX w="150" title="In Payroll" default="true" y="50" h="20" x="290">in_payroll</CHECKBOX>
 				<CHECKBOX w="150" title="In Tax" default="false" y="70" h="20" x="10">in_tax</CHECKBOX>
@@ -298,7 +298,7 @@
 			<FORM name="Deduction Type" keyfield="tax_type_id" table="tax_types">
 				<DEFAULT default="1">use_key</DEFAULT>
 				<TEXTFIELD w="430" title="Deduction Type" y="10" h="20" x="10">tax_type_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Formula" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10">formural</TEXTFIELD>
+				<TEXTFIELD w="430" title="Formular" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10">formural</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Deduction Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Linear" y="50" h="20" x="290">linear</CHECKBOX>
 				<CHECKBOX w="150" title="Percentage" y="70" h="20" x="10">percentage</CHECKBOX>
@@ -514,6 +514,31 @@
 					<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
+			<GRID name="Pensions" keyfield="pension_id" linkfield="entity_id" table="vw_pensions">
+				<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Pension Company">pension_company</TEXTFIELD>
+				<TEXTFIELD w="75" title="Pension Number">pension_number</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Use Formular">use_formura</CHECKBOX>
+				<TEXTFIELD w="75" title="Contribution">contribution_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Employer %">employer_ps</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Employer Amount">employer_amount</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Employer Formular">employer_formural</CHECKBOX>
+				<CHECKBOX w="75" title="Active">active</CHECKBOX>
+				<FORM name="Pensions" keyfield="pension_id" linkfield="entity_id" table="pensions">
+					<COMBOBOX w="430" title="Deduction" lptable="adjustments" where="(adjustment_type = 2)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Pension Company" y="30" h="20" x="10">pension_company</TEXTFIELD>
+					<TEXTFIELD w="150" title="Pension Number" y="30" h="20" x="290">pension_number</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
+					<CHECKBOX w="150" title="Use Formular" y="50" h="20" x="290">use_formura</CHECKBOX>
+					<CHECKBOX w="150" title="Active" y="70" h="20" x="10">active</CHECKBOX>
+					<COMBOBOX w="430" title="Contribution" lptable="adjustments" tab="Employer" lpkey="adjustment_id" where="(adjustment_type = 1)" y="2" h="20" x="10" lpfield="adjustment_name">contribution_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Employer %" tab="Employer" y="22" h="20" x="10">employer_ps</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Employer Amount" tab="Employer" y="22" h="20" x="290">employer_amount</TEXTDECIMAL>
+					<CHECKBOX w="150" title="Employer Formular" tab="Employer" y="42" h="20" x="10">employer_formural</CHECKBOX>
+					<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 			<GRID name="Claims" keyfield="claim_id" linkfield="entity_id" table="vw_claims">
 				<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
@@ -664,8 +689,10 @@
 				<ACTION fnct="generate_payroll" approval="1" role="hr,admin">Generate Payroll</ACTION>
 				<ACTION fnct="process_payroll" approval="1" role="payroll,admin">Process Payroll</ACTION>
 				<ACTION fnct="process_loans" role="payroll,admin">Process Loans</ACTION>
+				<ACTION fnct="process_pensions" role="payroll,admin">Process Pensions</ACTION>
 				<ACTION fnct="process_payroll" approval="2" role="payroll,admin">Request Approval</ACTION>
 				<ACTION fnct="process_ledger" role="payroll,admin">Process Ledger</ACTION>
+				<ACTION fnct="process_payroll" approval="3" role="payroll,admin">Close Period</ACTION>
 			</ACTIONS>
 			<GRID name="Employee Month" keyfield="employee_month_id" orderby="entity_name" linkfield="period_id" table="vw_employee_month">
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
@@ -890,8 +917,9 @@
 				<TEXTDECIMAL w="100" title="Per Diem Tax Limit" default="2000" lw="150" y="30" h="20" x="290">per_diem_tax_limit</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Activated" default="true" y="50" h="20" x="10">activated</CHECKBOX>
 				<CHECKBOX w="150" title="Closed" y="50" h="20" x="290">closed</CHECKBOX>
-				<TEXTFIELD w="150" title="Payroll Account" default="8000" y="70" h="20" x="10">gl_payroll_account</TEXTFIELD>
-				<TEXTFIELD w="150" title="Bank Account" default="3200" y="70" h="20" x="290">gl_bank_account</TEXTFIELD>
+				<TEXTFIELD w="150" title="Payroll GL Account" default="8000" y="70" h="20" x="10">gl_payroll_account</TEXTFIELD>
+				<TEXTFIELD w="150" title="Bank GL Account" default="3200" y="70" h="20" x="290">gl_bank_account</TEXTFIELD>
+				<TEXTFIELD w="150" title="Advance GL Account" default="8000" y="90" h="20" x="10">gl_advance_account</TEXTFIELD>
 				<TEXTAREA w="550" tab="Bank Address" y="1" h="170" x="10">bank_address</TEXTAREA>
 				<TEXTAREA w="550" tab="Bank Header" y="1" h="170" x="10">bank_header</TEXTAREA>
 				<TEXTAREA w="550" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
@@ -959,6 +987,9 @@
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<ACTIONS>
+				<ACTION fnct="process_payroll" approval="4" role="payroll,admin">Open Period</ACTION>
+			</ACTIONS>
 			<GRID name="Employee Month" keyfield="employee_month_id" orderby="entity_name" linkfield="period_id" table="vw_employee_month">
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
@@ -1445,6 +1476,7 @@
 			<DRILLDOWN name="Pay Groups" keyfield="pay_group_id" table="pay_groups" listfield="pay_group_name" filter="paygroupid" pos="top"></DRILLDOWN>
 			<JASPER name="Banking" reportfile="banking.jasper"></JASPER>
 			<JASPER name="Banking by Bank" reportfile="banking_2.jasper"></JASPER>
+			<JASPER name="Full Banking" reportfile="banking_3.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="770" name="Adjustments" key="107" h="750">

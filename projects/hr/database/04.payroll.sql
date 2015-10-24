@@ -74,6 +74,31 @@ CREATE INDEX default_banking_bank_branch_id ON default_banking (bank_branch_id);
 CREATE INDEX default_banking_currency_id ON default_banking (currency_id);
 CREATE INDEX default_banking_org_id ON default_banking(org_id);
 
+CREATE TABLE pensions (
+	pension_id 				serial primary key,
+	entity_id				integer references entitys,
+	adjustment_id			integer references adjustments,
+	contribution_id			integer references adjustments,
+	org_id					integer references orgs,
+	
+	pension_company			varchar(50) not null,
+	pension_number			varchar(50),
+	active					boolean default true,
+	
+	amount					float default 0 not null,
+	use_formura				boolean default false not null,
+	
+	employer_ps				float default 0 not null,
+	employer_amount			float default 0 not null,
+	employer_formural		boolean default false not null,
+	
+	details					text
+);
+CREATE INDEX pension_entity_id ON pensions (entity_id);
+CREATE INDEX pension_adjustment_id ON pensions (adjustment_id);
+CREATE INDEX pension_contribution_id ON pensions (contribution_id);
+CREATE INDEX pension_org_id ON pensions (org_id);
+
 CREATE TABLE employee_month (
 	employee_month_id		serial primary key,
 	entity_id				integer references entitys not null,
@@ -158,6 +183,7 @@ CREATE TABLE employee_adjustments (
 	employee_adjustment_id	serial primary key,
 	employee_month_id		integer references employee_month not null,
 	adjustment_id			integer references adjustments not null,
+	pension_id				integer references pensions,
 	org_id					integer references orgs,
 	adjustment_type			integer,
 	adjustment_factor		integer default 1 not null,
@@ -177,6 +203,7 @@ CREATE TABLE employee_adjustments (
 );
 CREATE INDEX employee_adjustments_employee_month_id ON employee_adjustments (employee_month_id);
 CREATE INDEX employee_adjustments_adjustment_id ON employee_adjustments (adjustment_id);
+CREATE INDEX employee_adjustments_pension_id ON employee_adjustments (pension_id);
 CREATE INDEX employee_adjustments_org_id ON employee_adjustments(org_id);
 
 CREATE TABLE claims (
@@ -342,7 +369,7 @@ CREATE VIEW vw_default_adjustments AS
 		default_adjustments.final_date, default_adjustments.narrative
 	FROM default_adjustments INNER JOIN vw_adjustments ON default_adjustments.adjustment_id = vw_adjustments.adjustment_id
 		INNER JOIN entitys ON default_adjustments.entity_id = entitys.entity_id;
-		
+
 CREATE VIEW vw_default_banking AS
 	SELECT entitys.entity_id, entitys.entity_name, 
 		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
@@ -354,6 +381,18 @@ CREATE VIEW vw_default_banking AS
 		INNER JOIN vw_bank_branch ON default_banking.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN currency ON default_banking.currency_id = currency.currency_id;
 
+CREATE VIEW vw_pensions AS
+	SELECT entitys.entity_id, entitys.entity_name,
+		adjustments.adjustment_id, adjustments.adjustment_name, 
+		pensions.contribution_id, contributions.adjustment_name as contribution_name, 
+		pensions.org_id, pensions.pension_id, pensions.pension_company, pensions.pension_number, 
+		pensions.amount, pensions.use_formura, pensions.employer_ps, pensions.employer_amount, 
+		pensions.employer_formural, pensions.active, pensions.details
+	FROM pensions INNER JOIN entitys ON pensions.entity_id = entitys.entity_id
+		INNER JOIN adjustments ON pensions.adjustment_id = adjustments.adjustment_id
+		INNER JOIN adjustments as contributions ON pensions.contribution_id = contributions.adjustment_id;
+	
+	
 CREATE OR REPLACE FUNCTION getAdjustment(int, int, int) RETURNS float AS $$
 DECLARE
 	adjustment float;
@@ -581,6 +620,7 @@ CREATE VIEW vw_employee_tax_types AS
 		eml.end_date, eml.gl_payroll_account,
 		eml.entity_id, eml.entity_name, eml.employee_id, eml.identity_card,
 		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, tax_types.tax_type_number,
+		tax_types.account_number,
 		employee_tax_types.org_id, employee_tax_types.employee_tax_type_id, employee_tax_types.tax_identification, 
 		employee_tax_types.amount, 
 		employee_tax_types.additional, employee_tax_types.employer, employee_tax_types.narrative,
@@ -626,11 +666,11 @@ CREATE VIEW vw_employee_tax_month AS
 
 	FROM vw_employee_month as emp INNER JOIN employee_tax_types ON emp.employee_month_id = employee_tax_types.employee_month_id
 		INNER JOIN tax_types ON employee_tax_types.tax_type_id = tax_types.tax_type_id;
-
 	
 CREATE VIEW vw_employee_advances AS
-	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
-		eml.month_id, eml.period_year, eml.period_month,
+	SELECT eml.employee_month_id, eml.period_id, eml.start_date, eml.end_date,
+		eml.month_id, eml.period_year, eml.period_month, 
+		eml.gl_payroll_account, eml.gl_bank_account,
 		eml.entity_id, eml.entity_name, eml.employee_id,
 		employee_advances.org_id, employee_advances.employee_advance_id, employee_advances.pay_date, employee_advances.pay_period, 
 		employee_advances.Pay_upto, employee_advances.amount, employee_advances.in_payroll, employee_advances.completed, 
@@ -638,8 +678,9 @@ CREATE VIEW vw_employee_advances AS
 	FROM employee_advances INNER JOIN vw_employee_month_list as eml ON employee_advances.employee_month_id = eml.employee_month_id;
 
 CREATE VIEW vw_advance_deductions AS
-	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
+	SELECT eml.employee_month_id, eml.period_id, eml.start_date, eml.end_date,
 		eml.month_id, eml.period_year, eml.period_month,
+		eml.gl_payroll_account, eml.gl_bank_account,
 		eml.entity_id, eml.entity_name, eml.employee_id,
 		advance_deductions.org_id, advance_deductions.advance_deduction_id, advance_deductions.pay_date, advance_deductions.amount, 
 		advance_deductions.in_payroll, advance_deductions.narrative
@@ -715,7 +756,7 @@ CREATE VIEW vw_employee_banking AS
 	FROM employee_banking INNER JOIN vw_employee_month_list as eml ON employee_banking.employee_month_id = eml.employee_month_id
 		INNER JOIN vw_bank_branch ON employee_banking.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN currency ON employee_banking.currency_id = currency.currency_id;
-	
+
 CREATE VIEW vw_employee_per_diem_ledger AS
 	(SELECT vw_employee_per_diem.org_id, vw_employee_per_diem.period_id, vw_employee_per_diem.travel_date, 'Transport' as description, 
 		vw_employee_per_diem.post_account, vw_employee_per_diem.entity_name, vw_employee_per_diem.full_amount as dr_amt, 0.0 as cr_amt
@@ -733,48 +774,60 @@ CREATE VIEW vw_employee_per_diem_ledger AS
 	WHERE (vw_employee_per_diem.approve_status = 'Approved'));
 
 CREATE VIEW vw_payroll_ledger_trx AS
-	SELECT org_id, period_id, end_date, description, gl_payroll_account, entity_name, dr_amt, cr_amt 
+	SELECT org_id, period_id, end_date, description, gl_payroll_account, entity_name, employee_id,
+		dr_amt, cr_amt 
 	FROM 
 	((SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, 'BASIC SALARY' as description, 
-		vw_employee_month.gl_payroll_account, vw_employee_month.entity_name, 
+		vw_employee_month.gl_payroll_account, vw_employee_month.entity_name, vw_employee_month.employee_id,
 		vw_employee_month.basic_pay as dr_amt, 0.0 as cr_amt
 	FROM vw_employee_month)
 	UNION
 	(SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, 'SALARY PAYMENTS',
-		vw_employee_month.gl_bank_account, vw_employee_month.entity_name, 0.0 as sum_basic_pay, 
+		vw_employee_month.gl_bank_account, vw_employee_month.entity_name, vw_employee_month.employee_id,
+		0.0 as sum_basic_pay, 
 		vw_employee_month.banked as sum_banked
-	FROM vw_employee_month
-	WHERE (vw_employee_month.bank_branch_id <> 0) AND (vw_employee_month.banked <> 0))
-	UNION
-	(SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, 'PETTY CASH PAYMENTS', 
-		'3305', vw_employee_month.entity_name, 0.0 as sum_basic_pay, vw_employee_month.banked as sum_banked
-	FROM vw_employee_month
-	WHERE (vw_employee_month.bank_branch_id = 0) AND (vw_employee_month.banked <> 0))
+	FROM vw_employee_month)
 	UNION
 	(SELECT vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, vw_employee_tax_types.tax_type_name, 
-		vw_employee_tax_types.account_id::varchar(32), vw_employee_tax_types.entity_name, 0.0, 
+		vw_employee_tax_types.account_number, vw_employee_tax_types.entity_name, vw_employee_tax_types.employee_id,
+		0.0, 
 		(vw_employee_tax_types.amount + vw_employee_tax_types.additional + vw_employee_tax_types.employer) 
 	FROM vw_employee_tax_types)
 	UNION
 	(SELECT vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, 'Employer - ' || vw_employee_tax_types.tax_type_name, 
-		'8025', vw_employee_tax_types.entity_name, vw_employee_tax_types.employer, 0.0
+		vw_employee_tax_types.account_number, vw_employee_tax_types.entity_name, vw_employee_tax_types.employee_id,
+		vw_employee_tax_types.employer, 0.0
 	FROM vw_employee_tax_types
 	WHERE (vw_employee_tax_types.employer <> 0))
 	UNION
 	(SELECT vw_employee_adjustments.org_id, vw_employee_adjustments.period_id, vw_employee_adjustments.end_date, vw_employee_adjustments.adjustment_name, vw_employee_adjustments.account_number, 
-		vw_employee_adjustments.entity_name,
+		vw_employee_adjustments.entity_name, vw_employee_adjustments.employee_id,
 		SUM(CASE WHEN vw_employee_adjustments.adjustment_type = 1 THEN vw_employee_adjustments.amount - vw_employee_adjustments.paid_amount ELSE 0 END) as dr_amt,
 		SUM(CASE WHEN vw_employee_adjustments.adjustment_type = 2 THEN vw_employee_adjustments.amount - vw_employee_adjustments.paid_amount ELSE 0 END) as cr_amt
 	FROM vw_employee_adjustments
 	WHERE (vw_employee_adjustments.visible = true) AND (vw_employee_adjustments.adjustment_type < 3)
 	GROUP BY vw_employee_adjustments.org_id, vw_employee_adjustments.period_id, vw_employee_adjustments.end_date, vw_employee_adjustments.adjustment_name, vw_employee_adjustments.account_number, 
-		vw_employee_adjustments.entity_name)
+		vw_employee_adjustments.entity_name, vw_employee_adjustments.employee_id)
 	UNION
 	(SELECT vw_employee_per_diem.org_id, vw_employee_per_diem.period_id, vw_employee_per_diem.travel_date, 'Transport' as description, 
-		vw_employee_per_diem.post_account, vw_employee_per_diem.entity_name, 
+		vw_employee_per_diem.post_account, vw_employee_per_diem.entity_name, vw_employee_per_diem.employee_id,
 		(vw_employee_per_diem.full_amount - vw_employee_per_diem.Cash_paid) as dr_amt, 0.0 as cr_amt
 	FROM vw_employee_per_diem
-	WHERE (vw_employee_per_diem.approve_status = 'Approved'))) as a
+	WHERE (vw_employee_per_diem.approve_status = 'Approved'))
+	UNION
+	(SELECT ea.org_id, ea.period_id, ea.end_date, 'SALARY ADVANCE' as description, 
+		ea.gl_payroll_account, ea.entity_name, ea.employee_id,
+		ea.amount as dr_amt, 
+		0.0 as cr_amt
+	FROM vw_employee_advances as ea
+	WHERE (ea.in_payroll = true))
+	UNION
+	(SELECT ead.org_id, ead.period_id, ead.end_date, 'ADVANCE DEDUCTION' as description, 
+		ead.gl_payroll_account, ead.entity_name, ead.employee_id,
+		0.0 as dr_amt, 
+		ead.amount as cr_amt
+	FROM vw_advance_deductions as ead
+	WHERE (ead.in_payroll = true))) as a
 	ORDER BY gl_payroll_account desc, dr_amt desc, cr_amt desc;
 
 CREATE VIEW vw_payroll_ledger AS
@@ -790,27 +843,21 @@ CREATE VIEW vw_payroll_ledger AS
 	(SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, 'SALARY PAYMENTS',
 		vw_employee_month.gl_bank_account, 0.0 as sum_basic_pay, sum(vw_employee_month.banked) as sum_banked
 	FROM vw_employee_month
-	WHERE (vw_employee_month.bank_branch_id <> 0) AND (vw_employee_month.banked <> 0)
-	GROUP BY vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, vw_employee_month.gl_bank_account)
-	UNION
-	(SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, 'PETTY CASH PAYMENTS', 
-		'3305', 0.0 as sum_basic_pay, sum(vw_employee_month.banked) as sum_banked
-	FROM vw_employee_month
-	WHERE (vw_employee_month.bank_branch_id = 0) AND (vw_employee_month.banked <> 0)
 	GROUP BY vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, vw_employee_month.gl_bank_account)
 	UNION
 	(SELECT vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, vw_employee_tax_types.tax_type_name, 
-		vw_employee_tax_types.account_id::varchar(32), 0.0, 
+		vw_employee_tax_types.account_number, 0.0, 
 		sum(vw_employee_tax_types.amount + vw_employee_tax_types.additional + vw_employee_tax_types.employer) 
 	FROM vw_employee_tax_types
 	GROUP BY vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, vw_employee_tax_types.tax_type_name, 
-		vw_employee_tax_types.account_id)
+		vw_employee_tax_types.account_number)
 	UNION
 	(SELECT vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, 'Employer - ' || vw_employee_tax_types.tax_type_name, 
-		'8025', SUM(vw_employee_tax_types.employer), 0.0
+		vw_employee_tax_types.account_number, SUM(vw_employee_tax_types.employer), 0.0
 	FROM vw_employee_tax_types
 	WHERE (vw_employee_tax_types.employer <> 0)
-	GROUP BY vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, vw_employee_tax_types.tax_type_name)
+	GROUP BY vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, vw_employee_tax_types.tax_type_name,
+		vw_employee_tax_types.account_number)
 	UNION
 	(SELECT vw_employee_adjustments.org_id, vw_employee_adjustments.period_id, vw_employee_adjustments.end_date, vw_employee_adjustments.adjustment_name, vw_employee_adjustments.account_number, 
 		SUM(CASE WHEN vw_employee_adjustments.adjustment_type = 1 THEN vw_employee_adjustments.amount - vw_employee_adjustments.paid_amount ELSE 0 END) as dr_amt,
@@ -825,7 +872,23 @@ CREATE VIEW vw_payroll_ledger AS
 		sum(vw_employee_per_diem.full_amount - vw_employee_per_diem.Cash_paid) as dr_amt, 0.0 as cr_amt
 	FROM vw_employee_per_diem
 	WHERE (vw_employee_per_diem.approve_status = 'Approved')
-	GROUP BY vw_employee_per_diem.org_id, vw_employee_per_diem.period_id, vw_employee_per_diem.travel_date, vw_employee_per_diem.post_account)) as a
+	GROUP BY vw_employee_per_diem.org_id, vw_employee_per_diem.period_id, vw_employee_per_diem.travel_date, vw_employee_per_diem.post_account)
+	UNION
+	(SELECT ea.org_id, ea.period_id, ea.end_date, 'SALARY ADVANCE' as description, 
+		ea.gl_payroll_account, 
+		sum(ea.amount) as dr_amt, 
+		0.0 as cr_amt
+	FROM vw_employee_advances as ea
+	WHERE (ea.in_payroll = true)
+	GROUP BY ea.org_id, ea.period_id, ea.end_date, ea.gl_payroll_account)
+	UNION
+	(SELECT ead.org_id, ead.period_id, ead.end_date, 'ADVANCE DEDUCTION' as description, 
+		ead.gl_payroll_account, 
+		0.0 as dr_amt, 
+		sum(ead.amount) as cr_amt
+	FROM vw_advance_deductions as ead
+	WHERE (ead.in_payroll = true)
+	GROUP BY ead.org_id, ead.period_id, ead.end_date, ead.gl_payroll_account)) as a
 	ORDER BY gl_payroll_account desc, dr_amt desc, cr_amt desc;
 	
 	
@@ -1150,6 +1213,16 @@ BEGIN
 		WHERE (period_id = CAST($1 as int));
 
 		msg := 'Application for approval';
+	ELSIF ($3 = '3') THEN
+		UPDATE periods SET closed = true
+		WHERE (period_id = CAST($1 as int));
+
+		msg := 'Application for approval';
+	ELSIF ($3 = '4') THEN
+		UPDATE periods SET closed = false
+		WHERE (period_id = CAST($1 as int));
+
+		msg := 'Application for approval';
 	END IF;
 
 	return msg;
@@ -1390,6 +1463,113 @@ BEGIN
 		msg := 'Pay step incremented';
 	END IF;
 
-	return msg;
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION process_pensions(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec							RECORD;
+	adj							RECORD;
+	v_period_id					integer;
+	v_org_id					integer;
+	v_employee_month_id			integer;
+	v_employee_adjustment_id	integer;
+	v_exchange_rate				real;
+	v_amount					real;
+	msg							varchar(120);
+BEGIN
+
+	SELECT period_id, org_id INTO v_period_id, v_org_id
+	FROM periods WHERE period_id = $1::int;
+	
+	FOR rec IN SELECT pension_id, entity_id, adjustment_id, contribution_id, 
+       pension_company, pension_number, amount, use_formura, 
+       employer_ps, employer_amount, employer_formural
+	FROM pensions WHERE (active = true) AND (org_id = v_org_id) LOOP
+	
+		SELECT employee_month_id INTO v_employee_month_id
+		FROM employee_month
+		WHERE (period_id = v_period_id) AND (entity_id = rec.entity_id);
+		
+		--- Deduction
+		SELECT employee_adjustment_id INTO v_employee_adjustment_id
+		FROM employee_adjustments
+		WHERE (employee_month_id = v_employee_month_id) AND (pension_id = rec.pension_id)
+			AND (adjustment_id = rec.adjustment_id);
+		
+		SELECT adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, 
+			adjustment_order, earning_code, formural, monthly_update, in_payroll, 
+			in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, 
+			tax_relief_ps, tax_max_allowed, account_number
+		INTO adj
+		FROM adjustments
+		WHERE (adjustment_id = rec.adjustment_id);
+		
+		IF(rec.use_formura = true) AND (adj.formural != null)THEN
+			EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
+			INTO v_amount;
+		ELSIF(rec.amount > 0)THEN
+			v_amount := rec.amount;
+		END IF;
+		
+		IF(v_employee_adjustment_id is null)THEN
+			INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
+				adjustment_id, adjustment_type, adjustment_factor, 
+				in_payroll, in_tax, visible,
+				exchange_rate, pay_date, amount)
+			VALUES (v_employee_month_id, rec.pension_id, v_org_id,
+				adj.adjustment_id, adj.adjustment_type, -1, 
+				adj.in_payroll, adj.in_tax, adj.visible,
+				1, current_date, v_amount);
+		ELSE
+			UPDATE employee_adjustments SET amount = v_amount
+			WHERE employee_adjustment_id = v_employee_adjustment_id;
+		END IF;
+	
+		--- Employer contribution
+		IF((rec.employer_ps > 0) OR (rec.employer_amount > 0) OR (rec.employer_formural = true))THEN
+			SELECT employee_adjustment_id INTO v_employee_adjustment_id
+			FROM employee_adjustments
+			WHERE (employee_month_id = v_employee_month_id) AND (pension_id = rec.pension_id)
+				AND (adjustment_id = rec.contribution_id);
+			
+			SELECT adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, 
+				adjustment_order, earning_code, formural, monthly_update, in_payroll, 
+				in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, 
+				tax_relief_ps, tax_max_allowed, account_number
+			INTO adj
+			FROM adjustments
+			WHERE (adjustment_id = rec.contribution_id);
+			
+			IF(rec.employer_formural = true) AND (adj.formural != null)THEN
+				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
+				INTO v_amount;
+			ELSIF(rec.employer_ps > 0)THEN
+				v_amount := v_amount * rec.employer_ps / 100;
+			ELSIF(rec.employer_amount > 0)THEN
+				v_amount := rec.employer_amount;
+			END IF;
+			
+			IF(v_employee_adjustment_id is null)THEN
+				INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
+					adjustment_id, adjustment_type, adjustment_factor, 
+					in_payroll, in_tax, visible,
+					exchange_rate, pay_date, amount)
+				VALUES (v_employee_month_id, rec.pension_id, v_org_id,
+					adj.adjustment_id, adj.adjustment_type, 1, 
+					adj.in_payroll, adj.in_tax, adj.visible,
+					1, current_date, v_amount);
+			ELSE
+				UPDATE employee_adjustments SET amount = v_amount
+				WHERE employee_adjustment_id = v_employee_adjustment_id;
+			END IF;
+		END IF;
+		
+	END LOOP;
+
+	msg := 'Pension Processed';
+
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
