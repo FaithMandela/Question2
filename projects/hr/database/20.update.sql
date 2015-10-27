@@ -32,6 +32,13 @@ ALTER TABLE periods ADD 	gl_advance_account		varchar(32);
 
 ALTER TABLE applicants ADD applicant_phone varchar(50);
 
+ALTER TABLE skills ADD 	state_skill				varchar(50);
+
+INSERT INTO skill_category (org_id, skill_category_id, skill_category_name, details) VALUES (0, 0, 'Others', NULL);
+INSERT INTO skill_types (org_id, skill_type_id, skill_category_id, skill_type_name) VALUES (0, 0, 0, 'Indicate Your Skill');
+
+
+
 DROP VIEW vw_intern_evaluations;
 DROP VIEW vw_applicants;	
 DROP VIEW vw_employees;
@@ -43,6 +50,23 @@ DROP VIEW vw_employee_tax_types;
 DROP VIEW vw_default_tax_types;
 DROP VIEW vw_period_tax_types;
 DROP VIEW vw_tax_types;
+DROP VIEW vw_skills;
+
+CREATE VIEW vw_skills AS
+	SELECT vw_skill_types.skill_category_id, vw_skill_types.skill_category_name, vw_skill_types.skill_type_id, 
+		vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced, 
+		entitys.entity_id, entitys.entity_name, skills.skill_id, skills.skill_level, skills.aquired, skills.training_date, 
+		skills.org_id, skills.trained, skills.training_institution, skills.training_cost, skills.details,
+		
+		(CASE WHEN vw_skill_types.skill_type_id = 0 THEN skills.state_skill
+			ELSE vw_skill_types.skill_type_name END) as skill_type_name,
+		
+		(CASE WHEN skill_level = 1 THEN 'Basic' WHEN skill_level = 2 THEN 'Intermediate' 
+			WHEN skill_level = 3 THEN 'Advanced' ELSE 'None' END) as skill_level_name,
+		(CASE WHEN skill_level = 1 THEN vw_skill_types.Basic WHEN skill_level = 2 THEN vw_skill_types.Intermediate 
+			WHEN skill_level = 3 THEN vw_skill_types.Advanced ELSE 'None' END) as skill_level_details
+	FROM skills INNER JOIN entitys ON skills.entity_id = entitys.entity_id
+		INNER JOIN vw_skill_types ON skills.skill_type_id = vw_skill_types.skill_type_id;
 
 CREATE VIEW vw_tax_types AS
 	SELECT vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name, 

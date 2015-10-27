@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cv_applicant" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="13997835-ccdf-4fa2-aeab-93e109ae9bb8">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cv_applicant_2" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="13997835-ccdf-4fa2-aeab-93e109ae9bb8">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -70,7 +70,7 @@ $P!{organd};]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="366" splitType="Stretch">
+		<band height="286" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="6" y="5" width="99" height="15" forecolor="#000000" uuid="1ae1d73d-a22c-4ec1-a536-0138fb322988"/>
 				<textElement>
@@ -211,22 +211,8 @@ $P!{organd};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{town}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement style="Column header" x="6" y="143" width="99" height="15" forecolor="#000000" uuid="55891de2-bc18-447f-b132-6aab9cc1ae47"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Objective]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="6" y="158" width="544" height="23" uuid="39aaa25e-97f7-4513-a7be-283a39dd3ef7"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{objective}]]></textFieldExpression>
-			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="184" width="555" height="17" uuid="43f48504-1e1e-4c1a-8848-eedd68ccd5e7"/>
+				<reportElement positionType="Float" x="0" y="163" width="555" height="17" uuid="43f48504-1e1e-4c1a-8848-eedd68ccd5e7"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -234,7 +220,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_education.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="205" width="555" height="17" uuid="a1fe17a8-e45c-4f22-b1fc-742c200cf637"/>
+				<reportElement positionType="Float" x="0" y="183" width="555" height="17" uuid="a1fe17a8-e45c-4f22-b1fc-742c200cf637"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -242,7 +228,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employment.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="226" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
+				<reportElement positionType="Float" x="0" y="144" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -250,21 +236,21 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_skills.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="6" y="296" width="99" height="15" forecolor="#000000" uuid="eafc4893-9da3-4a27-8f53-f3c28f6cea29"/>
+				<reportElement style="Column header" positionType="Float" x="6" y="246" width="99" height="15" forecolor="#000000" uuid="eafc4893-9da3-4a27-8f53-f3c28f6cea29"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Interest]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="6" y="311" width="544" height="23" uuid="b93cf248-ccc4-499d-8f80-b022b0957be0"/>
+				<reportElement style="Detail" positionType="Float" x="115" y="246" width="440" height="15" uuid="b93cf248-ccc4-499d-8f80-b022b0957be0"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{interests}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="340" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
+				<reportElement positionType="Float" x="0" y="264" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -272,7 +258,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_referees.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="248" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
+				<reportElement positionType="Float" x="0" y="203" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -280,7 +266,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_seminars.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="270" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
+				<reportElement positionType="Float" x="0" y="224" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>

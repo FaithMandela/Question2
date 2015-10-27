@@ -290,6 +290,7 @@ CREATE TABLE skills (
 	entity_id				integer references entitys,
 	skill_type_id			integer references skill_types,
 	org_id					integer references orgs,
+	state_skill				varchar(50),
 	skill_level				integer default 1 not null,
 	aquired					boolean default false not null,
 	training_date			date,
@@ -962,15 +963,19 @@ CREATE VIEW vw_cv_projects AS
 
 CREATE VIEW vw_skill_types AS
 	SELECT skill_category.skill_category_id, skill_category.skill_category_name, skill_types.skill_type_id, 
-		skill_types.org_id, skill_types.skill_type_name, skill_types.basic, skill_types.intermediate, 
-		skill_types.advanced, skill_types.details
+		skill_types.org_id, skill_types.skill_type_name, 
+		skill_types.basic, skill_types.intermediate, skill_types.advanced, skill_types.details
 	FROM skill_types INNER JOIN skill_category ON skill_types.skill_category_id = skill_category.skill_category_id;
 
 CREATE VIEW vw_skills AS
 	SELECT vw_skill_types.skill_category_id, vw_skill_types.skill_category_name, vw_skill_types.skill_type_id, 
-		vw_skill_types.skill_type_name, vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced, 
+		vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced, 
 		entitys.entity_id, entitys.entity_name, skills.skill_id, skills.skill_level, skills.aquired, skills.training_date, 
 		skills.org_id, skills.trained, skills.training_institution, skills.training_cost, skills.details,
+		
+		(CASE WHEN vw_skill_types.skill_type_id = 0 THEN skills.state_skill
+			ELSE vw_skill_types.skill_type_name END) as skill_type_name,
+		
 		(CASE WHEN skill_level = 1 THEN 'Basic' WHEN skill_level = 2 THEN 'Intermediate' 
 			WHEN skill_level = 3 THEN 'Advanced' ELSE 'None' END) as skill_level_name,
 		(CASE WHEN skill_level = 1 THEN vw_skill_types.Basic WHEN skill_level = 2 THEN vw_skill_types.Intermediate 

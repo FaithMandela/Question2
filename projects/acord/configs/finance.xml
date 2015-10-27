@@ -1,0 +1,199 @@
+<APP>
+	<MENU name="Finance MIS Module">
+		<MENU name="Regular Entry Dashboard">
+			<MENU name="Project details">1</MENU>
+			<MENU name="Contracts Details">2</MENU>
+		</MENU>
+		<MENU name="Reports">
+			<MENU name="Project Reports">10</MENU>
+			<MENU name="Contract Reports">11</MENU>
+			<MENU name="Grant Reports">12</MENU>
+		</MENU>
+		<MENU name="Control Panel">
+			<MENU name="Exchange Codes">3</MENU>
+			<MENU name="ACORD Offices">4</MENU>
+			<MENU name="Reports">
+				<MENU name="Exchange Codes List">13</MENU>
+				<MENU name="Expense Votes List">14</MENU>
+				<MENU name="Income Votes List">15</MENU>
+			</MENU>
+		</MENU>
+		<MENU name="PDU" xml="acord.xml">0</MENU>
+	</MENU>
+	<DESK w="585" name="Project Details" type="vert" key="1" h="500">
+		<GRID name="Projects" keyfield="projectid" table="projects" filterkey="3" key="2">
+			<TEXTFIELD w="40" title="Project Name">projectname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Location">location</TEXTFIELD>
+			<TEXTFIELD w="40" title="email">email</TEXTFIELD>
+			<TEXTFIELD w="40" title="Telephone">telephone</TEXTFIELD>
+			<FORM name="Projects" keyfield="projectid" table="projects" key="1">
+				<TEXTFIELD w="150" title="Starting Date" y="10" h="20" x="10">startingdate</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Opening Balance" y="10" h="20" x="420">openingbalance</TEXTDECIMAL>
+				<TEXTAREA w="250" title="History" y="50" h="80" x="10">history</TEXTAREA>
+				<TEXTAREA w="250" title="Core" y="50" h="80" x="420">core</TEXTAREA>
+				<TEXTAREA w="660" title="Details" y="140" h="80" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name=" Project Budget" keyfield="budgetid" linkfield="projectid" table="budgetview" key="3">
+				<TEXTFIELD w="40" title="Project Name">projectname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Expenditure">expenditure</TEXTFIELD>
+				<TEXTFIELD w="40" title="Budget Type">budgettype</TEXTFIELD>
+				<TEXTFIELD w="40" title="Global Amount">globalamount</TEXTFIELD>
+				<TEXTFIELD w="40" title="Field Amount">fieldamount</TEXTFIELD>
+				<TEXTFIELD w="40" title="Get-by-Date">getbydate</TEXTFIELD>
+				<TEXTFIELD w="40" title="Spend-by-Date">spendbydate</TEXTFIELD>
+			</GRID>
+			<FORM name="Project Budget" keyfield="budgetid" linkfield="projectid" table="budget" key="1" inputkey="2">
+				<TEXTFIELD w="150" title="Budget Type" lw="100" y="10" h="20" x="10">budgettype</TEXTFIELD>
+				<TEXTFIELD w="100" title="Global Amount" lw="100" y="10" h="20" x="290">globalamount</TEXTFIELD>
+				<TEXTFIELD w="100" title="Field Amount" lw="100" y="10" h="20" x="520">fieldamount</TEXTFIELD>
+				<COMBOBOX w="150" title="Office" lptable="offices" lw="100" y="40" h="20" x="10" lpfield="officename">officeid</COMBOBOX>
+				<TEXTFIELD w="100" title="Get-by-Date" lw="100" y="40" h="20" x="290">getbydate</TEXTFIELD>
+				<TEXTFIELD w="90" title="Spend-by-Date" lw="110" y="40" h="20" x="520">spendbydate</TEXTFIELD>
+				<COMBOBOX w="150" title="Subtheme" lptable="subthemes" lw="100" y="70" h="20" x="10" lpfield="subthemename">subthemeid</COMBOBOX>
+				<TEXTAREA w="610" title="Details" lw="100" y="100" h="80" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Project Expenditure" keyfield="expenditureid" linkfield="projectid" table="expenditure" key="4">
+				<TEXTFIELD w="40" title="Project">projectid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Office">officeid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Amount">amount</TEXTFIELD>
+				<TEXTFIELD w="40" title="Period-Date">prdate</TEXTFIELD>
+				<FORM name="Project Expenditure" keyfield="expenditureid" linkfield="projectid" table="expenditure" key="1" inputkey="2">
+					<COMBOBOX w="160" title="Project" lptable="projects" lw="85" y="10" h="20" x="10" lpfield="projectname">projectid</COMBOBOX>
+					<COMBOBOX w="170" title="Office" lptable="offices" lw="70" y="10" h="20" x="290" lpfield="officename">officeid</COMBOBOX>
+					<COMBOBOX w="200" title="Subtheme" lptable="subthemes" lw="80" y="10" h="20" x="550" lpfield="subthemename">subthemeid</COMBOBOX>
+					<TEXTFIELD w="150" title="Amount" lw="85" y="40" h="20" x="10">amount</TEXTFIELD>
+					<TEXTFIELD w="140" title="Period Date" lw="95" y="40" h="20" x="290">prdate</TEXTFIELD>
+					<TEXTAREA w="740" title="Details" lw="85" y="70" h="80" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+		</GRID>
+		<FILTER name="Projects Filter" key="3">
+			<TEXTFIELD w="140" title="Programme Name" y="10" h="20" x="10">programmename</TEXTFIELD>
+		</FILTER>
+	</DESK>
+	<DESK w="585" name="Contract Details" type="vert" key="2" h="500">
+		<GRID name="Contract Information" keyfield="contractid" table="contractview" filterkey="2" key="1">
+			<TEXTFIELD w="20" title="Contract ID" lw="30">contractid</TEXTFIELD>
+			<TEXTFIELD w="60" title="Project Name">projectname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Donor">donorname</TEXTFIELD>
+			<TEXTFIELD w="30" title="Application Ref.">applicationref</TEXTFIELD>
+			<TEXTFIELD w="40" title="Contract Ref.">contractref</TEXTFIELD>
+			<CHECKBOX w="20" title="Corefund">corefund</CHECKBOX>
+			<TEXTFIELD w="20" title="Contract Date">contractdate</TEXTFIELD>
+			<FORM name="Contract Details" keyfield="contractid" table="contracts" key="3">
+				<TEXTFIELD w="130" title="Application Ref." y="10" h="20" x="10">applicationref</TEXTFIELD>
+				<TEXTFIELD w="130" title="Contract Ref." y="10" h="20" x="270">contractref</TEXTFIELD>
+				<TEXTFIELD w="130" title="Subject" y="10" h="20" x="570">subject</TEXTFIELD>
+				<CHECKBOX w="130" title="Corefund" y="40" h="20" x="10">corefund</CHECKBOX>
+				<TEXTFIELD w="130" title="Percentage Levy" y="40" h="20" x="270">percentagelevy</TEXTFIELD>
+				<TEXTFIELD w="130" title="Currency" y="40" h="20" x="570">currency</TEXTFIELD>
+				<TEXTFIELD w="130" title="Decision Date" y="80" h="20" x="10">decisiondate</TEXTFIELD>
+				<TEXTFIELD w="130" title="Contract Date" y="110" h="20" x="10">contractdate</TEXTFIELD>
+				<TEXTFIELD w="130" title="Start of Grant" y="140" h="20" x="10">startofgrant</TEXTFIELD>
+				<TEXTFIELD w="130" title="End of Grant" y="170" h="20" x="10">endofgrant</TEXTFIELD>
+				<TEXTAREA w="430" title="Conditions" y="80" h="110" x="270">conditions</TEXTAREA>
+				<TEXTAREA w="250" title="Notes" y="220" h="60" x="10">notes</TEXTAREA>
+				<TEXTAREA w="250" title="Reporting" y="220" h="60" x="450">reporting</TEXTAREA>
+				<TEXTAREA w="250" title="Operation" y="290" h="60" x="10">operation</TEXTAREA>
+				<TEXTAREA w="250" title="Specific Conditions" y="290" h="60" x="450">speconditions</TEXTAREA>
+				<FORM name="Banking Details" keyfield="bankid" table="banking" key="2">
+					<TEXTFIELD w="150" title="Bank ID" y="10" h="20" x="10">bankid</TEXTFIELD>
+					<TEXTFIELD w="150" title="Contract ID" y="10" h="20" x="290">contractid</TEXTFIELD>
+					<TEXTFIELD w="150" title="Reference No." y="10" h="20" x="570">referenceno</TEXTFIELD>
+					<COMBOBOX w="150" title="Exchange Code" lptable="banking" y="40" h="20" x="10" lpfield="exchangecodeid">exchangecodeid</COMBOBOX>
+					<TEXTFIELD w="150" title="Exchange Rate" y="70" h="20" x="10">exchangerate</TEXTFIELD>
+					<TEXTFIELD w="150" title="Amount" y="100" h="20" x="10">amount</TEXTFIELD>
+					<TEXTFIELD w="150" title="Receive Date" y="130" h="20" x="10">receivedate</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="40" h="110" x="290">details</TEXTAREA>
+				</FORM>
+			</FORM>
+			<GRID name="Grants" keyfield="grantid" linkfield="contractid" table="grants" key="2">
+				<TEXTFIELD w="40" title="Grant ID">grantid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Contract ID">contractid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Amount">amount</TEXTFIELD>
+				<TEXTFIELD w="40" title="Pr Date">prdate</TEXTFIELD>
+				<FORM name="Grants" keyfield="grantid" table="grants" key="1">
+					<TEXTFIELD w="150" title="Grant ID" y="10" h="20" x="10">grantid</TEXTFIELD>
+					<COMBOBOX w="150" title="Contract ID" lptable="contracts" y="10" h="20" x="400" lpfield="contractid">contractid</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Amount" y="40" h="20" x="10">amount</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Pr Date" y="40" h="20" x="400">prdate</TEXTFIELD>
+					<TEXTAREA w="540" title="Details" y="70" h="60" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Banking Details" keyfield="bankid" linkfield="contractid" table="bankingview" key="3">
+				<TEXTFIELD w="40" title="Bank ID">bankid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Contract ID">contractid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Reference No.">referenceno</TEXTFIELD>
+				<TEXTFIELD w="40" title="Exchange Code">exchangecodeid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Exchange Rate">exchangerate</TEXTFIELD>
+				<TEXTFIELD w="40" title="Amount">amount</TEXTFIELD>
+				<TEXTFIELD w="40" title="Receive Date">receivedate</TEXTFIELD>
+			</GRID>
+		</GRID>
+		<FILTER name="Contracts Filter" key="2">
+			<COMBOBOX w="140" title="Contract ID" lptable="contracts" y="10" h="20" x="10" lpfield="contractid">contractid</COMBOBOX>
+		</FILTER>
+	</DESK>
+	<DESK w="585" name="Exchange Codes" type="vert" key="3" h="500">
+		<GRID name="Exchange Codes" keyfield="exchangecodeid" table="exchangecodes" filterkey="2" key="1">
+			<TEXTFIELD w="40" title="Exchange CodeID">exchangecodeid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Country">countrycodeid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Exchange Code">exchangecodename</TEXTFIELD>
+			<TEXTFIELD w="40" title="Mean Rate">meanrate</TEXTFIELD>
+			<FORM name="Exchange Codes" keyfield="exchangecodeid" table="exchangecodes" key="3">
+				<TEXTFIELD w="120" title="Exchange Code ID" y="10" h="20" x="10">exchangecodeid</TEXTFIELD>
+				<TEXTFIELD w="150" title="Exchange Code" y="10" h="20" x="280">exchangecodename</TEXTFIELD>
+				<COMBOBOX w="120" title="Country" lptable="countrycodes" y="40" h="20" x="10" lpfield="countrycodeid">countrycodeid</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Mean Rate" y="40" h="20" x="280">meanrate</TEXTDECIMAL>
+			</FORM>
+		</GRID>
+		<FILTER name="Exchange Codes Filter" key="2">
+			<COMBOBOX w="140" title="Country" lptable="countrycodes" y="10" h="20" x="10" lpfield="sys_country_name">countrycodeid</COMBOBOX>
+		</FILTER>
+	</DESK>
+	<DESK w="595" name="Offices" type="vert" key="4" h="500">
+		<GRID name="ACORD Offices" keyfield="officeid" table="officeview" filterkey="3" key="1">
+			<TEXTFIELD w="40" title="Office ID">officeid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Description">officename</TEXTFIELD>
+			<TEXTFIELD w="40" title="Country">sys_country_name</TEXTFIELD>
+			<FORM name="Office" keyfield="officeid" table="offices" key="2">
+				<TEXTFIELD w="100" title="Office ID" lw="80" y="10" h="20" x="10">officeid</TEXTFIELD>
+				<TEXTFIELD w="250" title="Description" lw="80" y="10" h="20" x="220">officename</TEXTFIELD>
+				<COMBOBOX w="150" title="Country" lptable="countrycodes" lw="80" y="10" h="20" x="580" lpfield="sys_country_name">countrycodeid</COMBOBOX>
+				<TEXTAREA w="720" title="Details" lw="80" y="40" h="60" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Project Reports" type="horl" key="10" h="500">
+		<FILTER location="250" name="Project Reports" type="horl">
+			<DRILLDOWN name="Projects Drill Down" keyfield="programmeid" table="programmes" listfield="programmename">
+				<DRILLDOWN name="Projects Drill Down" keyfield="projectid" wherefield="programmeid" table="projects" listfield="projectname" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="false" name="All Projects Listing" reportfile="finance/project_fin.jasper"></JASPER>
+			<JASPER filtered="true" name="Project Budget" reportfile="finance/budget.jasper"></JASPER>
+			<JASPER filtered="true" name="Project Expenditure" reportfile="finance/expenditure.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Contract Report" type="horl" key="11" h="500">
+		<FILTER location="250" name="Contract Report" type="horl">
+			<JASPER filtered="false" name="Grouped Contracts List" reportfile="finance/contract_fin_all.jasper"></JASPER>
+			<DRILLDOWN name="Contracts Drill Down" keyfield="programmeid" table="programmes" listfield="programmename">
+				<DRILLDOWN name="Contracts" keyfield="projectid" wherefield="programmeid" table="projects" listfield="projectname" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Contracts Drilldown" reportfile="finance/contract_fin.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Grant Reports" type="horl" key="12" h="500">
+		<FILTER location="250" name="Grant Reports" type="horl">
+			<JASPER filtered="false" name="General Banking Details" reportfile="finance/banking_all.jasper"></JASPER>
+			<DRILLDOWN name="Grants Drill Down" keyfield="projectid" table="projects" listfield="projectname">
+				<DRILLDOWN name="Banking" keyfield="contractid" wherefield="projectid" table="contracts" listfield="contractid" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Grants" reportfile="finance/grants.jasper"></JASPER>
+			<JASPER filtered="true" name="Banking Details" reportfile="finance/banking.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Exchange Codes List" type="horl" key="13" h="500">
+		<JASPER filtered="false" name="Exchange Codes" reportfile="finance/exchangecodes.jasper"></JASPER>
+	</DESK>
+</APP>

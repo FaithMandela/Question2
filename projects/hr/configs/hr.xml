@@ -272,17 +272,18 @@
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
 					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
+					<TEXTFIELD w="150" title="State Skill" y="30" h="20" x="10">state_skill</TEXTFIELD>
+					<COMBOLIST w="150" title="Skill Level" y="50" h="20" x="10">skill_level
 						<DATA key="1">Basic</DATA>
 						<DATA key="2">Intermediate</DATA>
 						<DATA key="3">Advanced</DATA>
 					</COMBOLIST>
-					<CHECKBOX w="150" title="Aquired" y="30" h="20" x="290">aquired</CHECKBOX>
-					<TEXTDATE w="150" title="Training Date" y="50" h="20" x="10">training_date</TEXTDATE>
-					<CHECKBOX w="150" title="Trained" y="50" h="20" x="290">trained</CHECKBOX>
-					<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
-					<TEXTDECIMAL w="150" title="Training Cost" y="90" h="20" x="10">training_cost</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="150" title="Aquired" y="50" h="20" x="290">aquired</CHECKBOX>
+					<TEXTDATE w="150" title="Training Date" y="70" h="20" x="10">training_date</TEXTDATE>
+					<CHECKBOX w="150" title="Trained" y="70" h="20" x="290">trained</CHECKBOX>
+					<TEXTFIELD w="430" title="Training Institution" y="90" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Training Cost" y="110" h="20" x="10">training_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
@@ -505,13 +506,14 @@
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
 					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
+					<TEXTFIELD w="150" title="State Skill" y="30" h="20" x="10">state_skill</TEXTFIELD>
+					<COMBOLIST w="150" title="Skill Level" y="50" h="20" x="10">skill_level
 						<DATA key="1">Basic</DATA>
 						<DATA key="2">Intermediate</DATA>
 						<DATA key="3">Advanced</DATA>
 					</COMBOLIST>
-					<TEXTFIELD w="430" title="Training Institution" y="50" h="20" x="10">training_institution</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees" user="table_id">
@@ -548,6 +550,7 @@
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
 			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+			<JASPER name="CV2" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Job Listing" key="14" h="550">
@@ -888,6 +891,7 @@
 			<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 			<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
 			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+			<JASPER name="CV2" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 			<FORM tw="570" name="Details" keyfield="entity_id" table="applicants" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
@@ -3467,7 +3471,8 @@
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<JASPER name="CV Applicant" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+			<JASPER name="CV2" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Employee List" key="106" h="550">
