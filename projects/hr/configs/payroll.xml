@@ -361,6 +361,8 @@
 			<FORM tw="570" name="Department" keyfield="department_id" table="departments" th="310">
 				<COMBOBOX w="410" title="Parent Department" lptable="departments" lw="140" lpkey="department_id" y="10" h="20" x="10" lpfield="department_name">ln_department_id</COMBOBOX>
 				<TEXTFIELD w="410" title="Department Name" lw="140" y="30" h="20" x="10">department_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Department Account" y="50" h="20" x="10">department_account</TEXTFIELD>
+				<TEXTFIELD w="350" title="Function Code" y="70" h="20" x="10">function_code</TEXTFIELD>
 				<TEXTAREA w="550" tab="Description" y="1" h="270" x="10">description</TEXTAREA>
 				<TEXTAREA w="550" tab="Duties" y="1" h="270" x="10">duties</TEXTAREA>
 				<TEXTAREA w="550" tab="Reports" y="1" h="270" x="10">reports</TEXTAREA>

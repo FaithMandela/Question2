@@ -607,18 +607,24 @@ CREATE VIEW vw_employee_month_list AS
 		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
 		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
+		departments.department_id, departments.department_name, departments.department_account, departments.function_code,
+		department_roles.department_role_id, department_roles.department_role_name,
 		employee_month.pay_group_id,
 		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay
 		
 	FROM employee_month INNER JOIN vw_periods ON employee_month.period_id = vw_periods.period_id
 		INNER JOIN entitys ON employee_month.entity_id = entitys.entity_id
-		INNER JOIN employees ON employee_month.entity_id = employees.entity_id;
+		INNER JOIN employees ON employee_month.entity_id = employees.entity_id
+		INNER JOIN department_roles ON employee_month.department_role_id = department_roles.department_role_id
+		INNER JOIN departments ON department_roles.department_id = departments.department_id;
 
 CREATE VIEW vw_employee_tax_types AS
 	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
 		eml.month_id, eml.period_year, eml.period_month,
 		eml.end_date, eml.gl_payroll_account,
 		eml.entity_id, eml.entity_name, eml.employee_id, eml.identity_card,
+		eml.department_id, eml.department_name, eml.department_account, eml.function_code,
+		eml.department_role_id, eml.department_role_name,
 		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, tax_types.tax_type_number,
 		tax_types.account_number,
 		employee_tax_types.org_id, employee_tax_types.employee_tax_type_id, employee_tax_types.tax_identification, 
@@ -707,6 +713,8 @@ CREATE VIEW vw_employee_adjustments AS
 		eml.month_id, eml.period_year, eml.period_month,
 		eml.end_date, 
 		eml.entity_id, eml.entity_name, eml.employee_id,
+		eml.department_id, eml.department_name, eml.department_account, eml.function_code,
+		eml.department_role_id, eml.department_role_name,
 		adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, adjustments.account_number, 
 		adjustments.earning_code,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,

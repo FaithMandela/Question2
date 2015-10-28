@@ -47,6 +47,8 @@ CREATE TABLE departments (
 	ln_department_id		integer references departments,
 	org_id					integer references orgs,
 	department_name			varchar(120),
+	department_account		varchar(50),
+	function_code			varchar(50),
 	active					boolean default true not null,
 	petty_cash				boolean default false not null,
 	description				text,
