@@ -55,48 +55,48 @@ ORDER BY leave_from ASC]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="42" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="42" uuid="a063bf8c-670a-41f4-a3c2-427f4525e853"/>
+				<reportElement x="-1" y="0" width="555" height="17" uuid="a063bf8c-670a-41f4-a3c2-427f4525e853"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="20" isBold="true"/>
+					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Leave Report For Field Team]]></text>
 			</staticText>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="34">
+		<band height="24">
 			<staticText>
-				<reportElement x="0" y="0" width="234" height="34" uuid="80c7f638-0c35-4bc3-8c52-e4c3fc3a57e3"/>
+				<reportElement x="0" y="0" width="234" height="24" uuid="80c7f638-0c35-4bc3-8c52-e4c3fc3a57e3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="234" y="0" width="57" height="34" uuid="40740f9a-a069-4736-b048-60a9a818cf1c"/>
+				<reportElement x="234" y="0" width="57" height="24" uuid="40740f9a-a069-4736-b048-60a9a818cf1c"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Opening Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="291" y="0" width="68" height="34" uuid="087438bb-6498-40fa-b00a-bc2e86c14ef0"/>
+				<reportElement x="291" y="0" width="68" height="24" uuid="087438bb-6498-40fa-b00a-bc2e86c14ef0"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Days earned]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="359" y="0" width="100" height="34" uuid="5c4ba512-4681-4083-ad91-3eac71fad89d"/>
+				<reportElement x="359" y="0" width="100" height="24" uuid="5c4ba512-4681-4083-ad91-3eac71fad89d"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total number of days]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="459" y="0" width="77" height="34" uuid="b6ecc694-cb4a-4cfb-a3b6-97f84d0e5aa6"/>
+				<reportElement x="459" y="0" width="77" height="24" uuid="b6ecc694-cb4a-4cfb-a3b6-97f84d0e5aa6"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
@@ -105,37 +105,37 @@ ORDER BY leave_from ASC]]>
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="20" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<textField>
-				<reportElement x="1" y="0" width="233" height="20" uuid="005693bd-d743-4097-87c0-37b82f579a20"/>
+				<reportElement x="1" y="0" width="233" height="13" uuid="005693bd-d743-4097-87c0-37b82f579a20"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="291" y="0" width="68" height="20" uuid="3d67c5a5-ec71-4c69-a64e-97f9295a877d"/>
+				<reportElement x="291" y="0" width="68" height="13" uuid="3d67c5a5-ec71-4c69-a64e-97f9295a877d"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{leave_days}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="459" y="0" width="77" height="20" uuid="ce84fac3-ce13-4107-9fa5-69232ea409cb"/>
+				<reportElement x="459" y="0" width="77" height="13" uuid="ce84fac3-ce13-4107-9fa5-69232ea409cb"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{days_taken}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="234" y="0" width="57" height="20" uuid="d7c2149f-c25b-420a-9e80-e0b7efae2eae"/>
+				<reportElement x="234" y="0" width="57" height="13" uuid="d7c2149f-c25b-420a-9e80-e0b7efae2eae"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{date_count}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="359" y="0" width="100" height="20" uuid="18cf9816-4bb3-440f-b16a-39823e3b8be8"/>
+				<reportElement x="359" y="0" width="100" height="13" uuid="18cf9816-4bb3-440f-b16a-39823e3b8be8"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -144,7 +144,7 @@ ORDER BY leave_from ASC]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch"/>
+		<band height="3" splitType="Stretch"/>
 	</detail>
 	<pageFooter>
 		<band height="18" splitType="Stretch">
