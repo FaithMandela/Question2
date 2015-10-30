@@ -1160,6 +1160,7 @@ CREATE VIEW vw_employee_objectives AS
 CREATE VIEW vw_objective_year AS
 	SELECT vw_employee_objectives.org_id, vw_employee_objectives.objective_year
 	FROM vw_employee_objectives
+	WHERE vw_employee_objectives.objective_year is not null
 	GROUP BY vw_employee_objectives.org_id, vw_employee_objectives.objective_year;
 
 CREATE VIEW vw_objectives AS
@@ -1208,6 +1209,7 @@ CREATE VIEW vw_job_reviews AS
 CREATE VIEW vw_review_year AS
 	SELECT vw_job_reviews.org_id, vw_job_reviews.review_year
 	FROM vw_job_reviews
+	WHERE vw_job_reviews.review_year is not null
 	GROUP BY vw_job_reviews.org_id, vw_job_reviews.review_year;
 
 CREATE VIEW vw_all_job_reviews AS

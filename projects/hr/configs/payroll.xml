@@ -309,8 +309,9 @@
 				<CHECKBOX w="150" title="Tax" y="110" h="20" x="290">In_Tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Registration Number" default="0" y="130" h="20" x="10">tax_type_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" default="0" y="130" h="290" x="10">account_number</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="170" h="90" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="Employer Account" y="150" h="20" x="10">employer_account</TEXTFIELD>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="190" h="90" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -1430,6 +1431,15 @@
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="Comparison" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<DRILLDOWN name="Previous" keyfield="period_year" table="vw_Period_Year" listfield="period_year" filter="previous_id" pos="top">
+				<DRILLDOWN name="Previous Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Comparison Payroll" org.table="vw_employee_month" reportfile="vw_payroll_diff.jasper"></JASPER>
+		</FILTER>
 		<GRID name="Full Payroll" keyfield="period_id" orderby="start_date desc" table="vw_periods">
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
@@ -1469,6 +1479,29 @@
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
 			</CROSSTAB>
 		</GRID>
+		<GRID name="SUN Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<GRID name="Sun Ledger" keyfield="sun_ledger_id" linkfield="period_id" table="vw_sun_ledger_trx">
+				<TEXTFIELD w="25" fnct="'2'::int" title="SUNF1">sunf1</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'0'::int" title="SUNF2">sunf2</TEXTFIELD>
+				<TEXTFIELD w="45" title="Account Code">gl_payroll_account</TEXTFIELD>
+				<TEXTFIELD w="75" title="Account Name">description</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'10'::int" title="SUNF3">sunf3</TEXTFIELD>
+				<TEXTFIELD w="75" title="FUNCTION">department_account</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'1'::int" title="SUNF4">sunf4</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="''" title="SUNF5">sunf5</TEXTFIELD>
+				<TEXTFIELD w="75" title="OWN">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="PROJECT">function_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Description">description2</TEXTFIELD>
+				<TEXTFIELD w="75" title="Amount">gl_amount</TEXTFIELD>
+				<TEXTFIELD w="25" title="DC">debit_credit</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'KES1'" title="SUNF6">sunf6</TEXTFIELD>
+			</GRID>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Banking" key="106" h="750">
 		<FILTER w="700" name="Payroll" split="150" type="horl" key="6" h="550">
@@ -1505,6 +1538,7 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Deductions" keyfield="adjustment_id" table="adjustments" where="(adjustment_type = 2)" listfield="adjustment_Name" filter="adjustmentid" pos="top"></DRILLDOWN>
 			<JASPER name="Deductions" reportfile="vw_employee_deduction.jasper"></JASPER>
+			<JASPER name="Deductions with ID" reportfile="vw_employee_deduction_2.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="770" name="Statutory Deductions" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
@@ -1528,8 +1562,8 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Statutory  Deductions" keyfield="tax_type_id" table="tax_types" where="(use_key=1)" listfield="tax_type_name" filter="tax_type_id"></DRILLDOWN>
 			<JASPER name="Statutory  Deductions" reportfile="vw_employee_tax_types_2.jasper"></JASPER>
-			<JASPER name="NSSF Format" reportfile="nssf_report.jasper"></JASPER>
-			<JASPER name="NHIF Format" reportfile="nhif_report.jasper"></JASPER>
+			<JASPER name="NSSF Format" org.table="orgs" reportfile="nssf_report.jasper"></JASPER>
+			<JASPER name="NHIF Format" org.table="orgs" reportfile="nhif_report.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Advance" key="109" h="550">

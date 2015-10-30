@@ -3542,6 +3542,7 @@
 			</FILTERFORM>
 			<JASPER name="Leave Summary 1" reportfile="employee_leave_report2.jasper"></JASPER>
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave2.jasper"></JASPER>
+			<JASPER name="Leave Balance" reportfile="leave_balance_field.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
 		<JASPER name="Approvals" reportfile="leave_approvals.jasper"></JASPER>

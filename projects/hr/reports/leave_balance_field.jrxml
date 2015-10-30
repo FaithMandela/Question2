@@ -24,14 +24,17 @@
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
-		<![CDATA[select entity_name, leave_type_name, leave_from, leave_to, leave_days,approve_status from vw_employee_leave
+	<queryString>
+		<![CDATA[SELECT entity_name, leave_type_name, leave_from, leave_to, leave_days,approve_status
+
+FROM vw_employee_leave
 
 WHERE leave_from >='$P!{minDate}'::date AND leave_from <= '$P!{maxDate}'::date
 AND entity_id = '$P!{entity_id}'::integer
 AND approve_status = '$P!{approve_status}'
 AND vw_employee_leave.leave_type_id = '$P!{leave_type_id}'
 $P!{organd}
+
 ORDER BY leave_from ASC]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>
@@ -59,7 +62,7 @@ ORDER BY leave_from ASC]]>
 			<staticText>
 				<reportElement x="0" y="0" width="555" height="42" uuid="a063bf8c-670a-41f4-a3c2-427f4525e853"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="20" isBold="true"/>
+					<font fontName="Times New Roman" size="20" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Leave Report For Field Team]]></text>
 			</staticText>
@@ -106,35 +109,35 @@ ORDER BY leave_from ASC]]>
 	</pageHeader>
 	<columnHeader>
 		<band height="20" splitType="Stretch">
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="1" y="0" width="233" height="20" uuid="005693bd-d743-4097-87c0-37b82f579a20"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="291" y="0" width="68" height="20" uuid="3d67c5a5-ec71-4c69-a64e-97f9295a877d"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{leave_days}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="459" y="0" width="77" height="20" uuid="ce84fac3-ce13-4107-9fa5-69232ea409cb"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{days_taken}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="234" y="0" width="57" height="20" uuid="d7c2149f-c25b-420a-9e80-e0b7efae2eae"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{date_count}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="359" y="0" width="100" height="20" uuid="18cf9816-4bb3-440f-b16a-39823e3b8be8"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="Times New Roman"/>

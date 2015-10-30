@@ -25,7 +25,9 @@
 	<queryString>
 		<![CDATA[SELECT vw_employee_adjustments.period_year, vw_employee_adjustments.period_month,
 vw_employee_adjustments.adjustment_name, vw_employee_adjustments.entity_id, vw_employee_adjustments.entity_name,  vw_employee_adjustments.in_payroll, vw_employee_adjustments.visible, vw_employee_adjustments.amount,
-vw_employee_adjustments.employee_id, vw_employee_adjustments.narrative
+vw_employee_adjustments.employee_id, vw_employee_adjustments.narrative,
+vw_employee_adjustments.identity_card
+
 FROM vw_employee_adjustments
 
 WHERE (vw_employee_adjustments.period_id = '$P!{filterid}')
@@ -44,6 +46,7 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 	<field name="amount" class="java.lang.Double"/>
 	<field name="employee_id" class="java.lang.String"/>
 	<field name="narrative" class="java.lang.String"/>
+	<field name="identity_card" class="java.lang.String"/>
 	<variable name="amount_1" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
 	</variable>
@@ -60,21 +63,21 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 				<text><![CDATA[Employee Deduction Report]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="64" y="35" width="58" height="20" uuid="9b483b5c-6446-4868-ba59-fd918d4c662e"/>
+				<reportElement x="61" y="35" width="51" height="20" uuid="9b483b5c-6446-4868-ba59-fd918d4c662e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{period_year}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="122" y="35" width="191" height="20" uuid="27eed4c2-d31b-4b11-85e9-5a44413d0dbd"/>
+				<reportElement x="112" y="35" width="111" height="20" uuid="27eed4c2-d31b-4b11-85e9-5a44413d0dbd"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{period_month}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="64" y="55" width="315" height="20" uuid="14863152-9cdf-4e04-9627-849936967796"/>
+				<reportElement x="61" y="55" width="318" height="20" uuid="14863152-9cdf-4e04-9627-849936967796"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -94,14 +97,14 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="63" height="15" forecolor="#000000" uuid="6b364648-5661-4ae5-a5ff-f589c3b81f6c"/>
+				<reportElement style="Column header" x="1" y="0" width="60" height="15" forecolor="#000000" uuid="6b364648-5661-4ae5-a5ff-f589c3b81f6c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="64" y="0" width="159" height="15" forecolor="#000000" uuid="556f4143-01fc-4c93-bbc9-6426a9224cf3"/>
+				<reportElement style="Column header" x="61" y="0" width="162" height="15" forecolor="#000000" uuid="556f4143-01fc-4c93-bbc9-6426a9224cf3"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -115,14 +118,14 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 				<text><![CDATA[In Payroll]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="268" y="0" width="45" height="15" forecolor="#000000" uuid="48b2db7a-056f-42fd-a817-a62f772d3ebc"/>
+				<reportElement style="Column header" x="268" y="0" width="60" height="15" forecolor="#000000" uuid="48b2db7a-056f-42fd-a817-a62f772d3ebc"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Visible]]></text>
+				<text><![CDATA[Identity No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="313" y="0" width="66" height="15" forecolor="#000000" uuid="b25706a5-0a38-499b-aa30-1d2ac644378b"/>
+				<reportElement style="Column header" x="328" y="0" width="51" height="15" forecolor="#000000" uuid="b25706a5-0a38-499b-aa30-1d2ac644378b"/>
 				<box rightPadding="2"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
@@ -143,16 +146,16 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="ad9abc79-d618-4210-a59c-417f6dfcb0cd"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="63" height="15" uuid="4ed1629f-030f-4691-852e-c2d9e2405731"/>
+					<reportElement style="Detail" x="1" y="0" width="60" height="15" uuid="4ed1629f-030f-4691-852e-c2d9e2405731"/>
 					<textElement>
-						<font fontName="Times New Roman" size="9"/>
+						<font fontName="Times New Roman" size="9" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="64" y="0" width="159" height="15" uuid="3c417033-1f8b-481b-81c2-b1f83e1cda80"/>
+					<reportElement style="Detail" x="61" y="0" width="162" height="15" uuid="3c417033-1f8b-481b-81c2-b1f83e1cda80"/>
 					<textElement>
-						<font fontName="Times New Roman" size="9"/>
+						<font fontName="Times New Roman" size="9" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
@@ -164,14 +167,14 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 					<textFieldExpression><![CDATA[$F{in_payroll}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="268" y="0" width="45" height="15" uuid="bf1e05bc-1cd6-401b-adcb-d580b7315e0c"/>
+					<reportElement style="Detail" x="268" y="0" width="60" height="15" uuid="bf1e05bc-1cd6-401b-adcb-d580b7315e0c"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{visible}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{identity_card}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-					<reportElement style="Detail" x="313" y="0" width="66" height="15" uuid="263f7a4d-5809-4755-8ed0-db0a5956b91c"/>
+					<reportElement style="Detail" x="328" y="0" width="51" height="15" uuid="263f7a4d-5809-4755-8ed0-db0a5956b91c"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
@@ -201,16 +204,16 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="3c8fa9da-43c1-4670-b395-3a09f49d813c"/>
+				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="3c8fa9da-43c1-4670-b395-3a09f49d813c"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="511" y="0" width="40" height="20" forecolor="#736343" uuid="1d02a0da-53c2-4d6e-9bff-43b617cd609a"/>
+					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="1d02a0da-53c2-4d6e-9bff-43b617cd609a"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="430" y="0" width="80" height="20" forecolor="#736343" uuid="ed6f2916-49c2-4bb3-a39d-097316d67313"/>
+					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="ed6f2916-49c2-4bb3-a39d-097316d67313"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
@@ -229,7 +232,7 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 	<summary>
 		<band height="31" splitType="Stretch">
 			<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-				<reportElement x="313" y="5" width="66" height="20" uuid="393c475b-2e14-461f-b875-4afb6a4428c2"/>
+				<reportElement x="328" y="5" width="51" height="20" uuid="393c475b-2e14-461f-b875-4afb6a4428c2"/>
 				<box rightPadding="2"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
@@ -237,7 +240,7 @@ ORDER BY vw_employee_adjustments.entity_id]]>
 				<textFieldExpression><![CDATA[$V{amount_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="64" y="5" width="159" height="20" forecolor="#000000" uuid="a572c1af-0fb9-40ec-8fc9-660f2cdda6de"/>
+				<reportElement style="Column header" x="61" y="5" width="162" height="20" forecolor="#000000" uuid="a572c1af-0fb9-40ec-8fc9-660f2cdda6de"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>

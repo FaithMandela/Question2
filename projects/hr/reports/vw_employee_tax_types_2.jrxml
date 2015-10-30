@@ -165,14 +165,14 @@ ORDER BY  vw_employee_tax_types.entity_id]]>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="1" y="0" width="70" height="14" uuid="0dff8377-7fda-4255-b357-1ea1128ea319"/>
 					<textElement>
-						<font fontName="Times New Roman" size="10"/>
+						<font fontName="Times New Roman" size="9" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="71" y="0" width="186" height="14" uuid="0f54d75c-e632-4cba-8f9f-afff197f8011"/>
 					<textElement>
-						<font fontName="Times New Roman" size="10"/>
+						<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>

@@ -31,7 +31,6 @@ ALTER TABLE tax_types ADD 	employer_account		varchar(32);
 
 ALTER TABLE periods ADD 	gl_advance_account		varchar(32);
 
-ALTER TABLE applicants ADD applicant_phone varchar(50);
 
 ALTER TABLE skills ADD 	state_skill				varchar(50);
 
@@ -40,7 +39,6 @@ INSERT INTO skill_types (org_id, skill_type_id, skill_category_id, skill_type_na
 
 ALTER TABLE departments ADD  department_account		varchar(50);
 ALTER TABLE departments ADD  function_code			varchar(50);
-UPDATE departments SET department_account = dept_function,  function_code = dept_project;
 
 DROP VIEW vw_intern_evaluations;
 DROP VIEW vw_applicants;	
