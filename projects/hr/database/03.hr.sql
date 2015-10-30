@@ -1020,6 +1020,7 @@ CREATE VIEW vw_employee_leave_types AS
 	FROM employee_leave_types INNER JOIN entitys ON employee_leave_types.entity_id = entitys.entity_id
 		INNER JOIN leave_types ON employee_leave_types.leave_type_id = leave_types.leave_type_id;
 
+		
 CREATE VIEW vw_employee_leave AS
 	SELECT entitys.entity_id, entitys.entity_name, leave_types.leave_type_id, leave_types.leave_type_name, 
 		contact_entity.entity_name as contact_name,

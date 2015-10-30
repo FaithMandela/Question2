@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<APP database="tickets" name="Tickets" reportpath="/root/baraza/projects/tickets/reports/">
+<APP database="tickets" name="Tickets">
 	<TREE name="Tickets">
 		<NODE name="Entries">
 			<NODE key="1" name="Logs"></NODE>
