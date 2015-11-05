@@ -3544,7 +3544,13 @@
 			<JASPER name="Leave Summary 2" org.table="vw_employee_leave" reportfile="employee_leave2.jasper"></JASPER>
 			<JASPER name="Leave Balance" reportfile="leave_balance_field.jasper"></JASPER>
 		</FILTER>
-		<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
+		<FILTER w="700" name="Leave Balance" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
+			<JASPER name="Leave Balance - by type" reportfile="leave_balance_field.jasper"></JASPER>
+		</FILTER>
 		<JASPER name="Approvals" reportfile="leave_approvals.jasper"></JASPER>
 		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>

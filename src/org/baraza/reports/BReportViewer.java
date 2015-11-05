@@ -41,10 +41,6 @@ public class BReportViewer extends JRViewer implements ActionListener {
 	public void refreshPage() {
 		super.refreshPage();
 	}
-
-	public void setPageIndex(int index) {
-		super.setPageIndex(index);
-	}
 	
 	public void btnPrintActionPerformed() {
 		if(auditTable != null) {

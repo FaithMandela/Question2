@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-CLASSPATH=".:../build/lib/jasperreports-5.5.0.jar:../build/lib/mail.jar:"
+CLASSPATH=".:../build/lib/jasperreports-6.1.0.jar:../build/lib/mail.jar:"
 CLASSPATH+="../build/lib/poi-3.10.jar:../build/lib/ojdbc6.jar:../build/lib/itextpdf-5.5.0.jar:../build/lib/commons-codec-1.9.jar:"
 CLASSPATH+="../build/lib/javax.json-1.0.4.jar:"
 CLASSPATH+="../build/lib/server/jsch.jar:../build/lib/server/rxtxcomm.jar:"
