@@ -333,6 +333,6 @@ CREATE VIEW vw_sun_ledger_trx AS
 		banked as amount,
 		'C' as debit_credit
 	FROM vw_employee_month)) as a
-	ORDER BY gl_payroll_account desc, amount desc, debit_credit desc;
+	WHERE amount > 0;
 	
 
