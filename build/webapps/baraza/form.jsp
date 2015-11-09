@@ -15,6 +15,8 @@
 	String userName = request.getRemoteUser();
 
 	BWebForms form = new BWebForms(dbconfig);
+	String formData = form.getWebForm(null, request.getParameterMap());
+	String formTitle = form.getTitle();
 %>
 
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
@@ -112,9 +114,6 @@
 			<a href="index.jsp">
 			<img src="./assets/logos/logo_header.png" alt="logo" style="margin: 20px 10px 0 10px; width: 107px;" class="logo-default"/>
 			</a>
-			<div class="menu-toggler sidebar-toggler">
-				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
-			</div>
 		</div>
 		<!-- END LOGO -->
 
@@ -141,7 +140,32 @@
 
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-	<%= form.getWebForm(null, request.getParameterMap()) %>
+	<div class="row">
+		<div class="col-md-12">
+			<!-- BEGIN Portlet PORTLET-->
+			<div class="portlet light">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-speech"></i>
+						<span class="caption-subject bold uppercase"> <%= formTitle %></span>
+					</div>
+					<div class="actions">
+						<a href="javascript:;" class="btn btn-circle btn-default">
+						<i class="fa fa-pencil"></i> Edit </a>
+						<a href="javascript:;" class="btn btn-circle btn-default">
+						<i class="fa fa-plus"></i> Add </a>
+						<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"></a>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<div class="scroller" style="height:575px" data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
+						<%= formData %>
+					</div>
+				</div>
+			</div>
+			<!-- END Portlet PORTLET-->
+		</div>
+	</div>
 </div>
 <!-- END CONTAINER -->
 
@@ -279,4 +303,4 @@
 <!-- END BODY -->
 </html>
 
-<% 	forms.close(); %>
+<% 	form.close(); %>

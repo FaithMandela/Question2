@@ -212,9 +212,8 @@
 	</DESK>
 	<DESK w="700" name="Forms" key="20" h="500">
 		<GRID name="Forms" keyfield="form_id" orderby="form_number, form_id" table="forms">
-			<TEXTFIELD w="75" title="Form ID">form_id</TEXTFIELD>
-			<TEXTFIELD w="240" title="Form Name">form_name</TEXTFIELD>
 			<TEXTFIELD w="120" title="Form Number">form_number</TEXTFIELD>
+			<TEXTFIELD w="240" title="Form Name">form_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Version">version</TEXTFIELD>
 			<CHECKBOX w="75" title="Completed" format="boolean" ischar="true">completed</CHECKBOX>
 			<CHECKBOX w="75" title="Active" format="boolean" ischar="true">is_active</CHECKBOX>
@@ -228,6 +227,26 @@
 				<CHECKBOX w="75" title="Manditory">manditory</CHECKBOX>
 				<CHECKBOX w="75" title="Field Bold">field_bold</CHECKBOX>
 				<CHECKBOX w="75" title="Field Italics">field_italics</CHECKBOX>
+				<FORM name="Fields" keyfield="field_id" linkfield="form_id" table="fields">
+					<TEXTAREA w="430" title="Question" y="10" h="40" x="10" rows="5">question</TEXTAREA>
+					<COMBOLIST w="150" title="Field Type" default="TEXTFIELD" y="50" h="20" x="10">field_type
+						<NODE>TEXTFIELD</NODE>
+						<NODE>TITLE</NODE>
+						<NODE>SUBGRID</NODE>
+						<NODE>DATE</NODE>
+						<NODE>TIME</NODE>
+						<NODE>LIST</NODE>
+						<NODE>SELECT</NODE>
+					</COMBOLIST>
+					<TEXTFIELD w="150" title="Field Order" y="50" h="20" x="290">field_order</TEXTFIELD>
+					<TEXTFIELD w="150" title="Share Line" y="70" h="20" x="10">share_line</TEXTFIELD>
+					<TEXTFIELD w="150" title="Field Size" default="25" y="70" h="20" x="290">field_size</TEXTFIELD>
+					<TEXTFIELD w="150" title="Field Class" y="90" h="20" x="10">field_class</TEXTFIELD>
+					<CHECKBOX w="150" title="Manditory" y="90" ischar="true" h="20" x="290">manditory</CHECKBOX>
+					<CHECKBOX w="150" title="Field Bold" y="110" ischar="true" h="20" x="10">field_bold</CHECKBOX>
+					<CHECKBOX w="150" title="Field Italics" y="110" ischar="true" h="20" x="290">field_italics</CHECKBOX>
+					<TEXTAREA w="530" title="Field Lookup" y="2" h="70" x="10" rows="5">field_lookup</TEXTAREA>
+				</FORM>
 				<GRID name="Sub Fields" keyfield="sub_field_id" orderby="sub_field_order" linkfield="field_id" table="vw_sub_fields">
 					<TEXTFIELD w="75" title="Sub Field Order">sub_field_order</TEXTFIELD>
 					<TEXTFIELD w="240" title="Question">question</TEXTFIELD>
@@ -252,27 +271,6 @@
 						<CHECKBOX w="150" title="Show" y="210" ischar="true" h="20" x="290">show</CHECKBOX>
 					</FORM>
 				</GRID>
-				<FORM name="Fields" keyfield="field_id" linkfield="form_id" table="fields">
-					<TEXTAREA w="530" tab="Question" y="10" h="80" x="10">question</TEXTAREA>
-					<TEXTAREA w="530" tab="Field Lookup" y="100" h="70" x="10">field_lookup</TEXTAREA>
-					<COMBOLIST w="150" title="Field Type" default="TEXTFIELD" y="170" h="20" x="10">field_type
-						<NODE>TEXTFIELD</NODE>
-						<NODE>TITLE</NODE>
-						<NODE>SUBGRID</NODE>
-						<NODE>TABLE</NODE>
-						<NODE>DATE</NODE>
-						<NODE>TIME</NODE>
-						<NODE>LIST</NODE>
-						<NODE>SELECT</NODE>
-					</COMBOLIST>
-					<TEXTFIELD w="150" title="Field Order" y="170" h="20" x="290">field_order</TEXTFIELD>
-					<TEXTFIELD w="150" title="Share Line" y="190" h="20" x="10">share_line</TEXTFIELD>
-					<TEXTFIELD w="150" title="Field Size" default="25" y="190" h="20" x="290">field_size</TEXTFIELD>
-					<TEXTFIELD w="150" title="Field Class" y="210" h="20" x="10">field_class</TEXTFIELD>
-					<CHECKBOX w="150" title="Manditory" y="210" ischar="true" h="20" x="290">manditory</CHECKBOX>
-					<CHECKBOX w="150" title="Field Bold" y="230" ischar="true" h="20" x="10">field_bold</CHECKBOX>
-					<CHECKBOX w="150" title="Field Italics" y="230" ischar="true" h="20" x="290">field_italics</CHECKBOX>
-				</FORM>
 			</GRID>
 			<FORM name="Forms" keyfield="form_id" table="forms" th="210">
 				<TEXTFIELD w="430" title="Form Name" y="10" h="20" x="10">form_name</TEXTFIELD>
