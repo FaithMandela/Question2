@@ -4,7 +4,7 @@
 <c:set var="mainPage" value="forms.jsp" scope="page" />
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="org.baraza.web.*" %>
+<%@ page import="org.baraza.web.BWebForms" %>
 <%@ page import="org.baraza.xml.BElement" %>
 
 <%
@@ -14,7 +14,7 @@
 	String userIP = request.getRemoteAddr();
 	String userName = request.getRemoteUser();
 
-	BForms forms = new BForms(dbconfig);
+	BWebForms form = new BWebForms(dbconfig);
 %>
 
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
@@ -141,9 +141,11 @@
 
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-	<!-- END CONTENT -->
+	<%= form.getWebForm(null, request.getParameterMap()) %>
 </div>
 <!-- END CONTAINER -->
+
+
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
 	<div class="page-footer-inner">

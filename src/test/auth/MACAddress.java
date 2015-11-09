@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 public class MACAddress {
 
@@ -19,6 +21,16 @@ public class MACAddress {
 			}
 		} catch (SocketException e) {
 			e.printStackTrace();
+		}
+		
+		Properties props = System.getProperties();
+		for(String prop : props.stringPropertyNames()) {
+			System.out.println("Prop : " + prop + " = " + props.getProperty(prop));
+		}
+		
+		Map<String,String> envs = System.getenv();
+		for(String env : envs.keySet()) {
+			System.out.println("Env : " + env + " = " + envs.get(env));
 		}
 	}
 
@@ -56,6 +68,11 @@ public class MACAddress {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < mac.length; i++) {
 			sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));		
+		}
+		System.out.println("Current MAC address : " + sb.toString());
+		sb = new StringBuilder();
+		for (int i = 0; i < mac.length; i++) {
+			sb.append(String.format("%02X%s", mac[i], ""));		
 		}
 		System.out.println("Current MAC address : " + sb.toString());
 	}

@@ -21,8 +21,10 @@ public class getMotherBoardSerial {
 		} else if (isUnix()) {
 			System.out.println("This is Unix or Linux");
 			//String execName = "/sys/devices/virtual/dmi/id/chassis_serial ";
-			String execName = "/sys/devices/virtual/dmi/id/board_serial";
-			command = "cat " + execName;
+			//String execName = "/sys/devices/virtual/dmi/id/board_serial";
+			//command = "cat " + execName;
+			String execName = "dmidecode -t system";
+			command = execName;
 		} else if (isSolaris()) {
 			System.out.println("This is Solaris");
 		} else {
@@ -42,14 +44,12 @@ public class getMotherBoardSerial {
 		try {
 			p = Runtime.getRuntime().exec(command);
 			p.waitFor();
-			BufferedReader reader = 
-                            new BufferedReader(new InputStreamReader(p.getInputStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-                        String line = "";			
+			String line = "";			
 			while ((line = reader.readLine())!= null) {
 				output.append(line + "\n");
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
