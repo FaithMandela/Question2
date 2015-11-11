@@ -766,6 +766,32 @@ CREATE VIEW vw_employee_banking AS
 		INNER JOIN vw_bank_branch ON employee_banking.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN currency ON employee_banking.currency_id = currency.currency_id;
 
+CREATE VIEW vw_pension_adjustments AS
+	SELECT c.period_id, c.start_date,
+		a.employee_adjustment_id, a.employee_month_id, a.adjustment_id, a.pension_id, 
+		a.org_id, a.adjustment_type, a.adjustment_factor, a.pay_date, a.amount, 
+		a.exchange_rate, a.in_payroll, a.in_tax, a.visible,
+		(a.amount * a.exchange_rate) as base_amount
+	FROM employee_adjustments as a INNER JOIN employee_month as b ON a.employee_month_id = b.employee_month_id
+		INNER JOIN periods as c ON b.period_id = c.period_id
+	WHERE (a.pension_id is not null);
+
+CREATE VIEW vw_employee_pensions AS
+	SELECT a.entity_id, a.entity_name, a.adjustment_id, a.adjustment_name, a.contribution_id, 
+		a.contribution_name, a.org_id, a.pension_id, a.pension_company, a.pension_number, 
+		a.active,
+		b.period_id, b.start_date, b.employee_month_id, 
+		b.amount, b.base_amount,
+		COALESCE(c.amount, 0) as employer_amount, 
+		COALESCE(c.base_amount, 0) as employer_base_amount,
+		(b.amount + COALESCE(c.amount, 0)) as pension_amount, 
+		(b.base_amount + COALESCE(c.base_amount, 0)) as pension_base_amount
+	FROM (vw_pensions as a INNER JOIN vw_pension_adjustments as b 
+		ON (a.pension_id = b.pension_id) AND (a.adjustment_id = b.adjustment_id))
+		LEFT JOIN vw_pension_adjustments as c
+		ON (a.pension_id = c.pension_id) AND (a.contribution_id = c.adjustment_id)
+		AND (b.employee_month_id = c.employee_month_id);
+		
 CREATE VIEW vw_employee_per_diem_ledger AS
 	(SELECT vw_employee_per_diem.org_id, vw_employee_per_diem.period_id, vw_employee_per_diem.travel_date, 'Transport' as description, 
 		vw_employee_per_diem.post_account, vw_employee_per_diem.entity_name, vw_employee_per_diem.full_amount as dr_amt, 0.0 as cr_amt

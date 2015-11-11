@@ -91,10 +91,12 @@ UPDATE skill_types SET skill_type_name =  initcap(skill_type_name), org_id = 0;
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 1, 'Sacco Allowance', true, true);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 2, 'Bonus', true, true);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, in_payroll, Visible, In_Tax) VALUES (1, 3, 'Employer - Pension', false, true, false);
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 11, 'SACCO', true, false);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 12, 'HELB', true, false);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 13, 'Rent Payment', true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 14, 'Pension deduction', true, false);
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 21, 'Travel', true, false);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 22, 'Communcation', true, false);

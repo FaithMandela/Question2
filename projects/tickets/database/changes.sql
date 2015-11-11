@@ -24,7 +24,7 @@ DELETE FROM tickets WHERE ticketdate <= '2013-12-31';
 DELETE FROM logdetails USING logs WHERE logdetails.logid = logs.logid AND logdate <= '2013-12-31';
 DELETE FROM logs WHERE logdate <= '2013-12-31';
 
-UPDATE tickets SET processed = true WHERE (processed = false) AND (ticketdate < '2015-02-01');
+UPDATE tickets SET processed = true WHERE (processed = false) AND (ticketdate < '2015-10-01');
 
 INSERT INTO pccs (pcc, agencyname) VALUES ('781Y', 'FLEET TRAVEL - UAE');
 
@@ -67,12 +67,27 @@ ALTER TABLE tickets ADD incentive_updated	boolean default false;
 ALTER TABLE pccs ADD	agency_incentive	boolean default false;
 ALTER TABLE pccs ADD	incentive_son		varchar(12);
 
-UPDATE pccs SET agency_incentive = false, incentive_son = 'PS' WHERE pcc = '77QU';
+UPDATE pccs SET agency_incentive = true, incentive_son = 'PS' WHERE pcc = '77QU';
 UPDATE pccs SET agency_incentive = true, incentive_son = 'NN' WHERE pcc = '7GQ4';
 
 
 UPDATE tickets SET incentive_updated = true WHERE ticketdate < '2015-02-01';
 
+
+INSERT INTO tickets(ticketid, 
+	ticketdate, ticketpcc, bookpcc, bpcc, son, pcc, line1, 
+	line2, line3, segs, tvoid, topen, tused, texch, trfnd, tarpt, 
+	tckin, tlftd, tunvl, tprtd, tsusp, picked_time, for_incentive, 
+	incentive_updated, processed)
+SELECT '000' ||	substring(ticketid from 4 for 10), 
+	ticketdate, ticketpcc, bookpcc, bpcc, son, pcc, line1, 
+	line2, line3, segs, tvoid, topen, tused, texch, trfnd, tarpt, 
+	tckin, tlftd, tunvl, tprtd, tsusp, picked_time,
+	true, true, true
+FROM tickets
+WHERE pcc = '77QU' and for_incentive = false and incentive_updated = false;
+UPDATE tickets SET incentive_updated = true WHERE pcc = '77QU' and incentive_updated = false;
+			
 SELECT *
 FROM tickets
 WHERE ticketdate >= '2015-02-01' and pcc = '77QU' and for_incentive = true and son = 'PS';

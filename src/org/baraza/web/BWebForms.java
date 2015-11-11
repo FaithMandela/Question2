@@ -140,16 +140,18 @@ public class BWebForms {
 		
 		int fieldRows = 2;
 		int fieldCount = 0;
+		String fieldId = "";
 		while(rs.moveNext()) {
 			fieldOrder = rs.getInt("field_order");
+			fieldId = rs.getString("field_id");
 			shareLine = rs.getInt("share_line");
 
 			fieldType = "TEXTFIELD";
-			if(rs.getString("field_type") != null) fieldType = rs.getString("field_type");
+			if(rs.getString("field_type") != null) fieldType = rs.getString("field_type").trim().toUpperCase();
 
 			fieldclass = "";
 			if(rs.getString("field_class") != null) fieldclass = " class='" + rs.getString("field_class") + "' ";
-
+			
 			question = rs.getString("question");
 			if(rs.getString("question") == null) question = "";
 
@@ -168,32 +170,43 @@ public class BWebForms {
 			label = "<label for='F" + rs.getString("field_id") +  "'> " + question + "</label>";
 			
 			// Start a new row
-			if(fieldType.equals("TITLE")) {
-				System.out.println("Title count : " + (fieldRows * 2 - fieldCount));
-				
-				if((fieldCount != 0) && (fieldCount < fieldRows)) myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2 - fieldCount) + "'></td></tr>\n");
+			if(fieldType.equals("TITLE") || fieldType.equals("SUBGRID") || fieldType.equals("TABLE")) {
+				if((fieldCount != 0) && (fieldCount < fieldRows)) 
+					myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2 - fieldCount) + "'></td></tr>\n");
 				myhtml.append("<tr>");
+				fieldCount = 0;
 			} else {
-				if((fieldCount % fieldRows) == 0) myhtml.append("<tr>");
+				if((fieldCount % fieldRows) == 0) {
+					myhtml.append("<tr>");
+					fieldCount = 0;
+				}
 				if(!question.equals("")) myhtml.append("<td style='width:200'>" + label + "</td>");
 			}
 			
 			if(fieldType.equals("TEXTFIELD")) {
 				input = "<td><input " + disabled + " type='text' ";
 				input += " style='width:" + rs.getString("field_size") + "0px' ";
-				input += " name='F" + rs.getString("field_id") +  "'";
-				input += " id ='F" + rs.getString("field_id") +  "'";
-				input += getAnswer(rs.getString("field_id"));
+				input += " name='F" + fieldId +  "'";
+				input += " id ='F" + fieldId +  "'";
+				input += getAnswer(fieldId);
 				input += " placeholder='" + details +"'";
 				input += " class='form-control' /></td>\n";
+				fieldCount++;
+			} else if(fieldType.equals("TEXTAREA")) {
+				input = "<td><textarea " + disabled + " type='text' ";
+				input += " style='width:" + rs.getString("field_size") + "0px' ";
+				input += " name='F" + fieldId +  "'";
+				input += " id ='F" + fieldId +  "'";
+				input += " placeholder='" + details +"'";
+				input += " class='form-control' />" + getAnswer(fieldId) + "</textarea></td>\n";
 				fieldCount++;
 			} else if(fieldType.equals("DATE")) {
 				input = "<td><div class='input-group input-medium date date-picker' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>";
 				input += "<input " + disabled + " type='text' ";
 				input += " style='width:" + rs.getString("field_size") + "0px' ";
-				input += " name='F" + rs.getString("field_id") +  "'";
-				input += " id ='F" + rs.getString("field_id") +  "'";
-				input += getAnswer(rs.getString("field_id"));
+				input += " name='F" + fieldId +  "'";
+				input += " id ='F" + fieldId +  "'";
+				input += getAnswer(fieldId);
 				input += " class='form-control' />";
 				input += "</div></td>\n";
 				fieldCount++;
@@ -279,19 +292,34 @@ public class BWebForms {
 				fieldCount = 0;
 			} else if(fieldType.equals("SUBGRID")) {
 				input = "";
+				myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2) + "'>");
 				myhtml.append(printSubTable(rs.getString("field_id"), disabled, question, table_count));
+				myhtml.append("</td>\n");
 				table_count ++;
 				fieldCount = 0;
 			} else if(fieldType.equals("TABLE")) {
 				input = "";
+				myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2) + "'>");
 				myhtml.append(printSubTable(rs.getString("field_id"), disabled, question, table_count));
+				myhtml.append("</td>\n");
 				table_count ++;
 				fieldCount = 0;
+			} else {
+				System.out.println("TYPE NOT DEFINED : " + fieldType);
 			}
 			
 			myhtml.append(input);
-			if((fieldCount % fieldRows) == 0) myhtml.append("</tr>\n");
+			
+			// create a new line if the is no line sharing
+			if(shareLine == -1) {
+				if((fieldCount != 0) && (fieldCount < fieldRows)) 
+					myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2 - fieldCount) + "'></td></tr>\n");
+				fieldCount = 0;
+			} else if((fieldCount % fieldRows) == 0) {
+				myhtml.append("</tr>\n");
+			}
 		}
+		
 		if((fieldCount % fieldRows) != 0) myhtml.append("</tr>\n");
 				
 		rs.close();
@@ -300,7 +328,7 @@ public class BWebForms {
 	}
 	
 	public String printSubTable(String fieldid, String disabled, String caption, int num) {
-		String myhtml = "";
+		StringBuilder myhtml = new StringBuilder();
 
 		String mysql = "SELECT sub_field_id, sub_field_type, sub_field_size, sub_field_lookup, question ";
 		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldid;
@@ -415,20 +443,14 @@ public class BWebForms {
 
 		if(j == 2) tableRows += filltb;
 
-		myhtml += "<fieldset>\n";
-		myhtml += "<div class='subTable" + num + " g8' id='subTable" + num + "'>\n";
-		myhtml += "<table class='innerTable'>\n";
-		myhtml += "<tr>" + mytitle + "<td></td></tr>\n";
-		myhtml += tableRows;
-
-		myhtml += "</table>\n";
-		myhtml += "<input type='button' class='btnAddMore' value='Add Row' name='" + num + "'/>\n";
-		myhtml += "</div>\n";
-		myhtml += "</fieldset>";
+		myhtml.append("<table class='innerTable'>\n");
+		myhtml.append("<tr>" + mytitle + "<td></td></tr>\n");
+		myhtml.append(tableRows);
+		myhtml.append("</table>\n");
 
 		rs.close();
 
-		return myhtml;
+		return myhtml.toString();
 	}
 
 	public String getParameter(String paramName) {
