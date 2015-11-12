@@ -181,6 +181,15 @@ public class BReportMaker {
 		myReport += "	<parameter name=\"filterid\" class=\"java.lang.String\">\n";
 		myReport += "		<defaultValueExpression><![CDATA[\"1\"]]></defaultValueExpression>\n";
 		myReport += "	</parameter>\n";
+		myReport += "	<parameter name=\"orgid\" class=\"java.lang.String\">\n";
+		myReport += "		<defaultValueExpression><![CDATA[\"0\"]]></defaultValueExpression>\n";
+		myReport += "	</parameter>\n";
+		myReport += "	<parameter name=\"orgwhere\" class=\"java.lang.String\">\n";
+		myReport += "		<defaultValueExpression><![CDATA[\"\"]]></defaultValueExpression>\n";
+		myReport += "	</parameter>\n";
+		myReport += "	<parameter name=\"organd\" class=\"java.lang.String\">\n";
+		myReport += "		<defaultValueExpression><![CDATA[\"\"]]></defaultValueExpression>\n";
+		myReport += "	</parameter>\n";
 		myReport += "	<queryString language=\"SQL\">\n";
 		myReport += "		<![CDATA[" + mysql + "]]>\n";
 		myReport += "	</queryString>\n";

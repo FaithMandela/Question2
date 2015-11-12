@@ -32,6 +32,7 @@
 			<MENU name="Adjustments">107</MENU>
 			<MENU name="Employee Adjustments">108</MENU>
 			<MENU name="Employee Statutories">118</MENU>
+			<MENU name="Pensions">125</MENU>
 			<MENU name="Advance">109</MENU>
 			<MENU name="Payslip">110</MENU>
 			<MENU name="P9A">111</MENU>
@@ -1567,7 +1568,19 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Advance" key="109" h="550">
-		<JASPER name="Advance" reportfile="vw_advance_statement.jasper"></JASPER>
+		<JASPER name="Advance" reportfile="vw_advance_balances.jasper"></JASPER>
+		<GRID name="Employee Advances" keyfield="entity_id" orderby="first_name" table="vw_employees">
+			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			<JASPER name="Advance Statement" reportfile="vw_advance_statement.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Payslip" key="110" h="750">
 		<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods">
@@ -1646,5 +1659,26 @@
 			<JASPER name="Full Ledger" reportfile="vw_payroll_ledger_trx.jasper"></JASPER>
 			<JASPER name="Transport Ledger" reportfile="vw_employee_per_diem_ledger.jasper"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" name="Pensions" key="125" h="550">
+		<FILTER w="700" name="Pension Payments" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Pension Payments" reportfile="vw_pensions_payments.jasper"></JASPER>
+		</FILTER>
+		<GRID name="Employee Pension" keyfield="entity_id" orderby="first_name" table="vw_employees">
+			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			<JASPER name="Pension Payments" reportfile="vw_employee_pensions.jasper"></JASPER>
+		</GRID>
+		<JASPER name="Pensions" reportfile="vw_pensions.jasper"></JASPER>
 	</DESK>
 </APP>
