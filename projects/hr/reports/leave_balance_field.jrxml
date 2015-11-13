@@ -46,8 +46,7 @@ ON (aa.entity_id = bb.entity_id) AND (aa.leave_type_id = bb.leave_type_id)
 
 WHERE (aa.leave_type_id = '$P!{leave_type_id}')
 
-$P!{organd}
-]]>
+$P!{organd}]]>
 	</queryString>
 	<field name="leave_type_name" class="java.lang.String"/>
 	<field name="entity_name" class="java.lang.String"/>
@@ -175,7 +174,7 @@ $P!{organd}
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{final_balance} - $F{days_taken}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{final_balance} - $F{days_earned} + $F{days_taken}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
