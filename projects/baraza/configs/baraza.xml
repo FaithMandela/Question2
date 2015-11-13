@@ -231,7 +231,9 @@
 					<TEXTAREA w="430" title="Question" y="10" h="40" x="10" rows="5">question</TEXTAREA>
 					<COMBOLIST w="150" title="Field Type" default="TEXTFIELD" y="50" h="20" x="10">field_type
 						<NODE>TEXTFIELD</NODE>
+						<NODE>TEXTAREA</NODE>
 						<NODE>TITLE</NODE>
+						<NODE>TEXT</NODE>
 						<NODE>SUBGRID</NODE>
 						<NODE>DATE</NODE>
 						<NODE>TIME</NODE>
@@ -255,20 +257,19 @@
 					<TEXTFIELD w="75" title="Sub Field Size">sub_field_size</TEXTFIELD>
 					<CHECKBOX w="75" title="Manditory" format="boolean">manditory</CHECKBOX>
 					<FORM name="Sub Fields" keyfield="sub_field_id" linkfield="field_id" table="sub_fields">
-						<TEXTAREA w="530" tab="Question" y="2" h="70" x="10">question</TEXTAREA>
-						<TEXTAREA w="530" tab="Sub Field Lookup" y="2" h="70" x="10">sub_field_lookup</TEXTAREA>
-						<TEXTFIELD w="150" title="Sub Field Order" y="80" h="20" x="10">sub_field_order</TEXTFIELD>
-						<COMBOLIST w="150" title="Sub Field Type" y="80" h="20" x="290">sub_field_type
+						<TEXTAREA w="530" title="Question" y="10" h="50" x="10" rows="5">question</TEXTAREA>
+						<TEXTFIELD w="150" title="Field Order" y="30" h="20" x="10">sub_field_order</TEXTFIELD>
+						<COMBOLIST w="150" title="Field Type" y="30" h="20" x="290">sub_field_type
 							<NODE>TEXTFIELD</NODE>
 							<NODE>TITLE</NODE>
-							<NODE>LIST</NODE>
-							<NODE>SELECT</NODE>
+							<NODE>TEXT</NODE>
 						</COMBOLIST>
-						<TEXTFIELD w="430" title="Sub Title Share" y="100" h="20" x="10">sub_title_share</TEXTFIELD>
-						<TEXTFIELD w="150" title="Sub Field Size" default="5" y="190" h="20" x="10">sub_field_size</TEXTFIELD>
-						<TEXTFIELD w="150" title="Sub Col Spans" y="190" h="20" x="290">sub_col_spans</TEXTFIELD>
-						<CHECKBOX w="150" title="Manditory" y="210" ischar="true" h="20" x="10">manditory</CHECKBOX>
-						<CHECKBOX w="150" title="Show" y="210" ischar="true" h="20" x="290">show</CHECKBOX>
+						<TEXTFIELD w="150" title="Title Share" y="50" h="20" x="10">sub_title_share</TEXTFIELD>
+						<TEXTFIELD w="150" title="Field Size" default="5" y="50" h="20" x="290">sub_field_size</TEXTFIELD>
+						<TEXTFIELD w="150" title="Col Spans" y="70" h="20" x="10">sub_col_spans</TEXTFIELD>
+						<CHECKBOX w="150" title="Manditory" y="70" ischar="true" h="20" x="290">manditory</CHECKBOX>
+						<CHECKBOX w="150" title="Show" y="90" ischar="true" h="20" x="10">show</CHECKBOX>
+						<TEXTAREA w="530" tab="Field Lookup" y="2" h="70" x="10" rows="5">sub_field_lookup</TEXTAREA>
 					</FORM>
 				</GRID>
 			</GRID>
@@ -280,17 +281,41 @@
 				<CHECKBOX w="150" title="Active" y="50" ischar="true" h="20" x="290">is_active</CHECKBOX>
 				<EDITOR w="530" tab="Form Header" y="2" h="170" x="10">form_header</EDITOR>
 				<EDITOR w="530" tab="Form Footer" y="2" h="170" x="10">form_footer</EDITOR>
-				<TEXTAREA w="530" tab="Initial" y="2" h="170" x="10">default_values</TEXTAREA>
-				<TEXTAREA w="530" tab="Initial Grid" y="2" h="170" x="10">default_sub_values</TEXTAREA>
 				<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" where="(approve_status = 'Completed')">
+			<TEXTFIELD w="150" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
+			<TEXTTIMESTAMP w="100" title="Application Date" format="date">application_date</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="100" title="Completion Date" format="date">completion_date</TEXTTIMESTAMP>
+			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes">entry_form_id</BROWSER>
+			<ACTIONS>
+				<ACTION fnct="Upd_Complete_Form" phase="2">Approve</ACTION>
+				<ACTION fnct="Upd_Complete_Form" phase="3">Reject</ACTION>
+			</ACTIONS>
+		</GRID>
+		<GRID name="Approved Forms" keyfield="entry_form_id" orderby="form_name, entity_name" table="vw_entry_forms" where="(approve_status = 'Approved')">
+			<TITLEFIELD w="150" title="Form Name">form_name</TITLEFIELD>
+			<TEXTFIELD w="150" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTTIMESTAMP w="100" title="Application Date" format="date">application_date</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="100" title="Completion Date" format="date">completion_date</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="100" title="Approve Date" format="date">action_date</TEXTTIMESTAMP>
+			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes">entry_form_id</BROWSER>
+		</GRID>
+		<GRID name="Rejected Forms" keyfield="entry_form_id" table="vw_entry_forms" where="(approve_status = 'Rejected')">
+			<TEXTFIELD w="150" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
+			<TEXTTIMESTAMP w="100" title="Application Date" format="date">application_date</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="100" title="Completion Date" format="date">completion_date</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="100" title="Rejected Date" format="date">action_date</TEXTTIMESTAMP>
+			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes">entry_form_id</BROWSER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Client Forms" key="25" h="500">
 		<GRID name="Forms" keyfield="form_id" orderby="form_id" table="forms">
-			<TEXTFIELD w="75" title="Form ID">form_id</TEXTFIELD>
-			<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Form Number">form_number</TEXTFIELD>
+			<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Version">version</TEXTFIELD>
 			<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
 			<BROWSER title="View Form" action="FORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=FORM" blankpage="true">form_id</BROWSER>
@@ -301,6 +326,7 @@
 	</DESK>
 	<DESK w="700" name="Applied Forms" key="30" h="500">
 		<GRID name="Applied Forms" keyfield="entry_form_id" table="vw_entry_forms" where="(approve_status = 'Draft')" user="entity_id">
+			<TEXTFIELD w="75" title="Form Number">form_number</TEXTFIELD>
 			<TEXTFIELD w="350" title="Form Name">form_name</TEXTFIELD>
 			<TEXTTIMESTAMP w="150" title="Application Date">application_date</TEXTTIMESTAMP>
 			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true">entry_form_id</BROWSER>
@@ -377,14 +403,14 @@
 	</DESK>
 	<DESK w="700" name="Form Reports" key="70" h="500">
 		<GRID name="Forms" keyfield="form_id" orderby="form_id" table="forms">
-			<TEXTFIELD w="75" title="Form ID">form_id</TEXTFIELD>
-			<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Form Number">form_number</TEXTFIELD>
+			<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Version">version</TEXTFIELD>
 			<CHECKBOX w="75" title="Completed" format="boolean">completed</CHECKBOX>
 			<ACTION w="75" title="View Form" path="form.report.jsp" action="FORMREPORT">form_id</ACTION>
 		</GRID>
 		<GRID name="Approved Forms" keyfield="entry_form_id" orderby="form_name, entity_name" table="vw_entry_forms" where="(approve_status = 'Approved')">
+			<TEXTFIELD w="75" title="Form Number">form_number</TEXTFIELD>
 			<TITLEFIELD w="150" title="Form Name">form_name</TITLEFIELD>
 			<TEXTFIELD w="150" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTTIMESTAMP w="100" title="Application Date" format="date">application_date</TEXTTIMESTAMP>

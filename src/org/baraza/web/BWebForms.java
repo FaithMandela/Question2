@@ -74,7 +74,7 @@ public class BWebForms {
 
 		mystr += fhead;
 		mystr += "<form id='baraza' name='baraza' method='post' action='form.jsp'>\n";
-		mystr += "<table width='95%' >\n";
+		mystr += "<table class='table' width='95%' >\n";
 
 		mystr += printForm(formid, null, "false");
 		
@@ -170,7 +170,7 @@ public class BWebForms {
 			label = "<label for='F" + rs.getString("field_id") +  "'> " + question + "</label>";
 			
 			// Start a new row
-			if(fieldType.equals("TITLE") || fieldType.equals("SUBGRID") || fieldType.equals("TABLE")) {
+			if(fieldType.equals("TITLE") || fieldType.equals("TEXT") || fieldType.equals("SUBGRID") || fieldType.equals("TABLE")) {
 				if((fieldCount != 0) && (fieldCount < fieldRows)) 
 					myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2 - fieldCount) + "'></td></tr>\n");
 				myhtml.append("<tr>");
@@ -287,7 +287,13 @@ public class BWebForms {
 			} else if(fieldType.equals("TITLE")) {
 				cnt_title ++;
 				input = "<td colspan='" + String.valueOf(fieldRows * 2) + "'>";
-				input += "<b><strong>" + question + "</strong></b>";
+				input += "<div class='form_title'><b><strong>" + question + "</strong></b></div>";
+				input += "</td>\n";
+				fieldCount = 0;
+			} else if(fieldType.equals("TEXT")) {
+				cnt_title ++;
+				input = "<td colspan='" + String.valueOf(fieldRows * 2) + "'>";
+				input += "<div class='form_text'>" + question + "</div>";
 				input += "</td>\n";
 				fieldCount = 0;
 			} else if(fieldType.equals("SUBGRID")) {
@@ -356,7 +362,7 @@ public class BWebForms {
 			subFieldSize.put(rs.getString("sub_field_id"), rs.getString("sub_field_size"));
 			subFieldLookups.put(rs.getString("sub_field_id"), rs.getString("sub_field_lookup"));
 
-			mytitle += "<td>" + rs.getString("question") + "</td>";
+			mytitle += "<th>" + rs.getString("question") + "</th>";
 		}
 
 		int j = 1;
@@ -443,10 +449,14 @@ public class BWebForms {
 
 		if(j == 2) tableRows += filltb;
 
-		myhtml.append("<table class='innerTable'>\n");
-		myhtml.append("<tr>" + mytitle + "<td></td></tr>\n");
+		myhtml.append("<div class='portlet-body'>\n");
+		myhtml.append("<div class=table-toolbar>\n");
+		myhtml.append("</div>");
+		myhtml.append("<table class='table table-striped table-hover table-bordered' id='sample_editable_1'>\n");
+		myhtml.append("<thead><tr>" + mytitle + "<th></th></tr></thead>\n");
 		myhtml.append(tableRows);
 		myhtml.append("</table>\n");
+		myhtml.append("</div'>\n");
 
 		rs.close();
 

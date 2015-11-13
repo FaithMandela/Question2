@@ -273,6 +273,8 @@
         Metronic.init(); // init metronic core componets
         Layout.init(); // init layout
         Calendar.init();
+		TableEditable.init();
+
         $('.date-picker').datepicker({
             autoclose: true
         });

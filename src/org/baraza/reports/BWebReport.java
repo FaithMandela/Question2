@@ -149,9 +149,7 @@ public class BWebReport  {
 			exporterHTML.setConfiguration(exporterConfig);
 
 			SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
-			reportConfig.setRemoveEmptySpaceBetweenRows(true);
 			reportConfig.setWhitePageBackground(false);
-			reportConfig.setRemoveEmptySpaceBetweenRows(true);
 			reportConfig.setPageIndex(Integer.valueOf(pageIndex));
 			exporterHTML.setConfiguration(reportConfig);
 			

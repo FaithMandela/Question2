@@ -957,7 +957,7 @@
 						<TEXTFIELD w="150" title="Pay Period" y="30" h="20" x="10">pay_period</TEXTFIELD>
 						<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="290">amount</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Payment Amount" y="50" h="20" x="10">payment_amount</TEXTDECIMAL>
-						<CHECKBOX w="150" title="In Payroll" y="70" h="20" x="10">in_payroll</CHECKBOX>
+						<CHECKBOX w="150" title="In Payroll" default="true" y="70" h="20" x="10">in_payroll</CHECKBOX>
 						<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
 						<COMBOLIST w="150" title="Approve" y="90" h="20" x="10">approve_status
 							<DATA>Approved</DATA>
@@ -976,7 +976,7 @@
 					<FORM name="Advance Deduction" keyfield="advance_deduction_id" linkfield="employee_month_id" table="advance_deductions">
 						<TEXTDATE w="150" title="Pay Date" y="10" h="20" x="10">pay_date</TEXTDATE>
 						<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="290">amount</TEXTDECIMAL>
-						<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="10">in_payroll</CHECKBOX>
+						<CHECKBOX w="150" title="In Payroll" default="true" y="30" h="20" x="10">in_payroll</CHECKBOX>
 						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>

@@ -2781,7 +2781,9 @@
 					<TEXTAREA w="430" title="Question" y="10" h="40" x="10" rows="5">question</TEXTAREA>
 					<COMBOLIST w="150" title="Field Type" default="TEXTFIELD" y="50" h="20" x="10">field_type
 						<NODE>TEXTFIELD</NODE>
+						<NODE>TEXTAREA</NODE>
 						<NODE>TITLE</NODE>
+						<NODE>TEXT</NODE>
 						<NODE>SUBGRID</NODE>
 						<NODE>DATE</NODE>
 						<NODE>TIME</NODE>
@@ -2805,19 +2807,19 @@
 					<TEXTFIELD w="75" title="Sub Field Size">sub_field_size</TEXTFIELD>
 					<CHECKBOX w="75" title="Manditory" format="boolean">manditory</CHECKBOX>
 					<FORM name="Sub Fields" keyfield="sub_field_id" linkfield="field_id" table="sub_fields">
-						<TEXTAREA w="530" tab="Question" y="2" h="70" x="10">question</TEXTAREA>
-						<TEXTAREA w="530" tab="Sub Field Lookup" y="2" h="70" x="10">sub_field_lookup</TEXTAREA>
-						<TEXTFIELD w="150" title="Sub Field Order" y="80" h="20" x="10">sub_field_order</TEXTFIELD>
-						<COMBOLIST w="150" title="Sub Field Type" y="80" h="20" x="290">sub_field_type
+						<TEXTAREA w="530" title="Question" y="10" h="50" x="10" rows="5">question</TEXTAREA>
+						<TEXTFIELD w="150" title="Field Order" y="30" h="20" x="10">sub_field_order</TEXTFIELD>
+						<COMBOLIST w="150" title="Field Type" y="30" h="20" x="290">sub_field_type
 							<NODE>TEXTFIELD</NODE>
 							<NODE>TITLE</NODE>
-							<NODE>SUBGRID</NODE>
+							<NODE>TEXT</NODE>
 						</COMBOLIST>
-						<TEXTFIELD w="430" title="Sub Title Share" y="100" h="20" x="10">sub_title_share</TEXTFIELD>
-						<TEXTFIELD w="150" title="Sub Field Size" default="5" y="190" h="20" x="10">sub_field_size</TEXTFIELD>
-						<TEXTFIELD w="150" title="Sub Col Spans" y="190" h="20" x="290">sub_col_spans</TEXTFIELD>
-						<CHECKBOX w="150" title="Manditory" y="210" ischar="true" h="20" x="10">manditory</CHECKBOX>
-						<CHECKBOX w="150" title="Show" y="210" ischar="true" h="20" x="290">show</CHECKBOX>
+						<TEXTFIELD w="150" title="Title Share" y="50" h="20" x="10">sub_title_share</TEXTFIELD>
+						<TEXTFIELD w="150" title="Field Size" default="5" y="50" h="20" x="290">sub_field_size</TEXTFIELD>
+						<TEXTFIELD w="150" title="Col Spans" y="70" h="20" x="10">sub_col_spans</TEXTFIELD>
+						<CHECKBOX w="150" title="Manditory" y="70" ischar="true" h="20" x="290">manditory</CHECKBOX>
+						<CHECKBOX w="150" title="Show" y="90" ischar="true" h="20" x="10">show</CHECKBOX>
+						<TEXTAREA w="530" tab="Field Lookup" y="2" h="70" x="10" rows="5">sub_field_lookup</TEXTAREA>
 					</FORM>
 				</GRID>
 			</GRID>
