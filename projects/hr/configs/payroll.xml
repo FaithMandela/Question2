@@ -33,6 +33,7 @@
 			<MENU name="Employee Adjustments">108</MENU>
 			<MENU name="Employee Statutories">118</MENU>
 			<MENU name="Pensions">125</MENU>
+			<MENU name="Loans">135</MENU>
 			<MENU name="Advance">109</MENU>
 			<MENU name="Payslip">110</MENU>
 			<MENU name="P9A">111</MENU>
@@ -1680,5 +1681,24 @@
 			<JASPER name="Pension Payments" reportfile="vw_employee_pensions.jasper"></JASPER>
 		</GRID>
 		<JASPER name="Pensions" reportfile="vw_pensions.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Loans" key="135" h="550">
+		<JASPER name="Open Loans" reportfile="vw_loans.jasper"></JASPER>
+		<JASPER name="All Loans" reportfile="vw_loans_2.jasper"></JASPER>
+		<JASPER name="Loan Types" reportfile="vw_loan_types.jasper"></JASPER>
+		<GRID name="Loan Payments" keyfield="loan_id" table="vw_loans">
+			<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Loan Type">loan_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
+			<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			<JASPER name="Loan Statement" reportfile="vw_loan_monthly.jasper"></JASPER>
+		</GRID>
 	</DESK>
 </APP>
