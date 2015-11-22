@@ -17,6 +17,7 @@
 	BWebForms form = new BWebForms(dbconfig);
 	String formData = form.getWebForm(null, request.getParameterMap());
 	String formTitle = form.getTitle();
+	String formGrid = form.printSubForm();
 %>
 
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
@@ -272,8 +273,6 @@
     jQuery(document).ready(function() {
         Metronic.init(); // init metronic core componets
         Layout.init(); // init layout
-        Calendar.init();
-		TableEditable.init();
 
         $('.date-picker').datepicker({
             autoclose: true
@@ -300,6 +299,11 @@
     });
 </script>
 
+<script type="text/javascript">
+
+	<%= formGrid %>;
+
+</script>
 
 </body>
 <!-- END BODY -->

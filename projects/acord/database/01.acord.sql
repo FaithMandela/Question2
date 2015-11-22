@@ -1,21 +1,15 @@
-CREATE TABLE exchangecodes (
-	exchangecodeid			varchar(12) primary key,
-	sys_country_id           	char(2) references sys_countrys,
-	exchangecodename		varchar(50),
-	meanrate			real
-);
-
-CREATE TABLE donorgroups (
-	donorgroupid			varchar(12) primary key,
-	donorgroupname			varchar(50) not null,
-	details                		text
-);
 
 CREATE TABLE offices (
-	officeid			varchar(12) primary key,
-	officename			text,
+	office_id				varchar(12) primary key,
+	office_name				text,
 	sys_country_id			char(2) references sys_countrys,
-	details				text
+	details					text
+);
+
+CREATE TABLE donor_groups (
+	donor_group_id			varchar(12) primary key,
+	donor_group_name		varchar(50) not null,
+	details					text
 );
 
 CREATE TABLE donors (
@@ -52,7 +46,6 @@ CREATE TABLE subthemes (
 
 CREATE TABLE programmes (
 	programmeid           		varchar(50) primary key,
-	themeid				varchar(12) references themes,
 	sys_country_id			char(2) references sys_countrys,
    	programmename    		varchar(50) not null,
 	areaprogramme			boolean default false not null,
