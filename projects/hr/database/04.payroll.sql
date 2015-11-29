@@ -400,35 +400,35 @@ BEGIN
 
 	IF ($3 = 1) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Adjustments
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2);
 	ELSIF ($3 = 2) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Adjustments
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true) AND (Visible = true);
 	ELSIF ($3 = 3) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Adjustments
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_Tax = true);
 	ELSIF ($3 = 4) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Adjustments
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true);
 	ELSIF ($3 = 5) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Adjustments
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (Visible = true);
 	ELSIF ($3 = 11) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Tax_Types
+		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($3 = 12) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Tax_Types
+		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1) AND (In_Tax = true);
 	ELSIF ($3 = 14) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM Employee_Tax_Types
+		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1) AND (Tax_Type_ID = $2);
 	ELSIF ($3 = 21) THEN
 		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
@@ -436,7 +436,7 @@ BEGIN
 		WHERE (employee_month_id = $1) AND (in_tax = true);
 	ELSIF ($3 = 22) THEN
 		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
-		FROM Employee_Adjustments
+		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (In_payroll = true) AND (Visible = true);
 	ELSIF ($3 = 23) THEN
 		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
@@ -509,8 +509,8 @@ BEGIN
 		FROM Employee_Month
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($2 = 2) THEN
-		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32) 
-			+ getAdjustment(Employee_Month_ID, 4, 23)
+		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 23)
+			- getAdjustment(Employee_Month_ID, 4, 32) 
 			- getAdjustment(Employee_Month_ID, 4, 12) - getAdjustment(Employee_Month_ID, 4, 24)) INTO adjustment
 		FROM Employee_Month
 		WHERE (Employee_Month_ID = $1);
@@ -1255,6 +1255,7 @@ DECLARE
 	v_period_tax_type_id		integer;
 	v_exchange_rate				real;
 	v_income					real;
+	v_tax_relief				real;
 	v_tax						real;
 BEGIN
 
@@ -1273,6 +1274,14 @@ BEGIN
 
 	ELSIF ($2 = 2) THEN
 		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
+		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
+
+	ELSIF ($2 = 3) THEN
+		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
+		v_tax_relief := getAdjustment(v_employee_month_id, 1) / 100;
+		if(v_tax_relief < 16666.67) then v_tax_relief := 16666.67; end if;
+		v_tax_relief := v_tax_relief + getAdjustment(v_employee_month_id, 1) / 5;
+		v_income := v_income - v_tax_relief;
 		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
 
 	ELSE
@@ -1525,6 +1534,7 @@ BEGIN
 	DELETE FROM employee_advances WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
 	DELETE FROM employee_banking WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
 	DELETE FROM employee_adjustments WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
+	DELETE FROM employee_overtime WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
 	DELETE FROM employee_tax_types WHERE (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = $1));
 	DELETE FROM period_tax_rates WHERE (period_tax_type_id IN (SELECT period_tax_type_id FROM period_tax_types WHERE period_id = $1));
 	DELETE FROM period_tax_types WHERE period_id = $1;

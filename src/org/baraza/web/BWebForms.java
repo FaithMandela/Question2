@@ -302,17 +302,13 @@ public class BWebForms {
 				fieldCount = 0;
 			} else if(fieldType.equals("SUBGRID") || fieldType.equals("TABLE")) {
 				input = "";
-				myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2) + "'>");
-				myhtml.append("\t<div class='table-scrollable'>\n");
-				myhtml.append("\t\t<table id='grid" + fieldId + "' class='table table-striped table-bordered table-hover'></table>\n");
-				myhtml.append("\t\t<div id='pager" + fieldId + "'></div>\n");
-				myhtml.append("\t</div>\n");
+				myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2) + "'>\n");
+				myhtml.append(printSubTable(fieldId, disabled, question, table_count));
 				myhtml.append("</td>\n");
-				table_count ++;
+				table_count++;
 				fieldCount = 0;
 			} else {
 				System.out.println("TYPE NOT DEFINED : " + fieldType);
-				table_count ++;
 			}
 			
 			myhtml.append(input);
@@ -366,13 +362,13 @@ public class BWebForms {
 		return myhtml;
 	}
 	
-	public JsonObjectBuilder printSubTable(String fieldid) {
+	public JsonObjectBuilder printSubTable(String fieldId) {
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
 		JsonArrayBuilder jsColNames = Json.createArrayBuilder();
 		
 		String mysql = "SELECT sub_field_id, sub_field_type, sub_field_size, sub_field_lookup, question ";
-		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldid;
+		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldId;
 		mysql += " ORDER BY sub_field_order";
 		BQuery rs = new BQuery(db, mysql);
 		
@@ -397,11 +393,11 @@ public class BWebForms {
 		return jshd;
 	}
 	
-	public String printSubTable(String fieldid, String disabled, String caption, int num) {
+	public String printSubTable(String fieldId, String disabled, String caption, int table_count) {
 		StringBuilder myhtml = new StringBuilder();
 
 		String mysql = "SELECT sub_field_id, sub_field_type, sub_field_size, sub_field_lookup, question ";
-		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldid;
+		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldId;
 		mysql += " ORDER BY sub_field_order";
 		BQuery rs = new BQuery(db, mysql);
 
@@ -448,13 +444,13 @@ public class BWebForms {
 				sub_field_size = subFieldSize.get(subFieldID);
 
 				if(sub_field_type.equals("TEXTFIELD")) {
-					filltb += "<td><input" + disabled + " class='mytableinput' type='text' size='25'";
+					filltb += "<td><input" + disabled + " class='form-control' type='text' ";
 					filltb += " style='width:" + sub_field_size + "0px' ";
 					filltb += " id='SF:" + subFieldID + "'";
 					filltb += " name='SF:" + subFieldID + "'";
 					filltb += ans + "/></td>\n";
 				} else if(sub_field_type.equals("LIST")) {
-					filltb += "<td><select classx='formcombobox'";
+					filltb += "<td><select classx='form-control'";
 					filltb += " id='SF:" + subFieldID + "'";
 					filltb += " name='SF:" + subFieldID + "'";
 					filltb += ">\n";
@@ -468,7 +464,7 @@ public class BWebForms {
 					}
 					filltb += "</select></td>\n";
 				} else if(sub_field_type.equals("SELECT")) {
-					filltb += "<td><select classx='formcombobox' ";
+					filltb += "<td><select classx='form-control' ";
 					filltb += " id='SF:" + subFieldID + "'";
 					filltb += " name='SF:" + subFieldID + "'";
 					filltb += ">\n";
@@ -502,7 +498,7 @@ public class BWebForms {
 			}
 
 			if(hasData)
-				filltb += "<td><input type='button' class='deleteThisRow' name='" + num + "' value='Delete'/></td>";
+				filltb += "<td><input type='button' class='deleteThisRow' name='del_row" + table_count + "_" + j + "' value='Delete'/></td>";
 			filltb += "</tr>\n";
 
 			if(hasData) tableRows += filltb;
@@ -516,10 +512,11 @@ public class BWebForms {
 		myhtml.append("<div class='portlet-body'>\n");
 		myhtml.append("<div class=table-toolbar>\n");
 		myhtml.append("</div>");
-		myhtml.append("<table class='table table-striped table-hover table-bordered' id='sample_editable_1'>\n");
+		myhtml.append("<table class='table table-striped table-hover table-bordered' id='sample_editable_" + table_count + "'>\n");
 		myhtml.append("<thead><tr>" + mytitle + "<th></th></tr></thead>\n");
 		myhtml.append(tableRows);
 		myhtml.append("</table>\n");
+		myhtml.append("<div><a id='add_row" + table_count + "' class='btn btn-default pull-left'>Add Row</a>\n");
 		myhtml.append("</div'>\n");
 
 		rs.close();
