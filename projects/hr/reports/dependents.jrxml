@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dependents" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5e573d3-a32c-4715-930e-322744a096d7">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -27,8 +27,11 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_kins.entity_name, vw_kins.beneficiary, vw_kins.beneficiary_ps, vw_kins.full_names, vw_kins.entity_id, vw_kins.relation, vw_kins.kin_type_name
+
 FROM vw_kins
-WHERE vw_kins.beneficiary = true]]>
+
+WHERE vw_kins.beneficiary = true
+$P!{organd}]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="beneficiary" class="java.lang.Boolean"/>

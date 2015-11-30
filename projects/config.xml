@@ -22,7 +22,8 @@
 	<APP dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">SACCO</APP>
 	<APP dbpath="jdbc:postgresql://localhost/codepamoja" dbname="codepamoja" path="codepamoja" xmlfile="codepamoja.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">CodePamoja</APP>
 	<APP dbpath="jdbc:postgresql://localhost/galileo" dbname="galileo" path="galileo" xmlfile="galileo.xml" dbclass="org.postgresql.Driver" dbusername="root">Galileo</APP>
-	<APP dbpath="jdbc:postgresql://192.168.0.4:5432/fidelity" dbname="fidelity" path="fidelity" xmlfile="fidelity.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Fidelity</APP>
+	<APP dbpath="jdbc:postgresql://localhost/tickets" dbname="tickets" path="tickets" xmlfile="tickets.xml" dbclass="org.postgresql.Driver" dbusername="root">Travelport Tickets</APP>
+	<APP dbpath="jdbc:postgresql://localhost/acord" dbname="acord" path="acord" xmlfile="acord.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Acord</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Finance</APP>
@@ -52,6 +53,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="aua.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA Web General</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mysa" dbname="mysa" path="mysa" xmlfile="mysa.xml" dbclass="org.postgresql.Driver" dbusername="root">MYSA</APP>
+	<APP dbpath="jdbc:postgresql://localhost/fidelity" dbname="fidelity" path="fidelity" xmlfile="fidelity.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Fidelity</APP>
 	<APP dbpath="jdbc:postgresql://localhost/metropol" dbname="metropol" path="metropol" xmlfile="metropol.xml" dbclass="org.postgresql.Driver" dbusername="root">Metropol</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sg" dbname="sg" path="sg" xmlfile="sg.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">SG</APP>
 	<APP dbpath="jdbc:postgresql://localhost/meridian" dbname="meridian" path="meridian" xmlfile="meridian.xml" dbclass="org.postgresql.Driver" dbusername="root">Meridian</APP>

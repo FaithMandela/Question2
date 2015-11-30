@@ -94,6 +94,8 @@ CREATE TABLE applicants (
 	identity_card			varchar(50),
 	language				varchar(320),
 	
+	previous_salary			real,
+	expected_salary			real,
 	how_you_heard			varchar(320),
 	created					timestamp default current_timestamp,
 
@@ -288,6 +290,7 @@ CREATE TABLE skills (
 	entity_id				integer references entitys,
 	skill_type_id			integer references skill_types,
 	org_id					integer references orgs,
+	state_skill				varchar(50),
 	skill_level				integer default 1 not null,
 	aquired					boolean default false not null,
 	training_date			date,
@@ -888,6 +891,7 @@ CREATE VIEW vw_employees AS
 	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
 		vw_bank_branch.bank_branch_code, vw_department_roles.department_id, vw_department_roles.department_name, 
 		vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
+		locations.location_id, locations.location_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		sys_countrys.sys_country_name, nob.sys_country_name as birth_nation_name,  
 		disability.disability_id, disability.disability_name,		
@@ -910,6 +914,7 @@ CREATE VIEW vw_employees AS
 		vw_education_max.grades_obtained, vw_education_max.certificate_number
 	FROM employees INNER JOIN vw_bank_branch ON employees.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN vw_department_roles ON employees.department_role_id = vw_department_roles.department_role_id
+		INNER JOIN locations ON employees.location_id = locations.location_id
 		INNER JOIN currency ON employees.currency_id = currency.currency_id
 		INNER JOIN sys_countrys ON employees.nationality = sys_countrys.sys_country_id		
 		LEFT JOIN sys_countrys as nob ON employees.nation_of_birth = nob.sys_country_id
@@ -958,15 +963,19 @@ CREATE VIEW vw_cv_projects AS
 
 CREATE VIEW vw_skill_types AS
 	SELECT skill_category.skill_category_id, skill_category.skill_category_name, skill_types.skill_type_id, 
-		skill_types.org_id, skill_types.skill_type_name, skill_types.basic, skill_types.intermediate, 
-		skill_types.advanced, skill_types.details
+		skill_types.org_id, skill_types.skill_type_name, 
+		skill_types.basic, skill_types.intermediate, skill_types.advanced, skill_types.details
 	FROM skill_types INNER JOIN skill_category ON skill_types.skill_category_id = skill_category.skill_category_id;
 
 CREATE VIEW vw_skills AS
 	SELECT vw_skill_types.skill_category_id, vw_skill_types.skill_category_name, vw_skill_types.skill_type_id, 
-		vw_skill_types.skill_type_name, vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced, 
+		vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced, 
 		entitys.entity_id, entitys.entity_name, skills.skill_id, skills.skill_level, skills.aquired, skills.training_date, 
 		skills.org_id, skills.trained, skills.training_institution, skills.training_cost, skills.details,
+		
+		(CASE WHEN vw_skill_types.skill_type_id = 0 THEN skills.state_skill
+			ELSE vw_skill_types.skill_type_name END) as skill_type_name,
+		
 		(CASE WHEN skill_level = 1 THEN 'Basic' WHEN skill_level = 2 THEN 'Intermediate' 
 			WHEN skill_level = 3 THEN 'Advanced' ELSE 'None' END) as skill_level_name,
 		(CASE WHEN skill_level = 1 THEN vw_skill_types.Basic WHEN skill_level = 2 THEN vw_skill_types.Intermediate 
@@ -1011,6 +1020,7 @@ CREATE VIEW vw_employee_leave_types AS
 	FROM employee_leave_types INNER JOIN entitys ON employee_leave_types.entity_id = entitys.entity_id
 		INNER JOIN leave_types ON employee_leave_types.leave_type_id = leave_types.leave_type_id;
 
+		
 CREATE VIEW vw_employee_leave AS
 	SELECT entitys.entity_id, entitys.entity_name, leave_types.leave_type_id, leave_types.leave_type_name, 
 		contact_entity.entity_name as contact_name,
@@ -1151,6 +1161,7 @@ CREATE VIEW vw_employee_objectives AS
 CREATE VIEW vw_objective_year AS
 	SELECT vw_employee_objectives.org_id, vw_employee_objectives.objective_year
 	FROM vw_employee_objectives
+	WHERE vw_employee_objectives.objective_year is not null
 	GROUP BY vw_employee_objectives.org_id, vw_employee_objectives.objective_year;
 
 CREATE VIEW vw_objectives AS
@@ -1187,7 +1198,7 @@ CREATE VIEW vw_review_points AS
 		review_points.org_id, review_points.review_point_id, review_points.review_point_name, 
 		review_points.review_points, review_points.details
 	FROM review_points INNER JOIN review_category ON review_points.review_category_id = review_category.review_category_id;
-
+	
 CREATE VIEW vw_job_reviews AS
 	SELECT entitys.entity_id, entitys.entity_name, job_reviews.job_review_id, job_reviews.total_points, 
 		job_reviews.org_id, job_reviews.review_date, job_reviews.review_done, 
@@ -1199,7 +1210,24 @@ CREATE VIEW vw_job_reviews AS
 CREATE VIEW vw_review_year AS
 	SELECT vw_job_reviews.org_id, vw_job_reviews.review_year
 	FROM vw_job_reviews
+	WHERE vw_job_reviews.review_year is not null
 	GROUP BY vw_job_reviews.org_id, vw_job_reviews.review_year;
+
+CREATE VIEW vw_all_job_reviews AS
+	SELECT a.org_id, a.review_year,  a.entity_id, a.employee_id, a.employee_name,
+		b.job_review_id, b.total_points, b.approve_status
+	FROM 
+		(SELECT vw_review_year.review_year, employees.org_id, employees.entity_id,
+			employees.employee_id, 
+			(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name
+		FROM vw_review_year INNER JOIN employees ON vw_review_year.org_id = employees.org_id
+		WHERE employees.active = true) as a
+	LEFT JOIN
+		(SELECT job_review_id, total_points, approve_status, entity_id, review_year
+		FROM vw_job_reviews) as b
+		
+	ON (a.entity_id = b.entity_id) AND (a.review_year = b.review_year);
+	
 
 CREATE VIEW vw_evaluation_points AS
 	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
@@ -1495,24 +1523,33 @@ CREATE TRIGGER ins_job_reviews AFTER INSERT ON job_reviews
 
 CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_org_id 				integer;
 	v_application_id		integer;
+	
+	reca					RECORD;
 	msg 					varchar(120);
 BEGIN
-	SELECT application_id, org_id INTO v_application_id
+	SELECT application_id INTO v_application_id
 	FROM applications 
-	WHERE (intake_ID = CAST($1 as int)) AND (entity_ID = CAST($2 as int));
+	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
+	
+	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
+	FROM applicants
+	WHERE (entity_id = $2::int);
 
-	SELECT org_id INTO v_org_id
-	FROM intake 
-	WHERE (intake_ID = CAST($1 as int));
+	IF(reca.entity_id is null) THEN
+		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
+		FROM employees
+		WHERE (entity_id = $2::int);
+	END IF;
 
-	IF v_application_id is null THEN
-		INSERT INTO applications (org_id, intake_id, entity_id, approve_status)
-		VALUES (v_org_id, CAST($1 as int), CAST($2 as int), 'Completed');
-		msg := 'Added Job application';
-	ELSE
+	IF v_application_id is not null THEN
 		msg := 'There is another application for the post.';
+	ELSIF (reca.previous_salary is null) OR (reca.expected_salary is null) THEN
+		msg := 'Kindly indicate your previous and expected salary';
+	ELSE
+		INSERT INTO applications (intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
+		VALUES ($1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		msg := 'Added Job application';
 	END IF;
 
 	return msg;
@@ -1728,6 +1765,92 @@ BEGIN
 	RETURN v_leave_balance;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_leave_approved_balance(integer, integer) RETURNS real AS $$
+DECLARE
+	reca					RECORD;
+	v_months				integer;
+	v_leave_starting		date;
+	v_leave_carryover		real;
+	v_leave_balance			real;
+	v_leave_days			real;
+	v_leave_work_days		real;
+	v_leave_initial			real;
+	v_year_leave			real;
+BEGIN
+
+	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry 
+		INTO reca
+	FROM leave_types
+	WHERE (leave_type_id = $2);
+
+	SELECT leave_balance, leave_starting INTO v_leave_carryover, v_leave_starting
+	FROM employee_leave_types
+	WHERE (entity_id = $1) AND (leave_type_id = $2);
+	IF(v_leave_carryover is null) THEN v_leave_carryover := 0; END IF;
+	IF(v_leave_carryover > reca.maximum_carry) THEN v_leave_carryover := reca.maximum_carry; END IF;
+	IF(v_leave_starting is null) THEN v_leave_starting := current_date; END IF;
+
+	v_months := EXTRACT(MONTH FROM CURRENT_TIMESTAMP) - 1;
+	v_leave_balance := reca.initial_days + reca.month_quota * v_months;
+	if(reca.month_quota = 0)THEN v_leave_balance := reca.allowed_leave_days; END IF;
+
+	IF(reca.maximum_carry = 0)THEN
+		SELECT sum(employee_leave.leave_days) INTO v_leave_days
+		FROM employee_leave 
+		WHERE (entity_id = $1) AND (leave_type_id = $2)
+			AND (approve_status = 'Approved')
+			AND (EXTRACT(YEAR FROM leave_from) = EXTRACT(YEAR FROM now()));
+		IF(v_leave_days is null) THEN v_leave_days := 0; END IF;
+
+		SELECT SUM(CASE WHEN leave_work_days.half_day = true THEN 0.5 ELSE 1 END) INTO v_leave_work_days
+		FROM leave_work_days INNER JOIN employee_leave ON leave_work_days.employee_leave_id = employee_leave.employee_leave_id
+		WHERE (employee_leave.entity_id = $1) AND (employee_leave.leave_type_id = $2)
+			AND (leave_work_days.approve_status = 'Approved')
+			AND (EXTRACT(YEAR FROM employee_leave.leave_from) = EXTRACT(YEAR FROM now()));
+		IF(v_leave_work_days is null) THEN v_leave_work_days := 0; END IF;
+		v_leave_days := v_leave_days - v_leave_work_days;
+
+		IF(v_leave_balance > reca.allowed_leave_days) THEN v_leave_balance := reca.allowed_leave_days; END IF;
+		v_leave_balance := v_leave_balance - v_leave_days;
+	ELSE
+		SELECT sum(employee_leave.leave_days) INTO v_leave_days
+		FROM employee_leave 
+		WHERE (entity_id = $1) AND (leave_type_id = $2)
+			AND (approve_status = 'Approved');
+		IF(v_leave_days is null) THEN v_leave_days := 0; END IF;
+		
+		SELECT sum(employee_leave.leave_days) INTO v_year_leave
+		FROM employee_leave 
+		WHERE (entity_id = $1) AND (leave_type_id = $2)
+			AND (approve_status = 'Approved')
+			AND (EXTRACT(YEAR FROM leave_from) = EXTRACT(YEAR FROM now()));
+		IF(v_year_leave is null) THEN v_year_leave := 0; END IF;
+
+		SELECT SUM(CASE WHEN leave_work_days.half_day = true THEN 0.5 ELSE 1 END) INTO v_leave_work_days
+		FROM leave_work_days INNER JOIN employee_leave ON leave_work_days.employee_leave_id = employee_leave.employee_leave_id
+		WHERE (employee_leave.entity_id = $1) AND (employee_leave.leave_type_id = $2)
+			AND (leave_work_days.approve_status = 'Approved');
+		IF(v_leave_work_days is null) THEN v_leave_work_days := 0; END IF;
+		v_leave_days := v_leave_days - v_leave_work_days;
+		
+		v_leave_initial := v_leave_carryover + (EXTRACT(YEAR FROM now()) - EXTRACT(YEAR FROM v_leave_starting)) * reca.allowed_leave_days;
+		IF(EXTRACT(MONTH FROM v_leave_starting) > 1)THEN
+			v_leave_initial := v_leave_carryover + (EXTRACT(YEAR FROM now()) - EXTRACT(YEAR FROM v_leave_starting) - 1) * reca.allowed_leave_days;
+			IF(reca.month_quota = 0)THEN v_leave_initial := v_leave_initial + (13 - EXTRACT(MONTH FROM v_leave_starting)) * reca.month_quota;
+			ELSE v_leave_initial := v_leave_initial + reca.allowed_leave_days;
+			END IF;
+		END IF;
+		v_leave_initial := v_leave_initial - (v_leave_days - v_year_leave);
+		IF(v_leave_initial > reca.maximum_carry) THEN v_leave_initial := reca.maximum_carry; END IF;		
+		v_leave_balance := v_leave_initial + v_leave_balance - v_year_leave;
+	END IF;
+
+	RETURN v_leave_balance;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION leave_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE

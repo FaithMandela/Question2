@@ -76,6 +76,7 @@ CREATE TABLE tax_types (
 	currency_id				integer references currency,
 	org_id					integer references orgs,
 	tax_type_name			varchar(50) not null,
+	tax_type_number			varchar(50),
 	formural				varchar(320),
 	tax_relief				real default 0 not null,
 	tax_type_order			integer default 0 not null,
@@ -87,6 +88,7 @@ CREATE TABLE tax_types (
 	employer				float default 0 not null,
 	employer_ps				float default 0 not null,
 	account_number			varchar(32),
+	employer_account		varchar(32),
 	active					boolean default true,
 	use_key					integer default 0 not null,
 	Details					text,
@@ -265,8 +267,9 @@ CREATE VIEW vw_tax_types AS
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		tax_types.org_id, tax_types.tax_type_id, tax_types.tax_type_name, tax_types.formural, tax_types.tax_relief, 
 		tax_types.tax_type_order, tax_types.in_tax, tax_types.tax_rate, tax_types.tax_inclusive, tax_types.linear, 
-		tax_types.percentage, tax_types.employer, tax_types.employer_ps, tax_types.account_number, tax_types.active, 
-		tax_types.use_key, tax_types.details
+		tax_types.percentage, tax_types.employer, tax_types.employer_ps, tax_types.account_number, 
+		tax_types.employer_account, tax_types.active, 
+		tax_types.tax_type_number, tax_types.use_key, tax_types.details
 	FROM tax_types INNER JOIN currency ON tax_types.currency_id = currency.currency_id
 		LEFT JOIN vw_accounts ON tax_types.account_id = vw_accounts.account_id;
 
@@ -279,7 +282,8 @@ CREATE VIEW vw_period_tax_types AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate,  
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister,
-		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, period_tax_types.Period_Tax_Type_Name, tax_types.use_key,
+		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, tax_types.tax_type_number,
+		period_tax_types.period_tax_type_name, tax_types.use_key,
 		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, period_tax_types.percentage, 
 		period_tax_types.formural, period_tax_types.details
 	FROM period_tax_types INNER JOIN vw_periods ON period_tax_types.period_id = vw_periods.period_id
@@ -299,7 +303,7 @@ CREATE VIEW vw_period_tax_rates AS
 	
 CREATE VIEW vw_default_tax_types AS
 	SELECT entitys.entity_id, entitys.entity_name, 
-		vw_tax_types.tax_type_id, vw_tax_types.tax_type_name, 
+		vw_tax_types.tax_type_id, vw_tax_types.tax_type_name, vw_tax_types.tax_type_number,
 		vw_tax_types.currency_id, vw_tax_types.currency_name, vw_tax_types.currency_symbol,
 		default_tax_types.default_tax_type_id, 
 		default_tax_types.org_id, default_tax_types.tax_identification, default_tax_types.active, default_tax_types.narrative

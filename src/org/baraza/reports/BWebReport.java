@@ -25,17 +25,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JRRuntimeException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.export.JRHtmlExporter;
-import net.sf.jasperreports.engine.export.JRHtmlExporterParameter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import net.sf.jasperreports.engine.export.HtmlExporter;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleXlsxReportConfiguration;
+import net.sf.jasperreports.export.SimpleHtmlReportConfiguration;
+import net.sf.jasperreports.export.SimpleHtmlExporterConfiguration;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
+import net.sf.jasperreports.web.util.WebHtmlResourceHandler;
 import net.sf.jasperreports.j2ee.servlets.ImageServlet;
 
 import org.baraza.xml.BElement;
@@ -128,19 +133,33 @@ public class BWebReport  {
 
 			if (pageIndex < 0) pageIndex = 0;
 			if (pageIndex > lastPageIndex) pageIndex = lastPageIndex;
+			
+			StringBuffer rbuffer = new StringBuffer();
+			
+			HtmlExporter exporterHTML = new HtmlExporter();
+			exporterHTML.setExporterInput(new SimpleExporterInput(jasperPrint));
+			SimpleHtmlExporterOutput exporterOutput = new SimpleHtmlExporterOutput(rbuffer);
+			exporterOutput.setImageHandler(new WebHtmlResourceHandler("image?image={0}"));
+			exporterHTML.setExporterOutput(exporterOutput);
+			
+			SimpleHtmlExporterConfiguration exporterConfig = new SimpleHtmlExporterConfiguration();
+			exporterConfig.setHtmlHeader("");
+			exporterConfig.setHtmlFooter("");
+			exporterConfig.setBetweenPagesHtml("");
+			exporterHTML.setConfiguration(exporterConfig);
 
+			SimpleHtmlReportConfiguration reportConfig = new SimpleHtmlReportConfiguration();
+			reportConfig.setWhitePageBackground(false);
+			reportConfig.setPageIndex(Integer.valueOf(pageIndex));
+			exporterHTML.setConfiguration(reportConfig);
+			
+			exporterHTML.exportReport();
+			
 			sbuffer.append("<div id='reports'>\n");
-			JRHtmlExporter exporter = new JRHtmlExporter();
-			exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-			exporter.setParameter(JRExporterParameter.OUTPUT_STRING_BUFFER, sbuffer);
-			exporter.setParameter(JRExporterParameter.PAGE_INDEX, Integer.valueOf(pageIndex));
-			exporter.setParameter(JRHtmlExporterParameter.HTML_HEADER, "");
-			exporter.setParameter(JRHtmlExporterParameter.BETWEEN_PAGES_HTML, "");
-			exporter.setParameter(JRHtmlExporterParameter.HTML_FOOTER, "");
-			exporter.setParameter(JRHtmlExporterParameter.IMAGES_URI, "image?image=");
-			exporter.exportReport();
+			sbuffer.append(rbuffer);
 			sbuffer.append("\n</div>\n");
 
+			sbuffer.append("<div id='reportfooter'>\n");
 			sbuffer.append("<table style='width: 597px; border-collapse: collapse'><tr>\n");
 			sbuffer.append("<td width='55'><button class='i_triangle_double_left icon' name='reportmove' type='submit' value='<<'>First</button></td>\n");
 			sbuffer.append("<td width='55'><button class='i_triangle_left icon' name='reportmove' type='submit' value='<'>Previous</button></td>\n");
@@ -151,6 +170,7 @@ public class BWebReport  {
 			sbuffer.append("<td width='55'><button class='i_excel_document icon' name='excelexport' type='submit' value='excel'>excel</button></td>\n");
 			sbuffer.append("<td width='55'><button class='i_pdf_document icon' name='reportexport' type='submit' value='pdf'>pdf</button></td>\n");
 			sbuffer.append("</tr><table>");
+			sbuffer.append("\n</div>\n");
 		} catch (JRException ex) {
 			System.out.println("Jasper exception : " + ex);
 		}
@@ -205,35 +225,29 @@ public class BWebReport  {
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, db.getDB());
 			if(reportType == 0) {
-				byte[] pdfdata = JasperExportManager.exportReportToPdf(jasperPrint);
-
 				response.setCharacterEncoding("ISO-8859-1");
 				response.setContentType("application/pdf");
 				response.setHeader("Content-Disposition", "attachment; filename=report.pdf");
-				response.setContentLength(pdfdata.length);
-				response.getOutputStream().write(pdfdata);
-				response.getOutputStream().flush();
+			
+				JRPdfExporter exporter = new JRPdfExporter();
+				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+				exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+				exporter.exportReport();
 			}
 			if(reportType == 1) {
-				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();  
-				JRXlsExporter exporterXls = new JRXlsExporter ();  
-				exporterXls.setParameter(JRXlsExporterParameter.JASPER_PRINT, jasperPrint);  
-				exporterXls.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, false);  
-				exporterXls.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, true);  
-				exporterXls.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, false);  
-				exporterXls.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, true);  
-				exporterXls.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, true);  
-				exporterXls.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, true);  
-				exporterXls.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, "report.xls");  
-				exporterXls.setParameter(JRXlsExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);  
-				exporterXls.exportReport();                               
-					
-				response.setContentType("application/vnd.ms-excel");  
-				response.setHeader("Content-Disposition", "attachment;filename=report.xls");  
-				ServletOutputStream servletOutputStream = response.getOutputStream();  
-				servletOutputStream.write(byteArrayOutputStream.toByteArray());  
-				servletOutputStream.flush();  
-				servletOutputStream.close(); 
+				response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+				response.setHeader("Content-Disposition", "attachment; filename=xxx.xlsx");
+
+				JRXlsxExporter exporter = new JRXlsxExporter();
+				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+				exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
+				SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
+				
+				configuration.setOnePagePerSheet(true);
+				configuration.setDetectCellType(true);
+				configuration.setCollapseRowSpan(false);
+				exporter.setConfiguration(configuration);
+				exporter.exportReport();
 			}
 		} catch (JRException ex) {
 			log.severe("jasper exception " + ex);

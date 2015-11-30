@@ -519,6 +519,7 @@
    	function updateField(valueid, valuename) {
 		document.getElementsByName(valueid)[0].value = valuename;
 	}
+
 	function resizeJqGridWidth(grid_id, div_id, width){
 	    $(window).bind('resize', function() {
 	        $('#' + grid_id).setGridWidth(width, true); //Back to original width
@@ -628,22 +629,7 @@
 
 	function navButtonAction(){
 		console.info("Reached navButtonAction()");
-
-
-
 	}//navButtonAction
-
-	/* /nav button */
-
-	// $("#jqlist").setGridWidth($('.portlet-body').width());
-	//
-    // // Size me later...
-    // $('.portlet-body').bind('resize', function () {
-	// 	console.log($('.portlet-body').width());
-    //     $("#jqlist").setGridWidth($('.portlet-body').width());
-    // }).trigger('resize');
-
-
 
 	resizeJqGridWidth('jqlist', 'portletBody', $('.portlet-body').width());
 

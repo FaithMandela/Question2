@@ -347,7 +347,7 @@ public class BQuery {
 		}*/
 
 		// SQL view debug point
-		System.out.println("SQL : " + mysql);
+		//System.out.println("SQL : " + mysql);
 	}
 
 	public void setSQL(String lsql) {
@@ -622,10 +622,7 @@ public class BQuery {
 			}
 		}
 		
-		System.out.println("BASE 4010 : " + fname + " = " + fvalue);
-		
         try {
-        System.out.println("BASE 4012 : " + rs.getString(fname));
         
 			int columnindex = rs.findColumn(fname);
 			if(fvalue == null) {
@@ -635,7 +632,7 @@ public class BQuery {
 		    } else {
 				type = getFieldType(columnindex);
 	
-				System.out.println("BASE 4015 : " + fname + " = " + fvalue + " type = " + type);
+				//System.out.println("BASE 4015 : " + fname + " = " + fvalue + " type = " + type);
 				switch(type) {
         			case Types.CHAR:
         			case Types.VARCHAR:
@@ -1006,20 +1003,23 @@ public class BQuery {
 
            	while (rs.next()) {
 				Vector<Object> newRow = new Vector<Object>();
-				for(int column=1; column<=titles.size(); column++) {
-					if(view == null) {
+				if(view == null) {
+					for(int column=1; column<=titles.size(); column++)
 						newRow.addElement(rs.getObject(column));
-					} else {
-						String fldName = view.getElement(column-1).getValue();
-						if (view.getElement(column-1).getName().equals("CHECKBOX")) {
-							newRow.addElement(rs.getBoolean(fieldNames.get(column-1)));
-						} else if(view.getElement(column-1).getAttribute("java") != null) {
-							String javaCall = view.getElement(column-1).getAttribute("java");
-							if(javaCall.equals("password")) {
-								newRow.addElement(cp.password(rs.getString(fldName)));
+				} else {
+					for(BElement el : view.getElements()) {
+						String fldName = el.getValue();
+						if(!fldName.trim().equals("")) {
+							if (el.getName().equals("CHECKBOX")) {
+								newRow.addElement(rs.getBoolean(fldName));
+							} else if(el.getAttribute("java") != null) {
+								String javaCall = el.getAttribute("java");
+								if(javaCall.equals("password")) {
+									newRow.addElement(cp.password(rs.getString(fldName)));
+								}
+							} else {
+								newRow.addElement(rs.getObject(fldName));
 							}
-						} else {
-							newRow.addElement(rs.getObject(fldName));
 						}
 					}
 				}
@@ -1581,8 +1581,8 @@ public class BQuery {
     	for(i=0; i<getRowCount(); i++) {
 			int colcount = getColumnCount()-1;
 			for(j=0;j<=colcount;j++) {
-				if(j==colcount) mystr += getcvsValueAt(i, j) + "\r\n";
-				else mystr += getcvsValueAt(i, j) + ",";
+				if(j==colcount) mystr += getCsvValueAt(i, j) + "\r\n";
+				else mystr += getCsvValueAt(i, j) + ",";
 			}
 		}
 
@@ -1590,7 +1590,7 @@ public class BQuery {
 		io.saveFile(filename, mystr);
 	}
 
-	public String getcvs() {
+	public String getCsv() {
 		int i, j;
 		String mystr = "";
 
@@ -1607,16 +1607,15 @@ public class BQuery {
     	for(i=0; i<getRowCount(); i++) {
 			int colcount = getColumnCount()-1;
 			for(j=0;j<=colcount;j++) {
-				if(j==colcount) mystr += getcvsValueAt(i, j) + "\r\n";
-				else mystr += getcvsValueAt(i, j) + ",";
+				if(j==colcount) mystr += getCsvValueAt(i, j) + "\r\n";
+				else mystr += getCsvValueAt(i, j) + ",";
 			}
 		}
 
 		return mystr;
 	}
 
-
-    public String getcvsValueAt(int aRow, int aColumn) {
+    public String getCsvValueAt(int aRow, int aColumn) {
         Vector row = (Vector)data.elementAt(aRow);
         Object myobj = row.elementAt(aColumn);
 		Class myclass = getColumnClass(aColumn);

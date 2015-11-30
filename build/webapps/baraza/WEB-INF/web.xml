@@ -12,11 +12,11 @@
 	</context-param>
 	<context-param>
 		<param-name>web_title</param-name>
-		<param-value>Baraza Human Resource Management System</param-value>
+		<param-value>Baraza Human Capital Management System</param-value>
 	</context-param>
 	<context-param>
 		<param-name>login_title</param-name>
-		<param-value>Baraza HRMS</param-value>
+		<param-value>Baraza HCMS</param-value>
 	</context-param>
 	<context-param>
 		<param-name>app_db</param-name>

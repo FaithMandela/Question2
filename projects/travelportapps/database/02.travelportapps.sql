@@ -865,6 +865,7 @@ CREATE TABLE apps_list(
   apps_list_id serial primary key,
   org_id integer REFERENCES orgs,
   app_name character varying(50),
+  descriptions text,
   query_date timestamp without time zone NOT NULL DEFAULT now(),
    UNIQUE (app_name)
 );
@@ -915,6 +916,27 @@ CREATE OR REPLACE VIEW vw_app_users AS
      JOIN apps_subscriptions ON entitys.org_id = apps_subscriptions.org_id
      JOIN apps_list ON apps_subscriptions.apps_list_id = apps_list.apps_list_id;
   
+  
+  CREATE OR REPLACE VIEW vw_app_subscriptions AS 
+ SELECT vw_orgs.org_id, apps_subscriptions.app_subscriptions_id,
+    vw_orgs.org_name,
+    apps_list.descriptions,
+    apps_list.app_name
+    
+   FROM apps_subscriptions
+     JOIN apps_list ON apps_subscriptions.apps_list_id = apps_list.apps_list_id
+     JOIN vw_orgs ON apps_subscriptions.org_id = vw_orgs.org_id;
+  
+  CREATE OR REPLACE VIEW vw_app_list AS 
+ SELECT vw_orgs.org_id, apps_list.apps_list_id,
+    vw_orgs.org_name,
+    apps_list.app_name,apps_list.query_date,
+    apps_list.descriptions
+    
+   FROM apps_list
+     JOIN vw_orgs ON apps_list.org_id = vw_orgs.org_id;
+  
+
 
 CREATE OR REPLACE VIEW tomcat_users AS 
  SELECT entitys.user_name,

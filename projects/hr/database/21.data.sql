@@ -44,6 +44,7 @@ INSERT INTO department_roles (org_id, department_role_id, department_id, ln_depa
 - Provide leadership and monitor team performance and individual staff performance ', NULL, NULL, NULL, NULL);
 SELECT pg_catalog.setval('department_roles_department_role_id_seq', 9, true);
 
+INSERT INTO skill_category (org_id, skill_category_id, skill_category_name, details) VALUES (0, 0, 'Others', NULL);
 INSERT INTO skill_category (org_id, skill_category_id, skill_category_name, details) VALUES (0, 1, 'HARDWARE', NULL);
 INSERT INTO skill_category (org_id, skill_category_id, skill_category_name, details) VALUES (0, 2, 'OPERATING SYSTEM', NULL);
 INSERT INTO skill_category (org_id, skill_category_id, skill_category_name, details) VALUES (0, 3, 'SOFTWARE', NULL);
@@ -55,6 +56,7 @@ INSERT INTO skill_category (org_id, skill_category_id, skill_category_name, deta
 SELECT pg_catalog.setval('skill_category_skill_category_id_seq', 10, true);
 UPDATE skill_category SET skill_category_name =  initcap(skill_category_name);
 
+INSERT INTO skill_types (skill_type_id, skill_category_id, skill_type_name, basic, intermediate, advanced, details) VALUES (0, 0, 'Indicate Your Skill', null, null, null, null);
 INSERT INTO skill_types (skill_type_id, skill_category_id, skill_type_name, basic, intermediate, advanced, details) VALUES (1, 1, 'Personal Computer', 'Identify the different components of a computer', 'Understand the working of each component', 'Troubleshoot, Diagonize and Repair', NULL);
 INSERT INTO skill_types (skill_type_id, skill_category_id, skill_type_name, basic, intermediate, advanced, details) VALUES (2, 1, 'Dot Matrix Printer', 'Identify the different components of a computer', 'Understand the working of each component', 'Troubleshoot, Diagonize and Repair', NULL);
 INSERT INTO skill_types (skill_type_id, skill_category_id, skill_type_name, basic, intermediate, advanced, details) VALUES (3, 1, 'Ticket Printer', 'Identify the different components of a computer', 'Understand the working of each component', 'Troubleshoot, Diagonize and Repair', NULL);
@@ -89,10 +91,12 @@ UPDATE skill_types SET skill_type_name =  initcap(skill_type_name), org_id = 0;
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 1, 'Sacco Allowance', true, true);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 2, 'Bonus', true, true);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, in_payroll, Visible, In_Tax) VALUES (1, 3, 'Employer - Pension', false, true, false);
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 11, 'SACCO', true, false);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 12, 'HELB', true, false);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 13, 'Rent Payment', true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 14, 'Pension deduction', true, false);
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 21, 'Travel', true, false);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 22, 'Communcation', true, false);

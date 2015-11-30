@@ -16,13 +16,21 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT cv_projects.cv_project_date, cv_projects.cv_project_name
+
 FROM cv_projects
+
 WHERE (cv_projects.entity_id = '$P!{filterid}')
-$P!{organd};]]>
+$P!{organd}
+
+ORDER BY cv_projects.cv_project_date]]>
 	</queryString>
 	<field name="cv_project_date" class="java.sql.Date"/>
 	<field name="cv_project_name" class="java.lang.String"/>
@@ -63,7 +71,7 @@ $P!{organd};]]>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="yyyy, MMMMM" isBlankWhenNull="true">
 				<reportElement style="Detail" x="1" y="0" width="140" height="15" uuid="735ee669-a93c-4d6b-a221-bb114dd03eaf"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>

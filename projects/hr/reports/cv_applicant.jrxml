@@ -226,7 +226,7 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{objective}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="-11" y="184" width="577" height="17" uuid="43f48504-1e1e-4c1a-8848-eedd68ccd5e7"/>
+				<reportElement positionType="Float" x="0" y="184" width="555" height="17" uuid="43f48504-1e1e-4c1a-8848-eedd68ccd5e7"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -234,7 +234,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_education.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="-11" y="205" width="577" height="17" uuid="a1fe17a8-e45c-4f22-b1fc-742c200cf637"/>
+				<reportElement positionType="Float" x="0" y="205" width="555" height="17" uuid="a1fe17a8-e45c-4f22-b1fc-742c200cf637"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -242,7 +242,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employment.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="-11" y="226" width="577" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
+				<reportElement positionType="Float" x="0" y="226" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -264,7 +264,7 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{interests}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="-11" y="340" width="577" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
+				<reportElement positionType="Float" x="0" y="340" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -272,7 +272,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_referees.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="-11" y="248" width="577" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
+				<reportElement positionType="Float" x="0" y="248" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -280,7 +280,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_seminars.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="-11" y="270" width="577" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
+				<reportElement positionType="Float" x="0" y="270" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
