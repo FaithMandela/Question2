@@ -96,7 +96,7 @@ WHERE pickup_date = CURRENT_TIMESTAMP::date]]>
 				<reportElement x="10" y="0" width="251" height="74" uuid="0b109bcb-b9ef-49e1-b85c-524182f86f48"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "cwt_logo.jpg"]]></imageExpression>
 			</image>
-			<image scaleImage="FillFrame">
+			<image scaleImage="RetainShape" hAlign="Right">
 				<reportElement x="551" y="0" width="244" height="84" uuid="a95d60b1-4b74-4478-a642-7ff7e3420deb"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "bts_logo.jpg"]]></imageExpression>
 			</image>
@@ -125,7 +125,7 @@ WHERE pickup_date = CURRENT_TIMESTAMP::date]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Passanger Name]]></text>
+				<text><![CDATA[Passenger Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="348" y="0" width="60" height="21" forecolor="#000000" uuid="7a97c002-ed63-41e1-b8dc-cf9f255a7ea6"/>
