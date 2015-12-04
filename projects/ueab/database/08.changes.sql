@@ -1,4 +1,7 @@
 
+UPDATE fields SET field_size = 25;
+UPDATE fields SET field_size = 85 WHERE (field_type = 'SUBGRID') OR (field_type = 'TABLE');
+
 ----- Do a backend approve
 CREATE OR REPLACE FUNCTION upd_qapprove(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(250) AS $$
 DECLARE

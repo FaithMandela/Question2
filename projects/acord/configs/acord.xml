@@ -707,7 +707,7 @@
 			<TEXTFIELD w="75" title="Website">website</TEXTFIELD>
 			<FORM name="Donors" keyfield="donor_id" table="donors">
 				<COMBOBOX w="430" title="Donor Group" lptable="donor_groups" y="10" h="20" x="10" lpfield="donor_group_name">donor_group_id</COMBOBOX>
-				<COMBOBOX w="430" title="Nationality" lptable="sys_countrys" lpkey="sys_country_id" y="30" h="20" x="10" lpfield="sys_country_name">nationality_id</COMBOBOX>
+				<COMBOBOX w="430" title="Nationality" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="30" h="20" x="10" lpfield="sys_country_name">nationality_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Donor ID" y="50" h="20" x="10">donor_id</TEXTFIELD>
 				<TEXTFIELD w="350" title="Donor Name" y="70" h="20" x="10">donor_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Legal Status" y="90" h="20" x="10">legal_status</TEXTFIELD>
@@ -777,7 +777,7 @@
 				<TEXTFIELD w="75" title="Country">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="175" title="Region Covered">region_covered</TEXTFIELD>
 				<FORM name="Project Locations" keyfield="project_location_id" linkfield="project_id" table="project_locations">
-					<COMBOBOX w="430" title="Sys Country ID" lptable="sys_countrys" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<COMBOBOX w="430" title="Country" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 					<TEXTAREA w="430" tab="Region Covered" y="30" h="70" x="10">region_covered</TEXTAREA>
 					<TEXTAREA w="430" tab="Details" y="100" h="70" x="10">details</TEXTAREA>
 				</FORM>

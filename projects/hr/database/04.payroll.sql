@@ -1636,7 +1636,7 @@ BEGIN
 		FROM adjustments
 		WHERE (adjustment_id = rec.adjustment_id);
 		
-		IF(rec.use_formura = true) AND (adj.formural != null)THEN
+		IF(rec.use_formura = true) AND (adj.formural is not null)THEN
 			EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 			INTO v_amount;
 		ELSIF(rec.amount > 0)THEN
@@ -1672,7 +1672,7 @@ BEGIN
 			FROM adjustments
 			WHERE (adjustment_id = rec.contribution_id);
 			
-			IF(rec.employer_formural = true) AND (adj.formural != null)THEN
+			IF(rec.employer_formural = true) AND (adj.formural is not null)THEN
 				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 				INTO v_amount;
 			ELSIF(rec.employer_ps > 0)THEN

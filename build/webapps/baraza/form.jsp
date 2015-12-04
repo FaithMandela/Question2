@@ -84,12 +84,11 @@
 
 	<link href="./assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="./assets/jqgrid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" media="screen" />
-
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
 
-        <style type="text/css">
-
-        </style>
+	<!-- jsgrid css -->
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid-theme.min.css" />
 
 </head>
 <!-- END HEAD -->
@@ -150,16 +149,19 @@
 						<span class="caption-subject bold uppercase"> <%= formTitle %></span>
 					</div>
 					<div class="actions">
+						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormValues();">
+						<i class="fa fa-pencil"></i> Save </a>
 						<a href="javascript:;" class="btn btn-circle btn-default">
-						<i class="fa fa-pencil"></i> Edit </a>
-						<a href="javascript:;" class="btn btn-circle btn-default">
-						<i class="fa fa-plus"></i> Add </a>
+						<i class="fa fa-plus"></i> Submit </a>
 						<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"></a>
 					</div>
 				</div>
 				<div class="portlet-body">
 					<div class="scroller" style="height:575px" data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
-						<%= formData %>
+						<form id='barazaForm' name='barazaForm' method='post' action='form.jsp'>
+							<%= form.getFormTabs() %>
+							<%= formData %>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -268,7 +270,10 @@
 <script src="./assets/global/plugins/moment.min.js"></script>
 <script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
 
-<script>
+<!-- jsgrid for sub form editing-->
+<script src="./assets/jsgrid-1.2.0/jsgrid.min.js"></script>
+
+<script type="text/javascript">
     jQuery(document).ready(function() {
         Metronic.init(); // init metronic core componets
         Layout.init(); // init layout
@@ -294,13 +299,26 @@
             placeholder: "Select an option",
             allowClear: true
         });
-
     });
-</script>
 
-<script type="text/javascript">
+	<%= form.printSubForm() %>
 
+	function getFormValues() {
+        var str = '';
+		var jsonForm = {};
+        var elem = document.getElementById('barazaForm').elements;
+        for(var i = 0; i < elem.length; i++) {
+			if(!(elem[i].name == null || elem[i].name == "", elem[i].value == null || elem[i].value == "")) {
+				jsonForm[elem[i].name] = elem[i].value;
+			}
+        }
 
+		for	(i = 0; i < db_list.length; i++) {
+			jsonForm[db_list[i]] = eval(db_list[i]);
+		}
+ 
+console.log(jsonForm);
+    }
 </script>
 
 </body>

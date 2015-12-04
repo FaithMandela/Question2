@@ -1,132 +1,202 @@
+ALTER TABLE applications ADD	previous_salary			real;
+ALTER TABLE applications ADD	expected_salary			real;
+ALTER TABLE applications ADD	review_rating			integer;
 
+ALTER TABLE contract_types ADD contract_text text;
+	
+DROP VIEW vw_contracting;
+DROP VIEW vw_applications;
+DROP VIEW vw_intake;
 
-CREATE VIEW vw_pension_adjustments AS
-	SELECT c.period_id, c.start_date,
-		a.employee_adjustment_id, a.employee_month_id, a.adjustment_id, a.pension_id, 
-		a.org_id, a.adjustment_type, a.adjustment_factor, a.pay_date, a.amount, 
-		a.exchange_rate, a.in_payroll, a.in_tax, a.visible,
-		(a.amount * a.exchange_rate) as base_amount
-	FROM employee_adjustments as a INNER JOIN employee_month as b ON a.employee_month_id = b.employee_month_id
-		INNER JOIN periods as c ON b.period_id = c.period_id
-	WHERE (a.pension_id is not null);
-
-CREATE VIEW vw_employee_pensions AS
-	SELECT a.entity_id, a.entity_name, a.adjustment_id, a.adjustment_name, a.contribution_id, 
-		a.contribution_name, a.org_id, a.pension_id, a.pension_company, a.pension_number, 
-		a.active,
-		b.period_id, b.start_date, b.employee_month_id, 
-		b.amount, b.base_amount,
-		COALESCE(c.amount, 0) as employer_amount, 
-		COALESCE(c.base_amount, 0) as employer_base_amount,
-		(b.amount + COALESCE(c.amount, 0)) as pension_amount, 
-		(b.base_amount + COALESCE(c.base_amount, 0)) as pension_base_amount
-	FROM (vw_pensions as a INNER JOIN vw_pension_adjustments as b 
-		ON (a.pension_id = b.pension_id) AND (a.adjustment_id = b.adjustment_id))
-		LEFT JOIN vw_pension_adjustments as c
-		ON (a.pension_id = c.pension_id) AND (a.contribution_id = c.adjustment_id)
-		AND (b.employee_month_id = c.employee_month_id);
+CREATE VIEW vw_intake AS
+	SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_description, 
+		vw_department_roles.department_duties, vw_department_roles.department_role_id, vw_department_roles.department_role_name,
+		vw_department_roles.parent_role_name,
+		vw_department_roles.job_description, vw_department_roles.job_requirements, vw_department_roles.duties, 
+		vw_department_roles.performance_measures, 
 		
-
-CREATE TABLE pay_scale_steps (
-	pay_scale_step_id		serial primary key,
-	pay_scale_id			integer references pay_scales,
-	org_id					integer references orgs,
-	pay_step				integer not null,
-	pay_amount				real not null
-);
-CREATE INDEX pay_scale_steps_pay_scale_id ON pay_scale_steps(pay_scale_id);
-CREATE INDEX pay_scale_steps_org_id ON pay_scale_steps(org_id);
-
-
-ALTER TABLE pay_scales ADD currency_id integer references currency;
-CREATE INDEX pay_scales_currency_id ON pay_scales(currency_id);
-
-
-ALTER TABLE employees ADD 	pay_scale_step_id		integer references pay_scale_steps;
-CREATE INDEX employees_pay_scale_step_id ON employees (pay_scale_step_id);
-
-CREATE VIEW vw_pay_scale_steps AS
-	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
+		locations.location_id, locations.location_name, pay_groups.pay_group_id, pay_groups.pay_group_name, 
 		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
-		pay_scale_steps.org_id, pay_scale_steps.pay_scale_step_id, pay_scale_steps.pay_step, 
-		pay_scale_steps.pay_amount,
-		(pay_scales.pay_scale_name || '-' || currency.currency_symbol || '-' || pay_scale_steps.pay_step) as pay_step_name
-	FROM pay_scale_steps INNER JOIN pay_scales ON pay_scale_steps.pay_scale_id = pay_scales.pay_scale_id
-		INNER JOIN currency ON pay_scales.currency_id = currency.currency_id;
 		
-
-ALTER TABLE tax_types ADD currency_id integer references currency;
-ALTER TABLE adjustments ADD currency_id integer references currency;
-ALTER TABLE employee_adjustments ADD exchange_rate real default 1;
-ALTER TABLE employee_tax_types ADD exchange_rate real default 1;
-ALTER TABLE employee_per_diem ADD exchange_rate real default 1;
-
-CREATE TABLE employee_banking (
-	employee_banking_id		serial primary key,
-	employee_month_id		integer references employee_month not null,
-	bank_branch_id			integer references bank_branch,
-	currency_id				integer references currency,
-	org_id					integer references orgs,
-	
-	amount					float default 0 not null,
-	exchange_rate			real default 1 not null,
-	active					boolean default true,
-	
-	bank_account			varchar(64),
-
-	Narrative				varchar(240)
-);
-CREATE INDEX employee_banking_employee_month_id ON employee_banking (employee_month_id);
-CREATE INDEX employee_banking_bank_branch_id ON employee_banking (bank_branch_id);
-CREATE INDEX employee_banking_currency_id ON employee_banking (currency_id);
-CREATE INDEX employee_banking_org_id ON employee_banking(org_id);
-
-CREATE VIEW vw_employee_month AS
-	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
-		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
-		vw_periods.quarter, vw_periods.semister, vw_periods.bank_header, vw_periods.bank_address,
-		vw_periods.gl_payroll_account, vw_periods.gl_bank_account, vw_periods.is_posted,
-		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
-		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
-		pay_groups.pay_group_id, pay_groups.pay_group_name, vw_department_roles.department_id, vw_department_roles.department_name,
-		vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
-		entitys.entity_id, entitys.entity_name,
-		employees.employee_id, employees.surname, employees.first_name, employees.middle_name, employees.date_of_birth, 
-		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
-		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
-		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
-		currency.currency_id, currency.currency_name, currency.currency_symbol, employee_month.exchange_rate,
+		intake.org_id, intake.intake_id, intake.opening_date, intake.closing_date, intake.positions, intake.contract, 
+		intake.contract_period, intake.details,
 		
-		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, employee_month.details,
-		getAdjustment(employee_month.employee_month_id, 4, 31) as overtime,
-		getAdjustment(employee_month.employee_month_id, 1, 1) as full_allowance,
-		getAdjustment(employee_month.employee_month_id, 1, 2) as payroll_allowance,
-		getAdjustment(employee_month.employee_month_id, 1, 3) as tax_allowance,
-		getAdjustment(employee_month.employee_month_id, 2, 1) as full_deduction,
-		getAdjustment(employee_month.employee_month_id, 2, 2) as payroll_deduction,
-		getAdjustment(employee_month.employee_month_id, 2, 3) as tax_deduction,
-		getAdjustment(employee_month.employee_month_id, 3, 1) as full_expense,
-		getAdjustment(employee_month.employee_month_id, 3, 2) as payroll_expense,
-		getAdjustment(employee_month.employee_month_id, 3, 3) as tax_expense,
-		getAdjustment(employee_month.employee_month_id, 4, 11) as payroll_tax,
-		getAdjustment(employee_month.employee_month_id, 4, 12) as tax_tax,
-		getAdjustment(employee_month.employee_month_id, 4, 22) as net_Adjustment,
-		getAdjustment(employee_month.employee_month_id, 4, 33) as per_diem,
-		getAdjustment(employee_month.employee_month_id, 4, 34) as advance,
-		getAdjustment(employee_month.employee_month_id, 4, 35) as advance_deduction,
-		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
-		+ getAdjustment(employee_month.employee_month_id, 4, 33) - getAdjustment(employee_month.employee_month_id, 4, 11)) as net_pay,
-		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
-		+ getAdjustment(employee_month.employee_month_id, 4, 33) + getAdjustment(employee_month.employee_month_id, 4, 34)
-		- getAdjustment(employee_month.employee_month_id, 4, 11) - getAdjustment(employee_month.employee_month_id, 4, 35)
-		- getAdjustment(employee_month.employee_month_id, 4, 36)
-		- getAdjustment(employee_month.employee_month_id, 4, 41)) as banked,
-		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 1, 1) 
-		+ getAdjustment(employee_month.employee_month_id, 3, 1) + getAdjustment(employee_month.employee_month_id, 4, 33)) as cost
-	FROM employee_month INNER JOIN vw_bank_branch ON employee_month.bank_branch_id = vw_bank_branch.bank_branch_id
-		INNER JOIN vw_periods ON employee_month.period_id = vw_periods.period_id
-		INNER JOIN pay_groups ON employee_month.pay_group_id = pay_groups.pay_group_id
-		INNER JOIN entitys ON employee_month.entity_id = entitys.entity_id
-		INNER JOIN vw_department_roles ON employee_month.department_role_id = vw_department_roles.department_role_id
-		INNER JOIN employees ON employee_month.entity_id = employees.entity_id
-		INNER JOIN currency ON employee_month.currency_id = currency.currency_id;
+		(vw_department_roles.department_name || ', ' || vw_department_roles.department_role_name || ', ' || to_char(intake.opening_date, 'YYYY, Mon')) as intake_disp
+	FROM intake INNER JOIN vw_department_roles ON intake.department_role_id = vw_department_roles.department_role_id
+		INNER JOIN locations ON intake.location_id = locations.location_id
+		INNER JOIN pay_groups ON intake.pay_group_id = pay_groups.pay_group_id
+		INNER JOIN pay_scales ON intake.pay_scale_id = pay_scales.pay_scale_id;
+
+CREATE VIEW vw_applications AS
+	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
+		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
+		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
+		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
+		entitys.entity_id, entitys.entity_name, entitys.primary_email,
+		
+		applications.org_id,
+		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 
+		applications.contract_start, applications.contract_period, applications.contract_terms, applications.initial_salary, 
+		applications.application_date, applications.approve_status, applications.workflow_table_id, applications.action_date, 
+		applications.applicant_comments, applications.review, applications.short_listed,
+		applications.previous_salary, applications.expected_salary, applications.review_rating,
+
+		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
+		vw_education_max.name_of_school, vw_education_max.examination_taken, 
+		vw_education_max.grades_obtained, vw_education_max.certificate_number,
+
+		vw_employment_max.employment_id, vw_employment_max.employers_name, vw_employment_max.position_held,
+		vw_employment_max.date_from as emp_date_from, vw_employment_max.date_to as emp_date_to, 
+		vw_employment_max.employment_duration, vw_employment_max.employment_experince,
+		round((date_part('year', vw_employment_max.employment_duration) + date_part('month', vw_employment_max.employment_duration)/12)::numeric, 1) as emp_duration,
+		round((date_part('year', vw_employment_max.employment_experince) + date_part('month', vw_employment_max.employment_experince)/12)::numeric, 1) as emp_experince
+		
+	FROM applications INNER JOIN entitys ON applications.entity_id = entitys.entity_id
+		INNER JOIN vw_intake ON applications.intake_id = vw_intake.intake_id
+		LEFT JOIN vw_education_max ON entitys.entity_id = vw_education_max.entity_id
+		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id;
+		
+CREATE VIEW vw_contracting AS
+	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
+		vw_intake.department_role_id, vw_intake.department_role_name, 
+		vw_intake.job_description, vw_intake.parent_role_name,
+		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
+		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
+		entitys.entity_id, entitys.entity_name, 
+		
+		orgs.org_id, orgs.org_name,
+		
+		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
+		contract_status.contract_status_id, contract_status.contract_status_name,
+		
+		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 
+		applications.contract_start, applications.contract_period, applications.contract_terms, applications.initial_salary, 
+		applications.application_date, applications.approve_status, applications.workflow_table_id, applications.action_date, 
+		applications.applicant_comments, applications.review, 
+
+		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
+		vw_education_max.name_of_school, vw_education_max.examination_taken, 
+		vw_education_max.grades_obtained, vw_education_max.certificate_number,
+
+		vw_employment_max.employment_id, vw_employment_max.employers_name, vw_employment_max.position_held,
+		vw_employment_max.date_from as emp_date_from, vw_employment_max.date_to as emp_date_to, 
+		
+		vw_employment_max.employment_duration, vw_employment_max.employment_experince,
+		round((date_part('year', vw_employment_max.employment_duration) + date_part('month', vw_employment_max.employment_duration)/12)::numeric, 1) as emp_duration,
+		round((date_part('year', vw_employment_max.employment_experince) + date_part('month', vw_employment_max.employment_experince)/12)::numeric, 1) as emp_experince
+
+	FROM applications INNER JOIN entitys ON applications.employee_id = entitys.entity_id
+		INNER JOIN orgs ON applications.org_id = orgs.org_id
+		LEFT JOIN vw_intake ON applications.intake_id = vw_intake.intake_id
+		LEFT JOIN contract_types ON applications.contract_type_id = contract_types.contract_type_id
+		LEFT JOIN contract_status ON applications.contract_status_id = contract_status.contract_status_id
+		LEFT JOIN vw_education_max ON entitys.entity_id = vw_education_max.entity_id
+		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id;
+
+CREATE OR REPLACE FUNCTION process_pensions(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec							RECORD;
+	adj							RECORD;
+	v_period_id					integer;
+	v_org_id					integer;
+	v_employee_month_id			integer;
+	v_employee_adjustment_id	integer;
+	v_exchange_rate				real;
+	v_amount					real;
+	msg							varchar(120);
+BEGIN
+
+	SELECT period_id, org_id INTO v_period_id, v_org_id
+	FROM periods WHERE period_id = $1::int;
+	
+	FOR rec IN SELECT pension_id, entity_id, adjustment_id, contribution_id, 
+       pension_company, pension_number, amount, use_formura, 
+       employer_ps, employer_amount, employer_formural
+	FROM pensions WHERE (active = true) AND (org_id = v_org_id) LOOP
+	
+		SELECT employee_month_id INTO v_employee_month_id
+		FROM employee_month
+		WHERE (period_id = v_period_id) AND (entity_id = rec.entity_id);
+		
+		--- Deduction
+		SELECT employee_adjustment_id INTO v_employee_adjustment_id
+		FROM employee_adjustments
+		WHERE (employee_month_id = v_employee_month_id) AND (pension_id = rec.pension_id)
+			AND (adjustment_id = rec.adjustment_id);
+		
+		SELECT adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, 
+			adjustment_order, earning_code, formural, monthly_update, in_payroll, 
+			in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, 
+			tax_relief_ps, tax_max_allowed, account_number
+		INTO adj
+		FROM adjustments
+		WHERE (adjustment_id = rec.adjustment_id);
+		
+		IF(rec.use_formura = true) AND (adj.formural is not null)THEN
+			EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
+			INTO v_amount;
+		ELSIF(rec.amount > 0)THEN
+			v_amount := rec.amount;
+		END IF;
+		
+		IF(v_employee_adjustment_id is null)THEN
+			INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
+				adjustment_id, adjustment_type, adjustment_factor, 
+				in_payroll, in_tax, visible,
+				exchange_rate, pay_date, amount)
+			VALUES (v_employee_month_id, rec.pension_id, v_org_id,
+				adj.adjustment_id, adj.adjustment_type, -1, 
+				adj.in_payroll, adj.in_tax, adj.visible,
+				1, current_date, v_amount);
+		ELSE
+			UPDATE employee_adjustments SET amount = v_amount
+			WHERE employee_adjustment_id = v_employee_adjustment_id;
+		END IF;
+	
+		--- Employer contribution
+		IF((rec.employer_ps > 0) OR (rec.employer_amount > 0) OR (rec.employer_formural = true))THEN
+			SELECT employee_adjustment_id INTO v_employee_adjustment_id
+			FROM employee_adjustments
+			WHERE (employee_month_id = v_employee_month_id) AND (pension_id = rec.pension_id)
+				AND (adjustment_id = rec.contribution_id);
+			
+			SELECT adjustment_id, currency_id, org_id, adjustment_name, adjustment_type, 
+				adjustment_order, earning_code, formural, monthly_update, in_payroll, 
+				in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, 
+				tax_relief_ps, tax_max_allowed, account_number
+			INTO adj
+			FROM adjustments
+			WHERE (adjustment_id = rec.contribution_id);
+			
+			IF(rec.employer_formural = true) AND (adj.formural is not null)THEN
+				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
+				INTO v_amount;
+			ELSIF(rec.employer_ps > 0)THEN
+				v_amount := v_amount * rec.employer_ps / 100;
+			ELSIF(rec.employer_amount > 0)THEN
+				v_amount := rec.employer_amount;
+			END IF;
+			
+			IF(v_employee_adjustment_id is null)THEN
+				INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
+					adjustment_id, adjustment_type, adjustment_factor, 
+					in_payroll, in_tax, visible,
+					exchange_rate, pay_date, amount)
+				VALUES (v_employee_month_id, rec.pension_id, v_org_id,
+					adj.adjustment_id, adj.adjustment_type, 1, 
+					adj.in_payroll, adj.in_tax, adj.visible,
+					1, current_date, v_amount);
+			ELSE
+				UPDATE employee_adjustments SET amount = v_amount
+				WHERE employee_adjustment_id = v_employee_adjustment_id;
+			END IF;
+		END IF;
+		
+	END LOOP;
+
+	msg := 'Pension Processed';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
