@@ -21,14 +21,14 @@ CREATE FOREIGN TABLE sms_i(
 	retries					integer ,
 	last_retry				timestamp,
 	senderAddress			varchar(64),
-	serviceId				varchar(64), 
-	spRevpassword			varchar(64), 
-	dateTime				timestamp, 
-	correlator				varchar(64), 
-	traceUniqueID			varchar(64), 
-	linkid					varchar(64), 
-	spRevId					varchar(64), 
-	spId					varchar(64), 
+	serviceId				varchar(64),
+	spRevpassword			varchar(64),
+	dateTime				timestamp,
+	correlator				varchar(64),
+	traceUniqueID			varchar(64),
+	linkid					varchar(64),
+	spRevId					varchar(64),
+	spId					varchar(64),
 	smsServiceActivationNumber	varchar(64),
 	link_id					integer,
 	message					text,
@@ -53,7 +53,7 @@ CREATE TABLE car_types(
     car_type_id         serial primary key,
     car_type_code       varchar(10) NOT NULL UNIQUE,
     car_type_name       varchar(75) NOT NULL
-); 
+);
 
 INSERT INTO car_types( car_type_id, car_type_code, car_type_name)
         VALUES  (1, '4 WHEEL', '4 WHEEL DRIVE'),
@@ -68,6 +68,7 @@ CREATE TABLE drivers(
     mobile_number       varchar(15),
     active              boolean default true,
     driver_pin          varchar(35),
+    is_backup           boolean default false,
     details             text
 );
 CREATE INDEX drivers_org_id ON drivers(org_id);
@@ -88,13 +89,15 @@ CREATE TABLE transfers(
     entity_id           integer references entitys,
     record_locator      varchar(10),
     customer_code       varchar(20),
+    customer_name       varchar(255),
     payment_type_id     integer references payment_types,
     currency_id         varchar(4),
-    agreed_amount       real not null default 0, 
+    agreed_amount       real not null default 0,
     booking_location    varchar(2),
     booking_date        timestamp default CURRENT_TIMESTAMP,
     payment_details     text,
-    reference_data      text
+    reference_data      text,
+    pax_no              integer,
 );
 
 CREATE INDEX transfers_entity_id ON transfers(entity_id);
@@ -168,9 +171,9 @@ CREATE VIEW vw_cars AS
 	INNER JOIN orgs ON cars.org_id = orgs.org_id;
 
 CREATE VIEW vw_transfers AS
-	SELECT entitys.entity_id, entitys.entity_name, 
-            payment_types.payment_type_id, payment_types.payment_type_name, 
-            transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.currency_id, transfers.agreed_amount, 
+	SELECT entitys.entity_id, entitys.entity_name,
+            payment_types.payment_type_id, payment_types.payment_type_name,
+            transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.currency_id, transfers.agreed_amount,
             transfers.booking_location, transfers.booking_date, transfers.payment_details, transfers.reference_data
 	FROM transfers
 	INNER JOIN entitys ON transfers.entity_id = entitys.entity_id
@@ -179,11 +182,11 @@ CREATE VIEW vw_transfers AS
 
 -- DROP VIEW vw_passangers;
 CREATE OR REPLACE VIEW vw_passangers AS
-	SELECT car_types.car_type_code, 
-	entitys.entity_id, entitys.entity_name, 
-	payment_types.payment_type_id, payment_types.payment_type_name, 
-	transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.currency_id, transfers.agreed_amount, transfers.booking_location, transfers.booking_date, transfers.payment_details, transfers.reference_data,
-    
+	SELECT car_types.car_type_code,
+	entitys.entity_id, entitys.entity_name,
+	payment_types.payment_type_id, payment_types.payment_type_name,
+	transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.customer_name, transfers.currency_id, transfers.agreed_amount, transfers.booking_location, transfers.booking_date, transfers.payment_details, transfers.reference_data,
+
     transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
     transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num,
 
@@ -199,11 +202,11 @@ CREATE OR REPLACE VIEW vw_passangers AS
 
 
 CREATE VIEW vw_passangers_noflights AS
-	SELECT car_types.car_type_code, 
-	entitys.entity_id, entitys.entity_name, 
-	payment_types.payment_type_id, payment_types.payment_type_name, 
+	SELECT car_types.car_type_code,
+	entitys.entity_id, entitys.entity_name,
+	payment_types.payment_type_id, payment_types.payment_type_name,
 	transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.currency_id, transfers.agreed_amount, transfers.booking_location, transfers.booking_date, transfers.payment_details, transfers.reference_data,
-    
+
     transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
     transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num,
 
@@ -220,51 +223,59 @@ CREATE VIEW vw_passangers_noflights AS
 
 
 -- DROP VIEW vw_transfer_assignments;
-CREATE OR REPLACE VIEW vw_transfer_assignments AS
-	SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number,
-	cars.car_type_id, cars.registration_number,
-	car_types.car_type_name, car_types.car_type_code,
-	passangers.passanger_id, passangers.passanger_name,
-	passangers.transfer_id, passangers.passanger_mobile,passangers.passanger_email,
-	passangers.pickup_time, passangers.pickup, passangers.dropoff, passangers.other_preference,
-	passangers.amount, passangers.processed, passangers.pickup_date, passangers.tab,
-	transfer_assignments.transfer_assignment_id, 
-	transfer_assignments.car_id, transfer_assignments.kms_out, transfer_assignments.kms_in,
-    transfer_assignments.time_out, transfer_assignments.time_in, 
-    transfer_assignments.no_show, transfer_assignments.no_show_reason,
-    transfer_assignments.closed, transfer_assignments.last_update,
-    transfer_assignments.cancelled, transfer_assignments.cancel_reason,
-    transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
-    transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num
 
-	FROM transfer_assignments
-	INNER JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
-	INNER JOIN cars ON cars.car_id = transfer_assignments.car_id
-	INNER JOIN car_types ON car_types.car_type_id = cars.car_type_id
-	INNER JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id
-    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
-    WHERE (transfer_flights.tab is null OR transfer_flights.tab = passangers.tab);
+-- DROP VIEW vw_transfer_assignments;
+CREATE OR REPLACE VIEW vw_transfer_assignments AS 
+ SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number, is_backup,
+    cars.car_type_id, cars.registration_number, car_types.car_type_name, 
+    car_types.car_type_code, transfers.transfer_id, transfers.record_locator, 
+    transfers.customer_code, transfers.customer_name, transfers.currency_id, 
+    transfers.agreed_amount, transfers.booking_location, transfers.booking_date, 
+    transfers.payment_details, transfers.reference_data, 
+    passangers.passanger_id, passangers.passanger_name, 
+    passangers.passanger_mobile, passangers.passanger_email, 
+    passangers.pickup_time, passangers.pickup, passangers.dropoff, 
+    passangers.other_preference, passangers.amount, passangers.processed, 
+    passangers.pickup_date, passangers.tab, 
+    transfer_assignments.transfer_assignment_id, transfer_assignments.car_id, 
+    transfer_assignments.kms_out, transfer_assignments.kms_in, 
+    transfer_assignments.time_out, transfer_assignments.time_in, 
+    transfer_assignments.no_show, transfer_assignments.no_show_reason, 
+    transfer_assignments.closed, transfer_assignments.last_update, 
+    transfer_assignments.cancelled, transfer_assignments.cancel_reason, 
+    transfer_flights.transfer_flight_id, transfer_flights.start_time, 
+    transfer_flights.end_time, transfer_flights.flight_date, 
+    transfer_flights.start_airport, transfer_flights.end_airport, 
+    transfer_flights.airline, transfer_flights.flight_num
+   FROM transfer_assignments
+   JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
+   JOIN cars ON cars.car_id = transfer_assignments.car_id
+   JOIN car_types ON car_types.car_type_id = cars.car_type_id
+   JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id
+   JOIN transfers ON passangers.transfer_id = transfers.transfer_id
+   LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
+  WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
 
 -- DROP VIEW vw_transfer_assignments_create;
-CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
-	SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number,
-	cars.car_type_id, cars.registration_number,
-	car_types.car_type_name, car_types.car_type_code,
-	passangers.passanger_id, passangers.passanger_name,
-	passangers.transfer_id, passangers.passanger_mobile,passangers.passanger_email,
-	passangers.pickup_time, passangers.pickup, passangers.dropoff, passangers.other_preference,
-	passangers.amount, passangers.processed, passangers.pickup_date, passangers.tab,
-	transfer_assignments.transfer_assignment_id, 
-	transfer_assignments.car_id, transfer_assignments.kms_out, transfer_assignments.kms_in,
+CREATE OR REPLACE VIEW vw_transfer_assignments_create AS 
+ SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number, drivers.is_backup,
+    cars.car_type_id, cars.registration_number, car_types.car_type_name, 
+    car_types.car_type_code, passangers.passanger_id, passangers.passanger_name, 
+    passangers.transfer_id, passangers.passanger_mobile, 
+    passangers.passanger_email, passangers.pickup_time, passangers.pickup, 
+    passangers.dropoff, passangers.other_preference, passangers.amount, 
+    passangers.processed, passangers.pickup_date, passangers.tab, 
+    transfer_assignments.transfer_assignment_id, transfer_assignments.car_id, 
+    transfer_assignments.kms_out, transfer_assignments.kms_in, 
     transfer_assignments.time_out, transfer_assignments.time_in, 
-    transfer_assignments.no_show, transfer_assignments.no_show_reason,
-    transfer_assignments.closed, transfer_assignments.last_update,
+    transfer_assignments.no_show, transfer_assignments.no_show_reason, 
+    transfer_assignments.closed, transfer_assignments.last_update, 
     transfer_assignments.cancelled, transfer_assignments.cancel_reason
-	FROM transfer_assignments
-	INNER JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
-	INNER JOIN cars ON cars.car_id = transfer_assignments.car_id
-	INNER JOIN car_types ON car_types.car_type_id = cars.car_type_id
-	INNER JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id;
+   FROM transfer_assignments
+   JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
+   JOIN cars ON cars.car_id = transfer_assignments.car_id
+   JOIN car_types ON car_types.car_type_id = cars.car_type_id
+   JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id;
 
 
 
@@ -318,7 +329,7 @@ BEGIN
     NEW.driver_pin := md5(v_pin);
 
     v_message := (E'Hello '::text || NEW.driver_name || E'.\nYour Pin is '::text || v_pin || E'.\nBunson Transport Department'::text)::text;
-    v_send_res := sendMessage(NEW.mobile_number, v_message); 
+    v_send_res := sendMessage(NEW.mobile_number, v_message);
 
 	RETURN NEW;
 END;
@@ -337,11 +348,11 @@ DECLARE
     v_send_res         text;
 BEGIN
     v_today := CURRENT_TIMESTAMP;
-    
+
     IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1500'::time )) THEN
         v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' || NEW.passanger_name || E'.\nFrom: ' || NEW.pickup || E'\nTo: ' || NEW.dropoff || E'\nAt: ' || NEW.pickup_time
                   || E'\nTel: ' || NEW.passanger_mobile;
-                  
+
         v_send_res := sendMessage('254725987342', v_message);
         v_send_res := sendMessage('254701772272', v_message);
         v_send_res := sendMessage('254738772272', v_message);
@@ -374,12 +385,12 @@ BEGIN
     v_flight_text := '';
 
     SELECT COUNT(transfer_flights.transfer_flight_id) INTO v_flight_count
-	FROM transfer_assignments 
+	FROM transfer_assignments
 	INNER JOIN passangers ON passangers.passanger_id = transfer_assignments.passanger_id
 	INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
 	WHERE transfer_assignments.transfer_assignment_id = NEW.transfer_assignment_id;
 
-   
+
     IF(v_flight_count = 0) THEN
         SELECT * INTO v_rec FROM vw_transfer_assignments_create  WHERE transfer_assignment_id = NEW.transfer_assignment_id;
 
@@ -394,9 +405,9 @@ BEGIN
                     || E'\nFlight No.: ' || v_rec.airline || ' '::text || v_rec.flight_num;
 
     END IF;
-    
-    v_message := (E'Hello '::text || v_rec.driver_name || E'\nYou Have a new Transfer Ref : ' 
-                  || v_rec.transfer_assignment_id 
+
+    v_message := (E'Hello '::text || v_rec.driver_name || E'\nYou Have a new Transfer Ref : '
+                  || v_rec.transfer_assignment_id
                   || E'\nPick ' || v_rec.passanger_name || E'.\nFrom: ' || v_rec.pickup || E'\nTo: ' || v_rec.dropoff || E'\nAt: ' || v_rec.pickup_time
                   || E'\nTel: ' || v_rec.passanger_mobile || v_flight_text
                   || E'\nBunson Transport Department'::text
@@ -410,7 +421,7 @@ BEGIN
 
     v_send_res := sendMessage(v_rec.mobile_number, v_message);
     v_send_res := sendMessage(v_rec.passanger_mobile, v_client_sms);
-    
+
     UPDATE passangers SET processed = true WHERE passanger_id = NEW.passanger_id;
 
 	RETURN NULL;
@@ -419,15 +430,10 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_transfer_assignments AFTER INSERT ON transfer_assignments
     FOR EACH ROW EXECUTE PROCEDURE ins_transfer_assignments();
-    
+
 
 delete from transfer_flights ;
 delete from transfer_assignments ;
 delete from passangers ;
 delete from sms;
-delete from transfers; 
-
-
-
-
-
+delete from transfers;
