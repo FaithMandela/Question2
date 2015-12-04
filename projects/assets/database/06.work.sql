@@ -1,9 +1,9 @@
 -- This is how you import
 --- Laptop
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-10-02', 1232, 0, 1, 28, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-11-30', 1232, 0, 1, 21, 139, '');
 
 --- CPU
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-10-02', 1223, 0, 1, 25, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-12-02', 1223, 0, 1, 31, 139, '');
 
 --- Monitor
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-10-02', 0, 0, 1, 26, 138, '');

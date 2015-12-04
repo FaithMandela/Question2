@@ -28,7 +28,10 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import java.sql.SQLException;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.FileItem;
@@ -47,6 +50,8 @@ public class BWebForms {
 	Map<String, String[]> params;
 	Map<String, String> answers;
 	Map<String, String> subanswers;
+	String entryFormId = null;
+	String formid = "0";
 	String fhead, ffoot, ftitle;
 
 	BDB db = null;
@@ -62,30 +67,36 @@ public class BWebForms {
 	}
 
 	public String getWebForm(String entryformid, Map<String, String[]> sParams) {
-
 		String mystr = "";
 
 		answers = new HashMap<String, String>();
 		subanswers = new HashMap<String, String>();
 		params = new HashMap<String, String[]>(sParams);
 		
-		String formid = getParameter("actionvalue");
-		getFormType(formid);
+		String entityId = null;
+		String approveStatus = null;
+		
+		String action = getParameter("action");
+		if((action == null) || (action.trim().equals("FORM"))) {
+			formid = getParameter("actionvalue");
+		} else {
+			String entryFormId = getParameter("actionvalue");
+			Map<String, String> formRS = db.readFields("form_id, entity_id, approve_status", "entry_forms WHERE entry_form_id = " + entryFormId);
+			formid = formRS.get("form_id");
+			entityId = formRS.get("entity_id");
+			approveStatus = formRS.get("approve_status");
+		}
+		
+		getFormType();
 
 		mystr += fhead;
-		mystr += "<form id='baraza' name='baraza' method='post' action='form.jsp'>\n";
-		mystr += "<table class='table' width='95%' >\n";
-
-		mystr += printForm(formid, null, "false");
-		
-		mystr += "</table>\n";
-		mystr += "</form>\n";
+		mystr += printForm(null, "false");
 		mystr += ffoot;
 
 		return mystr;
 	}
 	
-	public void getFormType(String formid) {
+	public void getFormType() {
 		fhead = "";
 		ffoot = "";
 		ftitle = "";
@@ -107,8 +118,46 @@ public class BWebForms {
 		else ffoot = "<section>" + ffoot + "</section>\n";
 	}
 	
+	public String getFormTabs() {
+		StringBuilder myhtml = new StringBuilder();
+		
+		String mysql = "SELECT * FROM fields WHERE (form_id = " + formid + ")";
+		mysql += " AND (field_type = 'TAB') ";
+		mysql += " ORDER BY field_order, field_id;";
+		BQuery rs = new BQuery(db, mysql);
+		
+		int tabCount = 0;
+		String tabs = "";
+		while(rs.moveNext()) {
+			String question = rs.getString("question");
+			if(rs.getString("question") == null) question = "";
+
+			if(tabCount == 0) tabs = "<li class='active'>";
+			else tabs += "\n<li>";
+			tabs += "<a href='#tab" + rs.getString("field_id") + "' data-toggle='tab'>" + question + " </a></li>\n";
+			
+			tabCount++;
+		}
+			
+		if(tabCount > 0) {
+			myhtml.append("<div class='row'>\n"
+			+ "	<div class='col-md-12'>\n"
+			+ "		<div class='tabbable portlet-tabs'>\n"
+			+ "			<ul class='nav nav-tabs'>\n"
+			+ tabs
+			+ "			</ul>\n"
+			+ "		</div>\n"
+			+ "	</div>\n"
+			+ "</div>\n"
+			+ "<div class='tab-content'>\n");
+		}
+		
+		
+		return myhtml.toString();
+	}
+		
 	//new printForm() method based on tables
-	public String printForm(String formid, String disabled, String process) {
+	public String printForm(String disabled, String process) {
 		StringBuilder myhtml = new StringBuilder();
 
 		int fieldOrder = 0;
@@ -138,8 +187,10 @@ public class BWebForms {
 		mysql += " ORDER BY field_order, field_id;";
 		BQuery rs = new BQuery(db, mysql);
 		
+		int elCount = 0;
 		int fieldRows = 2;
 		int fieldCount = 0;
+		int tabCount = 0;
 		String fieldId = "";
 		while(rs.moveNext()) {
 			fieldOrder = rs.getInt("field_order");
@@ -148,9 +199,6 @@ public class BWebForms {
 
 			fieldType = "TEXTFIELD";
 			if(rs.getString("field_type") != null) fieldType = rs.getString("field_type").trim().toUpperCase();
-
-			fieldclass = "";
-			if(rs.getString("field_class") != null) fieldclass = " class='" + rs.getString("field_class") + "' ";
 			
 			question = rs.getString("question");
 			if(rs.getString("question") == null) question = "";
@@ -158,11 +206,11 @@ public class BWebForms {
 			details = rs.getString("details");
 			if(rs.getString("details") == null) details = "";
 
-			label_position = rs.getString("label_position");
-			if(rs.getString("label_position") == null) label_position = "L";
-
+			fieldclass = "";
+			if(rs.getString("field_class") != null) fieldclass = " class='" + rs.getString("field_class") + "' ";
+			
 			size = 10;
-			if(rs.getString("field_size") == null) size = rs.getInt("field_size");
+			if(rs.getString("field_size") != null) size = rs.getInt("field_size");
 
 			if(rs.getBoolean("field_bold")) question = "<b>" + question + "</b>";
 			if(rs.getBoolean("field_italics")) question = "<i>" + question + "</i>";
@@ -171,67 +219,83 @@ public class BWebForms {
 			
 			// Start a new row
 			if(fieldType.equals("TITLE") || fieldType.equals("TEXT") || fieldType.equals("SUBGRID") || fieldType.equals("TABLE")) {
+				if((elCount == 0) && (tabCount == 0)) myhtml.append("<table class='table' width='95%' >\n");
+				
 				if((fieldCount != 0) && (fieldCount < fieldRows)) 
 					myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2 - fieldCount) + "'></td></tr>\n");
 				myhtml.append("<tr>");
 				fieldCount = 0;
+			} else if(fieldType.equals("TAB")) {
+				if(tabCount == 0) {
+					myhtml.append("<div class='tab-pane active' id='tab" + fieldId + "'>\n");
+				} else {
+					myhtml.append("</table></div>");
+					myhtml.append("<div class='tab-pane' id='tab" + fieldId + "'>\n");
+				}
+				myhtml.append("<table class='table' width='95%' >\n");
+				tabCount++;
 			} else {
+				if((elCount == 0) && (tabCount == 0)) myhtml.append("<table class='table' width='95%' >\n");
+				
 				if((fieldCount % fieldRows) == 0) {
 					myhtml.append("<tr>");
 					fieldCount = 0;
 				}
-				if(!question.equals("")) myhtml.append("<td style='width:200'>" + label + "</td>");
+				if(!question.equals("")) myhtml.append("<td style='width:200px'>" + label + "</td>");
 			}
 			
 			if(fieldType.equals("TEXTFIELD")) {
-				input = "<td><input " + disabled + " type='text' ";
-				input += " style='width:" + rs.getString("field_size") + "0px' ";
-				input += " name='F" + fieldId +  "'";
-				input += " id ='F" + fieldId +  "'";
-				input += getAnswer(fieldId);
-				input += " placeholder='" + details +"'";
-				input += " class='form-control' /></td>\n";
+				input = "<td><input " + disabled + " type='text' "
+				+ " style='width:" + size + "0px' "
+				+ " name='F" + fieldId +  "'"
+				+ " id ='F" + fieldId +  "'"
+				+ getAnswer(fieldId)
+				+ " placeholder='" + details +"'"
+				+ " class='form-control' /></td>\n";
 				fieldCount++;
 			} else if(fieldType.equals("TEXTAREA")) {
-				input = "<td><textarea " + disabled + " type='text' ";
-				input += " style='width:" + rs.getString("field_size") + "0px' ";
-				input += " name='F" + fieldId +  "'";
-				input += " id ='F" + fieldId +  "'";
-				input += " placeholder='" + details +"'";
-				input += " class='form-control' />" + getAnswer(fieldId) + "</textarea></td>\n";
+				input = "<td><textarea " + disabled + " type='text' "
+				+ " style='width:" + size + "0px' "
+				+ " name='F" + fieldId +  "'"
+				+ " id ='F" + fieldId +  "'"
+				+ " placeholder='" + details +"'"
+				+ " class='form-control' />" + getAnswer(fieldId) + "</textarea></td>\n";
 				fieldCount++;
 			} else if(fieldType.equals("DATE")) {
 				input = "<td><div class='input-group input-medium date date-picker' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>";
-				input += "<input " + disabled + " type='text' ";
-				input += " style='width:" + rs.getString("field_size") + "0px' ";
-				input += " name='F" + fieldId +  "'";
-				input += " id ='F" + fieldId +  "'";
-				input += getAnswer(fieldId);
-				input += " class='form-control' />";
+				input += "<input " + disabled + " type='text' "
+				+ " style='width:" + size + "0px' "
+				+ " name='F" + fieldId +  "'"
+				+ " id ='F" + fieldId +  "'"
+				+ getAnswer(fieldId)
+				+ " class='form-control'/>";
+				input += "<span class='input-group-btn'>"
+				+ "<button class='btn default' type='button'><i class='fa fa-calendar'></i></button>"
+				+ "</span>";
 				input += "</div></td>\n";
 				fieldCount++;
 			} else if(fieldType.equals("TIME")) {
 				input = "<td><div class='input-group input-medium'>\n";
-				input += "<input " + disabled + " type='text' ";
-				input += " style='width:" + rs.getString("field_size") + "0px' ";
-				input += " name='F" + rs.getString("field_id") +  "'";
-				input += " id ='F" + rs.getString("field_id") +  "'";
-				input += getAnswer(rs.getString("field_id"));
-				input += " class='form-control clockface' />\n";
-				input += "	<span class='input-group-btn'>\n";
-				input += "		<button class='btn default clockface-toggle' data-target='F" + rs.getString("field_id") + "' type='button'><i class='fa fa-clock-o'></i></button>\n";
-				input += "	</span>\n";
+				input += "<input " + disabled + " type='text' "
+				+ " style='width:" + size + "0px' "
+				+ " name='F" + fieldId +  "'"
+				+ " id ='F" + fieldId +  "'"
+				+ getAnswer(fieldId)
+				+ " class='form-control'/>";
+				input += "<span class='input-group-btn'>"
+				+ "	<button class='btn default clockface-toggle' data-target='F" + fieldId + "' type='button'><i class='fa fa-clock-o'></i></button>"
+				+ "</span>";
 				input += "</div></td>\n";
 				fieldCount++;
 			} else if(fieldType.equals("LIST")) {
 				input = "<td><select class='form-control' ";
-				input += " style='width:" + rs.getString("field_size") + "0px' ";
-				input += " name='F" + rs.getString("field_id") +  "'";
-				input += " id='F" + rs.getString("field_id") +  "'";
+				input += " style='width:" + size + "0px' ";
+				input += " name='F" + fieldId +  "'";
+				input += " id='F" + fieldId +  "'";
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
-				String listVal = answers.get("F" + rs.getString("field_id"));
+				String listVal = answers.get("F" + fieldId);
 				if(listVal == null) listVal = "";
 				else listVal = listVal.replace("\"", "").trim();
 
@@ -249,12 +313,13 @@ public class BWebForms {
 				fieldCount++;
 			} else if(fieldType.equals("SELECT")) {
 				input = "<td><select class='form-control' ";
-				input += " name='F" + rs.getString("field_id") + "'";
-				input += " id='F" + rs.getString("field_id") + "'";
+				input += " name='F" + fieldId + "'";
+				input += " id='F" + fieldId + "'";
+				input += " style='width:" + size + "0px' ";
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
-				String selectVal = answers.get("F" + rs.getString("field_id"));
+				String selectVal = answers.get("F" + fieldId);
 				if(selectVal == null) selectVal = "";
 				else selectVal = selectVal.replace("\"","").trim();
 				String spanVal = "";
@@ -296,19 +361,21 @@ public class BWebForms {
 				input += "<div class='form_text'>" + question + "</div>";
 				input += "</td>\n";
 				fieldCount = 0;
-			} else if(fieldType.equals("SUBGRID")) {
+			} else if(fieldType.equals("SUBGRID") || fieldType.equals("TABLE")) {
 				input = "";
-				myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2) + "'>");
-				myhtml.append(printSubTable(rs.getString("field_id"), disabled, question, table_count));
-				myhtml.append("</td>\n");
-				table_count ++;
+				myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2) + "'>"
+				+ "<div class='container'>"
+				+ "	<div class='col-md-12 column'>"
+				+ "		<div id='sub_table" + fieldId + "'></div>"
+				+ "	</div>"
+				+ "	<a id='add_row" + fieldId + "' class='btn btn-default pull-left'>Add Row</a>"
+				+"</div>"
+				+ "</td>");
+				
+				table_count++;
 				fieldCount = 0;
-			} else if(fieldType.equals("TABLE")) {
+			} else if(fieldType.equals("TAB")) {
 				input = "";
-				myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2) + "'>");
-				myhtml.append(printSubTable(rs.getString("field_id"), disabled, question, table_count));
-				myhtml.append("</td>\n");
-				table_count ++;
 				fieldCount = 0;
 			} else {
 				System.out.println("TYPE NOT DEFINED : " + fieldType);
@@ -317,27 +384,123 @@ public class BWebForms {
 			myhtml.append(input);
 			
 			// create a new line if the is no line sharing
-			if(shareLine == -1) {
-				if((fieldCount != 0) && (fieldCount < fieldRows)) 
-					myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2 - fieldCount) + "'></td></tr>\n");
-				fieldCount = 0;
-			} else if((fieldCount % fieldRows) == 0) {
-				myhtml.append("</tr>\n");
+			if(!fieldType.equals("TAB")) {
+				if(shareLine == -1) {
+					if((fieldCount != 0) && (fieldCount < fieldRows)) 
+						myhtml.append("<td colspan='" + String.valueOf(fieldRows * 2 - fieldCount) + "'></td></tr>\n");
+					fieldCount = 0;
+				} else if((fieldCount % fieldRows) == 0) {
+					myhtml.append("</tr>\n");
+				}
 			}
+			
+			elCount++;
 		}
 		
 		if((fieldCount % fieldRows) != 0) myhtml.append("</tr>\n");
+		
+		if(tabCount == 0) {
+			myhtml.append("</table>");
+		} else {
+			myhtml.append("</table>\n</div>\n</div>");
+		}
 				
 		rs.close();
 
 		return myhtml.toString();
 	}
 	
-	public String printSubTable(String fieldid, String disabled, String caption, int num) {
+	public String printSubForm() {
+		String myhtml = "";
+		String tableList = null;
+		
+		String mysql = "SELECT * FROM fields WHERE (form_id = " + formid + ")";
+		mysql += " AND ((field_type = 'SUBGRID') OR (field_type = 'TABLE')) ";
+		mysql += " ORDER BY field_order, field_id;";
+		BQuery rs = new BQuery(db, mysql);
+		
+		while(rs.moveNext()) {
+			myhtml += "\n\n" + printSubTable(rs.getString("field_id"), rs.getString("field_size"));
+			
+			if(tableList == null) tableList = "var db_list = ['db" + rs.getString("field_id") + ".table'";
+			else tableList += ", 'db" + rs.getString("field_id") + ".table'";
+		}
+		if(tableList == null) tableList = "var db = [";
+		tableList += "];";
+		
+		myhtml += "\n\n" + tableList;
+		
+		return myhtml;
+	}
+	
+	public String printSubTable(String fieldId, String tableSize) {
+		StringBuilder myhtml = new StringBuilder();
+		
+		String mysql = "SELECT sub_field_id, sub_field_type, sub_field_size, sub_field_lookup, question ";
+		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldId;
+		mysql += " ORDER BY sub_field_order";
+		BQuery rs = new BQuery(db, mysql);
+		
+		myhtml.append("var db" + fieldId + " = {\n"
+		+ "loadData: function(filter) { return this.table;  },\n"
+		+ "insertItem: function(insertingClient) { this.table.push(insertingClient); },\n"
+		+ "updateItem: function(updatingClient) { },\n"
+		+ "deleteItem: function(deletingClient) {\n"
+		+ "var clientIndex = $.inArray(deletingClient, this.table);\n"
+		+ "this.table.splice(clientIndex, 1);\n"
+		+ "}};\n"
+		+ "window.db" + fieldId + " = db" + fieldId + ";\n"
+		+ "db" + fieldId + ".table = [ ];\n\n"
+		+ "$('#sub_table" + fieldId + "').jsGrid(");
+			
+		JsonObjectBuilder jshd = Json.createObjectBuilder();
+		jshd.add("width", tableSize + "%");
+		jshd.add("height", "200px");
+		jshd.add("editing", true);
+		jshd.add("filtering", false);
+		jshd.add("sorting", false);
+		jshd.add("paging", false);
+		
+		jshd.add("data", "#db_table#");
+		
+		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
+		while(rs.moveNext()) {		
+			JsonObjectBuilder jsColEl = Json.createObjectBuilder();
+			String fld_name = "SF" + rs.getString("sub_field_id");
+			String fld_title = rs.getString("question");
+			String fld_size = rs.getString("sub_field_size");
+			String fld_type = rs.getString("sub_field_type");
+			if(fld_title == null) fld_title = "";
+			if(fld_size == null) fld_size = "100";
+			else fld_size = fld_size + "0";
+		
+			jsColEl.add("title", fld_title);
+			jsColEl.add("name", fld_name);
+			jsColEl.add("width", fld_size);
+			if(fld_type.equals("TEXTFIELD")) jsColEl.add("type", "text");
+			if(fld_type.equals("TEXTAREA")) jsColEl.add("type", "textarea");
+			jsColModel.add(jsColEl);
+		}
+		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
+		jsColEl.add("type", "control");
+		jsColModel.add(jsColEl);
+		jshd.add("fields", jsColModel);
+		
+		JsonObject jsObj = jshd.build();
+		String tableDef = jsObj.toString().replaceAll("\"#db_table#\"", "db" + fieldId + ".table");
+		myhtml.append(tableDef + "\n);");
+		
+		myhtml.append("\n$(document).ready(function(){"
+		+ "$('#add_row" + fieldId + "').click(function(){$('#sub_table" + fieldId + "').jsGrid('insertItem');});\n});\n");
+
+		return myhtml.toString();
+	}
+	
+	public String printSubTable(String fieldId, String disabled, String caption, int table_count) {
 		StringBuilder myhtml = new StringBuilder();
 
 		String mysql = "SELECT sub_field_id, sub_field_type, sub_field_size, sub_field_lookup, question ";
-		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldid;
+		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldId;
 		mysql += " ORDER BY sub_field_order";
 		BQuery rs = new BQuery(db, mysql);
 
@@ -384,13 +547,13 @@ public class BWebForms {
 				sub_field_size = subFieldSize.get(subFieldID);
 
 				if(sub_field_type.equals("TEXTFIELD")) {
-					filltb += "<td><input" + disabled + " class='mytableinput' type='text' size='25'";
+					filltb += "<td><input" + disabled + " class='form-control' type='text' ";
 					filltb += " style='width:" + sub_field_size + "0px' ";
 					filltb += " id='SF:" + subFieldID + "'";
 					filltb += " name='SF:" + subFieldID + "'";
 					filltb += ans + "/></td>\n";
 				} else if(sub_field_type.equals("LIST")) {
-					filltb += "<td><select classx='formcombobox'";
+					filltb += "<td><select classx='form-control'";
 					filltb += " id='SF:" + subFieldID + "'";
 					filltb += " name='SF:" + subFieldID + "'";
 					filltb += ">\n";
@@ -404,7 +567,7 @@ public class BWebForms {
 					}
 					filltb += "</select></td>\n";
 				} else if(sub_field_type.equals("SELECT")) {
-					filltb += "<td><select classx='formcombobox' ";
+					filltb += "<td><select classx='form-control' ";
 					filltb += " id='SF:" + subFieldID + "'";
 					filltb += " name='SF:" + subFieldID + "'";
 					filltb += ">\n";
@@ -438,7 +601,7 @@ public class BWebForms {
 			}
 
 			if(hasData)
-				filltb += "<td><input type='button' class='deleteThisRow' name='" + num + "' value='Delete'/></td>";
+				filltb += "<td><input type='button' class='deleteThisRow' name='del_row" + table_count + "_" + j + "' value='Delete'/></td>";
 			filltb += "</tr>\n";
 
 			if(hasData) tableRows += filltb;
@@ -452,10 +615,11 @@ public class BWebForms {
 		myhtml.append("<div class='portlet-body'>\n");
 		myhtml.append("<div class=table-toolbar>\n");
 		myhtml.append("</div>");
-		myhtml.append("<table class='table table-striped table-hover table-bordered' id='sample_editable_1'>\n");
+		myhtml.append("<table class='table table-striped table-hover table-bordered' id='sample_editable_" + table_count + "'>\n");
 		myhtml.append("<thead><tr>" + mytitle + "<th></th></tr></thead>\n");
 		myhtml.append(tableRows);
 		myhtml.append("</table>\n");
+		myhtml.append("<div><a id='add_row" + table_count + "' class='btn btn-default pull-left'>Add Row</a>\n");
 		myhtml.append("</div'>\n");
 
 		rs.close();

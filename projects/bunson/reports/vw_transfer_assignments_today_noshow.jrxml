@@ -112,7 +112,7 @@ WHERE pickup_date = CURRENT_TIMESTAMP::date AND vw_transfer_assignments.no_show 
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Passanger Name]]></text>
+				<text><![CDATA[Passenger Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="371" y="0" width="80" height="21" forecolor="#000000" uuid="7a97c002-ed63-41e1-b8dc-cf9f255a7ea6"/>

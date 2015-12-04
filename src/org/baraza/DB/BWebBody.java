@@ -375,7 +375,7 @@ public class BWebBody extends BQuery {
 		tabs.append("	</div>\n");
 		tabs.append("</div>\n");
 		tabs.append("<div class='tab-content'>\n");
-			
+
 		int i = 0;
 		response.append("<div class='form-body'>\n");
 		
@@ -389,8 +389,8 @@ public class BWebBody extends BQuery {
 				if(tabNotDone && hasTabs) response.append(tabs);
 				if(!tab.equals(el.getAttribute("tab"))) {
 					tab = el.getAttribute("tab");
-                    if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab.replace(" ", "") + "'>\n"); 
-                    else response.append("<div class='tab-pane' id='" + tab.replace(" ", "") + "'>\n");
+					if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab.replace(" ", "") + "'>\n"); 
+					else response.append("<div class='tab-pane' id='" + tab.replace(" ", "") + "'>\n");
 				}
                 if(tabNotDone && hasTabs) tabNotDone = false; 
 			} else if(!tabNotDone) {

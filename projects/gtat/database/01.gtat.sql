@@ -351,7 +351,7 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insmanagement(varchar(50), varchar(50)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION insmanagement(varchar(50), varchar(50), varchar(50)) RETURNS varchar(120) AS $$
 DECLARE
 	myrec RECORD;
 BEGIN
@@ -387,7 +387,7 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insSales(varchar(50), varchar(50)) RETURNS varchar(50) AS $$
+CREATE OR REPLACE FUNCTION insSales(varchar(50), varchar(50), varchar(50)) RETURNS varchar(50) AS $$
 DECLARE
 	myrec RECORD;
 BEGIN
@@ -421,7 +421,7 @@ END
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION insNetRates(varchar(50), varchar(50)) RETURNS varchar(50) AS $$
+CREATE OR REPLACE FUNCTION insNetRates(varchar(50), varchar(50), varchar(50)) RETURNS varchar(50) AS $$
 DECLARE
 	myrec RECORD;
 BEGIN

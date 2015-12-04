@@ -239,6 +239,7 @@
 						<NODE>TIME</NODE>
 						<NODE>LIST</NODE>
 						<NODE>SELECT</NODE>
+						<NODE>TAB</NODE>
 					</COMBOLIST>
 					<TEXTFIELD w="150" title="Field Order" y="50" h="20" x="290">field_order</TEXTFIELD>
 					<TEXTFIELD w="150" title="Share Line" y="70" h="20" x="10">share_line</TEXTFIELD>
@@ -261,7 +262,7 @@
 						<TEXTFIELD w="150" title="Field Order" y="30" h="20" x="10">sub_field_order</TEXTFIELD>
 						<COMBOLIST w="150" title="Field Type" y="30" h="20" x="290">sub_field_type
 							<NODE>TEXTFIELD</NODE>
-							<NODE>TITLE</NODE>
+							<NODE>TEXTAREA</NODE>
 							<NODE>TEXT</NODE>
 						</COMBOLIST>
 						<TEXTFIELD w="150" title="Title Share" y="50" h="20" x="10">sub_title_share</TEXTFIELD>

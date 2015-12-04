@@ -1056,7 +1056,9 @@ CREATE VIEW vw_intake AS
 		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
 		
 		intake.org_id, intake.intake_id, intake.opening_date, intake.closing_date, intake.positions, intake.contract, 
-		intake.contract_period, intake.details				
+		intake.contract_period, intake.details,
+		
+		(vw_department_roles.department_name || ', ' || vw_department_roles.department_role_name || ', ' || to_char(intake.opening_date, 'YYYY, Mon')) as intake_disp
 	FROM intake INNER JOIN vw_department_roles ON intake.department_role_id = vw_department_roles.department_role_id
 		INNER JOIN locations ON intake.location_id = locations.location_id
 		INNER JOIN pay_groups ON intake.pay_group_id = pay_groups.pay_group_id
