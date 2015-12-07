@@ -884,10 +884,10 @@
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Name">applicant_name</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phone">applicant_phone</TEXTFIELD>
 			<TEXTFIELD w="50" title="Age">applicant_age</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 			<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
@@ -918,6 +918,7 @@
 				</COMBOLIST>
 				<TEXTFIELD w="430" title="Language" y="90" h="20" x="10">language</TEXTFIELD>
 				<TEXTFIELD w="430" title="E-Mail" y="110" h="20" x="10">applicant_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Phone" y="130" h="20" x="10">applicant_phone</TEXTFIELD>
 				<TEXTAREA w="550" tab="Objective" y="1" h="170" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="170" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
