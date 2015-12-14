@@ -1601,6 +1601,7 @@
 				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
 				<JASPER name="Payslip" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
+				<JASPER name="SC Payslip" linkfield="filterid" reportfile="payslipd.jasper"></JASPER>
 				<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc.jasper"></JASPER>
 			</GRID>
 		</GRID>

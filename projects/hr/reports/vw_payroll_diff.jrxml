@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_payroll_diff" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3f15d4f2-f247-4567-b896-32b53cfdb26e">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="352"/>
+	<property name="ireport.x" value="578"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -32,7 +32,9 @@
   vw_employee_month.currency_id, vw_employee_month.currency_name,
   vw_employee_month.currency_symbol,
   vw_employee_month.banked,
-  bb.p_date, bb.p_basic_pay, bb.p_payroll_tax, bb.p_net_pay, bb.p_banked
+  bb.p_date, bb.p_basic_pay, bb.p_payroll_tax, bb.p_net_pay, bb.p_banked,
+  (vw_employee_month.net_pay - COALESCE(bb.p_net_pay, 0)) as diff_net_pay,
+  (vw_employee_month.banked - COALESCE(bb.p_banked, 0)) as diff_banked
 
 FROM vw_employee_month LEFT JOIN
 (SELECT aa.entity_id, aa.start_date as p_date, aa.basic_pay as p_basic_pay,
@@ -68,6 +70,8 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 	<field name="p_payroll_tax" class="java.lang.Double"/>
 	<field name="p_net_pay" class="java.lang.Double"/>
 	<field name="p_banked" class="java.lang.Double"/>
+	<field name="diff_net_pay" class="java.lang.Double"/>
+	<field name="diff_banked" class="java.lang.Double"/>
 	<variable name="basic_pay_1" class="java.lang.Double" resetType="Group" resetGroup="currency_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{basic_pay}]]></variableExpression>
 	</variable>
@@ -91,6 +95,12 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 	</variable>
 	<variable name="p_banked_1" class="java.lang.Double" resetType="Group" resetGroup="currency_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{p_banked}]]></variableExpression>
+	</variable>
+	<variable name="diff_net_pay_1" class="java.lang.Double" resetType="Group" resetGroup="currency_name" calculation="Sum">
+		<variableExpression><![CDATA[$F{diff_net_pay}]]></variableExpression>
+	</variable>
+	<variable name="diff_banked_1" class="java.lang.Double" resetType="Group" resetGroup="currency_name" calculation="Sum">
+		<variableExpression><![CDATA[$F{diff_banked}]]></variableExpression>
 	</variable>
 	<group name="currency_name">
 		<groupExpression><![CDATA[$F{currency_name}]]></groupExpression>
@@ -308,7 +318,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{net_pay_1} - $V{p_net_pay_1}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{diff_net_pay_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
 					<reportElement x="355" y="1" width="50" height="20" uuid="98fac350-3bcd-43d3-bf5b-f7e838893c48"/>
@@ -342,7 +352,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{banked_1} - $V{p_banked_1}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{diff_banked}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -472,7 +482,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{net_pay} - $F{p_net_pay}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{diff_net_pay}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="655" y="0" width="50" height="15" uuid="83df892b-1174-4550-81c4-b4a19cd6e79e"/>
@@ -482,7 +492,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{banked} - $F{p_banked}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{diff_banked}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
