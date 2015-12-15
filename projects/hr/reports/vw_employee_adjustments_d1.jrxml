@@ -31,6 +31,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_adjustments.adjustment_name, vw_employee_adjustments.amount, vw_employee_adjustments.balance,
+vw_employee_adjustments.adjustment_type,
 (CASE WHEN adjustment_type = 1 THEN 'Allowance' WHEN adjustment_type = 2 THEN 'Deductions' ELSE 'Expense' END) as adjustment_type_name,
 vw_employee_adjustments.In_payroll,
 base_amount, currency_symbol,
@@ -45,6 +46,7 @@ ORDER BY vw_employee_adjustments.adjustment_type;]]>
 	<field name="adjustment_name" class="java.lang.String"/>
 	<field name="amount" class="java.lang.Double"/>
 	<field name="balance" class="java.lang.Double"/>
+	<field name="adjustment_type" class="java.lang.Integer"/>
 	<field name="adjustment_type_name" class="java.lang.String"/>
 	<field name="in_payroll" class="java.lang.Boolean"/>
 	<field name="base_amount" class="java.lang.Double"/>
@@ -78,7 +80,9 @@ ORDER BY vw_employee_adjustments.adjustment_type;]]>
 		<groupFooter>
 			<band height="23">
 				<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
-					<reportElement x="261" y="3" width="103" height="20" uuid="3755e55e-703d-4ccf-a05f-ca5186215f2c"/>
+					<reportElement x="261" y="3" width="103" height="20" uuid="3755e55e-703d-4ccf-a05f-ca5186215f2c">
+						<printWhenExpression><![CDATA[$F{adjustment_type} == 1]]></printWhenExpression>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.0"/>
 						<bottomPen lineWidth="1.0"/>
@@ -89,7 +93,9 @@ ORDER BY vw_employee_adjustments.adjustment_type;]]>
 					<textFieldExpression><![CDATA[$V{amount_1}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="3" width="192" height="20" uuid="281ab6fc-7ed7-4432-9300-756fcd82840d"/>
+					<reportElement style="Detail" x="1" y="3" width="192" height="20" uuid="281ab6fc-7ed7-4432-9300-756fcd82840d">
+						<printWhenExpression><![CDATA[$F{adjustment_type} == 1]]></printWhenExpression>
+					</reportElement>
 					<box leftPadding="4"/>
 					<textElement verticalAlignment="Top">
 						<font fontName="Times New Roman" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
