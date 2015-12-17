@@ -1600,7 +1600,9 @@
 				<TEXTDECIMAL w="75" title="Deduction">payroll_deduction</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
-				<JASPER name="Payroll" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
+				<JASPER name="Payslip" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
+				<JASPER name="SC Payslip" linkfield="filterid" reportfile="payslipd.jasper"></JASPER>
+				<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc.jasper"></JASPER>
 			</GRID>
 		</GRID>
 		<FILTER w="700" name="Payslip" split="250" key="6" h="550">
@@ -1622,7 +1624,28 @@
 				<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 				<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			</FILTERGRID>
-			<JASPER name="Payslip" reportfile="payslip.jasper"></JASPER>
+			<JASPER name="Payslip " reportfile="payslip.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Payslip Summary" split="250" key="6" h="550">
+			<FILTERGRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees">
+				<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+				<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			</FILTERGRID>
+			<FILTERGRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods" filter="periodid">
+				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			</FILTERGRID>
+			<JASPER name="Payslip Summary" reportfile="payslipcp.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="P9A" key="111" h="750">
@@ -1688,7 +1711,7 @@
 		<JASPER name="Loan Types" reportfile="vw_loan_types.jasper"></JASPER>
 		<GRID name="Loan Payments" keyfield="loan_id" table="vw_loans">
 			<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Staff ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff ID">employee_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Loan Type">loan_type_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>

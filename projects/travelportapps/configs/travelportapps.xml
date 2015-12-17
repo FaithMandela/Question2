@@ -25,12 +25,12 @@
 			<MENU name="EMails" role="admin">60</MENU>
 			<MENU name="Files" role="admin">65</MENU>
 			<MENU name="Error Messages">70</MENU>
-			<MENU name="Travelport Apps">76</MENU>
+			<MENU name="Travelport Apps" role="user">76</MENU>
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Rates">90</MENU>
-			<MENU name="Sales Report " role="admin">91</MENU>
-			<MENU name="Insurance Payment  Reports" role="admin">92</MENU>
+			<MENU name="Sales Report " role="agency">91</MENU>
+			<MENU name="Insurance Payment  Reports" role="agency">92</MENU>
 			<MENU name="Insurance Sales ">93</MENU>
 		</MENU>
 	</MENU>
@@ -717,6 +717,8 @@
 		<GRID name="Rate Types" keyfield="rate_type_id" table="rate_types" noorg="true">
 			<TEXTFIELD w="75" title="Rate Type ID">rate_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type">rate_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Age From">age_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Age To">age_to</TEXTFIELD>
 			<GRID name="Rates" keyfield="rate_id" linkfield="rate_type_id" table="vw_rates" noorg="true">
 				<TEXTFIELD w="75" title="Rate Type">rate_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
@@ -743,6 +745,8 @@
 			</GRID>
 			<FORM name="Rate Types" keyfield="rate_type_id" table="rate_types" noorg="true">
 				<TEXTFIELD w="150" title="Rate Type" y="10" h="20" x="10">rate_type_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Age From" y="10" h="20" x="10">age_from</TEXTFIELD>
+				<TEXTFIELD w="150" title="Age To" y="10" h="20" x="10">age_to</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>

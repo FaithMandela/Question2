@@ -109,6 +109,8 @@ CREATE TABLE rate_types(
   rate_type_id serial primary key,
   rate_type_name character varying(100),
   age_limit integer DEFAULT 70,
+  days_from integer,
+  days_to integer,
   details text
 );
 
@@ -233,10 +235,10 @@ CREATE INDEX entitys_user_name  ON entitys   (user_name COLLATE pg_catalog."defa
 
 
 CREATE TABLE subscription_levels(
-  subscription_level_id serial primary key,
-  org_id integer REFERENCES orgs ,
-  subscription_level_name character varying(50),
-  details text
+  subscription_level_id 	serial primary key,
+  org_id 					integer REFERENCES orgs ,
+  subscription_level_name 	character varying(50),
+  details 					text
 );
 
 CREATE INDEX subscription_levels_org_id  ON subscription_levels   (org_id);
@@ -245,12 +247,12 @@ CREATE INDEX subscription_levels_org_id  ON subscription_levels   (org_id);
 
 
 CREATE TABLE entity_subscriptions(
-  entity_subscription_id serial primary key,
-  entity_type_id integer NOT NULL REFERENCES entity_types,
-  entity_id integer NOT NULL REFERENCES entitys ,
-  subscription_level_id integer NOT NULL REFERENCES subscription_levels,
-  org_id integer REFERENCES orgs,
-  details text,
+  entity_subscription_id 	serial primary key,
+  entity_type_id 			integer NOT NULL REFERENCES entity_types,
+  entity_id 				integer NOT NULL REFERENCES entitys ,
+  subscription_level_id 	integer NOT NULL REFERENCES subscription_levels,
+  org_id 					integer REFERENCES orgs,
+  details 					text,
   UNIQUE (entity_id, entity_type_id)
 );
 

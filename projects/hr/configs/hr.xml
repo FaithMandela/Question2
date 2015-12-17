@@ -884,10 +884,10 @@
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Name">applicant_name</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Phone">applicant_phone</TEXTFIELD>
 			<TEXTFIELD w="50" title="Age">applicant_age</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Education">education_class_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 			<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
@@ -918,6 +918,7 @@
 				</COMBOLIST>
 				<TEXTFIELD w="430" title="Language" y="90" h="20" x="10">language</TEXTFIELD>
 				<TEXTFIELD w="430" title="E-Mail" y="110" h="20" x="10">applicant_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Phone" y="130" h="20" x="10">applicant_phone</TEXTFIELD>
 				<TEXTAREA w="550" tab="Objective" y="1" h="170" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="170" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
@@ -1885,11 +1886,12 @@
 				<FORM name="Contract Details" keyfield="application_id" linkfield="employee_id" table="applications" th="210">
 					<COMBOBOX w="430" title="Contract Type" lptable="contract_types" y="10" h="20" x="10" lpfield="contract_type_name">contract_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Contract Status" lptable="contract_status" y="30" h="20" x="10" lpfield="contract_status_name">contract_status_id</COMBOBOX>
-					<TEXTDATE w="150" title="Contract Date" y="50" h="20" x="10">contract_date</TEXTDATE>
-					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="290">contract_start</TEXTDATE>
-					<TEXTFIELD w="150" title="Contract Period" y="70" h="20" x="10">contract_period</TEXTFIELD>
-					<TEXTDATE w="150" title="Contract Close" y="70" h="20" x="290">contract_close</TEXTDATE>
-					<TEXTDECIMAL w="150" title="Initial Salary" y="90" h="20" x="10">initial_salary</TEXTDECIMAL>
+					<COMBOBOX w="430" title="Intake" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
+					<TEXTDATE w="150" title="Contract Date" y="70" h="20" x="10">contract_date</TEXTDATE>
+					<TEXTDATE w="150" title="Contract Start" y="70" h="20" x="290">contract_start</TEXTDATE>
+					<TEXTFIELD w="150" title="Contract Period" y="90" h="20" x="10">contract_period</TEXTFIELD>
+					<TEXTDATE w="150" title="Contract Close" y="90" h="20" x="290">contract_close</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Initial Salary" y="110" h="20" x="10">initial_salary</TEXTDECIMAL>
 					<TEXTAREA w="430" tab="Contract Terms" y="2" h="170" x="10">contract_terms</TEXTAREA>
 					<TEXTAREA w="430" tab="Applicant Comments" y="2" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="430" tab="Review" y="2" h="170" x="10">review</TEXTAREA>
@@ -2789,6 +2791,7 @@
 						<NODE>TIME</NODE>
 						<NODE>LIST</NODE>
 						<NODE>SELECT</NODE>
+						<NODE>TAB</NODE>
 					</COMBOLIST>
 					<TEXTFIELD w="150" title="Field Order" y="50" h="20" x="290">field_order</TEXTFIELD>
 					<TEXTFIELD w="150" title="Share Line" y="70" h="20" x="10">share_line</TEXTFIELD>
@@ -2811,7 +2814,7 @@
 						<TEXTFIELD w="150" title="Field Order" y="30" h="20" x="10">sub_field_order</TEXTFIELD>
 						<COMBOLIST w="150" title="Field Type" y="30" h="20" x="290">sub_field_type
 							<NODE>TEXTFIELD</NODE>
-							<NODE>TITLE</NODE>
+							<NODE>TEXTAREA</NODE>
 							<NODE>TEXT</NODE>
 						</COMBOLIST>
 						<TEXTFIELD w="150" title="Title Share" y="50" h="20" x="10">sub_title_share</TEXTFIELD>
