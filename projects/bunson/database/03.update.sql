@@ -1,6 +1,12 @@
 ALTER  TABLE drivers ADD is_backup           boolean default false;
 ALTER TABLE transfers ADD pax_no              integer;
 
+ALTER TABLE transfers ADD transfer_cancelled  boolean default false;
+ALTER TABLE passangers ADD pax_cancelled           boolean default false;
+
+ALTER TABLE transfers   ADD is_group        boolean default false;
+ALTER TABLE passangers  ADD group_contact  boolean default false;
+ALTER TABLE passangers  ADD group_member   boolean default false;
 
 DROP VIEW vw_transfers;
 
@@ -9,7 +15,8 @@ CREATE OR REPLACE VIEW vw_transfers AS
     payment_types.payment_type_name, transfers.transfer_id, 
     transfers.record_locator, transfers.customer_code, transfers.customer_name, 
     transfers.currency_id, transfers.agreed_amount, transfers.pax_no, transfers.booking_location, 
-    transfers.booking_date, transfers.payment_details, transfers.reference_data
+    transfers.booking_date, transfers.payment_details, transfers.reference_data,transfers.transfer_cancelled,
+    transfers.is_group
    FROM transfers
    JOIN entitys ON transfers.entity_id = entitys.entity_id
    JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id;
@@ -21,11 +28,13 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     car_types.car_type_code, transfers.transfer_id, transfers.record_locator, 
     transfers.customer_code, transfers.customer_name, transfers.currency_id, 
     transfers.agreed_amount, transfers.booking_location, transfers.booking_date, 
-    transfers.payment_details, transfers.reference_data, transfers.pax_no,
+    transfers.payment_details, transfers.reference_data, transfers.pax_no, transfers.transfer_cancelled,
+    transfers.is_group,
+    passangers.group_contact, passangers.group_member,
     passangers.passanger_id, passangers.passanger_name, 
     passangers.passanger_mobile, passangers.passanger_email, 
     passangers.pickup_time, passangers.pickup, passangers.dropoff, 
-    passangers.other_preference, passangers.amount, passangers.processed, 
+    passangers.other_preference, passangers.amount, passangers.processed, passangers.pax_cancelled, 
     passangers.pickup_date, passangers.tab, 
     transfer_assignments.transfer_assignment_id, transfer_assignments.car_id, 
     transfer_assignments.kms_out, transfer_assignments.kms_in, 
@@ -46,6 +55,59 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
   WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
 
+
+-- View: vw_passangers
+
+DROP VIEW vw_passangers;
+
+CREATE OR REPLACE VIEW vw_passangers AS 
+ SELECT car_types.car_type_code, entitys.entity_id, entitys.entity_name, 
+    payment_types.payment_type_id, payment_types.payment_type_name, 
+    transfers.transfer_id, transfers.record_locator, transfers.customer_code, 
+    transfers.customer_name, transfers.currency_id, transfers.agreed_amount, 
+    transfers.pax_no, transfers.transfer_cancelled, transfers.booking_location, transfers.booking_date, 
+    transfers.is_group,
+    transfers.payment_details, transfers.reference_data, 
+    transfer_flights.transfer_flight_id, transfer_flights.start_time, 
+    transfer_flights.end_time, transfer_flights.flight_date, 
+    transfer_flights.start_airport, transfer_flights.end_airport, 
+    transfer_flights.airline, transfer_flights.flight_num, 
+    passangers.passanger_id, passangers.passanger_name, 
+    passangers.passanger_mobile, passangers.passanger_email, 
+    passangers.pickup_time, passangers.pickup, passangers.dropoff, 
+    passangers.other_preference, passangers.tab, passangers.amount, 
+    passangers.processed, pax_cancelled, passangers.pickup_date,
+    passangers.group_contact, passangers.group_member
+   FROM passangers
+   JOIN car_types ON passangers.car_type_code::text = car_types.car_type_code::text
+   JOIN transfers ON passangers.transfer_id = transfers.transfer_id
+   JOIN entitys ON transfers.entity_id = entitys.entity_id
+   JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id
+   LEFT JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id
+  WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
+
+
+
+
+DROP VIEW vw_group_members;
+CREATE OR REPLACE VIEW vw_group_members AS 
+ SELECT
+    a.transfer_id, a.is_group,
+    a.passanger_id, a.passanger_name,
+    a.processed,
+    a.group_contact, a.group_member,a.tab,
+    
+    m.transfer_id as m_transfer_id, m.is_group AS m_is_group,
+    m.passanger_id AS m_passanger_id, m.passanger_name AS m_passanger_name,
+    m.group_contact AS m_group_contact, m.group_member AS m_group_member,m.tab as m_tab
+   FROM vw_passangers as a
+   LEFT JOIN vw_passangers as m ON m.transfer_id = a.transfer_id
+   WHERE a.is_group = true and  a.group_contact = true AND 
+	m.group_contact = false and a.tab = m.tab
+
+   
+
+
 DROP VIEW vw_transfer_assignments_create;
 CREATE OR REPLACE VIEW vw_transfer_assignments_create AS 
  SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number, drivers.is_backup,
@@ -54,7 +116,7 @@ CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
     passangers.transfer_id, passangers.passanger_mobile, 
     passangers.passanger_email, passangers.pickup_time, passangers.pickup, 
     passangers.dropoff, passangers.other_preference, passangers.amount, 
-    passangers.processed, passangers.pickup_date, passangers.tab, 
+    passangers.processed,passangers.cancelled,  passangers.pickup_date, passangers.tab, 
     transfer_assignments.transfer_assignment_id, transfer_assignments.car_id, 
     transfer_assignments.kms_out, transfer_assignments.kms_in, 
     transfer_assignments.time_out, transfer_assignments.time_in, 
@@ -67,6 +129,34 @@ CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
    JOIN car_types ON car_types.car_type_id = cars.car_type_id
    JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id;
 -- Function: ins_transfer_assignments()
+
+
+
+
+CREATE OR REPLACE FUNCTION upd_transfers() RETURNS trigger AS $$
+DECLARE
+BEGIN
+    UPDATE passangers SET pax_cancelled = NEW.transfer_cancelled WHERE transfer_id =  NEW.transfer_id;
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_transfers AFTER UPDATE ON transfers
+    FOR EACH ROW EXECUTE PROCEDURE upd_transfers();
+
+
+
+CREATE OR REPLACE FUNCTION upd_passangers() RETURNS trigger AS $$
+DECLARE
+BEGIN
+
+    UPDATE transfer_assignments SET cancelled = NEW.pax_cancelled WHERE passanger_id =  NEW.passanger_id;
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_passangers AFTER UPDATE ON passangers
+    FOR EACH ROW EXECUTE PROCEDURE upd_passangers();
 
 -- DROP FUNCTION ins_transfer_assignments();
 
