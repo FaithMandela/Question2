@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="155"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -21,13 +21,15 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT eb.entity_id, eb.employee_id, eb.entity_name, eb.bank_name,
+		<![CDATA[SELECT eb.entity_id, eb.employee_id, eb.entity_name,
+	eb.bank_branch_code, eb.bank_name,
 	eb.bank_branch_name, eb.banked, eb.bank_account,
 	eb.period_id, eb.period_year, eb.period_month, eb.bank_address,
 	COALESCE(eb.bank_header, '') as bank_heading
 
 FROM
 ((SELECT vw_employee_month.entity_id, vw_employee_month.employee_id, vw_employee_month.entity_name,
+	vw_employee_month.bank_branch_code,
 	vw_employee_month.bank_name,
 	vw_employee_month.bank_branch_name, vw_employee_month.banked,
 	vw_employee_month.bank_account,
@@ -46,6 +48,7 @@ $P!{organd})
 UNION
 
 (SELECT vw_employee_banking.entity_id, vw_employee_banking.employee_id, vw_employee_banking.entity_name,
+	vw_employee_banking.bank_branch_code,
 	vw_employee_banking.bank_name,
 	vw_employee_banking.bank_branch_name,
 	vw_employee_banking.base_amount,
@@ -68,6 +71,7 @@ ORDER BY eb.employee_id;]]>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="employee_id" class="java.lang.String"/>
 	<field name="entity_name" class="java.lang.String"/>
+	<field name="bank_branch_code" class="java.lang.String"/>
 	<field name="bank_name" class="java.lang.String"/>
 	<field name="bank_branch_name" class="java.lang.String"/>
 	<field name="banked" class="java.lang.Double"/>
@@ -175,7 +179,7 @@ ORDER BY eb.employee_id;]]>
 				<text><![CDATA[Employee Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="254" y="1" width="184" height="16" forecolor="#000000" uuid="20f35f1a-56cf-48f5-a60b-2c6fe4b3245e"/>
+				<reportElement key="element-90" x="305" y="1" width="133" height="16" forecolor="#000000" uuid="20f35f1a-56cf-48f5-a60b-2c6fe4b3245e"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -226,6 +230,19 @@ ORDER BY eb.employee_id;]]>
 				</textElement>
 				<text><![CDATA[Account Number]]></text>
 			</staticText>
+			<staticText>
+				<reportElement key="element-90" x="255" y="1" width="50" height="16" forecolor="#000000" uuid="edbfe22c-6d79-4313-be4d-c210098fc00f"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Code]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -257,7 +274,7 @@ ORDER BY eb.employee_id;]]>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="254" y="0" width="184" height="15" uuid="df03b957-0c68-4c1c-8deb-ff3acea0dd59"/>
+				<reportElement key="textField" x="305" y="0" width="133" height="15" uuid="df03b957-0c68-4c1c-8deb-ff3acea0dd59"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -307,6 +324,19 @@ ORDER BY eb.employee_id;]]>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bank_account}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" x="254" y="0" width="51" height="15" uuid="a938847b-cc6a-4d5f-b548-e2645c65893a"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bank_branch_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

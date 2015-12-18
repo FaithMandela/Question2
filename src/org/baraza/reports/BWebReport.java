@@ -243,7 +243,7 @@ public class BWebReport  {
 				exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(response.getOutputStream()));
 				SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
 				
-				configuration.setOnePagePerSheet(true);
+				configuration.setOnePagePerSheet(false);
 				configuration.setDetectCellType(true);
 				configuration.setCollapseRowSpan(false);
 				exporter.setConfiguration(configuration);

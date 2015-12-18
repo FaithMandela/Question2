@@ -32,7 +32,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_employee_adjustments.adjustment_name, vw_employee_adjustments.amount, vw_employee_adjustments.balance,
 vw_employee_adjustments.adjustment_type,
-(CASE WHEN adjustment_type = 1 THEN 'Allowance' WHEN adjustment_type = 2 THEN 'Deductions' ELSE 'Expense' END) as adjustment_type_name,
+(CASE WHEN adjustment_type = 1 THEN 'Allowances' WHEN adjustment_type = 2 THEN 'Other Deductions' ELSE 'Expenses' END) as adjustment_type_name,
 vw_employee_adjustments.In_payroll,
 base_amount, currency_symbol,
 tax_relief_amount
@@ -41,7 +41,7 @@ WHERE (employee_month_id = $P{employee_month_id}) AND (Visible = true)
 AND (vw_employee_adjustments.In_payroll = '$P!{is_inpayroll}'::boolean)
 AND (adjustment_type = $P{is_adjustment_type})
 $P!{organd}
-ORDER BY vw_employee_adjustments.adjustment_type;]]>
+ORDER BY vw_employee_adjustments.adjustment_type, vw_employee_adjustments.adjustment_name;]]>
 	</queryString>
 	<field name="adjustment_name" class="java.lang.String"/>
 	<field name="amount" class="java.lang.Double"/>
@@ -69,7 +69,9 @@ ORDER BY vw_employee_adjustments.adjustment_type;]]>
 					<reportElement style="Detail" mode="Opaque" x="1" y="2" width="363" height="15" backcolor="#E7E7E7" uuid="5bb34262-82d2-47d9-9837-bb44ea335250">
 						<printWhenExpression><![CDATA[$P{is_inpayroll} == true]]></printWhenExpression>
 					</reportElement>
-					<box leftPadding="4"/>
+					<box leftPadding="4">
+						<bottomPen lineWidth="0.5"/>
+					</box>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>

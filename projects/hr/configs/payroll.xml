@@ -24,13 +24,13 @@
 		</MENU>
 		<MENU name="Reports" role="admin,payroll,reports">
 			<MENU name="Definations">101</MENU>
-			<MENU name="Statutory Deductions">102</MENU>
+			<MENU name="Statutory Definations">102</MENU>
 			<MENU name="Employee List">103</MENU>
 			<MENU name="Employee Default">104</MENU>
 			<MENU name="Payroll">105</MENU>
 			<MENU name="Banking">106</MENU>
-			<MENU name="Adjustments">107</MENU>
-			<MENU name="Employee Adjustments">108</MENU>
+			<MENU name="Summary Adv + Ded">107</MENU>
+			<MENU name="Advances and Deductions">108</MENU>
 			<MENU name="Employee Statutories">118</MENU>
 			<MENU name="Pensions">125</MENU>
 			<MENU name="Loans">135</MENU>
@@ -77,6 +77,10 @@
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
 			<CHECKBOX w="75" title="In Tax">in_tax</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="add_adjustment" approval="1" role="payroll,admin">Add to Month</ACTION>
+				<ACTION fnct="add_adjustment" approval="2" role="payroll,admin">Add to Employee</ACTION>
+			</ACTIONS>
 			<FORM name="Allowance" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="1">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Allowance Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
@@ -85,9 +89,10 @@
 				<CHECKBOX w="150" title="In Payroll" default="true" y="50" h="20" x="290">in_payroll</CHECKBOX>
 				<CHECKBOX w="150" title="In Tax" default="true" y="70" h="20" x="10">in_tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Order" default="0" y="70" h="20" x="290">adjustment_order</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" default="0" y="90" h="20" x="10">account_number</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				<TEXTDECIMAL w="150" title="Default Amount" y="90" h="20" x="10">default_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Account Number" default="0" y="110" h="20" x="10">account_number</TEXTFIELD>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Deductions" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 2)">
@@ -99,6 +104,10 @@
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
 			<CHECKBOX w="75" title="In Tax">in_tax</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="add_adjustment" approval="1" role="payroll,admin">Add to Month</ACTION>
+				<ACTION fnct="add_adjustment" approval="2" role="payroll,admin">Add to Employee</ACTION>
+			</ACTIONS>
 			<FORM name="Deduction" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="2">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Deduction Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
@@ -113,8 +122,9 @@
 				<TEXTDECIMAL w="150" title="Tax Reduction %" y="110" h="20" x="290">tax_reduction_ps</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Tax Relief %" y="130" h="20" x="10">tax_relief_ps</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Max Tax Allowed" y="130" h="20" x="290">tax_max_allowed</TEXTDECIMAL>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+				<TEXTDECIMAL w="150" title="Default Amount" y="150" h="20" x="10">default_amount</TEXTDECIMAL>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Expenses" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 3)">
@@ -126,6 +136,10 @@
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
 			<CHECKBOX w="75" title="In Tax">in_tax</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="add_adjustment" approval="1" role="payroll,admin">Add to Month</ACTION>
+				<ACTION fnct="add_adjustment" approval="2" role="payroll,admin">Add to Employee</ACTION>
+			</ACTIONS>
 			<FORM name="Expense" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="3">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Expense Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
@@ -135,8 +149,9 @@
 				<CHECKBOX w="150" title="In Tax" default="false" y="70" h="20" x="10">in_tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Order" default="0" y="70" h="20" x="290">adjustment_order</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" default="0" y="90" h="20" x="10">account_number</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				<TEXTDECIMAL w="150" title="Default Amount" y="110" h="20" x="10">default_amount</TEXTDECIMAL>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Claim Types" keyfield="claim_type_id" table="vw_claim_types">
@@ -1506,7 +1521,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Banking" key="106" h="750">
-		<FILTER w="700" name="Payroll" split="150" type="horl" key="6" h="550">
+		<FILTER w="700" name="Banking" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
