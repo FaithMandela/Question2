@@ -70,7 +70,7 @@ ORDER BY vw_employee_tax_types.tax_type_name]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Numbers]]></text>
+				<text><![CDATA[Identification]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

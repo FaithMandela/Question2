@@ -1469,31 +1469,36 @@
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
+				<CROSSTAB name="Tax Types ID" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
+					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Identification">tax_identification</TEXTFIELD>
+				</CROSSTAB>
+				<TEXTDECIMAL w="75" fnct="to_char(basic_pay, '9999999D9')" title="Basic Pay">v_basic_pay</TEXTDECIMAL>
 				<CROSSTAB name="Allowances" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 1)">
 					<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
-				<TEXTDECIMAL w="75" title="Total Allowance">payroll_allowance</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" fnct="to_char(payroll_allowance, '9999999D9')" title="Total Allowance">v_payroll_allowance</TEXTDECIMAL>
 				<CROSSTAB name="Deductions" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 2)">
 					<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
 				<CROSSTAB name="Tax Types" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
 					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
-				<TEXTDECIMAL w="75" title="Total Deduction">payroll_deduction</TEXTDECIMAL>
+				<TEXTFIELD w="75" fnct="to_char(payroll_deduction, '9999999D9')" title="Total Deduction">v_payroll_deduction</TEXTFIELD>
 				<CROSSTAB name="Expenses" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 3)">
 					<TEXTFIELD w="75" title="Expense">adjustment_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
-				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
+				<TEXTFIELD w="75" fnct="to_char(payroll_expense, '9999999D9')" title="Expense">v_payroll_expense</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(net_pay, '9999999D9')" title="Net Pay">v_net_pay</TEXTFIELD>
 			</CROSSTAB>
 		</GRID>
 		<GRID name="SUN Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">
@@ -1714,7 +1719,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<JASPER name="Pension Payments" reportfile="vw_employee_pensions.jasper"></JASPER>
 		</GRID>

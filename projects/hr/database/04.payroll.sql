@@ -1722,6 +1722,7 @@ BEGIN
 			v_amount := rec.amount;
 		END IF;
 		
+		a_exchange_rate := v_exchange_rate;
 		IF(v_currency_id <> adj.currency_id)THEN
 			a_exchange_rate := 1 / v_exchange_rate;
 		END IF;
