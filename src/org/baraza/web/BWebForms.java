@@ -26,12 +26,16 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.PrintWriter;
 
 import javax.json.Json;
+import javax.json.JsonValue;
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonArrayBuilder;
+import javax.json.JsonReader;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.FileItem;
@@ -48,8 +52,7 @@ import org.baraza.utils.BCipher;
 public class BWebForms {
 	Logger log = Logger.getLogger(BWebForms.class.getName());
 	Map<String, String[]> params;
-	Map<String, String> answers;
-	Map<String, String> subanswers;
+	JsonObject answers;
 	String entryFormId = null;
 	String formid = "0";
 	String fhead, ffoot, ftitle;
@@ -65,12 +68,15 @@ public class BWebForms {
 	    db = new BDB(dbconfig);
 	    access_text = at;
 	}
+	
+	public BWebForms(BDB db) {
+		this.db = db;
+	}
 
-	public String getWebForm(String entryformid, Map<String, String[]> sParams) {
+	public String getWebForm(Map<String, String[]> sParams) {
 		String mystr = "";
 
-		answers = new HashMap<String, String>();
-		subanswers = new HashMap<String, String>();
+		answers = Json.createObjectBuilder().build();
 		params = new HashMap<String, String[]>(sParams);
 		
 		String entityId = null;
@@ -80,8 +86,9 @@ public class BWebForms {
 		if((action == null) || (action.trim().equals("FORM"))) {
 			formid = getParameter("actionvalue");
 		} else {
-			String entryFormId = getParameter("actionvalue");
-			Map<String, String> formRS = db.readFields("form_id, entity_id, approve_status", "entry_forms WHERE entry_form_id = " + entryFormId);
+			entryFormId = getParameter("actionvalue");
+			Map<String, String> formRS = db.readFields("form_id, entity_id, approve_status, answer", "entry_forms WHERE entry_form_id = " + entryFormId);
+			processAnswers(formRS.get("answer"));
 			formid = formRS.get("form_id");
 			entityId = formRS.get("entity_id");
 			approveStatus = formRS.get("approve_status");
@@ -259,7 +266,7 @@ public class BWebForms {
 				+ " name='F" + fieldId +  "'"
 				+ " id ='F" + fieldId +  "'"
 				+ " placeholder='" + details +"'"
-				+ " class='form-control' />" + getAnswer(fieldId) + "</textarea></td>\n";
+				+ " class='form-control' />" + getAnswer(fieldId, false) + "</textarea></td>\n";
 				fieldCount++;
 			} else if(fieldType.equals("DATE")) {
 				input = "<td><div class='input-group input-medium date date-picker' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>";
@@ -295,7 +302,7 @@ public class BWebForms {
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
-				String listVal = answers.get("F" + fieldId);
+				String listVal = getAnswer(fieldId, false);
 				if(listVal == null) listVal = "";
 				else listVal = listVal.replace("\"", "").trim();
 
@@ -319,7 +326,7 @@ public class BWebForms {
 				input += ">\n";
 
 				String lookups = rs.getString("field_lookup");
-				String selectVal = answers.get("F" + fieldId);
+				String selectVal = getAnswer(fieldId, false);
 				if(selectVal == null) selectVal = "";
 				else selectVal = selectVal.replace("\"","").trim();
 				String spanVal = "";
@@ -495,136 +502,22 @@ public class BWebForms {
 
 		return myhtml.toString();
 	}
-	
-	public String printSubTable(String fieldId, String disabled, String caption, int table_count) {
-		StringBuilder myhtml = new StringBuilder();
+		
+	public String updateForm(String entryFormId, String jsonData) {
+		this.entryFormId = entryFormId;
+		String resp = "";
+System.out.println("Start saving the form " + jsonData);
 
-		String mysql = "SELECT sub_field_id, sub_field_type, sub_field_size, sub_field_lookup, question ";
-		mysql += " FROM vw_sub_fields WHERE field_id = " + fieldId;
-		mysql += " ORDER BY sub_field_order";
-		BQuery rs = new BQuery(db, mysql);
-
-		String mytitle = "";
-		String titleshare = "";
-		String sharetitle = "";
-
-		Map<String, String> subFields = new HashMap<String, String>();
-		Map<String, String> subFieldLookups = new HashMap<String, String>();
-		Map<String, String> subFieldSize = new HashMap<String, String>();
-		List<String> subFieldOrder = new ArrayList<String>();
-
-		String filltb = "";			// declares an array of String responce
-		String tableRows = "";
-		String ans = "";
-		String sub_field_type = "TEXTFIELD";
-		String sub_field_size = "";
-
-		while(rs.moveNext()) {
-			subFieldOrder.add(rs.getString("sub_field_id"));
-			subFields.put(rs.getString("sub_field_id"), rs.getString("sub_field_type"));
-			subFieldSize.put(rs.getString("sub_field_id"), rs.getString("sub_field_size"));
-			subFieldLookups.put(rs.getString("sub_field_id"), rs.getString("sub_field_lookup"));
-
-			mytitle += "<th>" + rs.getString("question") + "</th>";
+		String updSql = "SELECT entry_form_id, answer FROM entry_forms WHERE entry_form_id = " + entryFormId;
+		BQuery rs = new BQuery(db, updSql);
+		
+		if(rs.moveNext()) {
+			rs.recEdit();
+			rs.updateRecField("answer", jsonData);
+			rs.recSave();
 		}
-
-		int j = 1;
-		boolean printRow = true;
-
-		while(printRow) {
-			filltb = "<tr>";
-			boolean hasData = false;
-
-			//search:
-			for(String subFieldID : subFieldOrder) {
-				ans = getAnswer(subFieldID, j);
-				String answer = subanswers.get("SF:" + subFieldID + ":" + Integer.toString(j));
-
-				if(answer == null) answer = "";
-				else hasData = true;
-
-				sub_field_type = subFields.get(subFieldID);
-				sub_field_size = subFieldSize.get(subFieldID);
-
-				if(sub_field_type.equals("TEXTFIELD")) {
-					filltb += "<td><input" + disabled + " class='form-control' type='text' ";
-					filltb += " style='width:" + sub_field_size + "0px' ";
-					filltb += " id='SF:" + subFieldID + "'";
-					filltb += " name='SF:" + subFieldID + "'";
-					filltb += ans + "/></td>\n";
-				} else if(sub_field_type.equals("LIST")) {
-					filltb += "<td><select classx='form-control'";
-					filltb += " id='SF:" + subFieldID + "'";
-					filltb += " name='SF:" + subFieldID + "'";
-					filltb += ">\n";
-					String lookups = subFieldLookups.get(subFieldID);
-					if(lookups != null) {
-						String[] lookup = lookups.split("#");
-						for(String lps : lookup) {
-							if(lps.equals(answer)) filltb += "<option selected='selected'>" + lps + "</option>\n";
-							else filltb += "<option>" + lps + "</option>\n";
-						}
-					}
-					filltb += "</select></td>\n";
-				} else if(sub_field_type.equals("SELECT")) {
-					filltb += "<td><select classx='form-control' ";
-					filltb += " id='SF:" + subFieldID + "'";
-					filltb += " name='SF:" + subFieldID + "'";
-					filltb += ">\n";
-					String lookups = subFieldLookups.get(subFieldID);
-					String spn = "";
-					if(lookups != null) {
-						BQuery lprs = new BQuery(db, lookups);
-						int cols = lprs.getColnum();
-						while(lprs.moveNext()) {
-							if(cols == 1){
-								if(lprs.readField(1).equals(answer)) {
-									spn = lprs.readField(1);
-									filltb += "<option value='" + lprs.readField(1) + "' selected='selected'>" + lprs.readField(1) + "</option>\n";
-								} else {
-									filltb += "<option value='" + lprs.readField(1) + "'>" + lprs.readField(1) + "</option>\n";
-								}
-							} else {
-								if(lprs.readField(1).equals(answer)) {
-									spn = lprs.readField(2);
-									filltb += "<option value='" + lprs.readField(1) + "' selected='selected'>" + lprs.readField(2) + "</option>\n";
-								} else {
-									filltb += "<option value='" + lprs.readField(1) + "'>" + lprs.readField(2) + "</option>\n";
-								}
-							}
-						}
-						lprs.close();
-					}
-					filltb += "</select>";
-					filltb += "<span " + " id='tableselect" + subFieldID +  "' " + " class='noscreen'> " + spn + "</span></td>\n";
-				}
-			}
-
-			if(hasData)
-				filltb += "<td><input type='button' class='deleteThisRow' name='del_row" + table_count + "_" + j + "' value='Delete'/></td>";
-			filltb += "</tr>\n";
-
-			if(hasData) tableRows += filltb;
-			else printRow = false;
-
-			j++;
-		}
-
-		if(j == 2) tableRows += filltb;
-
-		myhtml.append("<div class='portlet-body'>\n");
-		myhtml.append("<div class=table-toolbar>\n");
-		myhtml.append("</div>");
-		myhtml.append("<table class='table table-striped table-hover table-bordered' id='sample_editable_" + table_count + "'>\n");
-		myhtml.append("<thead><tr>" + mytitle + "<th></th></tr></thead>\n");
-		myhtml.append(tableRows);
-		myhtml.append("</table>\n");
-		myhtml.append("<div><a id='add_row" + table_count + "' class='btn btn-default pull-left'>Add Row</a>\n");
-		myhtml.append("</div'>\n");
-
-		rs.close();
-
-		return myhtml.toString();
+		
+		return resp;
 	}
 
 	public String getParameter(String paramName) {
@@ -632,42 +525,39 @@ public class BWebForms {
 		if(params.get(paramName) != null) paramValue = params.get(paramName)[0];
 		return paramValue;
 	}
-
+	
+	public void processAnswers(String answer) {
+		if(answer == null) return;
+		
+		JsonReader jr = Json.createReader(new StringReader(answer));
+		answers = jr.readObject();
+		jr.close();
+	}
+	
 	public String getAnswer(String fieldid) {
-		String answer = answers.get("F" + fieldid);
-
-		if(answer == null) {
-			answer = "";
-		} else if(answer.trim().equals("")) {
-			answer = "";
-		} else {
-			answer = answer.replaceAll("&", "&amp;").replaceAll("\"", "&quot;");
-			answer = " value=\"" + answer + "\" ";
-		}
-
-		return answer;
+		return getAnswer(fieldid, true);
 	}
 
-	public String getAnswer(String subfieldid, int answerline) {
-		String answer = null;
-		String qst = "SF:" + subfieldid + ":" + Integer.toString(answerline);
-		answer = subanswers.get(qst);
-
+	public String getAnswer(String fieldid, boolean addValue) {
+		String aId = "F" + fieldid;
+		if(!answers.containsKey(aId)) return "";
+		if(answers.get(aId) instanceof JsonObject || answers.get(aId) instanceof JsonArray) return "";
+		
+		String answer = answers.getString(aId);
 		if(answer == null) {
 			answer = "";
 		} else if(answer.trim().equals("")) {
 			answer = "";
 		} else {
 			answer = answer.replaceAll("&", "&amp;").replaceAll("\"", "&quot;");
-			answer = " value=\"" + answer + "\" ";
+			if(addValue) answer = " value=\"" + answer + "\" ";
 		}
 
 		return answer;
 	}
 	
-	public String getTitle() {
-		return ftitle;
-	}
+	public String getTitle() { return ftitle; }
+	public String getEntryFormId() { return entryFormId; }
 	
 	public void close() {
 		if(db != null) db.close();

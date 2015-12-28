@@ -420,15 +420,15 @@ BEGIN
 		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (Visible = true);
 	ELSIF ($3 = 11) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
 		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($3 = 12) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
 		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1) AND (In_Tax = true);
 	ELSIF ($3 = 14) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
 		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1) AND (Tax_Type_ID = $2);
 	ELSIF ($3 = 21) THEN

@@ -87,7 +87,10 @@ public class Bajax extends HttpServlet {
 		String endDate = request.getParameter("enddate");
 		String endTime = request.getParameter("endtime");
 
-		if("calresize".equals(fnct)) {
+		if("formupdate".equals(fnct)) {
+			BWebForms webForm = new BWebForms(db);
+			resp = webForm.updateForm(request.getParameter("entry_form_id"), request.getParameter("json"));
+		} else if("calresize".equals(fnct)) {
 			resp = calResize(id, endDate, endTime);
 		} else if("calmove".equals(fnct)) {
 			resp = calMove(id, startDate, startTime, endDate, endTime);
