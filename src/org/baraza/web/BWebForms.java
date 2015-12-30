@@ -457,9 +457,9 @@ public class BWebForms {
 		+ "this.table.splice(clientIndex, 1);\n"
 		+ "}};\n"
 		+ "window.db" + fieldId + " = db" + fieldId + ";\n"
-		+ "db" + fieldId + ".table = [ ];\n\n"
+		+ "db" + fieldId + ".table = " + getSubAnswer(fieldId) + ";\n\n"
 		+ "$('#sub_table" + fieldId + "').jsGrid(");
-			
+		
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		jshd.add("width", tableSize + "%");
 		jshd.add("height", "200px");
@@ -552,6 +552,16 @@ System.out.println("Start saving the form " + jsonData);
 			answer = answer.replaceAll("&", "&amp;").replaceAll("\"", "&quot;");
 			if(addValue) answer = " value=\"" + answer + "\" ";
 		}
+
+		return answer;
+	}
+	
+	public String getSubAnswer(String fieldid) {
+		String aId = "db" + fieldid + ".table";
+		if(!answers.containsKey(aId)) return "[ ]";
+		if(!(answers.get(aId) instanceof JsonArray)) return "[ ]";
+		
+		String answer = answers.getJsonArray(aId).toString();
 
 		return answer;
 	}

@@ -2,6 +2,16 @@
 UPDATE fields SET field_size = 25;
 UPDATE fields SET field_size = 85 WHERE (field_type = 'SUBGRID') OR (field_type = 'TABLE');
 
+DROP VIEW vw_entry_forms;
+CREATE VIEW vw_entry_forms AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+		forms.form_id, forms.form_name, forms.form_number, forms.completed, forms.is_active, forms.use_key,
+		entry_forms.org_id, entry_forms.entry_form_id, entry_forms.approve_status, entry_forms.application_date, 
+		entry_forms.completion_date, entry_forms.action_date, entry_forms.narrative, 
+		entry_forms.answer, entry_forms.workflow_table_id, entry_forms.details
+	FROM entry_forms INNER JOIN entitys ON entry_forms.entity_id = entitys.entity_id
+		INNER JOIN forms ON entry_forms.form_id = forms.form_id;
+
 ----- Do a backend approve
 CREATE OR REPLACE FUNCTION upd_qapprove(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(250) AS $$
 DECLARE
