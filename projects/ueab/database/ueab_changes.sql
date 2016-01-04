@@ -23,8 +23,10 @@ county_name		varchar(50)
 ALTER TABLE students 
 ADD COLUMN disability varchar(5),
 ADD COLUMN dis_details text,
-ADD COLUMN county_id char(2) references countys;
-
+ADD COLUMN county_id char(2) references countys,
+ADD COLUMN passport boolean DEFAULT false,
+ADD COLUMN national_id  boolean DEFAULT false,
+ADD COLUMN identification_no varchar(20);
 
 
 CREATE INDEX students_county_id ON students (county_id);
@@ -125,11 +127,6 @@ SELECT q.religionid, q.religionname, q.denominationid, q.denominationname, q.sch
        q.details, q.ucharge, q.residencecharge, q.lcharge, q.feescharge,studentcounty.county_name,studentcounty.county_id
   FROM qstudentview as q
   INNER JOIN studentcounty ON q.studentid= studentcounty.county_id ;
-  
-  ALTER TABLE students
-  ADD COLUMN passport boolean DEFAULT false,
-  ADD COLUMN national_id  boolean DEFAULT false,
-  ADD COLUMN identification_no varchar(20);
   
   
   

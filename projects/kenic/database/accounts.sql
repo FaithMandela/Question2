@@ -497,3 +497,30 @@ AND (gl_trans.type = 12);
 ALTER TABLE ledger ADD	ChequeNo		varchar(50);
 
 
+---------- Clear the database for new periods
+DELETE FROM bank_trans;
+DELETE FROM comments;
+DELETE FROM cust_allocations;
+DELETE FROM cust_branch;
+DELETE FROM debtors_master;
+DELETE FROM debtor_trans;
+DELETE FROM debtor_trans_details;
+DELETE FROM gl_trans;
+DELETE FROM ledger;
+DELETE FROM refs;
+DELETE FROM sales_orders;
+DELETE FROM sales_order_details;
+DELETE FROM supp_allocations;
+DELETE FROM supp_invoice_items;
+DELETE FROM supp_trans;
+DELETE FROM trans_tax_details;
+DELETE FROM voided;
+
+
+------- Postgresql re-sync registrars
+INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
+
+UPDATE ledger SET ispicked = false WHERE created::date > '2015-12-31'::date;
+
+
+SELECT * FROM ledger WHERE created::date > '2015-12-31'::date;

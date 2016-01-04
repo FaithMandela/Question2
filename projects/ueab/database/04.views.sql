@@ -174,6 +174,7 @@ CREATE VIEW vw_students AS
 		students.onprobation, students.offcampus, students.currentcontact, students.currentemail, students.currenttel,
 		students.seeregistrar, students.hallseats, students.staff, students.fullbursary, students.details,
 		students.room_number, students.probation_details, students.registrar_details,
+		students.student_edit,
 		students.gfirstpass, ('G' || students.studentid) as gstudentid,
 		('<a href="a_statement_acct.jsp?view=1:0&accountno=' || students.accountnumber ||
 			'" target="_blank">View Accounts</a>') as view_statement
