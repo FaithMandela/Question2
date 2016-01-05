@@ -1,9 +1,4 @@
 
-INSERT INTO account_types VALUES (0, 0, 0, 'Current Account', 'Current Transactions');
-INSERT INTO account_types VALUES (1, 0, 0, 'Savings Account', 'Local Savings Transactions');
-INSERT INTO account_types VALUES (2, 1, 1, 'Int Current Account', 'Overseas Current Transactions');
-INSERT INTO account_types VALUES (3, 1, 1, 'Int Savings Account', 'Overseas Savings Transactions');
-
 
 INSERT INTO contribution_types VALUES(0,0,'Shares Contribution', FALSE, 'Cash raised is valued in shares');
 INSERT INTO contribution_types VALUES(1,0,'Member Contribution', TRUE, 'Cash raised for chama members');

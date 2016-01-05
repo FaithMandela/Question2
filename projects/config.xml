@@ -19,6 +19,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/booking" dbname="booking" path="booking" xmlfile="booking.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Booking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/agency" dbname="agency" path="agency" xmlfile="agency.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="db">Agency</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">SACCO</APP>
+	<APP dbpath="jdbc:postgresql://localhost/chamas" dbname="chamas" path="chamas" xmlfile="chamas.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Chamas</APP>
 	<APP dbpath="jdbc:postgresql://localhost/codepamoja" dbname="codepamoja" path="codepamoja" xmlfile="codepamoja.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">CodePamoja</APP>
 	<APP dbpath="jdbc:postgresql://localhost/galileo" dbname="galileo" path="galileo" xmlfile="galileo.xml" dbclass="org.postgresql.Driver" dbusername="root">Galileo</APP>
 	<APP dbpath="jdbc:postgresql://localhost/tickets" dbname="tickets" path="tickets" xmlfile="tickets.xml" dbclass="org.postgresql.Driver" dbusername="root">Travelport Tickets</APP>
