@@ -349,7 +349,7 @@ BEGIN
 		RAISE EXCEPTION 'No email address <br>%', mystr;
 	ELSIF((srec.address is null) OR (srec.town is null) OR (srec.countrycodeid is null) OR (srec.telno is null) OR (srec.county_id is null)) THEN
 		RAISE EXCEPTION 'No address details <br>%', mystr;
-	ELSIF((srec.guardianname is null) OR (srec.gaddress is null) OR (srec.gtown is null) OR (srec.gcountrycodeid is null) OR (srec.gtelno)) THEN 
+	ELSIF((srec.guardianname is null) OR (srec.gaddress is null) OR (srec.gtown is null) OR (srec.gcountrycodeid is null) OR (srec.gtelno is null)) THEN 
 		RAISE EXCEPTION 'No guardian details <br>%', mystr;
 	ELSIF(srec.nationality is null) THEN
 		RAISE EXCEPTION 'No nationality <br>%', mystr;
@@ -1406,21 +1406,20 @@ BEGIN
 	END IF;
 	
 	IF(NEW.identification_no is null)THEN
-		NEW.student_edit = 'allow';
+		NEW.student_edit := 'allow';
 	ELSIF(NEW.email is null)THEN
-		NEW.student_edit = 'allow';
+		NEW.student_edit := 'allow';
 	ELSIF((NEW.address is null) OR (NEW.town is null) OR (NEW.countrycodeid is null) OR (NEW.telno is null) OR (NEW.county_id is null)) THEN
-		NEW.student_edit = 'allow';
-	ELSIF((NEW.guardianname is null) OR (NEW.gaddress is null) OR (NEW.gtown is null) OR (NEW.gcountrycodeid is null) OR (NEW.gtelno)) THEN 
-		NEW.student_edit = 'allow';
+		NEW.student_edit := 'allow';
+	ELSIF((NEW.guardianname is null) OR (NEW.gaddress is null) OR (NEW.gtown is null) OR (NEW.gcountrycodeid is null) OR (NEW.gtelno is null)) THEN 
+		NEW.student_edit := 'allow';
 	ELSIF(NEW.nationality is null) THEN
-		NEW.student_edit = 'allow';
+		NEW.student_edit := 'allow';
 	ELSIF(NEW.disability is null) THEN
-		NEW.student_edit = 'allow';
+		NEW.student_edit := 'allow';
 	ELSE
-		NEW.student_edit = 'none';
+		NEW.student_edit := 'none';
 	END IF;
-	
 
 	RETURN NEW;
 END;

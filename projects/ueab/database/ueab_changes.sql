@@ -65,7 +65,21 @@ VALUES	('MO', 'Mombasa'),
 		('LP','Laikipia'),
 		('NK','Nakuru'),
 		('NO','Narok'),
-		('KJ','kajiado');
+		('KJ','kajiado'),
+		('BM','Bomet'),
+		('BU','Bungoma'),
+		('BS','Busia'),
+		('HO','Homabay'),
+		('KA','Kakamega'),
+		('KE','Kericho'),
+		('KS','Kisii'),
+		('KU','Kisumu'),
+		('MI','Migori'),
+		('MS','Marsabit'),
+		('NI','Nairobi'),
+		('NM','Nyamira'),
+		('SI','Siaya'),
+		('VI','Vihiga');
 		
 	
 

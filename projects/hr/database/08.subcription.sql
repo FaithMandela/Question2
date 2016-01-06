@@ -149,8 +149,8 @@ BEGIN
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
-		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix)
-		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id);
+		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
+		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
 		
 		v_currency_id := nextval('currency_currency_id_seq');
 		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'US Dollar', 'USD');
