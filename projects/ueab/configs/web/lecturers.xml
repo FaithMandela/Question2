@@ -1,4 +1,4 @@
-<APP name="UEAB" org="org_id" password="change_password">
+<APP auth.name="instructorid" name="UEAB" auth.id="instructorid" org="org_id" password="change_password" auth.table="instructors">
 	<MENU title="Lectures">
 		<MENU name="Information">
 			<MENU name="School">1</MENU>
@@ -32,7 +32,6 @@
 			<MENU name="Post Graduate List">110</MENU>
 		</MENU>
 	</MENU>
-
 	<DESK w="700" name="School" key="1" h="500">
 		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true">
 			<TEXTFIELD w="75" title="School ID">schoolid</TEXTFIELD>
@@ -107,7 +106,6 @@
 			</FORMVIEW>
 		</GRID>
 	</DESK>
-
 	<DESK w="700" name="Current Timetable" key="10" h="500">
 		<GRID name="Current Timetable" table="currtimetableview">
 			<TEXTFIELD w="40" title="Start" format="time">starttime</TEXTFIELD>

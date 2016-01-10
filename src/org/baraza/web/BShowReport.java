@@ -36,11 +36,7 @@ public class BShowReport extends HttpServlet {
 		String projectDir = context.getInitParameter("projectDir");
 		if(projectDir != null) xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
 
-		String userIP = request.getRemoteAddr();
-		String userName = request.getRemoteUser();
-
 		BWeb web = new BWeb(dbconfig, xmlfile);
-		web.setUser(userIP, userName);
 		web.init(request);
 
 		String reportType = request.getParameter("report");

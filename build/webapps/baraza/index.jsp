@@ -33,11 +33,7 @@
 		reportPath = projectDir + ps + "reports" + ps;
 	}
 
-	String userIP = request.getRemoteAddr();
-	String userName = request.getRemoteUser();
-
 	BWeb web = new BWeb(dbconfig, xmlfile);
-	web.setUser(userIP, userName);
 	web.init(request);
 
 	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
