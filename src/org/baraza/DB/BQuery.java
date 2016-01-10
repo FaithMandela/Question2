@@ -347,7 +347,7 @@ public class BQuery {
 		}*/
 
 		// SQL view debug point
-		//System.out.println("SQL : " + mysql);
+		System.out.println("SQL : " + mysql);
 	}
 
 	public void setSQL(String lsql) {

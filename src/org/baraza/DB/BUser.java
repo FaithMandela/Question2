@@ -47,7 +47,7 @@ public class BUser {
 		String mysql = "SELECT entity_id, entity_type_id, org_id, no_org, entity_name, Super_User, Entity_Leader, Function_Role ";
 		mysql += "FROM entitys WHERE User_name = '" + userName + "'";
 		BQuery rs = new BQuery(db, mysql);
-
+System.out.println("BASE 10 : " + mysql);
 		if(rs.moveNext()) {
 			entityName = rs.readField("entity_name");
 			entityType = rs.readField("entity_type_id");
@@ -88,6 +88,7 @@ public class BUser {
 	public void setUser(BDB db, String tableName, String idCol, String nameCol, String userName) {
 		String mysql = "SELECT " + idCol + " FROM " +  tableName;
 		mysql += " WHERE " + nameCol + " = '" + userName + "'";
+System.out.println("BASE 20 : " + mysql);
 		BQuery rs = new BQuery(db, mysql);
 		if(rs.moveNext()) userID = rs.readField(idCol);
 

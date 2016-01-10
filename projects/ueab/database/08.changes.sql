@@ -42,8 +42,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 DROP TRIGGER ins_students ON students;
-CREATE TRIGGER ins_students AFTER INSERT OR UPDATE ON students
-  FOR EACH ROW EXECUTE PROCEDURE ins_students();
+CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
+FOR EACH ROW EXECUTE PROCEDURE ins_students();
 
 
 DROP VIEW vw_students;
