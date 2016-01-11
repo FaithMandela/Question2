@@ -1325,7 +1325,6 @@ CREATE VIEW studentmarkview AS
 		students.studentname
 	FROM (registrations INNER JOIN marks ON registrations.markid = marks.markid)
 		INNER JOIN students ON registrations.existingid = students.studentid;
-
 		
 ---- webservice functions
 CREATE VIEW ws_students AS
