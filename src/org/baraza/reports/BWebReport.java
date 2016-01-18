@@ -48,7 +48,7 @@ import org.baraza.DB.BDB;
 
 public class BWebReport  {
 	Logger log = Logger.getLogger(BWebReport.class.getName());
-	String name, reportfile, filterkey, filtervalue;
+	String name, reportfile, fileName, filterkey, filtervalue;
 	boolean showpdf = false;
 	String userid, userfilter;
 	String groupid, groupfilter;
@@ -69,6 +69,7 @@ public class BWebReport  {
 
 		name = view.getAttribute("name");
 		reportfile = view.getAttribute("reportfile");
+		fileName = view.getAttribute("filename", "report");
 		userfilter = view.getAttribute("user", "entity_id");
 		groupfilter = view.getAttribute("group");
 		filterkey = view.getAttribute("filterkey");
@@ -227,7 +228,7 @@ public class BWebReport  {
 			if(reportType == 0) {
 				response.setCharacterEncoding("ISO-8859-1");
 				response.setContentType("application/pdf");
-				response.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+				response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".pdf");
 			
 				JRPdfExporter exporter = new JRPdfExporter();
 				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
@@ -236,7 +237,7 @@ public class BWebReport  {
 			}
 			if(reportType == 1) {
 				response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-				response.setHeader("Content-Disposition", "attachment; filename=xxx.xlsx");
+				response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
 
 				JRXlsxExporter exporter = new JRXlsxExporter();
 				exporter.setExporterInput(new SimpleExporterInput(jasperPrint));

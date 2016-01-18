@@ -181,7 +181,7 @@
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
 			<TEXTFIELD w="50" title="Credit Hours">credithours</TEXTFIELD>
-			<GRID name="Class List" orderby="studentid" linkfield="qcourseid" table="studentgradeview" noorg="true" where="(approved = true)">
+			<GRID name="Class List" keyfield="qgradeid" updatetable="qgrades" orderby="studentid" linkfield="qcourseid" table="studentgradeview" noorg="true" where="(approved = true)">
 				<TEXTFIELD w="70" title="Student ID">studentid</TEXTFIELD>
 				<TEXTFIELD w="150" title="Student Name">studentname</TEXTFIELD>
 				<TEXTFIELD w="70" title="GPA Hours">credit</TEXTFIELD>
