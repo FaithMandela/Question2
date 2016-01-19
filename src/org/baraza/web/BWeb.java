@@ -102,6 +102,9 @@ public class BWeb {
 	public void init(HttpServletRequest request) {
 		if((root == null) || (db == null)) return;	// error check
 		
+		// login the user
+		setUser(request.getRemoteAddr(), request.getRemoteUser());
+		
 		views = new ArrayList<BElement>();
 		viewKeys = new ArrayList<String>();
 		viewData = new ArrayList<String>();
@@ -271,6 +274,13 @@ public class BWeb {
 			if(userName == null) userName = "root";
 			db.setUser(userIP, userName);
 			userID = db.getUserID();
+			String authTable = root.getAttribute("auth.table");
+			if(authTable != null) {
+				String authId = root.getAttribute("auth.id");
+				String authName = root.getAttribute("auth.name");
+				db.setUser(authTable, authId, authName, userName);
+				userID = db.getUserID();
+			}
 		}
 	}
 	

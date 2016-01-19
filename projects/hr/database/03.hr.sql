@@ -1,6 +1,8 @@
 ALTER TABLE orgs
+ADD default_country_id		char(2) references sys_countrys,
 ADD Bank_Header				text,
 ADD Bank_Address			text;
+CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
 
 CREATE TABLE disability (
 	disability_id			serial primary key,
@@ -1337,6 +1339,18 @@ CREATE OR REPLACE FUNCTION get_review_category(varchar(16)) RETURNS integer AS $
     SELECT review_category_id
 	FROM job_reviews
 	WHERE (job_review_id = CAST($1 as int));
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_country(int) RETURNS char(2) AS $$
+    SELECT default_country_id::varchar(12)
+	FROM orgs
+	WHERE (org_id = $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_currency(int) RETURNS int AS $$
+    SELECT currency_id
+	FROM orgs
+	WHERE (org_id = $1);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_allowances" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_allowances" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6976d97e-4a3c-40bc-9960-53333d61e892">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -38,25 +38,25 @@ $P!{organd}]]>
 	<title>
 		<band height="63" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="42"/>
+				<reportElement style="Title" x="66" y="0" width="446" height="42" uuid="dcea4135-1b97-4e73-9340-d05dc7b1b941"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[Employee Allowances Report]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="88" y="42" width="87" height="15"/>
+				<reportElement style="Detail" x="88" y="42" width="87" height="15" uuid="4b5e78f7-a1d2-41d8-b02e-ce2def442730"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{period_year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{period_year}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="175" y="42" width="174" height="15"/>
+				<reportElement style="Detail" x="175" y="42" width="174" height="15" uuid="a89e984c-49e5-4cdd-b43c-192d3d16fbe1"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{period_month}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{period_month}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -70,39 +70,32 @@ $P!{organd}]]>
 		<band splitType="Stretch"/>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
-		</band>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="723fbff5-2a86-4d5e-b4cc-35594066eb91"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343"/>
+					<reportElement style="Column header" x="756" y="1" width="40" height="20" forecolor="#736343" uuid="275ced5f-6af4-4be2-b923-bc7309a431fe"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343"/>
+					<reportElement style="Column header" x="676" y="1" width="80" height="20" forecolor="#736343" uuid="24efce5c-4857-48d3-8586-76f0dca8dbcb"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343"/>
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="ae053b7f-ec7a-4045-9ff6-58ab331f65eb"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -110,10 +103,10 @@ $P!{organd}]]>
 	<summary>
 		<band height="45" splitType="Stretch">
 			<crosstab>
-				<reportElement x="0" y="0" width="555" height="45"/>
-				<rowGroup name="entity_name" width="193" totalPosition="End">
-					<bucket>
-						<bucketExpression class="java.lang.String"><![CDATA[$F{entity_name}]]></bucketExpression>
+				<reportElement x="0" y="0" width="802" height="45" uuid="9305a050-0060-4da0-b291-408c3f8e595c"/>
+				<rowGroup name="entity_name" width="176" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{entity_name}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -121,12 +114,12 @@ $P!{organd}]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="193" height="16"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="176" height="16" uuid="48027e1d-420f-4807-9ee3-919841604ad4"/>
 								<box leftPadding="2"/>
 								<textElement textAlignment="Left">
 									<font fontName="Times New Roman"/>
 								</textElement>
-								<textFieldExpression class="java.lang.String"><![CDATA[$V{entity_name}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{entity_name}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabRowHeader>
@@ -136,7 +129,7 @@ $P!{organd}]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="193" height="25"/>
+								<reportElement x="0" y="0" width="176" height="25" uuid="9117f31b-f539-490f-8b3f-2c54b8e1f78f"/>
 								<box leftPadding="2"/>
 								<textElement verticalAlignment="Middle">
 									<font fontName="Times New Roman" isBold="true"/>
@@ -147,8 +140,8 @@ $P!{organd}]]>
 					</crosstabTotalRowHeader>
 				</rowGroup>
 				<columnGroup name="adjustment_name" height="30" totalPosition="End">
-					<bucket>
-						<bucketExpression class="java.lang.String"><![CDATA[$F{adjustment_name}]]></bucketExpression>
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{adjustment_name}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>
 						<cellContents backcolor="#F0F8FF" mode="Opaque">
@@ -156,12 +149,12 @@ $P!{organd}]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="30"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="48" height="30" uuid="14de7a59-bda7-4b70-87dc-c41c85506afd"/>
 								<box rightPadding="2"/>
 								<textElement textAlignment="Right">
-									<font fontName="Times New Roman" isBold="true"/>
+									<font fontName="Times New Roman" size="8" isBold="true"/>
 								</textElement>
-								<textFieldExpression class="java.lang.String"><![CDATA[$V{adjustment_name}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{adjustment_name}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabColumnHeader>
@@ -171,7 +164,7 @@ $P!{organd}]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<staticText>
-								<reportElement x="0" y="0" width="58" height="30"/>
+								<reportElement x="0" y="0" width="49" height="30" uuid="8796b653-db9d-459a-b4af-dee7e30c7f13"/>
 								<box rightPadding="2"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="Times New Roman" isBold="true"/>
@@ -184,63 +177,63 @@ $P!{organd}]]>
 				<measure name="amountMeasure" class="java.lang.Double" calculation="Sum">
 					<measureExpression><![CDATA[$F{amount}]]></measureExpression>
 				</measure>
-				<crosstabCell width="70" height="16">
+				<crosstabCell width="48" height="16">
 					<cellContents>
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="16"/>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="48" height="16" uuid="67d2797a-675f-4412-827e-37db5361f346"/>
 							<box rightPadding="2"/>
 							<textElement textAlignment="Right">
 								<font fontName="Times New Roman"/>
 							</textElement>
-							<textFieldExpression class="java.lang.Double"><![CDATA[$V{amountMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{amountMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="70" height="25" rowTotalGroup="entity_name">
+				<crosstabCell width="48" height="25" rowTotalGroup="entity_name">
 					<cellContents backcolor="#BFE1FF" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="25"/>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="48" height="25" uuid="8f25d729-0401-4673-a654-d84d8a30dffc"/>
 							<box rightPadding="2"/>
 							<textElement textAlignment="Right">
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
-							<textFieldExpression class="java.lang.Double"><![CDATA[$V{amountMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{amountMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="58" height="16" columnTotalGroup="adjustment_name">
+				<crosstabCell width="49" height="16" columnTotalGroup="adjustment_name">
 					<cellContents backcolor="#BFE1FF" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="58" height="16"/>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="49" height="16" uuid="a0e08822-70c9-48e3-b723-4b11007935e0"/>
 							<box rightPadding="2"/>
 							<textElement textAlignment="Right">
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
-							<textFieldExpression class="java.lang.Double"><![CDATA[$V{amountMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{amountMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="58" rowTotalGroup="entity_name" columnTotalGroup="adjustment_name">
+				<crosstabCell width="49" rowTotalGroup="entity_name" columnTotalGroup="adjustment_name">
 					<cellContents backcolor="#BFE1FF" mode="Opaque">
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="58" height="25"/>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="49" height="25" uuid="6180c364-6bca-4544-9c1f-ebf37d192810"/>
 							<box rightPadding="2"/>
 							<textElement textAlignment="Right">
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
-							<textFieldExpression class="java.lang.Double"><![CDATA[$V{amountMeasure}]]></textFieldExpression>
+							<textFieldExpression><![CDATA[$V{amountMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>

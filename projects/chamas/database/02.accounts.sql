@@ -72,9 +72,11 @@ CREATE INDEX gls_account_id ON gls (account_id);
 
 CREATE TABLE tax_types (
 	tax_type_id				serial primary key,
-	org_id					integer references orgs,
 	account_id				integer references accounts,
+	currency_id				integer references currency,
+	org_id					integer references orgs,
 	tax_type_name			varchar(50) not null,
+	tax_type_number			varchar(50),
 	formural				varchar(320),
 	tax_relief				real default 0 not null,
 	tax_type_order			integer default 0 not null,
@@ -83,14 +85,19 @@ CREATE TABLE tax_types (
 	tax_inclusive			boolean default false not null,
 	linear					boolean default true,
 	percentage				boolean default true,
-	Employer				float default 0 not null,
-	Employer_PS				float default 0 not null,
+	employer				float default 0 not null,
+	employer_ps				float default 0 not null,
+	account_number			varchar(32),
+	employer_account		varchar(32),
 	active					boolean default true,
 	use_key					integer default 0 not null,
-	Details					text
+	Details					text,
+	
+	UNIQUE(tax_type_name, org_id)
 );
-CREATE INDEX tax_types_org_id ON tax_types (org_id);
 CREATE INDEX tax_types_account_id ON tax_types (account_id);
+CREATE INDEX tax_types_currency_id ON tax_types (currency_id);
+CREATE INDEX tax_types_org_id ON tax_types (org_id);
 
 CREATE TABLE tax_rates (
 	tax_rate_id				serial primary key,
@@ -102,21 +109,6 @@ CREATE TABLE tax_rates (
 );
 CREATE INDEX tax_rates_tax_type_id ON tax_rates (tax_type_id);
 CREATE INDEX tax_rates_org_id ON tax_rates(org_id);
-
-CREATE TABLE default_tax_types (
-	default_tax_type_id		serial primary key,
-	entity_id				integer references entitys,
-	tax_type_id				integer references tax_types,
-	org_id					integer references orgs,
-	tax_identification		varchar(50),
-	narrative				varchar(240),
-	additional				float default 0 not null,
-	active					boolean default true,
-	UNIQUE(entity_id, tax_type_id)
-);
-CREATE INDEX default_tax_types_entity_id ON default_tax_types (entity_id);
-CREATE INDEX default_tax_tax_type_id ON default_tax_types (tax_type_id);
-CREATE INDEX default_tax_types_org_id ON default_tax_types(org_id);
 
 CREATE TABLE period_tax_types (
 	period_tax_type_id		serial primary key,
@@ -134,7 +126,10 @@ CREATE TABLE period_tax_types (
 	in_tax					boolean not null default false,
 	employer				float not null,
 	employer_ps				float not null,
-	details					text
+	account_number			varchar(32),
+	details					text,
+	
+	UNIQUE(period_id, tax_type_id)
 );
 CREATE INDEX period_tax_types_tax_type_id ON period_tax_types (tax_type_id);
 CREATE INDEX period_tax_types_period_id ON period_tax_types (period_id);
@@ -144,13 +139,34 @@ CREATE INDEX period_tax_types_org_id ON period_tax_types(org_id);
 CREATE TABLE period_tax_rates (
 	period_tax_rate_id		serial primary key,
 	period_tax_type_id		integer references period_tax_types,
+	tax_rate_id				integer references tax_rates,
 	org_id					integer references orgs,
 	tax_range				float not null,
 	tax_rate				float not null,
-	narrative				varchar(240)
+	narrative				varchar(240),
+	
+	UNIQUE(period_tax_type_id, tax_rate_id)
 );
 CREATE INDEX period_tax_rates_period_tax_type_id ON period_tax_rates (period_tax_type_id);
 CREATE INDEX period_tax_rates_org_id ON period_tax_rates(org_id);
+
+CREATE TABLE default_tax_types (
+	default_tax_type_id		serial primary key,
+	entity_id				integer references entitys,
+	tax_type_id				integer references tax_types,
+	org_id					integer references orgs,
+	tax_identification		varchar(50),
+	narrative				varchar(240),
+	additional				float default 0 not null,
+	active					boolean default true,
+	UNIQUE(entity_id, tax_type_id)
+);
+CREATE INDEX default_tax_types_entity_id ON default_tax_types (entity_id);
+CREATE INDEX default_tax_types_tax_type_id ON default_tax_types (tax_type_id);
+CREATE INDEX default_tax_types_org_id ON default_tax_types(org_id);
+
+ALTER TABLE entitys ADD	account_id		integer references accounts;
+CREATE INDEX entitys_account_id ON entitys (account_id);
 
 CREATE VIEW vw_account_types AS
 	SELECT accounts_class.accounts_class_id, accounts_class.accounts_class_name, accounts_class.chat_type_id, accounts_class.chat_type_name, 
@@ -245,29 +261,29 @@ CREATE VIEW vw_budget_ledger AS
 		INNER JOIN periods ON journals.period_id = periods.period_id
 	WHERE (journals.posted = true)
 	GROUP BY journals.org_id, periods.fiscal_year_id, journals.department_id, gls.account_id;
-
+		
 CREATE VIEW vw_tax_types AS
 	SELECT vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name, 
-		tax_types.tax_type_id, tax_types.org_id, tax_types.tax_type_name, 
-		tax_types.tax_rate, tax_types.tax_inclusive, tax_types.details
-	FROM tax_types INNER JOIN vw_accounts ON tax_types.account_id = vw_accounts.account_id;
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		tax_types.org_id, tax_types.tax_type_id, tax_types.tax_type_name, tax_types.formural, tax_types.tax_relief, 
+		tax_types.tax_type_order, tax_types.in_tax, tax_types.tax_rate, tax_types.tax_inclusive, tax_types.linear, 
+		tax_types.percentage, tax_types.employer, tax_types.employer_ps, tax_types.account_number, 
+		tax_types.employer_account, tax_types.active, 
+		tax_types.tax_type_number, tax_types.use_key, tax_types.details
+	FROM tax_types INNER JOIN currency ON tax_types.currency_id = currency.currency_id
+		LEFT JOIN vw_accounts ON tax_types.account_id = vw_accounts.account_id;
 
 CREATE VIEW vw_tax_rates AS
 	SELECT tax_types.tax_type_id, tax_types.tax_type_name, tax_types.tax_relief, tax_types.linear, tax_types.percentage,
 		tax_rates.org_id, tax_rates.tax_rate_id, tax_rates.tax_range, tax_rates.tax_rate, tax_rates.narrative
 	FROM tax_rates INNER JOIN tax_types ON tax_rates.tax_type_id = tax_types.tax_type_id;
 
-CREATE VIEW vw_default_tax_types AS
-	SELECT entitys.entity_id, entitys.entity_name, tax_types.tax_type_id, tax_types.tax_type_name, default_tax_types.default_tax_type_id, 
-		default_tax_types.org_id, default_tax_types.tax_identification, default_tax_types.active, default_tax_types.narrative
-	FROM default_tax_types INNER JOIN entitys ON default_tax_types.entity_id = entitys.entity_id
-		INNER JOIN tax_types ON default_tax_types.tax_type_id = tax_types.tax_type_id;
-
 CREATE VIEW vw_period_tax_types AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate,  
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister,
-		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, period_tax_types.Period_Tax_Type_Name, 
+		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, tax_types.tax_type_number,
+		period_tax_types.period_tax_type_name, tax_types.use_key,
 		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, period_tax_types.percentage, 
 		period_tax_types.formural, period_tax_types.details
 	FROM period_tax_types INNER JOIN vw_periods ON period_tax_types.period_id = vw_periods.period_id
@@ -284,7 +300,16 @@ CREATE VIEW vw_period_tax_rates AS
 		getTaxMin(period_tax_rates.tax_range, period_tax_types.period_tax_type_id) as min_range, 
 		period_tax_rates.org_id, period_tax_rates.tax_range as max_range, period_tax_rates.tax_rate, period_tax_rates.narrative
 	FROM period_tax_rates INNER JOIN period_tax_types ON period_tax_rates.period_tax_type_id = period_tax_types.period_tax_type_id;
-
+	
+CREATE VIEW vw_default_tax_types AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+		vw_tax_types.tax_type_id, vw_tax_types.tax_type_name, vw_tax_types.tax_type_number,
+		vw_tax_types.currency_id, vw_tax_types.currency_name, vw_tax_types.currency_symbol,
+		default_tax_types.default_tax_type_id, 
+		default_tax_types.org_id, default_tax_types.tax_identification, default_tax_types.active, default_tax_types.narrative
+	FROM default_tax_types INNER JOIN entitys ON default_tax_types.entity_id = entitys.entity_id
+		INNER JOIN vw_tax_types ON default_tax_types.tax_type_id = vw_tax_types.tax_type_id;
+	
 CREATE OR REPLACE FUNCTION prev_acct(integer, date) RETURNS real AS $$
     SELECT sum(gls.debit - gls.credit)
 	FROM gls INNER JOIN journals ON gls.journal_id = journals.journal_id
@@ -387,15 +412,15 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_gls BEFORE INSERT OR UPDATE ON gls
     FOR EACH ROW EXECUTE PROCEDURE upd_gls();
 
-CREATE OR REPLACE FUNCTION close_year(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION close_year(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	trx_date		DATE;
 	periodid		INTEGER;
 	journalid		INTEGER;
 	profit_acct		INTEGER;
 	retain_acct		INTEGER;
-	rec			RECORD;
-	msg			varchar(120);
+	rec				RECORD;
+	msg				varchar(120);
 BEGIN
 	SELECT fiscal_year_id, fiscal_year_start, fiscal_year_end, year_opened, year_closed INTO rec
 	FROM fiscal_years
@@ -456,3 +481,5 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+

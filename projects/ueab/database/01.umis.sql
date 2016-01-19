@@ -381,6 +381,9 @@ CREATE TABLE students (
 	hallseats			integer not null default 1,
 	fullbursary			boolean default false not null,
 	disabled			boolean default false not null,
+	
+	student_edit		varchar(50) default 'none' not null,
+	
 	currentcontact		text,
 	currentemail		varchar(120),
 	currenttel			varchar(120),

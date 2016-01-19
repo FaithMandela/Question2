@@ -19,12 +19,12 @@ DROP VIEW vwlogs;
 UPDATE tickets SET ticketdate = ticketdate - interval '1 year' WHERE ticketdate > '2015-02-02';
 UPDATE logs SET logdate = logdate - interval '1 year' WHERE logdate = > '2015-02-02';
 
-DELETE FROM tes USING tickets WHERE tes.ticketid = tickets.ticketid AND ticketdate <= '2013-12-31';
-DELETE FROM tickets WHERE ticketdate <= '2013-12-31';
-DELETE FROM logdetails USING logs WHERE logdetails.logid = logs.logid AND logdate <= '2013-12-31';
-DELETE FROM logs WHERE logdate <= '2013-12-31';
+DELETE FROM tes USING tickets WHERE tes.ticketid = tickets.ticketid AND ticketdate <= '2014-12-31';
+DELETE FROM tickets WHERE ticketdate <= '2014-12-31';
+DELETE FROM logdetails USING logs WHERE logdetails.logid = logs.logid AND logdate <= '2014-12-31';
+DELETE FROM logs WHERE logdate <= '2014-12-31';
 
-UPDATE tickets SET processed = true WHERE (processed = false) AND (ticketdate < '2015-10-01');
+UPDATE tickets SET processed = true WHERE (processed = false) AND (ticketdate < '2015-12-01');
 
 INSERT INTO pccs (pcc, agencyname) VALUES ('781Y', 'FLEET TRAVEL - UAE');
 

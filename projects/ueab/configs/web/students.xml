@@ -27,9 +27,8 @@
 			<MENU name="Full Charges">34</MENU>
 		</MENU>
 	</MENU>
-
 	<DESK w="700" name="Student Details" key="1" h="500">
-		<FORMVIEW w="550" name="Student Details" lw="120" keyfield="studentid" table="studentview" params="schoolid" user="studentid">
+		<FORMVIEW w="550" name="Student Details" lw="120" keyfield="studentid" table="vw_students" params="schoolid,student_edit" user="studentid">
 			<CHECKBOX w="75" title="On Probation" format="boolean" ischar="true">onprobation</CHECKBOX>
 			<CHECKBOX w="75" title="Off Campus" format="boolean" ischar="true">offcampus</CHECKBOX>
 			<CHECKBOX w="75" title="See Registrar" format="boolean" ischar="true">seeregistrar</CHECKBOX>
@@ -116,13 +115,30 @@
 					<TEXTFIELD title="Details">details</TEXTFIELD>
 				</FORMVIEW>
 			</FORMVIEW>
-			<FORM name="Edit Details" keyfield="studentid" table="students">
-				<TEXTFIELD w="150" title="Address" y="10" h="20" x="10">address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Zipcode" y="10" h="20" x="290">zipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="Town" y="30" h="20" x="10">town</TEXTFIELD>
-				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="30" h="20" x="290" lpfield="countryname">countrycodeid</COMBOBOX>
-				<TEXTFIELD w="250" title="Tel No" y="50" h="20" x="10">telno</TEXTFIELD>
-				<TEXTFIELD w="250" title="Email" y="70" h="20" x="10">email</TEXTFIELD>
+			<FORM name="Edit Details" keyfield="studentid" table="students" user="studentid" viewfilter="student_edit=allow">
+				<TEXTFIELD w="150" title="Email" y="130" h="20" x="290">email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Address" y="50" h="20" x="290">address</TEXTFIELD>
+				<TEXTFIELD w="150" title="Zipcode" y="70" h="20" x="10">zipcode</TEXTFIELD>
+				<TEXTFIELD w="150" title="Town" y="70" h="20" x="290">town</TEXTFIELD>
+				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="90" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
+				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county_id</COMBOBOX>
+				<CHECKBOX w="50" title="National ID" lw="70" y="110" h="20" x="290">national_id</CHECKBOX>
+				<CHECKBOX w="50" title="Passport" lw="70" y="110" h="20" x="440">passport</CHECKBOX>
+				<TEXTFIELD w="150" title="Identification No" y="130" h="20" x="10">identification_no</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guardian Name" y="170" h="20" x="10">guardianname</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Email" y="230" h="20" x="10">gemail</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Address" y="170" h="20" x="290">gaddress</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Zip Code" y="190" h="20" x="10">gzipcode</TEXTFIELD>
+				<TEXTFIELD w="150" title="G. Town" y="190" h="20" x="290">gtown</TEXTFIELD>
+				<COMBOBOX w="150" title="G. Country" lptable="countrys" noorg="true" lpkey="countryid" y="210" h="20" x="10" lpfield="countryname">gcountrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" title="G. Tel No" y="210" h="20" x="290">gtelno</TEXTFIELD>
+				<COMBOBOX w="150" title="Nationality" lptable="countrys" noorg="true" lpkey="countryid" y="230" h="20" x="290" lpfield="countryname">Nationality</COMBOBOX>
+				<COMBOLIST w="80" title="Disability" default="No" y="270" h="20" x="10">disability
+					<DATA>No</DATA>
+					<DATA>Yes</DATA>
+				</COMBOLIST>
+				<TEXTAREA w="430" title="if yes, give details" y="290" h="40" x="10">dis_details</TEXTAREA>
 			</FORM>
 		</FORMVIEW>
 		<FORMVIEW w="550" name="Degree" lw="120" table="studentmajorview" noorg="true" user="studentid">
@@ -135,7 +151,6 @@
 			<CHECKBOX w="75" title="Major" format="boolean" ischar="true">major</CHECKBOX>
 		</FORMVIEW>
 	</DESK>
-
 	<DESK w="700" name="School" key="10" h="500">
 		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true">
 			<TEXTFIELD w="75" title="School ID">schoolid</TEXTFIELD>
@@ -210,7 +225,6 @@
 			</FORMVIEW>
 		</GRID>
 	</DESK>
-
 	<DESK w="700" name="Current Timetable" key="9" h="500">
 		<GRID limit="100" name="Current Timetable" table="currtimetableview">
 			<TEXTFIELD w="40" title="Start" format="time">starttime</TEXTFIELD>

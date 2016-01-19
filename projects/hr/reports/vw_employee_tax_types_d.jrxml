@@ -24,18 +24,24 @@
 	</parameter>
 	<parameter name="employee_month_id" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[SELECT vw_employee_tax_types.tax_type_name, vw_employee_tax_types.tax_identification, vw_employee_tax_types.amount,
-currency_symbol, base_amount
+		<![CDATA[SELECT vw_employee_tax_types.tax_type_name, vw_employee_tax_types.tax_identification, vw_employee_tax_types.amount, vw_employee_tax_types.additional,
+vw_employee_tax_types.currency_symbol, vw_employee_tax_types.base_amount,
+(vw_employee_tax_types.amount + vw_employee_tax_types.additional) as total_amount
+
 FROM vw_employee_tax_types
+
 WHERE (employee_month_id = $P{employee_month_id})
 $P!{organd}
-ORDER BY vw_employee_tax_types.tax_type_id]]>
+
+ORDER BY vw_employee_tax_types.tax_type_name]]>
 	</queryString>
 	<field name="tax_type_name" class="java.lang.String"/>
 	<field name="tax_identification" class="java.lang.String"/>
 	<field name="amount" class="java.lang.Double"/>
+	<field name="additional" class="java.lang.Double"/>
 	<field name="currency_symbol" class="java.lang.String"/>
 	<field name="base_amount" class="java.lang.Double"/>
+	<field name="total_amount" class="java.lang.Double"/>
 	<variable name="tot_amount" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
@@ -57,10 +63,20 @@ ORDER BY vw_employee_tax_types.tax_type_id]]>
 		<band height="15" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" mode="Opaque" x="1" y="0" width="363" height="15" forecolor="#000000" backcolor="#E7E7E7" uuid="84cd509f-5685-480e-9ae6-b2d6789f86cc"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Statutory Deduction]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="364" y="0" width="160" height="15" forecolor="#000000" backcolor="#E7E7E7" uuid="72baed43-688a-408f-8289-e622afd4c04c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Identification]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -78,11 +94,18 @@ ORDER BY vw_employee_tax_types.tax_type_id]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="364" y="0" width="160" height="15" uuid="c63bfb9f-b2b5-403a-a238-986ff89eaddc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tax_identification}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="23"/>
+		<band/>
 	</summary>
 </jasperReport>

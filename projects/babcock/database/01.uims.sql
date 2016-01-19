@@ -324,7 +324,7 @@ CREATE TABLE students (
 	balance_time		timestamp,
 	currentbalance		real,
 
-	Etranzact_card_no	varchar(64),
+	etranzact_card_no	varchar(64),
 	picturefile			varchar(240),
 	emailuser			varchar(120),
 	currentcontact		text,

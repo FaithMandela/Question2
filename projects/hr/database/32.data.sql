@@ -167,6 +167,7 @@ INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95035'
 INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95040',950,'ANNUAL GENERAL MEETING');
 INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95045',950,'SEMINARS, WORKSHOPS and MEETINGS');
 INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95500',955,'OFFICE RENT');
+INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95502',955,'OFFICE COSTS');
 INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95505',955,'CLEANING');
 INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95510',955,'NEWSPAPERS');
 INSERT INTO accounts (account_id, account_type_id, account_name) VALUES ('95515',955,'OTHER CONSUMABLES');
