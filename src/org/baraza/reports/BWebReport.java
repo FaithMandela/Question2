@@ -49,6 +49,7 @@ import org.baraza.DB.BDB;
 public class BWebReport  {
 	Logger log = Logger.getLogger(BWebReport.class.getName());
 	String name, reportfile, fileName, filterkey, filtervalue;
+	String fileSql = null;
 	boolean showpdf = false;
 	String userid, userfilter;
 	String groupid, groupfilter;
@@ -69,7 +70,8 @@ public class BWebReport  {
 
 		name = view.getAttribute("name");
 		reportfile = view.getAttribute("reportfile");
-		fileName = view.getAttribute("filename", "report");
+		fileName = view.getAttribute("file.name", "report");
+		fileSql = view.getAttribute("file.sql");
 		userfilter = view.getAttribute("user", "entity_id");
 		groupfilter = view.getAttribute("group");
 		filterkey = view.getAttribute("filterkey");
@@ -222,6 +224,11 @@ public class BWebReport  {
 			groupid = (String)session.getAttribute("groupvalue");
 			if ((groupfilter != null) && (groupid != null)) {
 				parameters.put(groupfilter, groupid);
+			}
+			
+			if((fileSql != null) && (parameters.size() > 0)) {
+				fileName = db.executeFunction(fileSql + parameters.get(0));
+				if(fileName == null) fileName = "report";
 			}
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, db.getDB());
