@@ -17,7 +17,7 @@ public class BUser {
 	String userName = null;
 	String userID = null;
 	String orgID = null;
-	String orgName = null;
+	String orgName = "";
 	String entityName = null;
 	String entityType = null;
 	String startView = null;
