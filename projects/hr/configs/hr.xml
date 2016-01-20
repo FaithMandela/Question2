@@ -3426,7 +3426,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			</GRID>
 		</GRID>
 	</DESK>
