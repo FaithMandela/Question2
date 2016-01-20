@@ -90,14 +90,9 @@ public class BWebFiles extends HttpServlet {
 		String projectDir = context.getInitParameter("projectDir");
 		if(projectDir != null) xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
 		
-		String userIP = request.getRemoteAddr();
-		String userName = request.getRemoteUser();
 		String webPath = "http://" + request.getLocalAddr() + ":" + request.getLocalPort();
 
-System.out.println("BASE 1010 : " + userName);
-
 		web = new BWeb(dbconfig, xmlfile);
-		web.setUser(userIP, userName);
 		web.init(request);
 
 		view = web.getView();

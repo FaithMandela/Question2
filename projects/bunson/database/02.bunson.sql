@@ -97,10 +97,11 @@ CREATE TABLE transfers(
     booking_date        timestamp default CURRENT_TIMESTAMP,
     payment_details     text,
     reference_data      text,
-    pax_no              integer,
+    pax_no              integer default 1,
     transfer_cancelled  boolean default false,
     is_group            boolean default false,
 );
+
 
 CREATE INDEX transfers_entity_id ON transfers(entity_id);
 CREATE INDEX transfers_payment_type_id ON transfers(payment_type_id);
@@ -117,7 +118,8 @@ CREATE TABLE transfer_flights(
     end_airport             varchar(100),
     airline                 varchar(10),
     flight_num              varchar(10),
-    tab                     integer
+    tab                     integer,
+    create_key              integer default 1
 );
 CREATE INDEX transfer_flights_transfer_id ON transfer_flights(transfer_id);
 
@@ -481,8 +483,27 @@ CREATE TRIGGER ins_transfer_assignments AFTER INSERT ON transfer_assignments
     FOR EACH ROW EXECUTE PROCEDURE ins_transfer_assignments();
 
 
-delete from transfer_flights ;
+CREATE OR REPLACE FUNCTION ins_transfer_flights() RETURNS trigger AS $$
+DECLARE
+    v_transfer_id   integer;
+BEGIN
+
+    IF(NEW.create_key = 2) THEN
+        SELECT transfer_id INTO v_transfer_id FROM passangers WHERE passanger_id = NEW.transfer_id;
+        NEW.transfer_id := v_transfer_id;
+    END IF;
+
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP TRIGGER ins_transfer_flights ON transfer_flights;
+CREATE TRIGGER ins_transfer_flights BEFORE INSERT ON transfer_flights
+    FOR EACH ROW EXECUTE PROCEDURE ins_transfer_flights();
+
+/*delete from transfer_flights ;
 delete from transfer_assignments ;
 delete from passangers ;
 delete from sms;
 delete from transfers;
+*/

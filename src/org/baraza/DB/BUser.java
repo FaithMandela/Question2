@@ -17,7 +17,7 @@ public class BUser {
 	String userName = null;
 	String userID = null;
 	String orgID = null;
-	String orgName = null;
+	String orgName = "";
 	String entityName = null;
 	String entityType = null;
 	String startView = null;
@@ -88,6 +88,7 @@ public class BUser {
 	public void setUser(BDB db, String tableName, String idCol, String nameCol, String userName) {
 		String mysql = "SELECT " + idCol + " FROM " +  tableName;
 		mysql += " WHERE " + nameCol + " = '" + userName + "'";
+
 		BQuery rs = new BQuery(db, mysql);
 		if(rs.moveNext()) userID = rs.readField(idCol);
 

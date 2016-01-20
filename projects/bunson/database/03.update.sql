@@ -8,6 +8,9 @@ ALTER TABLE transfers   ADD is_group        boolean default false;
 ALTER TABLE passangers  ADD group_contact  boolean default false;
 ALTER TABLE passangers  ADD group_member   boolean default false;
 
+ALTER TABLE transfer_flights ADD create_key              integer default 1;
+ALTER TABLE transfers ALTER COLUMN pax_no SET default 1;
+
 DROP VIEW vw_transfers;
 
 CREATE OR REPLACE VIEW vw_transfers AS 
@@ -45,7 +48,7 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     transfer_flights.transfer_flight_id, transfer_flights.start_time, 
     transfer_flights.end_time, transfer_flights.flight_date, 
     transfer_flights.start_airport, transfer_flights.end_airport, 
-    transfer_flights.airline, transfer_flights.flight_num
+    transfer_flights.airline, transfer_flights.flight_num, transfer_flights.create_key
    FROM transfer_assignments
    JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
    JOIN cars ON cars.car_id = transfer_assignments.car_id
@@ -57,7 +60,7 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
 
 
 -- View: vw_passangers
-
+DROP VIEW vw_group_members;
 DROP VIEW vw_passangers;
 
 CREATE OR REPLACE VIEW vw_passangers AS 
@@ -75,7 +78,10 @@ CREATE OR REPLACE VIEW vw_passangers AS
     passangers.passanger_id, passangers.passanger_name, 
     passangers.passanger_mobile, passangers.passanger_email, 
     passangers.pickup_time, passangers.pickup, passangers.dropoff, 
-    passangers.other_preference, passangers.tab, passangers.amount, 
+    passangers.other_preference, passangers.tab, 
+    (CASE WHEN passangers.tab = 1 THEN 'Depature'
+        WHEN passangers.tab = 2 THEN 'Arrival'
+        ELSE 'Depature' END) AS tab_name, passangers.amount, 
     passangers.processed, pax_cancelled, passangers.pickup_date,
     passangers.group_contact, passangers.group_member
    FROM passangers
@@ -87,9 +93,6 @@ CREATE OR REPLACE VIEW vw_passangers AS
   WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
 
 
-
-
-DROP VIEW vw_group_members;
 CREATE OR REPLACE VIEW vw_group_members AS 
  SELECT
     a.transfer_id, a.is_group,
@@ -99,11 +102,11 @@ CREATE OR REPLACE VIEW vw_group_members AS
     
     m.transfer_id as m_transfer_id, m.is_group AS m_is_group,
     m.passanger_id AS m_passanger_id, m.passanger_name AS m_passanger_name,
-    m.group_contact AS m_group_contact, m.group_member AS m_group_member,m.tab as m_tab
+    m.group_contact AS m_group_contact, m.group_member AS m_group_member,m.tab as m_tab, m.tab_name AS m_tab_name
    FROM vw_passangers as a
    LEFT JOIN vw_passangers as m ON m.transfer_id = a.transfer_id
    WHERE a.is_group = true and  a.group_contact = true AND 
-	m.group_contact = false and a.tab = m.tab
+	m.group_contact = false and a.tab = m.tab;
 
    
 
@@ -270,3 +273,22 @@ $BODY$
   COST 100;
 ALTER FUNCTION ins_transfer_assignments()
   OWNER TO postgres;
+
+
+CREATE OR REPLACE FUNCTION ins_transfer_flights() RETURNS trigger AS $$
+DECLARE
+    v_transfer_id   integer;
+BEGIN
+
+    IF(NEW.create_key = 2) THEN
+        SELECT transfer_id INTO v_transfer_id FROM passangers WHERE passanger_id = NEW.transfer_id;
+        NEW.transfer_id := v_transfer_id;
+    END IF;
+
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP TRIGGER ins_transfer_flights ON transfer_flights;
+CREATE TRIGGER ins_transfer_flights BEFORE INSERT ON transfer_flights
+    FOR EACH ROW EXECUTE PROCEDURE ins_transfer_flights();

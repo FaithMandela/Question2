@@ -33,11 +33,7 @@
 		reportPath = projectDir + ps + "reports" + ps;
 	}
 
-	String userIP = request.getRemoteAddr();
-	String userName = request.getRemoteUser();
-
 	BWeb web = new BWeb(dbconfig, xmlfile);
-	web.setUser(userIP, userName);
 	web.init(request);
 
 	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
@@ -575,39 +571,39 @@
 		    var data = jQuery("#jqlist").jqGrid('getRowData',rowid);
 		    location.replace(data.CL);
 		};
-
-	  <% if(web.isEditField()) { %>
-        jqcf.onSelectRow = function(id){
-			//console.log(" HAS web.isEditField()  : <%=web.isEditField()%>")
-          	if(id && id!==lastsel2){
-				//console.info('id : ' + id + '\nlastsel2 : ' + lastsel2);
-
-				var data = jQuery("#jqlist").jqGrid('getRowData',id);
-				//console.info(data);
-
-            	//jQuery('#jqlist').restoreRow(lastsel2);
-
-				var editparameters = {
-					"keys" : true,
-					"oneditfunc" : null,
-					"successfunc" : null,
-				    "extraparam" : {"KF":data.KF},
-					"aftersavefunc" :null,
-					"errorfunc":null,
-					"afterrestorefunc" :null,
-					"restoreAfterError" : true,
-					"mtype" : "POST"
-				}
-
-				jQuery("#jqlist").jqGrid('editRow',id,  editparameters);
-
-            	lastsel2=id;
-          	}
-        };
-
-	  <% } %>
     }
 <% } %>
+
+<% if(web.isEditField()) { %>
+	jqcf.onSelectRow = function(id){
+		//console.log(" HAS web.isEditField()  : <%=web.isEditField()%>")
+	  	if(id && id!==lastsel2){
+			//console.info('id : ' + id + '\nlastsel2 : ' + lastsel2);
+
+			var data = jQuery("#jqlist").jqGrid('getRowData',id);
+			//console.info(data);
+
+			//jQuery('#jqlist').restoreRow(lastsel2);
+
+			var editparameters = {
+				"keys" : true,
+				"oneditfunc" : null,
+				"successfunc" : null,
+				"extraparam" : {"KF":data.KF},
+				"aftersavefunc" :null,
+				"errorfunc":null,
+				"afterrestorefunc" :null,
+				"restoreAfterError" : true,
+				"mtype" : "POST"
+			}
+
+			jQuery("#jqlist").jqGrid('editRow',id,  editparameters);
+
+			lastsel2=id;
+	  	}
+	};
+<% } %>
+
     //console.log(jqcf);
 
     jQuery("#jqlist").jqGrid(jqcf);

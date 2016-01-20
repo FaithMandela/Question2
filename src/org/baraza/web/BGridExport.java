@@ -41,11 +41,7 @@ public class BGridExport extends HttpServlet {
 			reportPath = projectDir + ps + "reports" + ps;
 		}
 
-		String userIP = request.getRemoteAddr();
-		String userName = request.getRemoteUser();
-
 		BWeb web = new BWeb(dbconfig, xmlfile);
-		web.setUser(userIP, userName);
 		web.init(request);
 		BElement root = web.getRoot();
 

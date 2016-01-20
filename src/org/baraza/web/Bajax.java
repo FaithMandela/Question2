@@ -56,12 +56,8 @@ public class Bajax extends HttpServlet {
 		try { out = response.getWriter(); } catch(IOException ex) {}
 		String resp = "";
 
-		String userIP = request.getRemoteAddr();
-		String userName = request.getRemoteUser();
-
 		web = new BWeb(dbconfig, xmlfile);
 		web.init(request);
-		web.setUser(userIP, userName);
 		
 		db = web.getDB();
 		
