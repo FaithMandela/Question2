@@ -3516,7 +3516,7 @@
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">from_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="New Employees" reportfile="new_employees.jasper"></JASPER>
+			<JASPER name="New Employees" reportfile="new_employeees.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="CV Employees" key="107" h="750">
