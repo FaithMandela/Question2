@@ -39,47 +39,152 @@ CREATE TABLE etravel(
 
 
 
+-- Function: ins_transfer_assignments()
+
+-- DROP FUNCTION ins_transfer_assignments();
+CREATE OR REPLACE FUNCTION ins_transfer_assignments()
+  RETURNS trigger AS
+$BODY$
+    DECLARE
+        v_send_res         text;
+        v_message          text;
+        v_client_sms       text;
+        v_staff_sms		text;
+        v_rec              record;
+        v_rec_flight       record;
+        v_flight_text      text;
+        v_flight_count     integer;
+        v_pccson           varchar(20);
+        v_staff_numbers    text;
+        a_staff_numbers    text[];
+    BEGIN
+        v_flight_text := '';
+        v_message := '';
+
+        SELECT COUNT(transfer_flights.transfer_flight_id) INTO v_flight_count
+    	FROM transfer_assignments
+    	INNER JOIN passangers ON passangers.passanger_id = transfer_assignments.passanger_id
+    	INNER JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
+    	WHERE transfer_assignments.transfer_assignment_id = NEW.transfer_assignment_id;
+
+
+        IF(v_flight_count = 0) THEN
+            SELECT * INTO v_rec FROM vw_transfer_assignments  WHERE transfer_assignment_id = NEW.transfer_assignment_id;
+
+        ELSE
+            SELECT transfer_assignment_id, booking_location, driver_name, is_backup,  mobile_number, passanger_name, passanger_mobile, pickup, dropoff, pickup_date, pickup_time, customer_code, customer_name,
+            start_time,end_time, flight_date, start_airport,car_type_code , end_airport, airline,flight_num, tab
+            INTO v_rec FROM vw_transfer_assignments WHERE transfer_assignment_id = NEW.transfer_assignment_id;
+
+            /*v_flight_text := E'\nFlight Date : ' || v_rec.flight_date
+                        || E'\nDep Time : ' || v_rec.start_time
+                        || E'\nAirport : ' || v_rec.start_airport
+                        || E'\nFlight No.: ' || v_rec.airline || ' '::text || v_rec.flight_num;*/
+
+            v_flight_text := E'\n' || v_rec.airline || ' '::text || v_rec.flight_num || ' ' || v_rec.start_airport || ' - ' || v_rec.end_airport;
+
+        END IF;
+
+        -- Depature driver sms
+
+        v_message := v_rec.passanger_name || ' : ' || v_rec.passanger_mobile || ' (' || COALESCE(v_rec.customer_name, v_rec.customer_code, '') || ')'
+                    || E'\nAt: ' || v_rec.pickup_time || 'HRS'
+                    || E'.\nFrom: ' || v_rec.pickup
+                    || E'\nTo: ' || COALESCE(v_rec.dropoff,'')
+                    || E'\nDate: ' || to_char(v_rec.pickup_date, 'DD Mon YYYY')
+                    || COALESCE(v_flight_text, '')
+                    || E'\nCWT Transport Department'::text
+                    || E'\nhttp://d.dc.co.ke/bunson/?mobile=' || v_rec.mobile_number || '&reference=' || v_rec.transfer_assignment_id;
+        -- RAISE EXCEPTION 'Driver SMS :  %', v_message;
+        v_send_res := sendMessage(v_rec.mobile_number, v_message);
+
+        /* check if driver is a backup driver*/
+        IF(v_rec.is_backup = true) THEN
+            v_client_sms := (E'Hello '::text || v_rec.passanger_name
+                        || E'\nOur Driver '::text
+                        || E'\nWill Pick You ' || E'.\nFrom: ' 
+                        || v_rec.pickup 
+                        || E'\nTo: ' || v_rec.dropoff 
+                        || E'\nAt: ' || v_rec.pickup_time || 'HRS'
+                        || E'\nDate: ' || to_char(v_rec.pickup_date, 'DD Mon YYYY')
+                        || E'\nCWT Transport Department'::text
+                        || E'\nTel: 0701772272 / 0738772272'::text);
+        ELSE
+            v_client_sms := (E'Hello '::text || v_rec.passanger_name
+                        || E'\nDriver '::text || v_rec.driver_name || ':'::text || v_rec.mobile_number
+                        || E'\nWill Pick You '
+                        || E'.\nFrom: ' || COALESCE(v_rec.pickup,'')
+                        || E'\nTo: ' || COALESCE(v_rec.dropoff,'')
+                        || E'\nAt: ' || COALESCE(v_rec.pickup_time,'')  || 'HRS'
+                        || E'\nDate: ' || to_char(v_rec.pickup_date, 'DD Mon YYYY')
+                        || E'\nCWT Transport Department'::text
+                        || E'\nTel: 0701772272 / 0738772272'::text);
+        END IF;
+
+
+        v_send_res := sendMessage(v_rec.passanger_mobile, v_client_sms);
+
+
+        /* if its arrival send message to  */
+        IF(v_rec.tab = 2) THEN
+
+            v_staff_sms := (E''::text || v_rec.passanger_name || ' '
+                    || v_rec.passanger_mobile
+                    || '('::text || COALESCE(v_rec.customer_name, v_rec.customer_code,'') || ')'::text
+                    || E'\nArrival At ' || COALESCE(v_rec.pickup_time,'')  || 'HRS'
+                    || ' On ' ::text || to_char(v_rec.pickup_date, 'DD Mon YYYY')
+                    || E'\nJKIA to : ' || COALESCE(v_rec.dropoff,'')
+                    || v_flight_text::text);
+                    -- || E'\n'::text || v_rec.driver_name || '('::text || v_rec.mobile_number || ')'::text
+                    -- || E'\nCWT Transport Department'::text
+                    -- || E'\nTel: 0701772272 / 0738772272'::text);
+
+            SELECT staff_numbers INTO v_staff_numbers FROM orgs WHERE org_id = 0;
+            a_staff_numbers := regexp_split_to_array (v_staff_numbers,',');
+
+            FOR i IN 1..array_length(a_staff_numbers,1) LOOP
+        		v_send_res := sendMessage(a_staff_numbers[i], v_staff_sms);
+        	END LOOP;
+        END IF;
+
+        UPDATE passangers SET processed = true WHERE passanger_id = NEW.passanger_id;
+
+
+        SELECT entitys.user_name INTO v_pccson
+            FROM vw_passangers
+            INNER JOIN entitys ON entitys.entity_id = vw_passangers.entity_id
+            WHERE vw_passangers.passanger_id = NEW.passanger_id;
+
+        INSERT INTO etravel(transfer_assignment_id, ticket_airline, ticket_number, 
+                    ticket_location, ticket_date, ticket_currency, ticket_agent, 
+                    ticket_pax_name, car_reference, car_type, car_renting_location, 
+                    car_voucher_issued, car_rate, car_from_date, car_to_date, ticket_booking_clerk, 
+                    ticket_destination_tax, ticket_commission_amount_1, ticket_discount_amount_1, 
+                    ts_service_1, ts_amount_1, ts_service_2, ts_amount_2, ticket_customer_1, 
+                    ticket_status, car_remarks, car_renting_station, 
+                    car_drop_station,
+                    ready, picked)
+            VALUES (v_rec.transfer_assignment_id, v_rec.airline, '00', 
+                    v_rec.booking_location, v_rec.pickup_date, '00', '00', 
+                    v_rec.passanger_name, 0, v_rec.car_type_code, v_rec.booking_location, 
+                    CURRENT_TIMESTAMP::date, 0, v_rec.pickup_date, v_rec.pickup_date, v_pccson, 
+                    0, 0, 0, 
+                    0, 0, 0, 0, v_rec.customer_code, 
+                    'S', '00', v_rec.pickup, 
+                    v_rec.dropoff,
+                    true, false);
+
+    	RETURN NULL;
+    END;
+    $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION ins_transfer_assignments()
+  OWNER TO postgres;
 
 
 
 
 
-
-
-
-
-Column Name	                Type	 Length	Mandatory	Validation	Remarks
-
- Airline_Code    	        varchar	 10	 Y	Y	CODE FOR EACH TYPE OF SALES (PICKUP/TRANSFER) FOR MIS REPORTING
- Sales_Reference_Number	    varchar	 20	 Y	Y	UNIQUE IDENTIFICATION NUMBER
- Sales Branch	            varchar	 10	 Y	Y	SALES BRANCH
- Sales_date	                DATE        	 Y		SALES DATE (DD/MON/YY)
- Currency	                varchar	 10	 Y	Y	CURRENCY CODE (KES/USD)
- Supplier	                varchar	 10	 Y	Y	SUPPLIER/PROVIDER/AGENT
- Pax_name	                varchar	 75	 Y		PASSENGER NAME
- Booking_reference	        varchar	 50	 Y		CONFIRMATION NUMBER / REFERENCE NUMBER
- Car_type	                varchar	 10	 Y	Y	CAR MODEL /BRAND
- Place Of_issue	            varchar	 50	 Y		CITY NAME / CODE
- Issue_date	                DATE	 	     Y		SAME AS SALES DATE (DD/MON/YY)
- Car_rate	                NUMBER	 	     Y		RATE PER DAY
- Car_from date	            DATE	 	     Y		RENT START DATE  (DD/MON/YY)
- Car_to_date	            DATE	 	     Y		RENT END DATE (DD/MON/YY)
- Booking Clark	            varchar	 10	 Y	Y	BOOKING HANDLER/EXECUTIVE
- Tax	                    NUMBER	 	     N		TAX IF ANY APPLICABLE
- Commision	                NUMBER	 	     N		COMMISION FROM SUPPLIER /PROVIDER
- Discount	                NUMBER	 	     N		DISCOUNT GIVEN TO PASSENEGER
- Sfeecode1	                varchar	 10	 N	Y	SERVICE FEE CODE
- Service Fee1	            NUMBER	 	     N		SERVICE FEE AMOUNT
- Sfeecode2	                varchar	 10	 N	Y	MARKUP / EXTRA COLLECTION CODE
- Service Fee2	            NUMBER	 	     N		MARKUP AMOUNT
- Customer_code	            varchar	 10	 N	Y	CUSTOMER CODE
- LPO	                    varchar	 10	 N		PURCHASE ORDER
- Lpo_date	                DATE	 	     N		PURCHASE ORDER DATE (DD/MON/YY)
- Sales_type	                varchar	 2	 Y	Y	SALES OR REFUND  (S/R)
- Remarks	                varchar	 200 N		REMARKS / NARRATION
- Pick Up Renting station	varchar	 50	 Y		PROCESSED DATE AND TIME
- Drop of  Station	        varchar	 50	 Y		RENTING PLACE/LOCATION
- AGT_CANX_FEES	            NUMBER	 	     N		AGENT /SUPPLIER CANX. FEE
- AGENCY_CANX_FEE	        NUMBER	 	     N		BUNSON TRAVEL SERVICE FEE ON REFUND
 
 

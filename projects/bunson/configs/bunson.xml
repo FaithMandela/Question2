@@ -1558,7 +1558,7 @@
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
-			<JASPER name="Voucher" reportfile="vw_passangers.jasper"></JASPER>
+			<JASPER name="Voucher" file.sql="SELECT 'Transfer Voucher_' || customer_name || '-' || pickup_date  FROM vw_passangers WHERE passanger_id =" reportfile="vw_passangers.jasper"></JASPER>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>

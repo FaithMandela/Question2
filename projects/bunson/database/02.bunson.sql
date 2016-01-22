@@ -474,6 +474,8 @@ BEGIN
     v_send_res := sendMessage(v_rec.passanger_mobile, v_client_sms);
 
     UPDATE passangers SET processed = true WHERE passanger_id = NEW.passanger_id;
+    
+    
 
 	RETURN NULL;
 END;
@@ -486,14 +488,17 @@ CREATE TRIGGER ins_transfer_assignments AFTER INSERT ON transfer_assignments
 CREATE OR REPLACE FUNCTION ins_transfer_flights() RETURNS trigger AS $$
 DECLARE
     v_transfer_id   integer;
+    v_tab           integer;
 BEGIN
 
     IF(NEW.create_key = 2) THEN
-        SELECT transfer_id INTO v_transfer_id FROM passangers WHERE passanger_id = NEW.transfer_id;
+        SELECT transfer_id,tab INTO v_transfer_id,  v_tab FROM passangers WHERE passanger_id = NEW.transfer_id;
         NEW.transfer_id := v_transfer_id;
+        NEW.tab := v_tab;
+        --RAISE EXCEPTION 'v_transfer_id : % , v_tab : %', v_transfer_id,v_tab;
     END IF;
 
-	RETURN null;
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
