@@ -3426,7 +3426,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			</GRID>
 		</GRID>
 	</DESK>
@@ -3516,7 +3516,7 @@
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">from_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="New Employees" reportfile="new_employees.jasper"></JASPER>
+			<JASPER name="New Employees" reportfile="new_employeees.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="CV Employees" key="107" h="750">

@@ -1,4 +1,4 @@
-<APP name="Baraza" password="change_password">
+<APP name="Baraza" noorg="false" password="change_password">
 	<MENU name="Baraza">
 		<MENU name="Service Desk">
 			<MENU name="Dashboard">1</MENU>
