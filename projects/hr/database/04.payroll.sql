@@ -7,6 +7,7 @@ CREATE TABLE adjustments (
 	adjustment_order		integer default 0 not null,
 	earning_code			integer,
 	formural				varchar(430),
+	default_amount			real default 0 not null,
 	monthly_update			boolean default true not null,
 	in_payroll				boolean default true not null,
 	in_tax					boolean default true not null,
@@ -419,15 +420,15 @@ BEGIN
 		FROM employee_adjustments
 		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (Visible = true);
 	ELSIF ($3 = 11) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
 		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($3 = 12) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
 		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1) AND (In_Tax = true);
 	ELSIF ($3 = 14) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
 		FROM employee_tax_types
 		WHERE (Employee_Month_ID = $1) AND (Tax_Type_ID = $2);
 	ELSIF ($3 = 21) THEN
@@ -1597,6 +1598,78 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION add_adjustment(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	adj							RECORD;
+	rec							RECORD;
+	v_period_id					integer;
+	v_org_id					integer;
+	v_adjustment_factor			integer;
+	v_default_adjustment_id		integer;
+	v_amount					real;
+	msg							varchar(120);
+BEGIN
+
+	SELECT adjustment_id, adjustment_name, org_id, adjustment_type, formural, default_amount, in_payroll, in_tax, visible INTO adj
+	FROM adjustments
+	WHERE (adjustment_id = $1::integer);
+	
+	IF(adj.adjustment_type = 2)THEN
+		v_adjustment_factor := -1;
+	ELSE
+		v_adjustment_factor := 1;
+	END IF;
+	
+	IF ($3 = '1') THEN
+		SELECT max(period_id) INTO v_period_id
+		FROM periods
+		WHERE (closed = false) AND (org_id = adj.org_id);
+		
+		FOR rec IN SELECT employee_month_id, exchange_rate
+			FROM employee_month 
+			WHERE (period_id = v_period_id) LOOP
+			
+			IF(adj.formural is not null)THEN
+				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || rec.employee_month_id
+				INTO v_amount;
+			END IF;
+			IF(v_amount is null)THEN
+				v_amount := adj.default_amount;
+			END IF;
+	
+			IF(v_amount is not null)THEN
+				INSERT INTO employee_adjustments (employee_month_id, adjustment_id, org_id,
+					adjustment_type, adjustment_factor, pay_date, amount,
+					exchange_rate, in_payroll, in_tax, visible)
+				VALUES(rec.employee_month_id, adj.adjustment_id, adj.org_id,
+					adj.adjustment_type, v_adjustment_factor, current_date, v_amount,
+				(1 / rec.exchange_rate), adj.in_payroll, adj.in_tax, adj.visible);
+			END IF;
+		END LOOP;
+		msg := 'Added ' || adj.adjustment_name || ' to month';
+	ELSIF ($3 = '2') THEN	
+		FOR rec IN SELECT entity_id
+			FROM employees
+			WHERE (active = true) AND (org_id = adj.org_id) LOOP
+			
+			SELECT default_adjustment_id INTO v_default_adjustment_id
+			FROM default_adjustments
+			WHERE (entity_id = rec.entity_id) AND (adjustment_id = adj.adjustment_id);
+			
+			IF(v_default_adjustment_id is null)THEN
+				INSERT INTO default_adjustments (entity_id, adjustment_id, org_id,
+					amount, active)
+				VALUES (rec.entity_id, adj.adjustment_id, adj.org_id,
+					adj.default_amount, true);
+			END IF;
+		END LOOP;
+		msg := 'Added ' || adj.adjustment_name || ' to employees';
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION process_pensions(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec							RECORD;
@@ -1605,7 +1678,9 @@ DECLARE
 	v_org_id					integer;
 	v_employee_month_id			integer;
 	v_employee_adjustment_id	integer;
+	v_currency_id				integer;
 	v_exchange_rate				real;
+	a_exchange_rate				real;
 	v_amount					real;
 	msg							varchar(120);
 BEGIN
@@ -1618,7 +1693,8 @@ BEGIN
        employer_ps, employer_amount, employer_formural
 	FROM pensions WHERE (active = true) AND (org_id = v_org_id) LOOP
 	
-		SELECT employee_month_id INTO v_employee_month_id
+		SELECT employee_month_id, currency_id, exchange_rate 
+			INTO v_employee_month_id, v_currency_id, v_exchange_rate
 		FROM employee_month
 		WHERE (period_id = v_period_id) AND (entity_id = rec.entity_id);
 		
@@ -1636,14 +1712,22 @@ BEGIN
 		FROM adjustments
 		WHERE (adjustment_id = rec.adjustment_id);
 		
-		IF(rec.use_formura = true) AND (adj.formural is not null)THEN
+		IF(rec.use_formura = true) AND (adj.formural is not null) AND (v_employee_month_id is not null) THEN
 			EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 			INTO v_amount;
+			IF(v_currency_id <> adj.currency_id)THEN
+				v_amount := v_amount * v_exchange_rate;
+			END IF;
 		ELSIF(rec.amount > 0)THEN
 			v_amount := rec.amount;
 		END IF;
 		
-		IF(v_employee_adjustment_id is null)THEN
+		a_exchange_rate := v_exchange_rate;
+		IF(v_currency_id <> adj.currency_id)THEN
+			a_exchange_rate := 1 / v_exchange_rate;
+		END IF;
+		
+		IF(v_employee_adjustment_id is null) AND (v_employee_month_id is not null) THEN
 			INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
 				adjustment_id, adjustment_type, adjustment_factor, 
 				in_payroll, in_tax, visible,
@@ -1651,9 +1735,9 @@ BEGIN
 			VALUES (v_employee_month_id, rec.pension_id, v_org_id,
 				adj.adjustment_id, adj.adjustment_type, -1, 
 				adj.in_payroll, adj.in_tax, adj.visible,
-				1, current_date, v_amount);
-		ELSE
-			UPDATE employee_adjustments SET amount = v_amount
+				a_exchange_rate, current_date, v_amount);
+		ELSIF (v_employee_month_id is not null) THEN
+			UPDATE employee_adjustments SET amount = v_amount, exchange_rate = a_exchange_rate
 			WHERE employee_adjustment_id = v_employee_adjustment_id;
 		END IF;
 	
@@ -1672,16 +1756,23 @@ BEGIN
 			FROM adjustments
 			WHERE (adjustment_id = rec.contribution_id);
 			
-			IF(rec.employer_formural = true) AND (adj.formural is not null)THEN
+			IF(v_currency_id <> adj.currency_id)THEN
+				a_exchange_rate := 1 / v_exchange_rate;
+			END IF;
+			
+			IF(rec.employer_formural = true) AND (adj.formural is not null) AND (v_employee_month_id is not null) THEN
 				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 				INTO v_amount;
+				IF(v_currency_id <> adj.currency_id)THEN
+					v_amount := v_amount * v_exchange_rate;
+				END IF;
 			ELSIF(rec.employer_ps > 0)THEN
 				v_amount := v_amount * rec.employer_ps / 100;
 			ELSIF(rec.employer_amount > 0)THEN
 				v_amount := rec.employer_amount;
 			END IF;
 			
-			IF(v_employee_adjustment_id is null)THEN
+			IF(v_employee_adjustment_id is null) AND (v_employee_month_id is not null)THEN
 				INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
 					adjustment_id, adjustment_type, adjustment_factor, 
 					in_payroll, in_tax, visible,
@@ -1689,9 +1780,9 @@ BEGIN
 				VALUES (v_employee_month_id, rec.pension_id, v_org_id,
 					adj.adjustment_id, adj.adjustment_type, 1, 
 					adj.in_payroll, adj.in_tax, adj.visible,
-					1, current_date, v_amount);
-			ELSE
-				UPDATE employee_adjustments SET amount = v_amount
+					a_exchange_rate, current_date, v_amount);
+			ELSIF (v_employee_month_id is not null) THEN
+				UPDATE employee_adjustments SET amount = v_amount, exchange_rate = a_exchange_rate
 				WHERE employee_adjustment_id = v_employee_adjustment_id;
 			END IF;
 		END IF;
@@ -1703,3 +1794,5 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+	

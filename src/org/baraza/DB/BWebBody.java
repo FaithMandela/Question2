@@ -420,9 +420,11 @@ public class BWebBody extends BQuery {
 		StringBuilder response = new StringBuilder();
 		
 		String defaultvalue = el.getAttribute("default", "");
-		String default_fnct = view.getAttribute("default_fnct");
+		String default_fnct = el.getAttribute("default_fnct");
+		String default_org_fnct = el.getAttribute("default_org_fnct");
 		if(default_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
-		
+		if(default_org_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
+
 		if(formCols > 1) response.append("<div class='col-md-6'>\n");
 		response.append("	<div class='form-group'>\n");
 		response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");

@@ -293,7 +293,7 @@ $P!{organd};]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Net Pay]]></text>
+				<text><![CDATA[Net Salary]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField" positionType="Float" x="299" y="161" width="84" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="4b63ecbe-2943-4b50-a25c-d2ccf60f0771"/>
@@ -397,7 +397,7 @@ $P!{organd};]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Basic Pay]]></text>
+				<text><![CDATA[Basic Salary]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-2" x="339" y="70" width="118" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="52375504-d671-48d2-aa43-6e9efb632b85"/>

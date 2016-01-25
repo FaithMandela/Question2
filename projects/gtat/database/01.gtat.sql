@@ -351,11 +351,11 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insmanagement(varchar(50), varchar(50), varchar(50)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION insmanagement(varchar(50), varchar(50)) RETURNS varchar(120) AS $$
 DECLARE
 	myrec RECORD;
 BEGIN
-	DELETE FROM tmpmanagement WHERE booking = 'Booking';
+	DELETE FROM tmpmanagement WHERE lower(booking) IN ('booking id', 'booking');
 	DELETE FROM tmpmanagement WHERE SubAgent is null;
 
 	INSERT INTO clientbranches (branchname)
@@ -370,7 +370,7 @@ BEGIN
 
 	INSERT INTO management(clientbranchid, bookingid, AgentReference,CreationDate, DepartureDate, 
 		LeadName, WholesaleValue, GrossValue,Currency,Commission, SubAgent, PeriodID)
-	SELECT clientbranches.clientbranchid, cast(cast(booking as real) as int), AgentReference, 
+	SELECT clientbranches.clientbranchid, cast((booking::double precision) as int), AgentReference, 
 		CAST('1899-12-30' as date) + cast(CAST(CreationDate as real) as int),
 		CAST('1899-12-30' as date) + cast(CAST(DepartureDate as real) as int),
 		LeadName, to_number(WholesaleValue, 'FM999G999G999.99'), to_number(GrossValue, 'FM999G999G999.99'), 
@@ -387,19 +387,19 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insSales(varchar(50), varchar(50), varchar(50)) RETURNS varchar(50) AS $$
+CREATE OR REPLACE FUNCTION insSales(varchar(50), varchar(50)) RETURNS varchar(50) AS $$
 DECLARE
 	myrec RECORD;
 BEGIN
 
-	DELETE FROM tmpsales WHERE bookingid = 'Booking ID';
+	DELETE FROM tmpsales WHERE lower(bookingid) IN ('booking id', 'booking');
 
 	SELECT INTO myrec max(PeriodID) as defperiodid 
 	FROM Period WHERE (IsActive = true) AND (Approved = false);
 
 	INSERT INTO sales (bookingid, AgentReference, item, city, name, ServiceDate, nights, status, alternate, rmks,
 			completed, RequestedDate, RequestedTime, nationality, totalprice, netremits, gkref, periodid, commission, vat_rate) 
-	SELECT cast(cast(bookingid as real) as int), AgentReference, trim(upper(replace(tmpsales.item, ' ', ''))), city, name, 
+	SELECT cast((bookingid::double precision) as int), AgentReference, trim(upper(replace(tmpsales.item, ' ', ''))), city, name, 
 			CAST('1899-12-30' as date) + cast(CAST(ServiceDate as real) as int),
 			cast(Cast(nights as real) as int), status, alternate, rmks, completed, 
 			CAST('1899-12-30' as date) + cast(CAST(RequestedDate as real) as int),
@@ -421,18 +421,18 @@ END
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION insNetRates(varchar(50), varchar(50), varchar(50)) RETURNS varchar(50) AS $$
+CREATE OR REPLACE FUNCTION insNetRates(varchar(50), varchar(50)) RETURNS varchar(50) AS $$
 DECLARE
 	myrec RECORD;
 BEGIN
 
-	DELETE FROM tmpnetrates WHERE bookingid = 'Booking ID';
+	DELETE FROM tmpnetrates WHERE lower(bookingid)  IN ('booking id', 'booking');
 
 	SELECT INTO myrec max(PeriodID) as defperiodid FROM Period WHERE (IsActive = true) AND (Approved = false);
 
 	INSERT INTO netrates (gkref, bookingid, AgentReference, item, city, name, ServiceDate, nights, status, alternate, rmks,
 			completed, RequestedDate, RequestedTime, nationality, totalprice, netremits, Supplier_Deadline, periodid, commission)  
-	SELECT gkref, cast(cast(bookingid as real) as int), AgentReference, trim(upper(replace(tmpnetrates.item, ' ', ''))), city, name, 
+	SELECT gkref, cast((bookingid::double precision) as int), AgentReference, trim(upper(replace(tmpnetrates.item, ' ', ''))), city, name, 
 			CAST('1899-12-30' as date) + cast(CAST(ServiceDate as real) as int),
 			cast(Cast(nights as real) as int), status, alternate, rmks, completed, 
 			CAST('1899-12-30' as date) + cast(CAST(RequestedDate as real) as int),

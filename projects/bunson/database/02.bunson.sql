@@ -97,8 +97,11 @@ CREATE TABLE transfers(
     booking_date        timestamp default CURRENT_TIMESTAMP,
     payment_details     text,
     reference_data      text,
-    pax_no              integer,
+    pax_no              integer default 1,
+    transfer_cancelled  boolean default false,
+    is_group            boolean default false,
 );
+
 
 CREATE INDEX transfers_entity_id ON transfers(entity_id);
 CREATE INDEX transfers_payment_type_id ON transfers(payment_type_id);
@@ -115,7 +118,8 @@ CREATE TABLE transfer_flights(
     end_airport             varchar(100),
     airline                 varchar(10),
     flight_num              varchar(10),
-    tab                     integer
+    tab                     integer,
+    create_key              integer default 1
 );
 CREATE INDEX transfer_flights_transfer_id ON transfer_flights(transfer_id);
 
@@ -133,10 +137,15 @@ CREATE TABLE passangers(
     dropoff             varchar(255),
     amount              real not null default 0,
     processed           boolean default false,
-    other_preference    text,
-    tab                integer not null
+    pax_cancelled       boolean default false,
+    other_preference   text,
+    tab                integer not null,
+    group_contact      boolean default false,
+    group_member       boolean default false
 );
 CREATE INDEX passangers_transfer_id ON passangers(transfer_id);
+
+
 
 CREATE TABLE transfer_assignments(
     transfer_assignment_id      serial primary key,
@@ -181,24 +190,29 @@ CREATE VIEW vw_transfers AS
 
 
 -- DROP VIEW vw_passangers;
-CREATE OR REPLACE VIEW vw_passangers AS
-	SELECT car_types.car_type_code,
-	entitys.entity_id, entitys.entity_name,
-	payment_types.payment_type_id, payment_types.payment_type_name,
-	transfers.transfer_id, transfers.record_locator, transfers.customer_code, transfers.customer_name, transfers.currency_id, transfers.agreed_amount, transfers.booking_location, transfers.booking_date, transfers.payment_details, transfers.reference_data,
-
-    transfer_flights.transfer_flight_id, transfer_flights.start_time,  transfer_flights.end_time, transfer_flights.flight_date, transfer_flights.start_airport,
-    transfer_flights.end_airport, transfer_flights.airline, transfer_flights.flight_num,
-
-	passangers.passanger_id, passangers.passanger_name, passangers.passanger_mobile, passangers.passanger_email, passangers.pickup_time, passangers.pickup, passangers.dropoff, passangers.other_preference, passangers.tab,
-	passangers.amount, passangers.processed, passangers.pickup_date
-    FROM passangers
-	INNER JOIN car_types ON passangers.car_type_code = car_types.car_type_code
-	INNER JOIN transfers ON passangers.transfer_id = transfers.transfer_id
-	INNER JOIN entitys ON transfers.entity_id = entitys.entity_id
-	INNER JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id
-    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id
-    WHERE (transfer_flights.tab is null OR transfer_flights.tab = passangers.tab);
+CREATE OR REPLACE VIEW vw_passangers AS 
+ SELECT car_types.car_type_code, entitys.entity_id, entitys.entity_name, 
+    payment_types.payment_type_id, payment_types.payment_type_name, 
+    transfers.transfer_id, transfers.record_locator, transfers.customer_code, 
+    transfers.customer_name, transfers.currency_id, transfers.agreed_amount, 
+    transfers.pax_no, transfers.transfer_cancelled, transfers.booking_location, transfers.booking_date, 
+    transfers.payment_details, transfers.reference_data, 
+    transfer_flights.transfer_flight_id, transfer_flights.start_time, 
+    transfer_flights.end_time, transfer_flights.flight_date, 
+    transfer_flights.start_airport, transfer_flights.end_airport, 
+    transfer_flights.airline, transfer_flights.flight_num, 
+    passangers.passanger_id, passangers.passanger_name, 
+    passangers.passanger_mobile, passangers.passanger_email, 
+    passangers.pickup_time, passangers.pickup, passangers.dropoff, 
+    passangers.other_preference, passangers.tab, passangers.amount, 
+    passangers.processed, pax_cancelled, passangers.pickup_date
+   FROM passangers
+   JOIN car_types ON passangers.car_type_code::text = car_types.car_type_code::text
+   JOIN transfers ON passangers.transfer_id = transfers.transfer_id
+   JOIN entitys ON transfers.entity_id = entitys.entity_id
+   JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id
+   LEFT JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id
+  WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
 
 
 CREATE VIEW vw_passangers_noflights AS
@@ -315,6 +329,35 @@ CREATE TRIGGER ins_transfers BEFORE INSERT ON transfers
     FOR EACH ROW EXECUTE PROCEDURE ins_transfers();
 
 
+CREATE OR REPLACE FUNCTION upd_transfers() RETURNS trigger AS $$
+DECLARE
+BEGIN
+    UPDATE passangers SET pax_cancelled = NEW.transfer_cancelled WHERE transfer_id =  NEW.transfer_id;
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_transfers AFTER UPDATE ON transfers
+    FOR EACH ROW EXECUTE PROCEDURE upd_transfers();
+
+
+
+CREATE OR REPLACE FUNCTION upd_passangers() RETURNS trigger AS $$
+DECLARE
+BEGIN
+
+    UPDATE transfer_assignments SET cancelled = NEW.pax_cancelled WHERE passanger_id =  NEW.passanger_id;
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_passangers AFTER UPDATE ON passangers
+    FOR EACH ROW EXECUTE PROCEDURE upd_passangers();
+
+
+
+
+
 /* check null date */
 
 CREATE OR REPLACE FUNCTION ins_drivers() RETURNS trigger AS $$
@@ -350,8 +393,10 @@ BEGIN
     v_today := CURRENT_TIMESTAMP;
 
     IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1500'::time )) THEN
-        v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' || NEW.passanger_name || E'.\nFrom: ' || NEW.pickup || E'\nTo: ' || NEW.dropoff || E'\nAt: ' || NEW.pickup_time
-                  || E'\nTel: ' || NEW.passanger_mobile;
+        v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' || NEW.passanger_name || E'.\nFrom: ' 
+                    || NEW.pickup || E'\nTo: ' || NEW.dropoff 
+                    || E'\nAt: ' || NEW.pickup_time   || 'HRS'
+                    || E'\nTel: ' || NEW.passanger_mobile;
 
         v_send_res := sendMessage('254725987342', v_message);
         v_send_res := sendMessage('254701772272', v_message);
@@ -400,7 +445,7 @@ BEGIN
         INTO v_rec FROM vw_transfer_assignments WHERE transfer_assignment_id = NEW.transfer_assignment_id;
 
         v_flight_text := E'\nFlight Date : ' || v_rec.flight_date
-                    || E'\nDep Time : ' || v_rec.start_time
+                    || E'\nDep Time : ' || v_rec.start_time   || 'HRS'
                     || E'\nAirport : ' || v_rec.start_airport
                     || E'\nFlight No.: ' || v_rec.airline || ' '::text || v_rec.flight_num;
 
@@ -408,14 +453,20 @@ BEGIN
 
     v_message := (E'Hello '::text || v_rec.driver_name || E'\nYou Have a new Transfer Ref : '
                   || v_rec.transfer_assignment_id
-                  || E'\nPick ' || v_rec.passanger_name || E'.\nFrom: ' || v_rec.pickup || E'\nTo: ' || v_rec.dropoff || E'\nAt: ' || v_rec.pickup_time
+                  || E'\nPick ' || v_rec.passanger_name 
+                  || E'.\nFrom: ' || v_rec.pickup 
+                  || E'\nTo: ' || v_rec.dropoff 
+                  || E'\nAt: ' || v_rec.pickup_time  || 'HRS'
                   || E'\nTel: ' || v_rec.passanger_mobile || v_flight_text
                   || E'\nBunson Transport Department'::text
                   || E'\nhttp://d.dc.co.ke/bunson/?mobile=' || v_rec.mobile_number || '&reference=' || v_rec.transfer_assignment_id)::text;
 
     v_client_sms := (E'Hello '::text || v_rec.passanger_name
                     || E'\nOur Driver '::text || v_rec.driver_name || '('::text || v_rec.mobile_number || ')'::text
-                    || E'\nWill Pick You ' || E'.\nFrom: ' || v_rec.pickup || E'\nTo: ' || v_rec.dropoff || E'\nAt: ' || v_rec.pickup_time
+                    || E'\nWill Pick You ' || E'.\nFrom: ' 
+                    || v_rec.pickup 
+                    || E'\nTo: ' || v_rec.dropoff 
+                    || E'\nAt: ' || v_rec.pickup_time  || 'HRS'
                     || v_flight_text
                     || E'\nBunson Transport Department'::text);
 
@@ -432,8 +483,27 @@ CREATE TRIGGER ins_transfer_assignments AFTER INSERT ON transfer_assignments
     FOR EACH ROW EXECUTE PROCEDURE ins_transfer_assignments();
 
 
-delete from transfer_flights ;
+CREATE OR REPLACE FUNCTION ins_transfer_flights() RETURNS trigger AS $$
+DECLARE
+    v_transfer_id   integer;
+BEGIN
+
+    IF(NEW.create_key = 2) THEN
+        SELECT transfer_id INTO v_transfer_id FROM passangers WHERE passanger_id = NEW.transfer_id;
+        NEW.transfer_id := v_transfer_id;
+    END IF;
+
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+-- DROP TRIGGER ins_transfer_flights ON transfer_flights;
+CREATE TRIGGER ins_transfer_flights BEFORE INSERT ON transfer_flights
+    FOR EACH ROW EXECUTE PROCEDURE ins_transfer_flights();
+
+/*delete from transfer_flights ;
 delete from transfer_assignments ;
 delete from passangers ;
 delete from sms;
 delete from transfers;
+*/

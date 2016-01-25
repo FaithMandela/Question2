@@ -11,7 +11,6 @@ CREATE TABLE forms (
 	form_header				text,
 	form_footer				text,
 	default_values			text,
-	default_sub_values		text,
 	details					text,
 	UNIQUE(form_name, version)
 );
@@ -92,12 +91,13 @@ CREATE VIEW vw_sub_fields AS
 	FROM sub_fields INNER JOIN vw_fields ON sub_fields.field_id = vw_fields.field_id;
 
 CREATE VIEW vw_entry_forms AS
-	SELECT entitys.entity_id, entitys.entity_name, forms.form_id, forms.form_name, entry_forms.entry_form_id,
-		entry_forms.org_id, entry_forms.approve_status, entry_forms.application_date, 
+	SELECT entitys.entity_id, entitys.entity_name, 
+		forms.form_id, forms.form_name, forms.form_number, forms.completed, forms.is_active, forms.use_key,
+		entry_forms.org_id, entry_forms.entry_form_id, entry_forms.approve_status, entry_forms.application_date, 
 		entry_forms.completion_date, entry_forms.action_date, entry_forms.narrative, 
 		entry_forms.answer, entry_forms.workflow_table_id, entry_forms.details
 	FROM entry_forms INNER JOIN entitys ON entry_forms.entity_id = entitys.entity_id
-	INNER JOIN forms ON entry_forms.form_id = forms.form_id;
+		INNER JOIN forms ON entry_forms.form_id = forms.form_id;
 
 CREATE OR REPLACE FUNCTION Ins_Entry_Form(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE

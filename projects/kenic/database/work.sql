@@ -23,7 +23,7 @@ UPDATE configuration SET value = '127.0.0.1' WHERE value = '198.32.67.25';
 
 ------- Access reset
 INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
-update login set password = md5('invent');
+UPDATE login SET password = md5(<<newpassword>>) WHERE clid = 'root';
 
 ------- Error on approval -----------------------------
 INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');

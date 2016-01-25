@@ -151,7 +151,7 @@ CREATE VIEW vw_loans AS
 	SELECT vw_loan_types.adjustment_id, vw_loan_types.adjustment_name, vw_loan_types.account_number,
 		vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
 		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
-		entitys.entity_id, entitys.entity_name, 
+		entitys.entity_id, entitys.entity_name, employees.employee_id,
 		loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
 		loans.repayment_period, loans.application_date, loans.approve_status, loans.initial_payment, 
 		loans.loan_date, loans.action_date, loans.details,
@@ -160,13 +160,14 @@ CREATE VIEW vw_loans AS
 		(loans.principle + get_total_interest(loans.loan_id) - loans.initial_payment - get_total_repayment(loans.loan_id)) as loan_balance,
 		get_payment_period(loans.principle, loans.monthly_repayment, loans.interest) as calc_repayment_period
 	FROM loans INNER JOIN entitys ON loans.entity_id = entitys.entity_id
+		INNER JOIN employees ON loans.entity_id = employees.entity_id
 		INNER JOIN vw_loan_types ON loans.loan_type_id = vw_loan_types.loan_type_id;
 
 CREATE VIEW vw_loan_monthly AS
 	SELECT  vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.account_number,
 		vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
 		vw_loans.loan_type_id, vw_loans.loan_type_name, 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
+		vw_loans.entity_id, vw_loans.entity_name, vw_loans.employee_id, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, loan_monthly.repayment, loan_monthly.interest_paid, 
@@ -182,7 +183,7 @@ CREATE VIEW vw_loan_payments AS
 	SELECT vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.account_number,
 		vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
 		vw_loans.loan_type_id, vw_loans.loan_type_name, 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
+		vw_loans.entity_id, vw_loans.entity_name, vw_loans.employee_id, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_loans.application_date, vw_loans.approve_status, vw_loans.initial_payment, 
 		vw_loans.org_id, vw_loans.action_date,

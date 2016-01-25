@@ -15,7 +15,7 @@
 	String userName = request.getRemoteUser();
 
 	BWebForms form = new BWebForms(dbconfig);
-	String formData = form.getWebForm(null, request.getParameterMap());
+	String formData = form.getWebForm(request.getParameterMap());
 	String formTitle = form.getTitle();
 %>
 
@@ -149,11 +149,13 @@
 						<span class="caption-subject bold uppercase"> <%= formTitle %></span>
 					</div>
 					<div class="actions">
+					  <% if(form.getEntryFormId() != null) { %>
 						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormValues();">
 						<i class="fa fa-pencil"></i> Save </a>
 						<a href="javascript:;" class="btn btn-circle btn-default">
 						<i class="fa fa-plus"></i> Submit </a>
 						<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"></a>
+					  <% } %>
 					</div>
 				</div>
 				<div class="portlet-body">
@@ -316,8 +318,22 @@
 		for	(i = 0; i < db_list.length; i++) {
 			jsonForm[db_list[i]] = eval(db_list[i]);
 		}
- 
 console.log(jsonForm);
+console.log(JSON.stringify(jsonForm));
+
+		$.ajax({
+			type: "POST",
+			url: "ajaxupdate?fnct=formupdate&entry_form_id=" + <%=form.getEntryFormId()%>,
+			data: "json=" + JSON.stringify(jsonForm),
+			dataType: "json",
+			success: function(data){
+console.log("Data: " + data);
+			},
+			failure: function(errMsg) {
+console.log("Error: " + errMsg);
+			}
+		});
+
     }
 </script>
 

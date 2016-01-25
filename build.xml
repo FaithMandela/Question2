@@ -9,7 +9,7 @@
 	<property name="build.lib" location="build/lib"/>
 	<property name="classes.dir" value="${build}/classes"/>
 	<property name="projects" value="projects/"/>
-	<property name="tomcat.hr" value="/opt/tomcat/webapps/hr/"/>
+	<property name="tomcat" value="/opt/tomcat/webapps/"/>
 
 	<path id="classpath">
 		<fileset dir="${build.lib}">
@@ -52,11 +52,6 @@
 			keystore="${build.lib}/dewciskeystore.jks" alias="dewciskeystore" storepass="Baraza9NBO"/>
 
         <delete dir="${classes.dir}"/>
-	</target>
-
-    <target name="deploy">
-		<copy file="${build}/baraza.jar" tofile="${tomcat.hr}/WEB-INF/lib/baraza.jar" overwrite="true"/>
-		<copy file="${build}/baraza.app.jar" tofile="${tomcat.hr}/app/baraza.jar" overwrite="true"/>
 	</target>
 
     <target name="javadoc">
@@ -103,5 +98,15 @@
 			<arg value="${projects}"/>
 		</java>
     </target>
+
+    <target name="deploy.hr">
+		<copy file="${build}/baraza.jar" tofile="${tomcat}/hr/WEB-INF/lib/baraza.jar" overwrite="true"/>
+		<copy file="${build}/baraza.app.jar" tofile="${tomcat}/hr/app/baraza.jar" overwrite="true"/>
+	</target>
+
+    <target name="deploy.ueab">
+		<copy file="${build}/baraza.jar" tofile="${tomcat}/ueab/WEB-INF/lib/baraza.jar" overwrite="true"/>
+		<copy file="${build}/baraza.app.jar" tofile="${tomcat}/ueab/app/baraza.jar" overwrite="true"/>
+	</target>
 
 </project>
