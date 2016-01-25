@@ -8,7 +8,7 @@
 			table="sys_emails, sys_emailed, passengers"
 			where="(passengers.passenger_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
 			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)"
-			attachment="passengers_contract.jasper">
+			attachment="travelinsurance/certificate.jasper">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">passengers.passenger_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="passengers">passenger_name</BODYFIELD>
@@ -16,7 +16,7 @@
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
-	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
+	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, entitys"
 			where="(entitys.entity_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
 			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">

@@ -85,4 +85,6 @@
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mpamanech" path="mobilehealth" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Mpamanech Tomcat Server</SERVER>
 	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="telcom" path="telcom" xmlfile="telcom.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Telcom</APP>
+	<APP dbpath="jdbc:postgresql://localhost/icealion" dbname="icealion" path="icealion" xmlfile="icealion.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Icea Lion</APP>
+	<APP dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="faidaplus.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">Faidaplus</APP>
 </APPLIST>
