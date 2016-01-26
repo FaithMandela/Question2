@@ -57,6 +57,7 @@ CREATE TABLE currency (
 CREATE TABLE orgs (
 	org_id					serial primary key,
 	currency_id				integer references currency,
+	default_country_id		char(2) references sys_countrys,
 	parent_org_id			integer references orgs,
 	org_name				varchar(50) not null unique,
 	org_sufix				varchar(4) not null unique,
@@ -64,10 +65,12 @@ CREATE TABLE orgs (
 	is_active				boolean not null default true,
 	logo					varchar(50),
 	pin 					varchar(50),
+	license					text,
 	details					text
 );
 CREATE INDEX orgs_currency_id ON orgs (currency_id);
 CREATE INDEX orgs_parent_org_id ON orgs (parent_org_id);
+CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
 
 ALTER TABLE currency ADD org_id			integer references orgs;
 CREATE INDEX currency_org_id ON currency (org_id);

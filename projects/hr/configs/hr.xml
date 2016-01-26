@@ -3658,7 +3658,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			</GRID>
 			<GRID name="Approved Reviews" keyfield="job_review_id" orderby="entity_name" linkfield="review_year" table="vw_review_reporting" where="(approve_status='Approved')" user="rpt_id">
 				<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
@@ -3666,7 +3666,7 @@
 				<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 				<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-				<JASPER name="Review Report" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
+				<JASPER name="Review Report" org.table="employees" reportfile="vw_employee_appraisal_report.jasper"></JASPER>
 			</GRID>
 		</GRID>
 	</DESK>

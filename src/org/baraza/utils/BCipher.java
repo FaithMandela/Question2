@@ -14,6 +14,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 
+import java.security.NoSuchAlgorithmException;
+import java.io.UnsupportedEncodingException;
+
+
 public class BCipher {
 	SecretKey key;
 	Cipher cipher;
@@ -73,14 +77,14 @@ public class BCipher {
 		String hash = null;
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA"); 	// SHA-1 generator instance
-			md.update(planpw.getBytes("UTF-8")); 				// Message summary generation
+			md.update(planpw.getBytes("UTF-8")); 					// Message summary generation
 			Base64 coder = new Base64(32);
 			byte raw[] = md.digest(); 								// Message summary reception
 			hash = new String(coder.encode(raw)); 					// Encoding to BASE64
 			hash = hash.replace("\n", "");
-		} catch(java.security.NoSuchAlgorithmException ex) {
+		} catch(NoSuchAlgorithmException ex) {
 			System.out.println("No algorithim : " + ex.getMessage());
-		} catch(java.io.UnsupportedEncodingException ex) {
+		} catch(UnsupportedEncodingException ex) {
 			System.out.println("Unsupported Encoding : " + ex.getMessage());
 		}
 

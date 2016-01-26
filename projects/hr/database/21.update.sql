@@ -1,6 +1,7 @@
-ALTER TABLE orgs
-ADD default_country_id		char(2) references sys_countrys;
+ALTER TABLE orgs ADD default_country_id		char(2) references sys_countrys;
+ALTER TABLE orgs ADD license				text;
 CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
+
 
 UPDATE orgs SET default_country_id = 'KE';
 
