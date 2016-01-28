@@ -51,7 +51,7 @@ public class Bajax extends HttpServlet {
 			System.out.println(ce + ":" + request.getParameter(ce));
 		}
 
-        response.setContentType("text/html");
+		response.setContentType("text/html");
 		PrintWriter out = null;
 		try { out = response.getWriter(); } catch(IOException ex) {}
 		String resp = "";
@@ -251,7 +251,6 @@ public class Bajax extends HttpServlet {
 		String resp = "";
 						
 		String mysql = "SELECT " + sqlProcess + "('0', '" + db.getUserID() + "', '')";
-System.out.println("BASE : " + mysql);
 		String myoutput = web.executeFunction(mysql);
 		
 		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
