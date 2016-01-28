@@ -521,6 +521,17 @@ public class BDB {
 		}
 		return mystr;
 	}
+	
+	public String getCatalogName() {
+		String catalogName = null;
+		try {
+			catalogName = db.getCatalog();
+		} catch(SQLException ex) {
+			log.severe("Database name : " + ex);
+		}
+		
+		return catalogName;
+	}
 
 	public boolean isValid() {
 		boolean dbv = false;

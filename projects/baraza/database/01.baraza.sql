@@ -65,6 +65,7 @@ CREATE TABLE orgs (
 	is_active				boolean not null default true,
 	logo					varchar(50),
 	pin 					varchar(50),
+	system_identifier		varchar(32),
 	license					text,
 	details					text
 );
@@ -74,13 +75,6 @@ CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
 
 ALTER TABLE currency ADD org_id			integer references orgs;
 CREATE INDEX currency_org_id ON currency (org_id);
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (3, 'British Pound', 'BPD');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'Euro', 'ERO');
-INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
-UPDATE currency SET org_id = 0;
-SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 
 CREATE TABLE currency_rates (
 	currency_rate_id		serial primary key,
@@ -1115,6 +1109,14 @@ $$ LANGUAGE plpgsql;
 
 
 --- Data
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (3, 'British Pound', 'BPD');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'Euro', 'ERO');
+INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
+UPDATE currency SET org_id = 0;
+SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
+
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');

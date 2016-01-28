@@ -44,6 +44,28 @@ public class BNetwork {
 			System.out.println("Env : " + env + " = " + envs.get(env));
 		}
 	}
+	
+	public String getMACAddress(String networkIP) {
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			InetAddress ip = InetAddress.getByName(networkIP);
+			if(ip == null) return null;
+			NetworkInterface netint = NetworkInterface.getByInetAddress(ip);
+			if(netint == null) return null;
+			if(netint.getHardwareAddress() == null) return null;
+				
+			byte[] mac = netint.getHardwareAddress();
+			for (int i = 0; i < mac.length; i++) sb.append(String.format("%02X%s", mac[i], ""));
+			System.out.println("Current MAC address : " + sb.toString());
+		} catch(UnknownHostException ex) {
+			System.out.println("Error on MACAddress " + ex);
+		} catch(SocketException ex) {
+			System.out.println("Error on MACAddress " + ex);
+		}
+		
+		return sb.toString();
+	}
 
 	private void displayInterfaceInformation(NetworkInterface netint) throws SocketException {
 		System.out.printf("Display name: %s%n", netint.getDisplayName());

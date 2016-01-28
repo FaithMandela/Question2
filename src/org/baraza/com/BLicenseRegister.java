@@ -8,6 +8,8 @@
  */
 package org.baraza.com;
 
+import java.util.Map;
+import java.util.UUID;
 import java.io.PrintWriter;
 import java.io.IOException;
 
@@ -19,8 +21,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.baraza.DB.BDB;
 import org.baraza.xml.BElement;
+import org.baraza.utils.BNetwork;
 
-public class BLicenseRegister {
+public class BLicenseRegister extends HttpServlet {
 
 	BDB db = null;
 
@@ -51,11 +54,25 @@ public class BLicenseRegister {
 	}
 	
 	private void getLicense(String remoteAddr, String remoteUser) {
-		String dbID = "";
-		String macAddr = "";
 		String orgName = "";
+		
+		BNetwork net = new BNetwork();
+		String macAddr = net.getMACAddress(remoteAddr);
+		
+		String dbName = db.getCatalogName();
+		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
+System.out.println("DB ID : " + dbName + " : " + dbID);
 
-	
+		Map<String, String> orgField = db.readFields("org_name, system_identifier", "orgs WHERE org_id = 0");
+		String sysName = orgField.get("org_name");
+		String sysID = orgField.get("system_identifier");
+		if(sysID == null) {
+			sysID = UUID.randomUUID().toString();
+			db.executeQuery("UPDATE orgs SET system_identifier = '" + sysID + "' WHERE org_id = 0");
+		}
+System.out.println("System ID : " sysName + " : " + dbID);
+		
+		
 	}
 	
 
