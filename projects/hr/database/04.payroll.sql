@@ -144,8 +144,9 @@ CREATE INDEX employee_tax_types_org_id ON employee_tax_types(org_id);
 
 CREATE TABLE employee_advances (
 	employee_advance_id		serial primary key,
-	employee_month_id		integer references employee_month not null,
+	employee_month_id		integer references employee_month,
 	currency_id				integer references currency,
+	entity_id				integer not null references entitys,
 	org_id					integer references orgs,
 	pay_date				date default current_date not null,
 	pay_upto				date not null,
@@ -157,14 +158,16 @@ CREATE TABLE employee_advances (
 	completed				boolean not null default false,
 
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 
-	narrative				varchar(240)
+	narrative				varchar(240),
+	details					text
 );
 CREATE INDEX employee_advances_employee_month_id ON employee_advances (employee_month_id);
 CREATE INDEX employee_advances_currency_id ON employee_advances (currency_id);
+CREATE INDEX employee_advances_entity_id ON employee_advances (entity_id);
 CREATE INDEX employee_advances_org_id ON employee_advances(org_id);
 
 CREATE TABLE advance_deductions (
@@ -1800,4 +1803,58 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_advances
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+    
+CREATE OR REPLACE FUNCTION advance_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Advance applied';
 	
+	UPDATE employee_advances SET approve_status = 'Completed'
+	WHERE (employee_advance_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION ins_employee_advances() RETURNS trigger AS $$
+DECLARE
+	v_period_id			integer;
+BEGIN
+
+	IF(NEW.pay_upto is null)THEN
+		NEW.pay_upto := current_date;
+	END IF;
+	IF(NEW.payment_amount is null)THEN
+		NEW.payment_amount := NEW.amount;
+		NEW.pay_period := 1;
+	END IF;
+
+	IF((NEW.approve_status = 'Approved') AND (OLD.approve_status = 'Completed'))THEN
+		SELECT max(period_id) INTO v_period_id
+		FROM periods
+		WHERE (closed = false);
+		
+		SELECT max(employee_month_id) INTO NEW.employee_month_id
+		FROM employee_month
+		WHERE (period_id = v_period_id) AND (entity_id = NEW.entity_id);
+		
+		IF(v_period_id is null)THEN
+			RAISE EXCEPTION 'You need to have the current period approved';
+		ELSIF(NEW.employee_month_id is null)THEN
+			RAISE EXCEPTION 'You need to have the staff in the current active month';
+		END IF;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_employee_advances BEFORE INSERT OR UPDATE ON employee_advances
+    FOR EACH ROW EXECUTE PROCEDURE ins_employee_advances();
+    
+    

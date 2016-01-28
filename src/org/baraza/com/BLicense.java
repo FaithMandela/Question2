@@ -47,12 +47,12 @@ public class BLicense {
 	* Run the application - desktop mode
 	* Use {@link #createLicense(String, String, String, String)} 
 	* 
+	* @param holder This String field can hold the holder's name, common name (cname)	
 	* @param productKey - This String field can hold a product key, serial number, serial code or any other String-representable data necessary for identifying this license.
-	* @param holder This String field can hold the holder's name, common name (cname)
 	* @param MachineID - This String field can hold the machine X500Principal identification, UUID, Mac address, hardware ID, or any other String-representable data necessary for identifying this license.
-	* @param issueDate - This field holds the date the license is issued/created (in Java Unix Epoch format¹).
+	* @param databaseID - This field holds the ID for the database
 	*/
-	public String createLicense(String productKey, String holder, String MachineID, String issueDate) {
+	public String createLicense(String holder, String productKey, String MachineID, String databaseID) {
 		String license = null;
 
 		return license;
