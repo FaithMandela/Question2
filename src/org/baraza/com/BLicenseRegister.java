@@ -70,7 +70,12 @@ System.out.println("DB ID : " + dbName + " : " + dbID);
 			sysID = UUID.randomUUID().toString();
 			db.executeQuery("UPDATE orgs SET system_identifier = '" + sysID + "' WHERE org_id = 0");
 		}
-System.out.println("System ID : " sysName + " : " + dbID);
+System.out.println("System ID : " + sysName + " : " + dbID);
+
+
+		// Create the license
+		BLicense license = new BLicense();
+		license.createLicense(sysName, sysID, macAddr, dbID);
 		
 		
 	}

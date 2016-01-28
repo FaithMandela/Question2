@@ -85,8 +85,6 @@ CREATE TABLE currency_rates (
 );
 CREATE INDEX currency_rates_org_id ON currency_rates (org_id);
 CREATE INDEX currency_rates_currency_id ON currency_rates (currency_id);
-INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
-VALUES (0, 0, 1, 1);
 
 CREATE TABLE sys_queries (
 	sys_queries_id			serial primary key,
@@ -1116,6 +1114,9 @@ INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'E
 INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
 UPDATE currency SET org_id = 0;
 SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
+
+INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
+VALUES (0, 0, 1, 1);
 
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
