@@ -44,7 +44,7 @@ RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_contributions BEFORE INSERT ON contributions
+CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE On contributions
    FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
 
   
@@ -68,11 +68,12 @@ LANGUAGE plpgsql;
    
 CREATE TRIGGER ins_investment BEFORE INSERT OR UPDATE ON investments
 	FOR EACH ROW EXECUTE PROCEDURE ins_investment();
+	
+	
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
-
-CREATE OR REPLACE FUNCTION ins_applicants()
+    CREATE OR REPLACE FUNCTION ins_applicants()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -94,7 +95,7 @@ BEGIN
 
 				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, rec.org_id, 4, 
+				VALUES (NEW.entity_id, rec.org_id, 0, 
 					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
 			ELSE
@@ -114,8 +115,11 @@ END;
 $BODY$
   LANGUAGE plpgsql;
   
-CREATE TRIGGER ins_applicants
-  BEFORE INSERT OR UPDATE
-  ON applicants
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_applicants();
+  
+  
+CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
+  FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
+  
+  
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();

@@ -1,7 +1,12 @@
 <APP name="Faida Plus" password="change_password" material="true">
 	<MENU name="Faida Plus">
+		<MENU name="Orders" role="admin">
+			<MENU name="Products">7</MENU>
+			<MENU name="Orders">8</MENU>
+		</MENU>
 		<MENU name="Tickets" role="admin">
-			<MENU name="Logs">1</MENU>
+			<MENU name="Applicant">9</MENU>
+			<MENU name="Logs">10</MENU>
 			<MENU name="Tickets">2</MENU>
 			<MENU name="Segments">3</MENU>
 			<MENU name="Imports">4</MENU>
@@ -13,7 +18,182 @@
 			<MENU name="Ticket Summary">101</MENU>
 		</MENU>
 	</MENU>
-	<DESK w="585" name="Logs" type="vert" key="1" h="500">
+	<DESK w="700" name="Dashboard" key="1" h="500">
+		<DASHBOARD w="650" name="Dashboard">
+			<TILE w="60" name="New Orders" role="admin" noorg.query="true" table="orders" where="(order_status = 'New')" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
+			</TILE>
+		</DASHBOARD>
+	</DESK>
+	<DESK w="700" name="Products" key="7" h="500">
+		<GRID name="Products" keyfield="product_id" table="products">
+			<TEXTFIELD w="75" title="ID">product_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Details">product_details</TEXTFIELD>
+			<FORM name="Products" keyfield="product_id" linkfield="product_id" table="products">
+				<COMBOBOX w="430" title="product_category" lptable="product_category" y="30" h="20" x="10" lpfield="product_category_name">product_category_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Product Name" y="50" h="20" x="10">product_name</TEXTFIELD>
+				<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">image</PICTURE>
+				<TEXTFIELD w="250" title="Product Price" y="90" h="20" x="10">product_uPrice</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">product_details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Products Category" keyfield="product_category_id" table="product_category">
+			<TEXTFIELD w="75" title="ID">product_category_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Name">product_category_name</TEXTFIELD>
+			<FORM name="Products" keyfield="product_category_id" table="product_category">
+				<TEXTFIELD w="150" title="Product Name" y="50" h="20" x="10">product_category_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Orders" key="8" h="500">
+		<GRID name="Orders" keyfield="order_id" table="vw_orders">
+			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
+				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
+				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
+				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Applicant" key="9" h="650">
+		<GRID name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants">
+			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
+			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
+			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
+			<TEXTFIELD w="120" title="Status">approved</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">date_of_application</TEXTFIELD>
+			<GRID wheresql="table_name = 'applicant'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="applicant">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Education" keyfield="education_id" orderby="date_from desc" linkfield="entity_id" table="vw_education">
+				<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
+				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Name Of School">name_of_school</TEXTFIELD>
+				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
+				<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
+				<FORM name="Education" keyfield="education_id" linkfield="entity_id" table="education">
+					<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
+					<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
+					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
+					<TEXTFIELD w="430" title="Name Of School" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+					<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
+					<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Employment" keyfield="employment_id" orderby="date_from desc" linkfield="entity_id" table="vw_employment">
+				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
+				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Employers Name">employers_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Position Held">position_held</TEXTFIELD>
+				<FORM name="Employment" keyfield="employment_id" linkfield="entity_id" table="employment">
+					<TEXTDATE w="150" title="Date From" y="10" h="20" x="10">date_from</TEXTDATE>
+					<TEXTDATE w="150" title="Date To" y="10" h="20" x="290">date_to</TEXTDATE>
+					<TEXTFIELD w="430" title="Employers Name" y="30" h="20" x="10">employers_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Position Held" y="50" h="20" x="10">position_held</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Seminars" keyfield="cv_seminar_id" linkfield="entity_id" table="vw_cv_seminars">
+				<TEXTFIELD w="75" title="Seminar Name">cv_seminar_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Seminar Date">cv_seminar_date</TEXTDATE>
+				<FORM name="Cv Seminars" keyfield="cv_seminar_id" linkfield="entity_id" table="cv_seminars">
+					<TEXTFIELD w="430" title="Seminar Name" y="10" h="20" x="10">cv_seminar_name</TEXTFIELD>
+					<TEXTDATE w="150" title="Seminar Date" y="30" h="20" x="10">cv_seminar_date</TEXTDATE>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Projects" keyfield="cv_projectid" linkfield="entity_id" table="vw_cv_projects">
+				<TEXTFIELD w="75" title="Project Name">cv_project_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Project Date">cv_project_date</TEXTDATE>
+				<FORM name="Projects" keyfield="cv_projectid" linkfield="entity_id" table="cv_projects">
+					<TEXTFIELD w="430" title="Project Name" y="10" h="20" x="10">cv_project_name</TEXTFIELD>
+					<TEXTDATE w="150" title="Project Date" y="30" h="20" x="10">cv_project_date</TEXTDATE>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Skills" keyfield="skill_id" linkfield="entity_id" table="vw_skills">
+				<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
+				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
+						<DATA key="1">Basic</DATA>
+						<DATA key="2">Intermediate</DATA>
+						<DATA key="3">Advanced</DATA>
+					</COMBOLIST>
+					<TEXTFIELD w="430" title="Training Institution" y="50" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
+				<TEXTFIELD w="100" title="Name">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="cv_referees">table_name</DEFAULT>
+					<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
+					<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="70" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="90" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="110" h="20" x="10">street</TEXTFIELD>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="130" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="250" title="Phone Number" y="150" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="50" title="Extension" y="150" h="20" x="390">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="170" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="190" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="210" h="20" x="10">email</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FILES username="repository" repository="/repository/webdav/files/" name="Upload Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza">
+				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+				<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
+				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
+				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+			</FILES>
+		</GRID>
+	</DESK>
+	<DESK w="585" name="Logs" type="vert" key="10" h="500">
 		<GRID name="PCCs" keyfield="pcc" orderby="agencyname" table="pccs" key="1">
 			<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="240" title="Agency Name">agencyname</TEXTFIELD>

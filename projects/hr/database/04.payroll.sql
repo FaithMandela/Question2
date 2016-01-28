@@ -385,13 +385,15 @@ CREATE VIEW vw_default_banking AS
 CREATE VIEW vw_pensions AS
 	SELECT entitys.entity_id, entitys.entity_name,
 		adjustments.adjustment_id, adjustments.adjustment_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		pensions.contribution_id, contributions.adjustment_name as contribution_name, 
 		pensions.org_id, pensions.pension_id, pensions.pension_company, pensions.pension_number, 
 		pensions.amount, pensions.use_formura, pensions.employer_ps, pensions.employer_amount, 
 		pensions.employer_formural, pensions.active, pensions.details
 	FROM pensions INNER JOIN entitys ON pensions.entity_id = entitys.entity_id
 		INNER JOIN adjustments ON pensions.adjustment_id = adjustments.adjustment_id
-		INNER JOIN adjustments as contributions ON pensions.contribution_id = contributions.adjustment_id;
+		INNER JOIN adjustments as contributions ON pensions.contribution_id = contributions.adjustment_id
+		INNER JOIN currency ON adjustments.currency_id = currency.currency_id;
 	
 	
 CREATE OR REPLACE FUNCTION getAdjustment(int, int, int) RETURNS float AS $$
@@ -780,9 +782,10 @@ CREATE VIEW vw_pension_adjustments AS
 CREATE VIEW vw_employee_pensions AS
 	SELECT a.entity_id, a.entity_name, a.adjustment_id, a.adjustment_name, a.contribution_id, 
 		a.contribution_name, a.org_id, a.pension_id, a.pension_company, a.pension_number, 
-		a.active,
+		a.active, a.currency_id, a.currency_name, a.currency_symbol,
 		b.period_id, b.start_date, b.employee_month_id, 
-		b.amount, b.base_amount,
+		COALESCE(b.amount, 0) as amount, 
+		COALESCE(b.base_amount, 0) as base_amount,
 		COALESCE(c.amount, 0) as employer_amount, 
 		COALESCE(c.base_amount, 0) as employer_base_amount,
 		(b.amount + COALESCE(c.amount, 0)) as pension_amount, 
@@ -1712,6 +1715,7 @@ BEGIN
 		FROM adjustments
 		WHERE (adjustment_id = rec.adjustment_id);
 		
+		v_amount := 0;
 		IF(rec.use_formura = true) AND (adj.formural is not null) AND (v_employee_month_id is not null) THEN
 			EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 			INTO v_amount;
@@ -1760,6 +1764,7 @@ BEGIN
 				a_exchange_rate := 1 / v_exchange_rate;
 			END IF;
 			
+			v_amount := 0;
 			IF(rec.employer_formural = true) AND (adj.formural is not null) AND (v_employee_month_id is not null) THEN
 				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 				INTO v_amount;
@@ -1772,7 +1777,7 @@ BEGIN
 				v_amount := rec.employer_amount;
 			END IF;
 			
-			IF(v_employee_adjustment_id is null) AND (v_employee_month_id is not null)THEN
+			IF(v_employee_adjustment_id is null) AND (v_employee_month_id is not null) AND (v_amount > 0) THEN
 				INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
 					adjustment_id, adjustment_type, adjustment_factor, 
 					in_payroll, in_tax, visible,

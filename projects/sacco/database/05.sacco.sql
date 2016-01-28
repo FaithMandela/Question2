@@ -139,10 +139,10 @@ CREATE TABLE investments (
 	default_interest 			real NOT NULL DEFAULT 1,
 	return_on_investment 		real NOT NULL DEFAULT 0,
 	
-	application_date			timestamp default now() not null,
+	application_date			timestamp default now(),
 	approve_status				varchar(16) default 'Draft' not null,
 	workflow_table_id			integer,
-	action_date					timestamp,
+	action_date				timestamp,
 	
 	details 					text
 );
@@ -166,6 +166,11 @@ CREATE TABLE applicants	(
 	picture_file 			character varying(32),
 	identity_card 			character varying(50),
 	language 			character varying(320),
+	
+	approve_status			varchar(16) default 'Draft' not null,
+	workflow_table_id		integer,
+	action_date			timestamp,
+	
 	salary 				real,
 	how_you_heard 			character varying(320),
 	created 			timestamp without time zone DEFAULT now(),
@@ -174,6 +179,11 @@ CREATE TABLE applicants	(
 	details 			text
 );		
  CREATE INDEX applicants_org_id ON applicants (org_id);
+ 
+ 
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
 
  CREATE OR REPLACE FUNCTION ins_applications(
     character varying,
