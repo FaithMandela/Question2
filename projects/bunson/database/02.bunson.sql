@@ -97,6 +97,7 @@ CREATE TABLE transfers(
     booking_date        timestamp default CURRENT_TIMESTAMP,
     payment_details     text,
     reference_data      text,
+    tc_email            varchar(100),
     pax_no              integer default 1,
     transfer_cancelled  boolean default false,
     is_group            boolean default false,
@@ -105,6 +106,8 @@ CREATE TABLE transfers(
 
 CREATE INDEX transfers_entity_id ON transfers(entity_id);
 CREATE INDEX transfers_payment_type_id ON transfers(payment_type_id);
+
+
 
 -- INSERT INTO transfers(entity_id, record_locator, customer_code, payment_type_id,         currency_id, agreed_amount, booking_location, booking_date, payment_details, reference_data) VALUES (3, null, '000000A018', 1, 'AFA', '30000', '07', to_date('20-04-2015', 'dd-MM-yyyy'), 'payement details', 'ref data')
 
@@ -391,19 +394,24 @@ DECLARE
     v_send_res         text;
 BEGIN
     v_today := CURRENT_TIMESTAMP;
-
-    IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1500'::time )) THEN
-        v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' || NEW.passanger_name || E'.\nFrom: ' 
-                    || NEW.pickup || E'\nTo: ' || NEW.dropoff 
-                    || E'\nAt: ' || NEW.pickup_time   || 'HRS'
-                    || E'\nTel: ' || NEW.passanger_mobile;
-
-        v_send_res := sendMessage('254725987342', v_message);
+    
+    IF((NEW.pickup_date = v_today::date) AND (v_today::time > '1600'::time )) THEN
+        v_message := 'An Emergency Transfer Has Been Issued. '|| E'\nPick ' 
+        || NEW.passanger_name || E'.\nFrom: ' || NEW.pickup || E'\nTo: ' 
+        || NEW.dropoff || E'\nAt: ' || NEW.pickup_time  || 'HRS'
+                  || E'\nTel: ' || NEW.passanger_mobile;
+                  
+        --v_send_res := sendMessage('254725987342', v_message);
         v_send_res := sendMessage('254701772272', v_message);
         v_send_res := sendMessage('254738772272', v_message);
-        v_send_res := sendMessage('254787847653', v_message);
 
     END IF;
+    -- CREATE EMAIL
+    INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, 
+            emailed, narrative)
+    VALUES (1, 0, NEW.passanger_id, 'passangers', 
+            false, 'Email Created For ' || NEW.passanger_name::text);
+
     RETURN NULL;
 
 END;
@@ -412,6 +420,27 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_passangers AFTER INSERT ON passangers
     FOR EACH ROW EXECUTE PROCEDURE ins_passangers();
+
+
+
+CREATE OR REPLACE FUNCTION aft_ins_transfers() RETURNS trigger AS $$
+DECLARE
+    
+BEGIN
+    -- CREATE EMAIL
+    INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, 
+            emailed, narrative)
+    VALUES (1, 0, NEW.transfer_id, 'transfers', 
+            false, 'Email Created For ' || NEW.customer_name || 'Transfer Id : '::text || NEW.transfer_id || 'Record Locator : '::text || NEW.record_locator::text);
+
+    RETURN NULL;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER aft_ins_transfers AFTER INSERT ON transfers
+    FOR EACH ROW EXECUTE PROCEDURE aft_ins_transfers();
 
 
 

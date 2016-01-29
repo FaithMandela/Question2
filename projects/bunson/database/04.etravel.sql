@@ -164,7 +164,7 @@ $BODY$
                     ticket_status, car_remarks, car_renting_station, 
                     car_drop_station,
                     ready, picked)
-            VALUES (v_rec.transfer_assignment_id, v_rec.airline, '00', 
+            VALUES (v_rec.transfer_assignment_id, COALESCE(v_rec.airline, 'N/A'), '00', 
                     v_rec.booking_location, v_rec.pickup_date, '00', '00', 
                     v_rec.passanger_name, 0, v_rec.car_type_code, v_rec.booking_location, 
                     CURRENT_TIMESTAMP::date, 0, v_rec.pickup_date, v_rec.pickup_date, v_pccson, 
@@ -181,10 +181,3 @@ $BODY$
   COST 100;
 ALTER FUNCTION ins_transfer_assignments()
   OWNER TO postgres;
-
-
-
-
-
-
-
