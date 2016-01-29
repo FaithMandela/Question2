@@ -29,6 +29,8 @@ import java.io.UnsupportedEncodingException;
 
 public class BLicense {
 
+	KeyPair keyPair;
+
 	public static void main(String args[]) {
 	
 		BLicense lic = new BLicense();
@@ -40,7 +42,7 @@ public class BLicense {
 	}
 
 	public BLicense() {
-	
+		keyPair = generateKey();
 	}
 	
 	/**
@@ -52,12 +54,24 @@ public class BLicense {
 	* @param MachineID - This String field can hold the machine X500Principal identification, UUID, Mac address, hardware ID, or any other String-representable data necessary for identifying this license.
 	* @param databaseID - This field holds the ID for the database
 	*/
-	public String createLicense(String holder, String productKey, String MachineID, String databaseID) {
-		String license = null;
-
-		return license;
+	public byte[] createLicense(String holder, String productKey, String MachineID, String databaseID) {
+		String licData = holder + "\n" + productKey  + "\n" + MachineID + "\n" + databaseID;
+		byte[] signedData = signData(keyPair, licData);
+		
+		return signedData;
 	}
 	
+	public boolean verifyLicense(String holder, String productKey, String MachineID, String databaseID, byte[] signedData, byte[] publicKey) {
+		String licData = holder + "\n" + productKey  + "\n" + MachineID + "\n" + databaseID;
+	
+		boolean signed = verifyData(publicKey, signedData, licData);
+		
+		return signed;
+	}
+	
+	public byte[] getPublicKey() {
+		return keyPair.getPublic().getEncoded();
+	}
 	
 	private KeyPair generateKey() {
 		KeyPair pair = null;

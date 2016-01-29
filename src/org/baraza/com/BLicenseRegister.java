@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.baraza.DB.BDB;
+import org.baraza.DB.BQuery;
 import org.baraza.xml.BElement;
 import org.baraza.utils.BNetwork;
 
@@ -56,13 +57,18 @@ public class BLicenseRegister extends HttpServlet {
 	private void getLicense(String remoteAddr, String remoteUser) {
 		String orgName = "";
 		
+		// Get MAC address and save on database
 		BNetwork net = new BNetwork();
 		String macAddr = net.getMACAddress(remoteAddr);
+		if(macAddr == null) return;
+		db.executeQuery("UPDATE orgs SET MAC_address = '" + macAddr + "' WHERE org_id = 0");
 		
+		// Get the database ID
 		String dbName = db.getCatalogName();
 		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
 System.out.println("DB ID : " + dbName + " : " + dbID);
 
+		// Get the organisation name and system identifier
 		Map<String, String> orgField = db.readFields("org_name, system_identifier", "orgs WHERE org_id = 0");
 		String sysName = orgField.get("org_name");
 		String sysID = orgField.get("system_identifier");
@@ -75,7 +81,16 @@ System.out.println("System ID : " + sysName + " : " + dbID);
 
 		// Create the license
 		BLicense license = new BLicense();
-		license.createLicense(sysName, sysID, macAddr, dbID);
+		byte[] lic = license.createLicense(sysName, sysID, macAddr, dbID);
+		
+		// Save the data
+		BQuery rs = new BQuery(db, "SELECT org_id, public_key, license FROM orgs WHERE org_id = 0");
+		rs.moveFirst();
+		rs.recEdit();
+		rs.updateBytes("public_key", license.getPublicKey());
+		rs.updateBytes("license", lic);
+		rs.recSave();
+		rs.close();
 		
 		
 	}
