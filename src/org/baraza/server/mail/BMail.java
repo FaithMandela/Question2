@@ -171,8 +171,9 @@ public class BMail {
 
 			for(String report : reports.keySet()) {
 				MimeBodyPart attachreport = new MimeBodyPart();
-				if(attachFile == null) attachFile = report + ".pdf";
+				attachFile = report + ".pdf";
 				if(attachDir == null) attachDir = "./";
+
 				attachreport.attachFile(attachDir + attachFile);
 				attachreport.setFileName(attachFile);
 				mp.addBodyPart(attachreport);

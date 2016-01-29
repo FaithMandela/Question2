@@ -1,3 +1,35 @@
+DROP ins_sys_reset IS EXISTS;
+CREATE OR REPLACE FUNCTION ins_sys_reset()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_entity_id			integer;
+	v_org_id			integer;
+	v_password			varchar(32);
+BEGIN
+	SELECT entity_id, org_id INTO v_entity_id, v_org_id
+	FROM entitys
+	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email)));
+
+	IF(v_entity_id is not null) THEN
+		v_password := upper(substring(md5(random()::text) from 3 for 9));
+
+		UPDATE entitys SET first_password = v_password, entity_password = md5(v_password)
+		WHERE entity_id = v_entity_id;
+
+		INSERT INTO sys_emailed (org_id, table_id, table_name)
+		VALUES(v_org_id, v_entity_id, 'entitys');
+	END IF;
+
+	RETURN NULL;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+  
+  CREATE TRIGGER ins_sys_reset AFTER INSERT ON sys_reset FOR EACH ROW
+  EXECUTE PROCEDURE ins_sys_reset();
+
+
 
 CREATE OR REPLACE FUNCTION ins_gurrantors() RETURNS TRIGGER AS $$
 DECLARE
@@ -44,7 +76,7 @@ RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_contributions BEFORE INSERT ON contributions
+CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE On contributions
    FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
 
   
@@ -73,7 +105,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 CREATE OR REPLACE FUNCTION ins_applicants()
-  RETURNS trigger AS
+RETURNS trigger AS
 $BODY$
 DECLARE
 	rec 			RECORD;
@@ -94,7 +126,7 @@ BEGIN
 
 				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, rec.org_id, 4, 
+				VALUES (NEW.entity_id, rec.org_id, 0, 
 					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
 			ELSE
@@ -102,20 +134,35 @@ BEGIN
 			END IF;
 		END IF;
 
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (1, NEW.entity_id, 'applicant');
+		INSERT INTO sys_emailed (table_id, table_name)
+		VALUES (NEW.entity_id, 'applicant');
 	ELSIF (TG_OP = 'UPDATE') THEN
 		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
 		WHERE entity_id = NEW.entity_id;
+
+			
+	END IF;
+	
+	IF (NEW.approve_status = 'Approved') THEN 
+	INSERT INTO members(
+            entity_id,org_id, surname, first_name, middle_name,phone, 
+            gender,marital_status,salary,nationality,objective, details)
+    VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
+    New.applicant_phone,New.gender,New.marital_status,NEW.salary,NEW.nationality,NEW.objective, NEW.details);
+	ELSE
 	END IF;
 
 	RETURN NEW;
 END;
 $BODY$
-  LANGUAGE plpgsql;
+  LANGUAGE plpgsql;   
+
+
   
-CREATE TRIGGER ins_applicants
-  BEFORE INSERT OR UPDATE
-  ON applicants
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_applicants();
+CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
+  FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
+  
+  
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    

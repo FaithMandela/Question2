@@ -139,10 +139,10 @@ CREATE TABLE investments (
 	default_interest 			real NOT NULL DEFAULT 1,
 	return_on_investment 		real NOT NULL DEFAULT 0,
 	
-	application_date			timestamp default now() not null,
+	application_date			timestamp default now(),
 	approve_status				varchar(16) default 'Draft' not null,
 	workflow_table_id			integer,
-	action_date					timestamp,
+	action_date				timestamp,
 	
 	details 					text
 );
@@ -166,6 +166,11 @@ CREATE TABLE applicants	(
 	picture_file 			character varying(32),
 	identity_card 			character varying(50),
 	language 			character varying(320),
+	
+	approve_status			varchar(16) default 'Draft' not null,
+	workflow_table_id		integer,
+	action_date			timestamp,
+	
 	salary 				real,
 	how_you_heard 			character varying(320),
 	created 			timestamp without time zone DEFAULT now(),
@@ -174,46 +179,105 @@ CREATE TABLE applicants	(
 	details 			text
 );		
  CREATE INDEX applicants_org_id ON applicants (org_id);
+ 
+ 
+CREATE TABLE members (
+	entity_id 			integer NOT NUll references from,
+	bank_branch_id 		integer NOT NULL,
+	location_id			integer,
+  	currency_id 		integer references currency,
+ 	org_id 			integer references orgs,
+	person_title		character varying(7),
+	surname 			character varying(50) NOT NULL,
+	first_name 			character varying(50) NOT NULL,
+  	middle_name 		character varying(50),
+  	date_of_birth 		date,
+  	gender 			character varying(1),
+ 	phone				character varying(120),
+  	nationality 		character(2) NOT NULL,
+  	nation_of_birth 		character(2),
+  	place_of_birth		character varying(50),
+  	marital_status 		character varying(2),
+  	appointment_date 		date,
+ 	current_appointment 	date,
+  	exit_date 			date,
+  	bank_account 		character varying(32),
+  	picture_file 		character varying(32),
+  	active 			boolean NOT NULL DEFAULT true,
+  	language 			character varying(320),
+  	desg_code 			character varying(16),
+  	inc_mth 			character varying(16),
+  	interests 			text,
+  	objective 			text,
+  	details 			text,
+  	salary 			real,
+ 
+ 
+ 
+ 
+ 
+ 
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
- CREATE OR REPLACE FUNCTION ins_applications(
-    character varying,
-    character varying,
-    character varying)
-  RETURNS character varying AS
+CREATE OR REPLACE FUNCTION ins_applicants()
+RETURNS trigger AS
 $BODY$
 DECLARE
-	v_application_id		integer;
-	
-	reca					RECORD;
-	msg 					varchar(120);
+	rec 			RECORD;
+	v_entity_id		integer;
 BEGIN
-	SELECT application_id INTO v_application_id
-	FROM applications 
-	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
+	IF (TG_OP = 'INSERT') THEN
+		
+		IF(NEW.entity_id IS NULL) THEN
+			SELECT entity_id INTO v_entity_id
+			FROM entitys
+			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
+				
+			IF(v_entity_id is null)THEN
+				SELECT org_id INTO rec
+				FROM orgs WHERE (is_default = true);
+
+				NEW.entity_id := nextval('entitys_entity_id_seq');
+
+				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
+					primary_email, primary_telephone, function_role)
+				VALUES (NEW.entity_id, rec.org_id, 0, 
+					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
+					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
+			ELSE
+				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
+			END IF;
+		END IF;
+
+		INSERT INTO sys_emailed (table_id, table_name)
+		VALUES (NEW.entity_id, 'applicant');
+	ELSIF (TG_OP = 'UPDATE') THEN
+		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
+		WHERE entity_id = NEW.entity_id;
+
+			
+	END IF;
 	
-	SELECT org_id, entity_id, salary INTO reca
-	FROM applicants
-	WHERE (entity_id = $2::int);
-
-	IF(reca.entity_id is null) THEN
-		SELECT org_id, entity_id, salary as my_salary INTO reca
-		FROM members
-		WHERE (entity_id = $2::int);
-	END IF;
-
-	IF v_application_id is not null THEN
-		msg := 'There is another application for the post.';
-	ELSIF (reca.salary is null) OR (reca.expected_salary is null) THEN
-		msg := 'Kindly indicate your salary';
+	IF (NEW.approve_status = 'Approved') THEN 
+	INSERT INTO members(
+            entity_id,org_id, surname, first_name, middle_name,phone, 
+            gender,marital_status,salary,nationality,objective, details)
+    VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
+    New.applicant_phone,New.gender,New.marital_status,NEW.salary,NEW.nationality,NEW.objective, new.details);
 	ELSE
-		INSERT INTO applications (intake_id, org_id, entity_id, salary, approve_status)
-		VALUES ($1::int, reca.org_id, reca.entity_id, reca.my_salary, 'Completed');
-		msg := 'Added Job application';
 	END IF;
 
-	return msg;
-END $BODY$
-LANGUAGE plpgsql;
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_applicants
+  BEFORE INSERT OR UPDATE
+  ON applicants
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_applicants();
 
 
 -------- Data
