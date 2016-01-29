@@ -491,19 +491,14 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Approvals" key="45" h="500">
-		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals" params="table_name, table_id" where="(approve_status = 'Completed')">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status = 'Completed')" user="entity_id">
 			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Entity Name">approval_entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Workflow Phase ID">workflow_phase_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Level">approval_level</TEXTFIELD>
-			<CHECKBOX w="75" title="Notice">notice</CHECKBOX>
-			<TEXTFIELD w="75" title="Notice File">notice_file</TEXTFIELD>
-			<CHECKBOX w="75" title="Advice">advice</CHECKBOX>
-			<TEXTFIELD w="75" title="Advice File">advice_file</TEXTFIELD>
-			<TEXTFIELD w="75" title="Return Level">return_level</TEXTFIELD>
-			<TEXTFIELD w="75" title="Required Approvals">required_approvals</TEXTFIELD>
-			<TEXTFIELD w="75" title="Phase Narrative">phase_narrative</TEXTFIELD>
-			<CHECKBOX w="75" title="Use Reporting">use_reporting</CHECKBOX>
+			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approval_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Date">completion_date</TEXTTIMESTAMP>
 			<ACTIONS>
 				<ACTION fnct="upd_approvals" approval="2">Approve</ACTION>
@@ -618,11 +613,10 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="All Approvals" key="50" h="500">
-		<GRID name="All Approvals" keyfield="approval_id" table="vw_approvals" params="table_name, table_id">
+		<GRID name="All Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id">
 			<TEXTFIELD w="25" title="App. ID">approval_id</TEXTFIELD>
 			<TEXTFIELD w="25" title="ID">table_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="To">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Source">source_entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Group">approval_entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>
@@ -636,13 +630,32 @@
 				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
 				<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
 			</GRID>
+			<GRID name="Leave Approvals" keyfield="employee_leave_id" table="vw_employee_leave" viewfilter="table_name=employee_leave" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Leave Type">leave_type_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
+				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM new="false" name="Employee Leave" keyfield="employee_leave_id" table="employee_leave">
+					<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
+					<TEXTDATE w="150" title="Leave From" y="30" h="20" x="10">leave_from</TEXTDATE>
+					<TEXTDATE w="150" title="Leave To" y="30" h="20" x="290">leave_to</TEXTDATE>
+					<CHECKBOX w="150" title="Start Half Day" y="50" h="20" x="10">Start_Half_Day</CHECKBOX>
+					<CHECKBOX w="150" title="End Half Day" y="50" h="20" x="290">End_Half_Day</CHECKBOX>
+					<TEXTFIELD w="150" title="Leave Days" y="70" h="20" x="10">Leave_days</TEXTFIELD>
+					<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
+					<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<TEXTTIMESTAMP w="100" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTTIMESTAMP w="100" title="Completion Date">completion_date</TEXTTIMESTAMP>
 				<TEXTTIMESTAMP w="100" title="Approve Date">action_date</TEXTTIMESTAMP>
-				<BROWSER name="View Form" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes"></BROWSER>
+				<BROWSER name="View Form" linkfield="actionvalue" baseurl="http://localhost:8080/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes"></BROWSER>
 			</GRID>
 		</GRID>
 	</DESK>
