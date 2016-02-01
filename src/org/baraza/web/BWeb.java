@@ -783,6 +783,12 @@ public class BWeb {
 		String body = "";
 		wheresql = null;
 		sortby = null;
+		
+		// Check for license
+		/*if(!hasLicense()) {
+			body = "\t<div>Your need to register the system</div>\n";
+			return body;
+		}*/
 
 		BElement sview = null;
 		comboField = request.getParameter("field");
@@ -2112,8 +2118,6 @@ System.out.println("repository : " + repository);
 	}
 	
 	public boolean hasLicense() {
-		boolean isOkay = false;
-		
 		// Get the database ID
 		String dbName = db.getCatalogName();
 		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
@@ -2129,7 +2133,7 @@ System.out.println("repository : " + repository);
 		
 		lrs.close();
 		
-		return isOkay;
+		return signed;
 	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }

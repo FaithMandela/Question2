@@ -26,7 +26,6 @@
 	String userName = request.getRemoteUser();
 
 	BWeb web = new BWeb(dbconfig, xmlfile);
-	web.setUser(userIP, userName);
 	web.init(request);
 	web.setMainPage("application.jsp");
 

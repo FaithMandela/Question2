@@ -56,6 +56,7 @@ public class BLicense {
 	*/
 	public byte[] createLicense(String holder, String productKey, String MachineID, String databaseID) {
 		String licData = holder + "\n" + productKey  + "\n" + MachineID + "\n" + databaseID;
+
 		byte[] signedData = signData(keyPair, licData);
 		
 		return signedData;
@@ -63,7 +64,7 @@ public class BLicense {
 	
 	public boolean verifyLicense(String holder, String productKey, String MachineID, String databaseID, byte[] signedData, byte[] publicKey) {
 		String licData = holder + "\n" + productKey  + "\n" + MachineID + "\n" + databaseID;
-	
+		
 		boolean signed = verifyData(publicKey, signedData, licData);
 		
 		return signed;
@@ -83,10 +84,7 @@ public class BLicense {
 			
 			pair = keyGen.generateKeyPair();
 			PublicKey pub = pair.getPublic();			
-			PrivateKey priv = pair.getPrivate();
-			
-			System.out.println("BASE 10 : " + priv);
-			System.out.println("BASE 20 : " + pub);
+			PrivateKey priv = pair.getPrivate();			
 		} catch(NoSuchAlgorithmException ex) {
 			System.out.println("Public key generation error : " + ex);
 		} catch(NoSuchProviderException ex) {

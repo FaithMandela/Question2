@@ -66,18 +66,15 @@ public class BLicenseRegister extends HttpServlet {
 		// Get the database ID
 		String dbName = db.getCatalogName();
 		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
-System.out.println("DB ID : " + dbName + " : " + dbID);
 
 		// Get the organisation name and system identifier
-		Map<String, String> orgField = db.readFields("org_name, system_identifier", "orgs WHERE org_id = 0");
+		Map<String, String> orgField = db.readFields("org_name, system_key, system_identifier", "orgs WHERE org_id = 0");
 		String sysName = orgField.get("org_name");
 		String sysID = orgField.get("system_identifier");
 		if(sysID == null) {
 			sysID = UUID.randomUUID().toString();
 			db.executeQuery("UPDATE orgs SET system_identifier = '" + sysID + "' WHERE org_id = 0");
 		}
-System.out.println("System ID : " + sysName + " : " + dbID);
-
 
 		// Create the license
 		BLicense license = new BLicense();
