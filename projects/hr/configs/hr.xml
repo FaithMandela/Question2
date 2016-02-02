@@ -1331,7 +1331,7 @@
 				<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 			</FILES>
-			<JASPER name="CV" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_employees" file.sql="SELECT entity_name FROM entitys WHERE entity_id = " reportfile="cv_employees.jasper"></JASPER>
 		</GRID>
 		<GRID name="Education Class" keyfield="education_class_id" table="education_class">
 			<TEXTFIELD w="75" title="Education Class ID">education_class_id</TEXTFIELD>
