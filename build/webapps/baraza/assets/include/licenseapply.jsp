@@ -19,6 +19,6 @@
 		</div>			
 	</div>
 	<div class='col-md-3'>
-		<button class='form-control' id="licenseApply" name='licenseApply' value='Apply'><i class='fa  fa-save'></i> &nbsp; Apply</button>
+		<button class='btn btn-success i_tick icon small' id="licenseApply" name='licenseApply' type='button' value='Apply'><i class='fa  fa-save'></i> &nbsp; Apply</button>
 	</div>
 </div>

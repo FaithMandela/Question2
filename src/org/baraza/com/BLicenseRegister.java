@@ -87,13 +87,15 @@ public class BLicenseRegister extends HttpServlet {
 		String databaseID = request.getParameter("database_identifier");
 		
 		String mysql = "SELECT subscription_id, system_key, subscribed, subscribed_date FROM subscriptions "
-			+ "WHERE system_key = '" + sysKey + "'";
+			+ "WHERE (approve_status = 'Approved') AND (subscribed = false) "
+			+ "AND (system_key = '" + sysKey + "')";
 		BQuery rs = new BQuery(db, mysql);
 		if(rs.moveFirst()) {
 			BLicense license = new BLicense();
 			resp = license.createLicense(holder, productKey, MachineID, databaseID);
+			db.executeQuery("UPDATE subscriptions SET subscribed = true, subscribed_date = current_timestamp WHERE (system_key = '" + sysKey + "')");
 		} else {
-			resp = "";
+			resp = "ERROR";
 		}
 		rs.close();
 				
@@ -102,11 +104,12 @@ public class BLicenseRegister extends HttpServlet {
 	
 	private String getLicense(BDB db, String remoteAddr, String remoteUser, String orgName, String sysKey) {
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
-		jshd.add("error", false);
-		jshd.add("msg", "Registred okay");
+		jshd.add("error", true);
+		jshd.add("msg", "License regitration failed");
+
 		
-		if((orgName == null) || (sysKey == null)) {
-			jshd.add("error", false);
+		if((orgName == null) || (sysKey == null) || (orgName.trim().length() < 2) ||  (sysKey.trim().length() < 32)) {
+			jshd.add("error", true);
 			jshd.add("msg", "You must enter a valid organization name and system key");
 
 			JsonObject jsObj = jshd.build();
@@ -115,6 +118,10 @@ public class BLicenseRegister extends HttpServlet {
 		
 		// Send these parameters to the server
 		try {		
+			// Update the system_key and org_name
+			db.executeQuery("UPDATE orgs SET system_key = '" + sysKey + "' WHERE org_id = 0");
+			db.executeQuery("UPDATE orgs SET org_name = '" + orgName + "' WHERE org_id = 0");
+
 			// Get the organisation name, system key and system identifier
 			Map<String, String> params = db.readFields("org_name, system_key, system_identifier", "orgs WHERE org_id = 0");
 			String sysID = params.get("system_identifier");
@@ -145,7 +152,12 @@ System.out.println("Connecting IP : " + soc.getLocalAddress().getHostAddress());
 			params.put("mac_address", macAddr);
 			
 			String licStr = net.sendPost(myURL, params);
-			if(licStr != null) saveLicense(db, licStr);
+			if(licStr != null) {
+				if(saveLicense(db, licStr)) {
+					jshd.add("error", false);
+					jshd.add("msg", "Registred okay, refresh page");
+				}
+			}
 		} catch (MalformedURLException ex) {
 			System.out.println("License Registration : " + ex);
 		} catch (UnknownHostException ex) {
@@ -158,15 +170,13 @@ System.out.println("Connecting IP : " + soc.getLocalAddress().getHostAddress());
 		return jsObj.toString();
 	}
 	
-	private void saveLicense(BDB db, String licStr) {
-		// Create the license
+	private boolean saveLicense(BDB db, String licStr) {
+		boolean isOkay = false;
 		
 		String lics[] = licStr.split("===================");
 		
 		if(lics.length == 2) {
 			Base64 decd = new Base64();
-System.out.println("License : " + lics[0]);
-System.out.println("Public Key : " + lics[1]);
 			
 			// Save the data
 			BQuery rs = new BQuery(db, "SELECT org_id, public_key, license FROM orgs WHERE org_id = 0");
@@ -176,7 +186,11 @@ System.out.println("Public Key : " + lics[1]);
 			rs.updateBytes("public_key", decd.decodeBase64(lics[1]));
 			rs.recSave();
 			rs.close();
+			
+			isOkay = true;
 		}
+		
+		return isOkay;
 	}
 
 	

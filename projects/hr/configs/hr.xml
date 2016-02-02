@@ -16,6 +16,7 @@
 			<MENU name="Petty Cash" role="pettycash">90</MENU>
 			<MENU name="Transaction Ledger" role="finance">190</MENU>
 			<MENU name="Client Forms" role="forms">72</MENU>
+			<MENU name="Subscription" role="subscription">215</MENU>
 			<MENU name="Approvals" role="staff">83</MENU>
 		</MENU>
 		<MENU name="Internship" role="admin,hr">
@@ -4064,5 +4065,27 @@
 			</FORM>
 		</GRID>
 		<JASPER name="Advance Statement" user="filterid" reportfile="vw_advance_statement.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Subscription" key="215" h="500">
+		<FORMVIEW name="Subscription" keyfield="industry_id" table="vw_subscriptions" user="entity_id">
+			<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Industry Name">industry_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Address">business_address</TEXTFIELD>
+			<TEXTFIELD w="75" title="City">city</TEXTFIELD>
+			<TEXTFIELD w="75" title="State">state</TEXTFIELD>
+			<TEXTFIELD w="75" title="Number Of Employees">number_of_employees</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">telephone</TEXTFIELD>
+			<TEXTFIELD w="75" title="Website">website</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Contact">primary_contact</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job Title">job_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="System Key">system_key</TEXTFIELD>
+			<CHECKBOX w="75" title="Subscribed">subscribed</CHECKBOX>
+			<TEXTTIMESTAMP w="75" title="Subscribed Date">subscribed_date</TEXTTIMESTAMP>
+		</FORMVIEW>
 	</DESK>
 </APP>

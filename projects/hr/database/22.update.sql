@@ -1,11 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-ALTER TABLE subscriptions ADD	system_key				varchar(64);
-ALTER TABLE subscriptions ADD	subscribed				boolean;
-ALTER TABLE subscriptions ADD	subscribed_date			timestamp;
-
-UPDATE subscriptions SET system_key = uuid_generate_v4();
-
 
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
@@ -64,7 +58,6 @@ BEGIN
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
-			
 	END IF;
 
 	RETURN NEW;
