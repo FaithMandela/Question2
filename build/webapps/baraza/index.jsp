@@ -307,7 +307,10 @@
 						</div>
 
 						<div class="portlet-body" id="portletBody" style="min-height:360px;">
-								<%= web.getBody(request, reportPath) %>
+							<%= web.getBody(request, reportPath) %>
+							<%if(!web.getLicense()) {%>
+							<%@ include file="./assets/include/licenseapply.jsp" %>
+							<% } %>
 						</div>
 
 						<%= web.getFilters() %>
@@ -822,6 +825,24 @@ console.log(data.result.message);
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
 
+<%if(!web.getLicense()) {%>
+
+	$('#licenseApply').click(function(){
+		console.log('BASE 5 : ');
+
+        var orgName = $("#org_name").val();
+        var sysKey = $("#sys_key").val();
+
+        $.post("registerlicense", {org_name: orgName, sys_key: sysKey}, function(data) {
+            if(data.error == true) {
+                toastr['error'](data.msg, "Error");
+            } else if(data.error == false) {
+                toastr['success'](data.msg, "Ok");
+            }
+        }, "JSON");
+	});
+
+<% } %>
 
 </script>
 <!-- END JAVASCRIPTS -->

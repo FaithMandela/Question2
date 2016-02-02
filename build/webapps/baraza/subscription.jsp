@@ -5,7 +5,7 @@
 <%
 	ServletContext context = getServletContext();
 	String dbconfig = "java:/comp/env/jdbc/database";
-	String xmlcnf = "application.xml";
+	String xmlcnf = "subscription.xml";
 	if(request.getParameter("logoff") == null) {
 		session.setAttribute("xmlcnf", xmlcnf);
 	} else {
@@ -26,8 +26,9 @@
 	String userName = request.getRemoteUser();
 
 	BWeb web = new BWeb(dbconfig, xmlfile);
+	web.setUser(userIP, userName);
 	web.init(request);
-	web.setMainPage("application.jsp");
+	web.setMainPage("subscription.jsp");
 
 	String entryformid = null;
 	String action = request.getParameter("action");
@@ -132,11 +133,6 @@
     <link href="jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" rel="search" type="text/css" />
     <link href="jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="search" type="text/css" />
 -->
-<style type="text/css">
-    
-</style>
-        
-        
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
@@ -158,7 +154,7 @@
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
 			<a href="index.jsp?xml=hr.xml">
-			<img src="./assets/logos/logo_header.png" alt="logo" style="margin: 10px 10px 0 10px; height: 45px;" class="logo-default"/>
+			 <img src="./assets/logos/logo_header.png" alt="logo" style="margin: 20px 10px 0 10px; width: 107px;" class="logo-default"/>
 			</a>
 			<div class="menu-toggler sidebar-toggler">
 				<!-- DOC: Remove the above "hide" to enable the sidebar toggler button on header -->
@@ -201,29 +197,20 @@
 
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
-	<!-- BEGIN CONTENT -->
-    
     <div class="page-sidebar-wrapper">
 		<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
 		<!-- DOC: Change data-auto-speed="200" to adjust the sub menu slide up/down speed -->
 		<div class="page-sidebar navbar-collapse collapse">
-            <%@ include file="./assets/include/application.jsp" %>
+            <%@ include file="./assets/include/subscription_guide.jsp" %>
 			<!-- END SIDEBAR MENU -->
 		</div>
 	</div>
-    
-    
-    
-    
-    
-    
-    
-    
+	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
 		<div class="page-content">
 
 			<!-- BEGIN PAGE CONTENT-->
-			<form id="baraza" name="baraza" method="post" action="application.jsp" data-confirm-send="false" data-ajax="false">
+			<form id="baraza" name="baraza" method="post" action="subscription.jsp" data-confirm-send="false" data-ajax="false">
 				<%= web.getHiddenValues() %>
 			<div class="row">
 				<div class="col-md-12" >
@@ -231,7 +218,7 @@
 					<% if(opResult != null) out.println("<div style='color:#FF0000'>" + opResult + "</div>"); %>
 					<%= web.getSaveMsg() %>
 
-					<div class="portlet box green-seagreen">
+					<div class="portlet box purple">
 						<div class="portlet-title">
 							<div class="caption">
 								<i class="fa fa-cogs"></i><%= web.getViewName() %>

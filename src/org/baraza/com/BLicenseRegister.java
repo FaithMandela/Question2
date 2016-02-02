@@ -9,15 +9,28 @@
 package org.baraza.com;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.UUID;
+import java.util.Enumeration;
+import java.net.URL;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.net.UnknownHostException;
+import java.net.MalformedURLException;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
+import org.apache.commons.codec.binary.Base64;
 
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
@@ -26,20 +39,18 @@ import org.baraza.utils.BNetwork;
 
 public class BLicenseRegister extends HttpServlet {
 
-	BDB db = null;
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response)  {
 		doGet(request, response);
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) { 
-		response.setContentType("text/html");
 		PrintWriter out = null;
 		try { out = response.getWriter(); } catch(IOException ex) {}
 		String resp = "";
 
 		String dbconfig = "java:/comp/env/jdbc/database";
-		db = new BDB(dbconfig);
+		BDB db = new BDB(dbconfig);
 		// If there is no DB connection
 		if(db == null) {
 			resp = "DB access error";
@@ -47,53 +58,127 @@ public class BLicenseRegister extends HttpServlet {
 			return;
 		}
 		
-		getLicense(request.getRemoteAddr(), request.getRemoteUser());
+		Enumeration e = request.getParameterNames();
+        while (e.hasMoreElements()) {
+			String ce = (String)e.nextElement();
+			System.out.println(ce + ":" + request.getParameter(ce));
+		}
 		
+		String systemKey = request.getParameter("system_key");
+		String orgName = request.getParameter("org_name");
+		String sysKey = request.getParameter("sys_key");
+		if(systemKey == null) {
+			response.setContentType("application/json;charset=\"utf-8\"");
+			resp = getLicense(db, request.getRemoteAddr(), request.getRemoteUser(), orgName, sysKey);
+		} else {
+			response.setContentType("text/html");
+			resp = setLicense(db, systemKey, request);
+		}
 		 
 		out.println(resp);
 		db.close();
 	}
 	
-	private void getLicense(String remoteAddr, String remoteUser) {
-		String orgName = "";
+	private String setLicense(BDB db, String sysKey, HttpServletRequest request) {
+		String resp = "";
+		String holder = request.getParameter("org_name");
+		String productKey = request.getParameter("system_identifier");
+		String MachineID = request.getParameter("mac_address");
+		String databaseID = request.getParameter("database_identifier");
 		
-		// Get MAC address and save on database
-		BNetwork net = new BNetwork();
-		String macAddr = net.getMACAddress(remoteAddr);
-		if(macAddr == null) return;
-		db.executeQuery("UPDATE orgs SET MAC_address = '" + macAddr + "' WHERE org_id = 0");
-		
-		// Get the database ID
-		String dbName = db.getCatalogName();
-		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
-System.out.println("DB ID : " + dbName + " : " + dbID);
-
-		// Get the organisation name and system identifier
-		Map<String, String> orgField = db.readFields("org_name, system_identifier", "orgs WHERE org_id = 0");
-		String sysName = orgField.get("org_name");
-		String sysID = orgField.get("system_identifier");
-		if(sysID == null) {
-			sysID = UUID.randomUUID().toString();
-			db.executeQuery("UPDATE orgs SET system_identifier = '" + sysID + "' WHERE org_id = 0");
+		String mysql = "SELECT subscription_id, system_key, subscribed, subscribed_date FROM subscriptions "
+			+ "WHERE system_key = '" + sysKey + "'";
+		BQuery rs = new BQuery(db, mysql);
+		if(rs.moveFirst()) {
+			BLicense license = new BLicense();
+			resp = license.createLicense(holder, productKey, MachineID, databaseID);
+		} else {
+			resp = "";
 		}
-System.out.println("System ID : " + sysName + " : " + dbID);
-
-
-		// Create the license
-		BLicense license = new BLicense();
-		byte[] lic = license.createLicense(sysName, sysID, macAddr, dbID);
-		
-		// Save the data
-		BQuery rs = new BQuery(db, "SELECT org_id, public_key, license FROM orgs WHERE org_id = 0");
-		rs.moveFirst();
-		rs.recEdit();
-		rs.updateBytes("public_key", license.getPublicKey());
-		rs.updateBytes("license", lic);
-		rs.recSave();
 		rs.close();
-		
-		
+				
+		return resp;
 	}
+	
+	private String getLicense(BDB db, String remoteAddr, String remoteUser, String orgName, String sysKey) {
+		JsonObjectBuilder jshd = Json.createObjectBuilder();
+		jshd.add("error", false);
+		jshd.add("msg", "Registred okay");
+		
+		if((orgName == null) || (sysKey == null)) {
+			jshd.add("error", false);
+			jshd.add("msg", "You must enter a valid organization name and system key");
+
+			JsonObject jsObj = jshd.build();
+			return jsObj.toString();
+		}
+		
+		// Send these parameters to the server
+		try {		
+			// Get the organisation name, system key and system identifier
+			Map<String, String> params = db.readFields("org_name, system_key, system_identifier", "orgs WHERE org_id = 0");
+			String sysID = params.get("system_identifier");
+			if(sysID == null) {
+				sysID = UUID.randomUUID().toString();
+				db.executeQuery("UPDATE orgs SET system_identifier = '" + sysID + "' WHERE org_id = 0");
+				params.put("system_identifier", sysID);
+			}
+			
+			// Get the database ID
+			String dbName = db.getCatalogName();
+			String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
+			params.put("database_identifier", dbID);
+		
+			// Get the connecting interface MAC address
+			//URL myURL = new URL("http://hcm.openbaraza.org/hcm/registerlicense");
+			URL myURL = new URL("http://192.168.0.7:9090/hr/registerlicense");
+			InetAddress hostAddress = InetAddress.getByName(myURL.getHost());
+			Socket soc = new Socket(hostAddress, 80);
+System.out.println("Connecting IP : " + soc.getLocalAddress().getHostAddress());
+			// Get MAC address and save on database
+			BNetwork net = new BNetwork();
+			String macAddr = net.getMACAddress(soc.getLocalAddress().getHostAddress());
+			soc.close();
+			
+			if(macAddr == null) return null;
+			db.executeQuery("UPDATE orgs SET mac_address = '" + macAddr + "' WHERE org_id = 0");
+			params.put("mac_address", macAddr);
+			
+			String licStr = net.sendPost(myURL, params);
+			if(licStr != null) saveLicense(db, licStr);
+		} catch (MalformedURLException ex) {
+			System.out.println("License Registration : " + ex);
+		} catch (UnknownHostException ex) {
+			System.out.println("License Registration : " + ex);
+		} catch (IOException ex) {
+			System.out.println("License Registration : " + ex);
+		}
+		
+		JsonObject jsObj = jshd.build();
+		return jsObj.toString();
+	}
+	
+	private void saveLicense(BDB db, String licStr) {
+		// Create the license
+		
+		String lics[] = licStr.split("===================");
+		
+		if(lics.length == 2) {
+			Base64 decd = new Base64();
+System.out.println("License : " + lics[0]);
+System.out.println("Public Key : " + lics[1]);
+			
+			// Save the data
+			BQuery rs = new BQuery(db, "SELECT org_id, public_key, license FROM orgs WHERE org_id = 0");
+			rs.moveFirst();
+			rs.recEdit();
+			rs.updateBytes("license", decd.decodeBase64(lics[0]));
+			rs.updateBytes("public_key", decd.decodeBase64(lics[1]));
+			rs.recSave();
+			rs.close();
+		}
+	}
+
 	
 
 }

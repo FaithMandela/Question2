@@ -66,9 +66,9 @@ CREATE TABLE orgs (
 	logo					varchar(50),
 	pin 					varchar(50),
 
-	system_key				varchar(32),
-	system_identifier		varchar(32),
-	MAC_address				varchar(32),
+	system_key				varchar(64),
+	system_identifier		varchar(64),
+	MAC_address				varchar(64),
 	public_key				bytea,
 	license					bytea,
 

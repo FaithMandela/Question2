@@ -65,6 +65,7 @@ public class BWeb {
 	Map<String, String> params;
 
 	boolean selectAll = false;
+	boolean isLicense = true;
 	String[] deskTypes = {"CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
@@ -783,6 +784,9 @@ public class BWeb {
 		String body = "";
 		wheresql = null;
 		sortby = null;
+		
+		// Check for license
+		//if(!hasLicense()) return "";
 
 		BElement sview = null;
 		comboField = request.getParameter("field");
@@ -2111,9 +2115,11 @@ System.out.println("repository : " + repository);
 		return hasSubs;
 	}
 	
+	public boolean getLicense() {
+		return isLicense;
+	}
+	
 	public boolean hasLicense() {
-		boolean isOkay = false;
-		
 		// Get the database ID
 		String dbName = db.getCatalogName();
 		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
@@ -2125,11 +2131,11 @@ System.out.println("repository : " + repository);
 		lrs.moveFirst();
 		
 		BLicense lic = new BLicense();
-		boolean signed = lic.verifyLicense(lrs.getString("org_name"), lrs.getString("system_identifier"), lrs.getString("MAC_address"), dbID, lrs.getBytes("license"), lrs.getBytes("public_key"));
+		isLicense = lic.verifyLicense(lrs.getString("org_name"), lrs.getString("system_identifier"), lrs.getString("MAC_address"), dbID, lrs.getBytes("license"), lrs.getBytes("public_key"));
 		
 		lrs.close();
 		
-		return isOkay;
+		return isLicense;
 	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }

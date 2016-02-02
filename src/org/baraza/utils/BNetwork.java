@@ -8,17 +8,24 @@
  */
 package org.baraza.utils;
 
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
+import java.io.DataOutputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.net.URL;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.HttpURLConnection;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class BNetwork {
 
@@ -46,20 +53,32 @@ public class BNetwork {
 	}
 	
 	public String getMACAddress(String networkIP) {
+		String sb = null;
+		
+		try {
+			InetAddress ipAddr = InetAddress.getByName(networkIP);
+			if(ipAddr == null) return null;
+			
+			sb = getMACAddress(ipAddr);
+		} catch(UnknownHostException ex) {
+			System.out.println("Error on MACAddress " + ex);
+		}
+		
+		return sb;
+	}
+
+	
+	public String getMACAddress(InetAddress ipAddr) {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			InetAddress ip = InetAddress.getByName(networkIP);
-			if(ip == null) return null;
-			NetworkInterface netint = NetworkInterface.getByInetAddress(ip);
+			NetworkInterface netint = NetworkInterface.getByInetAddress(ipAddr);
 			if(netint == null) return null;
 			if(netint.getHardwareAddress() == null) return null;
 				
 			byte[] mac = netint.getHardwareAddress();
 			for (int i = 0; i < mac.length; i++) sb.append(String.format("%02X%s", mac[i], ""));
 			System.out.println("Current MAC address : " + sb.toString());
-		} catch(UnknownHostException ex) {
-			System.out.println("Error on MACAddress " + ex);
 		} catch(SocketException ex) {
 			System.out.println("Error on MACAddress " + ex);
 		}
@@ -108,5 +127,49 @@ public class BNetwork {
 			sb.append(String.format("%02X%s", mac[i], ""));		
 		}
 		System.out.println("Current MAC address : " + sb.toString());
+	}
+	
+	
+	// HTTP POST request
+	public String sendPost(URL myURL, Map<String, String> params) {
+		StringBuffer response = new StringBuffer();
+		try {
+			HttpURLConnection con = (HttpURLConnection) myURL.openConnection();
+			
+			String urlParameters = null;
+			for(String param : params.keySet()) {
+				if(urlParameters==null) urlParameters = param + "=" + params.get(param);
+				else urlParameters += "&" + param + "=" + params.get(param);
+			}
+			
+			//add reuqest header
+			con.setRequestMethod("POST");
+			con.setRequestProperty("User-Agent", "Mozilla/5.0");
+			con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+			// Send post request
+			con.setDoOutput(true);
+			DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+			wr.writeBytes(urlParameters);
+			wr.flush();
+			wr.close();
+
+			int responseCode = con.getResponseCode();
+			System.out.println("\nSending 'POST' request to URL : " + myURL.toString());
+			System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			while ((inputLine = in.readLine()) != null) response.append(inputLine);
+			in.close();
+
+			//print result
+			System.out.println(response.toString());
+		} catch(IOException ex) {
+			System.out.println("BNetwork sendPost : " + ex);
+		}
+		
+		return response.toString();
 	}
 }
