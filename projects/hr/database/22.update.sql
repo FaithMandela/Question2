@@ -1,6 +1,8 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 ALTER TABLE subscriptions ADD	system_key				varchar(64);
+ALTER TABLE subscriptions ADD	subscribed				boolean;
+ALTER TABLE subscriptions ADD	subscribed_date			timestamp;
 
 UPDATE subscriptions SET system_key = uuid_generate_v4();
 
