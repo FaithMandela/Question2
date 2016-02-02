@@ -1020,6 +1020,7 @@ CREATE VIEW vw_employee_leave_types AS
 	FROM employee_leave_types INNER JOIN entitys ON employee_leave_types.entity_id = entitys.entity_id
 		INNER JOIN leave_types ON employee_leave_types.leave_type_id = leave_types.leave_type_id;
 
+		
 CREATE VIEW vw_employee_leave AS
 	SELECT entitys.entity_id, entitys.entity_name, leave_types.leave_type_id, leave_types.leave_type_name, 
 		contact_entity.entity_name as contact_name,
@@ -1055,7 +1056,9 @@ CREATE VIEW vw_intake AS
 		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
 		
 		intake.org_id, intake.intake_id, intake.opening_date, intake.closing_date, intake.positions, intake.contract, 
-		intake.contract_period, intake.details				
+		intake.contract_period, intake.details,
+		
+		(vw_department_roles.department_name || ', ' || vw_department_roles.department_role_name || ', ' || to_char(intake.opening_date, 'YYYY, Mon')) as intake_disp
 	FROM intake INNER JOIN vw_department_roles ON intake.department_role_id = vw_department_roles.department_role_id
 		INNER JOIN locations ON intake.location_id = locations.location_id
 		INNER JOIN pay_groups ON intake.pay_group_id = pay_groups.pay_group_id
@@ -1160,6 +1163,7 @@ CREATE VIEW vw_employee_objectives AS
 CREATE VIEW vw_objective_year AS
 	SELECT vw_employee_objectives.org_id, vw_employee_objectives.objective_year
 	FROM vw_employee_objectives
+	WHERE vw_employee_objectives.objective_year is not null
 	GROUP BY vw_employee_objectives.org_id, vw_employee_objectives.objective_year;
 
 CREATE VIEW vw_objectives AS
@@ -1208,6 +1212,7 @@ CREATE VIEW vw_job_reviews AS
 CREATE VIEW vw_review_year AS
 	SELECT vw_job_reviews.org_id, vw_job_reviews.review_year
 	FROM vw_job_reviews
+	WHERE vw_job_reviews.review_year is not null
 	GROUP BY vw_job_reviews.org_id, vw_job_reviews.review_year;
 
 CREATE VIEW vw_all_job_reviews AS
@@ -1332,6 +1337,18 @@ CREATE OR REPLACE FUNCTION get_review_category(varchar(16)) RETURNS integer AS $
     SELECT review_category_id
 	FROM job_reviews
 	WHERE (job_review_id = CAST($1 as int));
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_country(int) RETURNS char(2) AS $$
+    SELECT default_country_id::varchar(12)
+	FROM orgs
+	WHERE (org_id = $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_currency(int) RETURNS int AS $$
+    SELECT currency_id
+	FROM orgs
+	WHERE (org_id = $1);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$

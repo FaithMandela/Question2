@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="NHIF" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a93c0c47-012f-4e29-93a6-7a7152fa6439">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -69,26 +69,51 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="tax_type_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_employees.employee_name, vw_orgs.org_name, vw_period_tax_types.tax_type_id,
- vw_period_tax_rates.tax_rate, vw_period_tax_types.period_month, vw_employees .identity_card,vw_employees.employee_id, vw_period_tax_types.tax_type_name, vw_orgs.pin
-from vw_period_tax_types
-full outer join vw_employees ON vw_period_tax_types.org_id = vw_employees.org_id
-full outer join payroll_ledger on vw_period_tax_types.period_id = payroll_ledger.period_id
-full outer join vw_period_tax_rates on vw_period_tax_types.period_id= vw_period_tax_rates.period_id
-full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_type_name= 'NSSF';]]>
+		<![CDATA[
+SELECT vw_employee_tax_types.tax_type_name, vw_employee_tax_types.period_year, vw_employee_tax_types.period_month, vw_employee_tax_types.employee_id,
+vw_employee_tax_types.tax_identification, vw_employee_tax_types.identity_card,
+vw_employee_tax_types.entity_id, vw_employee_tax_types.entity_name,
+vw_employee_tax_types.surname, vw_employee_tax_types.first_name,
+vw_employee_tax_types.amount, vw_employee_tax_types.additional, vw_employee_tax_types.employer,
+vw_employee_tax_types.base_amount, vw_employee_tax_types.base_additional,
+vw_employee_tax_types.base_employer,
+(vw_employee_tax_types.amount + vw_employee_tax_types.additional + vw_employee_tax_types.employer) as total_payable,
+
+vw_employee_tax_types.tax_type_number, orgs.org_name
+
+FROM vw_employee_tax_types INNER JOIN orgs ON vw_employee_tax_types.org_id = orgs.org_id
+
+WHERE (tax_type_id = '$P!{tax_type_id}')
+AND (period_id = '$P!{filterid}')
+$P!{organd}
+
+ORDER BY  vw_employee_tax_types.entity_id]]>
 	</queryString>
-	<field name="employee_name" class="java.lang.String"/>
-	<field name="org_name" class="java.lang.String"/>
-	<field name="tax_type_id" class="java.lang.Integer"/>
-	<field name="tax_rate" class="java.lang.Double"/>
-	<field name="period_month" class="java.lang.String"/>
-	<field name="identity_card" class="java.lang.String"/>
-	<field name="employee_id" class="java.lang.String"/>
 	<field name="tax_type_name" class="java.lang.String"/>
-	<field name="pin" class="java.lang.String"/>
+	<field name="period_year" class="java.lang.String"/>
+	<field name="period_month" class="java.lang.String"/>
+	<field name="employee_id" class="java.lang.String"/>
+	<field name="tax_identification" class="java.lang.String"/>
+	<field name="identity_card" class="java.lang.String"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="surname" class="java.lang.String"/>
+	<field name="first_name" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="additional" class="java.lang.Double"/>
+	<field name="employer" class="java.lang.Double"/>
+	<field name="base_amount" class="java.lang.Double"/>
+	<field name="base_additional" class="java.lang.Double"/>
+	<field name="base_employer" class="java.lang.Double"/>
+	<field name="total_payable" class="java.lang.Double"/>
+	<field name="tax_type_number" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
 	<variable name="total" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{tax_rate}]]></variableExpression>
+		<variableExpression><![CDATA[$F{total_payable}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -135,7 +160,7 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" isBold="false" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[  $F{org_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" x="0" y="80" width="98" height="16" isPrintWhenDetailOverflows="true" forecolor="#000000" uuid="30c80396-5de5-4691-a293-09998878ba73"/>
@@ -163,7 +188,7 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10" isBold="false" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[  $F{pin}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tax_type_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" x="0" y="35" width="98" height="17" isPrintWhenDetailOverflows="true" forecolor="#000000" uuid="00dc968e-f64c-4f14-873c-18aff2f888ac"/>
@@ -189,9 +214,9 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
-					<font size="10" isBold="false" isUnderline="false" isPdfEmbedded="true"/>
+					<font fontName="Times New Roman" size="10" isBold="false" isUnderline="false" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[  new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{period_year} + ", " + $F{period_month}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -210,7 +235,7 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 					<rightPen lineWidth="0.3"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[ PERSONAL NUMBER]]></text>
 			</staticText>
@@ -224,12 +249,12 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL AMOUNT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="453" y="-1" width="102" height="23" forecolor="#000000" uuid="cd757612-9171-484d-b359-c8acc97288da"/>
+				<reportElement style="Column header" x="453" y="-1" width="101" height="23" forecolor="#000000" uuid="cd757612-9171-484d-b359-c8acc97288da"/>
 				<box>
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
@@ -238,7 +263,7 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[NATIONAL I.D NO.]]></text>
 			</staticText>
@@ -252,7 +277,7 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[FUND MEMBERSHIP NUMBER]]></text>
 			</staticText>
@@ -266,65 +291,65 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[EMPLOYEE'S NAME]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="32" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="453" y="0" width="101" height="15" uuid="5ce66c19-d934-46e5-a2e7-d4da379e80d9"/>
 				<box>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{identity_card}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="363" y="0" width="90" height="15" uuid="3f372a4d-8caf-4389-b05c-76679795c2c6"/>
 				<box>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tax_rate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_payable}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="263" y="0" width="100" height="15" uuid="b4499500-8aa0-424e-ab8e-990f084c888f"/>
 				<box>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tax_type_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tax_identification}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="98" y="0" width="165" height="15" uuid="49aef86e-7ff5-4d87-bf14-0ec3741f958d"/>
 				<box>
-					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="1.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[  $F{employee_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="0" y="0" width="98" height="15" uuid="10206a40-7f20-4e78-9c8b-85c07157dfef"/>
@@ -335,55 +360,28 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[  $F{employee_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="1" splitType="Stretch">
-			<textField>
-				<reportElement x="364" y="-17" width="90" height="17" uuid="d24dbfe7-ba60-41b3-a7ba-6005822fd2a6"/>
-				<box>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="263" y="-17" width="101" height="17" uuid="ec6cbbfa-3ff1-4ce2-ae25-8622bb4e74d5"/>
-				<box>
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[TOTAL]]></text>
-			</staticText>
-		</band>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-22" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="0b4d26a6-336b-4751-93fa-c074b7ddde41"/>
+				<reportElement mode="Opaque" x="0" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="0b4d26a6-336b-4751-93fa-c074b7ddde41"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="05d6b109-46f7-4ea2-a822-8dc5a99f3e64"/>
+					<reportElement style="Column header" x="510" y="0" width="40" height="20" forecolor="#736343" uuid="05d6b109-46f7-4ea2-a822-8dc5a99f3e64"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="0ad4a0bd-3e6f-42a5-9ed2-da414271775c"/>
+					<reportElement style="Column header" x="430" y="0" width="80" height="20" forecolor="#736343" uuid="0ad4a0bd-3e6f-42a5-9ed2-da414271775c"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
@@ -400,6 +398,33 @@ full outer join vw_orgs on vw_period_tax_types.org_id= vw_orgs.org_id where tax_
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement x="363" y="0" width="90" height="17" uuid="d24dbfe7-ba60-41b3-a7ba-6005822fd2a6"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="262" y="0" width="101" height="17" uuid="ec6cbbfa-3ff1-4ce2-ae25-8622bb4e74d5"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>

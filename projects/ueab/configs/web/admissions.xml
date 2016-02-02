@@ -11,9 +11,10 @@
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Application Forms" key="1" h="500">
-		<GRID name="Applied Forms" keyfield="entry_form_id" table="vw_entry_forms" where="(approve_status = 'Draft')" user="entity_id">
+		<GRID name="Application Forms" keyfield="entry_form_id" table="vw_entry_forms" user="entity_id">
 			<TEXTFIELD w="350" title="Form Name">form_name</TEXTFIELD>
 			<TEXTTIMESTAMP w="150" title="Application Date">application_date</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="100" title="Completion Date">completion_date</TEXTTIMESTAMP>
 			<BROWSER title="Edit Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="form.jsp?action=ENTRYFORM" blankpage="true">entry_form_id</BROWSER>
 			<FILES username="root" repository="http://localhost:8080/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" noorg="true" password="enter">
 				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
@@ -21,13 +22,6 @@
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
-		</GRID>
-		<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" where="(approve_status != 'Draft')" user="entity_id">
-			<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<TEXTTIMESTAMP w="100" title="Application Date">application_date</TEXTTIMESTAMP>
-			<TEXTTIMESTAMP w="100" title="Completion Date">completion_date</TEXTTIMESTAMP>
-			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes">entry_form_id</BROWSER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="School" key="2" h="500">

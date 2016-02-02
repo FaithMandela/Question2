@@ -48,7 +48,7 @@
 <body class="page-md login" id="login">
 <!-- BEGIN LOGO -->
 <div class="logo">
-	<a href="index.jsp">
+	<a href="http://openbaraza.org/">
     <img src="${contextPath}/assets/logos/logo.png" alt=""/>
 	</a>
 </div>
@@ -64,8 +64,7 @@
 		<h3 class="form-title"><%= pageContext.getServletContext().getInitParameter("login_title") %></h3>
 		<div class="alert alert-danger display-hide">
 			<button class="close" data-close="alert"></button>
-			<span>
-			Enter  username and password. </span>
+			<span>Enter  username and password. </span>
 		</div>
 		<div class="form-group">
 			<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->

@@ -1,26 +1,22 @@
-<%@ page import="org.baraza.web.*" %>
+<!DOCTYPE html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<c:set var="mainPage" value="forms.jsp" scope="page" />
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="org.baraza.web.BWebForms" %>
+<%@ page import="org.baraza.xml.BElement" %>
 
 <%
+	ServletContext context = getServletContext();
 	String dbconfig = "java:/comp/env/jdbc/database";
-	String entryformid = null;
-	String action = request.getParameter("action");
-	String value = request.getParameter("value");
-	String post = request.getParameter("post");
-	String process = request.getParameter("process");
-	String reportexport = request.getParameter("reportexport");
 
-	String contentType = request.getContentType();
-	if (contentType != null) {
-		if (contentType.indexOf("multipart/form-data") >= 0) {
-			BForms uploadForms = new BForms(dbconfig);
-			entryformid = uploadForms.uploadFile(request);
-			uploadForms.close();
+	String userIP = request.getRemoteAddr();
+	String userName = request.getRemoteUser();
 
-			action = "ENTRYFORM";
-		}
-	}
-
-	BForms forms = new BForms(dbconfig);
+	BWebForms form = new BWebForms(dbconfig);
+	String formData = form.getWebForm(request.getParameterMap());
+	String formTitle = form.getTitle();
 %>
 
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
@@ -34,8 +30,9 @@
 	<title><%= pageContext.getServletContext().getInitParameter("web_title") %></title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta content="width=device-width, initial-scale=1" name="viewport"/>
-	<meta content="" name="description"/>
-	<meta content="" name="author"/>
+	<meta content="Open Baraza Framework" name="description"/>
+	<meta content="Open Baraza" name="author"/>
+
 	<!-- BEGIN GLOBAL MANDATORY STYLES -->
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
 	<link href="./assets/global/plugins/font-awesome/css/font-awesome.min.css"  rel="stylesheet" type="text/css"/>
@@ -61,55 +58,122 @@
 	<link href="./assets/global/plugins/jquery-tags-input/jquery.tagsinput.css" rel="stylesheet" type="text/css"/>
     <link href="./assets/global/plugins/select2/select2.css" rel="stylesheet" type="text/css" />
     <link href="./assets/global/plugins/jquery-multi-select/css/multi-select.css" rel="stylesheet" type="text/css" />
+    <link href="./assets/global/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet"/>
+    <link href="./assets/global/plugins/bootstrap-toastr/toastr.min.css" rel="stylesheet" type="text/css"/>
+    <link href="./assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.css" rel="stylesheet" type="text/css"/>
+    <link href="./assets/admin/pages/css/profile.css" rel="stylesheet" type="text/css"/>
 
+	<link href="./assets/global/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css"/>
+
+
+    <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+    <link href="./assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet">
 
 	<!-- END PAGE STYLES -->
 	<!-- BEGIN THEME STYLES -->
 	<!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
-	<link href="./assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css"/>
-	<link href="./assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+    <script >console.info("Default Design") </script>
+    <link href="./assets/global/css/components-rounded.css" id="style_components" rel="stylesheet" type="text/css"/>
+    <link href="./assets/global/css/plugins.css" rel="stylesheet" type="text/css"/>
+
 	<link href="./assets/admin/layout4/css/layout.css" rel="stylesheet" type="text/css"/>
 	<link href="./assets/admin/layout4/css/themes/light.css" rel="stylesheet" type="text/css" id="style_color"/>
-	
+
 	<!-- END THEME STYLES -->
-	<link rel="shortcut icon" href="favicon.ico"/>
+	<link rel="shortcut icon" href="./assets/logos/favicon.png"/>
 
-	<link rel="stylesheet" type="text/css" media="screen" href="assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css" />
-    <link href="./jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" rel="search" type="text/css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="assets/jqgrid/css/ui.jqgrid.css" />
-
+	<link href="./assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="./assets/jqgrid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
 
-</head>
+	<!-- jsgrid css -->
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid-theme.min.css" />
 
+</head>
+<!-- END HEAD -->
+<!-- BEGIN BODY -->
+<!-- DOC: Apply "page-header-fixed-mobile" and "page-footer-fixed-mobile" class to body element to force fixed header or footer in mobile devices -->
+<!-- DOC: Apply "page-sidebar-closed" class to the body and "page-sidebar-menu-closed" class to the sidebar menu element to hide the sidebar by default -->
+<!-- DOC: Apply "page-sidebar-hide" class to the body to make the sidebar completely hidden on toggle -->
+<!-- DOC: Apply "page-sidebar-closed-hide-logo" class to the body element to make the logo hidden on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-hide" class to body element to completely hide the sidebar on sidebar toggle -->
+<!-- DOC: Apply "page-sidebar-fixed" class to have fixed sidebar -->
+<!-- DOC: Apply "page-footer-fixed" class to the body element to have fixed footer -->
+<!-- DOC: Apply "page-sidebar-reversed" class to put the sidebar on the right side -->
+<!-- DOC: Apply "page-full-width" class to the body element to have full width page without the sidebar menu -->
 <body class="page-header-fixed page-sidebar-closed-hide-logo page-sidebar-closed-hide-logo page-footer-fixed">
 
-<% if(action.equals("FORM")) { %>
+<!-- BEGIN HEADER -->
+<div class="page-header navbar navbar-fixed-top">
+	<!-- BEGIN HEADER INNER -->
+	<div class="page-header-inner">
+		<!-- BEGIN LOGO -->
+		<div class="page-logo">
+			<a href="index.jsp">
+			<img src="./assets/logos/logo_header.png" alt="logo" style="margin: 20px 10px 0 10px; width: 107px;" class="logo-default"/>
+			</a>
+		</div>
+		<!-- END LOGO -->
 
-	<div class="widget" id="form_widget">
+		<!-- BEGIN PAGE TOP -->
+		<div class="page-top">
 
-		<FORM>
-		<INPUT TYPE="button" onClick="window.print()" value="PRINT">
-		</FORM>
+			<!-- BEGIN TOP NAVIGATION MENU -->
+			<div class="top-menu">
+				<ul class="nav navbar-nav pull-right">
+					<!-- BEGIN USER LOGIN DROPDOWN -->
+					<!-- END USER LOGIN DROPDOWN -->
+				</ul>
+			</div>
+			<!-- END TOP NAVIGATION MENU -->
+		</div>
+		<!-- END PAGE TOP -->
+	</div>
+	<!-- END HEADER INNER -->
+</div>
 
-		<div>
-		    <%= forms.getForm(null, request.getParameterMap()) %>
+<!-- END HEADER -->
+
+<div class="clearfix"></div>
+
+<!-- BEGIN CONTAINER -->
+<div class="page-container">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- BEGIN Portlet PORTLET-->
+			<div class="portlet light">
+				<div class="portlet-title">
+					<div class="caption">
+						<i class="icon-speech"></i>
+						<span class="caption-subject bold uppercase"> <%= formTitle %></span>
+					</div>
+					<div class="actions">
+					  <% if(form.getEntryFormId() != null) { %>
+						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormValues();">
+						<i class="fa fa-pencil"></i> Save </a>
+						<a href="javascript:;" class="btn btn-circle btn-default">
+						<i class="fa fa-plus"></i> Submit </a>
+						<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"></a>
+					  <% } %>
+					</div>
+				</div>
+				<div class="portlet-body">
+					<div class="scroller" style="height:575px" data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
+						<form id='barazaForm' name='barazaForm' method='post' action='form.jsp'>
+							<%= form.getFormTabs() %>
+							<%= formData %>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- END Portlet PORTLET-->
 		</div>
 	</div>
-
-
-
-<% } else if(action.equals("ENTRYFORM")) { %>
-	<div id="content">
-		<%= forms.getForm(entryformid, request.getParameterMap()) %>
-	</div>
-
-<% }
-
-	forms.close();
-%>
-
+</div>
 <!-- END CONTAINER -->
+
+
 <!-- BEGIN FOOTER -->
 <div class="page-footer">
 	<div class="page-footer-inner">
@@ -125,7 +189,7 @@
 <!-- BEGIN CORE PLUGINS -->
 <!--[if lt IE 9]>
 <script src="./assets/global/plugins/respond.min.js"></script>
-<script src="./assets/global/plugins/excanvas.min.js"></script> 
+<script src="./assets/global/plugins/excanvas.min.js"></script>
 <![endif]-->
 <script src="./assets/global/plugins/jquery.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery-migrate.min.js" type="text/javascript"></script>
@@ -150,16 +214,41 @@
 <script src="./assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript" ></script>
+<script src="./assets/global/plugins/ckeditor/ckeditor.js" type="text/javascript" ></script>
 
 <script src="./assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/select2/select2.min.js" type="text/javascript"></script>
+
+
 
 <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
 <script src="./assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
+<script src="./assets/global/plugins/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<!--<script src="//blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>-->
+<script src="./assets/global/plugins/jquery-file-upload/js/vendor/load-image.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="./assets/global/plugins/jquery-file-upload/js/vendor/canvas-to-blob.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="./assets/global/plugins/jquery-file-upload/js/jquery.fileupload-validate.js"></script>
+
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="./assets/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
 <script src="./assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="./assets/admin/layout4/scripts/layout.js" type="text/javascript"></script>
 <script src="./assets/admin/layout4/scripts/demo.js" type="text/javascript"></script>
@@ -167,81 +256,89 @@
 <script src="./assets/admin/pages/scripts/tasks.js" type="text/javascript"></script>
 <script src="./assets/admin/pages/scripts/components-pickers.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript" ></script>
+<script src="./assets/global/plugins/jquery-multi-select/js/jquery.quicksearch.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/jstree/dist/jstree.min.js" type="text/javascript"></script>
+<script src="./assets/admin/pages/scripts/ui-tree.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/bootstrap-toastr/toastr.min.js"></script>
 
 <!-- END PAGE LEVEL SCRIPTS -->
 
 <script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
 
-	<script type="text/javascript">
+<!-- calendar-->
+<!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
+<script src="./assets/global/plugins/moment.min.js"></script>
+<script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
 
-      $(document).ready(function(){
+<!-- jsgrid for sub form editing-->
+<script src="./assets/jsgrid-1.2.0/jsgrid.min.js"></script>
 
-	    $('.btnAddMore').live('click',function(){
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        Metronic.init(); // init metronic core componets
+        Layout.init(); // init layout
 
-		var clonedRow = $(".subTable" + this.getAttribute("name") + " tr:last").clone().html();
-		var appendRow = '<tr class = "row">' + clonedRow + '</tr>';
+        $('.date-picker').datepicker({
+            autoclose: true
+        });
 
-		$('.subTable' + this.getAttribute("name") + ' tr:last').after(appendRow);
+		UITree.init();
+
+		$('.clockface').clockface({
+            format: 'hh:mm a',
+            trigger: 'manual'
+        });
+
+        $('.clockface-toggle').click(function (e) {
+            e.stopPropagation();
+            var target = $(this).attr('data-target');
+            $('#' + target ).clockface('toggle');
+        });
+
+		$('.select2me').select2({
+            placeholder: "Select an option",
+            allowClear: true
+        });
+    });
+
+	<%= form.printSubForm() %>
+
+	function getFormValues() {
+        var str = '';
+		var jsonForm = {};
+        var elem = document.getElementById('barazaForm').elements;
+        for(var i = 0; i < elem.length; i++) {
+			if(!(elem[i].name == null || elem[i].name == "", elem[i].value == null || elem[i].value == "")) {
+				jsonForm[elem[i].name] = elem[i].value;
+			}
+        }
+
+		for	(i = 0; i < db_list.length; i++) {
+			jsonForm[db_list[i]] = eval(db_list[i]);
+		}
+console.log(jsonForm);
+console.log(JSON.stringify(jsonForm));
+
+		$.ajax({
+			type: "POST",
+			url: "ajaxupdate?fnct=formupdate&entry_form_id=" + <%=form.getEntryFormId()%>,
+			data: "json=" + JSON.stringify(jsonForm),
+			dataType: "json",
+			success: function(data){
+console.log("Data: " + data);
+			},
+			failure: function(errMsg) {
+console.log("Error: " + errMsg);
+			}
 		});
 
-	    //when you click on the button called "delete", the function inside will be triggered.
-	    $('.deleteThisRow').live('click',function(){
-
-		var num = this.getAttribute("name");
-		var rowLength = $('#subTable' + num + ' tr').length;
-
-
-		//this line makes sure that we don't ever run out of rows.
-		if(rowLength > 2){
-		    deleteRow(this);
-		    }
-		else{
-		    $('.subTable tr:last').after(appendRow);
-		    deleteRow(this);
-		    }
-	      });
-
-		function deleteRow(currentNode){
-			  $(currentNode).parent().parent().remove();
-			  }
-		  });
-
-	</script>
-
-	<script>
-		jQuery(document).ready(function() {    
-            
-		   Metronic.init(); // init metronic core componets
-		   Layout.init(); // init layout
-		   //Demo.init(); // init demo features 
-		   //Index.init(); // init index page
-		   //Tasks.initDashboardWidget(); // init tash dashboard widget  
-		   //ComponentsPickers.init();
-            
-            $('.date-picker').datepicker();
-            
-            //alert($(".mask_currency").length);
-            
-            $('.multi-select').multiSelect();
-            
-            /*$(".mask_currency").each(function(i, obj){
-                var mask = $(this).attr('data-mask');
-                $(this).inputmask(mask, {
-                    numericInput: true
-                });
-            });*/
-
-            $('.select2me').select2({
-                placeholder: "Select an option",
-                allowClear: true
-            });
-		});
-	</script>
-
-<!-- END JAVASCRIPTS -->
+    }
+</script>
 
 </body>
+<!-- END BODY -->
 </html>
 
-
+<% 	form.close(); %>

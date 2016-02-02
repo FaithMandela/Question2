@@ -24,14 +24,16 @@
 		</MENU>
 		<MENU name="Reports" role="admin,payroll,reports">
 			<MENU name="Definations">101</MENU>
-			<MENU name="Statutory Deductions">102</MENU>
+			<MENU name="Statutory Definations">102</MENU>
 			<MENU name="Employee List">103</MENU>
 			<MENU name="Employee Default">104</MENU>
 			<MENU name="Payroll">105</MENU>
 			<MENU name="Banking">106</MENU>
-			<MENU name="Adjustments">107</MENU>
-			<MENU name="Employee Adjustments">108</MENU>
+			<MENU name="Summary Adv + Ded">107</MENU>
+			<MENU name="Advances and Deductions">108</MENU>
 			<MENU name="Employee Statutories">118</MENU>
+			<MENU name="Pensions">125</MENU>
+			<MENU name="Loans">135</MENU>
 			<MENU name="Advance">109</MENU>
 			<MENU name="Payslip">110</MENU>
 			<MENU name="P9A">111</MENU>
@@ -75,6 +77,10 @@
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
 			<CHECKBOX w="75" title="In Tax">in_tax</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="add_adjustment" approval="1" role="payroll,admin">Add to Month</ACTION>
+				<ACTION fnct="add_adjustment" approval="2" role="payroll,admin">Add to Employee</ACTION>
+			</ACTIONS>
 			<FORM name="Allowance" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="1">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Allowance Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
@@ -83,9 +89,10 @@
 				<CHECKBOX w="150" title="In Payroll" default="true" y="50" h="20" x="290">in_payroll</CHECKBOX>
 				<CHECKBOX w="150" title="In Tax" default="true" y="70" h="20" x="10">in_tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Order" default="0" y="70" h="20" x="290">adjustment_order</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" default="0" y="90" h="20" x="10">account_number</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				<TEXTDECIMAL w="150" title="Default Amount" y="90" h="20" x="10">default_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Account Number" default="0" y="110" h="20" x="10">account_number</TEXTFIELD>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Deductions" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 2)">
@@ -97,6 +104,10 @@
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
 			<CHECKBOX w="75" title="In Tax">in_tax</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="add_adjustment" approval="1" role="payroll,admin">Add to Month</ACTION>
+				<ACTION fnct="add_adjustment" approval="2" role="payroll,admin">Add to Employee</ACTION>
+			</ACTIONS>
 			<FORM name="Deduction" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="2">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Deduction Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
@@ -111,8 +122,9 @@
 				<TEXTDECIMAL w="150" title="Tax Reduction %" y="110" h="20" x="290">tax_reduction_ps</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Tax Relief %" y="130" h="20" x="10">tax_relief_ps</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Max Tax Allowed" y="130" h="20" x="290">tax_max_allowed</TEXTDECIMAL>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+				<TEXTDECIMAL w="150" title="Default Amount" y="150" h="20" x="10">default_amount</TEXTDECIMAL>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Expenses" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 3)">
@@ -124,6 +136,10 @@
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
 			<CHECKBOX w="75" title="In Tax">in_tax</CHECKBOX>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="add_adjustment" approval="1" role="payroll,admin">Add to Month</ACTION>
+				<ACTION fnct="add_adjustment" approval="2" role="payroll,admin">Add to Employee</ACTION>
+			</ACTIONS>
 			<FORM name="Expense" keyfield="adjustment_id" table="adjustments">
 				<DEFAULT default="3">adjustment_type</DEFAULT>
 				<TEXTFIELD w="430" title="Expense Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
@@ -133,8 +149,9 @@
 				<CHECKBOX w="150" title="In Tax" default="false" y="70" h="20" x="10">in_tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Order" default="0" y="70" h="20" x="290">adjustment_order</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" default="0" y="90" h="20" x="10">account_number</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				<TEXTDECIMAL w="150" title="Default Amount" y="110" h="20" x="10">default_amount</TEXTDECIMAL>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Claim Types" keyfield="claim_type_id" table="vw_claim_types">
@@ -151,7 +168,7 @@
 		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" noorg="true" user="entity_id">
 			<COMBOBOX w="150" title="Org" lptable="vw_org_select" y="10" org.id="parent_org_id" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 		</FORM>
-		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
+		<GRID name="All Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -176,21 +193,23 @@
 					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
 					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
 					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="150" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+					<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
-				<TEXTFIELD w="350" title="Organisation" y="10" h="20" x="10">org_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Default" y="30" h="20" x="10">is_default</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
-				<TEXTFIELD w="350" title="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
-				<COMBOBOX w="430" title="Base Currency" lptable="currency" noorg="true" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="true" lpkey="org_id" y="90" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
-				<TEXTFIELD w="50" title="Sufix" y="110" h="20" x="10">org_sufix</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
+				<COMBOBOX w="430" title="Base Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="350" title="Default Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="90" h="20" x="10" lpfield="sys_country_name">default_country_id</COMBOBOX>
+				<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="true" lpkey="org_id" y="110" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+				<TEXTFIELD w="50" title="Sufix" placeholder="Organisation Sufix" y="130" h="20" x="10">org_sufix</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Currency" keyfield="currency_id" table="currency" noorg="true">
+		<GRID name="Currency" keyfield="currency_id" table="currency">
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
@@ -203,6 +222,10 @@
 					<TEXTDECIMAL w="150" title="Exchange Rate" y="10" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				</FORM>
 			</GRID>
+			<FORM name="Currency" keyfield="currency_id" table="currency">
+				<TEXTFIELD w="150" title="Currency Name" y="10" h="20" x="10">currency_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Currency Symbol" y="10" h="20" x="290">currency_symbol</TEXTFIELD>
+			</FORM>
 		</GRID>
 		<GRID name="Locations" keyfield="location_id" table="locations">
 			<TEXTFIELD w="75" title="Location ID">location_id</TEXTFIELD>
@@ -309,8 +332,9 @@
 				<CHECKBOX w="150" title="Tax" y="110" h="20" x="290">In_Tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Registration Number" default="0" y="130" h="20" x="10">tax_type_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" default="0" y="130" h="290" x="10">account_number</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="170" h="90" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="Employer Account" y="150" h="20" x="10">employer_account</TEXTFIELD>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="190" h="90" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -399,7 +423,7 @@
 				<TEXTFIELD w="100" title="Middle Name" lw="90" y="50" h="20" x="250" span="true">middle_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="First Name" lw="70" y="50" h="20" x="440">first_name</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Birth" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
-				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
+				<COMBOBOX w="150" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
 				<COMBOLIST w="150" title="Gender" y="90" ischar="true" h="20" x="10" span="true">gender
 					<DATA key="M">Male</DATA>
 					<DATA key="F">Female</DATA>
@@ -411,7 +435,7 @@
 					<DATA key="W">Widowed</DATA>
 					<DATA key="X">Separated</DATA>
 				</COMBOLIST>
-				<COMBOBOX w="150" title="Birth Nation" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
+				<COMBOBOX w="150" title="Birth Nation" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
 				<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
 				<COMBOBOX w="430" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
@@ -426,7 +450,7 @@
 				<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
 				<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
-				<COMBOBOX w="430" title="Currency" lptable="currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
 				<COMBOBOX w="430" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Employment Terms" tab="Terms" y="150" h="20" x="10">employment_terms</TEXTFIELD>
@@ -955,7 +979,7 @@
 						<TEXTFIELD w="150" title="Pay Period" y="30" h="20" x="10">pay_period</TEXTFIELD>
 						<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="290">amount</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Payment Amount" y="50" h="20" x="10">payment_amount</TEXTDECIMAL>
-						<CHECKBOX w="150" title="In Payroll" y="70" h="20" x="10">in_payroll</CHECKBOX>
+						<CHECKBOX w="150" title="In Payroll" default="true" y="70" h="20" x="10">in_payroll</CHECKBOX>
 						<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
 						<COMBOLIST w="150" title="Approve" y="90" h="20" x="10">approve_status
 							<DATA>Approved</DATA>
@@ -974,7 +998,7 @@
 					<FORM name="Advance Deduction" keyfield="advance_deduction_id" linkfield="employee_month_id" table="advance_deductions">
 						<TEXTDATE w="150" title="Pay Date" y="10" h="20" x="10">pay_date</TEXTDATE>
 						<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="290">amount</TEXTDECIMAL>
-						<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="10">in_payroll</CHECKBOX>
+						<CHECKBOX w="150" title="In Payroll" default="true" y="30" h="20" x="10">in_payroll</CHECKBOX>
 						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
@@ -1430,6 +1454,15 @@
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="Comparison" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<DRILLDOWN name="Previous" keyfield="period_year" table="vw_Period_Year" listfield="period_year" filter="previous_id" pos="top">
+				<DRILLDOWN name="Previous Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Comparison Payroll" org.table="vw_employee_month" reportfile="vw_payroll_diff.jasper"></JASPER>
+		</FILTER>
 		<GRID name="Full Payroll" keyfield="period_id" orderby="start_date desc" table="vw_periods">
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
@@ -1442,36 +1475,64 @@
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
+				<CROSSTAB name="Tax Types ID" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
+					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Identification">tax_identification</TEXTFIELD>
+				</CROSSTAB>
+				<TEXTDECIMAL w="75" fnct="to_char(basic_pay, '9999999D9')" title="Basic Pay">v_basic_pay</TEXTDECIMAL>
 				<CROSSTAB name="Allowances" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 1)">
 					<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
-				<TEXTDECIMAL w="75" title="Total Allowance">payroll_allowance</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" fnct="to_char(payroll_allowance, '9999999D9')" title="Total Allowance">v_payroll_allowance</TEXTDECIMAL>
 				<CROSSTAB name="Deductions" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 2)">
 					<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
 				<CROSSTAB name="Tax Types" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
 					<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
-				<TEXTDECIMAL w="75" title="Total Deduction">payroll_deduction</TEXTDECIMAL>
+				<TEXTFIELD w="75" fnct="to_char(payroll_deduction, '9999999D9')" title="Total Deduction">v_payroll_deduction</TEXTFIELD>
 				<CROSSTAB name="Expenses" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 3)">
 					<TEXTFIELD w="75" title="Expense">adjustment_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="employee_month_id">employee_month_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="Amount">d_amount</TEXTFIELD>
 				</CROSSTAB>
-				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
+				<TEXTFIELD w="75" fnct="to_char(payroll_expense, '9999999D9')" title="Expense">v_payroll_expense</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(net_pay, '9999999D9')" title="Net Pay">v_net_pay</TEXTFIELD>
 			</CROSSTAB>
+		</GRID>
+		<GRID name="SUN Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<GRID name="Sun Ledger" keyfield="sun_ledger_id" linkfield="period_id" table="vw_sun_ledger_trx">
+				<TEXTFIELD w="25" fnct="'2'::int" title="SUNF1">sunf1</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'0'::int" title="SUNF2">sunf2</TEXTFIELD>
+				<TEXTFIELD w="45" title="Account Code">gl_payroll_account</TEXTFIELD>
+				<TEXTFIELD w="75" title="Account Name">description</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'10'::int" title="SUNF3">sunf3</TEXTFIELD>
+				<TEXTFIELD w="75" title="FUNCTION">department_account</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'1'::int" title="SUNF4">sunf4</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="''" title="SUNF5">sunf5</TEXTFIELD>
+				<TEXTFIELD w="75" title="OWN">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="PROJECT">function_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Description">description2</TEXTFIELD>
+				<TEXTFIELD w="75" title="Amount">gl_amount</TEXTFIELD>
+				<TEXTFIELD w="25" title="DC">debit_credit</TEXTFIELD>
+				<TEXTFIELD w="25" fnct="'KES1'" title="SUNF6">sunf6</TEXTFIELD>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Banking" key="106" h="750">
-		<FILTER w="700" name="Payroll" split="150" type="horl" key="6" h="550">
+		<FILTER w="700" name="Banking" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
@@ -1505,6 +1566,7 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Deductions" keyfield="adjustment_id" table="adjustments" where="(adjustment_type = 2)" listfield="adjustment_Name" filter="adjustmentid" pos="top"></DRILLDOWN>
 			<JASPER name="Deductions" reportfile="vw_employee_deduction.jasper"></JASPER>
+			<JASPER name="Deductions with ID" reportfile="vw_employee_deduction_2.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="770" name="Statutory Deductions" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
@@ -1528,12 +1590,24 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Statutory  Deductions" keyfield="tax_type_id" table="tax_types" where="(use_key=1)" listfield="tax_type_name" filter="tax_type_id"></DRILLDOWN>
 			<JASPER name="Statutory  Deductions" reportfile="vw_employee_tax_types_2.jasper"></JASPER>
-			<JASPER name="NSSF Format" reportfile="nssf_report.jasper"></JASPER>
-			<JASPER name="NHIF Format" reportfile="nhif_report.jasper"></JASPER>
+			<JASPER name="NSSF Format" org.table="orgs" reportfile="nssf_report.jasper"></JASPER>
+			<JASPER name="NHIF Format" org.table="orgs" reportfile="nhif_report.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Advance" key="109" h="550">
-		<JASPER name="Advance" reportfile="vw_advance_statement.jasper"></JASPER>
+		<JASPER name="Advance" reportfile="vw_advance_balances.jasper"></JASPER>
+		<GRID name="Employee Advances" keyfield="entity_id" orderby="first_name" table="vw_employees">
+			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			<JASPER name="Advance Statement" reportfile="vw_advance_statement.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Payslip" key="110" h="750">
 		<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods">
@@ -1552,7 +1626,9 @@
 				<TEXTDECIMAL w="75" title="Deduction">payroll_deduction</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Expense">payroll_expense</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
-				<JASPER name="Payroll" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
+				<JASPER name="Payslip" linkfield="filterid" reportfile="payslipa.jasper"></JASPER>
+				<JASPER name="SC Payslip" linkfield="filterid" reportfile="payslipd.jasper"></JASPER>
+				<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc.jasper"></JASPER>
 			</GRID>
 		</GRID>
 		<FILTER w="700" name="Payslip" split="250" key="6" h="550">
@@ -1574,7 +1650,28 @@
 				<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 				<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			</FILTERGRID>
-			<JASPER name="Payslip" reportfile="payslip.jasper"></JASPER>
+			<JASPER name="Payslip " reportfile="payslip.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Payslip Summary" split="250" key="6" h="550">
+			<FILTERGRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees">
+				<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+				<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			</FILTERGRID>
+			<FILTERGRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods" filter="periodid">
+				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			</FILTERGRID>
+			<JASPER name="Payslip Summary" reportfile="payslipcp.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="P9A" key="111" h="750">
@@ -1612,5 +1709,44 @@
 			<JASPER name="Full Ledger" reportfile="vw_payroll_ledger_trx.jasper"></JASPER>
 			<JASPER name="Transport Ledger" reportfile="vw_employee_per_diem_ledger.jasper"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" name="Pensions" key="125" h="550">
+		<FILTER w="700" name="Pension Payments" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Pension Payments" reportfile="vw_pensions_payments.jasper"></JASPER>
+		</FILTER>
+		<GRID name="Employee Pension" keyfield="entity_id" orderby="first_name" table="vw_employees">
+			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			<JASPER name="Pension Payments" reportfile="vw_employee_pensions.jasper"></JASPER>
+		</GRID>
+		<JASPER name="Pensions" reportfile="vw_pensions.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Loans" key="135" h="550">
+		<JASPER name="Open Loans" reportfile="vw_loans.jasper"></JASPER>
+		<JASPER name="All Loans" reportfile="vw_loans_2.jasper"></JASPER>
+		<JASPER name="Loan Types" reportfile="vw_loan_types.jasper"></JASPER>
+		<GRID name="Loan Payments" keyfield="loan_id" table="vw_loans">
+			<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Loan Type">loan_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
+			<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			<JASPER name="Loan Statement" reportfile="vw_loan_monthly.jasper"></JASPER>
+		</GRID>
 	</DESK>
 </APP>

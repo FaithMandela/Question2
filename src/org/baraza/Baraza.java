@@ -38,6 +38,9 @@ public class Baraza extends JApplet implements WindowListener {
 
 	/**
 	* Main class call
+	* Use {@link #main(String[])} 
+	* 
+	* @param args 		Run the baraza program at command line
 	*/
 	public static void main(String args[]) {
 		String mode = "run";
@@ -68,11 +71,13 @@ public class Baraza extends JApplet implements WindowListener {
 
 	/**
 	* Run the application - desktop mode
-	* Use {@link #run(String, String, String)} run
+	* Use {@link #run(String, String, String, String, String)} 
 	* 
 	* @param configDir 		Directory where the configs are at
 	* @param mode 			The running mode {client, ide, server }
 	* @param dbpath 		override the xml database path
+	* @param configFile		override the configFile database path
+	* @param encryptionKey 	Use encripted key for file
 	*/
 	public void run(String configDir, String mode, String dbpath, String configFile, String encryptionKey) {
 		int sm = start(configDir, mode, dbpath, configFile, encryptionKey);
@@ -107,11 +112,13 @@ public class Baraza extends JApplet implements WindowListener {
 	/**
 	* Get start up parametrs and determine how the application starts
 	* 
-	* Use {@link #start(String, String, String)} start
+	* Use {@link #start(String, String, String, String, String)} 
 	* 
 	* @param configDir 		Directory where the configs are at
 	* @param mode 			The running mode {client, ide, server }
 	* @param dbpath 		override the xml database path
+	* @param configFile		override the configFile database path
+	* @param encryptionKey 	Use encripted key for file
 	* @return       		returns the selected run mode
 	*/
 	public int start(String configDir, String mode, String dbpath, String configFile, String encryptionKey) {

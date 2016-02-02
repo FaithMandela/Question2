@@ -23,11 +23,12 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT supervisor_rating, recomendation::text || E'\n\n' || reviewer_comments AS supervisor_comments,
+		<![CDATA[SELECT supervisor_rating, COALESCE(recomendation,'') AS recomendation , COALESCE(reviewer_comments,'') AS reviewer_comments,
 self_rating, details AS employee_comments FROM job_reviews  WHERE (job_reviews.job_review_id = '$P!{filterid}')]]>
 	</queryString>
 	<field name="supervisor_rating" class="java.lang.Integer"/>
-	<field name="supervisor_comments" class="java.lang.String"/>
+	<field name="recomendation" class="java.lang.String"/>
+	<field name="reviewer_comments" class="java.lang.String"/>
 	<field name="self_rating" class="java.lang.Integer"/>
 	<field name="employee_comments" class="java.lang.String"/>
 	<background>
@@ -137,7 +138,7 @@ self_rating, details AS employee_comments FROM job_reviews  WHERE (job_reviews.j
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{supervisor_comments}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{recomendation} + "\n" + $F{reviewer_comments}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
 				<reportElement positionType="Float" mode="Opaque" x="72" y="133" width="247" height="20" backcolor="#E7E7E7" uuid="66eb92de-c523-4a6f-8bc3-19bfcc0fe7fa"/>

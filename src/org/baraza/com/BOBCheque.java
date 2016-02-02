@@ -221,7 +221,7 @@ public class BOBCheque extends JApplet implements Printable, ActionListener, Lis
 			String cname = rs.getString("name");
 			float camount = rs.getFloat("amount");
 			int cba = (int) camount;
-			int cbc = (int) (100 * (camount % cba));
+			int cbc = (int) (100 * (camount - cba));
 			BAmountInWords aiw = new BAmountInWords(cba);
 			BAmountInWords aiwc = new BAmountInWords(cbc);
 			SimpleDateFormat dateformatter = new SimpleDateFormat("dd.MMM.yyyy");
@@ -239,8 +239,8 @@ public class BOBCheque extends JApplet implements Printable, ActionListener, Lis
 			cl.add(rs.getString("fin_payment_id"));
 			tbdef.cheques.add(cl);
 
-			//System.out.println(mydate + ", " + cname + ", " + ":" + camount + ": " + cba + ", " + cbc);
-			//System.out.println(aiw.getAmountInWords() + " and " + aiwc.getAmountInWords() + " cents\n");
+			System.out.println(mydate + ", " + cname + ", " + ":" + camount + ": " + cba + ", " + cbc);
+			System.out.println(aiw.getAmountInWords() + " and " + aiwc.getAmountInWords() + " cents\n");
 		}
 
 		tbdef.refresh();

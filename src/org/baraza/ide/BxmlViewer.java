@@ -624,9 +624,8 @@ public class BxmlViewer extends JTabbedPane implements ActionListener, TreeSelec
 			if(i >= ik) ik = i + 5;
 		}
 
-		String tableName = tableList.getSelectedItem().toString();
 		BElement mel = new BElement("MENU");
-		mel.setAttribute("name", db.initCap(tableName));
+		mel.setAttribute("name", db.initCap(txtNewDesk.getText()));
 		mel.setValue(String.valueOf(ik));
 		BTreeNode mnNode = makeNode(mel);
 		top.add(mnNode);

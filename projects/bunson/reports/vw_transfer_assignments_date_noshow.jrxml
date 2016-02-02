@@ -25,7 +25,8 @@
 	<queryString>
 		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name, vw_transfer_assignments.car_type_code, customer_name, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, closed, cancelled, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num, '$P!{date}'::date AS today
 FROM vw_transfer_assignments
-WHERE pickup_date = '$P!{date}'::date  AND vw_transfer_assignments.no_show = true]]>
+WHERE pickup_date = '$P!{date}'::date  AND vw_transfer_assignments.no_show = true
+ORDER BY vw_transfer_assignments.pickup_time::time ASC]]>
 	</queryString>
 	<field name="driver_id" class="java.lang.Integer"/>
 	<field name="driver_name" class="java.lang.String"/>
@@ -98,7 +99,7 @@ WHERE pickup_date = '$P!{date}'::date  AND vw_transfer_assignments.no_show = tru
 				<reportElement x="10" y="0" width="251" height="74" uuid="0b109bcb-b9ef-49e1-b85c-524182f86f48"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "cwt_logo.jpg"]]></imageExpression>
 			</image>
-			<image scaleImage="FillFrame">
+			<image scaleImage="RetainShape" hAlign="Right">
 				<reportElement x="551" y="0" width="244" height="84" uuid="a95d60b1-4b74-4478-a642-7ff7e3420deb"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "bts_logo.jpg"]]></imageExpression>
 			</image>
@@ -135,7 +136,7 @@ WHERE pickup_date = '$P!{date}'::date  AND vw_transfer_assignments.no_show = tru
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Passanger Name]]></text>
+				<text><![CDATA[Passenger Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="348" y="0" width="60" height="21" forecolor="#000000" uuid="7a97c002-ed63-41e1-b8dc-cf9f255a7ea6"/>

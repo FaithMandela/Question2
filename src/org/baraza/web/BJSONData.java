@@ -38,9 +38,6 @@ public class BJSONData extends HttpServlet {
 		String dbconfig = "java:/comp/env/jdbc/database";
 		String projectDir = context.getInitParameter("projectDir");
 		if(projectDir != null) xmlfile = projectDir + ps + "configs" + ps + xmlcnf;
-
-		String userIP = request.getRemoteAddr();
-		String userName = request.getRemoteUser();
 		
 		/*Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
@@ -49,7 +46,6 @@ public class BJSONData extends HttpServlet {
 		}*/
 		
 		BWeb web = new BWeb(dbconfig, xmlfile);
-		web.setUser(userIP, userName);
 		web.init(request);
 		BElement view = web.getView();
 		//System.out.println("BASE 1010 : " + view.toString());

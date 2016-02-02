@@ -286,7 +286,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION insQStudent(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
+CREATE OR REPLACE FUNCTION insQStudent(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(1024) AS $$
 DECLARE
 	srec			RECORD;
 	qrec			RECORD;
@@ -296,12 +296,19 @@ DECLARE
 	resid			VARCHAR(12);
 	sclassid		INTEGER;
 	qresid			INTEGER;
-	mystr			VARCHAR(120);
+	mystr			VARCHAR(1024);
 BEGIN
 	SELECT students.onprobation, students.seeregistrar, students.probation_details, students.registrar_details,
 		students.balance_time, CAST(students.balance_time as date) as balance_date, students.curr_balance,
 		students.offcampus, students.residenceid, students.room_number, students.org_id,
 		students.fullbursary, students.staff,
+		students.identification_no, 
+		students.email, 
+		students.address, students.town, students.countrycodeid, students.telno, students.county_id, 
+		students.guardianname, students.gaddress, students.gtown, students.gcountrycodeid, students.gtelno, 
+		students.gemail, 
+		students.nationality, 
+		students.disability,
 		studentdegrees.studentdegreeid, studentdegrees.degreeid, studentdegrees.sublevelid
 	INTO srec
 	FROM students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid
@@ -332,6 +339,22 @@ BEGIN
 		v_minimal_fees := 1000000;
 	ELSIF (srec.staff = true) THEN
 		v_minimal_fees := 1000000;
+	END IF;
+	
+	mystr := 'You have to update your student details before you proceed. Click on student then student details, On student details click on go (green arrow) then click edit details. Put the correct details and save. You can thereafter proceed with registration';
+	
+	IF(srec.identification_no is null)THEN
+		RAISE EXCEPTION 'No nation ID {For Kenyan} or Passport number <br>%', mystr;
+	ELSIF(srec.email is null)THEN
+		RAISE EXCEPTION 'No email address <br>%', mystr;
+	ELSIF((srec.address is null) OR (srec.town is null) OR (srec.countrycodeid is null) OR (srec.telno is null) OR (srec.county_id is null)) THEN
+		RAISE EXCEPTION 'No address details <br>%', mystr;
+	ELSIF((srec.guardianname is null) OR (srec.gaddress is null) OR (srec.gtown is null) OR (srec.gcountrycodeid is null) OR (srec.gtelno is null)) THEN 
+		RAISE EXCEPTION 'No guardian details <br>%', mystr;
+	ELSIF(srec.nationality is null) THEN
+		RAISE EXCEPTION 'No nationality <br>%', mystr;
+	ELSIF(srec.disability is null) THEN
+		RAISE EXCEPTION 'No disability stated <br>%', mystr;
 	END IF;
 
 	mystr := '';
@@ -1381,12 +1404,28 @@ BEGIN
 		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, first_password, entity_password)
 		VALUES(0, 10, COALESCE(NEW.guardianname, NEW.studentname), 'G' || NEW.studentid, NEW.gemail, NEW.gfirstpass, NEW.gstudentpass);
 	END IF;
+	
+	IF(NEW.identification_no is null)THEN
+		NEW.student_edit := 'allow';
+	ELSIF(NEW.email is null)THEN
+		NEW.student_edit := 'allow';
+	ELSIF((NEW.address is null) OR (NEW.town is null) OR (NEW.countrycodeid is null) OR (NEW.telno is null) OR (NEW.county_id is null)) THEN
+		NEW.student_edit := 'allow';
+	ELSIF((NEW.guardianname is null) OR (NEW.gaddress is null) OR (NEW.gtown is null) OR (NEW.gcountrycodeid is null) OR (NEW.gtelno is null)) THEN 
+		NEW.student_edit := 'allow';
+	ELSIF(NEW.nationality is null) THEN
+		NEW.student_edit := 'allow';
+	ELSIF(NEW.disability is null) THEN
+		NEW.student_edit := 'allow';
+	ELSE
+		NEW.student_edit := 'none';
+	END IF;
 
-	RETURN NULL;
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_students AFTER INSERT ON students
+CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
   FOR EACH ROW EXECUTE PROCEDURE ins_students();
 
 CREATE OR REPLACE FUNCTION OpenQuarter(varchar(12), varchar(12), varchar(12)) RETURNS varchar(50) AS $$

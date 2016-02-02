@@ -28,6 +28,26 @@ SELECT employeeid,  17, 0, 0, true
 FROM import.employees
 WHERE ishoused = 'Yes';
 
+INSERT INTO default_tax_types(entity_id, tax_type_id, org_id, active)
+SELECT a.entity_id, 3, 0, true
+FROM employees as a LEFT JOIN 
+(SELECT entity_id FROM default_tax_types WHERE tax_type_id = 3) as b
+ON a.entity_id = b.entity_id
+WHERE b.entity_id is null;
+
+
+INSERT INTO employee_tax_types(employee_month_id, org_id, tax_type_id, in_tax, amount, exchange_rate)
+SELECT aa.employee_month_id, aa.org_id, 3, false, 0, 1
+FROM employee_month  as aa LEFT JOIN 
+(SELECT a.employee_month_id
+FROM employee_month as a INNER JOIN employee_tax_types as b ON a.employee_month_id = b.employee_month_id
+WHERE b.tax_type_id = 3 and a.period_id = 213) AS bb
+ON aa.employee_month_id = bb.employee_month_id
+WHERE aa.period_id = 213 AND bb.employee_month_id is null;
+
+
+
+
 CREATE OR REPLACE FUNCTION generate_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_period_id		integer;
@@ -234,7 +254,8 @@ CREATE VIEW vw_sun_ledger_trx AS
 	SELECT org_id, period_id, end_date, entity_id,
 		gl_payroll_account, description,
 		department_account,  employee_id, function_code,
-		description2, amount, debit_credit 
+		description2, round(amount::numeric, 1) as gl_amount, debit_credit,
+		(period_id::varchar || '.' || entity_id::varchar || '.' || COALESCE(gl_payroll_account, '')) as sun_ledger_id
 	FROM 
 	((SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, vw_employee_month.entity_id,
 		vw_employee_month.gl_payroll_account, 'Payroll' as description, 
@@ -284,16 +305,34 @@ CREATE VIEW vw_sun_ledger_trx AS
 		vw_employee_tax_types.account_number, vw_employee_tax_types.tax_type_name,
 		vw_employee_tax_types.department_account, vw_employee_tax_types.employee_id, vw_employee_tax_types.function_code,
 		to_char(vw_employee_tax_types.start_date, 'Month YYYY') || ' - ' || vw_employee_tax_types.tax_type_name || ' - Deduction',
-		(vw_employee_tax_types.amount + vw_employee_tax_types.additional),
+		(vw_employee_tax_types.amount + vw_employee_tax_types.additional + vw_employee_tax_types.employer),
 		'C' as debit_credit
-	FROM vw_employee_tax_types)) as a
-	ORDER BY gl_payroll_account desc, amount desc, debit_credit desc;
-	
-	
+	FROM vw_employee_tax_types)
 	UNION
-	(SELECT vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, 'Employer - ' || vw_employee_tax_types.tax_type_name, 
-		vw_employee_tax_types.account_number, vw_employee_tax_types.entity_name, vw_employee_tax_types.employee_id,
-		vw_employee_tax_types.employer, 0.0
+	(SELECT vw_employee_tax_types.org_id, vw_employee_tax_types.period_id, vw_employee_tax_types.end_date, vw_employee_tax_types.entity_id,
+		vw_employee_tax_types.employer_account, vw_employee_tax_types.tax_type_name,
+		vw_employee_tax_types.department_account, vw_employee_tax_types.employee_id, vw_employee_tax_types.function_code,
+		to_char(vw_employee_tax_types.start_date, 'Month YYYY') || ' - ' || vw_employee_tax_types.tax_type_name || ' - Contribution',
+		vw_employee_tax_types.employer,
+		'D' as debit_credit
 	FROM vw_employee_tax_types
-	WHERE (vw_employee_tax_types.employer <> 0))) as a
-	ORDER BY gl_payroll_account desc, dr_amt desc, cr_amt desc;
+	WHERE vw_employee_tax_types.employer > 0)
+	UNION
+	(SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, vw_employee_month.entity_id,
+		vw_employee_month.employee_id, vw_employee_month.entity_name,
+		'', '', '',
+		to_char(vw_employee_month.start_date, 'Month YYYY') || ' - Payroll Banking' as description2, 
+		banked as amount,
+		'D' as debit_credit
+	FROM vw_employee_month)
+	UNION
+	(SELECT vw_employee_month.org_id, vw_employee_month.period_id, vw_employee_month.end_date, vw_employee_month.entity_id,
+		vw_employee_month.gl_bank_account, 'Bank Account',
+		'', '', '',
+		to_char(vw_employee_month.start_date, 'Month YYYY') || ' - Payroll Banking' as description2, 
+		banked as amount,
+		'C' as debit_credit
+	FROM vw_employee_month)) as a
+	WHERE amount > 0;
+	
+

@@ -119,14 +119,14 @@ public class BAppLauncher extends HttpServlet {
 		appStr += "		<jar href=\"baraza.jar\"/>\n";
 		appStr += "		<jar href=\"lib/activation-1.1.1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/barbecue-1.5-beta1.jar\"/>\n";
-		appStr += "		<jar href=\"lib/commons-beanutils-1.8.0.jar\"/>\n";
-		appStr += "		<jar href=\"lib/commons-collections-2.1.1.jar\"/>\n";
+		appStr += "		<jar href=\"lib/commons-beanutils-1.9.0.jar\"/>\n";
+		appStr += "		<jar href=\"lib/commons-collections-3.2.1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/commons-codec-1.9.jar\"/>\n";
 		appStr += "		<jar href=\"lib/commons-digester-2.1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/commons-logging-1.1.1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/groovy-all-2.0.1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/iText-2.1.7.js2.jar\"/>\n";
-		appStr += "		<jar href=\"lib/jasperreports-5.5.0.jar\"/>\n";
+		appStr += "		<jar href=\"lib/jasperreports-6.1.0.jar\"/>\n";
 		appStr += "		<jar href=\"lib/jcommon-1.0.15.jar\"/>\n";
 		appStr += "		<jar href=\"lib/jfreechart-1.0.12.jar\"/>\n";
 		appStr += "		<jar href=\"lib/mail.jar\"/>\n";

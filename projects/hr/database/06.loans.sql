@@ -140,13 +140,18 @@ CREATE OR REPLACE FUNCTION get_penalty(integer, date) RETURNS real AS $$
 $$ LANGUAGE SQL;
 
 CREATE VIEW vw_loan_types AS
-	SELECT adjustments.adjustment_id, adjustments.adjustment_name, loan_types.loan_type_id, loan_types.loan_type_name, 
-		loan_types.org_id, loan_types.default_interest, loan_types.reducing_balance, loan_types.details
-	FROM loan_types INNER JOIN adjustments ON loan_types.adjustment_id = adjustments.adjustment_id;
+	SELECT adjustments.adjustment_id, adjustments.adjustment_name, adjustments.account_number,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		loan_types.org_id, loan_types.loan_type_id, loan_types.loan_type_name, 
+		loan_types.default_interest, loan_types.reducing_balance, loan_types.details
+	FROM loan_types INNER JOIN adjustments ON loan_types.adjustment_id = adjustments.adjustment_id
+		INNER JOIN currency ON adjustments.currency_id = currency.currency_id;
 
 CREATE VIEW vw_loans AS
-	SELECT vw_loan_types.adjustment_id, vw_loan_types.adjustment_name, vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
-		entitys.entity_id, entitys.entity_name, 
+	SELECT vw_loan_types.adjustment_id, vw_loan_types.adjustment_name, vw_loan_types.account_number,
+		vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
+		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
+		entitys.entity_id, entitys.entity_name, employees.employee_id,
 		loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
 		loans.repayment_period, loans.application_date, loans.approve_status, loans.initial_payment, 
 		loans.loan_date, loans.action_date, loans.details,
@@ -155,11 +160,14 @@ CREATE VIEW vw_loans AS
 		(loans.principle + get_total_interest(loans.loan_id) - loans.initial_payment - get_total_repayment(loans.loan_id)) as loan_balance,
 		get_payment_period(loans.principle, loans.monthly_repayment, loans.interest) as calc_repayment_period
 	FROM loans INNER JOIN entitys ON loans.entity_id = entitys.entity_id
+		INNER JOIN employees ON loans.entity_id = employees.entity_id
 		INNER JOIN vw_loan_types ON loans.loan_type_id = vw_loan_types.loan_type_id;
 
 CREATE VIEW vw_loan_monthly AS
-	SELECT  vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.loan_type_id, vw_loans.loan_type_name, 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
+	SELECT  vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.account_number,
+		vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
+		vw_loans.loan_type_id, vw_loans.loan_type_name, 
+		vw_loans.entity_id, vw_loans.entity_name, vw_loans.employee_id, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, loan_monthly.repayment, loan_monthly.interest_paid, 
@@ -172,8 +180,10 @@ CREATE VIEW vw_loan_monthly AS
 		INNER JOIN vw_periods ON loan_monthly.period_id = vw_periods.period_id;
 
 CREATE VIEW vw_loan_payments AS
-	SELECT vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.loan_type_id, vw_loans.loan_type_name, 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
+	SELECT vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.account_number,
+		vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
+		vw_loans.loan_type_id, vw_loans.loan_type_name, 
+		vw_loans.entity_id, vw_loans.entity_name, vw_loans.employee_id, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_loans.application_date, vw_loans.approve_status, vw_loans.initial_payment, 
 		vw_loans.org_id, vw_loans.action_date,
@@ -248,24 +258,41 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
+DECLARE
+	v_default_interest	real;
+	v_reducing_balance	boolean;
 BEGIN
 
-	IF(NEW.principle is null) OR (NEW.interest is null)THEN
-		RAISE EXCEPTION 'You have to enter a principle and interest amount';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is null)THEN
+	SELECT default_interest, reducing_balance INTO v_default_interest, v_reducing_balance
+	FROM loan_types 
+	WHERE (loan_type_id = NEW.loan_type_id);
+	
+	IF(NEW.interest is null)THEN
+		NEW.interest := v_default_interest;
+	END IF;
+	IF (NEW.reducing_balance is null)THEN
+		NEW.reducing_balance := v_reducing_balance;
+	END IF;
+	IF(NEW.monthly_repayment is null) THEN
+		NEW.monthly_repayment := 0;
+	END IF;
+	IF (NEW.repayment_period is null)THEN
+		NEW.repayment_period := 0;
+	END IF;
+	
+
+	IF(NEW.principle is null)THEN
+		RAISE EXCEPTION 'You have to enter a principle amount';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period = 0))THEN
 		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is not null)THEN
-		IF(NEW.repayment_period > 0)THEN
-			NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
-		ELSE
-			RAISE EXCEPTION 'The repayment period should be greater than 0';
-		END IF;
-	ELSIF(NEW.monthly_repayment is not null) AND (NEW.repayment_period is null)THEN
-		IF(NEW.monthly_repayment > 0)THEN
-			NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
-		ELSE
-			RAISE EXCEPTION 'The monthly repayment should be greater than 0';
-		END IF;
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period < 1))THEN
+		RAISE EXCEPTION 'The repayment period should be greater than 0';
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment < 1))THEN
+		RAISE EXCEPTION 'The monthly repayment should be greater than 0';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period > 0))THEN
+		NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment > 0))THEN
+		NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
 	END IF;
 	
 	RETURN NEW;
@@ -275,3 +302,22 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE ins_loans();
 
+
+CREATE OR REPLACE FUNCTION loan_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Loan applied';
+	
+	UPDATE loans SET approve_status = 'Completed'
+	WHERE (loan_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+    
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+    
