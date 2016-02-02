@@ -1558,6 +1558,7 @@
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Record Locator">record_locator</TEXTFIELD>
 			<TEXTFIELD w="75" title="Customer Code">customer_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
@@ -1654,6 +1655,7 @@
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Record Locator">record_locator</TEXTFIELD>
 			<TEXTFIELD w="75" title="Customer Code">customer_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
@@ -1724,7 +1726,8 @@
 			<TEXTFIELD w="75" title="Consultant">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Payment Type Name">payment_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Record Locator">record_locator</TEXTFIELD>
-			<TEXTFIELD w="75" title="Organisation">customer_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Customer Code">customer_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
@@ -1792,6 +1795,28 @@
 					<TEXTDECIMAL w="150" title="Amount" y="240" h="20" x="10">amount</TEXTDECIMAL>
 					<CHECKBOX w="150" title="Cancelled" y="260" h="20" x="10">cancelled</CHECKBOX>
 					<TEXTAREA w="430" title="Other Preference" y="130" h="70" x="10">other_preference</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Departure Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true" where="(tab=1)">
+				<TEXTFIELD w="75" title="Transfer Flight ID">transfer_flight_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+				<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
+				<SPINTIME w="75" title="End Time">end_time</SPINTIME>
+				<TEXTDATE w="75" title="Flight Date">flight_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Start Airport">start_airport</TEXTFIELD>
+				<TEXTFIELD w="75" title="End Airport">end_airport</TEXTFIELD>
+				<TEXTFIELD w="75" title="Airline">airline</TEXTFIELD>
+				<TEXTFIELD w="75" title="Flight Num">flight_num</TEXTFIELD>
+				<TEXTFIELD w="75" title="Tab">tab</TEXTFIELD>
+				<FORM name="Transfer Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true">
+					<DEFAULT default="1">tab</DEFAULT>
+					<SPINTIME w="150" title="Start Time" y="30" h="20" x="10">start_time</SPINTIME>
+					<SPINTIME w="150" title="End Time" y="30" h="20" x="290">end_time</SPINTIME>
+					<TEXTDATE w="150" title="Flight Date" y="50" h="20" x="10">flight_date</TEXTDATE>
+					<TEXTFIELD w="150" title="Start Airport" y="50" h="20" x="290">start_airport</TEXTFIELD>
+					<TEXTFIELD w="150" title="End Airport" y="70" h="20" x="10">end_airport</TEXTFIELD>
+					<TEXTFIELD w="150" title="Airline" y="70" h="20" x="290">airline</TEXTFIELD>
+					<TEXTFIELD w="150" title="Flight Num" y="90" h="20" x="10">flight_num</TEXTFIELD>
 				</FORM>
 			</GRID>
 			<GRID name="Passengers Arrivals" keyfield="passanger_id" linkfield="transfer_id" table="passangers" tab.count="count(passanger_id)" noorg="true" where="(tab=2)">
@@ -1862,15 +1887,40 @@
 					<TEXTAREA w="430" title="Other Preference" y="130" h="70" x="10">other_preference</TEXTAREA>
 				</FORM>
 			</GRID>
+			<GRID name="Arrival Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true" where="(tab=2)">
+				<TEXTFIELD w="75" title="Transfer Flight ID">transfer_flight_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+				<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
+				<SPINTIME w="75" title="End Time">end_time</SPINTIME>
+				<TEXTDATE w="75" title="Flight Date">flight_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Start Airport">start_airport</TEXTFIELD>
+				<TEXTFIELD w="75" title="End Airport">end_airport</TEXTFIELD>
+				<TEXTFIELD w="75" title="Airline">airline</TEXTFIELD>
+				<TEXTFIELD w="75" title="Flight Num">flight_num</TEXTFIELD>
+				<TEXTFIELD w="75" title="Tab">tab</TEXTFIELD>
+				<FORM name="Transfer Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true">
+					<DEFAULT default="2">tab</DEFAULT>
+					<SPINTIME w="150" title="Start Time" y="30" h="20" x="10">start_time</SPINTIME>
+					<SPINTIME w="150" title="End Time" y="30" h="20" x="290">end_time</SPINTIME>
+					<TEXTDATE w="150" title="Flight Date" y="50" h="20" x="10">flight_date</TEXTDATE>
+					<TEXTFIELD w="150" title="Start Airport" y="50" h="20" x="290">start_airport</TEXTFIELD>
+					<TEXTFIELD w="150" title="End Airport" y="70" h="20" x="10">end_airport</TEXTFIELD>
+					<TEXTFIELD w="150" title="Airline" y="70" h="20" x="290">airline</TEXTFIELD>
+					<TEXTFIELD w="150" title="Flight Num" y="90" h="20" x="10">flight_num</TEXTFIELD>
+				</FORM>
+			</GRID>
 			<FORM name="Finance" keyfield="transfer_id" table="transfers" noorg="true">
 				<DEFAULT default="xxx">record_locator</DEFAULT>
 				<DEFAULT default="KES">currency_id</DEFAULT>
 				<DEFAULT default="01">booking_location</DEFAULT>
 				<COMBOBOX w="430" title="Entity ID" lptable="entitys" user="entity_id" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Organisation Code" y="30" h="20" x="290">customer_code</TEXTFIELD>
-				<TEXTFIELD w="150" title="Organisation Name" y="30" h="20" x="290">customer_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Customer Code" y="30" h="20" x="290">customer_code</TEXTFIELD>
+				<TEXTFIELD w="150" title="Customer Name" y="30" h="20" x="290">customer_name</TEXTFIELD>
 				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" y="50" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Agreed Amount" y="70" h="20" x="290">agreed_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Pax No" y="270" h="20" x="10">pax_no</TEXTFIELD>
+				<CHECKBOX w="150" title="Group" y="290" h="20" x="10">is_group</CHECKBOX>
+				<TEXTFIELD w="430" title="Consultant Email" y="250" h="20" x="10">tc_email</TEXTFIELD>
 				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 				<TEXTAREA w="430" title="Reference Data" y="180" h="70" x="10">reference_data</TEXTAREA>
 			</FORM>
@@ -1892,6 +1942,7 @@
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Record Locator">record_locator</TEXTFIELD>
 			<TEXTFIELD w="75" title="Customer Code">customer_code</TEXTFIELD>
+			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
