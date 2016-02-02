@@ -8,6 +8,8 @@
  */
 package org.baraza.com;
 
+import java.util.Map;
+import java.util.UUID;
 import java.io.PrintWriter;
 import java.io.IOException;
 
@@ -18,9 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.baraza.DB.BDB;
+import org.baraza.DB.BQuery;
 import org.baraza.xml.BElement;
+import org.baraza.utils.BNetwork;
 
-public class BLicenseRegister {
+public class BLicenseRegister extends HttpServlet {
 
 	BDB db = null;
 
@@ -51,11 +55,41 @@ public class BLicenseRegister {
 	}
 	
 	private void getLicense(String remoteAddr, String remoteUser) {
-		String dbID = "";
-		String macAddr = "";
 		String orgName = "";
+		
+		// Get MAC address and save on database
+		BNetwork net = new BNetwork();
+		String macAddr = net.getMACAddress(remoteAddr);
+		if(macAddr == null) return;
+		db.executeQuery("UPDATE orgs SET MAC_address = '" + macAddr + "' WHERE org_id = 0");
+		
+		// Get the database ID
+		String dbName = db.getCatalogName();
+		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
 
-	
+		// Get the organisation name and system identifier
+		Map<String, String> orgField = db.readFields("org_name, system_key, system_identifier", "orgs WHERE org_id = 0");
+		String sysName = orgField.get("org_name");
+		String sysID = orgField.get("system_identifier");
+		if(sysID == null) {
+			sysID = UUID.randomUUID().toString();
+			db.executeQuery("UPDATE orgs SET system_identifier = '" + sysID + "' WHERE org_id = 0");
+		}
+
+		// Create the license
+		BLicense license = new BLicense();
+		byte[] lic = license.createLicense(sysName, sysID, macAddr, dbID);
+		
+		// Save the data
+		BQuery rs = new BQuery(db, "SELECT org_id, public_key, license FROM orgs WHERE org_id = 0");
+		rs.moveFirst();
+		rs.recEdit();
+		rs.updateBytes("public_key", license.getPublicKey());
+		rs.updateBytes("license", lic);
+		rs.recSave();
+		rs.close();
+		
+		
 	}
 	
 

@@ -692,7 +692,29 @@ public class BQuery {
 
 		return errMsg;
 	}
-
+	
+	public String updateBytes(String fname, byte[] bdata) {
+		String errMsg = null;
+		try {
+			rs.updateBytes(fname, bdata);
+		} catch (SQLException ex) {
+			errMsg = fname + " : " + ex.getMessage() + "\n";
+        	log.severe("The SQL Exeption on updateBytes field " + fname + " : " + ex);
+		}
+		return errMsg;
+	}
+	
+	public byte[] getBytes(String fname) {
+		try {
+			byte[] bdata = rs.getBytes(fname);
+			return bdata;
+		} catch (SQLException ex) {
+        	log.severe("The SQL Exeption on updateBytes field " + fname + " : " + ex);
+		}
+		
+		return null;
+	}
+	
 	public String recDelete() {
 		String errMsg = null;
 		errCode = 0;

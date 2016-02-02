@@ -1,8 +1,6 @@
 ALTER TABLE orgs
-ADD default_country_id		char(2) references sys_countrys,
 ADD Bank_Header				text,
 ADD Bank_Address			text;
-CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
 
 CREATE TABLE disability (
 	disability_id			serial primary key,

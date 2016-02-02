@@ -2,10 +2,12 @@
 	<MENU name="Sacco">
 		<MENU name="My Details" role="applicant">24</MENU>
 		<MENU name="Service Desk" role="member">
-			<MENU name="Active Loans">150</MENU>
-			<MENU name="My Guarantees">195</MENU>
-			<MENU name="My Contributions">205</MENU>
-			<MENU name="My investments">210</MENU>
+			<MENU name="Loans">150</MENU>
+			<MENU name="Guarantee">195</MENU>
+			<MENU name="Contributions">205</MENU>
+			<MENU name="investments">210</MENU>
+		</MENU>
+		<MENU name="Approvals" role="admin,manager">
 			<MENU name="Approvals">45</MENU>
 		</MENU>
 		<MENU name="Administration" role="admin,manager">
@@ -333,7 +335,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Approvals" key="45" h="500">
-		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status = 'Completed')" user="entity_id">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals" params="table_name, table_id" where="(approve_status = 'Completed')">
 			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
@@ -472,25 +474,6 @@
 				<TEXTFIELD w="75" title="To">app_entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
 				<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
-			</GRID>
-			<GRID name="Leave Approvals" keyfield="employee_leave_id" table="vw_employee_leave" viewfilter="table_name=employee_leave" linkparams="table_id=workflow_table_id">
-				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Leave Type">leave_type_name</TEXTFIELD>
-				<TEXTDATE w="75" title="Leave From">leave_from</TEXTDATE>
-				<TEXTDATE w="75" title="Leave To">leave_to</TEXTDATE>
-				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-				<FORM new="false" name="Employee Leave" keyfield="employee_leave_id" table="employee_leave">
-					<COMBOBOX w="430" title="Leave Type" lptable="leave_types" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
-					<TEXTDATE w="150" title="Leave From" y="30" h="20" x="10">leave_from</TEXTDATE>
-					<TEXTDATE w="150" title="Leave To" y="30" h="20" x="290">leave_to</TEXTDATE>
-					<CHECKBOX w="150" title="Start Half Day" y="50" h="20" x="10">Start_Half_Day</CHECKBOX>
-					<CHECKBOX w="150" title="End Half Day" y="50" h="20" x="290">End_Half_Day</CHECKBOX>
-					<TEXTFIELD w="150" title="Leave Days" y="70" h="20" x="10">Leave_days</TEXTFIELD>
-					<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
-					<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
@@ -934,7 +917,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Member Loans" key="150" h="550">
+	<DESK w="700" name="Active Loans" key="150" h="550">
 		<GRID name="Loans" keyfield="loan_id" table="vw_loans" user="entity_id">
 			<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
@@ -954,14 +937,15 @@
 			<TEXTDECIMAL w="75" title="Loan Balance">loan_balance</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Calc Repayment Period">calc_repayment_period</TEXTDECIMAL>
 			<FORM name="Loans" keyfield="loan_id" table="loans">
+				<COMBOBOX w="430" title="Entity ID" lptable="entitys" user="entity_id" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Loan Type ID" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Principle" y="50" h="20" x="10">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Interest" y="50" h="20" x="290">interest</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Monthly Repayment" y="70" h="20" x="10">monthly_repayment</TEXTDECIMAL>
 				<TEXTDATE w="150" title="Loan Date" y="70" h="20" x="290">loan_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Initial Payment" y="90" h="20" x="10">initial_payment</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Reducing Balance" y="90" h="20" x="290">reducing_balance</CHECKBOX>
 				<TEXTFIELD w="150" title="Repayment Period" y="110" h="20" x="10">repayment_period</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Monthly Repayment" y="70" h="20" x="10">monthly_repayment</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<FORM name="Gurrantors" keyfield="gurrantor_id" linkfield="loan_id" table="gurrantors">
@@ -990,7 +974,7 @@
 		<JASPER name="Reports" params="entity_id" reportfile="member_loans.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Loans " key="170" h="550">
-		<GRID name="Loans" keyfield="loan_id" table="vw_loans">
+		<GRID name="Loans" keyfield="loan_id" orderby="loan_date" table="vw_loans">
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Loan Date">loan_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
@@ -1219,7 +1203,7 @@
 		<JASPER name="Transaction Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Applicant" key="23" h="650">
-		<GRID name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants">
+		<GRID name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants" where="(approve_status= 'Completed')">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
@@ -1227,11 +1211,11 @@
 			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
 			<TEXTFIELD w="75" title="Language">language</TEXTFIELD>
-			<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Picture File">picture_file</TEXTFIELD>
 			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
 			<TEXTFIELD w="75" title="Applicant Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Applicant Phone">applicant_phone</TEXTFIELD>
+			<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
 			<FORM tw="570" name="Details" keyfield="entity_id" role="admin" table="applicants" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
@@ -1263,11 +1247,6 @@
 				<TEXTAREA w="550" tab="Interests" y="1" h="170" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 			</FORM>
-			<ACTIONS>
-				<ACTION fnct="upd_approvals" approval="2">Approve</ACTION>
-				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
-				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
-			</ACTIONS>
 			<GRID wheresql="table_name = 'applicant'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
 				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
@@ -1407,8 +1386,6 @@
 				<TEXTFIELD w="430" title="Primary Contact" y="170" h="20" x="10">primary_contact</TEXTFIELD>
 				<TEXTFIELD w="430" title="Job Title" y="190" h="20" x="10">job_title</TEXTFIELD>
 				<TEXTFIELD w="430" title="Primary Email" y="210" h="20" x="10">primary_email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Approve Status" y="250" h="20" x="10">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Workflow Table ID" y="250" h="20" x="290">workflow_table_id</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="290" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>

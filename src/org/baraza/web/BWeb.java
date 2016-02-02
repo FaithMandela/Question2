@@ -40,6 +40,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
+import org.baraza.com.BLicense;
 import org.baraza.utils.Bio;
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
@@ -782,6 +783,12 @@ public class BWeb {
 		String body = "";
 		wheresql = null;
 		sortby = null;
+		
+		// Check for license
+		/*if(!hasLicense()) {
+			body = "\t<div>Your need to register the system</div>\n";
+			return body;
+		}*/
 
 		BElement sview = null;
 		comboField = request.getParameter("field");
@@ -2108,6 +2115,25 @@ System.out.println("repository : " + repository);
 			if(el.getName().equals("CROSSTAB")) hasSubs = true;
 		}
 		return hasSubs;
+	}
+	
+	public boolean hasLicense() {
+		// Get the database ID
+		String dbName = db.getCatalogName();
+		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
+		System.out.println("DB ID : " + dbName + " : " + dbID);
+
+		String mysql = "SELECT org_id, org_name, system_identifier, MAC_address, public_key, license "
+			+ "FROM orgs WHERE org_id = 0";
+		BQuery lrs = new BQuery(db, mysql);
+		lrs.moveFirst();
+		
+		BLicense lic = new BLicense();
+		boolean signed = lic.verifyLicense(lrs.getString("org_name"), lrs.getString("system_identifier"), lrs.getString("MAC_address"), dbID, lrs.getBytes("license"), lrs.getBytes("public_key"));
+		
+		lrs.close();
+		
+		return signed;
 	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
