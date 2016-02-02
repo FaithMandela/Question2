@@ -227,10 +227,10 @@ public class BWebReport  {
 			}
 			
 			if((fileSql != null) && (parameters.size() > 0)) {
-				fileName = db.executeFunction(fileSql + parameters.get(0));
+				fileName = db.executeFunction(fileSql + parameters.get("filterid"));
 				if(fileName == null) fileName = "report";
 				
-System.out.println("BASE 4050 : " + fileSql + parameters.get(0));
+System.out.println("BASE 4050 : " + fileSql + parameters.get("filterid"));
 System.out.println("BASE 4050 : " + fileName);
 			}
 
