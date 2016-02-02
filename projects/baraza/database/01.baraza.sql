@@ -65,8 +65,13 @@ CREATE TABLE orgs (
 	is_active				boolean not null default true,
 	logo					varchar(50),
 	pin 					varchar(50),
-	system_identifier		varchar(32),
-	license					text,
+
+	system_key				varchar(64),
+	system_identifier		varchar(64),
+	MAC_address				varchar(64),
+	public_key				bytea,
+	license					bytea,
+
 	details					text
 );
 CREATE INDEX orgs_currency_id ON orgs (currency_id);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_passangers" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31ce1aed-8af4-4791-9487-55ec4792ef40">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_passangers_email" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31ce1aed-8af4-4791-9487-55ec4792ef40">
 	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -19,13 +19,16 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="passanger_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_passangers.car_type_code,
 vw_passangers.customer_name,
 vw_passangers.entity_name, vw_passangers.payment_type_name, vw_passangers.transfer_id, vw_passangers.customer_code, vw_passangers.agreed_amount, vw_passangers.start_time, vw_passangers.transfer_flight_id, vw_passangers.flight_date, vw_passangers.start_airport, vw_passangers.end_airport, vw_passangers.airline, vw_passangers.flight_num, vw_passangers.passanger_id, vw_passangers.passanger_name, vw_passangers.passanger_mobile, vw_passangers.passanger_email, vw_passangers.pickup_time, vw_passangers.pickup, vw_passangers.dropoff, vw_passangers.amount, vw_passangers.processed, vw_passangers.pickup_date,
 vw_passangers.tab, vw_passangers.other_preference, pax_no
 FROM vw_passangers
-WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
+WHERE vw_passangers.passanger_id = '$P!{passanger_id}']]>
 	</queryString>
 	<field name="car_type_code" class="java.lang.String"/>
 	<field name="customer_name" class="java.lang.String"/>

@@ -4,12 +4,13 @@ ALTER TABLE transfers ADD pax_no              integer;
 ALTER TABLE transfers ADD transfer_cancelled  boolean default false;
 ALTER TABLE passangers ADD pax_cancelled           boolean default false;
 
-ALTER TABLE transfers   ADD is_group        boolean default false;
+ALTER TABLE transfers   ADD is_group       boolean default false;
 ALTER TABLE passangers  ADD group_contact  boolean default false;
 ALTER TABLE passangers  ADD group_member   boolean default false;
 
 ALTER TABLE transfer_flights ADD create_key              integer default 1;
 ALTER TABLE transfers ALTER COLUMN pax_no SET default 1;
+ALTER  TABLE transfers ADD tc_email            varchar(100);
 
 DROP VIEW vw_transfers;
 
@@ -148,7 +149,6 @@ CREATE TRIGGER upd_transfers AFTER UPDATE ON transfers
     FOR EACH ROW EXECUTE PROCEDURE upd_transfers();
 
 
-
 CREATE OR REPLACE FUNCTION upd_passangers() RETURNS trigger AS $$
 DECLARE
 BEGIN
@@ -278,14 +278,17 @@ ALTER FUNCTION ins_transfer_assignments()
 CREATE OR REPLACE FUNCTION ins_transfer_flights() RETURNS trigger AS $$
 DECLARE
     v_transfer_id   integer;
+    v_tab           integer;
 BEGIN
 
     IF(NEW.create_key = 2) THEN
-        SELECT transfer_id INTO v_transfer_id FROM passangers WHERE passanger_id = NEW.transfer_id;
+        SELECT transfer_id,tab INTO v_transfer_id,  v_tab FROM passangers WHERE passanger_id = NEW.transfer_id;
         NEW.transfer_id := v_transfer_id;
+        NEW.tab := v_tab;
+        --RAISE EXCEPTION 'v_transfer_id : % , v_tab : %', v_transfer_id,v_tab;
     END IF;
 
-	RETURN null;
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
