@@ -2130,8 +2130,12 @@ System.out.println("repository : " + repository);
 		BQuery lrs = new BQuery(db, mysql);
 		lrs.moveFirst();
 		
-		BLicense lic = new BLicense();
-		isLicense = lic.verifyLicense(lrs.getString("org_name"), lrs.getString("system_identifier"), lrs.getString("MAC_address"), dbID, lrs.getBytes("license"), lrs.getBytes("public_key"));
+		if((lrs.getString("org_name") != null) && (lrs.getString("system_identifier") != null) && (lrs.getString("MAC_address") != null) && (lrs.getBytes("license") != null) && (lrs.getBytes("public_key") != null)) {
+			BLicense lic = new BLicense();
+			isLicense = lic.verifyLicense(lrs.getString("org_name"), lrs.getString("system_identifier"), lrs.getString("MAC_address"), dbID, lrs.getBytes("license"), lrs.getBytes("public_key"));
+		} else {
+			isLicense = false;
+		}
 		
 		lrs.close();
 		

@@ -137,8 +137,8 @@ public class BLicenseRegister extends HttpServlet {
 			params.put("database_identifier", dbID);
 		
 			// Get the connecting interface MAC address
-			//URL myURL = new URL("http://hcm.openbaraza.org/hcm/registerlicense");
-			URL myURL = new URL("http://192.168.0.7:9090/hr/registerlicense");
+			URL myURL = new URL("http://hcm.openbaraza.org/innerkonsult/registerlicense");
+			//URL myURL = new URL("http://192.168.0.7:9090/hr/registerlicense");
 			InetAddress hostAddress = InetAddress.getByName(myURL.getHost());
 			Socket soc = new Socket(hostAddress, 80);
 System.out.println("Connecting IP : " + soc.getLocalAddress().getHostAddress());

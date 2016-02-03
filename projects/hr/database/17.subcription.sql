@@ -182,8 +182,6 @@ BEGIN
 		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
 	END IF;
 
-IF
-
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
