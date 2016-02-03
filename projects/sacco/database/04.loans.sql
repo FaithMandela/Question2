@@ -252,6 +252,8 @@ BEGIN
 			RAISE EXCEPTION 'The monthly repayment should be greater than 0';
 		END IF;
 	END IF;
+		NEW.approve_status := 'Completed';
+		NEW.workflow_table_id := '1';
 	
 	RETURN NEW;
 END;
