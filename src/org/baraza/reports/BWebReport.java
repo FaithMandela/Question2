@@ -227,8 +227,9 @@ public class BWebReport  {
 			}
 			
 			if((fileSql != null) && (parameters.size() > 0)) {
-				fileName = db.executeFunction(fileSql + parameters.get(0));
+				fileName = db.executeFunction(fileSql + parameters.get("filterid"));
 				if(fileName == null) fileName = "report";
+				fileName = fileName.replaceAll(" ", "_");
 			}
 
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, db.getDB());

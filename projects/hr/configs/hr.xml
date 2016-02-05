@@ -9,11 +9,14 @@
 			<MENU name="Job Listing">14</MENU>
 			<MENU name="Internships" role="applicant">15</MENU>
 			<MENU name="Claims Requests" role="staff">36</MENU>
+			<MENU name="Loan Application" role="staff">205</MENU>
+			<MENU name="Advance Application" role="staff">210</MENU>
 			<MENU name="Pay Slip" role="staff">16</MENU>
 			<MENU name="Petty Cash Request" role="staff">92</MENU>
 			<MENU name="Petty Cash" role="pettycash">90</MENU>
 			<MENU name="Transaction Ledger" role="finance">190</MENU>
 			<MENU name="Client Forms" role="forms">72</MENU>
+			<MENU name="Subscription" role="subscription">215</MENU>
 			<MENU name="Approvals" role="staff">83</MENU>
 		</MENU>
 		<MENU name="Internship" role="admin,hr">
@@ -1329,7 +1332,7 @@
 				<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 			</FILES>
-			<JASPER name="CV" org.table="vw_employees" reportfile="cv_employees.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_employees" file.sql="SELECT entity_name FROM entitys WHERE entity_id = " reportfile="cv_employees.jasper"></JASPER>
 		</GRID>
 		<GRID name="Education Class" keyfield="education_class_id" table="education_class">
 			<TEXTFIELD w="75" title="Education Class ID">education_class_id</TEXTFIELD>
@@ -3813,6 +3816,8 @@
 				</FORM>
 			</GRID>
 			<JASPER name="Report" reportfile="vw_tx_ledger_a.jasper"></JASPER>
+			<JASPER name="Uncleared" reportfile="vw_tx_ledger_b.jasper"></JASPER>
+			<JASPER name="Open" reportfile="vw_tx_ledger_c.jasper"></JASPER>
 		</GRID>
 		<GRID name="Expenditure" keyfield="tx_ledger_id" orderby="completed desc, tx_ledger_date" table="vw_tx_ledger" where="(tx_type = -1) AND (for_processing = true) AND (completed = false)">
 			<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
@@ -4002,5 +4007,85 @@
 	<DESK w="700" name="Transaction Ledger" key="195" h="550">
 		<JASPER name="Transaction Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
 		<JASPER name="Transaction Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Loan Application" key="205" h="500">
+		<GRID name="Draft Application" keyfield="loan_id" table="vw_loans" where="(approve_status = 'Draft')" user="entity_id">
+			<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Loan Type">loan_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
+			<ACTIONS>
+				<ACTION fnct="loan_aplication">Apply for Loan</ACTION>
+			</ACTIONS>
+			<FORM name="Loan" keyfield="loan_id" table="loans">
+				<USERFIELD>entity_id</USERFIELD>
+				<DEFAULT default="Draft">approve_status</DEFAULT>
+				<COMBOBOX w="430" title="Loan Type" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Principle" y="30" h="20" x="10">principle</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Repayment" y="30" h="20" x="290">monthly_repayment</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Loan Payments" keyfield="loan_id" table="vw_loans" user="entity_id">
+			<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Loan Type">loan_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
+			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			<JASPER name="Loan Statement" reportfile="vw_loan_monthly.jasper"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Advance Application" key="210" h="500">
+		<GRID name="Draft Advances" keyfield="employee_advance_id" linkfield="employee_month_id" table="employee_advances" where="(approve_status = 'Draft')" user="entity_id">
+			<TEXTFIELD w="75" title="Employee Advance ID">employee_advance_id</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
+			<TEXTFIELD w="275" title="Narrative">narrative</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="advance_aplication">Apply for Advance</ACTION>
+			</ACTIONS>
+			<FORM name="Employee Advance" keyfield="employee_advance_id" linkfield="employee_month_id" table="employee_advances">
+				<USERFIELD>entity_id</USERFIELD>
+				<DEFAULT default="Draft">approve_status</DEFAULT>
+				<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="10">amount</TEXTDECIMAL>
+				<CHECKBOX w="150" title="In Payroll" default="false" y="10" h="20" x="290">in_payroll</CHECKBOX>
+				<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<JASPER name="Advance Statement" user="filterid" reportfile="vw_advance_statement.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Subscription" key="215" h="500">
+		<FORMVIEW name="Subscription" keyfield="industry_id" table="vw_subscriptions" user="entity_id">
+			<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Industry Name">industry_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Address">business_address</TEXTFIELD>
+			<TEXTFIELD w="75" title="City">city</TEXTFIELD>
+			<TEXTFIELD w="75" title="State">state</TEXTFIELD>
+			<TEXTFIELD w="75" title="Number Of Employees">number_of_employees</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">telephone</TEXTFIELD>
+			<TEXTFIELD w="75" title="Website">website</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Contact">primary_contact</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job Title">job_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="System Key">system_key</TEXTFIELD>
+			<CHECKBOX w="75" title="Subscribed">subscribed</CHECKBOX>
+			<TEXTTIMESTAMP w="75" title="Subscribed Date">subscribed_date</TEXTTIMESTAMP>
+		</FORMVIEW>
 	</DESK>
 </APP>

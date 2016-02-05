@@ -313,7 +313,7 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="14" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tab} == 1 ? "DEPATURE" : "ARRIVAL"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? "DEPARTURE" : "ARRIVAL"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" positionType="Float" x="456" y="105" width="30" height="15" forecolor="#000000" uuid="7465d941-ba57-40d7-93b9-882c4207827d"/>

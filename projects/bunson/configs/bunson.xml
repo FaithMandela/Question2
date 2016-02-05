@@ -13,6 +13,7 @@
 			<MENU icon="fa fa-support" name="Drivers" role="admin">5</MENU>
 			<MENU icon="fa fa-cab" name="Cars" role="admin">10</MENU>
 			<MENU icon="fa fa-gear" name="Definitions" role="admin">15</MENU>
+			<MENU icon="fa fa-envelope-o" name="EMails" role="admin">81</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
@@ -57,17 +58,20 @@
 				<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Date Enroled">date_enroled</TEXTTIMESTAMP>
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
 				<FORM name="Entity" keyfield="entity_id" linkfield="org_id" table="entitys" noorg="true">
 					<COMBOBOX w="430" title="Entity Type ID" lptable="entity_types" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 					<TEXTFIELD w="430" title="Entity Name" y="10" h="20" x="10">entity_name</TEXTFIELD>
 					<TEXTFIELD w="430" title="User Name" y="30" h="20" x="10">user_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Son" y="280" h="20" x="10">son</TEXTFIELD>
+					<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
 					<CHECKBOX w="150" title="Super User" y="70" h="20" x="290">super_user</CHECKBOX>
 					<CHECKBOX w="150" title="Entity Leader" y="90" h="20" x="10">entity_leader</CHECKBOX>
 					<TEXTFIELD w="430" title="Function Role" y="110" h="20" x="10">function_role</TEXTFIELD>
 					<CHECKBOX w="150" title="Active" y="130" h="20" x="290">is_active</CHECKBOX>
 					<TEXTFIELD w="150" title="First Password" y="150" h="20" x="290">first_password</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
-					<TEXTFIELD w="150" title="Son" y="280" h="20" x="10">son</TEXTFIELD>
 				</FORM>
 			</GRID>
 			<FORM name="Org" keyfield="org_id" table="orgs" noorg="true">
@@ -1558,7 +1562,7 @@
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
-			<JASPER name="Voucher" reportfile="vw_passangers.jasper"></JASPER>
+			<JASPER name="Voucher" file.sql="SELECT 'Transfer Voucher_' || customer_name || '-' || pickup_date  FROM vw_passangers WHERE passanger_id =" reportfile="vw_passangers.jasper"></JASPER>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -5424,6 +5428,28 @@
 			<JASPER name="Voucher" reportfile="vw_transfer_assignments.jasper"></JASPER>
 			<JASPER name="Todays Transfer List" reportfile="vw_transfer_assignments_today.jasper"></JASPER>
 			<JASPER name="Todays No Show List" reportfile="vw_transfer_assignments_today_noshow.jasper"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="EMails" key="81" h="500">
+		<GRID name="EMails" keyfield="sys_email_id" table="sys_emails">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Title">title</TEXTFIELD>
+			<FORM name="EMails" keyfield="sys_email_id" table="sys_emails" th="210">
+				<TEXTFIELD w="350" title="Email Name" y="10" h="20" x="10">sys_email_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Title" y="30" h="20" x="10">title</TEXTFIELD>
+				<EDITOR w="530" tab="Details" y="2" h="170" x="10">details</EDITOR>
+			</FORM>
+		</GRID>
+		<GRID name="Email List" keyfield="sys_emailed_id" table="vw_sys_emailed">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
+			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 		</GRID>
 	</DESK>
 </APP>

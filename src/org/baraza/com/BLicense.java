@@ -17,7 +17,6 @@ import java.security.KeyPairGenerator;
 import java.security.Signature;
 import java.security.KeyFactory;
 import java.security.spec.X509EncodedKeySpec;
-import org.apache.commons.codec.binary.Base64;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -26,13 +25,15 @@ import java.security.InvalidKeyException;
 import java.security.spec.InvalidKeySpecException;
 import java.io.UnsupportedEncodingException;
 
+import org.apache.commons.codec.binary.Base64;
 
 public class BLicense {
+
+	KeyPair keyPair;
 
 	public static void main(String args[]) {
 	
 		BLicense lic = new BLicense();
-		lic.encript("dennis sdaf dsfsa dsaf dsaf df dsa fdsf dsf dsf sfd as sdf sdf fsdaf d df fsdf dsf dsf ", "salt");
 		KeyPair kpl = lic.generateKey();
 		byte[] signedData = lic.signData(kpl, "my data");
 		
@@ -40,24 +41,42 @@ public class BLicense {
 	}
 
 	public BLicense() {
-	
+		keyPair = generateKey();
 	}
 	
 	/**
 	* Run the application - desktop mode
 	* Use {@link #createLicense(String, String, String, String)} 
 	* 
+	* @param holder This String field can hold the holder's name, common name (cname)	
 	* @param productKey - This String field can hold a product key, serial number, serial code or any other String-representable data necessary for identifying this license.
-	* @param holder This String field can hold the holder's name, common name (cname)
 	* @param MachineID - This String field can hold the machine X500Principal identification, UUID, Mac address, hardware ID, or any other String-representable data necessary for identifying this license.
-	* @param issueDate - This field holds the date the license is issued/created (in Java Unix Epoch format¹).
+	* @param databaseID - This field holds the ID for the database
 	*/
-	public String createLicense(String productKey, String holder, String MachineID, String issueDate) {
-		String license = null;
+	public String createLicense(String holder, String productKey, String MachineID, String databaseID) {
+		String licData = holder + "\n" + productKey  + "\n" + MachineID + "\n" + databaseID;
 
-		return license;
+		byte[] signedData = signData(keyPair, licData);
+		
+		Base64 encd = new Base64();
+		String encodData = encd.encodeBase64URLSafeString(signedData);
+		String encodPK = encd.encodeBase64URLSafeString(keyPair.getPublic().getEncoded());
+System.out.println("License : " + encodData + "===================" + encodPK);
+		
+		return encodData + "===================" + encodPK;
 	}
 	
+	public boolean verifyLicense(String holder, String productKey, String MachineID, String databaseID, byte[] signedData, byte[] publicKey) {
+		String licData = holder + "\n" + productKey  + "\n" + MachineID + "\n" + databaseID;
+		
+		boolean signed = verifyData(publicKey, signedData, licData);
+		
+		return signed;
+	}
+	
+	public byte[] getPublicKey() {
+		return keyPair.getPublic().getEncoded();
+	}
 	
 	private KeyPair generateKey() {
 		KeyPair pair = null;
@@ -69,10 +88,7 @@ public class BLicense {
 			
 			pair = keyGen.generateKeyPair();
 			PublicKey pub = pair.getPublic();			
-			PrivateKey priv = pair.getPrivate();
-			
-			System.out.println("BASE 10 : " + priv);
-			System.out.println("BASE 20 : " + pub);
+			PrivateKey priv = pair.getPrivate();			
 		} catch(NoSuchAlgorithmException ex) {
 			System.out.println("Public key generation error : " + ex);
 		} catch(NoSuchProviderException ex) {
@@ -134,27 +150,5 @@ public class BLicense {
 		return signed;
 	}
 
-	
-	public String encript(String input, String salt) {
-		if((input == null) || (salt == null)) return null;
-		String hash = null;
-		try {
-			MessageDigest md = MessageDigest.getInstance("SHA-512"); 	// SHA-512 generator instance
-			md.update(salt.getBytes("UTF-8"));							// Update the salt
-			byte raw[] = md.digest(input.getBytes("UTF-8"));			// Digest the message
-			
-			Base64 coder = new Base64(32);
-			hash = new String(coder.encode(raw));	 					// Encoding to BASE64
-			hash = hash.replace("\n", "");
-		} catch(NoSuchAlgorithmException ex) {
-			System.out.println("No algorithim : " + ex.getMessage());
-		} catch(UnsupportedEncodingException ex) {
-			System.out.println("Unsupported Encoding : " + ex.getMessage());
-		}
-		
-		System.out.println("Hash : " + hash);
-		
-		return hash;
-	}
 	
 }
