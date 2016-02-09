@@ -567,7 +567,7 @@
 			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 			<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
-			<JASPER name="Role Details" reportfile="vw_department_role_details_a.jasper"></JASPER>
+			<JASPER name="Role Details" org.table="vw_department_roles" reportfile="vw_department_role_details_a.jasper"></JASPER>
 			<ACTIONS>
 				<ACTION fnct="Ins_applications">Apply For Post</ACTION>
 			</ACTIONS>
@@ -3851,6 +3851,7 @@
 			<JASPER name="Report" reportfile="vw_tx_ledger_a.jasper"></JASPER>
 			<JASPER name="Uncleared" reportfile="vw_tx_ledger_b.jasper"></JASPER>
 			<JASPER name="Open" reportfile="vw_tx_ledger_c.jasper"></JASPER>
+			<JASPER name="Tax" reportfile="vw_tx_ledger_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Expenditure" keyfield="tx_ledger_id" orderby="completed desc, tx_ledger_date" table="vw_tx_ledger" where="(tx_type = -1) AND (for_processing = true) AND (completed = false)">
 			<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
