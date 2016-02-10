@@ -232,7 +232,7 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
@@ -371,7 +371,7 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
@@ -480,7 +480,7 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
@@ -584,7 +584,7 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
@@ -688,8 +688,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -905,8 +905,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -1009,8 +1009,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" where="(active=true)" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -1188,8 +1188,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -1385,8 +1385,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -1563,7 +1563,7 @@
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
-			<JASPER name="Voucher" file.sql="SELECT 'Transfer Voucher_' || customer_name || '-' || pickup_date  FROM vw_passangers WHERE passanger_id =" reportfile="vw_passangers.jasper"></JASPER>
+			<JASPER name="Voucher" file.sql="SELECT 'Transfer Voucher_' || passanger_name || '-' || pickup_date  FROM vw_passangers WHERE passanger_id =" reportfile="vw_passangers.jasper"></JASPER>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -1738,6 +1738,8 @@
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Email">passanger_email</TEXTFIELD>
+				<CHECKBOX w="75" title="Group Contact">group_contact</CHECKBOX>
+				<CHECKBOX w="75" title="Group Member">group_member</CHECKBOX>
 				<TEXTFIELD w="75" title="Car Type Code">car_type_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Pickup Time">pickup_time</TEXTFIELD>
 				<TEXTFIELD w="75" title="Pickup">pickup</TEXTFIELD>
@@ -1760,7 +1762,7 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
@@ -1787,6 +1789,8 @@
 					<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Email" y="30" h="20" x="10">passanger_email</TEXTFIELD>
+					<CHECKBOX w="150" title="Group Contact" y="280" h="20" x="10">group_contact</CHECKBOX>
+					<CHECKBOX w="150" title="Group Member" y="280" h="20" x="290">group_member</CHECKBOX>
 					<COMBOBOX w="430" title="Car Type Code" lptable="car_types" y="50" h="20" x="10" lpfield="car_type_code">car_type_code</COMBOBOX>
 					<TEXTFIELD w="150" title="Pickup Time" placeholder="e.g. 2200" y="70" h="20" x="10">pickup_time</TEXTFIELD>
 					<TEXTFIELD w="430" title="Pickup Location" y="90" h="20" x="10">pickup</TEXTFIELD>
@@ -1825,6 +1829,8 @@
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Email">passanger_email</TEXTFIELD>
+				<CHECKBOX w="75" title="Group Contact">group_contact</CHECKBOX>
+				<CHECKBOX w="75" title="Group Member">group_member</CHECKBOX>
 				<TEXTFIELD w="75" title="Car Type Code">car_type_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Pickup Time">pickup_time</TEXTFIELD>
 				<TEXTFIELD w="75" title="Pickup">pickup</TEXTFIELD>
@@ -1849,8 +1855,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -1877,6 +1883,8 @@
 					<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Email" y="30" h="20" x="10">passanger_email</TEXTFIELD>
+					<CHECKBOX w="150" title="Group Contact" y="280" h="20" x="10">group_contact</CHECKBOX>
+					<CHECKBOX w="150" title="Group Member" y="280" h="20" x="290">group_member</CHECKBOX>
 					<COMBOBOX w="430" title="Car Type Code" lptable="car_types" y="50" h="20" x="10" lpfield="car_type_code">car_type_code</COMBOBOX>
 					<TEXTFIELD w="150" title="Pickup Time" placeholder="e.g. 2200" y="70" h="20" x="10">pickup_time</TEXTFIELD>
 					<TEXTFIELD w="430" title="Pickup Location" y="90" h="20" x="10">pickup</TEXTFIELD>
@@ -1983,8 +1991,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2287,8 +2295,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2384,8 +2392,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car " lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2476,8 +2484,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2568,8 +2576,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2761,8 +2769,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2930,8 +2938,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver ID" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3043,8 +3051,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3108,8 +3116,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3231,8 +3239,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3383,8 +3391,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3527,8 +3535,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3641,8 +3649,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3750,8 +3758,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3859,8 +3867,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -4072,8 +4080,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car " lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -4252,8 +4260,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -4386,8 +4394,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -4506,8 +4514,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -4624,8 +4632,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -4823,8 +4831,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -4920,8 +4928,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -5109,8 +5117,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -5217,8 +5225,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -5288,8 +5296,8 @@
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
 					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -5413,8 +5421,8 @@
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
-					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
+					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -5492,10 +5500,9 @@
 				<EDITOR w="530" tab="Details" y="2" h="170" x="10">details</EDITOR>
 			</FORM>
 		</GRID>
-		<GRID name="Email List" keyfield="sys_emailed_id" table="vw_sys_emailed">
-			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+		<GRID name="Email List" keyfield="sys_emailed_id" orderby="sys_emailed_id DESC" table="vw_sys_emailed">
 			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
