@@ -46,6 +46,7 @@ BEGIN
 			ELSE IF (v_total_guranteed > v_amount) THEN
 			RAISE EXCEPTION 'The amount gurranteed has been exceeded by %' ,(v_amount-v_total_guranteed);
 			New.amount:= 0;
+			
 			END IF;
 		END IF;
 	RETURN NEW;
@@ -61,15 +62,19 @@ DECLARE
 	v_loan vw_loans%rowtype;
 BEGIN
 	v_contrib_amount := 0;
-	FOR v_loan IN SELECT * FROM vw_loans WHERE approve_status = 'Completed' AND is_closed = false AND entity_id = 0
+	FOR v_loan IN SELECT * FROM vw_loans WHERE approve_status = 'Approved' AND is_closed = false 
 		LOOP
 		-- for all loans insert loan repayment
 		RAISE NOTICE 'Loan Id : %' , v_loan.loan_id;
 		-- here you can check for balance to chose whether or not to close loan
+		
+		/*INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment) 
+		VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);*/
+            
 		INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
 		VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
 		v_contrib_amount := v_contrib_amount - v_loan.monthly_repayment;
-
+		
 		END LOOP;
 	NEW.contribution_amount = v_contrib_amount;
 RETURN NEW;
@@ -166,3 +171,72 @@ CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
     
+DROP TRIGGER ins_subscriptions IF EXISTS;
+-- Function: ins_subscriptions()
+
+-- DROP FUNCTION ins_subscriptions();
+
+CREATE OR REPLACE FUNCTION ins_subscriptions()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_entity_id		integer;
+	v_org_id		integer;
+	v_currency_id	integer;
+	v_department_id	integer;
+	v_bank_id		integer;
+	v_org_suffix    char(2);
+	rec 			RECORD;
+BEGIN
+
+	IF (TG_OP = 'INSERT') THEN
+		SELECT entity_id INTO v_entity_id
+		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
+		IF(v_entity_id is null)THEN
+			NEW.entity_id := nextval('entitys_entity_id_seq');
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
+			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
+		
+			INSERT INTO sys_emailed ( org_id, table_id, table_name)
+			VALUES ( 0, 1, 'subscription');
+		
+		NEW.approve_status := 'Completed';
+		NEW.workflow_table_id := '11';
+		ELSE
+			RAISE EXCEPTION 'You already have an account, login and request for services';
+		END IF ;
+		
+	ELSIF(NEW.approve_status = 'Approved')THEN
+
+		NEW.org_id := nextval('orgs_org_id_seq');
+		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
+		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
+		
+		
+		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, 'Kenya Shillings', 'KES', 'KES');
+		
+		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id,'Kenya Shillings' , 'KES','KES');
+		UPDATE orgs SET currency_id = 1 WHERE org_id = NEW.org_id;
+	
+		
+		v_bank_id := nextval('banks_bank_id_seq');
+		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+		
+		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
+		WHERE entity_id = NEW.entity_id;
+
+		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
+		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
+		
+		
+		
+	END IF;
+
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
+  FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();

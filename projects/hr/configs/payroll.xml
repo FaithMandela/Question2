@@ -1004,6 +1004,43 @@
 				</GRID>
 			</GRID>
 		</GRID>
+		<GRID name="Claims" keyfield="claim_id" orderby="claim_date desc" table="vw_claims">
+			<TEXTFIELD w="75" title="Claim id">claim_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status"></TEXTFIELD>
+			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
+			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="vw_claim_details">
+				<TEXTFIELD w="175" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
+				<TEXTFIELD w="175" title="Receipt Number">receipt_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>
+				<FORM name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details">
+					<TEXTFIELD w="150" title="Nature Of Expence" y="10" h="20" x="10">nature_of_expence</TEXTFIELD>
+					<TEXTFIELD w="150" title="Receipt Number" y="10" h="20" x="290">receipt_number</TEXTFIELD>
+					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="20" x="290">exchange_rate</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Expense Code" y="70" h="20" x="10">expense_code</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Claims" keyfield="claim_id" table="claims">
+				<USERFIELD>entity_id</USERFIELD>
+				<DEFAULT default="Draft">approve_status</DEFAULT>
+				<COMBOBOX w="430" title="Claim Type" lptable="claim_types" y="10" h="20" x="10" lpfield="claim_type_name">claim_type_id</COMBOBOX>
+				<TEXTDATE w="150" title="Claim Date" y="30" h="20" x="10">claim_date</TEXTDATE>
+				<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="290">in_payroll</CHECKBOX>
+				<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<JASPER name="Claim Report" reportfile="vw_claim_details.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="770" name="Payroll Archive" key="5" h="650">
 		<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods" where="(closed = true)">

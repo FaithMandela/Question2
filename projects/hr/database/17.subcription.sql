@@ -31,6 +31,10 @@ CREATE TABLE subscriptions (
 	job_title				varchar(120),
 	primary_email			varchar(120),
 	confirm_email			varchar(120),
+
+	system_key				varchar(64),
+	subscribed				boolean,
+	subscribed_date			timestamp,
 	
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
@@ -94,6 +98,7 @@ CREATE VIEW vw_subscriptions AS
 		subscriptions.number_of_employees, subscriptions.telephone, subscriptions.website, 
 		subscriptions.primary_contact, subscriptions.job_title, subscriptions.primary_email, 
 		subscriptions.approve_status, subscriptions.workflow_table_id, subscriptions.application_date, subscriptions.action_date, 
+		subscriptions.system_key, subscriptions.subscribed, subscriptions.subscribed_date,
 		subscriptions.details
 	FROM subscriptions INNER JOIN industry ON subscriptions.industry_id = industry.industry_id
 		INNER JOIN sys_countrys ON subscriptions.country_id = sys_countrys.sys_country_id
@@ -175,7 +180,6 @@ BEGIN
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
-			
 	END IF;
 
 	RETURN NEW;
