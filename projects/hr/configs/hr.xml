@@ -16,6 +16,7 @@
 			<MENU name="Petty Cash" role="pettycash">90</MENU>
 			<MENU name="Transaction Ledger" role="finance">190</MENU>
 			<MENU name="Client Forms" role="forms">72</MENU>
+			<MENU name="Subscription" role="subscription">215</MENU>
 			<MENU name="Approvals" role="staff">83</MENU>
 		</MENU>
 		<MENU name="Internship" role="admin,hr">
@@ -566,7 +567,7 @@
 			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 			<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
-			<JASPER name="Role Details" reportfile="vw_department_role_details_a.jasper"></JASPER>
+			<JASPER name="Role Details" org.table="vw_department_roles" reportfile="vw_department_role_details_a.jasper"></JASPER>
 			<ACTIONS>
 				<ACTION fnct="Ins_applications">Apply For Post</ACTION>
 			</ACTIONS>
@@ -2378,6 +2379,9 @@
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<ACTIONS>
+				<ACTION fnct="claims_aplication">Apply for Claim</ACTION>
+			</ACTIONS>
 			<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="vw_claim_details">
 				<TEXTFIELD w="175" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
 				<TEXTFIELD w="175" title="Receipt Number">receipt_number</TEXTFIELD>
@@ -2397,6 +2401,7 @@
 			</GRID>
 			<FORM name="Claims" keyfield="claim_id" table="claims">
 				<USERFIELD>entity_id</USERFIELD>
+				<DEFAULT default="Draft">approve_status</DEFAULT>
 				<COMBOBOX w="430" title="Claim Type" lptable="claim_types" y="10" h="20" x="10" lpfield="claim_type_name">claim_type_id</COMBOBOX>
 				<TEXTDATE w="150" title="Claim Date" y="30" h="20" x="10">claim_date</TEXTDATE>
 				<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="290">in_payroll</CHECKBOX>
@@ -2410,7 +2415,7 @@
 			<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-			<TEXTFIELD w="75" title="Approve Status"></TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<JASPER name="Claim Report" reportfile="vw_claim_details.jasper"></JASPER>
 		</GRID>
 	</DESK>
@@ -3271,6 +3276,35 @@
 				<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			</GRID>
+			<GRID name="Claims" keyfield="claim_id" table="vw_claims" viewfilter="table_name=claims" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="From">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approve Status"></TEXTFIELD>
+				<JASPER name="Claim Report" reportfile="vw_claim_details.jasper"></JASPER>
+			</GRID>
+			<GRID name="Advance" keyfield="employee_advance_id" table="employee_advances" viewfilter="table_name=claims" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="From">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Employee Advance ID">employee_advance_id</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
+				<TEXTFIELD w="275" title="Narrative">narrative</TEXTFIELD>
+			</GRID>
+			<GRID name="Loan" keyfield="loan_id" table="vw_loans" viewfilter="table_name=loans" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Staff ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Loan Type">loan_type_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+				<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
+				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+			</GRID>
 			<GRID name="Completed Forms" keyfield="entry_form_id" table="vw_entry_forms" viewfilter="table_name=entry_forms" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="150" title="Form Name">form_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
@@ -3817,6 +3851,7 @@
 			<JASPER name="Report" reportfile="vw_tx_ledger_a.jasper"></JASPER>
 			<JASPER name="Uncleared" reportfile="vw_tx_ledger_b.jasper"></JASPER>
 			<JASPER name="Open" reportfile="vw_tx_ledger_c.jasper"></JASPER>
+			<JASPER name="Tax" reportfile="vw_tx_ledger_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Expenditure" keyfield="tx_ledger_id" orderby="completed desc, tx_ledger_date" table="vw_tx_ledger" where="(tx_type = -1) AND (for_processing = true) AND (completed = false)">
 			<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
@@ -4046,7 +4081,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Advance Application" key="210" h="500">
-		<GRID name="Draft Advances" keyfield="employee_advance_id" linkfield="employee_month_id" table="employee_advances" where="(approve_status = 'Draft')" user="entity_id">
+		<GRID name="Draft Advances" keyfield="employee_advance_id" table="employee_advances" where="(approve_status = 'Draft')" user="entity_id">
 			<TEXTFIELD w="75" title="Employee Advance ID">employee_advance_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
@@ -4064,5 +4099,27 @@
 			</FORM>
 		</GRID>
 		<JASPER name="Advance Statement" user="filterid" reportfile="vw_advance_statement.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Subscription" key="215" h="500">
+		<FORMVIEW name="Subscription" keyfield="industry_id" table="vw_subscriptions" user="entity_id">
+			<TEXTFIELD w="75" title="Subscription ID">subscription_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Industry Name">industry_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Business Address">business_address</TEXTFIELD>
+			<TEXTFIELD w="75" title="City">city</TEXTFIELD>
+			<TEXTFIELD w="75" title="State">state</TEXTFIELD>
+			<TEXTFIELD w="75" title="Number Of Employees">number_of_employees</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">telephone</TEXTFIELD>
+			<TEXTFIELD w="75" title="Website">website</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Contact">primary_contact</TEXTFIELD>
+			<TEXTFIELD w="75" title="Job Title">job_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="System Key">system_key</TEXTFIELD>
+			<CHECKBOX w="75" title="Subscribed">subscribed</CHECKBOX>
+			<TEXTTIMESTAMP w="75" title="Subscribed Date">subscribed_date</TEXTTIMESTAMP>
+		</FORMVIEW>
 	</DESK>
 </APP>

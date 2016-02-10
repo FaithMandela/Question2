@@ -221,8 +221,11 @@ CREATE TABLE claims (
 	in_payroll				boolean not null default false,
 	narrative				varchar(250),
 	
+	process_claim			boolean not null default false,
+	process_date			date,
+	
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 	
@@ -348,6 +351,7 @@ CREATE VIEW vw_claims AS
 	SELECT claim_types.claim_type_id, claim_types.claim_type_name, 
 		entitys.entity_id, entitys.entity_name, 
 		claims.org_id, claims.claim_id, claims.claim_date, claims.narrative, claims.in_payroll,
+		claims.process_claim, claims.process_date,
 		claims.application_date, claims.approve_status, claims.workflow_table_id, claims.action_date, 
 		claims.details
 	FROM claims INNER JOIN claim_types ON claims.claim_type_id = claim_types.claim_type_id
@@ -1193,9 +1197,9 @@ BEGIN
 
 	INSERT INTO advance_deductions (org_id, amount, employee_month_id)
 	SELECT NEW.org_id, (Amount / Pay_Period), NEW.Employee_Month_ID
-	FROM Employee_Advances INNER JOIN Employee_Month ON Employee_Advances.Employee_Month_ID = Employee_Month.Employee_Month_ID
-	WHERE (entity_ID = NEW.entity_ID) AND (Pay_Period > 0) AND (completed = false)
-		AND (Pay_upto >= current_date);
+	FROM employee_advances INNER JOIN employee_month ON employee_advances.employee_month_id = employee_month.employee_month_id
+	WHERE (employee_month.entity_id = NEW.entity_id) AND (employee_advances.pay_period > 0) AND (employee_advances.completed = false)
+		AND (employee_advances.pay_upto >= current_date);
 		
 	INSERT INTO project_staff_costs (org_id, employee_month_id, project_id, project_role, payroll_ps, staff_cost, tax_cost)
 	SELECT NEW.org_id, NEW.employee_month_id, 
@@ -1857,4 +1861,27 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_employee_advances BEFORE INSERT OR UPDATE ON employee_advances
     FOR EACH ROW EXECUTE PROCEDURE ins_employee_advances();
     
-    
+
+CREATE OR REPLACE FUNCTION claims_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_amount			real;
+	msg 				varchar(120);
+BEGIN
+	msg := 'Advance applied';
+	
+	SELECT sum(amount) INTO v_amount
+	FROM vw_claim_details
+	WHERE (claim_id = $1::int);
+	
+	IF(v_amount is null)THEN
+		RAISE EXCEPTION 'You need to add claim details';
+	END IF;
+	
+	UPDATE claims SET approve_status = 'Completed'
+	WHERE (claim_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+

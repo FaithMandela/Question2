@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gradestatus" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gradestatus" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -15,9 +15,11 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT quarterid, gradeid, studentid, studentname, courseid, coursetitle, instructorname, classoption
+		<![CDATA[SELECT quarterid, gradeid, studentid, studentname, courseid, coursetitle, instructorname, classoption, credithours
+
 FROM studentgradeview
 WHERE (quarterid = '$P!{filterid}') AND (gradeid ='$P!{gradeid}') AND (approved = true)
+
 ORDER BY courseid, studentname;]]>
 	</queryString>
 	<field name="quarterid" class="java.lang.String"/>
@@ -28,12 +30,13 @@ ORDER BY courseid, studentname;]]>
 	<field name="coursetitle" class="java.lang.String"/>
 	<field name="instructorname" class="java.lang.String"/>
 	<field name="classoption" class="java.lang.String"/>
+	<field name="credithours" class="java.lang.Double"/>
 	<group name="courseid">
 		<groupExpression><![CDATA[$F{courseid}]]></groupExpression>
 		<groupHeader>
-			<band height="44" splitType="Stretch">
+			<band height="38" splitType="Stretch">
 				<staticText>
-					<reportElement key="element-90" x="64" y="27" width="61" height="16" forecolor="#000000"/>
+					<reportElement key="element-90" x="64" y="21" width="61" height="16" forecolor="#000000"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -46,7 +49,7 @@ ORDER BY courseid, studentname;]]>
 					<text><![CDATA[Student ID]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="125" y="27" width="195" height="16" forecolor="#000000"/>
+					<reportElement key="element-90" x="125" y="21" width="195" height="16" forecolor="#000000"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -98,7 +101,7 @@ ORDER BY courseid, studentname;]]>
 					<text><![CDATA[Instructor]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="320" y="27" width="81" height="16" forecolor="#000000"/>
+					<reportElement key="element-90" x="320" y="21" width="81" height="16" forecolor="#000000"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -148,6 +151,32 @@ ORDER BY courseid, studentname;]]>
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
 					<textFieldExpression class="java.lang.String"><![CDATA[$F{instructorname}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="element-90" x="413" y="21" width="61" height="16" forecolor="#000000"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Credit Hours]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.0;-#,##0.0" isBlankWhenNull="true">
+					<reportElement key="textField" x="474" y="21" width="40" height="16"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{credithours}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
