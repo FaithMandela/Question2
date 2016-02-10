@@ -432,7 +432,7 @@ public class BWebForms {
 			if(tableList == null) tableList = "var db_list = ['db" + rs.getString("field_id") + ".table'";
 			else tableList += ", 'db" + rs.getString("field_id") + ".table'";
 		}
-		if(tableList == null) tableList = "var db = [";
+		if(tableList == null) tableList = "var db_list = [";
 		tableList += "];";
 		
 		myhtml += "\n\n" + tableList;
@@ -486,6 +486,10 @@ public class BWebForms {
 			jsColEl.add("width", fld_size);
 			if(fld_type.equals("TEXTFIELD")) jsColEl.add("type", "text");
 			if(fld_type.equals("TEXTAREA")) jsColEl.add("type", "textarea");
+			if(fld_type.equals("DATEFIELD")) {
+				jsColEl.add("type", "date");
+				jsColEl.add("myCustomProperty", "bar");
+			}
 			jsColModel.add(jsColEl);
 		}
 		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
