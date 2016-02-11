@@ -150,7 +150,7 @@
 		</FORM>
 	</DESK>
 	<DESK w="700" name="My Details" key="4" h="580">
-		<FORMVIEW new="false" name="My Details" keyfield="entity_id" table="vw_employees" user="entity_id">
+		<FORMVIEW new="false" name="My Details" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_employees" user="entity_id">
 			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
@@ -390,7 +390,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Applicant Details" key="10" h="500">
-		<FORMVIEW new="false" name="Applicant" keyfield="entity_id" table="vw_applicants" user="entity_id">
+		<FORMVIEW new="false" name="Applicant" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>

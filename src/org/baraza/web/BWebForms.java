@@ -470,8 +470,9 @@ public class BWebForms {
 		
 		jshd.add("data", "#db_table#");
 		
+		List<String> jsTables = new ArrayList<String>();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
-		while(rs.moveNext()) {		
+		while(rs.moveNext()) {
 			JsonObjectBuilder jsColEl = Json.createObjectBuilder();
 			String fld_name = "SF" + rs.getString("sub_field_id");
 			String fld_title = rs.getString("question");
@@ -484,12 +485,31 @@ public class BWebForms {
 			jsColEl.add("title", fld_title);
 			jsColEl.add("name", fld_name);
 			jsColEl.add("width", fld_size);
-			if(fld_type.equals("TEXTFIELD")) jsColEl.add("type", "text");
-			if(fld_type.equals("TEXTAREA")) jsColEl.add("type", "textarea");
-			if(fld_type.equals("DATEFIELD")) {
+			if(fld_type.equals("TEXTFIELD")) {
+				jsColEl.add("type", "text");
+			} else if(fld_type.equals("TEXTAREA")) {
+				jsColEl.add("type", "textarea");
+			} else if(fld_type.equals("DATEFIELD")) {
 				jsColEl.add("type", "date");
-				jsColEl.add("myCustomProperty", "bar");
+			} else if(fld_type.equals("LIST")) {				
+				String lookups = rs.getString("sub_field_lookup");
+				if(lookups != null) {
+					jsColEl.add("type", "select");
+					jsColEl.add("items", "db" + fieldId + ".sel_" + fld_name);
+					jsColEl.add("valueField", "name");
+					jsColEl.add("textField", "name");
+
+					JsonObjectBuilder jsSelObj = Json.createObjectBuilder();
+					JsonArrayBuilder jsSelModel = Json.createArrayBuilder();
+					String[] lookup = lookups.split("#");
+					for(String lps : lookup) {
+						jsSelObj.add("name", lps);
+						jsSelModel.add(jsSelObj);
+					}
+					jsTables.add("db" + fieldId + ".sel_" + fld_name + "=" + jshd.build().toString());
+				}
 			}
+			
 			jsColModel.add(jsColEl);
 		}
 		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
@@ -500,6 +520,7 @@ public class BWebForms {
 		JsonObject jsObj = jshd.build();
 		String tableDef = jsObj.toString().replaceAll("\"#db_table#\"", "db" + fieldId + ".table");
 		myhtml.append(tableDef + "\n);");
+		for(String jsTable : jsTables) myhtml.append(jsTable + ";\n");
 		
 		myhtml.append("\n$(document).ready(function(){"
 		+ "$('#add_row" + fieldId + "').click(function(){$('#sub_table" + fieldId + "').jsGrid('insertItem');});\n});\n");
