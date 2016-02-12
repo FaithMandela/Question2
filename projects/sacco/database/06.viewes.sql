@@ -1,36 +1,38 @@
 
 --VIEWS
-
-drop view vw_gurrantors;
-CREATE VIEW vw_gurrantors AS  
-	SELECT vw_loans.principle,vw_loans.entity_id, vw_loans.interest,
-		vw_loans.monthly_repayment,vw_loans.loan_date,vw_loans.initial_payment,	vw_loans.loan_id,vw_loans.repayment_amount,vw_loans.total_interest,
-		vw_loans.loan_balance,vw_loans.calc_repayment_period,vw_loans.reducing_balance, vw_loans.repayment_period,vw_loans.application_date,vw_loans.approve_status,vw_loans.org_id,
-		vw_loans.action_date,vw_loans.details,vw_loans.total_repayment,
-	
-		entitys.entity_name,entitys.is_picked,
-		loan_types.loan_type_id,loan_types.loan_type_name,loan_types.default_interest,gurrantors.gurrantor_id,
-		gurrantors.is_accepted,gurrantors.amount,gurrantors_entity.entity_name as gurrantor_entity_name,
-		gurrantors_entity.entity_id AS gurrantor_entity_id
-	FROM vw_loans
-		RIGHT JOIN entitys ON vw_loans.entity_id = entitys.entity_id
-		RIGHT JOIN loan_types ON vw_loans.loan_type_id = loan_types.loan_type_id
-		LEFT JOIN gurrantors ON gurrantors.loan_id = vw_loans.loan_id
-		LEFT JOIN entitys gurrantors_entity ON entitys.entity_id = gurrantors.entity_id;
-
-    
-CREATE VIEW vw_contributions AS
-	SELECT contributions.contribution_id,contributions.org_id,contributions.entity_id,contributions.period_id,
-		contributions.payment_type_id,contributions.deposit_date,contributions.deposit_amount,contributions.entry_date,
-		contributions.transaction_ref,contributions.contribution_amount,
-		entitys.entity_name,entitys.is_active,
-		contribution_types.contribution_type_id,contribution_types.contribution_type_name,
-		payment_types.payment_type_name,payment_types.payment_narrative
-	FROM contributions
-		JOIN entitys ON contributions.entity_id = entitys.entity_id
-		JOIN contribution_types on contributions.contribution_type_id = contribution_types.contribution_type_id
-		JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id;  
-	
+CREATE OR REPLACE VIEW vw_gurrantors AS 
+ SELECT vw_loans.principle,
+    vw_loans.entity_id,
+    vw_loans.interest,
+    vw_loans.monthly_repayment,
+    vw_loans.loan_date,
+    vw_loans.initial_payment,
+    vw_loans.loan_id,
+    vw_loans.repayment_amount,
+    vw_loans.total_interest,
+    vw_loans.loan_balance,
+    vw_loans.calc_repayment_period,
+    vw_loans.reducing_balance,
+    vw_loans.repayment_period,
+    vw_loans.application_date,
+    vw_loans.approve_status,
+    vw_loans.org_id,
+    vw_loans.action_date,
+    vw_loans.details,
+    vw_loans.total_repayment,
+    entitys.entity_name,
+    loan_types.loan_type_id,
+    loan_types.loan_type_name,
+    gurrantors.gurrantor_id,
+    gurrantors.is_accepted,
+    gurrantors.amount,
+    gurrantors_entity.entity_name AS gurrantor_entity_name,
+    gurrantors_entity.entity_id AS gurrantor_entity_id
+   FROM gurrantors
+     INNER JOIN vw_loans ON vw_loans.loan_id = gurrantors.loan_id
+     INNER JOIN entitys ON vw_loans.entity_id = entitys.entity_id
+     INNER JOIN loan_types ON vw_loans.loan_type_id = loan_types.loan_type_id
+     INNER JOIN entitys gurrantors_entity ON gurrantors_entity.entity_id = gurrantors.entity_id;
 DROP VIEW vw_entitys;
 
 CREATE OR REPLACE VIEW vw_entitys AS 
@@ -63,7 +65,7 @@ CREATE OR REPLACE VIEW vw_entitys_types AS
 	SELECT	entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
 		entitys.function_role, entitys.attention, entitys.primary_email, entitys.org_id,entitys.primary_telephone,
-		
+		  entitys.new_password,
 		entity_types.entity_type_id, entity_types.entity_type_name, 
 		entity_types.entity_role, entity_types.use_key
 	FROM entitys
@@ -151,11 +153,11 @@ CREATE OR REPLACE VIEW vw_investments AS
     
 	investments.investment_id,investments.investment_type_id , investments.maturity_date,investments.invest_amount ,investments.yearly_dividend,investments.withdrawal_date,investments.withdrwal_amount ,
 	investments.period_years,investments.default_interest,investments.return_on_investment,investments.application_date,investments.approve_status, investments.workflow_table_id,
-	investments.action_date,investments.details
-   FROM entitys
-     JOIN investments ON entitys.entity_id = investments.entity_id;
-
-
+	investments.action_date,investments.details, investment_types.investment_type_name
+   FROM  investments
+     JOIN entitys ON entitys.entity_id = investments.entity_id
+     JOIN investment_types on investments.investment_type_id = investment_types.investment_type_id;
+     
 CREATE VIEW vw_trx AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
 		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
