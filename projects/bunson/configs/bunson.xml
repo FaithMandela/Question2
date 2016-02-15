@@ -133,6 +133,7 @@
 				<TEXTFIELD w="150" title="Mobile Number" placeholder="e.g 2547123456" y="10" h="20" x="290">mobile_number</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="10">active</CHECKBOX>
 				<CHECKBOX w="150" title="Backup" y="120" h="20" x="10">is_backup</CHECKBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="supplier_codes" noorg="true" y="10" h="20" x="10" lpfield="air_agent_name">air_agent_code</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -219,6 +220,7 @@
 				<TEXTDATE w="75" title="Pickup Date">pickup_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car ID">car_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -234,6 +236,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -358,6 +361,7 @@
 				<TEXTDATE w="75" title="Pickup Date">pickup_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car ID">car_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -373,6 +377,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -467,6 +472,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -482,6 +488,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -571,6 +578,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -586,6 +594,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -675,6 +684,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -690,6 +700,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -779,6 +790,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -891,6 +903,7 @@
 				<TEXTDATE w="75" title="Pickup Date">pickup_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car ID">car_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -907,6 +920,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -996,6 +1010,7 @@
 					<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 					<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 					<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -1011,6 +1026,7 @@
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car" lptable="cars" where="(active=true)" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -1062,6 +1078,7 @@
 					<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 					<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 					<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -1077,6 +1094,7 @@
 					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 						<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -1090,6 +1108,7 @@
 					<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 					<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 					<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -1918,6 +1937,7 @@
 				</FORM>
 			</GRID>
 			<FORM name="Finance" keyfield="transfer_id" table="transfers" noorg="true">
+				<DEFAULT default="2">create_source</DEFAULT>
 				<DEFAULT default="xxx">record_locator</DEFAULT>
 				<DEFAULT default="KES">currency_id</DEFAULT>
 				<DEFAULT default="01">booking_location</DEFAULT>
@@ -2169,6 +2189,7 @@
 				<TEXTDATE w="75" title="Pickup Date">pickup_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car ID">car_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -2184,6 +2205,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 					<COMBOBOX w="430" title="Driver ID" lptable="drivers" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2197,6 +2219,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2282,6 +2305,7 @@
 				<TEXTDATE w="75" title="Pickup Date">pickup_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car ID">car_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -2297,6 +2321,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2310,6 +2335,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2379,6 +2405,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2394,6 +2421,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car " lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2406,6 +2434,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2471,6 +2500,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2486,6 +2516,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2498,6 +2529,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2563,6 +2595,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2578,6 +2611,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2589,6 +2623,7 @@
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
@@ -2655,6 +2690,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2673,6 +2709,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -2755,6 +2792,7 @@
 				<TEXTDATE w="75" title="Pickup Date">pickup_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car ID">car_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -2771,6 +2809,7 @@
 				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 					<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 					<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -2784,6 +2823,7 @@
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Kms In">kms_in</TEXTFIELD>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -3038,6 +3078,7 @@
 					<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 					<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 					<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -3053,6 +3094,7 @@
 					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Confirmation Code" y="290" h="20" x="10">confirmation_code</TEXTFIELD>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
 						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
 						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
@@ -3065,6 +3107,7 @@
 					<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 					<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 					<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Kms Out">kms_out</TEXTFIELD>
 					<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
@@ -3365,6 +3408,7 @@
 				<TEXTFIELD w="75" title="Registration Number">registration_number</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Name">car_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Car Type Code">car_type_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Confirmation Code">confirmation_code</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
