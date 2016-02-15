@@ -3631,6 +3631,7 @@
 	</DESK>
 	<DESK w="700" name="Job Review" key="112" h="550">
 		<JASPER name="Job Review" reportfile="vw_evaluation_points.jasper"></JASPER>
+		<JASPER name="Appraisal Ratings" reportfile="vw_appraisal_ratings.jasper"></JASPER>
 		<JASPER name="Review Category" reportfile="vw_review_points.jasper"></JASPER>
 		<FILTER w="700" name="Career Development" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year"></DRILLDOWN>

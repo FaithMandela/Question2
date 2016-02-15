@@ -61,10 +61,18 @@ INSERT INTO car_types( car_type_id, car_type_code, car_type_name)
                 (3, 'MINIBUS -C', 'MINIBUS 25 seater'),
                 (4, 'SALOON', 'SALOON CAR');
 
+
+
+CREATE TABLE supplier_codes(
+    AIR_AGENT_CODE      varchar(10),
+    AIR_AGENT_NAME      varchar(75)
+);
+
 CREATE TABLE drivers(
     driver_id           serial primary key,
     org_id		        integer references orgs,
     driver_name         varchar(100),
+    AIR_AGENT_CODE      varchar(10),
     mobile_number       varchar(15),
     active              boolean default true,
     driver_pin          varchar(35),
@@ -72,6 +80,9 @@ CREATE TABLE drivers(
     details             text
 );
 CREATE INDEX drivers_org_id ON drivers(org_id);
+
+
+
 
 CREATE TABLE cars(
     car_id              serial primary key,
@@ -101,6 +112,7 @@ CREATE TABLE transfers(
     pax_no              integer default 1,
     transfer_cancelled  boolean default false,
     is_group            boolean default false,
+    create_source       integer default 1
 );
 
 
@@ -155,6 +167,7 @@ CREATE TABLE transfer_assignments(
     passanger_id                integer references passangers,
     driver_id                   integer references drivers,
     car_id                      integer references cars,
+    confirmation_code           varchar(25),
     kms_out                     varchar(100),
     time_out                    time,
     kms_in                      varchar(100),
@@ -170,6 +183,8 @@ CREATE TABLE transfer_assignments(
 CREATE INDEX transfer_assignments_passanger_id ON transfer_assignments(passanger_id);
 CREATE INDEX transfer_assignments_driver_id ON transfer_assignments(driver_id);
 CREATE INDEX transfer_assignments_car_id ON transfer_assignments(car_id);
+
+
 
 
 
@@ -243,27 +258,30 @@ CREATE VIEW vw_passangers_noflights AS
 
 -- DROP VIEW vw_transfer_assignments;
 CREATE OR REPLACE VIEW vw_transfer_assignments AS 
- SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number, is_backup,
-    cars.car_type_id, cars.registration_number, car_types.car_type_name, 
-    car_types.car_type_code, transfers.transfer_id, transfers.record_locator, 
-    transfers.customer_code, transfers.customer_name, transfers.currency_id, 
-    transfers.agreed_amount, transfers.booking_location, transfers.booking_date, 
-    transfers.payment_details, transfers.reference_data, 
+ SELECT drivers.driver_id, drivers.driver_name, drivers.mobile_number, 
+    drivers.is_backup, drivers.air_agent_code, cars.car_type_id, cars.registration_number, 
+    car_types.car_type_name, car_types.car_type_code, transfers.transfer_id, 
+    transfers.record_locator, transfers.customer_code, transfers.customer_name, 
+    transfers.currency_id, transfers.agreed_amount, transfers.booking_location, 
+    transfers.booking_date, transfers.payment_details, transfers.reference_data, 
+    transfers.pax_no, transfers.transfer_cancelled, transfers.is_group, 
+    transfers.create_source, passangers.group_contact, passangers.group_member, 
     passangers.passanger_id, passangers.passanger_name, 
     passangers.passanger_mobile, passangers.passanger_email, 
     passangers.pickup_time, passangers.pickup, passangers.dropoff, 
     passangers.other_preference, passangers.amount, passangers.processed, 
-    passangers.pickup_date, passangers.tab, 
+    passangers.pax_cancelled, passangers.pickup_date, passangers.tab, 
     transfer_assignments.transfer_assignment_id, transfer_assignments.car_id, 
-    transfer_assignments.kms_out, transfer_assignments.kms_in, 
-    transfer_assignments.time_out, transfer_assignments.time_in, 
-    transfer_assignments.no_show, transfer_assignments.no_show_reason, 
-    transfer_assignments.closed, transfer_assignments.last_update, 
-    transfer_assignments.cancelled, transfer_assignments.cancel_reason, 
-    transfer_flights.transfer_flight_id, transfer_flights.start_time, 
-    transfer_flights.end_time, transfer_flights.flight_date, 
-    transfer_flights.start_airport, transfer_flights.end_airport, 
-    transfer_flights.airline, transfer_flights.flight_num
+    transfer_assignments.confirmation_code, transfer_assignments.kms_out, 
+    transfer_assignments.kms_in, transfer_assignments.time_out, 
+    transfer_assignments.time_in, transfer_assignments.no_show, 
+    transfer_assignments.no_show_reason, transfer_assignments.closed, 
+    transfer_assignments.last_update, transfer_assignments.cancelled, 
+    transfer_assignments.cancel_reason, transfer_flights.transfer_flight_id, 
+    transfer_flights.start_time, transfer_flights.end_time, 
+    transfer_flights.flight_date, transfer_flights.start_airport, 
+    transfer_flights.end_airport, transfer_flights.airline, 
+    transfer_flights.flight_num, transfer_flights.create_key
    FROM transfer_assignments
    JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
    JOIN cars ON cars.car_id = transfer_assignments.car_id
@@ -272,6 +290,8 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
    JOIN transfers ON passangers.transfer_id = transfers.transfer_id
    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
   WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
+
+
 
 -- DROP VIEW vw_transfer_assignments_create;
 CREATE OR REPLACE VIEW vw_transfer_assignments_create AS 
@@ -293,6 +313,48 @@ CREATE OR REPLACE VIEW vw_transfer_assignments_create AS
    JOIN cars ON cars.car_id = transfer_assignments.car_id
    JOIN car_types ON car_types.car_type_id = cars.car_type_id
    JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id;
+
+
+DROP VIEW vw_transfer_assignments_etravel;
+CREATE OR REPLACE VIEW vw_transfer_assignments_etravel AS 
+ SELECT 
+transfers.transfer_id::text || '/' || passangers.passanger_id || '/' || transfer_assignments.transfer_assignment_id AS voucher_ref, 
+
+ drivers.driver_id, drivers.driver_name,
+    drivers.is_backup, drivers.air_agent_code,
+    car_types.car_type_code, 
+    transfers.transfer_id, transfers.record_locator, transfers.customer_code, 
+    transfers.customer_name, transfers.currency_id, transfers.agreed_amount, 
+    transfers.booking_location, transfers.booking_date, 
+    transfers.payment_details, transfers.reference_data, transfers.pax_no, 
+    transfers.transfer_cancelled, transfers.is_group, transfers.create_source, 
+    passangers.group_contact, passangers.group_member, passangers.passanger_id, 
+    passangers.passanger_name, passangers.passanger_mobile, 
+    passangers.passanger_email, passangers.pickup_time, passangers.pickup, 
+    passangers.dropoff, passangers.other_preference, passangers.amount, 
+    passangers.processed, passangers.pax_cancelled, passangers.pickup_date, 
+    passangers.tab, transfer_assignments.transfer_assignment_id, 
+    transfer_assignments.car_id, transfer_assignments.confirmation_code, 
+    transfer_assignments.kms_out, transfer_assignments.kms_in, 
+    transfer_assignments.time_out, transfer_assignments.time_in, 
+    transfer_assignments.no_show, transfer_assignments.no_show_reason, 
+    transfer_assignments.closed, transfer_assignments.last_update, 
+    transfer_assignments.cancelled, transfer_assignments.cancel_reason, 
+    transfer_flights.transfer_flight_id, transfer_flights.start_time, 
+    transfer_flights.end_time, transfer_flights.flight_date, 
+    transfer_flights.start_airport, transfer_flights.end_airport, 
+    transfer_flights.airline, transfer_flights.flight_num, 
+    transfer_flights.create_key
+   FROM transfer_assignments
+   JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
+   JOIN cars ON cars.car_id = transfer_assignments.car_id
+   JOIN car_types ON car_types.car_type_id = cars.car_type_id
+   JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id
+   JOIN transfers ON passangers.transfer_id = transfers.transfer_id
+   LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
+  WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
+
+
 
 
 
