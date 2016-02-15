@@ -1433,47 +1433,56 @@ CREATE INDEX apps_subscriptions_list_id  ON apps_subscriptions   (apps_list_id);
 
 
 CREATE TABLE passengers
-      (
-        passenger_id serial NOT NULL,
-        rate_id integer,
-        entity_id integer,
-        org_id integer,
-        passenger_name character varying(100),
-        passenger_mobile character varying(15),
-        passenger_email character varying(100),
-        passenger_age integer DEFAULT 0,
-        days_covered integer,
-        nok_name character varying(100),
-        nok_mobile character varying(15),
-        nok_national_id character varying(20),
-        is_north_america boolean DEFAULT false,
-        cover_amount real,
-        approved boolean DEFAULT false,
-        details text,
-        days_from character varying(20),
-        days_to character varying(20),
-        destown character varying(10),
-        sys_country_id character(2) REFERENCES sys_countrys,
-        passenger_id_no character varying(20),
-		passenger_dob character varying(20),
-		totalAmount_covered real,
-		pin_no character varying(25),
-		corporate_id integer REFERENCES corporates,
-		corporate_rate_id integer REFERENCES corporate_rates,
-		corporate_rate_category_id integer REFERENCES corporate_rates,
-		countries text,
-        approved_date timestamp without time zone,
-        CONSTRAINT passengers_pkey PRIMARY KEY (passenger_id),
-        CONSTRAINT passengers_entity_id_fkey FOREIGN KEY (entity_id)
-            REFERENCES entitys (entity_id) MATCH SIMPLE
-            ON UPDATE NO ACTION ON DELETE NO ACTION,
-        CONSTRAINT passengers_org_id_fkey FOREIGN KEY (org_id)
-            REFERENCES orgs (org_id) MATCH SIMPLE
-            ON UPDATE NO ACTION ON DELETE NO ACTION,
-        CONSTRAINT passengers_rate_id_fkey FOREIGN KEY (rate_id)
-            REFERENCES rates (rate_id) MATCH SIMPLE
-            ON UPDATE NO ACTION ON DELETE NO ACTION
-      );
+(
+  passenger_id serial NOT NULL,
+  rate_id integer,
+  entity_id integer,
+  org_id integer,
+  passenger_name character varying(100),
+  passenger_mobile character varying(15),
+  passenger_email character varying(100),
+  passenger_age integer DEFAULT 0,
+  days_covered integer,
+  nok_name character varying(100),
+  nok_mobile character varying(15),
+  nok_national_id character varying(20),
+  is_north_america boolean DEFAULT false,
+  cover_amount real,
+  approved boolean DEFAULT false,
+  details text,
+  days_from character varying(20),
+  days_to character varying(20),
+  destown character varying(50),
+  approved_date timestamp without time zone,
+  sys_country_id character(2),
+  passenger_id_no character varying(20),
+  passenger_dob character varying(20),
+  corporate_id integer,
+  corporate_rate_id integer,
+  pin_no character varying(25),
+  totalamount_covered real,
+  countries text,
+  policy_number character varying(50),
+  CONSTRAINT passengers_pkey PRIMARY KEY (passenger_id),
+  CONSTRAINT passengers_corporate_id_fkey FOREIGN KEY (corporate_id)
+      REFERENCES corporates (corporate_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT passengers_corporate_rate_id_fkey FOREIGN KEY (corporate_rate_id)
+      REFERENCES corporate_rates (corporate_rate_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT passengers_entity_id_fkey FOREIGN KEY (entity_id)
+      REFERENCES entitys (entity_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT passengers_org_id_fkey FOREIGN KEY (org_id)
+      REFERENCES orgs (org_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT passengers_rate_id_fkey FOREIGN KEY (rate_id)
+      REFERENCES rates (rate_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT passengers_sys_country_id_fkey FOREIGN KEY (sys_country_id)
+      REFERENCES sys_countrys (sys_country_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
 	CREATE INDEX passenger_sys_country_id  ON passengers   (sys_country_id);
       CREATE INDEX passengers_org_id
         ON passengers
@@ -1589,39 +1598,39 @@ CREATE TABLE passengers
 
 
 
-          CREATE OR REPLACE VIEW vw_corporate_benefits AS
-           SELECT corporate_benefits.corporate_benefit_type_id,
-              corporate_benefit_types.corporate_benefit_type_name,
-              corporate_benefits.rate_type_id,
-              corporate_rate_types.rate_type_name,
-              corporate_benefits.benefit_id,
-              corporate_benefits.individual,
-              corporate_benefits.others
-             FROM corporate_benefits
-               JOIN corporate_benefit_types ON corporate_benefits.corporate_benefit_type_id = corporate_benefit_types.corporate_benefit_type_id
-               JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
+CREATE OR REPLACE VIEW vw_corporate_benefits AS
+SELECT corporate_benefits.corporate_benefit_type_id,
+  corporate_benefit_types.corporate_benefit_type_name,
+  corporate_benefits.rate_type_id,
+  corporate_rate_types.rate_type_name,
+  corporate_benefits.benefit_id,
+  corporate_benefits.individual,
+  corporate_benefits.others
+ FROM corporate_benefits
+   JOIN corporate_benefit_types ON corporate_benefits.corporate_benefit_type_id = corporate_benefit_types.corporate_benefit_type_id
+   JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
 
 
 
-          CREATE OR REPLACE VIEW vw_rate_types AS
-           SELECT rate_types.rate_type_id,
-              rate_types.rate_type_name,
-              rate_types.age_limit,
-              rate_types.details,
-              rate_types.age_from,
-              rate_types.age_to,
-              rate_category.rate_category_name
-             FROM rate_types
-               JOIN rate_category ON rate_types.rate_category_id = rate_category.rate_category_id ;
+CREATE OR REPLACE VIEW vw_rate_types AS
+SELECT rate_types.rate_type_id,
+  rate_types.rate_type_name,
+  rate_types.age_limit,
+  rate_types.details,
+  rate_types.age_from,
+  rate_types.age_to,
+  rate_category.rate_category_name
+ FROM rate_types
+   JOIN rate_category ON rate_types.rate_category_id = rate_category.rate_category_id ;
 
-               CREATE OR REPLACE VIEW vw_corporate_rate_types AS
-                SELECT corporate_rate_types.rate_type_id,
-                   corporate_rate_types.rate_type_name,
-                   corporate_rate_types.age_limit,
-                   corporate_rate_types.details,
-                   corporate_rate_category.corporate_rate_category_name
-                  FROM corporate_rate_types
-                  JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id ;
+CREATE OR REPLACE VIEW vw_corporate_rate_types AS
+SELECT corporate_rate_types.rate_type_id,
+   corporate_rate_types.rate_type_name,
+   corporate_rate_types.age_limit,
+   corporate_rate_types.details,
+   corporate_rate_category.corporate_rate_category_name
+  FROM corporate_rate_types
+  JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id ;
 
 
 CREATE OR REPLACE VIEW vw_passengers AS
@@ -1768,7 +1777,26 @@ CREATE FUNCTION get_benefit_section_b(integer) RETURNS text AS $$
     SELECT individual AS result from vw_benefits WHERE rate_type_id = $1 AND benefit_section IN('1B');
 $$LANGUAGE SQL;
 
-
+drop function getCreditLimit(integer);
+CREATE FUNCTION getCreditLimit(integer) RETURNS double precision AS $$
+	DECLARE 
+		credit_limit 	double precision;
+		cover_amount 	double precision;
+		paid_amount 	double precision;
+		current_limit 	double precision;
+		BEGIN
+			credit_limit := COALESCE((SELECT orgs.credit_limit FROM orgs WHERE orgs.org_id = $1 GROUP BY orgs.credit_limit),0);
+			cover_amount:= COALESCE((SELECT SUM(passengers.totalamount_covered)AS cover_amount FROM passengers WHERE org_id = $1
+				GROUP BY org_id),0);
+				
+			paid_amount :=COALESCE((SELECT SUM(payment_amount)as payment_amount FROM payments WHERE org_id = $1 GROUP BY org_id),0);
+			
+			current_limit := (credit_limit + paid_amount) - cover_amount;
+			
+			
+		RETURN current_limit;
+		END;
+$$LANGUAGE plpgsql;
 
 
 
