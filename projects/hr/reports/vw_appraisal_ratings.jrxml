@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_appraisal_ratings" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f0e31a58-df53-46d4-9492-bce1042c7b02">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="68"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -22,6 +22,9 @@
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="orgid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
 job_reviews.supervisor_rating, COALESCE(job_reviews.recomendation,'') AS recomendation ,
@@ -34,9 +37,11 @@ vw_evaluation_points.points, vw_evaluation_points.narrative,
 getComputedReviewPoints(1, job_reviews.job_review_id) AS comp_emp_points,
 getComputedReviewPoints(2, job_reviews.job_review_id) AS comp_reviewer_points
 
+
 FROM vw_evaluation_points
 INNER JOIN job_reviews ON job_reviews.job_review_id = vw_evaluation_points.job_review_id
-$P!{orgwhere}
+
+
 ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_category_id;]]>
 	</queryString>
 	<field name="supervisor_rating" class="java.lang.Integer"/>
@@ -59,79 +64,79 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 	<group name="job_review_id">
 		<groupExpression><![CDATA[$F{job_review_id}]]></groupExpression>
 		<groupHeader>
-			<band height="230">
+			<band height="309">
 				<staticText>
-					<reportElement style="Column header" x="1" y="0" width="94" height="15" forecolor="#000000" uuid="6b2d9a3c-94e3-46c3-85dc-56d4d4ade4b5"/>
+					<reportElement style="Column header" x="1" y="28" width="94" height="15" forecolor="#000000" uuid="6b2d9a3c-94e3-46c3-85dc-56d4d4ade4b5"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Job Review ID :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="1" y="15" width="94" height="15" forecolor="#000000" uuid="c49cdd4c-2f6d-4d07-815d-59678085e0a1"/>
+					<reportElement style="Column header" x="1" y="43" width="94" height="15" forecolor="#000000" uuid="c49cdd4c-2f6d-4d07-815d-59678085e0a1"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Employee :]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="95" y="15" width="201" height="15" uuid="c41cce77-ac56-4396-af3d-d37a689d9551"/>
+					<reportElement style="Detail" x="95" y="43" width="201" height="15" uuid="c41cce77-ac56-4396-af3d-d37a689d9551"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="95" y="0" width="47" height="15" uuid="cc722101-7232-4844-aa39-0d59517635be"/>
+					<reportElement style="Detail" x="95" y="28" width="47" height="15" uuid="cc722101-7232-4844-aa39-0d59517635be"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{job_review_id}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="360" y="0" width="86" height="15" forecolor="#000000" uuid="e01571c2-0c4c-45c3-b898-30d09a04f0e1"/>
+					<reportElement style="Column header" x="360" y="28" width="86" height="15" forecolor="#000000" uuid="e01571c2-0c4c-45c3-b898-30d09a04f0e1"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Overall Score]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
-					<reportElement style="Detail" x="446" y="0" width="102" height="15" uuid="edc48c2c-eb26-4bbb-90dc-1c5dda5a616e"/>
+					<reportElement style="Detail" x="446" y="28" width="102" height="15" uuid="edc48c2c-eb26-4bbb-90dc-1c5dda5a616e"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{comp_emp_points}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="1" y="30" width="94" height="15" forecolor="#000000" uuid="6ed9352d-df6b-44f0-afbe-a36aa9c3783f"/>
+					<reportElement style="Column header" x="1" y="58" width="94" height="15" forecolor="#000000" uuid="6ed9352d-df6b-44f0-afbe-a36aa9c3783f"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Review Date :]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
-					<reportElement style="Detail" x="95" y="30" width="141" height="15" uuid="b4b9b13d-750d-4b9b-88b9-871915de69f2"/>
+					<reportElement style="Detail" x="95" y="58" width="141" height="15" uuid="b4b9b13d-750d-4b9b-88b9-871915de69f2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{review_date}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="360" y="30" width="86" height="15" forecolor="#000000" uuid="c4131c69-2115-4efd-b9da-20727b7c8077"/>
+					<reportElement style="Column header" x="360" y="58" width="86" height="15" forecolor="#000000" uuid="c4131c69-2115-4efd-b9da-20727b7c8077"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Review Done :]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="446" y="30" width="102" height="15" uuid="308bac18-1266-4d98-a6b7-f4229ec2fec9"/>
+					<reportElement style="Detail" x="446" y="58" width="102" height="15" uuid="308bac18-1266-4d98-a6b7-f4229ec2fec9"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{review_done} ? "Yes":"No"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement positionType="Float" x="21" y="162" width="112" height="20" uuid="66b54e93-5b05-4578-8c69-4699dfc90321"/>
+					<reportElement positionType="Float" x="21" y="187" width="121" height="20" uuid="66b54e93-5b05-4578-8c69-4699dfc90321"/>
 					<box leftPadding="10">
 						<topPen lineWidth="0.75" lineColor="#F2F2F2"/>
 						<leftPen lineWidth="0.75" lineColor="#F2F2F2"/>
@@ -144,14 +149,14 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 					<text><![CDATA[Supervisor Comments : ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
-					<reportElement positionType="Float" mode="Opaque" x="78" y="207" width="247" height="20" backcolor="#E7E7E7" uuid="b8545142-54fe-4918-ac55-e1a3fcb1bfe1"/>
+					<reportElement positionType="Float" mode="Opaque" x="78" y="287" width="247" height="20" backcolor="#E7E7E7" uuid="b8545142-54fe-4918-ac55-e1a3fcb1bfe1"/>
 					<textElement verticalAlignment="Middle">
 						<font pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{self_rating}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement positionType="Float" x="133" y="162" width="421" height="20" uuid="dd726ee6-038c-45b9-a6cb-c565ac82d4a8"/>
+					<reportElement positionType="Float" x="142" y="187" width="412" height="20" uuid="dd726ee6-038c-45b9-a6cb-c565ac82d4a8"/>
 					<box>
 						<topPen lineWidth="0.75" lineColor="#F2F2F2"/>
 						<leftPen lineWidth="0.0" lineColor="#F2F2F2"/>
@@ -164,14 +169,14 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 					<text><![CDATA[Include any comments on your overall performance for the las t one year]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
-					<reportElement positionType="Float" mode="Opaque" x="416" y="207" width="138" height="20" backcolor="#E7E7E7" uuid="74beb792-4bc2-4766-9d1b-0952e8501271"/>
+					<reportElement positionType="Float" mode="Opaque" x="416" y="287" width="138" height="20" backcolor="#E7E7E7" uuid="74beb792-4bc2-4766-9d1b-0952e8501271"/>
 					<textElement verticalAlignment="Middle">
 						<font pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{supervisor_rating}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement positionType="Float" x="21" y="115" width="109" height="20" uuid="1e9d6b9e-7ebe-4406-aa88-ca7ca1c87762"/>
+					<reportElement positionType="Float" x="21" y="105" width="121" height="20" uuid="1e9d6b9e-7ebe-4406-aa88-ca7ca1c87762"/>
 					<box leftPadding="10">
 						<topPen lineWidth="0.75" lineColor="#F2F2F2"/>
 						<leftPen lineWidth="0.75" lineColor="#F2F2F2"/>
@@ -184,7 +189,7 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 					<text><![CDATA[Employee Comments : ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement positionType="Float" x="21" y="137" width="531" height="20" uuid="9f147037-eecc-4849-bc94-2562f44e0431"/>
+					<reportElement positionType="Float" x="21" y="127" width="531" height="60" uuid="9f147037-eecc-4849-bc94-2562f44e0431"/>
 					<box leftPadding="10" rightPadding="10">
 						<leftPen lineWidth="0.75" lineColor="#F2F2F2"/>
 						<bottomPen lineWidth="0.75" lineColor="#F2F2F2"/>
@@ -196,7 +201,7 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 					<textFieldExpression><![CDATA[$F{employee_comments}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement positionType="Float" x="130" y="115" width="422" height="20" uuid="5619617b-1970-4fd9-896d-d06d63d9f9bb"/>
+					<reportElement positionType="Float" x="142" y="105" width="410" height="20" uuid="5619617b-1970-4fd9-896d-d06d63d9f9bb"/>
 					<box>
 						<topPen lineWidth="0.75" lineColor="#F2F2F2"/>
 						<leftPen lineWidth="0.0" lineColor="#F2F2F2"/>
@@ -209,21 +214,21 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 					<text><![CDATA[Include any comments on your overall performance for the las t one year]]></text>
 				</staticText>
 				<staticText>
-					<reportElement positionType="Float" mode="Opaque" x="325" y="207" width="91" height="20" backcolor="#E7E7E7" uuid="1f09d76a-1eba-4e83-9468-c42602901447"/>
+					<reportElement positionType="Float" mode="Opaque" x="325" y="287" width="91" height="20" backcolor="#E7E7E7" uuid="1f09d76a-1eba-4e83-9468-c42602901447"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[Supervisor Rating : ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Title" positionType="Float" x="-1" y="57" width="555" height="20" uuid="e77a7033-8f69-4d7d-93bf-8e60a01992e8"/>
+					<reportElement style="Title" positionType="Float" x="-1" y="85" width="555" height="20" uuid="e77a7033-8f69-4d7d-93bf-8e60a01992e8"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="12" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[Overall Rating and Comments]]></text>
 				</staticText>
 				<staticText>
-					<reportElement positionType="Float" mode="Opaque" x="8" y="207" width="70" height="20" backcolor="#E7E7E7" uuid="42c25e31-ba85-4346-8d89-796e99284713"/>
+					<reportElement positionType="Float" mode="Opaque" x="1" y="287" width="77" height="20" backcolor="#E7E7E7" uuid="42c25e31-ba85-4346-8d89-796e99284713"/>
 					<box leftPadding="10"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -231,7 +236,7 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 					<text><![CDATA[Self Rating : ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement positionType="Float" x="21" y="182" width="533" height="20" uuid="3ba0fbd7-f195-4417-aca7-7443cdfefd3f"/>
+					<reportElement positionType="Float" x="21" y="207" width="533" height="70" uuid="3ba0fbd7-f195-4417-aca7-7443cdfefd3f"/>
 					<box leftPadding="10" rightPadding="10">
 						<leftPen lineWidth="0.75" lineColor="#F2F2F2"/>
 						<bottomPen lineWidth="0.75" lineColor="#F2F2F2"/>
@@ -243,24 +248,27 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 					<textFieldExpression><![CDATA[$F{recomendation} + "\n" + $F{reviewer_comments}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
-					<reportElement style="Detail" x="446" y="15" width="102" height="15" uuid="41fa0496-67b9-45d0-8d4c-836bb8b9147d"/>
+					<reportElement style="Detail" x="446" y="43" width="102" height="15" uuid="41fa0496-67b9-45d0-8d4c-836bb8b9147d"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{comp_reviewer_points}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="360" y="15" width="86" height="15" forecolor="#000000" uuid="f7f5b44e-38b6-4492-90fa-b1ec89f952cd"/>
+					<reportElement style="Column header" x="360" y="43" width="86" height="15" forecolor="#000000" uuid="f7f5b44e-38b6-4492-90fa-b1ec89f952cd"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Supervisor Rating]]></text>
 				</staticText>
+				<line>
+					<reportElement positionType="Float" x="0" y="4" width="555" height="1" uuid="3db8fc07-f786-4aec-b68f-37a13867c716"/>
+					<graphicElement>
+						<pen lineStyle="Dotted" lineColor="#666666"/>
+					</graphicElement>
+				</line>
 			</band>
 		</groupHeader>
-		<groupFooter>
-			<band height="8"/>
-		</groupFooter>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -282,19 +290,6 @@ ORDER BY vw_evaluation_points.job_review_id ASC, vw_evaluation_points.review_cat
 	<columnHeader>
 		<band height="21" splitType="Stretch"/>
 	</columnHeader>
-	<detail>
-		<band height="9" splitType="Stretch"/>
-	</detail>
-	<columnFooter>
-		<band height="15" splitType="Stretch">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="a57999ba-9d2a-41fb-9403-a7bbe099f022"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
-		</band>
-	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
