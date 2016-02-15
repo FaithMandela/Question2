@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="new_employees" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="899ad3a6-08ed-45c0-bf79-81538a4ce8f1">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="new_entities" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="899ad3a6-08ed-45c0-bf79-81538a4ce8f1">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="from_date" class="java.util.Date">
 		<defaultValueExpression><![CDATA["2015-12-12"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="to_date" class="java.util.Date">
+		<defaultValueExpression><![CDATA["2016-3-3"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT entity_name,date_enroled, function_role,entity_role,entity_type_name,
@@ -15,9 +18,7 @@
 
 FROM vw_entitys_types
 
-WHERE date_enroled >= '$P!{from_date}'::date
-
-]]>
+WHERE (date_enroled::date) >= '$P!{from_date}' AND  (date_enroled::date) <= '$P!{to_date}' and entity_role not like 'subscriptions']]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="date_enroled" class="java.sql.Timestamp"/>

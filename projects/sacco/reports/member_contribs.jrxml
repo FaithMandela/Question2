@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="member_contribs" language="groovy" pageWidth="900" pageHeight="500" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="743a68cf-5069-40db-9168-5d50d010d61b">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="577"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -13,9 +13,6 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="filter_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA[entity_id]]></defaultValueExpression>
-	</parameter>
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
@@ -70,7 +67,7 @@ FROM vw_contributions where entity_id = '$P!{entity_id}']]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="121" y="1" width="93" height="15" forecolor="#000000" uuid="e1f0a196-f04d-4279-9619-c16676ddd03f"/>
+				<reportElement style="Column header" x="121" y="0" width="93" height="15" forecolor="#000000" uuid="e1f0a196-f04d-4279-9619-c16676ddd03f"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -84,7 +81,7 @@ FROM vw_contributions where entity_id = '$P!{entity_id}']]>
 				<text><![CDATA[Payment Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="385" y="1" width="119" height="15" forecolor="#000000" uuid="ae0098be-9f8b-4a9a-88de-ebed1748302a"/>
+				<reportElement style="Column header" x="385" y="0" width="119" height="15" forecolor="#000000" uuid="ae0098be-9f8b-4a9a-88de-ebed1748302a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -98,7 +95,7 @@ FROM vw_contributions where entity_id = '$P!{entity_id}']]>
 				<text><![CDATA[Transaction REf]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="221" y="1" width="135" height="15" forecolor="#000000" uuid="1da2a95c-30a4-4e83-ad1f-db9a9d457554"/>
+				<reportElement style="Column header" x="221" y="0" width="135" height="15" forecolor="#000000" uuid="1da2a95c-30a4-4e83-ad1f-db9a9d457554"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>

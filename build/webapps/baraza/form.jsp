@@ -87,8 +87,8 @@
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
 
 	<!-- jsgrid css -->
-    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid.min.css" />
-    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid-theme.min.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid/jsgrid-theme.min.css" />
 
 </head>
 <!-- END HEAD -->
@@ -264,16 +264,9 @@
 
 <!-- END PAGE LEVEL SCRIPTS -->
 
-<script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
-<script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
-
-<!-- calendar-->
-<!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
-<script src="./assets/global/plugins/moment.min.js"></script>
-<script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
-
 <!-- jsgrid for sub form editing-->
-<script src="./assets/jsgrid-1.2.0/jsgrid.min.js"></script>
+<script src="./assets/jsgrid/jsgrid.min.js"></script>
+<script src="./assets/jsgrid/jsgrid.date.js"></script>
 
 <script type="text/javascript">
     jQuery(document).ready(function() {

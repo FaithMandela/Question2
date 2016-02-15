@@ -27,17 +27,26 @@ CREATE VIEW vw_contribution_types AS
 	INNER JOIN orgs ON contribution_types.org_id = orgs.org_id;
 
 
-CREATE VIEW vw_contributions AS
-	SELECT accounts.account_id, accounts.account_name, contribution_types.contribution_type_id, contribution_types.contribution_type_name,
-	 entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name, periods.period_id, contributions.meeting_id, contributions.contribution_id, 
-	contributions.contribution_date, contributions.contribution_amount, contributions.banking_details, contributions.confirmation, 
-	contributions.member_payment, contributions.share_value, contributions.details
-	FROM contributions
-	INNER JOIN accounts ON contributions.account_id = accounts.account_id
-	INNER JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
-	INNER JOIN entitys ON contributions.entity_id = entitys.entity_id
-	INNER JOIN orgs ON contributions.org_id = orgs.org_id
-	INNER JOIN periods ON contributions.period_id = periods.period_id;
+CREATE OR REPLACE VIEW vw_contributions AS 
+ SELECT 
+    contribution_types.contribution_type_id,
+    contribution_types.contribution_type_name,
+    entitys.entity_id,
+    entitys.entity_name,
+    contributions.org_id,
+     contributions.period_id,
+    contributions.meeting_id,
+    contributions.contribution_id,
+    contributions.contribution_amount,
+    contributions.banking_details,
+    contributions.details,
+    contributions.actual_amount,contributions.merry_go_round_percentage
+   FROM contributions
+        JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
+     JOIN entitys ON contributions.entity_id = entitys.entity_id
+
+
+
 
 
 CREATE VIEW vw_investment_types AS

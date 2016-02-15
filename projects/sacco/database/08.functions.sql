@@ -46,9 +46,13 @@ BEGIN
 			ELSE IF (v_total_guranteed > v_amount) THEN
 			RAISE EXCEPTION 'The amount gurranteed has been exceeded by %' ,(v_amount-v_total_guranteed);
 			New.amount:= 0;
-			
+				END IF;
 			END IF;
-		END IF;
+	IF (TG_OP = 'UPDATE') THEN
+	  UPDATE loans
+    SET approve_status = 'Completed';
+	RAISE NOTICE ' Loan Completed';
+	 END IF;
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -56,30 +60,36 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_gurrantors AFTER INSERT OR UPDATE ON gurrantors
 	FOR EACH ROW EXECUTE PROCEDURE ins_gurrantors();
   
+
+DROP FUNCTION IF EXISTS ins_contributions();
 CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $$
 DECLARE
-	v_contrib_amount	real;
-	v_loan vw_loans%rowtype;
+v_contrib_amount	real;
+v_loan vw_loans%rowtype;
 BEGIN
-	v_contrib_amount := 0;
-	FOR v_loan IN SELECT * FROM vw_loans WHERE approve_status = 'Approved' AND is_closed = false 
-		LOOP
-		-- for all loans insert loan repayment
-		RAISE NOTICE 'Loan Id : %' , v_loan.loan_id;
-		-- here you can check for balance to chose whether or not to close loan
-		
-		/*INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment) 
-		VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);*/
-            
-		INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
-		VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
-		v_contrib_amount := v_contrib_amount - v_loan.monthly_repayment;
-		
-		END LOOP;
-	NEW.contribution_amount = v_contrib_amount;
-RETURN NEW;
+v_contrib_amount := 0;
+FOR v_loan IN
+SELECT *
+FROM vw_loans WHERE approve_status = 'Completed' AND is_closed = false AND entity_id = 0
+LOOP
+       -- for all loans insert loan repayment
+RAISE NOTICE 'Loan Id : %' , v_loan.loan_id;
+-- here you can check for balance to chose whether or not to close loan
+INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment_amount)
+	VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
+	
+	v_contrib_amount := v_contrib_amount - v_loan.monthly_repayment;
+
+INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
+	VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
+	
+END LOOP;
+NEW.contribution_amount = v_contrib_amount;
+   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+
 
 CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE On contributions
    FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
@@ -93,13 +103,16 @@ DECLARE
 	v_totals			real;
 BEGIN
 	SELECT interest_type INTO v_interests FROM  investment_types WHERE investment_type_id = NEW. investment_type_id;
+		
 		NEW.default_interest := v_interests;
 		v_invest := NEW.invest_amount + (NEW.invest_amount * NEW.default_interest/100 );
 		NEW.return_on_investment := v_invest - NEW.invest_amount;
 		NEW.yearly_dividend :=(v_invest/ NEW.period_years);
 		NEW.withdrwal_amount := v_invest;
+		NEW.approve_status := 'Completed';
 	RETURN NEW;
 END;
+
 $BODY$
 LANGUAGE plpgsql;
    
@@ -144,28 +157,35 @@ BEGIN
 	ELSIF (TG_OP = 'UPDATE') THEN
 		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
 		WHERE entity_id = NEW.entity_id;
-
-			
-	END IF;
-	
-	IF (NEW.approve_status = 'Approved') THEN 
-	INSERT INTO members(
-            entity_id,org_id, surname, first_name, middle_name,phone, 
-            gender,marital_status,salary,nationality,objective, details)
-    VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
-    New.applicant_phone,New.gender,New.marital_status,NEW.salary,NEW.nationality,NEW.objective, NEW.details);
-	ELSE
-	END IF;
-
+END IF;
 	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;   
 
-
-  
 CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
   FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
+   
+  CREATE OR REPLACE FUNCTION upd_applicants()
+RETURNS trigger AS
+$BODY$
+BEGIN
+	IF (NEW.approve_status = 'Approved') THEN 
+	INSERT INTO members(entity_id,org_id, surname, first_name, middle_name,phone, 
+            gender,marital_status,objective, details)
+	VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
+	New.applicant_phone,New.gender,New.marital_status,NEW.objective, NEW.details);
+		ELSE
+			END IF;
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql; 
+
+
+  
+CREATE TRIGGER upd_applicants AFTER INSERT OR UPDATE ON applicants
+    FOR EACH ROW EXECUTE PROCEDURE upd_applicants();
   
   
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
@@ -189,7 +209,7 @@ DECLARE
 	rec 			RECORD;
 BEGIN
 
-	IF (TG_OP = 'INSERT') THEN
+	IF (TG_OP = 'INSERT') THENss
 		SELECT entity_id INTO v_entity_id
 		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
 		IF(v_entity_id is null)THEN

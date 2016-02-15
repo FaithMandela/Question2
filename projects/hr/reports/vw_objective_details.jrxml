@@ -16,8 +16,12 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="objective_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -91,7 +95,7 @@ $P!{organd};]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="58" splitType="Stretch">
+		<band height="54" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="1" y="0" width="18" height="15" uuid="cf3aa83b-cd60-4293-b3c8-db31614466db"/>
 				<textElement verticalAlignment="Middle">

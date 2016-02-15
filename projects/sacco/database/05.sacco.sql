@@ -182,111 +182,46 @@ CREATE TABLE applicants	(
  
  
 CREATE TABLE members (
-	entity_id 			integer NOT NUll references from,
-	bank_branch_id 		integer NOT NULL,
-	location_id			integer,
-  	currency_id 		integer references currency,
- 	org_id 			integer references orgs,
-	person_title		character varying(7),
+	entity_id 			integer NOT NUll references entitys,
+	address_id			integer references address,
+  	bank_id                 	integer references banks,
+ 	org_id 				integer references orgs,
+	person_title			character varying(7),
+	
+	full_name			 varchar (120),
 	surname 			character varying(50) NOT NULL,
 	first_name 			character varying(50) NOT NULL,
-  	middle_name 		character varying(50),
-  	date_of_birth 		date,
-  	gender 			character varying(1),
+  	middle_name 			character varying(50),
+  	date_of_birth 			date,
+  	gender 				character varying(1),
  	phone				character varying(120),
-  	nationality 		character(2) NOT NULL,
-  	nation_of_birth 		character(2),
-  	place_of_birth		character varying(50),
-  	marital_status 		character varying(2),
-  	appointment_date 		date,
- 	current_appointment 	date,
+  	primary_email			character varying(120),
+  	
+  	place_of_birth			character varying(50),
+  	marital_status 			character varying(2),
+  	appointment_date 		timestamp default now(),
+ 
   	exit_date 			date,
-  	bank_account 		character varying(32),
-  	picture_file 		character varying(32),
-  	active 			boolean NOT NULL DEFAULT true,
+  	
+  	picture_file 			character varying(32),
+  	active 				boolean NOT NULL DEFAULT true,
   	language 			character varying(320),
-  	desg_code 			character varying(16),
-  	inc_mth 			character varying(16),
-  	interests 			text,
+	interests 			text,
   	objective 			text,
-  	details 			text,
-  	salary 			real,
+  	details 			text
+  	);
+ 
+ CREATE INDEX members_org_id ON members (org_id);
+CREATE INDEX members_bank_id ON members (bank_id);
+ CREATE INDEX members_address_id ON members (address_id);
  
  
- 
- 
- 
- 
-CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
-    FOR EACH ROW EXECUTE PROCEDURE upd_action();
-
-CREATE OR REPLACE FUNCTION ins_applicants()
-RETURNS trigger AS
-$BODY$
-DECLARE
-	rec 			RECORD;
-	v_entity_id		integer;
-BEGIN
-	IF (TG_OP = 'INSERT') THEN
-		
-		IF(NEW.entity_id IS NULL) THEN
-			SELECT entity_id INTO v_entity_id
-			FROM entitys
-			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
-				
-			IF(v_entity_id is null)THEN
-				SELECT org_id INTO rec
-				FROM orgs WHERE (is_default = true);
-
-				NEW.entity_id := nextval('entitys_entity_id_seq');
-
-				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
-					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, rec.org_id, 0, 
-					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
-					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
-			ELSE
-				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
-			END IF;
-		END IF;
-
-		INSERT INTO sys_emailed (table_id, table_name)
-		VALUES (NEW.entity_id, 'applicant');
-	ELSIF (TG_OP = 'UPDATE') THEN
-		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
-		WHERE entity_id = NEW.entity_id;
-
-			
-	END IF;
-	
-	IF (NEW.approve_status = 'Approved') THEN 
-	INSERT INTO members(
-            entity_id,org_id, surname, first_name, middle_name,phone, 
-            gender,marital_status,salary,nationality,objective, details)
-    VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
-    New.applicant_phone,New.gender,New.marital_status,NEW.salary,NEW.nationality,NEW.objective, new.details);
-	ELSE
-	END IF;
-
-	RETURN NEW;
-END;
-$BODY$
-  LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_applicants
-  BEFORE INSERT OR UPDATE
-  ON applicants
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_applicants();
-
-
 -------- Data
 INSERT INTO payment_types(payment_type_id, payment_type_name, org_id) VALUES
 	(1, 'Bank',0),
 	(2, 'Mpesa',0),
 	(3, 'Cash', 0),
 	(4, 'Airtel Money', 0 );
---end payments
 
 
 INSERT INTO contribution_types(contribution_type_id, contribution_type_name, org_id, interval_days) VALUES
@@ -314,5 +249,14 @@ INSERT INTO investment_types(investment_type_id, org_id, investment_type_name, d
 	(1,12,'Real Estate','bu'),
 	(2,5,'Buy Equity','buy land');
 
+DELETE FROM currency WHERE currency_id > 1;
 
-	
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
+VALUES (1, 0, 0, 'admin', 'admin', 'admin@localhost', false, false, false, 'baraza');	
+
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
+VALUES (0, 0, 0, 'applicant', 'applicant', 'applicant@localhost', false, false, false, 'baraza');
+
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
+VALUES (0, 0, 0, 'member', 'member', 'member@localhost', false, false, false, 'baraza');
+

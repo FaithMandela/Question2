@@ -16,6 +16,8 @@
 		<MENU name="Reports" role="deans,hostel">
 			<MENU name="Hostel Residence Students">214</MENU>
 			<MENU name="Off-Campus">215</MENU>
+			<MENU name="Semester Paid Students">551</MENU>
+			<MENU name="Students Audit">772</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="705" name="Citizenship Types" type="vert" key="1" h="500">
@@ -91,8 +93,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	
-		<DESK w="700" name="Students" type="vert" key="4" h="560">
+	<DESK w="700" name="Students" type="vert" key="4" h="560">
 		<GRID name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
@@ -120,7 +121,6 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	
 	<DESK w="700" name="Students Address" type="vert" key="5" h="560">
 		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" noorg="true">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
@@ -323,5 +323,49 @@
 			<JASPER filtered="true" name="Female Offcampus" reportfile="offcampus1.jasper"></JASPER>
 			<JASPER filtered="true" name="Male Offcampus" reportfile="offcampus2.jasper"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" name="Semester Paid Students" key="551" h="500">
+		<FILTER location="250" name="Semester Paid Students" type="horl">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
+				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="Quarter" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<DRILLDOWN name="Schools" keyfield="schoolid" table="schools" listfield="schoolname">
+				<DRILLDOWN name="Departments" keyfield="departmentid" wherefield="schoolid" table="departments" listfield="departmentname" pos="top">
+					<DRILLDOWN name="Majors" keyfield="majorid" wherefield="departmentid" table="majors" listfield="majorname" filtername="majorid" pos="top"></DRILLDOWN>
+				</DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Semester Programme Students" reportfile="wvqstudentchargesbb.jasper"></JASPER>
+			<JASPER filtered="true" name="Semester Students Tel Num" reportfile="wvqstudentfone.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="630" name="Students Audit" key="772" h="750">
+		<GRID name="Semester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
+			<GRID name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="vwqstudentbalances" noorg="true" where="(finaceapproval = true) AND (printed = true)">
+				<TEXTFIELD w="10" title="Matrix Num">studentid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
+				<TEXTFIELD w="20" title="Account Number">accountnumber</TEXTFIELD>
+				<TEXTFIELD w="20" title="Study Level">studylevel</TEXTFIELD>
+				<TEXTFIELD w="20" title="Programme">majorname</TEXTFIELD>
+				<TEXTFIELD w="20" title="registered">approved</TEXTFIELD>
+				<GRID name="Registered Courses" keyfield="qgradeid" linkfield="qstudentid" table="studentgradeview" noorg="true">
+					<TEXTFIELD w="10" title="Matrix Num">studentid</TEXTFIELD>
+					<TEXTFIELD w="20" title="Student">studentname</TEXTFIELD>
+					<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
+					<TEXTFIELD w="100" title="Course Title">coursetitle</TEXTFIELD>
+					<TEXTFIELD w="100" title="Lecturer">instructorname</TEXTFIELD>
+					<TEXTFIELD w="10" title="Units">chargehours</TEXTFIELD>
+					<TEXTFIELD w="5" title="Dropped">dropped</TEXTFIELD>
+				</GRID>
+				<GRID name="Approval Trail" keyfield="approvalid" linkfield="qstudentid" table="approvallist" noorg="true">
+					<TEXTFIELD w="40" title="Approval Type">approvaltype</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approved By">approvedby</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approve Date">approvedate</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approval Computer">clientip</TEXTFIELD>
+				</GRID>
+			</GRID>
+		</GRID>
 	</DESK>
 </APP>

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_objectives_subrpt2" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="25" bottomMargin="25" uuid="867ee53a-7493-4bac-902a-d91582454e3e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="172"/>
+	<property name="ireport.y" value="160"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -20,8 +20,12 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
 
@@ -100,9 +104,9 @@ ORDER BY objective_id ASC]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="30">
+			<band height="20">
 				<staticText>
-					<reportElement mode="Opaque" x="0" y="9" width="102" height="20" backcolor="#F2F2F2" uuid="f65caa11-5cc7-4204-9762-12a99dd148c3"/>
+					<reportElement mode="Opaque" x="2" y="0" width="102" height="20" backcolor="#F2F2F2" uuid="f65caa11-5cc7-4204-9762-12a99dd148c3"/>
 					<box leftPadding="4">
 						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
 					</box>
@@ -112,7 +116,7 @@ ORDER BY objective_id ASC]]>
 					<text><![CDATA[Self Rating : ]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Opaque" x="333" y="9" width="160" height="20" backcolor="#F2F2F2" uuid="e4714cce-dad5-42e6-99cf-14fa99b3a715"/>
+					<reportElement mode="Opaque" x="335" y="0" width="160" height="20" backcolor="#F2F2F2" uuid="e4714cce-dad5-42e6-99cf-14fa99b3a715"/>
 					<box>
 						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
 					</box>
@@ -122,7 +126,7 @@ ORDER BY objective_id ASC]]>
 					<text><![CDATA[Supervisor's Rating : ]]></text>
 				</staticText>
 				<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="493" y="9" width="58" height="20" backcolor="#F2F2F2" uuid="f53e23e1-a8e2-418b-b1ce-b2b65eca7d35"/>
+					<reportElement mode="Opaque" x="495" y="0" width="58" height="20" backcolor="#F2F2F2" uuid="f53e23e1-a8e2-418b-b1ce-b2b65eca7d35"/>
 					<box>
 						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
 					</box>
@@ -132,7 +136,7 @@ ORDER BY objective_id ASC]]>
 					<textFieldExpression><![CDATA[$V{total_reviwer_rating}]]></textFieldExpression>
 				</textField>
 				<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="102" y="9" width="231" height="20" backcolor="#F2F2F2" uuid="772716f6-c6cb-44f6-a3ea-85027a02cbb5"/>
+					<reportElement mode="Opaque" x="104" y="0" width="231" height="20" backcolor="#F2F2F2" uuid="772716f6-c6cb-44f6-a3ea-85027a02cbb5"/>
 					<box>
 						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
 					</box>

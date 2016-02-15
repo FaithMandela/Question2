@@ -153,8 +153,9 @@ CREATE VIEW vw_loans AS
 		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
 		entitys.entity_id, entitys.entity_name, employees.employee_id,
 		loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
-		loans.repayment_period, loans.application_date, loans.approve_status, loans.initial_payment, 
-		loans.loan_date, loans.action_date, loans.details,
+		loans.repayment_period, loans.initial_payment, loans.loan_date, 
+		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, 
+		loans.details,
 		get_repayment(loans.principle, loans.interest, loans.repayment_period) as repayment_amount, 
 		loans.initial_payment + get_total_repayment(loans.loan_id) as total_repayment, get_total_interest(loans.loan_id) as total_interest,
 		(loans.principle + get_total_interest(loans.loan_id) - loans.initial_payment - get_total_repayment(loans.loan_id)) as loan_balance,
@@ -266,7 +267,7 @@ BEGIN
 	SELECT default_interest, reducing_balance INTO v_default_interest, v_reducing_balance
 	FROM loan_types 
 	WHERE (loan_type_id = NEW.loan_type_id);
-	
+		
 	IF(NEW.interest is null)THEN
 		NEW.interest := v_default_interest;
 	END IF;
@@ -279,8 +280,10 @@ BEGIN
 	IF (NEW.repayment_period is null)THEN
 		NEW.repayment_period := 0;
 	END IF;
+	IF(NEW.approve_status = 'Draft')THEN
+		NEW.repayment_period := 0;
+	END IF;
 	
-
 	IF(NEW.principle is null)THEN
 		RAISE EXCEPTION 'You have to enter a principle amount';
 	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period = 0))THEN
@@ -293,6 +296,10 @@ BEGIN
 		NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
 	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment > 0))THEN
 		NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
+	END IF;
+	
+	IF(NEW.monthly_repayment > NEW.principle)THEN
+		RAISE EXCEPTION 'Repayment should be less than the principal amount';
 	END IF;
 	
 	RETURN NEW;

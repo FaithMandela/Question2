@@ -6,6 +6,10 @@ CREATE TABLE contribution_types (
 	details				text
 );
 
+
+ALTER TABLE contribution_types DROP merry_go_round CASCADE;
+
+
 CREATE INDEX contribution_types_org_id ON contribution_types (org_id);
 
 
@@ -24,6 +28,16 @@ CREATE TABLE contributions (
 	share_value			real not null,
 	details				text
 );
+
+ALTER TABLE contributions ADD meeting_id integer references meetings;
+ALTER TABLE contributions ADD merry_go_round_percentage real;
+ALTER TABLE contributions ADD actual_amount real;
+ALTER TABLE contributions DROP contribution_date CASCADE;
+ALTER TABLE contributions ADD merry_go_round boolean default true;
+ALTER TABLE contributions DROP confirmation CASCADE;
+ALTER TABLE contributions DROP member_payment CASCADE;
+ALTER TABLE contributions DROP share_value CASCADE;
+
 
 CREATE INDEX contributions_contributions_type_id ON contributions (contribution_type_id);
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
@@ -122,6 +136,8 @@ CREATE TABLE investment_types (
 );
 
 CREATE INDEX investment_types_org_id ON investment_types (org_id);
+ALTER TABLE investment_types ADD interest_amount real;
+
 
 CREATE TABLE investments (
    	investment_id                   serial primary key,
@@ -137,6 +153,17 @@ CREATE TABLE investments (
 	is_active                       boolean default true not null,
 	details                         text
 );
+
+
+ALTER TABLE investments DROP COLUMN amount CASCADE;
+ALTER TABLE investments ADD COLUMN principal real;
+ALTER TABLE investments ADD COLUMN period real;
+ALTER TABLE investments ADD COLUMN monthly_returns real;
+ALTER TABLE investments ADD COLUMN total_payment real;
+ALTER TABLE investments ADD COLUMN investment_name varchar(120);
+ALTER TABLE investments DROP status;
+ALTER TABLE investments ADD approve_status varchar (16) ;
+
 
 CREATE INDEX investments_investment_type_id ON investments (investment_type_id);
 CREATE INDEX investments_account_id ON investments (account_id);
@@ -155,6 +182,9 @@ CREATE TABLE meetings (
 	status				varchar (16) default 'Draft' not null,
 	details				text
 );
+
+ALTER TABLE meetings ADD entity_id integer references entitys;
+
 
 CREATE INDEX meetings_org_id ON meetings (org_id);
 
