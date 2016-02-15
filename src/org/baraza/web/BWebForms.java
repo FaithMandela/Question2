@@ -455,10 +455,9 @@ public class BWebForms {
 		+ "deleteItem: function(deletingClient) {\n"
 		+ "var clientIndex = $.inArray(deletingClient, this.table);\n"
 		+ "this.table.splice(clientIndex, 1);\n"
-		+ "}};\n"
+		+ "}\n};\n"
 		+ "window.db" + fieldId + " = db" + fieldId + ";\n"
-		+ "db" + fieldId + ".table = " + getSubAnswer(fieldId) + ";\n\n"
-		+ "$('#sub_table" + fieldId + "').jsGrid(");
+		+ "db" + fieldId + ".table = " + getSubAnswer(fieldId) + ";\n\n");
 		
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		jshd.add("width", tableSize + "%");
@@ -470,7 +469,7 @@ public class BWebForms {
 		
 		jshd.add("data", "#db_table#");
 		
-		List<String> jsTables = new ArrayList<String>();
+		Map<String, String> jsTables = new HashMap<String, String>();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
 		while(rs.moveNext()) {
 			JsonObjectBuilder jsColEl = Json.createObjectBuilder();
@@ -491,13 +490,14 @@ public class BWebForms {
 				jsColEl.add("type", "textarea");
 			} else if(fld_type.equals("DATEFIELD")) {
 				jsColEl.add("type", "date");
-			} else if(fld_type.equals("LIST")) {				
+			} else if(fld_type.equals("LIST")) {
 				String lookups = rs.getString("sub_field_lookup");
 				if(lookups != null) {
 					jsColEl.add("type", "select");
-					jsColEl.add("items", "db" + fieldId + ".sel_" + fld_name);
+					jsColEl.add("items", "#db" + fieldId + ".sel_" + fld_name + "#");
 					jsColEl.add("valueField", "name");
 					jsColEl.add("textField", "name");
+					jsColEl.add("align", "left");
 
 					JsonObjectBuilder jsSelObj = Json.createObjectBuilder();
 					JsonArrayBuilder jsSelModel = Json.createArrayBuilder();
@@ -506,7 +506,7 @@ public class BWebForms {
 						jsSelObj.add("name", lps);
 						jsSelModel.add(jsSelObj);
 					}
-					jsTables.add("db" + fieldId + ".sel_" + fld_name + "=" + jshd.build().toString());
+					jsTables.put("db" + fieldId + ".sel_" + fld_name, jsSelModel.build().toString());
 				}
 			}
 			
@@ -518,12 +518,16 @@ public class BWebForms {
 		jshd.add("fields", jsColModel);
 		
 		JsonObject jsObj = jshd.build();
-		String tableDef = jsObj.toString().replaceAll("\"#db_table#\"", "db" + fieldId + ".table");
-		myhtml.append(tableDef + "\n);");
-		for(String jsTable : jsTables) myhtml.append(jsTable + ";\n");
+		String tableDef = jsObj.toString().replaceAll("\"#db_table#\"", "db" + fieldId + ".table");	
+		for(String jsTable : jsTables.keySet()) {
+			tableDef = tableDef.replace("\"#" + jsTable + "#\"", jsTable);
+			myhtml.append(jsTable + "=" + jsTables.get(jsTable) + ";\n");
+		}
 		
-		myhtml.append("\n$(document).ready(function(){"
-		+ "$('#add_row" + fieldId + "').click(function(){$('#sub_table" + fieldId + "').jsGrid('insertItem');});\n});\n");
+		myhtml.append("$('#sub_table" + fieldId + "').jsGrid(" + tableDef + "\n);\n"); 
+		
+		myhtml.append("\n$(document).ready(function(){\n"
+		+ "$('#add_row" + fieldId + "').click(function(){$('#sub_table" + fieldId + "').jsGrid('insertItem');\n});\n});\n");
 
 		return myhtml.toString();
 	}

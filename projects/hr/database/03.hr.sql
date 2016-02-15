@@ -2373,3 +2373,31 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION getComputedReviewPoints(v_type integer, v_job_review_id integer) RETURNS double precision AS $$
+DECLARE
+	v_points double precision;
+BEGIN
+	IF(v_type = 1) THEN
+		SELECT SUM((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.points)  INTO v_points
+		FROM job_reviews INNER JOIN vw_evaluation_objectives
+		ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
+
+		WHERE (job_reviews.job_review_id =v_job_review_id)
+		AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date));
+	ELSE
+		SELECT SUM((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.reviewer_points) INTO  v_points
+		FROM job_reviews INNER JOIN vw_evaluation_objectives
+		ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
+
+		WHERE (job_reviews.job_review_id = v_job_review_id)
+		AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date));
+	END IF;
+	
+	IF(v_points is null) THEN v_points := 0; END IF;
+   
+	RETURN v_points;
+END;
+$$ LANGUAGE plpgsql;
+
