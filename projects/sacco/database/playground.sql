@@ -1,27 +1,25 @@
--- View: vw_vw_entitys_types_types
+CREATE OR REPLACE FUNCTION change_password(varchar(12), varchar(32), varchar(32)) RETURNS varchar(120) AS $$
+DECLARE
+	old_password 	varchar(64);
+	passchange 		varchar(120);
+	entityID		integer;
+BEGIN
+	passchange := 'Password Error';
+	entityID := CAST($1 AS INT);
+	SELECT entity_password INTO old_password
+	FROM entitys WHERE (entity_id = entityID);
 
--- DROP VIEW vw_vw_entitys_types_types;
+	IF ($2 = '0') THEN
+		passchange := first_password();
+		UPDATE entitys SET first_password = passchange, Entity_password = md5(passchange) WHERE (entity_id = entityID);
+		passchange := 'Password Changed';
+	ELSIF (old_password = md5($2)) THEN
+		UPDATE entitys SET Entity_password = md5($3) WHERE (entity_id = entityID);
+		passchange := 'Password Changed';
+	ELSE
+		passchange := null;
+	END IF;
 
-CREATE OR REPLACE VIEW vw_vw_entitys_types_types AS 
- SELECT vw_entitys_types.entity_id,
-    vw_entitys_types.entity_name,
-    vw_entitys_types.user_name,
-    vw_entitys_types.super_user,
-    vw_entitys_types.entity_leader,
-    vw_entitys_types.date_enroled,
-    vw_entitys_types.is_active,
-    vw_entitys_types.entity_password,
-    vw_entitys_types.first_password,
-    vw_entitys_types.function_role,
-    vw_entitys_types.attention,
-    vw_entitys_types.primary_email,
-    vw_entitys_types.org_id,
-    vw_entitys_types.primary_telephone,
-    entity_types.entity_type_id,
-    entity_types.entity_type_name,
-    entity_types.entity_role,
-    entity_types.use_key
-   FROM vw_entitys_types
-     JOIN entity_types ON vw_entitys_types.entity_type_id = entity_types.entity_type_id;
-
-
+	return passchange;
+END;
+$$ LANGUAGE plpgsql;
