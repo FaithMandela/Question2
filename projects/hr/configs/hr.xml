@@ -408,12 +408,12 @@
 					<DATA>Dr</DATA>
 					<DATA>Prof</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="100" title="Surname" y="10" h="20" x="190">surname</TEXTFIELD>
-				<TEXTFIELD w="100" title="First Name" y="10" h="20" x="490">first_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Surname" required="true" y="10" h="20" x="190">surname</TEXTFIELD>
+				<TEXTFIELD w="100" title="First Name" required="true" y="10" h="20" x="490">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="30" h="20" x="10">middle_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">applicant_phone</TEXTFIELD>
-				<TEXTFIELD w="430" title="Email" y="50" h="20" x="10">applicant_email</TEXTFIELD>
-				<TEXTDATE w="150" title="Date Of Birth (DD/MM/YYYY)" y="70" h="20" x="10">date_of_birth</TEXTDATE>
+				<TEXTFIELD w="150" title="Phone" required="true" y="30" h="20" x="290">applicant_phone</TEXTFIELD>
+				<TEXTFIELD w="430" title="Email" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
+				<TEXTDATE w="150" title="Date Of Birth (DD/MM/YYYY)" required="true" y="70" h="20" x="10">date_of_birth</TEXTDATE>
 				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
 				<COMBOLIST w="150" title="Gender" y="90" h="20" x="10">gender
 					<DATA key="M">Male</DATA>
@@ -423,10 +423,10 @@
 					<DATA key="M">Married</DATA>
 					<DATA key="S">Single</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="150" title="Identity Card" y="110" h="20" x="10">identity_card</TEXTFIELD>
-				<TEXTFIELD w="430" title="Language" y="130" h="20" x="10">language</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Previous Salary" y="150" h="20" x="10">previous_salary</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Expected Salary" y="150" h="20" x="290">expected_salary</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10">identity_card</TEXTFIELD>
+				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="150" h="20" x="10">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="150" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10">interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10">field_of_study</TEXTAREA>
@@ -445,14 +445,14 @@
 					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
-					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" required="true" y="50" h="20" x="10">town</TEXTFIELD>
 					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
 					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
-					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" required="true" y="110" h="20" x="10">phone_number</TEXTFIELD>
 					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
 					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
 					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" required="true" y="190" h="20" x="10">email</TEXTFIELD>
 					<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -466,9 +466,9 @@
 				<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
 				<FORM name="Education" keyfield="education_id" linkfield="entity_id" table="education">
 					<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
-					<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
+					<TEXTDATE w="150" title="Date From" required="true" y="30" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Name Of School" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name Of School" required="true" y="50" h="20" x="10">name_of_school</TEXTFIELD>
 					<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
 					<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
@@ -480,10 +480,10 @@
 				<TEXTFIELD w="75" title="Employers Name">employers_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Position Held">position_held</TEXTFIELD>
 				<FORM name="Employment" keyfield="employment_id" linkfield="entity_id" table="employment">
-					<TEXTDATE w="150" title="Date From" y="10" h="20" x="10">date_from</TEXTDATE>
+					<TEXTDATE w="150" title="Date From" required="true" y="10" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="10" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Employers Name" y="30" h="20" x="10">employers_name</TEXTFIELD>
-					<TEXTFIELD w="430" title="Position Held" y="50" h="20" x="10">position_held</TEXTFIELD>
+					<TEXTFIELD w="430" title="Employers Name" required="true" y="30" h="20" x="10">employers_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Position Held" required="true" y="50" h="20" x="10">position_held</TEXTFIELD>
 					<TEXTAREA w="430" title="Responsibilities" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -491,8 +491,8 @@
 				<TEXTFIELD w="75" title="Seminar Name">cv_seminar_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Seminar Date">cv_seminar_date</TEXTDATE>
 				<FORM name="Cv Seminars" keyfield="cv_seminar_id" linkfield="entity_id" table="cv_seminars">
-					<TEXTFIELD w="430" title="Seminar Name" y="10" h="20" x="10">cv_seminar_name</TEXTFIELD>
-					<TEXTDATE w="150" title="Seminar Date" y="30" h="20" x="10">cv_seminar_date</TEXTDATE>
+					<TEXTFIELD w="430" title="Seminar Name" required="true" y="10" h="20" x="10">cv_seminar_name</TEXTFIELD>
+					<TEXTDATE w="150" title="Seminar Date" required="true" y="30" h="20" x="10">cv_seminar_date</TEXTDATE>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -500,8 +500,8 @@
 				<TEXTFIELD w="75" title="Project Name">cv_project_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Project Date">cv_project_date</TEXTDATE>
 				<FORM name="Projects" keyfield="cv_projectid" linkfield="entity_id" table="cv_projects">
-					<TEXTFIELD w="430" title="Project Name" y="10" h="20" x="10">cv_project_name</TEXTFIELD>
-					<TEXTDATE w="150" title="Project Date" y="30" h="20" x="10">cv_project_date</TEXTDATE>
+					<TEXTFIELD w="430" title="Project Name" required="true" y="10" h="20" x="10">cv_project_name</TEXTFIELD>
+					<TEXTDATE w="150" title="Project Date" required="true" y="30" h="20" x="10">cv_project_date</TEXTDATE>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -531,20 +531,20 @@
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="referees">table_name</DEFAULT>
-					<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Company Name" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
 					<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>
-					<TEXTFIELD w="150" title="Town" y="70" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" required="true" y="70" h="20" x="10">town</TEXTFIELD>
 					<TEXTFIELD w="430" title="Premises" y="90" h="20" x="10">premises</TEXTFIELD>
 					<TEXTFIELD w="430" title="Street" y="110" h="20" x="10">street</TEXTFIELD>
 					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="130" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-					<TEXTFIELD w="250" title="Phone Number" y="150" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="250" title="Phone Number" required="true" y="150" h="20" x="10">phone_number</TEXTFIELD>
 					<TEXTFIELD w="50" title="Extension" y="150" h="20" x="390">extension</TEXTFIELD>
 					<TEXTFIELD w="430" title="Mobile" y="170" h="20" x="10">mobile</TEXTFIELD>
 					<TEXTFIELD w="430" title="Fax" y="190" h="20" x="10">fax</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email" y="210" h="20" x="10">email</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" required="true" y="210" h="20" x="10">email</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
