@@ -1,9 +1,9 @@
 <APPLIST loglevel="info" dbpassword="invent" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
 	<APP dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="schools.xml" dbclass="org.postgresql.Driver" dbusername="root">Schools</APP>
-	<APP dbpath="jdbc:postgresql://192.168.0.4:5432/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
+	<APP dbpath="jdbc:postgresql://1localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="travelportapps.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</APP>
-	<APP dbpath="jdbc:postgresql://127.0.0.1:5432/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
-	<APP dbpath="jdbc:postgresql://62.24.116.56:5432/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
+	<APP dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
+	<APP dbpath="jdbc:postgresql://localhost/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
 	<APP dbpath="jdbc:postgresql://localhost/accounts" dbname="accounts" path="accounts" xmlfile="accounts.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Accounts</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Human Resources</APP>
@@ -54,13 +54,14 @@
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="aua.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA Web General</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mysa" dbname="mysa" path="mysa" xmlfile="mysa.xml" dbclass="org.postgresql.Driver" dbusername="root">MYSA</APP>
+	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
 	<APP dbpath="jdbc:postgresql://localhost/fidelity" dbname="fidelity" path="fidelity" xmlfile="fidelity.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Fidelity</APP>
 	<APP dbpath="jdbc:postgresql://localhost/metropol" dbname="metropol" path="metropol" xmlfile="metropol.xml" dbclass="org.postgresql.Driver" dbusername="root">Metropol</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sg" dbname="sg" path="sg" xmlfile="sg.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">SG</APP>
 	<APP dbpath="jdbc:postgresql://localhost/meridian" dbname="meridian" path="meridian" xmlfile="meridian.xml" dbclass="org.postgresql.Driver" dbusername="root">Meridian</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mhealth" dbname="mhealth" path="mhealth" xmlfile="mhealth.xml" dbclass="org.postgresql.Driver" dbusername="root">MHealth</APP>
 	<APP dbpath="jdbc:postgresql://localhost/church" dbname="church" path="church" xmlfile="church.xml" dbclass="org.postgresql.Driver" dbusername="root">Church</APP>
-	<APP dbschema="CCK" dbpassword="Imis2goke" dbpath="jdbc:oracle:thin:@172.100.3.30:1541:tcrm" dbname="tcrm" path="cck" xmlfile="lcs.xml" dbclass="oracle.jdbc.driver.OracleDriver" dbusername="cck">CCK CRM</APP>
+	<APP dbpath="jdbc:oracle:thin:@172.100.3.30:1541:tcrm" dbschema="CCK" dbpassword="Imis2goke" dbname="tcrm" path="cck" xmlfile="lcs.xml" dbclass="oracle.jdbc.driver.OracleDriver" dbusername="cck">CCK CRM</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cck" dbname="cck" path="cck" xmlfile="cck.xml" dbclass="org.postgresql.Driver" dbusername="root">CCK</APP>
 	<APP dbpath="jdbc:postgresql://localhost/events" dbname="events" path="events" xmlfile="events.xml" dbclass="org.postgresql.Driver" dbusername="root">Events</APP>
 	<APP dbpath="jdbc:postgresql://localhost/vms" dbname="vms" path="vms" xmlfile="vms.xml" dbclass="org.postgresql.Driver" dbusername="root">VMS</APP>
@@ -84,5 +85,5 @@
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mpamanech" path="mobilehealth" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Mpamanech Tomcat Server</SERVER>
-
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/chama" dbname="chama" path="chama" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Chama Tomcat Server</SERVER>
 </APPLIST>

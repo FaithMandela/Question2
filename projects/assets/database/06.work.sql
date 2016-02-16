@@ -3,10 +3,10 @@
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-04', 1232, 0, 1, 39, 139, '');
 
 --- CPU
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-12-02', 1223, 0, 1, 31, 139, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-15', 1223, 0, 1, 25, 138, '');
 
 --- Monitor
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-10-02', 0, 0, 1, 26, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-15', 0, 0, 1, 26, 138, '');
 
 --- UPS 
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-10-08', 115, 0, 1, 6, 138, '');

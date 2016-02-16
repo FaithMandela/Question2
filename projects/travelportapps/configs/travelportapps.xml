@@ -2,11 +2,14 @@
 	<MENU name="Travelport Apps">
 		<MENU name="Service Desk">
 			<MENU name="My Insurance">82</MENU>
+		</MENU>
+		<MENU name="Organisation" role="admin,manager,agency,user">
+			<MENU icon="fa fa-sitemap" name="Travel Agencies" role="admin,manager,agency">10</MENU>
 			<MENU name="Corporate Clients" role="admin,manager">46</MENU>
 		</MENU>
 		<MENU name="Transactions" role="admin,manager,agency,user">
-			<MENU name="Insurance" role="admin ,manager,agency,user">80</MENU>
-			<MENU icon="fa fa-sitemap" name="Travel Agencies" role="admin,manager,agency">10</MENU>
+			<MENU name="Insurance" role="admin,manager,agency,user">80</MENU>
+			<MENU name="Payments" role="admin,manager">85</MENU>
 		</MENU>
 		<MENU name="Configurations" role="admin,agency,manager">
 			<MENU name="Rates" role="manager,admin">75</MENU>
@@ -131,10 +134,12 @@
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 				<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
 					<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
+					<TEXTFIELD w="350" title="PCC" y="50" h="20" x="10">pcc</TEXTFIELD>
 					<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
 					<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
 					<COMBOBOX w="430" title="Base Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="false" lpkey="org_id" y="110" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+					<TEXTFIELD w="50" title="Credit Limit" placeholder="e.g: 2000" y="130" h="20" x="10">credit_limit</TEXTFIELD>
 					<TEXTFIELD w="50" title="Sufix" placeholder="Organisation Sufix" y="130" h="20" x="10">org_sufix</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -217,10 +222,12 @@
 			</GRID>
 			<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
 				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="PCC" y="50" h="20" x="10">pcc</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
 				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
 				<COMBOBOX w="430" title="Base Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="false" lpkey="org_id" y="110" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+				<TEXTFIELD w="50" title="Credit Limit" placeholder="e.g: 2000" y="130" h="20" x="10">credit_limit</TEXTFIELD>
 				<TEXTFIELD w="50" title="Sufix" placeholder="Organisation Sufix" y="130" h="20" x="10">org_sufix</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -1123,6 +1130,12 @@
 			<GRID name="Policy"></GRID>
 			<JASPER name="Letter to Embassy" reportfile="travelinsurance/letterToEmbassy.jasper"></JASPER>
 		</GRID>
+		<FILES username="root" repository="http://localhost:8080/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='entry_forms')" filetable="entry_forms" password="enter">
+			<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+			<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
+		</FILES>
 	</DESK>
 	<DESK w="700" name="My Insurance" key="82" h="550">
 		<GRID name="Insurance" keyfield="passenger_id" orderby="passenger_id DESC" table="vw_passengers" user="entity_id">
@@ -1144,7 +1157,7 @@
 			<JASPER name="Letter to Embassy" reportfile="travelinsurance/letterToEmbassy.jasper"></JASPER>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Payments" key="85" h="550">
+	<DESK w="700" name="Payments" role="admin,manager" key="85" h="550">
 		<GRID name="Pending Payments" keyfield="payment_id" table="vw_payments" noorg="true" where="(approved = false)">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
@@ -1154,6 +1167,7 @@
 			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
 			<FORM name="Payments" keyfield="payment_id" table="payments">
 				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" noorg="true" y="10" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Agency Name" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Payment Amount" y="30" h="20" x="10">payment_amount</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Transaction Reference" y="30" h="20" x="290">transaction_reference</TEXTFIELD>
 				<TEXTDATE w="150" title="Payment Date" y="50" h="20" x="10">payment_date</TEXTDATE>
