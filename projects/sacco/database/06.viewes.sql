@@ -35,6 +35,11 @@ CREATE OR REPLACE VIEW vw_gurrantors AS
      INNER JOIN entitys gurrantors_entity ON gurrantors_entity.entity_id = gurrantors.entity_id;
 DROP VIEW vw_entitys;
 
+
+
+
+
+
 CREATE OR REPLACE VIEW vw_entitys AS 
 SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
 		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
@@ -58,14 +63,14 @@ SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, v
 		entity_types.entity_type_id, entity_types.entity_type_name, 
 		entity_types.entity_role, entity_types.use_key
 	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
-		JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
+		FULL JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
 		
 CREATE OR REPLACE VIEW vw_entitys_types AS 
 	SELECT	entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
 		entitys.function_role, entitys.attention, entitys.primary_email, entitys.org_id,entitys.primary_telephone,
-		  entitys.new_password,
+		  entitys.new_password,entitys.exit_amount
 		entity_types.entity_type_id, entity_types.entity_type_name, 
 		entity_types.entity_role, entity_types.use_key
 	FROM entitys
@@ -265,535 +270,109 @@ CREATE VIEW vw_day_ledgers AS
 		INNER JOIN vw_bank_accounts ON day_ledgers.bank_account_id = vw_bank_accounts.bank_account_id
 		LEFT JOIN stores ON day_ledgers.store_id = stores.store_id;
 
-CREATE OR REPLACE FUNCTION upd_transaction_details() RETURNS trigger AS $$
-DECLARE
-	statusID 	INTEGER;
-	journalID 	INTEGER;
-	v_for_sale	BOOLEAN;
-	accountid 	INTEGER;
-	taxrate 	REAL;
-BEGIN
-	SELECT transactions.transaction_status_id, transactions.journal_id, transaction_types.for_sales
-		INTO statusID, journalID, v_for_sale
-	FROM transaction_types INNER JOIN transactions ON transaction_types.transaction_type_id = transactions.transaction_type_id
-	WHERE (transaction_id = NEW.transaction_id);
-
-	IF ((statusID > 1) OR (journalID is not null)) THEN
-		RAISE EXCEPTION 'Transaction is already posted no changes are allowed.';
-	END IF;
-
-	IF(v_for_sale = true)THEN
-		SELECT items.sales_account_id, tax_types.tax_rate INTO accountid, taxrate
-		FROM tax_types INNER JOIN items ON tax_types.tax_type_id = items.tax_type_id
-		WHERE (items.item_id = NEW.item_id);
-	ELSE
-		SELECT items.purchase_account_id, tax_types.tax_rate INTO accountid, taxrate
-		FROM tax_types INNER JOIN items ON tax_types.tax_type_id = items.tax_type_id
-		WHERE (items.item_id = NEW.item_id);
-	END IF;
-
-	NEW.tax_amount := NEW.amount * taxrate / 100;
-	IF(accountid is not null)THEN
-		NEW.account_id := accountid;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER upd_transaction_details BEFORE INSERT OR UPDATE ON transaction_details
-    FOR EACH ROW EXECUTE PROCEDURE upd_transaction_details();
-
-CREATE OR REPLACE FUNCTION af_upd_transaction_details() RETURNS trigger AS $$
-DECLARE
-	tamount REAL;
-BEGIN
-
-	IF(TG_OP = 'DELETE')THEN
-		SELECT SUM(quantity * (amount + tax_amount)) INTO tamount
-		FROM transaction_details WHERE (transaction_id = OLD.transaction_id);
-		UPDATE transactions SET transaction_amount = tamount WHERE (transaction_id = OLD.transaction_id);	
-	ELSE
-		SELECT SUM(quantity * (amount + tax_amount)) INTO tamount
-		FROM transaction_details WHERE (transaction_id = NEW.transaction_id);
-		UPDATE transactions SET transaction_amount = tamount WHERE (transaction_id = NEW.transaction_id);	
-	END IF;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER af_upd_transaction_details AFTER INSERT OR UPDATE OR DELETE ON transaction_details
-    FOR EACH ROW EXECUTE PROCEDURE af_upd_transaction_details();
-
-CREATE OR REPLACE FUNCTION upd_transactions() RETURNS trigger AS $$
-DECLARE
-	transid 	INTEGER;
-	currid		INTEGER;
-BEGIN
-
-	IF(TG_OP = 'INSERT') THEN
-		SELECT document_number INTO transid
-		FROM transaction_types WHERE (transaction_type_id = NEW.transaction_type_id);
-		UPDATE transaction_types SET document_number = transid + 1 WHERE (transaction_type_id = NEW.transaction_type_id);
-
-		NEW.document_number := transid;
-		IF(NEW.currency_id is null)THEN
-			SELECT currency_id INTO NEW.currency_id
-			FROM orgs
-			WHERE (org_id = NEW.org_id);
-		END IF;
-	ELSE
-		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
-		ELSIF ((OLD.approve_status = 'Completed') AND (NEW.approve_status != 'Completed')) THEN
-		ELSIF ((OLD.journal_id is not null) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
-			RAISE EXCEPTION 'Transaction % is already posted no changes are allowed.', NEW.transaction_id;
-		ELSIF ((OLD.transaction_status_id > 1) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
-			RAISE EXCEPTION 'Transaction % is already completed no changes are allowed.', NEW.transaction_id;
-		END IF;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER upd_transactions BEFORE INSERT OR UPDATE ON transactions
-    FOR EACH ROW EXECUTE PROCEDURE upd_transactions();
-
-CREATE OR REPLACE FUNCTION get_period(date) RETURNS INTEGER AS $$
-	SELECT period_id FROM periods WHERE (start_date <= $1) AND (end_date >= $1); 
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION get_open_period(date) RETURNS INTEGER AS $$
-	SELECT period_id FROM periods WHERE (start_date <= $1) AND (end_date >= $1)
-		AND (opened = true) AND (closed = false); 
-$$ LANGUAGE SQL;
-
-CREATE OR REPLACE FUNCTION complete_transaction(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	rec RECORD;
-	bankacc INTEGER;
-	msg varchar(120);
-BEGIN
-	SELECT transaction_id, transaction_type_id, transaction_status_id INTO rec
-	FROM transactions
-	WHERE (transaction_id = CAST($1 as integer));
-
-	IF($3 = '2') THEN
-		UPDATE transactions SET transaction_status_id = 4 
-		WHERE transaction_id = rec.transaction_id;
-		msg := 'Transaction Archived';
-	ELSIF(rec.transaction_status_id = 1) THEN
-		IF($3 = '1') THEN
-			UPDATE transactions SET transaction_status_id = 2, approve_status = 'Completed'
-			WHERE transaction_id = rec.transaction_id;
-		END IF;
-		msg := 'Transaction completed.';
-	ELSE
-		msg := 'Transaction alerady completed.';
-	END IF;
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION copy_transaction(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	msg varchar(120);
-BEGIN
-
-	INSERT INTO transactions (org_id, department_id, entity_id, currency_id, transaction_type_id, transaction_date, order_number, payment_terms, job, narrative, details)
-	SELECT org_id, department_id, entity_id, currency_id, transaction_type_id, CURRENT_DATE, order_number, payment_terms, job, narrative, details
-	FROM transactions
-	WHERE (transaction_id = CAST($1 as integer));
-
-	INSERT INTO transaction_details (org_id, transaction_id, account_id, item_id, quantity, amount, tax_amount, narrative, details)
-	SELECT org_id, currval('transactions_transaction_id_seq'), account_id, item_id, quantity, amount, tax_amount, narrative, details
-	FROM transaction_details
-	WHERE (transaction_id = CAST($1 as integer));
-
-	msg := 'Transaction Copied';
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION process_transaction(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	rec RECORD;
-	bankacc INTEGER;
-	msg varchar(120);
-BEGIN
-	SELECT org_id, transaction_id, transaction_type_id, transaction_status_id, transaction_amount INTO rec
-	FROM transactions
-	WHERE (transaction_id = CAST($1 as integer));
-
-	IF(rec.transaction_status_id = 1) THEN
-		msg := 'Transaction needs to be completed first.';
-	ELSIF(rec.transaction_status_id = 2) THEN
-		IF (($3 = '7') AND ($3 = '8')) THEN
-			SELECT max(bank_account_id) INTO bankacc
-			FROM bank_accounts WHERE (is_default = true);
-
-			INSERT INTO transactions (org_id, department_id, entity_id, currency_id, transaction_type_id, transaction_date, bank_account_id, transaction_amount)
-			SELECT transactions.org_id, transactions.department_id, transactions.entity_id, transactions.currency_id, 1, CURRENT_DATE, bankacc, 
-				SUM(transaction_details.quantity * (transaction_details.amount + transaction_details.tax_amount))
-			FROM transactions INNER JOIN transaction_details ON transactions.transaction_id = transaction_details.transaction_id
-			WHERE (transactions.transaction_id = rec.transaction_id)
-			GROUP BY transactions.transaction_id, transactions.entity_id;
-
-			INSERT INTO transaction_links (org_id, transaction_id, transaction_to, amount)
-			VALUES (rec.org_id, currval('transactions_transaction_id_seq'), rec.transaction_id, rec.transaction_amount);
 		
-			UPDATE transactions SET transaction_status_id = 3 WHERE transaction_id = rec.transaction_id;
-		ELSE
-			INSERT INTO transactions (org_id, department_id, entity_id, currency_id, transaction_type_id, transaction_date, order_number, payment_terms, job, narrative, details)
-			SELECT org_id, department_id, entity_id, currency_id, CAST($3 as integer), CURRENT_DATE, order_number, payment_terms, job, narrative, details
-			FROM transactions
-			WHERE (transaction_id = rec.transaction_id);
-
-			INSERT INTO transaction_details (org_id, transaction_id, account_id, item_id, quantity, amount, tax_amount, narrative, details)
-			SELECT org_id, currval('transactions_transaction_id_seq'), account_id, item_id, quantity, amount, tax_amount, narrative, details
-			FROM transaction_details
-			WHERE (transaction_id = rec.transaction_id);
-
-			INSERT INTO transaction_links (org_id, transaction_id, transaction_to, amount)
-			VALUES (REC.org_id, currval('transactions_transaction_id_seq'), rec.transaction_id, rec.transaction_amount);
-
-			UPDATE transactions SET transaction_status_id = 3 WHERE transaction_id = rec.transaction_id;
-		END IF;
-		msg := 'Transaction proccesed';
-	ELSE
-		msg := 'Transaction previously Processed.';
-	END IF;
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION post_transaction(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	rec RECORD;
-	periodid INTEGER;
-	journalid INTEGER;
-	msg varchar(120);
-BEGIN
-	SELECT org_id, department_id, transaction_id, transaction_type_id, transaction_type_name as tx_name, 
-		transaction_status_id, journal_id, gl_bank_account_id, currency_id, exchange_rate,
-		transaction_date, transaction_amount, document_number, credit_amount, debit_amount,
-		entity_account_id, entity_name, approve_status INTO rec
-	FROM vw_transactions
-	WHERE (transaction_id = CAST($1 as integer));
-
-	periodid := get_open_period(rec.transaction_date);
-	IF(periodid is null) THEN
-		msg := 'No active period to post.';
-	ELSIF(rec.journal_id is not null) THEN
-		msg := 'Transaction previously Posted.';
-	ELSIF(rec.transaction_status_id = 1) THEN
-		msg := 'Transaction needs to be completed first.';
-	ELSIF(rec.approve_status != 'Approved') THEN
-		msg := 'Transaction is not yet approved.';
-	ELSE
-		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
-		VALUES (rec.org_id, rec.department_id, rec.currency_id, periodid, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
-		journalid := currval('journals_journal_id_seq');
-
-		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
-
-		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
-			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
-		ELSE
-			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			SELECT org_id, journalid, trans_account_id, full_debit_amount, full_credit_amount, rec.tx_name || ' - ' || item_name
-			FROM vw_transaction_details
-			WHERE (transaction_id = rec.transaction_id) AND (full_amount > 0);
-
-			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			SELECT org_id, journalid, tax_account_id, tax_debit_amount, tax_credit_amount, rec.tx_name || ' - ' || item_name
-			FROM vw_transaction_details
-			WHERE (transaction_id = rec.transaction_id) AND (full_tax_amount > 0);
-		END IF;
-
-		UPDATE transactions SET journal_id = journalid WHERE (transaction_id = rec.transaction_id);
-		msg := process_journal(CAST(journalid as varchar),'0','0');
-	END IF;
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION add_tx_link(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-BEGIN
-	
-	INSERT INTO transaction_details (transaction_id, org_id, item_id, quantity, amount, tax_amount, narrative, details)
-	SELECT CAST($3 as integer), org_id, item_id, quantity, amount, tax_amount, narrative, details
-	FROM transaction_details
-	WHERE (transaction_detail_id = CAST($1 as integer));
-
-	INSERT INTO transaction_links (org_id, transaction_detail_id, transaction_detail_to, quantity, amount)
-	SELECT org_id, transaction_detail_id, currval('transaction_details_transaction_detail_id_seq'), quantity, amount
-	FROM transaction_details
-	WHERE (transaction_detail_id = CAST($1 as integer));
-
-	return 'DONE';
-END;
-$$ LANGUAGE plpgsql;
-
-
-------------Hooks to approval trigger
-CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON transactions
-    FOR EACH ROW EXECUTE PROCEDURE upd_action();
-
-
-CREATE OR REPLACE FUNCTION get_budgeted(integer, date, integer) RETURNS real AS $$
-DECLARE
-	reca		RECORD;
-	app_id		Integer;
-	v_bill		real;
-	v_variance	real;
-BEGIN
-
-	FOR reca IN SELECT transaction_detail_id, account_id, amount 
-		FROM transaction_details WHERE (transaction_id = $1) LOOP
-
-		SELECT sum(amount) INTO v_bill
-		FROM transactions INNER JOIN transaction_details ON transactions.transaction_id = transaction_details.transaction_id
-		WHERE (transactions.department_id = $3) AND (transaction_details.account_id = reca.account_id)
-			AND (transactions.journal_id is null) AND (transaction_details.transaction_detail_id <> reca.transaction_detail_id);
-		IF(v_bill is null)THEN
-			v_bill := 0;
-		END IF;
-
-		SELECT sum(budget_lines.amount) INTO v_variance
-		FROM fiscal_years INNER JOIN budgets ON fiscal_years.fiscal_year_id = budgets.fiscal_year_id
-			INNER JOIN budget_lines ON budgets.budget_id = budget_lines.budget_id
-		WHERE (budgets.department_id = $3) AND (budget_lines.account_id = reca.account_id)
-			AND (budgets.approve_status = 'Approved')
-			AND (fiscal_years.fiscal_year_start <= $2) AND (fiscal_years.fiscal_year_end >= $2);
-		IF(v_variance is null)THEN
-			v_variance := 0;
-		END IF;
-
-		v_variance := v_variance - (reca.amount + v_bill);
-
-		IF(v_variance < 0)THEN
-			RETURN v_variance;
-		END IF;
-	END LOOP;
-
-	RETURN v_variance;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION upd_approvals(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	app_id		Integer;
-	reca 		RECORD;
-	recb		RECORD;
-	recc		RECORD;
-	recd		RECORD;
-
-	min_level	Integer;
-	mysql		varchar(240);
-	msg 		varchar(120);
-BEGIN
-	app_id := CAST($1 as int);
-	SELECT approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, approvals.review_advice,
-		workflow_phases.workflow_phase_id, workflow_phases.workflow_id, workflow_phases.return_level INTO reca
-	FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
-	WHERE (approvals.approval_id = app_id);
-
-	SELECT count(approval_checklist_id) as cl_count INTO recc
-	FROM approval_checklists
-	WHERE (approval_id = app_id) AND (manditory = true) AND (done = false);
-
-	SELECT transaction_type_id, get_budgeted(transaction_id, transaction_date, department_id) as budget_var INTO recd
-	FROM transactions
-	WHERE (workflow_table_id = reca.table_id);
-
-	IF ($3 = '1') THEN
-		UPDATE approvals SET approve_status = 'Completed', completion_date = now()
-		WHERE approval_id = app_id;
-		msg := 'Completed';
-	ELSIF ($3 = '2') AND (recc.cl_count <> 0) THEN
-		msg := 'There are manditory checklist that must be checked first.';
-	ELSIF (recd.transaction_type_id = 5) AND (recd.budget_var < 0) THEN
-		msg := 'You need a budget to approve the expenditure.';
-	ELSIF ($3 = '2') AND (recc.cl_count = 0) THEN
-		UPDATE approvals SET approve_status = 'Approved', action_date = now(), app_entity_id = CAST($2 as int)
-		WHERE approval_id = app_id;
-
-		SELECT min(approvals.approval_level) INTO min_level
-		FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
-		WHERE (approvals.table_id = reca.table_id) AND (approvals.approve_status = 'Draft')
-			AND (workflow_phases.advice = false) AND (workflow_phases.notice = false);
 		
-		IF(min_level is null)THEN
-			mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Approved') 
-			|| ', action_date = now()'
-			|| ' WHERE workflow_table_id = ' || reca.table_id;
-			EXECUTE mysql;
-
-			INSERT INTO sys_emailed (table_id, table_name, email_type)
-			VALUES (reca.table_id, 'vw_workflow_approvals', 1);
-		ELSE
-			FOR recb IN SELECT workflow_phase_id, advice
-			FROM workflow_phases
-			WHERE (workflow_id = reca.workflow_id) AND (approval_level = min_level) LOOP
-				IF (recb.advice = true) THEN
-					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
-					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
-				ELSE
-					UPDATE approvals SET approve_status = 'Completed', completion_date = now()
-					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
-				END IF;
-			END LOOP;
-		END IF;
-		msg := 'Approved';
-	ELSIF ($3 = '3') THEN
-		UPDATE approvals SET approve_status = 'Rejected',  action_date = now(), app_entity_id = CAST($2 as int)
-		WHERE approval_id = app_id;
-
-		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Rejected') 
-		|| ', action_date = now()'
-		|| ' WHERE workflow_table_id = ' || reca.table_id;
-		EXECUTE mysql;
-
-		INSERT INTO sys_emailed (table_id, table_name, email_type, org_id)
-		VALUES (reca.table_id, 'vw_workflow_approvals', 2, reca.org_id);
-		msg := 'Rejected';
-	ELSIF ($3 = '4') AND (reca.return_level = 0) THEN
-		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
-		WHERE approval_id = app_id;
 		
-		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Draft') 
-		|| ', action_date = now()'
-		|| ' WHERE workflow_table_id = ' || reca.table_id;
-		EXECUTE mysql;
 		
-		msg := 'Forwarded for review';
-	ELSIF ($3 = '4') AND (reca.return_level <> 0) THEN
-		INSERT INTO approvals (org_id, workflow_phase_id, table_name, table_id, org_entity_id, escalation_days, escalation_hours, approval_level, approval_narrative, to_be_done, approve_status)
-		SELECT org_id, workflow_phase_id, reca.table_name, reca.table_id, CAST($2 as int), escalation_days, escalation_hours, approval_level, phase_narrative, reca.review_advice, 'Completed'
-		FROM vw_workflow_entitys
-		WHERE (workflow_id = reca.workflow_id) AND (approval_level = reca.return_level)
-		ORDER BY workflow_phase_id;
-		msg := 'Forwarded to owner for review';
-	END IF;
-
-	RETURN msg;
-END;
-$$ LANGUAGE plpgsql;
-
-
---data
-
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Aerospace');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Agriculture');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Automotive');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Business and Consultancy Services');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Reseller');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Services and Consultancy');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Manufacturer');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Software Development');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Investments');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Education');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Electronics');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Finance, Banking, Insurance');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - National or Federal');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - State, Country or Local');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Healthcare');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Hotel and Leisure');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Legal');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Manufacturing');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Media, Marketing, Entertainment, Publishing, PR');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Real Estate');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Retail, Wholesale');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Telecoms');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Transportation and Distribution');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Travel and Tours');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Other');
-
-
-INSERT INTO default_accounts (default_account_id, account_id, narrative) VALUES (1, 99999, 'SURPLUS/DEFICIT ACCOUNT');
-INSERT INTO default_accounts (default_account_id, account_id, narrative) VALUES (2, 61000, 'RETAINED EARNINGS ACCOUNT');
-UPDATE default_accounts set org_id = 0;
-
-INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
-VALUES (0, 0, 1, 0, '33000', 'Cash Account', true);
-
-
-INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'Exempt', 0, '42005');
-INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'VAT', 16, '42005');
-
-UPDATE tax_types SET currency_id = 1;
-UPDATE tax_types SET account_id = 90000;
-
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (7, 0, 0, 'Budget', 'budgets', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (8, 0, 0, 'Requisition', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (9, 0, 3, 'Transactions', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
-
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (10, 0, 1, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (11, 0, 5, 'subscriptions', 'subscriptions', NULL, NULL, 'subscription approved', 'subscription rejected', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflows_workflow_id_seq', 5, true);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (5, 0, 7, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (6, 0,8, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (7, 0, 9 ,0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (8, 0, 10 ,0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (9, 0,11, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 5, true);
-
-
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
-VALUES (1, 0, 'Application', 'Thank you for your Application', 'Thank you {{name}} for your application.<br><br>
-Your user name is {{username}}<br> 
-Your password is {{password}}<br><br>
-Regards<br>
-Human Resources Manager<br>
-');
-
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
-VALUES (3, 0, 'Password reset', 'Password reset', 'Hello {{name}},<br><br>
-Your password has been reset to:<br><br>
-Your user name is {{username}}<br> 
-Your password is {{password}}<br><br>
-Regards<br>
-Human Resources Manager<br>
-');
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
-VALUES (4, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
-Welcome to OpenBaraza SaaS Platform<br><br>
-Your password is:<br><br>
-Your user name is {{username}}<br> 
-Your password is {{password}}<br><br>
-Regards,<br>
-OpenBaraza<br>
-');
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
-VALUES (5, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
-Your OpenBaraza SaaS Platform application has been approved<br><br>
-Welcome to OpenBaraza SaaS Platform<br><br>
-Regards,<br>
-OpenBaraza<br>
-');
-
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 7, true);
-
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 1, 0, 'Human Resources and Administration');
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 2, 0, 'Sales and Marketing');
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 3, 0, 'Finance');
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 4, 4, 'Procurement');
-SELECT pg_catalog.setval('departments_department_id_seq', 5, true);
+		
+CREATE OR REPLACE VIEW vw_trx AS 
+ SELECT vw_orgs.org_id,
+    vw_orgs.org_name,
+    vw_orgs.is_default AS org_is_default,
+    vw_orgs.is_active AS org_is_active,
+    vw_orgs.logo AS org_logo,
+    vw_orgs.cert_number AS org_cert_number,
+    vw_orgs.pin AS org_pin,
+    vw_orgs.vat_number AS org_vat_number,
+    vw_orgs.invoice_footer AS org_invoice_footer,
+    vw_orgs.sys_country_id AS org_sys_country_id,
+    vw_orgs.sys_country_name AS org_sys_country_name,
+    vw_orgs.address_id AS org_address_id,
+    vw_orgs.table_name AS org_table_name,
+    vw_orgs.post_office_box AS org_post_office_box,
+    vw_orgs.postal_code AS org_postal_code,
+    vw_orgs.premises AS org_premises,
+    vw_orgs.street AS org_street,
+    vw_orgs.town AS org_town,
+    vw_orgs.phone_number AS org_phone_number,
+    vw_orgs.extension AS org_extension,
+    vw_orgs.mobile AS org_mobile,
+    vw_orgs.fax AS org_fax,
+    vw_orgs.email AS org_email,
+    vw_orgs.website AS org_website,
+    vw_entitys.address_id,
+    vw_entitys.address_name,
+    vw_entitys.sys_country_id,
+    vw_entitys.sys_country_name,
+    vw_entitys.table_name,
+    vw_entitys.is_default,
+    vw_entitys.post_office_box,
+    vw_entitys.postal_code,
+    vw_entitys.premises,
+    vw_entitys.street,
+    vw_entitys.town,
+    vw_entitys.phone_number,
+    vw_entitys.extension,
+    vw_entitys.mobile,
+    vw_entitys.fax,
+    vw_entitys.email,
+    vw_entitys.website,
+    vw_entitys.entity_id,
+    vw_entitys.entity_name,
+    vw_entitys.user_name,
+    vw_entitys.super_user,
+    vw_entitys.attention,
+    vw_entitys.date_enroled,
+    vw_entitys.is_active,
+    vw_entitys.entity_type_id,
+    vw_entitys.entity_type_name,
+    vw_entitys.entity_role,
+    vw_entitys.use_key,
+    transaction_types.transaction_type_id,
+    transaction_types.transaction_type_name,
+    transaction_types.document_prefix,
+    transaction_types.for_sales,
+    transaction_types.for_posting,
+    transaction_status.transaction_status_id,
+    transaction_status.transaction_status_name,
+    currency.currency_id,
+    currency.currency_name,
+    currency.currency_symbol,
+    departments.department_id,
+    departments.department_name,
+    transactions.journal_id,
+    transactions.bank_account_id,
+    transactions.transaction_id,
+    transactions.transaction_date,
+    transactions.transaction_amount,
+    transactions.application_date,
+    transactions.approve_status,
+    transactions.workflow_table_id,
+    transactions.action_date,
+    transactions.narrative,
+    transactions.document_number,
+    transactions.payment_number,
+    transactions.order_number,
+    transactions.exchange_rate,
+    transactions.payment_terms,
+    transactions.job,
+    transactions.details,
+        CASE
+            WHEN transactions.journal_id IS NULL THEN 'Not Posted'::text
+            ELSE 'Posted'::text
+        END AS posted,
+        CASE
+            WHEN transactions.transaction_type_id = 2 OR transactions.transaction_type_id = 8 OR transactions.transaction_type_id = 10 THEN transactions.transaction_amount
+            ELSE 0::real
+        END AS debit_amount,
+        CASE
+            WHEN transactions.transaction_type_id = 5 OR transactions.transaction_type_id = 7 OR transactions.transaction_type_id = 9 THEN transactions.transaction_amount
+            ELSE 0::real
+        END AS credit_amount
+   FROM transactions
+    full JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
+     full JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
+     full JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
+     full JOIN currency ON transactions.currency_id = currency.currency_id
+     LEFT JOIN vw_entitys ON transactions.entity_id = vw_entitys.entity_id
+     LEFT JOIN departments ON transactions.department_id = departments.department_id;

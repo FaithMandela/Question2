@@ -14,8 +14,7 @@
 			<MENU name="Organisation">null</MENU>
 		</MENU>
 		<MENU name="Administration" role="staff,admin,manager">
-			<MENU name="Approvals" role="admin">null</MENU>
-			<MENU name="Entitys" role="admin">null</MENU>
+			<MENU name="Members">null</MENU>
 			<MENU name="Contributions" role="admin">null</MENU>
 			<MENU name="Loans" role="admin">null</MENU>
 			<MENU name="Investments" role="admin">null</MENU>
@@ -24,12 +23,22 @@
 			<MENU name="EMails" role="admin">null</MENU>
 			<MENU name="Files" role="admin">null</MENU>
 			<MENU name="All Approvals" role="manager,admin">null</MENU>
+			<MENU name="Approvals" role="admin">null</MENU>
+			<MENU name="Entitys" role="admin">null</MENU>
 		</MENU>
 		<MENU name="Reports" role="admin, manager,member">
 			<MENU name="New Members" role="manager,admin,member">null</MENU>
 			<MENU name="Transaction Ledger" role="member">null</MENU>
+			<MENU name="Member Reports" role="member">null
+				<MENU name="Loan">245</MENU>
+				<MENU name="Contributions">250</MENU>
+				<MENU name="Investments">255</MENU>
+			</MENU>
+			<MENU name="Member Reports" role="admin">null
+				<MENU name="Loan Repayment">265</MENU>
+			</MENU>
 		</MENU>
-		<MENU name="Finance" role="admin,manager,member" xml="finance.xml">0</MENU>
+		<MENU name="Finance" role="admin,manager,member,staff" xml="finance.xml">0</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" h="500">
 		<DASHBOARD w="650" name="Dashboard">

@@ -9,14 +9,14 @@ DECLARE
 	reca					RECORD;
 	msg 					varchar(120);
 BEGIN
-	SELECT application_id, entity_id INTO v_application_id, v_entity_id
+	SELECT application_id INTO v_application_id
 	FROM applications 
 	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
 	
 	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
 	FROM applicants
 	WHERE (entity_id = $2::int);
-
+	v_entity_id := reca.entity_id;
 	IF(reca.entity_id is null) THEN
 		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
 		FROM employees
@@ -24,11 +24,11 @@ BEGIN
 		v_entity_id := reca.entity_id;
 	END IF;
 	
-	SELECT max(address_id) INTO v_address
+	SELECT count(address_id) INTO v_address
 	FROM vw_address
 	WHERE (table_name = 'applicant') AND (is_default = true) AND (table_id  = v_entity_id);
 	IF(v_address is null) THEN v_address = 0; END IF;
-
+	
 	SELECT count(education_id) INTO c_education_id
 	FROM education
 	WHERE (entity_id  = v_entity_id);
@@ -45,7 +45,7 @@ BEGIN
 	ELSIF (reca.previous_salary is null) OR (reca.expected_salary is null) THEN
 		msg := 'Kindly indicate your previous and expected salary';
 		RAISE EXCEPTION '%', msg;
-	ELSIF (v_address = 0) THEN
+	ELSIF (v_address < 1) THEN
 		msg := 'You need to have at least one full address added';
 		RAISE EXCEPTION '%', msg;
 	ELSIF (c_education_id < 2) THEN
@@ -63,6 +63,7 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION objectives_review(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
