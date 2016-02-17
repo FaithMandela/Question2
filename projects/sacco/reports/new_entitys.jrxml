@@ -18,7 +18,7 @@
 
 FROM vw_entitys_types
 
-WHERE (date_enroled::date) >= '$P!{from_date}' AND  (date_enroled::date) <= '$P!{to_date}' and entity_role not like 'subscriptions']]>
+WHERE (date_enroled::date) >= '$P!{from_date}' AND  (date_enroled::date) <= '$P!{to_date}' and entity_role not like 'subscriptions' and entity_id not in(1,0);]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="date_enroled" class="java.sql.Timestamp"/>

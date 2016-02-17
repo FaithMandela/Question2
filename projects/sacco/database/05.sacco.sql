@@ -211,52 +211,9 @@ CREATE TABLE members (
   	details 			text
   	);
  
- CREATE INDEX members_org_id ON members (org_id);
-CREATE INDEX members_bank_id ON members (bank_id);
- CREATE INDEX members_address_id ON members (address_id);
+	CREATE INDEX members_org_id ON members (org_id);
+	CREATE INDEX members_bank_id ON members (bank_id);
+	CREATE INDEX members_address_id ON members (address_id);
  
  
--------- Data
-INSERT INTO payment_types(payment_type_id, payment_type_name, org_id) VALUES
-	(1, 'Bank',0),
-	(2, 'Mpesa',0),
-	(3, 'Cash', 0),
-	(4, 'Airtel Money', 0 );
-
-
-INSERT INTO contribution_types(contribution_type_id, contribution_type_name, org_id, interval_days) VALUES
-	(1, 'Daily', 0, 1),
-	(2, 'Weekly', 0, 7),
-	(3, 'fortnight', 0, 14),
-	(4, 'Monthly', 0, 30);
-	
-INSERT INTO loan_types(loan_type_id, org_id, loan_type_name, default_interest) VALUES 
-	(0, 0, 'Emergency', 15),
-	(1, 0, 'Education', 9),
-	(2, 0, 'Development', 10);
-
-INSERT INTO fiscal_years(fiscal_year_id, org_id, fiscal_year_start, fiscal_year_end, year_opened,year_closed, details) VALUES
-	(1, 0, '2016-01-01', '2016-05-31', 'true', 'false', 'jajajaja');
-
-INSERT INTO collateral_types(collateral_type_id, org_id, collateral_type_name, details) VALUES 
-	(0, 0, 'plot', 'my plot number LR/70/L'),
-    (1, 0, 'Car', 'Chasis NO'),
-	(2, 0, 'Mortage', 'my plot No and HSE'),
-    (3, 0, 'Motor Cycle', 'Chasis No');
-
-INSERT INTO investment_types(investment_type_id, org_id, investment_type_name, details) VALUES 
-	(0,15,'Land','buy land'),
-	(1,12,'Real Estate','bu'),
-	(2,5,'Buy Equity','buy land');
-
-DELETE FROM currency WHERE currency_id > 1;
-
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (1, 0, 0, 'admin', 'admin', 'admin@localhost', false, false, false, 'baraza');	
-
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (0, 0, 0, 'applicant', 'applicant', 'applicant@localhost', false, false, false, 'baraza');
-
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (0, 0, 0, 'member', 'member', 'member@localhost', false, false, false, 'baraza');
-
+ALTER TABLE entitys ADD exit_amount REAL default 0;
