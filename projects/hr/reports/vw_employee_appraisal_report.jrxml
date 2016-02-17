@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_appraisal_report" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33a5cf3b-78f1-4bc5-8667-959d25428d96">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="123"/>
+	<property name="ireport.y" value="489"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -228,7 +228,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<reportElement positionType="Float" x="0" y="698" width="555" height="1" uuid="1c395e26-e93e-4b00-bdb0-fd8b2312facb"/>
 			</break>
 			<subreport runToBottom="true">
-				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="711" width="555" height="7" uuid="7b18453a-2f53-4515-9120-22a84e7a9f1b"/>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="708" width="555" height="7" uuid="7b18453a-2f53-4515-9120-22a84e7a9f1b"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -239,10 +239,10 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employee_objectives_subrpt2.jasper"]]></subreportExpression>
 			</subreport>
 			<break>
-				<reportElement positionType="Float" x="0" y="709" width="555" height="1" uuid="d0051672-f4f8-4748-922a-b5a2bf95e039"/>
+				<reportElement positionType="Float" x="0" y="707" width="555" height="1" uuid="d0051672-f4f8-4748-922a-b5a2bf95e039"/>
 			</break>
 			<subreport>
-				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="727" width="555" height="7" uuid="4de4f974-e733-4b53-9ddd-a178299ef484"/>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="726" width="555" height="7" uuid="4de4f974-e733-4b53-9ddd-a178299ef484"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -253,7 +253,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "appraisal_subrpt4.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="719" width="555" height="7" uuid="aef2dd00-8c00-47b6-8eb3-cadbf7542c5c"/>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="1" y="716" width="555" height="7" uuid="aef2dd00-8c00-47b6-8eb3-cadbf7542c5c"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -264,7 +264,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_evaluation_points_subrpt.jasper"]]></subreportExpression>
 			</subreport>
 			<break>
-				<reportElement positionType="Float" x="0" y="726" width="555" height="1" uuid="9306211e-f8c3-40f4-a7af-4a84f8c4719c"/>
+				<reportElement positionType="Float" x="0" y="724" width="555" height="1" uuid="9306211e-f8c3-40f4-a7af-4a84f8c4719c"/>
 			</break>
 			<subreport>
 				<reportElement positionType="Float" x="1" y="745" width="555" height="9" uuid="3a194535-7c78-41c5-b68d-70dc932c7626"/>
