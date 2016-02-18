@@ -1,4 +1,9 @@
 
+ALTER TABLE applications
+ADD	previous_salary			real,
+ADD	expected_salary			real,
+ADD	review_rating			integer;
+
 CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_entity_id				integer;
@@ -51,7 +56,7 @@ BEGIN
 	ELSIF (c_education_id < 2) THEN
 		msg := 'You need to have at least two education levels added';
 		RAISE EXCEPTION '%', msg;
-	ELSIF (c_referees < 4) THEN
+	ELSIF (c_referees < 3) THEN
 		msg := 'You need to have at least three referees added';
 		RAISE EXCEPTION '%', msg;
 	ELSE

@@ -86,6 +86,11 @@ public class Bajax extends HttpServlet {
 		if("formupdate".equals(fnct)) {
 			BWebForms webForm = new BWebForms(db);
 			resp = webForm.updateForm(request.getParameter("entry_form_id"), request.getParameter("json"));
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("formsubmit".equals(fnct)) {
+			BWebForms webForm = new BWebForms(db);
+			resp = webForm.submitForm(request.getParameter("entry_form_id"), request.getParameter("json"));
+			response.setContentType("application/json;charset=\"utf-8\"");
 		} else if("calresize".equals(fnct)) {
 			resp = calResize(id, endDate, endTime);
 		} else if("calmove".equals(fnct)) {

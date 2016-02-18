@@ -439,7 +439,7 @@ public class BWebBody extends BQuery {
 			if(el.getAttribute("type") == null) response.append(" type='text'");
 			else response.append(" type='" + el.getAttribute("type") + "'");
 
-			if(el.getAttribute("class") == null) response.append(" class='form-control'");
+			if(el.getAttribute("class") == null) response.append(" class='form-control'");			
 			else response.append(" class='" + el.getAttribute("class") + "'");
 			if(el.getAttribute("w") != null) response.append(" size='" + el.getAttribute("w") + "'");
 			else response.append(" size='50'");
@@ -484,6 +484,7 @@ public class BWebBody extends BQuery {
 			response.append("<textarea name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
@@ -498,6 +499,7 @@ public class BWebBody extends BQuery {
 			else fieldValue = el.getAttribute("default", "");
 
 			response.append("<textarea class='ckeditor form-control' name='" + el.getValue() + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			response.append(" cols='50' rows='10'>");
@@ -509,6 +511,7 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 
@@ -577,6 +580,7 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 
@@ -646,6 +650,7 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "' multiple='multiple' ");
 			if(el.getAttribute("class") == null) response.append(" class='multi-select form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 
@@ -712,6 +717,7 @@ public class BWebBody extends BQuery {
 			response.append("<select name='" + el.getValue() + "'");
 			if(el.getAttribute("class") == null) response.append(" class='form-control'");
 			else response.append(" class='" + el.getAttribute("class") + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
 			
@@ -732,6 +738,7 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("CHECKBOX")) {
 			response.append("<input type='checkbox' name='" + el.getValue());
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			response.append("' value='true'");
 			if(eof) {
 				if(getBoolean(el.getValue())) response.append(" checked");
@@ -748,6 +755,7 @@ public class BWebBody extends BQuery {
 			response.append("<input class='form-control' name='" + el.getValue() + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 			if(eof) {
 				SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -773,6 +781,7 @@ public class BWebBody extends BQuery {
 
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = true ");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 
 			if(el.getAttribute("js_function") != null) {			
 				String tgt = el.getAttribute("target","");
@@ -792,6 +801,7 @@ public class BWebBody extends BQuery {
 			response.append("<input class='form-control' type='text' name='" + el.getValue() + "'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(eof) {
 				SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
 				if(getString(el.getValue()) != null) {
@@ -806,6 +816,7 @@ public class BWebBody extends BQuery {
 
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(eof) {
 				SimpleDateFormat dateformatter = new SimpleDateFormat("hh:mm a");
 				if(getString(el.getValue())!=null) {

@@ -1587,7 +1587,7 @@ BEGIN
 	ELSIF (c_education_id < 2) THEN
 		msg := 'You need to have at least two education levels added';
 		RAISE EXCEPTION '%', msg;
-	ELSIF (c_referees < 4) THEN
+	ELSIF (c_referees < 3) THEN
 		msg := 'You need to have at least three referees added';
 		RAISE EXCEPTION '%', msg;
 	ELSE

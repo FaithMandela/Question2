@@ -262,19 +262,12 @@ CREATE TABLE application_forms (
 	accepted			boolean not null default false,
 	premajor			boolean not null default false,
 
-	submitapplication		boolean not null default false,
-	submitdate				timestamp,
-	isaccepted				boolean not null default false,
-	isreported				boolean not null default false,
-	isdeferred				boolean not null default false,
-	isrejected				boolean not null default false,
-	evaluationdate			date,
 	
 	homeaddress			varchar(120),
 	phonenumber			varchar(50),
 
 
-	accepteddate		date,
+	apply_trimester		varchar(32),
 
 	reported			boolean not null default false,
 	reporteddate		date,
