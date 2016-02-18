@@ -132,8 +132,8 @@
 				<TEXTFIELD w="150" title="Driver Name" y="10" h="20" x="10">driver_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Mobile Number" placeholder="e.g 2547123456" y="10" h="20" x="290">mobile_number</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="10">active</CHECKBOX>
-				<CHECKBOX w="150" title="Backup" y="120" h="20" x="10">is_backup</CHECKBOX>
-				<COMBOBOX w="430" title="Supplier" lptable="supplier_codes" noorg="true" y="10" h="20" x="10" lpfield="air_agent_name">air_agent_code</COMBOBOX>
+				<CHECKBOX w="150" id="chkBackupDriver" title="Backup" y="120" h="20" x="10">is_backup</CHECKBOX>
+				<COMBOBOX w="430" id="cmbSupplier" title="Supplier" lptable="supplier_codes" noorg="true" y="10" h="20" x="10" lpfield="air_agent_name">air_agent_code</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
