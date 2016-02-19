@@ -737,9 +737,9 @@ public class BWebBody extends BQuery {
 			response.append("</select>\n");
 		} else if(el.getName().equals("CHECKBOX")) {
 			response.append("<input type='checkbox' name='" + el.getValue() + "'");
+			response.append(" value='true'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
 			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
-			response.append("' value='true'");
 			if(eof) {
 				if(getBoolean(el.getValue())) response.append(" checked");
 			} else if(el.getAttribute("default", "").equals("true")) {
