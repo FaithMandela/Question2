@@ -29,8 +29,8 @@
 			<MENU name="Employee Default">104</MENU>
 			<MENU name="Payroll">105</MENU>
 			<MENU name="Banking">106</MENU>
-			<MENU name="Summary Adv + Ded">107</MENU>
-			<MENU name="Advances and Deductions">108</MENU>
+			<MENU name="Summary Allow, Deduct">107</MENU>
+			<MENU name="Allowance and Deductions">108</MENU>
 			<MENU name="Employee Statutories">118</MENU>
 			<MENU name="Pensions">125</MENU>
 			<MENU name="Loans">135</MENU>

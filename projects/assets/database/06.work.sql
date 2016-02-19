@@ -25,6 +25,10 @@ ORDER BY type;
 
 
 ----- Equipment in store
+SELECT asset_type_name, model, purchase_date, asset_serial
+FROM vw_assets
+WHERE (asset_type_id IN (1, 3)) AND (asset_status_id = 1) AND (purchase_date > '2015-01-01'::date)
+ORDER BY asset_type_id, purchase_date;
 
 SELECT store_equiments.equipment_type, store_equiments.serial_number
 FROM store_equiments LEFT JOIN vw_assets ON store_equiments.serial_number = vw_assets.asset_serial
@@ -38,6 +42,7 @@ WHERE vw_assets.asset_status_id = 1) as a LEFT JOIN store_equiments
 	ON a.asset_serial = store_equiments.serial_number
 WHERE (store_equiments.serial_number is null)
 ORDER BY a.asset_type_name, a.asset_serial; 
+
 
 
 ---- Clients not on PM List
