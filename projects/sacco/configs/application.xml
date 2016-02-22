@@ -4,7 +4,9 @@
 	</MENU>
 	<DESK w="700" name="Registration" key="1" h="500">
 		<FORM cols="2" new="true" name="Applicant" keyfield="entity_id" edit="false" delete="false" audit="false" table="applicants" fornew="true" save.button="Apply">
-			<DEFAULT default="0">org_id</DEFAULT>
+			
+			<COMBOBOX w="150" required="true" title="SACCO" default="0" lptable="orgs" lpkey="org_id" noorg="true"  y="70" h="20" x="200" lpfield="org_name" span="true" >org_id</COMBOBOX>
+						
 			<COMBOLIST w="50" required="true" title="Title *" y="10" h="20" x="10" span="true">person_title
 				<DATA>Miss</DATA>
 				<DATA>Mr</DATA>

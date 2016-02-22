@@ -1,6 +1,6 @@
 <APP name="Finance" org="org_id" password="change_password" color="green" material="true"> 
 	<MENU name="Finance">
-		<MENU name="Transactions" role="admin,manager,staff">
+		<MENU name="Transactions" role="staff">
 			<MENU name="Sales">2</MENU>
 			<MENU name="Purchase">3</MENU>
 			<MENU name="Budget">55</MENU>z
@@ -38,41 +38,27 @@
 			<MENU name="Balance Sheet">160</MENU>
 			<MENU name="Statement">170</MENU>
 		</MENU>
-		<MENU name="Sacco" role="admin,member,manager" xml="sacco.xml">0</MENU>
+		<MENU name="Sacco" role="admin,manager" xml="sacco.xml">0</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
 	<DASHBOARD w="650" name="Dashboard">
 		<TILE w="25" name="Active Members" role="admin" noorg.query="true" table="vw_entitys_types" where="(is_active = true and entity_id Not in (0,1) and function_role= 'member')" h="25">
 			<TEXTFIELD w="25" fnct="COALESCE(count(entity_id), 0)" title="Total Members">total_Members</TEXTFIELD>
 		</TILE>
-		<TILE name="Total contributions" role="admin" noorg.query="true" table="contributions" where="(entity_id Not in (0,1))">
-			<TEXTFIELD w="60" fnct="COALESCE(sum(deposit_amount), 0)" title="Total Deposits">Total_deposits</TEXTFIELD>
-		</TILE>
-		<TILE name="Month Balance" role="admin" noorg.query="true" table="vw_loan_monthly" where="(entity_id Not in (0,1))">
-			<TEXTFIELD w="60" fnct="COALESCE(sum(loan_balance), 0)" title="Total Loans" h="60">Pending_loans</TEXTFIELD>
-		</TILE>
-		<TILE name="My Active Loans" role="member" noorg.query="true" table="loans" user="entity_id">
-			<TEXTFIELD w="60" fnct="COALESCE(COUNT(loan_Id))" title="My Active Loans" h="60">My_Active_loans</TEXTFIELD>
-		</TILE>
-		<TILE name="My loan Balances" role="member" noorg.query="true" table="vw_loans" where="(approve_status ='Approved')" user="entity_id">
-			<TEXTFIELD w="60" fnct="COALESCE(SUM(loan_balance),0)" title="Total Loans" h="60">My_loan_balance</TEXTFIELD>
-		</TILE>
-		<TILE name="My investments" role="member" noorg.query="true" table="investments" user="entity_id">
-			<TEXTFIELD w="60" fnct="ROUND((yearly_dividend) ::numeric,2)" title="Total investments" h="60">My_Yearly_dividends</TEXTFIELD>
-		</TILE>
+		<TILELIST name="Repayments" keyfield="transaction_type_id" role="staff" noorg.query="true" orderby="transaction_type_name" table="vw_transactions">
+			<TEXTFIELD w="75" title="Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account">entity_account_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Type">transaction_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Status">transaction_status_name</TEXTFIELD>
+		</TILELIST>
+		
 		<TILELIST name="News" noorg.query="true" table="sys_news" where="(publish= 'true')">
 			<TEXTFIELD w="75" title="News">sys_news_title</TEXTFIELD>
 			<TEXTFIELD w="75" title="Details">details</TEXTFIELD>
 		</TILELIST>
-		<TILELIST name="My Loans" keyfield="loan_id" role="member" orderby="(loan_month_Id)" noorg.query="true" table="vw_loan_monthly" where="(activated='True')" user="entity_id">
-			<TEXTFIELD w="75" title="Principle">principle</TEXTFIELD>
-			<TEXTFIELD w="75" title="Loan Balance">loan_balance</TEXTFIELD>
-			<TEXTFIELD w="75" title="total Repayments">total_repayment</TEXTFIELD>
-		</TILELIST>
+		
 	</DASHBOARD>
 </DESK>
-
-	
 	<DESK w="700" name="Sales" key="2" h="500">
 		<GRID name="Sales Quotation" keyfield="transaction_id" orderby="document_number desc" table="vw_transactions" where="(transaction_type_id = 14)">
 			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
