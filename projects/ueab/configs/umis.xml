@@ -2216,7 +2216,7 @@
 	</DESK>
 	<DESK w="700" name="Graduations List" noorg="true" type="horl" key="442" h="500">
 		<FILTER location="250" name="Graduations List" type="horl">
-			<DRILLDOWN name="Graduation Year" keyfield="gradyear" table="vwgradyear" noorg="true" listfield="gradyear"></DRILLDOWN>
+			<DRILLDOWN name="Graduation Year" keyfield="gradyear" orderby="gradyear desc" table="vwgradyear" noorg="true" listfield="gradyear"></DRILLDOWN>
 			<JASPER filtered="true" name="Graduations List" reportfile="graduates.jasper"></JASPER>
 		</FILTER>
 	</DESK>
