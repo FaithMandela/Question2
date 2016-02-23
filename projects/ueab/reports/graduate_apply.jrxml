@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="graduates" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="1d71fa34-e7c3-4cd6-adf0-89c138395166">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="graduate_apply" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="1d71fa34-e7c3-4cd6-adf0-89c138395166">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -19,11 +19,12 @@
 	sex, maritalstatus, degreename,
 	started, degreelevelname, graduatedate, address, town,
 	core_major,
-	EXTRACT(YEAR FROM graduatedate) as gradyear
+	grad_accept_month, grad_accept_date, grad_accept_year,
+	graduatedate
 FROM vw_studentdegrees
-WHERE (graduated = true) AND
-(EXTRACT(YEAR FROM graduatedate) = '$P!{filterid}')
-ORDER BY graduatedate, degreelevelname;]]>
+WHERE (graduated = true) AND (grad_accept_year = '$P!{filterid}')
+
+ORDER BY grad_accept_month, degreelevelname;]]>
 	</queryString>
 	<field name="studentid" class="java.lang.String"/>
 	<field name="studentname" class="java.lang.String"/>
@@ -38,9 +39,11 @@ ORDER BY graduatedate, degreelevelname;]]>
 	<field name="address" class="java.lang.String"/>
 	<field name="town" class="java.lang.String"/>
 	<field name="core_major" class="java.lang.String"/>
-	<field name="gradyear" class="java.lang.Double"/>
-	<group name="graduatedate">
-		<groupExpression><![CDATA[$F{graduatedate}]]></groupExpression>
+	<field name="grad_accept_month" class="java.lang.String"/>
+	<field name="grad_accept_date" class="java.sql.Date"/>
+	<field name="grad_accept_year" class="java.lang.String"/>
+	<group name="grad_accept_month">
+		<groupExpression><![CDATA[$F{grad_accept_month}]]></groupExpression>
 		<groupHeader>
 			<band height="23" splitType="Stretch">
 				<staticText>
@@ -67,7 +70,7 @@ ORDER BY graduatedate, degreelevelname;]]>
 					<textElement>
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{graduatedate}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{grad_accept_month}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -258,7 +261,7 @@ ORDER BY graduatedate, degreelevelname;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="28" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Graduates Report]]></text>
+				<text><![CDATA[Graduation Application Report]]></text>
 			</staticText>
 		</band>
 	</title>

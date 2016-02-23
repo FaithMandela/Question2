@@ -163,7 +163,7 @@ CREATE OR REPLACE FUNCTION getstudentdegreeid(varchar(12), varchar(12)) RETURNS 
 	WHERE (studentdegrees.studentid = $1) AND (qstudents.quarterid = $2);
 $$ LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION getcoremajor(integer) RETURNS character varying AS $$
+CREATE OR REPLACE FUNCTION getcoremajor(integer) RETURNS varchar(75) AS $$
     SELECT max(majors.majorname)
     FROM studentmajors INNER JOIN majors ON studentmajors.majorid = majors.majorid
     WHERE (studentmajors.studentdegreeid = $1) AND (studentmajors.primarymajor = true);

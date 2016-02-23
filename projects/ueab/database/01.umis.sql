@@ -314,6 +314,7 @@ CREATE TABLE majorcontents (
 	gradeid				varchar(2) not null references grades,
 	bulletingid			integer references bulleting,
 	minor				boolean default false not null,
+	content_level		integer,
 	narrative			varchar(240),
 	UNIQUE (majorid, courseid, contenttypeid, minor, bulletingid)
 );
@@ -332,6 +333,7 @@ CREATE TABLE majoroptcontents (
 	gradeid				varchar(2) not null references grades,
 	minor				boolean not null default false not null,
 	bulletingid			integer not null references bulleting,
+	content_level		integer,
 	narrative			varchar(240),
 	UNIQUE (majoroptionid, courseid, contenttypeid, minor, bulletingid)
 );
@@ -357,6 +359,7 @@ CREATE TABLE students (
 	address				varchar(50),
 	zipcode				varchar(50),
 	town				varchar(50),
+	county_id 			char(2) references countys,
 	countrycodeid		char(2) not null references countrys,
 	telno				varchar(50),
 	email				varchar(240),
@@ -383,6 +386,12 @@ CREATE TABLE students (
 	disabled			boolean default false not null,
 	
 	student_edit		varchar(50) default 'none' not null,
+	
+	disability			varchar(5),
+	dis_details 		text,
+	passport			boolean DEFAULT false,
+	national_id			boolean DEFAULT false,
+	identification_no	varchar(20);
 	
 	currentcontact		text,
 	currentemail		varchar(120),
