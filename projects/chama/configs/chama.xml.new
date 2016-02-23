@@ -27,13 +27,6 @@
 			<MENU name="Files" role="admin">65</MENU>
 			<MENU name="Error Messages">70</MENU>
 		</MENU>
-		<MENU name="Reports" role="admin, manager,member">
-			<MENU name="Contributions">235</MENU>
-			<MENU name="Investments">240</MENU>
-			<MENU name="Borrowing">245</MENU>
-			<MENU name="Loans">250</MENU>
-			<MENU name="Penalty">255</MENU>
-		</MENU>
 		<MENU name="Finance" role="finance" xml="finance.xml">0</MENU>
 		<MENU name="Payroll" role="payroll" xml="payroll.xml">0</MENU>
 	</MENU>
@@ -529,7 +522,7 @@
 		<GRID name="Contributions" keyfield="contribution_id" table="vw_contributions">
 			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account">bank_account_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account">bank_account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Contribution Amount">contribution_amount</TEXTFIELD>
 			<TEXTFIELD w="75" title="Actual Amount">actual_amount</TEXTFIELD>
 			<TEXTFIELD w="75" title="Merry Go Round Percentage">merry_go_round_percentage</TEXTFIELD>
@@ -558,7 +551,7 @@
 			<TEXTFIELD w="75" title="Borrowing ID">borrowing_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Borrowing Type ID">borrowing_type_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Borrowing">date_of_borrowing</TEXTDATE>
-			<TEXTFIELD w="75" title="Bank Account">bank_account_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account">bank_account_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Interest">interest</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
@@ -580,8 +573,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Penalty" key="95" h="550">
-		<GRID name="Penalty" keyfield="penalty_id" table="vw_penalty">
-			<TEXTFIELD w="75" title="Bank Account">bank_account_id</TEXTFIELD>
+		<GRID name="Penalty" keyfield="penalty_id" table="penalty">
+			<TEXTFIELD w="75" title="Bank Account">bank_account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Penalty Type Name">penalty_type_name</TEXTFIELD>
@@ -1114,7 +1107,7 @@
 			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account">bank_account_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account">bank_account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
@@ -1150,23 +1143,19 @@
 	</DESK>
 	<DESK w="700" name="Investments" key="215" h="550">
 		<GRID name="Investments" keyfield="investment_id" table="vw_investments">
-			<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Investment Type ID">investment_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Investment Type Name">investment_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account ID">bank_account_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Investment ID">investment_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Investment Name">investment_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Investment Type Name">investment_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account">bank_account_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Accrual">date_of_accrual</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Principal">principal</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Monthly Returns">monthly_returns</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Total Payment">total_payment</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Default Interest">default_interest</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Period">period</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Workflow Table ID">workflow_table_id</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Principal">principal</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Period">period</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Monthly Returns">monthly_returns</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Payment">total_payment</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Investment Name">investment_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Default Interest">default_interest</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<FORM name="Investments" keyfield="investment_id" table="investments">
 				<COMBOBOX w="430" title="Investment Type ID" lptable="investment_types" y="10" h="20" x="10" lpfield="investment_type_name">investment_type_id</COMBOBOX>
@@ -1199,7 +1188,7 @@
 	</DESK>
 	<DESK w="700" name="Borrowing" key="220" h="550">
 		<GRID name="Borrowing" keyfield="borrowing_id" table="vw_borrowing">
-			<TEXTFIELD w="75" title="Bank Account">bank_account_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account">bank_account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Borrowing Type Name">borrowing_type_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Borrowing">date_of_borrowing</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
@@ -1254,7 +1243,7 @@
 	</DESK>
 	<DESK w="700" name="Penalty" key="225" h="550">
 		<GRID name="Penalty" keyfield="penalty_id" table="vw_penalty">
-			<TEXTFIELD w="75" title="Bank Account">bank_account_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account">bank_account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Penalty Type Name">penalty_type_name</TEXTFIELD>
@@ -1354,20 +1343,5 @@
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
 		</FORMVIEW>
-	</DESK>
-	<DESK w="700" name="Contributions" key="235" h="550">
-		<JASPER name="Reports" reportfile="vw_contributions.jasper"></JASPER>
-	</DESK>
-	<DESK w="700" name="Investments" key="240" h="550">
-		<JASPER name="Reports" reportfile="vw_investments.jasper"></JASPER>
-	</DESK>
-	<DESK w="700" name="Borrowing" key="245" h="550">
-		<JASPER name="Reports" reportfile="vw_borrowing.jasper"></JASPER>
-	</DESK>
-	<DESK w="700" name="Loans" key="250" h="550">
-		<JASPER name="Reports" reportfile="vw_loans.jasper"></JASPER>
-	</DESK>
-	<DESK w="700" name="Penalty" key="255" h="550">
-		<JASPER name="Reports" reportfile="vw_penalty.jasper"></JASPER>
 	</DESK>
 </APP>
