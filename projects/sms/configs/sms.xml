@@ -24,7 +24,7 @@
 				<TEXTAREA w="430" title="Numbers" placeholder="e.g 0712838887,0733878787" y="120" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
 				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10">message_ready</CHECKBOX>
 				<TEXTAREA w="430" placeholder="Enter the message" tab="Message" required="true" y="50" h="70" x="10" rows="8">message</TEXTAREA>
-				<MULTISELECT w="430" lptable="vw_address" tab="Addresses" lpkey="mobile" y="50" h="70" x="10" rows="8" lpfield="disp_name">addresses</MULTISELECT>
+				<MULTISELECT w="430" lptable="vw_address" tab="Addresses" lpkey="mobile" where="(mobile is not null) and (disp_name is not null) " y="50" h="70" x="10" rows="8" lpfield="disp_name">addresses</MULTISELECT>
 				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">
