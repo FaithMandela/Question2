@@ -257,6 +257,7 @@ CREATE VIEW vw_studentdegrees AS
 		
 		studentdegrees.mathplacement, studentdegrees.englishplacement, studentdegrees.details,
 		
+		to_char(grad_apply_date, 'Mon YYYY') as grad_apply_month,
 		to_char(grad_accept_date, 'Mon YYYY') as grad_accept_month,
 		to_char(grad_accept_date, 'YYYY') as grad_accept_year,
 		
@@ -563,7 +564,9 @@ CREATE VIEW qstudentmajorview AS
 		qstudents.departapproval, qstudents.overloadapproval, qstudents.finalised, qstudents.printed,
 		qstudents.noapproval, qstudents.exam_clear, qstudents.exam_clear_date, qstudents.exam_clear_balance,
 		qstudents.qresidenceid,
-		quarters.active, quarters.closed
+		quarters.active, quarters.closed,
+		substring(quarters.quarterid from 1 for 9)  as quarteryear, 
+		trim(substring(quarters.quarterid from 11 for 2)) as quarter
 	FROM (studentmajorview INNER JOIN qstudents ON studentmajorview.studentdegreeid = qstudents.studentdegreeid)
 		INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid;
 
