@@ -1162,19 +1162,27 @@ CREATE VIEW corecourseoutline AS
 			
 CREATE OR REPLACE FUNCTION get_passed(double precision, double precision, integer, varchar(12), varchar(12)) RETURNS boolean AS $$
 DECLARE
-	passed 			boolean;
-	v_courseid		varchar(12);
+	passed 				boolean;
+	v_required_courses	integer;
+	v_courses			integer;
 BEGIN
 	passed := false;
 	
 	IF($1 >= $2) THEN
 		passed := true;
 	ELSIF($3 is not null)THEN
-		SELECT max(courseid) INTO v_courseid
+		SELECT count(courseid) INTO v_courses
 		FROM courseoutline
-		WHERE (content_level ) AND (studentid = $4) AND (majorid = $5)
+		WHERE (content_level = $3) AND (studentid = $4) AND (majorid = $5)
 			AND (courseweight >= gradeweight);
-		IF(v_courseid is not null)THEN passed := true; END IF;
+		IF(v_courses is null)THEN v_courses := 0; END IF;
+		
+		SELECT required_courses INTO v_required_courses
+		FROM content_levels
+		WHERE (content_level = $3);
+		IF(v_required_courses is null)THEN v_required_courses := 1; END IF;
+		
+		IF(v_courses >=  v_required_courses)THEN passed := true; END IF;
 	END IF;
 
     RETURN passed;

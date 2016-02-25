@@ -563,6 +563,16 @@
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID name="Content Levels" keyfield="content_level" table="content_levels" noorg="true">
+			<TEXTFIELD w="75" title="Content Level">content_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Required Courses">required_courses</TEXTFIELD>
+			<TEXTFIELD w="275" title="Narrative">narrative</TEXTFIELD>
+			<FORM name="Content Levels" keyfield="content_level" table="content_levels" noorg="true">
+				<TEXTFIELD w="150" title="Content Level" y="10" h="20" x="10">content_level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Required Courses" y="10" h="20" x="290">required_courses</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+			</FORM>
+		</GRID>
 	</DESK>
 	<DESK w="725" name="Students" key="11" h="650">
 		<GRID limit="200" name="Students" keyfield="studentid" orderby="studentid" table="studentview" noorg="true">
@@ -572,7 +582,7 @@
 			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Denomination">denominationname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
-			<FORM name="Students" keyfield="studentid" table="students">
+			<FORM auditid="sys_audit_trail_id" name="Students" keyfield="studentid" table="students">
 				<TEXTFIELD w="150" title="Student ID" y="10" h="20" x="10">studentid</TEXTFIELD>
 				<COMBOBOX w="150" title="School Name" lptable="schools" noorg="true" y="10" h="20" x="290" lpfield="schoolname">schoolid</COMBOBOX>
 				<COMBOBOX w="430" title="Denomination" lptable="denominations" noorg="true" y="30" h="20" x="10" lpfield="denominationname">denominationid</COMBOBOX>
@@ -798,7 +808,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Students Halted" type="vert" key="41" h="560">
-		<GRID name="Students" keyfield="studentid" updatetable="students" table="studentview">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="studentview">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="140" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="School Name">schoolname</TEXTFIELD>

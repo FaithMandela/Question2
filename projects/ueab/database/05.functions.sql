@@ -1171,10 +1171,24 @@ CREATE TRIGGER ins_qstudents BEFORE INSERT OR UPDATE ON qstudents
     FOR EACH ROW EXECUTE PROCEDURE ins_qstudents();
 
 CREATE OR REPLACE FUNCTION updstudents() RETURNS trigger AS $$
+DECLARE
+	v_user_id		varchar(50);
+	v_user_ip		varchar(50);
 BEGIN
 	IF (OLD.fullbursary = false) and (NEW.fullbursary = true) THEN
-		INSERT INTO sys_audit_trail (user_id, table_name, record_id, change_type, narrative)
-		VALUES (current_user, 'students', NEW.studentid, 'approve', 'Approve full Bursary');
+		SELECT user_id, user_ip INTO v_user_id, v_user_ip
+		FROM sys_audit_trail
+		WHERE (sys_audit_trail_id = NEW.sys_audit_trail_id);
+		IF(v_user_id is null)THEN
+			v_user_id := current_user;
+			v_user_ip := cast(inet_client_addr() as varchar);
+		ELSE
+			SELECT user_name INTO v_user_id
+			FROM entitys WHERE entity_id::varchar = v_user_id;
+		END IF;
+	
+		INSERT INTO sys_audit_trail (user_id, user_ip, table_name, record_id, change_type, narrative)
+		VALUES (v_user_id, v_user_ip, 'students', NEW.studentid, 'approve', 'Approve full Bursary');
 	END IF;
 
 	RETURN NULL;
