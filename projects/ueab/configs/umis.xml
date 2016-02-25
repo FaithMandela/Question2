@@ -752,27 +752,6 @@
 					<TEXTAREA w="480" title="Details" lw="70" y="70" h="120" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<GRID name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcreditsview" noorg="true">
-				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
-				<TEXTFIELD w="140" title="Course Title">coursetitle</TEXTFIELD>
-				<TEXTFIELD w="140" title="Credit Hours">credithours</TEXTFIELD>
-				<TEXTFIELD w="40" title="Narrative">narrative</TEXTFIELD>
-				<FORM name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcredits" noorg="true">
-					<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
-						<GRID name="Courses" keyfield="courseid" gridfilter="true" table="courseview" noorg="true" key="2" pos="top">
-							<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
-							<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
-					<TEXTFIELD w="50" title="Credit Hours" default="3" y="30" h="20" x="10">credithours</TEXTFIELD>
-					<TEXTFIELD w="480" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
-				</FORM>
-			</GRID>
-			<GRID name="Printed" keyfield="transcriptprintid" updatetable="transcriptprint" linkfield="studentdegreeid" table="transcriptprintview" noorg="true" key="9">
-				<TEXTFIELD w="15" title="Date Printed">printdate</TEXTFIELD>
-				<TEXTFIELD w="15" title="Printed By">entity_name</TEXTFIELD>
-				<TEXTFIELD w="35" title="Narrative" edit="true">narrative</TEXTFIELD>
-			</GRID>
 		</GRID>
 		<GRID limit="200" name="Completed Students" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(cleared = true)">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
