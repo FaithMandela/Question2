@@ -617,7 +617,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Pay Slip" key="16" h="550">
-		<GRID name="Year" keyfield="period_year" table="vw_period_year">
+		<GRID name="Year" keyfield="period_year" orderby="period_year desc" table="vw_period_year">
 			<TEXTFIELD w="430" title="Period Year" y="10" h="70" x="10">period_year</TEXTFIELD>
 			<GRID name="Payroll" keyfield="employee_month_id" linkfield="period_year" table="vw_employee_month" where="(activated = true)" user="entity_id">
 				<TEXTFIELD w="75" title="Month">period_month</TEXTFIELD>

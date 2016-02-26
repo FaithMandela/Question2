@@ -2338,7 +2338,7 @@
 	</DESK>
 	<DESK w="700" name="Students Sub Levels" type="horl" key="633" h="500">
 		<FILTER location="250" name="Students Sub Levels" type="horl">
-			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" listfield="sublevelname"></DRILLDOWN>
+			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" listfield="sublevelname"></DRILLDOWN>
 			<JASPER filtered="true" name="Students Degrees" reportfile="studentdegreeviewd.jasper"></JASPER>
 		</FILTER>
 	</DESK>

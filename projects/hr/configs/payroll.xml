@@ -712,7 +712,7 @@
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
-				<ACTION fnct="generate_payroll" approval="1" role="hr,admin">Generate Payroll</ACTION>
+				<ACTION fnct="generate_payroll" approval="1" role="hr,admin,payrolladmin">Generate Payroll</ACTION>
 				<ACTION fnct="process_payroll" approval="1" role="payroll,admin">Process Payroll</ACTION>
 				<ACTION fnct="process_loans" role="payroll,admin">Process Loans</ACTION>
 				<ACTION fnct="process_pensions" role="payroll,admin">Process Pensions</ACTION>
@@ -1713,19 +1713,11 @@
 	</DESK>
 	<DESK w="700" name="P9A" key="111" h="750">
 		<FILTER w="700" name="P9A" split="250" key="6" h="550">
-			<FILTERGRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" filter="employeeid">
-				<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
-				<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
-				<CHECKBOX w="75" title="Active">active</CHECKBOX>
-			</FILTERGRID>
-			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" filter="filterid" pos="top"></DRILLDOWN>
-			<JASPER name="P9A" reportfile="P9A.jasper"></JASPER>
+			<FILTERFORM name="Employees">
+				<COMBOBOX w="430" orgerby="employee_name" title="Employee" lptable="vw_employees" cmb_fnct="employee_id || '- ' || employee_name" lpkey="entity_id" y="10" h="20" x="10" lpfield="employee">employee_id</COMBOBOX>
+				<COMBOBOX w="430" title="Year" lptable="vw_period_year" orderby="period_year desc" y="30" h="20" x="10" lpfield="period_year">period_year</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="P9A" org.table="vw_employee_month" reportfile="P9A.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="P10" key="112" h="750">
