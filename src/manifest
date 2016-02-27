@@ -9,9 +9,9 @@ Class-Path: lib/activation-1.1.1.jar lib/bcprov-jdk16-1.46.jar lib/commons-beanu
  lib/itextpdf-5.5.0.jar lib/jasperreports-6.1.0.jar lib/jcommon-1.0.15.jar lib/jfreechart-1.0.12.jar lib/jsch.jar lib/mail.jar 
  lib/mysql-connector-java-5.1.13-bin.jar lib/ojdbc6.jar lib/poi-3.10.jar lib/postgresql-9.3-1101.jdbc4.jar lib/sqljdbc4.jar 
  lib/barbecue-1.5-beta1.jar lib/javax.json-1.0.4.jar lib/jackson-databind-2.1.4.jar lib/jackson-core-2.1.4.jar 
- lib/interclient.jar 
+ lib/interclient.jar lib/barcode.jar 
  lib/webdav/httpclient-4.3.4.jar lib/webdav/httpcore-4.3.2.jar lib/webdav/sardine.jar lib/webdav/slf4j-api-1.7.7.jar 
- lib/webdav/slf4j-simple-1.7.7.jar lib/javaQuery.jar 
+ lib/webdav/slf4j-simple-1.7.7.jar 
  lib/server/jsch.jar lib/server/rxtxcomm.jar 
  lib/server/tomcat-embed-core.jar lib/server/tomcat-embed-logging-juli.jar lib/server/tomcat-embed-logging-log4j.jar 
  lib/server/tomcat-embed-jasper.jar lib/server/tomcat-dbcp.jar lib/server/ecj-P20140317-1600.jar lib/server/tomcat-embed-el.jar 

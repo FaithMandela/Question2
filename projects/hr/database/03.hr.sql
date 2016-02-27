@@ -1537,8 +1537,11 @@ CREATE TRIGGER ins_job_reviews AFTER INSERT ON job_reviews
 
 CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
+	v_entity_id				integer;
 	v_application_id		integer;
-	
+	v_address				integer;
+	c_education_id			integer;
+	c_referees				integer;
 	reca					RECORD;
 	msg 					varchar(120);
 BEGIN
@@ -1549,17 +1552,44 @@ BEGIN
 	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
 	FROM applicants
 	WHERE (entity_id = $2::int);
-
+	v_entity_id := reca.entity_id;
 	IF(reca.entity_id is null) THEN
 		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
 		FROM employees
 		WHERE (entity_id = $2::int);
+		v_entity_id := reca.entity_id;
 	END IF;
+	
+	SELECT count(address_id) INTO v_address
+	FROM vw_address
+	WHERE (table_name = 'applicant') AND (is_default = true) AND (table_id  = v_entity_id);
+	IF(v_address is null) THEN v_address = 0; END IF;
+	
+	SELECT count(education_id) INTO c_education_id
+	FROM education
+	WHERE (entity_id  = v_entity_id);
+	IF(c_education_id is null) THEN c_education_id = 0; END IF;
+	
+	SELECT count(address_id) INTO c_referees
+	FROM vw_referees
+	WHERE (table_id  = v_entity_id);
+	IF(c_referees is null) THEN c_referees = 0; END IF;
 
 	IF v_application_id is not null THEN
 		msg := 'There is another application for the post.';
+		RAISE EXCEPTION '%', msg;
 	ELSIF (reca.previous_salary is null) OR (reca.expected_salary is null) THEN
 		msg := 'Kindly indicate your previous and expected salary';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (v_address < 1) THEN
+		msg := 'You need to have at least one full address added';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (c_education_id < 2) THEN
+		msg := 'You need to have at least two education levels added';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (c_referees < 3) THEN
+		msg := 'You need to have at least three referees added';
+		RAISE EXCEPTION '%', msg;
 	ELSE
 		INSERT INTO applications (intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
 		VALUES ($1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
@@ -2037,6 +2067,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION objectives_review(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_objective_ps		real;
+	max_objective_ps	real;
 	sum_ods_ps			real;
 	rec					RECORD;
 	msg 				varchar(120);
@@ -2045,10 +2076,19 @@ BEGIN
 	SELECT sum(objectives.objective_ps) INTO v_objective_ps
 	FROM objectives
 	WHERE (objectives.employee_objective_id = CAST($1 as int));
+	SELECT max(objectives.objective_ps) INTO max_objective_ps
+	FROM objectives
+	WHERE (objectives.employee_objective_id = CAST($1 as int));
 	SELECT sum(objective_details.ods_ps) INTO sum_ods_ps
 	FROM objective_details INNER JOIN objectives ON objective_details.objective_id = objectives.objective_id
 	WHERE (objectives.employee_objective_id = CAST($1 as int));
 	
+	IF(v_objective_ps is null)THEN
+		v_objective_ps := 0;
+	END IF;
+	IF(max_objective_ps is null)THEN
+		max_objective_ps := 0;
+	END IF;
 	IF(sum_ods_ps is null)THEN
 		sum_ods_ps := 100;
 	END IF;
@@ -2056,7 +2096,10 @@ BEGIN
 		sum_ods_ps := 100;
 	END IF;
 
-	IF(v_objective_ps = 100) AND (sum_ods_ps = 100)THEN
+	IF(max_objective_ps > 50)THEN
+		msg := 'Objective should not have a % higer than 50';
+		RAISE EXCEPTION '%', msg;
+	ELSIF(v_objective_ps = 100) AND (sum_ods_ps = 100)THEN
 		UPDATE employee_objectives SET approve_status = 'Completed'
 		WHERE (employee_objective_id = CAST($1 as int));
 

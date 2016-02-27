@@ -1,25 +1,43 @@
-CREATE OR REPLACE FUNCTION change_password(varchar(12), varchar(32), varchar(32)) RETURNS varchar(120) AS $$
+
+CREATE OR REPLACE FUNCTION ins_members()
+RETURNS trigger AS
+$BODY$
 DECLARE
-	old_password 	varchar(64);
-	passchange 		varchar(120);
-	entityID		integer;
+	rec 			RECORD;
+	v_entity_id		integer;
 BEGIN
-	passchange := 'Password Error';
-	entityID := CAST($1 AS INT);
-	SELECT entity_password INTO old_password
-	FROM entitys WHERE (entity_id = entityID);
+	IF (TG_OP = 'INSERT') THEN
+		
+		IF(NEW.entity_id IS NULL) THEN
+			SELECT entity_id INTO v_entity_id
+			FROM entitys
+			WHERE function_role = 'member';
+				
+			IF(v_entity_id is null)THEN
+				SELECT org_id INTO rec
+				FROM orgs WHERE (is_default = true);
 
-	IF ($2 = '0') THEN
-		passchange := first_password();
-		UPDATE entitys SET first_password = passchange, Entity_password = md5(passchange) WHERE (entity_id = entityID);
-		passchange := 'Password Changed';
-	ELSIF (old_password = md5($2)) THEN
-		UPDATE entitys SET Entity_password = md5($3) WHERE (entity_id = entityID);
-		passchange := 'Password Changed';
-	ELSE
-		passchange := null;
-	END IF;
+				NEW.entity_id := nextval('entitys_entity_id_seq');
 
-	return passchange;
+				INSERT INTO members (entity_id, org_id, full_names, surname,first_name, middle_name, User_name, 
+					primary_email, primary_telephone, function_role)
+					
+				VALUES(NEW.entity_id, rec.org_id,NEW.entity_name,(NEW.surname || ' ' || NEW.first_name || ' ' ||COALESCE(NEW.middle_name, '')), NEW.primary_email, NEW.phone, NEW.appointment_date)
+			ELSE
+				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
+			END IF;
+		END IF;
+
+	ELSIF (TG_OP = 'UPDATE') THEN
+		UPDATE members  SET full_names = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
+		WHERE entity_id = NEW.entity_id;
+END IF;
+	RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$BODY$
+  LANGUAGE plpgsql;   
+
+CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
+  FOR EACH ROW  EXECUTE PROCEDURE ins_members();
+
+  

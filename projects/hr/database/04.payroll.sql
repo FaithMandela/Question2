@@ -384,7 +384,8 @@ CREATE VIEW vw_default_banking AS
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		default_banking.org_id, default_banking.default_banking_id, default_banking.amount, 
-		default_banking.ps_amount, default_banking.final_date, default_banking.active, default_banking.narrative
+		default_banking.ps_amount, default_banking.final_date, default_banking.active, 
+		default_banking.bank_account, default_banking.narrative
 	FROM default_banking INNER JOIN entitys ON default_banking.entity_id = entitys.entity_id
 		INNER JOIN vw_bank_branch ON default_banking.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN currency ON default_banking.currency_id = currency.currency_id;

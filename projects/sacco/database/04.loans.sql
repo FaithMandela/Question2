@@ -161,7 +161,7 @@ CREATE VIEW vw_loans AS
 
 CREATE VIEW vw_loan_monthly AS
 	SELECT 	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
-		vw_loans.loan_type_id, vw_loans.loan_type_name, 
+		vw_loans.loan_type_id, vw_loans.loan_type_name, vw_loans.approve_statu
 		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed, vw_periods.period_year,vw_periods.period_month,
