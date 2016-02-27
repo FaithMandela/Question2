@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="com.dewcis.travelinsurance.UrlScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="48"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
@@ -11,9 +11,6 @@
 	</parameter>
 	<parameter name="passenger_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[109]]></defaultValueExpression>
-	</parameter>
-	<parameter name="url" class="java.lang.String">
-		<defaultValueExpression><![CDATA[$P{REPORT_SCRIPTLET} .getUrl("http://localhost:8080/travelportapps/letter.jsp?view=55:0:0&data=")]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,vw_passengers.approved_date,vw_passengers.destown,vw_passengers.policy_number,vw_passengers.nok_national_id,
@@ -34,7 +31,7 @@ WHERE passenger_id = '$P!{filterid}']]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="131" splitType="Stretch">
+		<band height="146" splitType="Stretch">
 			<image>
 				<reportElement x="184" y="0" width="200" height="131" uuid="907327d0-5dc7-48df-a96d-fb08b71a6c2c"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "ICEA-LION-Travel-Insurance-Logo.png"]]></imageExpression>
@@ -54,8 +51,8 @@ WHERE passenger_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{passenger_id}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="448" y="20" width="102" height="50" uuid="bcee6746-58c3-4e90-a1ce-f613fc3f9168"/>
-				<imageExpression><![CDATA[new com.onbarcode.barcode.jasper.JasperRenderer(com.onbarcode.barcode.jasper.BarcodeGenerator.draw(102,$P{REPORT_SCRIPTLET}.getUrl("demo.dewcis.com/travelportapps/letter.jsp?view=55:0:0&data="+$F{passenger_id}), "", "X=2&Y=60"))]]></imageExpression>
+				<reportElement x="448" y="20" width="106" height="111" uuid="bcee6746-58c3-4e90-a1ce-f613fc3f9168"/>
+				<imageExpression><![CDATA[new com.onbarcode.barcode.jasper.JasperRenderer(com.onbarcode.barcode.jasper.BarcodeGenerator.draw(102,"http://tp.dc.co.ke/travelportapps/letter.jsp?view=55:0:0&data="+$F{passenger_id}, "", "X=2&Y=60"))]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -213,7 +210,7 @@ Manager, Business Development]]></text>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "file-page1.png"]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
-				<reportElement x="192" y="288" width="215" height="20" uuid="79f048e6-9e96-4a0b-a605-5bd00d528fe9"/>
+				<reportElement x="211" y="288" width="196" height="20" uuid="79f048e6-9e96-4a0b-a605-5bd00d528fe9"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
@@ -231,7 +228,7 @@ Manager, Business Development]]></text>
 				<textFieldExpression><![CDATA[$F{benefit}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="288" width="192" height="20" isPrintWhenDetailOverflows="true" uuid="9046a7b2-2642-40be-b955-df61cc765298"/>
+				<reportElement x="0" y="288" width="211" height="20" isPrintWhenDetailOverflows="true" uuid="9046a7b2-2642-40be-b955-df61cc765298"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
