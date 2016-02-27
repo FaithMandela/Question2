@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qgradeviewtransa" pageWidth="651" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="647" leftMargin="2" rightMargin="2" topMargin="2" bottomMargin="2" uuid="3ac06659-0682-449b-928d-38fea8b2f0a3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -160,7 +160,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="9" splitType="Stretch">
+		<band height="10" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField" x="2" y="0" width="93" height="9" uuid="2ee51ab5-177a-4d07-9b5e-2073798130f0"/>
 				<box leftPadding="2" rightPadding="2">
@@ -245,11 +245,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="8" splitType="Stretch">
-			<line>
-				<reportElement key="line-2" x="2" y="5" width="641" height="1" uuid="39b99d81-21db-4324-ab6d-d5ae54f43565"/>
-			</line>
-		</band>
+		<band height="4" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>
