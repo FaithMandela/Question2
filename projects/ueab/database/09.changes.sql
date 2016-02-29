@@ -12,6 +12,16 @@ ADD sys_audit_trail_id	integer references sys_audit_trail;
 CREATE INDEX students_org_id ON students (org_id);
 CREATE INDEX students_sys_audit_trail_id ON students (sys_audit_trail_id);
 
+CREATE OR REPLACE FUNCTION getcoursedone(varchar(12), varchar(12)) RETURNS float AS $$
+	SELECT max(grades.gradeweight)
+	FROM (((qcourses INNER JOIN qgrades ON qcourses.qcourseid = qgrades.qcourseid)
+		INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid)
+		INNER JOIN grades ON qgrades.gradeid = grades.gradeid)
+		INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
+	WHERE (qstudents.approved = true) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW')
+		AND (qgrades.dropped = false)
+		AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION updstudents() RETURNS trigger AS $$
 DECLARE

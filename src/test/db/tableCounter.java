@@ -17,8 +17,8 @@ public class tableCounter {
     	Vector data =  new Vector();
     	
 		try{
-			//Connection con = DriverManager.getConnection("jdbc:mysql://192.168.0.20:3306/acordhr", "root", "");
-			Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/hr", "root", "invent2k");
+			Connection con = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/faidaplus", "root", "");
+			//Connection con = DriverManager.getConnection("jdbc:postgresql://localhost/hr", "root", "invent2k");
 			
 			DatabaseMetaData dbmd = con.getMetaData();
 			String[] types = {"TABLE"};
@@ -28,9 +28,10 @@ public class tableCounter {
 				String table_schema = rs.getString("TABLE_SCHEM");
     		   	String table_name = rs.getString("TABLE_NAME");
     		   	System.out.println(table_name);
+    		   	if(table_schema == null) table_schema = "";
     		   	
     		   	//  erad the data
-				PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM " + table_schema + "." + table_name);
+				PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM " + table_schema + ".`" + table_name + "`");
 				ResultSet rst = ps.executeQuery();
 				rst.next();
 				int rowCount = rst.getInt(1);			

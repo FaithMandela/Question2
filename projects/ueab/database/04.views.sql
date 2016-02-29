@@ -838,7 +838,8 @@ CREATE OR REPLACE FUNCTION getcoursedone(varchar(12), varchar(12)) RETURNS float
 		INNER JOIN grades ON qgrades.gradeid = grades.gradeid)
 		INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
 	WHERE (qstudents.approved = true) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW')
-	AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
+		AND (qgrades.dropped = false)
+		AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getcoursetransfered(varchar(12), varchar(12)) RETURNS float AS $$

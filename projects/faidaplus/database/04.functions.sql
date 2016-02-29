@@ -1,7 +1,12 @@
 
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON bonus
+	FOR EACH ROW EXECUTE PROCEDURE upd_action();
+	
+	
 CREATE OR REPLACE FUNCTION generate_points(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	pcc						RECORD;
+	rec						RECORD;
 	v_period_bonus_ps		real;
 	v_period_bonus_amount	real;
 	v_pcc_bonus_ps			real;
@@ -38,6 +43,8 @@ BEGIN
 		v_bonus := (rec.points * v_period_bonus_ps / 100) + v_period_bonus_amount;
 		v_bonus := v_bonus + (rec.points * v_pcc_bonus_ps) + v_pcc_bonus_amount;
 		v_bonus := v_bonus + (rec.points * v_son_bonus_ps) + v_son_bonus_amount;
+		
+		UPDATE points SET bonus = v_bonus WHERE points_id = rec.points_id;
 
 	END LOOP;
 	
