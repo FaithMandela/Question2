@@ -31,10 +31,6 @@ $BODY$
 CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
   FOR EACH ROW  EXECUTE PROCEDURE ins_members();
   
-
-  
-  
-  
   
   
 CREATE OR REPLACE FUNCTION ins_applicants()
@@ -44,14 +40,7 @@ DECLARE
 	rec 			RECORD;
 	v_entity_id		integer;
 BEGIN
-
-IF (TG_OP = 'INSERT') THEN
-NEW.entity_id := nextval('entitys_entity_id_seq');
-else
-END IF;
-
-	IF (NEW.approve_status = 'Approved') THEN
-		
+	IF (NEW.function_role = 'member') THEN
 
 	INSERT INTO members(
             entity_id,org_id, person_title, full_name, 
@@ -61,10 +50,13 @@ END IF;
 	VALUES(NEW.entity_id, NEW.org_id,NEW.person_title,NEW.surname, NEW.surname, NEW.first_name, NEW.middle_name, 
             NEW.applicant_email, NEW.applicant_phone, NEW.date_of_birth, NEW.gender, 
             NEW.marital_status, NEW.language, NEW.interests, NEW.objective, NEW.details) RETURNING entity_id INTO v_entity_id;
-            
-	NEW.entity_id := v_entity_id;
+         
+         
+         
+         
+
 	ELSE 
-	--RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
+	RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 	END IF;
 	
 	INSERT INTO sys_emailed (table_id,org_id, table_name)
@@ -76,6 +68,6 @@ $BODY$
   LANGUAGE plpgsql;   
 
 
-CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
+CREATE TRIGGER ins_applicants AFTER INSERT OR UPDATE ON applicants
   FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
 

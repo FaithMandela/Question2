@@ -61,7 +61,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/meridian" dbname="meridian" path="meridian" xmlfile="meridian.xml" dbclass="org.postgresql.Driver" dbusername="root">Meridian</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mhealth" dbname="mhealth" path="mhealth" xmlfile="mhealth.xml" dbclass="org.postgresql.Driver" dbusername="root">MHealth</APP>
 	<APP dbpath="jdbc:postgresql://localhost/church" dbname="church" path="church" xmlfile="church.xml" dbclass="org.postgresql.Driver" dbusername="root">Church</APP>
-	<APP dbpath="jdbc:oracle:thin:@172.100.3.30:1541:tcrm" dbschema="CCK" dbpassword="Imis2goke" dbname="tcrm" path="cck" xmlfile="lcs.xml" dbclass="oracle.jdbc.driver.OracleDriver" dbusername="cck">CCK CRM</APP>
+	<APP dbschema="CCK" dbpassword="Imis2goke" dbpath="jdbc:oracle:thin:@172.100.3.30:1541:tcrm" dbname="tcrm" path="cck" xmlfile="lcs.xml" dbclass="oracle.jdbc.driver.OracleDriver" dbusername="cck">CCK CRM</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cck" dbname="cck" path="cck" xmlfile="cck.xml" dbclass="org.postgresql.Driver" dbusername="root">CCK</APP>
 	<APP dbpath="jdbc:postgresql://localhost/events" dbname="events" path="events" xmlfile="events.xml" dbclass="org.postgresql.Driver" dbusername="root">Events</APP>
 	<APP dbpath="jdbc:postgresql://localhost/vms" dbname="vms" path="vms" xmlfile="vms.xml" dbclass="org.postgresql.Driver" dbusername="root">VMS</APP>

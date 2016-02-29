@@ -16,12 +16,16 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_gls.journal_id, vw_gls.journal_date, vw_gls.posted, vw_gls.account_id,
 vw_gls.account_type_name, vw_gls.account_name, vw_gls.gl_narrative,
 vw_gls.debit, vw_gls.credit
 FROM vw_gls
 WHERE (period_id = '$P!{filterid}')
+$P!{organd}
 ORDER BY vw_gls.journal_id, vw_gls.account_id;]]>
 	</queryString>
 	<field name="journal_id" class="java.lang.Integer"/>
