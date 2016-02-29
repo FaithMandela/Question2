@@ -1881,7 +1881,7 @@ BEGIN
 	UPDATE claims SET approve_status = 'Completed'
 	WHERE (claim_id = CAST($1 as int)) AND (approve_status = 'Draft');
 
-	return msg;
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 
