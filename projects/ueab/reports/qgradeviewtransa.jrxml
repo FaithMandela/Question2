@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qgradeviewtransa" pageWidth="651" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="647" leftMargin="2" rightMargin="2" topMargin="2" bottomMargin="2">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qgradeviewtransa" pageWidth="651" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="647" leftMargin="2" rightMargin="2" topMargin="2" bottomMargin="2" uuid="3ac06659-0682-449b-928d-38fea8b2f0a3">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -17,7 +17,7 @@ courseid, repeated, coursetitle, instructorname, hours, credit, gradeid, gpa
 
 FROM coregradeview
 
-WHERE studentdegreeid = $P{studentdegreeid}
+WHERE (contenttypeid IN (1,2,6,8)) AND (studentdegreeid = $P{studentdegreeid})
 
 GROUP BY courseid, repeated, coursetitle, instructorname, hours, credit, gradeid, gpa
 
@@ -38,7 +38,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 		<groupHeader>
 			<band height="29" splitType="Stretch">
 				<staticText>
-					<reportElement key="element-90" x="2" y="19" width="93" height="10" forecolor="#000000"/>
+					<reportElement key="element-90" x="2" y="19" width="93" height="10" forecolor="#000000" uuid="e8213d8f-2156-4dab-8806-7dee2aaa63e4"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
@@ -51,7 +51,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 					<text><![CDATA[Course Code]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="95" y="19" width="322" height="10" forecolor="#000000"/>
+					<reportElement key="element-90" x="95" y="19" width="322" height="10" forecolor="#000000" uuid="d47167b2-f74e-47a4-a14e-4955162b512b"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -64,7 +64,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 					<text><![CDATA[Course Title]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="417" y="19" width="66" height="10" forecolor="#000000"/>
+					<reportElement key="element-90" x="417" y="19" width="66" height="10" forecolor="#000000" uuid="b4ed9367-e4e9-4fa8-8fad-1eac9346834c"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -77,7 +77,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 					<text><![CDATA[Degree Hours]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="483" y="19" width="52" height="10" forecolor="#000000"/>
+					<reportElement key="element-90" x="483" y="19" width="52" height="10" forecolor="#000000" uuid="dd789ffd-5c60-4279-ac10-e15cb74e6508"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -90,7 +90,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 					<text><![CDATA[GPA Hours]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="535" y="19" width="48" height="10" forecolor="#000000"/>
+					<reportElement key="element-90" x="535" y="19" width="48" height="10" forecolor="#000000" uuid="659f13b2-c689-4040-bd77-026c7c4067f7"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -103,7 +103,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 					<text><![CDATA[Grade]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-91" x="583" y="19" width="61" height="10" forecolor="#000000"/>
+					<reportElement key="element-91" x="583" y="19" width="61" height="10" forecolor="#000000" uuid="7f918657-c667-4507-831e-3899a91d2514"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -116,7 +116,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 					<text><![CDATA[Point]]></text>
 				</staticText>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement key="textField-2" x="116" y="4" width="433" height="12"/>
+					<reportElement key="textField-2" x="116" y="4" width="433" height="12" uuid="1a6217a8-4ee7-4d77-bfb4-931eec7286ae"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -126,10 +126,10 @@ ORDER BY description, contenttypeid, courseid;]]>
 					<textElement>
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[$F{description}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement key="element-92" x="4" y="4" width="112" height="12" forecolor="#000000"/>
+					<reportElement key="element-92" x="4" y="4" width="112" height="12" forecolor="#000000" uuid="89fad7fa-3f5d-4cb6-a48d-9af68ee6d36b"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -160,9 +160,9 @@ ORDER BY description, contenttypeid, courseid;]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="9" splitType="Stretch">
+		<band height="10" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="2" y="0" width="93" height="9"/>
+				<reportElement key="textField" x="2" y="0" width="93" height="9" uuid="2ee51ab5-177a-4d07-9b5e-2073798130f0"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
@@ -172,10 +172,10 @@ ORDER BY description, contenttypeid, courseid;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{courseid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{courseid}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="95" y="0" width="322" height="9"/>
+				<reportElement key="textField" x="95" y="0" width="322" height="9" uuid="91a92841-9cb6-4d43-a074-9f6fea9c0147"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -185,10 +185,10 @@ ORDER BY description, contenttypeid, courseid;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{coursetitle}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{coursetitle}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="417" y="0" width="66" height="9"/>
+				<reportElement key="textField" x="417" y="0" width="66" height="9" uuid="edcc71a2-c19b-4f94-a117-b5f03b44e801"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -198,10 +198,10 @@ ORDER BY description, contenttypeid, courseid;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{hours}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="483" y="0" width="52" height="9"/>
+				<reportElement key="textField" x="483" y="0" width="52" height="9" uuid="7753548a-e5ec-4384-8996-f4a390f19a36"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -211,10 +211,10 @@ ORDER BY description, contenttypeid, courseid;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{credit}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="535" y="0" width="48" height="9"/>
+				<reportElement key="textField" x="535" y="0" width="48" height="9" uuid="12c5ae4d-4a98-4c12-b34f-b49bb59f09f8"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -224,10 +224,10 @@ ORDER BY description, contenttypeid, courseid;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{gradeid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gradeid}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="583" y="0" width="61" height="9"/>
+				<reportElement key="textField-1" x="583" y="0" width="61" height="9" uuid="ca74d6eb-4448-48a3-874d-1f63edb47aff"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -237,7 +237,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[($F{repeated}.booleanValue() ? "*" : "" + $F{gpa})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{repeated}.booleanValue() ? "*" : "" + $F{gpa})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -245,11 +245,7 @@ ORDER BY description, contenttypeid, courseid;]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="8" splitType="Stretch">
-			<line>
-				<reportElement key="line-2" x="2" y="5" width="641" height="1"/>
-			</line>
-		</band>
+		<band height="4" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>

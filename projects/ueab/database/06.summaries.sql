@@ -179,13 +179,6 @@ CREATE VIEW vwnationality AS
 	GROUP BY nationality, countryname
 	ORDER BY countryname;
 
-CREATE VIEW vwgradyear AS
-	SELECT EXTRACT(YEAR FROM studentdegreeview.graduatedate) as gradyear
-	FROM studentdegreeview
-	WHERE (studentdegreeview.graduated = true)
-	GROUP BY EXTRACT(YEAR FROM studentdegreeview.graduatedate)
-	ORDER BY EXTRACT(YEAR FROM studentdegreeview.graduatedate);
-
 CREATE VIEW sexview AS
 	(SELECT 'M' as sex) UNION (SELECT 'F' as sex);
 

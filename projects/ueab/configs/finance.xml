@@ -57,7 +57,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="720" name="Students" key="11" h="560">
-		<GRID limit="100" name="Students" keyfield="studentid" updatetable="students" table="vw_students">
+		<GRID limit="100" auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="vw_students">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="100" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
