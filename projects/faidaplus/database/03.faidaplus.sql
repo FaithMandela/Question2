@@ -26,12 +26,12 @@ ALTER TABLE entitys ADD phone_pb boolean default false;
 ALTER TABLE entitys ADD phone_pt boolean default false;
 ALTER TABLE entitys ADD last_login timestamp;
 ALTER TABLE entitys ADD user_status integer;
-ALTER TABLE entitys ADD sms_alert boolean default false;  
+ALTER TABLE entitys ADD sms_alert boolean default false;
 ALTER TABLE entitys ADD email_alert boolean default false;
 ALTER TABLE entitys ADD newsletter boolean default false;
 
 CREATE TABLE towns (
-	town_id					serial primary key, 
+	town_id					serial primary key,
 	town_name				varchar(50),
 	aramex					boolean
 );
@@ -60,24 +60,24 @@ CREATE TABLE products (
 	product_category_id 	integer references product_category,
     supplier_id          	integer references suppliers,
 	created_by				integer references entitys,				--logged in system user who did the insert\
-	
+
 	product_name			varchar(100),
 	product_uprice			real,
 	product_ucost			real,
 	created					date not null default current_date,
-	
+
 	product_details 		text,
 	terms					text,
 	weight					real,
 	remarks					text,
-	
+
 	is_active				boolean default false,
 	updated_by			    integer references entitys,				--logged in system user who did the last update
 	updated					timestamp default now(),
-	
+
 	narrative			    text,
     image                   varchar(50),
-    
+
     details					text
 );
 CREATE INDEX products_product_category_id ON products (product_category_id);
@@ -110,19 +110,19 @@ CREATE INDEX order_product_id  ON order_details(product_id);
 CREATE INDEX order_details_id  ON orders(order_id);
 
 CREATE TABLE applicants (
-	entity_id				integer references entitys primary key,
+	applicant_id			serial primary key,
 	org_id 					integer references orgs,
 	applicant_email			varchar(50) not null,
 	pseudo_code				varchar(4),
 	son 					varchar(7),
 	consultant_dob			date not null,
 	status					varchar(20),
-	
+
  	approve_status			varchar(16) default 'draft' not null,
  	workflow_table_id		integer,
  	application_date		timestamp default now(),
  	action_date				timestamp,
-	
+
 	details					text
 );
 CREATE INDEX applicants_org_id ON applicants (org_id);
@@ -132,8 +132,9 @@ CREATE TABLE points (
 	org_id 					integer references orgs,
 	entity_id				integer references entitys,
 	period_id				integer references periods,
-	pcc                     varchar(4) references pccs,
+	pcc                     varchar(4),
 	son                     varchar(7),
+	point_date				date,
 	segments                real,
 	amount                  real,
 	points                  real,
@@ -175,7 +176,7 @@ DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
 
 CREATE VIEW vw_orgs AS
-	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		orgs.pcc,
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
@@ -207,7 +208,7 @@ CREATE VIEW vw_entitys AS
 		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
 		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
-		entitys.salutation, entitys.son,
+		entitys.salutation, entitys.son,entitys.birth_date,
 		entity_types.entity_type_id, entity_types.entity_type_name,
 		entity_types.entity_role, entity_types.use_key
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
@@ -247,28 +248,28 @@ CREATE VIEW vw_order_details AS
 		JOIN vw_products ON vw_products.product_id = order_details.product_id;
 
 CREATE VIEW vw_applicants AS
-	SELECT applicants.entity_id, applicants.applicant_email, cast(applicants.application_date as date),
-		applicants.pseudo_code, entitys.entity_name, applicants.son, applicants.approve_status,
+	SELECT applicants.applicant_id, applicants.applicant_email, cast(applicants.application_date as date),
+		applicants.pseudo_code, applicants.son, applicants.approve_status,
 		applicants.status, applicants.consultant_dob, applicants.details
-	FROM applicants JOIN entitys ON applicants.entity_id = entitys.entity_id;
+	FROM applicants;
 
 CREATE VIEW vw_consultant AS
-	SELECT applicants.entity_id, vw_entitys.primary_email, vw_entitys.date_enroled::date AS application_date,
+	SELECT vw_entitys.entity_id, vw_entitys.primary_email, vw_entitys.date_enroled::date AS application_date,
 		vw_entitys.pcc, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.is_active,
 		vw_entitys.son, vw_entitys.is_active as approved,
-		applicants.consultant_dob
-	FROM applicants JOIN vw_entitys ON applicants.entity_id = vw_entitys.entity_id;
+		vw_entitys.birth_date
+	FROM vw_entitys;
 
 CREATE VIEW vw_purged_consultant AS
-	SELECT applicants.entity_id, vw_entitys.primary_email, cast(vw_entitys.date_enroled as date),
+	SELECT vw_entitys.entity_id, vw_entitys.primary_email, cast(vw_entitys.date_enroled as date),
 		vw_entitys.pcc, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.is_active,
 		vw_entitys.son, vw_entitys.is_active as approved,
-		points.period_id, applicants.consultant_dob
-	FROM applicants JOIN vw_entitys ON applicants.entity_id = vw_entitys.entity_id
+		points.period_id, vw_entitys.birth_date
+	FROM  vw_entitys
 		JOIN points ON vw_entitys.son = points.son AND vw_entitys.pcc = points.pcc
 		JOIN periods ON points.period_id = periods.period_id
 	WHERE periods.start_date < CURRENT_DATE - INTERVAL '6 months';
-	
+
 CREATE VIEW vw_points AS
 	SELECT points.points_id, points.period_id, periods.start_date as period,
 		to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
@@ -308,12 +309,12 @@ CREATE VIEW vw_son_statement AS
 		vw_orders.entity_id, vw_orders.details
 	FROM vw_orders)) a
 	ORDER BY a.pcc, a.son, a.order_date;
-	
+
 CREATE VIEW vw_statement AS
 	SELECT vw_points.amount, sum(vw_points.points)as dr, vw_points.bonus,
 		vw_orders.entity_id, vw_orders.order_date, vw_orders.order_status,
 		vw_orders.entity_name, vw_orders.son, sum(vw_orders.order_total_amount)as cr,
-		vw_orders.pcc, 
+		vw_orders.pcc,
 		(sum(vw_points.points)-sum(vw_orders.order_total_amount))as balance,
 		orgs.org_name
 	FROM vw_orders INNER JOIN vw_points ON vw_orders.son = vw_points.son and vw_orders.pcc = vw_points.pcc

@@ -452,8 +452,6 @@ CREATE OR REPLACE VIEW vw_son_points AS
    FROM points
      JOIN vw_entitys ON points.pcc::text = vw_entitys.pcc::text AND points.son = vw_entitys.son;
 
-
-
     CREATE OR REPLACE VIEW vw_son_statement AS
         SELECT a.dr,
             a.cr,
