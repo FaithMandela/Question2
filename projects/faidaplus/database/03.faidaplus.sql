@@ -224,12 +224,12 @@ CREATE VIEW vw_products AS
 		JOIN product_category ON products.product_category_id=product_category.product_category_id;
 
 CREATE VIEW vw_orders AS
-	SELECT orders.order_id, orders.order_date, orders.order_status, orders.order_total_amount, orders.batch_no,
-		orders.shipping_cost, orders.grand_total, orders.details, vw_entitys.entity_name, vw_entitys.son,
-		vw_entitys.entity_id, vw_entitys.pcc, vw_entitys.org_name, vw_entitys.primary_email,
-		vw_entitys.primary_telephone, vw_entitys.function_role, vw_entitys.entity_role,
-		vw_entitys.org_id
-	FROM orders JOIN vw_entitys ON orders.entity_id = vw_entitys.entity_id;
+    SELECT orders.order_id, orders.order_date, orders.order_status, orders.order_total_amount, orders.batch_no,
+        orders.shipping_cost, orders.grand_total, orders.details, vw_entitys.entity_name, vw_entitys.son,
+        vw_entitys.entity_id, vw_entitys.pcc, vw_entitys.org_name, vw_entitys.primary_email,
+        vw_entitys.primary_telephone, vw_entitys.function_role, vw_entitys.entity_role,
+        vw_entitys.org_id
+    FROM orders JOIN vw_entitys ON orders.entity_id = vw_entitys.entity_id;
 
 CREATE VIEW vw_pccs AS
 	SELECT orgs.org_id, orgs.org_name,	orgs.is_default, orgs.is_active,
