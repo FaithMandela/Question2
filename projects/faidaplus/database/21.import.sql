@@ -22,3 +22,6 @@ UPDATE faidaplus.agency SET rel_id_town = 41 WHERE rel_id_town = 0;
 UPDATE faidaplus.supplier SET create_date = '2000-01-01 00:00:00' WHERE create_date <= '2000-01-01 00:00:00';
 UPDATE faidaplus.shop_item SET active = '0' WHERE active = '' or active = ' ';
 
+
+UPDATE faidaplus.segment SET date = '2000-01-01' WHERE date <= '2000-01-01';
+UPDATE faidaplus.segment SET date_time = '2000-01-01 00:00:00' WHERE date_time <= '2000-01-01 00:00:00';
