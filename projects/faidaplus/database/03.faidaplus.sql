@@ -1,24 +1,52 @@
 ---Project Database File
 
-ALTER TABLE orgs ADD pcc varchar(4);
+ALTER TABLE orgs ADD pcc varchar(7);
 ALTER TABLE orgs ADD sp_id	varchar(16);
 ALTER TABLE orgs ADD service_id	varchar(32);
 ALTER TABLE orgs ADD sender_name varchar(16);
 ALTER TABLE orgs ADD sms_rate real default 2 not null;
 ALTER TABLE orgs ADD show_fare boolean default false;
 ALTER TABLE orgs ADD gds_free_field integer default 96;
+ALTER TABLE orgs ADD is_iata boolean default false;
+ALTER TABLE orgs ADD date_enroled timestamp default now();
+ALTER TABLE orgs ADD account_manager_id integer references entitys;
+CREATE INDEX orgs_account_manager_id ON orgs (account_manager_id);
+
+ALTER TABLE orgs DROP CONSTRAINT orgs_org_name_key;
+ALTER TABLE orgs DROP CONSTRAINT orgs_org_sufix_key;
 
 ALTER TABLE entitys ADD salutation varchar(7);
+ALTER TABLE entitys ADD pcc_son varchar(7);
 ALTER TABLE entitys ADD son varchar(7);
+ALTER TABLE entitys ADD birth_date date;
+ALTER TABLE entitys ADD shipping text;
 ALTER TABLE entitys ADD phone_ph boolean default true;
 ALTER TABLE entitys ADD phone_pa boolean default false;
 ALTER TABLE entitys ADD phone_pb boolean default false;
-ALTER TABLE entitys ADD phone_pt boolean default false;  
+ALTER TABLE entitys ADD phone_pt boolean default false;
+ALTER TABLE entitys ADD last_login timestamp;
+ALTER TABLE entitys ADD user_status integer;
+ALTER TABLE entitys ADD sms_alert boolean default false;  
+ALTER TABLE entitys ADD email_alert boolean default false;
+ALTER TABLE entitys ADD newsletter boolean default false;
+
+CREATE TABLE towns (
+	town_id					serial primary key, 
+	town_name				varchar(50),
+	aramex					boolean
+);
+ALTER TABLE orgs ADD town_id integer references towns;
+CREATE INDEX orgs_town_id ON orgs (town_id);
 
 CREATE TABLE suppliers (
-	supplier_id 		serial primary key,
-	supplier_name		varchar(50),
-	details				text
+	supplier_id 			serial primary key,
+	supplier_name			varchar(50),
+	create_date				timestamp default now(),
+	contact_name			varchar(64),
+	email					varchar(240),
+	website					varchar(240),
+	address					text,
+	details					text
 );
 
 CREATE TABLE product_category (
@@ -27,20 +55,30 @@ CREATE TABLE product_category (
 	details 				text
 );
 
-CREATE TABLE products(
+CREATE TABLE products (
 	product_id				serial primary key,
-	product_name			varchar(100),
-	product_uprice			double precision,
 	product_category_id 	integer references product_category,
     supplier_id          	integer references suppliers,
-	created_by				integer references entitys,				--logged in system user who did the insert
+	created_by				integer references entitys,				--logged in system user who did the insert\
+	
+	product_name			varchar(100),
+	product_uprice			real,
+	product_ucost			real,
 	created					date not null default current_date,
+	
+	product_details 		text,
+	terms					text,
+	weight					real,
 	remarks					text,
+	
+	is_active				boolean default false,
 	updated_by			    integer references entitys,				--logged in system user who did the last update
-	updated				    date,
+	updated					timestamp default now(),
+	
 	narrative			    text,
     image                   varchar(50),
-	product_details 		text
+    
+    details					text
 );
 CREATE INDEX products_product_category_id ON products (product_category_id);
 CREATE INDEX products_supplier_id ON products (supplier_id);
@@ -115,6 +153,8 @@ CREATE TABLE bonus (
 
  	son						varchar(7),
  	pcc						varchar(12),
+ 	start_date				date,
+ 	end_date				date,
  	percentage 				real,
  	amount					real,
  	is_active				boolean default false,
