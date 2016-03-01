@@ -4,7 +4,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON bonus
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();
 	
 	
-CREATE OR REPLACE FUNCTION generate_points(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION generate_bonus(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec						RECORD;
 	v_period_bonus_ps		real;
@@ -30,13 +30,15 @@ BEGIN
 	
 		SELECT percentage, amount INTO v_pcc_bonus_ps, v_pcc_bonus_amount
 		FROM bonus
-		WHERE (pcc = rec.pcc) AND (is_active = true) AND (approve_status = 'Approved');
+		WHERE (pcc = rec.pcc) AND (is_active = true) AND (approve_status = 'Approved')
+			AND (start_date <= current_date) AND ((end_date is null) OR (end_date >= current_date));
 		IF(v_pcc_bonus_ps is null)THEN v_pcc_bonus_ps := 0; END IF;
 		IF(v_pcc_bonus_amount is null)THEN v_pcc_bonus_amount := 0; END IF;
 
 		SELECT percentage, amount INTO v_son_bonus_ps, v_son_bonus_amount
 		FROM bonus
-		WHERE (consultant_id = rec.entity_id) AND (is_active = true) AND (approve_status = 'Approved');
+		WHERE (consultant_id = rec.entity_id) AND (is_active = true) AND (approve_status = 'Approved')
+			AND (start_date <= current_date) AND ((end_date is null) OR (end_date >= current_date));
 		IF(v_son_bonus_ps is null)THEN v_son_bonus_ps := 0; END IF;
 		IF(v_son_bonus_amount is null)THEN v_son_bonus_amount := 0; END IF;
 
