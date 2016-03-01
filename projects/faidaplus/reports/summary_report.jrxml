@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bcc25eb4-79af-43d3-8399-a4abee1f8ae1">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT vw_son_points.period,
+    to_char(vw_son_points.period::date::timestamp with time zone, 'mm'::text) || 			to_char(vw_son_points.period::date::timestamp with time zone, 'yyyy'::text) AS ticket_period,
+    vw_son_points.pcc,
+    vw_son_points.son,
+    sum(vw_son_points.segments) as segments,
+    sum(vw_son_points.points) as totalkes,
+    sum(vw_son_points.bonus) as total_bonus,
+    sum(vw_orders.ordertotalamount) as ordertotalamount,
+    sum(vw_son_points.points - vw_orders.ordertotalamount ) as balance
+   FROM vw_son_points
+     JOIN vw_orders ON vw_son_points.pcc::text = vw_orders.pcc::text
+	 AND vw_son_points.son::text = vw_orders.son::text
+     GROUP BY vw_son_points.period,ticket_period,vw_son_points.pcc,vw_son_points.son;]]>
+	</queryString>
+	<field name="period" class="java.lang.String"/>
+	<field name="ticket_period" class="java.lang.String"/>
+	<field name="pcc" class="java.lang.String"/>
+	<field name="son" class="java.lang.String"/>
+	<field name="segments" class="java.lang.Float"/>
+	<field name="totalkes" class="java.lang.Float"/>
+	<field name="total_bonus" class="java.lang.Float"/>
+	<field name="ordertotalamount" class="java.lang.Double"/>
+	<field name="balance" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="555" height="29" uuid="cb2a779b-1788-4417-a26f-9011e933eb95"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="24"/>
+				</textElement>
+				<text><![CDATA[Users Profits ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="14" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="fe5bc944-a788-494d-b1df-4d3259f1d290"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PCCs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="1" width="75" height="20" uuid="182720df-b9ca-4426-8427-78f9b9435821"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SON]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="176" y="1" width="85" height="20" uuid="4c81e3d0-a0a1-44a2-b6fa-16d207cb6245"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Segments]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="261" y="0" width="79" height="20" uuid="9ce2af8d-3e8a-4d76-8171-89f718d22573"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Profits]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="0" width="123" height="20" uuid="26dceb1c-826d-457a-9272-0280adef39d9"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Redeemed Profits]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="468" y="1" width="87" height="20" uuid="e5e2395d-53f2-4fa5-9ab0-4e6f53d6361f"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balance Profits]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="21" width="555" height="1" uuid="85e9567d-c9ae-4e00-be38-cb0b63c46522"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="100" height="20" uuid="d131ac42-6a99-4f0e-836d-31ce8f9e5eef"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="75" height="20" uuid="1c1956b5-b710-4f38-976f-bd5194dc587f"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="176" y="0" width="85" height="20" uuid="2487fd13-c9b3-4615-aba3-6e4a667863c5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{segments}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="345" y="0" width="123" height="20" uuid="810d3296-bf3c-4398-9d12-5113ebeda9ea"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ordertotalamount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="261" y="0" width="80" height="20" uuid="f24fda22-1eec-4150-96f3-3811f5552ed6"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalkes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="468" y="0" width="87" height="20" uuid="a3e94d8f-4a82-4f78-b35b-312a398556ca"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

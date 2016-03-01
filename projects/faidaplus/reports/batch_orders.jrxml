@@ -32,7 +32,8 @@
       vw_entitys.org_id
      FROM orders
        JOIN vw_entitys ON orders.entity_id = vw_entitys.entity_id
-	WHERE batch_no = '$P!{batch_no}';]]>
+	WHERE batch_no = '$P!{batch_no}' AND order_date >= '$P!{minDate}'
+	 AND order_date <= '$P!{maxDate}';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
 	<field name="order_date" class="java.sql.Date"/>
@@ -55,11 +56,11 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="22" splitType="Stretch">
+		<band height="29" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="802" height="20" uuid="50dcabbb-46d5-4120-9469-d59b8f3c7327"/>
+				<reportElement x="0" y="0" width="802" height="29" uuid="50dcabbb-46d5-4120-9469-d59b8f3c7327"/>
 				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="24" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Batch Orders]]></text>
 			</staticText>
@@ -75,7 +76,7 @@
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Batch ID]]></text>
+				<text><![CDATA[Batch No.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="65" y="0" width="61" height="20" uuid="31c7bb49-0c2f-447a-b801-266564c93dd4"/>
@@ -116,42 +117,42 @@
 				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="378" y="0" width="57" height="20" uuid="4467f397-7dd1-4a39-a181-4abf5e85e085"/>
+				<reportElement x="378" y="0" width="94" height="20" uuid="4467f397-7dd1-4a39-a181-4abf5e85e085"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="435" y="0" width="71" height="20" uuid="60f87c67-9596-4c81-8539-900edb10f71d"/>
+				<reportElement x="472" y="0" width="71" height="20" uuid="60f87c67-9596-4c81-8539-900edb10f71d"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Account Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="506" y="0" width="63" height="20" uuid="ec008b19-3c4b-456d-bc2a-5ae6cd73e1d0"/>
+				<reportElement x="543" y="0" width="63" height="20" uuid="ec008b19-3c4b-456d-bc2a-5ae6cd73e1d0"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="569" y="0" width="75" height="20" uuid="086c3b69-6d91-4256-ad20-3a3eabaef87d"/>
+				<reportElement x="606" y="0" width="75" height="20" uuid="086c3b69-6d91-4256-ad20-3a3eabaef87d"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="736" y="0" width="66" height="20" uuid="f83ef036-c224-4468-872a-749f844021ac"/>
+				<reportElement x="746" y="0" width="56" height="20" uuid="f83ef036-c224-4468-872a-749f844021ac"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Grand Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="644" y="0" width="92" height="20" uuid="6ba5ef1a-c172-40dd-99a5-8330997f6a8a"/>
+				<reportElement x="681" y="0" width="65" height="20" uuid="6ba5ef1a-c172-40dd-99a5-8330997f6a8a"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
@@ -183,14 +184,14 @@
 				<textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="378" y="1" width="57" height="20" uuid="19fc26d4-bb6a-490c-9fba-52e4d2a7615f"/>
+				<reportElement x="378" y="1" width="94" height="20" uuid="19fc26d4-bb6a-490c-9fba-52e4d2a7615f"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="506" y="1" width="63" height="20" uuid="d0c6d070-da2e-4b99-8fac-edff47eee1f8"/>
+				<reportElement x="543" y="1" width="63" height="20" uuid="d0c6d070-da2e-4b99-8fac-edff47eee1f8"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -204,21 +205,21 @@
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="435" y="1" width="71" height="20" uuid="a1a7dfe5-365d-444c-b650-9c12bb49d447"/>
+				<reportElement x="472" y="1" width="71" height="20" uuid="a1a7dfe5-365d-444c-b650-9c12bb49d447"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{function_role}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="569" y="1" width="75" height="20" uuid="53d1c6ff-bade-46ba-bc7c-91e1e5728803"/>
+				<reportElement x="606" y="1" width="75" height="20" uuid="53d1c6ff-bade-46ba-bc7c-91e1e5728803"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ordertotalamount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="736" y="1" width="66" height="20" uuid="b010c194-7801-48ef-841b-41ac285f1672"/>
+				<reportElement x="746" y="1" width="56" height="20" uuid="b010c194-7801-48ef-841b-41ac285f1672"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -239,7 +240,7 @@
 				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="644" y="1" width="92" height="20" uuid="feff248f-8335-4d56-9611-6a9a5173202b"/>
+				<reportElement x="681" y="1" width="65" height="20" uuid="feff248f-8335-4d56-9611-6a9a5173202b"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>

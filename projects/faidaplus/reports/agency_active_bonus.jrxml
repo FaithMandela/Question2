@@ -15,7 +15,7 @@
     to_char(periods.start_date::timestamp with time zone, 'mmYYYY'::text) AS period
    FROM bonus
      JOIN periods ON bonus.period_id = periods.period_id
-     WHERE son is null AND is_active = true;]]>
+     WHERE son is null AND is_active = true AND bonus.approve_status = 'Approved';]]>
 	</queryString>
 	<field name="bonus_id" class="java.lang.Integer"/>
 	<field name="entity_id" class="java.lang.Integer"/>

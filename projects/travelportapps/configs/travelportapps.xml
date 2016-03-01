@@ -1,13 +1,14 @@
 <APP color="purple" name="Travelport Apps" org="org_id" password="change_password" material="true">
 	<MENU name="Travelport Apps">
 		<MENU name="Service Desk">
+			<MENU page="bima" name="New Insurance" role="broker,admin,user,manager">0</MENU>
 			<MENU name="My Insurance">82</MENU>
 		</MENU>
 		<MENU name="Organisation" role="admin,manager,agency,user">
 			<MENU icon="fa fa-sitemap" name="Travel Agencies" role="admin,manager,agency">10</MENU>
 			<MENU name="Corporate Clients" role="admin,manager">46</MENU>
 		</MENU>
-		<MENU name="Transactions" role="admin,manager,agency,user">
+		<MENU name="Transactions" role="admin,manager,agency">
 			<MENU name="Insurance" role="admin,manager,agency,user">80</MENU>
 			<MENU name="Payments" role="admin,manager">85</MENU>
 		</MENU>
@@ -20,7 +21,7 @@
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Rates">90</MENU>
-			<MENU name="Sales Report " role="admin,manager,agency,user">91</MENU>
+			<MENU name="Sales Report " role="admin,manager,agency,user,brooker">91</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
@@ -161,6 +162,7 @@
 							<DATA key="manager">Manager</DATA>
 							<DATA key="agency">Agency</DATA>
 							<DATA key="user">User</DATA>
+							<DATA key="broker">Broker</DATA>
 						</COMBOLIST>
 						<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
 						<TEXTFIELD w="150" title="SON" y="130" h="20" x="290">son</TEXTFIELD>
@@ -188,6 +190,7 @@
 						<DATA key="manager">Manager</DATA>
 						<DATA key="agency">Agency</DATA>
 						<DATA key="user">User</DATA>
+						<DATA key="broker">Broker</DATA>
 					</COMBOLIST>
 					<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
 					<TEXTFIELD w="150" title="SON" y="130" h="20" x="290">son</TEXTFIELD>

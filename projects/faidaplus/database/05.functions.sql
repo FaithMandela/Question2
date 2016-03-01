@@ -293,238 +293,42 @@ v_batch  integer;
 $BODY$
   LANGUAGE plpgsql ;
 
-  CREATE OR REPLACE FUNCTION getBirthday()
-   RETURNS bigint AS
- $BODY$
- 	SELECT  count(entity_id)
- 	FROM vw_consultant WHERE to_char(consultant_dob, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm');
- $BODY$
-   LANGUAGE sql;
+CREATE OR REPLACE FUNCTION getBirthday() RETURNS bigint AS
+    $BODY$
+        SELECT  count(entity_id)
+        FROM vw_consultant WHERE to_char(consultant_dob, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm');
+    $BODY$
+LANGUAGE sql;
 
 
-    CREATE OR REPLACE FUNCTION ins_bonus() RETURNS trigger AS $$
-        DECLARE
-            v_org_id 		integer;
-            rec 			RECORD;
-        BEGIN
-            IF(NEW.org_id is null)THEN
-                SELECT * INTO rec
-                FROM vw_entitys
-                WHERE entity_id = NEW.entity_id;
-                NEW.org_id :=rec.org_id;
-                NEW.pcc := rec.pcc;
-                NEW.son := rec.son;
-            ELSEIF(NEW.org_id is not null)THEN
-                SELECT * INTO rec
-                FROM orgs
-                WHERE org_id = NEW.org_id;
-                NEW.pcc :=rec.pcc;
-            END IF;
-            RETURN NEW;
-        END;
-    $$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION ins_bonus() RETURNS trigger AS $$
+    DECLARE
+        v_org_id 		integer;
+        rec 			RECORD;
+    BEGIN
+        IF(NEW.org_id is null)THEN
+            SELECT * INTO rec
+            FROM vw_entitys
+            WHERE entity_id = NEW.entity_id;
+            NEW.org_id :=rec.org_id;
+            NEW.pcc := rec.pcc;
+            NEW.son := rec.son;
+        ELSEIF(NEW.org_id is not null)THEN
+            SELECT * INTO rec
+            FROM orgs
+            WHERE org_id = NEW.org_id;
+            NEW.pcc :=rec.pcc;
+        END IF;
+        RETURN NEW;
+    END;
+$$ LANGUAGE plpgsql;
 
-   CREATE TRIGGER ins_bonus BEFORE INSERT OR UPDATE ON bonus
-      FOR EACH ROW EXECUTE PROCEDURE ins_bonus();
-
-
-    CREATE OR REPLACE FUNCTION getBatch_no() RETURNS bigint AS
-        $BODY$
-            SELECT last_value FROM batch_id_seq;
-        $BODY$
-    LANGUAGE sql;
+CREATE TRIGGER ins_bonus BEFORE INSERT OR UPDATE ON bonus
+  FOR EACH ROW EXECUTE PROCEDURE ins_bonus();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    CREATE OR REPLACE FUNCTION generate_points(
-   character,
-   character,
-   character,
-   character)
- RETURNS date AS
-$BODY$
-DECLARE
-    v_period		date;
-    v_points		bigint;
-    v_amount 		real;
-    rec_amount real;
-    rec_percent real;
-    v_percent 		real;
-     v_bonus 		real;
-    rec vw_son_segs%rowtype;
-    v_rec 		RECORD;
-BEGIN
-   SELECT start_date INTO v_period FROM periods WHERE period_id = $1::int AND closed = false;
-   IF(v_period IS NULL)THEN
-   RAISE EXCEPTION 'Period is closed';
-   END IF;
-   FOR rec IN select * from vw_son_segs WHERE (ticket_period = to_char(v_period, 'mm') ||to_char(v_period, 'yyyy'))
-   LOOP
-   SELECT * INTO v_rec FROM vw_son_bonus WHERE son = rec.son AND pcc = rec.pcc AND is_active = true AND period = rec.ticket_period;
-   --RAISE EXCEPTION '%',rec.son;
-   IF(v_rec.entity_id IS NOT NULL)THEN
-       rec_amount :=v_rec.amount;
-       rec_percent :=v_rec.percentage;
-       IF(v_rec.amount IS NOT NULL AND v_rec.percentage IS NULL)THEN
-           IF(1<= rec.total_segs::int  AND rec.total_segs::int <=250 ) THEN
-               v_amount := 12;
-               v_points := rec.total_segs * 12 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               END IF;
-               IF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=251 AND rec.total_segs::int <=500) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 16 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=501 ) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 20 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           INSERT INTO points (period,pcc,son,segments,amount,points,bonus)
-           VALUES (v_period,rec.pcc,rec.son,rec.total_segs,v_amount,v_points,(v_bonus::float4));
-       END IF;
-       IF(v_rec.amount IS NULL AND v_rec.percentage IS NOT NULL)THEN
-           rec_percent :=v_rec.percentage;
-           IF(1<= rec.total_segs::int  AND rec.total_segs::int <=250 ) THEN
-               v_amount := 12;
-               v_points := rec.total_segs * 12 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=251 AND rec.total_segs::int <=500) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 16 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=501 ) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 20 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           INSERT INTO points (period,pcc,son,segments,amount,points,bonus)
-           VALUES (v_period,rec.pcc,rec.son,rec.total_segs,v_amount,v_points,(v_bonus::float4));
-       END IF;
-   END IF;
-
-   IF(v_rec.entity_id IS NULL)THEN
-       SELECT * INTO v_rec FROM vw_bonus WHERE  pcc = rec.pcc AND is_active = true AND period = rec.ticket_period;
-       IF(v_rec.amount IS NOT NULL AND v_rec.percentage IS NULL)THEN
-           rec_amount :=v_rec.amount;
-           rec_percent := v_rec.percentage;
-           IF(1<= rec.total_segs::int  AND rec.total_segs::int <=250 ) THEN
-               v_amount := 12;
-               v_points := rec.total_segs * 12 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=251 AND rec.total_segs::int <=500) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 16 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=501 ) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 20 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           INSERT INTO points (period,pcc,son,segments,amount,points,bonus)
-           VALUES (v_period,rec.pcc,rec.son,rec.total_segs,v_amount,v_points,(v_bonus::float4));
-       END IF;
-       IF(v_rec.amount IS NULL AND v_rec.percentage IS NOT NULL)THEN
-           rec_percent :=v_rec.percentage;
-           IF(1<= rec.total_segs::int  AND rec.total_segs::int <=250 ) THEN
-               v_amount := 12;
-               v_points := rec.total_segs * 12 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=251 AND rec.total_segs::int <=500) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 16 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           IF(rec.total_segs::int >=501 ) THEN
-               v_amount := 16;
-               v_points := rec.total_segs * 20 ;
-               IF(rec_percent IS NOT NULL)THEN
-                   v_bonus := (rec_percent/100)*v_points;
-               ELSEIF(rec_amount IS NOT NULL)THEN
-                   v_bonus := rec_amount * 1;
-               END IF;
-           END IF;
-           INSERT INTO points (period,pcc,son,segments,amount,points,bonus)
-           VALUES (v_period,rec.pcc,rec.son,rec.total_segs,v_amount,v_points,(v_bonus::float4));
-       END IF;
-   END IF;
-   END LOOP;
-   IF(rec IS NULL)THEN
-   RAISE EXCEPTION 'There are no segments for this month';
-   END IF;
-   UPDATE periods SET closed = true WHERE period_id = $1::int;
-   RETURN v_period;
-END;
-$BODY$
- LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION getBatch_no() RETURNS bigint AS
+    $BODY$
+        SELECT last_value FROM batch_id_seq;
+    $BODY$
+LANGUAGE sql;

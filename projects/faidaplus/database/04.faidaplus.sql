@@ -13,7 +13,7 @@ ALTER TABLE entitys ADD son varchar(7);
 ALTER TABLE entitys ADD phone_ph boolean default true;
 ALTER TABLE entitys ADD phone_pa boolean default false;
 ALTER TABLE entitys ADD phone_pb boolean default false;
-ALTER TABLE entitys ADD phone_pt boolean default false;  
+ALTER TABLE entitys ADD phone_pt boolean default false;
 
 CREATE TABLE suppliers (
 	supplier_id 		serial primary key,
@@ -79,12 +79,12 @@ CREATE TABLE applicants (
 	son 					varchar(7),
 	consultant_dob			date not null,
 	status					varchar(20),
-	
+
  	approve_status			varchar(16) default 'draft' not null,
  	workflow_table_id		integer,
  	application_date		timestamp default now(),
  	action_date				timestamp,
-	
+
 	details					text
 );
 CREATE INDEX applicants_org_id ON applicants (org_id);
@@ -135,7 +135,7 @@ DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
 
 CREATE VIEW vw_orgs AS
-	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		orgs.pcc,
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
@@ -228,7 +228,7 @@ CREATE VIEW vw_purged_consultant AS
 		JOIN points ON vw_entitys.son = points.son AND vw_entitys.pcc = points.pcc
 		JOIN periods ON points.period_id = periods.period_id
 	WHERE periods.start_date < CURRENT_DATE - INTERVAL '6 months';
-	
+
 CREATE VIEW vw_points AS
 	SELECT points.points_id, points.period_id, periods.start_date as period,
 		to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
@@ -268,12 +268,12 @@ CREATE VIEW vw_son_statement AS
 		vw_orders.entity_id, vw_orders.details
 	FROM vw_orders)) a
 	ORDER BY a.pcc, a.son, a.order_date;
-	
+
 CREATE VIEW vw_statement AS
 	SELECT vw_points.amount, sum(vw_points.points)as dr, vw_points.bonus,
 		vw_orders.entity_id, vw_orders.order_date, vw_orders.order_status,
 		vw_orders.entity_name, vw_orders.son, sum(vw_orders.order_total_amount)as cr,
-		vw_orders.pcc, 
+		vw_orders.pcc,
 		(sum(vw_points.points)-sum(vw_orders.order_total_amount))as balance,
 		orgs.org_name
 	FROM vw_orders INNER JOIN vw_points ON vw_orders.son = vw_points.son and vw_orders.pcc = vw_points.pcc

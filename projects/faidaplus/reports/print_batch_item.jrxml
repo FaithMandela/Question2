@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="print_batch_item" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="1af659e9-e4e3-4d08-99eb-c70eb6431f3a">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="order_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT order_details.order_details_id,
+    vw_orders.order_id,
+    vw_orders.order_date,
+    vw_orders.order_status,
+    vw_orders.org_id,
+    vw_orders.org_name,
+    vw_products.product_id,
+    vw_products.product_name,
+    vw_products.supplier_name,
+    vw_products.supplier_id,
+    vw_products.product_category_id,
+    vw_products.product_category_name,
+    vw_orders.entity_name,
+    vw_orders.entity_id,
+    vw_orders.batch_no,
+    order_details.product_uprice,
+    order_details.product_quantity,
+    order_details.totalamount
+   FROM order_details
+     JOIN vw_orders ON order_details.order_id = vw_orders.order_id
+     JOIN vw_products ON vw_products.product_id = order_details.product_id
+WHERE vw_orders.order_id = '$P!{order_id}';]]>
+	</queryString>
+	<field name="order_details_id" class="java.lang.Integer"/>
+	<field name="order_id" class="java.lang.Integer"/>
+	<field name="order_date" class="java.sql.Date"/>
+	<field name="order_status" class="java.lang.String"/>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="product_id" class="java.lang.Integer"/>
+	<field name="product_name" class="java.lang.String"/>
+	<field name="supplier_name" class="java.lang.String"/>
+	<field name="supplier_id" class="java.lang.Integer"/>
+	<field name="product_category_id" class="java.lang.Integer"/>
+	<field name="product_category_name" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="batch_no" class="java.lang.Float"/>
+	<field name="product_uprice" class="java.lang.Double"/>
+	<field name="product_quantity" class="java.lang.Integer"/>
+	<field name="totalamount" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="24" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="16" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="1" width="100" height="20" uuid="48764925-08e2-4966-b036-a4d55393b51c"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="1" width="100" height="20" uuid="3a3e8026-64b1-4d21-9b19-abcb690fd992"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="1" width="100" height="20" uuid="db0239cf-adc8-4990-8aa6-645ccf06df95"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Purchase Cost]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="302" y="1" width="100" height="20" uuid="8bd24c65-d5a9-44be-b038-4e076020dc22"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Cost]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="1" width="100" height="20" uuid="5c805f74-83e5-48e6-8fa8-4217187e1aed"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="1" width="100" height="20" uuid="9825ad5a-1d79-4e2d-924d-ad6e111ec338"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="1" width="100" height="20" uuid="ea55bc38-76d0-4ced-9219-fcf57a2a58da"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_uprice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="302" y="1" width="100" height="20" uuid="1a6f5bb4-b9e7-40d1-8dd1-33ee276ecd6e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalamount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
