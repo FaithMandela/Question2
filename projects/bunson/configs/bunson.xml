@@ -27,6 +27,15 @@
 			<TILE name="My Processed" role="consultant" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true)" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
+			<TILE name="My Todays Group" role="consultant" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date)" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="My Group Unprocessed" role="consultant" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="My Group Processed" role="consultant" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
 			<TILE name="Single Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
@@ -39,10 +48,10 @@
 			<TILE name="Group Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true)">
+			<TILE name="Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Group Processed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true)">
+			<TILE name="Group Processed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
@@ -1346,7 +1355,7 @@
 				<TEXTAREA w="430" title="Reference Data" y="180" h="70" x="10">reference_data</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID color="bunson" name="Cancelled Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="((is_group = false AND pax_cancelled = true)">
+		<GRID color="bunson" name="Cancelled Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(is_group = false AND pax_cancelled = true)">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
@@ -1749,7 +1758,7 @@
 			<TEXTFIELD w="75" title="Customer Name">customer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
+			<TEXTFIELD w="75" title="Booking Location">location_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<GRID name="Passengers Depatures" keyfield="passanger_id" linkfield="transfer_id" table="passangers" tab.count="count(passanger_id)" noorg="true" where="(tab=1)">
 				<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
@@ -1942,15 +1951,25 @@
 				<DEFAULT default="KES">currency_id</DEFAULT>
 				<DEFAULT default="01">booking_location</DEFAULT>
 				<COMBOBOX w="430" title="Entity ID" lptable="entitys" user="entity_id" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Customer Code" y="30" h="20" x="290">customer_code</TEXTFIELD>
-				<TEXTFIELD w="150" title="Customer Name" y="30" h="20" x="290">customer_name</TEXTFIELD>
+				<COMBOBOX w="430" title="Customer Name" lptable="customer_codes" y="50" h="20" x="10" lpfield="customer_name">customer_code</COMBOBOX>
 				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" y="50" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Agreed Amount" y="70" h="20" x="290">agreed_amount</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Pax No" y="270" h="20" x="10">pax_no</TEXTFIELD>
+				<COMBOLIST w="150" title="Pax No" y="70" h="20" x="10">pax_no
+					<DATA key="1">1</DATA>
+					<DATA key="2">2</DATA>
+					<DATA key="3">3</DATA>
+					<DATA key="4">4</DATA>
+					<DATA key="5">5</DATA>
+					<DATA key="6">6</DATA>
+					<DATA key="7">7</DATA>
+					<DATA key="8">8</DATA>
+					<DATA key="9">9</DATA>
+				</COMBOLIST>
+				<TEXTFIELD w="150" title="LPO" y="270" h="20" x="10">reference_data</TEXTFIELD>
 				<CHECKBOX w="150" title="Group" y="290" h="20" x="10">is_group</CHECKBOX>
 				<TEXTFIELD w="430" title="Consultant Email" y="250" h="20" x="10">tc_email</TEXTFIELD>
 				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
-				<TEXTAREA w="430" title="Reference Data" y="180" h="70" x="10">reference_data</TEXTAREA>
+				<CHECKBOX w="150" title="Email Ready" y="310" h="20" x="290">email_ready</CHECKBOX>
 			</FORM>
 		</GRID>
 		<GRID color="bunson" name="Cancelled Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(is_group = false AND pax_cancelled = true)" user="entity_id">
@@ -2673,7 +2692,7 @@
 				<TEXTAREA w="430" title="Other Preference" y="130" h="70" x="10">other_preference</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Processed Pax" keyfield="passanger_id" orderby="pickup_date ASC, pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(is_group = false AND processed = true)">
+		<GRID name="Processed Pax" keyfield="passanger_id" orderby="pickup_date ASC, pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(is_group = false AND processed = true  AND pax_cancelled = false)">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
@@ -4380,7 +4399,7 @@
 				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID color="bunson" name="Cancelled Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="((is_group = true AND group_contact =true AND pax_cancelled = true)">
+		<GRID color="bunson" name="Cancelled Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(is_group = true AND group_contact =true AND pax_cancelled = true)">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>

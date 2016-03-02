@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_2" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08747894-0f5b-4c39-9485-6be2f4dac043">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="113"/>
+	<property name="ireport.y" value="103"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -21,7 +21,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name,
-vw_transfer_assignments.customer_name, vw_transfer_assignments.car_type_code, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.pax_no, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num,
+vw_transfer_assignments.customer_name, reference_data, vw_transfer_assignments.car_type_code, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.pax_no, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num,
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_pickup_time
  FROM vw_transfer_assignments
 WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
@@ -33,6 +33,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 	<field name="registration_number" class="java.lang.String"/>
 	<field name="car_type_name" class="java.lang.String"/>
 	<field name="customer_name" class="java.lang.String"/>
+	<field name="reference_data" class="java.lang.String"/>
 	<field name="car_type_code" class="java.lang.String"/>
 	<field name="passanger_id" class="java.lang.Integer"/>
 	<field name="passanger_name" class="java.lang.String"/>
@@ -186,7 +187,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{time_in}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="366" y="76" width="181" height="15" uuid="88c3a9ea-d179-4011-9beb-ed3625bde05e"/>
+				<reportElement style="Detail" x="366" y="96" width="181" height="15" uuid="88c3a9ea-d179-4011-9beb-ed3625bde05e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -277,7 +278,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<text><![CDATA[Car Type Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="291" y="76" width="75" height="15" forecolor="#000000" uuid="edfc0357-c533-4bc3-b2d2-fdc7b65e6c18"/>
+				<reportElement style="Column header" x="291" y="96" width="75" height="15" forecolor="#000000" uuid="edfc0357-c533-4bc3-b2d2-fdc7b65e6c18"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -364,14 +365,14 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{reference_data}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" positionType="Float" x="291" y="41" width="75" height="15" forecolor="#000000" uuid="e008ef02-1e3d-4cf9-9415-b968515e4f1e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
 				</textElement>
-				<text><![CDATA[Organization]]></text>
+				<text><![CDATA[LPO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Title" x="223" y="18" width="324" height="20" uuid="80f54397-8f23-440b-b36d-e2b65627fe84"/>
@@ -404,6 +405,20 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pax_no}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="366" y="56" width="181" height="15" uuid="d8dc0edc-3a78-42a5-b03d-10c735faede7"/>
+				<textElement>
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="291" y="56" width="75" height="15" forecolor="#000000" uuid="a1190733-2614-4aee-9fcd-45324cfaf64d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Organization]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<pageFooter>

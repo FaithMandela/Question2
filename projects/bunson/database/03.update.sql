@@ -14,6 +14,8 @@ ALTER  TABLE transfers ADD tc_email            varchar(100);
 ALTER TABLE transfer_assignments ADD confirmation_code           varchar(25);
 ALTER TABLE transfers ADD create_source       integer default 1;
 
+ALTER TABLE transfer_assignments ADD synched                     boolean default false;
+
 
 CREATE TABLE supplier_codes(
     AIR_AGENT_CODE      varchar(10),

@@ -24,7 +24,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_passangers.car_type_code,
-vw_passangers.customer_name,
+vw_passangers.customer_name, reference_data,
 vw_passangers.entity_name, vw_passangers.payment_type_name, vw_passangers.transfer_id, vw_passangers.customer_code, vw_passangers.agreed_amount, vw_passangers.start_time, vw_passangers.transfer_flight_id, vw_passangers.flight_date, vw_passangers.start_airport, vw_passangers.end_airport, vw_passangers.airline, vw_passangers.flight_num, vw_passangers.passanger_id, vw_passangers.passanger_name, vw_passangers.passanger_mobile, vw_passangers.passanger_email, vw_passangers.pickup_time, vw_passangers.pickup, vw_passangers.dropoff, vw_passangers.amount, vw_passangers.processed, vw_passangers.pickup_date,
 vw_passangers.tab, vw_passangers.other_preference, pax_no
 FROM vw_passangers
@@ -32,6 +32,7 @@ WHERE vw_passangers.transfer_id = '$P!{transfer_id}'::integer]]>
 	</queryString>
 	<field name="car_type_code" class="java.lang.String"/>
 	<field name="customer_name" class="java.lang.String"/>
+	<field name="reference_data" class="java.lang.String"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="payment_type_name" class="java.lang.String"/>
 	<field name="transfer_id" class="java.lang.Integer"/>
@@ -301,14 +302,14 @@ WHERE vw_passangers.transfer_id = '$P!{transfer_id}'::integer]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{reference_data}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" positionType="Float" x="278" y="41" width="75" height="15" forecolor="#000000" uuid="5cf51f99-699f-40e1-a3bd-9fefe5cbbd90"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
 				</textElement>
-				<text><![CDATA[Organization]]></text>
+				<text><![CDATA[LPO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Title" x="243" y="20" width="312" height="20" uuid="7d3bbb01-d32c-44e7-a0d1-daf5b73e89ba"/>
@@ -334,6 +335,20 @@ WHERE vw_passangers.transfer_id = '$P!{transfer_id}'::integer]]>
 				</textElement>
 				<text><![CDATA[Pax No.]]></text>
 			</staticText>
+			<staticText>
+				<reportElement style="Column header" positionType="Float" x="278" y="59" width="75" height="15" forecolor="#000000" uuid="3b28fce6-4bcc-4c92-a322-6a0a0abbf464"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Organization]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" positionType="Float" x="353" y="59" width="197" height="15" uuid="9f639af1-8efb-4698-878b-32d3c4cc6042"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
@@ -353,13 +368,6 @@ WHERE vw_passangers.transfer_id = '$P!{transfer_id}'::integer]]>
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-				</textField>
-				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="17" forecolor="#736343" uuid="74f4e711-386a-4ce5-8efd-85f27ad08588"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
 			<staticText>
