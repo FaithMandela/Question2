@@ -7,7 +7,7 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT order_details.order_details_id,
+		<![CDATA[SELECT vw_order_details.order_details_id,
     vw_orders.order_id,
     vw_orders.order_date,
     vw_orders.order_status,
@@ -22,17 +22,17 @@
     vw_orders.entity_name,
     vw_orders.entity_id,
     vw_orders.batch_no,
-    order_details.product_uprice,
-    order_details.product_quantity,
-    order_details.totalamount
-   FROM order_details
-     JOIN vw_orders ON order_details.order_id = vw_orders.order_id
-     JOIN vw_products ON vw_products.product_id = order_details.product_id
+    vw_order_details.product_uprice,
+    vw_order_details.product_quantity,
+    vw_order_details.total_amount
+   FROM vw_order_details
+     JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
+     JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
 WHERE vw_orders.order_id = '$P!{order_id}';]]>
 	</queryString>
 	<field name="order_details_id" class="java.lang.Integer"/>
 	<field name="order_id" class="java.lang.Integer"/>
-	<field name="order_date" class="java.sql.Date"/>
+	<field name="order_date" class="java.sql.Timestamp"/>
 	<field name="order_status" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
@@ -44,10 +44,10 @@ WHERE vw_orders.order_id = '$P!{order_id}';]]>
 	<field name="product_category_name" class="java.lang.String"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
-	<field name="batch_no" class="java.lang.Float"/>
+	<field name="batch_no" class="java.lang.Integer"/>
 	<field name="product_uprice" class="java.lang.Double"/>
 	<field name="product_quantity" class="java.lang.Integer"/>
-	<field name="totalamount" class="java.lang.Double"/>
+	<field name="total_amount" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -117,7 +117,7 @@ WHERE vw_orders.order_id = '$P!{order_id}';]]>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{totalamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

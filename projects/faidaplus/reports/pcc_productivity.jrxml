@@ -5,16 +5,16 @@
 	<property name="ireport.y" value="0"/>
 	<queryString>
 		<![CDATA[SELECT
-      to_char(points.period::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
-      points.pcc,
-      sum(points.segments) as segments ,
-      sum(points.amount) as amount,
-      sum(points.points) as points,
-      sum(points.bonus) as bonus,
+      to_char(vw_points.period::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
+      vw_points.pcc,
+      sum(vw_points.segments) as segments ,
+      sum(vw_points.amount) as amount,
+      sum(vw_points.points) as points,
+      sum(vw_points.bonus) as bonus,
       vw_orgs.org_name
-     FROM points
-       JOIN vw_orgs ON points.pcc::text = vw_orgs.pcc::text
-	GROUP BY ticket_period,points.pcc,vw_orgs.org_name
+     FROM vw_points
+       JOIN vw_orgs ON vw_points.pcc::text = vw_orgs.pcc::text
+	GROUP BY vw_points.period,ticket_period,vw_points.pcc,vw_orgs.org_name
 	ORDER BY vw_orgs.org_name ASC;]]>
 	</queryString>
 	<field name="ticket_period" class="java.lang.String"/>
@@ -66,14 +66,14 @@
 			</staticText>
 			<staticText>
 				<reportElement x="391" y="1" width="60" height="20" uuid="b4c7a1ac-403f-4d4e-a960-f236b4db2f72"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Points]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="455" y="0" width="62" height="20" uuid="6d0d03a5-9b8c-4a66-b1b1-99658a5127af"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Bonus]]></text>

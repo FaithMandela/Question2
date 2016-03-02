@@ -16,7 +16,7 @@
 		<![CDATA[SELECT orders.order_id,
       orders.order_date,
       orders.order_status,
-      orders.ordertotalamount,
+      orders.order_total_amount,
       orders.batch_no,
       orders.shipping_cost,
       orders.grand_total,
@@ -36,10 +36,10 @@
 	 AND order_date <= '$P!{maxDate}';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
-	<field name="order_date" class="java.sql.Date"/>
+	<field name="order_date" class="java.sql.Timestamp"/>
 	<field name="order_status" class="java.lang.String"/>
-	<field name="ordertotalamount" class="java.lang.Double"/>
-	<field name="batch_no" class="java.lang.Float"/>
+	<field name="order_total_amount" class="java.lang.Double"/>
+	<field name="batch_no" class="java.lang.Integer"/>
 	<field name="shipping_cost" class="java.lang.Float"/>
 	<field name="grand_total" class="java.lang.Float"/>
 	<field name="entity_name" class="java.lang.String"/>
@@ -216,7 +216,7 @@
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ordertotalamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{order_total_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="746" y="1" width="56" height="20" uuid="b010c194-7801-48ef-841b-41ac285f1672"/>

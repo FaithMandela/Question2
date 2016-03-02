@@ -1,41 +1,41 @@
 <APP color="green" name="Faida Plus" password="change_password" material="true">
 	<MENU name="Faida Plus">
 		<MENU page="index.jsp" name="Redeem">0</MENU>
-		<MENU name="Products" role="admin">
-			<MENU name="Products" role="admin">7</MENU>
-			<MENU name="Products Category" role="admin">21</MENU>
-			<MENU name="Suppliers" role="admin">22</MENU>
+		<MENU name="Products" role="admin,staff">
+			<MENU name="Products" role="admin,staff">7</MENU>
+			<MENU name="Products Category" role="admin,staff">21</MENU>
+			<MENU name="Suppliers" role="admin,staff">22</MENU>
 		</MENU>
-		<MENU name="Orders" role="admin">
+		<MENU name="Orders" role="admin,staff">
 			<MENU name="My Orders" role="consultant">108</MENU>
-			<MENU name="Orders" role="admin">8</MENU>
-			<MENU name="Unbatched Orders" role="admin">10</MENU>
-			<MENU name="Batched Orders" role="admin">11</MENU>
-			<MENU name="Awaiting Collection" role="admin">12</MENU>
-			<MENU name="Collected" role="admin">13</MENU>
-			<MENU name="Close Batch" role="admin">115</MENU>
+			<MENU name="Orders" role="admin,staff">8</MENU>
+			<MENU name="Unbatched Orders" role="admin,staff">10</MENU>
+			<MENU name="Batched Orders" role="admin,staff">11</MENU>
+			<MENU name="Awaiting Collection" role="admin,staff">12</MENU>
+			<MENU name="Collected" role="admin,staff">13</MENU>
+			<MENU name="Close Batch" role="admin,staff">115</MENU>
 		</MENU>
-		<MENU name="Statements" role="admin">16</MENU>
-		<MENU name="Points" role="admin">107</MENU>
-		<MENU name="Agency" role="admin">
-			<MENU name="Agency" role="admin">111</MENU>
-			<MENU name="PCCs" role="admin">112</MENU>
+		<MENU name="Statements" role="admin,staff">16</MENU>
+		<MENU name="Points" role="admin,staff">107</MENU>
+		<MENU name="Agency" role="admin,staff">
+			<MENU name="Agency" role="admin,staff">111</MENU>
+			<MENU name="PCCs" role="admin,staff">112</MENU>
 		</MENU>
-		<MENU name="Consultants" role="admin">
-			<MENU name="Consultants" role="admin">9</MENU>
-			<MENU name="Active Consultants" role="admin">31</MENU>
-			<MENU name="Purged Consultants" role="admin">32</MENU>
-			<MENU name="Rejected Consultants" role="admin">33</MENU>
+		<MENU name="Consultants" role="admin,staff">
+			<MENU name="Consultants" role="admin,staff">9</MENU>
+			<MENU name="Active Consultants" role="admin,staff">31</MENU>
+			<MENU name="Purged Consultants" role="admin,staff">32</MENU>
+			<MENU name="Rejected Consultants" role="admin,staff">33</MENU>
 		</MENU>
 		<MENU name="Entitys" role="admin,consultant">15</MENU>
-		<MENU name="Tickets" role="admin">
+		<MENU name="Tickets" role="admin,staff">
 			<MENU name="Tickets">2</MENU>
 			<MENU name="Segments">3</MENU>
-			<MENU name="Tickets Years" role="admin">102</MENU>
+			<MENU name="Tickets Years" role="admin,staff">102</MENU>
 		</MENU>
-		<MENU name="Approval" role="admin">83</MENU>
-		<MENU name="Emails" role="admin">60</MENU>
-		<MENU name="Report" role="admin">
+		<MENU name="Approval" role="admin,staff">83</MENU>
+		<MENU name="Emails" role="admin,staff">60</MENU>
+		<MENU name="Report" role="admin,staff">
 			<MENU name="Productivity">110</MENU>
 			<MENU name="Batch Orders">113</MENU>
 			<MENU name="Orders">114</MENU>
@@ -100,7 +100,7 @@
 		<GRID name="New Orders" keyfield="order_id" table="vw_orders" tab.count="count(order_id)" where="order_status = 'Processing Order'" user="entity_id">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
@@ -108,13 +108,13 @@
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
 		<GRID name="Orders Awaiting Collection" keyfield="order_id" table="vw_orders" where="order_status = 'Awaiting Collection'" user="entity_id">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
@@ -122,13 +122,13 @@
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
 		<GRID name="Orders Collected" keyfield="order_id" table="vw_orders" where="order_status = 'Collected'" user="entity_id">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
@@ -136,15 +136,15 @@
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="All Orders" noorg="true" key="8" h="500">
-		<GRID name="All Orders" keyfield="order_id" role="admin" table="vw_orders" tab.count="count(order_id)" noorg="true">
+		<GRID name="All Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
@@ -154,15 +154,15 @@
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="UnBatched Orders" noorg="true" key="10" h="500">
-		<GRID name="UnBatched Orders" keyfield="order_id" role="admin" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is null)">
+		<GRID name="UnBatched Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is null)">
 			<TEXTFIELD w="75" title="Order ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
@@ -173,10 +173,10 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Batched Orders" noorg="true" key="11" h="500">
-		<GRID name="Batched Orders" keyfield="order_id" role="admin" orderby="batch_no DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is not null )">
+		<GRID name="Batched Orders" keyfield="order_id" role="admin,staff" orderby="batch_no DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is not null )">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
@@ -190,7 +190,7 @@
 		<GRID name=" Orders Awaiting Collection" keyfield="order_id" role="admin" orderby="order_id DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(order_status = 'Awaiting Collection')">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
@@ -203,7 +203,7 @@
 				<TEXTFIELD w="275" title="Item Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="125" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="125" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="125" title="Sub Total">total_amount</TEXTFIELD>
 				<TEXTFIELD w="200" title="Ordered Date">order_date</TEXTFIELD>
 				<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Consultant Name">entity_name</TEXTFIELD>
@@ -217,7 +217,7 @@
 		<GRID name="Orders Collected" keyfield="order_id" role="admin" table="vw_orders" tab.count="count(order_id)" noorg="true" where="order_status = 'Collected'">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<ACTIONS>
@@ -228,7 +228,7 @@
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
 	</DESK>
@@ -293,14 +293,14 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Rejected Consultants" key="33" h="650">
-		<GRID new="false" name="Rejected Consultants" keyfield="entity_id" orderby="entity_id" table="vw_applicants" tab.count="count(entity_id)" where="status='Rejected'">
-			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
+		<GRID new="false" name="Rejected Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" where="status='Rejected'">
+			<TEXTFIELD w="50" title="ID">applicant_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">application_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Details">details</TEXTFIELD>
-			<FORM new="false" name="Details" keyfield="entity_id" linkfield="entity_id" table="applicants">
+			<FORM new="false" name="Details" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
 				<TEXTAREA w="50" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -933,11 +933,11 @@
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Summary Report" h="550" key="124">
-		<FILTER w="700" name="Summary Report" split="150" type="vert" h="550" key="order_date">
+	<DESK w="700" name="Summary Report" key="124" h="550">
+		<FILTER w="700" name="Summary Report" split="150" type="vert" key="order_date" h="550">
 			<FILTERFORM name="Summary Report">
-				<TEXTDATE w="150" title="Starting From" h="10" key="mindate" y="50" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" h="20" key="maxdate" y="50" x="290">maxDate</TEXTDATE>
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Summary Report" reportfile="summary_report.jasper"></JASPER>
 		</FILTER>

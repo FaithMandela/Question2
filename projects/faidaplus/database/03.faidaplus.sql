@@ -101,7 +101,6 @@ CREATE TABLE order_details (
 	order_details_id 		serial primary key,
 	order_id				integer not null references orders,
 	product_id 				integer not null references products,
-	entity_id				integer not null references entitys,
 	product_quantity		integer,
 	product_uprice			double precision,
 	status					varchar(20) NOT NULL default 'New'

@@ -52,9 +52,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
 CREATE OR REPLACE FUNCTION generate_bonus(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec						RECORD;
@@ -103,10 +100,9 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-
-CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS character varying(120) AS $BODY$
+CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $BODY$
 DECLARE
-	msg 		character varying(20);
+	msg 		varchar(20);
 	details 	text;
 BEGIN
 
@@ -131,7 +127,7 @@ END;
 $BODY$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION ins_applicants()  RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_applicants()  RETURNS trigger AS $BODY$
 DECLARE
 	rec 			RECORD;
 	v_entity_id		integer;
@@ -145,19 +141,6 @@ BEGIN
 			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 		END IF;
 	END IF;
-
-
-		SELECT org_id INTO rec
-		FROM orgs WHERE (is_default = true);
-		NEW.entity_id := nextval('entitys_entity_id_seq');
-		INSERT INTO entitys (entity_id, org_id, entity_type_id,entity_name, User_name,primary_email, son,function_role,is_active)
-		VALUES (NEW.entity_id, rec.org_id, 0, NEW.son,
-		lower(NEW.applicant_email), lower(NEW.applicant_email),New.son, 'applicant',false);
-
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (1, NEW.entity_id, 'applicant');
-
-	END IF;
 	RETURN NEW;
 END;
 $BODY$
@@ -166,7 +149,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
 FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
 
-CREATE OR REPLACE FUNCTION upd_applicants(varchar(12), varchar(12), varchar(12),varchar(12)) RETURNS character varying(120) AS $$
+CREATE OR REPLACE FUNCTION upd_applicants(varchar(12), varchar(12), varchar(12),varchar(12)) RETURNS varchar(120) AS $BODY$
 DECLARE
 	ps				varchar(16);
 	v_pcc 			varchar(4);
@@ -196,23 +179,26 @@ BEGIN
 		msg := 'Applicant Rejected';
 	END IF;
 
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
+	VALUES (1, $1::integer , 'applicants');
+
 	RETURN msg;
 END;
-$$ LANGUAGE plpgsql;
+$BODY$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION getbalance(varchar(20),varchar(20)) RETURNS double precision AS $$
+CREATE OR REPLACE FUNCTION getbalance(varchar(20),varchar(20)) RETURNS double precision AS $BODY$
 	SELECT (SELECT round(COALESCE(SUM(points),0.0)+COALESCE(SUM(bonus),0.0))AS amount
-	FROM points WHERE son = $2::integer AND pcc = $1::integer)-(SELECT COALESCE(sum(ordertotalamount),0.0)AS sum
-	FROM vw_orders WHERE son = $2::integer AND pcc = $1::integer);
-$$ LANGUAGE sql;
+	FROM points WHERE son = $2 AND pcc = $1)-(SELECT COALESCE(sum(order_total_amount),0.0)AS sum
+	FROM vw_orders WHERE son = $2 AND pcc = $1);
+$BODY$ LANGUAGE sql;
 
 CREATE SEQUENCE batch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1;
 
-CREATE OR REPLACE FUNCTION upd_orders_batch(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS character varying(120) AS $$
+CREATE OR REPLACE FUNCTION upd_orders_batch(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS varchar(120) AS $BODY$
 DECLARE
 	v_batch  	integer;
-	msg 		varying(50);
+	msg 		varchar(50);
 BEGIN
 	IF ($3::integer = 1) THEN
 		v_batch := (SELECT last_value FROM batch_id_seq) ;
@@ -227,10 +213,10 @@ BEGIN
 
 	RETURN msg;
 END;
-$$ LANGUAGE plpgsql;
+$BODY$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION close_batch_seq()  RETURNS integer AS $$
+CREATE OR REPLACE FUNCTION close_batch_seq()  RETURNS integer AS $BODY$
 DECLARE
 	v_batch  integer;
 BEGIN
@@ -238,9 +224,32 @@ BEGIN
 	RETURN v_batch;
 END;
 
-$$ LANGUAGE plpgsql ;
+$BODY$ LANGUAGE plpgsql ;
 
-CREATE OR REPLACE FUNCTION getBirthday() RETURNS bigint AS $$
+CREATE OR REPLACE FUNCTION getBirthday() RETURNS bigint AS $BODY$
 	SELECT  count(entity_id)
-	FROM vw_consultant WHERE to_char(consultant_dob, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm');
-$$ LANGUAGE sql;
+	FROM vw_consultant WHERE to_char(birth_date, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm');
+$BODY$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION getBatch_no() RETURNS bigint AS $BODY$
+	SELECT last_value FROM batch_id_seq;
+$BODY$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION son_segments( varchar(7), varchar(4))  RETURNS numeric AS $BODY$
+	SELECT COALESCE(SUM(total_segs),0.0)  FROM vw_son_segs WHERE son = $1 AND pcc = $2;
+$BODY$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
+DECLARE
+	v_order integer;
+BEGIN
+	IF (NEW.order_details_id IS NULL) THEN
+		UPDATE order_details SET order_id=t.id
+		FROM (select orders.order_id AS id FROM orders WHERE orders.order_id = NEW.order_id)AS t ;
+	END IF;
+	RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_orders AFTER INSERT ON order_details
+FOR EACH ROW EXECUTE PROCEDURE ins_orders();

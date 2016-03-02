@@ -140,23 +140,23 @@
 	<columnHeader>
 		<band height="24" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20" uuid="dcdba84d-d422-466d-8aad-45376e6ee070"/>
+				<reportElement x="0" y="0" width="165" height="20" uuid="dcdba84d-d422-466d-8aad-45376e6ee070"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="0" width="100" height="20" uuid="2222c549-6c32-4060-8d78-61ae3c3a9523"/>
+				<reportElement x="165" y="0" width="204" height="20" uuid="2222c549-6c32-4060-8d78-61ae3c3a9523"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<text><![CDATA[Email	]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="0" width="100" height="20" uuid="17e6b60e-3552-41b1-96a1-71b3309526dd"/>
+				<reportElement x="395" y="0" width="100" height="20" uuid="17e6b60e-3552-41b1-96a1-71b3309526dd"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<text><![CDATA[Phone]]></text>
 			</staticText>
@@ -168,25 +168,25 @@
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="100" height="20" uuid="248ccc04-1063-47db-a9cc-c5cd427d2eaa"/>
+				<reportElement x="0" y="0" width="165" height="20" uuid="248ccc04-1063-47db-a9cc-c5cd427d2eaa"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="100" y="0" width="100" height="20" uuid="d4d55fed-9c58-4077-a453-e25ac5533a64"/>
+				<reportElement x="165" y="0" width="204" height="20" uuid="d4d55fed-9c58-4077-a453-e25ac5533a64"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="200" y="0" width="100" height="20" uuid="a5c076c9-c524-470b-b7a0-b3b5970ba0b9"/>
+				<reportElement x="395" y="0" width="100" height="20" uuid="a5c076c9-c524-470b-b7a0-b3b5970ba0b9"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{phone_number}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{primary_telephone}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
