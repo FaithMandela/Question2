@@ -499,6 +499,13 @@
             format: 'hh:mm a',
             trigger: 'manual'
         });
+        
+        $('#filtervalue').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                $('#btSearch').click();
+            }
+        });
 
         $('.clockface-toggle').click(function (e) {
             e.stopPropagation();
