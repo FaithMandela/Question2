@@ -182,6 +182,21 @@ CREATE FOREIGN TABLE i_segment (
 )
 SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'segment');
 
+CREATE FOREIGN TABLE i_bonus_total (
+	id_bonus_total			integer, 
+	rel_id_segment_period			integer, 
+	rel_id_bonus_type			char(1), 
+	rel_id_bonus			integer, 
+	pcc			varchar(3), 
+	multiplier			integer, 
+	segments			integer, 
+	value			integer, 
+	rel_id_user			integer, 
+	rel_id_agency			integer, 
+	date_time			timestamp
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'bonus_total');
+
 CREATE FOREIGN TABLE i_basket_status (
 	id_basket_status			integer, 
 	status			varchar(37), 
@@ -298,16 +313,25 @@ SELECT a.year, 0, a.id_segment_period, (a.year || '-' || a.month || '-01')::date
 FROM i_segment_period a
 ORDER BY a.id_segment_period;
 
-INSERT INTO points (points_id, period_id, entity_id, pcc, son, 
-	segments, amount, points, point_date)
-SELECT a.id_segment, a.rel_id_segment_period, 
-	CASE WHEN b.id_user is null THEN 0 ELSE a.rel_id_user END, 
-	a.pcc, a.son, a.segments, a.multiplier, a.value, a.date
+INSERT INTO points (period_id, entity_id, pcc, son, segments, points)
+SELECT c.rel_id_segment_period, c.entity_id, c.pcc, c.son, sum(c.segments), sum(c.value)
+FROM (SELECT a.id_segment, a.rel_id_segment_period, 
+	(CASE WHEN b.id_user is null THEN 0 ELSE a.rel_id_user END) as entity_id, 
+	a.pcc, a.son, a.segments, a.value
 FROM i_segment as a LEFT JOIN i_user b ON a.rel_id_user = b.id_user
-ORDER BY a.id_segment;
+ORDER BY a.id_segment) as c
+GROUP BY c.rel_id_segment_period, c.entity_id, c.pcc, c.son;
 
 UPDATE points SET org_id = entitys.org_id
 FROM entitys WHERE points.entity_id = entitys.entity_id;
+
+UPDATE points SET amount = 0;
+UPDATE points SET amount = points / segments WHERE segments > 0;
+
+UPDATE points SET bonus = i_bonus_total.value
+FROM i_bonus_total
+WHERE (points.period_id = i_bonus_total.rel_id_segment_period)
+	AND (points.entity_id = i_bonus_total.rel_id_user);
 
 INSERT INTO orders (order_id, entity_id, order_status, order_date, shipping_cost)
 SELECT a.id_basket, a.rel_id_user, b.status, check_in_date_time, a.shipping_cost
@@ -320,3 +344,9 @@ FROM i_basket_shop_item a INNER JOIN i_shop_item_batch b ON a.rel_id_shop_item_b
 INNER JOIN i_basket c ON a.rel_id_basket = c.id_basket
 WHERE c.checkout = '1';
 
+
+UPDATE orders SET order_total_amount = 
+	(SELECT sum(order_details.product_quantity * order_details.product_uprice) 
+	FROM order_details WHERE order_details.order_id = order_id);
+	
+	

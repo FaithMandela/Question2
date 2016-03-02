@@ -58,6 +58,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION generate_points(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec						RECORD;
+	v_entity_id				integer;
 	v_period				date;
 	v_points				real;
 	v_points_id				integer;
@@ -65,10 +66,10 @@ DECLARE
 	msg 					varchar(120);
 BEGIN
 
-	SELECT start_date INTO v_period FROM periods WHERE period_id = $1::integer AND closed = false;
+	SELECT period_id INTO v_period FROM periods WHERE period_id = $1::integer AND closed = false;
 	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed';	END IF;
 
-	FOR rec IN SELECT pcc,son,ticket_period,total_segs
+	FOR rec IN SELECT pcc, son, ticket_period, total_segs
 	FROM vw_son_segs WHERE (ticket_period = to_char(v_period, 'mm') ||to_char(v_period, 'yyyy') ) LOOP
 
 		IF(1<= rec.total_segs::integer AND rec.total_segs::integer <=250 ) THEN
@@ -85,13 +86,18 @@ BEGIN
 			v_amount := 20;
 			v_points := rec.total_segs * 20 ;
 		END IF;
+		
+		SELECT entitys.entity_id INTO v_entity_id
+		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
+		WHERE (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
+		IF(v_entity_id is null) THEN v_entity_id := 0; END IF;
 
 		SELECT points_id INTO v_points_id
 		FROM points WHERE period_id = $1::integer AND pcc = rec.pcc AND son = rec.son;
 
 		IF(v_points_id is null)THEN
-			INSERT INTO points (period,period_id,pcc,son,segments,amount,points)
-			VALUES (v_period,$1::integer,rec.pcc,rec.son,rec.total_segs,v_amount,v_points);
+			INSERT INTO points (period_id, entity_id, pcc, son, segments, amount, points)
+			VALUES (v_period, v_entity_id, rec.pcc, rec.son, rec.total_segs, v_amount, v_points);
 		END IF;
 
 		IF(v_points_id is not null)THEN
@@ -101,9 +107,7 @@ BEGIN
 
 	END LOOP;
 
-	IF(rec IS NULL)THEN RAISE EXCEPTION 'There are no segments for this month'; END IF;
 	msg := 'Points computed';
-    --UPDATE periods SET closed = true WHERE period_id = $1::integer;
 	RETURN msg;
 
 END;
