@@ -1,3 +1,4 @@
+
 SELECT count(roid) as domaincount
 FROM domain INNER JOIN zone ON domain.zone = zone.name
 WHERE (clid = 'WOL') AND (exdate > now());

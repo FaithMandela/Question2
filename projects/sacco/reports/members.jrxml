@@ -11,14 +11,21 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT entity_id, entity_name, user_name, super_user, entity_leader,
-       date_enroled, is_active, entity_password, first_password, new_password,
-       function_role, attention, primary_email, org_id, primary_telephone,
+       date_enroled, is_active, entity_password, first_password,attention,new_password,
+       function_role, primary_email, org_id, primary_telephone,
        entity_type_id, entity_type_name, entity_role, use_key,exit_amount
 
   FROM vw_entitys_types
- where entity_type_name not like 'subscriptions' and entity_id not in(0,1)
+where (entity_type_name not like 'subscriptions' and entity_id not in(0,1))
+$P!{organd}
 order by entity_id ASC]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
@@ -30,9 +37,9 @@ order by entity_id ASC]]>
 	<field name="is_active" class="java.lang.Boolean"/>
 	<field name="entity_password" class="java.lang.String"/>
 	<field name="first_password" class="java.lang.String"/>
+	<field name="attention" class="java.lang.String"/>
 	<field name="new_password" class="java.lang.String"/>
 	<field name="function_role" class="java.lang.String"/>
-	<field name="attention" class="java.lang.String"/>
 	<field name="primary_email" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="primary_telephone" class="java.lang.String"/>

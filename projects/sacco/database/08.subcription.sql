@@ -172,7 +172,9 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 
-CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_subscriptions()
+  RETURNS trigger AS
+$BODY$
 DECLARE
 	v_entity_id		integer;
 	v_org_id		integer;
@@ -189,22 +191,25 @@ BEGIN
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
+			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
 			INSERT INTO sys_emailed ( org_id, table_id, table_name)
 			VALUES ( 0, 1, 'subscription');
 		
-		NEW.approve_status := 'Completed';
-		NEW.workflow_table_id := '11';
-		ELSE
+			ELSE
 			RAISE EXCEPTION 'You already have an account, login and request for services';
 		END IF ;
 		
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
-		INSERT INTO orgs(org_id,  org_name, org_sufix, default_country_id)
-		VALUES(NEW.org_id, NEW.business_name, NEW.org_id, NEW.country_id);
+		
+		
+		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
+		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
+		
+		
+	
 		
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
@@ -219,18 +224,18 @@ BEGIN
 		
 		
 	END IF;
-
+	
+		
 	RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
-
-
+$BODY$
+  LANGUAGE plpgsql;
+   
+  
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  
 
-CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
-    FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  
 
 CREATE OR REPLACE FUNCTION ins_member_limit() RETURNS trigger AS $$

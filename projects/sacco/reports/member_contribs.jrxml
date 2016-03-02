@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="member_contribs" language="groovy" pageWidth="900" pageHeight="500" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="860" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="743a68cf-5069-40db-9168-5d50d010d61b">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="577"/>
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -16,13 +16,18 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_id, vw_contributions.org_id,
 vw_contributions.entity_id, vw_contributions.period_id,
 vw_contributions.payment_type_id, vw_contributions.deposit_date, vw_contributions.deposit_amount,
 vw_contributions.contribution_amount, vw_contributions.entry_date, vw_contributions.transaction_ref,
 vw_contributions.payment_type_name
-FROM vw_contributions where entity_id = '$P!{entity_id}']]>
+FROM vw_contributions where entity_id = '$P!{entity_id}'
+$P!{organd}
+]]>
 	</queryString>
 	<field name="contribution_id" class="java.lang.Integer"/>
 	<field name="org_id" class="java.lang.Integer"/>

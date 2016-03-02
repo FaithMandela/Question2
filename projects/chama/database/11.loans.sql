@@ -28,6 +28,10 @@ CREATE TABLE loans (
 	
 	details					text
 );
+
+ALTER TABLE loans ADD bank_account_id integer references bank_accounts;
+
+CREATE INDEX loans_bank_account_id ON loans (bank_account_id);
 CREATE INDEX loans_loan_type_id ON loans (loan_type_id);
 CREATE INDEX loans_entity_id ON loans (entity_id);
 CREATE INDEX loans_org_id ON loans (org_id);

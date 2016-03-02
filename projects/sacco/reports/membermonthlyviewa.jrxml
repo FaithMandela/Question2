@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="membermonthlyviewa" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="3184b6f0-c242-46bb-b5e7-8ca8fcb9f599">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="membermonthlyviewa" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="3184b6f0-c242-46bb-b5e7-8ca8fcb9f599">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -11,16 +11,29 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="org_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,
+		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,vw_contributions.org_id,
 vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.deposit_amount,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
-vw_contributions.entity_name,vw_contributions.is_active,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
+vw_contributions.entity_name,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
-ORDER BY vw_contributions.entity_id asc]]>
+where vw_contributions.is_active = 'true'
+ $P!{organd}
+ORDER BY vw_contributions.entity_id asc;
+]]>
 	</queryString>
 	<field name="contribution_id" class="java.lang.Integer"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="period_id" class="java.lang.Integer"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="payment_type_id" class="java.lang.Integer"/>
 	<field name="deposit_date" class="java.sql.Date"/>
 	<field name="deposit_amount" class="java.lang.Float"/>
@@ -28,7 +41,6 @@ ORDER BY vw_contributions.entity_id asc]]>
 	<field name="transaction_ref" class="java.lang.String"/>
 	<field name="contribution_amount" class="java.lang.Float"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="is_active" class="java.lang.Boolean"/>
 	<field name="contribution_type_id" class="java.lang.Integer"/>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="payment_type_name" class="java.lang.String"/>

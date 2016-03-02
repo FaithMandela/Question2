@@ -1,13 +1,14 @@
 <APP color="purple" name="Travelport Apps" org="org_id" password="change_password" material="true">
 	<MENU name="Travelport Apps">
 		<MENU name="Service Desk">
+			<MENU page="bima" name="New Insurance" role="broker,admin,user,manager">0</MENU>
 			<MENU name="My Insurance">82</MENU>
 		</MENU>
 		<MENU name="Organisation" role="admin,manager,agency,user">
 			<MENU icon="fa fa-sitemap" name="Travel Agencies" role="admin,manager,agency">10</MENU>
 			<MENU name="Corporate Clients" role="admin,manager">46</MENU>
 		</MENU>
-		<MENU name="Transactions" role="admin,manager,agency,user">
+		<MENU name="Transactions" role="admin,manager,agency">
 			<MENU name="Insurance" role="admin,manager,agency,user">80</MENU>
 			<MENU name="Payments" role="admin,manager">85</MENU>
 		</MENU>
@@ -20,7 +21,7 @@
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Rates">90</MENU>
-			<MENU name="Sales Report " role="admin,manager,agency,user">91</MENU>
+			<MENU name="Sales Report " role="admin,manager,agency,user,brooker">91</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
@@ -161,6 +162,7 @@
 							<DATA key="manager">Manager</DATA>
 							<DATA key="agency">Agency</DATA>
 							<DATA key="user">User</DATA>
+							<DATA key="broker">Broker</DATA>
 						</COMBOLIST>
 						<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
 						<TEXTFIELD w="150" title="SON" y="130" h="20" x="290">son</TEXTFIELD>
@@ -188,6 +190,7 @@
 						<DATA key="manager">Manager</DATA>
 						<DATA key="agency">Agency</DATA>
 						<DATA key="user">User</DATA>
+						<DATA key="broker">Broker</DATA>
 					</COMBOLIST>
 					<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
 					<TEXTFIELD w="150" title="SON" y="130" h="20" x="290">son</TEXTFIELD>
@@ -1108,7 +1111,7 @@
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER name="Certificate" reportfile="travelinsurance/certificate.jasper"></JASPER>
-			<GRID name="Policy"></GRID>
+			<JASPER name="Policy Document" reportfile="travelinsurance/policy_document.jasper"></JASPER>
 			<JASPER name="Letter to Embassy" reportfile="travelinsurance/letterToEmbassy.jasper"></JASPER>
 		</GRID>
 		<GRID name=" All Certificate" keyfield="passenger_id" role="admin,manager" orderby="passenger_id DESC " table="vw_passengers" noorg="true" where="(approved = true)">
@@ -1127,15 +1130,9 @@
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER name="Certificate" reportfile="travelinsurance/certificate.jasper"></JASPER>
-			<GRID name="Policy"></GRID>
+			<JASPER name="Policy Document" reportfile="travelinsurance/policy_document.jasper"></JASPER>
 			<JASPER name="Letter to Embassy" reportfile="travelinsurance/letterToEmbassy.jasper"></JASPER>
 		</GRID>
-		<FILES username="root" repository="http://localhost:8080/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" params="table_name" where="(table_name='entry_forms')" filetable="entry_forms" password="enter">
-			<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
-			<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
-			<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
-		</FILES>
 	</DESK>
 	<DESK w="700" name="My Insurance" key="82" h="550">
 		<GRID name="Insurance" keyfield="passenger_id" orderby="passenger_id DESC" table="vw_passengers" user="entity_id">
@@ -1153,7 +1150,7 @@
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER name="Certificate" reportfile="/travelinsurance/certificate.jasper"></JASPER>
-			<GRID name="Policy"></GRID>
+			<JASPER name="Policy Document" reportfile="travelinsurance/policy_document.jasper"></JASPER>
 			<JASPER name="Letter to Embassy" reportfile="travelinsurance/letterToEmbassy.jasper"></JASPER>
 		</GRID>
 	</DESK>

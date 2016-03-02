@@ -139,6 +139,7 @@ public class BMail {
 			}
 			mailActive = true;
 		} catch (Exception ex) {
+			mailActive = false;
 			log.severe("Mail User " + mailuser);
 			log.severe("Mail exception! " + ex);
 		}
@@ -210,6 +211,7 @@ public class BMail {
 			log.fine("Mail was recorded successfully.");
 			sent = true;
 		} catch (Exception ex) {
+			mailActive = false;		
 	    	if (ex instanceof SendFailedException) {
 				MessagingException sfe = (MessagingException)ex;
 				if (sfe instanceof SMTPSendFailedException) {
@@ -277,6 +279,7 @@ public class BMail {
 				folder.close(false);
 			}
 		} catch (Exception ex) {
+			mailActive = false;
 			log.severe("Oops, got mail exception! " + ex.getMessage());
     		ex.printStackTrace();
 		}
@@ -302,6 +305,7 @@ public class BMail {
 				dumpPart(msgs[i]);		// read the message
 		    }
 		} catch (Exception ex) {
+			mailActive = false;
 			log.severe("Oops, got mail exception! " + ex.getMessage());
     		ex.printStackTrace();
 		}
@@ -377,6 +381,7 @@ public class BMail {
 			else
 				System.out.println("X-Mailer NOT available");
 		} catch (MessagingException ex) {
+			mailActive = false;
 			System.out.println("Message reading error " + ex);
 		}
     }
@@ -456,6 +461,7 @@ public class BMail {
 				}
 			}
 		} catch (Exception ex) {
+			mailActive = false;
 			System.out.println("Read message error " + ex);
 		}
 	}
@@ -468,6 +474,7 @@ public class BMail {
 		try {
 			if(trans != null) trans.close();
 			if(store != null) store.close();
+			mailActive = false;
 		} catch(MessagingException ex) {
 			log.severe("Mail System closing error : " + ex);
 		}

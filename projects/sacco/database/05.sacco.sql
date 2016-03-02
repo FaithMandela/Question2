@@ -47,7 +47,7 @@ CREATE TABLE contributions (
 	transaction_ref         varchar(50),
 	narrative				varchar(255)
 );
-ALTER TABLE contributions add ;
+
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
 CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_payment_type_id ON contributions (payment_type_id);
@@ -55,6 +55,26 @@ CREATE INDEX contributions_contribution_type_id ON contributions (contribution_t
 CREATE INDEX contributions_orgs_id ON contributions (org_id);
 
 
+
+
+CREATE TABLE additional_funds (
+	additional_funds_id			serial primary key,
+	entity_id				integer references entitys,  
+	period_id				integer references periods,  
+	payment_type_id       		  integer references payment_types,
+	org_id					integer references orgs, 
+	additional_amount		real,
+	deposit_date			date,
+	adjustment			boolean default true,
+	adjustment_amount				real,
+	actual_amount   		real not null default 0,
+	entry_date              timestamp default CURRENT_TIMESTAMP,
+	transaction_ref         varchar(50),
+	narrative				varchar(255)
+);
+create index additional_funds_entity_id on additional_funds(entity_id);
+create index additional_funds_period_id on additional_funds(period_id);
+create index additional_funds_payment_type_id on additional_funds(payment_type_id);
 ---alter entities
 /*
 ALTER TABLE entitys ADD entry_amount real not null default 0;
@@ -210,10 +230,11 @@ CREATE TABLE members (
   	objective 			text,
   	details 			text
   	);
+member_id		integer serial primary key
  
-	CREATE INDEX members_org_id ON members (org_id);
-	CREATE INDEX members_bank_id ON members (bank_id);
-	CREATE INDEX members_address_id ON members (address_id);
+CREATE INDEX members_org_id ON members (org_id);
+CREATE INDEX members_bank_id ON members (bank_id);
+CREATE INDEX members_address_id ON members (address_id);
  
  
 ALTER TABLE entitys ADD exit_amount REAL default 0;

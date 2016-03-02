@@ -12,6 +12,48 @@ ALTER TABLE contribution_types DROP merry_go_round CASCADE;
 
 CREATE INDEX contribution_types_org_id ON contribution_types (org_id);
 
+ 
+CREATE TABLE members (
+	entity_id 			integer references entitys,
+	bank_account_id			integer references bank_accounts,
+	bank_branch_id 			integer references bank_branch,
+	currency_id 			integer references currency,
+ 	org_id 				integer references orgs,
+	location_id			integer references locations,
+
+ 	
+	person_title			varchar(50) not null,
+	surname 			varchar(50) not null,
+	first_name 			varchar(50) not null,
+  	middle_name 			varchar(50) not null,
+  	id_number			varchar(50) not null,
+  	date_of_birth 			date,
+  	
+	gender 				varchar(1),
+ 	phone				varchar(50) not null,
+  	nationality 			char(2) not null references sys_countrys,
+  	nation_of_birth 		char(2) not null references sys_countrys,
+  	marital_status 			varchar(2),
+	joining_date			date,
+	exit_date			date,
+
+ 	picture_file 			character varying(32),
+  	active 				boolean NOT NULL DEFAULT true,
+  	details 			text,
+  	);
+ALTER TABLE members DROP bank_account_id CASCADE;
+ALTER TABLE members ADD bank_account_number varchar(50);
+ALTER TABLE members ADD bank_id integer references banks;
+
+CREATE INDEX members_bank_id ON members (bank_id);
+CREATE INDEX members_entity_id ON members (entity_id);
+CREATE INDEX members_bank_branch_id ON members (bank_branch_id);
+CREATE INDEX members_bank_account_id ON members (bank_account_id);
+CREATE INDEX members_currency_id ON members (currency_id);
+CREATE INDEX members_org_id ON members (org_id);
+CREATE INDEX members_location_id ON members (location_id);
+CREATE INDEX members_nationality ON members (nationality);
+CREATE INDEX members_nation_of_birth ON members (nation_of_birth);
 
 CREATE TABLE contributions (
 	contribution_id			serial primary key,
@@ -37,8 +79,10 @@ ALTER TABLE contributions ADD merry_go_round boolean default true;
 ALTER TABLE contributions DROP confirmation CASCADE;
 ALTER TABLE contributions DROP member_payment CASCADE;
 ALTER TABLE contributions DROP share_value CASCADE;
+ALTER TABLE contributions ADD bank_account_id integer references bank_accounts;
 
 
+CREATE INDEX contributions_bank_account_id ON contributions (bank_account_id);
 CREATE INDEX contributions_contributions_type_id ON contributions (contribution_type_id);
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
 CREATE INDEX contributions_account_id ON contributions (account_id);
@@ -76,6 +120,9 @@ CREATE TABLE borrowing (
     	details                         text
 );
 
+ALTER TABLE borrowing ADD bank_account_id integer references bank_accounts;
+
+CREATE INDEX borrowing_bank_account_id ON borrowing (bank_account_id);
 CREATE INDEX borrowing_borrowing_type_id ON borrowing (borrowing_type_id);
 CREATE INDEX borrowing_account_id ON borrowing (account_id);
 CREATE INDEX borrowing_currency_id ON borrowing (currency_id);
@@ -105,7 +152,9 @@ CREATE TABLE penalty (
 	is_active                       boolean default true not null,
     	details                         text
 );
+ALTER TABLE penalty ADD bank_account_id integer references bank_accounts;
 
+CREATE INDEX penalty_bank_account_id ON penalty (bank_account_id);
 CREATE INDEX penalty_penalty_type_id ON penalty (penalty_type_id);
 CREATE INDEX penalty_account_id ON penalty (account_id);
 CREATE INDEX penalty_currency_id ON penalty (currency_id);
@@ -163,8 +212,9 @@ ALTER TABLE investments ADD COLUMN total_payment real;
 ALTER TABLE investments ADD COLUMN investment_name varchar(120);
 ALTER TABLE investments DROP status;
 ALTER TABLE investments ADD approve_status varchar (16) ;
+ALTER TABLE investments ADD bank_account_id integer references bank_accounts;
 
-
+CREATE INDEX investments_bank_account_id ON investments (bank_account_id);
 CREATE INDEX investments_investment_type_id ON investments (investment_type_id);
 CREATE INDEX investments_account_id ON investments (account_id);
 CREATE INDEX investments_currency_id ON investments (currency_id);

@@ -1,110 +1,226 @@
 <APP color="green" name="Faida Plus" password="change_password" material="true">
 	<MENU name="Faida Plus">
-		<MENU name="Products">7</MENU>
-		<MENU name="Orders">8</MENU>
-		<MENU name="Statements">16</MENU>
-		<MENU name="Organisation">111</MENU>
-		<MENU name="Consultant">9</MENU>
-		<MENU name="Pccs">106</MENU>
-		<MENU name="Tickets" role="admin,applicant">
-			<MENU name="Logs">10</MENU>
+		<MENU page="index.jsp" name="Redeem">0</MENU>
+		<MENU name="Products" role="admin,staff">
+			<MENU name="Products" role="admin,staff">7</MENU>
+			<MENU name="Products Category" role="admin,staff">21</MENU>
+			<MENU name="Suppliers" role="admin,staff">22</MENU>
+		</MENU>
+		<MENU name="Orders" role="admin,staff">
+			<MENU name="My Orders" role="consultant">108</MENU>
+			<MENU name="Orders" role="admin,staff">8</MENU>
+			<MENU name="Unbatched Orders" role="admin,staff">10</MENU>
+			<MENU name="Batched Orders" role="admin,staff">11</MENU>
+			<MENU name="Awaiting Collection" role="admin,staff">12</MENU>
+			<MENU name="Collected" role="admin,staff">13</MENU>
+			<MENU name="Close Batch" role="admin,staff">115</MENU>
+		</MENU>
+		<MENU name="Statements" role="admin,staff">16</MENU>
+		<MENU name="Points" role="admin,staff">107</MENU>
+		<MENU name="Agency" role="admin,staff">
+			<MENU name="Agency" role="admin,staff">111</MENU>
+			<MENU name="PCCs" role="admin,staff">112</MENU>
+		</MENU>
+		<MENU name="Consultants" role="admin,staff">
+			<MENU name="Consultants" role="admin,staff">9</MENU>
+			<MENU name="Active Consultants" role="admin,staff">31</MENU>
+			<MENU name="Purged Consultants" role="admin,staff">32</MENU>
+			<MENU name="Rejected Consultants" role="admin,staff">33</MENU>
+		</MENU>
+		<MENU name="Entitys" role="admin,consultant">15</MENU>
+		<MENU name="Tickets" role="admin,staff">
 			<MENU name="Tickets">2</MENU>
 			<MENU name="Segments">3</MENU>
-			<MENU name="Bonuses">116</MENU>
-			<MENU name="Imports">4</MENU>
-			<MENU name="Analysis">5</MENU>
-			<MENU name="Comparison">6</MENU>
-			<MENU name="Entitys">15</MENU>
+			<MENU name="Tickets Years" role="admin,staff">102</MENU>
 		</MENU>
-		<MENU name="Work Flow">40</MENU>
-		<MENU name="Report">
-			<MENU name="Ticket Summary">101</MENU>
+		<MENU name="Approval" role="admin,staff">83</MENU>
+		<MENU name="Emails" role="admin,staff">60</MENU>
+		<MENU name="Report" role="admin,staff">
+			<MENU name="Productivity">110</MENU>
+			<MENU name="Batch Orders">113</MENU>
+			<MENU name="Orders">114</MENU>
+			<MENU name="Agency Active Bonus">116</MENU>
+			<MENU name="Users COntacts">118</MENU>
+			<MENU name="Consultant Statement">123</MENU>
+			<MENU name="Summary Report">124</MENU>
+			<MENU name="Print Batch">125</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
 		<DASHBOARD w="650" name="Dashboard">
-			<TILE w="60" name="New Orders" role="admin" noorg.query="true" table="orders" where="(order_status = 'New')" h="25">
+			<TILE w="60" name="New Orders" role="admin" noorg.query="true" table="orders" where="(order_status = 'Processing Order')" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
+			</TILE>
+			<TILE w="60" name="PCCs" role="admin" noorg.query="true" table="pccs" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(pcc), 0)" title="PCCs">pcc</TEXTFIELD>
+			</TILE>
+			<TILE w="60" name="New Orders" role="applicant" noorg.query="true" table="orders" where="(order_status = 'Processing Order' )" user="entity_id" h="25">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Products" key="7" h="500">
-		<GRID name="Products" keyfield="product_id" table="products">
+		<GRID name="Products" keyfield="product_id" table="vw_products" tab.count="count(product_id)">
 			<TEXTFIELD w="75" title="ID">product_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Supplier">supplier_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Category Name">product_category_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Details">product_details</TEXTFIELD>
 			<FORM name="Products" keyfield="product_id" linkfield="product_id" table="products">
-				<COMBOBOX w="430" title="product_category" lptable="product_category" y="30" h="20" x="10" lpfield="product_category_name">product_category_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="suppliers" y="30" h="20" x="10" lpfield="supplier_name">supplier_id</COMBOBOX>
+				<COMBOBOX w="430" title="Product Category" lptable="product_category" y="30" h="20" x="10" lpfield="product_category_name">product_category_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Product Name" y="50" h="20" x="10">product_name</TEXTFIELD>
-				<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">image</PICTURE>
 				<TEXTFIELD w="250" title="Product Price" y="90" h="20" x="10">product_uPrice</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">product_details</TEXTAREA>
+				<PICTURE w="550" tab="Picture" access="ob" y="1" h="150" x="10">image</PICTURE>
+				<TEXTAREA w="430" tab="Details" y="170" h="70" x="10">product_details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Products Suppliers" keyfield="product_category_id" table="product_category">
+	</DESK>
+	<DESK w="700" name="Products Category" key="21" h="500">
+		<GRID name="Products Category" keyfield="product_category_id" table="product_category" tab.count="count(product_category_id)">
 			<TEXTFIELD w="75" title="ID">product_category_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Name">product_category_name</TEXTFIELD>
-			<FORM name="Products" keyfield="product_category_id" table="product_category">
+			<FORM name="Product Category" keyfield="product_category_id" table="product_category">
 				<TEXTFIELD w="150" title="Product Name" y="50" h="20" x="10">product_category_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Orders" key="8" h="500">
-		<GRID name="Periods" keyfield="period_id" orderby="period_id desc" table="vw_periods_c" where="(closed = false)">
-			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
-			<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
-			<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
-			<CHECKBOX w="75" title="Active">activated</CHECKBOX>
-			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+	<DESK w="700" name="Supplier" key="22" h="500">
+		<GRID name="Supplier" keyfield="supplier_id" table="suppliers" tab.count="count(supplier_id)">
+			<TEXTFIELD w="75" title="ID">supplier_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Supplier Name">supplier_name</TEXTFIELD>
+			<FORM name="Supplier" keyfield="supplier_id" table="suppliers">
+				<TEXTFIELD w="150" title="Supplier Name" y="50" h="20" x="10">supplier_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
-		<GRID name="New Orders" keyfield="order_id" table="vw_orders" where="order_status = 'Processing Order'">
+	</DESK>
+	<DESK w="700" name="My Orders" key="108" h="500">
+		<GRID name="New Orders" keyfield="order_id" table="vw_orders" tab.count="count(order_id)" where="order_status = 'Processing Order'" user="entity_id">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
-			<ACTIONS>
-				<ACTION fnct="upd_orders_status" approval="1">Awaiting Collection</ACTION>
-				<ACTION fnct="upd_orders_status" approval="2">Collected</ACTION>
-				<ACTION fnct="upd_orders_status" approval="3">Close</ACTION>
-			</ACTIONS>
 			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
 				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
-		<GRID name="Orders Awaiting Collection" keyfield="order_id" table="vw_orders" where="order_status = 'Awaiting Collection'">
+		<GRID name="Orders Awaiting Collection" keyfield="order_id" table="vw_orders" where="order_status = 'Awaiting Collection'" user="entity_id">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
-			<ACTIONS>
-				<ACTION fnct="upd_orders_status" approval="1">Awaiting Collection</ACTION>
-				<ACTION fnct="upd_orders_status" approval="2">Collected</ACTION>
-				<ACTION fnct="upd_orders_status" approval="3">Close</ACTION>
-			</ACTIONS>
 			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
 				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
-		<GRID name="Orders Collected" keyfield="order_id" table="vw_orders" where="order_status = 'Collected'">
+		<GRID name="Orders Collected" keyfield="order_id" table="vw_orders" where="order_status = 'Collected'" user="entity_id">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">ordertotalamount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
+				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
+				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
+				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
+			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="All Orders" noorg="true" key="8" h="500">
+		<GRID name="All Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true">
+			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<GRID name="Items Purchased" keyfield="order_details_id" linkfield="order_id" table="vw_order_details" tab.count="count(order_id)">
+				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
+				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
+				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
+			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="UnBatched Orders" noorg="true" key="10" h="500">
+		<GRID name="UnBatched Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is null)">
+			<TEXTFIELD w="75" title="Order ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="upd_orders_batch" approval="1">Batch</ACTION>
+			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Batched Orders" noorg="true" key="11" h="500">
+		<GRID name="Batched Orders" keyfield="order_id" role="admin,staff" orderby="batch_no DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is not null )">
+			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="upd_orders_status" approval="1">Awaiting Collection/Shipped</ACTION>
+			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Orders Awaiting Collection" noorg="true" key="12" h="500">
+		<GRID name=" Orders Awaiting Collection" keyfield="order_id" role="admin" orderby="order_id DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(order_status = 'Awaiting Collection')">
+			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<GRID name="Items Awaiting Collection" keyfield="order_details_id" role="admin" linkfield="order_id" table="vw_order_details" noorg="true" where="(batch_no is not null)">
+				<TEXTFIELD w="275" title="Product ID">order_details_id</TEXTFIELD>
+				<TEXTFIELD w="275" title="Bached No.">batch_no</TEXTFIELD>
+				<TEXTFIELD w="275" title="Supplier Name">supplier_name</TEXTFIELD>
+				<TEXTFIELD w="200" title="Product Category Name">product_category_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Item Name">product_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Quantity">product_quantity</TEXTFIELD>
+				<TEXTFIELD w="125" title="Unit Price">product_uprice</TEXTFIELD>
+				<TEXTFIELD w="125" title="Sub Total">total_amount</TEXTFIELD>
+				<TEXTFIELD w="200" title="Ordered Date">order_date</TEXTFIELD>
+				<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Consultant Name">entity_name</TEXTFIELD>
+			</GRID>
+			<ACTIONS>
+				<ACTION fnct="upd_orders_status" approval="2">Collected/Delivered</ACTION>
+			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Orders Collected" noorg="true" key="13" h="500">
+		<GRID name="Orders Collected" keyfield="order_id" role="admin" table="vw_orders" tab.count="count(order_id)" noorg="true" where="order_status = 'Collected'">
+			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<ACTIONS>
-				<ACTION fnct="upd_orders_status" approval="1">Awaiting Collection</ACTION>
-				<ACTION fnct="upd_orders_status" approval="2">Collected</ACTION>
 				<ACTION fnct="upd_orders_status" approval="3">Close</ACTION>
 			</ACTIONS>
 			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
@@ -112,20 +228,20 @@
 				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">totalamount</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Consultants" key="9" h="650">
-		<GRID name="Consultants" keyfield="entity_id" orderby="entity_id" table="vw_applicants" where="status='New'">
+		<GRID name="New Consultants" keyfield="entity_id" orderby="entity_id" table="vw_applicants" tab.count="count(entity_id)" where="status='New'">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="120" title="Approved">approved</TEXTFIELD>
+			<CHECKBOX w="120" title="Approved">approved</CHECKBOX>
 			<TEXTFIELD w="120" title="Status">status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">application_date</TEXTFIELD>
-			<GRID wheresql="table_name = 'applicant'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+			<GRID wheresql="table_name = 'applicants'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
 				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -153,25 +269,63 @@
 			<ACTIONS>
 				<ACTION fnct="upd_applicants" approval="1">Approve</ACTION>
 				<ACTION fnct="upd_applicants" approval="2">Reject</ACTION>
-				<ACTION fnct="upd_applicants" approval="3">Review</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID name="Active Consultants" keyfield="entity_id" orderby="entity_id" table="vw_consultant" where="is_active='true'">
+	</DESK>
+	<DESK w="700" name="Active Consultants" key="31" h="650">
+		<GRID name="Active Consultants" keyfield="entity_id" orderby="entity_id" table="vw_consultant" tab.count="count(entity_id)" where="is_active='true'">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="50" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="50" title="Pseudo Code">pcc</TEXTFIELD>
+			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date" fnc="application_date::date">application_date</TEXTFIELD>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Purged Consultants" key="32" h="650">
+		<GRID name="Purged Consultants" keyfield="entity_id" orderby="entity_id DESC" table="vw_purged_consultant" tab.count="count(entity_id)">
+			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="50" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="50" title="Pseudo Code">pcc</TEXTFIELD>
+			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">date_enroled</TEXTFIELD>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Rejected Consultants" key="33" h="650">
+		<GRID new="false" name="Rejected Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" where="status='Rejected'">
+			<TEXTFIELD w="50" title="ID">applicant_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">application_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Details">details</TEXTFIELD>
+			<FORM new="false" name="Details" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
+				<TEXTAREA w="50" title="Details">details</TEXTAREA>
+			</FORM>
 		</GRID>
-		<GRID name="purged Consultant" keyfield="entity_id" orderby="entity_id DESC" table="vw_purged_consultant" where="order_date > CURRENT_DATE - INTERVAL '3 months'">
-			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
-			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
-			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="120" title="Status">approved</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date">application_date</TEXTFIELD>
+	</DESK>
+	<DESK w="700" name="Points" type="vert" key="107" h="550">
+		<GRID name="Month" keyfield="ticket_period" orderby="ticket_period desc" table="vw_periods" key="1">
+			<TEXTFIELD w="40" title="Year">ticket_year</TEXTFIELD>
+			<TEXTFIELD w="40" title="Month">ticket_month</TEXTFIELD>
+			<TEXTFIELD w="40" title="Tickets">total_segs</TEXTFIELD>
+			<GRID name="Consultant Points" keyfield="pcc" orderby="org_name ASC" linkfield="ticket_period" table="vw_son_points">
+				<TEXTFIELD w="100" title="Agency Name">org_name</TEXTFIELD>
+				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
+				<TEXTFIELD w="40" title="SON">son</TEXTFIELD>
+				<TEXTFIELD w="40" title="Total Segments">segments</TEXTFIELD>
+				<TEXTFIELD w="40" title="Total KES">points</TEXTFIELD>
+				<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
+			</GRID>
+			<GRID name="PCCs Points" keyfield="pcc" orderby="org_name ASC" linkfield="ticket_period" table="vw_pcc_points">
+				<TEXTFIELD w="100" title="Agency Name">org_name</TEXTFIELD>
+				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
+				<TEXTFIELD w="40" title="Total Segments">segments</TEXTFIELD>
+				<TEXTFIELD w="40" title="Total KES">points</TEXTFIELD>
+				<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
+			</GRID>
 		</GRID>
-		<GRID name="Rejected Consultants" keyfield="entity_id" orderby="entity_id" table="vw_applicants"></GRID>
 	</DESK>
 	<DESK w="585" name="Logs" type="vert" key="10" h="500">
 		<GRID name="PCCs" keyfield="pcc" orderby="agencyname" table="pccs" key="1">
@@ -190,10 +344,10 @@
 		</GRID>
 	</DESK>
 	<DESK w="585" name="Tickets" type="vert" key="2" h="500">
-		<GRID name="PCCs" keyfield="pcc" table="pccs" key="1">
+		<GRID name="PCCs" keyfield="pcc" table="pccs" tab.count="count(pcc)" key="1">
 			<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="40" title="Agency Name">agency_name</TEXTFIELD>
-			<GRID name="Tickets" keyfield="ticketid" orderby="ticketdate desc" linkfield="pcc" table="vw_tickets" key="2">
+			<GRID name="Tickets" keyfield="ticket_id" orderby="ticket_date desc" linkfield="pcc" table="vw_tickets" tab.count="count(ticket_id)" key="2">
 				<TEXTFIELD w="40" title="Ticket Date">ticketdate</TEXTFIELD>
 				<TEXTFIELD w="140" title="Ticket">ticketid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Ticket PCC">ticketpcc</TEXTFIELD>
@@ -295,7 +449,51 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Entitys" key="15" h="500">
-		<GRID name="Entitys" keyfield="entity_id" table="vw_entitys">
+		<GRID new="false" name="Consultant" keyfield="entity_id" role="consultant" table="vw_entitys" user="entity_id" key="5">
+			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
+			<CHECKBOX w="100" title="Super User" format="boolean">super_user</CHECKBOX>
+			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+			<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'entitys'">
+				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="entitys">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM new="false" name="Entitys" keyfield="entity_id" table="entitys">
+				<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
+				<TEXTFIELD w="150" title="First Password" y="150" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Entitys" keyfield="entity_id" role="admin" table="vw_entitys" key="1">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -375,7 +573,7 @@
 				<ACTION fnct="change_password">Reset Password</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types">
+		<GRID name="Entity Types" keyfield="entity_type_id" role="admin" table="entity_types" key="2">
 			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 			<TEXTFIELD w="175" title="Entity Type Name">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Entity Role">entity_role</TEXTFIELD>
@@ -401,7 +599,7 @@
 				<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
+		<GRID name="Subscription Levels" keyfield="subscription_level_id" role="admin" table="subscription_levels" key="3">
 			<TEXTFIELD w="75" title="Level ID">subscription_level_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Level Name">subscription_level_name</TEXTFIELD>
 			<FORM name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
@@ -481,31 +679,23 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Satement" key="16" h="550">
-		<GRID name="Satement" keyfield="order_id" table="vw_statement">
+	<DESK w="700" name="Statements" key="16" h="550">
+		<JASPER name="All Statements" role="admin" reportfile="son_statements.jasper"></JASPER>
+		<GRID name="Consultant Statements" keyfield="entity_id" role="consultant" table="vw_son_statement" key="2">
+			<TEXTFIELD w="75" title="Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pseudo Code">pcc</TEXTFIELD>
 			<TEXTFIELD w="75" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="75" title="Agency Name">agency_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Segment Total">total_segs</TEXTFIELD>
-			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Redemption Amount">ordertotalamount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Dr">dr</TEXTFIELD>
+			<TEXTFIELD w="75" title="Cr">cr</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Balance">balance</TEXTDECIMAL>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Pccs" key="106" h="550">
-		<GRID name="PCCs" keyfield="pcc" table="vw_pccs" key="1">
-			<TEXTFIELD w="75" title="Pseudo Code">pcc</TEXTFIELD>
-			<TEXTFIELD w="75" title="Agency Name">agency_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Agency Name">agency_name</TEXTFIELD>
-			<FORM name="PCCs" keyfield="pcc" table="pccs" key="2">
-				<TEXTFIELD w="75" title="PCCs">pcc</TEXTFIELD>
-				<TEXTFIELD w="75" title="Agency Name">agency_name</TEXTFIELD>
-			</FORM>
-		</GRID>
-	</DESK>
-	<DESK w="700" name="Orgs" key="111" h="550">
-		<GRID name="Orgs" keyfield="org_id" table="vw_orgs">
+	<DESK w="700" name="Agency" key="111" h="550">
+		<GRID name="Agency" keyfield="org_id" role="admin" table="vw_orgs" tab.count="count(org_id)" noorg="true" key="2">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<TEXTFIELD w="75" title="Logo">logo</TEXTFIELD>
@@ -519,13 +709,18 @@
 				<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
-				<GRID name="Bonuses" keyfield="bonuses_id" table="bonuses" key="1">
-					<TEXTFIELD w="75" title="Org Id">org_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Entity Name">entity_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Bonus Amount">bonus_amount</TEXTFIELD>
-					<FORM name="Bonuses" keyfield="bonuses_id" linkfield="entity_id" table="bonuses" user="entity_id" key="2">
-						<COMBOBOX w="430" title=" Org Name" lptable="orgs" lpkey="org_id" y="30" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
-						<TEXTFIELD w="75" title="Bonus Amount">bonus_amount</TEXTFIELD>
+				<GRID name="Entity Bonus" keyfield="bonus_id" linkfield="entity_id" table="vw_son_bonus" key="1">
+					<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
+					<TEXTFIELD w="75" title="Bonus Amount">amount</TEXTFIELD>
+					<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+					<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
+					<FORM name="Entity Bonus" keyfield="bonus_id" linkfield="entity_id" table="bonus" key="2">
+						<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
+						<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
+						<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+						<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
 					</FORM>
 				</GRID>
 				<FORM name="Entitys" keyfield="entity_id" linkfield="org_id" table="entitys" noorg="true">
@@ -537,6 +732,7 @@
 						<DATA key="manager">Manager</DATA>
 						<DATA key="agency">Agency</DATA>
 						<DATA key="user">User</DATA>
+						<DATA key="consultant">Consultant</DATA>
 					</COMBOLIST>
 					<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
 					<TEXTFIELD w="150" title="SON" y="130" h="20" x="290">son</TEXTFIELD>
@@ -545,10 +741,24 @@
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Orgs" keyfield="org_id" table="orgs">
+			<GRID name="Bonus" keyfield="bonus_id" linkfield="org_id" table="bonus" key="3">
+				<TEXTFIELD w="75" title="Org Id">org_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
+				<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
+				<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+				<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
+				<FORM name="Bonus" keyfield="bonus_id" linkfield="org_id" table="bonus" key="2">
+					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
+					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
+					<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+					<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
+				</FORM>
+			</GRID>
+			<FORM name="Agency" keyfield="org_id" table="orgs">
 				<COMBOBOX w="430" title="Currency ID" lptable="currency" y="10" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Parent Org ID" lptable="orgs" lpkey="org_id" y="30" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Org Name" y="50" h="20" x="10">org_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Agency Name" y="50" h="20" x="10">org_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="PCC">pcc</TEXTFIELD>
 				<TEXTFIELD w="150" title="Org Sufix" y="50" h="20" x="290">org_sufix</TEXTFIELD>
 				<CHECKBOX w="150" title="Default" y="70" h="20" x="10">is_default</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="70" h="20" x="290">is_active</CHECKBOX>
@@ -559,11 +769,177 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Bonuses" key="116" h="550">
-		<GRID name="Bonuses" keyfield="bonuses_id" table="bonuses" key="1">
-			<TEXTFIELD w="75" title="Org Id">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Name">entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bonus Amount">bonus_amount</TEXTFIELD>
+	<DESK w="700" name="PCCs" key="112" h="550">
+		<GRID name="PCCs" keyfield="pcc" role="admin" table="vw_pccs" tab.count="count(pcc)" noorg="true" key="1">
+			<TEXTFIELD w="75" title="Pseudo Code">pcc</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency Name">agency_name</TEXTFIELD>
+			<FORM name="PCCs" keyfield="pcc" table="pccs" key="2">
+				<TEXTFIELD w="75" title="PCCs">pcc</TEXTFIELD>
+				<TEXTFIELD w="75" title="Agency Name">agency_name</TEXTFIELD>
+			</FORM>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Fiscal Years" key="102" h="500">
+		<GRID name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
+			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
+			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
+			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
+			<ACTIONS>
+				<ACTION fnct="close_year" approval="1">Close Year</ACTION>
+			</ACTIONS>
+			<GRID name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="vw_periods_c">
+				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
+				<CHECKBOX w="75" title="Period Opened">opened</CHECKBOX>
+				<CHECKBOX w="75" title="Period Closed">closed</CHECKBOX>
+				<ACTIONS>
+					<ACTION fnct="generate_points">Generate Points</ACTION>
+					<ACTION fnct="generate_bonus">Generate Bonus</ACTION>
+				</ACTIONS>
+				<GRID name="Market Bonus" keyfield="bonus_id" linkfield="period_id" table="bonus">
+					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
+					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
+					<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+					<FORM name="Market Bonus" keyfield="bonus_id" linkfield="period_id" table="bonus" key="2">
+						<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
+						<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
+						<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+					</FORM>
+				</GRID>
+				<FORM name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="periods">
+					<TEXTDATE w="150" title="Period Start" y="10" h="20" x="10">start_date</TEXTDATE>
+					<TEXTDATE w="150" title="Period End" y="10" h="20" x="290">end_date</TEXTDATE>
+					<CHECKBOX w="150" title="Period Opened" y="30" h="20" x="10">opened</CHECKBOX>
+					<CHECKBOX w="150" title="Period Closed" y="30" h="20" x="290">closed</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
+				<TEXTFIELD w="250" title="Fiscal Year" y="10" h="20" x="10">fiscal_year_id</TEXTFIELD>
+				<TEXTDATE w="150" title="Fiscal Year Start" y="30" h="20" x="10">fiscal_year_start</TEXTDATE>
+				<TEXTDATE w="150" title="Fiscal Year End" y="30" h="20" x="290">fiscal_year_end</TEXTDATE>
+				<CHECKBOX w="150" title="Year Opened" y="50" h="20" x="10">year_opened</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Orders Reports" key="113" h="550">
+		<FILTER w="700" name="Batch Orders " split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Batch Orders ">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+				<COMBOBOX w="430" title="Batch No." lptable="orders" groupby="batch_no" noorg="true" y="10" h="20" x="10" lpfield="batch_no">batch_no</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Batch Orders" reportfile="batch_orders.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Batch Items " split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Batch Items ">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+				<COMBOBOX w="430" title="Batch No." lptable="orders" groupby="batch_no" noorg="true" y="10" h="20" x="10" lpfield="batch_no">batch_no</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Batch Items" reportfile="batch_items.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Productivity Reports" key="110" h="550">
+		<JASPER name="Agency Productivity" reportfile="pcc_productivity.jasper"></JASPER>
+		<JASPER name="Consultant Productivity" reportfile="son_productivity.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Close Batch Number" noorg="true" key="115" h="500">
+		<GRID name="Current Batch No." keyfield="ticket_period" orderby="ticket_period desc" table="vw_periods" key="1">
+			<TEXTFIELD w="40" title="Year">ticket_year</TEXTFIELD>
+			<TEXTFIELD w="40" title="Month">ticket_month</TEXTFIELD>
+			<TEXTFIELD w="40" title="Tickets">total_segs</TEXTFIELD>
+			<GRID name="Batch No." keyfield="batch_no" groupby="batch_no,batch_date" table="orders" where="(batch_no = getBatch_no())" key="2">
+				<TEXTFIELD w="40" title="Batch No.#">batch_no</TEXTFIELD>
+				<TEXTFIELD w="40" title="Date">batch_date</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="upd_orders_batch" approval="2">Close Batch</ACTION>
+				</ACTIONS>
+			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Bonus" key="116" h="550">
+		<JASPER name="Agency Active Bonus" reportfile="agency_active_bonus.jasper"></JASPER>
+		<JASPER name="Consultant Productivity" reportfile="son_productivity.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Approvals" key="83" h="500">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status = 'Completed')" user="entity_id">
+			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approval_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Date">application_date</TEXTTIMESTAMP>
+			<ACTIONS>
+				<ACTION fnct="upd_approvals" approval="2">Approve</ACTION>
+				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
+				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
+			</ACTIONS>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Users Contacts" key="118" h="550">
+		<JASPER name="Users Contacts" reportfile="user_contacts.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Consultant Statement" key="123" h="550">
+		<FILTER w="700" name="Consultant Statement " split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Consultant Statement ">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Consultant Statement" reportfile="consultant_statement.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Summary Report" key="124" h="550">
+		<FILTER w="700" name="Summary Report" split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Summary Report">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Summary Report" reportfile="summary_report.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Print Batch" key="125" h="550">
+		<FILTER w="700" name="Print Batch " split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Print Batch ">
+				<COMBOBOX w="430" title="Batch Number" lptable="orders" lpkey="order_id" y="30" h="20" x="10" lpfield="order_id">batch_no</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Print Batch" reportfile="print_batch.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="EMails" key="60" h="500">
+		<GRID name="EMails" keyfield="sys_email_id" role="admin" table="sys_emails">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Title">title</TEXTFIELD>
+			<FORM name="EMails" keyfield="sys_email_id" table="sys_emails" th="210">
+				<TEXTFIELD w="350" title="Email Name" y="10" h="20" x="10">sys_email_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Title" y="30" h="20" x="10">title</TEXTFIELD>
+				<EDITOR w="530" tab="Details" y="2" h="170" x="10">details</EDITOR>
+			</FORM>
+		</GRID>
+		<GRID name="Email List" keyfield="sys_emailed_id" table="vw_sys_emailed">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
+			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Summary Report" key="124" h="550">
+		<FILTER w="700" name="Summary Report" split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Summary Report">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Summary Report" reportfile="summary_report.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

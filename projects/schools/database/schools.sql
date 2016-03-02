@@ -18,7 +18,7 @@
       CREATE TABLE religions(
 	  
 	  religion_id			serial primary key,
-	  religion_name			varchar(20);
+	  religion_name			varchar(20),
 	  details				text
 	  
 	  
@@ -117,7 +117,7 @@
 		 
 		  CREATE TABLE displinarys(
 	
-	  displinary_id			serial primary key
+	  displinary_id			serial primary key,
 	  displinary_name		varchar(50),
 	  details				text
 	  
@@ -205,7 +205,7 @@
 	
 	dormitory_student_id		serial primary key,
 	dormitory_id				integer references dormitorys,
-	entity_id					integer references students,
+	entity_id					integer references students
 	
 	);
 	
@@ -224,7 +224,7 @@
 	students_club_id		serial primary key,
 	entity_id				integer references students,
 	club_id					integer references clubs,
-	position				varchar(50),
+	position				varchar(50)
 	
 	);
 
@@ -335,7 +335,7 @@
 		CREATE TABLE weekdays (
 		
 		weekday_id					serial primary key,
-        weekday_name				varchar(30),
+        weekday_name				varchar(30)
 		);
 		
 		
@@ -455,7 +455,7 @@
 	SELECT  class.class_id, class.class_name, dormitorys.dormitory_id, dormitorys.dormitory_name,  students.entity_id, students.surname, students.middle_name, students.first_name, students.adm_no, students.gender, students.dob, students.age, students.adm_date, students.telephone, students.email, students.entry_grade, students.exit_date, students.pri_school
 	FROM students
 	INNER JOIN class ON students.class_id = class.class_id
-	INNER JOIN dormitorys ON students.dormitory_id = dormitorys.dormitory_id
+	INNER JOIN dormitorys ON students.dormitory_id = dormitorys.dormitory_id;
 	
 	
 	CREATE VIEW vw_trimester_student AS

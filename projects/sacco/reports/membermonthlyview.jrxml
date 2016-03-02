@@ -14,17 +14,25 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,
+		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,vw_contributions.org_id,
 vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.deposit_amount,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
 vw_contributions.entity_name,vw_contributions.is_active,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
 WHERE (vw_contributions.entity_id = '$P!{entity_id}')
-ORDER BY vw_contributions.deposit_date;]]>
+'$P!{organd}'
+ order BY vw_contributions.deposit_date;]]>
 	</queryString>
 	<field name="contribution_id" class="java.lang.Integer"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="period_id" class="java.lang.Integer"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="payment_type_id" class="java.lang.Integer"/>
 	<field name="deposit_date" class="java.sql.Date"/>
 	<field name="deposit_amount" class="java.lang.Float"/>

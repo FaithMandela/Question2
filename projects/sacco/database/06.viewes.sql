@@ -39,32 +39,55 @@ DROP VIEW vw_entitys;
 
 
 
+--DROP VIEW vw_orgs  CASCADE;
+CREATE VIEW vw_orgs AS
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
 
-CREATE OR REPLACE VIEW vw_entitys AS 
-SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
-		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
-		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		vw_orgs.sys_country_id as org_sys_country_id, vw_orgs.sys_country_name as org_sys_country_name, 
-		vw_orgs.address_id as org_address_id, vw_orgs.table_name as org_table_name,
-		vw_orgs.post_office_box as org_post_office_box, vw_orgs.postal_code as org_postal_code, 
-		vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
-		vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
-		vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
-		
-		addr.address_id, addr.address_name,
-		addr.sys_country_id, addr.sys_country_name, addr.table_name, addr.is_default,
-		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
-		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
-		
-		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
-		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
-		entitys.function_role, entitys.attention, entitys.primary_email,
-		
-		entity_types.entity_type_id, entity_types.entity_type_name, 
+		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
+		vw_org_address.org_address_id, vw_org_address.org_table_name,
+		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
+		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
+		vw_org_address.org_phone_number, vw_org_address.org_extension,
+		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
+	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+
+DROP VIEW vw_entity_address cascade;
+CREATE VIEW vw_entity_address AS
+	SELECT vw_address.address_id, vw_address.address_name,
+		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_id, vw_address.table_name,
+		vw_address.is_default, vw_address.post_office_box, vw_address.postal_code, vw_address.premises,
+		vw_address.street, vw_address.town, vw_address.phone_number, vw_address.extension, vw_address.mobile,
+		vw_address.fax, vw_address.email, vw_address.website
+	FROM vw_address
+	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
+
+CREATE VIEW vw_entitys AS
+	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
+		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
+
+		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
+		vw_orgs.org_address_id, vw_orgs.org_table_name,
+		vw_orgs.org_post_office_box, vw_orgs.org_postal_code,
+		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town,
+		vw_orgs.org_phone_number, vw_orgs.org_extension,
+		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
+
+		vw_entity_address.address_id, vw_entity_address.address_name,
+		vw_entity_address.sys_country_id, vw_entity_address.sys_country_name, vw_entity_address.table_name,
+		vw_entity_address.is_default, vw_entity_address.post_office_box, vw_entity_address.postal_code,
+		vw_entity_address.premises, vw_entity_address.street, vw_entity_address.town,
+		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile,
+		vw_entity_address.fax, vw_entity_address.email, vw_entity_address.website,
+
+		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
+		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
+		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
+		entity_types.entity_type_id, entity_types.entity_type_name,
 		entity_types.entity_role, entity_types.use_key
-	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
-		FULL JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
+	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
+		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
+		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
+
 		
 CREATE OR REPLACE VIEW vw_entitys_types AS 
 	SELECT	entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
@@ -163,21 +186,19 @@ CREATE OR REPLACE VIEW vw_investments AS
      JOIN entitys ON entitys.entity_id = investments.entity_id
      JOIN investment_types on investments.investment_type_id = investment_types.investment_type_id;
      
-CREATE VIEW vw_trx AS
+CREATE OR REPLACE VIEW vw_trx AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
-		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
-		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		vw_orgs.sys_country_id as org_sys_country_id, vw_orgs.sys_country_name as org_sys_country_name, 
-		vw_orgs.address_id as org_address_id, vw_orgs.table_name as org_table_name,
-		vw_orgs.post_office_box as org_post_office_box, vw_orgs.postal_code as org_postal_code, 
-		vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
-		vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
-		vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
+		vw_orgs.logo as org_logo,vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name, 
+		vw_orgs.org_address_id, vw_orgs.org_table_name,
+		vw_orgs.org_post_office_box , vw_orgs.org_postal_code, 
+		vw_orgs.org_street, vw_orgs.org_town, 
+		vw_orgs.org_phone_number, vw_orgs.org_extension, 
+		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs. org_email, vw_orgs.org_website,
 		vw_entitys.address_id, vw_entitys.address_name,
 		vw_entitys.sys_country_id, vw_entitys.sys_country_name, vw_entitys.table_name, vw_entitys.is_default,
 		vw_entitys.post_office_box, vw_entitys.postal_code, vw_entitys.premises, vw_entitys.street, vw_entitys.town, 
 		vw_entitys.phone_number, vw_entitys.extension, vw_entitys.mobile, vw_entitys.fax, vw_entitys.email, vw_entitys.website,
-		vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.User_name, vw_entitys.Super_User, vw_entitys.attention, 
+		vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.User_name, vw_entitys.Super_User, 
 		vw_entitys.Date_Enroled, vw_entitys.Is_Active, vw_entitys.entity_type_id, vw_entitys.entity_type_name,
 		vw_entitys.entity_role, vw_entitys.use_key,
 		transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
@@ -201,9 +222,6 @@ CREATE VIEW vw_trx AS
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
 		LEFT JOIN vw_entitys ON transactions.entity_id = vw_entitys.entity_id
 		LEFT JOIN departments ON transactions.department_id = departments.department_id;
-
-
-
 
 
 CREATE VIEW vw_trx_sum AS
@@ -273,106 +291,4 @@ CREATE VIEW vw_day_ledgers AS
 		
 		
 		
-		
-		
-CREATE OR REPLACE VIEW vw_trx AS 
- SELECT vw_orgs.org_id,
-    vw_orgs.org_name,
-    vw_orgs.is_default AS org_is_default,
-    vw_orgs.is_active AS org_is_active,
-    vw_orgs.logo AS org_logo,
-    vw_orgs.cert_number AS org_cert_number,
-    vw_orgs.pin AS org_pin,
-    vw_orgs.vat_number AS org_vat_number,
-    vw_orgs.invoice_footer AS org_invoice_footer,
-    vw_orgs.sys_country_id AS org_sys_country_id,
-    vw_orgs.sys_country_name AS org_sys_country_name,
-    vw_orgs.address_id AS org_address_id,
-    vw_orgs.table_name AS org_table_name,
-    vw_orgs.post_office_box AS org_post_office_box,
-    vw_orgs.postal_code AS org_postal_code,
-    vw_orgs.premises AS org_premises,
-    vw_orgs.street AS org_street,
-    vw_orgs.town AS org_town,
-    vw_orgs.phone_number AS org_phone_number,
-    vw_orgs.extension AS org_extension,
-    vw_orgs.mobile AS org_mobile,
-    vw_orgs.fax AS org_fax,
-    vw_orgs.email AS org_email,
-    vw_orgs.website AS org_website,
-    vw_entitys.address_id,
-    vw_entitys.address_name,
-    vw_entitys.sys_country_id,
-    vw_entitys.sys_country_name,
-    vw_entitys.table_name,
-    vw_entitys.is_default,
-    vw_entitys.post_office_box,
-    vw_entitys.postal_code,
-    vw_entitys.premises,
-    vw_entitys.street,
-    vw_entitys.town,
-    vw_entitys.phone_number,
-    vw_entitys.extension,
-    vw_entitys.mobile,
-    vw_entitys.fax,
-    vw_entitys.email,
-    vw_entitys.website,
-    vw_entitys.entity_id,
-    vw_entitys.entity_name,
-    vw_entitys.user_name,
-    vw_entitys.super_user,
-    vw_entitys.attention,
-    vw_entitys.date_enroled,
-    vw_entitys.is_active,
-    vw_entitys.entity_type_id,
-    vw_entitys.entity_type_name,
-    vw_entitys.entity_role,
-    vw_entitys.use_key,
-    transaction_types.transaction_type_id,
-    transaction_types.transaction_type_name,
-    transaction_types.document_prefix,
-    transaction_types.for_sales,
-    transaction_types.for_posting,
-    transaction_status.transaction_status_id,
-    transaction_status.transaction_status_name,
-    currency.currency_id,
-    currency.currency_name,
-    currency.currency_symbol,
-    departments.department_id,
-    departments.department_name,
-    transactions.journal_id,
-    transactions.bank_account_id,
-    transactions.transaction_id,
-    transactions.transaction_date,
-    transactions.transaction_amount,
-    transactions.application_date,
-    transactions.approve_status,
-    transactions.workflow_table_id,
-    transactions.action_date,
-    transactions.narrative,
-    transactions.document_number,
-    transactions.payment_number,
-    transactions.order_number,
-    transactions.exchange_rate,
-    transactions.payment_terms,
-    transactions.job,
-    transactions.details,
-        CASE
-            WHEN transactions.journal_id IS NULL THEN 'Not Posted'::text
-            ELSE 'Posted'::text
-        END AS posted,
-        CASE
-            WHEN transactions.transaction_type_id = 2 OR transactions.transaction_type_id = 8 OR transactions.transaction_type_id = 10 THEN transactions.transaction_amount
-            ELSE 0::real
-        END AS debit_amount,
-        CASE
-            WHEN transactions.transaction_type_id = 5 OR transactions.transaction_type_id = 7 OR transactions.transaction_type_id = 9 THEN transactions.transaction_amount
-            ELSE 0::real
-        END AS credit_amount
-   FROM transactions
-    full JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
-     full JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
-     full JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
-     full JOIN currency ON transactions.currency_id = currency.currency_id
-     LEFT JOIN vw_entitys ON transactions.entity_id = vw_entitys.entity_id
-     LEFT JOIN departments ON transactions.department_id = departments.department_id;
+	

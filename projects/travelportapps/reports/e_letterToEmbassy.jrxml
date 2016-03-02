@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="com.dewcis.travelinsurance.UrlScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -51,8 +51,8 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 				<textFieldExpression><![CDATA[$F{passenger_id}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="454" y="20" width="100" height="50" uuid="51887c74-2ba8-4b2f-a86f-74f64a7690a7"/>
-				<imageExpression><![CDATA[new com.onbarcode.barcode.jasper.JasperRenderer(com.onbarcode.barcode.jasper.BarcodeGenerator.draw(102,$P{REPORT_SCRIPTLET}.getUrl("apps.travelport.co.ke/travelportapps/letter.jsp?view=55:0:0&data="+$F{passenger_id}), "", "X=2&Y=60"))]]></imageExpression>
+				<reportElement x="454" y="20" width="100" height="99" uuid="51887c74-2ba8-4b2f-a86f-74f64a7690a7"/>
+				<imageExpression><![CDATA[new com.onbarcode.barcode.jasper.JasperRenderer(com.onbarcode.barcode.jasper.BarcodeGenerator.draw(102,"http://tp.dc.co.ke/travelportapps/letter.jsp?view=55:0:0&data="+$F{passenger_id}, "", "X=2&Y=60"))]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -210,7 +210,7 @@ Manager, Business Development]]></text>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "file-page1.png"]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
-				<reportElement x="193" y="288" width="215" height="20" uuid="79f048e6-9e96-4a0b-a605-5bd00d528fe9"/>
+				<reportElement x="206" y="288" width="202" height="20" uuid="79f048e6-9e96-4a0b-a605-5bd00d528fe9"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
@@ -228,7 +228,7 @@ Manager, Business Development]]></text>
 				<textFieldExpression><![CDATA[$F{benefit}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="287" width="192" height="20" isPrintWhenDetailOverflows="true" uuid="9046a7b2-2642-40be-b955-df61cc765298"/>
+				<reportElement x="0" y="287" width="206" height="20" isPrintWhenDetailOverflows="true" uuid="9046a7b2-2642-40be-b955-df61cc765298"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
