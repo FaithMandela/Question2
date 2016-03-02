@@ -86,7 +86,7 @@ CREATE INDEX products_supplier_id ON products (supplier_id);
 CREATE TABLE orders (
 	order_id 				serial primary key,
 	entity_id 				integer not null references entitys,
-	order_date				date not null default current_date,
+	order_date				timestamp not null default current_timestamp,
 	order_status			varchar(50) default 'processing order',
 	order_total_amount		double precision,
 	shipping_cost			real,

@@ -36,7 +36,7 @@ SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'staff');
 CREATE FOREIGN TABLE i_consultant (
 	id_consultant			integer, 
 	rel_id_salutation			integer, 
-	newsletter			char(0), 
+	newsletter			char(1), 
 	first_name			varchar(22), 
 	last_name			varchar(22), 
 	other_name			varchar(37), 
@@ -156,6 +156,62 @@ CREATE FOREIGN TABLE i_shop_item_batch (
 )
 SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'shop_item_batch');
 
+CREATE FOREIGN TABLE i_segment_period (
+	id_segment_period			integer, 
+	month			char(1), 
+	year			char(4), 
+	allocated			char(1)
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'segment_period');
+
+CREATE FOREIGN TABLE i_segment (
+	id_segment			integer, 
+	rel_id_segment_period			integer, 
+	pcc			varchar(3), 
+	son			varchar(3), 
+	multiplier			integer, 
+	segments			integer, 
+	value			integer, 
+	rel_id_user			integer, 
+	iata			char(1), 
+	amadeus			char(1), 
+	sabre			char(1), 
+	rel_pcc			varchar(3), 
+	posted			char(1), 
+	date			date
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'segment');
+
+CREATE FOREIGN TABLE i_basket_status (
+	id_basket_status			integer, 
+	status			varchar(37), 
+	details			VARCHAR, 
+	pos			integer
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'basket_status');
+
+CREATE FOREIGN TABLE i_basket (
+	id_basket			integer, 
+	rel_id_user			integer, 
+	checkout			char(1), 
+	check_in_date_time			timestamp, 
+	rel_id_basket_status			integer, 
+	rel_id_shipping_status			integer, 
+	rel_id_basket_batch			integer, 
+	shipping_type			char(1), 
+	rel_id_basket_collection_point			integer, 
+	shipping_cost			real
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'basket');
+
+CREATE FOREIGN TABLE i_basket_shop_item (
+	id_basket_shop_item			integer, 
+	rel_id_basket			integer, 
+	rel_id_shop_item_batch			integer, 
+	quantity			integer, 
+	add_date_time			timestamp
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'basket_shop_item');
 
 
 ------- Import script
@@ -200,9 +256,9 @@ SELECT 0, 0, 'consultant', a.salutation, (COALESCE(b.first_name, '') || ' ' || C
 	c.id_user, c.email, c.username, c.password, c.create_date, c.last_login, 
 	c.rel_id_user_status, c.cellphone, c.sms_alert::boolean, c.email_alert::boolean, c.newsletter::boolean,
 	CASE WHEN c.active = '1' THEN true ELSE false END
-FROM i_salutation a INNER JOIN i_consultant b ON a.id_salutation = b.rel_id_salutation
-	INNER JOIN i_user c ON b.id_consultant = c.rel_id
-WHERE c.group = 'consultant'
+FROM i_user c LEFT JOIN i_consultant b ON c.rel_id = b.id_consultant
+	LEFT JOIN i_salutation a ON a.id_salutation = b.rel_id_salutation
+WHERE (c.group = 'consultant' OR c.group = 'agency')
 ORDER BY c.id_user;
 
 
@@ -229,7 +285,38 @@ UPDATE entitys SET org_id = orgs.org_id
 FROM orgs WHERE (entitys.pcc_son is not null) and (entitys.pcc_son = orgs.pcc);
 
 
+INSERT INTO fiscal_years (org_id, fiscal_year_id, fiscal_year_start, fiscal_year_end)
+SELECT 0, b.year, (b.year || '-01-01')::date, (b.year::integer + 1 || '-01-01')::date - 1
+FROM (SELECT a.year
+FROM i_segment_period a
+GROUP BY a.year
+ORDER BY a.year) as b;
 
+INSERT INTO periods (fiscal_year_id, org_id, period_id, start_date, end_date)
+SELECT a.year, 0, a.id_segment_period, (a.year || '-' || a.month || '-01')::date,
+((a.year || '-' || a.month || '-01')::date + '1 month'::interval- '1 day'::interval)::date
+FROM i_segment_period a
+ORDER BY a.id_segment_period;
 
+INSERT INTO points (points_id, period_id, entity_id, pcc, son, 
+	segments, amount, points, point_date)
+SELECT a.id_segment, a.rel_id_segment_period, 
+	CASE WHEN b.id_user is null THEN 0 ELSE a.rel_id_user END, 
+	a.pcc, a.son, a.segments, a.multiplier, a.value, a.date
+FROM i_segment as a LEFT JOIN i_user b ON a.rel_id_user = b.id_user
+ORDER BY a.id_segment;
 
+UPDATE points SET org_id = entitys.org_id
+FROM entitys WHERE points.entity_id = entitys.entity_id;
+
+INSERT INTO orders (order_id, entity_id, order_status, order_date, shipping_cost)
+SELECT a.id_basket, a.rel_id_user, b.status, check_in_date_time, a.shipping_cost
+FROM i_basket a INNER JOIN i_basket_status b ON a.rel_id_basket_status = b.id_basket_status
+WHERE a.checkout = '1';
+
+INSERT INTO order_details (order_details_id, order_id, product_id, product_quantity, product_uprice)
+SELECT a.id_basket_shop_item, a.rel_id_basket, b.rel_id_shop_item, a.quantity, b.cost
+FROM i_basket_shop_item a INNER JOIN i_shop_item_batch b ON a.rel_id_shop_item_batch = b.id_shop_item_batch
+INNER JOIN i_basket c ON a.rel_id_basket = c.id_basket
+WHERE c.checkout = '1';
 
