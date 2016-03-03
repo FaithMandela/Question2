@@ -182,6 +182,18 @@ CREATE FOREIGN TABLE i_segment (
 )
 SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'segment');
 
+CREATE FOREIGN TABLE i_segment_total (
+	id_segment_total			integer, 
+	rel_id_segment_period			integer, 
+	multiplier			integer, 
+	segments_total			integer, 
+	value			integer, 
+	rel_id_agency			integer, 
+	rel_id_user			integer, 
+	date_time			timestamp
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'segment_total');
+
 CREATE FOREIGN TABLE i_bonus_total (
 	id_bonus_total			integer, 
 	rel_id_segment_period			integer, 
@@ -313,20 +325,15 @@ SELECT a.year, 0, a.id_segment_period, (a.year || '-' || a.month || '-01')::date
 FROM i_segment_period a
 ORDER BY a.id_segment_period;
 
-INSERT INTO points (period_id, entity_id, pcc, son, segments, points)
-SELECT c.rel_id_segment_period, c.entity_id, c.pcc, c.son, sum(c.segments), sum(c.value)
-FROM (SELECT a.id_segment, a.rel_id_segment_period, 
-	(CASE WHEN b.id_user is null THEN 0 ELSE a.rel_id_user END) as entity_id, 
-	a.pcc, a.son, a.segments, a.value
-FROM i_segment as a LEFT JOIN i_user b ON a.rel_id_user = b.id_user
-ORDER BY a.id_segment) as c
-GROUP BY c.rel_id_segment_period, c.entity_id, c.pcc, c.son;
+INSERT INTO points (points_id, period_id, amount, segments, points, point_date, entity_id)
+SELECT a.id_segment_total, a.rel_id_segment_period, a.multiplier, a.segments_total, a.value, a.date_time::date,
+	(CASE WHEN b.id_user is null THEN 0 ELSE a.rel_id_user END) as entity_id
+FROM i_segment_total as a LEFT JOIN i_user b ON a.rel_id_user = b.id_user
+ORDER BY a.id_segment_total;
+
 
 UPDATE points SET org_id = entitys.org_id
 FROM entitys WHERE points.entity_id = entitys.entity_id;
-
-UPDATE points SET amount = 0;
-UPDATE points SET amount = points / segments WHERE segments > 0;
 
 UPDATE points SET bonus = i_bonus_total.value
 FROM i_bonus_total
@@ -344,9 +351,14 @@ FROM i_basket_shop_item a INNER JOIN i_shop_item_batch b ON a.rel_id_shop_item_b
 INNER JOIN i_basket c ON a.rel_id_basket = c.id_basket
 WHERE c.checkout = '1';
 
+CREATE OR REPLACE FUNCTION get_order_total(int) RETURNS real AS $$
+	SELECT COALESCE(sum(order_details.product_quantity * order_details.product_uprice), 0)::real
+	FROM order_details 
+	WHERE (order_details.order_id = $1);
+$$ LANGUAGE SQL;
 
-UPDATE orders SET order_total_amount = 
-	(SELECT sum(order_details.product_quantity * order_details.product_uprice) 
-	FROM order_details WHERE order_details.order_id = order_id);
+
+UPDATE orders SET order_total_amount = get_order_total(order_id);
+
 	
-	
+

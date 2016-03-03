@@ -3,7 +3,7 @@
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="5.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="864"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
@@ -126,7 +126,7 @@ WHERE (qstudentid=$P{qstudentid});]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7"/>
+					<font fontName="Times New Roman" size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{courseid}]]></textFieldExpression>
 			</textField>
@@ -139,7 +139,7 @@ WHERE (qstudentid=$P{qstudentid});]]>
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7"/>
+					<font fontName="Times New Roman" size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{coursetitle}]]></textFieldExpression>
 			</textField>
@@ -152,7 +152,7 @@ WHERE (qstudentid=$P{qstudentid});]]>
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7"/>
+					<font fontName="Times New Roman" size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{hours}]]></textFieldExpression>
 			</textField>
@@ -165,7 +165,7 @@ WHERE (qstudentid=$P{qstudentid});]]>
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7"/>
+					<font fontName="Times New Roman" size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
 			</textField>
@@ -178,7 +178,7 @@ WHERE (qstudentid=$P{qstudentid});]]>
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7"/>
+					<font fontName="Times New Roman" size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gradeid}]]></textFieldExpression>
 			</textField>
@@ -191,7 +191,7 @@ WHERE (qstudentid=$P{qstudentid});]]>
 					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7"/>
+					<font fontName="Times New Roman" size="6"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{repeated}.booleanValue() ? "*" : "" + $F{gpa})]]></textFieldExpression>
 			</textField>

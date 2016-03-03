@@ -130,6 +130,7 @@ CREATE TABLE points (
 	org_id 					integer references orgs,
 	entity_id				integer references entitys,
 	period_id				integer references periods,
+	point_date				date,
 	pcc                     varchar(4),
 	son                     varchar(7),
 	segments                real,
