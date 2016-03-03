@@ -257,13 +257,6 @@ WHERE pickup_date = CURRENT_TIMESTAMP::date AND vw_transfer_assignments.no_show 
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
-				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="2a768f81-2e60-4468-813a-61ac7e351147"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
 			</frame>
 		</band>
 	</pageFooter>

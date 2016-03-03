@@ -88,9 +88,8 @@ CREATE TABLE orders (
 	entity_id 				integer not null references entitys,
 	order_date				timestamp not null default current_timestamp,
 	order_status			varchar(50) default 'processing order',
-	order_total_amount		double precision,
-	shipping_cost			real,
-	grand_total				real,
+	order_total_amount		real default 0 not null,
+	shipping_cost			real default 0 not null,
 	batch_no				integer,
 	batch_date				date,
 	details 				text
@@ -101,8 +100,8 @@ CREATE TABLE order_details (
 	order_details_id 		serial primary key,
 	order_id				integer not null references orders,
 	product_id 				integer not null references products,
-	product_quantity		integer,
-	product_uprice			double precision,
+	product_quantity		integer default 1 not null,
+	product_uprice			real default 0 not null,
 	status					varchar(20) NOT NULL default 'New'
 );
 CREATE INDEX order_product_id  ON order_details(product_id);
@@ -133,11 +132,10 @@ CREATE TABLE points (
 	period_id				integer references periods,
 	pcc                     varchar(4),
 	son                     varchar(7),
-	point_date				date,
 	segments                real,
 	amount                  real,
-	points                  real,
-	bonus                   real
+	points                  real default 0 not null,
+	bonus                   real default 0 not null
 );
 CREATE INDEX points_org_id ON points (org_id);
 CREATE INDEX points_entity_id ON points (entity_id);
@@ -224,7 +222,9 @@ CREATE VIEW vw_products AS
 
 CREATE VIEW vw_orders AS
     SELECT orders.order_id, orders.order_date, orders.order_status, orders.order_total_amount, orders.batch_no,
-        orders.shipping_cost, orders.grand_total, orders.details, vw_entitys.entity_name, vw_entitys.son,
+        orders.shipping_cost, orders.details, 
+        (orders.order_total_amount + orders.shipping_cost) as grand_total,
+        vw_entitys.entity_name, vw_entitys.son,
         vw_entitys.entity_id, vw_entitys.pcc, vw_entitys.org_name, vw_entitys.primary_email,
         vw_entitys.primary_telephone, vw_entitys.function_role, vw_entitys.entity_role,
         vw_entitys.org_id

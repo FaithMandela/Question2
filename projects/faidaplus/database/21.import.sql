@@ -25,3 +25,4 @@ UPDATE faidaplus.shop_item SET active = '0' WHERE active = '' or active = ' ';
 
 UPDATE faidaplus.segment SET date = '2000-01-01' WHERE date <= '2000-01-01';
 UPDATE faidaplus.segment SET date_time = '2000-01-01 00:00:00' WHERE date_time <= '2000-01-01 00:00:00';
+
