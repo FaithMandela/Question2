@@ -2,36 +2,39 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="print_batch" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7f91f0d3-a979-478b-b8d7-1441880767a1">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="138"/>
+	<property name="ireport.y" value="186"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/opt/baraza/projects/faidaplus/reports/"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="batch_no" class="java.lang.String">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT orders.order_id,
-      orders.order_date,
-      orders.order_status,
-      orders.order_total_amount,
-      orders.batch_no,
-      orders.shipping_cost,
-      orders.grand_total,
+		<![CDATA[SELECT vw_orders.order_id,
+      vw_orders.order_date::date,
+      vw_orders.order_status,
+      vw_orders.order_total_amount,
+      vw_orders.batch_no,
+      vw_orders.shipping_cost,
+      vw_orders.grand_total,
       vw_entitys.entity_name,
       vw_entitys.son,
-       vw_entitys.entity_id,
+      vw_entitys.entity_id,
       vw_entitys.pcc,
       vw_entitys.org_name,
-       vw_entitys.primary_email,
-        vw_entitys.primary_telephone,
-        vw_entitys.function_role,
-         vw_entitys.entity_role,
+      vw_entitys.primary_email,
+      vw_entitys.primary_telephone,
+      vw_entitys.function_role,
+      vw_entitys.entity_role,
       vw_entitys.org_id
-     FROM orders
-       JOIN vw_entitys ON orders.entity_id = vw_entitys.entity_id
-	;]]>
+     FROM vw_orders
+       JOIN vw_entitys ON vw_orders.entity_id = vw_entitys.entity_id
+	WHERE order_id = '$P!{batch_no}';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
-	<field name="order_date" class="java.sql.Timestamp"/>
+	<field name="order_date" class="java.sql.Date"/>
 	<field name="order_status" class="java.lang.String"/>
-	<field name="order_total_amount" class="java.lang.Double"/>
+	<field name="order_total_amount" class="java.lang.Float"/>
 	<field name="batch_no" class="java.lang.Integer"/>
 	<field name="shipping_cost" class="java.lang.Float"/>
 	<field name="grand_total" class="java.lang.Float"/>

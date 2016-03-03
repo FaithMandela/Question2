@@ -121,7 +121,7 @@ BEGIN
 	END IF;
 
 	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-	VALUES ($1::integer,2 ,'orders', 1, 0,details);
+	VALUES ($1::integer,4 ,'orders', 1, 0,details);
 	RETURN 'Successfully Updated';
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -137,9 +137,11 @@ BEGIN
 		FROM entitys
 		WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
 
-		IF(v_entity_id is null)THEN
+		IF(v_entity_id is NOT NULL)THEN
 			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 		END IF;
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name,narrative)
+		VALUES (1, NEW.applicant_id , 'applicants','Thank your for registering with faidaplus, your details are been verified ');
 	END IF;
 	RETURN NEW;
 END;
@@ -194,7 +196,6 @@ CREATE OR REPLACE FUNCTION getbalance(varchar(20),varchar(20)) RETURNS double pr
 	FROM points WHERE son = $2 AND pcc = $1)-(SELECT COALESCE(sum(order_total_amount),0.0)AS sum
 	FROM vw_orders WHERE son = $2 AND pcc = $1);
 $BODY$ LANGUAGE sql;
-
 
 CREATE SEQUENCE batch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1;
 

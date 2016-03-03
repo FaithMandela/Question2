@@ -33,8 +33,7 @@
                 vw_order_details.total_amount
                FROM vw_order_details
                  JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
-                 JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
-WHERE vw_order_details.batch_no = '$P!{batch_no}';]]>
+                 JOIN vw_products ON vw_products.product_id = vw_order_details.product_id;]]>
 	</queryString>
 	<field name="order_details_id" class="java.lang.Integer"/>
 	<field name="order_id" class="java.lang.Integer"/>
@@ -51,7 +50,7 @@ WHERE vw_order_details.batch_no = '$P!{batch_no}';]]>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="batch_no" class="java.lang.Integer"/>
-	<field name="product_uprice" class="java.lang.Double"/>
+	<field name="product_uprice" class="java.lang.Float"/>
 	<field name="product_quantity" class="java.lang.Integer"/>
 	<field name="total_amount" class="java.lang.Double"/>
 	<background>
@@ -76,35 +75,35 @@ WHERE vw_order_details.batch_no = '$P!{batch_no}';]]>
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="20" uuid="2bb6aa74-590e-4757-b868-90832b925ca5"/>
 				<textElement>
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Batch ID]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="200" y="0" width="100" height="20" uuid="b3af2c35-8c7b-4ab5-97e5-e99f15c966ff"/>
 				<textElement>
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Quantity]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="400" y="0" width="100" height="20" uuid="b8b7b2ad-1a5c-4438-86d3-a24ee90979be"/>
 				<textElement>
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total Cost]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="300" y="0" width="100" height="20" uuid="01661075-10d2-4271-852d-a75280631a22"/>
 				<textElement>
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Purchase Cost]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="100" y="0" width="100" height="20" uuid="8ee8f63d-a8d0-44a5-817b-09212d89e6c0"/>
 				<textElement>
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Title]]></text>
 			</staticText>
@@ -115,38 +114,38 @@ WHERE vw_order_details.batch_no = '$P!{batch_no}';]]>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="100" height="20" uuid="f73e1d2e-ab42-4948-a4c5-87e2344692ac"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{batch_no}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="100" y="0" width="100" height="20" uuid="345c200c-171c-4388-8280-83962c51c770"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="200" y="0" width="100" height="20" uuid="ca66d1ca-5cb2-4cca-a808-520185826ebd"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_quantity}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="300" y="0" width="100" height="20" uuid="e3009b0e-b3e4-4917-9b4e-3eadee57451c"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_uprice}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="400" y="0" width="100" height="20" uuid="00b12c82-e3c8-4ca5-8694-7ef5c2f47260"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
 			</textField>

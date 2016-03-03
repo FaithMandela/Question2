@@ -12,7 +12,7 @@
 	<queryString>
 		<![CDATA[SELECT a.dr,
     a.cr,
-    a.order_date,
+    a.order_date::date,
     a.son,
     a.pcc,
     a.org_name,
@@ -30,7 +30,7 @@
            FROM vw_son_points
         UNION
          SELECT 0::real AS float4,
-            vw_orders.ordertotalamount::real AS ordertotalamount,
+            vw_orders.order_total_amount::real AS order_total_amount,
             vw_orders.order_date,
             vw_orders.son,
             vw_orders.pcc,

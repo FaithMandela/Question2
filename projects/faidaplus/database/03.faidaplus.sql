@@ -115,7 +115,7 @@ CREATE TABLE applicants (
 	pseudo_code				varchar(4),
 	son 					varchar(7),
 	consultant_dob			date not null,
-	status					varchar(20),
+	status					varchar(20) default 'New',
 
  	approve_status			varchar(16) default 'draft' not null,
  	workflow_table_id		integer,
@@ -278,7 +278,7 @@ CREATE VIEW vw_points AS
 		INNER JOIN periods ON points.period_id = periods.period_id;
 
 CREATE VIEW vw_org_points AS
-	SELECT points.points_id, periods.start_date as period,
+	SELECT points.points_id, periods.period_id,periods.start_date as period,
 		to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
 		points.pcc, points.son, points.segments, points.amount,
 		points.points, points.bonus, vw_orgs.org_name
@@ -286,7 +286,7 @@ CREATE VIEW vw_org_points AS
 		INNER JOIN periods ON points.period_id = periods.period_id;
 
 CREATE VIEW vw_son_points AS
-	SELECT points.points_id, periods.start_date as period,
+	SELECT points.points_id, periods.period_id,periods.start_date as period,
 		to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
 		points.pcc, points.son, points.segments, points.amount,
 		points.points, points.bonus, vw_entitys.org_name,
@@ -295,7 +295,7 @@ CREATE VIEW vw_son_points AS
 		INNER JOIN periods ON points.period_id = periods.period_id;
 
 CREATE VIEW vw_son_statement AS
-	SELECT a.dr, a.cr, a.order_date, a.son, a.pcc,
+	SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
 		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,

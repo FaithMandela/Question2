@@ -13,32 +13,31 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT orders.order_id,
-      orders.order_date,
-      orders.order_status,
-      orders.order_total_amount,
-      orders.batch_no,
-      orders.shipping_cost,
-      orders.grand_total,
+		<![CDATA[SELECT vw_orders.order_id,
+      vw_orders.order_date::date,
+      vw_orders.order_status,
+      vw_orders.order_total_amount,
+      vw_orders.batch_no,
+      vw_orders.shipping_cost,
+      vw_orders.grand_total,
       vw_entitys.entity_name,
       vw_entitys.son,
-       vw_entitys.entity_id,
+      vw_entitys.entity_id,
       vw_entitys.pcc,
       vw_entitys.org_name,
-       vw_entitys.primary_email,
-        vw_entitys.primary_telephone,
-        vw_entitys.function_role,
-         vw_entitys.entity_role,
+      vw_entitys.primary_email,
+      vw_entitys.primary_telephone,
+      vw_entitys.function_role,
+      vw_entitys.entity_role,
       vw_entitys.org_id
-     FROM orders
-       JOIN vw_entitys ON orders.entity_id = vw_entitys.entity_id
-	WHERE batch_no = '$P!{batch_no}' AND order_date >= '$P!{minDate}'
-	 AND order_date <= '$P!{maxDate}';]]>
+     FROM vw_orders
+       JOIN vw_entitys ON vw_orders.entity_id = vw_entitys.entity_id
+	WHERE order_date::date >= '$P!{minDate}' AND order_date::date <= '$P!{maxDate}';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
-	<field name="order_date" class="java.sql.Timestamp"/>
+	<field name="order_date" class="java.sql.Date"/>
 	<field name="order_status" class="java.lang.String"/>
-	<field name="order_total_amount" class="java.lang.Double"/>
+	<field name="order_total_amount" class="java.lang.Float"/>
 	<field name="batch_no" class="java.lang.Integer"/>
 	<field name="shipping_cost" class="java.lang.Float"/>
 	<field name="grand_total" class="java.lang.Float"/>
@@ -131,14 +130,14 @@
 				<text><![CDATA[Account Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="543" y="0" width="63" height="20" uuid="ec008b19-3c4b-456d-bc2a-5ae6cd73e1d0"/>
+				<reportElement x="543" y="0" width="52" height="20" uuid="ec008b19-3c4b-456d-bc2a-5ae6cd73e1d0"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="606" y="0" width="75" height="20" uuid="086c3b69-6d91-4256-ad20-3a3eabaef87d"/>
+				<reportElement x="595" y="0" width="64" height="20" uuid="086c3b69-6d91-4256-ad20-3a3eabaef87d"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
@@ -152,7 +151,7 @@
 				<text><![CDATA[Grand Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="681" y="0" width="65" height="20" uuid="6ba5ef1a-c172-40dd-99a5-8330997f6a8a"/>
+				<reportElement x="659" y="0" width="65" height="20" uuid="6ba5ef1a-c172-40dd-99a5-8330997f6a8a"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
@@ -191,7 +190,7 @@
 				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="543" y="1" width="63" height="20" uuid="d0c6d070-da2e-4b99-8fac-edff47eee1f8"/>
+				<reportElement x="543" y="1" width="52" height="20" uuid="d0c6d070-da2e-4b99-8fac-edff47eee1f8"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -211,14 +210,14 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{function_role}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="606" y="1" width="75" height="20" uuid="53d1c6ff-bade-46ba-bc7c-91e1e5728803"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="595" y="1" width="64" height="20" uuid="53d1c6ff-bade-46ba-bc7c-91e1e5728803"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_total_amount}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="746" y="1" width="56" height="20" uuid="b010c194-7801-48ef-841b-41ac285f1672"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
@@ -239,8 +238,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="681" y="1" width="65" height="20" uuid="feff248f-8335-4d56-9611-6a9a5173202b"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="659" y="1" width="65" height="20" uuid="feff248f-8335-4d56-9611-6a9a5173202b"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>

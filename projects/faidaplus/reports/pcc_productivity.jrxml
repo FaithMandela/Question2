@@ -3,6 +3,12 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-28"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
       to_char(vw_points.period::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
@@ -14,6 +20,7 @@
       vw_orgs.org_name
      FROM vw_points
        JOIN vw_orgs ON vw_points.pcc::text = vw_orgs.pcc::text
+	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text) AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
 	GROUP BY vw_points.period,ticket_period,vw_points.pcc,vw_orgs.org_name
 	ORDER BY vw_orgs.org_name ASC;]]>
 	</queryString>

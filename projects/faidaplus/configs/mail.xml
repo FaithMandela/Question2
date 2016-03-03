@@ -5,15 +5,26 @@
 	reportpath="/opt/baraza/projects/faidaplus/reports/">
 
 	<REPORT name="Orders Status" keyfield="sys_emailed_id" action="Emailed" actioncount="1" infile="true"
-		table="sys_emails, sys_emailed, vw_orders"
+		table="sys_emails, sys_emailed, vw_orders,vw_entitys"
 		where="(vw_orders.order_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
-		 AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+		AND (vw_entitys.entity_id = vw_orders.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<ADDRESS title="address">vw_orders.primary_email</ADDRESS>
-		<BODYFIELD reference="{{name}}" basetable="vw_orders">entity_name</BODYFIELD>
+		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
+		<BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
+		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
 		<PARAM basetable="vw_orders">order_id</PARAM>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 
+	</REPORT>
+
+	<REPORT name="Applicant" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
+			table="sys_emails, sys_emailed, applicants"
+			where="(applicants.applicant_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
+			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<ADDRESS title="address">applicants.applicant_email</ADDRESS>
+		<BODYFIELD reference="{{name}}" basetable="applicants">applicant_email</BODYFIELD>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
