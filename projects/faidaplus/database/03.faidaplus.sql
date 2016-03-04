@@ -223,7 +223,7 @@ CREATE VIEW vw_products AS
 
 CREATE VIEW vw_orders AS
     SELECT orders.order_id, orders.order_date, orders.order_status, orders.order_total_amount, orders.batch_no,
-        orders.shipping_cost, orders.details, 
+        orders.shipping_cost, orders.details,
         (orders.order_total_amount + orders.shipping_cost) as grand_total,
         vw_entitys.entity_name, vw_entitys.son,
         vw_entitys.entity_id, vw_entitys.pcc, vw_entitys.org_name, vw_entitys.primary_email,
@@ -271,11 +271,11 @@ CREATE VIEW vw_purged_consultant AS
 	WHERE periods.start_date < CURRENT_DATE - INTERVAL '6 months';
 
 CREATE VIEW vw_points AS
-	SELECT points.points_id, points.period_id, periods.start_date as period,
+	SELECT points.points_id, points.period_id,points.org_id, periods.start_date as period,
 		to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
 		points.pcc, points.son, points.segments, points.amount,
 		points.points, points.bonus, vw_orgs.org_name
-	FROM points JOIN vw_orgs ON points.pcc::text = vw_orgs.pcc::text
+	FROM points JOIN vw_orgs ON points.org_id = vw_orgs.org_id
 		INNER JOIN periods ON points.period_id = periods.period_id;
 
 CREATE VIEW vw_org_points AS
@@ -292,23 +292,28 @@ CREATE VIEW vw_son_points AS
 		points.pcc, points.son, points.segments, points.amount,
 		points.points, points.bonus, vw_entitys.org_name,
 		vw_entitys.entity_name, vw_entitys.entity_id
-	FROM points JOIN vw_entitys ON points.pcc::text = vw_entitys.pcc::text AND points.son = vw_entitys.son
+	FROM points JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
 		INNER JOIN periods ON points.period_id = periods.period_id;
 
-CREATE VIEW vw_son_statement AS
+CREATE OR REPLACE VIEW vw_son_statement AS
 	SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
 		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
 		vw_son_points.pcc, vw_son_points.org_name, vw_son_points.entity_id,
-		'#Segments'::text as details
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details
 	FROM vw_son_points)
 	UNION
-	(SELECT 0::real AS float4, vw_orders.order_total_amount::real AS order_total_amount,
+	(SELECT 0::real AS float4, vw_order_details.total_amount::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
-		vw_orders.entity_id, vw_orders.details
-	FROM vw_orders)) a
-	ORDER BY a.pcc, a.son, a.order_date;
+		vw_orders.entity_id,
+		(vw_order_details.product_quantity||' @ '||vw_order_details.product_name||' added to shopping cart')as details
+	FROM vw_orders
+	JOIN vw_order_details ON vw_orders.order_id = vw_order_details.order_id)) a
+	ORDER BY a.order_date;
+
+
+
 
 CREATE VIEW vw_statement AS
 	SELECT vw_points.amount, sum(vw_points.points)as dr, vw_points.bonus,
@@ -317,7 +322,7 @@ CREATE VIEW vw_statement AS
 		vw_orders.pcc,
 		(sum(vw_points.points)-sum(vw_orders.order_total_amount))as balance,
 		orgs.org_name
-	FROM vw_orders INNER JOIN vw_points ON vw_orders.son = vw_points.son and vw_orders.pcc = vw_points.pcc
+	FROM vw_orders INNER JOIN vw_points ON vw_orders.entity_id = vw_points.entity_id
 		JOIN orgs ON vw_orders.pcc = orgs.pcc
 	GROUP BY vw_orders.entity_id, vw_orders.order_date,vw_orders.order_status,vw_orders.entity_name,
 		vw_orders.son, vw_orders.pcc,vw_points.pcc,  vw_points.son,

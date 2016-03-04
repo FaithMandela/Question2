@@ -10,36 +10,21 @@
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT a.dr,
-    a.cr,
-    a.order_date::date,
-    a.son,
-    a.pcc,
-    a.org_name,
-    a.entity_id,
-    a.dr - a.cr AS balance,
-    a.details
-   FROM ( SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
-            0::real AS cr,
-            vw_son_points.period::date AS order_date,
-            vw_son_points.son,
-            vw_son_points.pcc,
-            vw_son_points.org_name,
-            vw_son_points.entity_id,
-            '#Segments'::text AS details
-           FROM vw_son_points
-        UNION
-         SELECT 0::real AS float4,
-            vw_orders.order_total_amount::real AS order_total_amount,
-            vw_orders.order_date,
-            vw_orders.son,
-            vw_orders.pcc,
-            vw_orders.org_name,
-            vw_orders.entity_id,
-            vw_orders.details
-           FROM vw_orders) a
-	WHERE order_date >='$P!{minDate}' AND order_date <= '$P!{maxDate}'
-  ORDER BY a.pcc, a.son, a.order_date;]]>
+		<![CDATA[SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
+		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details
+	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
+		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
+		vw_son_points.pcc, vw_son_points.org_name, vw_son_points.entity_id,
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details
+	FROM vw_son_points)
+	UNION
+	(SELECT 0::real AS float4, vw_order_details.total_amount::real AS order_total_amount,
+		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
+		vw_orders.entity_id,
+		(vw_order_details.product_quantity||' @ '||vw_order_details.product_name||' added to shopping cart')as details
+	FROM vw_orders
+	JOIN vw_order_details ON vw_orders.order_id = vw_order_details.order_id)) a
+	ORDER BY a.order_date;]]>
 	</queryString>
 	<field name="dr" class="java.lang.Float"/>
 	<field name="cr" class="java.lang.Float"/>

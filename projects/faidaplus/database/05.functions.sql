@@ -121,7 +121,7 @@ BEGIN
 	END IF;
 
 	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-	VALUES ($1::integer,2 ,'orders', 1, 0,details);
+	VALUES ($1::integer,4 ,'orders', 1, 0,details);
 	RETURN 'Successfully Updated';
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -189,11 +189,11 @@ END;
 $BODY$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION getbalance(varchar(20),varchar(20)) RETURNS double precision AS $BODY$
-	SELECT (SELECT round(COALESCE(SUM(points),0.0)+COALESCE(SUM(bonus),0.0))AS amount
-	FROM points WHERE son = $2 AND pcc = $1)-(SELECT COALESCE(sum(order_total_amount),0.0)AS sum
-	FROM vw_orders WHERE son = $2 AND pcc = $1);
-$BODY$ LANGUAGE sql;
+CREATE OR REPLACE FUNCTION getbalance(integer) RETURNS real AS $$
+	SELECT COALESCE(sum(dr - cr), 0)
+	FROM vw_son_statement
+	WHERE entity_id = $1;
+$$ LANGUAGE sql;
 
 
 CREATE SEQUENCE batch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1;

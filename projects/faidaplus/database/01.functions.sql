@@ -190,11 +190,10 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-
-CREATE OR REPLACE FUNCTION getbalance(varchar(20),varchar(20)) RETURNS double precision AS $BODY$
+CREATE OR REPLACE FUNCTION getbalance(varchar(20)) RETURNS double precision AS $BODY$
 	SELECT (SELECT round(COALESCE(SUM(points),0.0)+COALESCE(SUM(bonus),0.0))AS amount
-	FROM points WHERE son = $2 AND pcc = $1)-(SELECT COALESCE(sum(order_total_amount),0.0)AS sum
-	FROM vw_orders WHERE son = $2 AND pcc = $1);
+	FROM points WHERE entity_id = $1::integer)-(SELECT COALESCE(sum(order_total_amount),0.0)AS sum
+	FROM vw_orders WHERE entity_id = $1::integer);
 $BODY$ LANGUAGE sql;
 
 CREATE SEQUENCE batch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1;

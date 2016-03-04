@@ -19,8 +19,9 @@
       sum(vw_points.bonus) as bonus,
       vw_orgs.org_name
      FROM vw_points
-       JOIN vw_orgs ON vw_points.pcc::text = vw_orgs.pcc::text
-	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text) AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
+       JOIN vw_orgs ON vw_points.org_id = vw_orgs.org_id
+	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text)
+	 AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
 	GROUP BY vw_points.period,ticket_period,vw_points.pcc,vw_orgs.org_name
 	ORDER BY vw_orgs.org_name ASC;]]>
 	</queryString>
