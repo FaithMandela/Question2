@@ -46,7 +46,7 @@ DECLARE
 BEGIN
 
 IF (TG_OP = 'INSERT') THEN
-NEW.entity_id := nextval('entitys_entity_id_seq');
+update applicants set entity_id := 0;
 else
 END IF;
 

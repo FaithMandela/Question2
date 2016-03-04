@@ -25,15 +25,16 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
+	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_name, vw_contributions.contribution_amount, vw_contributions.merry_go_round_percentage, vw_contributions.actual_amount
-FROM vw_contributions]]>
+FROM vw_contributions
+ORDER BY contribution_type_name]]>
 	</queryString>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="contribution_amount" class="java.lang.Double"/>
-	<field name="merry_go_round_percentage" class="java.lang.Double"/>
-	<field name="actual_amount" class="java.lang.Double"/>
+	<field name="contribution_amount" class="java.lang.Float"/>
+	<field name="merry_go_round_percentage" class="java.lang.Float"/>
+	<field name="actual_amount" class="java.lang.Float"/>
 	<variable name="total" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{actual_amount}]]></variableExpression>
 	</variable>

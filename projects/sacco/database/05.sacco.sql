@@ -238,3 +238,84 @@ CREATE INDEX members_address_id ON members (address_id);
  
  
 ALTER TABLE entitys ADD exit_amount REAL default 0;
+
+
+
+
+
+
+
+CREATE TABLE kin_types (
+	kin_type_id				serial primary key,
+	org_id					integer references orgs,
+	kin_type_name			varchar(50),
+	details					text
+);
+CREATE INDEX kin_types_org_id ON kin_types(org_id);
+
+CREATE TABLE kins (
+	kin_id					serial primary key,
+	entity_id				integer references entitys,
+	kin_type_id				integer references kin_types,
+	org_id					integer references orgs,
+	full_names				varchar(120),
+	date_of_birth			date,
+	identification			varchar(50),
+	relation				varchar(50),
+	emergency_contact		boolean default false not null,
+	beneficiary				boolean default false not null,
+	beneficiary_ps			real,
+	details					text
+);
+CREATE INDEX kins_entity_id ON kins (entity_id);
+CREATE INDEX kins_kin_type_id ON kins (kin_type_id);
+CREATE INDEX kins_org_id ON kins(org_id);
+
+
+CREATE TABLE employment (
+	employment_id				serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	employer_names				varchar(120),
+	current_branch				varchar (120),
+	staff_number				varchar(120),			
+	employer_address			varchar(50),
+	employer_postal_code			varchar(50),
+	employer_contact_person			varchar(120),
+	employer_email				varchar(50),
+	details					text
+);
+CREATE INDEX employment_entity_id ON employment (entity_id);
+CREATE INDEX employment_org_id ON employment(org_id);
+
+
+Create table member_business(
+	member_business_id 			serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	business_name				varchar(120),
+	nature_of_business			varchar(120),
+	business_address			varchar(120),
+	business_location			varchar(120),
+	business_telephone			varchar(120),
+	business_telephone_1			varchar(120),			
+	business_email				varchar(120),
+	business_area_code			varchar(120),
+	registration_particulars		varchar(240),
+	details					text
+);
+CREATE INDEX member_business_entity_id ON member_business (entity_id);
+CREATE INDEX member_business_org_id ON member_business(org_id);
+
+
+CREATE TABLE recruiting_agent(
+	recruiting_agent_id  		serial primary key,
+	entity_id			integer references entitys,
+	entity_name			 varchar(120),
+	org_id				integer references orgs,
+	details				text
+);
+CREATE INDEX recruiting_agent_entity_id ON recruiting_agent (entity_id);
+CREATE INDEX recruiting_agent_org_id ON recruiting_agent (org_id);
+
+Alter table members add recruiting_agent_id integer references recruiting_agent;

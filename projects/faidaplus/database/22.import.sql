@@ -240,6 +240,19 @@ CREATE FOREIGN TABLE i_basket_shop_item (
 )
 SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'basket_shop_item');
 
+CREATE FOREIGN TABLE i_lost_order (
+	id_lost_order			integer, 
+	rel_id_basket			integer, 
+	rel_id_batch			integer, 
+	date_time			timestamp, 
+	consultant			varchar(100), 
+	amount			DECIMAL, 
+	rel_id_basket_status			integer, 
+	rel_pcc			varchar(4), 
+	rel_son			varchar(2), 
+	rel_id_user			integer
+)
+SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'lost_order');
 
 ------- Import script
 INSERT INTO suppliers (supplier_id, supplier_name) VALUES(0, 'Travelport');
@@ -290,6 +303,7 @@ ORDER BY c.id_user;
 
 
 UPDATE entitys SET entity_name = initcap(trim(entity_name)),  pcc_son = upper(trim(pcc_son)), son = upper(trim(son)), primary_email = lower(trim(primary_email)), user_name = lower(trim(user_name));
+UPDATE entitys SET change_pcc = pcc_son, change_son = son;
 
 INSERT INTO towns(town_id, town_name, aramex)
 SELECT id_town, town, aramex::boolean
@@ -361,4 +375,29 @@ $$ LANGUAGE SQL;
 UPDATE orders SET order_total_amount = get_order_total(order_id);
 
 	
+INSERT INTO orders (order_id, order_status, order_date, order_total_amount, entity_id)
+SELECT a.rel_id_basket, b.status, date_time::date, a.amount,
+	(CASE WHEN c.id_user is null THEN 0 ELSE a.rel_id_user END) as entity_id
+FROM i_lost_order a INNER JOIN i_basket_status b ON a.rel_id_basket_status = b.id_basket_status
+	LEFT JOIN i_user c ON a.rel_id_user = c.id_user;
+	
+SELECT pg_catalog.setval('batch_id_seq', 123, true);
+SELECT setval('public.currency_currency_id_seq', 4);
+SELECT setval('public.entity_subscriptions_entity_subscription_id_seq', 1850);
+SELECT setval('public.entity_types_entity_type_id_seq', 3);
+SELECT setval('public.entitys_entity_id_seq', 2381);
+SELECT setval('public.fiscal_years_fiscal_year_id_seq', 2016);
+SELECT setval('public.order_details_order_details_id_seq', 20235);
+SELECT setval('public.orders_order_id_seq', 10597);
+SELECT setval('public.orgs_org_id_seq', 3124);
+SELECT setval('public.periods_period_id_seq', 110);
+SELECT setval('public.points_points_id_seq', 1612625);
+SELECT setval('public.product_category_product_category_id_seq', 10);
+SELECT setval('public.products_product_id_seq', 174);
+SELECT setval('public.subscription_levels_subscription_level_id_seq', 2);
+SELECT setval('public.suppliers_supplier_id_seq', 17);
+SELECT setval('public.sys_logins_sys_login_id_seq', 1);
+SELECT setval('public.towns_town_id_seq', 59);
+
+
 

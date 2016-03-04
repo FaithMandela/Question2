@@ -1196,7 +1196,11 @@ CREATE VIEW coursechecklist AS
 		courseoutline.coursetitle, courseoutline.minor, courseoutline.elective, courseoutline.credithours, courseoutline.nogpa, courseoutline.gradeid,
 		courseoutline.content_level, courseoutline.gradeweight, courseoutline.courseweight, courseoutline.prereqpassed,
 		
+<<<<<<< HEAD
+		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.courseid) as coursepased
+=======
 		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.majorid) as coursepased
+>>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
 		
 	FROM courseoutline;
 

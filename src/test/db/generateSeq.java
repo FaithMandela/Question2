@@ -11,7 +11,7 @@ public class generateSeq {
     public void generate() {  
 		try{
 			//Connection con = DriverManager.getConnection("jdbc:mysql://192.168.0.20:3306/acordhr", "root", "");
-			Connection con = DriverManager.getConnection("jdbc:postgresql://192.168.0.3/hr", "root", "invent2k");
+			Connection con = DriverManager.getConnection("jdbc:postgresql://127.0.0.1/faidaplus", "root", "invent2k");
 			
 			DatabaseMetaData dbmd = con.getMetaData();
 			String[] types = {"TABLE"};

@@ -18,6 +18,8 @@ ALTER TABLE orgs DROP CONSTRAINT orgs_org_sufix_key;
 ALTER TABLE entitys ADD salutation varchar(7);
 ALTER TABLE entitys ADD pcc_son varchar(7);
 ALTER TABLE entitys ADD son varchar(7);
+ALTER TABLE entitys ADD change_pcc varchar(7);
+ALTER TABLE entitys ADD change_son varchar(7);
 ALTER TABLE entitys ADD birth_date date;
 ALTER TABLE entitys ADD shipping text;
 ALTER TABLE entitys ADD phone_ph boolean default true;
@@ -29,6 +31,21 @@ ALTER TABLE entitys ADD user_status integer;
 ALTER TABLE entitys ADD sms_alert boolean default false;
 ALTER TABLE entitys ADD email_alert boolean default false;
 ALTER TABLE entitys ADD newsletter boolean default false;
+
+CREATE TABLE change_pccs (
+	change_pcc_id			serial primary key,
+ 	entity_id				integer references entitys,
+
+ 	son						varchar(7),
+ 	pcc						varchar(12),
+ 	change_son				varchar(7),
+ 	change_pcc				varchar(12),
+
+ 	approve_status			varchar(16) default 'Draft' not null,
+ 	workflow_table_id		integer,
+ 	application_date		timestamp default now(),
+ 	action_date				timestamp
+);
 
 CREATE TABLE towns (
 	town_id					serial primary key,
@@ -273,7 +290,7 @@ CREATE VIEW vw_purged_consultant AS
 CREATE VIEW vw_points AS
 	SELECT points.points_id, points.period_id,points.org_id, periods.start_date as period,
 		to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
-		points.pcc, points.son, points.segments, points.amount,
+		points.entity_id, points.pcc, points.son, points.segments, points.amount,
 		points.points, points.bonus, vw_orgs.org_name
 	FROM points JOIN vw_orgs ON points.org_id = vw_orgs.org_id
 		INNER JOIN periods ON points.period_id = periods.period_id;
@@ -311,8 +328,6 @@ CREATE OR REPLACE VIEW vw_son_statement AS
 	FROM vw_orders
 	JOIN vw_order_details ON vw_orders.order_id = vw_order_details.order_id)) a
 	ORDER BY a.order_date;
-
-
 
 
 CREATE VIEW vw_statement AS
