@@ -14,6 +14,10 @@
 	<parameter name="filter_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[SELECT vw_loan_monthly.entity_id, vw_loan_monthly.entity_name, vw_loan_monthly.loan_type_name, vw_loan_monthly.loan_id,
 vw_loan_monthly.loan_date, vw_loan_monthly.principle, vw_loan_monthly.interest, vw_loan_monthly.monthly_repayment,
@@ -21,6 +25,7 @@ vw_loan_monthly.repayment_period, vw_loan_monthly.loan_balance,
 vw_loan_monthly.start_date, vw_loan_monthly.interest_amount, vw_loan_monthly.interest_paid, vw_loan_monthly.repayment
 FROM vw_loan_monthly
 WHERE (period_id = '$P!{filter_id}')
+$P!{organd}
 ORDER BY vw_loan_monthly.loan_date asc]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

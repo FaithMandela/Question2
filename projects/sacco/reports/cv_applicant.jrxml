@@ -19,13 +19,17 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_applicants.applicant_name, vw_applicants.date_of_birth,vw_applicants.gender_name, vw_applicants.language,
 	vw_applicants.marital_status_name, vw_applicants.sys_country_name,
 	vw_applicants.objective, vw_applicants.interests,
 	address.post_office_box, address.postal_code, address.town, address.mobile, address.email
 FROM  vw_applicants LEFT JOIN address ON vw_applicants.entity_id = address.table_id
-WHERE ((address.table_name is null) OR (address.table_name = 'applicant')) AND (vw_applicants.entity_id ='$P!{filterid}');]]>
+WHERE ((address.table_name is null) OR (address.table_name = 'applicant')) AND (vw_applicants.entity_id ='$P!{filterid}')
+$P!{organd}]]>
 	</queryString>
 	<field name="applicant_name" class="java.lang.String"/>
 	<field name="date_of_birth" class="java.sql.Date"/>

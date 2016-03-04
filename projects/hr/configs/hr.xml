@@ -166,15 +166,7 @@
 					<DATA key="S">Single</DATA>
 				</COMBOLIST>
 				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="30" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
-				<TEXTFIELD w="150" title="Bank Account" y="50" h="20" x="10">bank_account</TEXTFIELD>
-				<GRIDBOX w="430" title="Bank Branch" lptable="vw_bank_branch" webgrid="6" y="70" h="20" x="10" lpfield="(bank_name || ', ' || bank_branch_name)">bank_branch_id
-					<GRID name="Bank Branch" keyfield="bank_branch_id" orderby="bank_name" table="vw_bank_branch">
-						<TEXTFIELD w="75" title="Bank">bank_name</TEXTFIELD>
-						<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
-						<TEXTFIELD w="75" title="Bank Branch Code">bank_branch_code</TEXTFIELD>
-					</GRID>
-				</GRIDBOX>
-				<TEXTFIELD w="430" title="Language" y="90" h="20" x="10">language</TEXTFIELD>
+				<TEXTFIELD w="430" title="Language" y="50" h="20" x="10">language</TEXTFIELD>
 				<TEXTAREA w="550" tab="Objective" y="1" h="170" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="170" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
@@ -617,7 +609,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Pay Slip" key="16" h="550">
-		<GRID name="Year" keyfield="period_year" table="vw_period_year">
+		<GRID name="Year" keyfield="period_year" orderby="period_year desc" table="vw_period_year">
 			<TEXTFIELD w="430" title="Period Year" y="10" h="70" x="10">period_year</TEXTFIELD>
 			<GRID name="Payroll" keyfield="employee_month_id" linkfield="period_year" table="vw_employee_month" where="(activated = true)" user="entity_id">
 				<TEXTFIELD w="75" title="Month">period_month</TEXTFIELD>

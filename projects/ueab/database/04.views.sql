@@ -838,7 +838,8 @@ CREATE OR REPLACE FUNCTION getcoursedone(varchar(12), varchar(12)) RETURNS float
 		INNER JOIN grades ON qgrades.gradeid = grades.gradeid)
 		INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
 	WHERE (qstudents.approved = true) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW')
-	AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
+		AND (qgrades.dropped = false)
+		AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getcoursetransfered(varchar(12), varchar(12)) RETURNS float AS $$
@@ -1195,7 +1196,11 @@ CREATE VIEW coursechecklist AS
 		courseoutline.coursetitle, courseoutline.minor, courseoutline.elective, courseoutline.credithours, courseoutline.nogpa, courseoutline.gradeid,
 		courseoutline.content_level, courseoutline.gradeweight, courseoutline.courseweight, courseoutline.prereqpassed,
 		
+<<<<<<< HEAD
 		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.courseid) as coursepased
+=======
+		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.majorid) as coursepased
+>>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
 		
 	FROM courseoutline;
 

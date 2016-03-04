@@ -1,47 +1,153 @@
---DROP TABLE etravel;
+
 CREATE TABLE etravel(
     etravel_id                      serial primary key,
-    transfer_assignment_id          integer,
-    ticket_airline                  varchar(10) NOT NULL,
-    ticket_number                   varchar(20) NOT NULL,
-    ticket_location                 varchar(10) NOT NULL,
-    ticket_date                     date NOT NULL,
-    ticket_currency                 varchar(10) NOT NULL,
-    ticket_agent                    varchar(10) NOT NULL,
-    ticket_pax_name                 varchar(75) NOT NULL,
-    car_reference                   real NOT NULL,
-    car_type                        varchar(10) NOT NULL,
-    car_renting_location            varchar(75) NOT NULL,
-    car_voucher_issued              date NOT NULL,
-    car_rate                        real DEFAULT 0 NOT NULL,
-    car_from_date                   date NOT NULL,
-    car_to_date                     date,
-    ticket_booking_clerk            varchar(10),
-    ticket_destination_tax          real DEFAULT 0 NOT NULL,
-    ticket_commission_amount_1      real DEFAULT 0 NOT NULL,
-    ticket_discount_amount_1        real DEFAULT 0 NOT NULL,
-    ts_service_1                    varchar(10) NOT NULL,
-    ts_amount_1                     real DEFAULT 0 NOT NULL,
-    ts_service_2                    varchar(10) NOT NULL,
-    ts_amount_2                     real DEFAULT 0 NOT NULL,
-    ticket_customer_1               varchar(10),
-    ticket_lpo                      varchar(25),
-    ticket_lpo_date                 date,
-    ticket_status                   varchar(1) DEFAULT 'S' NOT NULL,
-    car_remarks                     varchar(200),
-    car_renting_station             varchar(50) NOT NULL,
-    car_drop_station                varchar(50) NOT NULL,
-    ticket_retention_charges_air    real DEFAULT 0 NOT NULL,
-    ticket_retention_charges_agent  real DEFAULT 0 NOT NULL,
-    ready			                boolean default false,
+    voucher_ref                     varchar(50), 
+    entity_id                       integer, 
+    entity_name                     varchar(70), 
+    user_name                       varchar(100), 
+    driver_id                       integer, 
+    driver_name                     varchar(100), 
+    is_backup                       boolean default false, 
+    air_agent_code                  varchar(100), 
+    car_type_code                   varchar(10), 
+    transfer_id                     integer, 
+    record_locator                  varchar(10), 
+    customer_code                   varchar(20), 
+    customer_name                   varchar(70), 
+    currency_id                     varchar(4), 
+    agreed_amount                   real DEFAULT 0 NOT NULL, 
+    booking_location                varchar(10), 
+    booking_date                    TIMESTAMP, 
+    payment_details                 varchar(255), 
+    reference_data                  varchar(255), 
+    pax_no                          integer, 
+    transfer_cancelled              boolean default false,
+    is_group                        boolean default false, 
+    create_source                   integer, 
+    group_contact                   boolean default false, 
+    group_member                    boolean default false, 
+    passanger_id                    integer, 
+    passanger_name                  varchar(70), 
+    passanger_mobile                varchar(15), 
+    passanger_email                 varchar(50), 
+    pickup_time                     varchar(10), 
+    pickup                          varchar(50), 
+    dropoff                         varchar(50), 
+    other_preference                varchar(225), 
+    amount                          real DEFAULT 0 NOT NULL, 
+    processed                       boolean default false, 
+    pax_cancelled                   boolean default false, 
+    pickup_date                     DATE, 
+    tab                             integer, 
+    transfer_assignment_id          integer, 
+    car_id                          integer, 
+    confirmation_code               varchar(50), 
+    kms_out                         varchar(10),  
+    kms_in                          varchar(10),  
+    time_out                        varchar(10),  
+    time_in                         varchar(10),  
+    no_show                         boolean default false, 
+    no_show_reason                  varchar(255), 
+    closed                          boolean default false,
+    cancelled                       boolean default false,  
+    cancel_reason                   varchar(50), 
+    transfer_flight_id              integer, 
+    start_time                      time, 
+    end_time                        time, 
+    flight_date                     DATE, 
+    start_airport                   varchar(20), 
+    end_airport                     varchar(20), 
+    airline                         varchar(10),  
+    flight_num                      varchar(20),
+    create_key                      integer,
     picked                          boolean default false
 );
 
 
+INSERT INTO etravel(voucher_ref,entity_id,entity_name,user_name,driver_id,driver_name,is_backup,air_agent_code,car_type_code,transfer_id,record_locator,customer_code,customer_name,currency_id,agreed_amount,booking_location,booking_date,payment_details,reference_data,pax_no,transfer_cancelled,is_group,create_source,group_contact,group_member,passanger_id,passanger_name,passanger_mobile,passanger_email,pickup_time,pickup,dropoff,other_preference, amount,processed,pax_cancelled,pickup_date,tab,transfer_assignment_id,car_id,confirmation_code,kms_out,kms_in,time_out,time_in,no_show,no_show_reason,closed,cancelled,cancel_reason,transfer_flight_id,start_time,end_time,flight_date,start_airport,end_airport,airline,flight_num,create_key)
+(SELECT voucher_ref,entity_id,entity_name,user_name,driver_id,driver_name,is_backup,air_agent_code,car_type_code,transfer_id,record_locator,customer_code,customer_name,currency_id,agreed_amount,booking_location,booking_date,
+payment_details,reference_data,pax_no,transfer_cancelled,is_group,create_source,group_contact,group_member,passanger_id,
+passanger_name,passanger_mobile,passanger_email,pickup_time,pickup,dropoff,other_preference, amount,processed,
+pax_cancelled,pickup_date,tab,transfer_assignment_id,car_id,confirmation_code,kms_out,kms_in,
+time_out,time_in,no_show,no_show_reason,closed,cancelled,cancel_reason,
+transfer_flight_id,start_time,end_time,flight_date,start_airport ,end_airport ,airline,flight_num,create_key
+FROM vw_transfer_assignments_etravel ORDER BY transfer_id ASC
+);
+
+CREATE TABLE ID_CAR_BOOKINGS_BLOAT(
+    CAR_BOOKING_ID                  NUMBER NOT NULL,
+    voucher_ref                     VARCHAR2(50), 
+    entity_id                       NUMBER, 
+    entity_name                     VARCHAR2(70), 
+    user_name                       VARCHAR2(50), 
+    driver_id                       NUMBER, 
+    driver_name                     VARCHAR2(150), 
+    is_backup                       NUMBER DEFAULT 0, 
+    air_agent_code                  VARCHAR2(150), 
+    car_type_code                   VARCHAR2(50), 
+    transfer_id                     NUMBER, 
+    record_locator                  VARCHAR2(10), 
+    customer_code                   VARCHAR2(20), 
+    customer_name                   VARCHAR2(150), 
+    currency_id                     VARCHAR2(10), 
+    agreed_amount                   FLOAT DEFAULT 0, 
+    booking_location                VARCHAR2(5), 
+    booking_date                    TIMESTAMP, 
+    payment_details                 VARCHAR2(255), 
+    reference_data                  VARCHAR2(255), 
+    pax_no                          NUMBER, 
+    transfer_cancelled              NUMBER DEFAULT 0, 
+    is_group                        NUMBER DEFAULT 0, 
+    create_source                   NUMBER, 
+    group_contact                   NUMBER DEFAULT 0, 
+    group_member                    NUMBER DEFAULT 0, 
+    passanger_id                    NUMBER, 
+    passanger_name                  VARCHAR2(150), 
+    passanger_mobile                VARCHAR2(20), 
+    passanger_email                 VARCHAR2(100), 
+    pickup_time                     VARCHAR2(10), 
+    pickup                          VARCHAR2(100), 
+    dropoff                         VARCHAR2(100), 
+    other_preference                VARCHAR2(225), 
+    amount                          FLOAT, 
+    processed                       NUMBER DEFAULT 0, 
+    pax_cancelled                   NUMBER DEFAULT 0, 
+    pickup_date                     VARCHAR2(20), 
+    tab                             NUMBER DEFAULT 0, 
+    transfer_assignment_id          NUMBER DEFAULT 0, 
+    car_id                          NUMBER, 
+    confirmation_code               VARCHAR2(100), 
+    kms_out                         VARCHAR2(15),  
+    kms_in                          VARCHAR2(15),  
+    time_out                        VARCHAR2(10),  
+    time_in                         VARCHAR2(10),  
+    no_show                         NUMBER DEFAULT 0, 
+    no_show_reason                  VARCHAR2(255), 
+    closed                          NUMBER DEFAULT 0,
+    cancelled                       NUMBER DEFAULT 0,  
+    cancel_reason                   VARCHAR2(255), 
+    transfer_flight_id              NUMBER, 
+    start_time                      VARCHAR2(10), 
+    end_time                        VARCHAR2(10), 
+    flight_date                     VARCHAR2(10), 
+    start_airport                   VARCHAR2(20),
+    end_airport                     VARCHAR2(20), 
+    airline                         VARCHAR2(20),  
+    flight_num                      VARCHAR2(10),
+    create_key                      NUMBER,
+    CONSTRAINT ID_CAR_BOOKINGS_BLOAT_PK PRIMARY KEY 
+      (
+        CAR_BOOKING_ID 
+      )
+      ENABLE
+);
+
+-- etravel_id, voucher_ref,entity_id,entity_name,user_name,driver_id,driver_name,is_backup,air_agent_code,car_type_code,transfer_id,record_locator,customer_code,customer_name,currency_id,agreed_amount,booking_location,booking_date,payment_details,reference_data,pax_no,transfer_cancelled,is_group,create_source,group_contact,group_member,passanger_id,passanger_name,passanger_mobile,passanger_email,pickup_time,pickup,dropoff,other_preference, amount,processed,pax_cancelled,pickup_date,tab,transfer_assignment_id,car_id,confirmation_code,kms_out,kms_in,time_out,time_in,no_show,no_show_reason,closed,cancelled,cancel_reason,transfer_flight_id,start_time,end_time,flight_date,start_airport,end_airport,airline,flight_num,create_key
 
 -- Function: ins_transfer_assignments()
 
 -- DROP FUNCTION ins_transfer_assignments();
+
 CREATE OR REPLACE FUNCTION ins_transfer_assignments()
   RETURNS trigger AS
 $BODY$
@@ -149,8 +255,71 @@ $BODY$
 
         UPDATE passangers SET processed = true WHERE passanger_id = NEW.passanger_id;
 
+        -- create sync to etravel
+        IF(SELECT is_group FROM vw_transfer_assignments_etravel WHERE transfer_assignment_id = NEW.transfer_assignment_id) THEN
+            RAISE EXCEPTION 'GROUP ';
+        ELSE
+            RAISE EXCEPTION 'SINGLE ';
+            INSERT INTO etravel(voucher_ref,entity_id,entity_name,user_name,driver_id,driver_name,is_backup,air_agent_code,car_type_code,transfer_id,record_locator,customer_code,customer_name,currency_id,agreed_amount,booking_location,booking_date,payment_details,reference_data,pax_no,transfer_cancelled,is_group,create_source,group_contact,group_member,passanger_id,passanger_name,passanger_mobile,passanger_email,pickup_time,pickup,dropoff,other_preference, amount,processed,pax_cancelled,pickup_date,tab,transfer_assignment_id,car_id,confirmation_code,kms_out,kms_in,time_out,time_in,no_show,no_show_reason,closed,cancelled,cancel_reason,transfer_flight_id,start_time,end_time,flight_date,start_airport,end_airport,airline,flight_num,create_key)
+            (
+                SELECT voucher_ref,entity_id,entity_name,user_name,driver_id,driver_name,is_backup,air_agent_code,car_type_code,transfer_id,record_locator,customer_code,customer_name,currency_id,agreed_amount,booking_location,booking_date,
+                    payment_details,reference_data,pax_no,transfer_cancelled,is_group,create_source,group_contact,group_member,passanger_id,
+                    passanger_name,passanger_mobile,passanger_email,pickup_time,pickup,dropoff,other_preference, amount,processed,
+                    pax_cancelled,pickup_date,tab,transfer_assignment_id,car_id,confirmation_code,kms_out,kms_in,
+                    time_out,time_in,no_show,no_show_reason,closed,cancelled,cancel_reason,
+                    transfer_flight_id,start_time,end_time,flight_date,start_airport ,end_airport ,airline,flight_num,create_key
+                FROM vw_transfer_assignments_etravel
+                WHERE transfer_assignment_id = NEW.transfer_assignment_id;
+            );
+        END IF;
 
-        SELECT entitys.user_name INTO v_pccson
+
+        
+
+    	RETURN NULL;
+    END;
+    $BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100;
+ALTER FUNCTION ins_transfer_assignments()
+  OWNER TO postgres;
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+-- select * from etravel
+
+--delete from etravel
+
+--select * from etravel;
+
+
+INSERT INTO etravel(voucher_ref,entity_id,entity_name,user_name,driver_id,driver_name,is_backup,air_agent_code,car_type_code,transfer_id,record_locator,customer_code,customer_name,currency_id,agreed_amount,booking_location,booking_date,payment_details,reference_data,pax_no,transfer_cancelled,is_group,create_source,group_contact,group_member,passanger_id,passanger_name,passanger_mobile,passanger_email,pickup_time,pickup,dropoff,other_preference, amount,processed,pax_cancelled,pickup_date,tab,transfer_assignment_id,car_id,confirmation_code,kms_out,kms_in,time_out,time_in,no_show,no_show_reason,closed,cancelled,cancel_reason,transfer_flight_id,start_time,end_time,flight_date,start_airport,end_airport,airline,flight_num,create_key)
+(SELECT voucher_ref,entity_id,entity_name,user_name,driver_id,driver_name,is_backup,air_agent_code,car_type_code,transfer_id,record_locator,customer_code,customer_name,currency_id,agreed_amount,booking_location,booking_date,
+payment_details,reference_data,pax_no,transfer_cancelled,is_group,create_source,group_contact,group_member,passanger_id,
+passanger_name,passanger_mobile,passanger_email,pickup_time,pickup,dropoff,other_preference, amount,processed,
+pax_cancelled,pickup_date,tab,transfer_assignment_id,car_id,confirmation_code,kms_out,kms_in,
+time_out,time_in,no_show,no_show_reason,closed,cancelled,cancel_reason,
+transfer_flight_id,start_time,end_time,flight_date,start_airport ,end_airport ,airline,flight_num,create_key
+FROM vw_transfer_assignments_etravel ORDER BY transfer_id ASC LIMIT 10
+
+);
+
+
+
+
+SELECT entitys.user_name INTO v_pccson
             FROM vw_passangers
             INNER JOIN entitys ON entitys.entity_id = vw_passangers.entity_id
             WHERE vw_passangers.passanger_id = NEW.passanger_id;
@@ -173,53 +342,6 @@ $BODY$
                     'S', '00', v_rec.pickup, 
                     v_rec.dropoff,
                     true, false);
-
-    	RETURN NULL;
-    END;
-    $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION ins_transfer_assignments()
-  OWNER TO postgres;
-
-
-
-
-
-
-
-
-===
-    SELECT AIR_AGENT_CODE, AIR_AGENT_NAME FROM ID_AIRLINE_AGENT_MASTER WHERE AIR_AGENT_AP_GROUP = "CAR";
-
-
-  CREATE TABLE "KE022T3"."ID_AIRLINE_AGENT_MASTER" 
-   (	"AIR_AGENT_COMPANY" VARCHAR2(10 BYTE) NOT NULL ENABLE, 
-	"AIR_AGENT_CODE" VARCHAR2(10 BYTE) NOT NULL ENABLE, 
-	"AIR_AGENT_NAME" VARCHAR2(75 BYTE) NOT NULL ENABLE, 
-	"AIR_AGENT_ACCOUNT" VARCHAR2(150 BYTE), 
-	"AIR_AGENT_AP" VARCHAR2(10 BYTE) NOT NULL ENABLE, 
-	"AIR_AGENT_AP_GROUP" VARCHAR2(10 BYTE), 
-	"AIR_AGENT_AR" VARCHAR2(10 BYTE) NOT NULL ENABLE, 
-	"AIR_AGENT_AR_GROUP" VARCHAR2(10 BYTE), 
-	"AIR_AGENT_IATA_AR" VARCHAR2(10 BYTE), 
-	"AIR_AGENT_IATA_GROUP" VARCHAR2(10 BYTE), 
-	"AIR_AGENT_CREATED_BY" VARCHAR2(10 BYTE), 
-	"AIR_AGENT_CREATED_ON" DATE, 
-	"AIR_AGENT_MODIFIED_BY" VARCHAR2(10 BYTE), 
-	"AIR_AGENT_MODIFIED_ON" DATE, 
-	"AIR_AGENT_STATUS" VARCHAR2(1 BYTE) DEFAULT 'A' NOT NULL ENABLE, 
-	"AIR_AGENT_IATA_CODE" VARCHAR2(10 BYTE), 
-	 CONSTRAINT "AIRLINE_AGENT_KEY" PRIMARY KEY ("AIR_AGENT_COMPANY", "AIR_AGENT_CODE")
-  USING INDEX PCTFREE 10 INITRANS 2 MAXTRANS 255 COMPUTE STATISTICS 
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT)
-  TABLESPACE "TRAVEL_DATA"  ENABLE
-   ) PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
-  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
-  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT)
-  TABLESPACE "TRAVEL_DATA" ;
-
-
+*/
 
 

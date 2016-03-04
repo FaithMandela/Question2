@@ -98,20 +98,6 @@ CREATE VIEW vw_period_month AS
 	GROUP BY org_id, month_id, period_year, period_month
 	ORDER BY month_id, period_year, period_month;
 
-CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
-BEGIN
-	INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
-	SELECT NEW.fiscal_year_id, NEW.org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
-	FROM (SELECT CAST(generate_series(fiscal_year_start, fiscal_year_end, '1 month') as date) as period_start
-		FROM fiscal_years WHERE fiscal_year_id = NEW.fiscal_year_id) as a;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_fiscal_years AFTER INSERT ON fiscal_years
-    FOR EACH ROW EXECUTE PROCEDURE ins_fiscal_years();
-
 CREATE OR REPLACE FUNCTION ins_periods() RETURNS trigger AS $$
 DECLARE
 	year_close 		BOOLEAN;

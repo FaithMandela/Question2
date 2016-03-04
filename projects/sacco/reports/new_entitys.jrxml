@@ -9,6 +9,18 @@
 	<parameter name="to_date" class="java.util.Date">
 		<defaultValueExpression><![CDATA["2016-3-3"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="org_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportpath" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="org_where" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT entity_name,date_enroled, function_role,entity_role,entity_type_name,
 	entity_type_name,
@@ -16,9 +28,11 @@
 	is_active,
 	'$P!{from_date}'::date as starting_from
 
-FROM vw_entitys_types
+FROM vw_entitys
 
-WHERE (date_enroled::date) >= '$P!{from_date}' AND  (date_enroled::date) <= '$P!{to_date}' and entity_role not like 'subscriptions' and entity_id not in(1,0);]]>
+WHERE (date_enroled::date) >= '$P!{from_date}' AND  (date_enroled::date) <= '$P!{to_date}' and  entity_role not like 'subscriptions' and entity_id not in(1,0)
+
+$P!{organd};]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="date_enroled" class="java.sql.Timestamp"/>

@@ -14,11 +14,19 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="org_where" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_investments.entity_id,vw_investments.entity_name,vw_investments.investment_id,
 vw_investments.investment_type_id,vw_investments.maturity_date,vw_investments.invest_amount,vw_investments.yearly_dividend, vw_investments.withdrawal_date,vw_investments.withdrwal_amount,vw_investments.period_years,vw_investments.default_interest,vw_investments.return_on_investment, vw_investments.application_date, vw_investments.approve_status, vw_investments.workflow_table_id,vw_investments.action_date,vw_investments.details, vw_investments.investment_type_name
    FROM vw_investments
-WHERE (vw_investments.entity_id = '$P!{entity_id}')
+WHERE vw_investments.entity_id = '$P!{entity_id}'
+$P!{organd}
 ORDER BY vw_investments.maturity_date;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

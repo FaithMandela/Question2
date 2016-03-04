@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (8, 0, 'STUDENT SIGN OUT FORM', 'SSOF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle">
 <p></p><div align="center">UNIVERSITY OF EASTERN AFRICA, BARTON UNIVERSITY OF EASTERN AFRICA, BARTON<br>P.O. BOX 2500  30100 ELDORET, KENYA, EAST AFRICA <br>&nbsp; TELEPHONE: 52471 <br>&nbsp; FAX:020-0023017 <br>&nbsp; FOR BOARDING STUDENTS ONLY <br></div><div align="right"><br></div><p></p>', '<div align="center">A SEVENTH-DAY ADVENTIST INSTITUTION OF HIGHER LEARNING<br>CHARTERED 1991<br></div><div align="center"><br></div>', NULL, NULL, NULL);
 INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (5, 0, 'UNIVERSITY OF EASTERN AFRICA, BARATON CHARTERED LEGAL NOTICE No. 111, 1991 ', 'ADD AND DROP FORM', NULL, '1', '0', '0', 0, '<p><img align="center"  src="ueab.png" alt="No  image"><br></p>
@@ -76,6 +77,129 @@ SELECT pg_catalog.setval('forms_form_id_seq', 20, true);
 
 
 
+=======
+DELETE FROM application_forms;
+DELETE FROM entry_forms;
+DELETE FROM sub_fields;
+DELETE FROM fields;
+DELETE FROM forms;
+
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (8, 0, 'STUDENT SIGN OUT FORM', 'SSOF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle">
+
+<p></p><div align="center">UNIVERSITY OF EASTERN AFRICA, BARTON UNIVERSITY OF EASTERN AFRICA, BARTON<br>P.O. BOX 2500  30100 ELDORET, KENYA, EAST AFRICA <br>&nbsp; TELEPHONE: 52471 <br>&nbsp; FAX:020-0023017 <br>&nbsp; FOR BOARDING STUDENTS ONLY <br></div><div align="right"><br></div><p></p>', '<div align="center">A SEVENTH-DAY ADVENTIST INSTITUTION OF HIGHER LEARNING<br>CHARTERED 1991<br></div><div align="center"><br></div>', NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (5, 0, 'UNIVERSITY OF EASTERN AFRICA, BARATON CHARTERED LEGAL NOTICE No. 111, 1991 ', 'ADD AND DROP FORM', NULL, '1', '0', '0', 0, '<p><img align="center"  src="ueab.png" alt="No  image"><br></p>
+
+
+
+<p align="center"> ADD AND DROP FORM</p>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (6, 0, 'GRADUATION APPLICATION AND AGREEMENT FORM', 'GRA', NULL, '1', '0', '0', 0, '<p><br></p>
+
+<p><img src="ueab.png" alt="No  image" align="middle"></p><p>GRADUATION APPLICATION AND AGREEMENT FORM</p>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (7, 0, 'Examination Request Form', 'ERF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle">
+
+<p></p><div align="center">UNIVERSITY OF EASTERN AFRICA, BARATON<br></div><div align="center">CHARTERED LEGAL NOTICE No. 111, 1991<br>REGISTRARS OFFICE<br>&nbsp;Examination Request Form<br></div><p></p>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (13, 0, 'APPLICATION TO REPEAT A COURSE FORM', 'ATRCF', NULL, '1', '0', '0', 0, '<p><img src="ueab.png" alt="No  image" align="middle"></p><p>UNIVERSITY OF EASTERN AFRICA, BARATON<br>P.O Box 2500-30100<br>CHARTERED LEGAL NOTICE No. 111, 1991</p><p><br>APPLICATION TO REPEAT A COURSE FORM<br><br></p>', 'When this form is dully filled, take it to the registrar who will present it to the Academic Standards Committee (ASC) for approval.<br><br>', NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (9, 0, 'CHANGE/ADDITION OF MAJOR REQUEST FORM', 'C/AHRF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle">
+
+
+
+<p>UNIVERSITY OF EASTERN AFRICA, BARATON<br>CHARTERED LEGAL NOTICE No. 111, 1991<br></p>', '<p>NOTE: No action will be taken if the student fails to submit a letter of consent from the Sponsor(s). The student is responsible for bringing all these Forms together with the attachments, to the registrars office.<br><br></p>', NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (11, 0, 'DIFERRED GRADE(DG) FORM', 'DGF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle"><br><br>UNIVERSITY OF EASTERN AFRICA, BARATON<br>P.O Box 2500-30100<br>ELDORET<br>CHARTERED LEGAL NOTICE No. 111, 1991<br><br>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (12, 0, 'PETITION TO RECEIVE AN INCOMPLETE WORK (IW)', 'PTRAIW', NULL, '1', '0', '0', 0, '<p><img src="ueab.png" alt="No  image" align="middle"><br></p><div align="center">UNIVERSITY OF EASTERN AFRICA, BARATON<br>CHARTERED LEGAL NOTICE No. 111, 1991<br><b>PETITION TO RECEIVE AN INCOMPLETE WORK (IW)</b><br><br></div><p></p>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (10, 0, 'INSTRUCTORS PETITION FORM FOR CHANGE OF GRADE', 'IPFCOG', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle">
+
+
+
+<p>UNIVERSITY OF EASTERN AFRICA, BARATON<br>P.O Box 2500-30100<br>ELDORET<br>CHARTERED LEGAL NOTICE No. 111, 1991</p><p align="center"><b>INSTRUCTORS PETITION FORM FOR CHANGE OF GRADE</b><br>NOTE: This form is filled by the instructor after being satisfied that there is a genuine reason to change of grade. It is required that the instructor fills this form within the first three weeks of the current trimester for change of a grade of the previous trimester. The instructor must make four copies of the duly filled and signed form and give the following.<br></p><ol><li>The Department Chairperson</li><li>The School Dean</li><li>The Registrar</li><li>The Instructor remains with copy<br></li></ol>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (14, 0, 'CHALLENGE EXAMINATION APPLICATION FORM', 'CEAF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image">
+
+
+
+<p></p><div align="center"><b>UNIVERSITY OF EASTERN AFRICA, BARATON<br>CHARTERED LEGAL NOTICE No. 111, 1991<br>CHALLENGE EXAMINATION APPLICATION FORM</b><br></div><p></p>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (15, 0, 'CAMPUS TRANSFER FORM', 'CTF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle">
+
+
+
+<p></p><div align="center"><b>UNIVERSITY OF EASTERN AFRICA, BARATON</b><br><b>P.O Box 2500-30100</b><br><b>ELDORET</b><br><b>CHARTERED LEGAL NOTICE No. 111, 1991</b><br></div><p></p>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (2, 0, 'APPLICATION FOR ADMISSION INTO CERTIFICATE/DIPLOMA COURSE', '2', 'registrations', '1', '0', '0', 1, '<img src="ueab.png" alt="No  image">
+
+<p><b>A Chartered-Seventh Day Adventist Institution of Higher Learning</b><br></p><p>The Registrar, Admissions and Records<br>P.O Box 2500, ELDORET, KENYA<br>Phone: 0326- 2625<br>Fax: (254) 0325- 2526<br><br>Please include the following when returning this form:<br>a. Certified photocopies of credentials<br>b. Application fee of Kshs. 1000 (non-refundable)<br>c. Two recent passport photographs (attach one to the form)<br>Please write legibly and in BLOCK LETTERS<br></p>', '<p>NOTE: The University of Eastern Africa, Baraton is a No Smoking, No Drinking and No Addictive Drug Use zone<br><br></p>', NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (16, 0, 'CHANGE OF PROGRAMME REQUEST FORM', 'COPRF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image" align="middle">
+
+
+
+<p></p><div align="center">UNIVERSITY OF EASTERN AFRICA, BARATON<br>CHARTERED LEGAL NOTICE No. 111, 1991<br>CHANGE OF PROGRAMME REQUEST FORM<br></div><p></p>', 'NOTE: No action will be taken if the student fails to submit a letter of consent from the Sponsor(s) and letter of agreement from the chairperson of the New Department. The Student is responsible for bringing all these Forms together with the attachments, to the registrars office.<br><br>', NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (3, 0, 'Application for Admission to Graduate Studies', '1', 'registrations', '1', '0', '0', 1, '<img src="ueab.png" alt="No  image"></img>
+
+<p>Please complete and sign this form and return it to the Registrar, University of Eastern Africa, Baraton, P.O. Box 2500, Eldoret, Kenya with:<br>1) A non-refundable application fee of US$ 30.00 or its equivalent in Kenya Shilling. 2) Certified photocopies of your College or University diplomas or&nbsp; certificates. 3) Two recent passport-size photos. 4) Three letters of recommendation from your referees in sealed envelopes. 5) Two certified copies of official transcripts from each College and University that you have attended (Ask the concerned institution to send the transcripts directly to the University). 6. Certified photocopy of your secondary school certificate. 7. Updated CV. If&nbsp; accepted you will be notified in writing. No applicant should make arrangements to report to the University 
+
+until he/she has received official letter of acceptance<br></p>', '<p>Important: If a document is written in a language other than English, please submit a certified copy of the document in the original language and its translated version in English. Incomplete supporting documents will cause delay in the admission process.<br><br></p>', NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (17, 0, 'TRANSFER OF CREDITS REQUEST FORM', 'TOCRF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image">
+
+
+
+<p></p><div align="center">UNIVERSITY OF EASTERN AFRICA, BARATON<br>CHARTERED LEGAL NOTICE No. 111, 1991<br>(OFFICE OF THE REGISTRAR)<br>TRANSFER OF CREDITS REQUEST FORM<br></div><p></p>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (18, 0, 'GROUP DIFERRED GRADE (DG) FORM', 'GDGF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image">
+
+
+
+<div align="center">
+
+
+
+UNIVERSITY OF EASTERN AFRICA, BARATON<br>P.O Box 2500-30100, ELDORET, KENYA<br>CHARTERED LEGAL NOTICE No. 111, 1991<br>GROUP DIFERRED GRADE (DG) FORM</div>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (19, 0, 'NG Examination Request Form', 'NGERF', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image">
+
+
+
+<div align="center">UNIVERSITY OF EASTERN AFRICA, BARATON<br>CHARTERED LEGAL NOTICE No. 111, 1991<br>REGISTRARS OFFICE<br>NG Examination Request Form<br></div>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (20, 0, 'PETITION FOR REMARK OF FINAL TRIMESTER EXAMINATION', 'PFROFTE', NULL, '1', '0', '0', 0, '<img src="ueab.png" alt="No  image">
+
+
+
+<div align="center">UNIVERSITY OF EASTERN AFRICA, BARATON<br>CHARTERED LEGAL NOTICE No. 111, 1991<br>PETITION FOR REMARK OF FINAL TRIMESTER EXAMINATION<br></div>NOTE: This form is to be filled in pentaruplicate (five copies) and distributed as follows:<br><ol><li>Student</li><li>Department Chairperson</li><li>School Dean</li><li>DVC-Academics</li><li>Registrar</li></ol>', NULL, NULL, NULL, NULL);
+INSERT INTO forms (form_id, org_id, form_name, form_number, table_name, version, completed, is_active, use_key, form_header, form_footer, default_values, default_sub_values, details) VALUES (1, 0, 'APPLICATION FOR ADMISSION FOR UNDERGRADUATES', 'AAU', 'application_forms', '1', '0', '0', 1, '<p align="center">CHARTERED, LEGAL NOTICE NO. 111.1991<br><br></p>
+<table>
+<tbody>
+<tr><td align="left">P.O Box 2500, Eldoret 30100, Kenya</td></tr>
+<tr><td align="left">Fax (254) 053-52263</td></tr>
+<tr><td align="left">Website: www.ueab.ac.ke</td></tr>
+<tr><td align="left">East Africa callers. Tel: 053-522625</td></tr>
+<tr><td align="left">International callers. Tel: (254) 053-522625</td></tr>
+<tr><td align="left">E-mail: admissions@ueab.ac.ke</td></tr>
+
+</tbody>
+</table>
+<br>
+
+<p>
+
+Please include the following when returning this form:
+
+<br>a. Certified photocopy(s) of Secondary School Certificate(s)
+<br>b. Other certified certificates/diplomas if applicable
+
+<br>c. Application fee of Ksh. 1,500/=/US $ 20 (non-refundable)
+
+<br>d. Two clear, recent passport-size photographs (4.5 sq.cm or 2 in. by 2 in.) Both ears should be clearly seen.
+
+<br>e. Two Application Evaluation/Recommendation in sealed envelopes.
+<br>f. Signed affidavit of support by parents/sponsor (for international students).
+
+</p>
+
+', '<p></p><p>NOTIFICATION OF ACCEPTANCE: If admitted,&nbsp; you will be notified in writing. No student should come to the University until he/she receives a formal admission letter. Comply with the information given in the admission letter. Failure to comply with the instructions may lead to cancellation of the admission. International students must also comply with the Kenya Immigration&nbsp; Regulations.</p><br><br><p></p>', NULL, NULL, NULL);
+
+
+--
+-- Name: forms_form_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+SELECT pg_catalog.setval('forms_form_id_seq', 20, true);
+
+
+
+>>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
 INSERT INTO fields (field_id, org_id, form_id, field_name, question, field_lookup, field_type, field_class, field_bold, field_italics, field_order, share_line, field_size, label_position, field_fnct, manditory, show, tab, details, label_positon) VALUES (10, 0, 1, 'MaritalStatus', 'Marital Status', 'Single# Married', 'LIST', NULL, '0', '0', 100, 100, 25, 'L', NULL, '0', '1', NULL, NULL, NULL);
 INSERT INTO fields (field_id, org_id, form_id, field_name, question, field_lookup, field_type, field_class, field_bold, field_italics, field_order, share_line, field_size, label_position, field_fnct, manditory, show, tab, details, label_positon) VALUES (53, 0, 1, NULL, 'How did you know about UEAB?', NULL, 'TEXTFIELD', NULL, '0', '0', 310, -1, 25, 'L', NULL, '0', '1', NULL, NULL, NULL);
 INSERT INTO fields (field_id, org_id, form_id, field_name, question, field_lookup, field_type, field_class, field_bold, field_italics, field_order, share_line, field_size, label_position, field_fnct, manditory, show, tab, details, label_positon) VALUES (89, 0, 1, 'mname', 'Mothers name', NULL, 'TEXTFIELD', NULL, '0', '0', 890, 890, 25, 'L', NULL, '0', '1', 'Family', NULL, NULL);
@@ -766,11 +890,20 @@ INSERT INTO sub_fields (sub_field_id, org_id, field_id, sub_field_order, sub_tit
 INSERT INTO sub_fields (sub_field_id, org_id, field_id, sub_field_order, sub_title_share, sub_field_type, sub_field_lookup, sub_field_size, sub_col_spans, manditory, show, question) VALUES (55, 0, 221, 4, NULL, 'TEXTFIELD', NULL, 5, 1, '0', '0', 'Degree Classification');
 INSERT INTO sub_fields (sub_field_id, org_id, field_id, sub_field_order, sub_title_share, sub_field_type, sub_field_lookup, sub_field_size, sub_col_spans, manditory, show, question) VALUES (52, 0, 221, 5, NULL, 'TEXTFIELD', NULL, 5, 1, '0', '0', 'Country');
 INSERT INTO sub_fields (sub_field_id, org_id, field_id, sub_field_order, sub_title_share, sub_field_type, sub_field_lookup, sub_field_size, sub_col_spans, manditory, show, question) VALUES (58, 0, 227, 3, NULL, 'TEXTFIELD', NULL, 5, 1, '0', '0', 'Employer');
+<<<<<<< HEAD
 
 
 --
 -- Name: sub_fields_sub_field_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
 --
 
+=======
+
+
+--
+-- Name: sub_fields_sub_field_id_seq; Type: SEQUENCE SET; Schema: public; Owner: root
+--
+
+>>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
 SELECT pg_catalog.setval('sub_fields_sub_field_id_seq', 429, true);
 

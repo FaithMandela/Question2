@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanmonthlyviewa" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b6b0507b-9ad2-4cc5-b3e8-23e07bb64e47">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanmonthlyviewa" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b6b0507b-9ad2-4cc5-b3e8-23e07bb64e47">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -11,13 +11,22 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_loan_monthly.entity_id, vw_loan_monthly.entity_name, vw_loan_monthly.loan_type_name, vw_loan_monthly.loan_id,
 vw_loan_monthly.loan_date, vw_loan_monthly.principle, vw_loan_monthly.interest, vw_loan_monthly.monthly_repayment,
-vw_loan_monthly.repayment_period, vw_loan_monthly.loan_balance,
+vw_loan_monthly.repayment_period, vw_loan_monthly.loan_balance,vw_loan_monthly.org_id,
 vw_loan_monthly.start_date, vw_loan_monthly.interest_amount, vw_loan_monthly.interest_paid, vw_loan_monthly.repayment
 FROM vw_loan_monthly
-ORDER BY vw_loan_monthly.entity_id;]]>
+where entity_id Not in (1,0)
+$P!{organd}
+ORDER BY vw_loan_monthly.entity_id asc]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
@@ -29,6 +38,7 @@ ORDER BY vw_loan_monthly.entity_id;]]>
 	<field name="monthly_repayment" class="java.lang.Float"/>
 	<field name="repayment_period" class="java.lang.Integer"/>
 	<field name="loan_balance" class="java.lang.Float"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
 	<field name="interest_amount" class="java.lang.Float"/>
 	<field name="interest_paid" class="java.lang.Float"/>
