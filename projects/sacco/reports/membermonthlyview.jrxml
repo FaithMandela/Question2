@@ -26,7 +26,7 @@ vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.
 vw_contributions.entity_name,vw_contributions.is_active,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
 WHERE (vw_contributions.entity_id = '$P!{entity_id}')
-'$P!{organd}'
+$P!{organd}
  order BY vw_contributions.deposit_date;]]>
 	</queryString>
 	<field name="contribution_id" class="java.lang.Integer"/>

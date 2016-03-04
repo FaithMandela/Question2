@@ -706,7 +706,7 @@ $$ LANGUAGE plpgsql;
   
   
  CREATE OR REPLACE FUNCTION ins_members()
-RETURNS trigger AS
+  RETURNS trigger AS
 $BODY$
 DECLARE
 	rec 			RECORD;
@@ -722,27 +722,15 @@ BEGIN
 	NEW.entity_id := v_entity_id;
 
 	ELSIF (TG_OP = 'UPDATE') THEN
-		UPDATE members  SET full_name = 
-(NEW.Surname || ' ' 
-|| NEW.First_name || ' ' 
-|| COALESCE(NEW.Middle_name, ''))
-	WHERE entity_id = NEW.entity_id;
+	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
 END IF;
 	RETURN NEW;
 END;
 $BODY$
-  LANGUAGE plpgsql;   
+  LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
-  FOR EACH ROW  EXECUTE PROCEDURE ins_members();
-
-
-
-
-
-
-
-  
+  FOR EACH ROW  EXECUTE PROCEDURE ins_members(); 
 
 
 

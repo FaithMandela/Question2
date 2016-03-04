@@ -288,7 +288,12 @@ CREATE VIEW vw_day_ledgers AS
 		INNER JOIN vw_bank_accounts ON day_ledgers.bank_account_id = vw_bank_accounts.bank_account_id
 		LEFT JOIN stores ON day_ledgers.store_id = stores.store_id;
 
+
+CREATE OR REPLACE VIEW vw_recruiting_entity AS
+		SELECT members.entity_id,members.surname,recruiting_agent_entity.entity_name AS recruiting_agent_entity_name,
+			recruiting_agent.entity_id AS recruiting_agent_entity_id, recruiting_agent.recruiting_agent_id, 
+			recruiting_agent.org_id
+	FROM  members
+	JOIN recruiting_agent on members.recruiting_agent_id = recruiting_agent.recruiting_agent_id
+	left JOIN entitys recruiting_agent_entity ON recruiting_agent_entity.entity_id = recruiting_agent.entity_id;
 		
-		
-		
-	
