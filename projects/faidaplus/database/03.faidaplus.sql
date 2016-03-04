@@ -215,7 +215,7 @@ CREATE VIEW vw_entitys AS
 
 CREATE VIEW vw_products AS
 	SELECT products.product_id, products.product_name, products.product_details, products.product_uprice,
-		products.created, products.updated_by, suppliers.supplier_name, suppliers.supplier_id,
+		products.created, products.updated_by,products.image, suppliers.supplier_name, suppliers.supplier_id,
 		product_category.product_category_id,
 		product_category.product_category_name
 	FROM products JOIN suppliers ON products.supplier_id = suppliers.supplier_id
@@ -237,11 +237,11 @@ CREATE VIEW vw_pccs AS
 		pccs.agency_incentive, pccs.incentive_son
 	FROM pccs INNER JOIN orgs ON pccs.pcc = orgs.pcc;
 
-CREATE VIEW vw_order_details AS
+CREATE OR REPLACE VIEW vw_order_details AS
 	SELECT order_details.order_details_id, vw_orders.order_id, vw_orders.order_date, vw_orders.order_status,
 		vw_orders.org_id, vw_orders.org_name, vw_products.product_id, vw_products.product_name,
 		vw_products.supplier_name, vw_products.supplier_id, vw_products.product_category_id,
-		vw_products.product_category_name, vw_orders.entity_name, vw_orders.entity_id,
+		vw_products.product_category_name,vw_products.image, vw_orders.entity_name, vw_orders.entity_id,
 		vw_orders.batch_no, order_details.product_uprice, order_details.product_quantity,
 		(order_details.product_uprice * order_details.product_quantity) as total_amount
 	FROM order_details JOIN vw_orders ON order_details.order_id = vw_orders.order_id
