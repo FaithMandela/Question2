@@ -36,6 +36,7 @@ CREATE INDEX loans_loan_type_id ON loans (loan_type_id);
 CREATE INDEX loans_entity_id ON loans (entity_id);
 CREATE INDEX loans_org_id ON loans (org_id);
 
+DROP TABLE loan_monthly cascade;
 CREATE TABLE loan_monthly (
 	loan_month_id 				serial primary key,
 	loan_id					integer references loans,
@@ -44,7 +45,7 @@ CREATE TABLE loan_monthly (
 	interest_amount				real default 0 not null,
 	repayment				real default 0 not null,
 	interest_paid				real default 0 not null,
-	penalty					real default 0 not null,
+	penalty					boolean default true not null,
 	penalty_paid				real default 0 not null,
 	details					text,
 	UNIQUE (loan_id, period_id)
@@ -135,7 +136,7 @@ CREATE OR REPLACE FUNCTION get_total_repayment(integer, date) RETURNS real AS $$
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_penalty(integer, date) RETURNS real AS $$
-	SELECT CASE WHEN sum(penalty) is null THEN 0 ELSE sum(penalty) END
+	SELECT CASE WHEN sum(penalty_paid) is null THEN 0 ELSE sum(penalty_paid) END
 	FROM loan_monthly INNER JOIN periods ON loan_monthly.period_id = periods.period_id
 	WHERE (loan_monthly.loan_id = $1) AND (periods.start_date < $2);
 $$ LANGUAGE SQL;
@@ -192,7 +193,7 @@ CREATE VIEW vw_loan_payments AS
 CREATE VIEW vw_period_loans AS
 	SELECT vw_loan_monthly.org_id, vw_loan_monthly.period_id, 
 		sum(vw_loan_monthly.interest_amount) as sum_interest_amount, sum(vw_loan_monthly.repayment) as sum_repayment, 
-		sum(vw_loan_monthly.penalty) as sum_penalty, sum(vw_loan_monthly.penalty_paid) as sum_penalty_paid, 
+		 sum(vw_loan_monthly.penalty_paid) as sum_penalty_paid, 
 		sum(vw_loan_monthly.interest_paid) as sum_interest_paid, sum(vw_loan_monthly.loan_balance) as sum_loan_balance
 	FROM vw_loan_monthly
 	GROUP BY vw_loan_monthly.org_id, vw_loan_monthly.period_id;

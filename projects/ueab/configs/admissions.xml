@@ -18,6 +18,7 @@
 			<MENU name="Admision Marks List">442</MENU>
 			<MENU name="Students Progress">443</MENU>
 			<MENU name="New Students Level Enrolment">221</MENU>
+			<MENU name="Yearly Enrollment">402</MENU>
 		</MENU>
 		<MENU name="Control Panel">
 			<MENU name="Contact Types">21</MENU>
@@ -486,6 +487,13 @@
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Quater Students By Level" reportfile="qstudentviewnaa.jasper"></JASPER>
 			<JASPER filtered="true" name="Quater Students By Sub Level" reportfile="qstudentviewnab.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Yearly Enrollment" type="horl" key="402" h="500">
+		<FILTER location="250" name="Majors Yealy" type="horl">
+			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
+			<JASPER name="Enrollement Majors" reportfile="newmajorsummary.jasper"></JASPER>
+			<JASPER name="New Enrollement Majors" reportfile="newmajorsummarya.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>

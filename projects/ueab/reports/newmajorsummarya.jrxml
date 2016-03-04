@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="NewMajorSummary" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="af05fdde-f41c-4500-9553-75aec970a830">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="NewMajorSummarya" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="af05fdde-f41c-4500-9553-75aec970a830">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -13,7 +13,8 @@
 
 FROM qstudentmajorview
 
-WHERE quarteryear = $P{filterid}
+WHERE (getprevquarter(studentdegreeid, quarterid) is null)
+	AND (quarteryear = $P{filterid})
 
 GROUP BY quarterid, quarteryear, quarter, majorname, sex
 ORDER BY quarterid, quarteryear, quarter, majorname, sex;]]>
@@ -37,11 +38,11 @@ ORDER BY quarterid, quarteryear, quarter, majorname, sex;]]>
 				<textFieldExpression><![CDATA[$F{quarteryear}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="233" y="5" width="81" height="20" uuid="3a787aa7-4296-4f85-86e8-506f42a8e212"/>
+				<reportElement x="132" y="5" width="182" height="20" uuid="3a787aa7-4296-4f85-86e8-506f42a8e212"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Academic Year]]></text>
+				<text><![CDATA[New Students summary for Academic Year:]]></text>
 			</staticText>
 		</band>
 	</title>

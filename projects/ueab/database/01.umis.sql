@@ -314,6 +314,7 @@ CREATE TABLE majorcontents (
 	gradeid				varchar(2) not null references grades,
 	bulletingid			integer references bulleting,
 	minor				boolean default false not null,
+	content_level		integer,
 	narrative			varchar(240),
 	UNIQUE (majorid, courseid, contenttypeid, minor, bulletingid)
 );
@@ -322,6 +323,12 @@ CREATE INDEX majorcontents_courseid ON majorcontents (courseid);
 CREATE INDEX majorcontents_contenttypeid ON majorcontents (contenttypeid);
 CREATE INDEX majorcontents_gradeid ON majorcontents (gradeid);
 CREATE INDEX majorcontents_bulletingid ON majorcontents (bulletingid);
+
+CREATE TABLE content_levels (
+	content_level		integer primary key,
+	required_courses	integer default 1 not null,
+	narrative			varchar(250)
+);
 
 --- Define major option content
 CREATE TABLE majoroptcontents (
@@ -332,6 +339,7 @@ CREATE TABLE majoroptcontents (
 	gradeid				varchar(2) not null references grades,
 	minor				boolean not null default false not null,
 	bulletingid			integer not null references bulleting,
+	content_level		integer,
 	narrative			varchar(240),
 	UNIQUE (majoroptionid, courseid, contenttypeid, minor, bulletingid)
 );
@@ -348,6 +356,7 @@ CREATE TABLE students (
 	denominationid		varchar(12) not null references denominations,
 	residenceid			varchar(12) references residences,
 	org_id				integer references orgs,
+	sys_audit_trail_id	integer references sys_audit_trail,
 	studentname			varchar(50) not null,
 	room_number			integer,
 	Sex					varchar(1),
@@ -357,6 +366,7 @@ CREATE TABLE students (
 	address				varchar(50),
 	zipcode				varchar(50),
 	town				varchar(50),
+	county_id 			char(2) references countys,
 	countrycodeid		char(2) not null references countrys,
 	telno				varchar(50),
 	email				varchar(240),
@@ -384,6 +394,12 @@ CREATE TABLE students (
 	
 	student_edit		varchar(50) default 'none' not null,
 	
+	disability			varchar(5),
+	dis_details 		text,
+	passport			boolean DEFAULT false,
+	national_id			boolean DEFAULT false,
+	identification_no	varchar(20),
+	
 	currentcontact		text,
 	currentemail		varchar(120),
 	currenttel			varchar(120),
@@ -400,6 +416,8 @@ CREATE INDEX students_residenceid ON students (residenceid);
 CREATE INDEX students_countrycodeid ON students (countrycodeid);
 CREATE INDEX students_gcountrycodeid ON students (gcountrycodeid);
 CREATE INDEX students_accountnumber ON students (accountnumber);
+CREATE INDEX students_org_id ON students (org_id);
+CREATE INDEX students_sys_audit_trail_id ON students (sys_audit_trail_id);
 
 --- Define the degree undertaken by student 
 CREATE TABLE studentdegrees (
