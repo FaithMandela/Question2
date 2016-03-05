@@ -1268,7 +1268,7 @@
 				<TEXTAREA w="430" title="Objective" y="360" h="70" x="10">objective</TEXTAREA>
 				<TEXTAREA w="430" title="Details" y="430" h="70" x="10">details</TEXTAREA>
 			</FORM>
-			<GRID name="Recruiting Agent" keyfield="recruiting_agent_id" linkfield="recruiting_agent_id" table="recruiting_agent">
+			<GRID name="Recruiting Agent" keyfield="recruiting_agent_id" linkfield="recruiting_agent_id" table="recruiting_agent" tab.count="count(recruiting_agent_id)">
 				<TEXTFIELD w="75" title="Recruiting Agent ID">recruiting_agent_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 				<FORM name="Recruiting Agent" keyfield="recruiting_agent_id" linkfield="recruiting_agent_id" table="recruiting_agent">
