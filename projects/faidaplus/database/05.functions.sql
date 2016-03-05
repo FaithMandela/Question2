@@ -246,6 +246,19 @@ CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
 DECLARE
 	v_order integer;
 BEGIN
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name,narrative)
+	VALUES (4, NEW.order_id , 'orders','We have received your order and its under process');
+	RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_orders AFTER INSERT ON orders
+FOR EACH ROW EXECUTE PROCEDURE ins_orders();
+
+CREATE OR REPLACE FUNCTION ins_order_details() RETURNS trigger AS $BODY$
+DECLARE
+	v_order integer;
+BEGIN
 	IF (NEW.order_details_id IS NULL) THEN
 		UPDATE order_details SET order_id=t.id
 		FROM (select orders.order_id AS id FROM orders WHERE orders.order_id = NEW.order_id)AS t ;
@@ -254,5 +267,13 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_orders AFTER INSERT ON order_details
-FOR EACH ROW EXECUTE PROCEDURE ins_orders();
+CREATE TRIGGER ins_order_details AFTER INSERT ON order_details
+FOR EACH ROW EXECUTE PROCEDURE ins_order_details();
+
+CREATE OR REPLACE FUNCTION getdetails(integer) RETURNS text AS
+$$
+	SELECT (vw_order_details.product_quantity||' @ '||vw_order_details.product_name||' added to shopping cart')as details
+	FROM vw_order_details
+	WHERE order_id = $1;
+$$
+  LANGUAGE sql;
