@@ -35,6 +35,7 @@
 			<MENU name="Tickets Years" role="admin,staff">102</MENU>
 		</MENU>
 		<MENU name="Approval" role="admin,staff">83</MENU>
+		<MENU name="Workflow" role="admin,staff">40</MENU>
 		<MENU name="Emails" role="admin,staff">60</MENU>
 		<MENU name="Report" role="admin,staff">
 			<MENU name="Productivity">110</MENU>
@@ -287,15 +288,9 @@
 				<TEXTFIELD w="150" title="Username" required="true" y="30" h="20" x="290" span="true">user_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Mobile Number" required="true" y="30" h="20" x="290" span="true">primary_telephone</TEXTFIELD>
 			</FORMVIEW>
-			<FORM fornew="true" new="true" save.button="Apply" name="Change PCC" keyfield="entity_id" edit="false" delete="false" audit="false" linkfield="entity_id" table="change_pccs" user="entity_id">
-				<TEXTFIELD w="150" title="Pseudo Code *" required="true" y="30" h="20" x="290" span="true">change_pcc</TEXTFIELD>
-				<TEXTFIELD w="100" title="Sign On Code initials.* *" required="true" y="10" h="20" x="490" span="true">change_son</TEXTFIELD>
-				<FORMVIEW name="Applicant" keyfield="applicant_id" linkfield="applicant_id" table="change_pccs">
-					<TEXTFIELD w="430" fnct="'Data submited check your email for details'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email *" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
-					<TEXTFIELD w="150" title="Pseudo Code *" required="true" y="30" h="20" x="290" span="true">change_pcc</TEXTFIELD>
-					<TEXTFIELD w="100" title="Sign On Code initials.* *" required="true" y="10" h="20" x="490" span="true">change_son</TEXTFIELD>
-				</FORMVIEW>
+			<FORM fornew="true" new="true" save.button="Apply" name="Change PCC" keyfield="entity_id" edit="false" delete="false" audit="false" linkfield="entity_id" table="entitys">
+				<TEXTFIELD w="150" title="PCC" required="true" y="30" h="20" x="290" span="true">change_pcc</TEXTFIELD>
+				<TEXTFIELD w="100" title="SON" required="true" y="10" h="20" x="490" span="true">change_son</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>

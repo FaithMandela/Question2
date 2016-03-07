@@ -2,20 +2,20 @@
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON bonus
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();
-	
-	
+
+
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON change_pccs
 	FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-	
+
 CREATE OR REPLACE FUNCTION upd_entitys() RETURNS trigger AS $$
 BEGIN
 
 	IF((OLD.change_pcc <> NEW.change_pcc) or (OLD.change_son <> NEW.change_son))THEN
 		INSERT INTO change_pccs (entity_id, son, pcc, change_son, change_pcc)
-		VALUES (NEW.entity_id, NEW.son, NEW.pcc, NEW.change_son, NEW.change_pcc);
+		VALUES (NEW.entity_id, NEW.son, NEW.pcc_son, NEW.change_son, NEW.change_pcc);
  	END IF;
- 	
+
 	RETURN NEW
 END;
 $$ LANGUAGE plpgsql;
@@ -106,7 +106,7 @@ BEGIN
 			v_amount := 20;
 			v_points := rec.total_segs * 20 ;
 		END IF;
-		
+
 		SELECT entitys.entity_id INTO v_entity_id
 		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
 		WHERE (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
