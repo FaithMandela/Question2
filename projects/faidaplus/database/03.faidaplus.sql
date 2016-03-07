@@ -108,6 +108,7 @@ CREATE TABLE orders (
 	order_status			varchar(50) default 'processing order',
 	order_total_amount		real default 0 not null,
 	shipping_cost			real default 0 not null,
+	town_name				varchar(50),
 	batch_no				integer,
 	batch_date				date,
 	details 				text
@@ -193,19 +194,20 @@ DROP VIEW vw_orgs;
 
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
-		orgs.pcc,
+		orgs.pcc, towns.town_id, towns.town_name,
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
 		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
 		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
-	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id
+		LEFT JOIN towns ON orgs.town_id = towns.town_id;
 
 CREATE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
 		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
-		vw_orgs.pcc,
+		vw_orgs.pcc, vw_orgs.town_id, vw_orgs.town_name,
 
 		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
 		vw_orgs.org_address_id, vw_orgs.org_table_name,
@@ -243,6 +245,8 @@ CREATE VIEW vw_orders AS
     SELECT orders.order_id, orders.order_date, orders.order_status, orders.order_total_amount, orders.batch_no,
         orders.shipping_cost, orders.details,
         (orders.order_total_amount + orders.shipping_cost) as grand_total,
+        
+        vw_entitys.town_name, vw_entitys.org_premises, vw_entitys.org_street,
         vw_entitys.entity_name, vw_entitys.son,
         vw_entitys.entity_id, vw_entitys.pcc, vw_entitys.org_name, vw_entitys.primary_email,
         vw_entitys.primary_telephone, vw_entitys.function_role, vw_entitys.entity_role,

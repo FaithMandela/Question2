@@ -1,3 +1,4 @@
+DROP TRIGGER ins_orders ON orders;
 
 -- load extension first time after install
 CREATE EXTENSION mysql_fdw;
@@ -386,7 +387,6 @@ SELECT setval('public.currency_currency_id_seq', 4);
 SELECT setval('public.entity_subscriptions_entity_subscription_id_seq', 1850);
 SELECT setval('public.entity_types_entity_type_id_seq', 3);
 SELECT setval('public.entitys_entity_id_seq', 2381);
-SELECT setval('public.fiscal_years_fiscal_year_id_seq', 2016);
 SELECT setval('public.order_details_order_details_id_seq', 20235);
 SELECT setval('public.orders_order_id_seq', 10597);
 SELECT setval('public.orgs_org_id_seq', 3124);
@@ -400,4 +400,7 @@ SELECT setval('public.sys_logins_sys_login_id_seq', 1);
 SELECT setval('public.towns_town_id_seq', 59);
 
 
+CREATE TRIGGER ins_orders AFTER INSERT ON orders
+  FOR EACH ROW EXECUTE PROCEDURE ins_orders();
 
+  
