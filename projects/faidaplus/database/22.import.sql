@@ -28,7 +28,7 @@ CREATE FOREIGN TABLE i_staff (
 	email			varchar(150), 
 	cellphone			varchar(22), 
 	landline			varchar(22), 
-	shipping			VARCHAR, 
+	shipping			text, 
 	rel_id_staff			integer
 )
 SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'staff');

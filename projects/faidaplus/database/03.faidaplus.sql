@@ -15,6 +15,7 @@ CREATE INDEX orgs_account_manager_id ON orgs (account_manager_id);
 ALTER TABLE orgs DROP CONSTRAINT orgs_org_name_key;
 ALTER TABLE orgs DROP CONSTRAINT orgs_org_sufix_key;
 
+ALTER TABLE entitys ADD can_redeem boolean default true;
 ALTER TABLE entitys ADD salutation varchar(7);
 ALTER TABLE entitys ADD pcc_son varchar(7);
 ALTER TABLE entitys ADD son varchar(7);
@@ -311,6 +312,12 @@ CREATE VIEW vw_son_points AS
 		vw_entitys.entity_name, vw_entitys.entity_id
 	FROM points JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
 		INNER JOIN periods ON points.period_id = periods.period_id;
+		
+CREATE OR REPLACE FUNCTION get_order_details(integer) RETURNS text AS $$
+	SELECT (vw_order_details.product_quantity || ' @ ' || vw_order_details.product_name || ' added to shopping cart') as details
+	FROM vw_order_details
+	WHERE order_id = $1;
+$$ LANGUAGE sql;
 
 CREATE OR REPLACE VIEW vw_son_statement AS
 SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
@@ -324,10 +331,9 @@ SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
 	(SELECT 0::real AS float4, vw_orders.order_total_amount::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
-		getdetails(vw_orders.order_id) AS details
+		get_order_details(vw_orders.order_id) AS details
 	FROM vw_orders)) a
 	ORDER BY a.order_date;
-
 
 CREATE VIEW vw_all_bonus AS
 	SELECT bonus.bonus_id, bonus.entity_id, bonus.percentage, bonus.is_active,
