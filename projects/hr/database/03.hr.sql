@@ -931,6 +931,18 @@ CREATE VIEW vw_entity_employees AS
 		employees.basic_salary, employees.bank_account, employees.language, employees.objective, employees.Active
 	FROM entitys INNER JOIN employees ON entitys.entity_id = employees.entity_id;
 
+CREATE VIEW vw_employee_periods AS
+	SELECT aa.period_id, aa.start_date, aa.period_year, aa.period_month, aa.period_code, 
+		aa.week_start, EXTRACT(WEEK FROM aa.week_start) as p_week,
+		b.org_id, b.entity_id, b.employee_id, 
+		(b.Surname || ' ' || b.First_name || ' ' || COALESCE(b.Middle_name, '')) as employee_name 
+	FROM (SELECT a.org_id, a.period_id, a.start_date, a.end_date, 
+		to_char(a.start_date, 'YYYY') as period_year, to_char(a.start_date, 'Month') as period_month,
+		to_char(a.start_date, 'YYYYMM') as period_code,
+		generate_series(a.start_date, a.end_date, interval '1 week') as week_start
+		FROM periods a) aa
+	INNER JOIN employees b ON aa.org_id = b.org_id;
+	
 CREATE VIEW vw_education AS
 	SELECT education_class.education_class_id, education_class.education_class_name, entitys.entity_id, entitys.entity_name, 
 		education.org_id, education.education_id, education.date_from, education.date_to, education.name_of_school, education.examination_taken,
