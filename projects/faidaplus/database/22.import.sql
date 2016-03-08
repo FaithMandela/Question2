@@ -355,8 +355,8 @@ FROM i_bonus_total
 WHERE (points.period_id = i_bonus_total.rel_id_segment_period)
 	AND (points.entity_id = i_bonus_total.rel_id_user);
 
-INSERT INTO orders (order_id, entity_id, order_status, order_date, shipping_cost)
-SELECT a.id_basket, a.rel_id_user, b.status, check_in_date_time, a.shipping_cost
+INSERT INTO orders (order_id, entity_id, batch_no, order_status, order_date, shipping_cost)
+SELECT a.id_basket, a.rel_id_user, a.rel_id_basket_batch, b.status, check_in_date_time, a.shipping_cost
 FROM i_basket a INNER JOIN i_basket_status b ON a.rel_id_basket_status = b.id_basket_status
 WHERE a.checkout = '1';
 

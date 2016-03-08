@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="studentmajortrans" columnCount="2" pageWidth="374" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="186" leftMargin="0" rightMargin="2" topMargin="2" bottomMargin="2">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="studentmajortrans" pageWidth="374" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="372" leftMargin="0" rightMargin="2" topMargin="2" bottomMargin="2" uuid="35d3ec02-4cec-4d83-afe6-092b89c14334">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -34,9 +34,9 @@ ORDER BY major desc;]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="34" splitType="Stretch">
+		<band height="37" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="56" y="1" width="230" height="15" forecolor="#000000"/>
+				<reportElement key="textField" x="56" y="1" width="305" height="18" forecolor="#000000" uuid="7c639183-a5e3-4402-9fa1-28b27ed53b7c"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -44,12 +44,12 @@ ORDER BY major desc;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="12" isBold="false"/>
+					<font fontName="Times New Roman" size="14" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{majorname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{majorname}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="0" y="1" width="56" height="15" forecolor="#000000"/>
+				<reportElement key="textField" x="0" y="1" width="56" height="18" forecolor="#000000" uuid="26e49821-af3d-4f6d-b77d-fcc2921e27e1"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -57,12 +57,12 @@ ORDER BY major desc;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="12" isBold="false" pdfFontName="Helvetica"/>
+					<font fontName="Times New Roman" size="14" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[($F{major}.booleanValue() ? "Major" : "Minor")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{major}.booleanValue() ? "Major" : "Minor")]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="56" y="16" width="230" height="15" forecolor="#000000">
+				<reportElement key="textField-1" x="56" y="19" width="305" height="18" forecolor="#000000" uuid="e41ad521-fc5f-4776-9d02-9697fde0d82a">
 					<printWhenExpression><![CDATA[$F{majoroptionid} != 0]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2">
@@ -72,9 +72,9 @@ ORDER BY major desc;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="12" isBold="false"/>
+					<font fontName="Times New Roman" size="14" isBold="false"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{majoroptionname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{majoroptionname}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

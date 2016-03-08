@@ -721,7 +721,6 @@ BEGIN
 
 	NEW.entity_id := v_entity_id;
 
-	ELSIF (TG_OP = 'UPDATE') THEN
 	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
 END IF;
 	RETURN NEW;
