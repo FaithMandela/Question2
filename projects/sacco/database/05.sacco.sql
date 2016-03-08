@@ -206,6 +206,8 @@ CREATE TABLE members (
 	address_id			integer references address,
   	bank_id                 	integer references banks,
  	org_id 				integer references orgs,
+	recruiting_agent_id 		integer references recruiting_agent;
+
 	person_title			character varying(7),
 	
 	full_name			 varchar (120),
@@ -222,7 +224,7 @@ CREATE TABLE members (
   	appointment_date 		timestamp default now(),
  
   	exit_date 			date,
-  	
+  	member_id			integer serial primary key
   	picture_file 			character varying(32),
   	active 				boolean NOT NULL DEFAULT true,
   	language 			character varying(320),
@@ -230,12 +232,20 @@ CREATE TABLE members (
   	objective 			text,
   	details 			text
   	);
-member_id		integer serial primary key
+  	
+	alter table members add division varchar (120);
+	alter table members add location varchar (120);
+	alter table members add sub_location varchar (120);
+	alter table members add district varchar (120);
+	alter table members add county varchar (120) not null default 'Nairobi';
+	alter table members add residential_address varchar (120);
+
+
  
 CREATE INDEX members_org_id ON members (org_id);
 CREATE INDEX members_bank_id ON members (bank_id);
 CREATE INDEX members_address_id ON members (address_id);
- 
+CREATE INDEX members_recruiting_agent_id ON members (recruiting_agent_id); 
  
 ALTER TABLE entitys ADD exit_amount REAL default 0;
 
@@ -263,13 +273,27 @@ CREATE TABLE kins (
 	identification			varchar(50),
 	relation				varchar(50),
 	emergency_contact		boolean default false not null,
+	
 	beneficiary				boolean default false not null,
 	beneficiary_ps			real,
+	
+	postal_address 			varchar (120) ;
+	tel_number 			varchar (120) ;
+	email_address			varchar (120) ;
+	pin				varchar (120) ;
+
 	details					text
 );
 CREATE INDEX kins_entity_id ON kins (entity_id);
 CREATE INDEX kins_kin_type_id ON kins (kin_type_id);
 CREATE INDEX kins_org_id ON kins(org_id);
+
+alter table kins add postal_code varchar (120);
+
+ALTER table employment add telephone_number varchar(60);
+ALTER table employment drop employer_contact_person;
+
+
 
 
 CREATE TABLE employment (
@@ -285,6 +309,11 @@ CREATE TABLE employment (
 	employer_email				varchar(50),
 	details					text
 );
+
+
+
+
+
 CREATE INDEX employment_entity_id ON employment (entity_id);
 CREATE INDEX employment_org_id ON employment(org_id);
 
@@ -318,4 +347,6 @@ CREATE TABLE recruiting_agent(
 CREATE INDEX recruiting_agent_entity_id ON recruiting_agent (entity_id);
 CREATE INDEX recruiting_agent_org_id ON recruiting_agent (org_id);
 
-Alter table members add recruiting_agent_id integer references recruiting_agent;
+
+
+

@@ -5,7 +5,7 @@
 
 	<DESK w="700" name="Subscriptions" key="1" h="500">
 		<FORM cols="2" name="Subscription" keyfield="subscription_id" table="subscriptions" new="true" edit="false" delete="false" audit="false" fornew="true" save.button="Subscribe">
-			<DEFAULT default="0">parent_org_id</DEFAULT>
+			<DEFAULT default="0">org_id</DEFAULT>
 			<TEXTFIELD w="150" required="true" title="Business Name *" h="20" y="70" x="10" span="true">business_name</TEXTFIELD>
 			<TEXTFIELD w="150" title="Business Address" h="20" y="70" x="290">business_address</TEXTFIELD>
 			<TEXTFIELD w="150" required="true" title="County *" h="20" y="90" x="10" span="true">city</TEXTFIELD>
