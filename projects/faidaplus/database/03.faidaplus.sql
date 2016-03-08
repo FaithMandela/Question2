@@ -307,13 +307,15 @@ CREATE VIEW vw_points AS
 	FROM points JOIN vw_orgs ON points.org_id = vw_orgs.org_id
 		INNER JOIN periods ON points.period_id = periods.period_id;
 
-CREATE VIEW vw_org_points AS
-	SELECT points.points_id, periods.period_id,periods.start_date as period,
-		to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
-		points.pcc, points.son, points.segments, points.amount,
-		points.points, points.bonus, vw_orgs.org_name
-	FROM points JOIN vw_orgs ON points.pcc = vw_orgs.pcc
-		INNER JOIN periods ON points.period_id = periods.period_id;
+CREATE OR REPLACE VIEW vw_org_points AS
+	SELECT periods.period_id, periods.start_date AS period, to_char(periods.start_date::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
+		vw_orgs.pcc, COALESCE(SUM(points.segments),0.0) AS segments, COALESCE(SUM(points.points),0.0) AS points,
+		COALESCE(SUM(points.bonus),0.0) AS bonus, vw_orgs.org_id,vw_orgs.org_name
+	FROM points
+	 JOIN vw_orgs ON points.org_id = vw_orgs.org_id
+	 JOIN periods ON points.period_id = periods.period_id
+	 GROUP BY periods.period_id,periods.start_date,vw_orgs.pcc,vw_orgs.org_id,vw_orgs.org_name
+	ORDER BY period desc;
 
 CREATE VIEW vw_son_points AS
 	SELECT points.points_id, periods.period_id,periods.start_date as period,

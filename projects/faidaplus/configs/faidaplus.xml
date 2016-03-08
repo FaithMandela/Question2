@@ -427,7 +427,7 @@
 				<TEXTFIELD w="40" title="Total KES">points</TEXTFIELD>
 				<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
 			</GRID>
-			<GRID name="PCCs Points" keyfield="pcc" orderby="org_name ASC" linkfield="period_id" table="vw_org_points">
+			<GRID name="PCCs Points" orderby="org_name ASC" linkfield="period_id" table="vw_org_points">
 				<TEXTFIELD w="100" title="Agency Name">org_name</TEXTFIELD>
 				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 				<TEXTFIELD w="40" title="Total Segments">segments</TEXTFIELD>
@@ -750,7 +750,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Fiscal Years" key="102" h="500">
-		<GRID name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
+		<GRID name="Fiscal Years" keyfield="fiscal_year_id" orderby="fiscal_year_id desc" table="fiscal_years">
 			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
 			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
@@ -759,7 +759,7 @@
 			<ACTIONS>
 				<ACTION fnct="close_year" approval="1">Close Year</ACTION>
 			</ACTIONS>
-			<GRID name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="vw_periods_c">
+			<GRID name="Periods" keyfield="period_id" orderby="period_id desc" linkfield="fiscal_year_id" table="vw_periods_c">
 				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 				<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
@@ -825,7 +825,8 @@
 			<FILTERFORM name="Consultant Productivity">
 				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
 				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
-				<COMBOBOX w="50" title="SON" lptable="entitys" lpkey="entity_id" y="30" h="20" x="10" lpfield="son">entity_id</COMBOBOX>
+				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
+				<TEXTFIELD w="40" title="SON">son</TEXTFIELD>
 			</FILTERFORM>
 			<JASPER name="Consultant Productivity" reportfile="son_productivity.jasper"></JASPER>
 		</FILTER>
@@ -889,7 +890,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="EMails" key="60" h="500">
-		<GRID name="EMails" keyfield="sys_email_id" role="admin" table="sys_emails">
+		<GRID name="EMails" keyfield="sys_email_id" role="admin,staff" table="sys_emails">
 			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Title">title</TEXTFIELD>
@@ -899,7 +900,7 @@
 				<EDITOR w="530" tab="Details" y="2" h="170" x="10">details</EDITOR>
 			</FORM>
 		</GRID>
-		<GRID name="Email List" keyfield="sys_emailed_id" table="vw_sys_emailed">
+		<GRID name="Email List" keyfield="sys_emailed_id" role="admin,staff" table="vw_sys_emailed">
 			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
