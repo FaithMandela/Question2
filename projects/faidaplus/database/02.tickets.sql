@@ -7,11 +7,11 @@ CREATE SERVER t_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '62.24.12
 CREATE USER MAPPING FOR postgres SERVER t_server OPTIONS (user 'root', password 'invent');
 
 CREATE FOREIGN TABLE t_sonsegs (
-	pcc					varchar(4), 
-	agencyname			varchar(120), 
-	son					varchar(4), 
-	ticketperiod		varchar(7), 
-	segperiod			varchar(7), 
+	pcc					varchar(4),
+	agencyname			varchar(120),
+	son					varchar(4),
+	ticketperiod		varchar(7),
+	segperiod			varchar(7),
 	totalsegs			integer
 )
 SERVER t_server OPTIONS(table_name 'vwsonsegs');
@@ -64,7 +64,7 @@ CREATE TABLE tickets (
 	TUNVL					integer default 0,
 	TPRTD					integer default 0,
 	TSUSP					integer default 0,
-	
+
 	for_incentive			boolean default false,
 	incentive_updated		boolean default false,
 	processed				boolean default false
@@ -93,13 +93,13 @@ CREATE VIEW vw_tickets AS
 	FROM tickets;
 
 CREATE VIEW vw_ticket_segs AS
-	SELECT pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period, 
+	SELECT pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period,
 		sum(vw_tickets.activesegs) as total_segs
 	FROM (pccs INNER JOIN vw_tickets ON pccs.pcc = vw_tickets.pcc)
 	GROUP BY pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period;
 
 CREATE VIEW vw_days_agency_segs AS
-	SELECT pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period, 
+	SELECT pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period,
 		vw_tickets.ticket_date, sum(vw_tickets.activesegs) as total_segs
 	FROM (pccs INNER JOIN vw_tickets ON pccs.pcc = vw_tickets.pcc)
 	GROUP BY pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period, vw_tickets.ticket_date;
@@ -110,13 +110,13 @@ CREATE VIEW vw_days_segs AS
 	GROUP BY vw_tickets.ticket_period, vw_tickets.seg_period, vw_tickets.ticket_date;
 
 CREATE VIEW vw_booked_segs AS
-	SELECT pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period, 
+	SELECT pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period,
 		sum(vw_tickets.activesegs) as total_segs
 	FROM (pccs INNER JOIN vw_tickets ON pccs.pcc = vw_tickets.bpcc)
 	GROUP BY pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period;
 
 CREATE VIEW vw_son_segs AS
-	SELECT pccs.pcc, pccs.agency_name, vw_tickets.son, vw_tickets.ticket_period, vw_tickets.seg_period, 
+	SELECT pccs.pcc, pccs.agency_name, vw_tickets.son, vw_tickets.ticket_period, vw_tickets.seg_period,
 		sum(vw_tickets.activesegs) as total_segs
 	FROM (pccs INNER JOIN vw_tickets ON pccs.pcc = vw_tickets.bpcc)
 	GROUP BY pccs.pcc, pccs.agency_name, vw_tickets.son, vw_tickets.ticket_period, vw_tickets.seg_period;
@@ -128,7 +128,7 @@ CREATE VIEW vw_periods AS
 	ORDER BY ticket_year, ticket_period, seg_period;
 
 CREATE VIEW vw_period_years AS
-	SELECT ticket_year 
+	SELECT ticket_year
 	FROM vw_tickets
 	GROUP BY ticket_year
 	ORDER BY ticket_year;
@@ -149,32 +149,30 @@ DECLARE
 BEGIN
 
 	IF((OLD.processed = false) AND (NEW.processed = true))THEN
-	
+
 		SELECT agency_incentive, incentive_son INTO v_agency_incentive, v_incentive_son
 		FROM pccs WHERE pcc = NEW.bpcc;
-		
+
 		IF((NEW.for_incentive = false) AND (NEW.incentive_updated = false) AND (v_agency_incentive = true))THEN
 			v_pcc_son := NEW.bpcc || v_incentive_son;
-			
-			INSERT INTO tickets(ticket_id, 
-				ticket_date, ticket_pcc, book_pcc, bpcc, son, pcc, line1, 
-				line2, line3, segs, tvoid, topen, tused, texch, trfnd, tarpt, 
-				tckin, tlftd, tunvl, tprtd, tsusp, picked_time, for_incentive, 
+
+			INSERT INTO tickets(ticket_id,
+				ticket_date, ticket_pcc, book_pcc, bpcc, son, pcc, line1,
+				line2, line3, segs, tvoid, topen, tused, texch, trfnd, tarpt,
+				tckin, tlftd, tunvl, tprtd, tsusp, picked_time, for_incentive,
 				incentive_updated)
-			VALUES('000' ||	substring(NEW.ticket_id from 4 for 10), 
-				current_date, NEW.bpcc, v_pcc_son, NEW.bpcc, v_incentive_son, NEW.bpcc, NEW.line1, 
-				NEW.line2, NEW.line3, NEW.segs, NEW.tvoid, NEW.topen, NEW.tused, NEW.texch, NEW.trfnd, NEW.tarpt, 
+			VALUES('000' ||	substring(NEW.ticket_id from 4 for 10),
+				current_date, NEW.bpcc, v_pcc_son, NEW.bpcc, v_incentive_son, NEW.bpcc, NEW.line1,
+				NEW.line2, NEW.line3, NEW.segs, NEW.tvoid, NEW.topen, NEW.tused, NEW.texch, NEW.trfnd, NEW.tarpt,
 				NEW.tckin, NEW.tlftd, NEW.tunvl, NEW.tprtd, NEW.tsusp, NEW.picked_time, true, true);
-				
+
 			NEW.incentive_updated = true;
 		END IF;
 	END IF;
-	
+
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_tickets BEFORE UPDATE ON tickets
     FOR EACH ROW EXECUTE PROCEDURE ins_tickets();
-
-

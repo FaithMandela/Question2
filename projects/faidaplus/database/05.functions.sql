@@ -12,7 +12,7 @@ DECLARE
 BEGIN
 
 	v_period_id = $1::integer;
-	SELECT to_char(start_date, 'mmyyyy') INTO v_period 
+	SELECT to_char(start_date, 'mmyyyy') INTO v_period
 	FROM periods WHERE period_id = v_period_id AND closed = false;
 	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
@@ -33,7 +33,7 @@ BEGIN
 			v_amount := 20;
 			v_points := rec.totalsegs * 20 ;
 		END IF;
-		
+
 		SELECT orgs.org_id, entitys.entity_id INTO v_org_id, v_entity_id
 		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
 		WHERE (entitys.is_active = true) AND (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
@@ -52,13 +52,13 @@ BEGIN
 		END IF;
 	END LOOP;
 
-	IF(rec IS NULL)THEN 
-		msg := 'There are no segments for this month'; 
+	IF(rec IS NULL)THEN
+		msg := 'There are no segments for this month';
 	ELSE
 		msg := 'Points computed';
 	END IF;
-	
- 
+
+
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
@@ -305,14 +305,14 @@ BEGIN
 		INSERT INTO change_pccs (entity_id, son, pcc, change_son, change_pcc)
 		VALUES (NEW.entity_id, NEW.son, NEW.pcc, NEW.change_son, NEW.change_pcc);
  	END IF;
- 	
+
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER upd_entitys BEFORE UPDATE ON entitys
     FOR EACH ROW EXECUTE PROCEDURE upd_entitys();
-    
+
 CREATE OR REPLACE FUNCTION upd_change_pccs() RETURNS trigger AS $$
 DECLARE
 	v_org_id				integer;
@@ -323,16 +323,16 @@ BEGIN
 		SELECT orgs.org_id INTO v_org_id
 		FROM orgs WHERE (orgs.pcc = NEW.change_pcc);
 		IF((NEW.change_pcc is null) or (v_org_id is null))THEN RAISE EXCEPTION 'No Travel Agency with new PCC'; END IF;
-	
+
 		SELECT entity_id INTO v_entity_id
 		FROM entitys
 		WHERE (org_id = v_org_id) AND (entitys.son = NEW.change_son);
 		IF(v_entity_id is not null)THEN RAISE EXCEPTION 'A consultant with that SON already exists'; END IF;
-		
+
 		UPDATE entitys SET org_id = v_org_id, pcc = NEW.change_pcc, son = NEW.change_son
 		WHERE entity_id = v_entity_id;
  	END IF;
- 	
+
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -340,3 +340,9 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_change_pccs BEFORE UPDATE ON change_pccs
     FOR EACH ROW EXECUTE PROCEDURE upd_change_pccs();
 
+CREATE OR REPLACE FUNCTION get_town(integer) RETURNS text AS $$
+	SELECT towns.town_name FROM towns
+	JOIN orgs ON orgs.town_id = towns.town_id
+	JOIN vw_entitys ON vw_entitys.org_id = orgs.org_id
+	WHERE vw_entitys.entity_id = $1;
+$$ LANGUAGE sql;
