@@ -1,4 +1,24 @@
+--  New data fetch
 
+CREATE EXTENSION postgres_fdw;
+
+CREATE SERVER t_server FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '62.24.122.1', dbname 'tickets', port '5432');
+
+CREATE USER MAPPING FOR postgres SERVER t_server OPTIONS (user 'root', password 'invent');
+
+CREATE FOREIGN TABLE t_sonsegs (
+	pcc					varchar(4), 
+	agencyname			varchar(120), 
+	son					varchar(4), 
+	ticketperiod		varchar(7), 
+	segperiod			varchar(7), 
+	totalsegs			integer
+)
+SERVER t_server OPTIONS(table_name 'vwsonsegs');
+
+
+
+----- If the segments fall into this database
 CREATE TABLE pccs (
 	pcc						varchar(4) primary key,
 	agency_name				varchar(120),

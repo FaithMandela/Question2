@@ -20,8 +20,7 @@ degreeid, degreename, quarterid, quarteryear, quarter,
 gpa, credit, hours, cummcredit, cummgpa
 FROM studentquarterlist
 WHERE (studentdegreeid=$P{studentdegreeid}) AND (approved=true)
-ORDER BY studentid, quarterid;
-]]>
+ORDER BY studentid, quarterid;]]>
 	</queryString>
 	<field name="studentid" class="java.lang.String"/>
 	<field name="studentname" class="java.lang.String"/>
@@ -64,7 +63,7 @@ ORDER BY studentid, quarterid;
 	<detail>
 		<band height="297" splitType="Stretch">
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-1" mode="Opaque" x="4" y="10" width="411" height="258" uuid="d4a3b4a6-572c-4c95-97f6-d3a57ab616e9"/>
+				<reportElement key="subreport-1" mode="Opaque" x="4" y="11" width="411" height="255" uuid="d4a3b4a6-572c-4c95-97f6-d3a57ab616e9"/>
 				<subreportParameter name="qstudentid">
 					<subreportParameterExpression><![CDATA[$F{qstudentid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -72,7 +71,7 @@ ORDER BY studentid, quarterid;
 				<subreportExpression><![CDATA[$P{reportpath} + "qgradeviewtrans.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement key="staticText-6" mode="Transparent" x="4" y="0" width="30" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="e69e4dfd-d32e-4776-955e-ab40b0824170"/>
+				<reportElement key="staticText-6" mode="Transparent" x="4" y="0" width="30" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="e69e4dfd-d32e-4776-955e-ab40b0824170"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -86,21 +85,7 @@ ORDER BY studentid, quarterid;
 				<text><![CDATA[Year :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-7" mode="Transparent" x="7" y="268" width="75" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="b15a18fd-0265-4132-9dec-3dc1d29dbeff"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[Quarter Hours :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="staticText-8" mode="Transparent" x="7" y="278" width="75" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="7512002c-48ca-4af3-8b9b-d23226078777"/>
+				<reportElement key="staticText-8" mode="Transparent" x="7" y="278" width="75" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="7512002c-48ca-4af3-8b9b-d23226078777"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -114,21 +99,7 @@ ORDER BY studentid, quarterid;
 				<text><![CDATA[Quarter GPA :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-9" mode="Transparent" x="169" y="268" width="98" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="05c4cf8e-ac87-4548-af22-fc9ce9fc5b67"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<text><![CDATA[Cummulative Hours :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="staticText-10" mode="Transparent" x="169" y="278" width="98" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="6b3125e6-0332-4292-abea-4dc68daae8ee"/>
+				<reportElement key="staticText-10" mode="Transparent" x="169" y="278" width="98" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="6b3125e6-0332-4292-abea-4dc68daae8ee"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -141,22 +112,8 @@ ORDER BY studentid, quarterid;
 				</textElement>
 				<text><![CDATA[Cummulative GPA :]]></text>
 			</staticText>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-8" mode="Transparent" x="82" y="268" width="75" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="2140cfa8-b624-468e-855f-a36817dba69b"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
-			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-9" mode="Transparent" x="82" y="278" width="75" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="645f5615-c390-41cf-9915-b10d0bd006d7"/>
+				<reportElement key="textField-9" mode="Transparent" x="82" y="278" width="75" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="645f5615-c390-41cf-9915-b10d0bd006d7"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -170,7 +127,7 @@ ORDER BY studentid, quarterid;
 				<textFieldExpression><![CDATA[$F{gpa}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-10" mode="Transparent" x="34" y="0" width="66" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="a20c64f1-8d84-45d3-88fc-998fe44d47dc"/>
+				<reportElement key="textField-10" mode="Transparent" x="34" y="0" width="66" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="a20c64f1-8d84-45d3-88fc-998fe44d47dc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -183,22 +140,8 @@ ORDER BY studentid, quarterid;
 				</textElement>
 				<textFieldExpression><![CDATA[$F{quarteryear}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-11" mode="Transparent" x="267" y="268" width="90" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="b042e9a1-aec0-419d-8945-0c7eee0c2ae6"/>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
-					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cummcredit}]]></textFieldExpression>
-			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-12" mode="Transparent" x="267" y="278" width="90" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="c691c322-078b-4dbf-ad35-ae8c7ec84731"/>
+				<reportElement key="textField-12" mode="Transparent" x="267" y="278" width="90" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="c691c322-078b-4dbf-ad35-ae8c7ec84731"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -212,7 +155,7 @@ ORDER BY studentid, quarterid;
 				<textFieldExpression><![CDATA[$F{cummgpa}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-18" mode="Transparent" x="142" y="0" width="66" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="78f172c4-3cc3-4d0e-889b-711ec1cd8d23"/>
+				<reportElement key="textField-18" mode="Transparent" x="142" y="0" width="66" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="78f172c4-3cc3-4d0e-889b-711ec1cd8d23"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -226,7 +169,7 @@ ORDER BY studentid, quarterid;
 				<textFieldExpression><![CDATA[$F{quarter}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-21" mode="Transparent" x="100" y="0" width="42" height="10" forecolor="#000000" backcolor="#FFFFFF" uuid="6f11b0ad-da8c-42d7-919a-465bf6ef9fa9"/>
+				<reportElement key="staticText-21" mode="Transparent" x="100" y="0" width="42" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="6f11b0ad-da8c-42d7-919a-465bf6ef9fa9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -242,6 +185,62 @@ ORDER BY studentid, quarterid;
 			<line>
 				<reportElement key="line-2" x="4" y="291" width="775" height="1" forecolor="#CCCCCC" uuid="466f2e5c-ec99-4bba-a2d7-340f5b810be6"/>
 			</line>
+			<staticText>
+				<reportElement key="staticText-7" mode="Transparent" x="7" y="267" width="75" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="b15a18fd-0265-4132-9dec-3dc1d29dbeff"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Quarter Hours :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-9" mode="Transparent" x="169" y="267" width="98" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="05c4cf8e-ac87-4548-af22-fc9ce9fc5b67"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Cummulative Hours :]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-8" mode="Transparent" x="82" y="267" width="75" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="2140cfa8-b624-468e-855f-a36817dba69b"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement key="textField-11" mode="Transparent" x="267" y="267" width="90" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="b042e9a1-aec0-419d-8945-0c7eee0c2ae6"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
+					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cummcredit}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

@@ -35,6 +35,7 @@
 			<MENU name="Tickets Years" role="admin,staff">102</MENU>
 		</MENU>
 		<MENU name="Approval" role="admin,staff">83</MENU>
+		<MENU name="Workflow" role="admin,staff">40</MENU>
 		<MENU name="Emails" role="admin,staff">60</MENU>
 		<MENU name="Report" role="admin,staff">
 			<MENU name="Productivity">110</MENU>
@@ -274,32 +275,43 @@
 	</DESK>
 	<DESK w="700" name="Active Consultants" key="31" h="650">
 		<GRID name="Active Consultants" keyfield="entity_id" orderby="entity_id" table="vw_consultant" tab.count="count(entity_id)" where="is_active='true'">
-			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created" fnc="application_date::date">application_date</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
-			<TEXTFIELD w="50" title="Org Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="50" title="Pseudo Code">pcc</TEXTFIELD>
+			<TEXTFIELD w="50" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date" fnc="application_date::date">application_date</TEXTFIELD>
+			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+			<FORMVIEW name="Consultant Information" keyfield="entity_id" linkfield="entity_id" table="vw_entitys">
+				<TEXTFIELD w="430" title="Email Address" required="true" y="50" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="PCCs" required="true" y="30" h="20" x="290" span="true">pcc</TEXTFIELD>
+				<TEXTFIELD w="100" title="Sign On Code initials" required="true" y="10" h="20" x="490" span="true">son</TEXTFIELD>
+				<TEXTFIELD w="150" title="Username" required="true" y="30" h="20" x="290" span="true">user_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Mobile Number" required="true" y="30" h="20" x="290" span="true">primary_telephone</TEXTFIELD>
+			</FORMVIEW>
+			<FORM fornew="true" new="true" save.button="Apply" name="Change PCC" keyfield="entity_id" edit="false" delete="false" audit="false" linkfield="entity_id" table="entitys">
+				<TEXTFIELD w="150" title="PCC" required="true" y="30" h="20" x="290" span="true">change_pcc</TEXTFIELD>
+				<TEXTFIELD w="100" title="SON" required="true" y="10" h="20" x="490" span="true">change_son</TEXTFIELD>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Purged Consultants" key="32" h="650">
 		<GRID name="Purged Consultants" keyfield="entity_id" orderby="entity_id DESC" table="vw_purged_consultant" tab.count="count(entity_id)">
-			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created" fnc="application_date::date">application_date</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
-			<TEXTFIELD w="50" title="Org Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="50" title="Pseudo Code">pcc</TEXTFIELD>
+			<TEXTFIELD w="50" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date">date_enroled</TEXTFIELD>
+			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Rejected Consultants" key="33" h="650">
 		<GRID new="false" name="Rejected Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" where="status='Rejected'">
-			<TEXTFIELD w="50" title="ID">applicant_id</TEXTFIELD>
+			<TEXTFIELD w="50" title="User">applicant_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created" fnc="application_date::date">application_date</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
-			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
+			<TEXTFIELD w="50" title="PCC">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date">application_date</TEXTFIELD>
-			<TEXTFIELD w="75" title="Details">details</TEXTFIELD>
+			<CHECKBOX w="75" title="Status">status</CHECKBOX>
 			<FORM new="false" name="Details" keyfield="applicant_id" linkfield="applicant_id" table="applicants">
 				<TEXTAREA w="50" title="Details">details</TEXTAREA>
 			</FORM>
@@ -448,53 +460,26 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Update Contant Details" key="15" h="500">
-		<GRID new="false" name="Update Contant Details" keyfield="entity_id" role="consultant" table="vw_entitys" user="entity_id" key="5">
-			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
+		<FORMVIEW new="false" name="Update Contant Details" keyfield="entity_id" delete="false" role="consultant" table="vw_entitys" user="entity_id" key="5">
+			<TEXTFIELD w="75" title="User ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="140" title="Full Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
-			<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
-			<CHECKBOX w="100" title="Super User" format="boolean">super_user</CHECKBOX>
 			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
-			<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
-			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'entitys'">
-				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
-				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
-				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
-				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
-				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
-				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="entitys">table_name</DEFAULT>
-					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
-					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
-					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
-					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
-					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
-					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
-					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
-					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
-					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
-					<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
-					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
-				</FORM>
-			</GRID>
-			<FORM new="false" name="Entitys" keyfield="entity_id" table="entitys">
+			<TEXTFIELD w="150" title="PCCs" required="true" y="30" h="20" x="290" span="true">pcc</TEXTFIELD>
+			<TEXTFIELD w="100" title="Sign On Code initials" required="true" y="10" h="20" x="490" span="true">son</TEXTFIELD>
+			<FORM new="false" name="Contant Details" keyfield="entity_id" delete="false" table="entitys">
 				<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
 				<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
-				<TEXTFIELD w="150" title="First Password" y="150" h="20" x="290">first_password</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+				<TEXTDATE w="70" title="Date of Birth" y="170" h="70" x="10">birth_date</TEXTDATE>
 			</FORM>
-			<ACTIONS>
-				<ACTION fnct="change_password">Reset Password</ACTION>
-			</ACTIONS>
-		</GRID>
+			<FORM new="false" name="SON Details" keyfield="entity_id" delete="false" table="entitys">
+				<TEXTFIELD w="150" title="New PCC" y="50" h="20" x="10">change_pcc</TEXTFIELD>
+				<TEXTFIELD w="150" title="New SON" y="50" h="20" x="290">change_son</TEXTFIELD>
+			</FORM>
+		</FORMVIEW>
 	</DESK>
 	<DESK w="585" name="Ticket Summary" type="vert" key="101" h="500">
 		<GRID name="Month" keyfield="ticketperiod" orderby="ticketperiod desc" table="vwperiods" key="1">

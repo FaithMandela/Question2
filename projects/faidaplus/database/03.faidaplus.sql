@@ -15,6 +15,7 @@ CREATE INDEX orgs_account_manager_id ON orgs (account_manager_id);
 ALTER TABLE orgs DROP CONSTRAINT orgs_org_name_key;
 ALTER TABLE orgs DROP CONSTRAINT orgs_org_sufix_key;
 
+ALTER TABLE entitys ADD can_redeem boolean default true;
 ALTER TABLE entitys ADD salutation varchar(7);
 ALTER TABLE entitys ADD pcc_son varchar(7);
 ALTER TABLE entitys ADD son varchar(7);
@@ -107,6 +108,7 @@ CREATE TABLE orders (
 	order_status			varchar(50) default 'processing order',
 	order_total_amount		real default 0 not null,
 	shipping_cost			real default 0 not null,
+	town_name				varchar(50),
 	batch_no				integer,
 	batch_date				date,
 	details 				text
@@ -192,19 +194,20 @@ DROP VIEW vw_orgs;
 
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
-		orgs.pcc,
+		orgs.pcc, towns.town_id, towns.town_name,
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
 		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
 		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
-	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id
+		LEFT JOIN towns ON orgs.town_id = towns.town_id;
 
 CREATE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
 		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
-		vw_orgs.pcc,
+		vw_orgs.pcc, vw_orgs.town_id, vw_orgs.town_name,
 
 		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
 		vw_orgs.org_address_id, vw_orgs.org_table_name,
@@ -232,7 +235,7 @@ CREATE VIEW vw_entitys AS
 
 CREATE VIEW vw_products AS
 	SELECT products.product_id, products.product_name, products.product_details, products.product_uprice,
-		products.created, products.updated_by, suppliers.supplier_name, suppliers.supplier_id,
+		products.created, products.updated_by,products.image, suppliers.supplier_name, suppliers.supplier_id,
 		product_category.product_category_id,
 		product_category.product_category_name
 	FROM products JOIN suppliers ON products.supplier_id = suppliers.supplier_id
@@ -242,6 +245,8 @@ CREATE VIEW vw_orders AS
     SELECT orders.order_id, orders.order_date, orders.order_status, orders.order_total_amount, orders.batch_no,
         orders.shipping_cost, orders.details,
         (orders.order_total_amount + orders.shipping_cost) as grand_total,
+        
+        vw_entitys.town_name, vw_entitys.org_premises, vw_entitys.org_street,
         vw_entitys.entity_name, vw_entitys.son,
         vw_entitys.entity_id, vw_entitys.pcc, vw_entitys.org_name, vw_entitys.primary_email,
         vw_entitys.primary_telephone, vw_entitys.function_role, vw_entitys.entity_role,
@@ -254,11 +259,11 @@ CREATE VIEW vw_pccs AS
 		pccs.agency_incentive, pccs.incentive_son
 	FROM pccs INNER JOIN orgs ON pccs.pcc = orgs.pcc;
 
-CREATE VIEW vw_order_details AS
+CREATE OR REPLACE VIEW vw_order_details AS
 	SELECT order_details.order_details_id, vw_orders.order_id, vw_orders.order_date, vw_orders.order_status,
 		vw_orders.org_id, vw_orders.org_name, vw_products.product_id, vw_products.product_name,
 		vw_products.supplier_name, vw_products.supplier_id, vw_products.product_category_id,
-		vw_products.product_category_name, vw_orders.entity_name, vw_orders.entity_id,
+		vw_products.product_category_name,vw_products.image, vw_orders.entity_name, vw_orders.entity_id,
 		vw_orders.batch_no, order_details.product_uprice, order_details.product_quantity,
 		(order_details.product_uprice * order_details.product_quantity) as total_amount
 	FROM order_details JOIN vw_orders ON order_details.order_id = vw_orders.order_id
@@ -270,20 +275,20 @@ CREATE VIEW vw_applicants AS
 		applicants.status, applicants.consultant_dob, applicants.details
 	FROM applicants;
 
-CREATE VIEW vw_consultant AS
-	SELECT vw_entitys.entity_id, vw_entitys.primary_email, vw_entitys.date_enroled::date AS application_date,
+CREATE OR REPLACE VIEW vw_consultant AS
+	SELECT vw_entitys.entity_id,vw_entitys.user_name, vw_entitys.primary_email, vw_entitys.date_enroled::date AS application_date,
 		vw_entitys.pcc, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.is_active,
 		vw_entitys.son, vw_entitys.is_active as approved,
 		vw_entitys.birth_date
 	FROM vw_entitys;
 
-CREATE VIEW vw_purged_consultant AS
-	SELECT vw_entitys.entity_id, vw_entitys.primary_email, cast(vw_entitys.date_enroled as date),
+CREATE OR REPLACE VIEW vw_purged_consultant AS
+	SELECT vw_entitys.entity_id,vw_entitys.user_name, vw_entitys.primary_email, cast(vw_entitys.date_enroled as date),
 		vw_entitys.pcc, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.is_active,
 		vw_entitys.son, vw_entitys.is_active as approved,
 		points.period_id, vw_entitys.birth_date
 	FROM  vw_entitys
-		JOIN points ON vw_entitys.son = points.son AND vw_entitys.pcc = points.pcc
+		JOIN points ON vw_entitys.entity_id = points.entity_id
 		JOIN periods ON points.period_id = periods.period_id
 	WHERE periods.start_date < CURRENT_DATE - INTERVAL '6 months';
 
@@ -311,9 +316,15 @@ CREATE VIEW vw_son_points AS
 		vw_entitys.entity_name, vw_entitys.entity_id
 	FROM points JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
 		INNER JOIN periods ON points.period_id = periods.period_id;
+		
+CREATE OR REPLACE FUNCTION get_order_details(integer) RETURNS text AS $$
+	SELECT (vw_order_details.product_quantity || ' @ ' || vw_order_details.product_name || ' added to shopping cart') as details
+	FROM vw_order_details
+	WHERE order_id = $1;
+$$ LANGUAGE sql;
 
 CREATE OR REPLACE VIEW vw_son_statement AS
-	SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
+SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
 		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
@@ -321,27 +332,12 @@ CREATE OR REPLACE VIEW vw_son_statement AS
 		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details
 	FROM vw_son_points)
 	UNION
-	(SELECT 0::real AS float4, vw_order_details.total_amount::real AS order_total_amount,
+	(SELECT 0::real AS float4, vw_orders.order_total_amount::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
-		(vw_order_details.product_quantity||' @ '||vw_order_details.product_name||' added to shopping cart')as details
-	FROM vw_orders
-	JOIN vw_order_details ON vw_orders.order_id = vw_order_details.order_id)) a
+		get_order_details(vw_orders.order_id) AS details
+	FROM vw_orders)) a
 	ORDER BY a.order_date;
-
-
-CREATE VIEW vw_statement AS
-	SELECT vw_points.amount, sum(vw_points.points)as dr, vw_points.bonus,
-		vw_orders.entity_id, vw_orders.order_date, vw_orders.order_status,
-		vw_orders.entity_name, vw_orders.son, sum(vw_orders.order_total_amount)as cr,
-		vw_orders.pcc,
-		(sum(vw_points.points)-sum(vw_orders.order_total_amount))as balance,
-		orgs.org_name
-	FROM vw_orders INNER JOIN vw_points ON vw_orders.entity_id = vw_points.entity_id
-		JOIN orgs ON vw_orders.pcc = orgs.pcc
-	GROUP BY vw_orders.entity_id, vw_orders.order_date,vw_orders.order_status,vw_orders.entity_name,
-		vw_orders.son, vw_orders.pcc,vw_points.pcc,  vw_points.son,
-		vw_points.amount,vw_points.bonus,orgs.org_name;
 
 CREATE VIEW vw_all_bonus AS
 	SELECT bonus.bonus_id, bonus.entity_id, bonus.percentage, bonus.is_active,

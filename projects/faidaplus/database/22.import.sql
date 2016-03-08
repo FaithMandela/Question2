@@ -1,3 +1,4 @@
+DROP TRIGGER ins_orders ON orders;
 
 -- load extension first time after install
 CREATE EXTENSION mysql_fdw;
@@ -28,7 +29,7 @@ CREATE FOREIGN TABLE i_staff (
 	email			varchar(150), 
 	cellphone			varchar(22), 
 	landline			varchar(22), 
-	shipping			VARCHAR, 
+	shipping			text, 
 	rel_id_staff			integer
 )
 SERVER mysql_server OPTIONS(dbname 'faidaplus', table_name 'staff');
@@ -354,8 +355,8 @@ FROM i_bonus_total
 WHERE (points.period_id = i_bonus_total.rel_id_segment_period)
 	AND (points.entity_id = i_bonus_total.rel_id_user);
 
-INSERT INTO orders (order_id, entity_id, order_status, order_date, shipping_cost)
-SELECT a.id_basket, a.rel_id_user, b.status, check_in_date_time, a.shipping_cost
+INSERT INTO orders (order_id, entity_id, batch_no, order_status, order_date, shipping_cost)
+SELECT a.id_basket, a.rel_id_user, a.rel_id_basket_batch, b.status, check_in_date_time, a.shipping_cost
 FROM i_basket a INNER JOIN i_basket_status b ON a.rel_id_basket_status = b.id_basket_status
 WHERE a.checkout = '1';
 
@@ -386,7 +387,6 @@ SELECT setval('public.currency_currency_id_seq', 4);
 SELECT setval('public.entity_subscriptions_entity_subscription_id_seq', 1850);
 SELECT setval('public.entity_types_entity_type_id_seq', 3);
 SELECT setval('public.entitys_entity_id_seq', 2381);
-SELECT setval('public.fiscal_years_fiscal_year_id_seq', 2016);
 SELECT setval('public.order_details_order_details_id_seq', 20235);
 SELECT setval('public.orders_order_id_seq', 10597);
 SELECT setval('public.orgs_org_id_seq', 3124);
@@ -400,4 +400,7 @@ SELECT setval('public.sys_logins_sys_login_id_seq', 1);
 SELECT setval('public.towns_town_id_seq', 59);
 
 
+CREATE TRIGGER ins_orders AFTER INSERT ON orders
+  FOR EACH ROW EXECUTE PROCEDURE ins_orders();
 
+  
