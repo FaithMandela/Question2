@@ -33,7 +33,8 @@
                 vw_order_details.total_amount
                FROM vw_order_details
                  JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
-                 JOIN vw_products ON vw_products.product_id = vw_order_details.product_id;]]>
+                 JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
+		WHERE vw_orders.batch_no = '$P!{batch_no}';]]>
 	</queryString>
 	<field name="order_details_id" class="java.lang.Integer"/>
 	<field name="order_id" class="java.lang.Integer"/>

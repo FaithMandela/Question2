@@ -354,7 +354,7 @@ SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
 		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details
 	FROM vw_son_points)
 	UNION
-	(SELECT 0::real AS float4, vw_orders.order_total_amount::real AS order_total_amount,
+	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
 		get_order_details(vw_orders.order_id) AS details

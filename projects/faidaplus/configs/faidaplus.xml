@@ -1,24 +1,23 @@
 <APP color="green" name="Faida Plus" password="change_password" material="true">
 	<MENU name="Faida Plus">
-		<MENU page="index.jsp" name="Redeem">0</MENU>
+		<MENU page="index.jsp" name="Redeem" role="admin,staff,consultant">0</MENU>
+		<MENU page="orders" name="Orders" role="admin,staff,consultant">0</MENU>
+		<MENU page="statement" name="Statement" role="admin,staff,consultant">0</MENU>
 		<MENU name="Products" role="admin,staff">
 			<MENU name="Products" role="admin,staff">7</MENU>
 			<MENU name="Products Category" role="admin,staff">21</MENU>
 			<MENU name="Suppliers" role="admin,staff">22</MENU>
 		</MENU>
-		<MENU name="Orders" role="admin,staff">
+		<MENU name="All Orders" role="admin,staff">
 			<MENU name="My Orders" role="consultant">108</MENU>
-			<MENU name="Orders" role="admin,staff">8</MENU>
+			<MENU name="All Orders" role="admin,staff">8</MENU>
 			<MENU name="Close Batch" role="admin,staff">115</MENU>
 		</MENU>
-		<MENU name="Statements" role="admin,staff">16</MENU>
 		<MENU name="Points" role="admin,staff">107</MENU>
 		<MENU name="Consultants" role="admin,staff">9</MENU>
 		<MENU name="Agency" role="admin,staff">111</MENU>
 		<MENU name="Update Contact Details" role="consultant">15</MENU>
 		<MENU name="Tickets" role="admin,staff">
-			<MENU name="Tickets">2</MENU>
-			<MENU name="Segments">3</MENU>
 			<MENU name="Tickets Years" role="admin,staff">102</MENU>
 		</MENU>
 		<MENU name="Approval" role="admin,staff">83</MENU>
@@ -558,7 +557,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Update Contact Details" key="15" h="500">
-		<FORMVIEW new="false" name="Update Contact Details" keyfield="entity_id" delete="false" role="consultant" table="vw_entitys" user="entity_id" key="5">
+		<FORMVIEW new="false" name="Update Contact Details" gohint="Click on GO to edit your details of change travel agency" keyfield="entity_id" delete="false" role="consultant" table="vw_entitys" user="entity_id" key="5">
 			<TEXTFIELD w="75" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Full Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -663,7 +662,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Agency" key="111" h="550">
-		<GRID name="Agency" keyfield="org_id" role="admin" table="vw_orgs" tab.count="count(org_id)" noorg="true" key="2">
+		<GRID name="Agency" keyfield="org_id" role="admin,staff" table="vw_orgs" tab.count="count(org_id)" noorg="true" key="2">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
@@ -729,6 +728,7 @@
 				<COMBOBOX w="430" title="Parent Org ID" lptable="orgs" lpkey="org_id" y="30" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Agency Name" y="50" h="20" x="10">org_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="PCC">pcc</TEXTFIELD>
+				<COMBOBOX w="430" title="Delivery Town" lptable="towns" lpkey="town_id" y="30" h="20" x="10" lpfield="town_name">town_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Org Sufix" y="50" h="20" x="290">org_sufix</TEXTFIELD>
 				<CHECKBOX w="150" title="Default" y="70" h="20" x="10">is_default</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="70" h="20" x="290">is_active</CHECKBOX>
@@ -737,6 +737,29 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				<TEXTFIELD w="150" title="Pcc" y="180" h="20" x="10">pcc</TEXTFIELD>
 			</FORM>
+			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'orgs'">
+				<TEXTFIELD w="140" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="80" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="140" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="140" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="120" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="120" title="Email">email</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="orgs">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="PCCs" key="112" h="550">
@@ -799,15 +822,13 @@
 	<DESK w="700" name="Orders Reports" key="113" h="550">
 		<FILTER w="700" name="Batch Orders " split="150" type="vert" key="order_date" h="550">
 			<FILTERFORM name="Batch Orders ">
-				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+				<TEXTFIELD w="150" title="Batch No." y="50" key="maxdate" h="20" x="290">batch_no</TEXTFIELD>
 			</FILTERFORM>
 			<JASPER name="Batch Orders" reportfile="batch_orders.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Batch Items " split="150" type="vert" key="order_date" h="550">
 			<FILTERFORM name="Batch Items ">
-				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+				<TEXTFIELD w="150" title="Batch No." y="50" key="maxdate" h="20" x="290">batch_no</TEXTFIELD>
 			</FILTERFORM>
 			<JASPER name="Batch Items" reportfile="batch_items.jasper"></JASPER>
 		</FILTER>
@@ -884,7 +905,7 @@
 	<DESK w="700" name="Print Batch" key="125" h="550">
 		<FILTER w="700" name="Print Batch " split="150" type="vert" key="order_date" h="550">
 			<FILTERFORM name="Print Batch ">
-				<COMBOBOX w="50" title="Batch Number" lptable="orders" lpkey="batch_no" y="30" h="20" x="10" lpfield="batch_no">batch_no</COMBOBOX>
+				<TEXTFIELD w="150" title="Batch No." y="50" key="maxdate" h="20" x="290">batch_no</TEXTFIELD>
 			</FILTERFORM>
 			<JASPER name="Print Batch" reportfile="print_batch.jasper"></JASPER>
 		</FILTER>
