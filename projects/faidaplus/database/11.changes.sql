@@ -10,7 +10,7 @@ INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('5', '201
 INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('8', '2016-02-01','2016-03-31','points difference in Jan','8GH');
 
 
-UPDATE bonus SET org_id = bonus.org_id, approve_status = 'Approved'
+UPDATE bonus SET org_id = orgs.org_id, approve_status = 'Approved', is_active = true
 FROM orgs WHERE orgs.pcc = bonus.pcc;
 
 DELETE FROM points WHERE period_id IN (109, 110);
