@@ -13,7 +13,9 @@ UPDATE bonus SET org_id = bonus.org_id
 FROM orgs WHERE orgs.pcc = bonus.pcc;
 
 DELETE FROM points WHERE period_id IN (109, 110);
-DELETE FROM periods WHERE period_id IN (109, 110);
+
+
+UPDATE entitys SET can_redeem = false WHERE org_id IN (SELECT org_id FROM orgs WHERE pcc IN ('745E', '757F'));
 
 
 CREATE EXTENSION postgres_fdw;
