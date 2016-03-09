@@ -296,7 +296,7 @@ CREATE OR REPLACE VIEW vw_purged_consultant AS
 	WHERE points.point_date < CURRENT_DATE - INTERVAL '6 months'
 	GROUP BY vw_entitys.entity_id,vw_entitys.user_name, vw_entitys.primary_email, cast(vw_entitys.date_enroled as date),
 		vw_entitys.pcc, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.is_active,
-		vw_entitys.son, vw_entitys.is_active ,
+		vw_entitys.son, vw_entitys.last_login, vw_entitys.is_active, vw_entitys.account_manager_id,vw_entitys.account_manager_name,
 		 vw_entitys.birth_date;
 
 CREATE VIEW vw_points AS

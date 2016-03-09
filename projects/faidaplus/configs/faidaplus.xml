@@ -577,6 +577,9 @@
 				<TEXTFIELD w="150" title="New SON" y="50" h="20" x="290">change_son</TEXTFIELD>
 			</FORM>
 		</FORMVIEW>
+		<FORM foredit="true" user_field="org_id" new="false" name="Delivery Town" keyfield="org_id" delete="false" user_fnct="get_org_id" table="orgs">
+			<COMBOBOX w="150" title="Town" lptable="towns" noorg="true" y="10" h="20" x="10" lpfield="town_name">town_id</COMBOBOX>
+		</FORM>
 	</DESK>
 	<DESK w="585" name="Ticket Summary" type="vert" key="101" h="500">
 		<GRID name="Month" keyfield="ticketperiod" orderby="ticketperiod desc" table="vwperiods" key="1">

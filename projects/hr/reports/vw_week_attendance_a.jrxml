@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_week_attendance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5b3c306-744d-4c3a-8cb3-6f7db278641d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_week_attendance_a" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5b3c306-744d-4c3a-8cb3-6f7db278641d">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="539"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="56"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -37,7 +37,8 @@ COALESCE(fri_time_diff, '00:00:00'::interval) -
 
 FROM vw_week_attendance
 
-WHERE (vw_week_attendance.period_id = '$P!{filterid}')
+WHERE (vw_week_attendance.active = true)
+AND (vw_week_attendance.period_id = '$P!{filterid}')
 
 ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 	</queryString>

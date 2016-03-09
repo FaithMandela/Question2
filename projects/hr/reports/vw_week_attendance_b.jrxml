@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_week_attendance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5b3c306-744d-4c3a-8cb3-6f7db278641d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_week_attendance_b" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5b3c306-744d-4c3a-8cb3-6f7db278641d">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="539"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="56"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -26,7 +26,8 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_week_attendance.week_start, vw_week_attendance.employee_id, vw_week_attendance.employee_name, vw_week_attendance.mon_time_in, vw_week_attendance.mon_time_out, vw_week_attendance.tue_time_in, vw_week_attendance.tue_time_out, vw_week_attendance.wed_time_in, vw_week_attendance.wed_time_out, vw_week_attendance.thu_time_in, vw_week_attendance.thu_time_out, vw_week_attendance.fri_time_in, vw_week_attendance.fri_time_out,
+		<![CDATA[SELECT vw_week_attendance.period_code, vw_week_attendance.start_date,
+vw_week_attendance.week_start, vw_week_attendance.employee_id, vw_week_attendance.employee_name, vw_week_attendance.mon_time_in, vw_week_attendance.mon_time_out, vw_week_attendance.tue_time_in, vw_week_attendance.tue_time_out, vw_week_attendance.wed_time_in, vw_week_attendance.wed_time_out, vw_week_attendance.thu_time_in, vw_week_attendance.thu_time_out, vw_week_attendance.fri_time_in, vw_week_attendance.fri_time_out,
 
 (mon_count + tue_count + wed_count + thu_count + fri_count) as lunch_hours,
 
@@ -37,10 +38,13 @@ COALESCE(fri_time_diff, '00:00:00'::interval) -
 
 FROM vw_week_attendance
 
-WHERE (vw_week_attendance.period_id = '$P!{filterid}')
+WHERE (vw_week_attendance.active = true)
+AND (vw_week_attendance.entity_id = '$P!{filterid}')
 
-ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
+ORDER BY vw_week_attendance.period_code desc, vw_week_attendance.week_start]]>
 	</queryString>
+	<field name="period_code" class="java.lang.String"/>
+	<field name="start_date" class="java.sql.Date"/>
 	<field name="week_start" class="java.sql.Timestamp"/>
 	<field name="employee_id" class="java.lang.String"/>
 	<field name="employee_name" class="java.lang.String"/>
@@ -56,8 +60,8 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 	<field name="fri_time_out" class="java.sql.Time"/>
 	<field name="lunch_hours" class="java.lang.Integer"/>
 	<field name="time_diff" class="java.lang.String"/>
-	<group name="employee_name">
-		<groupExpression><![CDATA[$F{employee_name}]]></groupExpression>
+	<group name="period_code">
+		<groupExpression><![CDATA[$F{period_code}]]></groupExpression>
 		<groupHeader>
 			<band height="49">
 				<staticText>
@@ -65,28 +69,28 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<text><![CDATA[Employee ID]]></text>
+					<text><![CDATA[Month ID]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="95" y="0" width="59" height="15" uuid="f96bcf61-89fc-431d-b8d6-122343042c54"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{period_code}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement style="Column header" x="154" y="0" width="101" height="15" forecolor="#000000" uuid="21be90f3-4de8-4213-8bd2-79b00ec03b8d"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<text><![CDATA[Employee Name]]></text>
+					<text><![CDATA[Month]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="MMMMM, yyyy" isBlankWhenNull="true">
 					<reportElement style="Detail" x="255" y="0" width="336" height="15" uuid="e085756e-4cc4-493a-b0f3-30c6f1bd44a1"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{employee_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement style="Column header" x="1" y="33" width="94" height="15" forecolor="#000000" uuid="9d51eadf-d803-4902-8c96-e7adb1835458"/>
@@ -271,7 +275,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="71" splitType="Stretch">
+		<band height="86" splitType="Stretch">
 			<staticText>
 				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="09ca21c7-76f4-45fc-aae2-f4ff681f3c71"/>
 				<textElement verticalAlignment="Middle">
@@ -279,6 +283,34 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textElement>
 				<text><![CDATA[Week Attendance Report]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="255" y="70" width="336" height="15" uuid="13e910cf-9d82-41b0-9352-1613ac7e3ff3"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{employee_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="154" y="70" width="101" height="15" forecolor="#000000" uuid="da4f92ed-b7f5-4082-996b-9427439608d1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Employee Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="0" y="70" width="95" height="15" forecolor="#000000" uuid="42a33788-0374-4f7e-b62e-057d4bb5925d"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Employee ID]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="95" y="70" width="59" height="15" uuid="557b3862-c9ab-4471-b96a-0880cf2afb76"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{employee_id}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

@@ -347,3 +347,8 @@ CREATE OR REPLACE FUNCTION get_town(integer) RETURNS text AS $$
 	JOIN vw_entitys ON vw_entitys.org_id = orgs.org_id
 	WHERE vw_entitys.entity_id = $1;
 $$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION get_org_id(varchar(12)) RETURNS integer AS $$
+	SELECT org_id FROM entitys WHERE entity_id = $1::integer;
+$$ LANGUAGE sql;
+

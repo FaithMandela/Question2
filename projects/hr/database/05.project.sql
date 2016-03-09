@@ -331,12 +331,19 @@ CREATE VIEW vw_attendance AS
 	
 CREATE VIEW vw_week_attendance AS
 	SELECT a.period_id, a.start_date, a.period_year, a.period_month, a.period_code, 
-		a.week_start, a.p_week, a.org_id, a.entity_id, a.employee_id, a.employee_name,
+		a.week_start, a.p_week, a.org_id, a.entity_id, a.employee_id, a.employee_name, a.active,
+		
 		pp1.time_in as mon_time_in, pp1.time_out as mon_time_out, (pp1.time_out - pp1.time_in) as mon_time_diff,
 		pp2.time_in as tue_time_in, pp2.time_out as tue_time_out, (pp2.time_out - pp2.time_in) as tue_time_diff,
 		pp3.time_in as wed_time_in, pp3.time_out as wed_time_out, (pp3.time_out - pp3.time_in) as wed_time_diff,
 		pp4.time_in as thu_time_in, pp4.time_out as thu_time_out, (pp4.time_out - pp4.time_in) as thu_time_diff,
-		pp5.time_in as fri_time_in, pp5.time_out as fri_time_out, (pp5.time_out - pp5.time_in) as fri_time_diff
+		pp5.time_in as fri_time_in, pp5.time_out as fri_time_out, (pp5.time_out - pp5.time_in) as fri_time_diff,
+		
+		(CASE WHEN (pp1.time_in is null) or (pp1.time_out is null) THEN 0 ELSE 1 END) mon_count,
+		(CASE WHEN (pp2.time_in is null) or (pp2.time_out is null) THEN 0 ELSE 1 END) tue_count,
+		(CASE WHEN (pp3.time_in is null) or (pp3.time_out is null) THEN 0 ELSE 1 END) wed_count,
+		(CASE WHEN (pp4.time_in is null) or (pp4.time_out is null) THEN 0 ELSE 1 END) thu_count,
+		(CASE WHEN (pp5.time_in is null) or (pp5.time_out is null) THEN 0 ELSE 1 END) fri_count
 	FROM vw_employee_periods a
 		LEFT JOIN (SELECT p1.time_in, p1.time_out, p1.entity_id, p1.a_month, p1.a_week
 			FROM vw_attendance p1 WHERE p1.a_dow = 1) pp1 ON
