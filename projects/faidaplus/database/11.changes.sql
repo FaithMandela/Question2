@@ -41,6 +41,7 @@ CREATE OR REPLACE FUNCTION generate_points(varchar(12), varchar(12), varchar(12)
 DECLARE
 	rec						RECORD;
 	v_period				varchar(7);
+	period					date;
 	v_period_id				integer;
 	v_org_id				integer;
 	v_entity_id				integer;
@@ -51,7 +52,7 @@ DECLARE
 BEGIN
 
 	v_period_id = $1::integer;
-	SELECT to_char(start_date, 'mmyyyy') INTO v_period
+	SELECT end_date,to_char(start_date, 'mmyyyy') INTO period,v_period
 	FROM periods WHERE period_id = v_period_id AND closed = false;
 	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
@@ -63,7 +64,7 @@ BEGIN
 			v_points := rec.totalsegs * 12 ;
 		END IF;
 
-		IF(251>= rec.totalsegs::integer AND rec.total_segs::integer <=500) THEN
+		IF(251<= rec.totalsegs::integer AND rec.totalsegs::integer <=500) THEN
 			v_amount := 16;
 			v_points := rec.totalsegs * 16 ;
 		END IF;
@@ -83,16 +84,16 @@ BEGIN
 			AND (pcc = rec.pcc) AND (son = rec.son);
 
 		IF(v_points_id is null)THEN
-			INSERT INTO points (period, period_id, entity_id, pcc, son, segments, amount, points)
-			VALUES (v_period, v_period_id, v_entity_id, rec.pcc, rec.son, rec.total_segs, v_amount, v_points);
+			INSERT INTO points (point_date, period_id, org_id, entity_id, pcc, son, segments, amount, points)
+			VALUES (period, v_period_id, v_org_id, v_entity_id, rec.pcc, rec.son, rec.totalsegs, v_amount, v_points);
 		ELSE
-			UPDATE points SET segments = rec.total_segs, amount = v_amount, points = v_points
+			UPDATE points SET segments = rec.totalsegs, amount = v_amount, points = v_points
 			WHERE points_id = v_points_id;
 		END IF;
 	END LOOP;
 
 	IF(rec IS NULL)THEN
-		msg := 'There are no segments for this month';
+		RAISE EXCEPTION 'There are no segments for this month';
 	ELSE
 		msg := 'Points computed';
 	END IF;

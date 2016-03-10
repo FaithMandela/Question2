@@ -1,8 +1,8 @@
 <APP color="green" name="Faida Plus" password="change_password" material="true">
 	<MENU name="Faida Plus">
 		<MENU page="index.jsp" name="Redeem" role="admin,staff,consultant">0</MENU>
-		<MENU page="orders" name="Orders" role="admin,staff,consultant">0</MENU>
-		<MENU page="statement" name="Statement" role="admin,staff,consultant">0</MENU>
+		<MENU icon="fa fa-cart-arrow-down" page="orders" name="Orders" role="admin,staff,consultant">0</MENU>
+		<MENU icon="fa fa-list" page="statement" name="Statement" role="admin,staff,consultant">0</MENU>
 		<MENU name="Products" role="admin,staff">
 			<MENU name="Products" role="admin,staff">7</MENU>
 			<MENU name="Products Category" role="admin,staff">21</MENU>
@@ -14,7 +14,7 @@
 			<MENU name="Close Batch" role="admin,staff">115</MENU>
 		</MENU>
 		<MENU name="Points" role="admin,staff">107</MENU>
-		<MENU name="Consultants" role="admin,staff">9</MENU>
+		<MENU icon="fa fa-users" name="Consultants" role="admin,staff">9</MENU>
 		<MENU name="Agency" role="admin,staff">111</MENU>
 		<MENU name="Update Contact Details" role="consultant">15</MENU>
 		<MENU name="Tickets" role="admin,staff">
@@ -31,6 +31,8 @@
 			<MENU name="Consultant Statement">123</MENU>
 			<MENU name="Summary Report">124</MENU>
 			<MENU name="Print Batch">125</MENU>
+			<MENU name="Total Upload Segments">126</MENU>
+			<MENU name="Total Bonus">127</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
@@ -41,7 +43,7 @@
 			<TILE w="60" name="PCCs" role="admin,staff" noorg.query="true" table="orgs" h="25">
 				<TEXTFIELD w="75" fnct="COALESCE(count(org_id), 0)" title="PCCs">pcc</TEXTFIELD>
 			</TILE>
-			<TILE w="60" name="New Orders" role="consultant" noorg.query="true" table="orders" where="(order_status = 'Processing Order' )" user="entity_id" h="25">
+			<TILE w="60" name="New Orders" role="consultant" noorg.query="true" table="orders" where="(order_status = 'processing order' )" user="entity_id" h="25">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
@@ -1061,5 +1063,23 @@
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Total Upload Segments" key="126" h="550">
+		<FILTER w="700" name="Total Upload Segments" split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Total Upload Segments ">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Total Upload Segments" reportfile="total_upload_seg.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Total Bonus Earnings" key="127" h="550">
+		<FILTER w="700" name="Total Bonus Earnings" split="150" type="vert" key="order_date" h="550">
+			<FILTERFORM name="Total Bonus Earnings ">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Total Bonus Earnings" reportfile="consultant_bonus.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>
