@@ -25,8 +25,11 @@
 	</parameter>
 	<parameter name="period_year" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.period_year, vw_employee_month.period_month,
-(vw_employee_month.basic_pay + vw_employee_month.tax_allowance + getAdjustment(vw_employee_month.employee_month_id, 4, 32)) as grosspay,
+		<![CDATA[SELECT vw_employee_month.entity_id, vw_employee_month.entity_name, vw_employee_month.period_year,
+	vw_employee_month.period_month,
+	vw_employee_month.exchange_rate * (vw_employee_month.basic_pay +
+	 vw_employee_month.tax_allowance + getAdjustment(vw_employee_month.employee_month_id, 4, 32))
+	as grosspay,
 Employee_Tax_Types.Amount as calcpaye,
 vw_employee_month.tax_tax as calcnssf, Period_Tax_Types.tax_relief,
 (Employee_Tax_Types.Amount + Period_Tax_Types.tax_relief) as fulltax,

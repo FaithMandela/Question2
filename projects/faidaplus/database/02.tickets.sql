@@ -92,20 +92,19 @@ CREATE TABLE imp_segs (
 	ACTTXNET				integer
 );
 
-SELECT a.runtyp, a.pcc, a.s_segs, b.total_segs
-
-FROM (SELECT runtyp, pcc, sum(acttxnet) as s_segs
-FROM imp_segs
-GROUP BY runtyp, pcc) a LEFT JOIN
-(SELECT ('M' || vwtickets.segperiod) as seg_period, vwtickets.ticketpcc, 
-	sum(vwtickets.activesegs) as total_segs
-FROM vwtickets
-GROUP BY vwtickets.segperiod, vwtickets.ticketpcc) b
-ON (a.runtyp = b.seg_period) AND (a.pcc = b.ticketpcc)
-
 CREATE VIEW vw_logs AS
 	SELECT pccs.pcc, pccs.agency_name, logs.log_id, logs.log_date, logs.currency, logs.process_date
 	FROM pccs INNER JOIN logs ON pccs.pcc = logs.pcc;
+
+CREATE VIEW vw_tickets AS
+	SELECT ticket_id, ticket_date, ticket_pcc, book_pcc,  pcc, bpcc, son,
+		TVOID, TOPEN, TUSED, TEXCH, TRFND, TARPT, TCKIN, TLFTD, TUNVL, TPRTD, TSUSP,
+		segs, (TOPEN + TUSED + TARPT + TCKIN + TLFTD + TPRTD + TUNVL) as activesegs,
+		to_char(ticket_date, 'MMYYYY') as ticket_period,
+		(CAST(date_part('year', ticket_date) - 2000 as varchar) || to_char(ticket_date, 'MM')) as seg_period,
+		to_char(ticket_date, 'Month') as ticket_month,
+		to_char(ticket_date, 'YYYY') as ticket_year
+	FROM tickets;
 
 CREATE VIEW vw_ticket_segs AS
 	SELECT pccs.pcc, pccs.agency_name, vw_tickets.ticket_period, vw_tickets.seg_period,
@@ -193,14 +192,5 @@ CREATE TRIGGER ins_tickets BEFORE UPDATE ON tickets
     FOR EACH ROW EXECUTE PROCEDURE ins_tickets();
 
     
-CREATE VIEW vw_tickets AS
-	SELECT ticket_id, ticket_date, ticket_pcc, book_pcc,  pcc, bpcc, son,
-		TVOID, TOPEN, TUSED, TEXCH, TRFND, TARPT, TCKIN, TLFTD, TUNVL, TPRTD, TSUSP,
-		segs, (TOPEN + TUSED + TARPT + TCKIN + TLFTD + TPRTD + TUNVL) as activesegs,
-		to_char(ticket_date, 'MMYYYY') as ticket_period,
-		(CAST(date_part('year', ticket_date) - 2000 as varchar) || to_char(ticket_date, 'MM')) as seg_period,
-		to_char(ticket_date, 'Month') as ticket_month,
-		to_char(ticket_date, 'YYYY') as ticket_year
-	FROM tickets;
 	
 	
