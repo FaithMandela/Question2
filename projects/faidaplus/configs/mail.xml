@@ -4,6 +4,7 @@
 	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/faidaplus/reports/">
 
+
 	<REPORT name="Orders Status" keyfield="sys_emailed_id" action="Emailed" actioncount="1" infile="true"
 		table="sys_emails, sys_emailed, vw_orders,vw_entitys"
 		where="(vw_orders.order_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
@@ -12,6 +13,9 @@
 		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
 		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
+		<BODYFIELD reference="{{orderNo}}" basetable="vw_orders">order_id</BODYFIELD>
+		<BODYFIELD reference="{{mailBody}}" basetable="sys_emailed">mail_body</BODYFIELD>
+		<BODYFIELD reference="{{amount}}" basetable="vw_orders">grand_total</BODYFIELD>
 		<PARAM basetable="vw_orders">order_id</PARAM>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 

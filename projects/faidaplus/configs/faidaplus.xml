@@ -1,28 +1,27 @@
 <APP color="green" name="Faida Plus" password="change_password" material="true">
 	<MENU name="Faida Plus">
-		<MENU page="index.jsp" name="Redeem" role="admin,staff,consultant">0</MENU>
-		<MENU icon="fa fa-cart-arrow-down" page="orders" name="Orders" role="admin,staff,consultant">0</MENU>
-		<MENU icon="fa fa-list" page="statement" name="Statement" role="admin,staff,consultant">0</MENU>
-		<MENU name="Products" role="admin,staff">
-			<MENU name="Products" role="admin,staff">7</MENU>
-			<MENU name="Products Category" role="admin,staff">21</MENU>
-			<MENU name="Suppliers" role="admin,staff">22</MENU>
-		</MENU>
-		<MENU name="All Orders" role="admin,staff">
-			<MENU name="My Orders" role="consultant">108</MENU>
-			<MENU name="All Orders" role="admin,staff">8</MENU>
-			<MENU name="Close Batch" role="admin,staff">115</MENU>
-		</MENU>
-		<MENU name="Points" role="admin,staff">107</MENU>
+		<MENU icon="fa fa-cart-arrow-down" page="orders" name="Orders" role="admin,staff,consultant">01</MENU>
+		<MENU icon="fa fa-file" page="statement" name="Statement" role="admin,staff,consultant">02</MENU>
+		<MENU name="Segments and value" role="admin,staff">107</MENU>
 		<MENU icon="fa fa-users" name="Consultants" role="admin,staff">9</MENU>
-		<MENU name="Agency" role="admin,staff">111</MENU>
-		<MENU name="Update Contact Details" role="consultant">15</MENU>
-		<MENU name="Tickets" role="admin,staff">
-			<MENU name="Tickets Years" role="admin,staff">102</MENU>
-		</MENU>
+		<MENU icon="fa fa-sitemap" name="Agency" role="admin,staff">111</MENU>
+		<MENU icon="fa fa-edit" name="Update Contact Details" role="consultant">15</MENU>
 		<MENU name="Approval" role="admin,staff">83</MENU>
 		<MENU name="Workflow" role="admin,staff">40</MENU>
 		<MENU name="Emails" role="admin,staff">60</MENU>
+		<MENU icon="fa fa-gift" name="Products" role="admin,staff">
+			<MENU icon="fa fa-gift" name="Products" role="admin,staff">7</MENU>
+			<MENU icon="fa fa-bars" name="Products Category" role="admin,staff">21</MENU>
+			<MENU name="Suppliers" role="admin,staff">22</MENU>
+		</MENU>
+		<MENU icon="fa fa-cart-arrow-down" name="All Redemptions" role="admin,staff">
+			<MENU icon="fa fa-cart-arrow-down" name="My Redemptions" role="consultant">108</MENU>
+			<MENU icon="fa fa-cart-arrow-down" name="Redemptions" role="admin,staff">8</MENU>
+			<MENU name="Close Batch" role="admin,staff">115</MENU>
+		</MENU>
+		<MENU icon="fa fa-ticket" name="Tickets" role="admin,staff">
+			<MENU name="Tickets Years" role="admin,staff">102</MENU>
+		</MENU>
 		<MENU name="Report" role="admin,staff">
 			<MENU name="Productivity">110</MENU>
 			<MENU name="Batch Orders">113</MENU>
@@ -85,7 +84,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="My Orders" key="108" h="500">
+	<DESK w="700" name="My Redemptions" key="108" h="500">
 		<GRID name="New Orders" keyfield="order_id" table="vw_orders" tab.count="count(order_id)" where="order_status = 'Processing Order'" user="entity_id">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
@@ -129,7 +128,7 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="All Orders" noorg="true" key="8" h="500">
+	<DESK w="700" name="All Redemptions" noorg="true" key="8" h="500">
 		<GRID name="All Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
@@ -196,80 +195,6 @@
 			</ACTIONS>
 		</GRID>
 		<GRID name="Orders Collected" keyfield="order_id" role="admin,staff" table="vw_orders" tab.count="count(order_id)" noorg="true" where="order_status = 'Collected'">
-			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
-			<ACTIONS>
-				<ACTION fnct="upd_orders_status" approval="3">Close</ACTION>
-			</ACTIONS>
-			<GRID name="Items Purchased" keyfield="product_id" linkfield="order_id" table="vw_order_details">
-				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
-				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
-				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
-				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
-			</GRID>
-		</GRID>
-	</DESK>
-	<DESK w="700" name="UnBatched Orders" noorg="true" key="10" h="500">
-		<GRID name="UnBatched Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is null)">
-			<TEXTFIELD w="75" title="Order ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
-			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
-			<ACTIONS>
-				<ACTION fnct="upd_orders_batch" approval="1">Batch</ACTION>
-			</ACTIONS>
-		</GRID>
-	</DESK>
-	<DESK w="700" name="Batched Orders" noorg="true" key="11" h="500">
-		<GRID name="Batched Orders" keyfield="order_id" role="admin,staff" orderby="batch_no DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is not null )">
-			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
-			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
-			<ACTIONS>
-				<ACTION fnct="upd_orders_status" approval="1">Awaiting Collection/Shipped</ACTION>
-			</ACTIONS>
-		</GRID>
-	</DESK>
-	<DESK w="700" name="Orders Awaiting Collection" noorg="true" key="12" h="500">
-		<GRID name=" Orders Awaiting Collection" keyfield="order_id" role="admin" orderby="order_id DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(order_status = 'Awaiting Collection')">
-			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
-			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
-			<GRID name="Items Awaiting Collection" keyfield="order_details_id" role="admin" linkfield="order_id" table="vw_order_details" noorg="true" where="(batch_no is not null)">
-				<TEXTFIELD w="275" title="Product ID">order_details_id</TEXTFIELD>
-				<TEXTFIELD w="275" title="Bached No.">batch_no</TEXTFIELD>
-				<TEXTFIELD w="275" title="Supplier Name">supplier_name</TEXTFIELD>
-				<TEXTFIELD w="200" title="Product Category Name">product_category_name</TEXTFIELD>
-				<TEXTFIELD w="275" title="Item Name">product_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Quantity">product_quantity</TEXTFIELD>
-				<TEXTFIELD w="125" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="125" title="Sub Total">total_amount</TEXTFIELD>
-				<TEXTFIELD w="200" title="Ordered Date">order_date</TEXTFIELD>
-				<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
-				<TEXTFIELD w="275" title="Consultant Name">entity_name</TEXTFIELD>
-			</GRID>
-			<ACTIONS>
-				<ACTION fnct="upd_orders_status" approval="2">Collected/Delivered</ACTION>
-			</ACTIONS>
-		</GRID>
-	</DESK>
-	<DESK w="700" name="Orders Collected" noorg="true" key="13" h="500">
-		<GRID name="Orders Collected" keyfield="order_id" role="admin" table="vw_orders" tab.count="count(order_id)" noorg="true" where="order_status = 'Collected'">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
@@ -405,9 +330,8 @@
 			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 		</GRID>
 		<GRID new="false" name="Rejected Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" where="status='Rejected'">
-			<TEXTFIELD w="50" title="User">applicant_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Created" fnc="date_enroled::date">date_enroled</TEXTFIELD>
-			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
+			<TEXTFIELD w="50" title="Username">applicant_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created" fnc="application_date::date">application_date</TEXTFIELD>
 			<TEXTFIELD w="50" title="PCC">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
 			<CHECKBOX w="75" title="Status">status</CHECKBOX>
@@ -416,7 +340,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Points" type="vert" key="107" h="550">
+	<DESK w="700" name="Total Segments and Value" type="vert" key="107" h="550">
 		<GRID name="Month" keyfield="period_id" orderby="period_id desc" table="vw_periods_c" key="1">
 			<TEXTFIELD w="40" title="Year">period_year</TEXTFIELD>
 			<TEXTFIELD w="40" title="Month">period_month</TEXTFIELD>

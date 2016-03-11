@@ -20,13 +20,17 @@ BEGIN
 	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
 	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP
 
-		IF((rec.totalsegs::integer >= 1) AND (rec.totalsegs::integer <= 250)) THEN
+		IF(1<= rec.totalsegs::integer AND rec.totalsegs::integer <=250 ) THEN
 			v_amount := 12;
 			v_points := rec.totalsegs * 12 ;
-		ELSIF(rec.totalsegs::integer <= 500) THEN
+		END IF;
+
+		IF(251<= rec.totalsegs::integer AND rec.totalsegs::integer <=500) THEN
 			v_amount := 16;
 			v_points := rec.totalsegs * 16 ;
-		ELSE
+		END IF;
+
+		IF(rec.totalsegs::integer >=501 ) THEN
 			v_amount := 20;
 			v_points := rec.totalsegs * 20 ;
 		END IF;
@@ -63,8 +67,6 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION generate_bonus(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec						RECORD;
-	v_start_date			date;
-	v_end_date				date;
 	v_period_bonus_ps		real;
 	v_period_bonus_amount	real;
 	v_pcc_bonus_ps			real;
@@ -75,43 +77,34 @@ DECLARE
 	msg 					varchar(120);
 BEGIN
 
-	SELECT start_date, end_date INTO v_start_date, v_end_date
-	FROM periods WHERE period_id = $1::integer AND closed = false;
-	IF(v_start_date IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
-	v_period_bonus_ps := 0;
-	v_period_bonus_amount := 0;
 	SELECT percentage, amount INTO v_period_bonus_ps, v_period_bonus_amount
 	FROM bonus
 	WHERE (period_id = $1::integer) AND (is_active = true) AND (approve_status = 'Approved');
 	IF(v_period_bonus_ps is null)THEN v_period_bonus_ps := 0; END IF;
 	IF(v_period_bonus_amount is null)THEN v_period_bonus_amount := 0; END IF;
 
+
 	FOR rec IN SELECT points_id, entity_id, period_id, pcc, son, segments, amount, points, bonus
 	FROM points WHERE (period_id = $1::integer) LOOP
-		v_pcc_bonus_ps := 0;
-		v_pcc_bonus_amount := 0;
-		v_son_bonus_ps := 0;
-		v_son_bonus_amount := 0;
 
-		SELECT bonus.percentage, bonus.amount INTO v_pcc_bonus_ps, v_pcc_bonus_amount
-		FROM bonus INNER JOIN orgs ON bonus.org_id = orgs.org_id
-			INNER JOIN entitys ON orgs.org_id = entitys.org_id
-		WHERE (entitys.entity_id = rec.entity_id) AND (bonus.is_active = true) AND (bonus.approve_status = 'Approved')
-			AND (bonus.start_date <= v_start_date) AND ((bonus.end_date is null) OR (bonus.end_date >= v_end_date));
+		SELECT percentage, amount INTO v_pcc_bonus_ps, v_pcc_bonus_amount
+		FROM bonus
+		WHERE (pcc = rec.pcc) AND (is_active = true) AND (approve_status = 'Approved')
+			AND (start_date <= current_date) AND ((end_date is null) OR (end_date >= current_date));
 		IF(v_pcc_bonus_ps is null)THEN v_pcc_bonus_ps := 0; END IF;
 		IF(v_pcc_bonus_amount is null)THEN v_pcc_bonus_amount := 0; END IF;
 
 		SELECT percentage, amount INTO v_son_bonus_ps, v_son_bonus_amount
 		FROM bonus
 		WHERE (consultant_id = rec.entity_id) AND (is_active = true) AND (approve_status = 'Approved')
-			AND (start_date <= v_start_date) AND ((end_date is null) OR (end_date >= v_end_date));
+			AND (start_date <= current_date) AND ((end_date is null) OR (end_date >= current_date));
 		IF(v_son_bonus_ps is null)THEN v_son_bonus_ps := 0; END IF;
 		IF(v_son_bonus_amount is null)THEN v_son_bonus_amount := 0; END IF;
 
-		v_bonus := (rec.points * v_period_bonus_ps / 100) + (rec.segments * v_period_bonus_amount);
-		v_bonus := v_bonus + (rec.points * v_pcc_bonus_ps / 100) + (rec.segments * v_pcc_bonus_amount);
-		v_bonus := v_bonus + (rec.points * v_son_bonus_ps / 100) + (rec.segments * v_son_bonus_amount);
+		v_bonus := (rec.points * v_period_bonus_ps / 100) + (rec.points * v_period_bonus_amount);
+		v_bonus := v_bonus + (rec.points * v_pcc_bonus_ps / 100) + (rec.points * v_pcc_bonus_amount);
+		v_bonus := v_bonus + (rec.points * v_son_bonus_ps / 100) + (rec.points * v_son_bonus_amount);
 
 		UPDATE points SET bonus = v_bonus WHERE points_id = rec.points_id;
 
@@ -358,4 +351,3 @@ $$ LANGUAGE sql;
 CREATE OR REPLACE FUNCTION get_org_id(varchar(12)) RETURNS integer AS $$
 	SELECT org_id FROM entitys WHERE entity_id = $1::integer;
 $$ LANGUAGE sql;
-
