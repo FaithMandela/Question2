@@ -1,22 +1,6 @@
 
 
 
-INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('4', '2016-01-01','2016-01-31','To handle segments discrepancies in Aug 2015','2RJ');
-INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('50', '2016-01-01','2016-02-29','kes. 50 to push share to 50% from 10%','7PX1');
-INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('50', '2016-01-01','2016-02-29','kes. 50 to push share to 50% from 10%','B30');
-INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('25', '2016-01-01','2016-02-29','50% bonus to push share from 10% to 50%','75M5');
-INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('40', '2016-01-01','2016-03-31','Shiamsy extension from Jan-Mar to push more share','7GQ4');
-INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('5', '2016-01-01','2016-02-29','Discrepancies Aug and Dec 2015','757E');
-INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('8', '2016-02-01','2016-03-31','points difference in Jan','8GH');
-
-
-UPDATE bonus SET org_id = orgs.org_id, approve_status = 'Approved', is_active = true
-FROM orgs WHERE orgs.pcc = bonus.pcc;
-
-DELETE FROM points WHERE period_id IN (109, 110);
-
-
-UPDATE entitys SET can_redeem = false WHERE org_id IN (SELECT org_id FROM orgs WHERE pcc IN ('745E', '757F'));
 
 
 CREATE EXTENSION postgres_fdw;

@@ -300,11 +300,16 @@ CREATE TRIGGER ins_orgs BEFORE INSERT OR UPDATE ON orgs
 ALTER TABLE orgs ADD CONSTRAINT orgs_pcc_unique UNIQUE (pcc);
 
 CREATE OR REPLACE FUNCTION upd_entitys() RETURNS trigger AS $$
+DECLARE
+	v_pcc				varchar(7);
 BEGIN
 
 	IF((OLD.change_pcc <> NEW.change_pcc) or (OLD.change_son <> NEW.change_son))THEN
+		SELECT pcc INTO v_pcc
+		FROM orgs WHERE org_id = NEW.org_id;
+		
 		INSERT INTO change_pccs (entity_id, son, pcc, change_son, change_pcc)
-		VALUES (NEW.entity_id, NEW.son, NEW.pcc, NEW.change_son, NEW.change_pcc);
+		VALUES (NEW.entity_id, NEW.son, v_pcc, NEW.change_son, NEW.change_pcc);
  	END IF;
 
 	RETURN NEW;
