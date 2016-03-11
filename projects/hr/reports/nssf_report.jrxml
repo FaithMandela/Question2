@@ -73,8 +73,7 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[
-SELECT vw_employee_tax_types.tax_type_name, vw_employee_tax_types.period_year, vw_employee_tax_types.period_month, vw_employee_tax_types.employee_id,
+		<![CDATA[SELECT vw_employee_tax_types.tax_type_name, vw_employee_tax_types.period_year, vw_employee_tax_types.period_month, vw_employee_tax_types.employee_id,
 vw_employee_tax_types.tax_identification, vw_employee_tax_types.identity_card,
 vw_employee_tax_types.entity_id, vw_employee_tax_types.entity_name,
 vw_employee_tax_types.surname, vw_employee_tax_types.first_name,

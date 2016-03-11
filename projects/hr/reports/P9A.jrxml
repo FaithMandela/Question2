@@ -30,12 +30,16 @@
 	vw_employee_month.exchange_rate * (vw_employee_month.basic_pay +
 	 vw_employee_month.tax_allowance + getAdjustment(vw_employee_month.employee_month_id, 4, 32))
 	as grosspay,
-Employee_Tax_Types.Amount as calcpaye,
-vw_employee_month.tax_tax as calcnssf, Period_Tax_Types.tax_relief,
-(Employee_Tax_Types.Amount + Period_Tax_Types.tax_relief) as fulltax,
-Employee_Tax_Types.tax_identification as pinnumber,
-(vw_employee_month.basic_pay + vw_employee_month.tax_allowance - vw_employee_month.tax_tax) as chargeable,
-(vw_employee_month.basic_pay * 0.3) as e1, cast(20000 as real) as MaxContribRelief, orgs.org_name, orgs.pin
+	Employee_Tax_Types.Amount as calcpaye,
+	(vw_employee_month.exchange_rate * vw_employee_month.tax_tax) as calcnssf,
+	Period_Tax_Types.tax_relief,
+	(Employee_Tax_Types.Amount + Period_Tax_Types.tax_relief) as fulltax,
+	Employee_Tax_Types.tax_identification as pinnumber,
+	vw_employee_month.exchange_rate * (vw_employee_month.basic_pay +
+		vw_employee_month.tax_allowance - vw_employee_month.tax_tax) as chargeable,
+	(vw_employee_month.exchange_rate * vw_employee_month.basic_pay * 0.3) as e1,
+	cast(20000 as real) as MaxContribRelief,
+	orgs.org_name, orgs.pin
 
 FROM orgs, (vw_employee_month INNER JOIN Employee_Tax_Types ON vw_employee_month.Employee_Month_ID = Employee_Tax_Types.Employee_Month_ID
 	INNER JOIN Period_Tax_Types ON (vw_employee_month.Period_ID = Period_Tax_Types.Period_ID)
@@ -44,7 +48,9 @@ FROM orgs, (vw_employee_month INNER JOIN Employee_Tax_Types ON vw_employee_month
 WHERE ((Period_Tax_Types.Tax_Type_ID = 1) OR (Period_Tax_Types.Tax_Type_ID = 4))
 AND (vw_employee_month.entity_id = '$P!{employee_id}')
 AND (vw_employee_month.period_year = '$P!{period_year}')
-$P!{organd}]]>
+$P!{organd}
+
+ORDER BY vw_employee_month.start_date]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
