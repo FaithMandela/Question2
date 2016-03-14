@@ -70,13 +70,17 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-
-CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
+CREATE OR REPLACE FUNCTION ins_order_details() RETURNS trigger AS $BODY$
 DECLARE
 	v_order integer;
 BEGIN
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, narrative)
-	VALUES (4, NEW.order_id , 'orders', 4, 'We have received your order and its under process');
+	IF (NEW.order_details_id IS NULL) THEN
+		UPDATE order_details SET order_id=t.id
+		FROM (select orders.order_id AS id FROM orders WHERE orders.order_id = NEW.order_id)AS t ;
+	END IF;
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+	VALUES (4, NEW.order_id , 'vw_orders', 4, get_order_details(NEW.order_id), 'We have received your order and its under process');
+
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -97,3 +101,5 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+DROP TRIGGER ins_orders ON orders;

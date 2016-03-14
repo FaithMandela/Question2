@@ -285,9 +285,6 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_orders AFTER INSERT ON orders
-FOR EACH ROW EXECUTE PROCEDURE ins_orders();
-
 CREATE OR REPLACE FUNCTION ins_order_details() RETURNS trigger AS $BODY$
 DECLARE
 	v_order integer;
@@ -296,6 +293,9 @@ BEGIN
 		UPDATE order_details SET order_id=t.id
 		FROM (select orders.order_id AS id FROM orders WHERE orders.order_id = NEW.order_id)AS t ;
 	END IF;
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+	VALUES (4, NEW.order_id , 'vw_orders', 4, get_order_details(NEW.order_id), 'We have received your order and its under process');
+
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
