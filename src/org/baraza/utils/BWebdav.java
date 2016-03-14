@@ -65,7 +65,6 @@ public class BWebdav {
 	public boolean saveFile(File file, String saveName) {
 		boolean isv = true;
 		try {
-System.out.println("BASE 2010 : " + basePath + saveName);
 			InputStream fis = new FileInputStream(file);
 			sardine.put(basePath + saveName, fis);
 		} catch(IOException ex) {
@@ -78,7 +77,6 @@ System.out.println("BASE 2010 : " + basePath + saveName);
 	public boolean saveFile(InputStream fis, String saveName) {
 		boolean isv = true;
 		try {
-System.out.println("BASE 2010 : " + basePath + saveName);
 			sardine.put(basePath + saveName, fis);
 		} catch(IOException ex) {
 			System.out.println("File write error : " + ex);
