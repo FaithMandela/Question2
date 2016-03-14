@@ -210,6 +210,13 @@ BEGIN
 		VALUES (3, $1::integer , 'applicants', 3);
 	END IF;
 
+	IF ($3::integer = 3) THEN
+		UPDATE entitys SET is_active = 'true' WHERE entity_id = $1::integer ;
+		msg := 'Consultant Activated';
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (2, $1::integer , 'entitys', 3);
+	END IF;
+
 	RETURN msg;
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -272,8 +279,8 @@ CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
 DECLARE
 	v_order integer;
 BEGIN
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, narrative)
-	VALUES (4, NEW.order_id , 'orders', 4, 'We have received your order and its under process');
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+	VALUES (4, NEW.order_id , 'vw_orders', 4, get_order_details(NEW.order_id), 'We have received your order and its under process');
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -404,4 +411,3 @@ BEGIN
 	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
-

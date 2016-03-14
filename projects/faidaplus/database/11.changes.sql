@@ -59,9 +59,17 @@ BEGIN
 		VALUES (3, $1::integer , 'applicants', 3);
 	END IF;
 
+	IF ($3::integer = 3) THEN
+		UPDATE entitys SET is_active = 'true' WHERE entity_id = $1::integer ;
+		msg := 'Consultant Activated';
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (2, $1::integer , 'entitys', 3);
+	END IF;
+
 	RETURN msg;
 END;
 $BODY$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
 DECLARE
@@ -89,4 +97,3 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-

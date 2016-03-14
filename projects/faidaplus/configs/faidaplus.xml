@@ -280,7 +280,7 @@
 			</FORMVIEW>
 			<FORMVIEW name="Account Information" keyfield="entity_id" linkfield="entity_id" table="vw_entitys">
 				<TEXTFIELD w="150" title="Username" y="30" h="20" x="290" span="true">user_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Status Is Active" y="30" h="20" x="290" span="true">is_active</TEXTFIELD>
+				<CHECKBOX w="150" title="Status Is Active" y="30" h="20" x="290" span="true">is_active</CHECKBOX>
 				<TEXTFIELD w="430" title="Member Since" fcn="date_enroled::date" y="50" h="20" x="10">date_enroled</TEXTFIELD>
 				<TEXTFIELD w="150" title="Last Login" y="30" h="20" x="290" span="true">last_login</TEXTFIELD>
 				<TEXTFIELD w="100" title="PCC" y="10" h="20" x="490" span="true">pcc</TEXTFIELD>
@@ -315,7 +315,7 @@
 			</FORMVIEW>
 			<FORMVIEW name="Account Information" keyfield="entity_id" linkfield="entity_id" table="vw_entitys">
 				<TEXTFIELD w="150" title="Username" y="30" h="20" x="290" span="true">user_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Status Is Active" y="30" h="20" x="290" span="true">is_active</TEXTFIELD>
+				<CHECKBOX w="150" title="Status Is Active" y="30" h="20" x="290" span="true">is_active</CHECKBOX>
 				<TEXTFIELD w="430" title="Member Since" fcn="date_enroled::date" y="50" h="20" x="10">date_enroled</TEXTFIELD>
 				<TEXTFIELD w="150" title="Last Login" y="30" h="20" x="290" span="true">last_login</TEXTFIELD>
 				<TEXTFIELD w="100" title="PCC" y="10" h="20" x="490" span="true">pcc</TEXTFIELD>
@@ -333,6 +333,9 @@
 				<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
 				<TEXTDATE w="70" title="Date of Birth" y="170" h="70" x="10">birth_date</TEXTDATE>
 			</FORM>
+			<ACTIONS>
+				<ACTION fnct="upd_applicants" approval="3">Activate</ACTION>
+			</ACTIONS>
 		</GRID>
 		<GRID name="Purged Consultants" keyfield="entity_id" orderby="entity_id DESC" table="vw_purged_consultant" tab.count="count(entity_id)" noorg="true">
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
@@ -350,7 +353,7 @@
 			</FORMVIEW>
 			<FORMVIEW name="Account Information" keyfield="entity_id" linkfield="entity_id" table="vw_entitys">
 				<TEXTFIELD w="150" title="Username" y="30" h="20" x="290" span="true">user_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Status Is Active" y="30" h="20" x="290" span="true">is_active</TEXTFIELD>
+				<CHECKBOX w="150" title="Status Is Active" y="30" h="20" x="290" span="true">is_active</CHECKBOX>
 				<TEXTFIELD w="430" title="Member Since" fcn="date_enroled::date" y="50" h="20" x="10">date_enroled</TEXTFIELD>
 				<TEXTFIELD w="150" title="Last Login" y="30" h="20" x="290" span="true">last_login</TEXTFIELD>
 				<TEXTFIELD w="100" title="PCC" y="10" h="20" x="490" span="true">pcc</TEXTFIELD>
