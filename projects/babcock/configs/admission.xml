@@ -1,13 +1,13 @@
 <APP name="UMIS" org="org_id" password="change_password">
-	<MENU name="Babcock Admissions" role="admissions,centers">
-		<MENU name="Admissions" role="admissions,centers">
+	<MENU name="Babcock Admissions" role="admissions,centers,marketing">
+		<MENU name="Admissions" role="admissions,centers,marketing">
 			<MENU name="Applicants List">1</MENU>
-			<MENU name="Applications" role="admissions">21</MENU>
-			<MENU name="Applicants Check" role="admissions">11</MENU>
-			<MENU name="Unsubmitted Applicantions" role="admissions">14</MENU>
-			<MENU name="Submitted Applications" role="admissions">15</MENU>
-			<MENU name="Admit Applications" role="admissions">16</MENU>
-			<MENU name="Admited Applicants" role="admissions">17</MENU>
+			<MENU name="Applications" role="admissions,marketing">21</MENU>
+			<MENU name="Applicants Check" role="admissions,marketing">11</MENU>
+			<MENU name="Unsubmitted Applicantions" role="admissions,marketing">14</MENU>
+			<MENU name="Submitted Applications" role="admissions,marketing">15</MENU>
+			<MENU name="Admit Applications" role="admissions,marketing">16</MENU>
+			<MENU name="Admited Applicants" role="admissions,marketing">17</MENU>
 		</MENU>
 		<MENU name="Control Panel" role="admissions">
 			<MENU name="Entrance Exams">6</MENU>
@@ -18,8 +18,8 @@
 			<MENU name="Programmes">10</MENU>
 			<MENU name="Semesters">12</MENU>
 		</MENU>
-		<MENU name="Reports" role="admissions">
-			<MENU name="Applications">
+		<MENU name="Reports" role="admissions,marketing">
+			<MENU name="Applications" role="admissions,marketing">
 				<MENU name="Statistics">105</MENU>
 				<MENU name="Applications">110</MENU>
 				<MENU name="Unsubmitted Applications">120</MENU>
@@ -28,7 +28,7 @@
 				<MENU name="Chosen Exam Centers">145</MENU>
 				<MENU name="Paid Applications">150</MENU>
 			</MENU>
-			<MENU name="Admisions">
+			<MENU name="Admisions" role="admissions">
 				<MENU name="Submited Registration">107</MENU>
 				<MENU name="Registrations Form">106</MENU>
 				<MENU name="New Students">209</MENU>
@@ -36,7 +36,7 @@
 				<MENU name="New Applicants By Year">310</MENU>
 				<MENU name="New Applicants By Programme">320</MENU>
 			</MENU>
-			<MENU name="Control Panel">
+			<MENU name="Control Panel" role="admissions">
 				<MENU name="Marks List">101</MENU>
 				<MENU name="Subjects List">102</MENU>
 				<MENU name="States">104</MENU>

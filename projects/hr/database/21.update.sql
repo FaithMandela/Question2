@@ -1,3 +1,7 @@
+
+
+ALTER TABLE orgs ADD default_country_id varchar(2) default 'KE';
+
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 DECLARE
 	v_default_interest	real;

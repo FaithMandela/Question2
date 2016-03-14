@@ -32,7 +32,7 @@
       vw_entitys.org_id
      FROM vw_orders
        JOIN vw_entitys ON vw_orders.entity_id = vw_entitys.entity_id
-	WHERE order_date::date >= '$P!{minDate}' AND order_date::date <= '$P!{maxDate}';]]>
+	WHERE batch_no = '$P!{batch_no}';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
 	<field name="order_date" class="java.sql.Date"/>

@@ -403,4 +403,13 @@ SELECT setval('public.towns_town_id_seq', 59);
 CREATE TRIGGER ins_orders AFTER INSERT ON orders
   FOR EACH ROW EXECUTE PROCEDURE ins_orders();
 
-  
+UPDATE entitys SET org_id = 2744 WHERE entity_id = 1701;
+
+
+DELETE FROM points WHERE period_id IN (109, 110);
+
+UPDATE entitys SET can_redeem = false WHERE org_id IN (SELECT org_id FROM orgs WHERE pcc IN ('745E', '757F'));
+
+UPDATE bonus SET org_id = orgs.org_id, approve_status = 'Approved', is_active = true
+FROM orgs WHERE orgs.pcc = bonus.pcc;
+

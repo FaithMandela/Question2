@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <ESCALATION title="Faida Plus Mail" processdelay="2"
-	host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent" mailfrom="info@openbaraza.org"
+	host="mail.travelport-kenya.com" mailuser="faidaplus" mailpassword="misnomer-soak-lank"
+	mailfrom="faidaplus@travelport-kenya.com"
 	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/faidaplus/reports/">
 

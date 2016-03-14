@@ -9,10 +9,19 @@
 	<parameter name="minDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="entity_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pcc" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="son" class="java.lang.String">
+		<defaultValueExpression><![CDATA["CK"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
       to_char(vw_points.period::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
-      vw_points.pcc,
+      vw_orgs.pcc,
       vw_points.son,
       sum(vw_points.segments) as segments ,
       sum(vw_points.amount) as amount,
@@ -23,7 +32,9 @@
        JOIN vw_orgs ON vw_points.org_id = vw_orgs.org_id
 	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text)
 	AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
-	GROUP BY ticket_period,vw_points.period,vw_points.pcc,vw_points.son,vw_orgs.org_name
+	AND vw_points.pcc = '$P!{pcc}'
+AND vw_points.son = '$P!{son}'
+	GROUP BY ticket_period,vw_points.period,vw_orgs.pcc,vw_points.son,vw_orgs.org_name
 	ORDER BY vw_orgs.org_name ASC;]]>
 	</queryString>
 	<field name="ticket_period" class="java.lang.String"/>
