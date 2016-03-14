@@ -319,9 +319,8 @@ BEGIN
 		FROM orgs WHERE org_id = NEW.org_id;
 
 		INSERT INTO change_pccs (entity_id, son, pcc, change_son, change_pcc)
-		VALUES (NEW.entity_id, NEW.son, v_pcc, NEW.change_son, NEW.change_pcc);
+		VALUES (NEW.entity_id, trim(upper(NEW.son)) , v_pcc, trim(upper(NEW.change_son)), trim(upper(NEW.change_pcc)));
  	END IF;
-
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

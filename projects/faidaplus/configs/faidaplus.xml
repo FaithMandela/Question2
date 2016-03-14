@@ -26,13 +26,13 @@
 		<MENU name="Report" role="admin,staff">
 			<MENU name="Productivity">110</MENU>
 			<MENU name="Batch Orders">113</MENU>
+			<MENU name="Print Batch">125</MENU>
+			<MENU name="Upload Segments">126</MENU>
+			<MENU name="Total Bonus">127</MENU>
 			<MENU name="Agency Active Bonus">116</MENU>
-			<MENU name="Users COntacts">118</MENU>
+			<MENU name="Users Contacts">118</MENU>
 			<MENU name="Consultant Statement">123</MENU>
 			<MENU name="Summary Report">124</MENU>
-			<MENU name="Print Batch">125</MENU>
-			<MENU name="Total Upload Segments">126</MENU>
-			<MENU name="Total Bonus">127</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">

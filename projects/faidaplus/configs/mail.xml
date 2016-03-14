@@ -7,7 +7,7 @@
 
 
 	<REPORT name="Orders Status" keyfield="sys_emailed_id" action="Emailed" actioncount="1" infile="true"
-		table="sys_emails, sys_emailed, vw_orders,vw_entitys"
+		table="sys_emails, sys_emailed, vw_orders, vw_entitys"
 		where="(vw_orders.order_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
 		AND (vw_entitys.entity_id = vw_orders.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
@@ -35,7 +35,7 @@
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
 			table="sys_emails, sys_emailed, entitys"
 			where="(entitys.entity_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
-			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emails.use_type = 2)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="entitys">entity_name</BODYFIELD>
