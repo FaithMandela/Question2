@@ -468,6 +468,10 @@ BEGIN
 		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
+	ELSIF ($3 = 26) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (pension_id is not null) AND (adjustment_type = 2);
 	ELSIF ($3 = 31) THEN
 		SELECT SUM(overtime * overtime_rate) INTO adjustment
 		FROM employee_overtime

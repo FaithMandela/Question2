@@ -147,7 +147,7 @@ BEGIN
 	END IF;
 
 	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-	VALUES ($1::integer,4 ,'orders', 1, 0,details);
+	VALUES ($1::integer,4 ,'orders', 3, 0,details);
 	RETURN 'Successfully Updated';
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -198,16 +198,16 @@ BEGIN
 		INSERT INTO entitys (org_id, entity_type_id,entity_name, user_name,primary_email, son,function_role,is_active,birth_date)
 		VALUES (rec.org_id, 0, app.son,lower(app.applicant_email),lower(app.applicant_email),app.son, 'consultant',true,app.consultant_dob) returning entity_id INTO myid;
 		msg := 'Consultant account has been activated';
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (2, myid , 'entitys');
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (2, myid, 'entitys', 3);
 	END IF;
 
 	IF ($3::integer = 2) THEN
 		ps := 'Rejected';
 		UPDATE applicants SET status = ps , approved = false WHERE applicant_id = $1::integer ;
 		msg := 'Applicant Rejected';
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (3, $1::integer , 'applicants');
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (3, $1::integer , 'applicants', 3);
 	END IF;
 
 	RETURN msg;
@@ -272,8 +272,8 @@ CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
 DECLARE
 	v_order integer;
 BEGIN
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name,narrative)
-	VALUES (4, NEW.order_id , 'orders','We have received your order and its under process');
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, narrative)
+	VALUES (4, NEW.order_id , 'orders', 4, 'We have received your order and its under process');
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -395,11 +395,13 @@ BEGIN
 		UPDATE entitys SET first_password = v_password, entity_password = md5(v_password)
 		WHERE entity_id = v_entity_id;
 
-		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
-		VALUES(v_org_id, 6, v_entity_id, 'entitys');
+		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
+		VALUES(v_org_id, 6, v_entity_id, 'entitys', 4);
+	ELSE
+		RAISE EXCEPTION 'That email address is not available';
 	END IF;
 
 	RETURN NULL;
 END;
-$$
-  LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
+
