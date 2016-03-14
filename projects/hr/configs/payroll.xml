@@ -124,7 +124,8 @@
 				<TEXTDECIMAL w="150" title="Max Tax Allowed" y="130" h="20" x="290">tax_max_allowed</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Default Amount" y="150" h="20" x="10">default_amount</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Effects" lptable="adjustment_effects" noorg="true" y="190" h="20" x="10" lpfield="adjustment_effect_name">adjustment_effect_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Expenses" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 3)">
