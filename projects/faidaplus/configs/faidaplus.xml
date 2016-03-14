@@ -37,6 +37,9 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
 		<DASHBOARD w="650" name="Dashboard">
+			<TILE w="60" name="Birthday" role="admin,staff" noorg.query="true" table="vw_entitys" where="to_char(birth_date, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm')" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="New Orders">orders</TEXTFIELD>
+			</TILE>
 			<TILE w="60" name="New Orders" role="admin,staff" noorg.query="true" table="orders" where="(order_status = 'Processing Order')" h="25">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
