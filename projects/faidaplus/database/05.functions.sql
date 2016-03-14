@@ -38,6 +38,16 @@ BEGIN
 		SELECT orgs.org_id, entitys.entity_id INTO v_org_id, v_entity_id
 		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
 		WHERE (entitys.is_active = true) AND (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
+		
+		IF(v_entity_id is null)THEN 
+			SELECT entity_id INTO v_entity_id
+			FROM change_pccs
+			WHERE (approve_status = 'Approved') AND (pcc = rec.pcc) AND (son = rec.son);
+			SELECT org_id INTO v_org_id
+			FROM entitys
+			WHERE (entitys.is_active = true) AND (entity_id = v_entity_id);
+			IF(v_org_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
+		END IF;
 		IF(v_entity_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
 
 		SELECT points_id INTO v_points_id
@@ -319,6 +329,16 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_entitys BEFORE UPDATE ON entitys
     FOR EACH ROW EXECUTE PROCEDURE upd_entitys();
 
+CREATE OR REPLACE FUNCTION ins_change_pccs() RETURNS trigger AS $$
+BEGIN
+	NEW.approve_status = 'Completed';
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_change_pccs BEFORE INSERT ON change_pccs
+    FOR EACH ROW EXECUTE PROCEDURE ins_change_pccs();
+    
 CREATE OR REPLACE FUNCTION upd_change_pccs() RETURNS trigger AS $$
 DECLARE
 	v_org_id				integer;
@@ -345,6 +365,9 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER upd_change_pccs BEFORE UPDATE ON change_pccs
     FOR EACH ROW EXECUTE PROCEDURE upd_change_pccs();
+    
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON change_pccs
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 CREATE OR REPLACE FUNCTION get_town(integer) RETURNS text AS $$
 	SELECT towns.town_name FROM towns
