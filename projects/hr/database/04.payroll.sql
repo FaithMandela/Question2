@@ -1,6 +1,12 @@
+CREATE TABLE adjustment_effects (
+	adjustment_effect_id	integer primary key,
+	adjustment_effect_name	varchar(50) not null
+);
+
 CREATE TABLE adjustments (
 	adjustment_id			serial primary key,
 	currency_id				integer references currency,
+	adjustment_effect_id	integer references adjustment_effects,
 	org_id					integer references orgs,
 	adjustment_name			varchar(50) not null,
 	adjustment_type			integer not null,
@@ -25,6 +31,7 @@ CREATE TABLE adjustments (
 	UNIQUE(adjustment_name, org_id)
 );
 CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
+CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
 
 CREATE TABLE claim_types (
