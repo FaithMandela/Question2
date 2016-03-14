@@ -9,6 +9,7 @@
 		<MENU name="Approval" role="admin,staff">83</MENU>
 		<MENU name="Workflow" role="admin,staff">40</MENU>
 		<MENU name="Emails" role="admin,staff">60</MENU>
+		<MENU name="Entitys" role="admin,staff">100</MENU>
 		<MENU icon="fa fa-gift" name="Products" role="admin,staff">
 			<MENU icon="fa fa-gift" name="Products" role="admin,staff">7</MENU>
 			<MENU icon="fa fa-bars" name="Products Category" role="admin,staff">21</MENU>
@@ -39,11 +40,23 @@
 			<TILE w="60" name="New Orders" role="admin,staff" noorg.query="true" table="orders" where="(order_status = 'Processing Order')" h="25">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
-			<TILE w="60" name="PCCs" role="admin,staff" noorg.query="true" table="orgs" h="25">
-				<TEXTFIELD w="75" fnct="COALESCE(count(org_id), 0)" title="PCCs">pcc</TEXTFIELD>
-			</TILE>
 			<TILE w="60" name="New Orders" role="consultant" noorg.query="true" table="orders" where="(order_status = 'processing order' )" user="entity_id" h="25">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
+			</TILE>
+			<TILE w="60" name="UnBatched Orders" role="admin,staff" noorg.query="true" table="orders" where="(batch_no is null)" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="UnBatched Orders">unbatched_orders</TEXTFIELD>
+			</TILE>
+			<TILE w="60" name="Batched Orders" role="admin,staff" noorg.query="true" table="orders" where="(lower(order_status) = lower('Processing Order') AND batch_no is not null )" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="Batched Orders">batched_orders</TEXTFIELD>
+			</TILE>
+			<TILE w="60" name="Orders Awaiting Collection" role="admin,staff" noorg.query="true" table="orders" where="(order_status = 'Awaiting Collection')" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="Batched Orders">batched_orders</TEXTFIELD>
+			</TILE>
+			<TILE w="60" name="Orders Collected" role="admin,staff" noorg.query="true" table="orders" where="order_status = 'Collected'" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="Orders Collected">orders_collected</TEXTFIELD>
+			</TILE>
+			<TILE w="60" name="PCCs" role="admin,staff" noorg.query="true" table="orgs" h="25">
+				<TEXTFIELD w="75" fnct="COALESCE(count(org_id), 0)" title="PCCs">pcc</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
 	</DESK>
@@ -129,25 +142,9 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="All Redemptions" noorg="true" key="8" h="500">
-		<GRID name="All Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true">
-			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
-			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
-			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
-			<GRID name="Items Purchased" keyfield="order_details_id" linkfield="order_id" table="vw_order_details" tab.count="count(order_id)">
-				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
-				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
-				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
-				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
-				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
-			</GRID>
-		</GRID>
 		<GRID name="UnBatched Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is null)">
 			<TEXTFIELD w="75" title="Order ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
@@ -157,9 +154,9 @@
 				<ACTION fnct="upd_orders_batch" approval="1">Batch</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID name="Batched Orders" keyfield="order_id" role="admin,staff" orderby="batch_no DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(batch_no is not null )">
+		<GRID name="Batched Orders" keyfield="order_id" role="admin,staff" orderby="batch_no DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(lower(order_status) = lower('Processing Order') AND batch_no is not null )">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
@@ -169,9 +166,9 @@
 				<ACTION fnct="upd_orders_status" approval="1">Awaiting Collection/Shipped</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID name=" Orders Awaiting Collection" keyfield="order_id" role="admin,staff" orderby="order_id DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(order_status = 'Awaiting Collection')">
+		<GRID name=" Orders Awaiting Collection" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="(order_status = 'Awaiting Collection')">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
@@ -186,7 +183,7 @@
 				<TEXTFIELD w="75" title="Quantity">product_quantity</TEXTFIELD>
 				<TEXTFIELD w="125" title="Unit Price">product_uprice</TEXTFIELD>
 				<TEXTFIELD w="125" title="Sub Total">total_amount</TEXTFIELD>
-				<TEXTFIELD w="200" title="Ordered Date">order_date</TEXTFIELD>
+				<TEXTFIELD w="200" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Ordered Date">order_date</TEXTFIELD>
 				<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="Consultant Name">entity_name</TEXTFIELD>
 			</GRID>
@@ -194,9 +191,9 @@
 				<ACTION fnct="upd_orders_status" approval="2">Collected/Delivered</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID name="Orders Collected" keyfield="order_id" role="admin,staff" table="vw_orders" tab.count="count(order_id)" noorg="true" where="order_status = 'Collected'">
+		<GRID name="Orders Collected" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true" where="order_status = 'Collected'">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
-			<TEXTFIELD w="275" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
@@ -211,9 +208,25 @@
 				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
 		</GRID>
+		<GRID name="All Orders" keyfield="order_id" role="admin,staff" orderby="order_date DESC" table="vw_orders" tab.count="count(order_id)" noorg="true">
+			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<GRID name="Items Purchased" keyfield="order_details_id" linkfield="order_id" table="vw_order_details" tab.count="count(order_id)">
+				<TEXTFIELD w="75" title="Product ID">order_details_id</TEXTFIELD>
+				<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Quantity">product_quantity</TEXTFIELD>
+				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
+				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
+			</GRID>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Consultants" key="9" h="650">
-		<GRID name="Pending Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" where="approve_status='Pending'">
+		<GRID name="Pending Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" noorg="true" where="approve_status='Pending'">
 			<TEXTFIELD w="50" title="ID">applicant_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
@@ -251,7 +264,7 @@
 				<ACTION fnct="upd_applicants" approval="2">Reject</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID name="Active Consultants" keyfield="entity_id" orderby="entity_id desc" table="vw_consultant" tab.count="count(entity_id)" where="is_active='true'">
+		<GRID name="Active Consultants" keyfield="entity_id" orderby="entity_id desc" table="vw_consultant" tab.count="count(entity_id)" noorg="true" where="is_active='true'">
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created" fnc="application_date::date">application_date</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
@@ -286,7 +299,7 @@
 				<TEXTDATE w="70" title="Date of Birth" y="170" h="70" x="10">birth_date</TEXTDATE>
 			</FORM>
 		</GRID>
-		<GRID name="Suspended Consultants" keyfield="entity_id" orderby="entity_id desc" table="vw_consultant" tab.count="count(entity_id)" where="is_active='false'">
+		<GRID name="Suspended Consultants" keyfield="entity_id" orderby="entity_id desc" table="vw_consultant" tab.count="count(entity_id)" noorg="true" where="is_active='false'">
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created" fnc="application_date::date">application_date</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
@@ -321,15 +334,42 @@
 				<TEXTDATE w="70" title="Date of Birth" y="170" h="70" x="10">birth_date</TEXTDATE>
 			</FORM>
 		</GRID>
-		<GRID name="Purged Consultants" keyfield="entity_id" orderby="entity_id DESC" table="vw_purged_consultant" tab.count="count(entity_id)">
+		<GRID name="Purged Consultants" keyfield="entity_id" orderby="entity_id DESC" table="vw_purged_consultant" tab.count="count(entity_id)" noorg="true">
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created" fnc="date_enroled::date">date_enroled</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
 			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
+			<FORMVIEW name="Personal Information" keyfield="entity_id" linkfield="entity_id" table="vw_entitys">
+				<TEXTFIELD w="430" title="Email Address" required="true" y="50" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="PCCs" required="true" y="30" h="20" x="290" span="true">pcc</TEXTFIELD>
+				<TEXTFIELD w="100" title="Sign On Code initials" required="true" y="10" h="20" x="490" span="true">son</TEXTFIELD>
+				<TEXTFIELD w="150" title="Username" required="true" y="30" h="20" x="290" span="true">user_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Mobile Number" required="true" y="30" h="20" x="290" span="true">primary_telephone</TEXTFIELD>
+			</FORMVIEW>
+			<FORMVIEW name="Account Information" keyfield="entity_id" linkfield="entity_id" table="vw_entitys">
+				<TEXTFIELD w="150" title="Username" y="30" h="20" x="290" span="true">user_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Status Is Active" y="30" h="20" x="290" span="true">is_active</TEXTFIELD>
+				<TEXTFIELD w="430" title="Member Since" fcn="date_enroled::date" y="50" h="20" x="10">date_enroled</TEXTFIELD>
+				<TEXTFIELD w="150" title="Last Login" y="30" h="20" x="290" span="true">last_login</TEXTFIELD>
+				<TEXTFIELD w="100" title="PCC" y="10" h="20" x="490" span="true">pcc</TEXTFIELD>
+				<TEXTFIELD w="100" title="SON" y="10" h="20" x="490" span="true">son</TEXTFIELD>
+				<TEXTFIELD w="150" title="Agency" y="30" h="20" x="290" span="true">org_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Manager" y="30" h="20" x="290" span="true">account_manager_name</TEXTFIELD>
+			</FORMVIEW>
+			<FORM fornew="true" new="true" save.button="Apply" name="Update PCC/SON" keyfield="entity_id" edit="false" delete="false" audit="false" linkfield="entity_id" table="entitys">
+				<TEXTFIELD w="150" title="PCC" required="true" y="30" h="20" x="290" span="true">change_pcc</TEXTFIELD>
+				<TEXTFIELD w="100" title="SON" required="true" y="10" h="20" x="490" span="true">change_son</TEXTFIELD>
+			</FORM>
+			<FORM new="false" name="Update Personal Info" keyfield="entity_id" delete="false" table="entitys">
+				<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
+				<TEXTDATE w="70" title="Date of Birth" y="170" h="70" x="10">birth_date</TEXTDATE>
+			</FORM>
 		</GRID>
-		<GRID new="false" name="Rejected Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" where="status='Rejected'">
+		<GRID new="false" name="Rejected Consultants" keyfield="applicant_id" orderby="applicant_id" table="vw_applicants" tab.count="count(applicant_id)" noorg="true" where="status='Rejected'">
 			<TEXTFIELD w="50" title="Username">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created" fnc="application_date::date">application_date</TEXTFIELD>
 			<TEXTFIELD w="50" title="PCC">pseudo_code</TEXTFIELD>

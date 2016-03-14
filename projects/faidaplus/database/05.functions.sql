@@ -38,8 +38,8 @@ BEGIN
 		SELECT orgs.org_id, entitys.entity_id INTO v_org_id, v_entity_id
 		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
 		WHERE (entitys.is_active = true) AND (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
-		
-		IF(v_entity_id is null)THEN 
+
+		IF(v_entity_id is null)THEN
 			SELECT entity_id INTO v_entity_id
 			FROM change_pccs
 			WHERE (approve_status = 'Approved') AND (pcc = rec.pcc) AND (son = rec.son);
@@ -317,7 +317,7 @@ BEGIN
 	IF((OLD.change_pcc <> NEW.change_pcc) or (OLD.change_son <> NEW.change_son))THEN
 		SELECT pcc INTO v_pcc
 		FROM orgs WHERE org_id = NEW.org_id;
-		
+
 		INSERT INTO change_pccs (entity_id, son, pcc, change_son, change_pcc)
 		VALUES (NEW.entity_id, NEW.son, v_pcc, NEW.change_son, NEW.change_pcc);
  	END IF;
@@ -338,7 +338,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_change_pccs BEFORE INSERT ON change_pccs
     FOR EACH ROW EXECUTE PROCEDURE ins_change_pccs();
-    
+
 CREATE OR REPLACE FUNCTION upd_change_pccs() RETURNS trigger AS $$
 DECLARE
 	v_org_id				integer;
@@ -355,7 +355,7 @@ BEGIN
 		WHERE (org_id = v_org_id) AND (entitys.son = NEW.change_son);
 		IF(v_entity_id is not null)THEN RAISE EXCEPTION 'A consultant with that SON already exists'; END IF;
 
-		UPDATE entitys SET org_id = v_org_id, pcc = NEW.change_pcc, son = NEW.change_son
+		UPDATE entitys SET org_id = v_org_id, son = NEW.change_son
 		WHERE entity_id = v_entity_id;
  	END IF;
 
@@ -365,7 +365,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER upd_change_pccs BEFORE UPDATE ON change_pccs
     FOR EACH ROW EXECUTE PROCEDURE upd_change_pccs();
-    
+
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON change_pccs
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
@@ -379,3 +379,28 @@ $$ LANGUAGE sql;
 CREATE OR REPLACE FUNCTION get_org_id(varchar(12)) RETURNS integer AS $$
 	SELECT org_id FROM entitys WHERE entity_id = $1::integer;
 $$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION ins_sys_reset() RETURNS trigger AS $$
+DECLARE
+	v_entity_id			integer;
+	v_org_id			integer;
+	v_password			varchar(32);
+BEGIN
+	SELECT entity_id, org_id INTO v_entity_id, v_org_id
+	FROM entitys
+	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email)));
+
+	IF(v_entity_id is not null) THEN
+		v_password := upper(substring(md5(random()::text) from 3 for 9));
+
+		UPDATE entitys SET first_password = v_password, entity_password = md5(v_password)
+		WHERE entity_id = v_entity_id;
+
+		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
+		VALUES(v_org_id, 6, v_entity_id, 'entitys');
+	END IF;
+
+	RETURN NULL;
+END;
+$$
+  LANGUAGE plpgsql;
