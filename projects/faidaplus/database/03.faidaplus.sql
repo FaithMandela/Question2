@@ -249,7 +249,7 @@ CREATE VIEW vw_orders AS
         orders.shipping_cost, orders.details,
         (orders.order_total_amount + orders.shipping_cost) as grand_total,
 
-        vw_entitys.town_name, vw_entitys.org_premises, vw_entitys.org_street,
+        orders.town_name, vw_entitys.org_premises, vw_entitys.org_street,
         vw_entitys.entity_name, vw_entitys.son,
         vw_entitys.entity_id, vw_entitys.pcc, vw_entitys.org_name, vw_entitys.primary_email,
         vw_entitys.primary_telephone, vw_entitys.function_role, vw_entitys.entity_role,

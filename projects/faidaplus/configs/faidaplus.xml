@@ -822,10 +822,17 @@
 			<FILTERFORM name="Consultant Productivity">
 				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
 				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
-				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
-				<TEXTFIELD w="40" title="SON">son</TEXTFIELD>
+				<TEXTFIELD w="150" title="PCC" y="50" h="10" x="10">pcc</TEXTFIELD>
+				<TEXTFIELD w="150" title="SON" y="50" h="10" x="10">son</TEXTFIELD>
 			</FILTERFORM>
 			<JASPER name="Consultant Productivity" reportfile="son_productivity.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Cumulative Productivity " split="150" type="vert" h="550">
+			<FILTERFORM name="Cumulative Productivity">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Cumulative Productivity" reportfile="comulative_productivity.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Close Batch Number" noorg="true" key="115" h="500">

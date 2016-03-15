@@ -348,25 +348,25 @@ CREATE TRIGGER ins_change_pccs BEFORE INSERT ON change_pccs
 
 CREATE OR REPLACE FUNCTION upd_change_pccs() RETURNS trigger AS $$
 DECLARE
-	v_org_id				integer;
-	v_entity_id				integer;
+    v_org_id                integer;
+    v_entity_id                integer;
 BEGIN
 
-	IF((OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
-		SELECT orgs.org_id INTO v_org_id
-		FROM orgs WHERE (orgs.pcc = NEW.change_pcc);
-		IF((NEW.change_pcc is null) or (v_org_id is null))THEN RAISE EXCEPTION 'No Travel Agency with new PCC'; END IF;
+    IF((OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
+        SELECT orgs.org_id INTO v_org_id
+        FROM orgs WHERE (orgs.pcc = NEW.change_pcc);
+        IF((NEW.change_pcc is null) or (v_org_id is null))THEN RAISE EXCEPTION 'No Travel Agency with new PCC'; END IF;
 
-		SELECT entity_id INTO v_entity_id
-		FROM entitys
-		WHERE (org_id = v_org_id) AND (entitys.son = NEW.change_son);
-		IF(v_entity_id is not null)THEN RAISE EXCEPTION 'A consultant with that SON already exists'; END IF;
+        SELECT entity_id INTO v_entity_id
+        FROM entitys
+        WHERE (org_id = v_org_id) AND (entitys.son = NEW.change_son);
+        IF(v_entity_id is not null)THEN RAISE EXCEPTION 'A consultant with that SON already exists'; END IF;
 
-		UPDATE entitys SET org_id = v_org_id, son = NEW.change_son
-		WHERE entity_id = v_entity_id;
- 	END IF;
+        UPDATE entitys SET org_id = v_org_id, pcc_son = NEW.change_pcc, son = NEW.change_son
+        WHERE entity_id = NEW.entity_id;
+     END IF;
 
-	RETURN NEW;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
