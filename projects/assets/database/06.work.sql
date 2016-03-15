@@ -1,18 +1,18 @@
 -- This is how you import
 --- Laptop
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-11-30', 1232, 0, 1, 21, 139, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-04', 1232, 0, 1, 39, 139, '');
 
 --- CPU
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-12-02', 1223, 0, 1, 31, 139, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-15', 1223, 0, 1, 25, 138, '');
 
 --- Monitor
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-10-02', 0, 0, 1, 26, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-15', 0, 0, 1, 26, 138, '');
 
 --- UPS 
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-10-08', 115, 0, 1, 6, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-24', 115, 0, 1, 6, 138, '');
 
 --- Epson Printer
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2015-09-28', 287, 0, 1, 4, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-09-28', 287, 0, 1, 4, 138, '');
 
 
 ----- Assets comparison
@@ -25,6 +25,10 @@ ORDER BY type;
 
 
 ----- Equipment in store
+SELECT asset_type_name, model, purchase_date, asset_serial
+FROM vw_assets
+WHERE (asset_type_id IN (1, 3)) AND (asset_status_id = 1) AND (purchase_date > '2015-01-01'::date)
+ORDER BY asset_type_id, purchase_date;
 
 SELECT store_equiments.equipment_type, store_equiments.serial_number
 FROM store_equiments LEFT JOIN vw_assets ON store_equiments.serial_number = vw_assets.asset_serial
@@ -38,6 +42,7 @@ WHERE vw_assets.asset_status_id = 1) as a LEFT JOIN store_equiments
 	ON a.asset_serial = store_equiments.serial_number
 WHERE (store_equiments.serial_number is null)
 ORDER BY a.asset_type_name, a.asset_serial; 
+
 
 
 ---- Clients not on PM List

@@ -87,8 +87,8 @@
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
 
 	<!-- jsgrid css -->
-    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid.min.css" />
-    <link type="text/css" rel="stylesheet" href="./assets/jsgrid-1.2.0/jsgrid-theme.min.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid/jsgrid-theme.min.css" />
 
 </head>
 <!-- END HEAD -->
@@ -152,7 +152,7 @@
 					  <% if(form.getEntryFormId() != null) { %>
 						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormValues();">
 						<i class="fa fa-pencil"></i> Save </a>
-						<a href="javascript:;" class="btn btn-circle btn-default">
+						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormSumbit();">
 						<i class="fa fa-plus"></i> Submit </a>
 						<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"></a>
 					  <% } %>
@@ -160,6 +160,7 @@
 				</div>
 				<div class="portlet-body">
 					<div class="scroller" style="height:575px" data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
+						<section><div id="resp_msg"></div></section>
 						<form id='barazaForm' name='barazaForm' method='post' action='form.jsp'>
 							<%= form.getFormTabs() %>
 							<%= formData %>
@@ -220,7 +221,6 @@
 <script src="./assets/global/plugins/select2/select2.min.js" type="text/javascript"></script>
 
 
-
 <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
 <script src="./assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
@@ -273,7 +273,7 @@
 <script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
 
 <!-- jsgrid for sub form editing-->
-<script src="./assets/jsgrid-1.2.0/jsgrid.min.js"></script>
+<script src="./assets/jsgrid/jsgrid.min.js"></script>
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
@@ -303,6 +303,38 @@
         });
     });
 
+    var MyDateField = function(config) {
+        jsGrid.Field.call(this, config);
+    };
+
+    MyDateField.prototype = new jsGrid.Field({
+        sorter: function(date1, date2) {
+            return new Date(date1) - new Date(date2);
+        },
+
+        itemTemplate: function(value) {
+            return new Date(value).toDateString();
+        },
+
+        insertTemplate: function(value) {
+            return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
+        },
+
+        editTemplate: function(value) {
+            return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
+        },
+
+        insertValue: function() {
+            return this._insertPicker.datepicker("getDate").toISOString();
+        },
+
+        editValue: function() {
+            return this._editPicker.datepicker("getDate").toISOString();
+        }
+    });
+
+    jsGrid.fields.myDateField = MyDateField;
+
 	<%= form.printSubForm() %>
 
 	function getFormValues() {
@@ -318,8 +350,6 @@
 		for	(i = 0; i < db_list.length; i++) {
 			jsonForm[db_list[i]] = eval(db_list[i]);
 		}
-console.log(jsonForm);
-console.log(JSON.stringify(jsonForm));
 
 		$.ajax({
 			type: "POST",
@@ -327,14 +357,48 @@ console.log(JSON.stringify(jsonForm));
 			data: "json=" + JSON.stringify(jsonForm),
 			dataType: "json",
 			success: function(data){
-console.log("Data: " + data);
+console.log("Success: ");
+console.log(data);
 			},
 			failure: function(errMsg) {
-console.log("Error: " + errMsg);
+console.log("Error: ");
+console.log(data);
 			}
 		});
-
     }
+
+	function getFormSumbit() {
+        var str = '';
+		var jsonForm = {};
+        var elem = document.getElementById('barazaForm').elements;
+        for(var i = 0; i < elem.length; i++) {
+			if(!(elem[i].name == null || elem[i].name == "", elem[i].value == null || elem[i].value == "")) {
+				jsonForm[elem[i].name] = elem[i].value;
+			}
+        }
+
+		for	(i = 0; i < db_list.length; i++) {
+			jsonForm[db_list[i]] = eval(db_list[i]);
+		}
+
+		$.ajax({
+			type: "POST",
+			url: "ajaxupdate?fnct=formsubmit&entry_form_id=" + <%=form.getEntryFormId()%>,
+			data: "json=" + JSON.stringify(jsonForm),
+			dataType: "json",
+			success: function(data){
+console.log("Success: ");
+console.log(data);
+				$("#resp_msg").html(data.message);
+			},
+			failure: function(errMsg) {
+console.log("Error: ");
+console.log(data);
+				$("#resp_msg").html(data.message);
+			}
+		});
+	}
+
 </script>
 
 </body>

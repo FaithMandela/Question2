@@ -40,6 +40,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 
+import org.baraza.com.BLicense;
 import org.baraza.utils.Bio;
 import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
@@ -64,6 +65,7 @@ public class BWeb {
 	Map<String, String> params;
 
 	boolean selectAll = false;
+	boolean isLicense = true;
 	String[] deskTypes = {"CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
@@ -101,6 +103,9 @@ public class BWeb {
 
 	public void init(HttpServletRequest request) {
 		if((root == null) || (db == null)) return;	// error check
+		
+		// login the user
+		setUser(request.getRemoteAddr(), request.getRemoteUser());
 		
 		views = new ArrayList<BElement>();
 		viewKeys = new ArrayList<String>();
@@ -271,6 +276,13 @@ public class BWeb {
 			if(userName == null) userName = "root";
 			db.setUser(userIP, userName);
 			userID = db.getUserID();
+			String authTable = root.getAttribute("auth.table");
+			if(authTable != null) {
+				String authId = root.getAttribute("auth.id");
+				String authName = root.getAttribute("auth.name");
+				db.setUser(authTable, authId, authName, userName);
+				userID = db.getUserID();
+			}
 		}
 	}
 	
@@ -772,6 +784,9 @@ public class BWeb {
 		String body = "";
 		wheresql = null;
 		sortby = null;
+		
+		// Check for license
+		//if(!hasLicense()) return "";
 
 		BElement sview = null;
 		comboField = request.getParameter("field");
@@ -2098,6 +2113,33 @@ System.out.println("repository : " + repository);
 			if(el.getName().equals("CROSSTAB")) hasSubs = true;
 		}
 		return hasSubs;
+	}
+	
+	public boolean getLicense() {
+		return isLicense;
+	}
+	
+	public boolean hasLicense() {
+		// Get the database ID
+		String dbName = db.getCatalogName();
+		String dbID = db.executeFunction("SELECT datid FROM pg_stat_database WHERE datname = '" + dbName + "'");
+		System.out.println("DB ID : " + dbName + " : " + dbID);
+
+		String mysql = "SELECT org_id, org_name, system_identifier, MAC_address, public_key, license "
+			+ "FROM orgs WHERE org_id = 0";
+		BQuery lrs = new BQuery(db, mysql);
+		lrs.moveFirst();
+		
+		if((lrs.getString("org_name") != null) && (lrs.getString("system_identifier") != null) && (lrs.getString("MAC_address") != null) && (lrs.getBytes("license") != null) && (lrs.getBytes("public_key") != null)) {
+			BLicense lic = new BLicense();
+			isLicense = lic.verifyLicense(lrs.getString("org_name"), lrs.getString("system_identifier"), lrs.getString("MAC_address"), dbID, lrs.getBytes("license"), lrs.getBytes("public_key"));
+		} else {
+			isLicense = false;
+		}
+		
+		lrs.close();
+		
+		return isLicense;
 	}
 	
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }

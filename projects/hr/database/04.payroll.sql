@@ -1,6 +1,12 @@
+CREATE TABLE adjustment_effects (
+	adjustment_effect_id	integer primary key,
+	adjustment_effect_name	varchar(50) not null
+);
+
 CREATE TABLE adjustments (
 	adjustment_id			serial primary key,
 	currency_id				integer references currency,
+	adjustment_effect_id	integer references adjustment_effects,
 	org_id					integer references orgs,
 	adjustment_name			varchar(50) not null,
 	adjustment_type			integer not null,
@@ -25,6 +31,7 @@ CREATE TABLE adjustments (
 	UNIQUE(adjustment_name, org_id)
 );
 CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
+CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
 
 CREATE TABLE claim_types (
@@ -144,8 +151,9 @@ CREATE INDEX employee_tax_types_org_id ON employee_tax_types(org_id);
 
 CREATE TABLE employee_advances (
 	employee_advance_id		serial primary key,
-	employee_month_id		integer references employee_month not null,
+	employee_month_id		integer references employee_month,
 	currency_id				integer references currency,
+	entity_id				integer not null references entitys,
 	org_id					integer references orgs,
 	pay_date				date default current_date not null,
 	pay_upto				date not null,
@@ -157,14 +165,16 @@ CREATE TABLE employee_advances (
 	completed				boolean not null default false,
 
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 
-	narrative				varchar(240)
+	narrative				varchar(240),
+	details					text
 );
 CREATE INDEX employee_advances_employee_month_id ON employee_advances (employee_month_id);
 CREATE INDEX employee_advances_currency_id ON employee_advances (currency_id);
+CREATE INDEX employee_advances_entity_id ON employee_advances (entity_id);
 CREATE INDEX employee_advances_org_id ON employee_advances(org_id);
 
 CREATE TABLE advance_deductions (
@@ -218,8 +228,11 @@ CREATE TABLE claims (
 	in_payroll				boolean not null default false,
 	narrative				varchar(250),
 	
+	process_claim			boolean not null default false,
+	process_date			date,
+	
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 	
@@ -345,6 +358,7 @@ CREATE VIEW vw_claims AS
 	SELECT claim_types.claim_type_id, claim_types.claim_type_name, 
 		entitys.entity_id, entitys.entity_name, 
 		claims.org_id, claims.claim_id, claims.claim_date, claims.narrative, claims.in_payroll,
+		claims.process_claim, claims.process_date,
 		claims.application_date, claims.approve_status, claims.workflow_table_id, claims.action_date, 
 		claims.details
 	FROM claims INNER JOIN claim_types ON claims.claim_type_id = claim_types.claim_type_id
@@ -377,7 +391,8 @@ CREATE VIEW vw_default_banking AS
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		default_banking.org_id, default_banking.default_banking_id, default_banking.amount, 
-		default_banking.ps_amount, default_banking.final_date, default_banking.active, default_banking.narrative
+		default_banking.ps_amount, default_banking.final_date, default_banking.active, 
+		default_banking.bank_account, default_banking.narrative
 	FROM default_banking INNER JOIN entitys ON default_banking.entity_id = entitys.entity_id
 		INNER JOIN vw_bank_branch ON default_banking.bank_branch_id = vw_bank_branch.bank_branch_id
 		INNER JOIN currency ON default_banking.currency_id = currency.currency_id;
@@ -385,13 +400,15 @@ CREATE VIEW vw_default_banking AS
 CREATE VIEW vw_pensions AS
 	SELECT entitys.entity_id, entitys.entity_name,
 		adjustments.adjustment_id, adjustments.adjustment_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		pensions.contribution_id, contributions.adjustment_name as contribution_name, 
 		pensions.org_id, pensions.pension_id, pensions.pension_company, pensions.pension_number, 
 		pensions.amount, pensions.use_formura, pensions.employer_ps, pensions.employer_amount, 
 		pensions.employer_formural, pensions.active, pensions.details
 	FROM pensions INNER JOIN entitys ON pensions.entity_id = entitys.entity_id
 		INNER JOIN adjustments ON pensions.adjustment_id = adjustments.adjustment_id
-		INNER JOIN adjustments as contributions ON pensions.contribution_id = contributions.adjustment_id;
+		INNER JOIN adjustments as contributions ON pensions.contribution_id = contributions.adjustment_id
+		INNER JOIN currency ON adjustments.currency_id = currency.currency_id;
 	
 	
 CREATE OR REPLACE FUNCTION getAdjustment(int, int, int) RETURNS float AS $$
@@ -451,6 +468,10 @@ BEGIN
 		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
+	ELSIF ($3 = 26) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (pension_id is not null) AND (adjustment_type = 2);
 	ELSIF ($3 = 31) THEN
 		SELECT SUM(overtime * overtime_rate) INTO adjustment
 		FROM employee_overtime
@@ -780,9 +801,10 @@ CREATE VIEW vw_pension_adjustments AS
 CREATE VIEW vw_employee_pensions AS
 	SELECT a.entity_id, a.entity_name, a.adjustment_id, a.adjustment_name, a.contribution_id, 
 		a.contribution_name, a.org_id, a.pension_id, a.pension_company, a.pension_number, 
-		a.active,
+		a.active, a.currency_id, a.currency_name, a.currency_symbol,
 		b.period_id, b.start_date, b.employee_month_id, 
-		b.amount, b.base_amount,
+		COALESCE(b.amount, 0) as amount, 
+		COALESCE(b.base_amount, 0) as base_amount,
 		COALESCE(c.amount, 0) as employer_amount, 
 		COALESCE(c.base_amount, 0) as employer_base_amount,
 		(b.amount + COALESCE(c.amount, 0)) as pension_amount, 
@@ -1187,9 +1209,9 @@ BEGIN
 
 	INSERT INTO advance_deductions (org_id, amount, employee_month_id)
 	SELECT NEW.org_id, (Amount / Pay_Period), NEW.Employee_Month_ID
-	FROM Employee_Advances INNER JOIN Employee_Month ON Employee_Advances.Employee_Month_ID = Employee_Month.Employee_Month_ID
-	WHERE (entity_ID = NEW.entity_ID) AND (Pay_Period > 0) AND (completed = false)
-		AND (Pay_upto >= current_date);
+	FROM employee_advances INNER JOIN employee_month ON employee_advances.employee_month_id = employee_month.employee_month_id
+	WHERE (employee_month.entity_id = NEW.entity_id) AND (employee_advances.pay_period > 0) AND (employee_advances.completed = false)
+		AND (employee_advances.pay_upto >= current_date);
 		
 	INSERT INTO project_staff_costs (org_id, employee_month_id, project_id, project_role, payroll_ps, staff_cost, tax_cost)
 	SELECT NEW.org_id, NEW.employee_month_id, 
@@ -1712,6 +1734,7 @@ BEGIN
 		FROM adjustments
 		WHERE (adjustment_id = rec.adjustment_id);
 		
+		v_amount := 0;
 		IF(rec.use_formura = true) AND (adj.formural is not null) AND (v_employee_month_id is not null) THEN
 			EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 			INTO v_amount;
@@ -1760,6 +1783,7 @@ BEGIN
 				a_exchange_rate := 1 / v_exchange_rate;
 			END IF;
 			
+			v_amount := 0;
 			IF(rec.employer_formural = true) AND (adj.formural is not null) AND (v_employee_month_id is not null) THEN
 				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || v_employee_month_id
 				INTO v_amount;
@@ -1772,7 +1796,7 @@ BEGIN
 				v_amount := rec.employer_amount;
 			END IF;
 			
-			IF(v_employee_adjustment_id is null) AND (v_employee_month_id is not null)THEN
+			IF(v_employee_adjustment_id is null) AND (v_employee_month_id is not null) AND (v_amount > 0) THEN
 				INSERT INTO employee_adjustments(employee_month_id, pension_id, org_id, 
 					adjustment_id, adjustment_type, adjustment_factor, 
 					in_payroll, in_tax, visible,
@@ -1795,4 +1819,81 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_advances
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+    
+CREATE OR REPLACE FUNCTION advance_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Advance applied';
 	
+	UPDATE employee_advances SET approve_status = 'Completed'
+	WHERE (employee_advance_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION ins_employee_advances() RETURNS trigger AS $$
+DECLARE
+	v_period_id			integer;
+BEGIN
+
+	IF(NEW.pay_upto is null)THEN
+		NEW.pay_upto := current_date;
+	END IF;
+	IF(NEW.payment_amount is null)THEN
+		NEW.payment_amount := NEW.amount;
+		NEW.pay_period := 1;
+	END IF;
+
+	IF((NEW.approve_status = 'Approved') AND (OLD.approve_status = 'Completed'))THEN
+		SELECT max(period_id) INTO v_period_id
+		FROM periods
+		WHERE (closed = false);
+		
+		SELECT max(employee_month_id) INTO NEW.employee_month_id
+		FROM employee_month
+		WHERE (period_id = v_period_id) AND (entity_id = NEW.entity_id);
+		
+		IF(v_period_id is null)THEN
+			RAISE EXCEPTION 'You need to have the current period approved';
+		ELSIF(NEW.employee_month_id is null)THEN
+			RAISE EXCEPTION 'You need to have the staff in the current active month';
+		END IF;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_employee_advances BEFORE INSERT OR UPDATE ON employee_advances
+    FOR EACH ROW EXECUTE PROCEDURE ins_employee_advances();
+    
+
+CREATE OR REPLACE FUNCTION claims_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_amount			real;
+	msg 				varchar(120);
+BEGIN
+	msg := 'Advance applied';
+	
+	SELECT sum(amount) INTO v_amount
+	FROM vw_claim_details
+	WHERE (claim_id = $1::int);
+	
+	IF(v_amount is null)THEN
+		RAISE EXCEPTION 'You need to add claim details';
+	END IF;
+	
+	UPDATE claims SET approve_status = 'Completed'
+	WHERE (claim_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+

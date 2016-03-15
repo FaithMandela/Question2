@@ -262,19 +262,12 @@ CREATE TABLE application_forms (
 	accepted			boolean not null default false,
 	premajor			boolean not null default false,
 
-	submitapplication		boolean not null default false,
-	submitdate				timestamp,
-	isaccepted				boolean not null default false,
-	isreported				boolean not null default false,
-	isdeferred				boolean not null default false,
-	isrejected				boolean not null default false,
-	evaluationdate			date,
 	
 	homeaddress			varchar(120),
 	phonenumber			varchar(50),
 
 
-	accepteddate		date,
+	apply_trimester		varchar(32),
 
 	reported			boolean not null default false,
 	reporteddate		date,
@@ -493,6 +486,7 @@ DECLARE
 	rtn				varchar(50);
 	v_org_id		integer;
 	reg_id			integer;
+	v_bulletingid	integer;
 	baseid 			VARCHAR(12);
 	newid 			VARCHAR(12);
 	fullname 		VARCHAR(50);
@@ -529,6 +523,11 @@ BEGIN
 		INTO gudadd
 	FROM regcontacts
 	WHERE (regcontacts.guardiancontact = true) AND (regcontacts.registrationid = reg_id);
+	
+	SELECT max(bulletingid) INTO v_bulletingid
+	FROM bulleting 
+	WHERE iscurrent = true;
+	IF(v_bulletingid is null)THEN v_bulletingid := 0; END IF;
 
 	SELECT quarterid INTO myqtr
 	FROM quarters WHERE active = true;
@@ -585,7 +584,7 @@ BEGIN
 			gfirstpass, md5(gfirstpass), now(), 0);
 
 		INSERT INTO studentdegrees (degreeid, sublevelid, studentid, started, bulletingid)
-		VALUES (myrec.degreeid,  myrec.sublevelid, newid, current_date, 0);
+		VALUES (myrec.degreeid,  myrec.sublevelid, newid, current_date, v_bulletingid);
 
 		INSERT INTO studentmajors (studentdegreeid, majorid, major, nondegree, premajor, primarymajor)
 		VALUES (getstudentdegreeid(newid), myrec.majorid, true, false, myrec.premajor, true);

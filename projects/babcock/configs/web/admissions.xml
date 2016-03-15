@@ -297,7 +297,7 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Other Names">othernames</TEXTFIELD>
 			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes">entry_form_id</BROWSER>
-			<ACTION fnct="submitapplication" title="Sumbit Application" action="Sumbit Application">registrationid</ACTION>
+			<ACTION fnct="submitapplication" title="Submit Application" action="Sumbit Application">registrationid</ACTION>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Print Registration" key="215" h="500">

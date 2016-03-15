@@ -12,10 +12,16 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT DISTINCT contenttypeid, description, courseid, repeated, coursetitle, instructorname, hours, credit, gradeid, gpa
+		<![CDATA[SELECT max(contenttypeid) as contenttypeid, max(description) as description,
+courseid, repeated, coursetitle, instructorname, hours, credit, gradeid, gpa
+
 FROM coregradeview
+
 WHERE studentdegreeid = $P{studentdegreeid}
-ORDER BY contenttypeid;]]>
+
+GROUP BY courseid, repeated, coursetitle, instructorname, hours, credit, gradeid, gpa
+
+ORDER BY description, contenttypeid, courseid;]]>
 	</queryString>
 	<field name="contenttypeid" class="java.lang.Integer"/>
 	<field name="description" class="java.lang.String"/>
@@ -27,7 +33,7 @@ ORDER BY contenttypeid;]]>
 	<field name="credit" class="java.lang.Double"/>
 	<field name="gradeid" class="java.lang.String"/>
 	<field name="gpa" class="java.lang.Double"/>
-	<group name="description" isStartNewColumn="true">
+	<group name="description">
 		<groupExpression><![CDATA[$F{description}]]></groupExpression>
 		<groupHeader>
 			<band height="29" splitType="Stretch">

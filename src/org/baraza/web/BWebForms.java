@@ -62,15 +62,24 @@ public class BWebForms {
 
 	public BWebForms(String dbconfig) {
 		db = new BDB(dbconfig);
+		
+		answers = Json.createObjectBuilder().build();
+		params = new HashMap<String, String[]>();
 	}
 
 	public BWebForms(String dbconfig, String at) {
 	    db = new BDB(dbconfig);
 	    access_text = at;
+	    
+	    answers = Json.createObjectBuilder().build();
+		params = new HashMap<String, String[]>();
 	}
 	
 	public BWebForms(BDB db) {
 		this.db = db;
+		
+		answers = Json.createObjectBuilder().build();
+		params = new HashMap<String, String[]>();
 	}
 
 	public String getWebForm(Map<String, String[]> sParams) {
@@ -375,7 +384,7 @@ public class BWebForms {
 				+ "	<div class='col-md-12 column'>"
 				+ "		<div id='sub_table" + fieldId + "'></div>"
 				+ "	</div>"
-				+ "	<a id='add_row" + fieldId + "' class='btn btn-default pull-left'>Add Row</a>"
+				//+ "	<a id='add_row" + fieldId + "' class='btn btn-default pull-left'>Add Row</a>"
 				+"</div>"
 				+ "</td>");
 				
@@ -432,7 +441,7 @@ public class BWebForms {
 			if(tableList == null) tableList = "var db_list = ['db" + rs.getString("field_id") + ".table'";
 			else tableList += ", 'db" + rs.getString("field_id") + ".table'";
 		}
-		if(tableList == null) tableList = "var db = [";
+		if(tableList == null) tableList = "var db_list = [";
 		tableList += "];";
 		
 		myhtml += "\n\n" + tableList;
@@ -455,14 +464,14 @@ public class BWebForms {
 		+ "deleteItem: function(deletingClient) {\n"
 		+ "var clientIndex = $.inArray(deletingClient, this.table);\n"
 		+ "this.table.splice(clientIndex, 1);\n"
-		+ "}};\n"
+		+ "}\n};\n"
 		+ "window.db" + fieldId + " = db" + fieldId + ";\n"
-		+ "db" + fieldId + ".table = " + getSubAnswer(fieldId) + ";\n\n"
-		+ "$('#sub_table" + fieldId + "').jsGrid(");
+		+ "db" + fieldId + ".table = " + getSubAnswer(fieldId) + ";\n\n");
 		
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		jshd.add("width", tableSize + "%");
 		jshd.add("height", "200px");
+		jshd.add("inserting", true);
 		jshd.add("editing", true);
 		jshd.add("filtering", false);
 		jshd.add("sorting", false);
@@ -470,8 +479,9 @@ public class BWebForms {
 		
 		jshd.add("data", "#db_table#");
 		
+		Map<String, String> jsTables = new HashMap<String, String>();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
-		while(rs.moveNext()) {		
+		while(rs.moveNext()) {
 			JsonObjectBuilder jsColEl = Json.createObjectBuilder();
 			String fld_name = "SF" + rs.getString("sub_field_id");
 			String fld_title = rs.getString("question");
@@ -483,23 +493,77 @@ public class BWebForms {
 		
 			jsColEl.add("title", fld_title);
 			jsColEl.add("name", fld_name);
-			jsColEl.add("width", fld_size);
-			if(fld_type.equals("TEXTFIELD")) jsColEl.add("type", "text");
-			if(fld_type.equals("TEXTAREA")) jsColEl.add("type", "textarea");
+			jsColEl.add("width", Integer.valueOf(fld_size));
+			if(fld_type.equals("TEXTFIELD")) {
+				jsColEl.add("type", "text");
+			} else if(fld_type.equals("TEXTAREA")) {
+				jsColEl.add("type", "textarea");
+			} else if(fld_type.equals("DATEFIELD")) {
+				jsColEl.add("type", "myDateField");
+			} else if(fld_type.equals("LIST")) {
+				String lookups = rs.getString("sub_field_lookup");
+				if(lookups != null) {
+					jsColEl.add("type", "select");
+					jsColEl.add("items", "#db" + fieldId + ".sel_" + fld_name + "#");
+					jsColEl.add("valueField", "Name");
+					jsColEl.add("textField", "Name");
+					jsColEl.add("align", "left");
+
+					JsonObjectBuilder jsSelObj = Json.createObjectBuilder();
+					JsonArrayBuilder jsSelModel = Json.createArrayBuilder();
+					String[] lookup = lookups.split("#");
+					for(String lps : lookup) {
+						jsSelObj.add("Name", lps);
+						jsSelModel.add(jsSelObj);
+					}
+					jsTables.put("db" + fieldId + ".sel_" + fld_name, jsSelModel.build().toString());
+				}
+			} else if(fld_type.equals("SELECT")) {
+				String lookups = rs.getString("sub_field_lookup");
+				if(lookups != null) {
+					jsColEl.add("type", "select");
+					jsColEl.add("items", "#db" + fieldId + ".sel_" + fld_name + "#");
+					jsColEl.add("valueField", "Id");
+					jsColEl.add("textField", "Name");
+					jsColEl.add("align", "left");
+
+					JsonObjectBuilder jsSelObj = Json.createObjectBuilder();
+					JsonArrayBuilder jsSelModel = Json.createArrayBuilder();
+					BQuery lprs = new BQuery(db, lookups);
+					int cols = lprs.getColnum();
+					while(lprs.moveNext()) {
+						if(cols == 1){
+							jsSelObj.add("Id", lprs.readField(1));
+							jsSelObj.add("Name", lprs.readField(1));
+							jsSelModel.add(jsSelObj);
+						} else {
+							jsSelObj.add("Id", lprs.readField(1));
+							jsSelObj.add("Name", lprs.readField(2));
+							jsSelModel.add(jsSelObj);
+						}
+					}
+					lprs.close();
+					
+					jsTables.put("db" + fieldId + ".sel_" + fld_name, jsSelModel.build().toString());
+				}
+			}
+			
 			jsColModel.add(jsColEl);
 		}
 		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
+		jsColEl.add("width", 75);
 		jsColEl.add("type", "control");
 		jsColModel.add(jsColEl);
 		jshd.add("fields", jsColModel);
 		
 		JsonObject jsObj = jshd.build();
-		String tableDef = jsObj.toString().replaceAll("\"#db_table#\"", "db" + fieldId + ".table");
-		myhtml.append(tableDef + "\n);");
+		String tableDef = jsObj.toString().replaceAll("\"#db_table#\"", "db" + fieldId + ".table");	
+		for(String jsTable : jsTables.keySet()) {
+			tableDef = tableDef.replace("\"#" + jsTable + "#\"", jsTable);
+			myhtml.append(jsTable + "=" + jsTables.get(jsTable) + ";\n");
+		}
+		myhtml.append("$('#sub_table" + fieldId + "').jsGrid(" + tableDef + "\n);\n"); 
 		
-		myhtml.append("\n$(document).ready(function(){"
-		+ "$('#add_row" + fieldId + "').click(function(){$('#sub_table" + fieldId + "').jsGrid('insertItem');});\n});\n");
-
 		return myhtml.toString();
 	}
 		
@@ -508,17 +572,134 @@ public class BWebForms {
 		String resp = "";
 System.out.println("Start saving the form " + jsonData);
 
-		String updSql = "SELECT entry_form_id, answer FROM entry_forms WHERE entry_form_id = " + entryFormId;
+		String updSql = "SELECT entry_form_id, form_id, answer FROM entry_forms WHERE entry_form_id = " + entryFormId;
 		BQuery rs = new BQuery(db, updSql);
 		
 		if(rs.moveNext()) {
 			rs.recEdit();
 			rs.updateRecField("answer", jsonData);
 			rs.recSave();
+			rs.close();
+			resp = "{\"success\": 1, \"message\": \"Form data updated\"}";
+		} else {
+			resp = "{\"success\": 0, \"message\": \"Unable to update form data\"}";
 		}
 		
 		return resp;
 	}
+
+	public String submitForm(String entryFormId, String jsonData) {
+		this.entryFormId = entryFormId;
+		String resp = "";
+System.out.println("Start saving the form " + entryFormId);
+
+		String updSql = "SELECT entry_form_id, form_id, answer, approve_status "
+		+ "FROM entry_forms "
+		+ "WHERE entry_form_id = " + entryFormId;
+		BQuery rs = new BQuery(db, updSql);
+		
+		if(rs.moveNext()) {
+			rs.recEdit();
+			rs.updateRecField("answer", jsonData);
+			rs.recSave();
+			
+			resp = submitValidate(rs.getString("form_id"), entryFormId, jsonData);
+			
+			rs.close();
+			
+			resp = "{\"success\": 1, \"message\": \"" + resp + "\"}";
+		} else {
+			resp = "{\"success\": 0, \"message\": \"" + resp + "\"}";
+		}
+		
+		return resp;
+	}
+
+	public String submitValidate(String formId, String entryFormId, String jsonData) {
+		String resp = "";
+		String mysql = "SELECT * FROM fields "
+		+ " WHERE (form_id = " + formId + ") AND (manditory = '1') ";
+		mysql += "ORDER BY field_order, field_id;";
+		BQuery rs = new BQuery(db, mysql);
+		
+		// Process the answers
+		processAnswers(jsonData);
+
+		String ans = "";
+		boolean verified = true;
+		while(rs.moveNext()) {
+			String fieldType = "TEXTFIELD";
+			if(rs.getString("field_type") != null) fieldType = rs.getString("field_type");
+
+			String question = rs.getString("question");
+			if(rs.getString("question") == null) question = "";
+
+			if(fieldType.equals("TEXTFIELD") || fieldType.equals("DATE") || fieldType.equals("TIME") || fieldType.equals("TEXTAREA") || fieldType.equals("LIST") || fieldType.equals("SELECT")) {
+				ans = getAnswer(rs.getString("field_id"));
+				if(ans.trim().equals("")) {
+					verified = false;
+					resp += "<div style='color:#FF0000; font-weight:bold;'>* You need to answer : " + question + "</div><br/>";
+				}
+			}
+		}
+		rs.close();
+		
+		if(verified) {
+			if(saveTable(formId, entryFormId) != null) verified = false;
+		}
+		
+		if(verified) {
+			mysql = "UPDATE entry_forms SET approve_status = 'Completed', completion_date = now() "
+			+ "WHERE (entry_form_id = " + entryFormId + ")";
+			db.executeQuery(mysql);
+			resp += "<b>The form has been submitted successfully</b><br/>";	
+		} else {
+			resp += "<b>You need to ensure you have made the selection properly</b><br/>";
+		}
+
+		return resp;
+	}
+	
+	public String saveTable(String formid, String entryformid) {
+		String dbErr = null;
+		String mysql = "SELECT table_name FROM forms WHERE form_id = " + formid;
+		String tableName = db.executeFunction(mysql);
+
+		if(tableName != null) {
+			mysql = "SELECT field_name, field_id, field_fnct FROM fields WHERE form_id = " + formid;
+			mysql += " ORDER BY field_order, field_id;";
+			BQuery rs = new BQuery(db, mysql);
+
+			mysql = "INSERT INTO " + tableName + " (entry_form_id";
+			String values = ") VALUES (" + entryformid;
+			while(rs.moveNext()) {
+				String fieldName = rs.getString("field_name");
+				if(fieldName != null) {
+					String fieldFnct = rs.getString("field_fnct");
+					String ans = getAnswer(rs.getString("field_id"), false);
+					String ansa = "'" + ans + "'";
+					if(ans == null) { ansa = "null"; ans = ""; }
+
+					if((fieldFnct != null) && (ans != null))
+						ansa = fieldFnct.replace("#", ans);
+
+					if(!ans.equals("")) {
+						mysql += ", " + fieldName;
+						values += ", " + ansa;
+					}
+					
+					System.out.println("BASE 1010 : " + fieldName + " : " + ansa);
+				}
+			}
+			mysql +=   values + ")";
+			dbErr = db.executeQuery(mysql);
+
+			System.out.println("\n\nBASE 1020 : " + mysql);
+		}
+
+		return dbErr;
+	}
+
 
 	public String getParameter(String paramName) {
 		String paramValue = null;
@@ -548,9 +729,9 @@ System.out.println("Start saving the form " + jsonData);
 			answer = "";
 		} else if(answer.trim().equals("")) {
 			answer = "";
-		} else {
+		} else if(addValue) {
 			answer = answer.replaceAll("&", "&amp;").replaceAll("\"", "&quot;");
-			if(addValue) answer = " value=\"" + answer + "\" ";
+			answer = " value=\"" + answer + "\"";
 		}
 
 		return answer;

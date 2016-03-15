@@ -11,6 +11,7 @@
 			<MENU name="Define Phases">102</MENU>
 			<MENU name="Project Tasks">103</MENU>
 			<MENU name="Project Staff">104</MENU>
+			<MENU name="Attendance">115</MENU>
 		</MENU>
 		<MENU name="HR" xml="hr.xml">0</MENU>
 	</MENU>
@@ -347,5 +348,25 @@
 	</DESK>
 	<DESK w="700" name="Project Staff" key="104" h="550">
 		<JASPER name="Project Staff" reportfile="vw_project_staff.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Attendance" key="115" h="750">
+		<FILTER w="700" name="Attendance by Month" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Active Attendance" reportfile="vw_week_attendance_a.jasper"></JASPER>
+			<JASPER name="Attendance" reportfile="vw_week_attendance.jasper"></JASPER>
+		</FILTER>
+		<GRID name="Attendance by Staff" keyfield="entity_id" orderby="first_name" table="vw_employees">
+			<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">active</CHECKBOX>
+			<JASPER name="Attendance" reportfile="vw_week_attendance_b.jasper"></JASPER>
+		</GRID>
 	</DESK>
 </APP>

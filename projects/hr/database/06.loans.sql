@@ -153,8 +153,9 @@ CREATE VIEW vw_loans AS
 		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
 		entitys.entity_id, entitys.entity_name, employees.employee_id,
 		loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
-		loans.repayment_period, loans.application_date, loans.approve_status, loans.initial_payment, 
-		loans.loan_date, loans.action_date, loans.details,
+		loans.repayment_period, loans.initial_payment, loans.loan_date, 
+		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, 
+		loans.details,
 		get_repayment(loans.principle, loans.interest, loans.repayment_period) as repayment_amount, 
 		loans.initial_payment + get_total_repayment(loans.loan_id) as total_repayment, get_total_interest(loans.loan_id) as total_interest,
 		(loans.principle + get_total_interest(loans.loan_id) - loans.initial_payment - get_total_repayment(loans.loan_id)) as loan_balance,
@@ -258,24 +259,47 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
+DECLARE
+	v_default_interest	real;
+	v_reducing_balance	boolean;
 BEGIN
 
-	IF(NEW.principle is null) OR (NEW.interest is null)THEN
-		RAISE EXCEPTION 'You have to enter a principle and interest amount';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is null)THEN
+	SELECT default_interest, reducing_balance INTO v_default_interest, v_reducing_balance
+	FROM loan_types 
+	WHERE (loan_type_id = NEW.loan_type_id);
+		
+	IF(NEW.interest is null)THEN
+		NEW.interest := v_default_interest;
+	END IF;
+	IF (NEW.reducing_balance is null)THEN
+		NEW.reducing_balance := v_reducing_balance;
+	END IF;
+	IF(NEW.monthly_repayment is null) THEN
+		NEW.monthly_repayment := 0;
+	END IF;
+	IF (NEW.repayment_period is null)THEN
+		NEW.repayment_period := 0;
+	END IF;
+	IF(NEW.approve_status = 'Draft')THEN
+		NEW.repayment_period := 0;
+	END IF;
+	
+	IF(NEW.principle is null)THEN
+		RAISE EXCEPTION 'You have to enter a principle amount';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period = 0))THEN
 		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is not null)THEN
-		IF(NEW.repayment_period > 0)THEN
-			NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
-		ELSE
-			RAISE EXCEPTION 'The repayment period should be greater than 0';
-		END IF;
-	ELSIF(NEW.monthly_repayment is not null) AND (NEW.repayment_period is null)THEN
-		IF(NEW.monthly_repayment > 0)THEN
-			NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
-		ELSE
-			RAISE EXCEPTION 'The monthly repayment should be greater than 0';
-		END IF;
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period < 1))THEN
+		RAISE EXCEPTION 'The repayment period should be greater than 0';
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment < 1))THEN
+		RAISE EXCEPTION 'The monthly repayment should be greater than 0';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period > 0))THEN
+		NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment > 0))THEN
+		NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
+	END IF;
+	
+	IF(NEW.monthly_repayment > NEW.principle)THEN
+		RAISE EXCEPTION 'Repayment should be less than the principal amount';
 	END IF;
 	
 	RETURN NEW;
@@ -285,3 +309,22 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE ins_loans();
 
+
+CREATE OR REPLACE FUNCTION loan_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Loan applied';
+	
+	UPDATE loans SET approve_status = 'Completed'
+	WHERE (loan_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+    
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+    

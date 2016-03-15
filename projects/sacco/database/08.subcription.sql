@@ -1,5 +1,9 @@
+alter table orgs add default_country_id varchar(6); 
 
+<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
 
+=======
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 CREATE TABLE locations
 (
 	location_id			serial primary key,
@@ -171,7 +175,10 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
+
+CREATE OR REPLACE FUNCTION ins_subscriptions()
+  RETURNS trigger AS
+$BODY$
 DECLARE
 	v_entity_id		integer;
 	v_org_id		integer;
@@ -188,18 +195,19 @@ BEGIN
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
+			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
-			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-			VALUES (4, 0, NEW.entity_id, 'subscription');
+			INSERT INTO sys_emailed ( org_id, table_id, table_name)
+			VALUES ( 0, 1, 'subscription');
 		
-			NEW.approve_status := 'Completed';
-		ELSE
+			ELSE
 			RAISE EXCEPTION 'You already have an account, login and request for services';
-		END IF;
+		END IF ;
+		
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
+<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
 		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
 		
@@ -209,6 +217,16 @@ BEGIN
 		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'KES', 'ERO');
 		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
 		
+=======
+		
+		
+		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
+		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
+		
+		
+	
+		
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
@@ -216,19 +234,29 @@ BEGIN
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 
-		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
-			
+		INSERT INTO sys_emailed ( org_id, table_id, table_name)
+		VALUES ( NEW.org_id, NEW.entity_id, 'subscription');
+		
+		
+		
 	END IF;
-
+	
+		
 	RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
-
+$BODY$
+  LANGUAGE plpgsql;
+   
+  
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  
 
+<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
+=======
+ 
+
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 CREATE OR REPLACE FUNCTION ins_member_limit() RETURNS trigger AS $$
 DECLARE
 	v_member_count	integer;

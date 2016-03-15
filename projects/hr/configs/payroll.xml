@@ -1,7 +1,7 @@
 <APP name="Payroll" org="org_id" password="change_password">
 	<MENU name="Payroll">
 		<MENU name="Control Panel" role="admin,payroll">
-			<MENU name="Definations">4</MENU>
+			<MENU name="Definitions">4</MENU>
 			<MENU name="Salary Scales">8</MENU>
 			<MENU name="Statutory Deductions">2</MENU>
 			<MENU name="Banks">21</MENU>
@@ -29,8 +29,8 @@
 			<MENU name="Employee Default">104</MENU>
 			<MENU name="Payroll">105</MENU>
 			<MENU name="Banking">106</MENU>
-			<MENU name="Summary Adv + Ded">107</MENU>
-			<MENU name="Advances and Deductions">108</MENU>
+			<MENU name="Summary Allow, Deduct">107</MENU>
+			<MENU name="Allowance and Deductions">108</MENU>
 			<MENU name="Employee Statutories">118</MENU>
 			<MENU name="Pensions">125</MENU>
 			<MENU name="Loans">135</MENU>
@@ -67,7 +67,7 @@
 			</TILELIST>
 		</DASHBOARD>
 	</DESK>
-	<DESK w="715" name="Definations" key="4" h="500">
+	<DESK w="715" name="Definitions" key="4" h="500">
 		<GRID name="Allowances" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 1)">
 			<TEXTFIELD w="75" title="Allowance ID">adjustment_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Allowance Name">adjustment_name</TEXTFIELD>
@@ -124,7 +124,8 @@
 				<TEXTDECIMAL w="150" title="Max Tax Allowed" y="130" h="20" x="290">tax_max_allowed</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Default Amount" y="150" h="20" x="10">default_amount</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Effects" lptable="adjustment_effects" noorg="true" y="190" h="20" x="10" lpfield="adjustment_effect_name">adjustment_effect_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Expenses" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 3)">
@@ -508,14 +509,14 @@
 					<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
-			<GRID name="Expences" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 3)">
-				<TEXTFIELD w="75" title="Expence">adjustment_name</TEXTFIELD>
+			<GRID name="Expenses" keyfield="default_adjustment_id" linkfield="entity_id" table="vw_default_adjustments" where="(adjustment_type = 3)">
+				<TEXTFIELD w="75" title="Expense">adjustment_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTDATE w="75" title="Final Date">final_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
-				<FORM name="Expence" keyfield="default_adjustment_id" linkfield="entity_id" table="default_adjustments">
-					<COMBOBOX w="430" title="Expence" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+				<FORM name="Expense" keyfield="default_adjustment_id" linkfield="entity_id" table="default_adjustments">
+					<COMBOBOX w="430" title="Expense" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="30" h="20" x="290">final_date</TEXTDATE>
 					<CHECKBOX w="150" title="Active" y="50" h="20" x="10">active</CHECKBOX>
@@ -712,7 +713,7 @@
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
-				<ACTION fnct="generate_payroll" approval="1" role="hr,admin">Generate Payroll</ACTION>
+				<ACTION fnct="generate_payroll" approval="1" role="hr,admin,payrolladmin">Generate Payroll</ACTION>
 				<ACTION fnct="process_payroll" approval="1" role="payroll,admin">Process Payroll</ACTION>
 				<ACTION fnct="process_loans" role="payroll,admin">Process Loans</ACTION>
 				<ACTION fnct="process_pensions" role="payroll,admin">Process Pensions</ACTION>
@@ -1003,6 +1004,43 @@
 					</FORM>
 				</GRID>
 			</GRID>
+		</GRID>
+		<GRID name="Claims" keyfield="claim_id" orderby="claim_date desc" table="vw_claims">
+			<TEXTFIELD w="75" title="Claim id">claim_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status"></TEXTFIELD>
+			<TEXTFIELD w="75" title="Claim Type">claim_type_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Claim Date">claim_date</TEXTDATE>
+			<CHECKBOX w="75" title="In Payroll">in_payroll</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+			<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="vw_claim_details">
+				<TEXTFIELD w="175" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
+				<TEXTFIELD w="175" title="Receipt Number">receipt_number</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>
+				<FORM name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details">
+					<TEXTFIELD w="150" title="Nature Of Expence" y="10" h="20" x="10">nature_of_expence</TEXTFIELD>
+					<TEXTFIELD w="150" title="Receipt Number" y="10" h="20" x="290">receipt_number</TEXTFIELD>
+					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="20" x="290">exchange_rate</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Expense Code" y="70" h="20" x="10">expense_code</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Claims" keyfield="claim_id" table="claims">
+				<USERFIELD>entity_id</USERFIELD>
+				<DEFAULT default="Draft">approve_status</DEFAULT>
+				<COMBOBOX w="430" title="Claim Type" lptable="claim_types" y="10" h="20" x="10" lpfield="claim_type_name">claim_type_id</COMBOBOX>
+				<TEXTDATE w="150" title="Claim Date" y="30" h="20" x="10">claim_date</TEXTDATE>
+				<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="290">in_payroll</CHECKBOX>
+				<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<JASPER name="Claim Report" reportfile="vw_claim_details.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="770" name="Payroll Archive" key="5" h="650">
@@ -1426,10 +1464,10 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Definations" key="101" h="550">
+	<DESK w="700" name="Definitions" key="101" h="550">
 		<JASPER name="Allowances" reportfile="allowances.jasper"></JASPER>
 		<JASPER name="Deductions" reportfile="deductions.jasper"></JASPER>
-		<JASPER name="Expences" reportfile="expences.jasper"></JASPER>
+		<JASPER name="Expenses" reportfile="expences.jasper"></JASPER>
 		<JASPER name="Pay Group" reportfile="pay_groups.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Statutory Deductions" key="102" h="550">
@@ -1452,6 +1490,7 @@
 			</DRILLDOWN>
 			<JASPER name="Payroll" reportfile="vw_employee_month.jasper"></JASPER>
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
+			<JASPER name="Payroll Departments" reportfile="vw_employee_month_2.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Comparison" split="150" type="horl" key="6" h="550">
@@ -1505,6 +1544,9 @@
 				</CROSSTAB>
 				<TEXTFIELD w="75" fnct="to_char(payroll_expense, '9999999D9')" title="Expense">v_payroll_expense</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="to_char(net_pay, '9999999D9')" title="Net Pay">v_net_pay</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(advance, '9999999D9')" title="Advance">v_advance</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(advance_deduction, '9999999D9')" title="Advance Deductions">v_advance_deduction</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(banked, '9999999D9')" title="Banked">v_banked</TEXTFIELD>
 			</CROSSTAB>
 		</GRID>
 		<GRID name="SUN Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">
@@ -1676,19 +1718,11 @@
 	</DESK>
 	<DESK w="700" name="P9A" key="111" h="750">
 		<FILTER w="700" name="P9A" split="250" key="6" h="550">
-			<FILTERGRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" filter="employeeid">
-				<TEXTFIELD w="75" title="ID">employee_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
-				<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
-				<CHECKBOX w="75" title="Active">active</CHECKBOX>
-			</FILTERGRID>
-			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" filter="filterid" pos="top"></DRILLDOWN>
-			<JASPER name="P9A" reportfile="P9A.jasper"></JASPER>
+			<FILTERFORM name="Employees">
+				<COMBOBOX w="430" orgerby="employee_name" title="Employee" lptable="vw_employees" cmb_fnct="employee_id || '- ' || employee_name" lpkey="entity_id" y="10" h="20" x="10" lpfield="employee">employee_id</COMBOBOX>
+				<COMBOBOX w="430" title="Year" lptable="vw_period_year" orderby="period_year desc" y="30" h="20" x="10" lpfield="period_year">period_year</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="P9A" org.table="vw_employee_month" reportfile="P9A.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="P10" key="112" h="750">

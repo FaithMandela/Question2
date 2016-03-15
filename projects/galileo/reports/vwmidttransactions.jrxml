@@ -5,12 +5,15 @@
 		<defaultValueExpression><![CDATA["2009"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT clientname, startdate, monthid, periodmonth, periodyear, quarter, crs, sum(prd) as tprd
-FROM MIDTTransactionView
+		<![CDATA[SELECT fullname, clientname, startdate, monthid, periodmonth, periodyear, quarter, crs, sum(prd) as tprd
+FROM vw_MIDTTransactions
 WHERE (periodyear = '$P!{filterid}')
-GROUP BY clientname, startdate, monthid, periodmonth, periodyear, quarter, crs
-ORDER BY startdate, clientname;]]>
+GROUP BY fullname, clientname, startdate, monthid, periodmonth, periodyear, quarter, crs
+ORDER BY startdate, fullname, clientname;]]>
 	</queryString>
+	<field name="fullname" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<field name="clientname" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -60,6 +63,25 @@ ORDER BY startdate, clientname;]]>
 		<band height="52" splitType="Stretch">
 			<crosstab>
 				<reportElement x="0" y="0" width="1644" height="48"/>
+				<rowGroup name="accmanager" width="100">
+					<bucket>
+						<bucketExpression class="java.lang.String"><![CDATA[$F{fullname}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="100" height="17"/>
+								<textElement textAlignment="Left">
+									<font fontName="Times New Roman" isBold="true"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$V{accmanager}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
 				<rowGroup name="clientname" width="166" totalPosition="End">
 					<bucket>
 						<bucketExpression class="java.lang.String"><![CDATA[$F{clientname}]]></bucketExpression>
@@ -299,6 +321,18 @@ ORDER BY startdate, clientname;]]>
 							<textFieldExpression class="java.lang.Float"><![CDATA[$V{tprdMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="accmanager">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="accmanager" columnTotalGroup="crs">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="accmanager" columnTotalGroup="quarter">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="accmanager" columnTotalGroup="startdate">
+					<cellContents/>
 				</crosstabCell>
 			</crosstab>
 		</band>

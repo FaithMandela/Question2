@@ -57,6 +57,7 @@ CREATE TABLE currency (
 CREATE TABLE orgs (
 	org_id					serial primary key,
 	currency_id				integer references currency,
+	default_country_id		char(2) references sys_countrys,
 	parent_org_id			integer references orgs,
 	org_name				varchar(50) not null unique,
 	org_sufix				varchar(4) not null unique,
@@ -64,20 +65,21 @@ CREATE TABLE orgs (
 	is_active				boolean not null default true,
 	logo					varchar(50),
 	pin 					varchar(50),
+
+	system_key				varchar(64),
+	system_identifier		varchar(64),
+	MAC_address				varchar(64),
+	public_key				bytea,
+	license					bytea,
+
 	details					text
 );
 CREATE INDEX orgs_currency_id ON orgs (currency_id);
 CREATE INDEX orgs_parent_org_id ON orgs (parent_org_id);
+CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
 
 ALTER TABLE currency ADD org_id			integer references orgs;
 CREATE INDEX currency_org_id ON currency (org_id);
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (3, 'British Pound', 'BPD');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'Euro', 'ERO');
-INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
-UPDATE currency SET org_id = 0;
-SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 
 CREATE TABLE currency_rates (
 	currency_rate_id		serial primary key,
@@ -88,8 +90,6 @@ CREATE TABLE currency_rates (
 );
 CREATE INDEX currency_rates_org_id ON currency_rates (org_id);
 CREATE INDEX currency_rates_currency_id ON currency_rates (currency_id);
-INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
-VALUES (0, 0, 1, 1);
 
 CREATE TABLE sys_queries (
 	sys_queries_id			serial primary key,
@@ -274,6 +274,7 @@ CREATE INDEX sys_dashboard_org_id ON sys_dashboard (org_id);
 CREATE TABLE sys_emails (
 	sys_email_id			serial primary key,
 	org_id					integer references orgs,
+	use_type				integer default 1 not null,
 	sys_email_name			varchar(50),
 	default_email			varchar(120),
 	title					varchar(240) not null,
@@ -1112,6 +1113,17 @@ $$ LANGUAGE plpgsql;
 
 
 --- Data
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (3, 'British Pound', 'BPD');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'Euro', 'ERO');
+INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
+UPDATE currency SET org_id = 0;
+SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
+
+INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
+VALUES (0, 0, 1, 1);
+
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');

@@ -33,11 +33,7 @@
 		reportPath = projectDir + ps + "reports" + ps;
 	}
 
-	String userIP = request.getRemoteAddr();
-	String userName = request.getRemoteUser();
-
 	BWeb web = new BWeb(dbconfig, xmlfile);
-	web.setUser(userIP, userName);
 	web.init(request);
 
 	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
@@ -311,7 +307,10 @@
 						</div>
 
 						<div class="portlet-body" id="portletBody" style="min-height:360px;">
-								<%= web.getBody(request, reportPath) %>
+							<%= web.getBody(request, reportPath) %>
+							<%if(!web.getLicense()) {%>
+							<%@ include file="./assets/include/licenseapply.jsp" %>
+							<% } %>
 						</div>
 
 						<%= web.getFilters() %>
@@ -500,6 +499,13 @@
             format: 'hh:mm a',
             trigger: 'manual'
         });
+        
+        $('#filtervalue').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                $('#btSearch').click();
+            }
+        });
 
         $('.clockface-toggle').click(function (e) {
             e.stopPropagation();
@@ -575,39 +581,39 @@
 		    var data = jQuery("#jqlist").jqGrid('getRowData',rowid);
 		    location.replace(data.CL);
 		};
-
-	  <% if(web.isEditField()) { %>
-        jqcf.onSelectRow = function(id){
-			//console.log(" HAS web.isEditField()  : <%=web.isEditField()%>")
-          	if(id && id!==lastsel2){
-				//console.info('id : ' + id + '\nlastsel2 : ' + lastsel2);
-
-				var data = jQuery("#jqlist").jqGrid('getRowData',id);
-				//console.info(data);
-
-            	//jQuery('#jqlist').restoreRow(lastsel2);
-
-				var editparameters = {
-					"keys" : true,
-					"oneditfunc" : null,
-					"successfunc" : null,
-				    "extraparam" : {"KF":data.KF},
-					"aftersavefunc" :null,
-					"errorfunc":null,
-					"afterrestorefunc" :null,
-					"restoreAfterError" : true,
-					"mtype" : "POST"
-				}
-
-				jQuery("#jqlist").jqGrid('editRow',id,  editparameters);
-
-            	lastsel2=id;
-          	}
-        };
-
-	  <% } %>
     }
 <% } %>
+
+<% if(web.isEditField()) { %>
+	jqcf.onSelectRow = function(id){
+		//console.log(" HAS web.isEditField()  : <%=web.isEditField()%>")
+	  	if(id && id!==lastsel2){
+			//console.info('id : ' + id + '\nlastsel2 : ' + lastsel2);
+
+			var data = jQuery("#jqlist").jqGrid('getRowData',id);
+			//console.info(data);
+
+			//jQuery('#jqlist').restoreRow(lastsel2);
+
+			var editparameters = {
+				"keys" : true,
+				"oneditfunc" : null,
+				"successfunc" : null,
+				"extraparam" : {"KF":data.KF},
+				"aftersavefunc" :null,
+				"errorfunc":null,
+				"afterrestorefunc" :null,
+				"restoreAfterError" : true,
+				"mtype" : "POST"
+			}
+
+			jQuery("#jqlist").jqGrid('editRow',id,  editparameters);
+
+			lastsel2=id;
+	  	}
+	};
+<% } %>
+
     //console.log(jqcf);
 
     jQuery("#jqlist").jqGrid(jqcf);
@@ -826,6 +832,24 @@ console.log(data.result.message);
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
 
+<%if(!web.getLicense()) {%>
+
+	$('#licenseApply').click(function(){
+		console.log('BASE 5 : ');
+
+        var orgName = $("#org_name").val();
+        var sysKey = $("#sys_key").val();
+
+        $.post("registerlicense", {org_name: orgName, sys_key: sysKey}, function(data) {
+            if(data.error == true) {
+                toastr['error'](data.msg, "Error");
+            } else if(data.error == false) {
+                toastr['success'](data.msg, "Ok");
+            }
+        }, "JSON");
+	});
+
+<% } %>
 
 </script>
 <!-- END JAVASCRIPTS -->

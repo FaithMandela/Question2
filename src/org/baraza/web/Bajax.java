@@ -51,17 +51,13 @@ public class Bajax extends HttpServlet {
 			System.out.println(ce + ":" + request.getParameter(ce));
 		}
 
-        response.setContentType("text/html");
+		response.setContentType("text/html");
 		PrintWriter out = null;
 		try { out = response.getWriter(); } catch(IOException ex) {}
 		String resp = "";
 
-		String userIP = request.getRemoteAddr();
-		String userName = request.getRemoteUser();
-
 		web = new BWeb(dbconfig, xmlfile);
 		web.init(request);
-		web.setUser(userIP, userName);
 		
 		db = web.getDB();
 		
@@ -90,6 +86,11 @@ public class Bajax extends HttpServlet {
 		if("formupdate".equals(fnct)) {
 			BWebForms webForm = new BWebForms(db);
 			resp = webForm.updateForm(request.getParameter("entry_form_id"), request.getParameter("json"));
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("formsubmit".equals(fnct)) {
+			BWebForms webForm = new BWebForms(db);
+			resp = webForm.submitForm(request.getParameter("entry_form_id"), request.getParameter("json"));
+			response.setContentType("application/json;charset=\"utf-8\"");
 		} else if("calresize".equals(fnct)) {
 			resp = calResize(id, endDate, endTime);
 		} else if("calmove".equals(fnct)) {
@@ -255,7 +256,6 @@ public class Bajax extends HttpServlet {
 		String resp = "";
 						
 		String mysql = "SELECT " + sqlProcess + "('0', '" + db.getUserID() + "', '')";
-System.out.println("BASE : " + mysql);
 		String myoutput = web.executeFunction(mysql);
 		
 		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";

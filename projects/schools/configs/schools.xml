@@ -1,4 +1,4 @@
-<APP color="green" name="schools" password="change_password" material="true">
+<APP name="schools">
 	<MENU name="School IMIS">
 		<MENU name="Control Panel">
 			<MENU name="Class">50</MENU>
@@ -18,11 +18,11 @@
 			<MENU name="Absents">60</MENU>
 			<MENU name="New Applicant" role="applicant">80</MENU>
 		</MENU>
-		<MENU icon="icon-users" name="Students">
-			<MENU icon="icon-users" name="Students">1</MENU>
+		<MENU name="Students">
+			<MENU name="Students">1</MENU>
 		</MENU>
 		<MENU name="Trimester">
-			<MENU icon="fa fa-clock-o" name="Timetable">95</MENU>
+			<MENU name="Timetable">95</MENU>
 			<MENU name="View Time Table">100</MENU>
 		</MENU>
 		<MENU name="Summaries">
@@ -516,7 +516,7 @@
 		<JASPER name="report_student" reportfile="report_student.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Trimester Timetable" key="95" h="550">
-		<GRID color="blue-steel" name="Trimester" keyfield="timetable_id" table="vw_timetable">
+		<GRID name="Trimester" keyfield="timetable_id" table="vw_timetable">
 			<TEXTFIELD w="75" title="Class Name">class_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
 			<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
@@ -531,7 +531,7 @@
 				<COMBOBOX w="430" title="weekday Name" lptable="weekdays" y="110" h="20" x="10" lpfield="weekday_name">weekday_id</COMBOBOX>
 			</FORM>
 		</GRID>
-		<GRID color="blue" name="Weekdays" keyfield="weekday_id" table="weekdays">
+		<GRID name="Weekdays" keyfield="weekday_id" table="weekdays">
 			<TEXTFIELD w="75" title="Weekday ID">weekday_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Weekday Name">weekday_name</TEXTFIELD>
 			<FORM name="Weekdays" keyfield="weekday_id" table="weekdays">

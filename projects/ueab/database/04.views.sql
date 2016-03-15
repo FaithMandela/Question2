@@ -108,7 +108,8 @@ CREATE VIEW majorcontentview AS
 		majorview.electivecredit, courses.courseid, courses.coursetitle, courses.credithours, courses.nogpa, 
 		courses.yeartaken, courses.details as course_details,
 		contenttypes.contenttypeid, contenttypes.contenttypename, contenttypes.elective, contenttypes.prerequisite,
-		contenttypes.premajor, majorcontents.majorcontentid, majorcontents.minor, majorcontents.gradeid, majorcontents.narrative,
+		contenttypes.premajor, majorcontents.majorcontentid, majorcontents.minor, majorcontents.gradeid, 
+		majorcontents.content_level, majorcontents.narrative,
 		bulleting.bulletingid, bulleting.bulletingname, bulleting.startingquarter, bulleting.endingquarter,
 		bulleting.iscurrent
 	FROM (((majorview INNER JOIN majorcontents ON majorview.majorid = majorcontents.majorid)
@@ -121,7 +122,8 @@ CREATE VIEW majoroptcontentview AS
 		courses.courseid, courses.coursetitle, courses.credithours, courses.nogpa, 
 		courses.yeartaken, courses.details as course_details,
 		contenttypes.contenttypeid, contenttypes.contenttypename, contenttypes.elective, contenttypes.prerequisite, contenttypes.premajor,
-		majoroptcontents.majoroptcontentid, majoroptcontents.minor, majoroptcontents.gradeid, majoroptcontents.narrative,
+		majoroptcontents.majoroptcontentid, majoroptcontents.minor, majoroptcontents.gradeid, 
+		majoroptcontents.content_level, majoroptcontents.narrative,
 		bulleting.bulletingid, bulleting.bulletingname, bulleting.startingquarter, bulleting.endingquarter,
 		bulleting.iscurrent
 	FROM (((majoroptions INNER JOIN majoroptcontents ON majoroptions.majoroptionid = majoroptcontents.majoroptionid)
@@ -174,7 +176,8 @@ CREATE VIEW vw_students AS
 		students.onprobation, students.offcampus, students.currentcontact, students.currentemail, students.currenttel,
 		students.seeregistrar, students.hallseats, students.staff, students.fullbursary, students.details,
 		students.room_number, students.probation_details, students.registrar_details,
-		students.student_edit,
+		students.student_edit, students.disability, students.dis_details, students.passport,
+		students.national_id, students.identification_no,
 		students.gfirstpass, ('G' || students.studentid) as gstudentid,
 		('<a href="a_statement_acct.jsp?view=1:0&accountno=' || students.accountnumber ||
 			'" target="_blank">View Accounts</a>') as view_statement
@@ -254,12 +257,31 @@ CREATE VIEW vw_studentdegrees AS
 		
 		studentdegrees.mathplacement, studentdegrees.englishplacement, studentdegrees.details,
 		
+		to_char(grad_apply_date, 'Mon YYYY') as grad_apply_month,
+		to_char(grad_accept_date, 'Mon YYYY') as grad_accept_month,
+		to_char(grad_accept_date, 'YYYY') as grad_accept_year,
+		
+		getcoremajor(studentdegrees.studentdegreeid) as core_major,
 		getcummcredit(studentdegrees.studentdegreeid) as cumm_credits,
 		getcummgpa(studentdegrees.studentdegreeid) as cumm_gpa
 	FROM ((studentview INNER JOIN studentdegrees ON studentview.studentid = studentdegrees.studentid)
 		INNER JOIN sublevelview ON studentdegrees.sublevelid = sublevelview.sublevelid)
 		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid;
 
+CREATE VIEW vwgradyear AS
+	SELECT EXTRACT(YEAR FROM graduatedate) as gradyear
+	FROM vw_studentdegrees
+	WHERE (graduated = true)
+	GROUP BY EXTRACT(YEAR FROM graduatedate)
+	ORDER BY EXTRACT(YEAR FROM graduatedate);
+
+CREATE VIEW vw_apply_grad_year AS
+	SELECT grad_accept_year as apply_grad_year
+	FROM vw_studentdegrees
+	WHERE (graduated = true)
+	GROUP BY grad_accept_year
+	ORDER BY grad_accept_year;
+	
 CREATE VIEW transcriptprintview AS
 	SELECT entitys.entity_id, entitys.entity_name, entitys.user_name, transcriptprint.transcriptprintid, 
 		transcriptprint.studentdegreeid, transcriptprint.printdate, transcriptprint.narrative,
@@ -542,7 +564,9 @@ CREATE VIEW qstudentmajorview AS
 		qstudents.departapproval, qstudents.overloadapproval, qstudents.finalised, qstudents.printed,
 		qstudents.noapproval, qstudents.exam_clear, qstudents.exam_clear_date, qstudents.exam_clear_balance,
 		qstudents.qresidenceid,
-		quarters.active, quarters.closed
+		quarters.active, quarters.closed,
+		substring(quarters.quarterid from 1 for 9)  as quarteryear, 
+		trim(substring(quarters.quarterid from 11 for 2)) as quarter
 	FROM (studentmajorview INNER JOIN qstudents ON studentmajorview.studentdegreeid = qstudents.studentdegreeid)
 		INNER JOIN quarters ON qstudents.quarterid = quarters.quarterid;
 
@@ -814,7 +838,8 @@ CREATE OR REPLACE FUNCTION getcoursedone(varchar(12), varchar(12)) RETURNS float
 		INNER JOIN grades ON qgrades.gradeid = grades.gradeid)
 		INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
 	WHERE (qstudents.approved = true) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW')
-	AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
+		AND (qgrades.dropped = false)
+		AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getcoursetransfered(varchar(12), varchar(12)) RETURNS float AS $$
@@ -1094,6 +1119,7 @@ CREATE VIEW courseoutline (
 	studentdegreeid,
 	degreeid,
 	degreelevelid,
+	majorid,
 	description,
 	courseid,
 	coursetitle,
@@ -1102,58 +1128,80 @@ CREATE VIEW courseoutline (
 	credithours,
 	nogpa,
 	gradeid,
-	gradeweight
+	content_level,
+	gradeweight,
+	courseweight,
+	prereqpassed
+	
 ) AS
-	(SELECT 1, vw_ol_students.studentid, vw_ol_students.studentdegreeid, vw_ol_students.degreeid, vw_ol_students.degreelevelid,
-		majors.majorname, majorcontentview.courseid,
+	SELECT 1::int, vw_ol_students.studentid, vw_ol_students.studentdegreeid, vw_ol_students.degreeid, vw_ol_students.degreelevelid,
+		majors.majorid, majors.majorname, majorcontentview.courseid,
 		majorcontentview.coursetitle, majorcontentview.minor, majorcontentview.elective, majorcontentview.credithours,
-		majorcontentview.nogpa, majorcontentview.gradeid, grades.gradeweight
+		majorcontentview.nogpa, majorcontentview.gradeid, majorcontentview.content_level, grades.gradeweight,
+		getcoursedone(vw_ol_students.studentid, majorcontentview.courseid),
+		getprereqpassed(vw_ol_students.studentid, majorcontentview.courseid, vw_ol_students.studentdegreeid)
 	FROM ((majors INNER JOIN majorcontentview ON majors.majorid = majorcontentview.majorid)
 		INNER JOIN vw_ol_students ON (majorcontentview.majorid = vw_ol_students.majorid) AND (majorcontentview.bulletingid = vw_ol_students.bulletingid))
 		INNER JOIN grades ON majorcontentview.gradeid = grades.gradeid
-	WHERE ((not vw_ol_students.premajor and majorcontentview.premajor)=false) AND ((not vw_ol_students.nondegree and majorcontentview.prerequisite)=false))
-	UNION
-	(SELECT 2, vw_ol_students.studentid, vw_ol_students.studentdegreeid, vw_ol_students.degreeid, vw_ol_students.degreelevelid, 
-		majoroptions.majoroptionname, majoroptcontentview.courseid,
-		majoroptcontentview.coursetitle, majoroptcontentview.minor, majoroptcontentview.elective, majoroptcontentview.credithours,
-		majoroptcontentview.nogpa, majoroptcontentview.gradeid, grades.gradeweight
-	FROM ((majoroptions INNER JOIN majoroptcontentview ON majoroptions.majoroptionid = majoroptcontentview.majoroptionid)
-		INNER JOIN vw_ol_students ON (majoroptcontentview.majoroptionid = vw_ol_students.majoroptionid) AND (majoroptcontentview.bulletingid = vw_ol_students.bulletingid))
-		INNER JOIN grades ON majoroptcontentview.gradeid = grades.gradeid
-	WHERE ((not vw_ol_students.premajor and majoroptcontentview.premajor)=false) AND ((not vw_ol_students.nondegree and majoroptcontentview.prerequisite)=false));
+	WHERE ((not vw_ol_students.premajor and majorcontentview.premajor)=false) 
+		AND ((not vw_ol_students.nondegree and majorcontentview.prerequisite)=false);
 
 CREATE VIEW corecourseoutline AS 
-	(SELECT 1 AS orderid, studentdegrees.studentid, studentdegrees.studentdegreeid, studentdegrees.degreeid, 
+	SELECT 1::int AS orderid, studentdegrees.studentid, studentdegrees.studentdegreeid, studentdegrees.degreeid, 
 		majors.majorname AS description, majorcontentview.contenttypeid, majorcontentview.contenttypename,
 		majorcontentview.courseid, majorcontentview.coursetitle, majorcontentview.minor, 
 		majorcontentview.elective, majorcontentview.credithours, majorcontentview.nogpa, majorcontentview.gradeid, 
-		grades.gradeweight
+		majorcontentview.content_level, grades.gradeweight
 	FROM majors
 		INNER JOIN majorcontentview ON majors.majorid = majorcontentview.majorid
 		INNER JOIN studentmajors ON majorcontentview.majorid = studentmajors.majorid
 		INNER JOIN studentdegrees ON (studentmajors.studentdegreeid = studentdegrees.studentdegreeid) AND (majorcontentview.bulletingid = studentdegrees.bulletingid)
 		INNER JOIN grades ON majorcontentview.gradeid = grades.gradeid
-		WHERE (studentmajors.major = true) AND ((NOT studentmajors.premajor AND majorcontentview.premajor) = false) AND ((NOT studentmajors.nondegree AND majorcontentview.prerequisite) = false) AND (studentdegrees.dropout = false))
-	UNION 
-	(SELECT 2 AS orderid, studentdegrees.studentid, studentdegrees.studentdegreeid, studentdegrees.degreeid, 
-		majoroptions.majoroptionname AS description, majoroptcontentview.contenttypeid, majoroptcontentview.contenttypename,
-		majoroptcontentview.courseid, majoroptcontentview.coursetitle, 
-		majoroptcontentview.minor, majoroptcontentview.elective, majoroptcontentview.credithours, 
-		majoroptcontentview.nogpa, majoroptcontentview.gradeid, grades.gradeweight
-	FROM majoroptions
-		INNER JOIN majoroptcontentview ON majoroptions.majoroptionid = majoroptcontentview.majoroptionid
-		INNER JOIN studentmajors ON majoroptcontentview.majoroptionid = studentmajors.majoroptionid
-		INNER JOIN studentdegrees ON (studentmajors.studentdegreeid = studentdegrees.studentdegreeid) AND (majoroptcontentview.bulletingid = studentdegrees.bulletingid)
-		INNER JOIN grades ON majoroptcontentview.gradeid = grades.gradeid
-	WHERE (studentmajors.major = true) AND (NOT studentmajors.premajor AND majoroptcontentview.premajor) = false AND (NOT studentmajors.nondegree AND majoroptcontentview.prerequisite) = false AND (studentdegrees.dropout = false));
+		WHERE (studentmajors.major = true) AND ((NOT studentmajors.premajor AND majorcontentview.premajor) = false) 
+			AND ((NOT studentmajors.nondegree AND majorcontentview.prerequisite) = false) AND (studentdegrees.dropout = false);
 
+			
+CREATE OR REPLACE FUNCTION get_passed(double precision, double precision, integer, varchar(12), varchar(12)) RETURNS boolean AS $$
+DECLARE
+	passed 				boolean;
+	v_required_courses	integer;
+	v_courses			integer;
+BEGIN
+	passed := false;
+	
+	IF($1 >= $2) THEN
+		passed := true;
+	ELSIF($3 is not null)THEN
+		SELECT count(courseid) INTO v_courses
+		FROM courseoutline
+		WHERE (content_level = $3) AND (studentid = $4) AND (majorid = $5)
+			AND (courseweight >= gradeweight);
+		IF(v_courses is null)THEN v_courses := 0; END IF;
+		
+		SELECT required_courses INTO v_required_courses
+		FROM content_levels
+		WHERE (content_level = $3);
+		IF(v_required_courses is null)THEN v_required_courses := 1; END IF;
+		
+		IF(v_courses >=  v_required_courses)THEN passed := true; END IF;
+	END IF;
+
+    RETURN passed;
+END;
+$$ LANGUAGE plpgsql;
+			
 CREATE VIEW coursechecklist AS
 	SELECT DISTINCT courseoutline.orderid, courseoutline.studentid, courseoutline.studentdegreeid, courseoutline.degreeid, 
 		courseoutline.degreelevelid, courseoutline.description, courseoutline.courseid,
 		courseoutline.coursetitle, courseoutline.minor, courseoutline.elective, courseoutline.credithours, courseoutline.nogpa, courseoutline.gradeid,
-		courseoutline.gradeweight, getcoursedone(courseoutline.studentid, courseoutline.courseid) as courseweight,
-		(CASE WHEN (getcoursedone(courseoutline.studentid, courseoutline.courseid) >= courseoutline.gradeweight) THEN true ELSE false END) as coursepased,
-		getprereqpassed(courseoutline.studentid, courseoutline.courseid, courseoutline.studentdegreeid) as prereqpassed
+		courseoutline.content_level, courseoutline.gradeweight, courseoutline.courseweight, courseoutline.prereqpassed,
+		
+<<<<<<< HEAD
+		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.courseid) as coursepased
+=======
+		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.majorid) as coursepased
+>>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
+		
 	FROM courseoutline;
 
 CREATE VIEW studentchecklist AS
@@ -1325,7 +1373,6 @@ CREATE VIEW studentmarkview AS
 		students.studentname
 	FROM (registrations INNER JOIN marks ON registrations.markid = marks.markid)
 		INNER JOIN students ON registrations.existingid = students.studentid;
-
 		
 ---- webservice functions
 CREATE VIEW ws_students AS

@@ -495,6 +495,7 @@
 					<TEXTFIELD w="140" title="Course">coursetitle</TEXTFIELD>
 					<CHECKBOX w="40" title="Minor">minor</CHECKBOX>
 					<TEXTFIELD w="80" title="Content Type">contenttypename</TEXTFIELD>
+					<TEXTFIELD w="80" title="Content Level">content_level</TEXTFIELD>
 					<FORM name="Major Contents" keyfield="majorcontentid" inputparams="majorid=majorid" linkfield="bulletingid" table="majorcontents" noorg="true">
 						<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
 							<GRID name="Courses" keyfield="courseid" gridfilter="true" table="courseview" noorg="true">
@@ -506,40 +507,10 @@
 						<COMBOBOX w="430" title="Content Types" lptable="contenttypes" noorg="true" y="50" h="20" x="10" lpfield="contenttypename">contenttypeid</COMBOBOX>
 						<CHECKBOX w="50" title="Minor" y="70" h="20" x="10">Minor</CHECKBOX>
 						<TEXTFIELD w="50" title="Requirement" default="C-" y="70" h="20" x="290">gradeid</TEXTFIELD>
-						<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTFIELD w="50" title="Content Level" y="90" h="20" x="10">content_level</TEXTFIELD>
+						<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
-			</GRID>
-			<GRID name="Major Options" keyfield="majoroptionid" linkfield="majorid" table="majoroptions" noorg="true">
-				<TEXTFIELD w="140" title="Major Option">majoroptionname</TEXTFIELD>
-				<GRID name="Bulletings" keyfield="majoroptionid" linkfield="majoroptionid" table="vw_majoroption_bulletings" params="bulletingid" noorg="true">
-					<TEXTFIELD w="75" title="Bulleting">bulletingname</TEXTFIELD>
-					<TEXTFIELD w="75" title="Starting Trimester">startingquarter</TEXTFIELD>
-					<TEXTFIELD w="75" title="Ending Trimester">endingquarter</TEXTFIELD>
-					<CHECKBOX w="75" title="Is Current">iscurrent</CHECKBOX>
-					<GRID name="Major Option Contents" keyfield="majoroptcontentid" orderby="courseid" linkfield="majoroptionid" table="majoroptcontentview" noorg="true" linkparams="bulletingid=bulletingid">
-						<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
-						<TEXTFIELD w="140" title="Course">coursetitle</TEXTFIELD>
-						<TEXTFIELD w="80" title="Content Type">contenttypename</TEXTFIELD>
-						<FORM name="Major Option Contents" keyfield="majoroptcontentid" linkfield="majoroptionid" table="majoroptcontents" noorg="true">
-							<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
-								<GRID name="Courses" keyfield="courseid" gridfilter="true" table="courseview" noorg="true">
-									<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
-									<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
-								</GRID>
-							</GRIDBOX>
-							<COMBOBOX w="430" title="Bulleting" lptable="bulleting" noorg="true" y="30" h="20" x="10" lpfield="bulletingname">bulletingid</COMBOBOX>
-							<COMBOBOX w="430" title="Content Types" lptable="contenttypes" noorg="true" y="50" h="20" x="10" lpfield="contenttypename">contenttypeid</COMBOBOX>
-							<CHECKBOX w="50" title="Minor" y="70" h="20" x="10">Minor</CHECKBOX>
-							<TEXTFIELD w="50" title="Requirement" default="C-" y="70" h="20" x="290">gradeid</TEXTFIELD>
-							<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
-						</FORM>
-					</GRID>
-				</GRID>
-				<FORM name="Major Options" keyfield="majoroptionid" linkfield="majorid" table="majoroptions" noorg="true">
-					<TEXTFIELD w="430" title="Major Option" y="10" h="20" x="10">majoroptionname</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<GRID name="Requirements" keyfield="requirementid" linkfield="majorid" table="requirementview" noorg="true">
 				<TEXTFIELD w="140" title="subject">subjectname</TEXTFIELD>
@@ -592,6 +563,16 @@
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID name="Content Levels" keyfield="content_level" table="content_levels" noorg="true">
+			<TEXTFIELD w="75" title="Content Level">content_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Required Courses">required_courses</TEXTFIELD>
+			<TEXTFIELD w="275" title="Narrative">narrative</TEXTFIELD>
+			<FORM name="Content Levels" keyfield="content_level" table="content_levels" noorg="true">
+				<TEXTFIELD w="150" title="Content Level" y="10" h="20" x="10">content_level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Required Courses" y="10" h="20" x="290">required_courses</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+			</FORM>
+		</GRID>
 	</DESK>
 	<DESK w="725" name="Students" key="11" h="650">
 		<GRID limit="200" name="Students" keyfield="studentid" orderby="studentid" table="studentview" noorg="true">
@@ -601,7 +582,7 @@
 			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Denomination">denominationname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
-			<FORM name="Students" keyfield="studentid" table="students">
+			<FORM auditid="sys_audit_trail_id" name="Students" keyfield="studentid" table="students">
 				<TEXTFIELD w="150" title="Student ID" y="10" h="20" x="10">studentid</TEXTFIELD>
 				<COMBOBOX w="150" title="School Name" lptable="schools" noorg="true" y="10" h="20" x="290" lpfield="schoolname">schoolid</COMBOBOX>
 				<COMBOBOX w="430" title="Denomination" lptable="denominations" noorg="true" y="30" h="20" x="10" lpfield="denominationname">denominationid</COMBOBOX>
@@ -712,18 +693,19 @@
 		</GRID>
 	</DESK>
 	<DESK w="725" name="Students Graduation" key="51" h="650">
-		<GRID limit="200" name="Graduation Application" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true) AND (graduated = false)">
+		<GRID limit="1000" name="Graduation Application" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true) AND (graduated = false)">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
 			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Denomination">denominationname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Core Major">core_major</TEXTFIELD>
 			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
 			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
 			<TEXTFIELD w="45" title="Completed">completed</TEXTFIELD>
-			<TEXTFIELD w="45" title="Credit" pattern="###.#">cumm_credits</TEXTFIELD>
 			<TEXTFIELD w="45" title="GPA" pattern="###.#">cumm_gpa</TEXTFIELD>
+			<TEXTFIELD w="45" title="Application">grad_apply_month</TEXTFIELD>
+			<TEXTFIELD w="45" title="Graduation">grad_accept_month</TEXTFIELD>
 			<FORM name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegrees" noorg="true">
 				<COMBOBOX w="430" title="Degree" lptable="degrees" noorg="true" y="10" h="20" x="10" lpfield="degreename">degreeid</COMBOBOX>
 				<COMBOBOX w="430" title="Sub Level" lptable="sublevels" noorg="true" y="30" h="20" x="10" lpfield="sublevelname">sublevelid</COMBOBOX>
@@ -751,6 +733,10 @@
 				<TEXTAREA w="530" tab="Details" y="150" h="120" x="10">details</TEXTAREA>
 			</FORM>
 			<JASPER name="Grade Summary" reportfile="gradesummary_d.jasper"></JASPER>
+			<JASPER name="Course Pass" reportfile="studentdegreeviewb.jasper"></JASPER>
+			<JASPER name="Courses Remaining" reportfile="studentdegreeviewc.jasper"></JASPER>
+			<JASPER name="Completion Letter" reportfile="degree_comp_letter.jasper"></JASPER>
+			<JASPER name="Completion Certificate" reportfile="degree_comp_cert.jasper"></JASPER>
 			<GRID name="Student's Major" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 				<TEXTFIELD w="40" title="Major ID">majorid</TEXTFIELD>
 				<TEXTFIELD w="140" title="Major Name">majorname</TEXTFIELD>
@@ -766,34 +752,13 @@
 					<TEXTAREA w="480" title="Details" lw="70" y="70" h="120" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<GRID name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcreditsview" noorg="true">
-				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
-				<TEXTFIELD w="140" title="Course Title">coursetitle</TEXTFIELD>
-				<TEXTFIELD w="140" title="Credit Hours">credithours</TEXTFIELD>
-				<TEXTFIELD w="40" title="Narrative">narrative</TEXTFIELD>
-				<FORM name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcredits" noorg="true">
-					<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
-						<GRID name="Courses" keyfield="courseid" gridfilter="true" table="courseview" noorg="true" key="2" pos="top">
-							<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
-							<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
-					<TEXTFIELD w="50" title="Credit Hours" default="3" y="30" h="20" x="10">credithours</TEXTFIELD>
-					<TEXTFIELD w="480" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
-				</FORM>
-			</GRID>
-			<GRID name="Printed" keyfield="transcriptprintid" updatetable="transcriptprint" linkfield="studentdegreeid" table="transcriptprintview" noorg="true" key="9">
-				<TEXTFIELD w="15" title="Date Printed">printdate</TEXTFIELD>
-				<TEXTFIELD w="15" title="Printed By">entity_name</TEXTFIELD>
-				<TEXTFIELD w="35" title="Narrative" edit="true">narrative</TEXTFIELD>
-			</GRID>
 		</GRID>
 		<GRID limit="200" name="Completed Students" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(cleared = true)">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
 			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Denomination">denominationname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Core Major">core_major</TEXTFIELD>
 			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
 			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
@@ -822,7 +787,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Students Halted" type="vert" key="41" h="560">
-		<GRID name="Students" keyfield="studentid" updatetable="students" table="studentview">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="studentview">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="140" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="School Name">schoolname</TEXTFIELD>
@@ -2216,8 +2181,12 @@
 	</DESK>
 	<DESK w="700" name="Graduations List" noorg="true" type="horl" key="442" h="500">
 		<FILTER location="250" name="Graduations List" type="horl">
-			<DRILLDOWN name="Graduation Year" keyfield="gradyear" table="vwgradyear" noorg="true" listfield="gradyear"></DRILLDOWN>
+			<DRILLDOWN name="Graduation Year" keyfield="gradyear" orderby="gradyear desc" table="vwgradyear" noorg="true" listfield="gradyear"></DRILLDOWN>
 			<JASPER filtered="true" name="Graduations List" reportfile="graduates.jasper"></JASPER>
+		</FILTER>
+		<FILTER location="250" name="Applicants List" type="horl">
+			<DRILLDOWN name="Application Year" keyfield="apply_grad_year" orderby="apply_grad_year desc" table="vw_apply_grad_year" noorg="true" listfield="apply_grad_year"></DRILLDOWN>
+			<JASPER filtered="true" name="Applicants List" reportfile="graduate_apply.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Trimester Students Residence" type="horl" key="445" h="500">
@@ -2369,7 +2338,7 @@
 	</DESK>
 	<DESK w="700" name="Students Sub Levels" type="horl" key="633" h="500">
 		<FILTER location="250" name="Students Sub Levels" type="horl">
-			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" listfield="sublevelname"></DRILLDOWN>
+			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" listfield="sublevelname"></DRILLDOWN>
 			<JASPER filtered="true" name="Students Degrees" reportfile="studentdegreeviewd.jasper"></JASPER>
 		</FILTER>
 	</DESK>
@@ -2410,7 +2379,8 @@
 	<DESK w="700" name="Yearly Enrollment" type="horl" key="402" h="500">
 		<FILTER location="250" name="Majors Yealy" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
-			<JASPER filtered="true" name="Enrollemtn Majors" reportfile="newmajorsummary.jasper"></JASPER>
+			<JASPER name="Enrollement Majors" reportfile="newmajorsummary.jasper"></JASPER>
+			<JASPER name="New Enrollement Majors" reportfile="newmajorsummarya.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Forms" key="781" h="550">

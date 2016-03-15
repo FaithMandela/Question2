@@ -1,8 +1,6 @@
 ALTER TABLE orgs
-ADD default_country_id		char(2) references sys_countrys,
 ADD Bank_Header				text,
 ADD Bank_Address			text;
-CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
 
 CREATE TABLE disability (
 	disability_id			serial primary key,
@@ -933,6 +931,18 @@ CREATE VIEW vw_entity_employees AS
 		employees.basic_salary, employees.bank_account, employees.language, employees.objective, employees.Active
 	FROM entitys INNER JOIN employees ON entitys.entity_id = employees.entity_id;
 
+CREATE VIEW vw_employee_periods AS
+	SELECT aa.period_id, aa.start_date, aa.period_year, aa.period_month, aa.period_code, 
+		aa.week_start, EXTRACT(WEEK FROM aa.week_start) as p_week,
+		b.org_id, b.entity_id, b.employee_id, b.active,
+		(b.Surname || ' ' || b.First_name || ' ' || COALESCE(b.Middle_name, '')) as employee_name 
+	FROM (SELECT a.org_id, a.period_id, a.start_date, a.end_date, 
+		to_char(a.start_date, 'YYYY') as period_year, to_char(a.start_date, 'Month') as period_month,
+		to_char(a.start_date, 'YYYYMM') as period_code,
+		generate_series(a.start_date, a.end_date, interval '1 week') as week_start
+		FROM periods a) aa
+	INNER JOIN employees b ON aa.org_id = b.org_id;
+	
 CREATE VIEW vw_education AS
 	SELECT education_class.education_class_id, education_class.education_class_name, entitys.entity_id, entitys.entity_name, 
 		education.org_id, education.education_id, education.date_from, education.date_to, education.name_of_school, education.examination_taken,
@@ -1539,8 +1549,11 @@ CREATE TRIGGER ins_job_reviews AFTER INSERT ON job_reviews
 
 CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
+	v_entity_id				integer;
 	v_application_id		integer;
-	
+	v_address				integer;
+	c_education_id			integer;
+	c_referees				integer;
 	reca					RECORD;
 	msg 					varchar(120);
 BEGIN
@@ -1551,17 +1564,44 @@ BEGIN
 	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
 	FROM applicants
 	WHERE (entity_id = $2::int);
-
+	v_entity_id := reca.entity_id;
 	IF(reca.entity_id is null) THEN
 		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
 		FROM employees
 		WHERE (entity_id = $2::int);
+		v_entity_id := reca.entity_id;
 	END IF;
+	
+	SELECT count(address_id) INTO v_address
+	FROM vw_address
+	WHERE (table_name = 'applicant') AND (is_default = true) AND (table_id  = v_entity_id);
+	IF(v_address is null) THEN v_address = 0; END IF;
+	
+	SELECT count(education_id) INTO c_education_id
+	FROM education
+	WHERE (entity_id  = v_entity_id);
+	IF(c_education_id is null) THEN c_education_id = 0; END IF;
+	
+	SELECT count(address_id) INTO c_referees
+	FROM vw_referees
+	WHERE (table_id  = v_entity_id);
+	IF(c_referees is null) THEN c_referees = 0; END IF;
 
 	IF v_application_id is not null THEN
 		msg := 'There is another application for the post.';
+		RAISE EXCEPTION '%', msg;
 	ELSIF (reca.previous_salary is null) OR (reca.expected_salary is null) THEN
 		msg := 'Kindly indicate your previous and expected salary';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (v_address < 1) THEN
+		msg := 'You need to have at least one full address added';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (c_education_id < 2) THEN
+		msg := 'You need to have at least two education levels added';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (c_referees < 3) THEN
+		msg := 'You need to have at least three referees added';
+		RAISE EXCEPTION '%', msg;
 	ELSE
 		INSERT INTO applications (intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
 		VALUES ($1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
@@ -1981,6 +2021,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION job_review_check(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
+	v_self_rating		integer;
 	v_objective_ps		real;
 	sum_ods_ps			real;
 	v_point_check		integer;
@@ -1999,6 +2040,11 @@ BEGIN
 	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int))
 		AND (objectives.objective_ps > 0) AND (evaluation_points.points = 0);
+		
+	SELECT self_rating INTO v_self_rating
+	FROM job_reviews
+	WHERE (job_review_id = $1::int);
+	IF(v_self_rating is null) THEN v_self_rating := 0; END IF;
 	
 	IF(sum_ods_ps is null)THEN
 		sum_ods_ps := 100;
@@ -2015,6 +2061,9 @@ BEGIN
 	ELSIF(sum_ods_ps <> 100)THEN
 		msg := 'Objective details % must add up to 100';
 		RAISE EXCEPTION '%', msg;
+	ELSIF(v_self_rating = 0)THEN
+		msg := 'Indicate your self rating';
+		RAISE EXCEPTION '%', msg;
 	ELSIF(v_point_check is not null)THEN
 		msg := 'All objective evaluations points must be between 1 to 4';
 		RAISE EXCEPTION '%', msg;
@@ -2030,6 +2079,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION objectives_review(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_objective_ps		real;
+	max_objective_ps	real;
 	sum_ods_ps			real;
 	rec					RECORD;
 	msg 				varchar(120);
@@ -2038,10 +2088,19 @@ BEGIN
 	SELECT sum(objectives.objective_ps) INTO v_objective_ps
 	FROM objectives
 	WHERE (objectives.employee_objective_id = CAST($1 as int));
+	SELECT max(objectives.objective_ps) INTO max_objective_ps
+	FROM objectives
+	WHERE (objectives.employee_objective_id = CAST($1 as int));
 	SELECT sum(objective_details.ods_ps) INTO sum_ods_ps
 	FROM objective_details INNER JOIN objectives ON objective_details.objective_id = objectives.objective_id
 	WHERE (objectives.employee_objective_id = CAST($1 as int));
 	
+	IF(v_objective_ps is null)THEN
+		v_objective_ps := 0;
+	END IF;
+	IF(max_objective_ps is null)THEN
+		max_objective_ps := 0;
+	END IF;
 	IF(sum_ods_ps is null)THEN
 		sum_ods_ps := 100;
 	END IF;
@@ -2049,7 +2108,10 @@ BEGIN
 		sum_ods_ps := 100;
 	END IF;
 
-	IF(v_objective_ps = 100) AND (sum_ods_ps = 100)THEN
+	IF(max_objective_ps > 50)THEN
+		msg := 'Objective should not have a % higer than 50';
+		RAISE EXCEPTION '%', msg;
+	ELSIF(v_objective_ps = 100) AND (sum_ods_ps = 100)THEN
 		UPDATE employee_objectives SET approve_status = 'Completed'
 		WHERE (employee_objective_id = CAST($1 as int));
 
@@ -2366,3 +2428,31 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION getComputedReviewPoints(v_type integer, v_job_review_id integer) RETURNS double precision AS $$
+DECLARE
+	v_points double precision;
+BEGIN
+	IF(v_type = 1) THEN
+		SELECT SUM((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.points)  INTO v_points
+		FROM job_reviews INNER JOIN vw_evaluation_objectives
+		ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
+
+		WHERE (job_reviews.job_review_id =v_job_review_id)
+		AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date));
+	ELSE
+		SELECT SUM((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.reviewer_points) INTO  v_points
+		FROM job_reviews INNER JOIN vw_evaluation_objectives
+		ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
+
+		WHERE (job_reviews.job_review_id = v_job_review_id)
+		AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date));
+	END IF;
+	
+	IF(v_points is null) THEN v_points := 0; END IF;
+   
+	RETURN v_points;
+END;
+$$ LANGUAGE plpgsql;
+
