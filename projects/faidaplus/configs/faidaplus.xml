@@ -10,6 +10,7 @@
 		<MENU name="Workflow" role="admin,staff">40</MENU>
 		<MENU name="Emails" role="admin,staff">60</MENU>
 		<MENU name="Entitys" role="admin,staff">100</MENU>
+		<MENU page="birthday" name="Birthday" role="admin,staff">03</MENU>
 		<MENU icon="fa fa-gift" name="Products" role="admin,staff">
 			<MENU icon="fa fa-gift" name="Products" role="admin,staff">7</MENU>
 			<MENU icon="fa fa-bars" name="Products Category" role="admin,staff">21</MENU>

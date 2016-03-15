@@ -60,7 +60,7 @@ BEGIN
 	END IF;
 
 	IF ($3::integer = 3) THEN
-		UPDATE entitys SET is_active = 'true' WHERE entity_id = $1::integer ;
+		UPDATE entitys SET is_active = true WHERE entity_id = $1::integer ;
 		msg := 'Consultant Activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (2, $1::integer , 'entitys', 3);
