@@ -11,7 +11,7 @@
 <br>
 <b><i>Subscribe for: </b></i><br>
 <ul>
-    <li>free access for organizations with 5 or less employees.</li>
+    <li>free access for organizations with 5 or less Members.</li>
     <li>After evaluating the system you can download the open source version</li>
     <li>You can also request for a quotation for the hosted platform or for any deployment or feature requests </li>
 </ul>

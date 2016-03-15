@@ -1,0 +1,32 @@
+<APP>
+	<MENU name="ACORD">
+		<MENU name="Service Desk">
+			<MENU name="Projects">null</MENU>
+			<MENU name="Donors">null</MENU>
+			<MENU name="Goals">null</MENU>
+			<MENU name="Client Forms">null</MENU>
+			<MENU name="Applied Forms">null</MENU>
+			<MENU name="Approvals">null</MENU>
+		</MENU>
+		<MENU name="Configurations" role="admin">
+			<MENU name="Countrys" role="admin">null</MENU>
+			<MENU name="Organisation" role="admin">null</MENU>
+			<MENU name="Entitys" role="admin">null</MENU>
+			<MENU name="Forms" role="admin">null</MENU>
+			<MENU name="Form Approvals" role="admin">null</MENU>
+			<MENU name="Form Report" role="admin">null</MENU>
+			<MENU name="Workflows" role="admin">null</MENU>
+			<MENU name="All Approvals" role="admin">null</MENU>
+			<MENU name="News" role="admin">null</MENU>
+			<MENU name="EMails" role="admin">null</MENU>
+			<MENU name="Files" role="admin">null</MENU>
+			<MENU name="Error Messages">null</MENU>
+		</MENU>
+	</MENU>
+	<DESK w="700" name="Dashboard" h="500">
+		<GRID name="Dashboard" keyfield="sys_dashboard_id" table="sys_dashboard" user="entity_id">
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTFIELD w="430" title="Details">details</TEXTFIELD>
+		</GRID>
+	</DESK>
+</APP>

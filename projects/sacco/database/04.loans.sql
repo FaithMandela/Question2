@@ -1,4 +1,54 @@
+CREATE TABLE loan_types (
+	loan_type_id			serial primary key,
+	org_id				integer references orgs,
+	loan_type_name			varchar(50) not null,
+	default_interest		real,
+	reducing_balance		boolean default true not null,
+	details					text
+);
+CREATE INDEX loan_types_org_id ON loan_types (org_id);
 
+CREATE TABLE loans (
+	loan_id 				serial primary key,
+	loan_type_id				integer not null references loan_types,
+	entity_id				integer not null references entitys,
+	org_id					integer references orgs,
+	principle				real not null,
+	interest				real not null,
+	monthly_repayment			real not null,
+	loan_date				date,
+	initial_payment				real default 0 not null,
+	reducing_balance			boolean default true not null,
+	repayment_period			integer not null check (repayment_period > 0),
+	
+	application_date			timestamp default now(),
+	approve_status				varchar(16) default 'Draft' not null,
+	workflow_table_id			integer,
+	action_date				timestamp,
+	
+	is_closed				boolean default false
+	details					text
+);
+CREATE INDEX loans_loan_type_id ON loans (loan_type_id);
+CREATE INDEX loans_entity_id ON loans (entity_id);
+CREATE INDEX loans_org_id ON loans (org_id);
+
+CREATE TABLE loan_monthly (
+	loan_month_id 				serial primary key,
+	loan_id					integer references loans,
+	period_id				integer references periods,
+	org_id					integer references orgs,
+	interest_amount				real default 0 not null,
+	repayment				real default 0 not null,
+	interest_paid				real default 0 not null,
+	penalty					real default 0 not null,
+	penalty_paid				real default 0 not null,
+	details					text,
+	UNIQUE (loan_id, period_id)
+);
+CREATE INDEX loan_monthly_loan_id ON loan_monthly (loan_id);
+CREATE INDEX loan_monthly_period_id ON loan_monthly (period_id);
+CREATE INDEX loan_monthly_org_id ON loan_monthly (org_id);
 
 CREATE OR REPLACE FUNCTION get_repayment(real, real, integer) RETURNS real AS $$
 DECLARE
@@ -88,18 +138,17 @@ CREATE OR REPLACE FUNCTION get_penalty(integer, date) RETURNS real AS $$
 $$ LANGUAGE SQL;
 
 CREATE VIEW vw_loan_types AS
-	SELECT adjustments.adjustment_id, adjustments.adjustment_name, adjustments.account_number,
-		currency.currency_id, currency.currency_name, currency.currency_symbol,
+	SELECT	currency.currency_id, currency.currency_name, currency.currency_symbol,
 		loan_types.org_id, loan_types.loan_type_id, loan_types.loan_type_name, 
 		loan_types.default_interest, loan_types.reducing_balance, loan_types.details
-	FROM loan_types INNER JOIN adjustments ON loan_types.adjustment_id = adjustments.adjustment_id
-		INNER JOIN currency ON adjustments.currency_id = currency.currency_id;
+	FROM loan_types 
+		INNER JOIN currency ON loan_types.org_id = currency.org_id;
+
 
 CREATE VIEW vw_loans AS
-	SELECT vw_loan_types.adjustment_id, vw_loan_types.adjustment_name, vw_loan_types.account_number,
-		vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
+	SELECT 	vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
 		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
-		entitys.entity_id, entitys.entity_name, employees.employee_id,
+		entitys.entity_id, entitys.entity_name,
 		loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
 		loans.repayment_period, loans.application_date, loans.approve_status, loans.initial_payment, 
 		loans.loan_date, loans.action_date, loans.details,
@@ -108,18 +157,16 @@ CREATE VIEW vw_loans AS
 		(loans.principle + get_total_interest(loans.loan_id) - loans.initial_payment - get_total_repayment(loans.loan_id)) as loan_balance,
 		get_payment_period(loans.principle, loans.monthly_repayment, loans.interest) as calc_repayment_period
 	FROM loans INNER JOIN entitys ON loans.entity_id = entitys.entity_id
-		INNER JOIN employees ON loans.entity_id = employees.entity_id
 		INNER JOIN vw_loan_types ON loans.loan_type_id = vw_loan_types.loan_type_id;
 
 CREATE VIEW vw_loan_monthly AS
-	SELECT  vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.account_number,
-		vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
+	SELECT 	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
 		vw_loans.loan_type_id, vw_loans.loan_type_name, 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.employee_id, vw_loans.loan_date,
+		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, loan_monthly.repayment, loan_monthly.interest_paid, 
-		loan_monthly.employee_adjustment_id, loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
+		loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
 		get_total_interest(vw_loans.loan_id, vw_periods.start_date) as total_interest,
 		get_total_repayment(vw_loans.loan_id, vw_periods.start_date) as total_repayment,
 		(vw_loans.principle + get_total_interest(vw_loans.loan_id, vw_periods.start_date + 1) + get_penalty(vw_loans.loan_id, vw_periods.start_date + 1)
@@ -128,10 +175,9 @@ CREATE VIEW vw_loan_monthly AS
 		INNER JOIN vw_periods ON loan_monthly.period_id = vw_periods.period_id;
 
 CREATE VIEW vw_loan_payments AS
-	SELECT vw_loans.adjustment_id, vw_loans.adjustment_name, vw_loans.account_number,
-		vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
+	SELECT	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
 		vw_loans.loan_type_id, vw_loans.loan_type_name, 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.employee_id, vw_loans.loan_date,
+		vw_loans.entity_id, vw_loans.entity_name,vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_loans.application_date, vw_loans.approve_status, vw_loans.initial_payment, 
 		vw_loans.org_id, vw_loans.action_date,
@@ -160,6 +206,7 @@ CREATE VIEW vw_loan_projection AS
 		get_total_repayment(loan_id, CAST((EXTRACT(YEAR FROM age(current_date, '2010-05-01')) * 12) + EXTRACT(MONTH FROM age(current_date, loan_date)) as integer)) as loan_paid
 	FROM vw_loans;
 
+
 CREATE OR REPLACE FUNCTION process_loans(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec					RECORD;
@@ -168,14 +215,8 @@ DECLARE
 BEGIN
 	
 	FOR rec IN SELECT vw_loan_monthly.loan_month_id, vw_loan_monthly.loan_id, vw_loan_monthly.entity_id, vw_loan_monthly.period_id, 
-		vw_loan_monthly.employee_adjustment_id, vw_loan_monthly.adjustment_id, vw_loan_monthly.loan_balance, 
-		vw_loan_monthly.repayment, (vw_loan_monthly.interest_paid + vw_loan_monthly.penalty_paid) as total_interest,
-		(vw_loan_monthly.repayment + vw_loan_monthly.interest_paid + vw_loan_monthly.penalty_paid) as total_deduction,
-		employee_month.employee_month_id, employee_month.org_id, 
-		employee_month.currency_id, employee_month.exchange_rate,
-		adjustments.currency_id as adj_currency_id
-	FROM vw_loan_monthly INNER JOIN employee_month ON (vw_loan_monthly.entity_id = employee_month.entity_id) AND (vw_loan_monthly.period_id = employee_month.period_id)
-		INNER JOIN adjustments ON vw_loan_monthly.adjustment_id = adjustments.adjustment_id
+		vw_loan_monthly.loan_balance, vw_loan_monthly.repayment, (vw_loan_monthly.interest_paid + vw_loan_monthly.penalty_paid) as total_interest
+	FROM vw_loan_monthly
 	WHERE (vw_loan_monthly.period_id = CAST($1 as int)) LOOP
 	
 		IF(rec.currency_id = rec.adj_currency_id)THEN
@@ -183,23 +224,9 @@ BEGIN
 		ELSE
 			v_exchange_rate := 1 / rec.exchange_rate;
 		END IF;
-
-		IF(rec.employee_adjustment_id is null)THEN
-			INSERT INTO employee_adjustments (employee_month_id, adjustment_id, adjustment_type, adjustment_factor,
-				amount, balance, in_tax, org_id, exchange_rate)
-			VALUES (rec.employee_month_id, rec.adjustment_id, 2, -1,
-				rec.total_deduction, rec.loan_balance, false, rec.org_id, v_exchange_rate);
-
-			UPDATE loan_monthly SET employee_adjustment_id = currval('employee_adjustments_employee_adjustment_id_seq') 
-			WHERE (loan_month_id = rec.loan_month_id);
-		ELSE
-			UPDATE employee_adjustments SET amount = rec.total_deduction, balance = rec.loan_balance, exchange_rate = v_exchange_rate
-			WHERE (employee_adjustment_id = rec.employee_adjustment_id);
-		END IF;
-
 	END LOOP;
 
-	msg := 'Payroll Processed';
+	msg := 'Loan Processed';
 
 	RETURN msg;
 END;
@@ -233,3 +260,8 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE ins_loans();
 
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+    
