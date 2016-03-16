@@ -301,6 +301,6 @@ CREATE INDEX intermediate_outcome_output_id ON intermediate_outcome (output_id);
     details                     text
  );
 CREATE INDEX indicators_project_id ON indicators (project_id);
-CREATE INDEX indicators ON indicators (org_id);
+CREATE INDEX indicators_org_id ON indicators (org_id);
 
 

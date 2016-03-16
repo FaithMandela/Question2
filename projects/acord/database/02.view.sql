@@ -161,5 +161,9 @@ CREATE VIEW vw_intermediate_outcome AS
 	
 
 CREATE VIEW vw_indicators AS
-	SELECT projects.org_id, projects.project_id, projects.project_title, indicators.indicator_id, indicators.key_indictors, indicators.baseline_values, indicators.date_source, indicators.data_collection_method, indicators.frequency_of_collection, indicators.impact, indicators.leassons_learnt, indicators.action_acquired, indicators.quality_of_action, indicators.details
+	SELECT projects.project_id, projects.project_title, 
+		indicators.org_id, indicators.indicator_id, indicators.key_indictors, indicators.baseline_values, 
+		indicators.date_source, indicators.data_collection_method, indicators.frequency_of_collection, 
+		indicators.impact, indicators.leassons_learnt, indicators.action_acquired, indicators.quality_of_action, 
+		indicators.details
 	FROM indicators	INNER JOIN projects ON indicators.project_id = projects.project_id;
