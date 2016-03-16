@@ -4,27 +4,31 @@
 	<APP dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="travelportapps.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</APP>
 	<APP dbpath="jdbc:postgresql://127.0.0.1:5432/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
 	<APP dbpath="jdbc:postgresql://127.0.0.1:5432/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
+	<APP dbpath="jdbc:postgresql://1localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
+	<APP dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="travelportapps.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</APP>
+	<APP dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
+	<APP dbpath="jdbc:postgresql://localhost/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
 	<APP dbpath="jdbc:postgresql://localhost/accounts" dbname="accounts" path="accounts" xmlfile="accounts.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Accounts</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Human Resources</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="payroll.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Payroll</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="projects.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Projects</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Finance</APP>
+	<APP dbpath="jdbc:postgresql://localhost/chama" dbname="chama" path="chama" xmlfile="chama.xml" dbclass="org.postgresql.Driver" dbusername="postgres">chama</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.xml" dbclass="org.postgresql.Driver" dbusername="root">SMS</APP>
 	<APP dbpath="jdbc:postgresql://localhost/tamshi" dbname="tamshi" path="tamshi" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="root">Tamshi</APP>
 	<APP dbpath="jdbc:postgresql://localhost/gtat" dbname="gtat" path="gtat" xmlfile="gtat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">GTA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/assets" dbname="assets" path="assets" xmlfile="assets.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Assets</APP>
-	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="umis.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">UMIS</APP>
 	<APP dbpath="jdbc:postgresql://localhost/property" dbname="property" path="property" xmlfile="property.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">Property</APP>
 	<APP dbpath="jdbc:postgresql://localhost/booking" dbname="booking" path="booking" xmlfile="booking.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Booking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/agency" dbname="agency" path="agency" xmlfile="agency.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="db">Agency</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">SACCO</APP>
-	<APP dbpath="jdbc:postgresql://localhost/chamas" dbname="chamas" path="chamas" xmlfile="chamas.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Chamas</APP>
 	<APP dbpath="jdbc:postgresql://localhost/codepamoja" dbname="codepamoja" path="codepamoja" xmlfile="codepamoja.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">CodePamoja</APP>
 	<APP dbpath="jdbc:postgresql://localhost/galileo" dbname="galileo" path="galileo" xmlfile="galileo.xml" dbclass="org.postgresql.Driver" dbusername="root">Galileo</APP>
-	<APP dbpath="jdbc:postgresql://localhost/tickets" dbname="tickets" path="tickets" xmlfile="tickets.xml" dbclass="org.postgresql.Driver" dbusername="root">Travelport Tickets</APP>
+	<APP dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="faidaplus.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Faida Plus</APP>
 	<APP dbpath="jdbc:postgresql://localhost/acord" dbname="acord" path="acord" xmlfile="acord.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Acord</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
+	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="umis.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">UMIS</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Finance</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="admission.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Admissions</APP>
@@ -40,8 +44,8 @@
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/lecturers.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Lecturer</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Alumnae</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/industry.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Babcock Industry</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root">UEAB</APP>
-	<APP dbpath="jdbc:postgresql://localhost/ueab" dbname="ueab" path="ueab" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root">UEAB Admin</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root">UEAB</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root">UEAB Admin</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Admissions</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Alumnae</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="dos.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB DOS</APP>
@@ -54,6 +58,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="aua.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/aua" dbname="aua" path="aua" xmlfile="web/general.xml" dbclass="org.postgresql.Driver" dbusername="root">AUA Web General</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mysa" dbname="mysa" path="mysa" xmlfile="mysa.xml" dbclass="org.postgresql.Driver" dbusername="root">MYSA</APP>
+	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
 	<APP dbpath="jdbc:postgresql://localhost/fidelity" dbname="fidelity" path="fidelity" xmlfile="fidelity.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Fidelity</APP>
 	<APP dbpath="jdbc:postgresql://localhost/metropol" dbname="metropol" path="metropol" xmlfile="metropol.xml" dbclass="org.postgresql.Driver" dbusername="root">Metropol</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sg" dbname="sg" path="sg" xmlfile="sg.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">SG</APP>
@@ -68,7 +73,8 @@
 	<APP dbpath="jdbc:mysql://localhost/kenic" dbname="frontaccounting" path="frontaccounting" xmlfile="frontaccounting.xml" dbclass="com.mysql.jdbc.Driver" dbusername="root">Front Accounting</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hot" dbname="hot" path="hot" xmlfile="hot.xml" dbclass="org.postgresql.Driver" dbusername="root">HOT</APP>
 	<APP dbpath="jdbc:postgresql://localhost/yu" dbname="yu" path="yu" xmlfile="yu.xml" dbclass="org.postgresql.Driver" dbusername="root">YU</APP>
-	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Baraza</APP>
+	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
+	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Baraza</APP>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.server.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Modem Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.soap.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Soap Server</SERVER>
@@ -83,7 +89,8 @@
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mpamanech" path="mobilehealth" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Mpamanech Tomcat Server</SERVER>
-	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="telcom" path="telcom" xmlfile="telcom.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Telcom</APP>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/chama" dbname="chama" path="chama" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Chama Tomcat Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">FAidaplus Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelportapps Server</SERVER>
 </APPLIST>

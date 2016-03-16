@@ -235,7 +235,6 @@
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
 			<TEXTFIELD w="50" title="SON">son</TEXTFIELD>
-			<CHECKBOX w="120" title="Approved">approve_status</CHECKBOX>
 			<TEXTFIELD w="120" title="Status">status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">application_date</TEXTFIELD>
 			<GRID wheresql="table_name = 'applicants'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">

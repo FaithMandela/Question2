@@ -1,28 +1,25 @@
-CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $BODY$
+ALTER TABLE applicants ADD user_name  character varying(120);
+ALTER TABLE applicants  ALTER COLUMN status SET DEFAULT 'Pending';
+ALTER TABLE applicants  ALTER COLUMN approve_status SET DEFAULT 'Pending';
+
+CREATE OR REPLACE FUNCTION ins_applicants()  RETURNS trigger AS $BODY$
 DECLARE
-	msg 		varchar(20);
-	details 	text;
+	rec 			RECORD;
+	v_entity_id		integer;
 BEGIN
+	IF (TG_OP = 'INSERT') THEN
+		SELECT entity_id INTO v_entity_id
+		FROM entitys
+		WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)));
 
-	IF ($3::integer = 1) THEN
-		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
-		details :='Your Order is ready for collection';
+		IF(v_entity_id is not null)THEN
+			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
+		END IF;
 	END IF;
-
-	IF ($3::integer = 2) THEN
-		UPDATE orders SET order_status = 'Collected' WHERE order_id = $1::integer;
-		details := 'Your Order has been collected';
-	END IF;
-
-	IF ($3::integer = 3) THEN
-		UPDATE orders SET order_status = 'Closed' WHERE order_id = $1::integer;
-	END IF;
-
-	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id, narrative)
-	VALUES ($1::integer,4 ,'orders', 3, 0, details);
-	RETURN 'Successfully Updated';
+	RETURN NEW;
 END;
-$BODY$ LANGUAGE plpgsql;
+$BODY$
+LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION upd_applicants(varchar(12), varchar(12), varchar(12),varchar(12)) RETURNS varchar(120) AS $BODY$
 DECLARE
@@ -43,9 +40,9 @@ BEGIN
 			RAISE EXCEPTION 'Pseudo Code Does not Exist';
 		END IF;
 
-		UPDATE applicants SET status = ps , org_id = rec.org_id,approve_status = ps WHERE applicant_id = $1::integer ;
-		INSERT INTO entitys (org_id, entity_type_id,entity_name, user_name,primary_email, son,function_role,is_active,birth_date)
-		VALUES (rec.org_id, 0, app.son,lower(app.applicant_email),lower(app.applicant_email),app.son, 'consultant',true,app.consultant_dob) returning entity_id INTO myid;
+		UPDATE applicants SET status = ps , org_id = rec.org_id, approve_status = ps WHERE applicant_id = $1::integer ;
+		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, son, function_role, is_active, birth_date)
+		VALUES (rec.org_id, 0, trim(upper(app.son)), trim(app.user_name), trim(lower(app.applicant_email)), trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
 		msg := 'Consultant account has been activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (2, myid, 'entitys', 3);
@@ -53,7 +50,7 @@ BEGIN
 
 	IF ($3::integer = 2) THEN
 		ps := 'Rejected';
-		UPDATE applicants SET status = ps , approved = false WHERE applicant_id = $1::integer ;
+		UPDATE applicants SET status = ps , approve_status = ps WHERE applicant_id = $1::integer ;
 		msg := 'Applicant Rejected';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (3, $1::integer , 'applicants', 3);
@@ -69,32 +66,3 @@ BEGIN
 	RETURN msg;
 END;
 $BODY$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
-DECLARE
-	v_order integer;
-BEGIN
-INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
-VALUES (5, NEW.order_id , 'vw_orders', 4, get_order_details(NEW.order_id), 'We have received your order and its under process');
-
-	RETURN NEW;
-END;
-$BODY$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION upd_entitys() RETURNS trigger AS $$
-DECLARE
-	v_pcc				varchar(7);
-BEGIN
-
-	IF((OLD.change_pcc <> NEW.change_pcc) or (OLD.change_son <> NEW.change_son))THEN
-		SELECT pcc INTO v_pcc
-		FROM orgs WHERE org_id = NEW.org_id;
-
-		INSERT INTO change_pccs (entity_id, son, pcc, change_son, change_pcc)
-		VALUES (NEW.entity_id, trim(upper(NEW.son)) , v_pcc, trim(upper(NEW.change_son)), trim(upper(NEW.change_pcc)));
- 	END IF;
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;

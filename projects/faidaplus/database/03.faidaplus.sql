@@ -33,6 +33,7 @@ ALTER TABLE entitys ADD sms_alert boolean default false;
 ALTER TABLE entitys ADD email_alert boolean default false;
 ALTER TABLE entitys ADD newsletter boolean default false;
 
+
 CREATE TABLE change_pccs (
 	change_pcc_id			serial primary key,
  	entity_id				integer references entitys,
