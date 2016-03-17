@@ -131,12 +131,13 @@ CREATE TABLE applicants (
 	applicant_id			serial primary key,
 	org_id 					integer references orgs,
 	applicant_email			varchar(50) not null,
+	user_name  				varchar(120) not null;
 	pseudo_code				varchar(4),
 	son 					varchar(7),
 	consultant_dob			date not null,
-	status					varchar(20) default 'New',
+	status					varchar(20) default 'Pending',
 
- 	approve_status			varchar(16) default 'draft' not null,
+ 	approve_status			varchar(16) default 'Pending' not null,
  	workflow_table_id		integer,
  	application_date		timestamp default now(),
  	action_date				timestamp,
