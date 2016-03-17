@@ -15,6 +15,7 @@ CREATE TABLE tx_ledger (
 	entity_id 				integer references entitys,
 	bpartner_id				integer references entitys,
 	account_id				integer references accounts,
+	investment_id			integer references investments,
 	currency_id				integer references currency,
 	journal_id				integer references journals,
 	org_id					integer references orgs,
@@ -48,6 +49,8 @@ CREATE INDEX tx_ledger_currency_id ON tx_ledger (currency_id);
 CREATE INDEX tx_ledger_journal_id ON tx_ledger (journal_id);
 CREATE INDEX tx_ledger_workflow_table_id ON tx_ledger (workflow_table_id);
 CREATE INDEX tx_ledger_org_id ON tx_ledger (org_id);
+CREATE INDEX tx_ledger_investment_id ON tx_ledger (investment_id);
+
 
 CREATE VIEW vw_ledger_types AS
 	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 

@@ -32,7 +32,14 @@
 	as grosspay,
 	Employee_Tax_Types.Amount as calcpaye,
 	vw_employee_month.exchange_rate *
-	( vw_employee_month.tax_tax) as calcnssf,
+	(getAdjustment(vw_employee_month.employee_month_id, 4, 26) + vw_employee_month.tax_tax) as calcnssf,
+
+	(vw_employee_month.exchange_rate *
+	getAdjustment(vw_employee_month.employee_month_id, 1, 27)) as owner_occupier,
+
+	(vw_employee_month.exchange_rate *
+	getAdjustment(vw_employee_month.employee_month_id, 2, 28)) as insurance_relief,
+
 	Period_Tax_Types.tax_relief,
 	(Employee_Tax_Types.Amount + Period_Tax_Types.tax_relief) as fulltax,
 	Employee_Tax_Types.tax_identification as pinnumber,
@@ -60,6 +67,8 @@ ORDER BY vw_employee_month.start_date]]>
 	<field name="grosspay" class="java.lang.Double"/>
 	<field name="calcpaye" class="java.lang.Double"/>
 	<field name="calcnssf" class="java.lang.Double"/>
+	<field name="owner_occupier" class="java.lang.Double"/>
+	<field name="insurance_relief" class="java.lang.Double"/>
 	<field name="tax_relief" class="java.lang.Float"/>
 	<field name="fulltax" class="java.lang.Double"/>
 	<field name="pinnumber" class="java.lang.String"/>
@@ -78,7 +87,7 @@ ORDER BY vw_employee_month.start_date]]>
 		<variableExpression><![CDATA[$F{e1}]]></variableExpression>
 	</variable>
 	<variable name="sumtaxrelief" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{tax_relief}]]></variableExpression>
+		<variableExpression><![CDATA[$F{tax_relief} + $F{insurance_relief}]]></variableExpression>
 	</variable>
 	<variable name="sumchargeable" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{chargeable}]]></variableExpression>
@@ -91,6 +100,9 @@ ORDER BY vw_employee_month.start_date]]>
 	</variable>
 	<variable name="sumemployeemonthview" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{maxcontribrelief}]]></variableExpression>
+	</variable>
+	<variable name="sum_owner_occupier" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{owner_occupier}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -716,7 +728,7 @@ Fixed]]></text>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tax_relief}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tax_relief} + $F{insurance_relief}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 				<reportElement key="textField" x="605" y="0" width="57" height="14" uuid="8fafa23c-1527-40b3-bc94-f5d2b0c3d3de"/>
@@ -807,7 +819,7 @@ Fixed]]></text>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[0.0]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{owner_occupier}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 				<reportElement key="textField-8" x="486" y="0" width="62" height="14" uuid="b0a32046-468c-49ec-9116-87d5e91d5bfa"/>
@@ -986,7 +998,7 @@ Fixed]]></text>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA[0.0]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{sum_owner_occupier}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 				<reportElement key="textField-22" x="486" y="0" width="62" height="14" uuid="04baecf5-3b83-4f03-97f3-5e6852736de0"/>

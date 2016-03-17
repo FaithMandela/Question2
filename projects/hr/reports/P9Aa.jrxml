@@ -33,7 +33,15 @@
 	 vw_employee_month.tax_allowance + getAdjustment(vw_employee_month.employee_month_id, 4, 32))
 	as grosspay,
 	Employee_Tax_Types.Amount as calcpaye,
-	(vw_employee_month.exchange_rate * vw_employee_month.tax_tax) as calcnssf,
+	vw_employee_month.exchange_rate *
+	(getAdjustment(vw_employee_month.employee_month_id, 4, 26) + vw_employee_month.tax_tax) as calcnssf,
+
+	(vw_employee_month.exchange_rate *
+	getAdjustment(vw_employee_month.employee_month_id, 1, 27)) as owner_occupier,
+
+	(vw_employee_month.exchange_rate *
+	getAdjustment(vw_employee_month.employee_month_id, 2, 28)) as insurance_relief,
+
 	Period_Tax_Types.tax_relief,
 	(Employee_Tax_Types.Amount + Period_Tax_Types.tax_relief) as fulltax,
 	Employee_Tax_Types.tax_identification as pinnumber,
@@ -60,6 +68,8 @@ $P!{organd}]]>
 	<field name="grosspay" class="java.lang.Double"/>
 	<field name="calcpaye" class="java.lang.Double"/>
 	<field name="calcnssf" class="java.lang.Double"/>
+	<field name="owner_occupier" class="java.lang.Double"/>
+	<field name="insurance_relief" class="java.lang.Double"/>
 	<field name="tax_relief" class="java.lang.Float"/>
 	<field name="fulltax" class="java.lang.Double"/>
 	<field name="pinnumber" class="java.lang.String"/>
@@ -716,7 +726,7 @@ Fixed]]></text>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{tax_relief}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tax_relief} + $F{insurance_relief}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 				<reportElement key="textField" x="605" y="0" width="57" height="14" uuid="a78adee8-f9ee-4b12-b3d6-f35c0e9981a1"/>
@@ -807,7 +817,7 @@ Fixed]]></text>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[0.0]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{owner_occupier}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 				<reportElement key="textField-8" x="486" y="0" width="62" height="14" uuid="aaeca51c-aefd-425a-b1df-4bf7d80438e4"/>

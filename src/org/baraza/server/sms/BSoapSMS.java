@@ -220,12 +220,12 @@ public class BSoapSMS {
 			String sendResults = sendSMS(number, message, linkId, smsID, orgID, correlator);
 			
 			if(sendResults == null) {	// retry once for a error on the sending
-				try { Thread.sleep(200); } catch(InterruptedException ex) {}
-				if(retry < 4) retry++;
+				try { Thread.sleep(500); } catch(InterruptedException ex) {}
+				if(retry < 5) retry++;
 				else retry = 0;
 			} else if(sendResults.equals("SVC0901")) { // retry twice for a error on the sending
-				try { Thread.sleep(200); } catch(InterruptedException ex) {}
-				if(retry < 4) retry++;
+				try { Thread.sleep(500); } catch(InterruptedException ex) {}
+				if(retry < 5) retry++;
 				else retry = 0;
 			} else {
 				db.executeUpdate("UPDATE sms_queue SET send_results = '" + sendResults + "' WHERE sms_queue_id = " + correlator);
