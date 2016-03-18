@@ -472,6 +472,14 @@ BEGIN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (pension_id is not null) AND (adjustment_type = 2);
+	ELSIF ($3 = 27) THEN
+		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.amount) INTO adjustment
+		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
+		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
+	ELSIF ($3 = 28) THEN
+		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.tax_relief_amount) INTO adjustment
+		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
+		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
 	ELSIF ($3 = 31) THEN
 		SELECT SUM(overtime * overtime_rate) INTO adjustment
 		FROM employee_overtime

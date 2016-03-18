@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="opening_balance" language="groovy" pageWidth="595" pageHeight="842" columnWidth="538" leftMargin="37" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5bf66385-fc53-432c-9590-7958061b6881">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT b.pcc, b.son, a.org_name, a.entity_id, b.user_name, b.entity_name, to_char(sum(balance), '999,999,999,999')as balance
+FROM vw_opening_balance a INNER JOIN vw_entitys b ON a.entity_id = b.entity_id
+GROUP BY b.pcc,b.son, a.org_name, a.entity_id, b.entity_name,  b.user_name
+ORDER BY sum(balance) desc;]]>
+	</queryString>
+	<field name="pcc" class="java.lang.String"/>
+	<field name="son" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="user_name" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="balance" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="13" width="538" height="32" uuid="8d137096-0d80-4db1-a148-85b4960a1e28"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSULTANT OPENING BALANCE]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="8" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="79d89e22-91a9-4a3b-adc8-5ae7edcbb807"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Username]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="138" height="20" uuid="0643663d-ca74-479c-b2d6-005079024ba1"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="238" y="0" width="100" height="20" uuid="d7733d5c-eca4-4617-bb27-13ee78e15b3d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[PCC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="338" y="0" width="100" height="20" uuid="bba9ff12-5284-4c82-b70f-5f5e8e00d27e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[SON]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="438" y="0" width="100" height="20" uuid="018dd29c-23d9-4b23-9ce7-631b9c620945"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Balance]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" uuid="c13ae228-e836-4664-8fc3-9bae96f6b90c"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="538" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="89c253ee-1006-4ac1-bcda-4cd76101438d">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="62786919-6cec-4f4e-9240-684d1961d3ed"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="138" height="15" isPrintWhenDetailOverflows="true" uuid="c542b722-af8a-42b8-877d-2bbead75b5d9"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="338" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="b7e270cf-7e31-428f-844d-3b4cfef56465"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="438" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="d9ccff8e-74a7-40f1-933a-9809bb151693"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="238" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="83147dbe-9f31-49b8-b3e3-20bbb5a04594"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -20,6 +20,16 @@ CREATE VIEW vw_borrowing_types AS
 	SELECT orgs.org_id, orgs.org_name, borrowing_types.borrowing_type_id, borrowing_types.borrowing_type_name, borrowing_types.details
 	FROM borrowing_types
 	INNER JOIN orgs ON borrowing_types.org_id = orgs.org_id;
+	
+CREATE OR REPLACE VIEW vw_expenses AS
+	SELECT bank_accounts.bank_account_id, bank_accounts.bank_account_name, currency.currency_id,
+	currency.currency_name, entitys.entity_id, entitys.entity_name, expenses.org_id,  expenses.expense_id, expenses.date_accrued, 
+	expenses.amount, expenses.details
+	FROM expenses
+	JOIN bank_accounts ON expenses.bank_account_id = bank_accounts.bank_account_id
+	JOIN currency ON expenses.currency_id = currency.currency_id
+	JOIN entitys ON expenses.entity_id = entitys.entity_id
+	
 
 CREATE VIEW vw_contribution_types AS
 	SELECT orgs.org_id, orgs.org_name, contribution_types.contribution_type_id, contribution_types.contribution_type_name, 

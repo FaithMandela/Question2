@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user_contacts" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5b587bf8-eef6-40ad-8717-2fdc188d80f6">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user_contacts_KAM" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="260a982a-851a-4305-b6b2-56538cfe77f3">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_orgs.org_id,
     vw_orgs.org_name,
@@ -42,28 +45,16 @@
     vw_entity_address.fax,
     vw_entity_address.email,
     vw_entity_address.website,
-    entitys.entity_id,
-    entitys.entity_name,
-    entitys.user_name,
-    entitys.son,
-    entitys.super_user,
-    entitys.entity_leader,
-    entitys.date_enroled,
-    entitys.is_active,
-    entitys.entity_password,
-    entitys.first_password,
-    entitys.function_role,
-    entitys.primary_email,
-    entitys.primary_telephone,
-    entity_types.entity_type_id,
-    entity_types.entity_type_name,
-    entity_types.entity_role,
-    entity_types.use_key
-   FROM entitys
-     LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id
-     JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-     JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id
-	ORDER BY entitys.entity_name ASC;]]>
+    entity_id,
+entity_name,user_name,son,super_user,entity_leader,date_enroled,
+    vw_entitys.is_active,entity_password,first_password,function_role,primary_email,primary_telephone,
+    entity_types.entity_type_name
+   FROM vw_entitys
+     LEFT JOIN vw_entity_address ON vw_entitys.entity_id = vw_entity_address.table_id
+     JOIN vw_orgs ON vw_entitys.org_id = vw_orgs.org_id
+     JOIN entity_types ON vw_entitys.entity_type_id = entity_types.entity_type_id
+WHERE vw_entitys.account_manager_id = '$P!{entity_id}'
+	ORDER BY vw_entitys.entity_name ASC;]]>
 	</queryString>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
@@ -116,10 +107,7 @@
 	<field name="function_role" class="java.lang.String"/>
 	<field name="primary_email" class="java.lang.String"/>
 	<field name="primary_telephone" class="java.lang.String"/>
-	<field name="entity_type_id" class="java.lang.Integer"/>
 	<field name="entity_type_name" class="java.lang.String"/>
-	<field name="entity_role" class="java.lang.String"/>
-	<field name="use_key" class="java.lang.Integer"/>
 	<variable name="count" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{entity_id}]]></variableExpression>
 	</variable>
@@ -127,9 +115,9 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="32" splitType="Stretch">
+		<band height="36" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="30" uuid="db11eda6-e84e-48af-8762-2b3e3e996f2e"/>
+				<reportElement x="0" y="5" width="555" height="30" uuid="ad0f6138-f34d-4494-a647-6be64670bd15"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24" isBold="true"/>
 				</textElement>
@@ -138,39 +126,36 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="5" splitType="Stretch"/>
+		<band height="13" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="19" splitType="Stretch">
 			<staticText>
-				<reportElement x="43" y="0" width="180" height="15" uuid="dcdba84d-d422-466d-8aad-45376e6ee070"/>
+				<reportElement x="432" y="0" width="123" height="15" uuid="3cb362e2-76b1-4139-8d5e-e5903ec431c6"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="3"/>
-				</textElement>
-				<text><![CDATA[Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="223" y="0" width="218" height="15" uuid="2222c549-6c32-4060-8d78-61ae3c3a9523"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="3"/>
-				</textElement>
-				<text><![CDATA[Email	]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="441" y="0" width="114" height="15" uuid="17e6b60e-3552-41b1-96a1-71b3309526dd"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="3"/>
 				</textElement>
 				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="16" width="555" height="1" uuid="6817f788-6979-45c8-847b-cde4e279fb70"/>
+				<reportElement x="1" y="16" width="554" height="1" uuid="3e5c4d42-b36f-4f6f-9198-9ba21c885dfb"/>
 			</line>
 			<staticText>
-				<reportElement x="1" y="0" width="43" height="15" uuid="2f3c948a-71a6-4751-b911-55af6a8ba9da"/>
+				<reportElement x="40" y="0" width="172" height="15" uuid="9d6e5df7-7b8f-4c05-92ca-17e7cbfe3e7e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="212" y="0" width="220" height="15" uuid="eac39423-17ef-4136-9c7e-c7f1a93193bc"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="39" height="15" uuid="af658494-4ec3-4ba4-896d-e60fa8b6c138"/>
 				<text><![CDATA[#]]></text>
 			</staticText>
 		</band>
@@ -178,40 +163,37 @@
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="43" y="0" width="180" height="15" uuid="248ccc04-1063-47db-a9cc-c5cd427d2eaa"/>
+				<reportElement x="40" y="0" width="172" height="15" uuid="52d0bd0d-7b8d-4128-b80f-90b9b3698e63"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
-					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="223" y="0" width="218" height="15" uuid="d4d55fed-9c58-4077-a453-e25ac5533a64"/>
+				<reportElement x="212" y="0" width="220" height="15" uuid="cb0bdf2c-79f7-4c03-9cfd-3269bb5a6a32"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
-					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="441" y="0" width="114" height="15" uuid="a5c076c9-c524-470b-b7a0-b3b5970ba0b9"/>
+				<reportElement x="432" y="0" width="123" height="15" uuid="d6b1a15e-ea97-4e8b-a14e-098d120ae142"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
-					<paragraph leftIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{primary_telephone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="0" width="42" height="15" uuid="149894d5-b3a5-4e0e-b77f-3b8cc932b9cf"/>
+				<reportElement x="1" y="0" width="39" height="15" uuid="62553401-7e07-4833-ba1c-fc792e60f0e9"/>
 				<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="20" splitType="Stretch"/>
+		<band height="21" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="19" splitType="Stretch"/>
+		<band height="54" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
 		<band height="42" splitType="Stretch"/>
