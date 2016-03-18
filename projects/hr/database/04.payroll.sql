@@ -1,6 +1,12 @@
+CREATE TABLE adjustment_effects (
+	adjustment_effect_id	integer primary key,
+	adjustment_effect_name	varchar(50) not null
+);
+
 CREATE TABLE adjustments (
 	adjustment_id			serial primary key,
 	currency_id				integer references currency,
+	adjustment_effect_id	integer references adjustment_effects,
 	org_id					integer references orgs,
 	adjustment_name			varchar(50) not null,
 	adjustment_type			integer not null,
@@ -25,6 +31,7 @@ CREATE TABLE adjustments (
 	UNIQUE(adjustment_name, org_id)
 );
 CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
+CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
 
 CREATE TABLE claim_types (
@@ -461,6 +468,18 @@ BEGIN
 		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
 		FROM employee_adjustments
 		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
+	ELSIF ($3 = 26) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (pension_id is not null) AND (adjustment_type = 2);
+	ELSIF ($3 = 27) THEN
+		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.amount) INTO adjustment
+		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
+		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
+	ELSIF ($3 = 28) THEN
+		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.tax_relief_amount) INTO adjustment
+		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
+		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
 	ELSIF ($3 = 31) THEN
 		SELECT SUM(overtime * overtime_rate) INTO adjustment
 		FROM employee_overtime

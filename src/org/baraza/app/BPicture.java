@@ -8,6 +8,7 @@
  */
 package org.baraza.app;
 
+import java.util.logging.Logger;
 import java.io.File;
 
 import javax.swing.Icon;
@@ -25,7 +26,8 @@ import org.baraza.utils.BWebdav;
 import org.baraza.DB.BDB;
 
 public class BPicture extends JLabel implements MouseListener {
-
+	Logger log = Logger.getLogger(BPicture.class.getName());
+	
 	String pictureFile = null;
 	String pictureURL, pictureAccess;
 	BDB db = null;	
@@ -41,7 +43,7 @@ public class BPicture extends JLabel implements MouseListener {
 		String repository = el.getAttribute("repository");
 		String username = el.getAttribute("username");
 		String password = el.getAttribute("password");
-		webdav = new BWebdav(repository, username, password);
+		if(repository != null) webdav = new BWebdav(repository, username, password);
 	}
 
 	public void setPicture(String value) {
@@ -51,7 +53,11 @@ public class BPicture extends JLabel implements MouseListener {
         html += "<img src='" + mypic + "'>\n";
         html += "</div>\n</body>\n</html>";
 
-		this.setText(html);
+		try {
+			this.setText(html);
+		} catch(Exception ex) {
+			log.severe("html pucture diplay error " + ex);
+		}
 	}
 
 	public String getPicture() {
@@ -71,7 +77,7 @@ public class BPicture extends JLabel implements MouseListener {
 
 			pictureFile = db.executeFunction("SELECT nextval('picture_id_seq')");
 			pictureFile += "pic." + ff.getExtension(file);
-			webdav.saveFile(file, pictureFile);
+			if(webdav != null) webdav.saveFile(file, pictureFile);
 
  			Icon icon = new ImageIcon(file.getPath());
 			this.setIcon(icon);

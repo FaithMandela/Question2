@@ -89,6 +89,10 @@ INSERT INTO skill_types (skill_type_id, skill_category_id, skill_type_name, basi
 SELECT pg_catalog.setval('skill_types_skill_type_id_seq', 42, true);
 UPDATE skill_types SET skill_type_name =  initcap(skill_type_name), org_id = 0;
 
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (0, 'General');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'Housing');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'Insurance');
+
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 1, 'Sacco Allowance', true, true);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 2, 'Bonus', true, true);
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, in_payroll, Visible, In_Tax) VALUES (1, 3, 'Employer - Pension', false, true, false);

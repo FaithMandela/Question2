@@ -1,24 +1,22 @@
 <?xml version="1.0"?>
-<ESCALATION title="Mail" processdelay="5"
-	host="mail.travelport.co.ke" mailuser="notifications@travelport.co.ke" mailpassword="rUm9Dund8E" 
-	mailfrom="notifications@travelport.co.ke" smtppauth="true" inbox="INBOX" sentbox="Sent" >
-	
-	<REPORT name="Travelport Notifications" keyfield="email_id" action="ticket_emailed" actioncount="1" 
-			table="sys_emails, email"
-			where="(sys_emails.sys_email_id = 1) AND (email.is_sent = false)">
-		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<ADDRESS title="address">sys_emails.default_email</ADDRESS>
-		<BODYFIELD reference="{{message}}" basetable="email">message</BODYFIELD>
-		<FIELD title="Body" basetable="sys_emails">details</FIELD>
-	</REPORT>
+<ESCALATION title="Sacco Mails"  processdelay="2"
+    host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent" mailfrom="info@openbaraza.org"
+    inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
+    reportpath="/opt/baraza/projects/sacco/">
 
-	<REPORT name="Travelport Notifications" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-			table="sys_emails, sys_emailed"
-			where="(sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.emailed = false) AND (sys_emails.sys_email_id = 2)">
-		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<ADDRESS title="address">sys_emails.default_email</ADDRESS>
-		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
-		<FIELD title="Body" basetable="sys_emails">details</FIELD>
-	</REPORT>
-
+    <REPORT name="Sacco Notifications" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
+            table="sys_emails,sys_emailed,subscriptions,vw_entitys"
+         where="(subscriptions.subscription_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
+            AND (vw_entitys.entity_id = subscriptions.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+        
+         <SUBJECT title="subject">sys_emails.title</SUBJECT>
+        
+        <ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
+        <BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
+        <BODYFIELD reference="{{username}}" basetable="vw_entitys">user_name</BODYFIELD>
+        <BODYFIELD reference="{{Password}}" basetable="vw_entitys">first_password</BODYFIELD>
+        <FIELD title="Body" basetable="sys_emails">details</FIELD>
+        
+    </REPORT>
+    
 </ESCALATION>

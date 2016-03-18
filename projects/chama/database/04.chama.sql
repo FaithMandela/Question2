@@ -1,4 +1,5 @@
 CREATE TABLE members (
+	member_id					serial primary key,
 	entity_id 					integer references entitys,
 	bank_id						integer references banks,
 	bank_account_id				integer references bank_accounts,
@@ -169,6 +170,23 @@ CREATE INDEX borrowing_repayment_org_id ON borrowing_repayment(org_id);
 CREATE INDEX borrowing_repayment_borrowing_id ON borrowing_repayment (borrowing_id);
 CREATE INDEX borrowing_repayment_period_id ON borrowing_repayment (period_id);
 CREATE INDEX borrowing_repayment_penalty_id ON borrowing_repayment (penalty_id);
+
+CREATE TABLE expenses (
+	expense_id				serial primary key,
+	entity_id				integer references entitys,
+	bank_account_id			integer references bank_accounts,
+	org_id					integer references orgs,
+	currency_id				integer references currency,
+	date_accrued			date,
+	amount					real not null,
+	details					text
+);
+
+CREATE INDEX expenses_entity_id ON expenses (entity_id);
+CREATE INDEX expenses_bank_account_id ON expenses (bank_account_id);
+CREATE INDEX expenses_currency_id ON expenses (currency_id);
+CREATE INDEX expenses_org_id ON expenses (org_id);
+
 
 CREATE TABLE investment_types (
 	investment_type_id			serial primary key,

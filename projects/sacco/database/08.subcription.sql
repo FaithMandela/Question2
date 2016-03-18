@@ -1,5 +1,9 @@
 alter table orgs add default_country_id varchar(6); 
 
+<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
+
+=======
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 CREATE TABLE locations
 (
 	location_id			serial primary key,
@@ -203,6 +207,17 @@ BEGIN
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
+<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
+		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
+		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
+		
+		v_currency_id := nextval('currency_currency_id_seq');
+		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'KES', 'USD');
+		v_currency_id := nextval('currency_currency_id_seq');
+		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'KES', 'ERO');
+		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
+		
+=======
 		
 		
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
@@ -211,6 +226,7 @@ BEGIN
 		
 	
 		
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
@@ -236,8 +252,11 @@ CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  
 
+<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
+=======
  
 
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 CREATE OR REPLACE FUNCTION ins_member_limit() RETURNS trigger AS $$
 DECLARE
 	v_member_count	integer;

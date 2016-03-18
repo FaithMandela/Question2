@@ -102,6 +102,8 @@ public class BWebReport  {
 			parameters.put("orgid", db.getOrgID());
 			parameters.put("orgwhere", db.getOrgWhere(orgTable));
 			parameters.put("organd", db.getOrgAnd(orgTable));
+			parameters.put("entityid", db.getUserID());
+			parameters.put("entityname", db.getUserName());
 
 			session.setAttribute("userfield", "");
 			session.setAttribute("groupfield", "");
@@ -200,6 +202,8 @@ public class BWebReport  {
 			parameters.put("orgid", db.getOrgID());
 			parameters.put("orgwhere", db.getOrgWhere(orgTable));
 			parameters.put("organd", db.getOrgAnd(orgTable));
+			parameters.put("entityid", db.getUserID());
+			parameters.put("entityname", db.getUserName());
 
 			String reportFilters = (String)session.getAttribute("reportfilters");
 			String reportFilter[] = reportFilters.split(",");
@@ -280,6 +284,8 @@ public class BWebReport  {
 			parameters.put("orgid", db.getOrgID());
 			parameters.put("orgwhere", db.getOrgWhere(orgTable));
 			parameters.put("organd", db.getOrgAnd(orgTable));
+			parameters.put("entityid", db.getUserID());
+			parameters.put("entityname", db.getUserName());
 
 			String reportFilters = request.getParameter("reportfilters");
 			String reportFilter[] = reportFilters.split(",");

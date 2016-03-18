@@ -749,6 +749,23 @@
 					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<GRID name="Final Outcomes" keyfield="final_outcome_id" linkfield="goal_id" table="vw_final_outcomes">
+				<TEXTFIELD w="75" title="ID">final_outcome_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Final Outcomes" keyfield="final_outcome_id" linkfield="goal_id" table="final_outcomes">
+					<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Intermediate Outcome" keyfield="intermediate_outcome" linkfield="final_outcome_id" table="vw_intermediate_outcome">
+					<TEXTFIELD w="75" title="Ouput Narrative">final_outcome_narrative</TEXTFIELD>
+					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<FORM name="Intermediate Outcome" keyfield="intermediate_outcome" table="intermediate_outcome">
+						<COMBOBOX w="430" title="Final Outcome" lptable="final_outcomes" linkfield="final_outcome_id" y="10" h="20" x="10" lpfield="narrative">final_outcome_id</COMBOBOX>
+						<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Projects" key="1" h="550">
@@ -773,6 +790,33 @@
 				<TEXTAREA w="430" tab="Main Activities" y="350" h="70" x="10">main_activities</TEXTAREA>
 				<TEXTAREA w="430" tab="Notes" y="420" h="70" x="10">notes</TEXTAREA>
 			</FORM>
+			<GRID name="Problems" keyfield="problem_id" linkfield="project_id" table="vw_problems">
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+<<<<<<< HEAD
+				<TEXTFIELD w="75" title="Details">Details</TEXTFIELD>
+=======
+				<TEXTFIELD w="75" title="Details">problem_details</TEXTFIELD>
+>>>>>>> dc5a4336ff69993c6307b3411b6bdaa46c20fc17
+				<FORM name="Problems" keyfield="problem_id" linkfield="project_id" table="problems">
+					<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Interventions" keyfield="intervention_id" linkfield="problem_id" table="vw_interventions">
+					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<TEXTFIELD w="75" title="Details">Details</TEXTFIELD>
+					<FORM name="Interventions" keyfield="intervention_id" linkfield="problem_id" table="interventions">
+						<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+					</FORM>
+					<GRID name="Outputs" keyfield="output_id" linkfield="intervention_id" table="vw_outputs">
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<FORM name="Outputs" keyfield="output_id" linkfield="intervention_id" table="outputs">
+							<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
+							<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+						</FORM>
+					</GRID>
+				</GRID>
+			</GRID>
 			<GRID name="Project Locations" keyfield="project_location_id" linkfield="project_id" table="vw_project_locations">
 				<TEXTFIELD w="75" title="Country">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="175" title="Region Covered">region_covered</TEXTFIELD>
@@ -918,6 +962,29 @@
 					<TEXTDECIMAL w="150" title="Exchange Rate" y="30" h="20" x="290">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Expenditure Date" y="50" h="20" x="10">pr_date</TEXTDATE>
 					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Indicators" keyfield="indicator_id" linkfield="project_id" table="vw_indicators">
+				<TEXTFIELD w="75" title="Key Indictors">key_indictors</TEXTFIELD>
+				<TEXTFIELD w="75" title="Baseline Values">baseline_values</TEXTFIELD>
+				<TEXTDATE w="75" title="Date Source">date_source</TEXTDATE>
+				<TEXTFIELD w="75" title="Data Collection Method">data_collection_method</TEXTFIELD>
+				<TEXTFIELD w="75" title="Frequency Of Collection">frequency_of_collection</TEXTFIELD>
+				<TEXTFIELD w="75" title="Impact">impact</TEXTFIELD>
+				<TEXTFIELD w="75" title="Leassons Learnt">leassons_learnt</TEXTFIELD>
+				<TEXTFIELD w="75" title="Action Acquired">action_acquired</TEXTFIELD>
+				<TEXTFIELD w="75" title="Quality Of Action">quality_of_action</TEXTFIELD>
+				<FORM name="Indicators" keyfield="indicator_id" linkfield="project_id" table="indicators">
+					<TEXTFIELD w="430" title="Key Indictors" y="10" h="20" x="10">key_indictors</TEXTFIELD>
+					<TEXTFIELD w="430" title="Baseline Values" y="30" h="20" x="10">baseline_values</TEXTFIELD>
+					<TEXTDATE w="150" title="Date Source" y="50" h="20" x="10">date_source</TEXTDATE>
+					<TEXTFIELD w="430" title="Data Collection Method" y="70" h="20" x="10">data_collection_method</TEXTFIELD>
+					<TEXTFIELD w="430" title="Frequency Of Collection" y="90" h="20" x="10">frequency_of_collection</TEXTFIELD>
+					<TEXTFIELD w="430" title="Impact" y="110" h="20" x="10">impact</TEXTFIELD>
+					<TEXTFIELD w="430" title="Leassons Learnt" y="130" h="20" x="10">leassons_learnt</TEXTFIELD>
+					<TEXTFIELD w="430" title="Action Acquired" y="150" h="20" x="10">action_acquired</TEXTFIELD>
+					<TEXTFIELD w="430" title="Quality Of Action" y="170" h="20" x="10">quality_of_action</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>

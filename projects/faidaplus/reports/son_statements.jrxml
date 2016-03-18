@@ -9,9 +9,11 @@
 	<parameter name="minDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[
-SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
+		<![CDATA[SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
 		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
@@ -22,8 +24,9 @@ SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
 	(SELECT 0::real AS float4, vw_orders.order_total_amount::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
-		getdetails(vw_orders.order_id) AS details
+		get_order_details(vw_orders.order_id) AS details
 	FROM vw_orders)) a
+	WHERE entity_id = '$P!{entity_id}'
 	ORDER BY a.order_date ASC;]]>
 	</queryString>
 	<field name="dr" class="java.lang.Float"/>

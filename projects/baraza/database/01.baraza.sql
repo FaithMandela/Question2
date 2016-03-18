@@ -274,6 +274,7 @@ CREATE INDEX sys_dashboard_org_id ON sys_dashboard (org_id);
 CREATE TABLE sys_emails (
 	sys_email_id			serial primary key,
 	org_id					integer references orgs,
+	use_type				integer default 1 not null,
 	sys_email_name			varchar(50),
 	default_email			varchar(120),
 	title					varchar(240) not null,

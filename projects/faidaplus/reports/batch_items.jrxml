@@ -33,7 +33,8 @@
                 vw_order_details.total_amount
                FROM vw_order_details
                  JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
-                 JOIN vw_products ON vw_products.product_id = vw_order_details.product_id;]]>
+                 JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
+		WHERE vw_orders.batch_no = '$P!{batch_no}';]]>
 	</queryString>
 	<field name="order_details_id" class="java.lang.Integer"/>
 	<field name="order_id" class="java.lang.Integer"/>
@@ -68,42 +69,56 @@
 		</band>
 	</title>
 	<pageHeader>
-		<band height="13" splitType="Stretch"/>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="2bb6aa74-590e-4757-b868-90832b925ca5"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Batch Number :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="1" width="100" height="22" isPrintWhenDetailOverflows="true" uuid="f73e1d2e-ab42-4948-a4c5-87e2344692ac"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{batch_no}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20" uuid="2bb6aa74-590e-4757-b868-90832b925ca5"/>
+				<reportElement x="388" y="0" width="67" height="20" isPrintWhenDetailOverflows="true" uuid="b3af2c35-8c7b-4ab5-97e5-e99f15c966ff"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Batch ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="200" y="0" width="100" height="20" uuid="b3af2c35-8c7b-4ab5-97e5-e99f15c966ff"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<text><![CDATA[Quantity]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="0" width="100" height="20" uuid="b8b7b2ad-1a5c-4438-86d3-a24ee90979be"/>
-				<textElement>
+				<reportElement x="455" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="b8b7b2ad-1a5c-4438-86d3-a24ee90979be"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<text><![CDATA[Total Cost]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="100" height="20" uuid="01661075-10d2-4271-852d-a75280631a22"/>
-				<textElement>
+				<reportElement x="310" y="0" width="78" height="20" isPrintWhenDetailOverflows="true" uuid="01661075-10d2-4271-852d-a75280631a22"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="5"/>
 				</textElement>
 				<text><![CDATA[Purchase Cost]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="0" width="100" height="20" uuid="8ee8f63d-a8d0-44a5-817b-09212d89e6c0"/>
+				<reportElement x="0" y="0" width="310" height="20" isPrintWhenDetailOverflows="true" uuid="8ee8f63d-a8d0-44a5-817b-09212d89e6c0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<text><![CDATA[Title]]></text>
 			</staticText>
@@ -114,40 +129,45 @@
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="100" height="20" uuid="f73e1d2e-ab42-4948-a4c5-87e2344692ac"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="20" backcolor="#E5E5E5" uuid="7901a982-ff63-4a55-a240-518b0056eba5">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="455" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="00b12c82-e3c8-4ca5-8694-7ef5c2f47260"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{batch_no}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="100" y="0" width="100" height="20" uuid="345c200c-171c-4388-8280-83962c51c770"/>
+				<reportElement x="0" y="0" width="310" height="15" isPrintWhenDetailOverflows="true" uuid="345c200c-171c-4388-8280-83962c51c770"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="200" y="0" width="100" height="20" uuid="ca66d1ca-5cb2-4cca-a808-520185826ebd"/>
-				<textElement>
+				<reportElement x="388" y="0" width="67" height="15" isPrintWhenDetailOverflows="true" uuid="ca66d1ca-5cb2-4cca-a808-520185826ebd"/>
+				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="12"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_quantity}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="300" y="0" width="100" height="20" uuid="e3009b0e-b3e4-4917-9b4e-3eadee57451c"/>
-				<textElement>
+				<reportElement x="310" y="0" width="78" height="15" isPrintWhenDetailOverflows="true" uuid="e3009b0e-b3e4-4917-9b4e-3eadee57451c"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_uprice}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="400" y="0" width="100" height="20" uuid="00b12c82-e3c8-4ca5-8694-7ef5c2f47260"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

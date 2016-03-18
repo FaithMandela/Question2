@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="total_upload_seg" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65be8b96-a7b7-44f8-94dd-f7cbf1f882e0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    points.pcc,
+    points.son,
+    sum(points.segments)as segments,
+    sum(points.amount)as amount,
+    sum(points.points)as points,
+    sum(points.bonus)as bonus,
+    vw_entitys.org_name,
+    vw_entitys.entity_name,
+    vw_entitys.user_name,
+    vw_entitys.is_active,
+    vw_entitys.entity_id
+   FROM points
+     JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
+     JOIN periods ON points.period_id = periods.period_id
+WHERE to_char(periods.start_date, 'mmyyyy'::text) >= to_char('$P!{minDate}'::date, 'mmyyyy'::text)
+AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date, 'mmyyyy'::text)
+	GROUP BY  points.pcc, points.son, vw_entitys.org_name, vw_entitys.entity_name,    vw_entitys.user_name,  vw_entitys.is_active,   vw_entitys.entity_id;]]>
+	</queryString>
+	<field name="pcc" class="java.lang.String"/>
+	<field name="son" class="java.lang.String"/>
+	<field name="segments" class="java.lang.Float"/>
+	<field name="amount" class="java.lang.Float"/>
+	<field name="points" class="java.lang.Float"/>
+	<field name="bonus" class="java.lang.Float"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="user_name" class="java.lang.String"/>
+	<field name="is_active" class="java.lang.Boolean"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="30" uuid="fe9112dd-1abd-4cab-a1bb-302e420de4a1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="24"/>
+				</textElement>
+				<text><![CDATA[Total Upload Segments Value]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="15" uuid="53f88d8e-936a-4d26-9c0d-c49d15b0d38a"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date From :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="100" height="15" uuid="a9b465e8-982f-4e94-8edd-d4d523151a6e"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date To :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="16" width="210" height="15" uuid="8ae980f3-a9fe-49f4-8ad6-ca57e0861738"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{maxDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="1" width="210" height="15" uuid="6da6eee0-e176-483f-af7f-62a5758f8f38"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{minDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="156" height="20" uuid="728e9d87-d031-4d01-8b74-555a9b3b4839"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Username]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="156" y="0" width="154" height="20" uuid="090fb01f-7c1c-48e8-9ab1-67a5a410e75a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Full Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="0" width="67" height="32" isPrintWhenDetailOverflows="true" uuid="ebca8d19-4130-455b-82c8-21f41293c63e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Account Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="0" width="81" height="32" isPrintWhenDetailOverflows="true" uuid="6767df1a-9d8e-4b78-a5f8-b1bb54595e60"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Total Segments]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="458" y="0" width="97" height="32" isPrintWhenDetailOverflows="true" uuid="7a95381f-b31a-45c8-a955-0444ec7514e7"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Total Segments Earnings]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="32" width="555" height="1" isPrintWhenDetailOverflows="true" uuid="e5dcb5d1-6bb2-4493-a6a3-bca2b1a272af"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="156" height="15" isPrintWhenDetailOverflows="true" uuid="e150b22d-af7c-44b7-87e0-f18664a8c309"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="377" y="0" width="81" height="15" isPrintWhenDetailOverflows="true" uuid="02195028-5fcc-426f-8e43-26c67c7882f0"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{segments}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="458" y="0" width="97" height="15" isPrintWhenDetailOverflows="true" uuid="5713f858-f9ec-46e5-827d-a0ace843e123"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="156" y="0" width="154" height="15" isPrintWhenDetailOverflows="true" uuid="1ee9f8d7-6104-4d24-98cf-515217af08f1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="310" y="0" width="67" height="15" isPrintWhenDetailOverflows="true" uuid="c8304c3a-8a60-476f-9029-4a0565ab4b9d"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{is_active}==true?"Active":"Purged"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

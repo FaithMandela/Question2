@@ -1,389 +1,133 @@
-ALTER TABLE default_banking 
-ADD	bank_account			varchar(64);
+CREATE TABLE adjustment_effects (
+	adjustment_effect_id	integer primary key,
+	adjustment_effect_name	varchar(50) not null
+);
 
-DROP VIEW vw_default_banking;
-CREATE VIEW vw_default_banking AS
-	SELECT entitys.entity_id, entitys.entity_name, 
-		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
-		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
-		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		default_banking.org_id, default_banking.default_banking_id, default_banking.amount, 
-		default_banking.ps_amount, default_banking.final_date, default_banking.active, default_banking.narrative
-	FROM default_banking INNER JOIN entitys ON default_banking.entity_id = entitys.entity_id
-		INNER JOIN vw_bank_branch ON default_banking.bank_branch_id = vw_bank_branch.bank_branch_id
-		INNER JOIN currency ON default_banking.currency_id = currency.currency_id;
+ALTER TABLE adjustments ADD adjustment_effect_id	integer references adjustment_effects;
+CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 
-	
-ALTER TABLE applications
-ADD	previous_salary			real,
-ADD	expected_salary			real,
-ADD	review_rating			integer;
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (0, 'General');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'Housing');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'Insurance');
 
-CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+UPDATE adjustments SET adjustment_effect_id = 1 WHERE adjustment_id = 69;
+UPDATE adjustments SET adjustment_effect_id = 2 WHERE adjustment_id IN (40,63,45,64);
+
+CREATE OR REPLACE FUNCTION getAdjustment(int, int, int) RETURNS float AS $$
 DECLARE
-	v_entity_id				integer;
-	v_application_id		integer;
-	v_address				integer;
-	c_education_id			integer;
-	c_referees				integer;
-	reca					RECORD;
-	msg 					varchar(120);
+	adjustment float;
 BEGIN
-	SELECT application_id INTO v_application_id
-	FROM applications 
-	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
-	
-	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
-	FROM applicants
-	WHERE (entity_id = $2::int);
-	v_entity_id := reca.entity_id;
-	IF(reca.entity_id is null) THEN
-		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
-		FROM employees
-		WHERE (entity_id = $2::int);
-		v_entity_id := reca.entity_id;
-	END IF;
-	
-	SELECT count(address_id) INTO v_address
-	FROM vw_address
-	WHERE (table_name = 'applicant') AND (is_default = true) AND (table_id  = v_entity_id);
-	IF(v_address is null) THEN v_address = 0; END IF;
-	
-	SELECT count(education_id) INTO c_education_id
-	FROM education
-	WHERE (entity_id  = v_entity_id);
-	IF(c_education_id is null) THEN c_education_id = 0; END IF;
-	
-	SELECT count(address_id) INTO c_referees
-	FROM vw_referees
-	WHERE (table_id  = v_entity_id);
-	IF(c_referees is null) THEN c_referees = 0; END IF;
 
-	IF v_application_id is not null THEN
-		msg := 'There is another application for the post.';
-		RAISE EXCEPTION '%', msg;
-	ELSIF (reca.previous_salary is null) OR (reca.expected_salary is null) THEN
-		msg := 'Kindly indicate your previous and expected salary';
-		RAISE EXCEPTION '%', msg;
-	ELSIF (v_address < 1) THEN
-		msg := 'You need to have at least one full address added';
-		RAISE EXCEPTION '%', msg;
-	ELSIF (c_education_id < 2) THEN
-		msg := 'You need to have at least two education levels added';
-		RAISE EXCEPTION '%', msg;
-	ELSIF (c_referees < 3) THEN
-		msg := 'You need to have at least three referees added';
-		RAISE EXCEPTION '%', msg;
+	IF ($3 = 1) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2);
+	ELSIF ($3 = 2) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true) AND (Visible = true);
+	ELSIF ($3 = 3) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_Tax = true);
+	ELSIF ($3 = 4) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true);
+	ELSIF ($3 = 5) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (Visible = true);
+	ELSIF ($3 = 11) THEN
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
+		FROM employee_tax_types
+		WHERE (Employee_Month_ID = $1);
+	ELSIF ($3 = 12) THEN
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
+		FROM employee_tax_types
+		WHERE (Employee_Month_ID = $1) AND (In_Tax = true);
+	ELSIF ($3 = 14) THEN
+		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
+		FROM employee_tax_types
+		WHERE (Employee_Month_ID = $1) AND (Tax_Type_ID = $2);
+	ELSIF ($3 = 21) THEN
+		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (in_tax = true);
+	ELSIF ($3 = 22) THEN
+		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1) AND (In_payroll = true) AND (Visible = true);
+	ELSIF ($3 = 23) THEN
+		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = 1);
+	ELSIF ($3 = 24) THEN
+		SELECT SUM(exchange_rate * tax_reduction_amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
+	ELSIF ($3 = 25) THEN
+		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
+	ELSIF ($3 = 26) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (employee_month_id = $1) AND (pension_id is not null) AND (adjustment_type = 2);
+	ELSIF ($3 = 27) THEN
+		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.amount) INTO adjustment
+		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
+		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
+	ELSIF ($3 = 28) THEN
+		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.tax_relief_amount) INTO adjustment
+		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
+		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
+	ELSIF ($3 = 31) THEN
+		SELECT SUM(overtime * overtime_rate) INTO adjustment
+		FROM employee_overtime
+		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
+	ELSIF ($3 = 32) THEN
+		SELECT SUM(exchange_rate * tax_amount) INTO adjustment
+		FROM employee_per_diem
+		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
+	ELSIF ($3 = 33) THEN
+		SELECT SUM(exchange_rate * (full_amount -  cash_paid)) INTO adjustment
+		FROM Employee_Per_Diem
+		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
+	ELSIF ($3 = 34) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_advances
+		WHERE (Employee_Month_ID = $1) AND (in_payroll = true);
+	ELSIF ($3 = 35) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM advance_deductions
+		WHERE (Employee_Month_ID = $1) AND (In_payroll = true);
+	ELSIF ($3 = 36) THEN
+		SELECT SUM(exchange_rate * paid_amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1) AND (In_payroll = true) AND (Visible = true);
+	ELSIF ($3 = 37) THEN
+		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
+		FROM employee_adjustments
+		WHERE (Employee_Month_ID = $1);
+
+		IF(adjustment IS NULL)THEN
+			adjustment := 0;
+		END IF;
+	ELSIF ($3 = 41) THEN
+		SELECT SUM(exchange_rate * amount) INTO adjustment
+		FROM employee_banking
+		WHERE (Employee_Month_ID = $1);
 	ELSE
-		INSERT INTO applications (intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
-		VALUES ($1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
-		msg := 'Added Job application';
+		adjustment := 0;
 	END IF;
 
-	return msg;
+	IF(adjustment is null) THEN
+		adjustment := 0;
+	END IF;
+
+	RETURN adjustment;
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-CREATE OR REPLACE FUNCTION objectives_review(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	v_objective_ps		real;
-	max_objective_ps	real;
-	sum_ods_ps			real;
-	rec					RECORD;
-	msg 				varchar(120);
-BEGIN
-
-	SELECT sum(objectives.objective_ps) INTO v_objective_ps
-	FROM objectives
-	WHERE (objectives.employee_objective_id = CAST($1 as int));
-	SELECT max(objectives.objective_ps) INTO max_objective_ps
-	FROM objectives
-	WHERE (objectives.employee_objective_id = CAST($1 as int));
-	SELECT sum(objective_details.ods_ps) INTO sum_ods_ps
-	FROM objective_details INNER JOIN objectives ON objective_details.objective_id = objectives.objective_id
-	WHERE (objectives.employee_objective_id = CAST($1 as int));
-	
-	IF(v_objective_ps is null)THEN
-		v_objective_ps := 0;
-	END IF;
-	IF(max_objective_ps is null)THEN
-		max_objective_ps := 0;
-	END IF;
-	IF(sum_ods_ps is null)THEN
-		sum_ods_ps := 100;
-	END IF;
-	IF(sum_ods_ps = 0)THEN
-		sum_ods_ps := 100;
-	END IF;
-
-	IF(max_objective_ps > 50)THEN
-		msg := 'Objective should not have a % higer than 50';
-		RAISE EXCEPTION '%', msg;
-	ELSIF(v_objective_ps = 100) AND (sum_ods_ps = 100)THEN
-		UPDATE employee_objectives SET approve_status = 'Completed'
-		WHERE (employee_objective_id = CAST($1 as int));
-
-		msg := 'Objectives Review Applied';	
-	ELSIF(sum_ods_ps <> 100)THEN
-		msg := 'Objective details % must add up to 100';
-		RAISE EXCEPTION '%', msg;
-	ELSE
-		msg := 'Objective % must add up to 100';
-		RAISE EXCEPTION '%', msg;
-	END IF;
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION job_review_check(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	v_self_rating		integer;
-	v_objective_ps		real;
-	sum_ods_ps			real;
-	v_point_check		integer;
-	rec					RECORD;
-	msg 				varchar(120);
-BEGIN
-	
-	SELECT sum(objectives.objective_ps) INTO v_objective_ps
-	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
-	WHERE (evaluation_points.job_review_id = CAST($1 as int));
-	SELECT sum(ods_ps) INTO sum_ods_ps
-	FROM objective_details INNER JOIN evaluation_points ON evaluation_points.objective_id = objective_details.objective_id
-	WHERE (evaluation_points.job_review_id = CAST($1 as int));
-	
-	SELECT evaluation_points.evaluation_point_id INTO v_point_check
-	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
-	WHERE (evaluation_points.job_review_id = CAST($1 as int))
-		AND (objectives.objective_ps > 0) AND (evaluation_points.points = 0);
-		
-	SELECT self_rating INTO v_self_rating
-	FROM job_reviews
-	WHERE (job_review_id = $1::int);
-	IF(v_self_rating is null) THEN v_self_rating := 0; END IF;
-	
-	IF(sum_ods_ps is null)THEN
-		sum_ods_ps := 100;
-	END IF;
-	IF(sum_ods_ps = 0)THEN
-		sum_ods_ps := 100;
-	END IF;
-
-	IF(v_objective_ps = 100) AND (sum_ods_ps = 100)THEN
-		UPDATE job_reviews SET approve_status = 'Completed'
-		WHERE (job_review_id = CAST($1 as int));
-
-		msg := 'Review Applied';
-	ELSIF(sum_ods_ps <> 100)THEN
-		msg := 'Objective details % must add up to 100';
-		RAISE EXCEPTION '%', msg;
-	ELSIF(v_self_rating = 0)THEN
-		msg := 'Indicate your self rating';
-		RAISE EXCEPTION '%', msg;
-	ELSIF(v_point_check is not null)THEN
-		msg := 'All objective evaluations points must be between 1 to 4';
-		RAISE EXCEPTION '%', msg;
-	ELSE
-		msg := 'Objective % must add up to 100';
-		RAISE EXCEPTION '%', msg;
-	END IF;
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION getComputedReviewPoints(v_type integer, v_job_review_id integer) RETURNS double precision AS $$
-DECLARE
-	v_points double precision;
-BEGIN
-	IF(v_type = 1) THEN
-		SELECT SUM((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.points)  INTO v_points
-		FROM job_reviews INNER JOIN vw_evaluation_objectives
-		ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
-
-		WHERE (job_reviews.job_review_id =v_job_review_id)
-		AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date));
-	ELSE
-		SELECT SUM((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.reviewer_points) INTO  v_points
-		FROM job_reviews INNER JOIN vw_evaluation_objectives
-		ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
-
-		WHERE (job_reviews.job_review_id = v_job_review_id)
-		AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date));
-	END IF;
-	
-	IF(v_points is null) THEN v_points := 0; END IF;
-   
-	RETURN v_points;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
-DECLARE
-	v_default_interest	real;
-	v_reducing_balance	boolean;
-BEGIN
-
-	SELECT default_interest, reducing_balance INTO v_default_interest, v_reducing_balance
-	FROM loan_types 
-	WHERE (loan_type_id = NEW.loan_type_id);
-	
-	IF(NEW.interest is null)THEN
-		NEW.interest := v_default_interest;
-	END IF;
-	IF (NEW.reducing_balance is null)THEN
-		NEW.reducing_balance := v_reducing_balance;
-	END IF;
-	IF(NEW.monthly_repayment is null) THEN
-		NEW.monthly_repayment := 0;
-	END IF;
-	IF (NEW.repayment_period is null)THEN
-		NEW.repayment_period := 0;
-	END IF;
-	
-
-	IF(NEW.principle is null)THEN
-		RAISE EXCEPTION 'You have to enter a principle amount';
-	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period = 0))THEN
-		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
-	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period < 1))THEN
-		RAISE EXCEPTION 'The repayment period should be greater than 0';
-	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment < 1))THEN
-		RAISE EXCEPTION 'The monthly repayment should be greater than 0';
-	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period > 0))THEN
-		NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
-	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment > 0))THEN
-		NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
-	END IF;
-	
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
-    FOR EACH ROW EXECUTE PROCEDURE ins_loans();
-
-
-CREATE OR REPLACE FUNCTION loan_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	msg 				varchar(120);
-BEGIN
-	msg := 'Loan applied';
-	
-	UPDATE loans SET approve_status = 'Completed'
-	WHERE (loan_id = CAST($1 as int)) AND (approve_status = 'Draft');
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-    
-
-CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
-    FOR EACH ROW EXECUTE PROCEDURE upd_action();
-    
-
-CREATE OR REPLACE FUNCTION generate_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	v_period_id		integer;
-	v_org_id		integer;
-	v_month_name	varchar(50);
-
-	msg 			varchar(120);
-BEGIN
-	SELECT period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
-	FROM periods
-	WHERE (period_id = CAST($1 as integer));
-
-	INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id)
-	SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id
-	FROM tax_types
-	WHERE (active = true) AND (org_id = v_org_id);
-
-	INSERT INTO employee_month (period_id, org_id, pay_group_id, entity_id, bank_branch_id, department_role_id, currency_id, bank_account, basic_pay)
-	SELECT v_period_id, org_id, pay_group_id, entity_id, bank_branch_id, department_role_id, currency_id, bank_account, basic_salary
-	FROM employees
-	WHERE (employees.active = true) and (employees.org_id = v_org_id);
-
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
-	FROM vw_loans 
-	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
-
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
-	FROM vw_loans 
-	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
-
-	PERFORM updTax(employee_month_id, Period_id)
-	FROM employee_month
-	WHERE (period_id = v_period_id);
-	
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, narrative, org_id)
-	SELECT 7, entity_id, 'periods', v_month_name, v_org_id
-	FROM entity_subscriptions
-	WHERE entity_type_id = 6;
-
-	msg := 'Payroll Generated';
-
-	RETURN msg;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE OR REPLACE FUNCTION upd_employee_month() RETURNS trigger AS $$
-BEGIN
-	INSERT INTO employee_tax_types (org_id, employee_month_id, tax_type_id, tax_identification, additional, amount, employer, in_tax, exchange_rate)
-	SELECT NEW.org_id, NEW.employee_month_id, default_tax_types.tax_type_id, default_tax_types.tax_identification, 
-		Default_Tax_Types.Additional, 0, 0, Tax_Types.In_Tax,
-		(CASE WHEN Tax_Types.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END)
-	FROM Default_Tax_Types INNER JOIN Tax_Types ON Default_Tax_Types.Tax_Type_id = Tax_Types.Tax_Type_id
-	WHERE (Default_Tax_Types.active = true) AND (Default_Tax_Types.entity_ID = NEW.entity_ID);
-
-	INSERT INTO employee_adjustments (org_id, employee_month_id, adjustment_id, amount, adjustment_type, in_payroll, in_tax, visible, adjustment_factor, 
-		balance, tax_relief_amount, exchange_rate, narrative)
-	SELECT NEW.org_id, NEW.employee_month_id, default_adjustments.adjustment_id, default_adjustments.amount,
-		adjustments.adjustment_type, adjustments.in_payroll, adjustments.in_tax, adjustments.visible,
-		(CASE WHEN adjustments.adjustment_type = 2 THEN -1 ELSE 1 END),
-		(CASE WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = false) THEN (default_adjustments.balance + default_adjustments.amount)
-			WHEN (adjustments.running_balance = true) AND (adjustments.reduce_balance = true) THEN (default_adjustments.balance - default_adjustments.amount) END),
-		(default_adjustments.amount * adjustments.tax_relief_ps / 100),
-		(CASE WHEN adjustments.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END),
-		narrative
-	FROM default_adjustments INNER JOIN adjustments ON default_adjustments.adjustment_id = adjustments.adjustment_id
-	WHERE ((default_adjustments.final_date is null) OR (default_adjustments.final_date > current_date))
-		AND (default_adjustments.active = true) AND (default_adjustments.entity_id = NEW.entity_id);
-
-	INSERT INTO advance_deductions (org_id, amount, employee_month_id)
-	SELECT NEW.org_id, (Amount / Pay_Period), NEW.Employee_Month_ID
-	FROM employee_advances INNER JOIN employee_month ON employee_advances.employee_month_id = employee_month.employee_month_id
-	WHERE (employee_month.entity_id = NEW.entity_id) AND (employee_advances.pay_period > 0) AND (employee_advances.completed = false)
-		AND (employee_advances.pay_upto >= current_date);
-		
-	INSERT INTO project_staff_costs (org_id, employee_month_id, project_id, project_role, payroll_ps, staff_cost, tax_cost)
-	SELECT NEW.org_id, NEW.employee_month_id, 
-		project_staff.project_id, project_staff.project_role, project_staff.payroll_ps, project_staff.staff_cost, project_staff.tax_cost
-	FROM project_staff
-	WHERE (project_staff.entity_id = NEW.entity_id) AND (project_staff.monthly_cost = true);
-	
-	INSERT INTO employee_banking (org_id, employee_month_id, bank_branch_id, currency_id, 
-		bank_account, amount, 
-		exchange_rate)
-	SELECT NEW.org_id, NEW.employee_month_id, bank_branch_id, currency_id,
-		bank_account, amount,
-		(CASE WHEN default_banking.currency_id = NEW.currency_id THEN 1 ELSE 1 / NEW.exchange_rate END)
-	FROM default_banking 
-	WHERE (default_banking.entity_id = NEW.entity_id) AND (default_banking.active = true)
-		AND (amount > 0);
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-UPDATE entitys SET function_role = 'staff,payroll,payrolladmin' WHERE user_name = 'ERNYAOB01';
 

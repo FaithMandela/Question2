@@ -109,3 +109,53 @@ CREATE VIEW vw_expenditure AS
 		(expenditure.amount * expenditure.exchange_rate) as base_amount
 	FROM expenditure INNER JOIN projects ON expenditure.project_id = projects.project_id
 		INNER JOIN currency ON expenditure.currency_id = currency.currency_id;
+		
+---TOC
+CREATE VIEW vw_problems AS
+	SELECT projects.project_id, projects.project_title, 
+		problems.org_id, problems.problem_id, problems.narrative, problems.details
+	FROM problems INNER JOIN projects ON problems.project_id = projects.project_id;
+
+
+
+CREATE VIEW vw_interventions AS
+	SELECT vw_problems .project_id, vw_problems.project_title,
+		vw_problems.problem_id, vw_problems.narrative as problem_narrative, vw_problems.details as problem_details, 
+		interventions.org_id, interventions.intervention_id, interventions.narrative, interventions.details
+	FROM interventions INNER JOIN vw_problems ON interventions.problem_id = vw_problems.problem_id;
+
+
+
+CREATE VIEW vw_outputs AS
+	SELECT vw_interventions .project_id, vw_interventions.project_title,
+		vw_interventions.problem_id, vw_interventions.problem_narrative, vw_interventions.problem_details, 
+		vw_interventions.org_id, vw_interventions.intervention_id, vw_interventions.narrative as interventions_narrative, vw_interventions.details as interventions_details,
+		outputs.output_id, outputs.narrative, outputs.details
+	FROM outputs INNER JOIN vw_interventions ON outputs.intervention_id = vw_interventions.intervention_id;
+
+
+
+CREATE VIEW vw_final_outcomes AS
+	SELECT goals.goal_id, goals.goal_name, 
+	final_outcomes.org_id,final_outcomes.final_outcome_id, final_outcomes.narrative, final_outcomes.details
+	FROM final_outcomes
+	INNER JOIN goals ON final_outcomes.goal_id = goals.goal_id;
+
+
+
+CREATE VIEW vw_intermediate_outcome AS
+		SELECT vw_final_outcomes.goal_id, vw_final_outcomes.goal_name,vw_final_outcomes.org_id, vw_final_outcomes.final_outcome_id,
+		vw_final_outcomes.narrative as final_outcome_narrative, vw_final_outcomes.details as final_outcome_details
+		
+		,intermediate_outcome.intermediate_outcome, intermediate_outcome.narrative, intermediate_outcome.details
+	FROM intermediate_outcome
+	INNER JOIN vw_final_outcomes ON intermediate_outcome.final_outcome_id = vw_final_outcomes.final_outcome_id;
+		
+
+CREATE VIEW vw_indicators AS
+	SELECT projects.project_id, projects.project_title, 
+		indicators.org_id, indicators.indicator_id, indicators.key_indictors, indicators.baseline_values, 
+		indicators.date_source, indicators.data_collection_method, indicators.frequency_of_collection, 
+		indicators.impact, indicators.leassons_learnt, indicators.action_acquired, indicators.quality_of_action, 
+		indicators.details
+	FROM indicators	INNER JOIN projects ON indicators.project_id = projects.project_id;

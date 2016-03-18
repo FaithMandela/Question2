@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_week_attendance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5b3c306-744d-4c3a-8cb3-6f7db278641d">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="539"/>
+	<property name="ireport.y" value="56"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -26,7 +26,14 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_week_attendance.week_start, vw_week_attendance.employee_id, vw_week_attendance.employee_name, vw_week_attendance.mon_time_in, vw_week_attendance.mon_time_out, vw_week_attendance.tue_time_in, vw_week_attendance.tue_time_out, vw_week_attendance.wed_time_in, vw_week_attendance.wed_time_out, vw_week_attendance.thu_time_in, vw_week_attendance.thu_time_out, vw_week_attendance.fri_time_in, vw_week_attendance.fri_time_out
+		<![CDATA[SELECT vw_week_attendance.week_start, vw_week_attendance.employee_id, vw_week_attendance.employee_name, vw_week_attendance.mon_time_in, vw_week_attendance.mon_time_out, vw_week_attendance.tue_time_in, vw_week_attendance.tue_time_out, vw_week_attendance.wed_time_in, vw_week_attendance.wed_time_out, vw_week_attendance.thu_time_in, vw_week_attendance.thu_time_out, vw_week_attendance.fri_time_in, vw_week_attendance.fri_time_out,
+
+(mon_count + tue_count + wed_count + thu_count + fri_count) as lunch_hours,
+
+to_char((COALESCE(mon_time_diff, '00:00:00'::interval) + COALESCE(tue_time_diff, '00:00:00'::interval) +
+COALESCE(wed_time_diff, '00:00:00'::interval) + COALESCE(thu_time_diff, '00:00:00'::interval) +
+COALESCE(fri_time_diff, '00:00:00'::interval) -
+((mon_count + tue_count + wed_count + thu_count + fri_count)::varchar || 'hours')::interval), 'HH24:MI') as time_diff
 
 FROM vw_week_attendance
 
@@ -47,10 +54,12 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 	<field name="thu_time_out" class="java.sql.Time"/>
 	<field name="fri_time_in" class="java.sql.Time"/>
 	<field name="fri_time_out" class="java.sql.Time"/>
+	<field name="lunch_hours" class="java.lang.Integer"/>
+	<field name="time_diff" class="java.lang.String"/>
 	<group name="employee_name">
 		<groupExpression><![CDATA[$F{employee_name}]]></groupExpression>
 		<groupHeader>
-			<band height="53">
+			<band height="49">
 				<staticText>
 					<reportElement style="Column header" x="0" y="0" width="95" height="15" forecolor="#000000" uuid="440a32aa-cd11-4099-a154-345eee17980c"/>
 					<textElement>
@@ -81,6 +90,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<staticText>
 					<reportElement style="Column header" x="1" y="33" width="94" height="15" forecolor="#000000" uuid="9d51eadf-d803-4902-8c96-e7adb1835458"/>
+					<box>
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -88,6 +100,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="95" y="33" width="59" height="15" forecolor="#000000" uuid="d0bef93e-8ce5-416f-b002-f2303ebb7a5a"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -95,6 +108,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="154" y="33" width="59" height="15" forecolor="#000000" uuid="513a970c-6de8-4238-b73a-7658193d18b7"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -102,6 +118,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="213" y="33" width="59" height="15" forecolor="#000000" uuid="ac9715b2-cd8b-46fc-b6a8-86f5ce2e8cd8"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -109,6 +126,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="272" y="33" width="59" height="15" forecolor="#000000" uuid="1d4985aa-0146-4684-8484-436a956d6eca"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -116,6 +136,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="331" y="33" width="59" height="15" forecolor="#000000" uuid="6bd99e9a-4ed8-4641-aebb-aa03f67ff784"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -123,6 +144,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="390" y="33" width="59" height="15" forecolor="#000000" uuid="e1296704-407a-4316-af62-92b4f84e9289"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -130,6 +154,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="449" y="33" width="59" height="15" forecolor="#000000" uuid="40d3dfba-bd35-4c5f-8e0a-910cb97fd2e5"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -137,6 +162,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="508" y="33" width="59" height="15" forecolor="#000000" uuid="2a5e0045-5ac6-4ac0-aa6e-293c631bed20"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -144,6 +172,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="567" y="33" width="59" height="15" forecolor="#000000" uuid="436643b6-7555-4af5-ae11-00f2abc805bf"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -151,6 +180,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="626" y="33" width="59" height="15" forecolor="#000000" uuid="34f75dd4-5060-4c19-8f76-5b34b78abbc4"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -164,6 +196,10 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</line>
 				<staticText>
 					<reportElement style="Column header" x="95" y="18" width="118" height="15" forecolor="#000000" uuid="f14b5ba0-1c58-4343-aae3-44d35ba5dd75"/>
+					<box>
+						<leftPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -171,6 +207,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="213" y="18" width="118" height="15" forecolor="#000000" uuid="081b7917-9822-4c44-bc63-11879b42b41d"/>
+					<box>
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -178,6 +217,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="331" y="18" width="118" height="15" forecolor="#000000" uuid="9284d0f0-617f-466a-bb5f-0676642813b5"/>
+					<box>
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -185,6 +227,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="449" y="18" width="118" height="15" forecolor="#000000" uuid="5634e252-1f00-40f5-8fde-c4c06d16b288"/>
+					<box>
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -192,15 +237,34 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="567" y="18" width="118" height="15" forecolor="#000000" uuid="6fffb49b-29c4-4887-a979-982888a624dc"/>
+					<box>
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Friday]]></text>
 				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="685" y="33" width="48" height="15" forecolor="#000000" uuid="a0ade366-8e37-4feb-bafc-e430e5c30045"/>
+					<box leftPadding="2"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[Lunch]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="733" y="33" width="69" height="15" forecolor="#000000" uuid="48204d59-1300-4c39-9dda-40903e972455"/>
+					<box leftPadding="2"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<text><![CDATA[Hours]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="50"/>
+			<band height="23"/>
 		</groupFooter>
 	</group>
 	<background>
@@ -221,7 +285,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="23" splitType="Stretch"/>
+		<band height="14" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
@@ -229,6 +293,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="c3b30ac2-3be1-4586-a55e-e16e169451e7"/>
 				<textField isStretchWithOverflow="true" pattern="yyyy, MMMMM dd" isBlankWhenNull="true">
 					<reportElement style="Detail" x="1" y="0" width="94" height="15" uuid="995ce174-7a5c-49e2-af16-b4d25c7bff84"/>
+					<box>
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -236,6 +303,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="95" y="0" width="59" height="15" uuid="aa05d62f-1ceb-4250-8d5c-203f68f64442"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -243,6 +311,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="154" y="0" width="59" height="15" uuid="81bf6c28-dedf-4c00-9d27-8c045654eb87"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -250,6 +321,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="213" y="0" width="59" height="15" uuid="77ac6955-2fcc-4e01-bfe2-22694992bae0"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -257,6 +329,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="272" y="0" width="59" height="15" uuid="e02aa38e-ce8e-4479-abe6-222358dc650d"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -264,6 +339,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="331" y="0" width="59" height="15" uuid="b3d64794-f1eb-4ce9-8a5a-eb065aeba502"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -271,6 +347,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="390" y="0" width="59" height="15" uuid="b5bd0896-2ebe-402c-bb08-c980f2fe973d"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -278,6 +357,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="449" y="0" width="59" height="15" uuid="0a5469bc-a42e-405a-9338-10b18d2e1298"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -285,6 +365,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="508" y="0" width="59" height="15" uuid="12ca4fe1-60b1-434b-93cb-af87af3c0c88"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -292,6 +375,7 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="567" y="0" width="59" height="15" uuid="bf245f5a-0f22-4d02-9595-aa6971d1dcc2"/>
+					<box leftPadding="2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -299,10 +383,29 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
 					<reportElement style="Detail" x="626" y="0" width="59" height="15" uuid="7162dc1b-9b66-46fe-8d41-207717886eb9"/>
+					<box leftPadding="2">
+						<rightPen lineWidth="0.25"/>
+					</box>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{fri_time_out}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement style="Detail" x="685" y="0" width="48" height="15" uuid="b905d899-d747-42ee-b48e-2f44e2a45655"/>
+					<box leftPadding="2"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{lunch_hours}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
+					<reportElement style="Detail" x="733" y="0" width="69" height="15" uuid="3dedec5e-258f-49f9-aec3-50f686bbb24a"/>
+					<box leftPadding="2"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{time_diff}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -320,9 +423,9 @@ ORDER BY vw_week_attendance.employee_name, vw_week_attendance.week_start]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="841" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="37cd1929-e8d3-4ab4-b391-bbec048c059e"/>
+				<reportElement mode="Opaque" x="0" y="1" width="802" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="37cd1929-e8d3-4ab4-b391-bbec048c059e"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="771" y="1" width="40" height="20" forecolor="#736343" uuid="9bb2a90a-ad63-4ef6-a6d9-1ab4c42ed872"/>
+					<reportElement style="Column header" x="750" y="1" width="40" height="20" forecolor="#736343" uuid="9bb2a90a-ad63-4ef6-a6d9-1ab4c42ed872"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>

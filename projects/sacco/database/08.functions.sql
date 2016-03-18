@@ -54,6 +54,7 @@ $BODY$
 
 
 
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 CREATE OR REPLACE FUNCTION ins_gurrantors() RETURNS TRIGGER AS $$
 DECLARE
 	v_total_guranteed 	real;
@@ -69,6 +70,10 @@ BEGIN
 			ELSE IF (v_total_guranteed > v_amount) THEN
 			RAISE EXCEPTION 'The amount gurranteed has been exceeded by %' ,(v_amount-v_total_guranteed);
 			New.amount:= 0;
+<<<<<<< HEAD
+			END IF;
+		END IF;
+=======
 				END IF;
 			END IF;
 	IF (TG_OP = 'UPDATE') THEN
@@ -76,6 +81,7 @@ BEGIN
     SET approve_status = 'Completed';
 	RAISE NOTICE ' Loan Completed';
 	 END IF;
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -83,6 +89,30 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_gurrantors AFTER INSERT OR UPDATE ON gurrantors
 	FOR EACH ROW EXECUTE PROCEDURE ins_gurrantors();
   
+<<<<<<< HEAD
+CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $$
+DECLARE
+	v_contrib_amount	real;
+	v_loan vw_loans%rowtype;
+BEGIN
+	v_contrib_amount := 0;
+	FOR v_loan IN SELECT * FROM vw_loans WHERE approve_status = 'Completed' AND is_closed = false AND entity_id = 0
+		LOOP
+		-- for all loans insert loan repayment
+		RAISE NOTICE 'Loan Id : %' , v_loan.loan_id;
+		-- here you can check for balance to chose whether or not to close loan
+		INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
+		VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
+		v_contrib_amount := v_contrib_amount - v_loan.monthly_repayment;
+
+		END LOOP;
+	NEW.contribution_amount = v_contrib_amount;
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_contributions BEFORE INSERT ON contributions
+=======
 
 DROP FUNCTION IF EXISTS ins_contributions();
 CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $$
@@ -115,6 +145,7 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE On contributions
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
    FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
 
   
@@ -126,16 +157,24 @@ DECLARE
 	v_totals			real;
 BEGIN
 	SELECT interest_type INTO v_interests FROM  investment_types WHERE investment_type_id = NEW. investment_type_id;
+<<<<<<< HEAD
+=======
 		
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 		NEW.default_interest := v_interests;
 		v_invest := NEW.invest_amount + (NEW.invest_amount * NEW.default_interest/100 );
 		NEW.return_on_investment := v_invest - NEW.invest_amount;
 		NEW.yearly_dividend :=(v_invest/ NEW.period_years);
 		NEW.withdrwal_amount := v_invest;
+<<<<<<< HEAD
+	RETURN NEW;
+END;
+=======
 		NEW.approve_status := 'Completed';
 	RETURN NEW;
 END;
 
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 $BODY$
 LANGUAGE plpgsql;
    
@@ -146,7 +185,11 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 CREATE OR REPLACE FUNCTION ins_applicants()
+<<<<<<< HEAD
+  RETURNS trigger AS
+=======
 RETURNS trigger AS
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 $BODY$
 DECLARE
 	rec 			RECORD;
@@ -160,20 +203,39 @@ BEGIN
 			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
 				
 			IF(v_entity_id is null)THEN
+<<<<<<< HEAD
+				SELECT org_id INTO rec
+				FROM orgs WHERE (is_default = true);
+=======
 				
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 
 				NEW.entity_id := nextval('entitys_entity_id_seq');
 
 				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
+<<<<<<< HEAD
+				VALUES (NEW.entity_id, rec.org_id, 4, 
+					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
+					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
+			ELSE
+=======
 				VALUES (NEW.entity_id, New.org_id, 0, 
 					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant,member');
 					ELSE
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 			END IF;
 		END IF;
 
+<<<<<<< HEAD
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
+		VALUES (1, NEW.entity_id, 'applicant');
+	ELSIF (TG_OP = 'UPDATE') THEN
+		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
+		WHERE entity_id = NEW.entity_id;
+=======
 		INSERT INTO sys_emailed (table_id,org_id, table_name)
 		VALUES (NEW.entity_id,NEW.org_id, 'applicant');
 	ELSIF (TG_OP = 'UPDATE') THEN
@@ -221,34 +283,30 @@ DECLARE
 	rec 			RECORD;
 BEGIN
 
-	IF (TG_OP = 'INSERT') THENss
+	IF (TG_OP = 'INSERT') THEN
 		SELECT entity_id INTO v_entity_id
 		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
+			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
 			INSERT INTO sys_emailed ( org_id, table_id, table_name)
 			VALUES ( 0, 1, 'subscription');
 		
-		NEW.approve_status := 'Completed';
-		NEW.workflow_table_id := '11';
-		ELSE
+			ELSE
 			RAISE EXCEPTION 'You already have an account, login and request for services';
 		END IF ;
 		
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
+		
+		
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
-		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
+		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
 		
 		
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, 'Kenya Shillings', 'KES', 'KES');
-		
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id,'Kenya Shillings' , 'KES','KES');
-		UPDATE orgs SET currency_id = 1 WHERE org_id = NEW.org_id;
 	
 		
 		v_bank_id := nextval('banks_bank_id_seq');
@@ -259,20 +317,32 @@ BEGIN
 		WHERE entity_id = NEW.entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
+		VALUES ( 12, NEW.org_id, NEW.subscription_id, 'subscription');
 		
 		
 		
 	END IF;
-
+	
+		
 	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
-
+  
+  
+  
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
   FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
   
+
+
+CREATE TRIGGER ins_applicants
+  BEFORE INSERT OR UPDATE
+  ON applicants
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_applicants();
+=======
+
   
   
   
@@ -734,3 +804,4 @@ CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
 
 
 
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8

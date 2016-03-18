@@ -2,6 +2,7 @@ CREATE OR REPLACE FUNCTION generate_points(varchar(12), varchar(12), varchar(12)
 DECLARE
 	rec						RECORD;
 	v_period				varchar(7);
+	period					date;
 	v_period_id				integer;
 	v_org_id				integer;
 	v_entity_id				integer;
@@ -12,7 +13,7 @@ DECLARE
 BEGIN
 
 	v_period_id = $1::integer;
-	SELECT to_char(start_date, 'mmyyyy') INTO v_period 
+	SELECT end_date,to_char(start_date, 'mmyyyy') INTO period,v_period
 	FROM periods WHERE period_id = v_period_id AND closed = false;
 	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
@@ -24,7 +25,7 @@ BEGIN
 			v_points := rec.totalsegs * 12 ;
 		END IF;
 
-		IF(251>= rec.totalsegs::integer AND rec.total_segs::integer <=500) THEN
+		IF(251<= rec.totalsegs::integer AND rec.totalsegs::integer <=500) THEN
 			v_amount := 16;
 			v_points := rec.totalsegs * 16 ;
 		END IF;
@@ -33,10 +34,20 @@ BEGIN
 			v_amount := 20;
 			v_points := rec.totalsegs * 20 ;
 		END IF;
-		
+
 		SELECT orgs.org_id, entitys.entity_id INTO v_org_id, v_entity_id
 		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
 		WHERE (entitys.is_active = true) AND (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
+
+		IF(v_entity_id is null)THEN
+			SELECT entity_id INTO v_entity_id
+			FROM change_pccs
+			WHERE (approve_status = 'Approved') AND (pcc = rec.pcc) AND (son = rec.son);
+			SELECT org_id INTO v_org_id
+			FROM entitys
+			WHERE (entitys.is_active = true) AND (entity_id = v_entity_id);
+			IF(v_org_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
+		END IF;
 		IF(v_entity_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
 
 		SELECT points_id INTO v_points_id
@@ -44,21 +55,21 @@ BEGIN
 			AND (pcc = rec.pcc) AND (son = rec.son);
 
 		IF(v_points_id is null)THEN
-			INSERT INTO points (period, period_id, entity_id, pcc, son, segments, amount, points)
-			VALUES (v_period, v_period_id, v_entity_id, rec.pcc, rec.son, rec.total_segs, v_amount, v_points);
+			INSERT INTO points (point_date, period_id, org_id, entity_id, pcc, son, segments, amount, points)
+			VALUES (period, v_period_id, v_org_id, v_entity_id, rec.pcc, rec.son, rec.totalsegs, v_amount, v_points);
 		ELSE
-			UPDATE points SET segments = rec.total_segs, amount = v_amount, points = v_points
+			UPDATE points SET segments = rec.totalsegs, amount = v_amount, points = v_points
 			WHERE points_id = v_points_id;
 		END IF;
 	END LOOP;
 
-	IF(rec IS NULL)THEN 
-		msg := 'There are no segments for this month'; 
+	IF(rec IS NULL)THEN
+		RAISE EXCEPTION 'There are no segments for this month';
 	ELSE
 		msg := 'Points computed';
 	END IF;
-	
- 
+
+
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
@@ -136,7 +147,7 @@ BEGIN
 	END IF;
 
 	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-	VALUES ($1::integer,4 ,'orders', 1, 0,details);
+	VALUES ($1::integer,4 ,'orders', 3, 0,details);
 	RETURN 'Successfully Updated';
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -150,9 +161,9 @@ BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		SELECT entity_id INTO v_entity_id
 		FROM entitys
-		WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
+		WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)));
 
-		IF(v_entity_id is null)THEN
+		IF(v_entity_id is not null)THEN
 			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 		END IF;
 	END IF;
@@ -183,25 +194,40 @@ BEGIN
 			RAISE EXCEPTION 'Pseudo Code Does not Exist';
 		END IF;
 
-		UPDATE applicants SET status = ps , org_id = rec.org_id,approve_status = ps WHERE applicant_id = $1::integer ;
-		INSERT INTO entitys (org_id, entity_type_id,entity_name, user_name,primary_email, son,function_role,is_active,birth_date)
-		VALUES (rec.org_id, 0, app.son,lower(app.applicant_email),lower(app.applicant_email),app.son, 'consultant',true,app.consultant_dob) returning entity_id INTO myid;
+		UPDATE applicants SET status = ps , org_id = rec.org_id, approve_status = ps WHERE applicant_id = $1::integer ;
+		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, son, function_role, is_active, birth_date)
+		VALUES (rec.org_id, 0, trim(upper(app.son)), trim(app.user_name), trim(lower(app.applicant_email)), trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
 		msg := 'Consultant account has been activated';
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (2, myid , 'entitys');
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (2, myid, 'entitys', 3);
 	END IF;
 
 	IF ($3::integer = 2) THEN
 		ps := 'Rejected';
-		UPDATE applicants SET status = ps , approved = false WHERE applicant_id = $1::integer ;
+		UPDATE applicants SET status = ps , approve_status = ps WHERE applicant_id = $1::integer ;
 		msg := 'Applicant Rejected';
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (3, $1::integer , 'applicants');
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (3, $1::integer , 'applicants', 3);
+	END IF;
+
+	IF ($3::integer = 3) THEN
+		UPDATE entitys SET is_active = true WHERE entity_id = $1::integer ;
+		msg := 'Consultant Activated';
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (2, $1::integer , 'entitys', 3);
+	END IF;
+
+	IF ($3::integer = 4) THEN
+		UPDATE entitys SET is_active = false WHERE entity_id = $1::integer ;
+		msg := 'Account Deactivated';
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (2, $1::integer , 'entitys', 3);
 	END IF;
 
 	RETURN msg;
 END;
 $BODY$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION getbalance(integer) RETURNS real AS $$
@@ -253,22 +279,20 @@ CREATE OR REPLACE FUNCTION getBatch_no() RETURNS bigint AS $BODY$
 	SELECT last_value FROM batch_id_seq;
 $BODY$ LANGUAGE sql;
 
-CREATE OR REPLACE FUNCTION son_segments( varchar(7), varchar(4))  RETURNS numeric AS $BODY$
-	SELECT COALESCE(SUM(total_segs),0.0)  FROM vw_son_segs WHERE son = $1 AND pcc = $2;
+CREATE OR REPLACE FUNCTION son_segments( integer)  RETURNS real AS $BODY$
+	SELECT COALESCE(SUM(segments),0.0)  FROM vw_son_points WHERE entity_id = $1;
 $BODY$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
 DECLARE
 	v_order integer;
 BEGIN
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name,narrative)
-	VALUES (4, NEW.order_id , 'orders','We have received your order and its under process');
+
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+	VALUES (5, NEW.order_id , 'vw_orders', 4, get_order_details(NEW.order_id), 'We have received your order and its under process');
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_orders AFTER INSERT ON orders
-FOR EACH ROW EXECUTE PROCEDURE ins_orders();
 
 CREATE OR REPLACE FUNCTION ins_order_details() RETURNS trigger AS $BODY$
 DECLARE
@@ -278,12 +302,15 @@ BEGIN
 		UPDATE order_details SET order_id=t.id
 		FROM (select orders.order_id AS id FROM orders WHERE orders.order_id = NEW.order_id)AS t ;
 	END IF;
+
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_order_details AFTER INSERT ON order_details
 FOR EACH ROW EXECUTE PROCEDURE ins_order_details();
+CREATE TRIGGER ins_orders AFTER INSERT ON orders
+FOR EACH ROW EXECUTE PROCEDURE ins_orders();
 
 
 CREATE OR REPLACE FUNCTION ins_orgs() RETURNS trigger AS $$
@@ -299,44 +326,97 @@ CREATE TRIGGER ins_orgs BEFORE INSERT OR UPDATE ON orgs
 ALTER TABLE orgs ADD CONSTRAINT orgs_pcc_unique UNIQUE (pcc);
 
 CREATE OR REPLACE FUNCTION upd_entitys() RETURNS trigger AS $$
+DECLARE
+	v_pcc				varchar(7);
 BEGIN
 
 	IF((OLD.change_pcc <> NEW.change_pcc) or (OLD.change_son <> NEW.change_son))THEN
+		SELECT pcc INTO v_pcc
+		FROM orgs WHERE org_id = NEW.org_id;
+
 		INSERT INTO change_pccs (entity_id, son, pcc, change_son, change_pcc)
-		VALUES (NEW.entity_id, NEW.son, NEW.pcc, NEW.change_son, NEW.change_pcc);
+		VALUES (NEW.entity_id, trim(upper(NEW.son)) , v_pcc, trim(upper(NEW.change_son)), trim(upper(NEW.change_pcc)));
  	END IF;
- 	
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER upd_entitys BEFORE UPDATE ON entitys
     FOR EACH ROW EXECUTE PROCEDURE upd_entitys();
-    
+
+CREATE OR REPLACE FUNCTION ins_change_pccs() RETURNS trigger AS $$
+BEGIN
+	NEW.approve_status = 'Completed';
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_change_pccs BEFORE INSERT ON change_pccs
+    FOR EACH ROW EXECUTE PROCEDURE ins_change_pccs();
+
 CREATE OR REPLACE FUNCTION upd_change_pccs() RETURNS trigger AS $$
 DECLARE
-	v_org_id				integer;
-	v_entity_id				integer;
+    v_org_id                integer;
+    v_entity_id                integer;
 BEGIN
 
-	IF((OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
-		SELECT orgs.org_id INTO v_org_id
-		FROM orgs WHERE (orgs.pcc = NEW.change_pcc);
-		IF((NEW.change_pcc is null) or (v_org_id is null))THEN RAISE EXCEPTION 'No Travel Agency with new PCC'; END IF;
-	
-		SELECT entity_id INTO v_entity_id
-		FROM entitys
-		WHERE (org_id = v_org_id) AND (entitys.son = NEW.change_son);
-		IF(v_entity_id is not null)THEN RAISE EXCEPTION 'A consultant with that SON already exists'; END IF;
-		
-		UPDATE entitys SET org_id = v_org_id, pcc = NEW.change_pcc, son = NEW.change_son
-		WHERE entity_id = v_entity_id;
- 	END IF;
- 	
-	RETURN NEW;
+    IF((OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
+        SELECT orgs.org_id INTO v_org_id
+        FROM orgs WHERE (orgs.pcc = NEW.change_pcc);
+        IF((NEW.change_pcc is null) or (v_org_id is null))THEN RAISE EXCEPTION 'No Travel Agency with new PCC'; END IF;
+
+        SELECT entity_id INTO v_entity_id
+        FROM entitys
+        WHERE (org_id = v_org_id) AND (entitys.son = NEW.change_son);
+        IF(v_entity_id is not null)THEN RAISE EXCEPTION 'A consultant with that SON already exists'; END IF;
+
+        UPDATE entitys SET org_id = v_org_id, pcc_son = NEW.change_pcc, son = NEW.change_son
+        WHERE entity_id = NEW.entity_id;
+     END IF;
+
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER upd_change_pccs BEFORE UPDATE ON change_pccs
     FOR EACH ROW EXECUTE PROCEDURE upd_change_pccs();
 
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON change_pccs
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+CREATE OR REPLACE FUNCTION get_town(integer) RETURNS text AS $$
+	SELECT towns.town_name FROM towns
+	JOIN orgs ON orgs.town_id = towns.town_id
+	JOIN vw_entitys ON vw_entitys.org_id = orgs.org_id
+	WHERE vw_entitys.entity_id = $1;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION get_org_id(varchar(12)) RETURNS integer AS $$
+	SELECT org_id FROM entitys WHERE entity_id = $1::integer;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION ins_sys_reset() RETURNS trigger AS $$
+DECLARE
+	v_entity_id			integer;
+	v_org_id			integer;
+	v_password			varchar(32);
+BEGIN
+	SELECT entity_id, org_id INTO v_entity_id, v_org_id
+	FROM entitys
+	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email)));
+
+	IF(v_entity_id is not null) THEN
+		v_password := upper(substring(md5(random()::text) from 3 for 9));
+
+		UPDATE entitys SET first_password = v_password, entity_password = md5(v_password)
+		WHERE entity_id = v_entity_id;
+
+		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
+		VALUES(v_org_id, 6, v_entity_id, 'entitys', 4);
+	ELSE
+		RAISE EXCEPTION 'That email address is not available';
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;

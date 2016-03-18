@@ -124,7 +124,8 @@
 				<TEXTDECIMAL w="150" title="Max Tax Allowed" y="130" h="20" x="290">tax_max_allowed</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Default Amount" y="150" h="20" x="10">default_amount</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Effects" lptable="adjustment_effects" noorg="true" y="190" h="20" x="10" lpfield="adjustment_effect_name">adjustment_effect_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Expenses" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 3)">
@@ -1489,6 +1490,7 @@
 			</DRILLDOWN>
 			<JASPER name="Payroll" reportfile="vw_employee_month.jasper"></JASPER>
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
+			<JASPER name="Payroll Departments" reportfile="vw_employee_month_2.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Comparison" split="150" type="horl" key="6" h="550">
@@ -1542,6 +1544,9 @@
 				</CROSSTAB>
 				<TEXTFIELD w="75" fnct="to_char(payroll_expense, '9999999D9')" title="Expense">v_payroll_expense</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="to_char(net_pay, '9999999D9')" title="Net Pay">v_net_pay</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(advance, '9999999D9')" title="Advance">v_advance</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(advance_deduction, '9999999D9')" title="Advance Deductions">v_advance_deduction</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(banked, '9999999D9')" title="Banked">v_banked</TEXTFIELD>
 			</CROSSTAB>
 		</GRID>
 		<GRID name="SUN Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">

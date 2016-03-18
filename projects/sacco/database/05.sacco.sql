@@ -47,7 +47,11 @@ CREATE TABLE contributions (
 	transaction_ref         varchar(50),
 	narrative				varchar(255)
 );
+<<<<<<< HEAD
+ALTER TABLE contributions add ;
+=======
 
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
 CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_payment_type_id ON contributions (payment_type_id);
@@ -55,6 +59,8 @@ CREATE INDEX contributions_contribution_type_id ON contributions (contribution_t
 CREATE INDEX contributions_orgs_id ON contributions (org_id);
 
 
+<<<<<<< HEAD
+=======
 
 
 CREATE TABLE additional_funds (
@@ -75,6 +81,7 @@ CREATE TABLE additional_funds (
 create index additional_funds_entity_id on additional_funds(entity_id);
 create index additional_funds_period_id on additional_funds(period_id);
 create index additional_funds_payment_type_id on additional_funds(payment_type_id);
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 ---alter entities
 /*
 ALTER TABLE entitys ADD entry_amount real not null default 0;
@@ -159,10 +166,17 @@ CREATE TABLE investments (
 	default_interest 			real NOT NULL DEFAULT 1,
 	return_on_investment 		real NOT NULL DEFAULT 0,
 	
+<<<<<<< HEAD
+	application_date			timestamp default now() not null,
+	approve_status				varchar(16) default 'Draft' not null,
+	workflow_table_id			integer,
+	action_date					timestamp,
+=======
 	application_date			timestamp default now(),
 	approve_status				varchar(16) default 'Draft' not null,
 	workflow_table_id			integer,
 	action_date				timestamp,
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 	
 	details 					text
 );
@@ -186,11 +200,14 @@ CREATE TABLE applicants	(
 	picture_file 			character varying(32),
 	identity_card 			character varying(50),
 	language 			character varying(320),
+<<<<<<< HEAD
+=======
 	
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date			timestamp,
 	
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 	salary 				real,
 	how_you_heard 			character varying(320),
 	created 			timestamp without time zone DEFAULT now(),
@@ -199,6 +216,86 @@ CREATE TABLE applicants	(
 	details 			text
 );		
  CREATE INDEX applicants_org_id ON applicants (org_id);
+<<<<<<< HEAD
+
+ CREATE OR REPLACE FUNCTION ins_applications(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	v_application_id		integer;
+	
+	reca					RECORD;
+	msg 					varchar(120);
+BEGIN
+	SELECT application_id INTO v_application_id
+	FROM applications 
+	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
+	
+	SELECT org_id, entity_id, salary INTO reca
+	FROM applicants
+	WHERE (entity_id = $2::int);
+
+	IF(reca.entity_id is null) THEN
+		SELECT org_id, entity_id, salary as my_salary INTO reca
+		FROM members
+		WHERE (entity_id = $2::int);
+	END IF;
+
+	IF v_application_id is not null THEN
+		msg := 'There is another application for the post.';
+	ELSIF (reca.salary is null) OR (reca.expected_salary is null) THEN
+		msg := 'Kindly indicate your salary';
+	ELSE
+		INSERT INTO applications (intake_id, org_id, entity_id, salary, approve_status)
+		VALUES ($1::int, reca.org_id, reca.entity_id, reca.my_salary, 'Completed');
+		msg := 'Added Job application';
+	END IF;
+
+	return msg;
+END $BODY$
+LANGUAGE plpgsql;
+
+
+-------- Data
+INSERT INTO payment_types(payment_type_id, payment_type_name, org_id) VALUES
+	(1, 'Bank',0),
+	(2, 'Mpesa',0),
+	(3, 'Cash', 0),
+	(4, 'Airtel Money', 0 );
+--end payments
+
+
+INSERT INTO contribution_types(contribution_type_id, contribution_type_name, org_id, interval_days) VALUES
+	(1, 'Daily', 0, 1),
+	(2, 'Weekly', 0, 7),
+	(3, 'fortnight', 0, 14),
+	(4, 'Monthly', 0, 30);
+	
+INSERT INTO loan_types(loan_type_id, org_id, loan_type_name, default_interest) VALUES 
+	(0, 0, 'Emergency', 15),
+	(1, 0, 'Education', 9),
+	(2, 0, 'Development', 10);
+
+INSERT INTO fiscal_years(fiscal_year_id, org_id, fiscal_year_start, fiscal_year_end, year_opened,year_closed, details) VALUES
+	(1, 0, '2016-01-01', '2016-05-31', 'true', 'false', 'jajajaja');
+
+INSERT INTO collateral_types(collateral_type_id, org_id, collateral_type_name, details) VALUES 
+	(0, 0, 'plot', 'my plot number LR/70/L'),
+    (1, 0, 'Car', 'Chasis NO'),
+	(2, 0, 'Mortage', 'my plot No and HSE'),
+    (3, 0, 'Motor Cycle', 'Chasis No');
+
+INSERT INTO investment_types(investment_type_id, org_id, investment_type_name, details) VALUES 
+	(0,15,'Land','buy land'),
+	(1,12,'Real Estate','bu'),
+	(2,5,'Buy Equity','buy land');
+
+
+	
+=======
  
  
 CREATE TABLE members (
@@ -350,3 +447,4 @@ CREATE INDEX recruiting_agent_org_id ON recruiting_agent (org_id);
 
 
 
+>>>>>>> e829fb97559b72260b88801b69fa435872e337b8

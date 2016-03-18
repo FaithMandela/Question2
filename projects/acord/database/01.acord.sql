@@ -224,3 +224,83 @@ CREATE INDEX expenditure_project_id ON expenditure (project_id);
 CREATE INDEX expenditure_currency_id ON expenditure (currency_id);
 CREATE INDEX expenditure_org_id ON expenditure (org_id);
 
+
+----- Theory of change
+
+CREATE TABLE problems (
+    problem_id              serial primary key,    
+   	project_id    		   	varchar(12) references projects,
+	org_id					integer references orgs,
+    narrative               varchar(320),
+	
+	details            		text
+);
+CREATE INDEX problems_project_id ON problems (project_id);
+CREATE INDEX problems_org_id ON problems (org_id);
+
+CREATE TABLE interventions (
+    intervention_id         serial primary key,
+    problem_id    		   	integer references problems,
+    org_id					integer references orgs,
+    narrative               varchar(320),
+
+    details            		text
+    
+);
+CREATE INDEX interventions_problem_id ON interventions (problem_id);
+CREATE INDEX interventions_org_id ON interventions (org_id);
+
+
+CREATE TABLE outputs (
+    output_id               serial primary key,
+    intervention_id         integer references interventions,
+    org_id					integer references orgs,
+    narrative               varchar(320),
+    details            		text
+);
+CREATE INDEX outputs_intervention_id ON outputs (intervention_id);
+CREATE INDEX outputs_org_id ON outputs (org_id);
+
+CREATE TABLE final_outcomes(
+    final_outcome_id        serial primary key,
+    goal_id                 integer references goals,
+    org_id					integer references orgs,
+    narrative               varchar(320),
+    details            		text
+);
+CREATE INDEX final_outcomes_goal_id ON final_outcomes (goal_id);
+CREATE INDEX final_outcomes_org_id ON final_outcomes (org_id);
+
+
+CREATE TABLE intermediate_outcome(
+    intermediate_outcome    serial primary key,
+    final_outcome_id        integer references final_outcomes,
+    output_id               integer references outputs,
+    org_id					integer references orgs,
+    narrative               varchar(320),
+    details            		text
+    );
+CREATE INDEX intermediate_outcome_final_outcome_id ON intermediate_outcome (final_outcome_id);
+CREATE INDEX intermediate_outcome_org_id ON intermediate_outcome (org_id);
+CREATE INDEX intermediate_outcome_output_id ON intermediate_outcome (output_id);
+
+ CREATE TABLE indicators(
+    indicator_id                serial primary key,
+    project_id                  varchar references projects,
+    org_id                      integer references orgs,
+    
+    key_indictors               varchar(120),
+    baseline_values             varchar(320),
+    date_source                 date,
+    data_collection_method      varchar(320),
+    frequency_of_collection    varchar(320),
+    impact                      varchar(320),
+    leassons_learnt             varchar(320),
+    action_acquired             varchar(320),
+    quality_of_action           varchar(320),
+    details                     text
+ );
+CREATE INDEX indicators_project_id ON indicators (project_id);
+CREATE INDEX indicators_org_id ON indicators (org_id);
+
+
