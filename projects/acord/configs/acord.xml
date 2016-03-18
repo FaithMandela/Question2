@@ -749,6 +749,23 @@
 					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<GRID name="Final Outcomes" keyfield="final_outcome_id" linkfield="goal_id" table="vw_final_outcomes">
+				<TEXTFIELD w="75" title="ID">final_outcome_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Final Outcomes" keyfield="final_outcome_id" linkfield="goal_id" table="final_outcomes">
+					<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Intermediate Outcome" keyfield="intermediate_outcome" linkfield="final_outcome_id" table="vw_intermediate_outcome">
+					<TEXTFIELD w="75" title="Ouput Narrative">final_outcome_narrative</TEXTFIELD>
+					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<FORM name="Intermediate Outcome" keyfield="intermediate_outcome" table="intermediate_outcome">
+						<COMBOBOX w="430" title="Final Outcome" lptable="final_outcomes" linkfield="final_outcome_id" y="10" h="20" x="10" lpfield="narrative">final_outcome_id</COMBOBOX>
+						<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Projects" key="1" h="550">
@@ -775,12 +792,14 @@
 			</FORM>
 			<GRID name="Problems" keyfield="problem_id" linkfield="project_id" table="vw_problems">
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<TEXTFIELD w="75" title="Details">Details</TEXTFIELD>
 				<FORM name="Problems" keyfield="problem_id" linkfield="project_id" table="problems">
 					<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 				</FORM>
 				<GRID name="Interventions" keyfield="intervention_id" linkfield="problem_id" table="vw_interventions">
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<TEXTFIELD w="75" title="Details">Details</TEXTFIELD>
 					<FORM name="Interventions" keyfield="intervention_id" linkfield="problem_id" table="interventions">
 						<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
 						<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
@@ -794,20 +813,6 @@
 							<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
 							<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 						</FORM>
-						<GRID name="Intermediate Outcome" keyfield="intermediate_outcome" linkfield="final_outcome_id" table="vw_intermediate_outcome">
-							<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-							<FORM name="Intermediate Outcome" keyfield="intermediate_outcome" linkfield="final_outcome_id" table="intermediate_outcome">
-								<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
-								<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
-							</FORM>
-							<GRID name="Final Outcomes" keyfield="final_outcome_id" linkfield="goal_id" table="vw_final_outcomes">
-								<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-								<FORM name="Final Outcomes" keyfield="final_outcome_id" linkfield="goal_id" table="final_outcomes">
-									<TEXTFIELD w="430" title="Narrative" y="10" h="20" x="10">narrative</TEXTFIELD>
-									<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
-								</FORM>
-							</GRID>
-						</GRID>
 					</GRID>
 				</GRID>
 			</GRID>

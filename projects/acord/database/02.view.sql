@@ -147,18 +147,10 @@ CREATE VIEW vw_intermediate_outcome AS
 		SELECT vw_final_outcomes.goal_id, vw_final_outcomes.goal_name,vw_final_outcomes.org_id, vw_final_outcomes.final_outcome_id,
 		vw_final_outcomes.narrative as final_outcome_narrative, vw_final_outcomes.details as final_outcome_details
 		
-		,intermediate_outcome.intermediate_outcome, intermediate_outcome.narrative, intermediate_outcome.details,
-
-		vw_outputs.project_id, vw_outputs.project_title,
-		vw_outputs.problem_id, vw_outputs.problem_narrative, vw_outputs.problem_details, 
-		vw_outputs.intervention_id, vw_outputs.interventions_narrative, vw_outputs.interventions_details,
-		vw_outputs.output_id, vw_outputs.narrative as ouput_narrative, vw_outputs.details as output_details
-	
+		,intermediate_outcome.intermediate_outcome, intermediate_outcome.narrative, intermediate_outcome.details
 	FROM intermediate_outcome
-	INNER JOIN vw_final_outcomes ON intermediate_outcome.final_outcome_id = vw_final_outcomes.final_outcome_id
-	INNER JOIN vw_outputs ON vw_final_outcomes.org_id= vw_outputs.org_id;
-	
-	
+	INNER JOIN vw_final_outcomes ON intermediate_outcome.final_outcome_id = vw_final_outcomes.final_outcome_id;
+		
 
 CREATE VIEW vw_indicators AS
 	SELECT projects.org_id, projects.project_id, projects.project_title, indicators.indicator_id, indicators.key_indictors, indicators.baseline_values, indicators.date_source, indicators.data_collection_method, indicators.frequency_of_collection, indicators.impact, indicators.leassons_learnt, indicators.action_acquired, indicators.quality_of_action, indicators.details
