@@ -8,13 +8,12 @@
  */
 package org.baraza;
 
+import java.util.logging.Logger;
+import java.util.Properties;
 import java.io.InputStream;
-
 import java.awt.BorderLayout;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
-
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JApplet;
 import javax.swing.UIManager;
@@ -139,6 +138,15 @@ public class Baraza extends JApplet implements WindowListener {
 		}
 
 		BElement root = xml.getRoot();
+		
+		Properties props = System.getProperties();
+		if(root.getAttribute("pictures_url") != null) props.setProperty("pictures_url", root.getAttribute("pictures_url"));
+		if(root.getAttribute("photo_access") != null) props.setProperty("photo_access", root.getAttribute("photo_access"));
+		if(root.getAttribute("repository_url") != null) props.setProperty("repository_url", root.getAttribute("repository_url"));
+		if(root.getAttribute("rep_username") != null) props.setProperty("rep_username", root.getAttribute("rep_username"));
+		if(root.getAttribute("rep_password") != null) props.setProperty("rep_password", root.getAttribute("rep_password"));
+		
+		
 		if(mode != null) {
 			if(mode.equals("run")) sm = 0;
 			else if(mode.equals("develop")) sm = 1;
@@ -195,6 +203,11 @@ public class Baraza extends JApplet implements WindowListener {
 	* Close application handles
 	*/
 	public void close() {
+		System.clearProperty("photo_access");
+		System.clearProperty("repository_url");
+		System.clearProperty("rep_username");
+		System.clearProperty("rep_password");
+
 		if(app != null) app.close();
 		if(ide != null) ide.close();
 	}

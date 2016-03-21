@@ -295,6 +295,9 @@ class BField implements MouseListener {
 				gridBox.refresh();
 				setText(defaultValue);
 				break;
+			case 18:
+				picture.setText("Double click to add a picture");
+				break;
 			default:
 				setText(defaultValue);
 				break;

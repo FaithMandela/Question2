@@ -60,9 +60,9 @@ class BFiles extends JPanel implements ActionListener {
 		for(JButton btn : fileFunct) { fileControls.add(btn); btn.addActionListener(this); }
 		super.add(fileControls, BorderLayout.PAGE_START);
 
-		String repository = view.getAttribute("repository");
-		String username = view.getAttribute("username");
-		String password = view.getAttribute("password");
+		String repository = org.baraza.utils.BPropeties.getParam("repository_url", "http://localhost:9090/repository/webdav/files/");
+		String username = org.baraza.utils.BPropeties.getParam("rep_username", "repository");
+		String password = org.baraza.utils.BPropeties.getParam("rep_password", "baraza");
 		webdav = new BWebdav(repository, username, password);
 
 		query = new BQuery(db, view, null, null, false);
@@ -79,6 +79,12 @@ class BFiles extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent ev) {
 		String aKey = ev.getActionCommand();
+		
+		if((webdav == null) || (!webdav.isConnected())) {
+			JOptionPane.showMessageDialog(this, "The file repository is not connected");
+			return;
+		}
+
 
 		if("Upload File".equals(aKey)) {
 			JFileChooser fc = new JFileChooser();
