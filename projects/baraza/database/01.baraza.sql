@@ -1110,7 +1110,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE FUNCTION get_phase_entitys(integer) RETURNS varchar(320) AS $$
+DECLARE
+    myrec			RECORD;
+	myentitys		varchar(320);
+BEGIN
+	myentitys := null;
+	FOR myrec IN SELECT entitys.entity_name
+		FROM entitys INNER JOIN entity_subscriptions ON entitys.entity_id = entity_subscriptions.entity_id
+		WHERE (entity_subscriptions.entity_type_id = $1) LOOP
 
+		IF (myentitys is null) THEN
+			IF (myrec.entity_name is not null) THEN
+				myentitys := myrec.entity_name;
+			END IF;
+		ELSE
+			IF (myrec.entity_name is not null) THEN
+				myentitys := myemail || ', ' || myrec.entity_name;
+			END IF;
+		END IF;
+
+	END LOOP;
+
+	RETURN myentitys;
+END;
+$$ LANGUAGE plpgsql;
 
 --- Data
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');

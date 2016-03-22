@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<ESCALATION title="HR Mail" processdelay="5"
-	host="localhost" mailuser="sysadmin" mailpassword="invent2k" mailfrom="dennis@localhost"
-	inbox="INBOX" sentbox="INBOX.Sent" testemail="sysadmin@localhost">
+<ESCALATION title="HR Mail" processdelay="3"
+	host="mail.acordinternational.org" mailuser="hr" mailpassword="joAf0kIj5D" mailfrom="hr@acordinternational.org"
+	inbox="INBOX" sentbox="Sent">
 	
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, entitys"

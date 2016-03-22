@@ -15,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import java.net.URL;
 
 import java.awt.event.MouseListener;
@@ -37,16 +38,21 @@ public class BPicture extends JLabel implements MouseListener {
 		super();
 		this.db = db;
 		this.addMouseListener(this);
+	
+		pictureURL = org.baraza.utils.BPropeties.getParam("pictures_url", "http://localhost:9090/repository/barazapictures");
+		pictureAccess = org.baraza.utils.BPropeties.getParam("photo_access", "ob");
+		String repository = org.baraza.utils.BPropeties.getParam("repository_url", "http://localhost:9090/repository/webdav/pictures/");
+		String username = org.baraza.utils.BPropeties.getParam("rep_username", "repository");
+		String password = org.baraza.utils.BPropeties.getParam("rep_password", "baraza");
 
-		pictureURL = el.getAttribute("pictures");
-		pictureAccess = el.getAttribute("access");
-		String repository = el.getAttribute("repository");
-		String username = el.getAttribute("username");
-		String password = el.getAttribute("password");
-		if(repository != null) webdav = new BWebdav(repository, username, password);
+		webdav = new BWebdav(repository, username, password);
 	}
 
 	public void setPicture(String value) {
+		if(value == null) {
+			this.setText("Double click to add image");
+			return;
+		}
 		pictureFile = value;
 		String mypic = pictureURL + "?access=" + pictureAccess + "&picture=" + pictureFile;
 		String html = "<html>\n<body>\n<div style=\"text-align: center;\">\n";
@@ -59,12 +65,17 @@ public class BPicture extends JLabel implements MouseListener {
 			log.severe("html pucture diplay error " + ex);
 		}
 	}
-
+	
 	public String getPicture() {
 		return pictureFile;
 	}
 
 	public void readimage() {
+		if((webdav == null) || (!webdav.isConnected())) {
+			JOptionPane.showMessageDialog(this, "The file repository is not connected");
+			return;
+		}
+		
 		JFileChooser fc = new JFileChooser();
 		String[] ffa = {"jpg", "jpeg", "gif"};
 		BFileDialogueFilter ff = new BFileDialogueFilter(ffa, "Picure Images");
@@ -77,7 +88,7 @@ public class BPicture extends JLabel implements MouseListener {
 
 			pictureFile = db.executeFunction("SELECT nextval('picture_id_seq')");
 			pictureFile += "pic." + ff.getExtension(file);
-			if(webdav != null) webdav.saveFile(file, pictureFile);
+			if(webdav.isConnected()) webdav.saveFile(file, pictureFile);
 
  			Icon icon = new ImageIcon(file.getPath());
 			this.setIcon(icon);
