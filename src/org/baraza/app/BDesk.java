@@ -60,7 +60,7 @@ public class BDesk extends JInternalFrame implements MouseListener {
 				tabbedPane.addTab(el.getAttribute("name"), forms.get(forms.size() -1));
 
 				tabs.add(new BTabs(1, forms.size()-1));
-			} else if(el.getName().equals("GRID")) {
+			} else if(el.getName().equals("GRID") || el.getName().equals("FORMVIEW")) {
 				grids.add(new BGrids(logHandle, db, el, reportDir, false));
 				tabbedPane.addTab(el.getAttribute("name"), grids.get(grids.size() -1));
 
