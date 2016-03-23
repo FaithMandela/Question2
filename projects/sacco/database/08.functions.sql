@@ -1,6 +1,4 @@
 
-<<<<<<< HEAD
-=======
 
 CREATE OR REPLACE FUNCTION change_password(varchar(12), varchar(32), varchar(32), varchar(32)) RETURNS varchar(120) AS $$
 DECLARE
@@ -285,34 +283,30 @@ DECLARE
 	rec 			RECORD;
 BEGIN
 
-	IF (TG_OP = 'INSERT') THENss
+	IF (TG_OP = 'INSERT') THEN
 		SELECT entity_id INTO v_entity_id
 		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
+			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
 			INSERT INTO sys_emailed ( org_id, table_id, table_name)
 			VALUES ( 0, 1, 'subscription');
 		
-		NEW.approve_status := 'Completed';
-		NEW.workflow_table_id := '11';
-		ELSE
+			ELSE
 			RAISE EXCEPTION 'You already have an account, login and request for services';
 		END IF ;
 		
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
+		
+		
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
-		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
+		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
 		
 		
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, 'Kenya Shillings', 'KES', 'KES');
-		
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id,'Kenya Shillings' , 'KES','KES');
-		UPDATE orgs SET currency_id = 1 WHERE org_id = NEW.org_id;
 	
 		
 		v_bank_id := nextval('banks_bank_id_seq');
@@ -323,19 +317,25 @@ BEGIN
 		WHERE entity_id = NEW.entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
+		VALUES ( 12, NEW.org_id, NEW.subscription_id, 'subscription');
 		
 		
 		
->>>>>>> e829fb97559b72260b88801b69fa435872e337b8
 	END IF;
-
+	
+		
 	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
-<<<<<<< HEAD
   
+  
+  
+CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
+  FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
+  
+
+
 CREATE TRIGGER ins_applicants
   BEFORE INSERT OR UPDATE
   ON applicants
@@ -343,9 +343,6 @@ CREATE TRIGGER ins_applicants
   EXECUTE PROCEDURE ins_applicants();
 =======
 
-CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
-  FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
-  
   
   
   

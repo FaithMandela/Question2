@@ -191,7 +191,7 @@ class BGrids extends JPanel implements ActionListener, MouseListener {
 				String paneName = el.getAttribute("name");
 				BTextIcon textIcon = new BTextIcon(formsPane, paneName, BTextIcon.ROTATE_RIGHT);
 				formsPane.addTab("", textIcon, forms.get(forms.size()-1));
-			} else if(el.getName().equals("GRID")) {
+			} else if(el.getName().equals("GRID") || el.getName().equals("FORMVIEW")) {
 				grids.add(new BGrids(logHandle, db, el, reportDir, nullFilter));
 				tabs.add(new BTabs(2, grids.size()-1));
 

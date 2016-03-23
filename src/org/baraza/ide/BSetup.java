@@ -32,12 +32,14 @@ public class BSetup implements ActionListener {
 	JTextField ftUserName, ftPassword;
 	JLabel lbStatus;
 	String ps;
+	String path;
 	BXML xml;
 	BElement root;
 
-	public BSetup() {
+	public BSetup(String path) {
 		ps = System.getProperty("file.separator");
-		String setupXML = "projects" + ps + "setup.xml";
+		this.path = path;
+		String setupXML = path + ps + "setup.xml";
 		xml = new BXML(setupXML, false);
 		root = xml.getRoot();
 
@@ -87,7 +89,7 @@ public class BSetup implements ActionListener {
 		root.setAttribute("dbpassword", ftPassword.getText());
 		xml.saveFile();
 
-		String configXML = "projects" + ps + "config.xml";
+		String configXML = path + ps + "config.xml";
 		BXML cfgxml = new BXML(configXML, false);
 		BElement cfg = cfgxml.getRoot();
 		cfg.setAttribute("dbusername", ftUserName.getText());
@@ -140,7 +142,6 @@ public class BSetup implements ActionListener {
 
 			Bio io = new Bio();
 			String mysql = io.loadFile(fpath);
-			ndb.executeQuery("CREATE LANGUAGE plpgsql;");
 			err = ndb.executeQuery(mysql);
 		}
 		ndb.close();
@@ -176,7 +177,9 @@ public class BSetup implements ActionListener {
 	}
 
 	public static void main(String args[]) {
-		BSetup st = new BSetup();
+		String path = "projects";
+		if (args.length > 0) path = args[0].trim();
+		BSetup st = new BSetup(path);
 	}
 }
 
