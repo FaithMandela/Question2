@@ -1766,6 +1766,12 @@
 	</DESK>
 	<DESK w="700" name="Loans" key="135" h="550">
 		<JASPER name="Open Loans" reportfile="vw_loans.jasper"></JASPER>
+		<FILTER w="700" name="Loan Monthly" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Loan Monthly" reportfile="vw_loan_monthly_1.jasper"></JASPER>
+		</FILTER>
 		<JASPER name="All Loans" reportfile="vw_loans_2.jasper"></JASPER>
 		<JASPER name="Loan Types" reportfile="vw_loan_types.jasper"></JASPER>
 		<GRID name="Loan Payments" keyfield="loan_id" table="vw_loans">

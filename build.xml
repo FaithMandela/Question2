@@ -68,16 +68,6 @@
 		</javadoc>
 	</target>
 
-    <target name="setup">
-        <java dir="." classname="org.baraza.ide.BSetup" fork="true">
-			<arg value="./projects/hr/config/setup.xml"/>
-			<classpath>
-				<pathelement location="${build}/baraza.jar"/>
-				<pathelement path="${build.lib}"/>
-			</classpath>
-		</java>
-    </target>
-
     <target name="baraza">
         <java jar="${build}/baraza.jar" fork="true">
 			<arg value="run"/>
@@ -96,6 +86,28 @@
         <java jar="${build}/baraza.jar" fork="true">
 			<arg value="develop"/>
 			<arg value="${projects}"/>
+		</java>
+    </target>
+
+    <target name="setup.new">
+        <java dir="." classname="org.baraza.ide.BSetup" fork="true">
+			<arg value="./projects/hr/configs/"/>
+			<arg value="setup.sql"/>
+			<classpath>
+				<pathelement location="${build}/baraza.jar"/>
+				<pathelement path="${build.lib}"/>
+			</classpath>
+		</java>
+    </target>
+
+    <target name="setup.demo">
+        <java dir="." classname="org.baraza.ide.BSetup" fork="true">
+			<arg value="./projects/hr/configs/"/>
+			<arg value="demo.sql"/>
+			<classpath>
+				<pathelement location="${build}/baraza.jar"/>
+				<pathelement path="${build.lib}"/>
+			</classpath>
 		</java>
     </target>
 
