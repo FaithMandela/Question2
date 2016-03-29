@@ -39,6 +39,12 @@
 			<TILE name="Single Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
+			<TILE name="Today Single Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Today Single Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
 			<TILE name="Single Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = false)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
@@ -48,10 +54,28 @@
 			<TILE name="Group Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
+			<TILE name="Today Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true AND pickup_date = CURRENT_TIMESTAMP::date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Today Group Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true AND pickup_date = CURRENT_TIMESTAMP::date)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
 			<TILE name="Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 			<TILE name="Group Processed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Tomorrow Single Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = false AND pickup_date = (CURRENT_TIMESTAMP::date +1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Tomorrow Single Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = false AND pickup_date = (CURRENT_TIMESTAMP::date +1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Tomorrow Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true AND pickup_date = (CURRENT_TIMESTAMP::date + 1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Tomorrow Group Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true AND pickup_date = (CURRENT_TIMESTAMP::date + 1))">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
@@ -208,6 +232,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -349,6 +374,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -476,6 +502,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -582,6 +609,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -688,6 +716,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -794,6 +823,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -891,6 +921,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false  AND pax_cancelled = false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -1379,6 +1410,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -1591,6 +1623,7 @@
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<JASPER name="Voucher" file.sql="SELECT 'Transfer Voucher_' || passanger_name || '-' || pickup_date  FROM vw_passangers WHERE passanger_id =" reportfile="vw_passangers.jasper"></JASPER>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
@@ -1688,6 +1721,7 @@
 			<TEXTDECIMAL w="75" title="Agreed Amount">agreed_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -1967,7 +2001,6 @@
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="LPO" y="270" h="20" x="10">reference_data</TEXTFIELD>
 				<CHECKBOX w="150" title="Group" y="290" h="20" x="10">is_group</CHECKBOX>
-				<TEXTFIELD w="430" title="Consultant Email" y="250" h="20" x="10">tc_email</TEXTFIELD>
 				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 				<CHECKBOX w="150" title="Email Ready" y="310" h="20" x="290">email_ready</CHECKBOX>
 			</FORM>
@@ -1996,6 +2029,7 @@
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<JASPER name="Voucher" reportfile="vw_passangers.jasper"></JASPER>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -2187,6 +2221,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -2303,6 +2338,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -2419,6 +2455,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -2514,6 +2551,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -2609,6 +2647,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -2704,6 +2743,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" where="(closed=false)">
 				<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -2790,6 +2830,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -3267,6 +3308,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -3414,6 +3456,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -3559,6 +3602,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -3689,6 +3733,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -3798,6 +3843,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -3907,6 +3953,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -4016,6 +4063,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -4103,6 +4151,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -4423,6 +4472,7 @@
 			<TEXTFIELD w="75" title="Booking Location">booking_location</TEXTFIELD>
 			<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID name="Open Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments" noorg="true" new.button="Assign" where="(closed=false)">
 				<TEXTFIELD w="75" title="Driver ID">driver_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Driver Name">driver_name</TEXTFIELD>
@@ -4538,6 +4588,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -4656,6 +4707,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -4774,6 +4826,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -4871,6 +4924,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -4968,6 +5022,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -5065,6 +5120,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -5140,6 +5196,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
@@ -5445,6 +5502,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Pax No">pax_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Transfer ID">transfer_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Flight Details">flight_details</TEXTFIELD>
 			<GRID color="bunson" name="Group Members" keyfield="m_passanger_id" orderby="m_passanger_name ASC" linkfield="passanger_id" table="vw_group_members" tab.count="count(m_passanger_id)" noorg="true">
 				<TEXTFIELD w="75" title="Passenger ID">m_passanger_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Passenger Name">m_passanger_name</TEXTFIELD>
