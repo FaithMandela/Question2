@@ -1,58 +1,11 @@
-alter table orgs add default_country_id varchar(6); 
 
-<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
 
-=======
->>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 CREATE TABLE locations
 (
 	location_id			serial primary key,
 	org_id 				integer references orgs,
 	location_name 			character varying(50),
 	details			 text
-);
-
-
-
-
-CREATE TABLE members (
-	entity_id			integer references entitys primary key,
-	bank_branch_id			integer not null references bank_branch, 
-	member_id			varchar(12) not null unique ,
-	location_id			integer references locations,
-	currency_id			integer references currency,
-	org_id				integer references orgs unique,
-
-	person_title			varchar(7),
-	surname				varchar(50) not null,
-	first_name			varchar(50) not null,
-	middle_name			varchar(50),
-	date_of_birth			date,
-	
-	gender				varchar(1),
-	phone				varchar(120),
-	nationality			char(2) not null references sys_countrys,
-	
-	nation_of_birth			char(2) references sys_countrys,
-	place_of_birth			varchar(50),
-	
-	salary 				real,
-	marital_status 			varchar(2),
-	appointment_date		date,
-	current_appointment		date,
-
-	exit_date			date,
-	bank_account			varchar(32),
-	picture_file			varchar(32),
-	active				boolean default true not null,
-	language			varchar(320),
-	desg_code			varchar(16),
-	inc_mth				varchar(16),
-	
-	interests			text,
-	objective			text,
-	details				text
-
 );
 
 ALTER TABLE orgs ADD member_limit integer default 5 not null;
@@ -207,17 +160,6 @@ BEGIN
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
-<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
-		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
-		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
-		
-		v_currency_id := nextval('currency_currency_id_seq');
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'KES', 'USD');
-		v_currency_id := nextval('currency_currency_id_seq');
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'KES', 'ERO');
-		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
-		
-=======
 		
 		
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
@@ -226,7 +168,6 @@ BEGIN
 		
 	
 		
->>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
@@ -234,8 +175,8 @@ BEGIN
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 
-		INSERT INTO sys_emailed ( org_id, table_id, table_name)
-		VALUES ( NEW.org_id, NEW.entity_id, 'subscription');
+		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
+		VALUES ( 12, NEW.org_id, NEW.entity_id, 'subscription');
 		
 		
 		
@@ -246,17 +187,10 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
-   
-  
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  
 
-<<<<<<< HEAD:projects/sacco/database/08.subcription.sql
-=======
- 
-
->>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/08.subcription.sql
 CREATE OR REPLACE FUNCTION ins_member_limit() RETURNS trigger AS $$
 DECLARE
 	v_member_count	integer;
@@ -283,27 +217,3 @@ CREATE TRIGGER ins_member_limit BEFORE INSERT ON members
     FOR EACH ROW EXECUTE PROCEDURE ins_member_limit();
 
 	
-CREATE OR REPLACE FUNCTION ins_transactions_limit() RETURNS trigger AS $$
-DECLARE
-	v_transaction_count	integer;
-	v_transaction_limit	integer;
-BEGIN
-
-	SELECT count(transaction_id) INTO v_transaction_count
-	FROM transactions
-	WHERE (org_id = NEW.org_id);
-	
-	SELECT transaction_limit INTO v_transaction_limit
-	FROM orgs
-	WHERE (org_id = NEW.org_id);
-	
-	IF(v_transaction_count > v_transaction_limit)THEN
-		RAISE EXCEPTION 'You have reached the maximum transaction limit, request for a quite for more';
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_transactions_limit BEFORE INSERT ON transactions
-    FOR EACH ROW EXECUTE PROCEDURE ins_transactions_limit();

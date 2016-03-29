@@ -23,6 +23,23 @@
 	  </init-param>
 	</servlet>
 
+	<context-param>
+		<param-name>repository_url</param-name>
+		<param-value>http://localhost:9090/repository/webdav/pictures/</param-value>
+	</context-param>
+	<context-param>
+		<param-name>rep_username</param-name>
+		<param-value>repository</param-value>
+	</context-param>
+	<context-param>
+		<param-name>rep_password</param-name>
+		<param-value>baraza</param-value>
+	</context-param>
+	<context-param>
+		<param-name>photo_access</param-name>
+		<param-value>ob</param-value>
+	</context-param>
+
 	<servlet-mapping>
 	  <servlet-name>webdav</servlet-name>
 	  <url-pattern>/webdav/*</url-pattern>
@@ -31,35 +48,15 @@
 	<servlet>
 		<servlet-name>BarazaPictures</servlet-name>
 		<servlet-class>org.baraza.web.BWebPictures</servlet-class>
-
-		<init-param>
-			<param-name>repository_url</param-name>
-			<param-value>http://localhost:9090/repository/webdav/pictures/</param-value>
-		</init-param>
-		<init-param>
-			<param-name>rep_username</param-name>
-			<param-value>repository</param-value>
-		</init-param>
-		<init-param>
-			<param-name>rep_password</param-name>
-			<param-value>baraza</param-value>
-		</init-param>
-		<init-param>
-			<param-name>photo_access</param-name>
-			<param-value>enter2012</param-value>
-		</init-param>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>BarazaPictures</servlet-name>
 		<url-pattern>/barazapictures</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>BarazaPictures</servlet-name>
 		<url-pattern>/putbarazapictures</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>BarazaPictures</servlet-name>
 		<url-pattern>/delbarazapictures</url-pattern>
@@ -69,17 +66,14 @@
 		<servlet-name>BarazaFiles</servlet-name>
 		<servlet-class>org.baraza.web.BWebFiles</servlet-class>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>BarazaFiles</servlet-name>
 		<url-pattern>/barazafiles</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>BarazaFiles</servlet-name>
 		<url-pattern>/putbarazafiles</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>BarazaFiles</servlet-name>
 		<url-pattern>/delbarazafiles</url-pattern>

@@ -9,51 +9,33 @@
 	<parameter name="miniDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-02-01"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="batch_no" class="java.lang.Integer">
+	<parameter name="batch" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_order_details.order_details_id,
-                vw_orders.order_id,
-                vw_orders.order_date,
-                vw_orders.order_status,
-                vw_orders.org_id,
-                vw_orders.org_name,
+		<![CDATA[SELECT
                 vw_products.product_id,
                 vw_products.product_name,
-                vw_products.supplier_name,
-                vw_products.supplier_id,
-                vw_products.product_category_id,
-                vw_products.product_category_name,
-                vw_orders.entity_name,
-                vw_orders.entity_id,
                 vw_orders.batch_no,
                 vw_order_details.product_uprice,
-                vw_order_details.product_quantity,
-                vw_order_details.total_amount
+                sum(vw_order_details.product_quantity) as product_quantity,
+                sum(vw_order_details.total_amount) as total_amount
                FROM vw_order_details
                  JOIN vw_orders ON vw_order_details.order_id = vw_orders.order_id
                  JOIN vw_products ON vw_products.product_id = vw_order_details.product_id
-		WHERE vw_orders.batch_no = '$P!{batch_no}';]]>
+		WHERE vw_orders.batch_no = '$P!{batch}'
+		GROUP BY vw_products.product_id, vw_order_details.product_uprice,
+                    vw_products.product_name, vw_orders.batch_no;]]>
 	</queryString>
-	<field name="order_details_id" class="java.lang.Integer"/>
-	<field name="order_id" class="java.lang.Integer"/>
-	<field name="order_date" class="java.sql.Timestamp"/>
-	<field name="order_status" class="java.lang.String"/>
-	<field name="org_id" class="java.lang.Integer"/>
-	<field name="org_name" class="java.lang.String"/>
 	<field name="product_id" class="java.lang.Integer"/>
 	<field name="product_name" class="java.lang.String"/>
-	<field name="supplier_name" class="java.lang.String"/>
-	<field name="supplier_id" class="java.lang.Integer"/>
-	<field name="product_category_id" class="java.lang.Integer"/>
-	<field name="product_category_name" class="java.lang.String"/>
-	<field name="entity_name" class="java.lang.String"/>
-	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="batch_no" class="java.lang.Integer"/>
 	<field name="product_uprice" class="java.lang.Float"/>
-	<field name="product_quantity" class="java.lang.Integer"/>
+	<field name="product_quantity" class="java.lang.Long"/>
 	<field name="total_amount" class="java.lang.Double"/>
+	<variable name="total_cost" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_amount}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -84,20 +66,12 @@
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{batch_no}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{batch_no}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="23" splitType="Stretch">
-			<staticText>
-				<reportElement x="388" y="0" width="67" height="20" isPrintWhenDetailOverflows="true" uuid="b3af2c35-8c7b-4ab5-97e5-e99f15c966ff"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
-				</textElement>
-				<text><![CDATA[Quantity]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="455" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="b8b7b2ad-1a5c-4438-86d3-a24ee90979be"/>
 				<textElement textAlignment="Right">
@@ -105,14 +79,6 @@
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<text><![CDATA[Total Cost]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="310" y="0" width="78" height="20" isPrintWhenDetailOverflows="true" uuid="01661075-10d2-4271-852d-a75280631a22"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="4" rightIndent="5"/>
-				</textElement>
-				<text><![CDATA[Purchase Cost]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="0" width="310" height="20" isPrintWhenDetailOverflows="true" uuid="8ee8f63d-a8d0-44a5-817b-09212d89e6c0"/>
@@ -125,6 +91,22 @@
 			<line>
 				<reportElement x="0" y="20" width="555" height="1" uuid="8f415dbd-637e-49d1-99f8-5749e70f8a30"/>
 			</line>
+			<staticText>
+				<reportElement x="310" y="0" width="67" height="20" isPrintWhenDetailOverflows="true" uuid="b3af2c35-8c7b-4ab5-97e5-e99f15c966ff"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="0" width="78" height="20" isPrintWhenDetailOverflows="true" uuid="01661075-10d2-4271-852d-a75280631a22"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Purchase Cost]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -154,25 +136,40 @@
 				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="388" y="0" width="67" height="15" isPrintWhenDetailOverflows="true" uuid="ca66d1ca-5cb2-4cca-a808-520185826ebd"/>
-				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" size="12"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{product_quantity}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="310" y="0" width="78" height="15" isPrintWhenDetailOverflows="true" uuid="e3009b0e-b3e4-4917-9b4e-3eadee57451c"/>
+				<reportElement x="377" y="0" width="78" height="15" isPrintWhenDetailOverflows="true" uuid="e3009b0e-b3e4-4917-9b4e-3eadee57451c"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{product_uprice}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="310" y="0" width="67" height="15" isPrintWhenDetailOverflows="true" uuid="ca66d1ca-5cb2-4cca-a808-520185826ebd"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_quantity}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="45" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="455" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="8f5e9ab0-41d0-45bd-8a02-31c49393049a"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_cost}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="355" y="0" width="100" height="20" uuid="bb310343-9f8e-43b5-ab14-720d63d8e5b5"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Cost]]></text>
+			</staticText>
+		</band>
 	</columnFooter>
 	<pageFooter>
 		<band height="54" splitType="Stretch"/>

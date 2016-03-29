@@ -26,6 +26,7 @@
 		<SUBJECT title="subject">vw_approvals.phase_narrative</SUBJECT>
 		<FIELD title="Body" basetable="vw_approvals">advice_email</FIELD>
 		<BODYFIELD reference="{{name}}" basetable="vw_approvals">org_entity_name</BODYFIELD>
+		<BODYFIELD reference="{{approval_name}}" fnct="get_phase_entitys(vw_approvals.approval_entity_id)">approval_entitys</BODYFIELD>
 		<PARAM basetable="vw_approvals">table_id</PARAM>
 		<REPORT basetable="vw_approvals">notice_file</REPORT>
 	</REPORT>
@@ -38,6 +39,7 @@
 		<SUBJECT title="subject">vw_approvals_entitys.phase_narrative</SUBJECT>
 		<FIELD title="Body" basetable="vw_approvals_entitys">advice_email</FIELD>
 		<BODYFIELD reference="{{name}}" basetable="vw_approvals_entitys">org_entity_name</BODYFIELD>
+		<BODYFIELD reference="{{approval_name}}" basetable="vw_approvals_entitys">approval_entity_name</BODYFIELD>
 		<PARAM basetable="vw_approvals_entitys">table_id</PARAM>
 		<REPORT basetable="vw_approvals_entitys">notice_file</REPORT>
 	</REPORT>

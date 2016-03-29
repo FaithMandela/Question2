@@ -134,12 +134,20 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="26" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="749bb7ab-3b95-4f5d-9929-9aa383725afa">
+					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="156" height="15" isPrintWhenDetailOverflows="true" uuid="e150b22d-af7c-44b7-87e0-f18664a8c309"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
+					<paragraph leftIndent="5" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
@@ -155,7 +163,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				<reportElement x="458" y="0" width="97" height="15" isPrintWhenDetailOverflows="true" uuid="5713f858-f9ec-46e5-827d-a0ace843e123"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
+					<paragraph leftIndent="4" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
 			</textField>

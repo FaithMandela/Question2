@@ -711,6 +711,35 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER updqstudents AFTER UPDATE ON qstudents
     FOR EACH ROW EXECUTE PROCEDURE updqstudents();
+    
+
+CREATE OR REPLACE FUNCTION updb_qstudents() RETURNS trigger AS $$
+BEGIN
+
+	IF(NEW.finaceapproval = true)THEN
+		IF(OLD.studylevel <> NEW.studylevel)THEN
+			RAISE EXCEPTION 'You cannot change study level after financial approval';
+		END IF;
+
+		IF(OLD.qresidenceid <> NEW.qresidenceid)THEN
+			RAISE EXCEPTION 'You cannot change residence after financial approval';
+		END IF;
+		
+		IF(OLD.sublevelid <> NEW.sublevelid)THEN
+			RAISE EXCEPTION 'You cannot change sub level after financial approval';
+		END IF;
+		
+		IF(OLD.mealtype <> NEW.mealtype)THEN
+			RAISE EXCEPTION 'You cannot change meal type after financial approval';
+		END IF;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER updb_qstudents BEFORE UPDATE ON qstudents
+    FOR EACH ROW EXECUTE PROCEDURE updb_qstudents();
 
 -- update the date a course was withdrawn
 CREATE OR REPLACE FUNCTION updqgrades() RETURNS trigger AS $$

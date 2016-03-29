@@ -1,4 +1,3 @@
-alter table entitys add account_id integer references accounts;
 
 CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,

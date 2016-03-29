@@ -9,7 +9,7 @@
 	<parameter name="minDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="batch_no" class="java.lang.Integer">
+	<parameter name="batch" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -32,7 +32,7 @@
       vw_entitys.org_id
      FROM vw_orders
        JOIN vw_entitys ON vw_orders.entity_id = vw_entitys.entity_id
-	WHERE batch_no = '$P!{batch_no}';]]>
+	WHERE batch_no = '$P!{batch}';]]>
 	</queryString>
 	<field name="order_id" class="java.lang.Integer"/>
 	<field name="order_date" class="java.sql.Date"/>
@@ -51,6 +51,9 @@
 	<field name="function_role" class="java.lang.String"/>
 	<field name="entity_role" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
+	<variable name="grand_total" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{grand_total}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -78,10 +81,10 @@
 			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
 				<reportElement x="97" y="0" width="79" height="21" isPrintWhenDetailOverflows="true" uuid="eb4b267f-e9fd-4c7a-b99e-c5caff77e82d"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{batch_no}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{batch_no}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -96,7 +99,7 @@
 				<text><![CDATA[Order ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="61" y="0" width="65" height="29" uuid="ff5a8bb5-bd3e-4e43-8d82-cd413a41867c"/>
+				<reportElement x="61" y="0" width="53" height="29" uuid="ff5a8bb5-bd3e-4e43-8d82-cd413a41867c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -104,7 +107,7 @@
 				<text><![CDATA[Order Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="126" y="0" width="120" height="20" uuid="ace5c60a-50ac-4d2d-97c1-23e2d9b31a3b"/>
+				<reportElement x="114" y="0" width="132" height="20" uuid="ace5c60a-50ac-4d2d-97c1-23e2d9b31a3b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -191,7 +194,7 @@
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yy" isBlankWhenNull="true">
-				<reportElement x="61" y="0" width="65" height="15" uuid="4312f613-0447-41f0-ae84-ff64f78906b1"/>
+				<reportElement x="61" y="0" width="53" height="15" uuid="4312f613-0447-41f0-ae84-ff64f78906b1"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -263,7 +266,7 @@
 				<textFieldExpression><![CDATA[$F{primary_telephone}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="126" y="0" width="120" height="15" uuid="7123b7e4-9014-42ba-9ad9-59f89e8ba1a2"/>
+				<reportElement x="114" y="0" width="132" height="15" uuid="7123b7e4-9014-42ba-9ad9-59f89e8ba1a2"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -281,7 +284,22 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="45" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="702" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="0b3dfd88-ad4f-4c62-8b23-fcdfe72788cc"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{grand_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="602" y="0" width="100" height="20" uuid="625ee883-3080-42ba-a60b-ed00160e2479"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Grand Total]]></text>
+			</staticText>
+		</band>
 	</columnFooter>
 	<pageFooter>
 		<band height="53" splitType="Stretch"/>

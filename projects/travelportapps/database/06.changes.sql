@@ -1,3 +1,7 @@
+ALTER TABLE passengers ADD COLUMN relationship character varying(120);
+ALTER TABLE passengers ADD COLUMN id_no character varying(120);
+ALTER TABLE passengers ADD COLUMN address text;
+
 ALTER TABLE passengers ADD COLUMN policy_number character varying(50);
 DROP view vw_passengers;
 CREATE OR REPLACE VIEW vw_passengers AS

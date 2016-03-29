@@ -326,6 +326,7 @@ CREATE TABLE identifications (
 );
 CREATE INDEX identifications_entity_id ON identifications(entity_id);
 CREATE INDEX identifications_identification_type_id ON identifications(identification_type_id);
+CREATE INDEX identifications_nationality ON identifications(nationality);
 CREATE INDEX identifications_org_id ON identifications(org_id);
 
 CREATE TABLE casual_category (
@@ -1352,13 +1353,13 @@ CREATE OR REPLACE FUNCTION get_review_category(varchar(16)) RETURNS integer AS $
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_default_country(int) RETURNS char(2) AS $$
-    SELECT default_country_id::varchar(12)
+	SELECT default_country_id::varchar(2)
 	FROM orgs
 	WHERE (org_id = $1);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_default_currency(int) RETURNS int AS $$
-    SELECT currency_id
+	SELECT currency_id
 	FROM orgs
 	WHERE (org_id = $1);
 $$ LANGUAGE SQL;
