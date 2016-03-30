@@ -36,22 +36,16 @@
 			<TILE name="My Group Processed" role="consultant" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true)" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Single Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
-				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
-			</TILE>
 			<TILE name="Today Single Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 			<TILE name="Today Single Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Single Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = false)">
+			<TILE name="Single Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = false AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Single Processed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = false)">
-				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
-			</TILE>
-			<TILE name="Group Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date)">
+			<TILE name="Todays Single Cancelled" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = false AND pickup_date = CURRENT_TIMESTAMP::date AND pax_cancelled = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 			<TILE name="Today Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true AND pickup_date = CURRENT_TIMESTAMP::date)">
@@ -60,10 +54,10 @@
 			<TILE name="Today Group Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true)">
+			<TILE name="Group Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Group Processed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true)">
+			<TILE name="Group Todays Cancelled" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date  AND pax_cancelled = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 			<TILE name="Tomorrow Single Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = false AND pickup_date = (CURRENT_TIMESTAMP::date +1))">
@@ -72,10 +66,34 @@
 			<TILE name="Tomorrow Single Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = false AND pickup_date = (CURRENT_TIMESTAMP::date +1))">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
+			<TILE name="Tomorrow Single Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = false AND pickup_date = (CURRENT_TIMESTAMP::date +1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Tomorrow Single Cancelled" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = false  AND pax_cancelled = true AND pickup_date = (CURRENT_TIMESTAMP::date +1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
 			<TILE name="Tomorrow Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true AND pickup_date = (CURRENT_TIMESTAMP::date + 1))">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 			<TILE name="Tomorrow Group Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true AND pickup_date = (CURRENT_TIMESTAMP::date + 1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Tomorrow Group Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND group_contact =true AND pickup_date = (CURRENT_TIMESTAMP::date + 1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Tomorrow Group Cancelled" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="( is_group = true   AND pax_cancelled = true AND  group_contact =true AND pickup_date = (CURRENT_TIMESTAMP::date + 1))">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Single Processed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = false)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Single Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = false)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Group Processed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
+			</TILE>
+			<TILE name="Group Unprocessed" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=false AND is_group = true AND group_contact =true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>
