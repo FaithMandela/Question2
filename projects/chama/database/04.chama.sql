@@ -8,17 +8,18 @@ CREATE TABLE members (
  	org_id 						integer references orgs,
 	location_id					integer references locations,
 
-	person_title				varchar(50) not null,
+	person_title				varchar(50),
 	surname 					varchar(50) not null,
 	first_name 					varchar(50) not null,
-  	middle_name 				varchar(50) not null,
+  	middle_name 				varchar(50),
+  	full_name					varchar(50),
   	id_number					varchar(50) not null,
   	email						varchar(50),
   	date_of_birth 				date,
   	
 	gender 						varchar(10),
- 	phone						varchar(50) not null,
- 	bank_account_number			varchar(50) not null,
+ 	phone						varchar(50),
+ 	bank_account_number			varchar(50),
   	nationality 				char(2) not null references sys_countrys,
   	nation_of_birth 			char(2) not null references sys_countrys,
   	marital_status 				varchar(20),
@@ -57,10 +58,28 @@ CREATE TABLE contribution_types (
 	contribution_type_id		serial primary key,
 	org_id						integer references orgs,
 	contribution_type_name		varchar(240),
+	investment_amount			real default 0 not null,
+	merry_go_round_amount		real default 0 not null,
+	frequency					varchar (15),		--- Irregural, Weekly, Fortnighly, Monthly,  quartely, semi-annually, annually
+	applies_to_all				boolean default true not null,
 	details						text
 );	
 CREATE INDEX contribution_types_org_id ON contribution_types (org_id);
 
+CREATE TABLE contribution_defaults (
+	contribution_default_id    	serial primary key,
+	contribution_type_id 		integer references contribution_types,
+	entity_id					integer references entitys,
+	org_id						integer references orgs,
+
+	investment_amount			real default 0 not null,
+	merry_go_round_amount		real default 0 not null,
+	details		text
+);
+
+CREATE INDEX contribution_defaults_contributions_type_id ON contribution_defaults (contribution_type_id);
+CREATE INDEX contribution_defaults_org_id ON contribution_defaults (org_id);
+CREATE INDEX contribution_defaults_entity_id ON contribution_defaults (entity_id);
 
 
 CREATE TABLE contributions (
@@ -72,11 +91,14 @@ CREATE TABLE contributions (
 	period_id					integer references periods,
 	org_id						integer references orgs,
 	
-	contribution_date			date not null,
-	contribution_amount			real not null,
-	merry_go_round 				boolean default true,
-	merry_go_round_percentage 	real,
-	actual_amount 				real,
+	contribution_date			date,
+	investment_amount			real not null,
+	merry_go_round_amount	 	real,
+	paid						boolean default false
+	
+	money_in					real,
+	money_out					real,
+	
 	details						text
 );
 
@@ -205,16 +227,17 @@ CREATE TABLE investments (
 	currency_id                 integer references currency,
     org_id                      integer references orgs,
     bank_account_id 			integer references bank_accounts,
-    investment_name 			varchar(120),
+    period_id					integer references periods,
+	investment_name 			varchar(120),
 	date_of_accrual             date,
-	principal 					real,
-	period						real,
+	total_cost 					real,
+	repayment_period			real,
 	monthly_returns 			real,
+	monthly_payments			real,
 	total_payment				real,
+	total_returns				real,
 	default_interest			real,
-	approve_status				varchar (16),
-	workflow_table_id			integer,
-	action_date					timestamp,
+	is_complete					boolean default false not null,
 	is_active                   boolean default true not null,
 	details                     text
 );
@@ -223,6 +246,8 @@ CREATE INDEX investments_bank_account_id ON investments (bank_account_id);
 CREATE INDEX investments_investment_type_id ON investments (investment_type_id);
 CREATE INDEX investments_currency_id ON investments (currency_id);
 CREATE INDEX investments_org_id ON investments (org_id);
+CREATE INDEX investments_period_id ON investments (period_id);
+
 
 
 ---trigs
@@ -230,26 +255,82 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
    FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 
-CREATE OR REPLACE FUNCTION ins_investment() RETURNS TRIGGER AS
+CREATE OR REPLACE FUNCTION ins_investments() RETURNS trigger AS 
 $BODY$
 DECLARE
-    v_principal			        real;
-    v_amount					real;
-    v_total_payment				real;
-    v_period                    real;
-    v_interests		            real;
+	v_investment_amount		real;
+	v_total_cost			real;
+    v_amount				real;
+    v_total_payment			real;
+    v_m_payment				real;
+	v_monthly_returns		real;
+    v_period                real;
+    v_interests		        real;
+	v_total_returns 		real;
 BEGIN
-SELECT interest_amount INTO v_interests FROM  investment_types WHERE investment_type_id = NEW. investment_type_id;
-		NEW.default_interest := v_interests;
- 		v_amount = New.principal * (v_interests/100) ;
-		NEW.total_payment := v_amount + New.principal;
-	 	NEW.monthly_returns = NEW.total_payment / NEW.period;  
-   	
+
+		SELECT sum(investment_amount) INTO v_investment_amount FROM contributions
+		WHERE org_id = New.org_id AND period_id = NEW.period_id;
+		SELECT total_payment INTO v_m_payment FROM investments WHERE is_complete = false;
+		
+
+IF (v_investment_amount is not null) THEN	
+	v_total_payment  = v_m_payment + v_investment_amount;
+	UPDATE investments SET monthly_payments = v_investment_amount, total_payment = v_total_payment;
+
 	
+	IF (v_total_payment >= v_m_payment) THEN
+	UPDATE investments SET is_complete = true WHERE is_complete = false;
+
+	END IF;
+END IF;
+	SELECT 	
+
 RETURN NEW;
 END;
 $BODY$
-LANGUAGE plpgsql;
+  LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_investment BEFORE INSERT OR UPDATE ON investments
+
+
+CREATE TRIGGER ins_investment BEFORE INSERT OR UPDATE ON contributions 
 FOR EACH ROW EXECUTE PROCEDURE ins_investment();
+
+
+ CREATE OR REPLACE FUNCTION ins_contrib()
+  RETURNS trigger AS
+$$
+DECLARE
+    v_percentage          real;
+    v_damt                real;
+    v_amt        		real;
+       
+BEGIN
+	IF (NEW.merry_go_round = true AND New.deduction = false )THEN 
+			v_percentage := NEW.merry_go_round_percentage/100 ;
+			v_amt := New.contribution_amount * v_percentage;
+			New.actual_amount := New.contribution_amount - v_amt;
+			
+	ELSE IF (New.merry_go_round = true AND New.deduction = true) THEN
+			v_percentage := NEW.merry_go_round_percentage/100 ;
+			v_amt := New.contribution_amount * v_percentage;
+			v_damt := new.deduction_amount;
+			New.actual_amount := New.contribution_amount - (v_damt + v_amt);
+
+	ELSE IF (new.deduction = true) THEN 
+			v_damt = new.deduction_amount;
+			New.actual_amount := New.contribution_amount - v_damt;
+			
+		END IF;	
+		END IF;	
+		END IF;	
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+  
+  
+  CREATE TRIGGER ins_contrib BEFORE INSERT OR UPDATE ON contributions
+FOR EACH ROW EXECUTE PROCEDURE ins_contrib();
+

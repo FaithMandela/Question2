@@ -14,7 +14,7 @@ CREATE TABLE tx_ledger (
 	ledger_type_id			integer references ledger_types,
 	entity_id 				integer references entitys,
 	bpartner_id				integer references entitys,
-	account_id				integer references accounts,
+	bank_account_id			integer references bank_accounts,
 	investment_id			integer references investments,
 	currency_id				integer references currency,
 	journal_id				integer references journals,
@@ -44,7 +44,7 @@ CREATE TABLE tx_ledger (
 CREATE INDEX tx_ledger_ledger_type_id ON tx_ledger (ledger_type_id);
 CREATE INDEX tx_ledger_entity_id ON tx_ledger (entity_id);
 CREATE INDEX tx_ledger_bpartner_id ON tx_ledger (bpartner_id);
-CREATE INDEX tx_ledger_account_id ON tx_ledger (account_id);
+CREATE INDEX tx_ledger_bank_account_id ON tx_ledger (bank_account_id);
 CREATE INDEX tx_ledger_currency_id ON tx_ledger (currency_id);
 CREATE INDEX tx_ledger_journal_id ON tx_ledger (journal_id);
 CREATE INDEX tx_ledger_workflow_table_id ON tx_ledger (workflow_table_id);
@@ -64,7 +64,7 @@ CREATE VIEW vw_tx_ledger AS
 	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		entitys.entity_id, entitys.entity_name, 
-		accounts.account_id, accounts.account_name,
+		bank_accounts.bank_account_id, bank_accounts.bank_account_name, investments.investment_id, investments.investment_name,
 		tx_ledger.bpartner_id, bpartners.entity_name as bpartner_name, 
 		
 		tx_ledger.org_id, tx_ledger.tx_ledger_id, tx_ledger.journal_id, 
@@ -107,8 +107,10 @@ CREATE VIEW vw_tx_ledger AS
 		INNER JOIN ledger_types ON tx_ledger.ledger_type_id = ledger_types.ledger_type_id
 		INNER JOIN currency ON tx_ledger.currency_id = currency.currency_id
 		INNER JOIN entitys ON tx_ledger.entity_id = entitys.entity_id
-		INNER JOIN accounts ON tx_ledger.account_id = accounts.account_id
-		INNER JOIN entitys as bpartners ON tx_ledger.bpartner_id = bpartners.entity_id;
+		INNER JOIN bank_accounts ON tx_ledger.bank_account_id = bank_accounts.bank_account_id
+		INNER JOIN entitys as bpartners ON tx_ledger.bpartner_id = bpartners.entity_id
+		INNER JOIN investments ON tx_ledger.investment_id = investments.investment_id;
+		
 	
 
 CREATE VIEW vws_tx_ledger AS
@@ -167,11 +169,11 @@ BEGIN
 	v_inteval :=  ((v_end - v_start) || ' months')::interval;
 
 	IF ($3 = '1') THEN
-		INSERT INTO tx_ledger(ledger_type_id, entity_id, bpartner_id, account_id, 
+		INSERT INTO tx_ledger(ledger_type_id, entity_id, bpartner_id, bank_account_id, 
 				currency_id, journal_id, org_id, exchange_rate, tx_type, tx_ledger_date, 
 				tx_ledger_quantity, tx_ledger_amount, tx_ledger_tax_amount, reference_number, 
 				narrative)
-		SELECT ledger_type_id, entity_id, bpartner_id, account_id, 
+		SELECT ledger_type_id, entity_id, bpartner_id, bank_account_id, 
 			currency_id, journal_id, org_id, exchange_rate, tx_type, (tx_ledger_date + v_inteval), 
 			tx_ledger_quantity, tx_ledger_amount, tx_ledger_tax_amount, reference_number,
 			narrative

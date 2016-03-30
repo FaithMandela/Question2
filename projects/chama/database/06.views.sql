@@ -30,38 +30,35 @@ CREATE OR REPLACE VIEW vw_expenses AS
 	JOIN currency ON expenses.currency_id = currency.currency_id
 	JOIN entitys ON expenses.entity_id = entitys.entity_id
 	
+CREATE OR REPLACE VIEW vw_contribution_defaults AS
+	SELECT contribution_types.contribution_type_id, contribution_types.contribution_type_name, entitys.entity_id, entitys.entity_name, contribution_defaults.org_id, contribution_defaults.contribution_default_id, contribution_defaults.investment_amount, contribution_defaults.merry_go_round_amount, contribution_defaults.details
+	FROM contribution_defaults
+	left JOIN contribution_types ON contribution_defaults.contribution_type_id = contribution_types.contribution_type_id
+	JOIN entitys ON contribution_defaults.entity_id = entitys.entity_id;
 
-CREATE VIEW vw_contribution_types AS
-	SELECT orgs.org_id, orgs.org_name, contribution_types.contribution_type_id, contribution_types.contribution_type_name, 
-	contribution_types.details
-	FROM contribution_types
-	JOIN orgs ON contribution_types.org_id = orgs.org_id;
+CREATE OR REPLACE VIEW vw_contribution_types AS
+	SELECT contribution_types.org_id, contribution_types.contribution_type_id, contribution_types.contribution_type_name, contribution_types.investment_amount, contribution_types.merry_go_round_amount, contribution_types.frequency, contribution_types.applies_to_all, contribution_types.details
+	FROM contribution_types;
+	
+CREATE VIEW vw_contributions AS
+	SELECT bank_accounts.bank_account_id, bank_accounts.bank_account_name, 
+		contribution_types.contribution_type_id, contribution_types.contribution_type_name,
+		entitys.entity_id, entitys.entity_name, 
+		
+		contributions.org_id, contributions.period_id,contributions.meeting_id,
+    contributions.contribution_id, contributions.contribution_date, contributions.investment_amount, contributions.merry_go_round_amount, contributions.money_in, contributions.money_out, contributions.details
 
-CREATE OR REPLACE VIEW vw_contributions AS 
- SELECT contribution_types.contribution_type_id,
-    contribution_types.contribution_type_name,
-    entitys.entity_id,
-    entitys.entity_name,
-    bank_accounts.bank_account_id,
-    contributions.org_id,
-    contributions.period_id,
-    contributions.meeting_id,
-    contributions.contribution_id,
-    contributions.contribution_date,
-    contributions.contribution_amount,
-    contributions.merry_go_round,
-    contributions.merry_go_round_percentage,
-    contributions.actual_amount,
-    contributions.details
-   FROM contributions
-     JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
+		FROM contributions
+		 JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN entitys ON contributions.entity_id = entitys.entity_id
      LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id;
+
 
 CREATE VIEW vw_investment_types AS
 	SELECT orgs.org_id, orgs.org_name, investment_types.investment_type_id, investment_types.investment_type_name, investment_types.details
 	FROM investment_types
 	INNER JOIN orgs ON investment_types.org_id = orgs.org_id;
+
 CREATE OR REPLACE VIEW vw_investments AS 
  SELECT currency.currency_id,
     currency.currency_name,
@@ -70,18 +67,19 @@ CREATE OR REPLACE VIEW vw_investments AS
     bank_accounts.bank_account_id,
     bank_accounts.bank_account_name,
     investments.org_id,
+    investments.period_id,
     investments.investment_id,
     investments.investment_name,
     investments.date_of_accrual,
-    investments.principal,
+    investments.total_cost,
+    investments.repayment_period,
     investments.monthly_returns,
+	investments.monthly_payments,
     investments.total_payment,
     investments.default_interest,
-    investments.period,
-    investments.workflow_table_id,
-    investments.action_date,
+    investments.total_returns,
+	investments.is_complete,
     investments.is_active,
-    investments.approve_status,
     investments.details
    FROM investments
      JOIN currency ON investments.currency_id = currency.currency_id
