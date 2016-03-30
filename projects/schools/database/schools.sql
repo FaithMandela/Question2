@@ -12,7 +12,7 @@ CREATE TABLE staff (
 	staff_id					serial primary key,
 	entity_id					integer references entitys,
 	org_id						integer references orgs,
-	staff_role					varchar (60)
+	staff_role					varchar (60),
 		
 	full_name					varchar (120),
 	surname 					varchar(50) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE stream_classes (
 	details						text
 );
 CREATE INDEX stream_classes_org_id ON stream_classes (org_id);
-
+--
 CREATE TABLE students (
 	student_id					varchar(12) primary key,
 	entity_id					integer references entitys,
@@ -54,12 +54,12 @@ CREATE TABLE students (
 	
 	student_name				varchar(50) not null,
 	Sex							varchar(1),
-	nationality					varchar(2) not null references countrys,
+	nationality					varchar(2) not null references sys_countrys,
 	birth_date					date not null,
 	address						varchar(50),
 	zipcode						varchar(50),
 	town						varchar(50),
-	country_code_id				char(2) not null references countrys,
+	country_code_id				char(2) not null references sys_countrys,
 	telno						varchar(50),
 	email						varchar(240),
 	
@@ -75,7 +75,7 @@ CREATE TABLE students (
 	g_address					varchar(50),
 	g_zipcode					varchar(50),
 	g_town						varchar(50),
-	g_countrycodeid				char(2) not null references countrys,
+	g_countrycodeid				char(2) not null references sys_countrys,
 	g_telno						varchar(50),
 	g_email						varchar(240),
 	
@@ -122,7 +122,7 @@ CREATE INDEX students_session_student_id ON students_session(student_id);
 CREATE INDEX students_session_student_id ON students_session(student_id);
 
 
-CREATE TABLE exams 
+CREATE TABLE exams (
 	exam_id							serial primary key,
 	org_id							integer references orgs,
 	exam_file						varchar (32),
