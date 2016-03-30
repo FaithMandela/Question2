@@ -188,7 +188,7 @@ BEGIN
 	IF ($3::integer = 1) THEN
 		ps := 'Approved';
 		SELECT * INTO app FROM applicants WHERE applicant_id = $1::integer;
-		SELECT org_id INTO rec FROM orgs WHERE (pcc = app.pseudo_code);
+		SELECT org_id INTO rec FROM orgs WHERE (trim(upper(pcc)) = trim(upper(app.pseudo_code)));
 
 		IF(rec IS NULL)THEN
 			RAISE EXCEPTION 'Pseudo Code Does not Exist';

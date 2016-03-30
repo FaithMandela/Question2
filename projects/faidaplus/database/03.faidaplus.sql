@@ -132,6 +132,7 @@ CREATE TABLE applicants (
 	org_id 					integer references orgs,
 	applicant_email			varchar(50) not null,
 	user_name  				varchar(120) not null;
+	phone_no    			character varying(50)
 	pseudo_code				varchar(4),
 	son 					varchar(7),
 	consultant_dob			date not null,

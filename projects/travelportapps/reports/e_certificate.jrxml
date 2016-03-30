@@ -156,7 +156,7 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nok_national_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{passenger_id_no}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="110" y="150" width="76" height="23" uuid="155ef31c-ed1c-4da9-96ff-591201d86101"/>
