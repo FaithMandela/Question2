@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="96"/>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
@@ -13,7 +13,7 @@
 		<defaultValueExpression><![CDATA[109]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,vw_passengers.approved_date,vw_passengers.destown,vw_passengers.policy_number,vw_passengers.nok_national_id,
+		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,vw_passengers.approved_date,vw_passengers.passenger_id_no,vw_passengers.destown,vw_passengers.policy_number,vw_passengers.nok_national_id,
 ('The policy is valid from  '|| vw_passengers.days_from)as days_from,('to '||vw_passengers.days_to ||'.')as days_to,'The policy benefits includes Emergency Medical and Evacuation benefits of USD '||get_benefit_section_a(rate_type_id)||' and USD '||get_benefit_section_b(rate_type_id)|| ' respectively and is applicable worldwide including all Schengen States.' as benefit from vw_passengers
 WHERE passenger_id = '$P!{filterid}']]>
 	</queryString>
@@ -21,6 +21,7 @@ WHERE passenger_id = '$P!{filterid}']]>
 	<field name="passenger_name" class="java.lang.String"/>
 	<field name="rate_type_id" class="java.lang.Integer"/>
 	<field name="approved_date" class="java.sql.Timestamp"/>
+	<field name="passenger_id_no" class="java.lang.String"/>
 	<field name="destown" class="java.lang.String"/>
 	<field name="policy_number" class="java.lang.String"/>
 	<field name="nok_national_id" class="java.lang.String"/>
@@ -129,7 +130,7 @@ WHERE passenger_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nok_national_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{passenger_id_no}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="133" y="175" width="143" height="20" uuid="00c2565f-f68d-441b-991a-af9a19e9649e"/>

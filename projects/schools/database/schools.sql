@@ -1,5 +1,3 @@
----Project Database File
-
 CREATE TABLE subjects (
 	subject_id 					serial primary key,
 	org_id						integer references orgs,
@@ -12,7 +10,7 @@ CREATE TABLE staff (
 	staff_id					serial primary key,
 	entity_id					integer references entitys,
 	org_id						integer references orgs,
-	staff_role					varchar (60)
+	staff_role					varchar (60),
 		
 	full_name					varchar (120),
 	surname 					varchar(50) NOT NULL,
@@ -38,28 +36,29 @@ CREATE INDEX staff_org_id ON staff (org_id);
 CREATE INDEX staff_entity_id ON staff (entity_id);
 
 CREATE TABLE stream_classes (
-	class_id					serial primary key,
+	stream_class_id					serial primary key,
 	org_id						integer references orgs,
+	class_level					integer,
 	stream						varchar(60),
 	narrative					varchar(320),
 	details						text
 );
 CREATE INDEX stream_classes_org_id ON stream_classes (org_id);
-
+--
 CREATE TABLE students (
-	student_id					varchar(12) primary key,
+	student_id					serial primary key,
 	entity_id					integer references entitys,
 	org_id						integer references orgs,
 	class_id					integer references stream_classes,
 	
 	student_name				varchar(50) not null,
 	Sex							varchar(1),
-	nationality					varchar(2) not null references countrys,
+	nationality					varchar(2) not null references sys_countrys,
 	birth_date					date not null,
 	address						varchar(50),
 	zipcode						varchar(50),
 	town						varchar(50),
-	country_code_id				char(2) not null references countrys,
+	country_code_id				char(2) not null references sys_countrys,
 	telno						varchar(50),
 	email						varchar(240),
 	
@@ -75,7 +74,7 @@ CREATE TABLE students (
 	g_address					varchar(50),
 	g_zipcode					varchar(50),
 	g_town						varchar(50),
-	g_countrycodeid				char(2) not null references countrys,
+	g_countrycodeid				char(2) not null references sys_countrys,
 	g_telno						varchar(50),
 	g_email						varchar(240),
 	
@@ -91,18 +90,25 @@ CREATE INDEX students_nationality ON students (nationality);
 CREATE INDEX students_country_code_id ON students (country_code_id);
 CREATE INDEX students_g_countrycodeid ON students (g_countrycodeid);
 
+---Project Database File
+
+
 CREATE TABLE grades (
-	grade_id 					serial primary key,
+	grade_id 					varchar(2) primary key,
 	org_id						integer references orgs,
-	grade_range					double,
+	grade_range					real,
 	details						text
 );
 CREATE INDEX grades_org_id ON grades (org_id);
 
-CREATE TABLE sessions(
+CREATE TABLE sessions (
+<<<<<<< HEAD
+	session_id					serial primary key,
+=======
 	sesion_id					serial primary key,
+>>>>>>> 0d1345827be20df978696da1bb70570deef519cf
 	org_id						integer references orgs,
-	session_narrative			text,
+	session_name				varchar(32),
 	session_start_date			date,
 	session_end_date			date,
 	details						text
@@ -110,7 +116,7 @@ CREATE TABLE sessions(
 
 CREATE INDEX session_org_id ON sessions(org_id);
 
-CREATE TABLE students_session(
+CREATE TABLE students_session (
 	student_session_id			serial primary key,
 	org_id 						integer references orgs,
 	session_id					integer	references sessions,
@@ -119,31 +125,47 @@ CREATE TABLE students_session(
 );
 CREATE INDEX students_session_org_id ON students_session(org_id);
 CREATE INDEX students_session_student_id ON students_session(student_id);
-CREATE INDEX students_session_student_id ON students_session(student_id);
 
 
-CREATE TABLE exams 
+CREATE TABLE exams (
 	exam_id							serial primary key,
+	session_id					integer references sessions,
+	subject_id					integer references subjects,
+<<<<<<< HEAD
+	class_level					integer references stream_classes,				
+=======
+	class_level					integer references stream_classes,				,
+>>>>>>> 0d1345827be20df978696da1bb70570deef519cf
 	org_id							integer references orgs,
-	exam_file						varchar (32),
+	exam_file						varchar(32),
 	exam_narrative					text
 );
 CREATE INDEX exams_org_id on exams(org_id);
+CREATE INDEX exams_session_id on exams(session_id);
+CREATE INDEX exams_subject_id on exams(subject_id);
+CREATE INDEX exams_class_level on exams(class_level);
 
 
 CREATE TABLE timetable (
 	timetable_id				serial primary key,
 	class_id					integer references stream_classes,
-	org_id						integer references orgs,
 	session_id					integer references sessions,
 	subject_id					integer references subjects,
-	week_day					char(9),
-	start_time					timestamp,
-	end_time					timestamp,
+	staff_id					integer references staff,	
+	org_id						integer references orgs,
+	monday						boolean not null default false,
+	tuesday						boolean not null default false,
+	wednesday					boolean not null default false,
+	thursday					boolean not null default false,
+	friday						boolean not null default false,
+	saturday					boolean not null default false,
+	start_time					time,
+	end_time					time,
 	narrative					text
-	);
+);
 CREATE INDEX timetable_class_id ON timetable(class_id);
 CREATE INDEX timetable_org_id ON timetable(org_id);
 CREATE INDEX timetable_session_id ON timetable(session_id);
 CREATE INDEX timetable_subject_id ON timetable(subject_id);
+CREATE INDEX timetable_staff_id ON timetable(staff_id);
 

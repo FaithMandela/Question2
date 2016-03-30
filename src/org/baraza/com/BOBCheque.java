@@ -148,8 +148,8 @@ public class BOBCheque extends JApplet implements Printable, ActionListener, Lis
 		JScrollPane eftSP = new JScrollPane(eftTable);
 		eftSP.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-		//rpt = new BReport(db, "http://172.100.3.34:8080/cheques/reports/", "EM_bankpaymentadvise.jasper");
-		rpt = new BReport(db, "/root/baraza/projects/ob/reports/", "EM_bankpaymentadvise.jasper");
+		rpt = new BReport(db, "http://172.100.3.34:8080/cheques/reports/", "EM_bankpaymentadvise.jasper");
+		//rpt = new BReport(db, "/root/baraza/projects/ob/reports/", "EM_bankpaymentadvise.jasper");
 
 		JPanel btPanel = new JPanel();
 		btPanel.add(label);
@@ -221,14 +221,15 @@ public class BOBCheque extends JApplet implements Printable, ActionListener, Lis
 			String cname = rs.getString("name");
 			float camount = rs.getFloat("amount");
 			int cba = (int) camount;
-			int cbc = (int) (100 * (camount - cba));
 			BAmountInWords aiw = new BAmountInWords(cba);
-			BAmountInWords aiwc = new BAmountInWords(cbc);
 			SimpleDateFormat dateformatter = new SimpleDateFormat("dd.MMM.yyyy");
 			String mydate = dateformatter.format(cdate);
 			DecimalFormat dformatter = new DecimalFormat("###,###,###.00");
 			String s = dformatter.format(camount);
 			String sfs = aiw.getAmountInWords();
+			
+			int cbc = Integer.valueOf(s.substring(s.length()-2, 2)).intValue();
+			BAmountInWords aiwc = new BAmountInWords(cbc);
 			if(cbc>5) sfs += " " + aiwc.getAmountInWords() + " cents\n";
 
 			cl.add(ref);

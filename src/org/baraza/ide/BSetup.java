@@ -176,6 +176,7 @@ public class BSetup implements ActionListener {
 			int n = JOptionPane.showConfirmDialog(panel, "This will delete existing database, are you sure you want to proceed?", "Demo Database", JOptionPane.YES_NO_OPTION);
 			if(n == 0) {
 				String err = createDB("demo.sql", ftUserName.getText(), ftPassword.getText());
+				
 				if(err != null) lbStatus.setText(err);
 				else lbStatus.setText("Database creation successfull.");
 			} else {
@@ -186,12 +187,15 @@ public class BSetup implements ActionListener {
 			int n = JOptionPane.showConfirmDialog(panel, "This will delete existing database, are you sure you want to proceed?", "New Database", JOptionPane.YES_NO_OPTION);
 			if(n == 0) {
 				String err = createDB("setup.sql", ftUserName.getText(), ftPassword.getText());
+				
 				if(err != null) lbStatus.setText(err);
 				else lbStatus.setText("Database creation successfull.");
 			} else {
 				lbStatus.setText("Baraza Setup");
 			}
 		}
+		
+		lbStatus.repaint();
 	}
 
 	public static void main(String args[]) {

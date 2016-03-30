@@ -284,7 +284,7 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="702" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="0b3dfd88-ad4f-4c62-8b23-fcdfe72788cc"/>
 				<textElement textAlignment="Right">
