@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_group" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08747894-0f5b-4c39-9485-6be2f4dac043">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="38"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -69,20 +69,17 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
-	<title>
+	<pageHeader>
 		<band height="55" splitType="Stretch">
 			<image>
-				<reportElement x="5" y="0" width="250" height="55" uuid="65d41721-5d43-4a16-8026-cdbafa738982"/>
+				<reportElement x="2" y="0" width="250" height="55" uuid="65d41721-5d43-4a16-8026-cdbafa738982"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "cwt_logo.jpg"]]></imageExpression>
 			</image>
 			<image scaleImage="RetainShape" hAlign="Right">
-				<reportElement x="292" y="0" width="253" height="55" uuid="6990d8c5-1d5a-4254-a966-ca72833e37cd"/>
+				<reportElement x="289" y="0" width="253" height="55" uuid="6990d8c5-1d5a-4254-a966-ca72833e37cd"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "bts_logo.jpg"]]></imageExpression>
 			</image>
 		</band>
-	</title>
-	<pageHeader>
-		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
 		<band height="236" splitType="Stretch">

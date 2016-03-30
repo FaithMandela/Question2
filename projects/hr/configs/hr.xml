@@ -2240,7 +2240,12 @@
 				<EDITFIELD w="175" title="Narrative" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">narrative</EDITFIELD>
 				<FORM name="Objective Evaluation" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
 					<COMBOBOX w="430" title="Work Objective" lptable="vw_objectives" linkfnct="get_review_entity" linkfield="entity_id" y="10" h="20" x="10" lpfield="objective_name">objective_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Points" y="30" h="20" x="10">points</TEXTFIELD>
+					<COMBOLIST w="50" title="Points" y="10" h="20" x="10">points
+						<DATA key="1">1- Exceeds the agreed standards set for the indicator</DATA>
+						<DATA key="2">2 - meets in full the agreed standards set for the indicator</DATA>
+						<DATA key="3">3 - partially meets the agreed standard set for the indicator</DATA>
+						<DATA key="4">4 - unsatisfactory; performance is far below the agreed standard set for the indicator.</DATA>
+					</COMBOLIST>
 					<TEXTAREA w="530" tab="Narrative" y="2" h="70" x="10">narrative</TEXTAREA>
 					<TEXTAREA w="530" tab="Discusion Area" y="2" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -2266,7 +2271,12 @@
 				<EDITFIELD w="175" title="Narrative" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">narrative</EDITFIELD>
 				<FORM name="Evaluation Points" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
 					<COMBOBOX w="430" title="Review Point" lptable="review_points" linkfnct="get_review_category" y="10" h="20" x="10" lpfield="review_point_name">review_point_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Grade" y="30" h="20" x="10">grade</TEXTFIELD>
+					<COMBOLIST w="50" title="Grade" y="10" h="20" x="10">grade
+						<DATA key="S">S - Satisfactory</DATA>
+						<DATA key="A">A - Average</DATA>
+						<DATA key="W">W - Area of Weakness</DATA>
+						<DATA key="NA">NA - Not Applicable</DATA>
+					</COMBOLIST>
 					<TEXTAREA w="530" tab="Narrative" y="2" h="70" x="10">narrative</TEXTAREA>
 					<TEXTAREA w="530" tab="Discusion Area" y="2" h="70" x="10">details</TEXTAREA>
 				</FORM>

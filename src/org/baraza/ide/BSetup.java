@@ -28,32 +28,43 @@ import org.baraza.DB.BQuery;
 
 public class BSetup implements ActionListener {
 
+	String ps;
+	String path;
 	JPanel panel;
 	JTextField ftUserName, ftPassword;
 	JLabel lbStatus;
-	String ps;
-	String path;
 	BXML xml;
 	BElement root;
-
+	
 	public BSetup(String path) {
 		ps = System.getProperty("file.separator");
 		this.path = path;
 		String setupXML = path + ps + "setup.xml";
 		xml = new BXML(setupXML, false);
 		root = xml.getRoot();
+	}
+	
+	public void runSetup(String filename) {
+		String dbUserName = root.getAttribute("dbusername");
+		String dbPassword = root.getAttribute("dbpassword");
+		
+		String err = createDB(filename, dbUserName, dbPassword);
+		if(err != null) System.out.println(err);
+		else System.out.println("Database creation successfull.");
+	}
 
-		String dbusername = root.getAttribute("dbusername");
-		String dbpassword = root.getAttribute("dbpassword");
+	public void runUISetup() {
+		String dbUserName = root.getAttribute("dbusername");
+		String dbPassword = root.getAttribute("dbpassword");
 
 		panel = new JPanel(new GridLayout(0, 2, 2, 2));
 
 		lbStatus = new JLabel("Baraza Setup");
 		JLabel lbUserName = new JLabel("User Name : ");
-		ftUserName = new JTextField(dbusername);
+		ftUserName = new JTextField(dbUserName);
 
 		JLabel lbPassword = new JLabel("Password : ");
-		ftPassword = new JTextField(dbpassword);
+		ftPassword = new JTextField(dbPassword);
 
 		JButton btTest = new JButton("Test Connection");
 		JButton btSave = new JButton("Save Configuration");
@@ -84,19 +95,19 @@ public class BSetup implements ActionListener {
 		frame.setVisible(true);
 	}
 
-	public void saveConfigs() {
-		root.setAttribute("dbusername", ftUserName.getText());
-		root.setAttribute("dbpassword", ftPassword.getText());
+	public void saveConfigs(String dbUserName, String dbPassword) {
+		root.setAttribute("dbusername", dbUserName);
+		root.setAttribute("dbpassword", dbPassword);
 		xml.saveFile();
 
 		String configXML = path + ps + "config.xml";
 		BXML cfgxml = new BXML(configXML, false);
 		BElement cfg = cfgxml.getRoot();
-		cfg.setAttribute("dbusername", ftUserName.getText());
-		cfg.setAttribute("dbpassword", ftPassword.getText());
+		cfg.setAttribute("dbusername", dbUserName);
+		cfg.setAttribute("dbpassword", dbPassword);
 		for(BElement cel : cfg.getElements()) {
-			cel.setAttribute("dbusername", ftUserName.getText());
-			cel.setAttribute("dbpassword", ftPassword.getText());
+			cel.setAttribute("dbusername", dbUserName);
+			cel.setAttribute("dbpassword", dbPassword);
 		}
 		cfgxml.saveFile();
 
@@ -113,21 +124,21 @@ public class BSetup implements ActionListener {
 		BElement web = webxml.getRoot();
 		for(BElement wel : web.getElements()) {
 			if("org.apache.catalina.realm.JDBCRealm".equals(wel.getAttribute("className"))) {
-				wel.setAttribute("connectionName", ftUserName.getText());
-				wel.setAttribute("connectionPassword", ftPassword.getText());
+				wel.setAttribute("connectionName", dbUserName);
+				wel.setAttribute("connectionPassword", dbPassword);
 			}
 			if("jdbc/database".equals(wel.getAttribute("name"))) {
-				wel.setAttribute("username", ftUserName.getText());
-				wel.setAttribute("password", ftPassword.getText());
+				wel.setAttribute("username", dbUserName);
+				wel.setAttribute("password", dbPassword);
 			}
 		}
 		webxml.saveFile();
 	}
 
-	public String createDB(String filename) {
+	public String createDB(String filename, String dbUserName, String dbPassword) {
 		String err = null;
 
-		BDB db = new BDB(root, ftUserName.getText(), ftPassword.getText());
+		BDB db = new BDB(root, dbUserName, dbPassword);
 		if(db.getDB() != null) {
 			db.executeQuery("CREATE ROLE root LOGIN;");
 			db.executeQuery("DROP DATABASE " + root.getAttribute("dbname"));
@@ -135,7 +146,7 @@ public class BSetup implements ActionListener {
 		}
 		db.close();
 
-		BDB ndb = new BDB(root.getAttribute("dbclass"), root.getAttribute("newdbpath"), ftUserName.getText(), ftPassword.getText());
+		BDB ndb = new BDB(root.getAttribute("dbclass"), root.getAttribute("newdbpath"), dbUserName, dbPassword);
 		if((ndb.getDB() != null) && (err == null)) {
 			String ps = System.getProperty("file.separator");
 			String fpath = "projects" + ps + root.getAttribute("path") + ps + "database" + ps + "setup" + ps + filename;
@@ -146,9 +157,6 @@ public class BSetup implements ActionListener {
 		}
 		ndb.close();
 	
-		if(err != null) lbStatus.setText(err);
-		else lbStatus.setText("Database creation successfull.");
-
 		return err;
 	}
 
@@ -161,25 +169,49 @@ public class BSetup implements ActionListener {
 			else lbStatus.setText("Connection Successfull");
 			db.close();
 		} else if("Save Configuration".equals(aKey)) {
-			saveConfigs();
+			saveConfigs(ftUserName.getText(), ftPassword.getText());
 			lbStatus.setText("Configurations Saved");
 		} else if("Create Demo".equals(aKey)) {
 			lbStatus.setText("The process will take a while to complete.");
 			int n = JOptionPane.showConfirmDialog(panel, "This will delete existing database, are you sure you want to proceed?", "Demo Database", JOptionPane.YES_NO_OPTION);
-			if(n == 0) createDB("demo.sql");
-			else lbStatus.setText("Baraza Setup");
+			if(n == 0) {
+				String err = createDB("demo.sql", ftUserName.getText(), ftPassword.getText());
+				
+				if(err != null) lbStatus.setText(err);
+				else lbStatus.setText("Database creation successfull.");
+			} else {
+				lbStatus.setText("Baraza Setup");
+			}
 		} else if("Create New".equals(aKey)) {
 			lbStatus.setText("The process will take a while to complete.");
 			int n = JOptionPane.showConfirmDialog(panel, "This will delete existing database, are you sure you want to proceed?", "New Database", JOptionPane.YES_NO_OPTION);
-			if(n == 0) createDB("setup.sql");
-			else lbStatus.setText("Baraza Setup");
+			if(n == 0) {
+				String err = createDB("setup.sql", ftUserName.getText(), ftPassword.getText());
+				
+				if(err != null) lbStatus.setText(err);
+				else lbStatus.setText("Database creation successfull.");
+			} else {
+				lbStatus.setText("Baraza Setup");
+			}
 		}
+		
+		lbStatus.repaint();
 	}
 
 	public static void main(String args[]) {
 		String path = "projects";
-		if (args.length > 0) path = args[0].trim();
-		BSetup st = new BSetup(path);
+		if (args.length == 1) {
+			path = args[0].trim();
+			BSetup st = new BSetup(path);
+			st.runUISetup();
+		} else if (args.length == 2) {
+			path = args[0].trim();
+			BSetup st = new BSetup(path);
+			st.runSetup(args[1].trim());
+		} else {
+			BSetup st = new BSetup(path);
+			st.runUISetup();
+		}
 	}
 }
 

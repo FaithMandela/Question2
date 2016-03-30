@@ -12,6 +12,7 @@ CREATE TABLE loans (
 	loan_id 				serial primary key,
 	loan_type_id				integer not null references loan_types,
 	entity_id				integer not null references entitys,
+	entity_name 			varchar(120),
 	org_id					integer references orgs,
 	principle				real not null,
 	interest				real not null,
@@ -26,7 +27,7 @@ CREATE TABLE loans (
 	workflow_table_id			integer,
 	action_date				timestamp,
 	
-	is_closed				boolean default false
+	is_closed				boolean default false,
 	details					text
 );
 CREATE INDEX loans_loan_type_id ON loans (loan_type_id);
@@ -161,11 +162,8 @@ CREATE VIEW vw_loans AS
 
 CREATE VIEW vw_loan_monthly AS
 	SELECT 	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
-<<<<<<< HEAD:projects/sacco/database/04.loans.sql
-		vw_loans.loan_type_id, vw_loans.loan_type_name, 
-=======
-		vw_loans.loan_type_id, vw_loans.loan_type_name, vw_loans.approve_statu
->>>>>>> e829fb97559b72260b88801b69fa435872e337b8:projects/sacco/database/04.loans.sql
+		vw_loans.loan_type_id, vw_loans.loan_type_name,vw_loans.approve_status,
+
 		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed, vw_periods.period_year,vw_periods.period_month,
