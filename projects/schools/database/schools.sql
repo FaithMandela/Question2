@@ -102,7 +102,11 @@ CREATE TABLE grades (
 CREATE INDEX grades_org_id ON grades (org_id);
 
 CREATE TABLE sessions (
+<<<<<<< HEAD
 	session_id					serial primary key,
+=======
+	sesion_id					serial primary key,
+>>>>>>> 0d1345827be20df978696da1bb70570deef519cf
 	org_id						integer references orgs,
 	session_name				varchar(32),
 	session_start_date			date,
@@ -127,7 +131,11 @@ CREATE TABLE exams (
 	exam_id							serial primary key,
 	session_id					integer references sessions,
 	subject_id					integer references subjects,
+<<<<<<< HEAD
 	class_level					integer references stream_classes,				
+=======
+	class_level					integer references stream_classes,				,
+>>>>>>> 0d1345827be20df978696da1bb70570deef519cf
 	org_id							integer references orgs,
 	exam_file						varchar(32),
 	exam_narrative					text

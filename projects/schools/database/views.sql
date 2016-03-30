@@ -1,5 +1,9 @@
 CREATE VIEW vw_subjects AS 
+<<<<<<< HEAD
 		SELECT subjects.org_id,subjects.subject_id, subjects.subject_name, subjects.details
+=======
+		subjects.org_id,subjects.subject_id, subjects.subject_name, subjects.details
+>>>>>>> 0d1345827be20df978696da1bb70570deef519cf
 	FROM subjects;
 
 CREATE VIEW vw_staff AS 
@@ -13,6 +17,7 @@ CREATE OR REPLACE VIEW vw_stream_classes AS
 		stream_classes.stream_class_id, stream_classes.class_level, stream_classes.stream, stream_classes.narrative, stream_classes.details
 	FROM stream_classes;
 
+<<<<<<< HEAD
 CREATE OR REPLACE VIEW vw_students AS 
 		SELECT entitys.entity_id, entitys.entity_name,
 		stream_classes.stream_class_id, stream_classes.stream,
@@ -29,12 +34,36 @@ CREATE VIEW vw_grades AS
 
 CREATE VIEW vw_sessions AS 
 		SELECT sessions.org_id, sessions.session_id, sessions.session_name, sessions.session_start_date, sessions.session_end_date, sessions.details
+=======
+CREATE VIEW students AS 
+		entitys.entity_id, entitys.entity_name,
+		stream_classes.class_id, stream_classes.stream,
+		countrys.nationality, countrys.country_code_id,
+		countrys.g_countrycodeid,students.org_id, students.student_id,
+		students.student_name,students.Sex, students.birth_date, students.address,
+		students.zipcode, students.town, students.telno, students.email,
+		students.fathers_name, students.fathers_tel_no, students.fathers_email,
+		students.mothers_name, students.mothers_tel_no, students.mothers_email, 
+		students.guardian_name, students.g_address, students.g_zipcode, students.g_town, students.g_telno, students.g_email, students.current_contact, students.registrar_details, students.details
+	FROM students	JOIN stream_classes ON students.class_id = stream_classes.class_id
+					JOIN entitys ON students.entity_id = entitys.entity_id
+					JOIN countrys ON students.nationality = countrys.nationality;
+
+CREATE VIEW vw_grades AS 
+		grades.org_id,grades.grade_id, grades.grade_range, grades.details
+	FROM grades;
+
+CREATE VIEW sessions AS 
+		sessions.org_id,sessions.sessions_id, sessions.session_narrative,
+		sessions.session_start_date, sessions.session_end_date, sessions.details
+>>>>>>> 0d1345827be20df978696da1bb70570deef519cf
 	FROM sessions;
 
 CREATE VIEW vw_students_session AS 
 		SELECT sessions.session_id, sessions.session_name,
 		students.student_id, students.student_name,
 		students_session.org_id, 
+<<<<<<< HEAD
 		students_session.student_session_id, students_session.details
 	FROM students_session	
 		JOIN sessions ON students_session.session_id = sessions.session_id
@@ -61,3 +90,23 @@ CREATE VIEW vw_timetable AS
 		JOIN subjects ON timetable.subject_id = subjects.subject_id
 		JOIN staff ON timetable.staff_id = staff.staff_id
 		JOIN sessions ON timetable.session_id = sessions.session_id;
+=======
+		students_session.students_session_id, students_session.details
+	FROM students_session	
+		JOIN sessions ON students_session.sessions_id = sessions.sessions_id
+		JOIN ON students_session.student_id = students.student_id;
+
+CREATE VIEW exams AS 
+		exams.org_id,exams.exam_id, exams.exam_file, exams.exam_narrative
+	FROM exams;
+
+CREATE VIEW timetable AS 
+		stream_classes.class_id, stream_classes.stream,
+		subjects.subject_id, subjects.subject_name, 
+		sessions.sessions_id, sessions.session_narrative,
+		timetable.org_id, timetable.timetable_id, timetable.week_day, timetable.start_time, timetable.end_time, timetable.narrative
+	FROM timetable	
+		JOIN stream_classes ON timetable.class_id = stream_classes.class_id
+		JOIN subjects ON timetable.subject_id = subjects.subject_id
+		JOIN sessions ON timetable.sessions_id = sessions.sessions_id;
+>>>>>>> 0d1345827be20df978696da1bb70570deef519cf
