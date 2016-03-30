@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_group" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08747894-0f5b-4c39-9485-6be2f4dac043">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="17"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -446,24 +446,7 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="55" splitType="Stretch">
-			<frame>
-				<reportElement positionType="Float" mode="Opaque" x="0" y="37" width="555" height="18" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="245b3d64-c940-4895-8fb3-0f77b02f29ce"/>
-				<textField evaluationTime="Report">
-					<reportElement style="Column header" positionType="Float" x="415" y="0" width="127" height="17" forecolor="#736343" uuid="4e090890-8be0-417d-857a-afa885aa31ed"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement style="Column header" positionType="Float" x="255" y="0" width="161" height="17" forecolor="#736343" uuid="6fe40f91-f7ae-4d88-997a-da32163e735e"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="10" isBold="false"/>
-					</textElement>
-					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-				</textField>
-			</frame>
+		<band height="36" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" positionType="Float" x="0" y="0" width="555" height="18" forecolor="#000000" uuid="5c4b83bb-336f-41a3-b51b-fa3196ef2460"/>
 				<box>
