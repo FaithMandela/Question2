@@ -1,5 +1,3 @@
----Project Database File
-
 CREATE TABLE subjects (
 	subject_id 					serial primary key,
 	org_id						integer references orgs,
@@ -47,7 +45,7 @@ CREATE TABLE stream_classes (
 CREATE INDEX stream_classes_org_id ON stream_classes (org_id);
 --
 CREATE TABLE students (
-	student_id					varchar(12) primary key,
+	student_id					serial primary key,
 	entity_id					integer references entitys,
 	org_id						integer references orgs,
 	class_id					integer references stream_classes,
@@ -91,10 +89,13 @@ CREATE INDEX students_nationality ON students (nationality);
 CREATE INDEX students_country_code_id ON students (country_code_id);
 CREATE INDEX students_g_countrycodeid ON students (g_countrycodeid);
 
+---Project Database File
+
+
 CREATE TABLE grades (
 	grade_id 					serial primary key,
 	org_id						integer references orgs,
-	grade_range					double,
+	grade_range					real,
 	details						text
 );
 CREATE INDEX grades_org_id ON grades (org_id);
@@ -118,7 +119,6 @@ CREATE TABLE students_session(
 	details						text
 );
 CREATE INDEX students_session_org_id ON students_session(org_id);
-CREATE INDEX students_session_student_id ON students_session(student_id);
 CREATE INDEX students_session_student_id ON students_session(student_id);
 
 
