@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_by_date" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08747894-0f5b-4c39-9485-6be2f4dac043">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="107"/>
+	<property name="ireport.y" value="87"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -30,7 +30,7 @@ substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_time_in,
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_time_out
  FROM vw_transfer_assignments
-WHERE vw_transfer_assignments.pickup_date = '$P!{date}'::date
+WHERE vw_transfer_assignments.pickup_date = '$P!{date}'::date AND vw_transfer_assignments.is_group = false
 ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]>
 	</queryString>
 	<field name="driver_id" class="java.lang.Integer"/>
@@ -356,7 +356,8 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 			<staticText>
 				<reportElement style="Column header" x="80" y="274" width="188" height="15" forecolor="#000000" uuid="887ab1de-5513-494c-b189-03f84c8bc806"/>
 				<box>
-					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+					<bottomPen lineWidth="0.0" lineColor="#666666"/>
+					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10"/>
