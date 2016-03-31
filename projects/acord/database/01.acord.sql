@@ -291,7 +291,7 @@ CREATE INDEX intermediate_outcome_output_id ON intermediate_outcome (output_id);
     
     key_indictors               varchar(120),
     baseline_values             varchar(320),
-    date_source                 date,
+    data_source                 varchar(320),
     data_collection_method      varchar(320),
     frequency_of_collection    varchar(320),
     impact                      varchar(320),
