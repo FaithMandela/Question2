@@ -10,8 +10,8 @@
 			<MENU name="Students">511</MENU>
 			<MENU name="Students Requests">521</MENU>
 		</MENU>
-		<MENU name="Semester">
-			<MENU name="Semesters Students">515</MENU>
+		<MENU name="Trimester">
+			<MENU name="Trimesters Students">515</MENU>
 			<MENU name="Course Registration">562</MENU>
 			<MENU name="Registration Opening">564</MENU>
 			<MENU name="Printed List">565</MENU>
@@ -306,8 +306,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="585" name="Authorised Students" type="vert" key="21" h="570">
-		<GRID name="Semester" keyfield="quarterid" table="quarters" noorg="true" where="(closed = false)">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+		<GRID name="Trimester" keyfield="quarterid" table="quarters" noorg="true" where="(closed = false)">
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID name="Students" keyfield="qstudentid" linkfield="quarterid" table="qstudentview" where="(approved= true)">
@@ -319,8 +319,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="585" name="Authorised Students - Report" type="vert" key="22" h="570">
-		<GRID name="Semester" keyfield="quarterid" table="quarters" noorg="true" where="(closed = false)">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+		<GRID name="Trimester" keyfield="quarterid" table="quarters" noorg="true" where="(closed = false)">
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<JASPER filtered="true" name="Approved Students" keyfield="quarterid" reportfile="qstudentviewd.jasper"></JASPER>
@@ -383,9 +383,9 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="630" name="Semesters Students" key="515" h="520">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+	<DESK w="630" name="Trimesters Students" key="515" h="520">
+		<GRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
 			<GRID name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="studentquarterview">
@@ -470,8 +470,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Class List" type="horl" key="554" h="500">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
-			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+		<GRID name="Trimesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" linkfield="quarterid" table="qcourseview">
 				<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
@@ -485,7 +485,7 @@
 	<DESK w="700" name="Registration Statistics" type="horl" key="569" h="500">
 		<FILTER location="250" name="Registration Statistics" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" listfield="quarteryear">
-				<DRILLDOWN name="Semesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" pos="top"></DRILLDOWN>
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Registration Statistics" reportfile="quarterstats.jasper"></JASPER>
 		</FILTER>
@@ -526,11 +526,11 @@
 					<TEXTFIELD w="150" title="Share Line" y="190" h="20" x="10">share_line</TEXTFIELD>
 					<TEXTFIELD w="150" title="Field Size" default="25" y="190" h="20" x="290">field_size</TEXTFIELD>
 					<TEXTFIELD w="150" title="Field Class" y="210" h="20" x="10">field_class</TEXTFIELD>
-					<TEXTFIELD w="150" title="Field Name" y="210" h="20" x="10">field_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Field Function" y="210" h="20" x="10">field_fnct</TEXTFIELD>
-					<CHECKBOX w="150" title="Manditory" y="210" ischar="true" h="20" x="290">manditory</CHECKBOX>
-					<CHECKBOX w="150" title="Field Bold" y="230" ischar="true" h="20" x="10">field_bold</CHECKBOX>
-					<CHECKBOX w="150" title="Field Italics" y="230" ischar="true" h="20" x="290">field_italics</CHECKBOX>
+					<TEXTFIELD w="150" title="Field Name" y="210" h="20" x="290">field_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Field Function" y="230" h="20" x="10">field_fnct</TEXTFIELD>
+					<CHECKBOX w="150" title="Manditory" y="230" ischar="true" h="20" x="290">manditory</CHECKBOX>
+					<CHECKBOX w="150" title="Field Bold" y="250" ischar="true" h="20" x="10">field_bold</CHECKBOX>
+					<CHECKBOX w="150" title="Field Italics" y="250" ischar="true" h="20" x="290">field_italics</CHECKBOX>
 				</FORM>
 				<GRID name="Sub Fields" keyfield="sub_field_id" orderby="sub_field_order" linkfield="field_id" table="vw_sub_fields">
 					<TEXTFIELD w="75" title="Sub Field Order">sub_field_order</TEXTFIELD>
