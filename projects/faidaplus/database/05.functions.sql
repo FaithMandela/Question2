@@ -68,8 +68,6 @@ BEGIN
 	ELSE
 		msg := 'Points computed';
 	END IF;
-
-
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
@@ -195,8 +193,8 @@ BEGIN
 		END IF;
 
 		UPDATE applicants SET status = ps , org_id = rec.org_id, approve_status = ps WHERE applicant_id = $1::integer ;
-		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, son, function_role, is_active, birth_date)
-		VALUES (rec.org_id, 0, trim(upper(app.son)), trim(app.user_name), trim(lower(app.applicant_email)), trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
+		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, son, function_role, is_active, birth_date)
+		VALUES (rec.org_id, 0, trim(upper(app.son)), trim(app.user_name), trim(lower(app.applicant_email)), app.phone_no, trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
 		msg := 'Consultant account has been activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (2, myid, 'entitys', 3);
@@ -229,12 +227,33 @@ END;
 $BODY$ LANGUAGE plpgsql;
 
 
-
 CREATE OR REPLACE FUNCTION getbalance(integer) RETURNS real AS $$
-	SELECT COALESCE(sum(dr - cr), 0)
-	FROM vw_son_statement
-	WHERE entity_id = $1;
-$$ LANGUAGE sql;
+DECLARE
+	v_org_id 			integer;
+	v_function_role		text;
+	v_balance			real;
+BEGIN
+	v_balance = 0::real;
+	SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
+	IF(v_function_role = 'manager')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_pcc_statement
+		WHERE org_id = v_org_id;
+	END IF;
+	IF(v_function_role = 'consultant')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_son_statement
+		WHERE entity_id = $1;
+	END IF;
+
+	IF(v_function_role = 'admin' OR v_function_role = 'staff' OR v_function_role is null )THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_pcc_statement
+		WHERE org_id = 0;
+	END IF;
+	RETURN v_balance;
+END;
+$$ LANGUAGE plpgsql;
 
 
 CREATE SEQUENCE batch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1;

@@ -389,3 +389,19 @@ CREATE VIEW vw_org_bonus AS
 	FROM bonus JOIN vw_orgs ON bonus.org_id = vw_orgs.org_id
 		JOIN periods ON bonus.period_id = periods.period_id
 	WHERE bonus.entity_id is null;
+
+CREATE OR REPLACE VIEW vw_pcc_statement AS
+SELECT a.dr, a.cr, a.org_id, a.order_date::date, a.pcc,
+		a.org_name, a.dr - a.cr AS balance, a.details
+	FROM ((SELECT COALESCE(vw_org_points.points, 0::real) + COALESCE(vw_org_points.bonus, 0::real) AS dr,
+		0::real AS cr, vw_org_points.period AS order_date, ''::text,
+		vw_org_points.pcc, vw_org_points.org_name, 0::integer,vw_org_points.org_id,
+		( segments||' segments sold in '|| ticket_period)as details
+	FROM vw_org_points)
+	UNION
+	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
+		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
+		vw_orders.entity_id,vw_orders.org_id,
+		get_order_details(vw_orders.order_id) AS details
+	FROM vw_orders)) a
+	ORDER BY a.order_date;
