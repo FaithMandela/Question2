@@ -54,7 +54,7 @@
 			<TILE name="Today Group Actioned" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(processed=true AND is_group = true AND group_contact =true AND pickup_date = CURRENT_TIMESTAMP::date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
-			<TILE name="Group Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date)">
+			<TILE name="Group Todays Pax" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date AND group_contact =true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passanger_id), 0)" title="Total Pax">passanger_id</TEXTFIELD>
 			</TILE>
 			<TILE name="Group Todays Cancelled" role="transport" noorg.query="true" table="vw_passangers" noorg="true" where="(is_group = true AND pickup_date = CURRENT_TIMESTAMP::date  AND pax_cancelled = true)">
