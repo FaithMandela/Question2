@@ -771,8 +771,8 @@ CREATE TABLE qtimetable (
 	cfriday				boolean not null default false,
 	csaturday			boolean not null default false,
 	csunday				boolean not null default false,
-	start_time			time not null,
-	end_time				time not null,
+	starttime			time not null,
+	endtime				time not null,
 	lab					boolean not null default false,
 	details				text
 );

@@ -1,4 +1,4 @@
-<APP name="UEAB" org="org_id" password="change_password">
+<APP auth.name="studentid" name="UEAB" auth.id="studentid" org="org_id" password="change_password" auth.table="students">
 	<MENU title="Students">
 		<MENU name="Student">
 			<MENU name="Student Details">1</MENU>
