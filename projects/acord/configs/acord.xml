@@ -995,7 +995,7 @@
 				<FORM name="Indicators" keyfield="indicator_id" linkfield="project_id" table="indicators">
 					<TEXTFIELD w="430" title="Key Indictors" y="10" h="20" x="10">key_indictors</TEXTFIELD>
 					<TEXTFIELD w="430" title="Baseline Values" y="30" h="20" x="10">baseline_values</TEXTFIELD>
-					<TEXTDATE w="150" title="Date Source" y="50" h="20" x="10">date_source</TEXTDATE>
+					<TEXTFIELD w="150" title="Data Source" y="50" h="20" x="10">date_source</TEXTFIELD>
 					<TEXTFIELD w="430" title="Data Collection Method" y="70" h="20" x="10">data_collection_method</TEXTFIELD>
 					<TEXTFIELD w="430" title="Frequency Of Collection" y="90" h="20" x="10">frequency_of_collection</TEXTFIELD>
 					<TEXTFIELD w="430" title="Impact" y="110" h="20" x="10">impact</TEXTFIELD>

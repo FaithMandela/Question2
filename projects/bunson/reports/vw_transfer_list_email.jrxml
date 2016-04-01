@@ -28,7 +28,7 @@ vw_passangers.customer_name,vw_passangers.reference_data,
 vw_passangers.entity_name, vw_passangers.payment_type_name, vw_passangers.transfer_id, vw_passangers.customer_code, vw_passangers.agreed_amount, vw_passangers.start_time, vw_passangers.transfer_flight_id, vw_passangers.flight_date, vw_passangers.start_airport, vw_passangers.end_airport, vw_passangers.airline, vw_passangers.flight_num, vw_passangers.passanger_id, vw_passangers.passanger_name, vw_passangers.passanger_mobile, vw_passangers.passanger_email, vw_passangers.pickup_time, vw_passangers.pickup, vw_passangers.dropoff, vw_passangers.amount, vw_passangers.processed, vw_passangers.pickup_date,
 vw_passangers.tab, vw_passangers.other_preference, pax_no
 FROM vw_passangers
-WHERE vw_passangers.transfer_id = '$P!{transfer_id}'::integer]]>
+WHERE vw_passangers.transfer_id = '$P!{transfer_id}'::integer AND vw_passangers.is_group = false]]>
 	</queryString>
 	<field name="car_type_code" class="java.lang.String"/>
 	<field name="customer_name" class="java.lang.String"/>
