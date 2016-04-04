@@ -164,6 +164,8 @@ BEGIN
 		IF(v_entity_id is not null)THEN
 			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 		END IF;
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (1, NEW.applicant_id, 'applicants', 3);
 	END IF;
 	RETURN NEW;
 END;

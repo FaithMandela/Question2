@@ -880,12 +880,19 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Bonus" key="116">
-		<FILTER split="150" w="700" h="550" name="Total Bonus Earnings" type="vert" key="order_date">
-			<FILTERFORM name="Total Bonus Earnings ">
+		<FILTER split="150" w="700" h="550" name="Consultant Bonus" type="vert" key="order_date">
+			<FILTERFORM name="Consultant Bonus ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="consultant_bonus.jasper" name="Total Bonus Earnings"></JASPER>
+			<JASPER reportfile="consultant_bonus.jasper" name="Consultant Bonus"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Agency Bonus " type="vert" key="order_date">
+			<FILTERFORM name="Agency Bonus ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="agency_bonus.jasper" name=" Agency Bonus"></JASPER>
 		</FILTER>
 		<JASPER reportfile="active_bonus.jasper" name="Active Bonus"></JASPER>
 		<FILTER split="150" w="700" h="550" name="Bonus per KAM" type="vert" key="order_date">
@@ -1083,7 +1090,13 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Opening Balance" key="129">
-		<JASPER reportfile="opening_balance.jasper" name="Opening Balance"></JASPER>
+		<FILTER split="150" w="700" h="550" name="Opening Balance" type="vert" key="order_date">
+			<FILTERFORM name="Opening Balance ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="opening_balance.jasper" name="Opening Balance"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Total Redemptions" key="128">
 		<FILTER split="150" w="700" h="550" name="Total Redemptions" type="vert" key="order_date">
