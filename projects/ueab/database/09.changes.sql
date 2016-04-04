@@ -12,8 +12,6 @@ ADD sys_audit_trail_id	integer references sys_audit_trail;
 CREATE INDEX students_org_id ON students (org_id);
 CREATE INDEX students_sys_audit_trail_id ON students (sys_audit_trail_id);
 
-<<<<<<< HEAD
-=======
 CREATE OR REPLACE FUNCTION getcoursedone(varchar(12), varchar(12)) RETURNS float AS $$
 	SELECT max(grades.gradeweight)
 	FROM (((qcourses INNER JOIN qgrades ON qcourses.qcourseid = qgrades.qcourseid)
@@ -24,7 +22,7 @@ CREATE OR REPLACE FUNCTION getcoursedone(varchar(12), varchar(12)) RETURNS float
 		AND (qgrades.dropped = false)
 		AND (studentdegrees.studentid = $1) AND (qcourses.courseid = $2);		
 $$ LANGUAGE SQL;
->>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
+
 
 CREATE OR REPLACE FUNCTION updstudents() RETURNS trigger AS $$
 DECLARE
@@ -79,9 +77,6 @@ BEGIN
     RETURN passed;
 END;
 $$ LANGUAGE plpgsql;
-<<<<<<< HEAD
-			
-=======
 
 
 DROP VIEW coregradeview;
@@ -136,4 +131,4 @@ CREATE VIEW coregradeview AS
 		corecourseoutline.contenttypeid, corecourseoutline.contenttypename
 	FROM corecourseoutline INNER JOIN studentgradeview ON (corecourseoutline.studentdegreeid = studentgradeview.studentdegreeid) AND (corecourseoutline.courseid = studentgradeview.courseid)
 	WHERE (studentgradeview.approved = true) AND (corecourseoutline.minor = false);
->>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
+

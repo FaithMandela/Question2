@@ -242,7 +242,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="750" name="Workflows" key="40" h="570">
-		<GRID name="Workflows" keyfield="workflow_id" table="vw_workflows">
+		<GRID name="Workflows" keyfield="workflow_id" table="vw_workflows" noorg="true">
 			<TEXTFIELD w="75" title="Workflow ID">workflow_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow Name">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Source">source_entity_name</TEXTFIELD>
@@ -301,7 +301,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Approvals" key="45" h="500">
-		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status='Completed')" user="entity_id">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" tab.count="count(approval_id)" params="table_name, table_id" where="(approve_status='Completed')" user="entity_id">
 			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>

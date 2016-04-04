@@ -2,11 +2,9 @@
 	<MENU name="General Information">
 		<MENU name="Information">
 			<MENU name="School">1</MENU>
-			<MENU name="Student Application">11</MENU>
 			<MENU name="Employer Application">12</MENU>
 		</MENU>
 	</MENU>
-
 	<DESK w="700" name="School" key="1" h="500">
 		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true">
 			<TEXTFIELD w="75" title="School ID">schoolid</TEXTFIELD>
@@ -81,7 +79,6 @@
 			</FORMVIEW>
 		</GRID>
 	</DESK>
-
 	<DESK w="700" name="Application for Admission" key="11" h="500">
 		<FORM name="Application for Admission" keyfield="entity_id" audit="false" del="false" table="entitys" noorg="true">
 			<DEFAULT default="8">entity_type_id</DEFAULT>
@@ -114,6 +111,14 @@
 			<TEXTAREA w="430" title="Details" y="250" h="70" x="10">details</TEXTAREA>
 			<FORMVIEW name="News" keyfield="sys_news_id" table="sys_news" noorg="true" where="(sys_news_id = 2)">
 				<TEXTAREA w="530" title="Advice" y="2" h="170" x="10">details</TEXTAREA>
+			</FORMVIEW>
+		</FORM>
+	</DESK>
+	<DESK w="700" name="Reset Passwords" key="2" h="500">
+		<FORM fornew="true" save.button="Reset Password" name="Reset Passwords" keyfield="sys_reset_id" edit="false" delete="false" audit="false" table="sys_reset" noorg="true">
+			<TEXTFIELD w="430" title="Request Email" y="30" h="20" x="10">request_email</TEXTFIELD>
+			<FORMVIEW name="Sys Reset" keyfield="sys_reset_id" linkfield="sys_reset_id" display="form" table="sys_reset" noorg="true">
+				<TEXTFIELD w="430" fnct="'Your email has been sent to your email.'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
 			</FORMVIEW>
 		</FORM>
 	</DESK>

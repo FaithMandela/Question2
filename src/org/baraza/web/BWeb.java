@@ -294,15 +294,6 @@ public class BWeb {
 		}
 	}
 
-	public void setUser(String userIP, String tableName, String idCol, String nameCol, String userName) {
-		if(db != null) {
-			if(userName == null) userName = "root";
-			db.setUser(userIP, userName);
-			db.setUser(tableName, idCol, nameCol, userName);
-			userID = db.getUserID();
-		}
-	}
-
 	public void setMainPage(String mainPage) {
 		this.mainPage = mainPage;
 		webSession.setAttribute("mainpage", mainPage);

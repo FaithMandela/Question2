@@ -35,6 +35,7 @@
 			<MENU name="Opening Balance">129</MENU>
 			<MENU name="Summary Report">124</MENU>
 			<MENU name="Consultant Statement">123</MENU>
+			<MENU name="Total Redemptions">128</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
@@ -965,7 +966,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="500" name="Entitys" key="100">
-		<GRID role="admin" keyfield="entity_id" name="Entitys" where="function_role = 'admin' OR function_role = 'staff'" key="1" table="vw_entitys">
+		<GRID noorg="true" role="admin,staff" keyfield="entity_id" name="Entitys" where="function_role = 'admin' OR function_role = 'staff'" key="1" table="vw_entitys">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -984,9 +985,6 @@
 				<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
 				<TEXTDATE w="75" title="Date of Birth">birth_date</TEXTDATE>
-				<CHECKBOX w="150" h="20" x="10" y="110" title="Super User">super_user</CHECKBOX>
-				<CHECKBOX w="150" h="20" x="290" y="110" title="Entity Leader">entity_leader</CHECKBOX>
-				<CHECKBOX w="150" h="20" x="10" y="130" title="No Org">no_org</CHECKBOX>
 				<COMBOBOX w="75" h="20" lpfield="entity_type_name" lptable="entity_types" title="Functional Role" lpkey="entity_role">function_role</COMBOBOX>
 				<CHECKBOX w="150" h="20" x="10" y="150" title="Active">is_active</CHECKBOX>
 				<TEXTAREA w="430" h="70" x="10" y="170" title="Details">details</TEXTAREA>
@@ -1025,18 +1023,20 @@
 					<TEXTAREA w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<GRID keyfield="account_manager_id" name="Accounts" linkfield="account_manager_id" table="vw_orgs">
+			<GRID noorg="true" keyfield="org_id" name="Accounts" linkfield="account_manager_id" table="orgs">
 				<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
-				<FORM keyfield="org_id" name="Accounts" linkfield="account_manager_id" table="orgs">
-					<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" title="Entity">entity_id</COMBOBOX>
-					<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
-					<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
+				<FORM new="false" keyfield="org_id" name="Accounts" linkfield="account_manager_id" table="orgs">
+					<COMBOBOX w="430" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" title="Staff Name">account_manager_id</COMBOBOX>
 				</FORM>
 			</GRID>
-			<ACTIONS>
-				<ACTION fnct="change_password">Reset Password</ACTION>
-			</ACTIONS>
+		</GRID>
+		<GRID noorg="true" keyfield="org_id" name="Account Manager" key="5" table="orgs">
+			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
+			<FORM new="false" noorg="true" keyfield="org_id" name="Account Manager" linkfield="account_manager_id" table="orgs">
+				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" fnct="account_manager_id" y="10" lptable="entitys" title="Staff Name">entity_id</COMBOBOX>
+			</FORM>
 		</GRID>
 		<GRID role="admin" keyfield="entity_type_id" name="Entity Types" key="2" table="entity_types">
 			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
@@ -1084,5 +1084,14 @@
 	</DESK>
 	<DESK w="700" h="550" name="Opening Balance" key="129">
 		<JASPER reportfile="opening_balance.jasper" name="Opening Balance"></JASPER>
+	</DESK>
+	<DESK w="700" h="550" name="Total Redemptions" key="128">
+		<FILTER split="150" w="700" h="550" name="Total Redemptions" type="vert" key="order_date">
+			<FILTERFORM name="Total Redemptions ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="total_redemption.jasper" name="Total Redemptions"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

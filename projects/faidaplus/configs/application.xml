@@ -10,7 +10,7 @@
 			<TEXTFIELD w="430" required="true" title="Username *" placeholder="Username" y="50" h="20" x="10">user_name</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Mobile Number *" placeholder="Mobile Number" y="50" h="20" x="10">phone_no</TEXTFIELD>
 			<TEXTFIELD w="150" required="true" title="Pseudo Code *" placeholder="PCC" h="20" y="30" x="290" span="true" fnct="upper(pseudo_code)">pseudo_code</TEXTFIELD>			
-			<TEXTFIELD w="100" required="true" title="Sign On Code initials.* *" placeholder="Input son without suffix Z" y="10" h="20" x="490" fnct="upper(son)" span="true">son</TEXTFIELD>
+			<TEXTFIELD w="100" required="true" title="Sign On Code initials.* *" placeholder="Input initials without prefix Z" y="10" h="20" x="490" fnct="upper(son)" span="true">son</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Birth" placeholder="Date Of Birth">consultant_dob</TEXTDATE>
 			
 			<FORMVIEW name="Applicant" keyfield="applicant_id" linkfield="applicant_id" table="applicants">

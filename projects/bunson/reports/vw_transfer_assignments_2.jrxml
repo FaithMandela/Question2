@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_2" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08747894-0f5b-4c39-9485-6be2f4dac043">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="83"/>
+	<property name="ireport.y" value="86"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -20,7 +20,7 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name,
+		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, entity_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name,
 vw_transfer_assignments.customer_name, reference_data, vw_transfer_assignments.car_type_code, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.pax_no, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num,
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_pickup_time
  FROM vw_transfer_assignments
@@ -28,6 +28,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="driver_id" class="java.lang.Integer"/>
 	<field name="driver_name" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
 	<field name="mobile_number" class="java.lang.String"/>
 	<field name="car_type_id" class="java.lang.Integer"/>
 	<field name="registration_number" class="java.lang.String"/>
@@ -89,14 +90,18 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 	<detail>
 		<band height="292" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="1" y="214" width="78" height="15" forecolor="#000000" uuid="12566469-8389-4ff4-be1b-e25b1f4b1cea"/>
+				<reportElement style="Column header" x="1" y="226" width="78" height="15" forecolor="#000000" uuid="12566469-8389-4ff4-be1b-e25b1f4b1cea"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Time In]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="271" y="113" width="88" height="15" forecolor="#000000" uuid="3c83cd5e-4649-4dcc-ae60-2b321c8748fb"/>
+				<reportElement style="Column header" x="267" y="113" width="92" height="15" forecolor="#000000" uuid="3c83cd5e-4649-4dcc-ae60-2b321c8748fb"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -104,6 +109,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="1" y="113" width="78" height="15" forecolor="#000000" uuid="ea38d4aa-b100-4122-ac68-433adac016cf"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -111,21 +117,25 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" stretchType="RelativeToTallestObject" x="1" y="37" width="78" height="15" forecolor="#000000" uuid="9fdf3772-4858-4a5e-aab8-75621537bc52"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Pax No.]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="66" width="188" height="27" isRemoveLineWhenBlank="true" uuid="65e9e227-5e61-412a-b3a5-c8e138d14222"/>
-				<box leftPadding="4"/>
+				<reportElement style="Detail" x="79" y="66" width="188" height="25" isRemoveLineWhenBlank="true" uuid="65e9e227-5e61-412a-b3a5-c8e138d14222"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{passanger_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="1" y="194" width="78" height="15" forecolor="#000000" uuid="3f888ca0-e52d-46af-b8a6-07cdec957b7d"/>
+				<reportElement style="Column header" x="1" y="208" width="78" height="15" forecolor="#000000" uuid="3f888ca0-e52d-46af-b8a6-07cdec957b7d"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -139,7 +149,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pickup}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd MMM yyyy" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="79" y="113" width="188" height="15" uuid="01473954-2c2e-49a2-965e-e5e7068ed0a2"/>
 				<box leftPadding="4"/>
 				<textElement>
@@ -148,7 +158,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{flight_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="174" width="188" height="15" isRemoveLineWhenBlank="true" uuid="3aafe2f5-55fe-4f58-9eaa-73e0128516cd"/>
+				<reportElement style="Detail" x="79" y="190" width="188" height="15" isRemoveLineWhenBlank="true" uuid="3aafe2f5-55fe-4f58-9eaa-73e0128516cd"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -156,14 +166,15 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{driver_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="1" y="174" width="78" height="15" forecolor="#000000" uuid="716e44e3-0796-489d-a277-9ef55e615a4f"/>
+				<reportElement style="Column header" x="1" y="190" width="78" height="15" forecolor="#000000" uuid="716e44e3-0796-489d-a277-9ef55e615a4f"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Driver Name]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="359" y="174" width="185" height="15" uuid="85d9f2b3-7d2a-4172-b207-4f2afed0646e"/>
+				<reportElement style="Detail" x="359" y="190" width="185" height="15" uuid="85d9f2b3-7d2a-4172-b207-4f2afed0646e"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -171,7 +182,10 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{mobile_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="1" y="234" width="78" height="15" forecolor="#000000" uuid="9b08b5d6-50a9-471e-830a-69329c9f0a60"/>
+				<reportElement style="Column header" x="267" y="226" width="92" height="15" forecolor="#000000" uuid="9b08b5d6-50a9-471e-830a-69329c9f0a60"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -196,7 +210,8 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<text><![CDATA[____________________________]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="271" y="93" width="88" height="15" forecolor="#000000" uuid="f7640dc3-722e-4c4f-9921-a4362a3b29cf"/>
+				<reportElement style="Column header" x="267" y="93" width="92" height="15" forecolor="#000000" uuid="f7640dc3-722e-4c4f-9921-a4362a3b29cf"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -211,14 +226,20 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{pickup_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="1" y="66" width="78" height="15" forecolor="#000000" uuid="66f3ebee-0c0f-41e5-b457-502508f145e4"/>
+				<reportElement style="Column header" x="1" y="66" width="78" height="25" forecolor="#000000" uuid="66f3ebee-0c0f-41e5-b457-502508f145e4"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Passenger Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="271" y="214" width="88" height="15" forecolor="#000000" uuid="6c981cb6-1e02-4c4f-9d9c-77e0e61315e9"/>
+				<reportElement style="Column header" x="156" y="226" width="49" height="15" forecolor="#000000" uuid="6c981cb6-1e02-4c4f-9d9c-77e0e61315e9"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -233,6 +254,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="1" y="93" width="78" height="15" forecolor="#000000" uuid="f7307e4e-917c-4f07-bf1d-ae474b0accdf"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -246,15 +268,17 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{tab} == 1 ? "DEPARTURE" : "ARRIVAL"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="359" y="66" width="185" height="15" isRemoveLineWhenBlank="true" uuid="843301e8-c27b-4c87-b9f8-543aa7f85dd5"/>
-				<box leftPadding="4"/>
+				<reportElement style="Detail" x="359" y="66" width="185" height="25" isRemoveLineWhenBlank="true" uuid="843301e8-c27b-4c87-b9f8-543aa7f85dd5"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{passanger_mobile}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="359" y="194" width="185" height="15" isRemoveLineWhenBlank="true" uuid="b9e00d09-5bcb-4dc6-9078-cd1944b87c4b"/>
+				<reportElement style="Detail" x="205" y="208" width="62" height="15" isRemoveLineWhenBlank="true" uuid="b9e00d09-5bcb-4dc6-9078-cd1944b87c4b"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -262,14 +286,15 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{kms_out}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="1" y="254" width="78" height="15" forecolor="#000000" uuid="3d83f2a4-e2a4-4fc9-a0ee-972b1caaf06e"/>
+				<reportElement style="Column header" x="1" y="245" width="78" height="15" forecolor="#000000" uuid="3d83f2a4-e2a4-4fc9-a0ee-972b1caaf06e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Other Details]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="271" y="174" width="88" height="15" forecolor="#000000" uuid="0f26c07c-4f2f-4d75-aeb6-77436753b4a3"/>
+				<reportElement style="Column header" x="267" y="190" width="92" height="15" forecolor="#000000" uuid="0f26c07c-4f2f-4d75-aeb6-77436753b4a3"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -277,7 +302,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Title" positionType="Float" x="184" y="20" width="185" height="17" uuid="103256d8-a50d-4a1c-9177-79f2dd963565"/>
-				<box>
+				<box leftPadding="4">
 					<bottomPen lineWidth="0.5" lineColor="#666666"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
@@ -286,14 +311,17 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<text><![CDATA[Transfer Voucher]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="271" y="66" width="88" height="15" forecolor="#000000" uuid="72860504-6c7e-456d-be9e-6d40e9f67102"/>
+				<reportElement style="Column header" x="267" y="66" width="92" height="25" forecolor="#000000" uuid="72860504-6c7e-456d-be9e-6d40e9f67102"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Passenger Mobile]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="359" y="234" width="185" height="15" isRemoveLineWhenBlank="true" uuid="1c4e2df7-32d3-46bf-96ce-a6ae005965e1"/>
+				<reportElement style="Detail" x="359" y="208" width="185" height="15" isRemoveLineWhenBlank="true" uuid="1c4e2df7-32d3-46bf-96ce-a6ae005965e1"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -301,7 +329,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{registration_number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="254" width="465" height="15" uuid="47174aa4-bf87-4dbd-8b42-136753a76877"/>
+				<reportElement style="Detail" x="79" y="245" width="465" height="15" uuid="47174aa4-bf87-4dbd-8b42-136753a76877"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -309,7 +337,8 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{other_preference}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="271" y="234" width="88" height="15" forecolor="#000000" uuid="463d782e-c716-44b6-80e6-a3dfaa3d7046"/>
+				<reportElement style="Column header" x="267" y="208" width="92" height="15" forecolor="#000000" uuid="463d782e-c716-44b6-80e6-a3dfaa3d7046"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -317,14 +346,15 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="1" y="134" width="78" height="15" forecolor="#000000" uuid="d9cc23f4-217c-43e0-9416-e22797cd80fe"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Pickup Point]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="369" y="20" width="185" height="17" uuid="cea58035-5fa0-47e9-9767-1e03ac005c7c"/>
-				<box rightPadding="4">
+				<reportElement style="Detail" positionType="Float" x="369" y="20" width="175" height="17" uuid="cea58035-5fa0-47e9-9767-1e03ac005c7c"/>
+				<box leftPadding="4">
 					<bottomPen lineWidth="0.5" lineColor="#666666"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
@@ -349,7 +379,10 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{pax_no}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="1" y="154" width="78" height="15" forecolor="#000000" uuid="b58718ef-d6bc-4057-9453-116e897dd3be"/>
+				<reportElement style="Column header" x="1" y="152" width="78" height="15" forecolor="#000000" uuid="b58718ef-d6bc-4057-9453-116e897dd3be"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -365,14 +398,17 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" stretchType="RelativeToTallestObject" x="271" y="37" width="88" height="15" forecolor="#000000" uuid="195f9513-bc52-4049-aa57-cff2e1d44c5a"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Organization]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
-				<reportElement style="Detail" x="359" y="214" width="185" height="15" uuid="8e7a3b98-b811-400c-b096-0b65963a3ace"/>
-				<box leftPadding="4"/>
+				<reportElement style="Detail" x="205" y="226" width="62" height="15" uuid="8e7a3b98-b811-400c-b096-0b65963a3ace"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -380,7 +416,7 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="73" y="20" width="111" height="17" uuid="6233c255-183c-4a4d-a475-93d397f2ee4d"/>
-				<box>
+				<box leftPadding="4">
 					<bottomPen lineWidth="0.5" lineColor="#666666"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
@@ -389,16 +425,18 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{transfer_id}+ "/" + $F{passanger_id} + "/" + $F{transfer_assignment_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="234" width="188" height="15" isRemoveLineWhenBlank="true" uuid="67e0d905-d895-410b-8221-2190ba232d4e"/>
-				<box leftPadding="4"/>
+				<reportElement style="Detail" x="359" y="226" width="185" height="15" isRemoveLineWhenBlank="true" uuid="67e0d905-d895-410b-8221-2190ba232d4e"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{car_type_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="20" width="73" height="17" forecolor="#000000" uuid="341e4366-eb87-458e-a04a-8e1b35b3bf60"/>
-				<box>
+				<reportElement style="Column header" positionType="Float" x="1" y="20" width="72" height="17" forecolor="#000000" uuid="341e4366-eb87-458e-a04a-8e1b35b3bf60"/>
+				<box leftPadding="4">
 					<bottomPen lineWidth="0.5" lineColor="#666666"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
@@ -407,23 +445,27 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<text><![CDATA[Voucher Ref :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="154" width="465" height="15" uuid="61385249-3064-4c8f-b13a-bff2947a971f"/>
-				<box leftPadding="4"/>
+				<reportElement style="Detail" x="79" y="152" width="465" height="15" uuid="61385249-3064-4c8f-b13a-bff2947a971f"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dropoff}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="214" width="188" height="15" uuid="5e1fb2e3-31a9-4fe9-9f7e-2d09eb3d1661"/>
-				<box leftPadding="4"/>
+				<reportElement style="Detail" x="79" y="226" width="77" height="15" uuid="5e1fb2e3-31a9-4fe9-9f7e-2d09eb3d1661"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{time_in}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="194" width="188" height="15" isRemoveLineWhenBlank="true" uuid="776dfa40-b23d-43ac-9436-8e28c6b2ebd4"/>
+				<reportElement style="Detail" x="79" y="208" width="77" height="15" isRemoveLineWhenBlank="true" uuid="776dfa40-b23d-43ac-9436-8e28c6b2ebd4"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -448,12 +490,29 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 				<text><![CDATA[Client Signature]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="271" y="194" width="88" height="15" forecolor="#000000" uuid="48879352-4263-479b-8087-d85b8a16b922"/>
+				<reportElement style="Column header" x="156" y="208" width="49" height="15" forecolor="#000000" uuid="48879352-4263-479b-8087-d85b8a16b922"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Kms Out]]></text>
 			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1" y="172" width="78" height="15" forecolor="#000000" uuid="81c35871-94ed-4cfd-89de-b879fdf4717d"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Consultant]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="79" y="172" width="465" height="15" uuid="0e5df4b9-1c49-4ad0-a2bb-baa5ff9148c6"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
@@ -464,14 +523,14 @@ WHERE vw_transfer_assignments.transfer_assignment_id = '$P!{filterid}']]>
 					<topPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Bold"/>
 				</textElement>
 				<text><![CDATA[BUNSON TRAVEL SERVICE | P.O. BOX 45456 - 00100 NAIROBI | transport@carlsonwagonlit.co.ke]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" positionType="Float" x="-1" y="13" width="555" height="12" forecolor="#000000" uuid="1a75230c-83d4-4bf1-9884-39fb9a7b8ec8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Transport Emergency :254738772272,254701772272    |  CWT JKIA Representative:254701708011,254707835815]]></text>
 			</staticText>
