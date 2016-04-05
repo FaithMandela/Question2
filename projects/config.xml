@@ -94,4 +94,5 @@
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">FAidaplus Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelportapps Server</SERVER>
 	<APP dbpath="jdbc:postgresql://localhost/microstart" dbname="microstart" path="microstart" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">microstart</APP>
+	<APP dbpath="jdbc:postgresql://localhost/microstart" dbname="microstart" path="microstart" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">microstart</APP>
 </APPLIST>

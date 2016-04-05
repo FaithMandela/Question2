@@ -50,7 +50,7 @@ CREATE TABLE students (
 	student_id					serial primary key,
 	entity_id					integer references entitys,
 	org_id						integer references orgs,
-	class_id					integer references stream_classes,
+	stream_class_id 			integer references stream_classes,
 	
 	student_name				varchar(50) not null,
 	Sex							varchar(1),
@@ -86,7 +86,7 @@ CREATE TABLE students (
 
 CREATE INDEX students_org_id ON students (org_id);
 CREATE INDEX students_entity_id ON students (entity_id);
-CREATE INDEX students_class_id ON students (class_id);
+CREATE INDEX students_class_id ON students (stream_class_id);
 CREATE INDEX students_nationality ON students (nationality);
 CREATE INDEX students_country_code_id ON students (country_code_id);
 CREATE INDEX students_g_countrycodeid ON students (g_countrycodeid);
@@ -139,7 +139,7 @@ CREATE INDEX exams_class_level on exams(class_level);
 
 CREATE TABLE timetable (
 	timetable_id				serial primary key,
-	class_id					integer references stream_classes,
+	stream_class_id					integer references stream_classes,
 	session_id					integer references sessions,
 	subject_id					integer references subjects,
 	staff_id					integer references staff,	

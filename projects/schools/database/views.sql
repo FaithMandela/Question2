@@ -17,9 +17,11 @@ CREATE OR REPLACE VIEW vw_students AS
 		SELECT entitys.entity_id, entitys.entity_name,
 		stream_classes.stream_class_id, stream_classes.stream,
 		sys_countrys.sys_country_id, sys_countrys.sys_country_name,
-		students.org_id, students.student_id, students.class_id, students.student_name, students.sex, students.nationality, students.birth_date, students.address, students.zipcode, students.town, students.country_code_id, students.telno, students.email, students.fathers_name, students.fathers_tel_no, students.fathers_email, students.mothers_name, students.mothers_tel_no, students.mothers_email, students.guardian_name, students.g_address, students.g_zipcode, students.g_town, students.g_countrycodeid, students.g_telno, students.g_email, students.current_contact, students.registrar_details, students.details
+		students.org_id, students.student_id, students.class_id, students.student_name,
+		 students.sex, students.nationality, students.birth_date, students.address, students.zipcode,
+		 students.town, students.country_code_id, students.telno, students.email, students.fathers_name, students.fathers_tel_no, students.fathers_email, students.mothers_name, students.mothers_tel_no, students.mothers_email, students.guardian_name, students.g_address, students.g_zipcode, students.g_town, students.g_countrycodeid, students.g_telno, students.g_email, students.current_contact, students.registrar_details, students.details
 	FROM students	
-		JOIN stream_classes ON students.class_id = stream_classes.stream_class_id
+		JOIN stream_classes ON students.stream_class_id = stream_classes.stream_class_id
 		JOIN entitys ON students.entity_id = entitys.entity_id
 		JOIN sys_countrys ON students.country_code_id = sys_countrys.sys_country_id;
 		
@@ -55,9 +57,9 @@ CREATE VIEW vw_timetable AS
 		staff.staff_id, staff.surname,
 		stream_classes.stream_class_id, stream_classes.stream, 
 		subjects.org_id, subjects.subject_id, subjects.subject_name,
-		timetable.timetable_id, timetable.class_id, timetable.monday, timetable.tuesday, timetable.wednesday, timetable.thursday, timetable.friday, timetable.saturday, timetable.start_time, timetable.end_time, timetable.narrative
+		timetable.timetable_id,timetable.monday, timetable.tuesday, timetable.wednesday, timetable.thursday, timetable.friday, timetable.saturday, timetable.start_time, timetable.end_time, timetable.narrative
 	FROM timetable	
-		JOIN stream_classes ON timetable.class_id = stream_classes.stream_class_id
+		JOIN stream_classes ON timetable.stream_class_id = stream_classes.stream_class_id
 		JOIN subjects ON timetable.subject_id = subjects.subject_id
 		JOIN staff ON timetable.staff_id = staff.staff_id
 		JOIN sessions ON timetable.session_id = sessions.session_id;
