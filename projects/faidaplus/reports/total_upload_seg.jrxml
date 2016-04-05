@@ -11,7 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
-    points.pcc,
+    vw_entitys.pcc,
     points.son,
     sum(points.segments)as segments,
     sum(points.amount)as amount,
@@ -27,7 +27,7 @@
      JOIN periods ON points.period_id = periods.period_id
 WHERE to_char(periods.start_date, 'mmyyyy'::text) >= to_char('$P!{minDate}'::date, 'mmyyyy'::text)
 AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date, 'mmyyyy'::text)
-	GROUP BY  points.pcc, points.son, vw_entitys.org_name, vw_entitys.entity_name,    vw_entitys.user_name,  vw_entitys.is_active,   vw_entitys.entity_id;]]>
+	GROUP BY  vw_entitys.pcc, points.son, vw_entitys.org_name, vw_entitys.entity_name,    vw_entitys.user_name,  vw_entitys.is_active,   vw_entitys.entity_id;]]>
 	</queryString>
 	<field name="pcc" class="java.lang.String"/>
 	<field name="son" class="java.lang.String"/>
@@ -55,7 +55,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 		</band>
 	</title>
 	<pageHeader>
-		<band height="31" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="100" height="15" uuid="53f88d8e-936a-4d26-9c0d-c49d15b0d38a"/>
 				<textElement>
@@ -89,7 +89,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 	<columnHeader>
 		<band height="33" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="156" height="20" uuid="728e9d87-d031-4d01-8b74-555a9b3b4839"/>
+				<reportElement x="0" y="0" width="70" height="20" uuid="728e9d87-d031-4d01-8b74-555a9b3b4839"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -97,15 +97,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				<text><![CDATA[Username]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="156" y="0" width="154" height="20" uuid="090fb01f-7c1c-48e8-9ab1-67a5a410e75a"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
-				</textElement>
-				<text><![CDATA[Full Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="310" y="0" width="67" height="32" isPrintWhenDetailOverflows="true" uuid="ebca8d19-4130-455b-82c8-21f41293c63e"/>
+				<reportElement x="342" y="0" width="56" height="32" isPrintWhenDetailOverflows="true" uuid="ebca8d19-4130-455b-82c8-21f41293c63e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -113,7 +105,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				<text><![CDATA[Account Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="0" width="81" height="32" isPrintWhenDetailOverflows="true" uuid="6767df1a-9d8e-4b78-a5f8-b1bb54595e60"/>
+				<reportElement x="398" y="0" width="60" height="32" isPrintWhenDetailOverflows="true" uuid="6767df1a-9d8e-4b78-a5f8-b1bb54595e60"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -131,6 +123,28 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 			<line>
 				<reportElement x="0" y="32" width="555" height="1" isPrintWhenDetailOverflows="true" uuid="e5dcb5d1-6bb2-4493-a6a3-bca2b1a272af"/>
 			</line>
+			<staticText>
+				<reportElement x="70" y="0" width="121" height="20" uuid="75a9c44e-4550-408e-9f30-e1a36a34c09b"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agency Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="243" y="0" width="99" height="20" uuid="090fb01f-7c1c-48e8-9ab1-67a5a410e75a"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<text><![CDATA[Full Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="191" y="0" width="52" height="20" uuid="98c0778e-91a1-4f73-81de-8f43d9236934"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PCC]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -144,22 +158,22 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="156" height="15" isPrintWhenDetailOverflows="true" uuid="e150b22d-af7c-44b7-87e0-f18664a8c309"/>
+				<reportElement x="0" y="0" width="70" height="15" isPrintWhenDetailOverflows="true" uuid="e150b22d-af7c-44b7-87e0-f18664a8c309"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="5" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="377" y="0" width="81" height="15" isPrintWhenDetailOverflows="true" uuid="02195028-5fcc-426f-8e43-26c67c7882f0"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="398" y="0" width="60" height="15" isPrintWhenDetailOverflows="true" uuid="02195028-5fcc-426f-8e43-26c67c7882f0"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{segments}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="458" y="0" width="97" height="15" isPrintWhenDetailOverflows="true" uuid="5713f858-f9ec-46e5-827d-a0ace843e123"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
@@ -167,21 +181,35 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="156" y="0" width="154" height="15" isPrintWhenDetailOverflows="true" uuid="1ee9f8d7-6104-4d24-98cf-515217af08f1"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="310" y="0" width="67" height="15" isPrintWhenDetailOverflows="true" uuid="c8304c3a-8a60-476f-9029-4a0565ab4b9d"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="342" y="0" width="56" height="15" isPrintWhenDetailOverflows="true" uuid="c8304c3a-8a60-476f-9029-4a0565ab4b9d"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{is_active}==true?"Active":"Purged"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="70" y="0" width="121" height="15" isPrintWhenDetailOverflows="true" uuid="3cf58c5d-814f-49a6-b428-040929583002"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="191" y="0" width="52" height="15" isPrintWhenDetailOverflows="true" uuid="b7964b4b-bcf3-4448-8829-050f5d38cebb"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="243" y="0" width="98" height="15" isPrintWhenDetailOverflows="true" uuid="1ee9f8d7-6104-4d24-98cf-515217af08f1"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+					<paragraph leftIndent="4" rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

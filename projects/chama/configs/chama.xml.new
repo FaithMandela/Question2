@@ -1,49 +1,49 @@
-<APP name="Chama" org="org_id" password="change_password">
+<APP>
 	<MENU name="Chama">
 		<MENU name="Service Desk">
-			<MENU name="My Details">230</MENU>
-			<MENU name="My account">205</MENU>
-			<MENU name="Investments">110</MENU>
-			<MENU name="Borrowing">90</MENU>
-			<MENU name="Banks">200</MENU>
+			<MENU name="My Details"></MENU>
+			<MENU name="My account"></MENU>
+			<MENU name="Investments"></MENU>
+			<MENU name="Borrowing"></MENU>
+			<MENU name="Banks"></MENU>
 		</MENU>
 		<MENU name="Administration" role="admin">
-			<MENU name="Members">260</MENU>
-			<MENU name="Contributions">210</MENU>
-			<MENU name="Investments">215</MENU>
-			<MENU name="Borrowing">220</MENU>
-			<MENU name="Penalty">225</MENU>
-			<MENU name="Loans">115</MENU>
-			<MENU name="Expenses">305</MENU>
-			<MENU name="Transaction Ledger">310</MENU>
-			<MENU name="Banks">270</MENU>
-			<MENU name="Meetings">100</MENU>
-			<MENU name="Entitys" role="admin">15</MENU>
-			<MENU name="Approvals" role="admin">45</MENU>
-			<MENU name="Files" role="admin">65</MENU>
+			<MENU name="Members"></MENU>
+			<MENU name="Contributions"></MENU>
+			<MENU name="Investments"></MENU>
+			<MENU name="Borrowing"></MENU>
+			<MENU name="Penalty"></MENU>
+			<MENU name="Loans"></MENU>
+			<MENU name="Expenses"></MENU>
+			<MENU name="Transaction Ledger"></MENU>
+			<MENU name="Banks"></MENU>
+			<MENU name="Meetings"></MENU>
+			<MENU name="Entitys" role="admin"></MENU>
+			<MENU name="Approvals" role="admin"></MENU>
+			<MENU name="Files" role="admin"></MENU>
 		</MENU>
 		<MENU name="Organization" role="admin">
-			<MENU name="Periods">275</MENU>
-			<MENU name="Organisation" role="admin">10</MENU>
-			<MENU name="Workflows" role="admin">40</MENU>
-			<MENU name="All Approvals" role="admin">50</MENU>
-			<MENU name="News" role="admin">55</MENU>
-			<MENU name="EMails" role="admin">60</MENU>
-			<MENU name="Error Messages">70</MENU>
-			<MENU name="Subscriptions">280</MENU>
+			<MENU name="Periods"></MENU>
+			<MENU name="Organisation" role="admin"></MENU>
+			<MENU name="Workflows" role="admin"></MENU>
+			<MENU name="All Approvals" role="admin"></MENU>
+			<MENU name="News" role="admin"></MENU>
+			<MENU name="EMails" role="admin"></MENU>
+			<MENU name="Error Messages"></MENU>
+			<MENU name="Subscriptions"></MENU>
 		</MENU>
 		<MENU name="Reports">
-			<MENU name="Contributions" role="manager,admin">235</MENU>
-			<MENU name="Investments" role="manager,admin">240</MENU>
-			<MENU name="Borrowing" role="manager,admin">245</MENU>
-			<MENU name="Loans" role="manager,admin">250</MENU>
-			<MENU name="Penalty" role="manager,admin">255</MENU>
-			<MENU name="Member Contributions">285</MENU>
-			<MENU name="Member Loans">290</MENU>
-			<MENU name="Member Penalty">295</MENU>
+			<MENU name="Contributions" role="manager,admin"></MENU>
+			<MENU name="Investments" role="manager,admin"></MENU>
+			<MENU name="Borrowing" role="manager,admin"></MENU>
+			<MENU name="Loans" role="manager,admin"></MENU>
+			<MENU name="Penalty" role="manager,admin"></MENU>
+			<MENU name="Member Contributions"></MENU>
+			<MENU name="Member Loans"></MENU>
+			<MENU name="Member Penalty"></MENU>
 		</MENU>
-		<MENU name="Finance" role="finance" xml="finance.xml">0</MENU>
-		<MENU name="Payroll" role="payroll" xml="payroll.xml">0</MENU>
+		<MENU name="Finance" role="finance"></MENU>
+		<MENU name="Payroll" role="payroll"></MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
@@ -242,7 +242,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="750" name="Workflows" key="40" h="570">
-		<GRID name="Workflows" keyfield="workflow_id" table="vw_workflows" noorg="true">
+		<GRID name="Workflows" keyfield="workflow_id" table="vw_workflows">
 			<TEXTFIELD w="75" title="Workflow ID">workflow_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow Name">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Source">source_entity_name</TEXTFIELD>
@@ -301,7 +301,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Approvals" key="45" h="500">
-		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" tab.count="count(approval_id)" params="table_name, table_id" where="(approve_status='Completed')" user="entity_id">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status='Completed')" user="entity_id">
 			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
@@ -891,10 +891,10 @@
 			<TEXTFIELD w="75" title="Bank Account ID">bank_account_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Contribution Date">contribution_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-			<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
 			<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
 		</GRID>
@@ -908,7 +908,6 @@
 				<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Paid" y="240" h="20" x="10">paid</CHECKBOX>
 				<TEXTDECIMAL w="150" title="Money In" y="130" h="20" x="290">money_in</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="10">money_out</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
@@ -931,9 +930,15 @@
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
-				<ACTION fnct="generate_contribs" role="admin">Generate Contributionsl</ACTION>
+				<ACTION fnct="generate_payroll" approval="1" role="hr,admin,payrolladmin">Generate Payroll</ACTION>
+				<ACTION fnct="process_payroll" approval="1" role="payroll,admin">Process Payroll</ACTION>
+				<ACTION fnct="process_loans" role="payroll,admin">Process Loans</ACTION>
+				<ACTION fnct="process_pensions" role="payroll,admin">Process Pensions</ACTION>
+				<ACTION fnct="process_payroll" approval="2" role="payroll,admin">Request Approval</ACTION>
+				<ACTION fnct="process_ledger" role="payroll,admin">Process Ledger</ACTION>
+				<ACTION fnct="process_payroll" approval="3" role="payroll,admin">Close Period</ACTION>
 			</ACTIONS>
-			<GRID name="Contributions" keyfield="contribution_id" linkfield="period_id" table="vw_contributions">
+			<GRID name="Contributions" keyfield="contribution_id" table="vw_contributions">
 				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Bank Account name">bank_account_name</TEXTFIELD>
@@ -942,7 +947,6 @@
 				<TEXTDATE w="75" title="Contribution Date">contribution_date</TEXTDATE>
 				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
 				<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
 				<FORM name="Contributions" keyfield="contribution_id" table="contributions">
@@ -954,48 +958,47 @@
 					<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
-					<CHECKBOX w="150" title="Paid" y="240" h="20" x="10">paid</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Money In" y="130" h="20" x="290">money_in</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="10">money_out</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-		</GRID>
-		<GRID name="Contribution Types" keyfield="contribution_type_id" table="vw_contribution_types">
-			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Frequency">frequency</TEXTFIELD>
-			<CHECKBOX w="75" title="Applies To All">applies_to_all</CHECKBOX>
-			<FORM name="Contribution Types" keyfield="contribution_type_id" table="contribution_types">
-				<TEXTFIELD w="430" title="Contribution Type Name" y="10" h="20" x="10">contribution_type_name</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Investment Amount" y="30" h="20" x="10">investment_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="30" h="20" x="290">merry_go_round_amount</TEXTDECIMAL>
-				<COMBOLIST w="150" title="Frequency" y="10" h="20" x="290">frequency
-					<DATA>Irregularly</DATA>
-					<DATA>Weekly</DATA>
-					<DATA>Fortnightly</DATA>
-					<DATA>Monthly</DATA>
-					<DATA>Quarterly.</DATA>
-					<DATA>Semi-annually</DATA>
-					<DATA>Annually</DATA>
-				</COMBOLIST>
-				<CHECKBOX w="150" title="Applies To All" y="50" h="20" x="290">applies_to_all</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID name="Contribution Defaults" keyfield="contribution_default_id" table="vw_contribution_defaults">
-			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-			<FORM name="Contribution Defaults" keyfield="contribution_default_id" table="contribution_defaults">
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<COMBOBOX w="430" title="Contribution Type ID" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Investment Amount" y="30" h="20" x="10">investment_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="30" h="20" x="290">merry_go_round_amount</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
-			</FORM>
+			<GRID name="Contribution Types" keyfield="contribution_type_id" table="vw_contribution_types">
+				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Frequency">frequency</TEXTFIELD>
+				<CHECKBOX w="75" title="Applies To All">applies_to_all</CHECKBOX>
+				<FORM name="Contribution Types" keyfield="contribution_type_id" table="contribution_types">
+					<TEXTFIELD w="430" title="Contribution Type Name" y="10" h="20" x="10">contribution_type_name</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Investment Amount" y="30" h="20" x="10">investment_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="30" h="20" x="290">merry_go_round_amount</TEXTDECIMAL>
+					<COMBOLIST w="150" title="Frequency" y="10" h="20" x="290">frequency
+						<DATA>Irregularly</DATA>
+						<DATA>Weekly</DATA>
+						<DATA>Fortnightly</DATA>
+						<DATA>Monthly</DATA>
+						<DATA>Quarterly.</DATA>
+						<DATA>Semi-annually</DATA>
+						<DATA>Annually</DATA>
+					</COMBOLIST>
+					<CHECKBOX w="150" title="Applies To All" y="50" h="20" x="290">applies_to_all</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Contribution Defaults" keyfield="contribution_default_id" table="vw_contribution_defaults">
+				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
+				<FORM name="Contribution Defaults" keyfield="contribution_default_id" table="contribution_defaults">
+					<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Contribution Type ID" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Investment Amount" y="30" h="20" x="10">investment_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="30" h="20" x="290">merry_go_round_amount</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Investments" key="215" h="550">
@@ -1298,10 +1301,10 @@
 				<TEXTFIELD w="75" title="Bank Account ID">bank_account_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 				<TEXTDATE w="75" title="Contribution Date">contribution_date</TEXTDATE>
 				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
 				<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
 				<FORM name="Contributions" keyfield="contribution_id" table="contributions">
@@ -1871,7 +1874,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<MENU name="Contributions">315</MENU>
+	<DESK name="Contributions"></DESK>
 	<DESK w="700" name="Contributions" key="315" h="550">
 		<GRID name="Contributions" keyfield="contribution_id" table="contributions">
 			<TEXTFIELD w="75" title="Contribution ID">contribution_id</TEXTFIELD>
@@ -1901,7 +1904,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<MENU name="Contributions">320</MENU>
+	<DESK name="Contributions"></DESK>
 	<DESK w="700" name="Contributions" key="320" h="550">
 		<GRID name="Contributions" keyfield="contribution_id" table="vw_contributions">
 			<TEXTFIELD w="75" title="Bank Account ID">bank_account_id</TEXTFIELD>
@@ -1920,18 +1923,18 @@
 			<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
 			<FORM name="Contributions" keyfield="contribution_id" table="contributions">
-				<TEXTFIELD w="150" title="Contribution Type ID" y="10" h="20" x="10">contribution_type_id</TEXTFIELD>
-				<COMBOBOX w="430" title="Meeting ID" lptable="meetings" y="30" h="20" x="10" lpfield="meeting_id">meeting_id</COMBOBOX>
-				<COMBOBOX w="430" title="Bank Account ID" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<COMBOBOX w="430" title="Period ID" lptable="periods" y="90" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
-				<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Money In" y="130" h="20" x="290">money_in</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="10">money_out</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
-				<CHECKBOX w="150" title="Paid" y="240" h="20" x="10">paid</CHECKBOX>
+				<TEXTFIELD w="150" title="Contribution Type ID" h="20" y="10" x="10">contribution_type_id</TEXTFIELD>
+				<COMBOBOX w="430" title="Meeting ID" lptable="meetings" h="20" y="30" lpfield="meeting_id" x="10">meeting_id</COMBOBOX>
+				<COMBOBOX w="430" title="Bank Account ID" lptable="bank_accounts" h="20" y="50" lpfield="bank_account_name" x="10">bank_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Entity ID" lptable="entitys" h="20" y="70" lpfield="entity_name" x="10">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Period ID" lptable="periods" h="20" y="90" lpfield="period_id" x="10">period_id</COMBOBOX>
+				<TEXTDATE w="150" title="Contribution Date" h="20" y="110" x="10">contribution_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Investment Amount" h="20" y="110" x="290">investment_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Merry Go Round Amount" h="20" y="130" x="10">merry_go_round_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Money In" h="20" y="130" x="290">money_in</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Money Out" h="20" y="150" x="10">money_out</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" h="70" y="170" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Paid" h="20" y="240" x="10">paid</CHECKBOX>
 			</FORM>
 		</GRID>
 	</DESK>

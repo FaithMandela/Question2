@@ -51,17 +51,17 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>
-				<text><![CDATA[TOTAL  BONUS EARNINGS]]></text>
+				<text><![CDATA[CONSULTANT  BONUS]]></text>
 			</staticText>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="18" splitType="Stretch"/>
+		<band height="10" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="146" height="20" uuid="5f81ac1b-4b66-4782-bf8a-5abc29feeb1d"/>
+				<reportElement x="0" y="0" width="81" height="20" uuid="5f81ac1b-4b66-4782-bf8a-5abc29feeb1d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -69,7 +69,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[Username]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="146" y="0" width="148" height="20" uuid="a9ca20a0-a23a-4041-a08b-e50693101223"/>
+				<reportElement x="81" y="0" width="123" height="20" uuid="a9ca20a0-a23a-4041-a08b-e50693101223"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -77,7 +77,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[Full Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="357" y="0" width="71" height="20" uuid="ae800d2e-89c9-4482-a023-b49d9471a79f"/>
+				<reportElement x="372" y="0" width="58" height="20" uuid="ae800d2e-89c9-4482-a023-b49d9471a79f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -104,18 +104,25 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[Account Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="294" y="0" width="63" height="20" uuid="a03f0eb7-b7bd-4b9e-a728-f34c63054e1f"/>
+				<reportElement x="319" y="0" width="53" height="20" uuid="a03f0eb7-b7bd-4b9e-a728-f34c63054e1f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PCC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="204" y="0" width="115" height="20" uuid="c9adb5e2-337c-46c3-bd21-f8d272811e59"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agency]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="0" width="572" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="b58bc8db-1f99-47d9-9cdc-39974d7eceec">
+				<reportElement x="0" y="1" width="572" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="b58bc8db-1f99-47d9-9cdc-39974d7eceec">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -123,7 +130,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="146" height="15" isPrintWhenDetailOverflows="true" uuid="c269fd41-5d15-434c-ba99-d7cf6cacce23"/>
+				<reportElement x="0" y="0" width="81" height="15" isPrintWhenDetailOverflows="true" uuid="c269fd41-5d15-434c-ba99-d7cf6cacce23"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -131,7 +138,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="146" y="0" width="150" height="15" isPrintWhenDetailOverflows="true" uuid="aa43c68b-de0a-40bf-b0ec-a9d05a09ede6"/>
+				<reportElement x="81" y="0" width="123" height="15" isPrintWhenDetailOverflows="true" uuid="aa43c68b-de0a-40bf-b0ec-a9d05a09ede6"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -139,7 +146,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="359" y="0" width="71" height="15" isPrintWhenDetailOverflows="true" uuid="a5f03ae5-0dfa-4235-b2db-a4e1a13335d4"/>
+				<reportElement x="372" y="0" width="57" height="15" isPrintWhenDetailOverflows="true" uuid="a5f03ae5-0dfa-4235-b2db-a4e1a13335d4"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -162,12 +169,19 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				</textElement>
 				<textFieldExpression><![CDATA[$F{is_active}==true?"Active":"Suspended"]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="296" y="0" width="63" height="15" uuid="212721c1-3995-4e2b-b3a8-9e992cc3b1cb"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="319" y="0" width="53" height="15" isPrintWhenDetailOverflows="true" uuid="212721c1-3995-4e2b-b3a8-9e992cc3b1cb"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="204" y="0" width="115" height="15" isPrintWhenDetailOverflows="true" uuid="66d0154b-c14b-498e-b652-484e3b0a727b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
