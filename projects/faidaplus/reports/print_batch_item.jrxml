@@ -208,13 +208,4 @@ WHERE vw_orders.order_id = '$P!{order_id}';]]>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="20" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band height="54" splitType="Stretch"/>
-	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
 </jasperReport>
