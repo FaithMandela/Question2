@@ -3,6 +3,7 @@
 		<MENU name="Students">1</MENU>
 		<MENU name="Staff">20</MENU>
 		<MENU name="Control Panel">15</MENU>
+		<MENU name="Subjects">25</MENU>
 	</MENU>
 	<DESK w="700" name="Control Panel" key="15" h="550">
 		<GRID name="Sessions" keyfield="session_id" linkfield="org_id" table="vw_sessions">
@@ -127,9 +128,9 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Students" key="1" h="550">
-		<FORMVIEW name="Students" keyfield="student_id" table="vw_students">
-			<TEXTFIELD w="75" title="ID">student_id</TEXTFIELD>
+	<DESK w="700" hide="true" name="Students" key="1" h="550">
+		<GRID name="Students" keyfield="student_id" table="vw_students">
+			<TEXTFIELD w="20" title="ID">student_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Sex">sex</CHECKBOX>
 			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
@@ -142,11 +143,8 @@
 			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Fathers Name">fathers_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Fathers Tel No">fathers_tel_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Fathers Email">fathers_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Mothers Name">mothers_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Mothers Tel No">mothers_tel_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Mothers Email">mothers_email</TEXTFIELD>
-			<TEXTFIELD w="75" title="Guardian Name">guardian_name</TEXTFIELD>
 			<FORM cols="2" tw="570" name="Students" keyfield="student_id" table="students" th="180">
 				<TEXTFIELD w="150" title="Student Name" y="30" h="20" x="10">student_name</TEXTFIELD>
 				<COMBOLIST w="150" title="Gender" y="50" ischar="true" h="20" x="10" span="true">sex
@@ -184,7 +182,7 @@
 				<TEXTAREA w="430" title="Details" y="530" h="70" x="10">details</TEXTAREA>
 				<TEXTAREA w="430" title="Current Contact" y="390" h="70" x="10">current_contact</TEXTAREA>
 			</FORM>
-		</FORMVIEW>
+		</GRID>
 		<GRID name="Stream Classes" keyfield="stream_class_id" linkfield="stream_class_id" table="vw_stream_classes">
 			<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>
 			<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
@@ -212,6 +210,17 @@
 				<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
 				<SPINTIME w="75" title="End Time">end_time</SPINTIME>
 			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Subjects" key="25" h="550">
+		<GRID name="Subjects" keyfield="subject_id" table="vw_subjects">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Subject ID">subject_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
+			<FORM name="Subjects" keyfield="subject_id" table="subjects">
+				<TEXTFIELD w="430" title="Subject Name" y="10" h="20" x="10">subject_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 </APP>
