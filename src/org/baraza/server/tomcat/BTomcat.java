@@ -72,8 +72,6 @@ public class BTomcat extends Thread {
 		} catch(LifecycleException ex) {
 			log.severe("Tomcat Life cycle error : " + ex);
 		}
-		
-		this.start();
 	}
 
 	public String getCurrentDir() {

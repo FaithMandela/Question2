@@ -267,7 +267,7 @@ WHERE (studentdegreeid = '$P!{filterid}');]]>
 					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[(($F{graduatedate} == null) ? "DEGREE STATUS" : "DATE CONFERED")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(($F{graduatedate} == null) ? "DEGREE STATUS" : "DATE CONFERRED")]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-23" mode="Transparent" x="125" y="141" width="122" height="16" forecolor="#000000" backcolor="#FFFFFF" uuid="06ae40a4-14b7-47eb-a3b5-176746b07630"/>

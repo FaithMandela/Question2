@@ -27,8 +27,8 @@ ORDER BY type;
 ----- Equipment in store
 SELECT asset_type_name, model, purchase_date, asset_serial
 FROM vw_assets
-WHERE (asset_type_id IN (1, 3)) AND (asset_status_id = 1) AND (purchase_date > '2015-01-01'::date)
-ORDER BY asset_type_id, purchase_date;
+WHERE (asset_type_id IN (1, 3)) AND (asset_status_id = 1) AND (purchase_date >= '2016-01-01'::date)
+ORDER BY asset_type_id, purchase_date, model;
 
 SELECT store_equiments.equipment_type, store_equiments.serial_number
 FROM store_equiments LEFT JOIN vw_assets ON store_equiments.serial_number = vw_assets.asset_serial
