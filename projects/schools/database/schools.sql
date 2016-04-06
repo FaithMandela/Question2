@@ -160,7 +160,7 @@ CREATE INDEX timetable_session_id ON timetable(session_id);
 CREATE INDEX timetable_subject_id ON timetable(subject_id);
 CREATE INDEX timetable_staff_id ON timetable(staff_id);
 
-
+--NEW TABLES
 CREATE TABLE exams_subjects(
 	exams_subjects				serial primary key,
 	exam_id						integer references exams,
