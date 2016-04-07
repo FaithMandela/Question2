@@ -122,12 +122,14 @@ CREATE INDEX students_session_org_id ON students_session(org_id);
 CREATE INDEX students_session_student_id ON students_session(student_id);
 
 
+
 CREATE TABLE exams (
 	exam_id							serial primary key,
 	session_id					integer references sessions,
 	subject_id					integer references subjects,
 	class_level					integer references stream_classes,				
 	org_id							integer references orgs,
+	exam_name						varchar(50),
 	exam_file						varchar(32),
 	exam_narrative					text
 );
@@ -154,7 +156,7 @@ CREATE TABLE timetable (
 	end_time					time,
 	narrative					text
 );
-CREATE INDEX timetable_class_id ON timetable(class_id);
+CREATE INDEX timetable_stream_class_id ON timetable(stream_class_id);
 CREATE INDEX timetable_org_id ON timetable(org_id);
 CREATE INDEX timetable_session_id ON timetable(session_id);
 CREATE INDEX timetable_subject_id ON timetable(subject_id);
@@ -162,7 +164,7 @@ CREATE INDEX timetable_staff_id ON timetable(staff_id);
 
 --NEW TABLES
 CREATE TABLE exams_subjects(
-	exams_subjects				serial primary key,
+	exams_subjects_id				serial primary key,
 	exam_id						integer references exams,
 	org_id						integer references orgs,
 	subject_id					integer references subjects,
@@ -185,10 +187,10 @@ CREATE TABLE fees_structure(
 );
 CREATE INDEX fees_structure_session_id ON fees_structure(session_id);
 CREATE INDEX fees_structure_org_id ON fees_structure(org_id);
-CREATE INDEX fees_structure_session_id ON fees_structure(stream_class_id);
+CREATE INDEX fees_structure_stream_class_id ON fees_structure(stream_class_id);
 
 CREATE TABLE students_fees(
-	student_fee_id				primary serial key,
+	student_fee_id				serial primary key,
 	student_id					integer references students,
 	fees_structure_id			integer  references fees_structure,
 	fees_charged				real,
@@ -196,7 +198,7 @@ CREATE TABLE students_fees(
 	paid_date					date,
 	fees_balance				real,
 	cleared						boolean default false,
-	description					text,
+	description					text
 );
 CREATE INDEX student_fees_student_id ON students_fees(student_id);
 CREATE INDEX student_fees_fees_structure_id ON students_fees(fees_structure_id);

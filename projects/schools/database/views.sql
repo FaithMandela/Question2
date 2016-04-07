@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW vw_students AS
 		SELECT entitys.entity_id, entitys.entity_name,
 		stream_classes.stream_class_id, stream_classes.stream,
 		sys_countrys.sys_country_id, sys_countrys.sys_country_name,
-		students.org_id, students.student_id, students.class_id, students.student_name,
+		students.org_id, students.student_id, students.student_name,
 		 students.sex, students.nationality, students.birth_date, students.address, students.zipcode,
 		 students.town, students.country_code_id, students.telno, students.email, students.fathers_name, students.fathers_tel_no, students.fathers_email, students.mothers_name, students.mothers_tel_no, students.mothers_email, students.guardian_name, students.g_address, students.g_zipcode, students.g_town, students.g_countrycodeid, students.g_telno, students.g_email, students.current_contact, students.registrar_details, students.details
 	FROM students	
@@ -63,3 +63,28 @@ CREATE VIEW vw_timetable AS
 		JOIN subjects ON timetable.subject_id = subjects.subject_id
 		JOIN staff ON timetable.staff_id = staff.staff_id
 		JOIN sessions ON timetable.session_id = sessions.session_id;
+		
+CREATE VIEW vw_exams_subjects AS
+	SELECT exams.exam_id, exams.exam_name, 
+	subjects.subject_id, subjects.subject_name, 
+	exams_subjects.org_id, exams_subjects.exams_subjects_id, exams_subjects.exam_file, exams_subjects.exam_description, exams_subjects.narrative
+	FROM exams_subjects
+		JOIN exams ON exams_subjects.exam_id = exams.exam_id
+		JOIN subjects ON exams_subjects.subject_id = subjects.subject_id;
+
+CREATE VIEW vw_fees_structure AS
+	SELECT sessions.session_id, sessions.session_name,
+	stream_classes.stream_class_id, stream_classes.stream,
+	fees_structure.org_id, fees_structure.fees_structure_id, fees_structure.fees_amount,  fees_structure.additional_amounts, fees_structure.description
+	FROM fees_structure
+		JOIN sessions ON fees_structure.session_id = sessions.session_id
+		JOIN stream_classes ON fees_structure.stream_class_id = stream_classes.stream_class_id;
+
+CREATE VIEW vw_students_fees AS
+	SELECT fees_structure.fees_structure_id,
+	students.student_id, students.student_name,
+	students_fees.student_fee_id, students_fees.fees_charged, students_fees.fees_paid, students_fees.paid_date, students_fees.fees_balance, students_fees.cleared, students_fees.description
+	FROM students_fees
+	INNER JOIN fees_structure ON students_fees.fees_structure_id = fees_structure.fees_structure_id
+	INNER JOIN students ON students_fees.student_id = students.student_id;
+
