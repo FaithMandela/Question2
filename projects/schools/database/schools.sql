@@ -45,6 +45,15 @@ CREATE TABLE stream_classes (
 	details						text
 );
 CREATE INDEX stream_classes_org_id ON stream_classes (org_id);
+
+CREATE TABLE grades (
+	grade_id 					varchar(2) primary key,
+	org_id						integer references orgs,
+	grade_range					real,
+	details						text
+);
+CREATE INDEX grades_org_id ON grades (org_id);
+
 --
 CREATE TABLE students (
 	student_id					serial primary key,
@@ -91,16 +100,7 @@ CREATE INDEX students_nationality ON students (nationality);
 CREATE INDEX students_country_code_id ON students (country_code_id);
 CREATE INDEX students_g_countrycodeid ON students (g_countrycodeid);
 
-CREATE TABLE grades (
-	grade_id 					varchar(2) primary key,
-	org_id						integer references orgs,
-	grade_range					real,
-	details						text
-);
-CREATE INDEX grades_org_id ON grades (org_id);
-
 CREATE TABLE sessions (
-
 	session_id					serial primary key,
 	org_id						integer references orgs,
 	session_name				varchar(32),
