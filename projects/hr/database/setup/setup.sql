@@ -1193,7 +1193,7 @@ ALTER FUNCTION public.get_budgeted(integer, date, integer) OWNER TO postgres;
 CREATE FUNCTION get_default_country(integer) RETURNS character
     LANGUAGE sql
     AS $_$
-    SELECT default_country_id::varchar(12)
+	SELECT default_country_id::varchar(2)
 	FROM orgs
 	WHERE (org_id = $1);
 $_$;
@@ -1208,7 +1208,7 @@ ALTER FUNCTION public.get_default_country(integer) OWNER TO postgres;
 CREATE FUNCTION get_default_currency(integer) RETURNS integer
     LANGUAGE sql
     AS $_$
-    SELECT currency_id
+	SELECT currency_id
 	FROM orgs
 	WHERE (org_id = $1);
 $_$;
@@ -1690,6 +1690,41 @@ $_$;
 
 
 ALTER FUNCTION public.get_phase_email(integer) OWNER TO postgres;
+
+--
+-- Name: get_phase_entitys(integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION get_phase_entitys(integer) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE
+    myrec			RECORD;
+	myentitys		varchar(320);
+BEGIN
+	myentitys := null;
+	FOR myrec IN SELECT entitys.entity_name
+		FROM entitys INNER JOIN entity_subscriptions ON entitys.entity_id = entity_subscriptions.entity_id
+		WHERE (entity_subscriptions.entity_type_id = $1) LOOP
+
+		IF (myentitys is null) THEN
+			IF (myrec.entity_name is not null) THEN
+				myentitys := myrec.entity_name;
+			END IF;
+		ELSE
+			IF (myrec.entity_name is not null) THEN
+				myentitys := myemail || ', ' || myrec.entity_name;
+			END IF;
+		END IF;
+
+	END LOOP;
+
+	RETURN myentitys;
+END;
+$_$;
+
+
+ALTER FUNCTION public.get_phase_entitys(integer) OWNER TO postgres;
 
 --
 -- Name: get_phase_status(boolean, boolean); Type: FUNCTION; Schema: public; Owner: postgres
@@ -10988,6 +11023,7 @@ ALTER SEQUENCE sys_emailed_sys_emailed_id_seq OWNED BY sys_emailed.sys_emailed_i
 CREATE TABLE sys_emails (
     sys_email_id integer NOT NULL,
     org_id integer,
+    use_type integer DEFAULT 1 NOT NULL,
     sys_email_name character varying(50),
     default_email character varying(120),
     title character varying(240) NOT NULL,
@@ -19033,24 +19069,225 @@ ALTER TABLE ONLY workflows ALTER COLUMN workflow_id SET DEFAULT nextval('workflo
 -- Data for Name: account_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (100, 0, 10, 'COST', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (110, 0, 10, 'ACCUMULATED DEPRECIATION', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (200, 0, 20, 'COST', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (210, 0, 20, 'ACCUMULATED AMORTISATION', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (300, 0, 30, 'DEBTORS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (310, 0, 30, 'INVESTMENTS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (320, 0, 30, 'CURRENT BANK ACCOUNTS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (330, 0, 30, 'CASH ON HAND', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (340, 0, 30, 'PRE-PAYMMENTS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (400, 0, 40, 'CREDITORS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (410, 0, 40, 'ADVANCED BILLING', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (420, 0, 40, 'VAT', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (430, 0, 40, 'WITHHOLDING TAX', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (500, 0, 50, 'LOANS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (600, 0, 60, 'CAPITAL GRANTS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (610, 0, 60, 'ACCUMULATED SURPLUS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (700, 0, 70, 'SALES REVENUE', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (710, 0, 70, 'OTHER INCOME', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (800, 0, 80, 'COST OF REVENUE', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (900, 0, 90, 'STAFF COSTS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (905, 0, 90, 'COMMUNICATIONS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (910, 0, 90, 'DIRECTORS ALLOWANCES', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (915, 0, 90, 'TRANSPORT', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (920, 0, 90, 'TRAVEL', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (925, 0, 90, 'POSTAL and COURIER', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (930, 0, 90, 'ICT PROJECT', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (935, 0, 90, 'STATIONERY', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (940, 0, 90, 'SUBSCRIPTION FEES', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (945, 0, 90, 'REPAIRS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (950, 0, 90, 'PROFESSIONAL FEES', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (955, 0, 90, 'OFFICE EXPENSES', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (960, 0, 90, 'MARKETING EXPENSES', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (965, 0, 90, 'STRATEGIC PLANNING', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (970, 0, 90, 'DEPRECIATION', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (975, 0, 90, 'CORPORATE SOCIAL INVESTMENT', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (980, 0, 90, 'FINANCE COSTS', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (985, 0, 90, 'TAXES', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (990, 0, 90, 'INSURANCE', NULL);
+INSERT INTO account_types (account_type_id, org_id, accounts_class_id, account_type_name, details) VALUES (995, 0, 90, 'OTHER EXPENSES', NULL);
 
 
 --
 -- Data for Name: accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (10000, 0, 100, 'COMPUTERS and EQUIPMENT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (10005, 0, 100, 'FURNITURE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (11000, 0, 110, 'COMPUTERS and EQUIPMENT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (11005, 0, 110, 'FURNITURE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (20000, 0, 200, 'INTANGIBLE ASSETS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (20005, 0, 200, 'NON CURRENT ASSETS: DEFFERED TAX', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (20010, 0, 200, 'INTANGIBLE ASSETS: ACCOUNTING PACKAGE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (21000, 0, 210, 'ACCUMULATED AMORTISATION', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (30000, 0, 300, 'TRADE DEBTORS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (30005, 0, 300, 'STAFF DEBTORS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (30010, 0, 300, 'OTHER DEBTORS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (30015, 0, 300, 'DEBTORS PROMPT PAYMENT DISCOUNT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (30020, 0, 300, 'INVENTORY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (30025, 0, 300, 'INVENTORY WORK IN PROGRESS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (30030, 0, 300, 'GOODS RECEIVED CLEARING ACCOUNT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (31005, 0, 310, 'UNIT TRUST INVESTMENTS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (32000, 0, 320, 'COMMERCIAL BANK', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (32005, 0, 320, 'MPESA', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (33000, 0, 330, 'CASH ACCOUNT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (33005, 0, 330, 'PETTY CASH', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (34000, 0, 340, 'PREPAYMENTS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (34005, 0, 340, 'DEPOSITS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (34010, 0, 340, 'TAX RECOVERABLE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (34015, 0, 340, 'TOTAL REGISTRAR DEPOSITS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40000, 0, 400, 'CREDITORS- ACCRUALS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40005, 0, 400, 'ADVANCE BILLING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40010, 0, 400, 'LEAVE - ACCRUALS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40015, 0, 400, 'ACCRUED LIABILITIES: CORPORATE TAX', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40020, 0, 400, 'OTHER ACCRUALS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40025, 0, 400, 'PROVISION FOR CREDIT NOTES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40030, 0, 400, 'NSSF', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40035, 0, 400, 'NHIF', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40040, 0, 400, 'HELB', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40045, 0, 400, 'PAYE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (40050, 0, 400, 'PENSION', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (41000, 0, 410, 'ADVANCED BILLING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (42000, 0, 420, 'INPUT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (42005, 0, 420, 'OUTPUT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (42010, 0, 420, 'REMITTANCE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (43000, 0, 430, 'WITHHOLDING TAX', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (50000, 0, 500, 'BANK LOANS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (60000, 0, 600, 'CAPITAL GRANTS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (60005, 0, 600, 'ACCUMULATED AMORTISATION OF CAPITAL GRANTS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (60010, 0, 600, 'DIVIDEND', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (61000, 0, 610, 'RETAINED EARNINGS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (61005, 0, 610, 'ACCUMULATED SURPLUS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (61010, 0, 610, 'ASSET REVALUATION GAIN / LOSS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (70005, 0, 700, 'GOODS SALES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (70010, 0, 700, 'SERVICE SALES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (70015, 0, 700, 'SALES DISCOUNT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71000, 0, 710, 'FAIR VALUE GAIN/LOSS IN INVESTMENTS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71005, 0, 710, 'DONATION', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71010, 0, 710, 'EXCHANGE GAIN(LOSS)', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71015, 0, 710, 'REGISTRAR TRAINING FEES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71020, 0, 710, 'DISPOSAL OF ASSETS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71025, 0, 710, 'DIVIDEND INCOME', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71030, 0, 710, 'INTEREST INCOME', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (71035, 0, 710, 'TRAINING, FORUM, MEETINGS and WORKSHOPS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (80000, 0, 800, 'COST OF GOODS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90000, 0, 900, 'BASIC SALARY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90005, 0, 900, 'LEAVE ALLOWANCES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90010, 0, 900, 'AIRTIME ', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90012, 0, 900, 'TRANSPORT ALLOWANCE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90015, 0, 900, 'REMOTE ACCESS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90020, 0, 900, 'ICEA EMPLOYER PENSION CONTRIBUTION', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90025, 0, 900, 'NSSF EMPLOYER CONTRIBUTION', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90035, 0, 900, 'CAPACITY BUILDING - TRAINING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90040, 0, 900, 'INTERNSHIP ALLOWANCES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90045, 0, 900, 'BONUSES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90050, 0, 900, 'LEAVE ACCRUAL', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90055, 0, 900, 'WELFARE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90056, 0, 900, 'STAFF WELLFARE: WATER', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90057, 0, 900, 'STAFF WELLFARE: TEA', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90058, 0, 900, 'STAFF WELLFARE: OTHER CONSUMABLES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90060, 0, 900, 'MEDICAL INSURANCE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90065, 0, 900, 'GROUP PERSONAL ACCIDENT AND WIBA', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90070, 0, 900, 'STAFF SATISFACTION SURVEY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90075, 0, 900, 'GROUP LIFE INSURANCE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90500, 0, 905, 'FIXED LINES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90505, 0, 905, 'CALLING CARDS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90510, 0, 905, 'LEASE LINES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90515, 0, 905, 'REMOTE ACCESS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (90520, 0, 905, 'LEASE LINE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (91000, 0, 910, 'SITTING ALLOWANCES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (91005, 0, 910, 'HONORARIUM', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (91010, 0, 910, 'WORKSHOPS and SEMINARS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (91500, 0, 915, 'CAB FARE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (91505, 0, 915, 'FUEL', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (91510, 0, 915, 'BUS FARE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (91515, 0, 915, 'POSTAGE and BOX RENTAL', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (92000, 0, 920, 'TRAINING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (92005, 0, 920, 'BUSINESS PROSPECTING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (92505, 0, 925, 'DIRECTORY LISTING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (92510, 0, 925, 'COURIER', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (93000, 0, 930, 'IP TRAINING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (93010, 0, 930, 'COMPUTER SUPPORT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (93500, 0, 935, 'PRINTED MATTER', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (93505, 0, 935, 'PAPER', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (93510, 0, 935, 'OTHER CONSUMABLES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (93515, 0, 935, 'TONER and CATRIDGE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (93520, 0, 935, 'COMPUTER ACCESSORIES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (94010, 0, 940, 'LICENSE FEE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (94015, 0, 940, 'SYSTEM SUPPORT FEES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (94500, 0, 945, 'FURNITURE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (94505, 0, 945, 'COMPUTERS and EQUIPMENT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (94510, 0, 945, 'JANITORIAL', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95000, 0, 950, 'AUDIT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95005, 0, 950, 'MARKETING AGENCY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95010, 0, 950, 'ADVERTISING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95015, 0, 950, 'CONSULTANCY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95020, 0, 950, 'TAX CONSULTANCY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95025, 0, 950, 'MARKETING CAMPAIGN', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95030, 0, 950, 'PROMOTIONAL MATERIALS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95035, 0, 950, 'RECRUITMENT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95040, 0, 950, 'ANNUAL GENERAL MEETING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95045, 0, 950, 'SEMINARS, WORKSHOPS and MEETINGS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95500, 0, 955, 'OFFICE RENT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95502, 0, 955, 'OFFICE COSTS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95505, 0, 955, 'CLEANING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95510, 0, 955, 'NEWSPAPERS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95515, 0, 955, 'OTHER CONSUMABLES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (95520, 0, 955, 'ADMINISTRATIVE EXPENSES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (96005, 0, 960, 'WEBSITE REVAMPING COSTS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (96505, 0, 965, 'STRATEGIC PLANNING', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (96510, 0, 965, 'MONITORING and EVALUATION', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (97000, 0, 970, 'COMPUTERS and EQUIPMENT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (97005, 0, 970, 'FURNITURE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (97010, 0, 970, 'AMMORTISATION OF INTANGIBLE ASSETS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (97500, 0, 975, 'CORPORATE SOCIAL INVESTMENT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (97505, 0, 975, 'DONATION', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98000, 0, 980, 'LEDGER FEES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98005, 0, 980, 'BOUNCED CHEQUE CHARGES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98010, 0, 980, 'OTHER FEES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98015, 0, 980, 'SALARY TRANSFERS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98020, 0, 980, 'UPCOUNTRY CHEQUES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98025, 0, 980, 'SAFETY DEPOSIT BOX', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98030, 0, 980, 'MPESA TRANSFERS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98035, 0, 980, 'CUSTODY FEES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98040, 0, 980, 'PROFESSIONAL FEES: MANAGEMENT FEES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98500, 0, 985, 'EXCISE DUTY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98505, 0, 985, 'FINES and PENALTIES', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98510, 0, 985, 'CORPORATE TAX', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (98515, 0, 985, 'FRINGE BENEFIT TAX', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99000, 0, 990, 'ALL RISKS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99005, 0, 990, 'FIRE and PERILS', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99010, 0, 990, 'BURGLARY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99015, 0, 990, 'COMPUTER POLICY', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99500, 0, 995, 'BAD DEBTS WRITTEN OFF', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99505, 0, 995, 'PURCHASE DISCOUNT', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99510, 0, 995, 'COST OF GOODS SOLD (COGS)', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99515, 0, 995, 'PURCHASE PRICE VARIANCE', false, true, NULL);
+INSERT INTO accounts (account_id, org_id, account_type_id, account_name, is_header, is_active, details) VALUES (99999, 0, 995, 'SURPLUS/DEFICIT', false, true, NULL);
 
 
 --
 -- Data for Name: accounts_class; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (10, 0, 1, 'ASSETS', 'FIXED ASSETS', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (20, 0, 1, 'ASSETS', 'INTANGIBLE ASSETS', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (30, 0, 1, 'ASSETS', 'CURRENT ASSETS', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (40, 0, 2, 'LIABILITIES', 'CURRENT LIABILITIES', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (50, 0, 2, 'LIABILITIES', 'LONG TERM LIABILITIES', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (60, 0, 3, 'EQUITY', 'EQUITY AND RESERVES', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (70, 0, 4, 'REVENUE', 'REVENUE AND OTHER INCOME', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (80, 0, 5, 'COST OF REVENUE', 'COST OF REVENUE', NULL);
+INSERT INTO accounts_class (accounts_class_id, org_id, chat_type_id, chat_type_name, accounts_class_name, details) VALUES (90, 0, 6, 'EXPENSES', 'EXPENSES', NULL);
 
 
 --
 -- Data for Name: address; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO address (address_id, address_type_id, sys_country_id, org_id, address_name, table_name, table_id, post_office_box, postal_code, premises, street, town, phone_number, extension, mobile, fax, email, website, is_default, first_password, details, company_name, position_held) VALUES (1, NULL, 'KE', NULL, NULL, 'orgs', 0, '45689', '00100', '16th Floor, view park towers', 'Utalii Lane', 'Nairobi', '+254 (20) 2227100/2243097', NULL, '+254 725 819505 or +254 738 819505', NULL, 'accounts@dewcis.com', 'www.dewcis.com', true, NULL, NULL, NULL, NULL);
 
 
 --
@@ -19077,19 +19314,41 @@ SELECT pg_catalog.setval('address_types_address_type_id_seq', 1, false);
 -- Data for Name: adjustment_effects; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (0, 'General');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'Housing');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'Insurance');
 
 
 --
 -- Data for Name: adjustments; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (1, 1, NULL, 0, 'Sacco Allowance', 1, 0, NULL, NULL, 0, true, true, true, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (2, 1, NULL, 0, 'Bonus', 1, 0, NULL, NULL, 0, true, true, true, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (3, 1, NULL, 0, 'Employer - Pension', 1, 0, NULL, NULL, 0, true, false, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (11, 1, NULL, 0, 'SACCO', 2, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (12, 1, NULL, 0, 'HELB', 2, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (13, 1, NULL, 0, 'Rent Payment', 2, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (14, 1, NULL, 0, 'Pension deduction', 2, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (21, 1, NULL, 0, 'Travel', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (22, 1, NULL, 0, 'Communcation', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (23, 1, NULL, 0, 'Tools', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (24, 1, NULL, 0, 'Payroll Cost', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (25, 1, NULL, 0, 'Health Insurance', 3, 0, NULL, NULL, 0, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (26, 1, NULL, 0, 'GPA Insurance', 3, 0, NULL, NULL, 0, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (27, 1, NULL, 0, 'Accomodation', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (28, 1, NULL, 0, 'Avenue Health Care', 3, 0, NULL, NULL, 0, true, true, false, false, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (29, 1, NULL, 0, 'Maternety Cost', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (30, 1, NULL, 0, 'Health care claims', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (31, 1, NULL, 0, 'Trainining', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
+INSERT INTO adjustments (adjustment_id, currency_id, adjustment_effect_id, org_id, adjustment_name, adjustment_type, adjustment_order, earning_code, formural, default_amount, monthly_update, in_payroll, in_tax, visible, running_balance, reduce_balance, tax_reduction_ps, tax_relief_ps, tax_max_allowed, account_number, details) VALUES (32, 1, NULL, 0, 'per diem', 3, 0, NULL, NULL, 0, true, true, false, true, false, false, 0, 0, 0, NULL, NULL);
 
 
 --
 -- Name: adjustments_adjustment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 1, false);
+SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 32, true);
 
 
 --
@@ -19232,6 +19491,7 @@ SELECT pg_catalog.setval('attendance_attendance_id_seq', 1, false);
 -- Data for Name: bank_accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO bank_accounts (bank_account_id, org_id, bank_branch_id, account_id, currency_id, bank_account_name, bank_account_number, narrative, is_default, is_active, details) VALUES (0, 0, 0, 33000, 1, 'Cash Account', NULL, NULL, true, true, NULL);
 
 
 --
@@ -19442,13 +19702,18 @@ SELECT pg_catalog.setval('claims_claim_id_seq', 1, false);
 -- Data for Name: contract_status; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO contract_status (contract_status_id, org_id, contract_status_name, details) VALUES (1, 0, 'Active', NULL);
+INSERT INTO contract_status (contract_status_id, org_id, contract_status_name, details) VALUES (2, 0, 'Resigned', NULL);
+INSERT INTO contract_status (contract_status_id, org_id, contract_status_name, details) VALUES (3, 0, 'Deceased', NULL);
+INSERT INTO contract_status (contract_status_id, org_id, contract_status_name, details) VALUES (4, 0, 'Terminated', NULL);
+INSERT INTO contract_status (contract_status_id, org_id, contract_status_name, details) VALUES (5, 0, 'Transferred', NULL);
 
 
 --
 -- Name: contract_status_contract_status_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('contract_status_contract_status_id_seq', 1, false);
+SELECT pg_catalog.setval('contract_status_contract_status_id_seq', 5, true);
 
 
 --
@@ -19498,7 +19763,7 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 -- Data for Name: currency_rates; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO currency_rates (currency_rate_id, currency_id, org_id, exchange_date, exchange_rate) VALUES (0, 1, 0, '2016-02-03', 1);
+INSERT INTO currency_rates (currency_rate_id, currency_id, org_id, exchange_date, exchange_rate) VALUES (0, 1, 0, '2016-04-06', 1);
 
 
 --
@@ -19551,6 +19816,8 @@ SELECT pg_catalog.setval('day_ledgers_day_ledger_id_seq', 1, false);
 -- Data for Name: default_accounts; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO default_accounts (default_account_id, org_id, account_id, narrative) VALUES (1, 0, 99999, 'SURPLUS/DEFICIT ACCOUNT');
+INSERT INTO default_accounts (default_account_id, org_id, account_id, narrative) VALUES (2, 0, 61000, 'RETAINED EARNINGS ACCOUNT');
 
 
 --
@@ -19623,13 +19890,25 @@ SELECT pg_catalog.setval('define_tasks_define_task_id_seq', 1, false);
 --
 
 INSERT INTO department_roles (department_role_id, department_id, ln_department_role_id, org_id, department_role_name, active, job_description, job_requirements, duties, performance_measures, details) VALUES (0, 0, 0, 0, 'Chair Person', true, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO department_roles (department_role_id, department_id, ln_department_role_id, org_id, department_role_name, active, job_description, job_requirements, duties, performance_measures, details) VALUES (1, 0, 0, 0, 'Chief Executive Officer', true, '- Defining short term and long term corporate strategies and objectives
+- Direct overall company operations ', NULL, '- Develop and control strategic relationships with third-party companies
+- Guide the development of client specific systems
+- Provide leadership and monitor team performance and individual staff performance ', NULL, NULL);
+INSERT INTO department_roles (department_role_id, department_id, ln_department_role_id, org_id, department_role_name, active, job_description, job_requirements, duties, performance_measures, details) VALUES (2, 1, 0, 0, 'Director, Human Resources', true, '- To direct and guide projects support services
+- Train end client users 
+- Provide leadership and monitor team performance and individual staff performance ', NULL, NULL, NULL, NULL);
+INSERT INTO department_roles (department_role_id, department_id, ln_department_role_id, org_id, department_role_name, active, job_description, job_requirements, duties, performance_measures, details) VALUES (3, 2, 0, 0, 'Director, Sales and Marketing', true, '- To direct and guide in systems and products development.
+- Provide leadership and monitor team performance and individual staff performance ', NULL, NULL, NULL, NULL);
+INSERT INTO department_roles (department_role_id, department_id, ln_department_role_id, org_id, department_role_name, active, job_description, job_requirements, duties, performance_measures, details) VALUES (4, 3, 0, 0, 'Director, Finance', true, '- To direct and guide projects implementation
+- Train end client users 
+- Provide leadership and monitor team performance and individual staff performance ', NULL, NULL, NULL, NULL);
 
 
 --
 -- Name: department_roles_department_role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('department_roles_department_role_id_seq', 1, false);
+SELECT pg_catalog.setval('department_roles_department_role_id_seq', 9, true);
 
 
 --
@@ -19637,13 +19916,17 @@ SELECT pg_catalog.setval('department_roles_department_role_id_seq', 1, false);
 --
 
 INSERT INTO departments (department_id, ln_department_id, org_id, department_name, department_account, function_code, active, petty_cash, description, duties, reports, details) VALUES (0, 0, 0, 'Board of Directors', NULL, NULL, true, false, NULL, NULL, NULL, NULL);
+INSERT INTO departments (department_id, ln_department_id, org_id, department_name, department_account, function_code, active, petty_cash, description, duties, reports, details) VALUES (1, 0, 0, 'Human Resources and Administration', NULL, NULL, true, false, NULL, NULL, NULL, NULL);
+INSERT INTO departments (department_id, ln_department_id, org_id, department_name, department_account, function_code, active, petty_cash, description, duties, reports, details) VALUES (2, 0, 0, 'Sales and Marketing', NULL, NULL, true, false, NULL, NULL, NULL, NULL);
+INSERT INTO departments (department_id, ln_department_id, org_id, department_name, department_account, function_code, active, petty_cash, description, duties, reports, details) VALUES (3, 0, 0, 'Finance', NULL, NULL, true, false, NULL, NULL, NULL, NULL);
+INSERT INTO departments (department_id, ln_department_id, org_id, department_name, department_account, function_code, active, petty_cash, description, duties, reports, details) VALUES (4, 4, 0, 'Procurement', NULL, NULL, true, false, NULL, NULL, NULL, NULL);
 
 
 --
 -- Name: departments_department_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('departments_department_id_seq', 1, false);
+SELECT pg_catalog.setval('departments_department_id_seq', 5, true);
 
 
 --
@@ -19669,13 +19952,22 @@ SELECT pg_catalog.setval('disability_disability_id_seq', 1, false);
 -- Data for Name: education_class; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (1, 0, 'Primary School', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (2, 0, 'Secondary School', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (3, 0, 'High School', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (4, 0, 'Certificate', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (5, 0, 'Diploma', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (6, 0, 'Profesional Qualifications', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (7, 0, 'Higher Diploma', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (8, 0, 'Under Graduate', NULL);
+INSERT INTO education_class (education_class_id, org_id, education_class_name, details) VALUES (9, 0, 'Post Graduate', NULL);
 
 
 --
 -- Name: education_class_education_class_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('education_class_education_class_id_seq', 1, false);
+SELECT pg_catalog.setval('education_class_education_class_id_seq', 9, true);
 
 
 --
@@ -19884,21 +20176,22 @@ INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role,
 INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (2, 0, 'Client', 'client', 0, NULL, NULL, NULL, NULL);
 INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (3, 0, 'Supplier', 'supplier', 0, NULL, NULL, NULL, NULL);
 INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (4, 0, 'Applicant', 'applicant', 0, '10:0', NULL, NULL, NULL);
+INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (5, 0, 'Subscription', 'subscription', 0, NULL, NULL, NULL, NULL);
 
 
 --
 -- Name: entity_types_entity_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
+SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
 
 
 --
 -- Data for Name: entitys; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (0, 0, 0, 'root', 'root', 'root@localhost', NULL, true, true, false, NULL, '2016-02-03 07:38:13.565928', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
-INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', NULL, false, true, false, NULL, '2016-02-03 07:38:13.565928', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (0, 0, 0, 'root', 'root', 'root@localhost', NULL, true, true, false, NULL, '2016-04-06 10:44:18.378535', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', NULL, false, true, false, NULL, '2016-04-06 10:44:18.378535', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
 
 
 --
@@ -20022,13 +20315,38 @@ SELECT pg_catalog.setval('identifications_identification_id_seq', 1, false);
 -- Data for Name: industry; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (1, 0, 'Aerospace', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (2, 0, 'Agriculture', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (3, 0, 'Automotive', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (4, 0, 'Business and Consultancy Services', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (5, 0, 'ICT - Reseller', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (6, 0, 'ICT - Services and Consultancy', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (7, 0, 'ICT - Manufacturer', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (8, 0, 'ICT - Software Development', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (9, 0, 'Investments', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (10, 0, 'Education', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (11, 0, 'Electronics', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (12, 0, 'Finance, Banking, Insurance', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (13, 0, 'Government - National or Federal', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (14, 0, 'Government - State, Country or Local', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (15, 0, 'Healthcare', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (16, 0, 'Hotel and Leisure', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (17, 0, 'Legal', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (18, 0, 'Manufacturing', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (19, 0, 'Media, Marketing, Entertainment, Publishing, PR', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (20, 0, 'Real Estate', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (21, 0, 'Retail, Wholesale', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (22, 0, 'Telecoms', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (23, 0, 'Transportation and Distribution', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (24, 0, 'Travel and Tours', NULL);
+INSERT INTO industry (industry_id, org_id, industry_name, details) VALUES (25, 0, 'Other', NULL);
 
 
 --
 -- Name: industry_industry_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('industry_industry_id_seq', 1, false);
+SELECT pg_catalog.setval('industry_industry_id_seq', 25, true);
 
 
 --
@@ -20145,13 +20463,22 @@ SELECT pg_catalog.setval('journals_journal_id_seq', 1, false);
 -- Data for Name: kin_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (1, 0, 'Wife', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (2, 0, 'Husband', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (3, 0, 'Daughter', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (4, 0, 'Son', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (5, 0, 'Mother', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (6, 0, 'Father', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (7, 0, 'Brother', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (8, 0, 'Sister', NULL);
+INSERT INTO kin_types (kin_type_id, org_id, kin_type_name, details) VALUES (9, 0, 'Others', NULL);
 
 
 --
 -- Name: kin_types_kin_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('kin_types_kin_type_id_seq', 1, false);
+SELECT pg_catalog.setval('kin_types_kin_type_id_seq', 9, true);
 
 
 --
@@ -20276,6 +20603,7 @@ SELECT pg_catalog.setval('loans_loan_id_seq', 1, false);
 -- Data for Name: locations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO locations (location_id, org_id, location_name, details) VALUES (0, 0, 'Main office', NULL);
 
 
 --
@@ -20341,7 +20669,7 @@ SELECT pg_catalog.setval('org_events_org_event_id_seq', 1, false);
 -- Data for Name: orgs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO orgs (org_id, currency_id, default_country_id, parent_org_id, org_name, org_sufix, is_default, is_active, logo, pin, system_key, system_identifier, mac_address, public_key, license, details, cert_number, vat_number, fixed_budget, invoice_footer, bank_header, bank_address, employee_limit, transaction_limit) VALUES (0, 1, NULL, NULL, 'default', 'dc', true, true, 'logo.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, 5, 100);
+INSERT INTO orgs (org_id, currency_id, default_country_id, parent_org_id, org_name, org_sufix, is_default, is_active, logo, pin, system_key, system_identifier, mac_address, public_key, license, details, cert_number, vat_number, fixed_budget, invoice_footer, bank_header, bank_address, employee_limit, transaction_limit) VALUES (0, 1, NULL, NULL, 'default', 'dc', true, true, 'logo.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, true, NULL, NULL, NULL, 1000, 1000000);
 
 
 --
@@ -20355,6 +20683,7 @@ SELECT pg_catalog.setval('orgs_org_id_seq', 1, false);
 -- Data for Name: pay_groups; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO pay_groups (pay_group_id, org_id, pay_group_name, details) VALUES (0, 0, 'Default', NULL);
 
 
 --
@@ -20394,6 +20723,7 @@ SELECT pg_catalog.setval('pay_scale_years_pay_scale_year_id_seq', 1, false);
 -- Data for Name: pay_scales; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO pay_scales (pay_scale_id, currency_id, org_id, pay_scale_name, min_pay, max_pay, details) VALUES (0, NULL, 0, 'Basic', 0, 1000000, NULL);
 
 
 --
@@ -20768,26 +21098,65 @@ SELECT pg_catalog.setval('shifts_shift_id_seq', 1, false);
 -- Data for Name: skill_category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (0, 0, 'Others', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (1, 0, 'Hardware', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (2, 0, 'Operating System', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (3, 0, 'Software', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (4, 0, 'Networking', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (6, 0, 'Servers', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (8, 0, 'Communication/Messaging Suite', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (9, 0, 'Voip', NULL);
+INSERT INTO skill_category (skill_category_id, org_id, skill_category_name, details) VALUES (10, 0, 'Development', NULL);
 
 
 --
 -- Name: skill_category_skill_category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('skill_category_skill_category_id_seq', 1, false);
+SELECT pg_catalog.setval('skill_category_skill_category_id_seq', 10, true);
 
 
 --
 -- Data for Name: skill_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (0, 0, 0, 'Indicate Your Skill', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (1, 1, 0, 'Personal Computer', 'Identify the different components of a computer', 'Understand the working of each component', 'Troubleshoot, Diagonize and Repair', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (2, 1, 0, 'Dot Matrix Printer', 'Identify the different components of a computer', 'Understand the working of each component', 'Troubleshoot, Diagonize and Repair', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (3, 1, 0, 'Ticket Printer', 'Identify the different components of a computer', 'Understand the working of each component', 'Troubleshoot, Diagonize and Repair', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (4, 1, 0, 'Hp Printer', 'Identify the different components of a computer', 'Understand the working of each component', 'Troubleshoot, Diagonize and Repair', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (5, 2, 0, 'Dos', 'Installation', 'Configuration', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (6, 2, 0, 'Windowsxp', 'Installation', 'Configuration', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (7, 2, 0, 'Linux', 'Installation', 'Configuration', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (8, 2, 0, 'Solaris Unix', 'Installation', 'Configuration', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (10, 3, 0, 'Office', 'Installation, Backup and Recovery', 'Application and Usage', 'Advanced Usage', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (11, 3, 0, 'Browsing', 'Setup ', 'Usage ', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (12, 3, 0, 'Galileo Products', 'Setup ', 'Usage ', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (13, 3, 0, 'Antivirus', 'Setup ', 'Updates and Support', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (9, 3, 0, 'Dialup', 'Installation', 'Configuration', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (21, 4, 0, 'Dialup', 'Dialup', 'Configuration', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (22, 4, 0, 'Lan', 'Installation ', 'Configuration', 'Troubleshooting and Support', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (23, 4, 0, 'Wan', 'Installation', 'Configuration', 'Configuration', NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (29, 6, 0, 'Samba', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (30, 6, 0, 'Mail', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (31, 6, 0, 'Web', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (32, 6, 0, 'Application ', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (33, 6, 0, 'Identity Management', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (34, 6, 0, 'Network Management   ', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (36, 6, 0, 'Backup And Storage Services', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (37, 8, 0, 'Groupware', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (38, 9, 0, 'Asterix', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (39, 10, 0, 'Database', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (40, 10, 0, 'Design', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (41, 10, 0, 'Baraza', NULL, NULL, NULL, NULL);
+INSERT INTO skill_types (skill_type_id, skill_category_id, org_id, skill_type_name, basic, intermediate, advanced, details) VALUES (42, 10, 0, 'Coding Java', NULL, NULL, NULL, NULL);
 
 
 --
 -- Name: skill_types_skill_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('skill_types_skill_type_id_seq', 1, false);
+SELECT pg_catalog.setval('skill_types_skill_type_id_seq', 42, true);
 
 
 --
@@ -21206,13 +21575,52 @@ SELECT pg_catalog.setval('sys_emailed_sys_emailed_id_seq', 1, false);
 -- Data for Name: sys_emails; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO sys_emails (sys_email_id, org_id, use_type, sys_email_name, default_email, title, details) VALUES (1, 0, 1, 'Application', NULL, 'Thank you for your Application', 'Thank you {{name}} for your application.<br><br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards<br>
+Human Resources Manager<br>
+');
+INSERT INTO sys_emails (sys_email_id, org_id, use_type, sys_email_name, default_email, title, details) VALUES (2, 0, 1, 'New Staff', NULL, 'HR Your credentials ', 'Hello {{name}},<br><br>
+Your credentials to the HR system have been created.<br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards<br>
+Human Resources Manager<br>
+');
+INSERT INTO sys_emails (sys_email_id, org_id, use_type, sys_email_name, default_email, title, details) VALUES (3, 0, 1, 'Password reset', NULL, 'Password reset', 'Hello {{name}},<br><br>
+Your password has been reset to:<br><br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards<br>
+Human Resources Manager<br>
+');
+INSERT INTO sys_emails (sys_email_id, org_id, use_type, sys_email_name, default_email, title, details) VALUES (4, 0, 1, 'Subscription', NULL, 'Subscription', 'Hello {{name}},<br><br>
+Welcome to OpenBaraza SaaS Platform<br><br>
+Your password is:<br><br>
+Your user name is {{username}}<br> 
+Your password is {{password}}<br><br>
+Regards,<br>
+OpenBaraza<br>
+');
+INSERT INTO sys_emails (sys_email_id, org_id, use_type, sys_email_name, default_email, title, details) VALUES (5, 0, 1, 'Subscription', NULL, 'Subscription', 'Hello {{name}},<br><br>
+Your OpenBaraza SaaS Platform application has been approved<br><br>
+Welcome to OpenBaraza SaaS Platform<br><br>
+Regards,<br>
+OpenBaraza<br>
+');
+INSERT INTO sys_emails (sys_email_id, org_id, use_type, sys_email_name, default_email, title, details) VALUES (7, 0, 1, 'Payroll Generated', NULL, 'Payroll Generated', 'Hello {{name}},<br><br>
+They payroll has been generated for {{narrative}}<br><br>
+Regards,<br>
+HR Manager<br>
+');
 
 
 --
 -- Name: sys_emails_sys_email_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 1, false);
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 7, true);
 
 
 --
@@ -21245,14 +21653,15 @@ SELECT pg_catalog.setval('sys_files_sys_file_id_seq', 1, false);
 -- Data for Name: sys_logins; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2016-03-22 11:22:34.8733', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2016-04-06 10:45:10.775529', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (2, 0, '2016-04-06 12:24:10.904967', '127.0.0.1', NULL);
 
 
 --
 -- Name: sys_logins_sys_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 1, true);
+SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 2, true);
 
 
 --
@@ -21324,26 +21733,57 @@ SELECT pg_catalog.setval('tasks_task_id_seq', 1, false);
 -- Data for Name: tax_rates; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (1, 1, 0, 10164, 10, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (2, 1, 0, 19740, 15, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (3, 1, 0, 29316, 20, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (4, 1, 0, 38892, 25, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (5, 1, 0, 10000000, 30, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (6, 2, 0, 4000, 5, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (7, 2, 0, 10000000, 0, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (8, 3, 0, 999, 0, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (9, 3, 0, 1499, 30, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (10, 3, 0, 1999, 40, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (11, 3, 0, 2999, 60, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (12, 3, 0, 3999, 80, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (13, 3, 0, 4999, 100, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 3, 0, 5999, 120, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (15, 3, 0, 6999, 140, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 3, 0, 7999, 160, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (17, 3, 0, 8999, 180, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (18, 3, 0, 9999, 200, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (19, 3, 0, 10999, 220, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (20, 3, 0, 11999, 240, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (21, 3, 0, 12999, 260, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (22, 3, 0, 13999, 280, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (23, 3, 0, 14999, 300, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (24, 3, 0, 1000000, 320, NULL);
+INSERT INTO tax_rates (tax_rate_id, tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (25, 4, 0, 10000000, 30, NULL);
 
 
 --
 -- Name: tax_rates_tax_rate_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tax_rates_tax_rate_id_seq', 1, false);
+SELECT pg_catalog.setval('tax_rates_tax_rate_id_seq', 25, true);
 
 
 --
 -- Data for Name: tax_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, tax_type_number, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, employer_account, active, use_key, details) VALUES (1, 90000, 1, 0, 'PAYE', NULL, 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, 0, false, true, true, 0, 0, NULL, NULL, true, 1, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, tax_type_number, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, employer_account, active, use_key, details) VALUES (2, 90000, 1, 0, 'NSSF', NULL, 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, 0, false, true, true, 0, 0, NULL, NULL, true, 1, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, tax_type_number, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, employer_account, active, use_key, details) VALUES (3, 90000, 1, 0, 'NHIF', NULL, 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, false, false, 0, 0, NULL, NULL, true, 1, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, tax_type_number, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, employer_account, active, use_key, details) VALUES (4, 90000, 1, 0, 'FULL PAYE', NULL, 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, 0, false, false, false, 0, 0, NULL, NULL, false, 1, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, tax_type_number, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, employer_account, active, use_key, details) VALUES (5, 90000, 1, 0, 'Exempt', NULL, NULL, 0, 0, false, 0, false, true, true, 0, 0, NULL, NULL, true, 0, NULL);
+INSERT INTO tax_types (tax_type_id, account_id, currency_id, org_id, tax_type_name, tax_type_number, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, employer_account, active, use_key, details) VALUES (6, 90000, 1, 0, 'VAT', NULL, NULL, 0, 0, false, 16, false, true, true, 0, 0, NULL, NULL, true, 0, NULL);
 
 
 --
 -- Name: tax_types_tax_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 1, false);
+SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 6, true);
 
 
 --
@@ -21451,22 +21891,22 @@ INSERT INTO transaction_status (transaction_status_id, transaction_status_name) 
 -- Data for Name: transaction_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (16, 'Requisitions', 'D', 1, false, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (14, 'Sales Quotation', 'D', 1, true, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (15, 'Purchase Quotation', 'D', 1, false, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (1, 'Sales Order', 'D', 1, true, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (2, 'Sales Invoice', 'D', 1, true, true);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (3, 'Sales Template', 'D', 1, true, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (4, 'Purchase Order', 'D', 1, false, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (5, 'Purchase Invoice', 'D', 1, false, true);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (6, 'Purchase Template', 'D', 1, false, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (7, 'Receipts', 'D', 1, true, true);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (8, 'Payments', 'D', 1, false, true);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (9, 'Credit Note', 'D', 1, true, true);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (10, 'Debit Note', 'D', 1, false, true);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (11, 'Delivery Note', 'D', 1, true, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (12, 'Receipt Note', 'D', 1, false, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (17, 'Work Use', 'D', 1, true, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (16, 'Requisitions', 'D', 10001, false, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (14, 'Sales Quotation', 'D', 10001, true, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (15, 'Purchase Quotation', 'D', 10001, false, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (1, 'Sales Order', 'D', 10001, true, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (2, 'Sales Invoice', 'D', 10001, true, true);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (3, 'Sales Template', 'D', 10001, true, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (4, 'Purchase Order', 'D', 10001, false, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (5, 'Purchase Invoice', 'D', 10001, false, true);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (6, 'Purchase Template', 'D', 10001, false, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (7, 'Receipts', 'D', 10001, true, true);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (8, 'Payments', 'D', 10001, false, true);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (9, 'Credit Note', 'D', 10001, true, true);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (10, 'Debit Note', 'D', 10001, false, true);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (11, 'Delivery Note', 'D', 10001, true, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (12, 'Receipt Note', 'D', 10001, false, false);
+INSERT INTO transaction_types (transaction_type_id, transaction_type_name, document_prefix, document_number, for_sales, for_posting) VALUES (17, 'Work Use', 'D', 10001, true, false);
 
 
 --
@@ -21512,13 +21952,21 @@ SELECT pg_catalog.setval('workflow_logs_workflow_log_id_seq', 1, false);
 -- Data for Name: workflow_phases; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (1, 1, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (2, 2, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (3, 3, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (4, 4, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (5, 5, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (6, 6, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (7, 7, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (8, 8, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 
 
 --
 -- Name: workflow_phases_workflow_phase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 1, false);
+SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 5, true);
 
 
 --
@@ -21538,13 +21986,21 @@ SELECT pg_catalog.setval('workflow_table_id_seq', 1, false);
 -- Data for Name: workflows; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (1, 0, 0, 'Budget', 'budgets', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (2, 0, 0, 'Requisition', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (3, 3, 0, 'Transactions', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (4, 1, 0, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (5, 5, 0, 'subscriptions', 'subscriptions', NULL, NULL, 'subscription approved', 'subscription rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (6, 1, 0, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (7, 1, 0, 'Loan', 'loans', NULL, NULL, 'Loan approved', 'Loan rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (8, 1, 0, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
 
 
 --
 -- Name: workflows_workflow_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('workflows_workflow_id_seq', 1, false);
+SELECT pg_catalog.setval('workflows_workflow_id_seq', 8, true);
 
 
 --
@@ -24810,6 +25266,13 @@ CREATE INDEX identifications_entity_id ON identifications USING btree (entity_id
 --
 
 CREATE INDEX identifications_identification_type_id ON identifications USING btree (identification_type_id);
+
+
+--
+-- Name: identifications_nationality; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX identifications_nationality ON identifications USING btree (nationality);
 
 
 --

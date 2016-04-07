@@ -6,7 +6,7 @@
 			<MENU name="Perfomance Management" role="staff">44</MENU>
 			<MENU name="My Tasks" role="staff">47</MENU>
 			<MENU name="My Details" role="applicant">10</MENU>
-			<MENU name="Job Listing">14</MENU>
+			<MENU name="Vacancies">14</MENU>
 			<MENU name="Internships" role="applicant">15</MENU>
 			<MENU name="Claims Requests" role="staff">36</MENU>
 			<MENU name="Loan Application" role="staff">205</MENU>
@@ -550,8 +550,8 @@
 			<JASPER name="CV2" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 		</FORMVIEW>
 	</DESK>
-	<DESK w="700" name="Job Listing" key="14" h="550">
-		<GRID name="Available Posts" keyfield="intake_id" table="vw_intake" where="(closing_date > current_date)">
+	<DESK w="700" name="Vacancies" key="14" h="550">
+		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" where="(closing_date > current_date)">
 			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>

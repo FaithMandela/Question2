@@ -63,7 +63,7 @@ ORDER BY studentid, quarterid;]]>
 	<detail>
 		<band height="139" splitType="Stretch">
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-1" mode="Opaque" x="4" y="11" width="389" height="98" uuid="7f25030b-b5b5-407e-ac7d-f4a66e9aeb0a"/>
+				<reportElement key="subreport-1" mode="Opaque" x="4" y="11" width="405" height="98" uuid="7f25030b-b5b5-407e-ac7d-f4a66e9aeb0a"/>
 				<subreportParameter name="qstudentid">
 					<subreportParameterExpression><![CDATA[$F{qstudentid}]]></subreportParameterExpression>
 				</subreportParameter>
