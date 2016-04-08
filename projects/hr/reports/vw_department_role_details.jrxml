@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_department_role_details" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_department_role_details" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="29f00f44-8088-4857-9316-a39ca0dd111c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="26"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -52,7 +52,7 @@ $P!{organd};]]>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="0" y="0" width="555" height="62"/>
+				<reportElement style="Title" x="0" y="0" width="555" height="62" uuid="a6c16357-2fff-4f10-a185-64a1dfec9ef4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -69,7 +69,7 @@ $P!{organd};]]>
 	<detail>
 		<band height="335" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="221" width="555" height="20" forecolor="#000000"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="205" width="555" height="20" forecolor="#000000" uuid="1db31966-3feb-4508-a45e-0600a8b63d0d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -79,21 +79,21 @@ $P!{organd};]]>
 				<text><![CDATA[Performance Measures]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="46" y="286" width="509" height="20"/>
+				<reportElement style="Detail" positionType="Float" x="46" y="270" width="509" height="20" uuid="0bc165af-1e16-4f9e-8d3e-b1e3c89e22f2"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{details}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="46" y="241" width="509" height="20"/>
+				<reportElement style="Detail" positionType="Float" x="46" y="225" width="509" height="20" uuid="b753bf58-0e2a-4573-99f6-06327c0f2407"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{performance_measures}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{performance_measures}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="122" width="555" height="20" forecolor="#000000"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="106" width="555" height="20" forecolor="#000000" uuid="16465d4f-504e-4027-901a-c290bc3ad428"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -102,15 +102,8 @@ $P!{organd};]]>
 				</textElement>
 				<text><![CDATA[Duties]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="46" y="90" width="509" height="20"/>
-				<textElement markup="html">
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{job_description}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="266" width="555" height="20" forecolor="#000000"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="250" width="555" height="20" forecolor="#000000" uuid="bbddb22f-6d28-4b1d-a3c6-2d4df787c1dd"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -120,7 +113,7 @@ $P!{organd};]]>
 				<text><![CDATA[Details]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="70" width="555" height="20" forecolor="#000000"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="54" width="555" height="20" forecolor="#000000" uuid="5feef13a-e083-4abc-93fa-6e2eebaeea62"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -130,21 +123,21 @@ $P!{organd};]]>
 				<text><![CDATA[Job Description]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="46" y="193" width="509" height="20"/>
+				<reportElement style="Detail" positionType="Float" x="46" y="177" width="509" height="20" uuid="88260db3-ffe1-42a0-ba29-6f251c0251fb"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{job_requirements}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{job_requirements}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="46" y="142" width="509" height="20"/>
+				<reportElement style="Detail" positionType="Float" x="46" y="126" width="509" height="20" uuid="faefc634-91a9-4ae1-9b0d-89d00e99b60e"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{duties}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{duties}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="173" width="555" height="20" forecolor="#000000"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="157" width="555" height="20" forecolor="#000000" uuid="0f6e58ab-61fd-4896-9780-9c152731dc60"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -154,14 +147,14 @@ $P!{organd};]]>
 				<text><![CDATA[Job Requirements]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="170" height="20" forecolor="#000000"/>
+				<reportElement style="Column header" x="1" y="0" width="170" height="20" forecolor="#000000" uuid="b4e828cf-a023-43bb-a252-7a829209b8c4"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="14"/>
 				</textElement>
 				<text><![CDATA[Department Name           : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="0" y="26" width="171" height="20" forecolor="#000000"/>
+				<reportElement style="Column header" x="0" y="26" width="171" height="20" forecolor="#000000" uuid="16efc567-ecd5-4e0b-924d-f5c1344e8be9"/>
 				<box>
 					<bottomPen lineWidth="1.25" lineColor="#E7E7E7"/>
 				</box>
@@ -171,28 +164,34 @@ $P!{organd};]]>
 				<text><![CDATA[Department Role Name  : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="171" y="0" width="379" height="20"/>
+				<reportElement style="Detail" x="171" y="0" width="379" height="20" uuid="9d3f495e-dd59-4962-b096-ab38eaf945bc"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{department_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{department_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="171" y="26" width="384" height="20"/>
+				<reportElement style="Detail" x="171" y="26" width="384" height="20" uuid="9d5b3d5a-5212-41c4-8072-00333dc0d057"/>
 				<box>
 					<bottomPen lineWidth="1.25" lineColor="#E7E7E7"/>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{department_role_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{department_role_name}]]></textFieldExpression>
 			</textField>
+			<componentElement>
+				<reportElement positionType="Float" x="1" y="74" width="554" height="32" uuid="67084038-034c-49a4-81e4-eb8bd211a677"/>
+				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
+					<hc:htmlContentExpression><![CDATA[$F{job_description}]]></hc:htmlContentExpression>
+				</hc:html>
+			</componentElement>
 		</band>
 	</detail>
 	<columnFooter>
 		<band height="4" splitType="Stretch">
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="9a9b813f-58fa-4218-a0a8-142da472197b"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
@@ -202,27 +201,27 @@ $P!{organd};]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="94ae93c9-92d8-48bb-8ab0-d06b5b8bdc8b"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343"/>
+					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="81e63969-7a05-4d17-925e-f74c1597d385"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343"/>
+					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="06c25cf4-6562-4639-882f-d2ade13fcd03"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343"/>
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="d1ce24c4-e86e-421e-89a4-c47638b2bd3b"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
-					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
