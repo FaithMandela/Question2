@@ -1,28 +1,45 @@
-ALTER TABLE orgs ADD member_limit integer default 10 not null;
+alter table orgs add default_country_id varchar(6); 
+
+CREATE TABLE locations
+(
+	location_id			serial primary key,
+	org_id 				integer references orgs,
+	location_name 			character varying(50),
+	details			 text
+);
+
+ALTER TABLE orgs ADD member_limit integer default 5 not null;
 ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
 
 
+-- CREATE TABLE industry (
+-- 	industry_id			serial primary key,
+-- 	org_id				integer references orgs,
+-- 	industry_name			varchar(50) not null,
+-- 	details				text
+-- );
+-- CREATE INDEX industry_org_id ON industry(org_id); 
+
 CREATE TABLE subscriptions (
 	subscription_id			serial primary key,
-	entity_id				integer references entitys,
+	--industry_id			integer references industry,
+	entity_id			integer references entitys,
 	account_manager_id		integer references entitys,
-	org_id					integer references orgs,
+	org_id				integer references orgs,
 
 	chama_name			varchar(50),
 	chama_address		varchar(100),
-	city					varchar(30),
-	state					varchar(50),
-	country_id				char(2) references sys_countrys,
+	city				varchar(30),
+	state				varchar(50),
+	country_id			char(2) references sys_countrys,
 	number_of_members		integer,
-	telephone				varchar(50),
+	telephone			varchar(50),
+	website				varchar(120),
 	
 	primary_contact			varchar(120),
+	job_title				varchar(120),
 	primary_email			varchar(120),
 	confirm_email			varchar(120),
-
-	system_key				varchar(64),
-	subscribed				boolean,
-	subscribed_date			timestamp,
 	
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
@@ -31,7 +48,7 @@ CREATE TABLE subscriptions (
 	
 	details					text
 );
-
+--CREATE INDEX subscriptions_industry_id ON subscriptions(industry_id);
 CREATE INDEX subscriptions_entity_id ON subscriptions(entity_id);
 CREATE INDEX subscriptions_account_manager_id ON subscriptions(account_manager_id);
 CREATE INDEX subscriptions_country_id ON subscriptions(country_id);
@@ -75,42 +92,28 @@ CREATE INDEX productions_subscription_id ON productions(subscription_id);
 CREATE INDEX productions_product_id ON productions(product_id);
 CREATE INDEX productions_org_id ON productions(org_id);
 
-CREATE OR REPLACE VIEW vw_subscriptions AS 
- SELECT sys_countrys.sys_country_id,
-    sys_countrys.sys_country_name,
-    entitys.entity_id,
-    entitys.entity_name,
-    account_manager.entity_id AS account_manager_id,
-    account_manager.entity_name AS account_manager_name,
-    orgs.org_id,
-    orgs.org_name,
-    subscriptions.subscription_id,
-	subscriptions.chama_name,
-    subscriptions.city,
-    subscriptions.state,
-    subscriptions.country_id,
-    subscriptions.number_of_members,
-    subscriptions.telephone,
-    subscriptions.primary_contact,
-    subscriptions.primary_email,
-    subscriptions.approve_status,
-    subscriptions.workflow_table_id,
-    subscriptions.application_date,
-    subscriptions.action_date,
-    subscriptions.system_key,
-    subscriptions.subscribed,
-    subscriptions.subscribed_date,
-    subscriptions.details
-   FROM subscriptions
-     JOIN sys_countrys ON subscriptions.country_id = sys_countrys.sys_country_id
-     LEFT JOIN entitys ON subscriptions.entity_id = entitys.entity_id
-     LEFT JOIN entitys account_manager ON subscriptions.account_manager_id = account_manager.entity_id
-     LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;
-
+CREATE VIEW vw_subscriptions AS
+	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name,
+		entitys.entity_id, entitys.entity_name, 
+		account_manager.entity_id as account_manager_id, account_manager.entity_name as account_manager_name,
+		orgs.org_id, orgs.org_name, 
+		
+		subscriptions.subscription_id, subscriptions.chama_name, 
+		subscriptions.chama_address, subscriptions.city, subscriptions.state, subscriptions.country_id, 
+		subscriptions.number_of_members, subscriptions.telephone, subscriptions.website, 
+		subscriptions.primary_contact, subscriptions.job_title, subscriptions.primary_email, 
+		subscriptions.approve_status, subscriptions.workflow_table_id, subscriptions.application_date, subscriptions.action_date, 
+		subscriptions.details
+	FROM 
+		INNER JOIN sys_countrys ON subscriptions.country_id = sys_countrys.sys_country_id
+		LEFT JOIN entitys ON subscriptions.entity_id = entitys.entity_id
+		LEFT JOIN entitys as account_manager ON subscriptions.account_manager_id = account_manager.entity_id
+		LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;	
+		
 CREATE VIEW vw_productions AS
 	SELECT orgs.org_id, orgs.org_name, 
 		products.product_id, products.product_name, products.transaction_limit,
-		subscriptions.subscription_id, 
+		subscriptions.subscription_id, subscriptions.chama_name, 
 		
 		productions.production_id, productions.approve_status, productions.workflow_table_id, productions.application_date, 
 		productions.action_date, productions.montly_billing, productions.is_active, 
@@ -124,6 +127,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
 
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
@@ -139,38 +143,24 @@ BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		SELECT entity_id INTO v_entity_id
 		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
-
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
 			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
-			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-			VALUES (4, 0, NEW.entity_id, 'subscription');
+			INSERT INTO sys_emailed ( org_id, table_id, table_name)
+			VALUES ( 0, 1, 'subscription');
 		
-			NEW.approve_status := 'Completed';
-		ELSE
+			ELSE
 			RAISE EXCEPTION 'You already have an account, login and request for services';
-		END IF;
+		END IF ;
+		
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
-		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix)
-		VALUES(NEW.org_id, 1, NEW.chama_name, NEW.org_id);
 		
-		v_currency_id := nextval('currency_currency_id_seq');
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'US Dollar', 'USD');
-		v_currency_id := nextval('currency_currency_id_seq');
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'Euro', 'ERO');
-		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
-		
-		INSERT INTO pay_scales (org_id, pay_scale_name, min_pay, max_pay) VALUES (NEW.org_id, 'Basic', 0, 1000000);
-		INSERT INTO pay_groups (org_id, pay_group_name) VALUES (NEW.org_id, 'Default');
-		INSERT INTO locations (org_id, location_name) VALUES (NEW.org_id, 'Main office');
-
-		v_department_id := nextval('departments_department_id_seq');
-		INSERT INTO Departments (org_id, department_id, department_name) VALUES (NEW.org_id, v_department_id, 'Board of Directors');
-		INSERT INTO department_roles (org_id, department_id, department_role_name, active) VALUES (NEW.org_id, v_department_id, 'Board of Directors', true);
+		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
+		VALUES(NEW.org_id, 1, NEW.chama_name, NEW.org_id, NEW.country_id);
 		
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
@@ -179,21 +169,20 @@ BEGIN
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 
-		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');
+		INSERT INTO sys_emailed ( org_id, table_id, table_name)
+		VALUES ( NEW.org_id, NEW.entity_id, 'subscription');
 	END IF;
-
+		
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-
-
-
-
+   
+  
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
+ 
 
+ 
 
 CREATE OR REPLACE FUNCTION ins_member_limit() RETURNS trigger AS $$
 DECLARE
@@ -210,7 +199,7 @@ BEGIN
 	WHERE (org_id = NEW.org_id);
 	
 	IF(v_member_count > v_member_limit)THEN
-		RAISE EXCEPTION 'You have reached the maximum member limit, request for a quite for more';
+		RAISE EXCEPTION 'You have reached the maximum staff limit, request for a quite for more';
 	END IF;
 
 	RETURN NEW;
@@ -219,6 +208,8 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_member_limit BEFORE INSERT ON members
     FOR EACH ROW EXECUTE PROCEDURE ins_member_limit();
+
+	
 CREATE OR REPLACE FUNCTION ins_transactions_limit() RETURNS trigger AS $$
 DECLARE
 	v_transaction_count	integer;
@@ -243,6 +234,3 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_transactions_limit BEFORE INSERT ON transactions
     FOR EACH ROW EXECUTE PROCEDURE ins_transactions_limit();
-
-	
-

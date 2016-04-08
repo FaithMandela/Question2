@@ -18,6 +18,11 @@ INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('5', '201
 INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('8', '2016-02-01','2016-03-31','points difference in Jan','8GH');
 
 
+INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('25', '2016-01-01','2016-12-31','Travel Agency Bonus','5GW0');
+INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('25', '2016-01-01','2016-12-31','Travel Agency Bonus','7MA8');
+INSERT INTO bonus (amount, start_date, end_date, details, pcc) VALUES ('54', '2016-01-01','2016-12-31','Travel Agency Bonus','9D0');
+
+
 INSERT INTO bonus (percentage, start_date, end_date, details, consultant_id) VALUES ('51', '2016-01-01','2016-01-31','Recovery', 1701);
 INSERT INTO bonus (percentage, start_date, end_date, details, consultant_id) VALUES ('42', '2016-02-01','2016-02-29','Recovery', 1701);
 
@@ -32,6 +37,11 @@ INSERT INTO bonus (percentage, start_date, end_date, details, consultant_id) VAL
 INSERT INTO bonus (percentage, start_date, end_date, details, consultant_id) VALUES ('11', '2016-02-01','2016-02-29','Recovery', 2028);
 
 INSERT INTO bonus (percentage, start_date, end_date, details, period_id) VALUES ('50', '2016-02-01','2016-02-29','Recovery', 110);
+INSERT INTO bonus (percentage, start_date, end_date, details, period_id) VALUES ('50', '2016-03-01','2016-03-31','Market Bonus', 111);
 
+
+UPDATE bonus SET org_id = orgs.org_id
+FROM orgs 
+WHERE orgs.pcc = bonus.pcc AND pcc is not null AND org_id is null;
 
 UPDATE bonus SET approve_status = 'Approved', is_active = true;

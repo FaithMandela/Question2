@@ -301,7 +301,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Approvals" key="45" h="500">
-		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" tab.count="count(approval_id)" params="table_name, table_id" where="(approve_status='Completed')" user="entity_id">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" tab.count="count(approval_id)" params="table_name, table_id" noorg="true" where="(approve_status='Completed')" user="entity_id">
 			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
@@ -923,7 +923,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Contributions" key="210" h="550">
-		<GRID name="Periods" keyfield="period_id" orderby="start_date desc" table="vw_periods" noorg="true" where="(closed = false)">
+		<GRID name="Contributions" keyfield="period_id" orderby="start_date desc" table="vw_periods" where="(closed = false)">
 			<TEXTFIELD w="45" title="Period ID">period_id</TEXTFIELD>
 			<TEXTFIELD w="45" title="Period Code">period_code</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
@@ -1241,7 +1241,7 @@
 		<JASPER name="Reports" reportfile="vw_penalty.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Members" key="260" h="550">
-		<GRID name="Members" keyfield="entity_id" table="members">
+		<GRID name="Members" keyfield="member_id" table="members">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Bank Branch ID">bank_branch_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
@@ -1254,8 +1254,8 @@
 			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
 			<TEXTDATE w="75" title="Joining Date">joining_date</TEXTDATE>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
-			<FORM name="Members" keyfield="entity_id" table="members">
-				<COMBOBOX w="430" title="Location ID" lptable="locations" y="110" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
+			<FORM name="Members" keyfield="member_id" linkfield="member_id" table="members">
+				<COMBOBOX w="430" title="Location ID" lptable="locations" noorg="true" y="110" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
 				<COMBOLIST w="150" title="Title" y="10" h="20" x="290">person_title
 					<DATA>Mr</DATA>
 					<DATA>Ms</DATA>
@@ -1304,7 +1304,7 @@
 				<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
 				<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
-				<FORM name="Contributions" keyfield="contribution_id" table="contributions">
+				<FORM name="Contributions" keyfield="contribution_id" linkfield="contribution_id" table="contributions">
 					<COMBOBOX w="430" title="Contribution Type ID" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Meeting ID" lptable="meetings" y="30" h="20" x="10" lpfield="meeting_id">meeting_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account ID" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
