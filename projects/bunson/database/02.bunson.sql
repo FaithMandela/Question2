@@ -243,26 +243,39 @@ CREATE OR REPLACE VIEW vw_transfers AS
 CREATE OR REPLACE VIEW vw_passangers AS 
  SELECT car_types.car_type_code, entitys.entity_id, entitys.entity_name, 
     payment_types.payment_type_id, payment_types.payment_type_name, 
-    transfers.transfer_id, transfers.record_locator, transfers.customer_code, 
-    transfers.customer_name, transfers.currency_id, transfers.agreed_amount, 
-    transfers.pax_no, transfers.transfer_cancelled, transfers.booking_location, transfers.booking_date, 
-    transfers.payment_details, transfers.reference_data, 
-    transfer_flights.transfer_flight_id, transfer_flights.start_time, 
-    transfer_flights.end_time, transfer_flights.flight_date, 
-    transfer_flights.start_airport, transfer_flights.end_airport, 
-    transfer_flights.airline, transfer_flights.flight_num, 
-    passangers.passanger_id, passangers.passanger_name, 
-    passangers.passanger_mobile, passangers.passanger_email, 
-    passangers.pickup_time, passangers.pickup, passangers.dropoff, 
-    passangers.other_preference, passangers.tab, passangers.amount, 
-    passangers.processed, pax_cancelled, passangers.pickup_date
+    transfers.transfer_id, transfers.record_locator, 
+    customer_codes.customer_code, customer_codes.customer_name, 
+    transfers.currency_id, transfers.agreed_amount, 
+    transfers.pax_no, transfers.transfer_cancelled, transfers.booking_location, 
+    transfers.booking_date, transfers.is_group, transfers.payment_details, 
+    transfers.reference_data, transfer_flights.transfer_flight_id, 
+    transfer_flights.start_time, transfer_flights.end_time, 
+    transfer_flights.flight_date, transfer_flights.start_airport, 
+    transfer_flights.end_airport, transfer_flights.airline, 
+    transfer_flights.flight_num, passangers.passanger_id, 
+    passangers.passanger_name, passangers.passanger_mobile, 
+    passangers.passanger_email, passangers.pickup_time, passangers.pickup, 
+    passangers.dropoff, passangers.other_preference, passangers.tab, 
+        CASE
+            WHEN passangers.tab = 1 THEN 'Depature'::text
+            WHEN passangers.tab = 2 THEN 'Arrival'::text
+            ELSE 'Depature'::text
+        END AS tab_name, 
+    passangers.amount, passangers.processed, passangers.pax_cancelled, 
+    passangers.pickup_date, passangers.group_contact, passangers.group_member, 
+    (((((((((transfer_flights.airline::text || '-'::text) || transfer_flights.flight_num::text) || '  '::text) 
+    || transfer_flights.start_airport::text) || '-'::text) || transfer_flights.end_airport::text) || '  '::text) 
+    || transfer_flights.start_time) || '-'::text) || transfer_flights.end_time AS flight_details
    FROM passangers
    JOIN car_types ON passangers.car_type_code::text = car_types.car_type_code::text
    JOIN transfers ON passangers.transfer_id = transfers.transfer_id
+   JOIN customer_codes ON customer_codes.customer_code = transfers.customer_code
    JOIN entitys ON transfers.entity_id = entitys.entity_id
    JOIN payment_types ON transfers.payment_type_id = payment_types.payment_type_id
    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = transfers.transfer_id
   WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
+
+
 
 
 CREATE VIEW vw_passangers_noflights AS
@@ -386,6 +399,23 @@ CREATE OR REPLACE VIEW vw_transfer_assignments_etravel AS
    JOIN transfers ON passangers.transfer_id = transfers.transfer_id
    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
   WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
+
+-- View: vw_group_members
+
+-- DROP VIEW vw_group_members;
+
+CREATE OR REPLACE VIEW vw_group_members AS 
+ SELECT a.transfer_id, a.is_group, a.passanger_id, a.passanger_name, 
+    a.processed, a.group_contact, a.group_member, a.tab, 
+    m.transfer_id AS m_transfer_id, m.is_group AS m_is_group, 
+    m.passanger_id AS m_passanger_id, m.passanger_name AS m_passanger_name, 
+    m.group_contact AS m_group_contact, m.group_member AS m_group_member, 
+    m.tab AS m_tab, m.tab_name AS m_tab_name
+   FROM vw_passangers a
+   LEFT JOIN vw_passangers m ON m.transfer_id = a.transfer_id
+  WHERE a.is_group = true AND a.group_contact = true AND m.group_contact = false AND a.tab = m.tab;
+
+
 
 
 

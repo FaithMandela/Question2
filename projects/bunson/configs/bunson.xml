@@ -5112,6 +5112,7 @@
 					</COMBOLIST>
 				</FORM>
 			</GRID>
+			<JASPER name="Voucher" reportfile="vw_transfer_group_unprocessed.jasper"></JASPER>
 			<FORM new="false" name="Passenger" keyfield="passanger_id" linkfield="transfer_id" table="passangers" noorg="true">
 				<CHECKBOX w="150" title="Pax Cancelled" y="260" h="20" x="290">pax_cancelled</CHECKBOX>
 				<CHECKBOX w="150" title="Processed" y="240" h="20" x="290">processed</CHECKBOX>
