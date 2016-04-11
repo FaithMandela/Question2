@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_borrowing" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="214136b3-14a4-4113-8d35-4e8135f8e975">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_borrowing" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1be215d8-923b-4bd8-a8a1-2864f100e25e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -13,37 +13,39 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="filterid" class="java.lang.String">
-		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	<parameter name="filter_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="orgid" class="java.lang.String">
-		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	<parameter name="org_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="orgwhere" class="java.lang.String">
+	<parameter name="org_where" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
-		<![CDATA[SELECT vw_borrowing.borrowing_type_name, vw_borrowing.borrowing_id, vw_borrowing.date_of_borrowing, vw_borrowing.amount, vw_borrowing.interest
-FROM vw_borrowing]]>
+	<queryString>
+		<![CDATA[SELECT vw_borrowing.org_id, vw_borrowing.borrowing_id, vw_borrowing.borrowing_type_name, vw_borrowing.amount, vw_borrowing.interest, vw_borrowing.date_of_borrowing
+FROM vw_borrowing
+Where vw_borrowing.borrowing_id is not null
+$P!{organd}
+order by borrowing_type_name
+]]>
 	</queryString>
-	<field name="borrowing_type_name" class="java.lang.String"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="borrowing_id" class="java.lang.Integer"/>
-	<field name="date_of_borrowing" class="java.sql.Date"/>
-	<field name="amount" class="java.lang.Double"/>
+	<field name="borrowing_type_name" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Float"/>
 	<field name="interest" class="java.lang.String"/>
-	<variable name="Total" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
-	</variable>
+	<field name="date_of_borrowing" class="java.sql.Date"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="66ef27eb-f2c3-4139-bc63-04419a298f65"/>
+				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="d258b8f7-42b4-402e-961d-913063ad2b34"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -57,128 +59,120 @@ FROM vw_borrowing]]>
 	<columnHeader>
 		<band height="16" splitType="Stretch">
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="9fa4afc3-f1ab-444a-89cb-cc467d2f1af2"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="0f731c14-d4d0-4fa2-8d8d-77310aff1d2a"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="105" height="15" forecolor="#000000" uuid="08087a12-9dfb-46a2-9845-ce8a4bc353a5"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Borrowing Type Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="106" y="0" width="105" height="15" forecolor="#000000" uuid="343ee750-abb2-4c60-8cd8-7a294538aae1"/>
+				<reportElement style="Column header" x="17" y="0" width="87" height="15" forecolor="#000000" uuid="bd542ecb-71ac-4d48-a9c1-3f4582f6fd9f"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Borrowing ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="211" y="0" width="105" height="15" forecolor="#000000" uuid="dae8db38-1a3b-4e0c-b90d-f0b74a7fa5e6"/>
+				<reportElement style="Column header" x="127" y="0" width="87" height="15" forecolor="#000000" uuid="20b72cc4-bc43-4c08-8973-df0e4dd88a9f"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Date Of Borrowing]]></text>
+				<text><![CDATA[Borrowing Type Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="316" y="0" width="105" height="15" forecolor="#000000" uuid="18bf1256-98f3-4355-9102-d2032c2ae84f"/>
+				<reportElement style="Column header" x="229" y="0" width="87" height="15" forecolor="#000000" uuid="52aac626-2f46-4dbe-885e-f628951532f1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="421" y="0" width="105" height="15" forecolor="#000000" uuid="678f7cc6-1c70-423a-9a29-1b94a0da7666"/>
+				<reportElement style="Column header" x="343" y="0" width="87" height="15" forecolor="#000000" uuid="5dd95d54-115d-49e5-9272-2b076bbf436a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Interest]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="436" y="0" width="87" height="15" forecolor="#000000" uuid="db700ee1-a4a4-4ab6-9259-ebda4d93bf3b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Date Of Borrowing]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<frame>
-				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="7aebc46c-b39f-4caf-b50e-bd6961bbbe2c"/>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="8d10e250-ebff-450f-9638-af4377565089"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="105" height="15" uuid="808ea8fc-27e3-4a2d-a5cc-4d40ce5f61f0"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{borrowing_type_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="106" y="0" width="105" height="15" uuid="3170e0ec-8c2c-44d0-b65c-a5b9e910452e"/>
+					<reportElement style="Detail" x="15" y="0" width="87" height="15" uuid="2e5ff266-a808-45a6-a282-09ffbb07639f"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{borrowing_id}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="211" y="0" width="105" height="15" uuid="1e65acc6-bf9d-4786-bdca-773f05170c19"/>
+					<reportElement style="Detail" x="123" y="0" width="87" height="15" uuid="b76f1ea3-1b52-4664-b64e-369d8e986bc8"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{date_of_borrowing}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{borrowing_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="316" y="0" width="105" height="15" uuid="3dda0b5c-e5ca-445d-8ba9-57f414443d91"/>
+					<reportElement style="Detail" x="230" y="0" width="87" height="15" uuid="49354dfa-bac2-4b4c-a5d4-b41a2bc37dd6"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="421" y="0" width="105" height="15" uuid="c9623d31-c264-4706-9272-814db789c0c9"/>
+					<reportElement style="Detail" x="340" y="0" width="87" height="15" uuid="7d80354b-03e2-4853-94ca-eb2c05847ccc"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{interest}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="436" y="0" width="87" height="15" uuid="acb7a44f-9c4b-4106-b781-3e06112019f6"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{date_of_borrowing}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="64" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="6722df55-4ae8-4958-9e61-a6e3288fabfe"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="74063a74-c66a-4d3b-adc7-0f0d66db54c0"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement x="23" y="20" width="100" height="20" uuid="04b8662c-277e-4d5a-aa44-7cd4275b42b3"/>
-				<text><![CDATA[Total]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="316" y="20" width="100" height="20" uuid="8442823f-0b48-41f5-a107-5b78bce61826"/>
-				<textFieldExpression><![CDATA[$V{Total}]]></textFieldExpression>
-			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="22951629-7b1f-44e0-9332-157eeefbfac3"/>
+				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="5bef2fd9-fd5c-456d-8ee2-6a8d72b1c928"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="a924d33f-d8d2-45bd-a0fe-9915ffc93ebb"/>
+					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="422fd99a-ec63-4916-b7e9-c6d08f504871"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="b952f031-64d7-4fdf-85f6-bf7c6b14d6f8"/>
+					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="ff950feb-7f9d-477b-996c-00b85b0f7e78"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="5df1393d-efcc-415c-b346-fe2928a14728"/>
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="4137367b-7b35-4255-899e-5750bd0ea2a2"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>

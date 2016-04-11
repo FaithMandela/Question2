@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transcripta2" columnCount="2" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="421" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ce5eb773-81e5-4872-8792-a1331b6a0f01">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -61,9 +61,9 @@ ORDER BY studentid, quarterid;]]>
 		<band splitType="Prevent"/>
 	</columnHeader>
 	<detail>
-		<band height="297" splitType="Stretch">
+		<band height="299" splitType="Stretch">
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-1" mode="Opaque" x="4" y="11" width="411" height="255" uuid="d4a3b4a6-572c-4c95-97f6-d3a57ab616e9"/>
+				<reportElement key="subreport-1" mode="Opaque" x="4" y="11" width="415" height="255" uuid="d4a3b4a6-572c-4c95-97f6-d3a57ab616e9"/>
 				<subreportParameter name="qstudentid">
 					<subreportParameterExpression><![CDATA[$F{qstudentid}]]></subreportParameterExpression>
 				</subreportParameter>

@@ -40,8 +40,7 @@
 	FROM vw_org_points
 	JOIN orgs ON vw_org_points.org_id = orgs.org_id
 	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text)
-	 AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
-	AND orgs.account_manager_id = '$P!{entity_id}';]]>
+	 AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text);]]>
 	</queryString>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="period" class="java.lang.String"/>

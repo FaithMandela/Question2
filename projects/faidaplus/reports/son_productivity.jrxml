@@ -146,6 +146,9 @@
 			</staticText>
 			<staticText>
 				<reportElement x="310" y="0" width="51" height="20" uuid="248ca52f-10bf-4410-af73-d14e14705098"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
 				<text><![CDATA[SON]]></text>
 			</staticText>
 		</band>

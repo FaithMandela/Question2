@@ -13,7 +13,7 @@ DECLARE
 BEGIN
 
 	v_period_id = $1::integer;
-	SELECT end_date,to_char(start_date, 'mmyyyy') INTO period,v_period
+	SELECT end_date,to_char(start_date, 'mmyyyy') INTO period, v_period
 	FROM periods WHERE period_id = v_period_id AND closed = false;
 	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
@@ -75,6 +75,9 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION generate_bonus(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec						RECORD;
+	v_period				varchar(7);
+	period					date;
+	v_period_id				integer;
 	v_period_bonus_ps		real;
 	v_period_bonus_amount	real;
 	v_pcc_bonus_ps			real;
@@ -85,13 +88,16 @@ DECLARE
 	msg 					varchar(120);
 BEGIN
 
+	v_period_id = $1::integer;
+	SELECT end_date,to_char(start_date, 'mmyyyy') INTO period,v_period
+	FROM periods WHERE period_id = v_period_id AND closed = false;
+	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
 	SELECT percentage, amount INTO v_period_bonus_ps, v_period_bonus_amount
 	FROM bonus
 	WHERE (period_id = $1::integer) AND (is_active = true) AND (approve_status = 'Approved');
 	IF(v_period_bonus_ps is null)THEN v_period_bonus_ps := 0; END IF;
 	IF(v_period_bonus_amount is null)THEN v_period_bonus_amount := 0; END IF;
-
 
 	FOR rec IN SELECT points_id, entity_id, period_id, pcc, son, segments, amount, points, bonus
 	FROM points WHERE (period_id = $1::integer) LOOP
@@ -110,9 +116,9 @@ BEGIN
 		IF(v_son_bonus_ps is null)THEN v_son_bonus_ps := 0; END IF;
 		IF(v_son_bonus_amount is null)THEN v_son_bonus_amount := 0; END IF;
 
-		v_bonus := (rec.points * v_period_bonus_ps / 100) + (rec.points * v_period_bonus_amount);
-		v_bonus := v_bonus + (rec.points * v_pcc_bonus_ps / 100) + (rec.points * v_pcc_bonus_amount);
-		v_bonus := v_bonus + (rec.points * v_son_bonus_ps / 100) + (rec.points * v_son_bonus_amount);
+		v_bonus := (rec.points * v_period_bonus_ps / 100) + (rec.segments * v_period_bonus_amount);
+		v_bonus := v_bonus + (rec.points * v_pcc_bonus_ps / 100) + (rec.segments * v_pcc_bonus_amount);
+		v_bonus := v_bonus + (rec.points * v_son_bonus_ps / 100) + (rec.segments * v_son_bonus_amount);
 
 		UPDATE points SET bonus = v_bonus WHERE points_id = rec.points_id;
 
@@ -164,6 +170,8 @@ BEGIN
 		IF(v_entity_id is not null)THEN
 			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 		END IF;
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (1, NEW.applicant_id, 'applicants', 3);
 	END IF;
 	RETURN NEW;
 END;

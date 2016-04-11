@@ -43,10 +43,10 @@
 			<TILE noorg.query="true" role="admin,staff" w="60" h="25" name="Birthday" where="to_char(birth_date, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm')" table="vw_entitys">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="admin,staff" w="60" h="25" name="New Orders" where="(order_status = 'Processing Order')" table="orders">
+			<TILE noorg="true" noorg.query="true" role="admin,staff" w="60" h="25" name="New Orders" where="(lower(order_status) = lower('Processing Order'))" table="orders">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="consultant" w="60" h="25" name="New Orders" where="(order_status = 'processing order' )" user="entity_id" table="orders">
+			<TILE noorg="true" noorg.query="true" role="consultant" w="60" h="25" name="New Orders" where="(lower(order_status) = lower('processing order' ))" user="entity_id" table="orders">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin,staff" w="60" h="25" name="UnBatched Orders" where="(batch_no is null)" table="orders">
@@ -379,7 +379,7 @@
 		<GRID keyfield="period_id" name="Month" orderby="period_id desc" key="1" table="vw_periods_c">
 			<TEXTFIELD w="40" title="Year">period_year</TEXTFIELD>
 			<TEXTFIELD w="40" title="Month">period_month</TEXTFIELD>
-			<GRID keyfield="pcc" name="Consultant Points" orderby="org_name ASC" linkfield="period_id" table="vw_son_points">
+			<GRID noorg="true" keyfield="points_id" name="Consultant Points" orderby="org_name ASC" linkfield="period_id" table="vw_son_points">
 				<TEXTFIELD w="100" title="Agency Name">org_name</TEXTFIELD>
 				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 				<TEXTFIELD w="40" title="SON">son</TEXTFIELD>
@@ -387,7 +387,7 @@
 				<TEXTFIELD w="40" title="Total KES">points</TEXTFIELD>
 				<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
 			</GRID>
-			<GRID name="PCCs Points" orderby="org_name ASC" linkfield="period_id" table="vw_org_points">
+			<GRID noorg="true" name="PCCs Points" orderby="org_name ASC" linkfield="period_id" table="vw_org_points">
 				<TEXTFIELD w="100" title="Agency Name">org_name</TEXTFIELD>
 				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 				<TEXTFIELD w="40" title="Total Segments">segments</TEXTFIELD>
@@ -435,23 +435,23 @@
 			<TEXTFIELD w="40" title="Year">ticket_year</TEXTFIELD>
 			<TEXTFIELD w="40" title="Month">ticket_month</TEXTFIELD>
 			<TEXTFIELD w="40" title="Tickets">total_segs</TEXTFIELD>
-			<GRID keyfield="pcc" name="Agency Segments" linkfield="ticket_period" key="2" table="vw_booked_segs">
+			<GRID noorg="true" keyfield="pcc" name="Agency Segments" linkfield="ticket_period" key="2" table="vw_booked_segs">
 				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 				<TEXTFIELD w="140" title="Agency Name">agency_name</TEXTFIELD>
 				<TEXTFIELD w="40" title="Ticket Segments">total_segs</TEXTFIELD>
 			</GRID>
-			<GRID keyfield="pcc" name="Consultant Segments" linkfield="ticket_period" key="3" table="vw_son_segs">
+			<GRID noorg="true" keyfield="pcc" name="Consultant Segments" linkfield="ticket_period" key="3" table="vw_son_segs">
 				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 				<TEXTFIELD w="140" title="Agency Name">agency_name</TEXTFIELD>
 				<TEXTFIELD w="40" title="SON">son</TEXTFIELD>
 				<TEXTFIELD w="40" title="Ticket Segments">total_segs</TEXTFIELD>
 			</GRID>
-			<GRID keyfield="pcc" name="Export Segments" linkfield="ticketperiod" key="4" table="vw_son_segs">
+			<GRID noorg="true" keyfield="pcc" name="Export Segments" linkfield="ticketperiod" key="4" table="vw_son_segs">
 				<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
 				<TEXTFIELD w="40" title="SON">son</TEXTFIELD>
 				<TEXTFIELD w="40" title="Ticket Segments">total_segs</TEXTFIELD>
 			</GRID>
-			<GRID keyfield="bpcc" name="Un Allocated Segments" linkfield="ticket_period" key="5" table="vw_unallocated">
+			<GRID noorg="true" keyfield="bpcc" name="Un Allocated Segments" linkfield="ticket_period" key="5" table="vw_unallocated">
 				<TEXTFIELD w="40" title="PCC">bpcc</TEXTFIELD>
 				<TEXTFIELD w="40" title="Ticket Segments">segements</TEXTFIELD>
 			</GRID>
@@ -850,7 +850,7 @@
 			<FILTERFORM name="Pcc Productivity ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX w="50" h="20" lpfield="pcc" x="10" y="30" lptable="orgs" title="PCC" lpkey="org_id">org_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc" x="10" y="30" lptable="orgs" title="PCC" lpkey="org_id">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="pcc_productivity.jasper" name="Agency Productivity"></JASPER>
 		</FILTER>
@@ -858,7 +858,7 @@
 			<FILTERFORM name="Consultant Productivity">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX w="50" h="20" lpfield="user_name" x="10" y="30" lptable="vw_entitys" title="Entity Username" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="50" h="20" lpfield="user_name" x="10" y="30" lptable="vw_entitys" title="Entity Username" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_productivity.jasper" name="Consultant Productivity"></JASPER>
 		</FILTER>
@@ -880,12 +880,19 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Bonus" key="116">
-		<FILTER split="150" w="700" h="550" name="Total Bonus Earnings" type="vert" key="order_date">
-			<FILTERFORM name="Total Bonus Earnings ">
+		<FILTER split="150" w="700" h="550" name="Consultant Bonus" type="vert" key="order_date">
+			<FILTERFORM name="Consultant Bonus ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="consultant_bonus.jasper" name="Total Bonus Earnings"></JASPER>
+			<JASPER reportfile="consultant_bonus.jasper" name="Consultant Bonus"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Agency Bonus " type="vert" key="order_date">
+			<FILTERFORM name="Agency Bonus ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="agency_bonus.jasper" name=" Agency Bonus"></JASPER>
 		</FILTER>
 		<JASPER reportfile="active_bonus.jasper" name="Active Bonus"></JASPER>
 		<FILTER split="150" w="700" h="550" name="Bonus per KAM" type="vert" key="order_date">
@@ -1083,7 +1090,13 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Opening Balance" key="129">
-		<JASPER reportfile="opening_balance.jasper" name="Opening Balance"></JASPER>
+		<FILTER split="150" w="700" h="550" name="Opening Balance" type="vert" key="order_date">
+			<FILTERFORM name="Opening Balance ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="opening_balance.jasper" name="Opening Balance"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Total Redemptions" key="128">
 		<FILTER split="150" w="700" h="550" name="Total Redemptions" type="vert" key="order_date">

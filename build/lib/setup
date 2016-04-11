@@ -15,7 +15,11 @@ jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -
 jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-logging-1.1.1.jar dewciskeystore
 jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO derby.jar dewciskeystore
 jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO groovy-all-2.0.1.jar dewciskeystore
-jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jasperreports-6.1.0.jar dewciskeystore
+jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jasperreports-6.2.0.jar dewciskeystore
+jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO htmlcomponent.jar dewciskeystore
+jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO core-renderer.jar dewciskeystore
+jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jtidy-r938.jar dewciskeystore
+jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO xml-apis-xerces-2.9.1.jar dewciskeystore
 jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO mail.jar dewciskeystore
 jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO mysql-connector-java-5.1.13-bin.jar dewciskeystore
 jarsigner -tsa https://timestamp.geotrust.com/tsa -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO ojdbc6.jar dewciskeystore
