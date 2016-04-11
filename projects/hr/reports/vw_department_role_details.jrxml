@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_department_role_details" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="29f00f44-8088-4857-9316-a39ca0dd111c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="3"/>
+	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="HR"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -72,9 +72,9 @@ $P!{organd};]]>
 		<band height="12" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="312" splitType="Stretch">
+		<band height="270" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="205" width="555" height="20" forecolor="#000000" uuid="1db31966-3feb-4508-a45e-0600a8b63d0d"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="181" width="555" height="20" forecolor="#000000" uuid="1db31966-3feb-4508-a45e-0600a8b63d0d"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -84,7 +84,7 @@ $P!{organd};]]>
 				<text><![CDATA[Performance Measures]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="106" width="555" height="20" forecolor="#000000" uuid="16465d4f-504e-4027-901a-c290bc3ad428"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="96" width="555" height="20" forecolor="#000000" uuid="16465d4f-504e-4027-901a-c290bc3ad428"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -94,7 +94,7 @@ $P!{organd};]]>
 				<text><![CDATA[Duties]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="250" width="555" height="20" forecolor="#000000" uuid="bbddb22f-6d28-4b1d-a3c6-2d4df787c1dd"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="223" width="555" height="20" forecolor="#000000" uuid="bbddb22f-6d28-4b1d-a3c6-2d4df787c1dd"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -114,7 +114,7 @@ $P!{organd};]]>
 				<text><![CDATA[Job Description]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="0" y="157" width="555" height="20" forecolor="#000000" uuid="0f6e58ab-61fd-4896-9780-9c152731dc60"/>
+				<reportElement style="Column header" positionType="Float" x="0" y="138" width="555" height="20" forecolor="#000000" uuid="0f6e58ab-61fd-4896-9780-9c152731dc60"/>
 				<box>
 					<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 				</box>
@@ -143,7 +143,7 @@ $P!{organd};]]>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="171" y="0" width="384" height="20" uuid="9d3f495e-dd59-4962-b096-ab38eaf945bc"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{department_name}]]></textFieldExpression>
 			</textField>
@@ -153,44 +153,45 @@ $P!{organd};]]>
 					<bottomPen lineWidth="1.25" lineColor="#E7E7E7"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{department_role_name}]]></textFieldExpression>
 			</textField>
-			<genericElement>
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="74" width="554" height="32" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="1ec117cc-4e40-46a0-859f-2a7143a5dd2b"/>
-				<genericElementType namespace="http://jasperreports.sourceforge.net/jasperreports/html" name="htmlelement"/>
-				<genericElementParameter name="htmlContent">
-					<valueExpression><![CDATA[$F{job_description}]]></valueExpression>
-				</genericElementParameter>
-				<genericElementParameter name="scaleType">
-					<valueExpression><![CDATA["RealHeight"]]></valueExpression>
-				</genericElementParameter>
-			</genericElement>
-			<componentElement>
-				<reportElement positionType="Float" x="1" y="126" width="554" height="31" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="7c70d369-4cab-4216-90da-d19f3228a310"/>
-				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RealHeight" horizontalAlign="Left" verticalAlign="Middle">
-					<hc:htmlContentExpression><![CDATA[$F{duties}]]></hc:htmlContentExpression>
-				</hc:html>
-			</componentElement>
-			<componentElement>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="1" y="177" width="554" height="28" isRemoveLineWhenBlank="true" uuid="0c0a6341-bfb5-4f92-a2a2-aafb6571e542"/>
-				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
-					<hc:htmlContentExpression><![CDATA[$F{job_requirements}]]></hc:htmlContentExpression>
-				</hc:html>
-			</componentElement>
-			<componentElement>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="1" y="225" width="554" height="25" isRemoveLineWhenBlank="true" uuid="e794ec5b-2395-4e58-a9bf-913994cfe0af"/>
-				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
-					<hc:htmlContentExpression><![CDATA[$F{performance_measures}]]></hc:htmlContentExpression>
-				</hc:html>
-			</componentElement>
-			<componentElement>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="1" y="270" width="554" height="32" isRemoveLineWhenBlank="true" uuid="e59d7e9d-9ca7-4932-8805-61d5d7112943"/>
-				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RetainShape" horizontalAlign="Left" verticalAlign="Middle">
-					<hc:htmlContentExpression><![CDATA[$F{details}]]></hc:htmlContentExpression>
-				</hc:html>
-			</componentElement>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="74" width="555" height="20" uuid="224053f7-bd22-4997-9761-0b7890c1cd78"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{job_description}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="116" width="555" height="20" uuid="2b4b29f7-9199-4bed-882b-75708594474b"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{duties}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="158" width="555" height="20" uuid="b9685d2d-57ac-40b2-b3e2-6579cf935ed6"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{job_requirements}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="201" width="555" height="20" uuid="6940b52b-d4a7-4994-9d0e-f36f6305ab83"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{performance_measures}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="243" width="555" height="20" uuid="c9939ddb-7188-415d-88fb-09fe720e505d"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>

@@ -58,23 +58,24 @@ public class BWebFiles extends HttpServlet {
 		String sp = request.getServletPath();
 		configure(request);
 		
+		String resp = null;
 		if(view.getName().equals("GRID")) {
-			String resp = importFile(request);
-			
-			PrintWriter out = null;
-			try { out = response.getWriter(); } catch(IOException ex) {}
-			
-			response.setContentType("application/json;charset=\"utf-8\"");
-			out.println(resp);
+			resp = importFile(request);
 		} if(view.getName().equals("FILES")) {
 			if(sp.equals("/barazafiles")) getFile(request, response);
 			if(sp.equals("/webdavfiles")) getWebDavFile(request, response);
-			if(sp.equals("/putbarazafiles")) receiveFile(request);
-			if(sp.equals("/delbarazafiles")) delFile(request, response);
+			if(sp.equals("/putbarazafiles")) resp = receiveFile(request);
+			if(sp.equals("/delbarazafiles")) resp = delFile(request, response);
 		}
 		
-		response.setContentType("application/json;charset=\"utf-8\"");
-
+		if(resp != null) {
+			response.setContentType("application/json;charset=\"utf-8\"");
+			try { 
+				PrintWriter out = response.getWriter();
+				out.println(resp);
+			} catch(IOException ex) {}
+		}
+			
 		// Close initialisations
 		query.close();
 		web.close();
@@ -120,7 +121,7 @@ System.out.println("BASE 1020 : " + repository);
 	
 	
 	public String importFile(HttpServletRequest request) {
-		String response = "{\"success\": 0, \"message\": \"Upload Failed\"}";
+		String resp = "{\"success\": 0, \"message\": \"Upload Failed\"}";
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		
 		int yourMaxMemorySize = 262144;
@@ -164,7 +165,7 @@ System.out.println("BASE 1410 : " + fileName);
 						jshd.add("message", "Proceess File");
                         
 						JsonObject jsObj = jshd.build();
-						response = jsObj.toString();
+						resp = jsObj.toString();
 						
 						BImportVector iv = new BImportVector(view);
 						iv.getTextData(item.getInputStream());
@@ -180,13 +181,13 @@ System.out.println("BASE 1410 : " + fileName);
 			System.out.println("File saving failed Exception " + ex);
 		}
 		
-System.out.println("BASE 1420 : " + response);
+System.out.println("BASE 1420 : " + resp);
 
-		return response;
+		return resp;
 	}
 
 	public String receiveFile(HttpServletRequest request) {
-		String response = "";
+		String resp = "{\"success\": 0, \"message\": \"Upload Failed\"}";
 
 		int yourMaxMemorySize = 262144;
 		
@@ -249,6 +250,7 @@ System.out.println("BASE 1440 : " + wdfn);
 					}
 				}
 			}
+			resp = "{\"success\": 1, \"message\": \"Upload Sucessful\"}";
 		} catch (FileUploadException ex) {
 			System.out.println("File upload exception " + ex);
 		} catch(IOException ex) {
@@ -257,7 +259,7 @@ System.out.println("BASE 1440 : " + wdfn);
 			System.out.println("File saving failed Exception " + ex);
 		}
 
-		return response;
+		return resp;
 	}
 
 	public void getFile(HttpServletRequest request, HttpServletResponse response) {
@@ -326,7 +328,9 @@ System.out.println("File : "  + fileName);
 		}
 	}
 
-	public void delFile(HttpServletRequest request, HttpServletResponse response) {
+	public String delFile(HttpServletRequest request, HttpServletResponse response) {
+		String resp = "{\"success\": 0, \"message\": \"Upload Failed\"}";
+		
 		String wdfn = request.getParameter("fileid");
 		System.out.println("BASE 1010 : " + wdfn);
 
@@ -343,7 +347,11 @@ System.out.println("File : "  + fileName);
 
 			query.recDelete();
 			webdav.delFile(wdfn);
+			
+			resp = "{\"success\": 1, \"message\": \"Upload Sucessful\"}";
 		}
+		
+		return resp;
 	}
 
 }
