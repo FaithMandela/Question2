@@ -797,8 +797,10 @@ $(function () {
         var progress = parseInt(data.loaded / data.total * 100, 10);
         $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function (e, data) {
-console.log('BASE 5');
-console.log(data.result.message);
+        console.log('BASE 5');
+        console.log(data.result);
+        console.log(data.result.message);
+        
 		var fileDone = $('<button>').text(data.result.message);
         $(data.context.children()[0]).append(fileDone).click(function(){ 
 			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {
