@@ -25,6 +25,7 @@ CREATE TABLE members (
   	marital_status 				varchar(20),
 	joining_date				date,
 	exit_date					date,
+	merry_go_round_number 		varchar(10)
 
  	picture_file 				character varying(32),
   	active 						boolean NOT NULL DEFAULT true,
