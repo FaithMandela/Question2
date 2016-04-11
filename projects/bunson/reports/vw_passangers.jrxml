@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_passangers" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31ce1aed-8af4-4791-9487-55ec4792ef40">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="34"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -88,18 +88,17 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tab} == 1 ? "DEPARTURE" : "ARRIVAL"]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="80" y="246" width="180" height="1" uuid="9ff6ed7e-8b11-486d-9f8b-137393510dcc"/>
-			</line>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="80" y="187" width="180" height="15" uuid="b5de50a7-cf3c-4f81-a98f-cbb0ad1ef157"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payment_type_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="278" y="101" width="88" height="15" forecolor="#000000" uuid="e420f07e-a5fc-408a-a8a7-0db38f5b3b33"/>
+				<reportElement style="Column header" x="268" y="101" width="98" height="15" forecolor="#000000" uuid="e420f07e-a5fc-408a-a8a7-0db38f5b3b33"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
 				</textElement>
@@ -116,7 +115,10 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 				<text><![CDATA[Voucher Ref :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="80" y="208" width="180" height="15" uuid="c8266fbc-ab80-4e20-9720-0c9074424aa0"/>
+				<reportElement style="Detail" x="80" y="204" width="471" height="15" uuid="c8266fbc-ab80-4e20-9720-0c9074424aa0"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -124,6 +126,7 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="80" y="145" width="470" height="15" uuid="201176a8-2e24-4291-8155-21d3106edeb5"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -131,6 +134,7 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="80" y="42" width="188" height="15" uuid="bffd7c26-4f41-4007-a122-cf400d086d77"/>
+				<box leftPadding="4"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -138,6 +142,7 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd MMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="80" y="124" width="188" height="15" uuid="706a2efe-dc52-4fd8-9798-b62e75b414f1"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -145,13 +150,15 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" positionType="Float" x="2" y="42" width="78" height="15" forecolor="#000000" uuid="4617d6e9-2434-4f60-9b5a-7d3047301a18"/>
+				<box leftPadding="4"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
 				</textElement>
 				<text><![CDATA[Pax No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="278" y="208" width="88" height="15" forecolor="#000000" uuid="d6587fda-0057-4d97-8b87-faced8adb3e6"/>
+				<reportElement style="Column header" x="2" y="223" width="78" height="15" forecolor="#000000" uuid="d6587fda-0057-4d97-8b87-faced8adb3e6"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -159,13 +166,17 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" x="366" y="42" width="185" height="15" uuid="2a9aea7a-8e91-4202-b0e6-f59c37c8d5e3"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="2" y="208" width="78" height="15" forecolor="#000000" uuid="dbee2c1f-f5fa-44f0-9d28-4087f8743c75"/>
+				<reportElement style="Column header" x="2" y="204" width="78" height="15" forecolor="#000000" uuid="dbee2c1f-f5fa-44f0-9d28-4087f8743c75"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -173,6 +184,9 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="2" y="76" width="78" height="15" forecolor="#000000" uuid="6c177ac6-ad65-44d7-9385-402204d59a68"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -200,6 +214,9 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="80" y="166" width="470" height="15" uuid="8f2651e0-cd92-4164-a15c-1e00aaea2636"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -207,6 +224,7 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" x="2" y="187" width="78" height="15" forecolor="#000000" uuid="4c024486-4979-4a91-bcd6-62ea4a471121"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -214,6 +232,7 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="366" y="124" width="185" height="15" uuid="cb08c6b3-f609-480a-aa5e-c2ff245168bd"/>
+				<box leftPadding="4"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -223,13 +242,15 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement style="Detail" x="366" y="101" width="185" height="15" uuid="410030e6-ad80-4ef7-9b48-f37b520b8f3a"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pickup_time}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="278" y="42" width="88" height="15" forecolor="#000000" uuid="1146f1ca-8d33-46fb-bdb9-168efb2ded50"/>
+				<reportElement style="Column header" positionType="Float" x="268" y="42" width="98" height="15" forecolor="#000000" uuid="1146f1ca-8d33-46fb-bdb9-168efb2ded50"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
 				</textElement>
@@ -237,13 +258,14 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="2" y="145" width="78" height="15" forecolor="#000000" uuid="a022cb49-2a6f-42b3-b2e4-1e7160409c2e"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Pickup Point]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="356" y="25" width="199" height="15" uuid="3fa444cc-9206-4787-9fb2-42db9fcf5118"/>
+				<reportElement style="Detail" positionType="Float" x="356" y="25" width="195" height="15" uuid="3fa444cc-9206-4787-9fb2-42db9fcf5118"/>
 				<box rightPadding="4">
 					<bottomPen lineWidth="0.5" lineColor="#666666"/>
 				</box>
@@ -254,20 +276,25 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="366" y="187" width="185" height="15" uuid="01a4212b-8bb4-4ec6-869c-d46c9c866139"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{car_type_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="278" y="124" width="88" height="15" forecolor="#000000" uuid="a461e5ac-de01-4c7f-a2aa-87c59b5f4c9d"/>
+				<reportElement style="Column header" x="268" y="124" width="98" height="15" forecolor="#000000" uuid="a461e5ac-de01-4c7f-a2aa-87c59b5f4c9d"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Flight ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="278" y="76" width="88" height="15" forecolor="#000000" uuid="cd72331a-9846-498e-8129-d4ff41530dc5"/>
+				<reportElement style="Column header" x="268" y="76" width="98" height="15" forecolor="#000000" uuid="cd72331a-9846-498e-8129-d4ff41530dc5"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -275,6 +302,9 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="366" y="76" width="185" height="15" uuid="61640ec3-201d-4efb-b959-c351c7fefb0d"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -282,6 +312,7 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" x="2" y="101" width="78" height="15" forecolor="#000000" uuid="cd18c87d-0e1c-4378-b1d0-a1a7c9f0cb67"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -289,27 +320,23 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="278" y="187" width="88" height="15" forecolor="#000000" uuid="1b14d00c-c22a-4532-8d8d-02679a36c004"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
 				</textElement>
 				<text><![CDATA[Car Type]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="366" y="208" width="185" height="15" uuid="24f129d3-4e03-4430-b633-034be32f6514"/>
+				<reportElement style="Detail" x="80" y="223" width="470" height="15" uuid="24f129d3-4e03-4430-b633-034be32f6514"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{other_preference}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="2" y="232" width="78" height="15" forecolor="#000000" uuid="89d9a3dd-5489-4cad-b92d-fb113396d68f"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Client Signature]]></text>
-			</staticText>
-			<staticText>
 				<reportElement style="Column header" x="2" y="124" width="78" height="15" forecolor="#000000" uuid="3f8f42fb-e3fa-4e2f-83e5-126dc5221d28"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -317,6 +344,9 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="80" y="76" width="188" height="15" uuid="0ebda55f-8727-4356-9b46-5c466d3601c1"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -324,6 +354,7 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd MMM yyyy" isBlankWhenNull="true">
 				<reportElement style="Detail" x="80" y="101" width="188" height="15" uuid="871a9ba7-b20e-47ba-97de-d2020e323ba5"/>
+				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -331,6 +362,9 @@ WHERE vw_passangers.passanger_id = '$P!{filterid}']]>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" x="2" y="166" width="78" height="15" forecolor="#000000" uuid="cef05622-5778-4987-8d3c-6e52432671a0"/>
+				<box leftPadding="4">
+					<bottomPen lineWidth="0.5" lineColor="#666666"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold"/>
 				</textElement>
