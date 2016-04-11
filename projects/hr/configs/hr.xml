@@ -32,7 +32,6 @@
 			<MENU name="Objectives Review">42</MENU>
 			<MENU name="Perfomance Review">40</MENU>
 			<MENU name="Arbitration">45</MENU>
-			<MENU name="Employee Trainings">50</MENU>
 		</MENU>
 		<MENU name="Administration" role="admin">
 			<MENU name="Organisation">20</MENU>
@@ -51,6 +50,7 @@
 			<MENU name="Supervisor Review Report" role="staff">165</MENU>
 		</MENU>
 		<MENU name="Training" role="training">
+			<MENU name="Employee Trainings">50</MENU>
 			<MENU name="Aptitude Tests">180</MENU>
 			<MENU name="Aptitude Test Report">185</MENU>
 		</MENU>

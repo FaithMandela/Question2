@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2016-04-08T08:56:57 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_department_role_details" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="29f00f44-8088-4857-9316-a39ca0dd111c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -29,7 +27,11 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_description, vw_department_roles.department_duties, vw_department_roles.parent_role_name, vw_department_roles.org_id, vw_department_roles.department_role_id, vw_department_roles.ln_department_role_id, vw_department_roles.department_role_name, vw_department_roles.job_description, vw_department_roles.job_requirements, vw_department_roles.duties, vw_department_roles.performance_measures, vw_department_roles.active, vw_department_roles.details
+		<![CDATA[SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_description,
+	vw_department_roles.department_duties, vw_department_roles.parent_role_name, vw_department_roles.org_id,
+	vw_department_roles.department_role_id, vw_department_roles.ln_department_role_id, vw_department_roles.department_role_name,
+	vw_department_roles.job_description, vw_department_roles.job_requirements, vw_department_roles.duties,
+	vw_department_roles.performance_measures, vw_department_roles.active, vw_department_roles.details
 FROM vw_department_roles
 WHERE vw_department_roles.department_role_id = '$P!{filterid}'
 $P!{organd};]]>
@@ -155,12 +157,16 @@ $P!{organd};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{department_role_name}]]></textFieldExpression>
 			</textField>
-			<componentElement>
-				<reportElement stretchType="RelativeToBandHeight" x="1" y="74" width="554" height="32" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="67084038-034c-49a4-81e4-eb8bd211a677"/>
-				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RealHeight" horizontalAlign="Left" verticalAlign="Middle">
-					<hc:htmlContentExpression><![CDATA[$F{job_description}]]></hc:htmlContentExpression>
-				</hc:html>
-			</componentElement>
+			<genericElement>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="74" width="554" height="32" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" backcolor="#FFFFFF" uuid="1ec117cc-4e40-46a0-859f-2a7143a5dd2b"/>
+				<genericElementType namespace="http://jasperreports.sourceforge.net/jasperreports/html" name="htmlelement"/>
+				<genericElementParameter name="htmlContent">
+					<valueExpression><![CDATA[$F{job_description}]]></valueExpression>
+				</genericElementParameter>
+				<genericElementParameter name="scaleType">
+					<valueExpression><![CDATA["RealHeight"]]></valueExpression>
+				</genericElementParameter>
+			</genericElement>
 			<componentElement>
 				<reportElement positionType="Float" x="1" y="126" width="554" height="31" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="7c70d369-4cab-4216-90da-d19f3228a310"/>
 				<hc:html xmlns:hc="http://jasperreports.sourceforge.net/htmlcomponent" xsi:schemaLocation="http://jasperreports.sourceforge.net/htmlcomponent http://jasperreports.sourceforge.net/xsd/htmlcomponent.xsd" scaleType="RealHeight" horizontalAlign="Left" verticalAlign="Middle">
