@@ -1875,7 +1875,7 @@
 					<TEXTAREA w="530" tab="Comments" y="1" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="530" tab="Review" y="1" h="170" x="10">review</TEXTAREA>
 				</FORM>
-				<FILES username="repository" repository="/repository/webdav/files/" name="Documents" keyfield="sys_file_id" table="sys_files" password="baraza" linkparams="entity_id=table_id">
+				<FILES new="false" repository="/repository/webdav/files/" name="Documents" keyfield="sys_file_id" table="sys_files" password="baraza" linkparams="entity_id=table_id">
 					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 					<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
 					<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
@@ -1906,7 +1906,7 @@
 					<TEXTAREA w="530" tab="Comments" y="1" h="170" x="10">applicant_comments</TEXTAREA>
 					<TEXTAREA w="530" tab="Review" y="1" h="170" x="10">review</TEXTAREA>
 				</FORM>
-				<FILES username="repository" repository="/repository/webdav/files/" name="Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza" linkparams="entity_id=table_id">
+				<FILES new="false" repository="/repository/webdav/files/" name="Documents" keyfield="sys_file_id" table="sys_files" password="baraza" linkparams="entity_id=table_id">
 					<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 					<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
 					<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
