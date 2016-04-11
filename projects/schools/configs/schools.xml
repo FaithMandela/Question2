@@ -211,6 +211,9 @@
 				<SPINTIME w="75" title="End Time">end_time</SPINTIME>
 			</GRID>
 		</GRID>
+		<GRID w="700" name="Students" key="235" h="550">
+			<JASPER name="Reports" reportfile="vw_students.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Subjects" key="25" h="550">
 		<GRID name="Subjects" keyfield="subject_id" table="vw_subjects">
