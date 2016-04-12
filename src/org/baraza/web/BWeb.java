@@ -2063,6 +2063,7 @@ System.out.println("repository : " + repository);
 		boolean fileImport = false;
 		if(root == null) return fileImport;
 		if(view == null) return fileImport;
+		if(view.getAttribute("new", "true").equals("false")) return fileImport;
 		if(view.getName().equals("FILES")) {
 			fileImport = true;
         } else if(view.getName().equals("GRID")) {
