@@ -65,7 +65,7 @@ public class BWebFiles extends HttpServlet {
 			if(sp.equals("/barazafiles")) getFile(request, response);
 			if(sp.equals("/webdavfiles")) getWebDavFile(request, response);
 			if(sp.equals("/putbarazafiles")) resp = receiveFile(request);
-			if(sp.equals("/delbarazafiles")) resp = delFile(request, response);
+			if(sp.equals("/delbarazafiles")) delFile(request, response);
 		}
 		
 		if(resp != null) {
@@ -349,6 +349,14 @@ System.out.println("File : "  + fileName);
 			webdav.delFile(wdfn);
 			
 			resp = "{\"success\": 1, \"message\": \"Upload Sucessful\"}";
+		}
+		
+		try {
+			String referer = request.getHeader("Referer");
+System.out.println("Referer : "  + referer);
+			response.sendRedirect(referer);
+		} catch(IOException ex) {
+			System.out.println("IO Error : " + ex);
 		}
 		
 		return resp;
