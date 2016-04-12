@@ -18,7 +18,8 @@
 	FROM vw_org_points
 	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text)
 	 AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
-	AND org_id = '$P!{org_id}';]]>
+	AND org_id = '$P!{org_id}'
+ORDER BY period DESC;]]>
 	</queryString>
 	<field name="period" class="java.sql.Date"/>
 	<field name="ticket_period" class="java.lang.String"/>
@@ -28,6 +29,15 @@
 	<field name="bonus" class="java.lang.Float"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
+	<variable name="total_bonus" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{bonus}]]></variableExpression>
+	</variable>
+	<variable name="total_points" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{points}]]></variableExpression>
+	</variable>
+	<variable name="total_seg" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{segments}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -152,7 +162,7 @@
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="481" y="0" width="74" height="15" uuid="2c7659af-96ea-493f-b7d7-c1d55ae3fc2f"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bonus}]]></textFieldExpression>
@@ -160,7 +170,7 @@
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="391" y="0" width="90" height="15" uuid="c3238cc9-5cd5-4029-a460-5722ae056b27"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
@@ -168,7 +178,7 @@
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="323" y="0" width="68" height="15" isPrintWhenDetailOverflows="true" uuid="0e9e650a-dcd4-4d3c-97a5-7084b43dc463"/>
 				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{segments}]]></textFieldExpression>
@@ -184,12 +194,41 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="9" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="6" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="481" y="0" width="74" height="20" isPrintWhenDetailOverflows="true" uuid="ce48cf2e-0be3-4e03-a0e2-303c5c5c9e28"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_bonus}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="391" y="0" width="90" height="20" isPrintWhenDetailOverflows="true" uuid="ebe0409e-c87c-42cc-ad2a-55f613cbc7da"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_points}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="322" y="0" width="69" height="20" isPrintWhenDetailOverflows="true" uuid="76e190af-6b31-4e96-8f64-36bfda50d876"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_seg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="217" y="0" width="100" height="20" uuid="8ab96840-9dc6-4ea2-857c-b7c116aedc40"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>

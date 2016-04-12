@@ -15,13 +15,22 @@
 FROM  orders
 WHERE order_date::date >= '$P!{minDate}' AND  order_date::date <= '$P!{maxDate}'
 GROUP BY batch_no,batch_date
-ORDER BY batch_no ASC;]]>
+ORDER BY batch_date DESC;]]>
 	</queryString>
 	<field name="batch_date" class="java.sql.Date"/>
 	<field name="order_total_amount" class="java.lang.Float"/>
 	<field name="batch_no" class="java.lang.Integer"/>
 	<field name="shipping_cost" class="java.lang.Float"/>
 	<field name="grand_total" class="java.lang.Float"/>
+	<variable name="v_shipping" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{shipping_cost}]]></variableExpression>
+	</variable>
+	<variable name="v_total" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{order_total_amount}]]></variableExpression>
+	</variable>
+	<variable name="v_grand_total" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{grand_total}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -56,21 +65,21 @@ ORDER BY batch_no ASC;]]>
 				<text><![CDATA[Batch Id]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="0" width="100" height="15" uuid="0601bf5c-c983-4a30-8f34-4f189ddc858b"/>
+				<reportElement x="150" y="0" width="145" height="15" uuid="0601bf5c-c983-4a30-8f34-4f189ddc858b"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Shipping Cost]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="350" y="0" width="100" height="15" uuid="9cc51794-5db7-4489-b233-aec66891d251"/>
+				<reportElement x="422" y="0" width="133" height="15" uuid="9cc51794-5db7-4489-b233-aec66891d251"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Grand Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="250" y="0" width="100" height="15" uuid="947aed55-24ec-4a79-8d34-0108b51d165b"/>
+				<reportElement x="295" y="1" width="127" height="15" uuid="947aed55-24ec-4a79-8d34-0108b51d165b"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -85,29 +94,29 @@ ORDER BY batch_no ASC;]]>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="72" y="0" width="78" height="15" isPrintWhenDetailOverflows="true" uuid="ccae46b5-41ef-47ce-bc77-c47a36452772"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{batch_no}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="150" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="a5dd58a5-6375-48e2-b89c-5a6d0a60351d"/>
+				<reportElement x="150" y="0" width="145" height="15" isPrintWhenDetailOverflows="true" uuid="a5dd58a5-6375-48e2-b89c-5a6d0a60351d"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shipping_cost}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="250" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="80210cb7-d7da-42b8-915f-f921173dc44a"/>
+				<reportElement x="295" y="0" width="127" height="15" isPrintWhenDetailOverflows="true" uuid="80210cb7-d7da-42b8-915f-f921173dc44a"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_total_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="350" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="1f5f2032-4832-4363-b418-5c4528bef7ad"/>
+				<reportElement x="422" y="0" width="133" height="15" isPrintWhenDetailOverflows="true" uuid="1f5f2032-4832-4363-b418-5c4528bef7ad"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grand_total}]]></textFieldExpression>
 			</textField>
@@ -121,12 +130,41 @@ ORDER BY batch_no ASC;]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="17" splitType="Stretch"/>
+		<band height="10" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="23" splitType="Stretch"/>
+		<band height="14" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="422" y="0" width="133" height="15" isPrintWhenDetailOverflows="true" uuid="4c4daa97-ac2d-4ff4-a025-a5e05e8752e2"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_grand_total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="295" y="0" width="127" height="15" isPrintWhenDetailOverflows="true" uuid="6a70b5f0-fd8e-41b9-9e7d-e1e22022f47e"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="187" y="0" width="108" height="15" isPrintWhenDetailOverflows="true" uuid="4ce5d620-8c4a-49de-acd0-ab094669140d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{v_shipping}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="72" y="0" width="100" height="22" isPrintWhenDetailOverflows="true" uuid="0b00c386-c3df-42eb-8474-1c0f6cd3090b"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>
