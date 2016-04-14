@@ -795,12 +795,15 @@ $(function () {
         }
     }).on('fileuploadprogressall', function (e, data) {
         var progress = parseInt(data.loaded / data.total * 100, 10);
+        $('#progress').addClass('active').addClass('progress-striped');
         $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function (e, data) {
         console.log('BASE 5');
         console.log(data.result);
         console.log(data.result.message);
         
+        $('#progress').removeClass('active').removeClass('progress-striped');
+        $('#jqlist').trigger('reloadGrid');
 		var fileDone = $('<button>').text(data.result.message);
         $(data.context.children()[0]).append(fileDone).click(function(){ 
 			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {
@@ -810,7 +813,7 @@ $(function () {
                      $('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
                 }
 	        }, "JSON");
-			}).append('<br>');
+        }).append('<br>');
 
         $.each(data.result.files, function (index, file) {
             if (file.url) {
