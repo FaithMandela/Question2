@@ -175,6 +175,10 @@ BEGIN
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		
+		INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
+		SELECT transaction_type_id, NEW.org_id, 1
+		FROM transaction_types;
+		
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 

@@ -388,16 +388,18 @@
 			</ACTIONS>
 			<FORM name="Receipts" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="7">transaction_type_id</DEFAULT>
+				<DEFAULT default="1">tx_type</DEFAULT>
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="vw_bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="70" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
-				<TEXTDATE w="150" title="Transaction Date" y="90" h="20" x="10">transaction_date</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="90" h="20" x="290">exchange_rate</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">transaction_amount</TEXTDECIMAL>
-				<TEXTFIELD w="430" title="Job" y="130" h="20" x="10">job</TEXTFIELD>
-				<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="90" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+				<TEXTDATE w="150" title="Transaction Date" y="110" h="20" x="10">transaction_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="110" h="20" x="290">exchange_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Amount" y="130" h="20" x="10">transaction_amount</TEXTDECIMAL>
+				<TEXTFIELD w="430" title="Job" y="150" h="20" x="10">job</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="170" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
 		</GRID>
@@ -662,6 +664,7 @@
 			</ACTIONS>
 			<FORM name="Payments" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="8">transaction_type_id</DEFAULT>
+				<DEFAULT default="-1">tx_type</DEFAULT>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="vw_bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>

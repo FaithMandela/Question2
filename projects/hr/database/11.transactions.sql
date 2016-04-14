@@ -93,7 +93,6 @@ CREATE TABLE transaction_types (
 	transaction_type_id		integer primary key,
 	transaction_type_name	varchar(50) not null,
 	document_prefix			varchar(16) default 'D' not null,
-	document_number			integer default 1 not null,
 	for_sales				boolean default true not null,
 	for_posting				boolean default true not null
 );
@@ -116,6 +115,19 @@ INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_s
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (21, 'Direct Expenditure', true, true);
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (22, 'Direct Income', false, true);
 
+CREATE TABLE transaction_counters (
+	transaction_counter_id	serial primary key,
+	transaction_type_id		integer references transaction_types,
+	org_id					integer references orgs,
+	document_number			integer default 1 not null
+);
+CREATE INDEX transaction_counters_transaction_type_id ON transaction_counters (transaction_type_id);
+CREATE INDEX transaction_counters_org_id ON transaction_counters (org_id);
+INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
+SELECT transaction_type_id, 0, 1
+FROM transaction_types;
+
+
 CREATE TABLE transaction_status (
 	transaction_status_id	integer primary key,
 	transaction_status_name	varchar(50) not null
@@ -129,8 +141,10 @@ CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,
 	account_id				integer references accounts,
 	org_id					integer references orgs,
-	ledger_type_name		varchar(120) not null unique,
-	details					text  
+	ledger_type_name		varchar(120) not null,
+	ledger_posting			boolean default true not null,
+	details					text,
+	UNIQUE(org_id, ledger_type_name)
 );
 CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
 CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
@@ -155,7 +169,7 @@ CREATE TABLE transactions (
 	transaction_tax_amount	real default 0 not null,
 	document_number			integer default 1 not null,
 	
-	tx_type					integer default 1 not null,
+	tx_type					integer,
 	
 	for_processing			boolean default false not null,
 	is_cleared				boolean default false not null,
@@ -381,6 +395,7 @@ CREATE VIEW vw_tx_ledger AS
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.details,
 		
+		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
 		to_char(transactions.payment_date, 'YYYY.MM') as ledger_period,
 		to_char(transactions.payment_date, 'YYYY') as ledger_year,
 		to_char(transactions.payment_date, 'Month') as ledger_month,
@@ -408,7 +423,8 @@ CREATE VIEW vw_tx_ledger AS
 		INNER JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
 		INNER JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
-		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id;
+		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
+	WHERE transactions.tx_type is not null;
 	
 
 CREATE VIEW vws_tx_ledger AS
@@ -476,7 +492,7 @@ BEGIN
 			tx_ledger_amount, tx_ledger_tax_amount, reference_number,
 			narrative
 		FROM transactions
-		WHERE (tx_type = -1) AND (to_char(payment_date, 'YYYY.MM') = $1);
+		WHERE (tx_type is not null) AND (to_char(payment_date, 'YYYY.MM') = $1);
 
 		msg := 'Appended a new month';
 	END IF;
@@ -549,14 +565,17 @@ CREATE TRIGGER af_upd_transaction_details AFTER INSERT OR UPDATE OR DELETE ON tr
 
 CREATE OR REPLACE FUNCTION upd_transactions() RETURNS trigger AS $$
 DECLARE
-	transid 	INTEGER;
-	currid		INTEGER;
+	v_counter_id	integer;
+	transid 		integer;
+	currid			integer;
 BEGIN
 
 	IF(TG_OP = 'INSERT') THEN
-		SELECT document_number INTO transid
-		FROM transaction_types WHERE (transaction_type_id = NEW.transaction_type_id);
-		UPDATE transaction_types SET document_number = transid + 1 WHERE (transaction_type_id = NEW.transaction_type_id);
+		SELECT transaction_counter_id, document_number INTO v_counter_id, transid
+		FROM transaction_counters 
+		WHERE (transaction_type_id = NEW.transaction_type_id) AND (org_id = NEW.org_id);
+		UPDATE transaction_counters SET document_number = transid + 1 
+		WHERE (transaction_counter_id = v_counter_id);
 
 		NEW.document_number := transid;
 		IF(NEW.currency_id is null)THEN
