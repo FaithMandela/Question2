@@ -10,22 +10,28 @@
 		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT b.pcc, b.son, a.org_name, a.entity_id, b.user_name, b.entity_name, to_char(sum(balance), '999,999,999,999')as balance, sum(a.points) as points, a.amount, sum(a.segments) as segments
-FROM vw_opening_balance a INNER JOIN vw_entitys b ON a.entity_id = b.entity_id
-WHERE a.period >='$P!{minDate}' AND a.period <='$P!{maxDate}'
-GROUP BY b.pcc,b.son, a.org_name, a.entity_id, a.amount, b.entity_name,  b.user_name
-ORDER BY sum(balance) desc;]]>
+		<![CDATA[SELECT sum(a.dr)as points, a.order_date::date AS order_date, sum(a.segments)as segments,
+a.org_name, a.entity_id, a.entity_name, sum(a.dr - a.cr) AS balance, sum(a.amount)as amount FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
+0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
+vw_son_points.pcc, vw_son_points.org_name, vw_son_points.entity_id,vw_son_points.entity_name,
+	COALESCE(vw_son_points.bonus, 0::real) AS bonus, COALESCE(vw_son_points.segments, 0::real) AS segments, COALESCE(vw_son_points.amount, 0::real) AS amount
+	FROM vw_son_points)
+	UNION
+	(SELECT 0::real AS float4, vw_orders.order_total_amount::real AS order_total_amount,
+		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
+		vw_orders.entity_id,vw_orders.entity_name, 0::real AS bonus, 0::real AS segments,
+0::real AS amount
+	FROM vw_orders)) a
+GROUP BY  a.order_date::date,a.org_name, a.entity_id, a.entity_name;]]>
 	</queryString>
-	<field name="pcc" class="java.lang.String"/>
-	<field name="son" class="java.lang.String"/>
+	<field name="points" class="java.lang.Float"/>
+	<field name="order_date" class="java.sql.Date"/>
+	<field name="segments" class="java.lang.Float"/>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
-	<field name="user_name" class="java.lang.String"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="balance" class="java.lang.String"/>
-	<field name="points" class="java.lang.Float"/>
+	<field name="balance" class="java.lang.Float"/>
 	<field name="amount" class="java.lang.Float"/>
-	<field name="segments" class="java.lang.Float"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -60,14 +66,6 @@ ORDER BY sum(balance) desc;]]>
 					<paragraph leftIndent="4"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="262" y="0" width="40" height="15" uuid="d7733d5c-eca4-4617-bb27-13ee78e15b3d"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="4"/>
-				</textElement>
-				<text><![CDATA[PCC]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="302" y="0" width="59" height="15" uuid="bba9ff12-5284-4c82-b70f-5f5e8e00d27e"/>
@@ -127,7 +125,7 @@ ORDER BY sum(balance) desc;]]>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{entity_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="61" y="0" width="98" height="15" isPrintWhenDetailOverflows="true" uuid="c542b722-af8a-42b8-877d-2bbead75b5d9"/>
@@ -144,14 +142,6 @@ ORDER BY sum(balance) desc;]]>
 					<paragraph leftIndent="4" rightIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="262" y="0" width="40" height="15" isPrintWhenDetailOverflows="true" uuid="83147dbe-9f31-49b8-b3e3-20bbb5a04594"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-					<paragraph leftIndent="4"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="159" y="0" width="103" height="15" uuid="019b444e-88bf-4945-a7b9-0c7bee790197"/>

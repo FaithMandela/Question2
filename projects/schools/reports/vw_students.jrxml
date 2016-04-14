@@ -28,6 +28,9 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/opt/baraza/projects/schools/reports/"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_students.entity_id, vw_students.entity_name, vw_students.stream_class_id, vw_students.stream, vw_students.org_id, vw_students.student_id, vw_students.student_name
 FROM vw_students
@@ -84,7 +87,7 @@ order by student_name]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="189" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="a922fa44-b6ec-40a4-b0df-a26acef16fe8"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -102,6 +105,15 @@ order by student_name]]>
 					<textFieldExpression><![CDATA[$F{student_name}]]></textFieldExpression>
 				</textField>
 			</frame>
+			<subreport>
+				<reportElement positionType="Float" isPrintRepeatedValues="false" x="7" y="26" width="142" height="109" uuid="c887ad55-4ea6-42fe-810f-3137e3392791"/>
+				<subreportParameter name="filterid"/>
+				<subreportParameter name="orgid"/>
+				<subreportParameter name="orgwhere"/>
+				<subreportParameter name="organd"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_timetable.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<columnFooter>

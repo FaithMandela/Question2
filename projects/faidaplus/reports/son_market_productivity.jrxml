@@ -37,7 +37,6 @@
        JOIN vw_entitys ON vw_entitys.entity_id = vw_son_points.entity_id
 WHERE vw_son_points.period >= '$P!{minDate}'::date
 AND vw_son_points.period <= '$P!{maxDate}'::date
-AND  vw_entitys.entity_id = '$P!{id}'
 GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.pcc,vw_entitys.son,vw_entitys.org_name
 	ORDER BY vw_son_points.period DESC;]]>
 	</queryString>
@@ -73,7 +72,7 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>
-				<text><![CDATA[CONSULTANT PRODUCTIVITY]]></text>
+				<text><![CDATA[MARKET PRODUCTIVITY]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -154,7 +153,7 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Consultant Name]]></text>
+				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="310" y="0" width="51" height="20" uuid="248ca52f-10bf-4410-af73-d14e14705098"/>
@@ -258,42 +257,42 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 	<summary>
 		<band height="42" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="626" y="6" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="751b449d-5fb7-49d3-859a-64db032ae773"/>
+				<reportElement x="626" y="8" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="751b449d-5fb7-49d3-859a-64db032ae773"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_points}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="533" y="6" width="91" height="20" uuid="13c4c1fa-fcfe-4069-94dd-cbf69633c863"/>
+				<reportElement x="533" y="8" width="91" height="20" uuid="13c4c1fa-fcfe-4069-94dd-cbf69633c863"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_bonus}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="429" y="6" width="103" height="20" uuid="d7c6e54f-bc1f-42e2-a1e5-6646f97ac414"/>
+				<reportElement x="429" y="8" width="103" height="20" uuid="d7c6e54f-bc1f-42e2-a1e5-6646f97ac414"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{points}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="250" y="6" width="100" height="20" uuid="84f8ddde-6201-4a95-ab0d-72629b9944f4"/>
+				<reportElement x="250" y="8" width="100" height="20" uuid="84f8ddde-6201-4a95-ab0d-72629b9944f4"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="361" y="6" width="68" height="20" isPrintWhenDetailOverflows="true" uuid="49aba459-a258-4912-b658-e4cc0344777c"/>
+				<reportElement x="361" y="8" width="68" height="20" isPrintWhenDetailOverflows="true" uuid="49aba459-a258-4912-b658-e4cc0344777c"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{segments_1}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="214" y="3" width="542" height="1" uuid="c078bd95-b7a8-406d-a074-d7b47afc137c"/>
+				<reportElement x="195" y="3" width="535" height="1" uuid="da0e2e78-ef31-45aa-8824-0b4856b3badd"/>
 			</line>
 		</band>
 	</summary>

@@ -869,6 +869,13 @@
 			</FILTERFORM>
 			<JASPER reportfile="comulative_productivity.jasper" name="Cumulative Productivity"></JASPER>
 		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Market Productivity " type="vert">
+			<FILTERFORM name="Market Productivity ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="son_market_productivity.jasper" name="Market Productivity "></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK noorg="true" w="700" h="500" name="Close Batch Number" key="115">
 		<GRID keyfield="batch_no" name="Batch No." where="(batch_no = getBatch_no())" groupby="batch_no,batch_date" key="2" table="orders">
@@ -928,7 +935,7 @@
 			<FILTERFORM name="Consultant Statement ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX w="30" h="20" lpfield="user_name" x="10" y="10" lptable="vw_entitys" title="Entity">entity_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="user_name" x="10" y="10" lptable="vw_entitys" title="Entity" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_statements.jasper" name="Consultant Statement"></JASPER>
 		</FILTER>

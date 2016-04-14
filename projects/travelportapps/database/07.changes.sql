@@ -22,15 +22,18 @@ SELECT orgs.org_id,  orgs.org_name,  vw_rates.rate_type_id,  vw_rates.rate_type_
 
 
 CREATE TABLE policy_members (
-    policy_member_id serial primary key,
-    passenger_id integer references passengers,
-    org_id integer,
-    entity_id integer,
-    member_name character varying(50),
-    passport_number character varying(50),
-    pin_number character varying(50),
-    phone_number character varying(20),
-    primary_email character varying(50),
-    policy_number character varying(50)
+    policy_member_id    serial primary key,
+    passenger_id        integer references passengers,
+    org_id              integer,
+    entity_id           integer,
+    member_name         character varying(50),
+    passport_number     character varying(50),
+    pin_number          character varying(50),
+    phone_number        character varying(20),
+    primary_email       character varying(50),
+    policy_number       character varying(50),
+    rate_type_id        integer,
+    amount_covered      real,
+    totalCost           real
 );
 CREATE INDEX policy_members_passenger_id ON passengers (passenger_id);
