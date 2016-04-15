@@ -426,12 +426,29 @@ CREATE VIEW vw_tx_ledger AS
 		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
 	WHERE transactions.tx_type is not null;
 	
+CREATE OR REPLACE FUNCTION prev_balance(date) RETURNS real AS $$
+    SELECT COALESCE(sum(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount), 0)::real
+	FROM transactions
+	WHERE (transactions.payment_date < $1) 
+		AND (transactions.tx_type is not null);
+$$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION prev_clear_balance(date) RETURNS real AS $$
+    SELECT COALESCE(sum(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount), 0)::real
+	FROM transactions
+	WHERE (transactions.payment_date < $1) AND (transactions.completed = true) 
+		AND (transactions.is_cleared = true) AND (transactions.tx_type is not null);
+$$ LANGUAGE SQL;
+	
 CREATE VIEW vws_tx_ledger AS
 	SELECT org_id, ledger_period, ledger_year, ledger_month, 
 		sum(base_amount) as sum_base_amount, sum(base_tax_amount) as sum_base_tax_amount,
 		sum(base_balance) as sum_base_balance, sum(cleared_balance) as sum_cleared_balance,
-		sum(dr_amount) as sum_dr_amount, sum(cr_amount) as sum_cr_amount
+		sum(dr_amount) as sum_dr_amount, sum(cr_amount) as sum_cr_amount,
+		
+		to_date(ledger_period || '.01', 'YYYY.MM.DD') as start_date,
+		sum(base_amount) + prev_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_balance_amount,
+		sum(cleared_balance) + prev_clear_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_clear_balance_amount
 			
 	FROM vw_tx_ledger
 	GROUP BY org_id, ledger_period, ledger_year, ledger_month;
@@ -485,12 +502,12 @@ BEGIN
 	IF ($3 = '1') THEN
 		INSERT INTO transactions(ledger_type_id, entity_id, bank_account_id, 
 				currency_id, journal_id, org_id, exchange_rate, tx_type, payment_date, 
-				tx_ledger_amount, tx_ledger_tax_amount, reference_number, 
-				narrative)
+				transaction_amount, transaction_tax_amount, reference_number, 
+				narrative, transaction_type_id, transaction_date)
 		SELECT ledger_type_id, entity_id, bank_account_id, 
 			currency_id, journal_id, org_id, exchange_rate, tx_type, (payment_date + v_inteval), 
-			tx_ledger_amount, tx_ledger_tax_amount, reference_number,
-			narrative
+			transaction_amount, transaction_tax_amount, reference_number,
+			narrative, transaction_type_id, (transaction_date  + v_inteval)
 		FROM transactions
 		WHERE (tx_type is not null) AND (to_char(payment_date, 'YYYY.MM') = $1);
 
@@ -584,6 +601,10 @@ BEGIN
 			WHERE (org_id = NEW.org_id);
 		END IF;
 	ELSE
+		IF ((OLD.approve_status = 'Draft') AND (NEW.completed = true)) THEN
+			NEW.approve_status := 'Completed';
+		END IF;
+	
 		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
 		ELSIF ((OLD.approve_status = 'Completed') AND (NEW.approve_status != 'Completed')) THEN
 		ELSIF ((OLD.journal_id is not null) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
@@ -728,12 +749,16 @@ BEGIN
 	periodid := get_open_period(rec.transaction_date);
 	IF(periodid is null) THEN
 		msg := 'No active period to post.';
+		RAISE EXCEPTION 'No active period to post.';
 	ELSIF(rec.journal_id is not null) THEN
 		msg := 'Transaction previously Posted.';
+		RAISE EXCEPTION 'Transaction previously Posted.';
 	ELSIF(rec.transaction_status_id = 1) THEN
 		msg := 'Transaction needs to be completed first.';
+		RAISE EXCEPTION 'Transaction needs to be completed first.';
 	ELSIF(rec.approve_status != 'Approved') THEN
 		msg := 'Transaction is not yet approved.';
+		RAISE EXCEPTION 'Transaction is not yet approved.';
 	ELSE
 		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
 		VALUES (rec.org_id, rec.department_id, rec.currency_id, periodid, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
