@@ -133,7 +133,7 @@
 				<TEXTFIELD w="275" title="PCC">pcc</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Credit Limit">credit_limit</TEXTDECIMAL>
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-				<FORM noorg="true" keyfield="org_id" name="Organisation" table="orgs">
+				<FORM noorg="true" keyfield="org_id" name="Organisation" linkfield="parent_org_id" table="orgs">
 					<TEXTFIELD w="350" h="20" x="10" y="10" placeholder="Organisation Name" title="Organisation">org_name</TEXTFIELD>
 					<TEXTFIELD w="350" h="20" x="10" y="50" title="PCC">pcc</TEXTFIELD>
 					<CHECKBOX w="150" h="20" x="290" y="30" title="Active">is_active</CHECKBOX>
@@ -223,7 +223,7 @@
 					<TEXTAREA tab="Details" w="430" h="70" x="10" y="2">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM noorg="true" keyfield="org_id" name="Organisation" table="orgs">
+			<FORM noorg="true" keyfield="org_id" name="Organisation" linkfield="parent_org_id" table="orgs">
 				<TEXTFIELD w="350" h="20" x="10" y="10" placeholder="Organisation Name" title="Organisation">org_name</TEXTFIELD>
 				<TEXTFIELD w="350" h="20" x="10" y="50" title="PCC">pcc</TEXTFIELD>
 				<CHECKBOX w="150" h="20" x="290" y="30" title="Active">is_active</CHECKBOX>

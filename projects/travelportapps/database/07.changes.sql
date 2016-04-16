@@ -32,8 +32,21 @@ CREATE TABLE policy_members (
     phone_number        character varying(20),
     primary_email       character varying(50),
     policy_number       character varying(50),
-    rate_type_id        integer,
+    rate_id             integer,
     amount_covered      real,
-    totalCost           real
+    totalamount_covered real,
+    age                 integer,
+    passenger_dob       date
 );
 CREATE INDEX policy_members_passenger_id ON passengers (passenger_id);
+
+
+
+CREATE OR REPLACE VIEW vw_policy_members AS
+SELECT
+    p.policy_member_id, p.passenger_id, p.org_id, p.entity_id, p.member_name, p.passport_number, p.pin_number,
+    p.phone_number,  p.primary_email, p.rate_id, p.amount_covered, p.totalamount_covered, p.age,
+    p.passenger_dob, a.countries,a.policy_number, a.destown, a.sys_country_name, a.reason_for_travel,
+    a.departure_country, a.entity_name, a.days_from, a.days_to
+    FROM  policy_members p
+    JOIN vw_passengers a ON p.passenger_id = a.passenger_id ;
