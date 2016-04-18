@@ -1,133 +1,50 @@
-CREATE TABLE adjustment_effects (
-	adjustment_effect_id	integer primary key,
-	adjustment_effect_name	varchar(50) not null
-);
-
-ALTER TABLE adjustments ADD adjustment_effect_id	integer references adjustment_effects;
-CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
-
-INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (0, 'General');
-INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'Housing');
-INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'Insurance');
-
-UPDATE adjustments SET adjustment_effect_id = 1 WHERE adjustment_id = 69;
-UPDATE adjustments SET adjustment_effect_id = 2 WHERE adjustment_id IN (40,63,45,64);
-
-CREATE OR REPLACE FUNCTION getAdjustment(int, int, int) RETURNS float AS $$
-DECLARE
-	adjustment float;
-BEGIN
-
-	IF ($3 = 1) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2);
-	ELSIF ($3 = 2) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true) AND (Visible = true);
-	ELSIF ($3 = 3) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_Tax = true);
-	ELSIF ($3 = 4) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (In_payroll = true);
-	ELSIF ($3 = 5) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1) AND (adjustment_type = $2) AND (Visible = true);
-	ELSIF ($3 = 11) THEN
-		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
-		FROM employee_tax_types
-		WHERE (Employee_Month_ID = $1);
-	ELSIF ($3 = 12) THEN
-		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
-		FROM employee_tax_types
-		WHERE (Employee_Month_ID = $1) AND (In_Tax = true);
-	ELSIF ($3 = 14) THEN
-		SELECT SUM(exchange_rate * (amount + additional)) INTO adjustment
-		FROM employee_tax_types
-		WHERE (Employee_Month_ID = $1) AND (Tax_Type_ID = $2);
-	ELSIF ($3 = 21) THEN
-		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
-		FROM employee_adjustments
-		WHERE (employee_month_id = $1) AND (in_tax = true);
-	ELSIF ($3 = 22) THEN
-		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1) AND (In_payroll = true) AND (Visible = true);
-	ELSIF ($3 = 23) THEN
-		SELECT SUM(exchange_rate * amount * adjustment_factor) INTO adjustment
-		FROM employee_adjustments
-		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = 1);
-	ELSIF ($3 = 24) THEN
-		SELECT SUM(exchange_rate * tax_reduction_amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
-	ELSIF ($3 = 25) THEN
-		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (employee_month_id = $1) AND (in_tax = true) AND (adjustment_factor = -1);
-	ELSIF ($3 = 26) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (employee_month_id = $1) AND (pension_id is not null) AND (adjustment_type = 2);
-	ELSIF ($3 = 27) THEN
-		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.amount) INTO adjustment
-		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
-		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
-	ELSIF ($3 = 28) THEN
-		SELECT SUM(employee_adjustments.exchange_rate * employee_adjustments.tax_relief_amount) INTO adjustment
-		FROM employee_adjustments INNER JOIN adjustments ON employee_adjustments.adjustment_id = adjustments.adjustment_id
-		WHERE (employee_adjustments.employee_month_id = $1) AND (adjustments.adjustment_effect_id = $2);
-	ELSIF ($3 = 31) THEN
-		SELECT SUM(overtime * overtime_rate) INTO adjustment
-		FROM employee_overtime
-		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
-	ELSIF ($3 = 32) THEN
-		SELECT SUM(exchange_rate * tax_amount) INTO adjustment
-		FROM employee_per_diem
-		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
-	ELSIF ($3 = 33) THEN
-		SELECT SUM(exchange_rate * (full_amount -  cash_paid)) INTO adjustment
-		FROM Employee_Per_Diem
-		WHERE (Employee_Month_ID = $1) AND (approve_status = 'Approved');
-	ELSIF ($3 = 34) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_advances
-		WHERE (Employee_Month_ID = $1) AND (in_payroll = true);
-	ELSIF ($3 = 35) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM advance_deductions
-		WHERE (Employee_Month_ID = $1) AND (In_payroll = true);
-	ELSIF ($3 = 36) THEN
-		SELECT SUM(exchange_rate * paid_amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1) AND (In_payroll = true) AND (Visible = true);
-	ELSIF ($3 = 37) THEN
-		SELECT SUM(exchange_rate * tax_relief_amount) INTO adjustment
-		FROM employee_adjustments
-		WHERE (Employee_Month_ID = $1);
-
-		IF(adjustment IS NULL)THEN
-			adjustment := 0;
-		END IF;
-	ELSIF ($3 = 41) THEN
-		SELECT SUM(exchange_rate * amount) INTO adjustment
-		FROM employee_banking
-		WHERE (Employee_Month_ID = $1);
-	ELSE
-		adjustment := 0;
-	END IF;
-
-	IF(adjustment is null) THEN
-		adjustment := 0;
-	END IF;
-
-	RETURN adjustment;
-END;
-$$ LANGUAGE plpgsql;
 
 
+DROP VIEW vw_intern_evaluations;
+DROP VIEW vw_applicants;
+
+CREATE VIEW vw_applicants AS
+	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, applicants.entity_id, applicants.surname, 
+		applicants.org_id, applicants.first_name, applicants.middle_name, applicants.date_of_birth, applicants.nationality, 
+		applicants.identity_card, applicants.language, applicants.objective, applicants.interests, applicants.picture_file, applicants.details,
+		applicants.person_title, applicants.field_of_study, applicants.applicant_email, applicants.applicant_phone, 
+		applicants.previous_salary, applicants.expected_salary,
+		(applicants.Surname || ' ' || applicants.First_name || ' ' || COALESCE(applicants.Middle_name, '')) as applicant_name,
+		to_char(age(applicants.date_of_birth), 'YY') as applicant_age,
+		(CASE WHEN applicants.gender = 'M' THEN 'Male' ELSE 'Female' END) as gender_name,
+		(CASE WHEN applicants.marital_status = 'M' THEN 'Married' ELSE 'Single' END) as marital_status_name,
+
+		vw_education_max.education_class_id, vw_education_max.education_class_name, 
+		vw_education_max.education_id, vw_education_max.date_from, vw_education_max.date_to, 
+		vw_education_max.name_of_school, vw_education_max.examination_taken,
+		vw_education_max.grades_obtained, vw_education_max.certificate_number,
+		
+		vw_employment_max.employers_name, vw_employment_max.position_held,
+		vw_employment_max.date_from as emp_date_from, vw_employment_max.date_to as emp_date_to, 
+		vw_employment_max.employment_duration, vw_employment_max.employment_experince,
+		round((date_part('year', vw_employment_max.employment_duration) + date_part('month', vw_employment_max.employment_duration)/12)::numeric, 1) as emp_duration,
+		round((date_part('year', vw_employment_max.employment_experince) + date_part('month', vw_employment_max.employment_experince)/12)::numeric, 1) as emp_experince
+		
+	FROM applicants INNER JOIN sys_countrys ON applicants.nationality = sys_countrys.sys_country_id
+		LEFT JOIN vw_education_max ON applicants.entity_id = vw_education_max.entity_id
+		LEFT JOIN vw_employment_max ON applicants.entity_id = vw_employment_max.entity_id;
+		
+		
+		
+CREATE VIEW vw_intern_evaluations AS 
+	SELECT vw_applicants.entity_id, vw_applicants.sys_country_name, vw_applicants.applicant_name, 
+		vw_applicants.applicant_age, vw_applicants.gender_name, vw_applicants.marital_status_name, vw_applicants.language, 
+		vw_applicants.objective, vw_applicants.interests, education.date_from, education.date_to, education.name_of_school, 
+		education.examination_taken, vw_internships.department_id, vw_internships.department_name, 
+		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date, 
+
+		interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, interns.application_date, 
+		interns.approve_status, interns.action_date, interns.workflow_table_id, interns.applicant_comments, interns.review
+	FROM vw_applicants JOIN education ON vw_applicants.entity_id = education.entity_id
+		JOIN interns ON interns.entity_id = vw_applicants.entity_id
+		JOIN vw_internships ON interns.internship_id = vw_internships.internship_id
+		JOIN (SELECT education.entity_id, max(education.education_class_id) AS mx_class_id FROM education
+			WHERE education.entity_id IS NOT NULL
+			GROUP BY education.entity_id) a ON education.entity_id = a.entity_id AND education.education_class_id = a.mx_class_id
+		WHERE education.education_class_id > 6
+		ORDER BY vw_applicants.entity_id;

@@ -29,11 +29,19 @@
 		<![CDATA[SELECT vw_applicants.applicant_name,
 	vw_applicants.date_of_birth, vw_applicants.gender_name,
 	vw_applicants.marital_status_name, vw_applicants.sys_country_name,
- 	vw_applicants.language, address.post_office_box,
-	address.postal_code, address.town, address.mobile, address.email,
-	vw_applicants.objective, vw_applicants.interests
-FROM  vw_applicants LEFT JOIN address ON vw_applicants.entity_id = address.table_id
-WHERE ((address.table_name is null) OR (address.table_name = 'applicant')) AND (vw_applicants.entity_id = '$P!{filterid}')
+ 	vw_applicants.language, vw_applicants.objective, vw_applicants.interests,
+	vw_applicants.previous_salary, vw_applicants.expected_salary,
+	ad.post_office_box, ad.postal_code, ad.town, ad.mobile, ad.email
+
+FROM  vw_applicants LEFT JOIN
+
+(SELECT address.post_office_box, address.postal_code, address.town, address.mobile, address.email,
+address.table_id
+FROM address WHERE (address.table_name = 'applicant') AND (address.is_default = true)) as ad
+
+ON vw_applicants.entity_id = ad.table_id
+
+WHERE (vw_applicants.entity_id = '$P!{filterid}')
 $P!{organd};]]>
 	</queryString>
 	<field name="applicant_name" class="java.lang.String"/>
@@ -42,13 +50,15 @@ $P!{organd};]]>
 	<field name="marital_status_name" class="java.lang.String"/>
 	<field name="sys_country_name" class="java.lang.String"/>
 	<field name="language" class="java.lang.String"/>
+	<field name="objective" class="java.lang.String"/>
+	<field name="interests" class="java.lang.String"/>
+	<field name="previous_salary" class="java.lang.Float"/>
+	<field name="expected_salary" class="java.lang.Float"/>
 	<field name="post_office_box" class="java.lang.String"/>
 	<field name="postal_code" class="java.lang.String"/>
 	<field name="town" class="java.lang.String"/>
 	<field name="mobile" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
-	<field name="objective" class="java.lang.String"/>
-	<field name="interests" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -70,7 +80,7 @@ $P!{organd};]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="286" splitType="Stretch">
+		<band height="303" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="6" y="5" width="99" height="15" forecolor="#000000" uuid="1ae1d73d-a22c-4ec1-a536-0138fb322988"/>
 				<textElement>
@@ -184,14 +194,14 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{postal_code}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="115" y="95" width="130" height="15" uuid="95cee34d-4950-4215-b262-71fde730683d"/>
+				<reportElement style="Detail" x="115" y="95" width="435" height="15" uuid="95cee34d-4950-4215-b262-71fde730683d"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{mobile}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="115" y="110" width="201" height="15" uuid="958fb8a3-66c2-40f5-b661-be2da90b8924"/>
+				<reportElement style="Detail" x="115" y="110" width="435" height="15" uuid="958fb8a3-66c2-40f5-b661-be2da90b8924"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -212,7 +222,7 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{town}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="163" width="555" height="17" uuid="43f48504-1e1e-4c1a-8848-eedd68ccd5e7"/>
+				<reportElement positionType="Float" x="0" y="180" width="555" height="17" uuid="43f48504-1e1e-4c1a-8848-eedd68ccd5e7"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -220,7 +230,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_education.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="183" width="555" height="17" uuid="a1fe17a8-e45c-4f22-b1fc-742c200cf637"/>
+				<reportElement positionType="Float" x="0" y="200" width="555" height="17" uuid="a1fe17a8-e45c-4f22-b1fc-742c200cf637"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -228,7 +238,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employment.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="144" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
+				<reportElement positionType="Float" x="0" y="161" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -236,21 +246,21 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_skills.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement style="Column header" positionType="Float" x="6" y="246" width="99" height="15" forecolor="#000000" uuid="eafc4893-9da3-4a27-8f53-f3c28f6cea29"/>
+				<reportElement style="Column header" positionType="Float" x="6" y="263" width="99" height="15" forecolor="#000000" uuid="eafc4893-9da3-4a27-8f53-f3c28f6cea29"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Interest]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="115" y="246" width="440" height="15" uuid="b93cf248-ccc4-499d-8f80-b022b0957be0"/>
+				<reportElement style="Detail" positionType="Float" x="115" y="263" width="440" height="15" uuid="b93cf248-ccc4-499d-8f80-b022b0957be0"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{interests}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="264" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
+				<reportElement positionType="Float" x="0" y="281" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -258,7 +268,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_referees.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="203" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
+				<reportElement positionType="Float" x="0" y="220" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -266,7 +276,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_seminars.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="224" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
+				<reportElement positionType="Float" x="0" y="241" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -286,6 +296,34 @@ $P!{organd};]]>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{language}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="6" y="140" width="99" height="15" forecolor="#000000" uuid="e613fe86-80a7-4770-9d98-0743379eb4d4"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Current Salary :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="259" y="140" width="132" height="15" forecolor="#000000" uuid="e572887b-ae35-42f3-a917-6f3b5c8d227a"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Expected Salary :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement style="Detail" x="115" y="140" width="130" height="15" uuid="f35dc73b-f1f4-4129-9ac2-54ec4db1862c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{previous_salary}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement style="Detail" x="402" y="140" width="148" height="15" uuid="28b8ace2-b266-4c30-86d6-236839e4159c"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{expected_salary}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

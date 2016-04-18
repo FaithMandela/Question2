@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cv_employees" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a98bf4dc-0964-4d72-b1f7-d73b78528e80">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="147"/>
+	<property name="ireport.y" value="27"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -16,18 +16,31 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_employees.employee_name, vw_employees.date_of_birth, vw_employees.gender_name, vw_employees.language,
-	vw_employees.marital_status_name, vw_employees.sys_country_name,
+		<![CDATA[SELECT vw_employees.employee_name, vw_employees.date_of_birth, vw_employees.gender_name,
+	vw_employees.language, vw_employees.marital_status_name, vw_employees.sys_country_name,
 	vw_employees.objective, vw_employees.interests,
-	address.post_office_box, address.postal_code, address.town, address.mobile, address.email
-FROM  vw_employees LEFT JOIN address ON vw_employees.entity_id = address.table_id
-WHERE ((address.table_name is null) OR (address.table_name = 'employees')) AND (vw_employees.active = true)
+	ad.post_office_box, ad.postal_code, ad.town, ad.mobile, ad.email
+
+FROM  vw_employees LEFT JOIN
+
+(SELECT address.post_office_box, address.postal_code, address.town, address.mobile, address.email,
+address.table_id
+FROM address WHERE (address.table_name = 'applicant') AND (address.is_default = true)) as ad
+
+ON vw_employees.entity_id = ad.table_id
+
+
+WHERE (vw_employees.active = true)
 $P!{organd};]]>
 	</queryString>
 	<field name="employee_name" class="java.lang.String"/>
@@ -178,14 +191,14 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{postal_code}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="115" y="95" width="130" height="15" uuid="2ff09cf6-8c4a-4c32-8f4f-192917da489e"/>
+				<reportElement style="Detail" x="115" y="95" width="435" height="15" uuid="2ff09cf6-8c4a-4c32-8f4f-192917da489e"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{mobile}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="115" y="110" width="201" height="15" uuid="b29bc187-5886-4f58-9436-247db1b92fc9"/>
+				<reportElement style="Detail" x="115" y="110" width="435" height="15" uuid="b29bc187-5886-4f58-9436-247db1b92fc9"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
