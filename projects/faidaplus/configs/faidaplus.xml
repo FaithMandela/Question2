@@ -32,7 +32,7 @@
 			<MENU name="Upload Segments">126</MENU>
 			<MENU name="Bonus">116</MENU>
 			<MENU name="Users Contacts">118</MENU>
-			<MENU name="Opening Balance">129</MENU>
+			<MENU name="Closing Balance">129</MENU>
 			<MENU name="Summary Report">124</MENU>
 			<MENU name="Consultant Statement">123</MENU>
 			<MENU name="Total Redemptions">128</MENU>
@@ -660,18 +660,20 @@
 					<CHECKBOX w="75" title="Can Redeem">can_redeem</CHECKBOX>
 					<TEXTAREA w="430" h="70" x="10" y="170" title="Details">details</TEXTAREA>
 				</FORM>
-				<GRID keyfield="bonus_id" name="Entity Bonus" linkfield="entity_id" key="1" table="vw_son_bonus">
-					<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
-					<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<GRID noorg="true" keyfield="bonus_id" name="Entity Bonus" linkfield="entity_id" key="1" table="bonus">
+					<TEXTFIELD w="75" title="Entity Id">entity_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Bonus Amount">amount</TEXTFIELD>
 					<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-					<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
+					<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+					<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 					<FORM keyfield="bonus_id" name="Entity Bonus" linkfield="entity_id" key="2" table="bonus">
+						<TEXTFIELD w="75" title="SON">son</TEXTFIELD>
 						<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 						<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
 						<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
-						<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
+						<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+						<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 					</FORM>
 				</GRID>
 			</GRID>
@@ -680,12 +682,15 @@
 				<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 				<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
 				<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
-				<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="org_id" key="2" table="bonus">
+					<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
 					<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
-					<TEXTDATE w="75" title="Valid Till">valid_till</TEXTDATE>
+					<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+					<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				</FORM>
 			</GRID>
 			<FORM noorg="true" keyfield="org_id" name="Agency" table="orgs">
@@ -1096,13 +1101,31 @@
 			<JASPER reportfile="total_upload_seg.jasper" name="Total Upload Segments"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" h="550" name="Opening Balance" key="129">
-		<FILTER split="150" w="700" h="550" name="Opening Balance" type="vert" key="order_date">
-			<FILTERFORM name="Opening Balance ">
-				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
-				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+	<DESK w="700" h="550" name="Closing Balance" key="129">
+		<FILTER split="150" w="700" h="550" name="Agency Closing Balance" type="vert" key="order_date">
+			<FILTERFORM name="Agency Closing Balance ">
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER reportfile="opening_balance.jasper" name="Opening Balance"></JASPER>
+			<JASPER reportfile="opening_balance_by_agency.jasper" name="Agency Closing Balance"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Consultant Closing Balance" type="vert" key="order_date">
+			<FILTERFORM name="Consultant Closing Balance">
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="opening_balance_by_consultant.jasper" name="Consultant Closing Balance"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Closing Balance" type="vert" key="order_date">
+			<FILTERFORM name="Closing Balance">
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="opening_balance_by_balance.jasper" name="Closing Balance"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Closing Balance by Agency" type="vert" key="order_date">
+			<FILTERFORM name="Closing Balance by Agency">
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
+				<COMBOBOX noorg="true" w="50" h="20" lpfield="org_name" x="10" y="30" lptable="orgs" title="Agency Name" lpkey="org_name">org_name</COMBOBOX>
+			</FILTERFORM>
+			<JASPER reportfile="closing_balance_by_agency.jasper" name="Closing Balance by Agency"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Total Redemptions" key="128">
