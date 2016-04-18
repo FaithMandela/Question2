@@ -61,7 +61,7 @@ CREATE TABLE additional_funds (
 	period_id				integer references periods,  
 	payment_type_id       		  integer references payment_types,
 	org_id					integer references orgs, 
-	entity_name 			varchar(120)
+	entity_name 			varchar(120),
 	additional_amount		real,
 	deposit_date			date,
 	adjustment			boolean default true,

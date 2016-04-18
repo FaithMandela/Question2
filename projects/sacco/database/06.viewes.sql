@@ -98,7 +98,7 @@ CREATE VIEW vw_entity_address AS
 		vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
-DROP VIEW vw_entitys;
+
 CREATE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
 		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
@@ -187,7 +187,7 @@ CREATE VIEW vw_loan_repayments AS
 		loan_repayment.repayment_narrative,
 		vw_loans.calc_repayment_period
 	FROM vw_loans
-	INNER JOIN loan_repayment ON loan_repayment.loan_id = vw_loans.loan_id
+	INNER JOIN loan_repayment ON loan_repayment.loan_id = vw_loans.loan_id;
 
 --here	
 
