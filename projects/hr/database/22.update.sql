@@ -48,3 +48,13 @@ CREATE VIEW vw_intern_evaluations AS
 			GROUP BY education.entity_id) a ON education.entity_id = a.entity_id AND education.education_class_id = a.mx_class_id
 		WHERE education.education_class_id > 6
 		ORDER BY vw_applicants.entity_id;
+
+CREATE OR REPLACE FUNCTION sum_attendance_hours(integer, integer) RETURNS interval AS $$
+	SELECT sum(COALESCE(mon_time_diff, '00:00:00'::interval) + COALESCE(tue_time_diff, '00:00:00'::interval) +
+		COALESCE(wed_time_diff, '00:00:00'::interval) + COALESCE(thu_time_diff, '00:00:00'::interval) +
+		COALESCE(fri_time_diff, '00:00:00'::interval) -
+		((mon_count + tue_count + wed_count + thu_count + fri_count)::varchar || 'hours')::interval)
+	FROM vw_week_attendance
+	WHERE (vw_week_attendance.entity_id = $1) AND (vw_week_attendance.period_id = $2)
+$$ LANGUAGE SQL;
+

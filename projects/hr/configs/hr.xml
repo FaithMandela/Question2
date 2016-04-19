@@ -2560,6 +2560,7 @@
 			</GRID>
 		</GRID>
 		<JASPER name="My Task Report" user="filterid" reportfile="vw_tasks_1.jasper"></JASPER>
+		<JASPER name="Attendance" user="filterid" reportfile="vw_week_attendance_b.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Arbitration" key="45" h="550">
 		<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">
