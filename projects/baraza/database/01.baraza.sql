@@ -460,7 +460,7 @@ CREATE VIEW vw_address_entitys AS
 		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
 		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
-	WHERE (vw_address.table_name = 'entitys');
+	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
 	
 CREATE VIEW vw_org_select AS
 	(SELECT org_id, parent_org_id, org_name

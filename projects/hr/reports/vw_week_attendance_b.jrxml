@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_week_attendance_b" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5b3c306-744d-4c3a-8cb3-6f7db278641d">
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="56"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="263"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -34,7 +34,9 @@ vw_week_attendance.week_start, vw_week_attendance.employee_id, vw_week_attendanc
 to_char((COALESCE(mon_time_diff, '00:00:00'::interval) + COALESCE(tue_time_diff, '00:00:00'::interval) +
 COALESCE(wed_time_diff, '00:00:00'::interval) + COALESCE(thu_time_diff, '00:00:00'::interval) +
 COALESCE(fri_time_diff, '00:00:00'::interval) -
-((mon_count + tue_count + wed_count + thu_count + fri_count)::varchar || 'hours')::interval), 'HH24:MI') as time_diff
+((mon_count + tue_count + wed_count + thu_count + fri_count)::varchar || 'hours')::interval), 'HH24:MI') as time_diff,
+
+to_char(sum_attendance_hours(vw_week_attendance.entity_id, vw_week_attendance.period_id), 'HH24:MI') as time_total
 
 FROM vw_week_attendance
 
@@ -60,6 +62,7 @@ ORDER BY vw_week_attendance.period_code desc, vw_week_attendance.week_start]]>
 	<field name="fri_time_out" class="java.sql.Time"/>
 	<field name="lunch_hours" class="java.lang.Integer"/>
 	<field name="time_diff" class="java.lang.String"/>
+	<field name="time_total" class="java.lang.String"/>
 	<group name="period_code">
 		<groupExpression><![CDATA[$F{period_code}]]></groupExpression>
 		<groupHeader>
@@ -268,7 +271,19 @@ ORDER BY vw_week_attendance.period_code desc, vw_week_attendance.week_start]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="23"/>
+			<band height="23">
+				<textField>
+					<reportElement x="733" y="0" width="69" height="20" uuid="a2afa4f5-106e-49bf-bcc6-944322ee3ead"/>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<bottomPen lineWidth="1.0" lineStyle="Double"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{time_total}]]></textFieldExpression>
+				</textField>
+			</band>
 		</groupFooter>
 	</group>
 	<background>

@@ -179,7 +179,7 @@
 				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<CHECKBOX w="140" title="Default">is_default</CHECKBOX>
 				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="employees">table_name</DEFAULT>
 					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
@@ -431,7 +431,7 @@
 				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<CHECKBOX w="140" title="Default">is_default</CHECKBOX>
 				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="applicant">table_name</DEFAULT>
 					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
@@ -974,14 +974,14 @@
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
 				<TEXTAREA w="550" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 			</FORM>
-			<GRID wheresql="table_name = 'applicant'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+			<GRID wheresql="table_name = 'applicant'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'applicant'">
 				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
 				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<CHECKBOX w="140" title="Default">is_default</CHECKBOX>
 				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="applicant">table_name</DEFAULT>
 					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
@@ -2560,6 +2560,7 @@
 			</GRID>
 		</GRID>
 		<JASPER name="My Task Report" user="filterid" reportfile="vw_tasks_1.jasper"></JASPER>
+		<JASPER name="Attendance" user="filterid" reportfile="vw_week_attendance_b.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Arbitration" key="45" h="550">
 		<GRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">
@@ -3198,6 +3199,27 @@
 				<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 				<JASPER name="Allowances" reportfile="vw_employee_allowances.jasper"></JASPER>
 				<JASPER name="Deductions" reportfile="vw_employee_deductions.jasper"></JASPER>
+			</GRID>
+			<GRID name="Interns" keyfield="intern_id" table="vw_interns" params="entity_id" viewfilter="table_name=interns" linkparams="table_id=workflow_table_id">
+				<TEXTFIELD w="75" title="ID">intern_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
+				<GRID name="Applicant" keyfield="entity_id" table="vw_applicants" linkparams="entity_id=entity_id">
+					<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+					<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Age">applicant_age</TEXTFIELD>
+					<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
+					<JASPER name="CV Applicant" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+				</GRID>
 			</GRID>
 			<GRID name="Leave Approvals" keyfield="employee_leave_id" table="vw_employee_leave" viewfilter="table_name=employee_leave" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>

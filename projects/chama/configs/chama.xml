@@ -933,7 +933,7 @@
 			<ACTIONS>
 				<ACTION fnct="generate_contribs" role="admin">Generate Contributionsl</ACTION>
 			</ACTIONS>
-			<GRID name="Contributions" keyfield="contribution_id" linkfield="period_id" table="vw_contributions">
+			<GRID name="Contributions" keyfield="contribution_id" linkfield="period_id" table="vw_member_contrib">
 				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Bank Account name">bank_account_name</TEXTFIELD>
@@ -945,6 +945,7 @@
 				<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
 				<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
 				<FORM name="Contributions" keyfield="contribution_id" table="contributions">
 					<COMBOBOX w="430" title="Contribution Type ID" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Meeting ID" lptable="meetings" y="30" h="20" x="10" lpfield="meeting_id">meeting_id</COMBOBOX>
@@ -972,30 +973,30 @@
 				<TEXTDECIMAL w="150" title="Investment Amount" y="30" h="20" x="10">investment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="30" h="20" x="290">merry_go_round_amount</TEXTDECIMAL>
 				<COMBOLIST w="150" title="Frequency" y="10" h="20" x="290">frequency
-					<DATA>Irregularly</DATA>
-					<DATA>Weekly</DATA>
-					<DATA>Fortnightly</DATA>
-					<DATA>Monthly</DATA>
-					<DATA>Quarterly.</DATA>
-					<DATA>Semi-annually</DATA>
-					<DATA>Annually</DATA>
+					<DATA value="0">Irregularly</DATA>
+					<DATA value="1">Weekly</DATA>
+					<DATA value="2">Fortnightly</DATA>
+					<DATA value="3">Monthly</DATA>
+					<DATA value="4">Quarterly.</DATA>
+					<DATA value="5">Semi-annually</DATA>
+					<DATA value="6">Annually</DATA>
 				</COMBOLIST>
 				<CHECKBOX w="150" title="Applies To All" y="50" h="20" x="290">applies_to_all</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</FORM>
-		</GRID>
-		<GRID name="Contribution Defaults" keyfield="contribution_default_id" table="vw_contribution_defaults">
-			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-			<FORM name="Contribution Defaults" keyfield="contribution_default_id" table="contribution_defaults">
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<COMBOBOX w="430" title="Contribution Type ID" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Investment Amount" y="30" h="20" x="10">investment_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="30" h="20" x="290">merry_go_round_amount</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
-			</FORM>
+			<GRID name="Contribution Defaults" keyfield="contribution_default_id" table="vw_contribution_defaults" where="(applies_to_all =  false)">
+				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
+				<FORM name="Contribution Defaults" keyfield="contribution_default_id" table="contribution_defaults">
+					<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Contribution Type ID" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Investment Amount" y="30" h="20" x="10">investment_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="30" h="20" x="290">merry_go_round_amount</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Investments" key="215" h="550">
@@ -1252,10 +1253,11 @@
 			<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
 			<TEXTFIELD w="75" title="Phone">phone</TEXTFIELD>
 			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
+			<TEXTFIELD w="75" title="Merry Go Round Number">merry_go_round_number</TEXTFIELD>
 			<TEXTDATE w="75" title="Joining Date">joining_date</TEXTDATE>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<FORM name="Members" keyfield="member_id" linkfield="member_id" table="members">
-				<COMBOBOX w="430" title="Location ID" lptable="locations" noorg="true" y="110" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
+				<COMBOBOX w="430" title="Branch" lptable="locations" noorg="true" y="110" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
 				<COMBOLIST w="150" title="Title" y="10" h="20" x="290">person_title
 					<DATA>Mr</DATA>
 					<DATA>Ms</DATA>
@@ -1286,6 +1288,7 @@
 					<DATA>Married</DATA>
 					<DATA>Single</DATA>
 				</COMBOLIST>
+				<TEXTFIELD w="150" title="Merry Go Round Number" y="420" h="20" x="10">merry_go_round_number</TEXTFIELD>
 				<TEXTDATE w="150" title="Joining Date" y="210" h="20" x="290">joining_date</TEXTDATE>
 				<TEXTDATE w="150" title="Exit Date" y="230" h="20" x="10">exit_date</TEXTDATE>
 				<TEXTFIELD w="150" title="Picture File" y="230" h="20" x="290">picture_file</TEXTFIELD>
@@ -1467,11 +1470,6 @@
 	</DESK>
 	<DESK w="700" name="Periods" key="275" h="550">
 		<GRID name="Periods" keyfield="period_id" table="vw_periods">
-			<TEXTFIELD w="75" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
-			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
-			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
-			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
-			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
@@ -1488,8 +1486,8 @@
 			<TEXTDECIMAL w="75" title="Month ID">month_id</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Quarter">quarter</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Semister">semister</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Merry Go Round Number">mgr_number</TEXTFIELD>
 			<FORM name="Periods" keyfield="period_id" table="periods">
-				<COMBOBOX w="430" title="Fiscal Year ID" lptable="fiscal_years" y="10" h="20" x="10" lpfield="fiscal_year_id">fiscal_year_id</COMBOBOX>
 				<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
 				<CHECKBOX w="150" title="Opened" y="50" h="20" x="10">opened</CHECKBOX>
@@ -1505,6 +1503,7 @@
 				<TEXTAREA w="430" title="Bank Header" y="150" h="70" x="10">bank_header</TEXTAREA>
 				<TEXTAREA w="430" title="Bank Address" y="220" h="70" x="10">bank_address</TEXTAREA>
 				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="290" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Merry Go Round Number" y="420" h="20" x="10">mgr_number</TEXTFIELD>
 				<TEXTTIMESTAMP w="150" title="Application Date" y="310" h="20" x="10">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="150" title="Approve Status" y="310" h="20" x="290">approve_status</TEXTFIELD>
 				<TEXTFIELD w="150" title="Workflow Table ID" y="330" h="20" x="10">workflow_table_id</TEXTFIELD>
@@ -1868,70 +1867,6 @@
 				<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
 				<TEXTFIELD w="150" title="First Password" y="90" h="20" x="290">first_password</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-	</DESK>
-	<MENU name="Contributions">315</MENU>
-	<DESK w="700" name="Contributions" key="315" h="550">
-		<GRID name="Contributions" keyfield="contribution_id" table="contributions">
-			<TEXTFIELD w="75" title="Contribution ID">contribution_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Contribution Type ID">contribution_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account ID">bank_account_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTDATE w="75" title="Contribution Date">contribution_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
-			<FORM name="Contributions" keyfield="contribution_id" table="contributions">
-				<COMBOBOX w="430" title="Contribution Type ID" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Meeting ID" lptable="meetings" y="30" h="20" x="10" lpfield="meeting_id">meeting_id</COMBOBOX>
-				<COMBOBOX w="430" title="Bank Account ID" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<COMBOBOX w="430" title="Period ID" lptable="periods" y="90" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
-				<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Money In" y="130" h="20" x="290">money_in</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="10">money_out</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-	</DESK>
-	<MENU name="Contributions">320</MENU>
-	<DESK w="700" name="Contributions" key="320" h="550">
-		<GRID name="Contributions" keyfield="contribution_id" table="vw_contributions">
-			<TEXTFIELD w="75" title="Bank Account ID">bank_account_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Contribution Type ID">contribution_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Contribution ID">contribution_id</TEXTFIELD>
-			<TEXTDATE w="75" title="Contribution Date">contribution_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
-			<FORM name="Contributions" keyfield="contribution_id" table="contributions">
-				<TEXTFIELD w="150" title="Contribution Type ID" y="10" h="20" x="10">contribution_type_id</TEXTFIELD>
-				<COMBOBOX w="430" title="Meeting ID" lptable="meetings" y="30" h="20" x="10" lpfield="meeting_id">meeting_id</COMBOBOX>
-				<COMBOBOX w="430" title="Bank Account ID" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<COMBOBOX w="430" title="Period ID" lptable="periods" y="90" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
-				<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Money In" y="130" h="20" x="290">money_in</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="10">money_out</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
-				<CHECKBOX w="150" title="Paid" y="240" h="20" x="10">paid</CHECKBOX>
 			</FORM>
 		</GRID>
 	</DESK>
