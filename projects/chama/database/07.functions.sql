@@ -1,34 +1,62 @@
-CREATE OR REPLACE FUNCTION ins_contribs() RETURNS trigger AS
-$$
+
+CREATE OR REPLACE FUNCTION ins_periods()
+  RETURNS trigger AS
+$BODY$
 DECLARE
-	v_investment_amount			real;
-	v_period_id					integer;
-	v_contribution_type_id			integer;
-	v_merry_go_round_amount		real;
-	v_money_in					real;
-	v_money_out					real;
-
+	v_period_id		integer;
+	v_mgr_number	integer;
+	v_org_id		integer;
+	v_merry_go_round_number	integer;
 BEGIN
-
-	SELECT  period_id, contribution_type_id, SUM(investment_amount), merry_go_round_amount
-	INTO v_period_id, v_contribution_type_id, v_money_in, v_merry_go_round_amount
-		FROM contributions
-		WHERE paid = true AND period_id = NEW.period_id 
-		GROUP BY period_id,contribution_type_id, merry_go_round_amount;
 	
-		UPDATE contributions SET money_in  = v_money_in WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
-RETURN NEW;
-END;
-$$
-  LANGUAGE plpgsql;
+	IF (NEW.approve_status = 'Approved') THEN
+		NEW.opened = false;
+		NEW.activated = false;
+		NEW.closed = true;
+	END IF;
+	
+	IF(TG_OP = 'INSERT')THEN
+		SELECT mgr_number, org_id INTO v_mgr_number, v_org_id
+		FROM periods
+		WHERE (period_id = (SELECT max(period_id) FROM periods WHERE org_id = NEW.org_id));
+		
+		IF(v_mgr_number is null)THEN
+			SELECT min(merry_go_round_number) INTO v_mgr_number
+			FROM members
+			WHERE org_id = NEW.org_id;
+			
+		ELSE
+			v_mgr_number := v_mgr_number + 1;
+		END IF;
+		
+		SELECT merry_go_round_number INTO v_merry_go_round_number 
+		FROM members
+		WHERE org_id = NEW.org_id and merry_go_round_number = v_mgr_number;
+		
+		IF (v_merry_go_round_number is null) THEN
+			SELECT min(merry_go_round_number) INTO v_merry_go_round_number 
+			FROM members
+			WHERE org_id = NEW.org_id and merry_go_round_number > v_mgr_number;
+	
+			v_mgr_number := v_merry_go_round_number;
+		END IF;
+		
+		NEW.mgr_number := v_mgr_number;
+	END IF;
 
+
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql 
+  
   CREATE TRIGGER ins_contribs
   AFTER INSERT OR UPDATE of paid
   ON contributions
   FOR EACH ROW
   EXECUTE PROCEDURE ins_contribs();
 
-CREATE OR REPLACE FUNCTION generate_contribs(
+  CREATE OR REPLACE FUNCTION generate_contribs(
     character varying,
     character varying,
     character varying)
@@ -37,9 +65,11 @@ $BODY$
 DECLARE
 	rec						RECORD;
 	v_period_id		integer;
+	vi_period_id		integer;
 	reca			RECORD;
 	v_org_id		integer;
 	v_month_name	varchar(50);
+	v_member_id		integer;
 
 	msg 			varchar(120);
 BEGIN
@@ -47,26 +77,48 @@ BEGIN
 	FROM periods
 	WHERE (period_id = $1::integer);
 
-	FOR reca IN SELECT entity_id FROM entitys WHERE (org_id = v_org_id) LOOP
-		
-	FOR rec IN SELECT org_id, contribution_type_id, investment_amount, merry_go_round_amount 
+	SELECT period_id INTO vi_period_id FROM contributions WHERE period_id in (v_period_id) AND org_id in (v_org_id);
+
+	IF( vi_period_id is null) THEN
+
+	FOR reca IN SELECT member_id, entity_id FROM members WHERE (org_id = v_org_id) LOOP
+	
+	FOR rec IN SELECT org_id, frequency, contribution_type_id, investment_amount, merry_go_round_amount 
 	FROM contribution_types WHERE (applies_to_all = true)  AND (org_id = v_org_id) LOOP
-		
-		INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,entity_id)
-		VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-		 reca.entity_id);
+		IF (rec.frequency = 'Weekly') THEN
+		FOR i in 1..4 LOOP
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount, member_id, entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END LOOP;
+		END IF;
+		IF (rec.frequency = 'Fortnightly') THEN
+		FOR i in 1..2 LOOP
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id, entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END LOOP;
+		END IF;
+		IF (rec.frequency = 'Monthly') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
 	
 	END LOOP;
 	
 	END LOOP;
 	msg := 'Contributions Generated';
+	ELSE
+	msg := 'Contributions already exist';
+	END IF;
+	
 
-	RETURN msg;
+RETURN msg;	
 END;
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-
-
+  LANGUAGE plpgsql
+  
 CREATE OR REPLACE FUNCTION ins_investments()
   RETURNS trigger AS
 $BODY$

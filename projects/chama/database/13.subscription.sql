@@ -41,7 +41,7 @@ CREATE TABLE subscriptions (
 	primary_email			varchar(120),
 	confirm_email			varchar(120),
 	
-	approve_status			varchar(16) default 'Draft' not null,
+	approve_status			varchar(16) default 'Completed' not null,
 	workflow_table_id		integer,
 	application_date		timestamp default now(),
 	action_date				timestamp,

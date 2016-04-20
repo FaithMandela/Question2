@@ -20,6 +20,24 @@ CREATE VIEW vw_borrowing_types AS
 	SELECT orgs.org_id, orgs.org_name, borrowing_types.borrowing_type_id, borrowing_types.borrowing_type_name, borrowing_types.details
 	FROM borrowing_types
 	INNER JOIN orgs ON borrowing_types.org_id = orgs.org_id;
+
+
+CREATE OR REPLACE VIEW vw_members AS
+	SELECT 	bank_branch.bank_branch_id, bank_branch.bank_branch_name, 
+	banks.bank_id, banks.bank_name, 
+	currency.currency_id, currency.currency_name, 
+	entitys.entity_id, entitys.entity_name, 
+	locations.location_id, locations.location_name,
+	sys_countrys.sys_country_id, sys_countrys.sys_country_name, 
+	members.org_id, members.member_id, members.person_title, members.surname, members.first_name, members.middle_name, members.full_name, members.id_number, members.email, members.date_of_birth, members.gender, members.phone, members.bank_account_number, members.nationality, members.nation_of_birth, members.marital_status, members.joining_date, members.exit_date, members.picture_file, members.active, members.details, members.merry_go_round_number
+	FROM members
+	JOIN bank_branch ON members.bank_branch_id = bank_branch.bank_branch_id
+	JOIN banks ON members.bank_id = banks.bank_id
+	JOIN currency ON members.currency_id = currency.currency_id
+	JOIN entitys ON members.entity_id = entitys.entity_id
+	JOIN locations ON members.location_id = locations.location_id
+	JOIN sys_countrys ON members.nationality = sys_countrys.sys_country_id;
+
 	
 CREATE OR REPLACE VIEW vw_expenses AS
 	SELECT bank_accounts.bank_account_id, bank_accounts.bank_account_name, currency.currency_id,
@@ -40,20 +58,46 @@ CREATE OR REPLACE VIEW vw_contribution_types AS
 	SELECT contribution_types.org_id, contribution_types.contribution_type_id, contribution_types.contribution_type_name, contribution_types.investment_amount, contribution_types.merry_go_round_amount, contribution_types.frequency, contribution_types.applies_to_all, contribution_types.details
 	FROM contribution_types;
 	
-CREATE VIEW vw_contributions AS
-	SELECT bank_accounts.bank_account_id, bank_accounts.bank_account_name, 
-		contribution_types.contribution_type_id, contribution_types.contribution_type_name,
-		entitys.entity_id, entitys.entity_name, 
-		
-		contributions.org_id, contributions.period_id,contributions.meeting_id,
-    contributions.contribution_id, contributions.contribution_date, contributions.investment_amount, contributions.merry_go_round_amount, contributions.money_in, contributions.money_out, contributions.details
 
-		FROM contributions
-		 JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
+CREATE OR REPLACE VIEW vw_contributions AS 
+ SELECT bank_accounts.bank_account_id,
+    bank_accounts.bank_account_name,
+    contribution_types.contribution_type_id,
+    contribution_types.contribution_type_name,
+    entitys.entity_id,
+    entitys.entity_name,
+    members.member_id,
+    members.middle_name,
+    contributions.org_id,
+    contributions.period_id,
+    contributions.meeting_id,
+    contributions.contribution_id,
+    contributions.contribution_date,
+    contributions.investment_amount,
+    contributions.merry_go_round_amount,
+    contributions.paid,
+    contributions.money_in,
+    contributions.money_out,
+    contributions.details
+   FROM contributions
+     JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN entitys ON contributions.entity_id = entitys.entity_id
+     JOIN members ON contributions.member_id = members.member_id
      LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id;
 
 
+
+CREATE OR REPLACE VIEW vw_member_contrib AS
+		SELECT vw_contributions.bank_account_id, vw_contributions.bank_account_name, 
+		vw_contributions.contribution_type_id, vw_contributions.contribution_type_name,
+		vw_members.entity_id, vw_members.entity_name, vw_members.member_id, vw_members.merry_go_round_number,
+		vw_contributions.org_id, vw_contributions.period_id, vw_contributions.meeting_id,
+    vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.money_in, vw_contributions.money_out
+
+		FROM vw_contributions
+		 JOIN vw_members  ON  vw_contributions.entity_id = vw_members.entity_id;
+
+     
 CREATE VIEW vw_investment_types AS
 	SELECT orgs.org_id, orgs.org_name, investment_types.investment_type_id, investment_types.investment_type_name, investment_types.details
 	FROM investment_types
