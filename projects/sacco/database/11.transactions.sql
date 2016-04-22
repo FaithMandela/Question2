@@ -54,7 +54,7 @@ CREATE INDEX items_tax_type_id ON items (tax_type_id);
 CREATE INDEX items_item_unit_id ON items (item_unit_id);
 CREATE INDEX items_sales_account_id ON items (sales_account_id);
 CREATE INDEX items_purchase_account_id ON items (purchase_account_id);
---here
+
 CREATE TABLE quotations (
 	quotation_id 			serial primary key,
 	org_id					integer references orgs,
@@ -75,6 +75,7 @@ CREATE TABLE transaction_types (
 	transaction_type_id		integer primary key,
 	transaction_type_name	varchar(50) not null,
 	document_prefix			varchar(16) default 'D' not null,
+	document_number			integer default 1 not null,
 	for_sales				boolean default true not null,
 	for_posting				boolean default true not null
 );
@@ -94,21 +95,6 @@ INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_s
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (11, 'Delivery Note', true, false);
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (12, 'Receipt Note', false, false);
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (17, 'Work Use', true, false);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (21, 'Direct Expenditure', true, true);
-INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (22, 'Direct Income', false, true);
-
-CREATE TABLE transaction_counters (
-	transaction_counter_id	serial primary key,
-	transaction_type_id		integer references transaction_types,
-	org_id					integer references orgs,
-	document_number			integer default 1 not null
-);
-CREATE INDEX transaction_counters_transaction_type_id ON transaction_counters (transaction_type_id);
-CREATE INDEX transaction_counters_org_id ON transaction_counters (org_id);
-INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
-SELECT transaction_type_id, 0, 1
-FROM transaction_types;
---here
 
 CREATE TABLE transaction_status (
 	transaction_status_id	integer primary key,
@@ -118,46 +104,30 @@ INSERT INTO transaction_status (transaction_status_id, transaction_status_name) 
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (2, 'Completed');
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (3, 'Processed');
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (4, 'Archive');
---HERE
+
 CREATE TABLE transactions (
-	transaction_id 			serial primary key,
-	entity_id 				integer references entitys,
+    transaction_id 			serial primary key,
+    entity_id 				integer references entitys,
 	transaction_type_id		integer references transaction_types,
-	ledger_type_id			integer references ledger_types,
-	transaction_status_id	integer references transaction_status default 1,
 	bank_account_id			integer references bank_accounts,
 	journal_id				integer references journals,
+	transaction_status_id	integer references transaction_status default 1,
 	currency_id				integer references currency,
 	department_id			integer references departments,
-	entered_by				integer references entitys,
 	org_id					integer references orgs,
-	
 	exchange_rate			real default 1 not null,
 	transaction_date		date not null,
-	payment_date			date not null,
 	transaction_amount		real default 0 not null,
-	transaction_tax_amount	real default 0 not null,
 	document_number			integer default 1 not null,
-	
-	tx_type					integer,
-	
-	for_processing			boolean default false not null,
-	is_cleared				boolean default false not null,
-	completed				boolean default false not null,
-
-	reference_number		varchar(50),
 	payment_number			varchar(50),
 	order_number			varchar(50),
 	payment_terms			varchar(50),
-	
 	job						varchar(240),
 	point_of_use			varchar(240),
-	
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
-	
     narrative				varchar(120),
     details					text
 );
@@ -169,7 +139,6 @@ CREATE INDEX transactions_transaction_status_id ON transactions (transaction_sta
 CREATE INDEX transactions_currency_id ON transactions (currency_id);
 CREATE INDEX transactions_department_id ON transactions (department_id);
 CREATE INDEX transactions_workflow_table_id ON transactions (workflow_table_id);
-CREATE INDEX transactions_entered_by ON transactions (entered_by);
 CREATE INDEX transactions_org_id ON transactions (org_id);
 
 CREATE TABLE transaction_details (
@@ -208,19 +177,50 @@ CREATE INDEX transaction_links_transaction_to ON transaction_links (transaction_
 CREATE INDEX transaction_links_transaction_detail_id ON transaction_links (transaction_detail_id);
 CREATE INDEX transaction_links_transaction_detail_to ON transaction_links (transaction_detail_to);
 
---HERE
-DROP view vw_bank_accounts;
-CREATE VIEW vw_bank_accounts AS
-	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
-		vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name,
-		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		bank_accounts.bank_account_id, bank_accounts.org_id, bank_accounts.bank_account_name, bank_accounts.bank_account_number, 
-		bank_accounts.narrative, bank_accounts.is_active, bank_accounts.details
-	FROM bank_accounts INNER JOIN vw_bank_branch ON bank_accounts.bank_branch_id = vw_bank_branch.bank_branch_id
-		INNER JOIN vw_accounts ON bank_accounts.account_id = vw_accounts.account_id
-		INNER JOIN currency ON bank_accounts.currency_id = currency.currency_id;
+CREATE TABLE day_ledgers (
+    day_ledger_id 			serial primary key,
+    entity_id 				integer references entitys,
+	transaction_type_id		integer references transaction_types,
+	bank_account_id			integer references bank_accounts,
+	journal_id				integer references journals,
+	transaction_status_id	integer references transaction_status default 1,
+	currency_id				integer references currency,
+	department_id			integer references departments,
+	item_id					integer references items,
+	store_id				integer references stores,
+	org_id					integer references orgs,
 
-DROP view vw_items;
+	exchange_rate			real default 1 not null,
+	day_ledger_date			date not null,
+	day_ledger_quantity		integer not null,
+    day_ledger_amount 		real default 0 not null,
+	day_ledger_tax_amount	real default 0 not null,
+	
+	document_number			integer default 1 not null,
+	payment_number			varchar(50),
+	order_number			varchar(50),
+	payment_terms			varchar(50),
+	job						varchar(240),
+	
+	application_date		timestamp default now(),
+	approve_status			varchar(16) default 'Draft' not null,
+	workflow_table_id		integer,
+	action_date				timestamp,
+    narrative				varchar(120),
+    details					text
+);
+CREATE INDEX day_ledgers_entity_id ON day_ledgers (entity_id);
+CREATE INDEX day_ledgers_transaction_type_id ON day_ledgers (transaction_type_id);
+CREATE INDEX day_ledgers_bank_account_id ON day_ledgers (bank_account_id);
+CREATE INDEX day_ledgers_journal_id ON day_ledgers (journal_id);
+CREATE INDEX day_ledgers_transaction_status_id ON day_ledgers (transaction_status_id);
+CREATE INDEX day_ledgers_currency_id ON day_ledgers (currency_id);
+CREATE INDEX day_ledgers_department_id ON day_ledgers (department_id);
+CREATE INDEX day_ledgers_item_id ON day_ledgers (item_id);
+CREATE INDEX day_ledgers_store_id ON day_ledgers (store_id);
+CREATE INDEX day_ledgers_workflow_table_id ON day_ledgers (workflow_table_id);
+CREATE INDEX day_ledgers_org_id ON day_ledgers (org_id);
+
 CREATE VIEW vw_items AS
 	SELECT sales_account.account_id as sales_account_id, sales_account.account_name as sales_account_name, 
 		purchase_account.account_id as purchase_account_id, purchase_account.account_name as purchase_account_name, 
@@ -236,22 +236,12 @@ CREATE VIEW vw_items AS
 		INNER JOIN item_units ON items.item_unit_id = item_units.item_unit_id
 		INNER JOIN tax_types ON items.tax_type_id = tax_types.tax_type_id;
 
-DROP view vw_quotations;
 CREATE VIEW vw_quotations AS
 	SELECT entitys.entity_id, entitys.entity_name, items.item_id, items.item_name, 
 		quotations.quotation_id, quotations.org_id, quotations.active, quotations.amount, quotations.valid_from, 
 		quotations.valid_to, quotations.lead_time, quotations.details
 	FROM quotations	INNER JOIN entitys ON quotations.entity_id = entitys.entity_id
 		INNER JOIN items ON quotations.item_id = items.item_id;
-
-DROP view vw_ledger_types;		
-CREATE VIEW vw_ledger_types AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
-		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
-		
-		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.details
-	FROM ledger_types INNER JOIN vw_accounts ON vw_accounts.account_id = ledger_types.account_id;
 
 CREATE VIEW vw_transactions AS
 	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
@@ -277,8 +267,8 @@ CREATE VIEW vw_transactions AS
 		LEFT JOIN entitys ON transactions.entity_id = entitys.entity_id
 		LEFT JOIN vw_bank_accounts ON vw_bank_accounts.bank_account_id = transactions.bank_account_id
 		LEFT JOIN departments ON transactions.department_id = departments.department_id;
-		
-		
+--here
+
 
 CREATE OR REPLACE VIEW vw_trx AS 
  SELECT vw_orgs.org_id,
@@ -382,8 +372,6 @@ CREATE VIEW vw_trx_sum AS
 		SUM(transaction_details.quantity * (transaction_details.amount + transaction_details.tax_amount)) as total_sale_amount
 	FROM transaction_details
 	GROUP BY transaction_details.transaction_id;
-	
-	
 
 CREATE VIEW vw_transaction_details AS
 	SELECT vw_transactions.department_id, vw_transactions.department_name, vw_transactions.transaction_type_id, 
@@ -415,72 +403,32 @@ CREATE VIEW vw_transaction_details AS
 		LEFT JOIN vw_items ON transaction_details.item_id = vw_items.item_id
 		LEFT JOIN accounts ON transaction_details.account_id = accounts.account_id
 		LEFT JOIN stores ON transaction_details.store_id = stores.store_id;
-		
-CREATE OR REPLACE FUNCTION upd_trx_ledger(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	msg							varchar(120);
-BEGIN
-	
-	IF ($3 = '1') THEN
-		UPDATE transactions SET for_processing = true WHERE transaction_id = $1::integer;
-		msg := 'Opened for processing';
-	ELSIF ($3 = '2') THEN
-		UPDATE transactions SET for_processing = false WHERE transaction_id = $1::integer;
-		msg := 'Closed for processing';
-	ELSIF ($3 = '3') THEN
-		UPDATE transactions  SET tx_ledger_date = current_date, completed = true
-		WHERE transaction_id = $1::integer AND completed = false;
-		msg := 'Completed';
-	ELSIF ($3 = '4') THEN
-		UPDATE transactions  SET is_cleared = true WHERE transaction_id = $1::integer;
-		msg := 'Cleared for posting ';
-	END IF;
 
-	RETURN msg;
-END;
-$$ LANGUAGE plpgsql;
+CREATE VIEW vw_day_ledgers AS
+	SELECT currency.currency_id, currency.currency_name, departments.department_id, departments.department_name, 
+		entitys.entity_id, entitys.entity_name, items.item_id, items.item_name,  orgs.org_id, orgs.org_name, 
+		transaction_status.transaction_status_id, transaction_status.transaction_status_name, 
+		transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
+		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
+		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
+		stores.store_id, stores.store_name,
 
+		day_ledgers.journal_id, day_ledgers.day_ledger_id, day_ledgers.exchange_rate, day_ledgers.day_ledger_date, 
+		day_ledgers.day_ledger_quantity, day_ledgers.day_ledger_amount, day_ledgers.day_ledger_tax_amount, 
+		day_ledgers.document_number, day_ledgers.payment_number, day_ledgers.order_number, 
+		day_ledgers.payment_terms, day_ledgers.job, day_ledgers.application_date, day_ledgers.approve_status, 
+		day_ledgers.workflow_table_id, day_ledgers.action_date, day_ledgers.narrative, day_ledgers.details
 
-CREATE OR REPLACE FUNCTION cpy_trx_ledger(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	v_ledger_date				timestamp;
-	last_date					timestamp;
-	v_start						integer;
-	v_end						integer;
-	v_inteval					interval;
-	msg							varchar(120);
-BEGIN
+	FROM day_ledgers INNER JOIN currency ON day_ledgers.currency_id = currency.currency_id
+		INNER JOIN departments ON day_ledgers.department_id = departments.department_id
+		INNER JOIN entitys ON day_ledgers.entity_id = entitys.entity_id
+		INNER JOIN items ON day_ledgers.item_id = items.item_id
+		INNER JOIN orgs ON day_ledgers.org_id = orgs.org_id
+		INNER JOIN transaction_status ON day_ledgers.transaction_status_id = transaction_status.transaction_status_id
+		INNER JOIN transaction_types ON day_ledgers.transaction_type_id = transaction_types.transaction_type_id
+		INNER JOIN vw_bank_accounts ON day_ledgers.bank_account_id = vw_bank_accounts.bank_account_id
+		LEFT JOIN stores ON day_ledgers.store_id = stores.store_id;
 
-	SELECT max(payment_date)::timestamp INTO last_date
-	FROM transactions
-	WHERE (to_char(payment_date, 'YYYY.MM') = $1);
-	v_start := EXTRACT(YEAR FROM last_date) * 12 + EXTRACT(MONTH FROM last_date);
-	
-	SELECT max(payment_date)::timestamp INTO v_ledger_date
-	FROM transactions;
-	v_end := EXTRACT(YEAR FROM v_ledger_date) * 12 + EXTRACT(MONTH FROM v_ledger_date) + 1;
-	v_inteval :=  ((v_end - v_start) || ' months')::interval;
-
-	IF ($3 = '1') THEN
-		INSERT INTO transactions(ledger_type_id, entity_id, bank_account_id, 
-				currency_id, journal_id, org_id, exchange_rate, tx_type, payment_date, 
-				tx_ledger_amount, tx_ledger_tax_amount, reference_number, 
-				narrative)
-		SELECT ledger_type_id, entity_id, bank_account_id, 
-			currency_id, journal_id, org_id, exchange_rate, tx_type, (payment_date + v_inteval), 
-			tx_ledger_amount, tx_ledger_tax_amount, reference_number,
-			narrative
-		FROM transactions
-		WHERE (tx_type is not null) AND (to_char(payment_date, 'YYYY.MM') = $1);
-
-		msg := 'Appended a new month';
-	END IF;
-
-	RETURN msg;
-END;
-$$ LANGUAGE plpgsql;
-
-		
 CREATE OR REPLACE FUNCTION upd_transaction_details() RETURNS trigger AS $$
 DECLARE
 	statusID 	INTEGER;
@@ -544,17 +492,14 @@ CREATE TRIGGER af_upd_transaction_details AFTER INSERT OR UPDATE OR DELETE ON tr
 
 CREATE OR REPLACE FUNCTION upd_transactions() RETURNS trigger AS $$
 DECLARE
-	v_counter_id	integer;
-	transid 		integer;
-	currid			integer;
+	transid 	INTEGER;
+	currid		INTEGER;
 BEGIN
 
 	IF(TG_OP = 'INSERT') THEN
-		SELECT transaction_counter_id, document_number INTO v_counter_id, transid
-		FROM transaction_counters 
-		WHERE (transaction_type_id = NEW.transaction_type_id) AND (org_id = NEW.org_id);
-		UPDATE transaction_counters SET document_number = transid + 1 
-		WHERE (transaction_counter_id = v_counter_id);
+		SELECT document_number INTO transid
+		FROM transaction_types WHERE (transaction_type_id = NEW.transaction_type_id);
+		UPDATE transaction_types SET document_number = transid + 1 WHERE (transaction_type_id = NEW.transaction_type_id);
 
 		NEW.document_number := transid;
 		IF(NEW.currency_id is null)THEN

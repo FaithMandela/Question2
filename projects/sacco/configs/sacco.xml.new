@@ -1061,12 +1061,12 @@
 				<TEXTFIELD w="150" title="Middle Name" y="50" h="20" x="10" span="true">middle_name</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Birth" lw="130" y="50" h="20" x="250">date_of_birth</TEXTDATE>
 				<COMBOLIST w="150" title="Gender" y="50" h="20" x="10" span="true">gender
-					<DATA key="M">Male</DATA>
-					<DATA key="F">Female</DATA>
+					<DATA>Male</DATA>
+					<DATA>Female</DATA>
 				</COMBOLIST>
 				<COMBOLIST w="150" title="Marital Status" y="50" h="20" x="250">marital_status
-					<DATA key="S">Single</DATA>
-					<DATA key="M">Married</DATA>
+					<DATA>Single</DATA>
+					<DATA>Married</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="430" title="Phone" y="50" h="20" x="10" span="true">phone</TEXTFIELD>
 				<TEXTFIELD w="430" title="Primary Email" y="50" h="20" x="250">primary_email</TEXTFIELD>
@@ -1267,7 +1267,7 @@
 		<JASPER name="Investments" reportfile="Memberloanviewinvestall.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Repayments" key="280" h="550">
-		<FILTER w="700" name="Repayments" split="150" type="horl" key="6" h="550">
+		<FILTER w="700" name="Repayments" split="150" type="horl" h="550">
 			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year_id" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
@@ -1300,12 +1300,12 @@
 					<TEXTFIELD w="150" title="Middle Name" y="50" h="20" x="10" span="true">middle_name</TEXTFIELD>
 					<TEXTDATE w="150" title="Date Of Birth" lw="130" y="50" h="20" x="250">date_of_birth</TEXTDATE>
 					<COMBOLIST w="150" title="Gender" y="50" h="20" x="10" span="true">gender
-						<DATA key="M">Male</DATA>
-						<DATA key="F">Female</DATA>
+						<DATA>Male</DATA>
+						<DATA>Female</DATA>
 					</COMBOLIST>
 					<COMBOLIST w="150" title="Marital Status" y="50" h="20" x="250">marital_status
-						<DATA key="S">Single</DATA>
-						<DATA key="M">Married</DATA>
+						<DATA>Single</DATA>
+						<DATA>Married</DATA>
 					</COMBOLIST>
 					<TEXTFIELD w="430" title="Phone" y="50" h="20" x="10" span="true">phone</TEXTFIELD>
 					<TEXTFIELD w="430" title="Primary Email" y="50" h="20" x="250">primary_email</TEXTFIELD>
