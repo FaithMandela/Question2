@@ -1126,7 +1126,7 @@ BEGIN
 			END IF;
 		ELSE
 			IF (myrec.entity_name is not null) THEN
-				myentitys := myemail || ', ' || myrec.entity_name;
+				myentitys := myentitys || ', ' || myrec.entity_name;
 			END IF;
 		END IF;
 
