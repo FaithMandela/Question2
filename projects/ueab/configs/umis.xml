@@ -2289,7 +2289,7 @@
 	</DESK>
 	<DESK w="700" name="Graded Courses" type="horl" key="460" h="500">
 		<FILTER location="250" name="Graded Courses" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Graded Courses" reportfile="qcoursegrading.jasper"></JASPER>
@@ -2315,7 +2315,7 @@
 	</DESK>
 	<DESK w="700" name="Study Year by Year" type="horl" key="772" h="500">
 		<FILTER location="250" name="Study Year by Year" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear"></DRILLDOWN>
 			<JASPER filtered="true" name="Study Year by Year - Summary" reportfile="studyyeard.jasper"></JASPER>
 			<JASPER filtered="true" name="Study Year by Year" reportfile="studyyearc.jasper"></JASPER>
 		</FILTER>
