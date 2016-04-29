@@ -132,3 +132,35 @@ CREATE VIEW coregradeview AS
 	FROM corecourseoutline INNER JOIN studentgradeview ON (corecourseoutline.studentdegreeid = studentgradeview.studentdegreeid) AND (corecourseoutline.courseid = studentgradeview.courseid)
 	WHERE (studentgradeview.approved = true) AND (corecourseoutline.minor = false);
 
+
+DROP VIEW vw_course_load;
+CREATE VIEW vw_course_load AS
+	SELECT qcourseview.schoolid, qcourseview.schoolname, qcourseview.departmentid, qcourseview.departmentname,
+		qcourseview.degreelevelid, qcourseview.degreelevelname, qcourseview.coursetypeid, qcourseview.coursetypename,
+		qcourseview.courseid, qcourseview.credithours, qcourseview.maxcredit, qcourseview.iscurrent,
+		qcourseview.nogpa, qcourseview.yeartaken, qcourseview.mathplacement, qcourseview.englishplacement,
+
+		qcourseview.org_id, qcourseview.instructorid, qcourseview.qcourseid, qcourseview.classoption, qcourseview.maxclass,
+		qcourseview.labcourse, qcourseview.clinical_fee, qcourseview.extracharge, 
+		qcourseview.approved, qcourseview.attendance, qcourseview.oldcourseid,
+		qcourseview.fullattendance, qcourseview.attachement, qcourseview.submit_grades, qcourseview.submit_date,
+		qcourseview.approved_grades, qcourseview.approve_date, qcourseview.examsubmited, qcourseview.examinable,
+		qcourseview.departmentchange, qcourseview.registrychange,
+		qcourseview.instructorname, qcourseview.coursetitle,
+
+		qcourseview.quarterid, qcourseview.qstart, qcourseview.qlatereg, qcourseview.qlatechange, qcourseview.qlastdrop,
+		qcourseview.qend, qcourseview.active, qcourseview.chalengerate, qcourseview.feesline, qcourseview.resline, 
+		qcourseview.minimal_fees, qcourseview.closed, qcourseview.quarter_name, qcourseview.quarteryear, qcourseview.quarter, 
+
+		qcourseview.levellocationid, qcourseview.levellocationname, qcourseview.gradesubmited,
+		a.course_load
+	FROM qcourseview INNER JOIN 
+
+		(SELECT qgrades.qcourseid, count(qgrades.qgradeid) as course_load 
+		FROM qgrades INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid
+		WHERE (qgrades.dropped = false) AND (qstudents.approved = true)
+		GROUP BY qgrades.qcourseid) as a
+
+		ON qcourseview.qcourseid = a.qcourseid;
+		
+		
