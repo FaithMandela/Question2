@@ -149,9 +149,12 @@ UPDATE registrations  SET af_amount = '150000.00', af_success = '0', af_payment_
 
 ---------------- Matriculation
 
+SELECT count(*) FROM students WHERE studentid ilike '15%';
+SELECT count(*) FROM students WHERE studentid ilike 'NR%';
+
 ALTER TABLE studentdegrees ALTER COLUMN studentid DROP NOT NULL;
 
-SELECT deldupstudent(studentid, null, '14') FROM students WHERE studentid like 'NV/%' ORDER BY studentid;
+SELECT deldupstudent(studentid, null, '15') FROM students WHERE studentid like 'NR/%' ORDER BY studentid;
 
 ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 

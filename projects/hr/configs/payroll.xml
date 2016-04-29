@@ -1672,6 +1672,8 @@
 				<JASPER name="SC Payslip" linkfield="filterid" reportfile="payslipd.jasper"></JASPER>
 				<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc.jasper"></JASPER>
 			</GRID>
+			<JASPER name="Payslip" linkfield="filterid" reportfile="payslipa_all.jasper"></JASPER>
+			<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc_all.jasper"></JASPER>
 		</GRID>
 		<FILTER w="700" name="Payslip" split="250" key="6" h="550">
 			<FILTERGRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees">
