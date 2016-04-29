@@ -1,60 +1,54 @@
 
-CREATE OR REPLACE FUNCTION ins_periods()
+
+CREATE OR REPLACE FUNCTION ins_contrib()
   RETURNS trigger AS
 $BODY$
 DECLARE
-	v_period_id		integer;
-	v_mgr_number	integer;
-	v_org_id		integer;
-	v_merry_go_round_number	integer;
+	v_investment_amount			real;
+	v_period_id					integer;
+	v_org_id					integer;
+	v_contribution_type_id		integer;
+	v_merry_go_round_amount		real;
+	 v_mgr_number				integer;
+	 v_merry_go_round_number	integer;
+	v_money_in					real;
+	v_money_out					real;
+	v_entity_id			integer;
+
 BEGIN
 	
-	IF (NEW.approve_status = 'Approved') THEN
-		NEW.opened = false;
-		NEW.activated = false;
-		NEW.closed = true;
-	END IF;
+	SELECT   org_id, contribution_type_id, SUM(investment_amount), SUM(merry_go_round_amount)
+	INTO  v_org_id, v_contribution_type_id, v_money_in, v_money_out
+	FROM contributions
+		WHERE paid = true AND period_id = NEW.period_id 
+		GROUP BY contribution_type_id,org_id;
+	v_period_id := NEW.period_id;
 	
-	IF(TG_OP = 'INSERT')THEN
-		SELECT mgr_number, org_id INTO v_mgr_number, v_org_id
-		FROM periods
-		WHERE (period_id = (SELECT max(period_id) FROM periods WHERE org_id = NEW.org_id));
-		
-		IF(v_mgr_number is null)THEN
-			SELECT min(merry_go_round_number) INTO v_mgr_number
-			FROM members
-			WHERE org_id = NEW.org_id;
-			
-		ELSE
-			v_mgr_number := v_mgr_number + 1;
-		END IF;
-		
-		SELECT merry_go_round_number INTO v_merry_go_round_number 
-		FROM members
-		WHERE org_id = NEW.org_id and merry_go_round_number = v_mgr_number;
-		
-		IF (v_merry_go_round_number is null) THEN
-			SELECT min(merry_go_round_number) INTO v_merry_go_round_number 
-			FROM members
-			WHERE org_id = NEW.org_id and merry_go_round_number > v_mgr_number;
+
+		UPDATE contributions SET money_in  = v_money_in WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
+			IF (v_money_out = 0)THEN
+			UPDATE contributions SET money_out  = 0 WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
+	ELSIF 	(v_money_out != 0)THEN
 	
-			v_mgr_number := v_merry_go_round_number;
-		END IF;
+		SELECT mgr_number INTO v_mgr_number FROM periods  WHERE period_id = NEW.period_id AND org_id = v_org_id;
+		SELECT entity_id, merry_go_round_number INTO v_entity_id, v_merry_go_round_number 
+		FROM vw_member_contrib 
+		WHERE merry_go_round_number = v_mgr_number;
 		
-		NEW.mgr_number := v_mgr_number;
+			UPDATE contributions SET money_out  = v_money_out WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id AND entity_id = v_entity_id;
+	
 	END IF;
 
-
-	RETURN NEW;
+RETURN NEW;
 END;
 $BODY$
-  LANGUAGE plpgsql 
+  LANGUAGE plpgsql
   
-  CREATE TRIGGER ins_contribs
-  AFTER INSERT OR UPDATE of paid
-  ON contributions
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_contribs();
+CREATE TRIGGER ins_contrib
+AFTER INSERT OR UPDATE of paid
+ON contributions
+FOR EACH ROW
+EXECUTE PROCEDURE ins_contrib();
 
   CREATE OR REPLACE FUNCTION generate_contribs(
     character varying,
@@ -118,48 +112,7 @@ RETURN msg;
 END;
 $BODY$
   LANGUAGE plpgsql
-  
-CREATE OR REPLACE FUNCTION ins_investments()
-  RETURNS trigger AS
-$BODY$
-DECLARE
-	v_investment_amount		real;
-	v_total_cost			real;
-    v_amount				real;
-    v_total_payment			real;
-    v_m_payment				real;
-	v_monthly_returns		real;
-    v_period                real;
-    v_interests		        real;
-BEGIN
 
-		SELECT sum(investment_amount) INTO v_investment_amount FROM contributions
-		WHERE org_id = New.org_id AND period_id = NEW.period_id;
-		SELECT total_payment INTO v_m_payment FROM investments WHERE is_complete = false;
-		
-
-IF (v_investment_amount is not null) THEN	
-	v_total_payment  = COALESCE(v_m_payment, 0) + COALESCE(v_investment_amount, 0);
-
-	UPDATE investments SET monthly_payments = v_investment_amount, total_payment = v_total_payment  WHERE is_complete = false;
-
-	
-	IF (v_total_payment >= v_m_payment) THEN
-	UPDATE investments SET is_complete = true WHERE is_complete = false;
-
-	END IF;
-END IF;
-		
-
-RETURN NEW;
-END;
-$BODY$
-
-CREATE TRIGGER ins_investments
-  AFTER INSERT OR UPDATE
-  ON contributions
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_investments();
 
  CREATE OR REPLACE FUNCTION ins_members()
   RETURNS trigger AS
@@ -189,33 +142,65 @@ END;
 $BODY$
   LANGUAGE plpgsql;
   
-CREATE TRIGGER ins_meeting
-  BEFORE INSERT OR UPDATE
-  ON meetings
+CREATE TRIGGER ins_members
+  BEFORE INSERT
+  ON members
   FOR EACH ROW
-  EXECUTE PROCEDURE ins_meeting();
+  EXECUTE PROCEDURE ins_members();
+
 
 CREATE OR REPLACE FUNCTION ins_inv()
   RETURNS trigger AS
 $BODY$
 DECLARE
-v_monthly_returns		real;
-v_total_returns 		real;
+total_cost 					real;
+v_monthly_returns			real;
+v_amount					real;
+v_total_returns 			real;
+v_total_payment				real;
+v_m_payment					real;
+v_repayment_period			real;
+v_total_repayment_amount	real;
+v_default_interest			real;
 
 BEGIN
-v_total_returns := null;
-SELECT monthly_returns, total_returns INTO v_monthly_returns, v_total_returns FROM investments where investment_id = NEW.investment_id;
 
-IF (v_monthly_returns is not null) THEN
-v_total_returns = COALESCE(v_total_returns, 0) + COALESCE(NEW.monthly_returns,0);
+SELECT repayment_period, default_interest, monthly_returns, monthly_payments, total_payment, total_returns, total_repayment_amount INTO v_repayment_period, v_default_interest, v_monthly_returns, v_m_payment, v_total_payment, v_total_returns, v_total_repayment_amount 
+FROM investments 
+WHERE investment_id = NEW.investment_id;
 
-END IF;
+	SELECT interest_amount INTO v_interests FROM  investment_types 
+	WHERE investment_type_id = NEW. investment_type_id;
+	
+	NEW.default_interest := v_interests;
+	v_amount = (New.total_cost * (v_interests/100)) ;
+	NEW.total_repayment_amount := v_amount + New.total_cost;
+	
+	IF (v_m_payment is null) THEN
+		NEW.monthly_payments = v_total_repayment_amount/v_repayment_period;
+	ELSIF (v_repayment_period is null) THEN
+		NEW.repayment_period = v_total_repayment_amount/v_m_payment;
+	ELSIF (v_repayment_period AND v_m_payment is null) THEN
+		RAISE EXECPTION 'Please enter the repayment period or the monthly payments';
+	ELSEIF (v_m_payment is not null) THEN	
+		v_total_payment  = COALESCE(v_m_payment, 0) + COALESCE(NEW.monthly_payments, 0);
+		UPDATE investments SET monthly_payments = v_m_payment, total_payment = v_total_payment  WHERE is_complete = false AND investment_id = NEW.investment_id;
+	END IF;
+	END IF;
+	END IF;
+	END IF;
+	
+	IF (v_total_payment >= v_m_payment) THEN
+		UPDATE investments SET is_complete = true WHERE is_complete = false;
+	END IF;
 
-IF(v_total_returns is not null)THEN
-UPDATE investments SET total_returns = v_total_returns where investment_id = NEW.investment_id;
+	IF (v_monthly_returns is not null) THEN
+		v_total_returns = COALESCE(v_total_returns, 0) + COALESCE(NEW.monthly_returns,0);
+		UPDATE investments SET monthly_returns = v_monthly_returns, total_returns = v_total_returns WHERE investment_id = NEW.investment_id;
 
-END IF;
+	END IF;
 
+	
 RETURN NEW;
 END;
 $BODY$

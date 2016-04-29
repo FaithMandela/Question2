@@ -222,6 +222,7 @@ BEGIN
 			SELECT min(merry_go_round_number) INTO v_mgr_number
 			FROM members
 			WHERE org_id = NEW.org_id;
+			
 		ELSE
 			v_mgr_number := v_mgr_number + 1;
 		END IF;
@@ -234,7 +235,7 @@ BEGIN
 			SELECT min(merry_go_round_number) INTO v_merry_go_round_number 
 			FROM members
 			WHERE org_id = NEW.org_id and merry_go_round_number > v_mgr_number;
-			
+	
 			v_mgr_number := v_merry_go_round_number;
 		END IF;
 		
@@ -245,7 +246,7 @@ BEGIN
 	RETURN NEW;
 END;
 $BODY$
-  LANGUAGE plpgsql
+  LANGUAGE plpgsql 
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
     FOR EACH ROW EXECUTE PROCEDURE ins_periods();

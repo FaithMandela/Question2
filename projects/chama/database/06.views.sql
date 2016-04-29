@@ -1,26 +1,3 @@
-CREATE OR REPLACE VIEW vw_borrowing AS
-	SELECT  borrowing_types.borrowing_type_id, 
-	borrowing_types.borrowing_type_name, borrowing.org_id, 
-	 bank_accounts.bank_account_id, borrowing.borrowing_id, borrowing.date_of_borrowing, borrowing.amount, borrowing.interest, borrowing.application_date, 
-	 borrowing.approve_status, borrowing.workflow_table_id, borrowing.action_date, borrowing.is_active, borrowing.details
-	FROM borrowing
-	left JOIN bank_accounts ON borrowing.bank_account_id = bank_accounts.bank_account_id
-	JOIN borrowing_types ON borrowing.borrowing_type_id = borrowing_types.borrowing_type_id;
-
-CREATE OR REPLACE VIEW vw_borrowing_repayment AS
-	SELECT borrowing.borrowing_id, borrowing.org_id, penalty.penalty_id, periods.period_id,
-	 borrowing_repayment.borrowing_repayment_id, borrowing_repayment.amount, borrowing_repayment.penalty,
-	  borrowing_repayment.penalty_paid, borrowing_repayment.action_date, borrowing_repayment.details
-	FROM borrowing_repayment
-	JOIN borrowing ON borrowing_repayment.borrowing_id = borrowing.borrowing_id
-	JOIN penalty ON borrowing_repayment.penalty_id = penalty.penalty_id
-	JOIN periods ON borrowing_repayment.period_id = periods.period_id;
-
-CREATE VIEW vw_borrowing_types AS
-	SELECT orgs.org_id, orgs.org_name, borrowing_types.borrowing_type_id, borrowing_types.borrowing_type_name, borrowing_types.details
-	FROM borrowing_types
-	INNER JOIN orgs ON borrowing_types.org_id = orgs.org_id;
-
 
 CREATE OR REPLACE VIEW vw_members AS
 	SELECT 	bank_branch.bank_branch_id, bank_branch.bank_branch_name, 
@@ -103,6 +80,7 @@ CREATE VIEW vw_investment_types AS
 	FROM investment_types
 	INNER JOIN orgs ON investment_types.org_id = orgs.org_id;
 
+
 CREATE OR REPLACE VIEW vw_investments AS 
  SELECT currency.currency_id,
     currency.currency_name,
@@ -116,20 +94,22 @@ CREATE OR REPLACE VIEW vw_investments AS
     investments.investment_name,
     investments.date_of_accrual,
     investments.total_cost,
+    investments.status,
+     investments.total_repayment_amount,
     investments.repayment_period,
     investments.monthly_returns,
-	investments.monthly_payments,
+    investments.monthly_payments,
     investments.total_payment,
     investments.default_interest,
     investments.total_returns,
-	investments.is_complete,
+    investments.is_complete,
     investments.is_active,
     investments.details
    FROM investments
      JOIN currency ON investments.currency_id = currency.currency_id
      JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id
      LEFT JOIN bank_accounts ON investments.bank_account_id = bank_accounts.bank_account_id;
-
+     
 CREATE OR REPLACE VIEW vw_meetings AS 
 	SELECT meetings.org_id, meetings.meeting_id, meetings.meeting_date, meetings.amount_contributed, 
 	meetings.meeting_place, meetings.minutes, meetings.status, meetings.details
@@ -150,3 +130,11 @@ CREATE VIEW vw_penalty_type AS
 	SELECT orgs.org_id, orgs.org_name, penalty_type.penalty_type_id, penalty_type.penalty_type_name, penalty_type.details
 	FROM penalty_type
 	JOIN orgs ON penalty_type.org_id = orgs.org_id;
+	
+CREATE OR REPLACE VIEW vw_member_meeting AS
+	SELECT members.member_id, members.surname, members.first_name,
+			meetings.meeting_id, meetings.meeting_date,
+			member_meeting.org_id ,member_meeting.member_meeting_id, member_meeting.narrative
+	FROM member_meeting
+		JOIN members ON member_meeting.member_id = members.member_id
+		JOIN meetings ON member_meeting.meeting_id = meetings.meeting_id;
