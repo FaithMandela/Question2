@@ -212,3 +212,54 @@ CREATE TRIGGER ins_inv
   FOR EACH ROW
   EXECUTE PROCEDURE ins_inv();
 
+
+CREATE OR REPLACE FUNCTION add_member_meeting(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg		 				varchar(120);
+	v_member_id				integer;
+	v_org_id				integer;
+BEGIN
+
+	SELECT member_id INTO v_member_id
+	FROM member_meeting WHERE (member_id = $1::int) AND (meeting_id = $3::int);
+	
+	IF(v_member_id is null)THEN
+		SELECT org_id INTO v_org_id
+		FROM meetings WHERE (meeting_id = $3::int);
+		
+		INSERT INTO  member_meeting (meeting_id, member_id, org_id)
+		VALUES ($3::int, $1::int, v_org_id);
+
+		msg := 'Added to meeting';
+	ELSE
+		msg := 'Already Added to meeting';
+	END IF;
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION remove_member_meeting(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg		 				varchar(120);
+	v_member_id				integer;
+	v_org_id				integer;
+BEGIN
+
+	SELECT member_id INTO v_member_id
+	FROM member_meeting WHERE (member_id = $1::int) AND (meeting_id = $3::int);
+	
+	IF(v_member_id is not null)THEN
+		SELECT org_id INTO v_org_id
+		FROM meetings WHERE (meeting_id = $3::int);
+		
+		DELETE FROM  member_meeting WHERE member_id = v_member_id AND (meeting_id = $3::int);
+		
+
+		msg := 'Removed from meeting';
+		END IF;
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
