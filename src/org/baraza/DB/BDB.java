@@ -33,6 +33,7 @@ public class BDB {
 	String orgID = null;
 	BUser user = null;
 	BLogHandle logHandle = null;
+	List<String> fullAudit;
 
 	private String lastErrorMsg = null;
 	private String lDBclass;
@@ -42,6 +43,7 @@ public class BDB {
 	private boolean readOnly = false;
 	
 	public BDB(BElement dbconfig) {
+		fullAudit =  new ArrayList<String>();
 		String dbclass = dbconfig.getAttribute("dbclass", "");
 		String dbpath = dbconfig.getAttribute("dbpath", ""); 
 		String dbusername = dbconfig.getAttribute("dbusername", "");
@@ -55,6 +57,7 @@ public class BDB {
 	}
 
 	public BDB(BElement dbconfig, String dbuser, String dbpassword) {
+		fullAudit =  new ArrayList<String>();
 		String dbclass = dbconfig.getAttribute("dbclass", "");
 		String dbpath = dbconfig.getAttribute("dbpath", ""); 
 		dbTemplate = dbconfig.getAttribute("dbtemplate");
@@ -65,11 +68,13 @@ public class BDB {
 	}
 
 	public BDB(String dbclass, String dbpath, String dbuser, String dbpassword) {
+		fullAudit =  new ArrayList<String>();
 		connectDB(dbclass, dbpath, dbuser, dbpassword);
 	}
 
 	// initialize the database and web output
 	public BDB(String datasource) {
+		fullAudit =  new ArrayList<String>();
 		try {
 			InitialContext cxt = new InitialContext();
 			DataSource ds = (DataSource) cxt.lookup(datasource);
@@ -548,13 +553,28 @@ public class BDB {
 		}
 		return dbv;
 	}
+	
+	public void setFullAudit(BElement audit) {
+		for(BElement aTables : audit.getElements()) {
+			fullAudit.add(aTables.getValue());
+		}
+	}
+	
+	public boolean isFullAudit(String tableName) {
+		return fullAudit.contains(tableName);
+	}
 
 	public String insAudit(String tableName, String recordID, String functionType) {
 		String inssql = "INSERT INTO sys_audit_trail (user_id, user_ip, table_name, record_id, change_type) VALUES('";
 		inssql += getUserID() + "', '" + getUserIP() + "', '" + tableName + "', '" + recordID  + "', '" + functionType + "')";
 		String autoKeyID = executeAutoKey(inssql);
-
 		return autoKeyID;
+	}
+	
+	public void insAuditDetails(String auditId, String oldValues) {
+		String inssql = "INSERT INTO sys_audit_details (sys_audit_trail_id, old_value) VALUES('";
+		inssql += auditId + "', '" + oldValues + "')";
+		executeQuery(inssql);
 	}
 
 	public Connection getDB() { return db; }

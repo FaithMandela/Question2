@@ -58,6 +58,7 @@ public class BQuery {
 	boolean readonly = false;
 	boolean iforg = false;
 	int errCode = 0;
+	String changeTrack = "";
 	
 	Integer rowStart = null;
 	Integer fertchSize = null;
@@ -619,6 +620,7 @@ public class BQuery {
 				if (fvalue == null) return errMsg;
 			} else {
 				if (oldvalue.equals(fvalue)) return errMsg;
+				changeTrack += "," + fname + ":\"" + oldvalue + "\"";
 			}
 		}
 		
@@ -741,7 +743,10 @@ public class BQuery {
 
 	public boolean recEdit() {
 		errCode = 0;
-		if(!isAddNew) isEdit = true;
+		if(!isAddNew) { 
+			isEdit = true;
+			changeTrack = "{userid:" + db.getUserID();
+		}
 		return isEdit;
 	}
 
@@ -757,11 +762,16 @@ public class BQuery {
 					isAddNew = false;
 				}
 			} else if(isEdit) {
-				if(auditID != null) {
+				if(db.isFullAudit(tableName) || (auditID != null)) {
 					String autoKeyID = db.insAudit(tableName, getString(keyField), "PREPARE");
-					rs.updateInt(auditID,  Integer.valueOf(autoKeyID));
+					if(auditID != null) rs.updateInt(auditID,  Integer.valueOf(autoKeyID));
+					if(db.isFullAudit(tableName)) {
+						changeTrack += "}";
+						db.insAuditDetails(autoKeyID, changeTrack);
+						System.out.println("changes : " + changeTrack);
+					}
 				}
-
+				
 				rs.updateRow();
 				rs.moveToCurrentRow();
 				recAudit("EDIT", null);

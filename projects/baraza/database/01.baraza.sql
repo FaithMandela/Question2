@@ -17,11 +17,9 @@ CREATE TABLE sys_audit_trail (
 );
 
 CREATE TABLE sys_audit_details (
-	sys_audit_detail_id		serial primary key,
-	sys_audit_trail_id		integer references sys_audit_trail,
-	new_value				text
+	sys_audit_trail_id		integer references sys_audit_trail primary key,
+	old_value				text
 );
-CREATE INDEX sys_audit_details_sys_audit_trail_id ON sys_audit_details (sys_audit_trail_id);
 
 CREATE TABLE sys_errors (
 	sys_error_id			serial primary key,
