@@ -45,7 +45,7 @@ CREATE TABLE periods (
 
     entity_id 				integer references entitys,
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'Draft' not null,
+	approve_status			varchar(16) default 'Completed' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 
@@ -61,14 +61,14 @@ CREATE VIEW vw_periods_c AS
 	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start, fiscal_years.fiscal_year_end,
 		fiscal_years.year_opened, fiscal_years.year_closed,
 
-		periods.period_id, periods.org_id, 
-		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
-		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
+		periods.period_id, periods.org_id,
+		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed,
+		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted,
 		periods.gl_payroll_account, periods.gl_bank_account, periods.gl_advance_account,
 		periods.bank_header, periods.bank_address, periods.details,
 
-		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
-		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
+		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year,
+		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter,
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
 		to_char(periods.start_date, 'YYYYMM') as period_code
 	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
@@ -126,5 +126,3 @@ CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
 ------------Hooks to approval trigger
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON periods
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
-
-

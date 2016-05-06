@@ -13,7 +13,7 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.org_id as org_id, vw_passengers.org_name, vw_passengers.rate_type_id, vw_passengers.rate_type_name, vw_passengers.rate_id, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.standard_rate,vw_passengers.policy_number, vw_passengers.north_america_rate,(vw_passengers.approved_date::Date)as approved_date, vw_passengers.entity_id,vw_passengers.entity_name, vw_passengers.passenger_id, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_age,vw_passengers.destown, vw_passengers.days_covered, vw_passengers.nok_name, vw_passengers.nok_mobile, vw_passengers.nok_national_id, vw_passengers.cover_amount,vw_passengers.totalAmount_covered, vw_passengers.is_north_america, vw_passengers.details,vw_passengers.pin_no,vw_passengers.sys_country_name,get_benefit_section_a(rate_type_id)
+		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.org_id as org_id, vw_passengers.org_name, vw_passengers.rate_type_id, vw_passengers.rate_plan_name, vw_passengers.rate_id, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.standard_rate,vw_passengers.policy_number, vw_passengers.north_america_rate,(vw_passengers.approved_date::Date)as approved_date, vw_passengers.entity_id,vw_passengers.entity_name, vw_passengers.passenger_id, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_age,vw_passengers.destown, vw_passengers.days_covered, vw_passengers.nok_name, vw_passengers.nok_mobile, vw_passengers.nok_national_id, vw_passengers.cover_amount,vw_passengers.totalAmount_covered, vw_passengers.is_north_america, vw_passengers.details,vw_passengers.pin_no,vw_passengers.sys_country_name,get_benefit_section_a(rate_type_id)
 FROM vw_passengers
 WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as Date) <= '$P!{maxDate} '
 ORDER BY vw_passengers.passenger_id DESC]]>
@@ -22,7 +22,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="rate_type_id" class="java.lang.Integer"/>
-	<field name="rate_type_name" class="java.lang.String"/>
+	<field name="rate_plan_name" class="java.lang.String"/>
 	<field name="rate_id" class="java.lang.Integer"/>
 	<field name="days_from" class="java.lang.String"/>
 	<field name="days_to" class="java.lang.String"/>
@@ -54,7 +54,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 	<title>
 		<band height="131" splitType="Stretch">
 			<staticText>
-				<reportElement x="196" y="0" width="539" height="38" uuid="d2310959-a4e7-4bec-8e2f-ad8333feb10c"/>
+				<reportElement x="196" y="0" width="772" height="38" uuid="d2310959-a4e7-4bec-8e2f-ad8333feb10c"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24" isBold="true"/>
 				</textElement>
@@ -344,7 +344,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rate_type_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{rate_plan_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
 				<reportElement x="853" y="0" width="55" height="25" isPrintWhenDetailOverflows="true" uuid="39814c58-ee83-4454-9652-1e1c48cbc043"/>
