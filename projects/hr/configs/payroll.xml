@@ -42,6 +42,16 @@
 		</MENU>
 		<MENU name="HR" role="admin,payroll,reports" xml="hr.xml">0</MENU>
 	</MENU>
+	<CONFIGS name="Full system configurations">
+		<AUDIT name="Full Table Audits">
+			<TABLE>employees</TABLE>
+			<TABLE>employee_month</TABLE>
+			<TABLE>employee_adjustments</TABLE>
+			<TABLE>employee_tax_types</TABLE>
+			<TABLE>employee_advances</TABLE>
+			<TABLE>advance_deductions</TABLE>
+		</AUDIT>
+	</CONFIGS>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
 			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">

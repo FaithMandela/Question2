@@ -28,9 +28,8 @@
 	<queryString>
 		<![CDATA[SELECT vw_tx_ledger.ledger_period, vw_tx_ledger.ledger_year, vw_tx_ledger.ledger_month,
 	vw_tx_ledger.ledger_type_name, vw_tx_ledger.currency_symbol, vw_tx_ledger.entity_name,
-	vw_tx_ledger.narrative,
-	vw_tx_ledger.bank_account_name, vw_tx_ledger.bpartner_name, vw_tx_ledger.tx_ledger_date,
-	vw_tx_ledger.tx_ledger_quantity, vw_tx_ledger.tx_ledger_amount,
+	vw_tx_ledger.narrative, vw_tx_ledger.bank_account_name,  vw_tx_ledger.payment_date,
+	vw_tx_ledger.transaction_amount,
 	vw_tx_ledger.reference_number, vw_tx_ledger.completed, vw_tx_ledger.is_cleared,
 	vw_tx_ledger.base_amount
 
@@ -40,8 +39,9 @@ WHERE (vw_tx_ledger.ledger_period = '$P!{filterid}')
 AND (vw_tx_ledger.completed = true) AND (vw_tx_ledger.is_cleared = false)
 $P!{organd}
 
+
 ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
-	vw_tx_ledger.completed desc, vw_tx_ledger.tx_ledger_date]]>
+	vw_tx_ledger.completed desc, vw_tx_ledger.payment_date]]>
 	</queryString>
 	<field name="ledger_period" class="java.lang.String"/>
 	<field name="ledger_year" class="java.lang.String"/>
@@ -51,10 +51,8 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="narrative" class="java.lang.String"/>
 	<field name="bank_account_name" class="java.lang.String"/>
-	<field name="bpartner_name" class="java.lang.String"/>
-	<field name="tx_ledger_date" class="java.sql.Date"/>
-	<field name="tx_ledger_quantity" class="java.lang.Integer"/>
-	<field name="tx_ledger_amount" class="java.lang.Float"/>
+	<field name="payment_date" class="java.sql.Date"/>
+	<field name="transaction_amount" class="java.lang.Float"/>
 	<field name="reference_number" class="java.lang.String"/>
 	<field name="completed" class="java.lang.Boolean"/>
 	<field name="is_cleared" class="java.lang.Boolean"/>
@@ -87,70 +85,63 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 					<text><![CDATA[Ledger Type]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="345" y="15" width="51" height="15" forecolor="#000000" uuid="e978bd45-3b5e-4768-acd6-ec535f3cc07b"/>
+					<reportElement style="Column header" x="371" y="15" width="51" height="15" forecolor="#000000" uuid="e978bd45-3b5e-4768-acd6-ec535f3cc07b"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Currency]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="104" y="15" width="107" height="15" forecolor="#000000" uuid="dc7b5366-9a4d-43bf-b6d8-798c4c10c0a5"/>
+					<reportElement style="Column header" x="104" y="15" width="118" height="15" forecolor="#000000" uuid="dc7b5366-9a4d-43bf-b6d8-798c4c10c0a5"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Source]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="211" y="15" width="134" height="15" forecolor="#000000" uuid="7296b906-b1a4-4322-8bc8-f79fe473abe2"/>
+					<reportElement style="Column header" x="222" y="15" width="149" height="15" forecolor="#000000" uuid="7296b906-b1a4-4322-8bc8-f79fe473abe2"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Narrative]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="568" y="15" width="51" height="15" forecolor="#000000" uuid="faeb85b4-aede-4354-a4b2-e783bfb284f0"/>
+					<reportElement style="Column header" x="594" y="15" width="51" height="15" forecolor="#000000" uuid="faeb85b4-aede-4354-a4b2-e783bfb284f0"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Date]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="619" y="15" width="51" height="15" forecolor="#000000" uuid="0587e568-7003-4920-812d-338b1207d43f"/>
-					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<text><![CDATA[Quantity]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Column header" x="670" y="15" width="51" height="15" forecolor="#000000" uuid="6bff5189-ba3b-4819-b660-f0f9639c23f7"/>
+					<reportElement style="Column header" x="645" y="15" width="68" height="15" forecolor="#000000" uuid="6bff5189-ba3b-4819-b660-f0f9639c23f7"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="396" y="15" width="83" height="15" forecolor="#000000" uuid="6e15a1ed-68ea-4953-81fc-5b6d52a11266"/>
+					<reportElement style="Column header" x="422" y="15" width="83" height="15" forecolor="#000000" uuid="6e15a1ed-68ea-4953-81fc-5b6d52a11266"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Reference Number]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="479" y="15" width="51" height="15" forecolor="#000000" uuid="311b1834-72f0-4e3c-a5e4-5241e4c33df3"/>
+					<reportElement style="Column header" x="505" y="15" width="51" height="15" forecolor="#000000" uuid="311b1834-72f0-4e3c-a5e4-5241e4c33df3"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Completed]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="530" y="15" width="38" height="15" forecolor="#000000" uuid="738d7d61-f033-4e0d-9626-9da955baeb1e"/>
+					<reportElement style="Column header" x="556" y="15" width="38" height="15" forecolor="#000000" uuid="738d7d61-f033-4e0d-9626-9da955baeb1e"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Cleared]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="721" y="15" width="66" height="15" forecolor="#000000" uuid="a48a5dca-7308-4f32-b404-228d5eec7e50"/>
+					<reportElement style="Column header" x="713" y="15" width="66" height="15" forecolor="#000000" uuid="a48a5dca-7308-4f32-b404-228d5eec7e50"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -161,7 +152,7 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 		<groupFooter>
 			<band height="22">
 				<textField pattern="#,##0" isBlankWhenNull="true">
-					<reportElement x="721" y="0" width="66" height="20" uuid="410fdf8a-189f-48e7-8c01-b574b7eb7205"/>
+					<reportElement x="713" y="0" width="66" height="20" uuid="410fdf8a-189f-48e7-8c01-b574b7eb7205"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
@@ -202,70 +193,63 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 					<textFieldExpression><![CDATA[$F{ledger_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="345" y="0" width="51" height="15" uuid="90850f3e-c745-42da-80ec-f1b2f64ee859"/>
+					<reportElement style="Detail" x="371" y="0" width="51" height="15" uuid="90850f3e-c745-42da-80ec-f1b2f64ee859"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{currency_symbol}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="104" y="0" width="107" height="15" uuid="5e145f20-1a02-454f-8003-ca0574b831e0"/>
+					<reportElement style="Detail" x="104" y="0" width="118" height="15" uuid="5e145f20-1a02-454f-8003-ca0574b831e0"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{bpartner_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="211" y="0" width="134" height="15" uuid="c38b62a4-d277-4a83-9c41-d2df15f67283"/>
+					<reportElement style="Detail" x="222" y="0" width="149" height="15" uuid="c38b62a4-d277-4a83-9c41-d2df15f67283"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{narrative}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-					<reportElement style="Detail" x="568" y="0" width="51" height="15" uuid="bdd1e227-364b-4ac5-951f-703877ab78d1"/>
+					<reportElement style="Detail" x="594" y="0" width="51" height="15" uuid="bdd1e227-364b-4ac5-951f-703877ab78d1"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{tx_ledger_date}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="619" y="0" width="51" height="15" uuid="c729eb78-c277-4402-b280-06d899a4335e"/>
+					<reportElement style="Detail" x="645" y="0" width="68" height="15" uuid="3d091448-cc7d-459c-b44e-944f0b5fcc70"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{tx_ledger_quantity}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="670" y="0" width="51" height="15" uuid="3d091448-cc7d-459c-b44e-944f0b5fcc70"/>
-					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{tx_ledger_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{transaction_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="396" y="0" width="83" height="15" uuid="b2e85ada-a74b-46f0-ac2d-6572d5de5c34"/>
+					<reportElement style="Detail" x="422" y="0" width="83" height="15" uuid="b2e85ada-a74b-46f0-ac2d-6572d5de5c34"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{reference_number}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="479" y="0" width="51" height="15" uuid="c422a28f-15aa-4ae1-8aa0-ccf13f214ce8"/>
+					<reportElement style="Detail" x="505" y="0" width="51" height="15" uuid="c422a28f-15aa-4ae1-8aa0-ccf13f214ce8"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{completed}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="530" y="0" width="38" height="15" uuid="007bf7a1-8ada-4f3c-ae75-3f04c3b592b8"/>
+					<reportElement style="Detail" x="556" y="0" width="38" height="15" uuid="007bf7a1-8ada-4f3c-ae75-3f04c3b592b8"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{is_cleared}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="721" y="0" width="66" height="15" uuid="1a998c64-271f-4a16-830f-6cc86ab9e9fa"/>
+					<reportElement style="Detail" x="713" y="0" width="66" height="15" uuid="1a998c64-271f-4a16-830f-6cc86ab9e9fa"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
