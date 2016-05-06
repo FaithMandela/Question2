@@ -16,8 +16,12 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employment.date_from, vw_employment.date_to, vw_employment.employers_name, vw_employment.position_held, vw_employment.details
 FROM vw_employment
@@ -110,7 +114,7 @@ ORDER BY vw_employment.date_from;]]>
 				<textFieldExpression><![CDATA[$F{position_held}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="0" y="17" width="525" height="15" uuid="219e7448-afa9-4716-94d0-b96708e21d34"/>
+				<reportElement style="Detail" positionType="Float" x="0" y="17" width="525" height="15" uuid="219e7448-afa9-4716-94d0-b96708e21d34"/>
 				<box>
 					<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
 				</box>

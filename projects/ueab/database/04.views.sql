@@ -617,7 +617,7 @@ CREATE VIEW vw_course_load AS
 		qcourseview.qend, qcourseview.active, qcourseview.chalengerate, qcourseview.feesline, qcourseview.resline, 
 		qcourseview.minimal_fees, qcourseview.closed, qcourseview.quarter_name, qcourseview.quarteryear, qcourseview.quarter, 
 
-		qcourseview.levellocationid, qcourseview.levellocationname,
+		qcourseview.levellocationid, qcourseview.levellocationname, qcourseview.gradesubmited,
 		a.course_load
 	FROM qcourseview INNER JOIN 
 

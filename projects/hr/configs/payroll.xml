@@ -42,6 +42,16 @@
 		</MENU>
 		<MENU name="HR" role="admin,payroll,reports" xml="hr.xml">0</MENU>
 	</MENU>
+	<CONFIGS name="Full system configurations">
+		<AUDIT name="Full Table Audits">
+			<TABLE>employees</TABLE>
+			<TABLE>employee_month</TABLE>
+			<TABLE>employee_adjustments</TABLE>
+			<TABLE>employee_tax_types</TABLE>
+			<TABLE>employee_advances</TABLE>
+			<TABLE>advance_deductions</TABLE>
+		</AUDIT>
+	</CONFIGS>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
 			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
@@ -1672,6 +1682,8 @@
 				<JASPER name="SC Payslip" linkfield="filterid" reportfile="payslipd.jasper"></JASPER>
 				<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc.jasper"></JASPER>
 			</GRID>
+			<JASPER name="Payslip" linkfield="filterid" reportfile="payslipa_all.jasper"></JASPER>
+			<JASPER name="Summary Payslip" linkfield="filterid" reportfile="payslipc_all.jasper"></JASPER>
 		</GRID>
 		<FILTER w="700" name="Payslip" split="250" key="6" h="550">
 			<FILTERGRID name="Employees" keyfield="entity_id" orderby="first_name" table="vw_employees">

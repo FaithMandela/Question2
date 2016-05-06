@@ -33,7 +33,7 @@
 FROM vw_contributions
 Where entity_id = $P!{entity_id}
 $P!{organd}
-order by contribution_type_id]]>
+order by period_id]]>
 	</queryString>
 	<field name="bank_account_name" class="java.lang.String"/>
 	<field name="contribution_type_id" class="java.lang.Integer"/>

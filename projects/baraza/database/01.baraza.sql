@@ -17,11 +17,9 @@ CREATE TABLE sys_audit_trail (
 );
 
 CREATE TABLE sys_audit_details (
-	sys_audit_detail_id		serial primary key,
-	sys_audit_trail_id		integer references sys_audit_trail,
-	new_value				text
+	sys_audit_trail_id		integer references sys_audit_trail primary key,
+	old_value				text
 );
-CREATE INDEX sys_audit_details_sys_audit_trail_id ON sys_audit_details (sys_audit_trail_id);
 
 CREATE TABLE sys_errors (
 	sys_error_id			serial primary key,
@@ -460,7 +458,7 @@ CREATE VIEW vw_address_entitys AS
 		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
 		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
-	WHERE (vw_address.table_name = 'entitys');
+	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
 	
 CREATE VIEW vw_org_select AS
 	(SELECT org_id, parent_org_id, org_name
@@ -1126,7 +1124,7 @@ BEGIN
 			END IF;
 		ELSE
 			IF (myrec.entity_name is not null) THEN
-				myentitys := myemail || ', ' || myrec.entity_name;
+				myentitys := myentitys || ', ' || myrec.entity_name;
 			END IF;
 		END IF;
 

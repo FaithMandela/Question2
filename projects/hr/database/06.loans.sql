@@ -15,6 +15,7 @@ CREATE TABLE loans (
 	loan_type_id			integer not null references loan_types,
 	entity_id				integer not null references entitys,
 	org_id					integer references orgs,
+	
 	principle				real not null,
 	interest				real not null,
 	monthly_repayment		real not null,

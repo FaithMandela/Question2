@@ -717,19 +717,19 @@ CREATE OR REPLACE FUNCTION updb_qstudents() RETURNS trigger AS $$
 BEGIN
 
 	IF(NEW.finaceapproval = true)THEN
-		IF(OLD.studylevel <> NEW.studylevel)THEN
+		IF(NEW.studylevel is null) OR (OLD.studylevel <> NEW.studylevel)THEN
 			RAISE EXCEPTION 'You cannot change study level after financial approval';
 		END IF;
 
-		IF(OLD.qresidenceid <> NEW.qresidenceid)THEN
+		IF(NEW.qresidenceid is null) OR (OLD.qresidenceid <> NEW.qresidenceid)THEN
 			RAISE EXCEPTION 'You cannot change residence after financial approval';
 		END IF;
 		
-		IF(OLD.sublevelid <> NEW.sublevelid)THEN
+		IF(NEW.sublevelid is null) OR (OLD.sublevelid <> NEW.sublevelid)THEN
 			RAISE EXCEPTION 'You cannot change sub level after financial approval';
 		END IF;
 		
-		IF(OLD.mealtype <> NEW.mealtype)THEN
+		IF(NEW.mealtype is null) OR (OLD.mealtype <> NEW.mealtype)THEN
 			RAISE EXCEPTION 'You cannot change meal type after financial approval';
 		END IF;
 	END IF;
@@ -1284,7 +1284,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
--- update students email address
+-- Change a students ID Number
 CREATE OR REPLACE FUNCTION deldupstudent(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	myrec RECORD;

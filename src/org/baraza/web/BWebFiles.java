@@ -138,6 +138,8 @@ System.out.println("BASE 1020 : " + repository);
 		ServletFileUpload upload = new ServletFileUpload(factory);
 
 		try {
+			String orgID = db.getOrgID();
+			String userOrg = db.getUserOrg();
 			
 			List items = upload.parseRequest(request);
 			Iterator itr = items.iterator();
@@ -153,23 +155,19 @@ System.out.println("BASE 1020 : " + repository);
 					String fieldName = item.getFieldName();
 					fileName = item.getName();
 					long fs = item.getSize();
-
+					
 					if(fs < maxfs) {
 System.out.println("BASE 1410 : " + fileName);
-						String orgID = db.getOrgID();
-						String userOrg = db.getUserOrg();
+						BImportVector iv = new BImportVector(view);
+						iv.getTextData(item.getInputStream());
+						query.importData(iv.getData());
 						
 						jshd.add("success", 1);
 						jshd.add("name", item.getName());
 						jshd.add("size", item.getSize());
-						jshd.add("message", "Proceess File");
-                        
+						jshd.add("message", "Proceessed File");
 						JsonObject jsObj = jshd.build();
 						resp = jsObj.toString();
-						
-						BImportVector iv = new BImportVector(view);
-						iv.getTextData(item.getInputStream());
-						query.importData(iv.getData());
 					}
 				}
 			}
