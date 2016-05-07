@@ -273,8 +273,7 @@ public class BApp extends JPanel implements ActionListener, TreeSelectionListene
 
 			configFile = configDir + prog.getAttribute("path") + ps + "configs" + ps + prog.getAttribute("xmlfile");
 			reportDir = prog.getAttribute("reports");
-			if(reportDir == null)
-				reportDir = configDir + prog.getAttribute("path") + ps + "reports" + ps;
+			if(reportDir == null) reportDir = configDir + prog.getAttribute("path") + ps + "reports" + ps;
 			BXML xml = new BXML(configFile, false);
 			boolean noauth = false;
 			String auth = prog.getAttribute("auth", "db");
@@ -310,6 +309,13 @@ public class BApp extends JPanel implements ActionListener, TreeSelectionListene
 				} catch(java.net.UnknownHostException ex) { }
 
 				db.setUser(ipaddress, tfUserName.getText());
+				
+				BElement configs = root.getElementByName("CONFIGS");
+				if(configs != null) {
+					BElement audit = configs.getElementByName("AUDIT");
+					if(audit != null) db.setFullAudit(audit);
+				}
+				
 				login();
 			}
 		} else if("About ...".equals(aKey)) {

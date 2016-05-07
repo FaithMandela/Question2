@@ -10,7 +10,7 @@
 		<MENU role="admin,staff" name="Approval">83</MENU>
 		<MENU role="admin,staff" name="Workflow">40</MENU>
 		<MENU role="admin,staff" name="Emails">60</MENU>
-		<MENU role="admin,staff" name="Entitys">100</MENU>
+		<MENU role="admin" name="Staff">100</MENU>
 		<MENU role="admin,staff" name="Birthday" page="birthday">03</MENU>
 		<MENU role="admin,staff" icon="fa fa-gift" name="Products">
 			<MENU role="admin,staff" icon="fa fa-gift" name="Products">7</MENU>
@@ -22,8 +22,8 @@
 			<MENU role="admin,staff" icon="fa fa-cart-arrow-down" name="Redemptions">8</MENU>
 			<MENU role="admin,staff" name="Close Batch">115</MENU>
 		</MENU>
-		<MENU role="admin,staff" icon="fa fa-ticket" name="Tickets">
-			<MENU role="admin,staff" name="Tickets Years">102</MENU>
+		<MENU role="admin" icon="fa fa-ticket" name="Tickets">
+			<MENU role="admin" name="Tickets Years">102</MENU>
 		</MENU>
 		<MENU role="admin,staff" name="Report">
 			<MENU name="Productivity">110</MENU>
@@ -88,7 +88,8 @@
 			<TEXTFIELD w="75" title="ID">product_category_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Name">product_category_name</TEXTFIELD>
 			<FORM noorg="true" keyfield="product_category_id" name="Product Category" table="product_category">
-				<TEXTFIELD w="150" h="20" x="10" y="50" title="Product Name">product_category_name</TEXTFIELD>
+				<TEXTFIELD w="70" h="20" x="10" y="50" title="Product Name">product_category_name</TEXTFIELD>
+				<TEXTFIELD w="70" h="20" x="10" y="50" placeholder="e.g fa-film" title="Product icon">icon</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="170" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -248,6 +249,7 @@
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" keyfield="entity_id" name="Active Consultants" orderby="entity_id desc" where="is_active='true'" tab.count="count(entity_id)" table="vw_consultant">
+			<TEXTFIELD w="50" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" fnc="application_date::date" title="Created">application_date</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
@@ -292,6 +294,7 @@
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" keyfield="entity_id" name="Suspended Consultants" orderby="entity_id desc" where="is_active='false'" tab.count="count(entity_id)" table="vw_consultant">
+			<TEXTFIELD w="50" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" fnc="application_date::date" title="Created">application_date</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
@@ -330,6 +333,7 @@
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" keyfield="entity_id" name="Purged Consultants" orderby="entity_id DESC" tab.count="count(entity_id)" table="vw_purged_consultant">
+			<TEXTFIELD w="50" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="50" title="User">user_name</TEXTFIELD>
 			<TEXTFIELD w="75" fnc="date_enroled::date" title="Created">date_enroled</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">primary_email</TEXTFIELD>
@@ -649,6 +653,7 @@
 					<TEXTFIELD w="150" h="20" x="290" y="50" title="User Name">user_name</TEXTFIELD>
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 					<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
+						<DATA key="admin">Administrator</DATA>
 						<DATA key="manager">Manager</DATA>
 						<DATA key="agency">Agency</DATA>
 						<DATA key="user">User</DATA>
@@ -809,6 +814,15 @@
 					<ACTION fnct="generate_points">Generate Points</ACTION>
 					<ACTION fnct="generate_bonus">Generate Bonus</ACTION>
 				</ACTIONS>
+				<GRID noorg="true" keyfield="points_id" name="Consultant Points" orderby="org_name ASC" linkfield="period_id" table="vw_points">
+					<TEXTFIELD w="100" title="Agency Name">org_name</TEXTFIELD>
+					<TEXTFIELD w="40" title="Username">user_name</TEXTFIELD>
+					<TEXTFIELD w="40" title="PCC">pcc</TEXTFIELD>
+					<TEXTFIELD w="40" title="SON">son</TEXTFIELD>
+					<TEXTFIELD w="40" title="Total Segments">segments</TEXTFIELD>
+					<TEXTFIELD w="40" title="Total KES">points</TEXTFIELD>
+					<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
+				</GRID>
 				<GRID keyfield="bonus_id" name="Market Bonus" linkfield="period_id" table="bonus">
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
@@ -820,6 +834,7 @@
 					</FORM>
 				</GRID>
 				<FORM keyfield="period_id" name="Periods" linkfield="fiscal_year_id" table="periods">
+					<USERFIELD>entity_id</USERFIELD>
 					<TEXTDATE w="150" h="20" x="10" y="10" title="Period Start">start_date</TEXTDATE>
 					<TEXTDATE w="150" h="20" x="290" y="10" title="Period End">end_date</TEXTDATE>
 					<CHECKBOX w="150" h="20" x="10" y="30" title="Period Opened">opened</CHECKBOX>
@@ -848,6 +863,13 @@
 				<TEXTFIELD w="150" h="20" x="290" y="50" title="Batch No." key="batch">batch</TEXTFIELD>
 			</FILTERFORM>
 			<JASPER reportfile="batch_items.jasper" name="Batch Items"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Items Purchased" type="vert" key="batch">
+			<FILTERFORM name="Items Purchased ">
+				<TEXTFIELD w="150" h="20" x="29" y="50" title="Batch No." key="batch">batch</TEXTFIELD>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="product_name" x="10" y="10" lptable="products" title="Product" lpkey="product_id">product_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER reportfile="batch_items_purchased.jasper" name="Items Purchased"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Productivity Reports" key="110">
@@ -881,9 +903,16 @@
 			</FILTERFORM>
 			<JASPER reportfile="son_market_productivity.jasper" name="Market Productivity "></JASPER>
 		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Cumulative Productivity per KAM " type="vert">
+			<FILTERFORM name="Cumulative Productivity per KAM ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="comulative_productivity_KAM.jasper" name="Cumulative Productivity per KAM "></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK noorg="true" w="700" h="500" name="Close Batch Number" key="115">
-		<GRID keyfield="batch_no" name="Batch No." where="(batch_no = getBatch_no())" groupby="batch_no,batch_date" key="2" table="orders">
+		<GRID noorg="true" keyfield="batch_no" name="Batch No." where="(batch_no = getBatch_no())" groupby="batch_no,batch_date" key="2" table="orders">
 			<TEXTFIELD w="40" title="Batch No.#">batch_no</TEXTFIELD>
 			<TEXTFIELD w="40" title="Date">batch_date</TEXTFIELD>
 			<ACTIONS>
@@ -907,7 +936,7 @@
 			<JASPER reportfile="agency_bonus.jasper" name=" Agency Bonus"></JASPER>
 		</FILTER>
 		<JASPER reportfile="active_bonus.jasper" name="Active Bonus"></JASPER>
-		<FILTER split="150" w="700" h="550" name="Bonus per KAM" type="vert" key="order_date">
+		<FILTER role="admin,staff" split="150" w="700" h="550" name="Bonus per KAM" type="vert" key="order_date">
 			<FILTERFORM name="Bonus per KAM ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
@@ -984,8 +1013,8 @@
 			<JASPER reportfile="summary_report.jasper" name="Summary Report"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" h="500" name="Entitys" key="100">
-		<GRID noorg="true" role="admin,staff" keyfield="entity_id" name="Entitys" where="function_role = 'admin' OR function_role = 'staff'" key="1" table="vw_entitys">
+	<DESK role="admin" w="700" h="500" name="Staff" key="100">
+		<GRID noorg="true" role="admin,staff" keyfield="entity_id" name="Staff" where="function_role = 'admin' OR function_role = 'staff'" key="1" table="vw_entitys">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -996,7 +1025,7 @@
 			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date of Birth">birth_date</TEXTFIELD>
-			<FORM keyfield="entity_id" name="Entitys" table="entitys">
+			<FORM keyfield="entity_id" name="Staff" table="entitys">
 				<DEFAULT default="org_id">0</DEFAULT>
 				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="30" lptable="entity_types" title="Entity Type">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="150" h="20" x="10" y="50" title="Entity Name">entity_name</TEXTFIELD>

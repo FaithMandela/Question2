@@ -14,14 +14,15 @@ WHERE passenger_id = '$P!{filterid}']]>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="rate_type_id" class="java.lang.Integer"/>
-	<field name="rate_type_name" class="java.lang.String"/>
+	<field name="rate_plan_id" class="java.lang.Integer"/>
 	<field name="rate_category_name" class="java.lang.String"/>
 	<field name="rate_id" class="java.lang.Integer"/>
+	<field name="rate_plan_name" class="java.lang.String"/>
+	<field name="standard_rate" class="java.lang.Float"/>
+	<field name="north_america_rate" class="java.lang.Float"/>
 	<field name="days_from" class="java.lang.String"/>
 	<field name="days_to" class="java.lang.String"/>
 	<field name="corporate_rate_id" class="java.lang.Integer"/>
-	<field name="standard_rate" class="java.lang.Float"/>
-	<field name="north_america_rate" class="java.lang.Float"/>
 	<field name="approved" class="java.lang.Boolean"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="countries" class="java.lang.String"/>
@@ -47,6 +48,8 @@ WHERE passenger_id = '$P!{filterid}']]>
 	<field name="approved_date" class="java.sql.Timestamp"/>
 	<field name="corporate_id" class="java.lang.Integer"/>
 	<field name="pin_no" class="java.lang.String"/>
+	<field name="reason_for_travel" class="java.lang.String"/>
+	<field name="departure_country" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -62,7 +65,7 @@ WHERE passenger_id = '$P!{filterid}']]>
 		</band>
 	</title>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="25" splitType="Stretch">
 			<textField hyperlinkType="Reference" hyperlinkTarget="Blank">
 				<reportElement x="0" y="0" width="391" height="20" uuid="17ae2cd0-7da7-4c9c-a145-25ea67ba4f0e"/>
 				<textElement markup="none">

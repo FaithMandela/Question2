@@ -137,6 +137,7 @@ DECLARE
 	v_department_id	integer;
 	v_bank_id		integer;
 	v_org_suffix    char(2);
+	v_member_id		integer;
 	rec 			RECORD;
 BEGIN
 
@@ -168,6 +169,9 @@ BEGIN
 		
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
+		
+		v_member_id := nextval('members_member_id_seq');
+		INSERT INTO members(org_id, member_id, entity_id, full_name) VALUES (NEW.org_id, v_member_id, NEW.entity_id, NEW.primary_contact);
 
 		INSERT INTO sys_emailed ( org_id, table_id, table_name)
 		VALUES ( NEW.org_id, NEW.entity_id, 'subscription');
@@ -176,12 +180,9 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-   
   
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
- 
-
  
 
 CREATE OR REPLACE FUNCTION ins_member_limit() RETURNS trigger AS $$

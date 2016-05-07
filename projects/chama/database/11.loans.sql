@@ -11,8 +11,10 @@ CREATE INDEX loan_types_org_id ON loan_types (org_id);
 CREATE TABLE loans (
 	loan_id 				serial primary key,
 	loan_type_id				integer not null references loan_types,
+	bank_account_id			integer references bank_accounts,
 	entity_id				integer not null references entitys,
 	org_id					integer references orgs,
+	
 	principle				real not null,
 	interest				real not null,
 	monthly_repayment			real not null,
@@ -29,14 +31,11 @@ CREATE TABLE loans (
 	details					text
 );
 
-ALTER TABLE loans ADD bank_account_id integer references bank_accounts;
-
 CREATE INDEX loans_bank_account_id ON loans (bank_account_id);
 CREATE INDEX loans_loan_type_id ON loans (loan_type_id);
 CREATE INDEX loans_entity_id ON loans (entity_id);
 CREATE INDEX loans_org_id ON loans (org_id);
 
-DROP TABLE loan_monthly cascade;
 CREATE TABLE loan_monthly (
 	loan_month_id 				serial primary key,
 	loan_id					integer references loans,
@@ -238,7 +237,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 BEGIN
-
+	SELECT CAST (repayment_period AS FLOAT);
 	IF(NEW.principle is null) OR (NEW.interest is null)THEN
 		RAISE EXCEPTION 'You have to enter a principle and interest amount';
 	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is null)THEN

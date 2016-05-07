@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consultant_bonus" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="127e3f1f-2582-4afd-921e-0c414455d4af">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consultant_bonus" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="127e3f1f-2582-4afd-921e-0c414455d4af">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -61,7 +61,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="81" height="20" uuid="5f81ac1b-4b66-4782-bf8a-5abc29feeb1d"/>
+				<reportElement x="0" y="0" width="96" height="20" uuid="5f81ac1b-4b66-4782-bf8a-5abc29feeb1d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -69,7 +69,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[Username]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="81" y="0" width="123" height="20" uuid="a9ca20a0-a23a-4041-a08b-e50693101223"/>
+				<reportElement x="96" y="0" width="123" height="20" uuid="a9ca20a0-a23a-4041-a08b-e50693101223"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -77,7 +77,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[Full Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="372" y="0" width="58" height="20" uuid="ae800d2e-89c9-4482-a023-b49d9471a79f"/>
+				<reportElement x="472" y="0" width="58" height="20" uuid="ae800d2e-89c9-4482-a023-b49d9471a79f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -85,7 +85,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[SON]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="485" y="0" width="87" height="28" uuid="eea5e973-3123-4539-a4b9-8cf1f6230961"/>
+				<reportElement x="630" y="0" width="122" height="20" uuid="eea5e973-3123-4539-a4b9-8cf1f6230961"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -93,10 +93,10 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[Total Bonus Earnings]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="28" width="572" height="1" uuid="a31739b1-0030-4051-b078-c5010f9e98bd"/>
+				<reportElement x="0" y="28" width="752" height="1" uuid="a31739b1-0030-4051-b078-c5010f9e98bd"/>
 			</line>
 			<staticText>
-				<reportElement x="430" y="0" width="55" height="28" uuid="97a48c7f-40fe-4cb3-a092-37153f18dd4f"/>
+				<reportElement x="530" y="0" width="100" height="20" uuid="97a48c7f-40fe-4cb3-a092-37153f18dd4f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -104,14 +104,14 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<text><![CDATA[Account Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="319" y="0" width="53" height="20" uuid="a03f0eb7-b7bd-4b9e-a728-f34c63054e1f"/>
+				<reportElement x="419" y="0" width="53" height="20" uuid="a03f0eb7-b7bd-4b9e-a728-f34c63054e1f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PCC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="204" y="0" width="115" height="20" uuid="c9adb5e2-337c-46c3-bd21-f8d272811e59"/>
+				<reportElement x="219" y="0" width="190" height="20" uuid="c9adb5e2-337c-46c3-bd21-f8d272811e59"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -122,7 +122,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 	<detail>
 		<band height="21" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="1" width="572" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="b58bc8db-1f99-47d9-9cdc-39974d7eceec">
+				<reportElement x="0" y="1" width="752" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="b58bc8db-1f99-47d9-9cdc-39974d7eceec">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -130,7 +130,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="81" height="15" isPrintWhenDetailOverflows="true" uuid="c269fd41-5d15-434c-ba99-d7cf6cacce23"/>
+				<reportElement x="0" y="0" width="96" height="15" isPrintWhenDetailOverflows="true" uuid="c269fd41-5d15-434c-ba99-d7cf6cacce23"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -138,7 +138,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="81" y="0" width="123" height="15" isPrintWhenDetailOverflows="true" uuid="aa43c68b-de0a-40bf-b0ec-a9d05a09ede6"/>
+				<reportElement x="96" y="1" width="123" height="15" isPrintWhenDetailOverflows="true" uuid="aa43c68b-de0a-40bf-b0ec-a9d05a09ede6"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -146,7 +146,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="372" y="0" width="57" height="15" isPrintWhenDetailOverflows="true" uuid="a5f03ae5-0dfa-4235-b2db-a4e1a13335d4"/>
+				<reportElement x="472" y="1" width="57" height="15" isPrintWhenDetailOverflows="true" uuid="a5f03ae5-0dfa-4235-b2db-a4e1a13335d4"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -154,7 +154,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="485" y="0" width="87" height="15" isPrintWhenDetailOverflows="true" uuid="6b81def8-ba98-45e3-9f62-9907fa8b0a31"/>
+				<reportElement x="630" y="0" width="122" height="15" isPrintWhenDetailOverflows="true" uuid="6b81def8-ba98-45e3-9f62-9907fa8b0a31"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -162,7 +162,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textFieldExpression><![CDATA[$F{bonus}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="429" y="0" width="56" height="15" isPrintWhenDetailOverflows="true" uuid="756c0729-c5e5-4e84-a481-02704fedbc66"/>
+				<reportElement x="530" y="1" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="756c0729-c5e5-4e84-a481-02704fedbc66"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -170,14 +170,14 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textFieldExpression><![CDATA[$F{is_active}==true?"Active":"Suspended"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="319" y="0" width="53" height="15" isPrintWhenDetailOverflows="true" uuid="212721c1-3995-4e2b-b3a8-9e992cc3b1cb"/>
+				<reportElement x="419" y="1" width="53" height="15" isPrintWhenDetailOverflows="true" uuid="212721c1-3995-4e2b-b3a8-9e992cc3b1cb"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="204" y="0" width="115" height="15" isPrintWhenDetailOverflows="true" uuid="66d0154b-c14b-498e-b652-484e3b0a727b"/>
+				<reportElement x="219" y="0" width="190" height="15" isPrintWhenDetailOverflows="true" uuid="66d0154b-c14b-498e-b652-484e3b0a727b"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
