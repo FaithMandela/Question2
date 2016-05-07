@@ -39,7 +39,7 @@ DECLARE
 v_contrib_amount	real;
 v_loan vw_loans%rowtype;
 BEGIN
-FOR v_loan IN SELECT * FROM vw_loans WHERE approve_status = 'Completed' AND is_closed = false
+FOR v_loan IN SELECT * FROM vw_loans WHERE approve_status = 'Approved'
 LOOP
 INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
 	VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
@@ -49,10 +49,12 @@ INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
 END LOOP;
 
 NEW.contribution_amount = NEW.deposit_amount - v_loan.monthly_repayment; 
+
    RETURN NEW;
 END;
 $BODY$
-LANGUAGE plpgsql;
+  LANGUAGE plpgsql;
+
 
   
 CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE On contributions
@@ -76,7 +78,7 @@ BEGIN
 		NEW.return_on_investment := v_invest - NEW.invest_amount;
 		NEW.yearly_dividend :=(v_invest/ NEW.period_years);
 		NEW.withdrwal_amount := v_invest;
-		NEW.approve_status := 'Completed';
+		
 	RETURN NEW;
 END;
 
@@ -89,77 +91,57 @@ CREATE TRIGGER ins_investment BEFORE INSERT OR UPDATE ON investments
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
+    
+
+CREATE OR REPLACE FUNCTION investment_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'investment applied';
+	
+	UPDATE investments SET approve_status = 'Completed'
+	WHERE (investment_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_applicants()
   RETURNS trigger AS
 $BODY$
 DECLARE
-	rec 			RECORD;
-	v_entity_id		integer;
+    rec             RECORD;
+    v_entity_id     integer;
+    v_exist         integer;
 BEGIN
-	IF (TG_OP = 'INSERT') THEN
-		
-		IF(NEW.entity_id IS NULL) THEN
-			SELECT entity_id INTO v_entity_id
-			FROM entitys
-			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
-				
-			IF(v_entity_id is null)THEN
-				
-
-				NEW.entity_id := nextval('entitys_entity_id_seq');
-
-				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
-					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, New.org_id, 0, 
-					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
-					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant,member');
-					ELSE
-				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
-			END IF;
-		END IF;
-
-		INSERT INTO sys_emailed (table_id,org_id, table_name)
-		VALUES (NEW.entity_id,NEW.org_id, 'applicant');
-	ELSIF (TG_OP = 'UPDATE') THEN
-		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
-		WHERE entity_id = NEW.entity_id;
-END IF;
-	RETURN NEW;
+  IF (TG_OP = 'INSERT') then 
+        Select count(applicant_email) INTO v_exist from applicants where applicant_email = NEW.applicant_email;
+        IF(v_exist != 0) THEN
+            Raise exception 'email exists';
+        END IF;
+  END IF;
+  
+  IF (TG_OP = 'UPDATE' AND NEW.approve_status = 'Approved') THEN
+         
+             INSERT INTO members(entity_id,org_id, surname, first_name, middle_name,phone, 
+            gender,marital_status,primary_email,objective, details) 
+         
+    VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
+    New.applicant_phone,New.gender,New.marital_status,New.applicant_email,NEW.objective, NEW.details)
+    RETURNING entity_id INTO v_entity_id;
+    NEW.entity_id := v_entity_id;
+    
+        INSERT INTO sys_emailed (sys_email_id, table_id,org_id, table_name)
+        VALUES (1,NEW.entity_id,NEW.org_id, 'applicant');
+        
+  END IF;  
+  RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
   FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
-
-CREATE OR REPLACE FUNCTION upd_applicants()
-  RETURNS trigger AS
-$BODY$
-BEGIN
-	IF (NEW.approve_status = 'Approved') THEN 
-	INSERT INTO members(entity_id,org_id, surname, first_name, middle_name,phone, 
-            gender,marital_status,objective, details)
-	VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
-	New.applicant_phone,New.gender,New.marital_status,NEW.objective, NEW.details);
-		ELSE
-			END IF;
-	RETURN NEW;
-END;
-$BODY$
-  LANGUAGE plpgsql;  
-  
-  
-CREATE TRIGGER upd_applicants AFTER INSERT OR UPDATE ON applicants
-    FOR EACH ROW EXECUTE PROCEDURE upd_applicants();
-  
-  
-CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON applicants
-    FOR EACH ROW EXECUTE PROCEDURE upd_action();
-    
-
----here
-
   
  CREATE OR REPLACE FUNCTION ins_members()
   RETURNS trigger AS
@@ -167,13 +149,21 @@ $BODY$
 DECLARE
 	rec 			RECORD;
 	v_entity_id		integer;
-	
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
-	NEW.entity_id := nextval('entitys_entity_id_seq');
 	
+	IF (New.primary_email is null)THEN
+		RAISE EXCEPTION 'You have to enter an Email';
+	ELSIF(NEW.first_name is null) AND (NEW.surname is null)THEN
+		RAISE EXCEPTION 'You have need to enter Sur name and full Name';
+	
+	ELSE
+	Raise NOTICE 'Thank you';
+	END IF;
+	NEW.entity_id := nextval('entitys_entity_id_seq');
+
 	INSERT INTO entitys (entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details)
-	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,1,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details) RETURNING entity_id INTO v_entity_id;
+	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details) RETURNING entity_id INTO v_entity_id;
 
 	NEW.entity_id := v_entity_id;
 
@@ -188,5 +178,56 @@ CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
   FOR EACH ROW  EXECUTE PROCEDURE ins_members(); 
 
 
+CREATE OR REPLACE FUNCTION gurrantor_accept(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Guranteeing Accepted';
+	
+	UPDATE gurrantors SET is_accepted = 'True'
+	WHERE (gurrantor_id = CAST($1 as int)) AND (amount > 0);
 
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION applicant_accept(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Applicant Added';
+	
+	UPDATE applicants SET approve_status = 'Approved'
+	WHERE (entity_id = CAST($1 as int)) AND (applicant_email is not null);
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION subscription_accepted(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Accepted';
+	
+	UPDATE subscriptions SET approve_status = 'Approved'
+	WHERE (subscription_id = CAST($1 as int)) And ;
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION subscription_rejected(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Accepted';
+	
+	UPDATE subscriptions SET approve_status = 'Reject'
+	WHERE (subscription_id = CAST($1 as int));
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
 

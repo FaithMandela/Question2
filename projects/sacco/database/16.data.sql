@@ -35,14 +35,16 @@ INSERT INTO investment_types( investment_type_id, org_id, investment_type_name, 
 
 DELETE FROM currency WHERE currency_id > 1;
 
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (2, 0, 0, 'admin', 'admin', 'admin@localhost', false, false, false, 'baraza');	
+INSERT INTO members(entity_id, member_id,org_id,person_title, full_name, surname, first_name, middle_name, 
+            gender, phone, primary_email, marital_status,active)
+    VALUES (2,0,0,'mr', 'member member member','member','member','member','M',234,'member@member.org','m','true');
+INSERT INTO applicants(
+            org_id, person_title, surname, first_name, middle_name, 
+            applicant_email, applicant_phone, approve_status, 
+            workflow_table_id)
+    VALUES (0, 'mr', 'applicant', 'applicant', 'applicant', 
+            'applicant@applicant.com',4545 ,'Completed' , 3);
 
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (3, 0, 0, 'applicant', 'applicant', 'applicant@localhost', false, false, false, 'baraza');
-
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (4, 0, 0, 'member', 'member', 'member@localhost', false, false, false, 'baraza');
 
 
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Aerospace');
@@ -88,11 +90,13 @@ SELECT pg_catalog.setval('workflows_workflow_id_seq', 5, true);
 
 
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
-VALUES (1, 0, 'Application', 'Thank you for your Application', 'Thank you {{name}} for your application.<br><br>
-Your user name is {{username}}<br> 
-Your password is {{password}}<br><br>
+VALUES (1, 0, 'Application', 'Thank you {{name}},<br><br> Thank for your application,<br>
+Your user name is {{username}}<br><br>
+Your password is {{first_password}}<br><br>
+
 Regards<br>
 Human Resources Manager<br>
+{{org_name}}, Sacco' <br>
 ');
 
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
@@ -105,19 +109,22 @@ Human Resources Manager<br>
 ');
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
 VALUES (4, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
-Welcome to OpenBaraza SaaS Platform<br><br>
+Welcome to Sacco Application<br><br>
 Your password is:<br><br>
 Your user name is {{username}}<br> 
 Your password is {{password}}<br><br>
 Regards,<br>
-OpenBaraza<br>
+Sacco Admin<br>
 ');
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
-VALUES (5, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
-Your OpenBaraza SaaS Platform application has been approved<br><br>
-Welcome to OpenBaraza SaaS Platform<br><br>
-Regards,<br>
-OpenBaraza<br>
+VALUES (5, 0, 'Subscription', 'Subscription', 'Hello {{name}},
+
+Welcome to Baraza Sacco Application
+
+Your user name is:  {{username}}
+Your password is:  {{passwd}}
+
+login at: http://demo.dewcis.com/sacco'
 ');
 
 SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 7, true);
