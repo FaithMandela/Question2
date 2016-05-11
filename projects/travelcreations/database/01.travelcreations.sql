@@ -17,11 +17,9 @@ CREATE TABLE sys_audit_trail (
 );
 
 CREATE TABLE sys_audit_details (
-	sys_audit_detail_id		serial primary key,
-	sys_audit_trail_id		integer references sys_audit_trail,
-	new_value				text
+	sys_audit_trail_id		integer references sys_audit_trail primary key,
+	old_value				text
 );
-CREATE INDEX sys_audit_details_sys_audit_trail_id ON sys_audit_details (sys_audit_trail_id);
 
 CREATE TABLE sys_errors (
 	sys_error_id			serial primary key,
@@ -54,44 +52,32 @@ CREATE TABLE currency (
 	currency_symbol			varchar(3)
 );
 
-CREATE TABLE orgs(
-  org_id 				serial primary key,
-  currency_id 			integer ,
-  parent_org_id 		integer,
-  org_name 				character varying(50) NOT NULL,
-  org_sufix 			character varying(4) NOT NULL,
-  is_default 			boolean NOT NULL DEFAULT true,
-  is_active 			boolean NOT NULL DEFAULT true,
-  logo 					character varying(50),
-  pin 					character varying(50),
-  details 				text,
-  pcc 					character varying(4),
-  sp_id 				character varying(16),
-  service_id 			character varying(32),
-  sender_name 			character varying(16),
-  sms_rate 				real NOT NULL DEFAULT 2,
-  show_fare 			boolean DEFAULT false,
-  gds_free_field 		integer DEFAULT 96,
-  credit_limit 			real NOT NULL DEFAULT 0,
-  UNIQUE (org_name,org_sufix)
+CREATE TABLE orgs (
+	org_id					serial primary key,
+	currency_id				integer references currency,
+	default_country_id		char(2) references sys_countrys,
+	parent_org_id			integer references orgs,
+	org_name				varchar(50) not null unique,
+	org_sufix				varchar(4) not null unique,
+	is_default				boolean not null default true,
+	is_active				boolean not null default true,
+	logo					varchar(50),
+	pin 					varchar(50),
+
+	system_key				varchar(64),
+	system_identifier		varchar(64),
+	MAC_address				varchar(64),
+	public_key				bytea,
+	license					bytea,
+
+	details					text
 );
-
-CREATE INDEX orgs_currency_id  ON orgs(currency_id);
-
-
-CREATE INDEX orgs_parent_org_id  ON orgs  (parent_org_id);
-
-
+CREATE INDEX orgs_currency_id ON orgs (currency_id);
+CREATE INDEX orgs_parent_org_id ON orgs (parent_org_id);
+CREATE INDEX orgs_default_country_id ON orgs(default_country_id);
 
 ALTER TABLE currency ADD org_id			integer references orgs;
 CREATE INDEX currency_org_id ON currency (org_id);
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (3, 'British Pound', 'BPD');
-INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'Euro', 'ERO');
-INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
-UPDATE currency SET org_id = 0;
-SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 
 CREATE TABLE currency_rates (
 	currency_rate_id		serial primary key,
@@ -102,8 +88,6 @@ CREATE TABLE currency_rates (
 );
 CREATE INDEX currency_rates_org_id ON currency_rates (org_id);
 CREATE INDEX currency_rates_currency_id ON currency_rates (currency_id);
-INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
-VALUES (0, 0, 1, 1);
 
 CREATE TABLE sys_queries (
 	sys_queries_id			serial primary key,
@@ -189,32 +173,27 @@ CREATE TABLE entity_types (
 );
 CREATE INDEX entity_types_org_id ON entity_types (org_id);
 
-CREATE TABLE entitys(
-  entity_id 					serial primary key,
-  entity_type_id 				integer NOT NULL  REFERENCES entity_types ,
-  org_id 						integer NOT NULL  REFERENCES orgs,
-  entity_name 					character varying(120) NOT NULL,
-  user_name 					character varying(120),
-  primary_email 				character varying(120),
-  primary_telephone 			character varying(50),
-  super_user 					boolean NOT NULL DEFAULT false,
-  entity_leader 				boolean NOT NULL DEFAULT false,
-  no_org 						boolean NOT NULL DEFAULT false,
-  function_role 				character varying(240),
-  date_enroled 					timestamp without time zone DEFAULT now(),
-  is_active 					boolean DEFAULT true,
-  entity_password 				character varying(64) NOT NULL DEFAULT md5('baraza'::text),
-  first_password 				character varying(64) NOT NULL DEFAULT 'baraza'::character varying,
-  new_password 					character varying(64),
-  start_url 					character varying(64),
-  is_picked 					boolean NOT NULL DEFAULT false,
-  details 						text,
-  son 							character varying(7),
-  phone_ph 						boolean DEFAULT true,
-  phone_pa 						boolean DEFAULT false,
-  phone_pb 						boolean DEFAULT false,
-  phone_pt 						boolean DEFAULT false,
-   UNIQUE (org_id, user_name)
+CREATE TABLE entitys (
+	entity_id				serial primary key,
+	entity_type_id			integer not null references entity_types,
+	org_id					integer not null references orgs,
+	entity_name				varchar(120) not null,
+	user_name				varchar(120) not null,
+	primary_email			varchar(120),
+	primary_telephone		varchar(50),
+	super_user				boolean default false not null,
+	entity_leader			boolean default false not null,
+	no_org					boolean default false not null,
+	function_role			varchar(240),
+	date_enroled			timestamp default now(),
+	is_active				boolean default true,
+	entity_password			varchar(64) not null,
+	first_password			varchar(64) not null,
+	new_password			varchar(64),
+	start_url				varchar(64),
+	is_picked				boolean default false not null,
+	details					text,
+	UNIQUE(org_id, user_name)
 );
 CREATE INDEX entitys_entity_type_id ON entitys (entity_type_id);
 CREATE INDEX entitys_org_id ON entitys (org_id);
@@ -293,6 +272,7 @@ CREATE INDEX sys_dashboard_org_id ON sys_dashboard (org_id);
 CREATE TABLE sys_emails (
 	sys_email_id			serial primary key,
 	org_id					integer references orgs,
+	use_type				integer default 1 not null,
 	sys_email_name			varchar(50),
 	default_email			varchar(120),
 	title					varchar(240) not null,
@@ -453,61 +433,33 @@ CREATE VIEW vw_sys_countrys AS
 		sys_countrys.sys_phone_code, sys_countrys.sys_country_name
 	FROM sys_continents INNER JOIN sys_countrys ON sys_continents.sys_continent_id = sys_countrys.sys_continent_id;
 
-CREATE OR REPLACE VIEW vw_address AS
- SELECT sys_countrys.sys_country_id,
-    sys_countrys.sys_country_name,
-    address.address_id,
-    address.org_id,
-    address.address_name,
-    address.table_name,
-    address.table_id,
-    address.post_office_box,
-    address.postal_code,
-    address.premises,
-    address.street,
-    address.town,
-    address.phone_number,
-    address.extension,
-    address.mobile,
-    address.fax,
-    address.email,
-    address.is_default,
-    address.website,
-    address.details,
-    address_types.address_type_id,
-    address_types.address_type_name
-   FROM address
-     JOIN sys_countrys ON address.sys_country_id = sys_countrys.sys_country_id
-     LEFT JOIN address_types ON address.address_type_id = address_types.address_type_id;
+CREATE VIEW vw_address AS
+	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name,
+		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town,
+		address.phone_number, address.extension, address.mobile, address.fax, address.email, address.is_default, address.website, address.details,
+		address_types.address_type_id, address_types.address_type_name
+	FROM address INNER JOIN sys_countrys ON address.sys_country_id = sys_countrys.sys_country_id
+		LEFT JOIN address_types ON address.address_type_id = address_types.address_type_id;
 
-CREATE OR REPLACE VIEW vw_org_address AS
- SELECT vw_address.sys_country_id AS org_sys_country_id,
-    vw_address.sys_country_name AS org_sys_country_name,
-    vw_address.address_id AS org_address_id,
-    vw_address.table_id AS org_table_id,
-    vw_address.table_name AS org_table_name,
-    vw_address.post_office_box AS org_post_office_box,
-    vw_address.postal_code AS org_postal_code,
-    vw_address.premises AS org_premises,
-    vw_address.street AS org_street,
-    vw_address.town AS org_town,
-    vw_address.phone_number AS org_phone_number,
-    vw_address.extension AS org_extension,
-    vw_address.mobile AS org_mobile,
-    vw_address.fax AS org_fax,
-    vw_address.email AS org_email,
-    vw_address.website AS org_website
-   FROM vw_address
-  WHERE vw_address.table_name::text = 'orgs'::text AND vw_address.is_default = true;
-
+CREATE VIEW vw_org_address AS
+	SELECT vw_address.sys_country_id as org_sys_country_id, vw_address.sys_country_name as org_sys_country_name,
+		vw_address.address_id as org_address_id, vw_address.table_id as org_table_id, vw_address.table_name as org_table_name,
+		vw_address.post_office_box as org_post_office_box, vw_address.postal_code as org_postal_code,
+		vw_address.premises as org_premises, vw_address.street as org_street, vw_address.town as org_town,
+		vw_address.phone_number as org_phone_number, vw_address.extension as org_extension,
+		vw_address.mobile as org_mobile, vw_address.fax as org_fax, vw_address.email as org_email,
+		vw_address.website as org_website
+	FROM vw_address
+	WHERE (vw_address.table_name = 'orgs') AND (vw_address.is_default = true);
+	
 CREATE VIEW vw_address_entitys AS
 	SELECT vw_address.address_id, vw_address.address_name, vw_address.table_id, vw_address.table_name,
 		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.is_default,
-		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town,
+		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
 		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
-	WHERE (vw_address.table_name = 'entitys');
-
+	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
+	
 CREATE VIEW vw_org_select AS
 	(SELECT org_id, parent_org_id, org_name
 	FROM orgs
@@ -517,124 +469,52 @@ CREATE VIEW vw_org_select AS
 	FROM orgs
 	WHERE (is_active = true));
 
-CREATE OR REPLACE VIEW vw_orgs AS
- SELECT orgs.org_id,
-    orgs.org_name,
-    orgs.is_default,
-    orgs.is_active,
-    orgs.logo,
-    orgs.details,
-    orgs.pcc,
-    orgs.gds_free_field,
-    orgs.show_fare,
-    vw_org_address.org_sys_country_id,
-    vw_org_address.org_sys_country_name,
-    vw_org_address.org_address_id,
-    vw_org_address.org_table_name,
-    vw_org_address.org_post_office_box,
-    vw_org_address.org_postal_code,
-    vw_org_address.org_premises,
-    vw_org_address.org_street,
-    vw_org_address.org_town,
-    vw_org_address.org_phone_number,
-    vw_org_address.org_extension,
-    vw_org_address.org_mobile,
-    vw_org_address.org_fax,
-    vw_org_address.org_email,
-    vw_org_address.org_website
-   FROM orgs
-     LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+CREATE VIEW vw_orgs AS
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
 
-CREATE OR REPLACE VIEW vw_entity_address AS
- SELECT vw_address.address_id,
-    vw_address.address_name,
-    vw_address.sys_country_id,
-    vw_address.sys_country_name,
-    vw_address.table_id,
-    vw_address.table_name,
-    vw_address.is_default,
-    vw_address.post_office_box,
-    vw_address.postal_code,
-    vw_address.premises,
-    vw_address.street,
-    vw_address.town,
-    vw_address.phone_number,
-    vw_address.extension,
-    vw_address.mobile,
-    vw_address.fax,
-    vw_address.email,
-    vw_address.website
-   FROM vw_address
-  WHERE vw_address.table_name::text = 'entitys'::text AND vw_address.is_default = true;
+		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
+		vw_org_address.org_address_id, vw_org_address.org_table_name,
+		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
+		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
+		vw_org_address.org_phone_number, vw_org_address.org_extension,
+		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
+	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
-CREATE OR REPLACE VIEW vw_entitys AS
- SELECT vw_orgs.org_id,
-    vw_orgs.org_name,
-    vw_orgs.is_default AS org_is_default,
-    vw_orgs.is_active AS org_is_active,
-    vw_orgs.logo AS org_logo,
-    vw_orgs.org_sys_country_id,
-    vw_orgs.org_sys_country_name,
-    vw_orgs.org_address_id,
-    vw_orgs.org_table_name,
-    vw_orgs.org_post_office_box,
-    vw_orgs.org_postal_code,
-    vw_orgs.org_premises,
-    vw_orgs.org_street,
-    vw_orgs.org_town,
-    vw_orgs.org_phone_number,
-    vw_orgs.org_extension,
-    vw_orgs.org_mobile,
-    vw_orgs.org_fax,
-    vw_orgs.org_email,
-    vw_orgs.org_website,
-    vw_entity_address.address_id,
-    vw_entity_address.address_name,
-    vw_entity_address.sys_country_id,
-    vw_entity_address.sys_country_name,
-    vw_entity_address.table_name,
-    vw_entity_address.is_default,
-    vw_entity_address.post_office_box,
-    vw_entity_address.postal_code,
-    vw_entity_address.premises,
-    vw_entity_address.street,
-    vw_entity_address.town,
-    vw_entity_address.phone_number,
-    vw_entity_address.extension,
-    vw_entity_address.mobile,
-    vw_entity_address.fax,
-    vw_entity_address.email,
-    vw_entity_address.website,
-    entitys.entity_id,
-    entitys.entity_name,
-    entitys.user_name,
-    entitys.super_user,
-    entitys.entity_leader,
-    entitys.date_enroled,
-    entitys.is_active,
-    entitys.entity_password,
-    entitys.first_password,
-    entitys.function_role,
-    entitys.primary_email,
-    entitys.primary_telephone,
-    entity_types.entity_type_id,
-    entity_types.entity_type_name,
-    entity_types.entity_role,
-    entity_types.use_key
-   FROM entitys
-     LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id
-     JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-     JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
-     CREATE OR REPLACE VIEW vw_sys_countrys AS
-      SELECT sys_continents.sys_continent_id,
-         sys_continents.sys_continent_name,
-         sys_countrys.sys_country_id,
-         sys_countrys.sys_country_code,
-         sys_countrys.sys_country_number,
-         sys_countrys.sys_phone_code,
-         sys_countrys.sys_country_name
-        FROM sys_continents
-          JOIN sys_countrys ON sys_continents.sys_continent_id = sys_countrys.sys_continent_id;
+CREATE VIEW vw_entity_address AS
+	SELECT vw_address.address_id, vw_address.address_name,
+		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_id, vw_address.table_name,
+		vw_address.is_default, vw_address.post_office_box, vw_address.postal_code, vw_address.premises,
+		vw_address.street, vw_address.town, vw_address.phone_number, vw_address.extension, vw_address.mobile,
+		vw_address.fax, vw_address.email, vw_address.website
+	FROM vw_address
+	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
+
+CREATE VIEW vw_entitys AS
+	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
+		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
+
+		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
+		vw_orgs.org_address_id, vw_orgs.org_table_name,
+		vw_orgs.org_post_office_box, vw_orgs.org_postal_code,
+		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town,
+		vw_orgs.org_phone_number, vw_orgs.org_extension,
+		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
+
+		vw_entity_address.address_id, vw_entity_address.address_name,
+		vw_entity_address.sys_country_id, vw_entity_address.sys_country_name, vw_entity_address.table_name,
+		vw_entity_address.is_default, vw_entity_address.post_office_box, vw_entity_address.postal_code,
+		vw_entity_address.premises, vw_entity_address.street, vw_entity_address.town,
+		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile,
+		vw_entity_address.fax, vw_entity_address.email, vw_entity_address.website,
+
+		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
+		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
+		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
+		entity_types.entity_type_id, entity_types.entity_type_name,
+		entity_types.entity_role, entity_types.use_key
+	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
+		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
+		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
 
 CREATE VIEW vw_entity_subscriptions AS
 	SELECT entity_types.entity_type_id, entity_types.entity_type_name, entitys.entity_id, entitys.entity_name,
@@ -763,15 +643,12 @@ CREATE VIEW vw_approvals_entitys AS
 	WHERE (approvals.forward_id is null) AND (reporting.primary_report = true) AND (reporting.is_active = true)
 		AND (vw_workflow_phases.use_reporting = true));
 
-
-CREATE OR REPLACE VIEW tomcat_users AS
-    SELECT entitys.user_name,
-     entitys.entity_password,
-     entity_types.entity_role
-    FROM entity_subscriptions
-      JOIN entitys ON entity_subscriptions.entity_id = entitys.entity_id
-      JOIN entity_types ON entity_subscriptions.entity_type_id = entity_types.entity_type_id
-      WHERE entitys.is_active = true;
+CREATE VIEW tomcat_users AS
+	SELECT entitys.user_name, entitys.Entity_password, entity_types.entity_role
+	FROM (Entity_subscriptions
+		INNER JOIN entitys ON Entity_subscriptions.entity_id = entitys.entity_id)
+		INNER JOIN entity_types ON Entity_subscriptions.entity_type_id = entity_types.entity_type_id
+	WHERE entitys.is_active = true;
 
 CREATE OR REPLACE FUNCTION default_currency(varchar(16)) RETURNS integer AS $$
 	SELECT orgs.currency_id
@@ -853,7 +730,7 @@ BEGIN
 	FROM entitys
 	WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)))
 		AND entity_id <> NEW.entity_id;
-
+		
 	IF(v_entity_id is not null)THEN
 		RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 	END IF;
@@ -1231,9 +1108,44 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE FUNCTION get_phase_entitys(integer) RETURNS varchar(320) AS $$
+DECLARE
+    myrec			RECORD;
+	myentitys		varchar(320);
+BEGIN
+	myentitys := null;
+	FOR myrec IN SELECT entitys.entity_name
+		FROM entitys INNER JOIN entity_subscriptions ON entitys.entity_id = entity_subscriptions.entity_id
+		WHERE (entity_subscriptions.entity_type_id = $1) LOOP
 
+		IF (myentitys is null) THEN
+			IF (myrec.entity_name is not null) THEN
+				myentitys := myrec.entity_name;
+			END IF;
+		ELSE
+			IF (myrec.entity_name is not null) THEN
+				myentitys := myentitys || ', ' || myrec.entity_name;
+			END IF;
+		END IF;
+
+	END LOOP;
+
+	RETURN myentitys;
+END;
+$$ LANGUAGE plpgsql;
 
 --- Data
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (3, 'British Pound', 'BPD');
+INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'Euro', 'ERO');
+INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
+UPDATE currency SET org_id = 0;
+SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
+
+INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
+VALUES (0, 0, 1, 1);
+
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');
@@ -1252,449 +1164,3 @@ SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
 
 
 
-
-CREATE TABLE rate_category(
-  rate_category_id 			serial primary key,
-  rate_category_name 		character varying(120),
-  group_rates boolean
-);
-CREATE TABLE corporate_rate_category
-(
-  corporate_rate_category_id serial primary key,
-  corporate_rate_category_name character varying(120)
-);
-
-CREATE TABLE corporates(
-  corporate_id 				serial primary key,
-  corporate_name 				character varying(50) NOT NULL,
-  is_default 			boolean NOT NULL DEFAULT true,
-  is_active 			boolean NOT NULL DEFAULT true,
-  logo 					character varying(50),
-  pin 					character varying(50),
-  details 				text,
-  credit_limit 			real NOT NULL DEFAULT 0,
-  UNIQUE (corporate_name)
-);
-
-
-
-CREATE TABLE rate_types
-  (
-    rate_type_id 		serial NOT NULL,
-    rate_type_name 	character varying(100),
-    age_limit 		integer DEFAULT 70,
-    details 		text,
-    age_from 		integer,
-    age_to 		    integer,
-    rate_category_id  integer REFERENCES rate_category,
-    CONSTRAINT rate_types_pkey PRIMARY KEY (rate_type_id)
-  );
-  CREATE INDEX rate_category_id_rf  ON rate_category (rate_category_id);
-
-  CREATE TABLE benefit_types
-  (
-    benefit_type_id 		serial NOT NULL,
-    benefit_type_name 		character varying(100),
-    benefit_section 		character varying(5),
-    details 			    text,
-
-    CONSTRAINT benefit_types_pkey PRIMARY KEY (benefit_type_id)
-  );
-
-  CREATE TABLE benefits
-  (
-    benefit_id 		    serial NOT NULL,
-    rate_type_id 		integer,
-    benefit_type_id 	integer,
-    individual 		    text,
-    others 		        text,
-    CONSTRAINT benefits_pkey PRIMARY KEY (benefit_id),
-    CONSTRAINT benefits_benefit_type_id_fkey FOREIGN KEY (benefit_type_id)
-        REFERENCES benefit_types (benefit_type_id) MATCH SIMPLE
-        ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT benefits_rate_type_id_fkey FOREIGN KEY (rate_type_id)
-        REFERENCES rate_types (rate_type_id) MATCH SIMPLE
-        ON UPDATE NO ACTION ON DELETE NO ACTION,
-    CONSTRAINT benefits_rate_type_id_benefit_type_id_key UNIQUE (rate_type_id, benefit_type_id)
-  );
-
-
-  CREATE INDEX benefits_benefit_type_id
-    ON benefits
-    USING btree
-    (benefit_type_id);
-
-  CREATE INDEX benefits_rate_type_id
-    ON benefits
-    USING btree
-    (rate_type_id);
-
-
-
-
-
-    CREATE TABLE corporate_rate_types
-    (
-      rate_type_id 		serial NOT NULL,
-      rate_type_name 	character varying(100),
-      age_limit 		integer DEFAULT 80,
-      details 		text,
-      corporate_rate_category_id integer,
-      CONSTRAINT corporate_rate_types_pkey PRIMARY KEY (rate_type_id)
-    );
-
-
-    CREATE TABLE corporate_benefit_types
-    (
-      corporate_benefit_type_id 		serial NOT NULL,
-      corporate_section                 character varying(5),
-      corporate_benefit_type_name 		character varying(100),
-      details 			    text,
-      CONSTRAINT corporate_benefit_types_pkey PRIMARY KEY (corporate_benefit_type_id)
-    );
-
-    CREATE TABLE corporate_benefits
-    (
-      benefit_id 		    serial NOT NULL,
-      rate_type_id 		integer,
-      corporate_benefit_type_id 	integer,
-      individual 		    text,
-      others 		        text,
-      CONSTRAINT corporate_benefits_pkey PRIMARY KEY (benefit_id),
-      CONSTRAINT corporate_benefits_benefit_type_id_fkey FOREIGN KEY (corporate_benefit_type_id)
-          REFERENCES corporate_benefit_types (corporate_benefit_type_id) MATCH SIMPLE
-          ON UPDATE NO ACTION ON DELETE NO ACTION,
-      CONSTRAINT benefits_rate_type_id_fkey FOREIGN KEY (rate_type_id)
-          REFERENCES corporate_rate_types (rate_type_id) MATCH SIMPLE
-          ON UPDATE NO ACTION ON DELETE NO ACTION,
-      CONSTRAINT corporate_benefits_rate_type_id_benefit_type_id_key UNIQUE (rate_type_id, corporate_benefit_type_id)
-    );
-
-    CREATE INDEX corporate_benefits_benefit_type_id
-      ON corporate_benefits
-      USING btree
-      (corporate_benefit_type_id);
-
-    CREATE INDEX corporate_benefits_rate_type_id
-      ON corporate_benefits
-      USING btree
-      (rate_type_id);
-
-      CREATE TABLE corporate_rates
-      (
-        corporate_rate_id 		        serial NOT NULL,
-        rate_type_id 		    integer,
-        days_from 		    integer,
-        days_to 		        integer,
-        standard_rate 	    real,
-        north_america_rate 	real,
-        CONSTRAINT corporate_rates_pkey PRIMARY KEY (corporate_rate_id),
-        CONSTRAINT corporate_rates_rate_type_id_fkey FOREIGN KEY (rate_type_id)
-            REFERENCES corporate_rate_types (rate_type_id) MATCH SIMPLE
-            ON UPDATE NO ACTION ON DELETE NO ACTION
-      );
-
-
-
-    CREATE TABLE rates
-    (
-      rate_id 		        serial NOT NULL,
-      rate_type_id 		    integer,
-      days_from 		    integer,
-      days_to 		        integer,
-      standard_rate 	    real,
-      north_america_rate 	real,
-      CONSTRAINT rates_pkey PRIMARY KEY (rate_id),
-      CONSTRAINT rates_rate_type_id_fkey FOREIGN KEY (rate_type_id)
-          REFERENCES rate_types (rate_type_id) MATCH SIMPLE
-          ON UPDATE NO ACTION ON DELETE NO ACTION
-    );
-
-CREATE TABLE apps_list(
-  apps_list_id 			serial primary key,
-  org_id 				integer REFERENCES orgs,
-  app_name 				character varying(50),
-  descriptions 			text,
-  query_date 			timestamp without time zone NOT NULL DEFAULT now(),
-   UNIQUE (app_name)
-);
-
-CREATE INDEX apps_list_org_id  ON apps_list   (org_id);
-
-CREATE TABLE apps_subscriptions(
-  app_subscriptions_id serial primary key,
-  org_id integer REFERENCES orgs,
-  apps_list_id integer REFERENCES apps_list,
-  subscription_date timestamp without time zone NOT NULL DEFAULT now()
-);
-
-CREATE INDEX apps_subscriptions_org_id  ON apps_subscriptions   (org_id);
-CREATE INDEX apps_subscriptions_list_id  ON apps_subscriptions   (apps_list_id);
-
-
-CREATE TABLE passengers
-(
-  passenger_id serial NOT NULL,
-  rate_id integer,
-  entity_id integer,
-  org_id integer,
-  passenger_name character varying(100),
-  passenger_mobile character varying(15),
-  passenger_email character varying(100),
-  passenger_age integer DEFAULT 0,
-  days_covered integer,
-  nok_name character varying(100),
-  nok_mobile character varying(15),
-  nok_national_id character varying(20),
-  is_north_america boolean DEFAULT false,
-  cover_amount real,
-  approved boolean DEFAULT false,
-  details text,
-  days_from character varying(20),
-  days_to character varying(20),
-  destown character varying(50),
-  approved_date timestamp without time zone,
-  sys_country_id character(2),
-  passenger_id_no character varying(20),
-  passenger_dob character varying(20),
-  corporate_id integer,
-  corporate_rate_id integer,
-  pin_no character varying(25),
-  totalamount_covered real,
-  countries text,
-  policy_number character varying(50),
-  CONSTRAINT passengers_pkey PRIMARY KEY (passenger_id),
-  CONSTRAINT passengers_corporate_id_fkey FOREIGN KEY (corporate_id)
-      REFERENCES corporates (corporate_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT passengers_corporate_rate_id_fkey FOREIGN KEY (corporate_rate_id)
-      REFERENCES corporate_rates (corporate_rate_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT passengers_entity_id_fkey FOREIGN KEY (entity_id)
-      REFERENCES entitys (entity_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT passengers_org_id_fkey FOREIGN KEY (org_id)
-      REFERENCES orgs (org_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT passengers_rate_id_fkey FOREIGN KEY (rate_id)
-      REFERENCES rates (rate_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT passengers_sys_country_id_fkey FOREIGN KEY (sys_country_id)
-      REFERENCES sys_countrys (sys_country_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-	CREATE INDEX passenger_sys_country_id  ON passengers   (sys_country_id);
-      CREATE INDEX passengers_org_id
-        ON passengers
-        USING btree
-        (org_id);
-
-      CREATE INDEX passengers_rate_id
-        ON passengers
-        USING btree
-        (rate_id);
-
-
-
-     CREATE TABLE policy_sequence (
-	  policy_no_id serial primary key,
-	  policy_sequence_no character varying(50)
-	  );
-	  INSERT INTO policy_sequence (policy_sequence_no ) VALUES('036A0528342');
-
-
-		CREATE FUNCTION ins_policy_number() RETURNS trigger AS $$
-			DECLARE
-			  base_val  char(50);
-			  yr 	integer;
-			  passenger_no char(4);
-			  sequence_no char(50);
-			BEGIN
-				yr :=(SELECT to_char as year from to_char(current_timestamp, 'YY'));
-				passenger_no := (SELECT TO_CHAR(NEW.passenger_id,'fm0000'));
-
-				sequence_no :=(SELECT policy_sequence_no from policy_sequence);
-				base_val := trim(sequence_no || passenger_no || '-' || yr);
-				NEW.policy_number := base_val;
-				RETURN NEW;
-		END; $$ LANGUAGE plpgsql;
-
-
-		CREATE TRIGGER ins_policy_number
-		  BEFORE INSERT ON passengers
-		  FOR EACH ROW EXECUTE PROCEDURE ins_policy_number();
-
-
-      CREATE OR REPLACE FUNCTION upd_passengers()
-        RETURNS trigger AS
-      	$BODY$
-      	DECLARE
-      	BEGIN
-      	IF(NEW.approved = true) THEN
-      		NEW.approved_date = CURRENT_TIMESTAMP;
-      	END IF;
-      	RETURN NEW;
-      	END;
-      	$BODY$
-        LANGUAGE plpgsql VOLATILE
-        COST 100;
-
-
-
-CREATE OR REPLACE FUNCTION ins_passengers()  RETURNS trigger AS
-	$BODY$
-	BEGIN
-	 INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
-	 VALUES(1,NEW.org_id,NEW.passenger_id,'passengers','Certificate Number:'||NEW.passenger_id||'\n\nPassanger Name:'||NEW.passenger_name);
-
-	RETURN NEW;
-	END;
-	$BODY$
-	LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_passengers AFTER INSERT ON passengers
-FOR EACH ROW  EXECUTE PROCEDURE ins_passengers();
-
-	CREATE OR REPLACE VIEW vw_rates AS
-     SELECT vw_rate_types.rate_type_id,  vw_rate_types.rate_type_name,  rates.rate_id,  rates.days_from,
-   rates.days_to,  rates.standard_rate,  rates.north_america_rate,  vw_rate_types.rate_category_name,
-   vw_rate_types.rate_category_id,  vw_rate_types.rate_plan_id,  vw_rate_types.rate_plan_name,
-   vw_rate_types.age_from,  vw_rate_types.age_to
-  FROM rates
-    JOIN vw_rate_types ON rates.rate_type_id = vw_rate_types.rate_type_id;
-
-CREATE OR REPLACE VIEW vw_corporate_rates AS
-SELECT corporate_rate_types.rate_type_id, corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
-  corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate
- FROM corporate_rates
-   JOIN corporate_rate_types ON corporate_rates.rate_type_id = corporate_rate_types.rate_type_id;
-
-     CREATE OR REPLACE VIEW vw_benefits AS
-      SELECT benefit_types.benefit_type_id,  benefit_types.benefit_type_name,  benefit_types.benefit_section,
-         rate_types.rate_type_id, rate_types.rate_type_name,  benefits.benefit_id,  benefits.individual, benefits.others
-        FROM benefits
-          JOIN benefit_types ON benefits.benefit_type_id = benefit_types.benefit_type_id
-          JOIN rate_types ON benefits.rate_type_id = rate_types.rate_type_id;
-
-
-
-CREATE OR REPLACE VIEW vw_corporate_benefits AS
-SELECT corporate_benefits.corporate_benefit_type_id,  corporate_benefit_types.corporate_benefit_type_name,
-  corporate_benefits.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_benefits.benefit_id,
-  corporate_benefits.individual,  corporate_benefits.others
- FROM corporate_benefits
-   JOIN corporate_benefit_types ON corporate_benefits.corporate_benefit_type_id = corporate_benefit_types.corporate_benefit_type_id
-   JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
-
-
-
-CREATE OR REPLACE VIEW vw_rate_types AS
-SELECT rate_types.rate_type_id,  rate_types.rate_type_name,  rate_types.age_limit,  rate_types.details,
-  rate_types.age_from,  rate_types.age_to,  rate_category.rate_category_name
- FROM rate_types
-   JOIN rate_category ON rate_types.rate_category_id = rate_category.rate_category_id ;
-
-CREATE OR REPLACE VIEW vw_corporate_rate_types AS
-SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_rate_types.age_limit,
-   corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name
-  FROM corporate_rate_types
-  JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id ;
-
-
-CREATE OR REPLACE VIEW vw_passengers AS
-SELECT orgs.org_id,  orgs.org_name,  vw_rates.rate_type_id,  vw_rates.rate_type_name,  vw_rate_types.rate_category_name,
-  vw_rates.rate_id,  passengers.days_from,  passengers.days_to,  passengers.corporate_rate_id,  vw_rates.standard_rate,
-  vw_rates.north_america_rate,  passengers.approved,  passengers.entity_id,  passengers.countries,
-  passengers.passenger_id,  passengers.passenger_name,  passengers.passenger_mobile,  passengers.passenger_email,
-  passengers.passenger_age,  passengers.days_covered,  passengers.nok_name,  passengers.nok_mobile,
-  passengers.passenger_id_no,  passengers.nok_national_id,  passengers.cover_amount,  passengers.totalAmount_covered,
-  passengers.is_north_america,  passengers.details,  passengers.passenger_dob,  passengers.policy_number,
-  entitys.entity_name,  passengers.destown,  sys_countrys.sys_country_name,  passengers.approved_date,
-  passengers.corporate_id,  passengers.pin_no
- FROM passengers
-   JOIN orgs ON passengers.org_id = orgs.org_id
-   JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
-   JOIN vw_rate_types ON vw_rates.rate_type_id = vw_rate_types.rate_type_id
-   JOIN entitys ON passengers.entity_id = entitys.entity_id
-   JOIN sys_countrys ON passengers.sys_country_id = sys_countrys.sys_country_id;
-
-        CREATE OR REPLACE VIEW vw_staff AS
-            SELECT orgs.org_id,   orgs.org_name, vw_corporate_rates.rate_type_id,   vw_corporate_rates.rate_type_name,
-               passengers.days_from,  passengers.days_to,   passengers.corporate_rate_id,
-               vw_corporate_rates.standard_rate,  vw_corporate_rates.north_america_rate,   passengers.approved,
-               passengers.entity_id,  passengers.passenger_id, passengers.passenger_name,  passengers.passenger_mobile,
-               passengers.passenger_email,  passengers.passenger_age,   passengers.days_covered,
-               passengers.nok_name,    passengers.nok_mobile, passengers.passenger_id_no,  passengers.nok_national_id,
-               passengers.cover_amount,  passengers.is_north_america,  passengers.details,  passengers.passenger_dob,
-               entitys.entity_name,   passengers.destown,  sys_countrys.sys_country_name,    passengers.approved_date,
-               passengers.corporate_id
-              FROM passengers
-                JOIN orgs ON passengers.org_id = orgs.org_id
-                JOIN vw_corporate_rates ON passengers.corporate_rate_id = vw_corporate_rates.corporate_rate_id
-                JOIN entitys ON passengers.entity_id = entitys.entity_id
-                JOIN sys_countrys ON passengers.sys_country_id = sys_countrys.sys_country_id;
-
-
-
-CREATE OR REPLACE VIEW vw_app_users AS
- SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.pcc, vw_orgs.gds_free_field, vw_orgs.show_fare,
-    vw_orgs.logo,  vw_entity_address.table_id, vw_entity_address.table_name, vw_entity_address.post_office_box,
-    vw_entity_address.postal_code, vw_entity_address.premises, vw_entity_address.street,
-    vw_entity_address.town, vw_entity_address.phone_number, vw_entity_address.email,
-    vw_entity_address.sys_country_name, entitys.entity_id, entitys.entity_name, entitys.user_name,
-    entitys.entity_password,  entitys.son, entitys.phone_ph,  entitys.phone_pa, entitys.phone_pb,  entitys.phone_pt,
-    apps_list.app_name
-   FROM entitys
-     LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id
-     JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-     JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id
-     JOIN apps_subscriptions ON entitys.org_id = apps_subscriptions.org_id
-     JOIN apps_list ON apps_subscriptions.apps_list_id = apps_list.apps_list_id;
-
-CREATE OR REPLACE VIEW vw_app_subscriptions AS
- SELECT vw_orgs.org_id, apps_subscriptions.app_subscriptions_id,
-    vw_orgs.org_name,
-    apps_list.descriptions,
-    apps_list.app_name
-
-   FROM apps_subscriptions
-     JOIN apps_list ON apps_subscriptions.apps_list_id = apps_list.apps_list_id
-     JOIN vw_orgs ON apps_subscriptions.org_id = vw_orgs.org_id;
-
- CREATE OR REPLACE VIEW vw_app_list AS
- SELECT vw_orgs.org_id, apps_list.apps_list_id,
-    vw_orgs.org_name,
-    apps_list.app_name,apps_list.query_date,
-    apps_list.descriptions
-
-   FROM apps_list
-     JOIN vw_orgs ON apps_list.org_id = vw_orgs.org_id;
-
-
-CREATE FUNCTION get_benefit_section_a(integer) RETURNS text AS $$
-    SELECT individual AS result from vw_benefits WHERE rate_type_id = $1 AND benefit_section IN('1A');
-$$LANGUAGE SQL;
-CREATE FUNCTION get_benefit_section_b(integer) RETURNS text AS $$
-    SELECT individual AS result from vw_benefits WHERE rate_type_id = $1 AND benefit_section IN('1B');
-$$LANGUAGE SQL;
-
-drop function getCreditLimit(integer);
-CREATE FUNCTION getCreditLimit(integer) RETURNS double precision AS $$
-	DECLARE
-		credit_limit 	double precision;
-		cover_amount 	double precision;
-		paid_amount 	double precision;
-		current_limit 	double precision;
-		BEGIN
-			credit_limit := COALESCE((SELECT orgs.credit_limit FROM orgs WHERE orgs.org_id = $1 GROUP BY orgs.credit_limit),0);
-			cover_amount:= COALESCE((SELECT SUM(passengers.totalamount_covered)AS cover_amount FROM passengers WHERE org_id = $1
-				GROUP BY org_id),0);
-
-			paid_amount :=COALESCE((SELECT SUM(payment_amount)as payment_amount FROM payments WHERE org_id = $1 GROUP BY org_id),0);
-
-			current_limit := (credit_limit + paid_amount) - cover_amount;
-
-
-		RETURN current_limit;
-		END;
-$$LANGUAGE plpgsql;
