@@ -163,4 +163,21 @@ CREATE VIEW vw_course_load AS
 
 		ON qcourseview.qcourseid = a.qcourseid;
 		
+
+DROP VIEW studentmarkview;
+CREATE VIEW studentmarkview AS
+	SELECT marks.markid, marks.grade, marks.markweight, registrations.existingid,
+		getfirstquarterid(registrations.existingid) as firstquarter,
+		students.studentid, students.studentname, students.accountnumber, students.nationality,
+		students.sex, students.maritalstatus, students.birthdate,
+		c3.countryname as nationalitycountry, 
+		studentdegrees.studentdegreeid, degrees.degreeid, degrees.degreename,
+		sublevels.sublevelid, sublevels.sublevelname,
+		getcoremajor(studentdegrees.studentdegreeid) as core_major
+	FROM (registrations INNER JOIN marks ON registrations.markid = marks.markid)
+		INNER JOIN students ON registrations.existingid = students.studentid
+		INNER JOIN countrys as c3 ON students.nationality = c3.countryid
+		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid
+		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid
+		INNER JOIN sublevels ON studentdegrees.sublevelid = sublevels.sublevelid;
 		
