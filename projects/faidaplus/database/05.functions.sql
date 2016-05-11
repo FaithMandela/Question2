@@ -117,9 +117,9 @@ BEGIN
 		IF(v_son_bonus_ps is null)THEN v_son_bonus_ps := 0; END IF;
 		IF(v_son_bonus_amount is null)THEN v_son_bonus_amount := 0; END IF;
 
-		v_bonus := (rec.segments * v_period_bonus_ps / 100) + (rec.segments * v_period_bonus_amount);
-		v_bonus := v_bonus + (rec.segments * v_pcc_bonus_ps / 100) + (rec.segments * v_pcc_bonus_amount);
-		v_bonus := v_bonus + (rec.segments * v_son_bonus_ps / 100) + (rec.segments * v_son_bonus_amount);
+		v_bonus := (rec.points * v_period_bonus_ps / 100) + (rec.segments * v_period_bonus_amount);
+		v_bonus := v_bonus + (rec.points * v_pcc_bonus_ps / 100) + (rec.segments * v_pcc_bonus_amount);
+		v_bonus := v_bonus + (rec.points * v_son_bonus_ps / 100) + (rec.segments * v_son_bonus_amount);
 
 		UPDATE points SET bonus = v_bonus WHERE points_id = rec.points_id;
 

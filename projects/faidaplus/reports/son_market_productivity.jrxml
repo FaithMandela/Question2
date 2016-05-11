@@ -139,21 +139,21 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 				<text><![CDATA[Points]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="533" y="0" width="93" height="20" uuid="6d0d03a5-9b8c-4a66-b1b1-99658a5127af"/>
+				<reportElement x="532" y="0" width="118" height="20" uuid="6d0d03a5-9b8c-4a66-b1b1-99658a5127af"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Bonus]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="20" width="738" height="2" uuid="c0210eba-4540-47ff-9bd9-5f4dfeb16874"/>
+				<reportElement x="0" y="20" width="802" height="2" uuid="c0210eba-4540-47ff-9bd9-5f4dfeb16874"/>
 			</line>
 			<staticText>
 				<reportElement x="64" y="0" width="186" height="20" uuid="d988541c-cc47-4197-b67b-76ccd7f43536"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Agency Name]]></text>
+				<text><![CDATA[Consultant Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="310" y="0" width="51" height="20" uuid="248ca52f-10bf-4410-af73-d14e14705098"/>
@@ -163,7 +163,7 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 				<text><![CDATA[SON]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="626" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="2d924209-5f05-4c15-a833-c8f170bb3ab7"/>
+				<reportElement x="650" y="0" width="151" height="20" isPrintWhenDetailOverflows="true" uuid="2d924209-5f05-4c15-a833-c8f170bb3ab7"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="5"/>
@@ -173,9 +173,9 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="0" width="738" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="74f617ff-94e5-4e05-8215-ce6a98388f93">
+				<reportElement x="0" y="1" width="802" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="74f617ff-94e5-4e05-8215-ce6a98388f93">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -199,7 +199,7 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="533" y="0" width="96" height="15" uuid="2c7659af-96ea-493f-b7d7-c1d55ae3fc2f"/>
+				<reportElement x="532" y="0" width="118" height="15" uuid="2c7659af-96ea-493f-b7d7-c1d55ae3fc2f"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -239,7 +239,7 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="626" y="0" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="4b08868a-6f16-4db6-b19c-2e5c4f9dcadc"/>
+				<reportElement x="650" y="0" width="151" height="15" isPrintWhenDetailOverflows="true" uuid="4b08868a-6f16-4db6-b19c-2e5c4f9dcadc"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="5"/>
@@ -257,14 +257,14 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 	<summary>
 		<band height="42" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="626" y="8" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="751b449d-5fb7-49d3-859a-64db032ae773"/>
+				<reportElement x="650" y="8" width="151" height="20" isPrintWhenDetailOverflows="true" uuid="751b449d-5fb7-49d3-859a-64db032ae773"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_points}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="533" y="8" width="91" height="20" uuid="13c4c1fa-fcfe-4069-94dd-cbf69633c863"/>
+				<reportElement x="532" y="8" width="118" height="20" uuid="13c4c1fa-fcfe-4069-94dd-cbf69633c863"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -292,7 +292,7 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 				<textFieldExpression><![CDATA[$V{segments_1}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="195" y="3" width="535" height="1" uuid="da0e2e78-ef31-45aa-8824-0b4856b3badd"/>
+				<reportElement x="195" y="3" width="606" height="1" uuid="da0e2e78-ef31-45aa-8824-0b4856b3badd"/>
 			</line>
 		</band>
 	</summary>

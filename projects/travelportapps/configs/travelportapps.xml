@@ -983,12 +983,11 @@
 		<GRID noorg="true" keyfield="rate_type_id" name="Rate Plan" table="vw_rate_types">
 			<TEXTFIELD w="75" title="Rate Type ID">rate_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category">rate_category_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Rate PLan">rate_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Age From">age_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Age To">age_to</TEXTFIELD>
 			<GRID noorg="true" keyfield="rate_id" name="Rates" linkfield="rate_type_id" table="vw_rates">
-				<TEXTFIELD w="75" title="Rate Type">rate_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Excluding USA and Canada">standard_rate</TEXTDECIMAL>
