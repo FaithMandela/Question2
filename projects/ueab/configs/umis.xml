@@ -34,7 +34,7 @@
 				<MENU name="Majors Contents">118</MENU>
 			</MENU>
 		</MENU>
-		<MENU name="Students" role="records,dvc">
+		<MENU name="Students" role="records,dvc,cpanel">
 			<MENU name="Students">11</MENU>
 			<MENU name="Students Graduation">51</MENU>
 			<MENU name="Students Requests">21</MENU>
