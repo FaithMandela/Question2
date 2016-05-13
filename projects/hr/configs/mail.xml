@@ -71,5 +71,17 @@
 		<SUBJECT title="subject">vw_workflow_approvals.workflow_narrative</SUBJECT>
 		<FIELD title="Body" basetable="vw_workflow_approvals">reject_email</FIELD>
 	</REPORT>
+	
+	<REPORT name="Birthday Email" keyfield="entity_id" action="dob_emailed" actioncount="1" 
+			table="vw_entity_employees, sys_emails"
+		 where="(vw_entity_employees.dob_email is not null) 
+				AND (EXTRACT(month FROM vw_entity_employees.date_of_birth) = EXTRACT(month FROM current_day))
+				AND (EXTRACT(DAY FROM vw_entity_employees.date_of_birth) = EXTRACT(DAY FROM current_day))
+				AND ( != vw_entity_employees.dob_email) 
+				AND (sys_emails.use_type = 8)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<ADDRESS title="address">vw_entity_employees.primary_email</ADDRESS>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
+	</REPORT>
 
 </ESCALATION>

@@ -866,7 +866,8 @@ DECLARE
 	msg 		varchar(120);
 BEGIN
 	app_id := CAST($1 as int);
-	SELECT approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, approvals.review_advice,
+	SELECT approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, 
+		approvals.approval_level, approvals.review_advice,
 		workflow_phases.workflow_phase_id, workflow_phases.workflow_id, workflow_phases.return_level INTO reca
 	FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
 	WHERE (approvals.approval_id = app_id);
@@ -904,16 +905,27 @@ BEGIN
 
 			INSERT INTO sys_emailed (table_id, table_name, email_type)
 			VALUES (reca.table_id, 'vw_workflow_approvals', 1);
-		ELSE
-			FOR recb IN SELECT workflow_phase_id, advice
+			
+			FOR recb IN SELECT workflow_phase_id, advice, notice
 			FROM workflow_phases
-			WHERE (workflow_id = reca.workflow_id) AND (approval_level = min_level) LOOP
-				IF (recb.advice = true) THEN
+			WHERE (workflow_id = reca.workflow_id) AND (approval_level >= reca.approval_level) LOOP
+				IF (recb.advice = true) or (recb.notice = true) THEN
 					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
 					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
+				END IF;
+			END LOOP;
+		ELSE
+			FOR recb IN SELECT workflow_phase_id, advice, notice
+			FROM workflow_phases
+			WHERE (workflow_id = reca.workflow_id) AND (approval_level <= min_level) LOOP
+				IF (recb.advice = true) or (recb.notice = true) THEN
+					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
+					WHERE (workflow_phase_id = recb.workflow_phase_id) 
+						AND (approve_status = 'Draft') AND (table_id = reca.table_id);
 				ELSE
 					UPDATE approvals SET approve_status = 'Completed', completion_date = now()
-					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
+					WHERE (workflow_phase_id = recb.workflow_phase_id) 
+						AND (approve_status = 'Draft') AND (table_id = reca.table_id);
 				END IF;
 			END LOOP;
 		END IF;
@@ -933,19 +945,25 @@ BEGIN
 	ELSIF ($3 = '4') AND (reca.return_level = 0) THEN
 		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
 		WHERE approval_id = app_id;
-		
-		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Draft') 
+
+		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Draft')
 		|| ', action_date = now()'
 		|| ' WHERE workflow_table_id = ' || reca.table_id;
 		EXECUTE mysql;
-		
+
 		msg := 'Forwarded for review';
 	ELSIF ($3 = '4') AND (reca.return_level <> 0) THEN
+		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
+		WHERE approval_id = app_id;
+
 		INSERT INTO approvals (org_id, workflow_phase_id, table_name, table_id, org_entity_id, escalation_days, escalation_hours, approval_level, approval_narrative, to_be_done, approve_status)
 		SELECT org_id, workflow_phase_id, reca.table_name, reca.table_id, CAST($2 as int), escalation_days, escalation_hours, approval_level, phase_narrative, reca.review_advice, 'Completed'
 		FROM vw_workflow_entitys
 		WHERE (workflow_id = reca.workflow_id) AND (approval_level = reca.return_level)
 		ORDER BY workflow_phase_id;
+
+		UPDATE approvals SET approve_status = 'Draft' WHERE approval_id = app_id;
+
 		msg := 'Forwarded to owner for review';
 	END IF;
 
