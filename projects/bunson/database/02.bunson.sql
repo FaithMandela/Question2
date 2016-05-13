@@ -95,7 +95,6 @@ CREATE INDEX drivers_org_id ON drivers(org_id);
 
 
 
-
 CREATE TABLE cars(
     car_id              serial primary key,
     org_id				integer references orgs,
@@ -131,7 +130,6 @@ CREATE TABLE transfers(
 
 CREATE INDEX transfers_entity_id ON transfers(entity_id);
 CREATE INDEX transfers_payment_type_id ON transfers(payment_type_id);
-
 
 
 -- INSERT INTO transfers(entity_id, record_locator, customer_code, payment_type_id,         currency_id, agreed_amount, booking_location, booking_date, payment_details, reference_data) VALUES (3, null, '000000A018', 1, 'AFA', '30000', '07', to_date('20-04-2015', 'dd-MM-yyyy'), 'payement details', 'ref data')
