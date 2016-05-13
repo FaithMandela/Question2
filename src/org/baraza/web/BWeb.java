@@ -95,6 +95,12 @@ public class BWeb {
 			
 			if(root.getAttribute("readonly", "false").equals("true")) db.setReadOnly(true);
 			
+			BElement configs = root.getElementByName("CONFIGS");
+			if(configs != null) {
+				BElement audit = configs.getElementByName("AUDIT");
+				if(audit != null) db.setFullAudit(audit);
+			}
+			
 			db.setOrgID(root.getAttribute("org"));
 		}
 

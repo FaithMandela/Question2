@@ -44,8 +44,8 @@
 	<APP path="babcock" dbname="babcock" auth="entity" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/babcock" xmlfile="web/lecturers.xml">Babcock Lecturer</APP>
 	<APP path="babcock" dbname="babcock" auth="entity" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/babcock" xmlfile="web/alumnae.xml">Babcock Alumnae</APP>
 	<APP path="babcock" dbname="babcock" auth="entity" dbclass="org.postgresql.Driver" dbusername="root" dbpath="jdbc:postgresql://umisdb/babcock" xmlfile="web/industry.xml">Babcock Industry</APP>
-	<APP path="ueab" dbname="ueab" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="umis.xml">UEAB</APP>
-	<APP path="ueab" dbname="ueab" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="admin.xml">UEAB Admin</APP>
+	<APP path="ueab" dbname="ueab" auth="entity" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="umis.xml">UEAB</APP>
+	<APP path="ueab" dbname="ueab" auth="entity" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="admin.xml">UEAB Admin</APP>
 	<APP path="ueab" dbname="ueab" auth="entity" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="admissions.xml">UEAB Admissions</APP>
 	<APP path="ueab" dbname="ueab" auth="entity" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="alumnae.xml">UEAB Alumnae</APP>
 	<APP path="ueab" dbname="ueab" auth="entity" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="dos.xml">UEAB DOS</APP>

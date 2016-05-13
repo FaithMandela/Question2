@@ -28,18 +28,17 @@
 	<queryString>
 		<![CDATA[SELECT vw_tx_ledger.ledger_period, vw_tx_ledger.ledger_year, vw_tx_ledger.ledger_month,
 	vw_tx_ledger.ledger_type_name, vw_tx_ledger.currency_symbol, vw_tx_ledger.entity_name,
-	vw_tx_ledger.narrative,
-	vw_tx_ledger.bank_account_name, vw_tx_ledger.bpartner_name, vw_tx_ledger.tx_ledger_date,
-	vw_tx_ledger.tx_ledger_quantity, vw_tx_ledger.tx_ledger_amount,
+	vw_tx_ledger.narrative, vw_tx_ledger.bank_account_name,  vw_tx_ledger.payment_date,
+	vw_tx_ledger.transaction_date, vw_tx_ledger.transaction_amount,
 	vw_tx_ledger.reference_number, vw_tx_ledger.completed, vw_tx_ledger.is_cleared,
-	vw_tx_ledger.base_amount
+	vw_tx_ledger.base_tax_amount, vw_tx_ledger.base_amount
 
 FROM vw_tx_ledger
 
 $P!{orgwhere}
 
 ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
-	vw_tx_ledger.completed desc, vw_tx_ledger.tx_ledger_date]]>
+	vw_tx_ledger.completed desc, vw_tx_ledger.payment_date]]>
 	</queryString>
 	<field name="ledger_period" class="java.lang.String"/>
 	<field name="ledger_year" class="java.lang.String"/>
@@ -49,13 +48,13 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="narrative" class="java.lang.String"/>
 	<field name="bank_account_name" class="java.lang.String"/>
-	<field name="bpartner_name" class="java.lang.String"/>
-	<field name="tx_ledger_date" class="java.sql.Date"/>
-	<field name="tx_ledger_quantity" class="java.lang.Integer"/>
-	<field name="tx_ledger_amount" class="java.lang.Float"/>
+	<field name="payment_date" class="java.sql.Date"/>
+	<field name="transaction_date" class="java.sql.Date"/>
+	<field name="transaction_amount" class="java.lang.Float"/>
 	<field name="reference_number" class="java.lang.String"/>
 	<field name="completed" class="java.lang.Boolean"/>
 	<field name="is_cleared" class="java.lang.Boolean"/>
+	<field name="base_tax_amount" class="java.lang.Double"/>
 	<field name="base_amount" class="java.lang.Double"/>
 	<variable name="base_amount_1" class="java.lang.Double" resetType="Group" resetGroup="ledger_period" calculation="Sum">
 		<variableExpression><![CDATA[$F{base_amount}]]></variableExpression>
@@ -114,10 +113,10 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="619" y="15" width="51" height="15" forecolor="#000000" uuid="0587e568-7003-4920-812d-338b1207d43f"/>
-					<textElement textAlignment="Right">
+					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<text><![CDATA[Quantity]]></text>
+					<text><![CDATA[T Date]]></text>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="670" y="15" width="51" height="15" forecolor="#000000" uuid="6bff5189-ba3b-4819-b660-f0f9639c23f7"/>
@@ -211,7 +210,7 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{bpartner_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="211" y="0" width="134" height="15" uuid="c38b62a4-d277-4a83-9c41-d2df15f67283"/>
@@ -225,21 +224,21 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{tx_ledger_date}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{payment_date}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement style="Detail" x="619" y="0" width="51" height="15" uuid="c729eb78-c277-4402-b280-06d899a4335e"/>
-					<textElement textAlignment="Right">
+					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{tx_ledger_quantity}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{transaction_date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="670" y="0" width="51" height="15" uuid="3d091448-cc7d-459c-b44e-944f0b5fcc70"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{tx_ledger_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{transaction_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="396" y="0" width="83" height="15" uuid="b2e85ada-a74b-46f0-ac2d-6572d5de5c34"/>

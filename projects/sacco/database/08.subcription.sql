@@ -129,6 +129,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 
+
 CREATE OR REPLACE FUNCTION ins_subscriptions()
   RETURNS trigger AS
 $BODY$
@@ -150,9 +151,11 @@ BEGIN
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
 			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
-			INSERT INTO sys_emailed ( org_id, table_id, table_name)
-			VALUES ( 0, 1, 'subscription');
+	
+			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
+		VALUES ( 4, 0, NEW.entity_id, 'subscription');
 		
+
 			ELSE
 			RAISE EXCEPTION 'You already have an account, login and request for services';
 		END IF ;
@@ -176,7 +179,7 @@ BEGIN
 		WHERE entity_id = NEW.entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES ( 12, NEW.org_id, NEW.entity_id, 'subscription');
+		VALUES ( 5, NEW.org_id, NEW.entity_id, 'subscription');
 		
 		
 		
@@ -187,6 +190,9 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+
+    
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  

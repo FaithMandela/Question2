@@ -111,39 +111,6 @@ CREATE INDEX contributions_org_id ON contributions (org_id);
 CREATE INDEX contributions_meeting_id ON contributions (meeting_id);
 
 
-CREATE TABLE borrowing_types (
-	borrowing_type_id			serial primary key,
-	org_id           	        integer references orgs,
-	borrowing_type_name         varchar (120) ,
-	details						text
-);
-
-CREATE INDEX borrowing_types_org_id ON borrowing_types (org_id);
-
-
-CREATE TABLE borrowing (
-	borrowing_id            	serial primary key,
-    borrowing_type_id			integer references borrowing_types, 
-    currency_id             	integer references currency,
-    org_id                  	integer references orgs,
-    bank_account_id 			integer references bank_accounts,
-	date_of_borrowing       	date,
-    amount                  	real not null,
-	interest                	varchar(120),
-	application_date			timestamp default now() not null,
-	approve_status				varchar(16) default 'Draft' not null,
-	workflow_table_id			integer,
-	action_date					timestamp,
-	is_active                   boolean default true not null,
-	details                     text
-);
-
-
-CREATE INDEX borrowing_bank_account_id ON borrowing (bank_account_id);
-CREATE INDEX borrowing_borrowing_type_id ON borrowing (borrowing_type_id);
-CREATE INDEX borrowing_currency_id ON borrowing (currency_id);
-CREATE INDEX borrowing_org_id ON borrowing (org_id);
-
 CREATE TABLE penalty_type (
 	penalty_type_id				serial primary key,
 	org_id                      integer references orgs,
@@ -174,25 +141,6 @@ CREATE INDEX penalty_penalty_type_id ON penalty (penalty_type_id);
 CREATE INDEX penalty_currency_id ON penalty (currency_id);
 CREATE INDEX penalty_org_id ON penalty (org_id);
 CREATE INDEX penalty_entity_id ON penalty (entity_id);
-
-DROP TABLE borrowing_repayment cascade;
-CREATE TABLE borrowing_repayment (
-	borrowing_repayment_id		serial primary key,
-	org_id                      integer references orgs,
-	borrowing_id                integer references borrowing,
-	period_id					integer references periods,
-	amount						real not null default 0,
-	action_date					timestamp,
-	penalty						boolean default true not null,
-	penalty_id					integer references penalty,
-	penalty_paid				real default 0 not null,
-	details                     text
-);
-
-CREATE INDEX borrowing_repayment_org_id ON borrowing_repayment(org_id);
-CREATE INDEX borrowing_repayment_borrowing_id ON borrowing_repayment (borrowing_id);
-CREATE INDEX borrowing_repayment_period_id ON borrowing_repayment (period_id);
-CREATE INDEX borrowing_repayment_penalty_id ON borrowing_repayment (penalty_id);
 
 CREATE TABLE expenses (
 	expense_id				serial primary key,
@@ -230,8 +178,10 @@ CREATE TABLE investments (
     bank_account_id 			integer references bank_accounts,
     period_id					integer references periods,
 	investment_name 			varchar(120),
+	status						character varying(25) NOT NULL DEFAULT 'Prospective'
 	date_of_accrual             date,
 	total_cost 					real,
+	total_repayment_amount		real
 	repayment_period			real,
 	monthly_returns 			real,
 	monthly_payments			real,
@@ -249,6 +199,13 @@ CREATE INDEX investments_currency_id ON investments (currency_id);
 CREATE INDEX investments_org_id ON investments (org_id);
 CREATE INDEX investments_period_id ON investments (period_id);
 
+CREATE TABLE member_meeting (
+	member_meeting_id					serial primary key,
+	member_id 					integer references members,
+	meeting_id					integer references meetings,
+	org_id                      			integer references orgs,
+	narrative						text
+	);
 
 
 

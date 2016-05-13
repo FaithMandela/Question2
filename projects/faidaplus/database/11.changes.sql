@@ -1,75 +1,32 @@
-DROP VIEW vw_opening_balance;
-
-CREATE OR REPLACE VIEW vw_opening_balance AS
-SELECT a.dr,
-   a.cr,
-   a.order_date::date AS order_date,
-   a.son,
-   a.pcc,
-   a.org_name,
-   a.entity_id,
-   a.dr - a.cr AS balance,
-   a.points,
-   a.segments,
-   a.amount,
-   a.period
-  FROM ( SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
-		   0::real AS cr,
-		   vw_son_points.period AS order_date,
-		   vw_son_points.son,
-		   vw_son_points.pcc,
-		   vw_son_points.org_name,
-		   vw_son_points.entity_id,
-		   vw_son_points.segments,
-	       vw_son_points.amount,
-		   vw_son_points.points,
-		   vw_son_points.period
-		  FROM vw_son_points
-	   UNION
-		SELECT 0::real AS float4,
-		   vw_orders.grand_total AS order_total_amount,
-		   vw_orders.order_date,
-		   vw_orders.son,
-		   vw_orders.pcc,
-		   vw_orders.org_name,
-		   vw_orders.entity_id,
-		   0::real as segments,
-		   0::real as amount,
-		   0::real as points,
-		   null::date as period
-		  FROM vw_orders) a
- ORDER BY a.order_date;
+ALTER TABLE product_category ADD COLUMN icon character varying(50);
+UPDATE product_category SET icon = 'fa-credit-card' WHERE product_category_id = 1;
+UPDATE product_category SET icon = 'fa-cutlery' WHERE product_category_id = 2;
+UPDATE product_category SET icon = 'fa-tv' WHERE product_category_id = 3;
+UPDATE product_category SET icon = 'fa-car' WHERE product_category_id = 4;
+UPDATE product_category SET icon = 'fa-paint-brush' WHERE product_category_id = 5;
+UPDATE product_category SET icon = 'fa-cart-plus' WHERE product_category_id = 6;
+UPDATE product_category SET icon = 'fa-shopping-cart' WHERE product_category_id = 8;
+UPDATE product_category SET icon = 'fa-film' WHERE product_category_id = 9;
+UPDATE product_category SET icon = 'fa-gift' WHERE product_category_id = 11;
 
 
-
- CREATE OR REPLACE VIEW vw_bonus AS
-  SELECT bonus.bonus_id, bonus.consultant_id,  bonus.period_id,  bonus.entity_id, bonus.org_id,
-  bonus.son, bonus.pcc, bonus.start_date,
-  bonus.end_date, bonus.percentage, bonus.amount, bonus.is_active, bonus.approve_status ,
-  bonus.workflow_table_id, bonus.application_date ,
-  bonus.action_date, bonus.details, orgs.org_name
-  FROM bonus
-  INNER JOIN orgs ON orgs.org_id = bonus.org_id;
-
-
-
-CREATE OR REPLACE FUNCTION ins_applicants()  RETURNS trigger AS $BODY$
+CREATE OR REPLACE FUNCTION ins_periods() RETURNS trigger AS $$
 DECLARE
-	rec 			RECORD;
-	v_entity_id		integer;
+	year_close 		BOOLEAN;
 BEGIN
-	IF (TG_OP = 'INSERT') THEN
-		SELECT entity_id INTO v_entity_id
-		FROM entitys
-		WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)));
+	SELECT year_closed INTO year_close
+	FROM fiscal_years
+	WHERE (fiscal_year_id = NEW.fiscal_year_id);
 
-		IF(v_entity_id is not null)THEN
-			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
-		END IF;
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
-		VALUES (1, NEW.applicant_id, 'applicants', 3);
+	IF (NEW.approve_status = 'Approved') THEN
+		NEW.opened = false;
+		NEW.activated = false;
 	END IF;
+
+	IF(year_close = true)THEN
+		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
+	END IF;
+
 	RETURN NEW;
 END;
-$BODY$
-LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;

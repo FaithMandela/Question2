@@ -25,7 +25,7 @@
 	<target name="compile" description="compile the source" depends="init">
 
 		<!-- Compile the java code from ${src} into ${build} -->
-		<javac srcdir="${src}" destdir="${classes.dir}" includeAntRuntime="false">
+		<javac debug="true" srcdir="${src}" destdir="${classes.dir}" includeAntRuntime="false">
 			<classpath refid="classpath"/>
 			<exclude name="test/**"/>
 		</javac>

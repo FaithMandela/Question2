@@ -29,7 +29,7 @@
 from vw_loans
 where entity_id = $P!{entity_id}
 $P!{organd}
-ORDER BY vw_loans.approve_status;]]>
+ORDER BY vw_loans.approve_status]]>
 	</queryString>
 	<field name="currency_name" class="java.lang.String"/>
 	<field name="loan_type_id" class="java.lang.Integer"/>

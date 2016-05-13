@@ -1,5 +1,8 @@
 ALTER TABLE passengers ADD COLUMN departure_country character varying(50);
 ALTER TABLE passengers ADD COLUMN reason_for_travel text;
+ALTER TABLE passengers ADD COLUMN postal_code character varying(50);
+ALTER TABLE passengers ADD COLUMN expiry_date character varying(20);
+ALTER TABLE passengers ADD COLUMN physical_address text;
 
 DROP view vw_passengers;
 CREATE OR REPLACE VIEW vw_passengers AS
@@ -47,6 +50,9 @@ SELECT
     p.policy_member_id, p.passenger_id, p.org_id, p.entity_id, p.member_name, p.passport_number, p.pin_number,
     p.phone_number,  p.primary_email, p.rate_id, p.amount_covered, p.totalamount_covered, p.age,
     p.passenger_dob, a.countries,a.policy_number, a.destown, a.sys_country_name, a.reason_for_travel,
-    a.departure_country, a.entity_name, a.days_from, a.days_to
+    a.departure_country, a.entity_name, a.days_from, a.days_to, a.rate_type_id, a.approved_date
     FROM  policy_members p
     JOIN vw_passengers a ON p.passenger_id = a.passenger_id ;
+
+DELETE FROM passengers ;
+ALTER SEQUENCE passengers_passenger_id_seq RESTART WITH 1;

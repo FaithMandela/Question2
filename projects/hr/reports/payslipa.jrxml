@@ -87,7 +87,7 @@ $P!{organd};]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="301" splitType="Stretch">
+		<band height="284" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField" x="53" y="2" width="87" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="47625af4-f729-48fa-811b-dd741fd63a93"/>
 				<box>
@@ -459,7 +459,7 @@ $P!{organd};]]>
 				<textFieldExpression><![CDATA[$F{currency_symbol}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="10" y="272" width="521" height="16" uuid="7017fffb-8e4a-4714-ae7c-3469bd2e2484"/>
+				<reportElement positionType="Float" x="10" y="262" width="521" height="16" uuid="7017fffb-8e4a-4714-ae7c-3469bd2e2484"/>
 				<subreportParameter name="employee_month_id">
 					<subreportParameterExpression><![CDATA[$F{employee_month_id}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -473,7 +473,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employee_adjustments.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement key="staticText" positionType="Float" x="7" y="250" width="524" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="b8127b98-43f3-473b-b768-3d8d3cbee55f"/>
+				<reportElement key="staticText" positionType="Float" x="7" y="240" width="524" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="b8127b98-43f3-473b-b768-3d8d3cbee55f"/>
 				<box>
 					<bottomPen lineWidth="0.75" lineColor="#DA8626"/>
 				</box>

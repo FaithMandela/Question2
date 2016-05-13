@@ -868,6 +868,7 @@ CREATE VIEW vw_applicants AS
 		applicants.org_id, applicants.first_name, applicants.middle_name, applicants.date_of_birth, applicants.nationality, 
 		applicants.identity_card, applicants.language, applicants.objective, applicants.interests, applicants.picture_file, applicants.details,
 		applicants.person_title, applicants.field_of_study, applicants.applicant_email, applicants.applicant_phone, 
+		applicants.previous_salary, applicants.expected_salary,
 		(applicants.Surname || ' ' || applicants.First_name || ' ' || COALESCE(applicants.Middle_name, '')) as applicant_name,
 		to_char(age(applicants.date_of_birth), 'YY') as applicant_age,
 		(CASE WHEN applicants.gender = 'M' THEN 'Male' ELSE 'Female' END) as gender_name,

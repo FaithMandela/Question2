@@ -154,8 +154,11 @@ CREATE VIEW vw_loans AS
 		loans.repayment_period, loans.application_date, loans.approve_status, loans.initial_payment, 
 		loans.loan_date, loans.action_date, loans.details,
 		get_repayment(loans.principle, loans.interest, loans.repayment_period) as repayment_amount, 
-		loans.initial_payment + get_total_repayment(loans.loan_id) as total_repayment, get_total_interest(loans.loan_id) as total_interest,
+		loans.initial_payment + get_total_repayment(loans.loan_id) as total_repayment,
+		
+		get_total_interest(loans.loan_id) as total_interest,
 		(loans.principle + get_total_interest(loans.loan_id) - loans.initial_payment - get_total_repayment(loans.loan_id)) as loan_balance,
+		
 		get_payment_period(loans.principle, loans.monthly_repayment, loans.interest) as calc_repayment_period
 	FROM loans INNER JOIN entitys ON loans.entity_id = entitys.entity_id
 		INNER JOIN vw_loan_types ON loans.loan_type_id = vw_loan_types.loan_type_id;
@@ -231,6 +234,20 @@ BEGIN
 	msg := 'Loan Processed';
 
 	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION loan_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Loan applied';
+	
+	UPDATE loans SET approve_status = 'Completed'
+	WHERE (loan_id = CAST($1 as int)) AND (approve_status = 'Draft');
+
+	return msg;
 END;
 $$ LANGUAGE plpgsql;
 

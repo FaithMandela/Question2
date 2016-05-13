@@ -21,3 +21,10 @@ GROUP BY a.pcc, a.org_name, a.entity_id, b.entity_name
 ORDER BY sum(balance) desc;
 
 
+---- Do a balance analysis
+SELECT entity_id, entity_name, sum(balance)
+FROM vw_opening_balance
+---WHERE order_date < '2016-01-01'::date
+GROUP BY entity_id, entity_name
+ORDER BY sum(balance)
+

@@ -28,25 +28,25 @@
 	<queryString>
 		<![CDATA[SELECT vws_tx_ledger.ledger_period, vws_tx_ledger.ledger_year, vws_tx_ledger.ledger_month,
 	vws_tx_ledger.sum_dr_amount, vws_tx_ledger.sum_cr_amount, vws_tx_ledger.sum_base_amount,
-	vws_tx_ledger.sum_base_tax_amount, vws_tx_ledger.sum_base_balance,
-	vws_tx_ledger.sum_cleared_balance
+	vws_tx_ledger.sum_base_balance, vws_tx_ledger.sum_cleared_balance,
+	vws_tx_ledger.prev_balance_amount, vws_tx_ledger.prev_clear_balance_amount
 
 FROM vws_tx_ledger
 
 $P!{orgwhere}
 
-ORDER BY ledger_year desc, ledger_period;
-]]>
+ORDER BY ledger_year desc, ledger_period;]]>
 	</queryString>
 	<field name="ledger_period" class="java.lang.String"/>
 	<field name="ledger_year" class="java.lang.String"/>
 	<field name="ledger_month" class="java.lang.String"/>
-	<field name="sum_dr_amount" class="java.lang.Double"/>
-	<field name="sum_cr_amount" class="java.lang.Double"/>
+	<field name="sum_dr_amount" class="java.lang.Float"/>
+	<field name="sum_cr_amount" class="java.lang.Float"/>
 	<field name="sum_base_amount" class="java.lang.Double"/>
-	<field name="sum_base_tax_amount" class="java.lang.Double"/>
 	<field name="sum_base_balance" class="java.lang.Double"/>
 	<field name="sum_cleared_balance" class="java.lang.Double"/>
+	<field name="prev_balance_amount" class="java.lang.Double"/>
+	<field name="prev_clear_balance_amount" class="java.lang.Double"/>
 	<variable name="sum_base_balance_1" class="java.lang.Double" resetType="Group" resetGroup="ledger_year" calculation="Sum">
 		<variableExpression><![CDATA[$F{sum_base_balance}]]></variableExpression>
 	</variable>
@@ -78,53 +78,60 @@ ORDER BY ledger_year desc, ledger_period;
 					<text><![CDATA[Month]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="80" y="15" width="70" height="15" forecolor="#000000" uuid="e71a66d3-cf39-41ad-a5f4-bfd3b539d8a7"/>
+					<reportElement style="Column header" x="80" y="15" width="65" height="15" forecolor="#000000" uuid="e71a66d3-cf39-41ad-a5f4-bfd3b539d8a7"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Dr Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="150" y="15" width="70" height="15" forecolor="#000000" uuid="cad9b5ca-d1bc-4489-8687-4f876b218231"/>
+					<reportElement style="Column header" x="145" y="15" width="65" height="15" forecolor="#000000" uuid="cad9b5ca-d1bc-4489-8687-4f876b218231"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Cr Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="220" y="15" width="70" height="15" forecolor="#000000" uuid="7119a9cd-f802-4844-9e91-eb6f13d42b11"/>
+					<reportElement style="Column header" x="210" y="15" width="65" height="15" forecolor="#000000" uuid="7119a9cd-f802-4844-9e91-eb6f13d42b11"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="290" y="15" width="70" height="15" forecolor="#000000" uuid="2686da90-e69b-41ed-a2f8-e6c58b85b94b"/>
+					<reportElement style="Column header" x="405" y="15" width="65" height="15" forecolor="#000000" uuid="2686da90-e69b-41ed-a2f8-e6c58b85b94b"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<text><![CDATA[Tax Amount]]></text>
+					<text><![CDATA[T Balance]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="360" y="15" width="70" height="15" forecolor="#000000" uuid="591115e8-eaf4-45a0-8a3c-f5197c5d8f44"/>
+					<reportElement style="Column header" x="275" y="15" width="65" height="15" forecolor="#000000" uuid="591115e8-eaf4-45a0-8a3c-f5197c5d8f44"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Balance]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="430" y="15" width="70" height="15" forecolor="#000000" uuid="113c3af8-dc11-4d32-b2f5-31e6c1d3189b"/>
+					<reportElement style="Column header" x="340" y="15" width="65" height="15" forecolor="#000000" uuid="113c3af8-dc11-4d32-b2f5-31e6c1d3189b"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<text><![CDATA[Cleared]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="470" y="15" width="65" height="15" forecolor="#000000" uuid="41d89af6-0f84-4f6f-8933-22407717e872"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
+					</textElement>
+					<text><![CDATA[TC Balance]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="24">
 				<textField pattern="#,##0">
-					<reportElement x="360" y="2" width="70" height="20" uuid="ef328d81-0e58-491a-b6db-58cb0c3ef07b"/>
+					<reportElement x="275" y="2" width="65" height="20" uuid="ef328d81-0e58-491a-b6db-58cb0c3ef07b"/>
 					<box>
 						<topPen lineWidth="0.5"/>
 						<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -135,7 +142,7 @@ ORDER BY ledger_year desc, ledger_period;
 					<textFieldExpression><![CDATA[$V{sum_base_balance_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0">
-					<reportElement x="430" y="2" width="70" height="20" uuid="d6f9e752-acc4-40b9-9597-00fe3747caef"/>
+					<reportElement x="340" y="2" width="65" height="20" uuid="d6f9e752-acc4-40b9-9597-00fe3747caef"/>
 					<box>
 						<topPen lineWidth="0.5"/>
 						<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -180,46 +187,53 @@ ORDER BY ledger_year desc, ledger_period;
 					<textFieldExpression><![CDATA[$F{ledger_month}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="80" y="0" width="70" height="15" uuid="041327bd-972e-4b50-9a5a-21dc0d121b3f"/>
+					<reportElement style="Detail" x="80" y="0" width="65" height="15" uuid="041327bd-972e-4b50-9a5a-21dc0d121b3f"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sum_dr_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="150" y="0" width="70" height="15" uuid="36e11b00-725b-491b-a3c8-51b205a0dc97"/>
+					<reportElement style="Detail" x="145" y="0" width="65" height="15" uuid="36e11b00-725b-491b-a3c8-51b205a0dc97"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sum_cr_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="220" y="0" width="70" height="15" uuid="72d7d2d9-c9db-4fa6-b6d1-7b0ce15d7b88"/>
+					<reportElement style="Detail" x="210" y="0" width="65" height="15" uuid="72d7d2d9-c9db-4fa6-b6d1-7b0ce15d7b88"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sum_base_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="290" y="0" width="70" height="15" uuid="b0ced975-95dc-4c3f-a7dd-8b9673d658d0"/>
+					<reportElement style="Detail" x="405" y="0" width="65" height="15" uuid="b0ced975-95dc-4c3f-a7dd-8b9673d658d0"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{sum_base_tax_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{prev_balance_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="360" y="0" width="70" height="15" uuid="e8fb63e4-3745-41db-889a-52b96abf1914"/>
+					<reportElement style="Detail" x="275" y="0" width="65" height="15" uuid="e8fb63e4-3745-41db-889a-52b96abf1914"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sum_base_balance}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="430" y="0" width="70" height="15" uuid="3c861770-8195-4064-ad9d-b6aff8f58d61"/>
+					<reportElement style="Detail" x="340" y="0" width="65" height="15" uuid="3c861770-8195-4064-ad9d-b6aff8f58d61"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{sum_cleared_balance}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="470" y="0" width="65" height="15" uuid="033d5517-d9cb-43ad-b66e-44556e03abf7"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{prev_clear_balance_amount}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>

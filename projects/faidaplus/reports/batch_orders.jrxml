@@ -126,12 +126,11 @@
 				<reportElement x="0" y="32" width="802" height="1" uuid="4da1bebb-6e5c-44c0-bfd7-2cbc6f171224"/>
 			</line>
 			<staticText>
-				<reportElement x="246" y="0" width="69" height="29" uuid="75117650-bf2b-4e1c-96a7-e3196bd28e3c"/>
+				<reportElement x="246" y="0" width="69" height="29" isPrintWhenDetailOverflows="true" uuid="75117650-bf2b-4e1c-96a7-e3196bd28e3c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<text><![CDATA[Phone]]></text>
+				<text><![CDATA[Phone no.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="400" y="0" width="94" height="29" uuid="4467f397-7dd1-4a39-a181-4abf5e85e085"/>
@@ -204,7 +203,7 @@
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="61" height="15" uuid="20c159d5-6aec-43cf-9f37-09948435b6c1"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
@@ -244,7 +243,7 @@
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="617" y="0" width="64" height="15" uuid="53d1c6ff-bade-46ba-bc7c-91e1e5728803"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_total_amount}]]></textFieldExpression>
@@ -252,16 +251,15 @@
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="746" y="0" width="56" height="15" uuid="b010c194-7801-48ef-841b-41ac285f1672"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grand_total}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="246" y="0" width="69" height="15" uuid="852bac94-dca4-48fd-8693-0e38922343bd"/>
+				<reportElement x="246" y="0" width="69" height="15" isPrintWhenDetailOverflows="true" uuid="852bac94-dca4-48fd-8693-0e38922343bd"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{primary_telephone}]]></textFieldExpression>
 			</textField>
@@ -276,7 +274,7 @@
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="681" y="0" width="65" height="15" uuid="feff248f-8335-4d56-9611-6a9a5173202b"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shipping_cost}]]></textFieldExpression>
@@ -284,27 +282,30 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="22" splitType="Stretch">
+		<band height="22" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="16" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement x="420" y="3" width="382" height="1" uuid="cc013e96-c859-40e6-b5e5-a68293ccf76a"/>
+			</line>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="702" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="0b3dfd88-ad4f-4c62-8b23-fcdfe72788cc"/>
+				<reportElement x="681" y="7" width="121" height="20" isPrintWhenDetailOverflows="true" uuid="0b3dfd88-ad4f-4c62-8b23-fcdfe72788cc"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{grand_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="602" y="0" width="100" height="20" uuid="625ee883-3080-42ba-a60b-ed00160e2479"/>
+				<reportElement x="581" y="7" width="100" height="20" uuid="625ee883-3080-42ba-a60b-ed00160e2479"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" isBold="true"/>
+					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Grand Total]]></text>
 			</staticText>
 		</band>
-	</columnFooter>
-	<pageFooter>
-		<band height="53" splitType="Stretch"/>
-	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
 	</summary>
 </jasperReport>
