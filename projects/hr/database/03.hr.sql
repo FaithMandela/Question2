@@ -124,7 +124,7 @@ CREATE TABLE employees (
 	first_name				varchar(50) not null,
 	middle_name				varchar(50),
 	date_of_birth			date,
-	dob_email				date,
+	dob_email				date default '2016-01-01'::date,
 	
 	gender					varchar(1),
 	phone					varchar(120),
@@ -2460,7 +2460,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS void AS $$
-    UPDATE employees SET dob_email = current_date WHERE (entity_id = $2::int));
-$$ LANGUAGE SQL;
-
+CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	v_entity_name			varchar(120);
+BEGIN
+	SELECT org_id, entity_name INTO v_org_id, v_entity_name
+	FROM entitys WHERE (entity_id = $2::int);
+	
+    UPDATE employees SET dob_email = current_date WHERE (entity_id = $2::int);
+    INSERT INTO sys_emailed (sys_email_id, org_id, email_type, narrative)
+	VALUES (9, 0, 9, 'Its birthday for ' || v_entity_name);
+	
+    RETURN 'Done';
+END;
+$$ LANGUAGE plpgsql;

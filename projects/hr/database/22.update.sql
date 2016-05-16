@@ -1,13 +1,22 @@
 
 
-ALTER TABLE employees ADD dob_email				date;
+ALTER TABLE employees ADD dob_email				date default '2016-01-01'::date;
+ALTER TABLE sys_emails ADD default_email			varchar(320);
 
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
-VALUES (8, 0, 'Happy Birthday', 'Happy Birthday', 'Happy Birthday {{name}},<br><br>
-A very happy birhday to you.<br><br>
+INSERT INTO sys_emails (sys_email_id, use_type, org_id, sys_email_name, title, details) 
+VALUES (8, 8, 0, 'Have a Happy Birthday', 'Have a Happy Birthday', 'Happy Birthday {{name}},<br><br>
+A very happy birthday to you.<br><br>
 Regards,<br>
 HR Manager<br>
 ');
+INSERT INTO sys_emails (sys_email_id, use_type, org_id, sys_email_name, title, details) 
+VALUES (9, 9, 0, 'Happy Birthday', 'Happy Birthday', 'Hello HR,<br><br>
+{{narrative}}.<br><br>
+Regards,<br>
+HR Manager<br>
+');
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 9, true);
+
 
 DROP VIEW vw_employees;
 CREATE VIEW vw_employees AS
@@ -58,9 +67,21 @@ CREATE VIEW vw_entity_employees AS
 	
 	
 
-CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS void AS $$
-    UPDATE employees SET dob_email = current_date WHERE (entity_id = $2::int));
-$$ LANGUAGE SQL;
+CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	v_entity_name			varchar(120);
+BEGIN
+	SELECT org_id, entity_name INTO v_org_id, v_entity_name
+	FROM entitys WHERE (entity_id = $2::int);
+	
+    UPDATE employees SET dob_email = current_date WHERE (entity_id = $2::int);
+    INSERT INTO sys_emailed (sys_email_id, org_id, email_type, narrative)
+	VALUES (9, 0, 9, 'Its birthday for ' || v_entity_name);
+	
+    RETURN 'Done';
+END;
+$$ LANGUAGE plpgsql;
 
 
 

@@ -274,7 +274,7 @@ CREATE TABLE sys_emails (
 	org_id					integer references orgs,
 	use_type				integer default 1 not null,
 	sys_email_name			varchar(50),
-	default_email			varchar(120),
+	default_email			varchar(320),
 	title					varchar(240) not null,
 	details					text
 );
