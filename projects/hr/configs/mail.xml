@@ -6,7 +6,7 @@
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, entitys"
 			where="(entitys.entity_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
-			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 1)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="entitys">entity_name</BODYFIELD>
