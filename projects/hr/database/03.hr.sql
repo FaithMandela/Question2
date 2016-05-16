@@ -932,7 +932,7 @@ CREATE VIEW vw_entity_employees AS
 		employees.date_of_birth, employees.dob_email, employees.gender, employees.nationality, 
 		employees.marital_status, employees.appointment_date, 
 		employees.exit_date, employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card, 
-		employees.basic_salary, employees.bank_account, employees.language, employees.objective, employees.Active
+		employees.basic_salary, employees.bank_account, employees.language, employees.objective, employees.active
 	FROM entitys INNER JOIN employees ON entitys.entity_id = employees.entity_id;
 
 CREATE VIEW vw_employee_periods AS

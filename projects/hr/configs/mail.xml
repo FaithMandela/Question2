@@ -74,7 +74,7 @@
 	
 	<REPORT name="Birthday Email" keyfield="entity_id" action="emailed_dob" actioncount="1" 
 		table="vw_entity_employees, sys_emails"
-		where="(vw_entity_employees.date_of_birth is not null) 
+		where="(vw_entity_employees.date_of_birth is not null) AND (vw_entity_employees.active = true)
 			AND (EXTRACT(month FROM vw_entity_employees.date_of_birth) = EXTRACT(month FROM current_date))
 			AND (EXTRACT(DAY FROM vw_entity_employees.date_of_birth) = EXTRACT(DAY FROM current_date))
 			AND (EXTRACT(HOUR FROM current_time) > 8)
