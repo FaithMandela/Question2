@@ -44,7 +44,6 @@ CREATE TABLE policy_members (
 CREATE INDEX policy_members_passenger_id ON passengers (passenger_id);
 
 
-
 CREATE OR REPLACE VIEW vw_policy_members AS
 SELECT
     p.policy_member_id, p.passenger_id, p.org_id, p.entity_id, p.member_name, p.passport_number, p.pin_number,
@@ -53,6 +52,3 @@ SELECT
     a.departure_country, a.entity_name, a.days_from, a.days_to, a.rate_type_id, a.approved_date
     FROM  policy_members p
     JOIN vw_passengers a ON p.passenger_id = a.passenger_id ;
-
-DELETE FROM passengers ;
-ALTER SEQUENCE passengers_passenger_id_seq RESTART WITH 1;

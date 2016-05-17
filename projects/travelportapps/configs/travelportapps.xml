@@ -1001,7 +1001,7 @@
 			</GRID>
 			<GRID noorg="true" keyfield="benefit_id" name="Benefits" linkfield="rate_type_id" table="vw_benefits">
 				<TEXTFIELD w="75" title="Benefit Type">benefit_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Rate Type">rate_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="individual">individual</TEXTFIELD>
 				<TEXTFIELD w="75" title="Others">others</TEXTFIELD>
 				<FORM noorg="true" keyfield="benefit_id" name="Benefits" linkfield="rate_type_id" table="benefits">
@@ -1235,7 +1235,7 @@
 			<FILTERFORM name="Sales Per Agency ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="150" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" org.id="parent_org_id" title="Agency Sales">org_id</COMBOBOX>
+				<COMBOBOX w="150" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" org.id="parent_org_id" title="Agency Sales">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="travelinsurance/salesperagency.jasper" name="Sales Per Agency "></JASPER>
 		</FILTER>
