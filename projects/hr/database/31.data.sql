@@ -200,7 +200,19 @@ They payroll has been generated for {{narrative}}<br><br>
 Regards,<br>
 HR Manager<br>
 ');
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 7, true);
+INSERT INTO sys_emails (sys_email_id, use_type, org_id, sys_email_name, title, details) 
+VALUES (8, 8, 0, 'Have a Happy Birthday', 'Have a Happy Birthday', 'Happy Birthday {{name}},<br><br>
+A very happy birthday to you.<br><br>
+Regards,<br>
+HR Manager<br>
+');
+INSERT INTO sys_emails (sys_email_id, use_type, org_id, sys_email_name, title, details) 
+VALUES (9, 9, 0, 'Happy Birthday', 'Happy Birthday', 'Hello HR,<br><br>
+{{narrative}}.<br><br>
+Regards,<br>
+HR Manager<br>
+');
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 9, true);
 
 
 

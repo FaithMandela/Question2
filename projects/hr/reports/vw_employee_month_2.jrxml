@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_month_2" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d50a54db-3243-4334-9e70-d08f231c8244">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="707"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -21,12 +21,16 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_month.department_id, vw_employee_month.department_name,
-vw_employee_month.period_year, vw_employee_month.period_month,
-vw_employee_month.entity_id, vw_employee_month.entity_name,
-vw_employee_month.employee_id, vw_employee_month.overtime,
- vw_employee_month.basic_pay, vw_employee_month.payroll_allowance, vw_employee_month.payroll_deduction, vw_employee_month.payroll_expense, vw_employee_month.payroll_tax, vw_employee_month.net_pay,
-per_diem, advance, advance_deduction, banked, cost,
-vw_employee_month.currency_id, vw_employee_month.currency_name, vw_employee_month.currency_symbol
+ vw_employee_month.period_year, vw_employee_month.period_month,
+ vw_employee_month.entity_id, vw_employee_month.entity_name,
+ vw_employee_month.employee_id, vw_employee_month.overtime,
+ vw_employee_month.basic_pay, vw_employee_month.payroll_allowance,
+ vw_employee_month.payroll_deduction, vw_employee_month.payroll_expense,
+ vw_employee_month.payroll_tax, vw_employee_month.net_pay,
+ vw_employee_month.per_diem, vw_employee_month.advance, vw_employee_month.advance_deduction,
+ vw_employee_month.banked, vw_employee_month.cost,
+ vw_employee_month.currency_id, vw_employee_month.currency_name, vw_employee_month.currency_symbol,
+ (vw_employee_month.banked + getAdjustment(vw_employee_month.employee_month_id, 4, 41)) as tbanked
 
 FROM vw_employee_month
 WHERE (vw_employee_month.period_id = '$P!{filterid}')
@@ -56,6 +60,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.department_name, vw_
 	<field name="currency_id" class="java.lang.Integer"/>
 	<field name="currency_name" class="java.lang.String"/>
 	<field name="currency_symbol" class="java.lang.String"/>
+	<field name="tbanked" class="java.lang.Double"/>
 	<variable name="basic_pay_1" class="java.lang.Double" resetType="Group" resetGroup="department_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{basic_pay}]]></variableExpression>
 	</variable>
@@ -86,8 +91,8 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.department_name, vw_
 	<variable name="advance_deduction_1" class="java.lang.Double" resetType="Group" resetGroup="department_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{advance_deduction}]]></variableExpression>
 	</variable>
-	<variable name="banked_1" class="java.lang.Double" resetType="Group" resetGroup="department_name" calculation="Sum">
-		<variableExpression><![CDATA[$F{banked}]]></variableExpression>
+	<variable name="tbanked_1" class="java.lang.Double" resetType="Group" resetGroup="department_name" calculation="Sum">
+		<variableExpression><![CDATA[$F{tbanked}]]></variableExpression>
 	</variable>
 	<variable name="cost_1" class="java.lang.Double" resetType="Group" resetGroup="department_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{cost}]]></variableExpression>
@@ -167,7 +172,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.department_name, vw_
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<text><![CDATA[Net Pay]]></text>
+					<text><![CDATA[Gross Pay]]></text>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="247" y="16" width="50" height="15" forecolor="#000000" uuid="06978b39-d103-48cf-8e14-c3c63ed4a406"/>
@@ -354,7 +359,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.department_name, vw_
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{banked_1}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{tbanked_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0;(#,##0)">
 					<reportElement x="747" y="0" width="50" height="15" uuid="af23d9b2-74a6-4d41-b8d2-fdfacbd72a2f"/>
@@ -497,7 +502,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.department_name, vw_
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{banked}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{tbanked}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="547" y="0" width="50" height="15" uuid="c4fe921a-f992-439d-af36-a83fca74cab2"/>

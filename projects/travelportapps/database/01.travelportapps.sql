@@ -1556,43 +1556,22 @@ CREATE TRIGGER ins_passengers AFTER INSERT ON passengers
 FOR EACH ROW  EXECUTE PROCEDURE ins_passengers();
 
 	CREATE OR REPLACE VIEW vw_rates AS
-     SELECT vw_rate_types.rate_type_id,
-   vw_rate_types.rate_type_name,
-   rates.rate_id,
-   rates.days_from,
-   rates.days_to,
-   rates.standard_rate,
-   rates.north_america_rate,
-   vw_rate_types.rate_category_name,
-   vw_rate_types.rate_category_id,
-   vw_rate_types.rate_plan_id,
-   vw_rate_types.rate_plan_name,
-   vw_rate_types.age_from,
-   vw_rate_types.age_to
+     SELECT vw_rate_types.rate_type_id,  vw_rate_types.rate_type_name,  rates.rate_id,  rates.days_from,
+   rates.days_to,  rates.standard_rate,  rates.north_america_rate,  vw_rate_types.rate_category_name,
+   vw_rate_types.rate_category_id,  vw_rate_types.rate_plan_id,  vw_rate_types.rate_plan_name,
+   vw_rate_types.age_from,  vw_rate_types.age_to
   FROM rates
     JOIN vw_rate_types ON rates.rate_type_id = vw_rate_types.rate_type_id;
 
 CREATE OR REPLACE VIEW vw_corporate_rates AS
-SELECT corporate_rate_types.rate_type_id,
-  corporate_rate_types.rate_type_name,
-  corporate_rates.corporate_rate_id,
-  corporate_rates.days_from,
-  corporate_rates.days_to,
-  corporate_rates.standard_rate,
-  corporate_rates.north_america_rate
+SELECT corporate_rate_types.rate_type_id, corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
+  corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate
  FROM corporate_rates
    JOIN corporate_rate_types ON corporate_rates.rate_type_id = corporate_rate_types.rate_type_id;
 
      CREATE OR REPLACE VIEW vw_benefits AS
-      SELECT benefit_types.benefit_type_id,
-         benefit_types.benefit_type_name,
-         benefit_types.benefit_section,
-         rate_types.rate_type_id,
-         rate_types.rate_type_name,
-         benefits.benefit_id,
-
-         benefits.individual,
-         benefits.others
+      SELECT benefit_types.benefit_type_id,  benefit_types.benefit_type_name,  benefit_types.benefit_section,
+         rate_types.rate_type_id, rate_types.rate_type_name,  benefits.benefit_id,  benefits.individual, benefits.others
         FROM benefits
           JOIN benefit_types ON benefits.benefit_type_id = benefit_types.benefit_type_id
           JOIN rate_types ON benefits.rate_type_id = rate_types.rate_type_id;
@@ -1600,13 +1579,9 @@ SELECT corporate_rate_types.rate_type_id,
 
 
 CREATE OR REPLACE VIEW vw_corporate_benefits AS
-SELECT corporate_benefits.corporate_benefit_type_id,
-  corporate_benefit_types.corporate_benefit_type_name,
-  corporate_benefits.rate_type_id,
-  corporate_rate_types.rate_type_name,
-  corporate_benefits.benefit_id,
-  corporate_benefits.individual,
-  corporate_benefits.others
+SELECT corporate_benefits.corporate_benefit_type_id,  corporate_benefit_types.corporate_benefit_type_name,
+  corporate_benefits.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_benefits.benefit_id,
+  corporate_benefits.individual,  corporate_benefits.others
  FROM corporate_benefits
    JOIN corporate_benefit_types ON corporate_benefits.corporate_benefit_type_id = corporate_benefit_types.corporate_benefit_type_id
    JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
@@ -1614,63 +1589,28 @@ SELECT corporate_benefits.corporate_benefit_type_id,
 
 
 CREATE OR REPLACE VIEW vw_rate_types AS
-SELECT rate_types.rate_type_id,
-  rate_types.rate_type_name,
-  rate_types.age_limit,
-  rate_types.details,
-  rate_types.age_from,
-  rate_types.age_to,
-  rate_category.rate_category_name
+SELECT rate_types.rate_type_id,  rate_types.rate_type_name,  rate_types.age_limit,  rate_types.details,
+  rate_types.age_from,  rate_types.age_to,  rate_category.rate_category_name
  FROM rate_types
    JOIN rate_category ON rate_types.rate_category_id = rate_category.rate_category_id ;
 
 CREATE OR REPLACE VIEW vw_corporate_rate_types AS
-SELECT corporate_rate_types.rate_type_id,
-   corporate_rate_types.rate_type_name,
-   corporate_rate_types.age_limit,
-   corporate_rate_types.details,
-   corporate_rate_category.corporate_rate_category_name
+SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_rate_types.age_limit,
+   corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name
   FROM corporate_rate_types
   JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id ;
 
 
 CREATE OR REPLACE VIEW vw_passengers AS
-SELECT orgs.org_id,
-  orgs.org_name,
-  vw_rates.rate_type_id,
-  vw_rates.rate_type_name,
-  vw_rate_types.rate_category_name,
-  vw_rates.rate_id,
-  passengers.days_from,
-  passengers.days_to,
-  passengers.corporate_rate_id,
-  vw_rates.standard_rate,
-  vw_rates.north_america_rate,
-  passengers.approved,
-  passengers.entity_id,
-  passengers.countries,
-  passengers.passenger_id,
-  passengers.passenger_name,
-  passengers.passenger_mobile,
-  passengers.passenger_email,
-  passengers.passenger_age,
-  passengers.days_covered,
-  passengers.nok_name,
-  passengers.nok_mobile,
-  passengers.passenger_id_no,
-  passengers.nok_national_id,
-  passengers.cover_amount,
-  passengers.totalAmount_covered,
-  passengers.is_north_america,
-  passengers.details,
-  passengers.passenger_dob,
-  passengers.policy_number,
-  entitys.entity_name,
-  passengers.destown,
-  sys_countrys.sys_country_name,
-  passengers.approved_date,
-  passengers.corporate_id,
-  passengers.pin_no
+SELECT orgs.org_id,  orgs.org_name,  vw_rates.rate_type_id,  vw_rates.rate_type_name,  vw_rate_types.rate_category_name,
+  vw_rates.rate_id,  passengers.days_from,  passengers.days_to,  passengers.corporate_rate_id,  vw_rates.standard_rate,
+  vw_rates.north_america_rate,  passengers.approved,  passengers.entity_id,  passengers.countries,
+  passengers.passenger_id,  passengers.passenger_name,  passengers.passenger_mobile,  passengers.passenger_email,
+  passengers.passenger_age,  passengers.days_covered,  passengers.nok_name,  passengers.nok_mobile,
+  passengers.passenger_id_no,  passengers.nok_national_id,  passengers.cover_amount,  passengers.totalAmount_covered,
+  passengers.is_north_america,  passengers.details,  passengers.passenger_dob,  passengers.policy_number,
+  entitys.entity_name,  passengers.destown,  sys_countrys.sys_country_name,  passengers.approved_date,
+  passengers.corporate_id,  passengers.pin_no
  FROM passengers
    JOIN orgs ON passengers.org_id = orgs.org_id
    JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
@@ -1679,35 +1619,14 @@ SELECT orgs.org_id,
    JOIN sys_countrys ON passengers.sys_country_id = sys_countrys.sys_country_id;
 
         CREATE OR REPLACE VIEW vw_staff AS
-            SELECT orgs.org_id,
-               orgs.org_name,
-               vw_corporate_rates.rate_type_id,
-               vw_corporate_rates.rate_type_name,
-               passengers.days_from,
-               passengers.days_to,
-               passengers.corporate_rate_id,
-               vw_corporate_rates.standard_rate,
-               vw_corporate_rates.north_america_rate,
-               passengers.approved,
-               passengers.entity_id,
-               passengers.passenger_id,
-               passengers.passenger_name,
-               passengers.passenger_mobile,
-               passengers.passenger_email,
-               passengers.passenger_age,
-               passengers.days_covered,
-               passengers.nok_name,
-               passengers.nok_mobile,
-               passengers.passenger_id_no,
-               passengers.nok_national_id,
-               passengers.cover_amount,
-               passengers.is_north_america,
-               passengers.details,
-               passengers.passenger_dob,
-               entitys.entity_name,
-               passengers.destown,
-               sys_countrys.sys_country_name,
-               passengers.approved_date,
+            SELECT orgs.org_id,   orgs.org_name, vw_corporate_rates.rate_type_id,   vw_corporate_rates.rate_type_name,
+               passengers.days_from,  passengers.days_to,   passengers.corporate_rate_id,
+               vw_corporate_rates.standard_rate,  vw_corporate_rates.north_america_rate,   passengers.approved,
+               passengers.entity_id,  passengers.passenger_id, passengers.passenger_name,  passengers.passenger_mobile,
+               passengers.passenger_email,  passengers.passenger_age,   passengers.days_covered,
+               passengers.nok_name,    passengers.nok_mobile, passengers.passenger_id_no,  passengers.nok_national_id,
+               passengers.cover_amount,  passengers.is_north_america,  passengers.details,  passengers.passenger_dob,
+               entitys.entity_name,   passengers.destown,  sys_countrys.sys_country_name,    passengers.approved_date,
                passengers.corporate_id
               FROM passengers
                 JOIN orgs ON passengers.org_id = orgs.org_id
@@ -1718,31 +1637,12 @@ SELECT orgs.org_id,
 
 
 CREATE OR REPLACE VIEW vw_app_users AS
- SELECT vw_orgs.org_id,
-    vw_orgs.org_name,
-    vw_orgs.pcc,
-    vw_orgs.gds_free_field,
-    vw_orgs.show_fare,
-    vw_orgs.logo,
-    vw_entity_address.table_id,
-    vw_entity_address.table_name,
-    vw_entity_address.post_office_box,
-    vw_entity_address.postal_code,
-    vw_entity_address.premises,
-    vw_entity_address.street,
-    vw_entity_address.town,
-    vw_entity_address.phone_number,
-    vw_entity_address.email,
-    vw_entity_address.sys_country_name,
-    entitys.entity_id,
-    entitys.entity_name,
-    entitys.user_name,
-    entitys.entity_password,
-    entitys.son,
-    entitys.phone_ph,
-    entitys.phone_pa,
-    entitys.phone_pb,
-    entitys.phone_pt,
+ SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.pcc, vw_orgs.gds_free_field, vw_orgs.show_fare,
+    vw_orgs.logo,  vw_entity_address.table_id, vw_entity_address.table_name, vw_entity_address.post_office_box,
+    vw_entity_address.postal_code, vw_entity_address.premises, vw_entity_address.street,
+    vw_entity_address.town, vw_entity_address.phone_number, vw_entity_address.email,
+    vw_entity_address.sys_country_name, entitys.entity_id, entitys.entity_name, entitys.user_name,
+    entitys.entity_password,  entitys.son, entitys.phone_ph,  entitys.phone_pa, entitys.phone_pb,  entitys.phone_pt,
     apps_list.app_name
    FROM entitys
      LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id

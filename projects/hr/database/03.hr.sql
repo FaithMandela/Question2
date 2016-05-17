@@ -124,6 +124,7 @@ CREATE TABLE employees (
 	first_name				varchar(50) not null,
 	middle_name				varchar(50),
 	date_of_birth			date,
+	dob_email				date default '2016-01-01'::date,
 	
 	gender					varchar(1),
 	phone					varchar(120),
@@ -900,7 +901,7 @@ CREATE VIEW vw_employees AS
 		employees.org_id, employees.entity_id, employees.employee_id, employees.surname, employees.first_name, employees.middle_name, 
 		employees.person_title, employees.field_of_study,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
-		employees.date_of_birth, employees.place_of_birth, employees.gender, 
+		employees.date_of_birth, employees.dob_email, employees.place_of_birth, employees.gender, 
 		employees.nationality, employees.nation_of_birth, 
 		employees.marital_status, employees.appointment_date, 
 		employees.exit_date, employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card, 
@@ -928,9 +929,10 @@ CREATE VIEW vw_entity_employees AS
 		entitys.primary_email, entitys.super_user, entitys.entity_leader, entitys.function_role,
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, entitys.is_picked,
 		employees.employee_id, employees.surname, employees.first_name, employees.middle_name,
-		employees.date_of_birth, employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, 
+		employees.date_of_birth, employees.dob_email, employees.gender, employees.nationality, 
+		employees.marital_status, employees.appointment_date, 
 		employees.exit_date, employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card, 
-		employees.basic_salary, employees.bank_account, employees.language, employees.objective, employees.Active
+		employees.basic_salary, employees.bank_account, employees.language, employees.objective, employees.active
 	FROM entitys INNER JOIN employees ON entitys.entity_id = employees.entity_id;
 
 CREATE VIEW vw_employee_periods AS
@@ -2458,3 +2460,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	v_entity_name			varchar(120);
+BEGIN
+	SELECT org_id, entity_name INTO v_org_id, v_entity_name
+	FROM entitys WHERE (entity_id = $2::int);
+	
+    UPDATE employees SET dob_email = current_date WHERE (entity_id = $2::int);
+    INSERT INTO sys_emailed (sys_email_id, org_id, email_type, narrative)
+	VALUES (9, 0, 9, 'Its birthday for ' || v_entity_name);
+	
+    RETURN 'Done';
+END;
+$$ LANGUAGE plpgsql;

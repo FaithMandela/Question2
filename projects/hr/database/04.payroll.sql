@@ -515,7 +515,7 @@ BEGIN
 	ELSIF ($3 = 41) THEN
 		SELECT SUM(exchange_rate * amount) INTO adjustment
 		FROM employee_banking
-		WHERE (Employee_Month_ID = $1);
+		WHERE (employee_month_id = $1);
 	ELSE
 		adjustment := 0;
 	END IF;
@@ -610,6 +610,7 @@ CREATE VIEW vw_employee_month AS
 		getAdjustment(employee_month.employee_month_id, 4, 33) as per_diem,
 		getAdjustment(employee_month.employee_month_id, 4, 34) as advance,
 		getAdjustment(employee_month.employee_month_id, 4, 35) as advance_deduction,
+		getAdjustment(employee_month.employee_month_id, 4, 41) as other_banks,
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
 		+ getAdjustment(employee_month.employee_month_id, 4, 33) - getAdjustment(employee_month.employee_month_id, 4, 11)) as net_pay,
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
@@ -1753,7 +1754,7 @@ BEGIN
 			v_amount := rec.amount;
 		END IF;
 		
-		a_exchange_rate := v_exchange_rate;
+		a_exchange_rate := 1;
 		IF(v_currency_id <> adj.currency_id)THEN
 			a_exchange_rate := 1 / v_exchange_rate;
 		END IF;
@@ -1787,6 +1788,7 @@ BEGIN
 			FROM adjustments
 			WHERE (adjustment_id = rec.contribution_id);
 			
+			a_exchange_rate := 1;
 			IF(v_currency_id <> adj.currency_id)THEN
 				a_exchange_rate := 1 / v_exchange_rate;
 			END IF;

@@ -1195,12 +1195,7 @@ CREATE VIEW coursechecklist AS
 		courseoutline.degreelevelid, courseoutline.description, courseoutline.courseid,
 		courseoutline.coursetitle, courseoutline.minor, courseoutline.elective, courseoutline.credithours, courseoutline.nogpa, courseoutline.gradeid,
 		courseoutline.content_level, courseoutline.gradeweight, courseoutline.courseweight, courseoutline.prereqpassed,
-		
-<<<<<<< HEAD
-		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.courseid) as coursepased
-=======
 		get_passed(courseoutline.courseweight, courseoutline.gradeweight, courseoutline.content_level, courseoutline.studentid, courseoutline.majorid) as coursepased
->>>>>>> b77a21891ef11990fadb44f8af13b2f22a66677d
 		
 	FROM courseoutline;
 
@@ -1370,9 +1365,17 @@ CREATE VIEW vwdualcourselevels AS
 CREATE VIEW studentmarkview AS
 	SELECT marks.markid, marks.grade, marks.markweight, registrations.existingid,
 		getfirstquarterid(registrations.existingid) as firstquarter,
-		students.studentname
+		students.studentid, students.studentname, students.accountnumber, students.nationality,
+		students.sex, students.maritalstatus, students.birthdate,
+		c3.countryname as nationalitycountry, 
+		studentdegrees.studentdegreeid, degrees.degreeid, degrees.degreename,
+		getcoremajor(studentdegrees.studentdegreeid) as core_major
 	FROM (registrations INNER JOIN marks ON registrations.markid = marks.markid)
-		INNER JOIN students ON registrations.existingid = students.studentid;
+		INNER JOIN students ON registrations.existingid = students.studentid
+		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid
+		INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid
+		INNER JOIN countrys as c3 ON students.Nationality = c3.countryid;
+		
 		
 ---- webservice functions
 CREATE VIEW ws_students AS
