@@ -975,9 +975,11 @@
 	<DESK w="585" name="Services" type="vert" key="7" h="500">
 		<GRID name="Service Types" keyfield="assettypeid" table="assettypes" key="1">
 			<TEXTFIELD w="40" title="ID">assettypeid</TEXTFIELD>
-			<TEXTFIELD w="240" title="Type Name">assettypename</TEXTFIELD>
+			<TEXTFIELD w="160" title="Type Name">assettypename</TEXTFIELD>
+			<TEXTFIELD w="80" title="Cost">cost</TEXTFIELD>
 			<FORM name="Service Types" keyfield="assettypeid" table="assettypes" key="2">
 				<TEXTFIELD w="430" title="Type Name" y="10" h="20" x="10">assettypename</TEXTFIELD>
+				<TEXTFIELD w="430" title="Cost" y="10" h="20" x="10">cost</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="120" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -1029,6 +1031,42 @@
 				<TEXTFIELD w="40" title="Retrived">isretrived</TEXTFIELD>
 				<TEXTFIELD w="40" title="Date Retrived">dateretrived</TEXTFIELD>
 			</GRID>
+		</GRID>
+		<GRID name="Equipment List" keyfield="equipment_id" linkfield="worksheet" table="equipment">
+			<TEXTFIELD w="75" title="Equipment ID">equipment_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Worksheet">worksheet</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item">item</TEXTFIELD>
+			<TEXTFIELD w="75" title="Count">count</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item Location">item_location</TEXTFIELD>
+			<TEXTFIELD w="75" title="Invoice No">invoice_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Description">description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency">agency</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pc">pc</TEXTFIELD>
+			<TEXTFIELD w="75" title="Peripherals">peripherals</TEXTFIELD>
+			<TEXTFIELD w="75" title="Status">status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item User">item_user</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item Value">item_value</TEXTFIELD>
+			<TEXTFIELD w="75" title="Purchase Date">purchase_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Install Date">install_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>
+			<TEXTFIELD w="75" title="Details">details</TEXTFIELD>
+			<FORM name="Equipment" keyfield="equipment_id" linkfield="worksheet" table="equipment">
+				<TEXTFIELD w="150" title="Item" y="10" h="20" x="10">item</TEXTFIELD>
+				<TEXTFIELD w="150" title="Count" y="10" h="20" x="290">count</TEXTFIELD>
+				<TEXTFIELD w="150" title="Item Location" y="30" h="20" x="10">item_location</TEXTFIELD>
+				<TEXTFIELD w="150" title="Invoice No" y="30" h="20" x="290">invoice_no</TEXTFIELD>
+				<TEXTFIELD w="430" title="Description" y="50" h="20" x="10">description</TEXTFIELD>
+				<TEXTFIELD w="430" title="Agency" y="70" h="20" x="10">agency</TEXTFIELD>
+				<TEXTFIELD w="150" title="Pc" y="90" h="20" x="10">pc</TEXTFIELD>
+				<TEXTFIELD w="150" title="Peripherals" y="90" h="20" x="290">peripherals</TEXTFIELD>
+				<TEXTFIELD w="430" title="Status" y="110" h="20" x="10">status</TEXTFIELD>
+				<TEXTFIELD w="430" title="Item User" y="130" h="20" x="10">item_user</TEXTFIELD>
+				<TEXTFIELD w="150" title="Item Value" y="150" h="20" x="10">item_value</TEXTFIELD>
+				<TEXTFIELD w="150" title="Purchase Date" y="150" h="20" x="290">purchase_date</TEXTFIELD>
+				<TEXTFIELD w="150" title="Install Date" y="170" h="20" x="10">install_date</TEXTFIELD>
+				<TEXTFIELD w="150" title="Currency" y="170" h="20" x="290">currency</TEXTFIELD>
+				<TEXTFIELD w="150" title="Details" y="190" h="20" x="10">details</TEXTFIELD>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="585" name="Client Services" type="vert" key="16" h="500">

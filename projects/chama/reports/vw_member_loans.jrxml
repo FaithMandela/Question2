@@ -26,15 +26,14 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="entity_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_loans.currency_name, vw_loans.loan_type_name, vw_loans.entity_id, vw_loans.entity_name, vw_loans.org_id, vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment,  vw_loans.repayment_period, vw_loans.initial_payment, vw_loans.repayment_amount, vw_loans.total_repayment, vw_loans.loan_balance
 FROM vw_loans
-Where entity_id = $P!{entity_id}
 $P!{organd}
-order by loan_type_name
-]]>
+Where entity_id = $P!{entity_id}
+order by loan_type_name]]>
 	</queryString>
 	<field name="currency_name" class="java.lang.String"/>
 	<field name="loan_type_name" class="java.lang.String"/>
@@ -42,21 +41,21 @@ order by loan_type_name
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="loan_id" class="java.lang.Integer"/>
-	<field name="principle" class="java.lang.Double"/>
-	<field name="interest" class="java.lang.Double"/>
-	<field name="monthly_repayment" class="java.lang.Double"/>
+	<field name="principle" class="java.lang.Float"/>
+	<field name="interest" class="java.lang.Float"/>
+	<field name="monthly_repayment" class="java.lang.Float"/>
 	<field name="repayment_period" class="java.lang.Integer"/>
-	<field name="initial_payment" class="java.lang.Double"/>
-	<field name="repayment_amount" class="java.lang.Double"/>
-	<field name="total_repayment" class="java.lang.Double"/>
-	<field name="loan_balance" class="java.lang.Double"/>
+	<field name="initial_payment" class="java.lang.Float"/>
+	<field name="repayment_amount" class="java.lang.Float"/>
+	<field name="total_repayment" class="java.lang.Float"/>
+	<field name="loan_balance" class="java.lang.Float"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="49c06d54-fbaa-4f54-b085-22b63134cc2c"/>
+				<reportElement style="Title" positionType="Float" x="66" y="0" width="446" height="62" uuid="49c06d54-fbaa-4f54-b085-22b63134cc2c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -76,21 +75,14 @@ order by loan_type_name
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="9" y="0" width="37" height="15" forecolor="#000000" uuid="a938f999-a24f-42ef-9526-2930dbdc575a"/>
+				<reportElement style="Column header" x="9" y="0" width="76" height="15" forecolor="#000000" uuid="a938f999-a24f-42ef-9526-2930dbdc575a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Loan Type Name]]></text>
+				<text><![CDATA[Loan Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="62" y="0" width="37" height="15" forecolor="#000000" uuid="78d86435-ec47-456d-89f2-78dd6ca900c3"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Entity Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="110" y="0" width="37" height="15" forecolor="#000000" uuid="abb1c541-fdf2-46de-947e-768962c69da1"/>
+				<reportElement style="Column header" x="95" y="0" width="37" height="15" forecolor="#000000" uuid="abb1c541-fdf2-46de-947e-768962c69da1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -104,7 +96,7 @@ order by loan_type_name
 				<text><![CDATA[Interest]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="226" y="0" width="37" height="15" forecolor="#000000" uuid="a830882e-a46c-4c47-ac33-d6e3d504f47e"/>
+				<reportElement style="Column header" x="212" y="1" width="57" height="15" forecolor="#000000" uuid="a830882e-a46c-4c47-ac33-d6e3d504f47e"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -159,14 +151,7 @@ order by loan_type_name
 					<textFieldExpression><![CDATA[$F{loan_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="60" y="0" width="37" height="15" uuid="5f33e4dc-189b-4d62-8ed3-49516d560ea9"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="108" y="0" width="37" height="15" uuid="e77461f0-cda7-4a3a-a8c8-7c5ff90c456b"/>
+					<reportElement style="Detail" x="95" y="0" width="37" height="15" uuid="e77461f0-cda7-4a3a-a8c8-7c5ff90c456b"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>

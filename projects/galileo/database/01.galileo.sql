@@ -350,6 +350,7 @@ CREATE INDEX Transport_UserID ON Transport (UserID);
 CREATE TABLE AssetTypes (
 	AssetTypeID				serial primary key,
 	AssetTypeName			varchar(50) not null,
+	cost					real,
 	Details		 			text
 );
 
