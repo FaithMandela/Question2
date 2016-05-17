@@ -1556,7 +1556,8 @@
 				<TEXTFIELD w="75" fnct="to_char(net_pay, '9999999D9')" title="Net Pay">v_net_pay</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="to_char(advance, '9999999D9')" title="Advance">v_advance</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="to_char(advance_deduction, '9999999D9')" title="Advance Deductions">v_advance_deduction</TEXTFIELD>
-				<TEXTFIELD w="75" fnct="to_char(banked, '9999999D9')" title="Banked">v_banked</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(banked, '9999999D9')" title="Main Banked">v_banked</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(getAdjustment(employee_month_id, 4, 41), '9999999D9')" title="Other Banked">o_banked</TEXTFIELD>
 			</CROSSTAB>
 		</GRID>
 		<GRID name="SUN Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">
