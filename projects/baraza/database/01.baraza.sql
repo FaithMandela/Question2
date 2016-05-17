@@ -274,7 +274,7 @@ CREATE TABLE sys_emails (
 	org_id					integer references orgs,
 	use_type				integer default 1 not null,
 	sys_email_name			varchar(50),
-	default_email			varchar(120),
+	default_email			varchar(320),
 	title					varchar(240) not null,
 	details					text
 );
@@ -304,8 +304,8 @@ CREATE TABLE workflows (
 	table_name				varchar(64),
 	table_link_field		varchar(64),
 	table_link_id			integer,
-	approve_email			text,
-	reject_email			text,
+	approve_email			text not null,
+	reject_email			text not null,
 	approve_file			varchar(320),
 	reject_file				varchar(320),
 	details					text
@@ -327,7 +327,7 @@ CREATE TABLE workflow_phases (
 	use_reporting			boolean default false not null,
 	advice					boolean default false not null,
 	notice					boolean default false not null,
-	phase_narrative			varchar(240),
+	phase_narrative			varchar(240) not null,
 	advice_email			text,
 	notice_email			text,
 	advice_file				varchar(320),
@@ -799,6 +799,69 @@ CREATE FUNCTION Emailed(integer, varchar(64)) RETURNS void AS $$
     UPDATE sys_emailed SET emailed = true WHERE (sys_emailed_id = CAST($2 as int));
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION upd_action() RETURNS trigger AS $$
+DECLARE
+	wfid		INTEGER;
+	reca		RECORD;
+	tbid		INTEGER;
+	iswf		BOOLEAN;
+	add_flow	BOOLEAN;
+BEGIN
+	add_flow := false;
+	IF(TG_OP = 'INSERT')THEN
+		IF (NEW.approve_status = 'Completed')THEN
+			add_flow := true;
+		END IF;
+	ELSE
+		IF(OLD.approve_status = 'Draft') AND (NEW.approve_status = 'Completed')THEN
+			add_flow := true;
+		END IF;
+	END IF;
+
+	IF(add_flow = true)THEN
+		wfid := nextval('workflow_table_id_seq');
+		NEW.workflow_table_id := wfid;
+
+		IF(TG_OP = 'UPDATE')THEN
+			IF(OLD.workflow_table_id is not null)THEN
+				INSERT INTO workflow_logs (org_id, table_name, table_id, table_old_id)
+				VALUES (NEW.org_id, TG_TABLE_NAME, wfid, OLD.workflow_table_id);
+			END IF;
+		END IF;
+
+		FOR reca IN SELECT workflows.workflow_id, workflows.table_name, workflows.table_link_field, workflows.table_link_id
+		FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
+		WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) LOOP
+			iswf := true;
+			IF(reca.table_link_field is null)THEN
+				iswf := true;
+			ELSE
+				IF(TG_TABLE_NAME = 'entry_forms')THEN
+					tbid := NEW.form_id;
+				END IF;
+				IF(tbid = reca.table_link_id)THEN
+					iswf := true;
+				END IF;
+			END IF;
+
+			IF(iswf = true)THEN
+				INSERT INTO approvals (org_id, workflow_phase_id, table_name, table_id, org_entity_id, escalation_days, escalation_hours, approval_level, approval_narrative, to_be_done)
+				SELECT org_id, workflow_phase_id, TG_TABLE_NAME, wfid, NEW.entity_id, escalation_days, escalation_hours, approval_level, phase_narrative, 'Approve - ' || phase_narrative
+				FROM vw_workflow_entitys
+				WHERE (table_name = TG_TABLE_NAME) AND (entity_id = NEW.entity_id) AND (workflow_id = reca.workflow_id)
+				ORDER BY approval_level, workflow_phase_id;
+
+				UPDATE approvals SET approve_status = 'Completed'
+				WHERE (table_id = wfid) AND (approval_level = 1);
+			END IF;
+		END LOOP;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE FUNCTION ins_approvals() RETURNS trigger AS $$
 DECLARE
 	reca	RECORD;
@@ -864,68 +927,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_approvals AFTER INSERT OR UPDATE ON approvals
     FOR EACH ROW EXECUTE PROCEDURE upd_approvals();
 
-CREATE OR REPLACE FUNCTION upd_action() RETURNS trigger AS $$
-DECLARE
-	wfid		INTEGER;
-	reca		RECORD;
-	tbid		INTEGER;
-	iswf		BOOLEAN;
-	add_flow	BOOLEAN;
-BEGIN
-	add_flow := false;
-	IF(TG_OP = 'INSERT')THEN
-		IF (NEW.approve_status = 'Completed')THEN
-			add_flow := true;
-		END IF;
-	ELSE
-		IF(OLD.approve_status = 'Draft') AND (NEW.approve_status = 'Completed')THEN
-			add_flow := true;
-		END IF;
-	END IF;
-
-	IF(add_flow = true)THEN
-		wfid := nextval('workflow_table_id_seq');
-		NEW.workflow_table_id := wfid;
-
-		IF(TG_OP = 'UPDATE')THEN
-			IF(OLD.workflow_table_id is not null)THEN
-				INSERT INTO workflow_logs (org_id, table_name, table_id, table_old_id)
-				VALUES (NEW.org_id, TG_TABLE_NAME, wfid, OLD.workflow_table_id);
-			END IF;
-		END IF;
-
-		FOR reca IN SELECT workflows.workflow_id, workflows.table_name, workflows.table_link_field, workflows.table_link_id
-		FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
-		WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) LOOP
-			iswf := true;
-			IF(reca.table_link_field is null)THEN
-				iswf := true;
-			ELSE
-				IF(TG_TABLE_NAME = 'entry_forms')THEN
-					tbid := NEW.form_id;
-				END IF;
-				IF(tbid = reca.table_link_id)THEN
-					iswf := true;
-				END IF;
-			END IF;
-
-			IF(iswf = true)THEN
-				INSERT INTO approvals (org_id, workflow_phase_id, table_name, table_id, org_entity_id, escalation_days, escalation_hours, approval_level, approval_narrative, to_be_done)
-				SELECT org_id, workflow_phase_id, TG_TABLE_NAME, wfid, NEW.entity_id, escalation_days, escalation_hours, approval_level, phase_narrative, 'Approve - ' || phase_narrative
-				FROM vw_workflow_entitys
-				WHERE (table_name = TG_TABLE_NAME) AND (entity_id = NEW.entity_id) AND (workflow_id = reca.workflow_id)
-				ORDER BY approval_level, workflow_phase_id;
-
-				UPDATE approvals SET approve_status = 'Completed'
-				WHERE (table_id = wfid) AND (approval_level = 1);
-			END IF;
-		END LOOP;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION upd_approvals(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	app_id		Integer;
@@ -937,7 +938,8 @@ DECLARE
 	msg 		varchar(120);
 BEGIN
 	app_id := CAST($1 as int);
-	SELECT approvals.org_id, approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, approvals.review_advice,
+	SELECT approvals.org_id, approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, 
+		approvals.approval_level, approvals.review_advice,
 		workflow_phases.workflow_phase_id, workflow_phases.workflow_id, workflow_phases.return_level INTO reca
 	FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
 	WHERE (approvals.approval_id = app_id);
@@ -970,24 +972,26 @@ BEGIN
 			INSERT INTO sys_emailed (org_id, table_id, table_name, email_type)
 			VALUES (reca.org_id, reca.table_id, 'vw_workflow_approvals', 1);
 
-			FOR recb IN SELECT workflow_phase_id, advice
+			FOR recb IN SELECT workflow_phase_id, advice, notice
 			FROM workflow_phases
-			WHERE (workflow_id = reca.workflow_id) AND (approval_level = min_level) LOOP
-				IF (recb.advice = true) THEN
+			WHERE (workflow_id = reca.workflow_id) AND (approval_level >= reca.approval_level) LOOP
+				IF (recb.advice = true) or (recb.notice = true) THEN
 					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
 					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
 				END IF;
 			END LOOP;
 		ELSE
-			FOR recb IN SELECT workflow_phase_id, advice
+			FOR recb IN SELECT workflow_phase_id, advice, notice
 			FROM workflow_phases
-			WHERE (workflow_id = reca.workflow_id) AND (approval_level = min_level) LOOP
-				IF (recb.advice = true) THEN
+			WHERE (workflow_id = reca.workflow_id) AND (approval_level <= min_level) LOOP
+				IF (recb.advice = true) or (recb.notice = true) THEN
 					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
-					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
+					WHERE (workflow_phase_id = recb.workflow_phase_id) 
+						AND (approve_status = 'Draft') AND (table_id = reca.table_id);
 				ELSE
 					UPDATE approvals SET approve_status = 'Completed', completion_date = now()
-					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
+					WHERE (workflow_phase_id = recb.workflow_phase_id) 
+						AND (approve_status = 'Draft') AND (table_id = reca.table_id);
 				END IF;
 			END LOOP;
 		END IF;

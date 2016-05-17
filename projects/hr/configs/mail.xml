@@ -6,7 +6,7 @@
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, entitys"
 			where="(entitys.entity_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
-			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 1)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="entitys">entity_name</BODYFIELD>
@@ -63,13 +63,36 @@
 		<FIELD title="Body" basetable="vw_workflow_approvals">approve_email</FIELD>
 	</REPORT>
 
-	<REPORT name="WorkFlow Rejection" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
+	<REPORT name="WorkFlow Rejection" keyfield="sys_emailed_id" action="emailed" actioncount="1" 
 			table="sys_emailed, vw_workflow_approvals"
 			where="(vw_workflow_approvals.table_id = sys_emailed.table_id) AND (sys_emailed.emailed = false) 
 					AND (sys_emailed.table_name = 'vw_workflow_approvals') AND (sys_emailed.email_type = 2)">
 		<ADDRESS title="address">vw_workflow_approvals.org_primary_email</ADDRESS>
 		<SUBJECT title="subject">vw_workflow_approvals.workflow_narrative</SUBJECT>
 		<FIELD title="Body" basetable="vw_workflow_approvals">reject_email</FIELD>
+	</REPORT>
+	
+	<REPORT name="Birthday Email" keyfield="entity_id" action="emailed_dob" actioncount="1" 
+		table="vw_entity_employees, sys_emails"
+		where="(vw_entity_employees.date_of_birth is not null) AND (vw_entity_employees.active = true)
+			AND (EXTRACT(month FROM vw_entity_employees.date_of_birth) = EXTRACT(month FROM current_date))
+			AND (EXTRACT(DAY FROM vw_entity_employees.date_of_birth) = EXTRACT(DAY FROM current_date))
+			AND (EXTRACT(HOUR FROM current_time) > 8)
+			AND (vw_entity_employees.dob_email != current_date) 
+			AND (sys_emails.use_type = 8)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<ADDRESS title="address">vw_entity_employees.primary_email</ADDRESS>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
+	</REPORT>
+	
+	<REPORT name="Birthday HR Email" keyfield="sys_emailed_id" action="emailed" actioncount="9" 
+		table="sys_emailed, sys_emails"
+		where="(sys_emails.use_type = 9) AND (sys_emails.default_email is not null)
+			AND (sys_emailed.emailed = false) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+		<SUBJECT title="subject">sys_emailed.narrative</SUBJECT>
+		<ADDRESS title="address">sys_emails.default_email</ADDRESS>
+		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
 </ESCALATION>
