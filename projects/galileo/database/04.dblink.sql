@@ -41,7 +41,7 @@ CREATE FOREIGN TABLE i_asset_types (
 
 CREATE FOREIGN TABLE i_manufacturers (
 	manufacturer_id			integer,
-	manufacturer_name		varchar(50) not null unique,
+	manufacturer_name		varchar(50) not null,
 	details					text
  )SERVER dewcis_assets OPTIONS(table_name 'manufacturers');
 
