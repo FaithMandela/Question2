@@ -1115,6 +1115,7 @@
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Certificate" orderby="passenger_id DESC " where="(approved = true)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>

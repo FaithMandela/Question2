@@ -243,12 +243,12 @@ CREATE OR REPLACE VIEW vw_entitys AS
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
-
-CREATE VIEW vw_products AS
+		
+CREATE OR REPLACE VIEW vw_products AS
 	SELECT products.product_id, products.product_name, products.product_details, products.product_uprice,
 		products.created, products.updated_by,products.image, suppliers.supplier_name, suppliers.supplier_id,
 		product_category.product_category_id,
-		product_category.product_category_name
+		product_category.product_category_name,products.is_active
 	FROM products JOIN suppliers ON products.supplier_id = suppliers.supplier_id
 		JOIN product_category ON products.product_category_id=product_category.product_category_id;
 

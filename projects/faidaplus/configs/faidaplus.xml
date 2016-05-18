@@ -73,11 +73,13 @@
 			<TEXTFIELD w="275" title="Category Name">product_category_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Details">product_details</TEXTFIELD>
+			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 			<FORM noorg="true" keyfield="product_id" name="Products" linkfield="product_id" table="products">
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="supplier_name" x="10" y="30" lptable="suppliers" title="Supplier">supplier_id</COMBOBOX>
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="product_category_name" x="10" y="30" lptable="product_category" title="Product Category">product_category_id</COMBOBOX>
 				<TEXTFIELD w="150" h="20" x="10" y="50" title="Product Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="250" h="20" x="10" y="90" title="Product Price">product_uPrice</TEXTFIELD>
+				<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA tab="Details" w="430" h="70" x="10" y="170">product_details</TEXTAREA>
 			</FORM>

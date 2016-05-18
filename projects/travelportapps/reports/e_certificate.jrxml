@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificate" language="groovy" pageWidth="595" pageHeight="842" columnWidth="541" leftMargin="27" rightMargin="27" topMargin="20" bottomMargin="5" uuid="f68264b2-90bd-433b-a20d-19461dab01de">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="48"/>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["70"]]></defaultValueExpression>
 	</parameter>
@@ -11,7 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT  days_from,days_to, countries,passenger_id,passenger_name,
-     passenger_id_no, nok_national_id, passenger_dob, policy_number, sys_country_name,  departure_country
+     passenger_id_no, nok_national_id, passenger_dob, policy_number, sys_country_name,  departure_country,rate_plan_name
    FROM vw_passengers
 WHERE passenger_id = '$P!{filterid}';]]>
 	</queryString>
@@ -26,6 +26,7 @@ WHERE passenger_id = '$P!{filterid}';]]>
 	<field name="policy_number" class="java.lang.String"/>
 	<field name="sys_country_name" class="java.lang.String"/>
 	<field name="departure_country" class="java.lang.String"/>
+	<field name="rate_plan_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -68,7 +69,7 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[Passport Number :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="94" width="110" height="15" uuid="ecd3de49-c8e7-41a8-bf6c-a68b9b093e40"/>
+				<reportElement x="0" y="109" width="110" height="15" uuid="ecd3de49-c8e7-41a8-bf6c-a68b9b093e40"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -96,7 +97,7 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<text><![CDATA[Country of residence :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="109" width="318" height="15" uuid="612a9d63-d4ff-45d1-a859-a1f0170527db"/>
+				<reportElement x="1" y="94" width="142" height="15" uuid="612a9d63-d4ff-45d1-a859-a1f0170527db"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -124,14 +125,14 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				<textFieldExpression><![CDATA[$F{nok_national_id}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="94" width="297" height="15" uuid="155ef31c-ed1c-4da9-96ff-591201d86101"/>
+				<reportElement x="110" y="109" width="297" height="15" uuid="155ef31c-ed1c-4da9-96ff-591201d86101"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{days_from} + ' To: ' + $F{days_to}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="167" y="64" width="298" height="15" uuid="5ba22cd4-21b8-4c5c-a385-a5a68d518140"/>
+				<reportElement x="168" y="64" width="298" height="15" uuid="5ba22cd4-21b8-4c5c-a385-a5a68d518140"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -333,6 +334,13 @@ WHERE passenger_id = '$P!{filterid}';]]>
 				</textElement>
 				<text><![CDATA[P.O Box 46143-00100 or 30190-00100 Nairobi	]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="168" y="94" width="194" height="15" uuid="78c77666-10fd-4466-bf6a-a1bb7763b646"/>
+				<textElement>
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rate_plan_name}]]></textFieldExpression>
+			</textField>
 		</band>
 		<band height="28">
 			<subreport runToBottom="false">
