@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_payroll_diff" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="3f15d4f2-f247-4567-b896-32b53cfdb26e">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="578"/>
+	<property name="ireport.x" value="263"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -233,7 +233,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="30">
+			<band height="26">
 				<textField pattern="#,##0;(#,##0)" isBlankWhenNull="true">
 					<reportElement x="205" y="1" width="50" height="20" uuid="93e0c809-63e6-4312-a56c-638ace11b1ac"/>
 					<box>
@@ -336,7 +336,7 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<box rightPadding="2">
 						<topPen lineWidth="0.5"/>
 						<bottomPen lineWidth="0.75" lineStyle="Double"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" isBold="true"/>

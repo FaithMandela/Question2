@@ -919,6 +919,16 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="EMails" key="60">
+		<GRID keyfield="sys_emailed_id" name="Email List" orderby="sys_email_id DESC" table="vw_sys_emailed">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
+			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+		</GRID>
 		<GRID role="admin" keyfield="sys_email_id" name="EMails" table="sys_emails">
 			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
@@ -928,16 +938,6 @@
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Title">title</TEXTFIELD>
 				<EDITOR tab="Details" w="530" h="170" x="10" y="2">details</EDITOR>
 			</FORM>
-		</GRID>
-		<GRID keyfield="sys_emailed_id" name="Email List" table="vw_sys_emailed">
-			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
-			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
-			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 		</GRID>
 	</DESK>
 	<DESK w="800" h="500" name="Files" key="65">
@@ -983,12 +983,11 @@
 		<GRID noorg="true" keyfield="rate_type_id" name="Rate Plan" table="vw_rate_types">
 			<TEXTFIELD w="75" title="Rate Type ID">rate_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category">rate_category_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Rate PLan">rate_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Age From">age_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Age To">age_to</TEXTFIELD>
 			<GRID noorg="true" keyfield="rate_id" name="Rates" linkfield="rate_type_id" table="vw_rates">
-				<TEXTFIELD w="75" title="Rate Type">rate_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Excluding USA and Canada">standard_rate</TEXTDECIMAL>
@@ -1002,7 +1001,7 @@
 			</GRID>
 			<GRID noorg="true" keyfield="benefit_id" name="Benefits" linkfield="rate_type_id" table="vw_benefits">
 				<TEXTFIELD w="75" title="Benefit Type">benefit_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Rate Type">rate_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="individual">individual</TEXTFIELD>
 				<TEXTFIELD w="75" title="Others">others</TEXTFIELD>
 				<FORM noorg="true" keyfield="benefit_id" name="Benefits" linkfield="rate_type_id" table="benefits">
@@ -1116,6 +1115,7 @@
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Certificate" orderby="passenger_id DESC " where="(approved = true)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -1236,7 +1236,7 @@
 			<FILTERFORM name="Sales Per Agency ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="150" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" org.id="parent_org_id" title="Agency Sales">org_id</COMBOBOX>
+				<COMBOBOX w="150" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" org.id="parent_org_id" title="Agency Sales">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="travelinsurance/salesperagency.jasper" name="Sales Per Agency "></JASPER>
 		</FILTER>

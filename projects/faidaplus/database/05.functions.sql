@@ -77,6 +77,7 @@ DECLARE
 	rec						RECORD;
 	v_period				varchar(7);
 	period					date;
+	v_start_date			date;
 	v_period_id				integer;
 	v_period_bonus_ps		real;
 	v_period_bonus_amount	real;
@@ -89,7 +90,7 @@ DECLARE
 BEGIN
 
 	v_period_id = $1::integer;
-	SELECT end_date,to_char(start_date, 'mmyyyy') INTO period,v_period
+	SELECT start_date, end_date, to_char(start_date, 'mmyyyy') INTO v_start_date, period, v_period
 	FROM periods WHERE period_id = v_period_id AND closed = false;
 	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
@@ -105,14 +106,14 @@ BEGIN
 		SELECT percentage, amount INTO v_pcc_bonus_ps, v_pcc_bonus_amount
 		FROM bonus
 		WHERE (pcc = rec.pcc) AND (is_active = true) AND (approve_status = 'Approved')
-			AND (start_date <= current_date) AND ((end_date is null) OR (end_date >= current_date));
+			AND (start_date <= v_start_date) AND ((end_date is null) OR (end_date >= v_start_date));
 		IF(v_pcc_bonus_ps is null)THEN v_pcc_bonus_ps := 0; END IF;
 		IF(v_pcc_bonus_amount is null)THEN v_pcc_bonus_amount := 0; END IF;
 
 		SELECT percentage, amount INTO v_son_bonus_ps, v_son_bonus_amount
 		FROM bonus
-		WHERE (consultant_id = rec.entity_id) AND (is_active = true) AND (approve_status = 'Approved')
-			AND (start_date <= current_date) AND ((end_date is null) OR (end_date >= current_date));
+		WHERE (entity_id = rec.entity_id) AND (is_active = true) AND (approve_status = 'Approved')
+			AND (start_date <= v_start_date) AND ((end_date is null) OR (end_date >= v_start_date));
 		IF(v_son_bonus_ps is null)THEN v_son_bonus_ps := 0; END IF;
 		IF(v_son_bonus_amount is null)THEN v_son_bonus_amount := 0; END IF;
 

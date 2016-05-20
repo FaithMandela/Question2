@@ -49,6 +49,9 @@
 	<field name="user_name" class="java.lang.String"/>
 	<field name="is_active" class="java.lang.Boolean"/>
 	<field name="entity_id" class="java.lang.Integer"/>
+	<variable name="total_bonus" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{bonus}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -185,7 +188,7 @@
 				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="654" y="1" width="146" height="15" isPrintWhenDetailOverflows="true" uuid="fc794310-f969-4481-804f-812ee2166a34"/>
+				<reportElement x="654" y="0" width="146" height="15" isPrintWhenDetailOverflows="true" uuid="fc794310-f969-4481-804f-812ee2166a34"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -198,9 +201,27 @@
 		<band height="22" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="17" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="677" y="9" width="123" height="20" uuid="2713bd11-94d7-4def-8a66-25d5a460118f"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_bonus}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="509" y="9" width="146" height="20" uuid="b36b26c0-d233-4a51-bebc-5942bc89ee90"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL BONUS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="388" y="4" width="412" height="1" uuid="c284665a-49cf-46d4-bf87-e17f04943b9d"/>
+			</line>
+		</band>
 	</summary>
 </jasperReport>

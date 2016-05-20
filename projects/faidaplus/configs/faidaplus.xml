@@ -73,11 +73,13 @@
 			<TEXTFIELD w="275" title="Category Name">product_category_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Name">product_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Details">product_details</TEXTFIELD>
+			<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 			<FORM noorg="true" keyfield="product_id" name="Products" linkfield="product_id" table="products">
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="supplier_name" x="10" y="30" lptable="suppliers" title="Supplier">supplier_id</COMBOBOX>
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="product_category_name" x="10" y="30" lptable="product_category" title="Product Category">product_category_id</COMBOBOX>
 				<TEXTFIELD w="150" h="20" x="10" y="50" title="Product Name">product_name</TEXTFIELD>
 				<TEXTFIELD w="250" h="20" x="10" y="90" title="Product Price">product_uPrice</TEXTFIELD>
+				<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA tab="Details" w="430" h="70" x="10" y="170">product_details</TEXTAREA>
 			</FORM>
@@ -638,18 +640,18 @@
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<TEXTFIELD w="75" title="Logo">logo</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Website">org_website</TEXTFIELD>
-			<GRID noorg="false" keyfield="entity_id" name="Entitys" linkfield="org_id" table="vw_entitys">
-				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
-				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
+			<GRID noorg="false" keyfield="entity_id" name="Consultants" linkfield="org_id" table="vw_entitys">
+				<TEXTFIELD w="75" title="Consultant ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="140" title="Consultant Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
 				<CHECKBOX w="75" format="boolean" title="Active">is_active</CHECKBOX>
 				<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
-				<FORM new="false" noorg="true" keyfield="entity_id" name="Entitys" linkfield="org_id" table="entitys">
+				<FORM new="false" noorg="true" keyfield="entity_id" name="Consultants" linkfield="org_id" table="entitys">
 					<DEFAULT default="0">entity_type_id</DEFAULT>
-					<TEXTFIELD w="150" h="20" x="10" y="50" title="Entity Name">entity_name</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="10" y="50" title="Consultant Name">entity_name</TEXTFIELD>
 					<TEXTFIELD w="150" h="20" x="290" y="50" title="User Name">user_name</TEXTFIELD>
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 					<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
@@ -665,14 +667,14 @@
 					<CHECKBOX w="75" title="Can Redeem">can_redeem</CHECKBOX>
 					<TEXTAREA w="430" h="70" x="10" y="170" title="Details">details</TEXTAREA>
 				</FORM>
-				<GRID noorg="true" keyfield="bonus_id" name="Entity Bonus" linkfield="entity_id" key="1" table="bonus">
-					<TEXTFIELD w="75" title="Entity Id">entity_id</TEXTFIELD>
+				<GRID noorg="true" keyfield="bonus_id" name="Consultant Bonus" linkfield="entity_id" key="1" table="bonus">
+					<TEXTFIELD w="75" title="Consultant Id">entity_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Bonus Amount">amount</TEXTFIELD>
 					<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 					<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 					<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-					<FORM keyfield="bonus_id" name="Entity Bonus" linkfield="entity_id" key="2" table="bonus">
+					<FORM keyfield="bonus_id" name="Consultant Bonus" linkfield="entity_id" key="2" table="bonus">
 						<TEXTFIELD w="75" title="SON">son</TEXTFIELD>
 						<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 						<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
@@ -936,6 +938,13 @@
 			<JASPER reportfile="agency_bonus.jasper" name=" Agency Bonus"></JASPER>
 		</FILTER>
 		<JASPER reportfile="active_bonus.jasper" name="Active Bonus"></JASPER>
+		<FILTER split="150" w="700" h="550" name="Agency Bonus per KAM " type="vert" key="order_date">
+			<FILTERFORM name="Agency Bonus per KAM  ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="agency_bonus_KAM.jasper" name=" Agency Bonus per KAM "></JASPER>
+		</FILTER>
 		<FILTER role="admin,staff" split="150" w="700" h="550" name="Bonus per KAM" type="vert" key="order_date">
 			<FILTERFORM name="Bonus per KAM ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
@@ -948,6 +957,8 @@
 		<GRID noorg="true" keyfield="approval_id" name="Approvals" where="(approve_status = 'Completed')" params="table_name, table_id" user="entity_id" table="vw_approvals_entitys">
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approval">approval_entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>

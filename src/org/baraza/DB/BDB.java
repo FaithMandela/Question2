@@ -25,6 +25,7 @@ import org.baraza.utils.BLogHandle;
 
 public class BDB {
 	Logger log = Logger.getLogger(BDB.class.getName());
+    static Logger log2 = Logger.getLogger(BDB.class.getName());
 	Connection db = null;
 	DatabaseMetaData dbmd = null;
 	String dbTemplate = null;
@@ -576,6 +577,88 @@ public class BDB {
 		inssql += auditId + "', '" + oldValues + "')";
 		executeQuery(inssql);
 	}
+    
+    
+    public static DataSource getDataSource(String datasource) {
+		DataSource ds = null;
+		try {
+			Context ctx = new InitialContext();
+			ds = (DataSource) ctx.lookup(datasource);//"java:comp/env/jdbc/database"
+		} catch (NamingException e) {
+            log2.severe("Unable to create DataSource : " + e.toString());
+		}
+
+		return ds;
+	}
+
+	public static Connection getConnection(String datasource) {
+        Connection con = null;
+		try {
+			con = getDataSource(datasource).getConnection();
+		} catch (SQLException e) {
+            log2.severe("Unable to get Connection : " + e.toString());
+		}
+		return con;
+	}
+    
+    public static PreparedStatement getStatement(String datasource, String sql) {
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = getConnection(datasource).prepareStatement(sql);
+            log2.info("Preparing Statement..");
+		} catch (SQLException e) {
+            log2.severe("Unable to Prepare Statement : " + e.toString());
+		} catch (Exception ex) {
+            log2.severe("Error Preparing Statement : " + ex.toString());
+		}
+		return preparedStatement;
+	}
+    
+    
+    public static Integer executeStatement(PreparedStatement preparedStatement) {
+		Integer es = null;
+		try {
+			es = preparedStatement.executeUpdate(); // execute insert statement
+            log2.info("Executing Statement..");
+		} catch (SQLException e) {
+            log2.severe("Error Executing Statement" + e.getMessage());
+			es = null;
+		} catch (Exception e1) {
+            log2.severe("Error Executing Prepared Statement : " + e1.toString());
+			es = null;
+		} finally {
+			if (preparedStatement != null) {
+				Connection conn = null;
+				try {
+					conn = preparedStatement.getConnection();
+                    log2.info("Connection Retrievd");
+				} catch (SQLException e) {
+                    log2.severe("Failed To Retrieve Connection : " + e.toString());
+				}
+
+				try {
+					preparedStatement.close();
+                    log2.info("Statement Closed");
+				} catch (SQLException e) {
+                    log2.severe("Error Closing Statement : " + e.toString());
+				}
+
+				if (conn != null) {
+					try {
+						conn.close();
+                        log2.info("Connection Closed");
+					} catch (SQLException e) {
+                        log2.severe("Errot Closing Connection : " + e.toString());
+					}
+				}
+			}
+		}
+		return es;
+	}
+    
+    
+    
+    
 
 	public Connection getDB() { return db; }
 	public DatabaseMetaData getDBMetaData() { return dbmd; }

@@ -243,12 +243,12 @@ CREATE OR REPLACE VIEW vw_entitys AS
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
-
-CREATE VIEW vw_products AS
+		
+CREATE OR REPLACE VIEW vw_products AS
 	SELECT products.product_id, products.product_name, products.product_details, products.product_uprice,
 		products.created, products.updated_by,products.image, suppliers.supplier_name, suppliers.supplier_id,
 		product_category.product_category_id,
-		product_category.product_category_name
+		product_category.product_category_name,products.is_active
 	FROM products JOIN suppliers ON products.supplier_id = suppliers.supplier_id
 		JOIN product_category ON products.product_category_id=product_category.product_category_id;
 
@@ -413,13 +413,11 @@ SELECT a.dr, a.cr, a.org_id, a.order_date::date, a.pcc,
 	ORDER BY a.order_date;
 
 CREATE OR REPLACE VIEW vw_bonus AS
- SELECT bonus.bonus_id, bonus.consultant_id,  bonus.period_id,  bonus.entity_id, bonus.org_id,
- bonus.son, bonus.pcc, bonus.start_date,
- bonus.end_date, bonus.percentage, bonus.amount, bonus.is_active, bonus.approve_status ,
- bonus.workflow_table_id, bonus.application_date ,
- bonus.action_date, bonus.details, orgs.org_name
- FROM bonus
- INNER JOIN orgs ON orgs.org_id = bonus.org_id;
+ SELECT bonus.bonus_id,  bonus.consultant_id, bonus.period_id, bonus.entity_id, bonus.org_id, bonus.son,
+    bonus.pcc, bonus.start_date, bonus.end_date, bonus.percentage, bonus.amount, bonus.is_active, bonus.approve_status,
+    bonus.workflow_table_id, bonus.application_date, bonus.action_date, bonus.details,  orgs.org_name, orgs.account_manager_id
+   FROM bonus
+     JOIN orgs ON orgs.org_id = bonus.org_id;
 
 
 CREATE OR REPLACE VIEW vw_opening_balance AS
@@ -437,3 +435,109 @@ FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.b
 		   0::real as points,  null::date as period
 		  FROM vw_orders)) a
 ORDER BY a.order_date;
+
+
+CREATE OR REPLACE VIEW vw_approvals_entitys AS
+ SELECT vw_workflow_phases.workflow_id,
+    vw_workflow_phases.workflow_name,
+    vw_workflow_phases.source_entity_id,
+    vw_workflow_phases.source_entity_name,
+    vw_workflow_phases.approval_entity_id,
+    vw_workflow_phases.approval_entity_name,
+    vw_workflow_phases.workflow_phase_id,
+    vw_workflow_phases.approval_level,
+    vw_workflow_phases.notice,
+    vw_workflow_phases.notice_email,
+    vw_workflow_phases.notice_file,
+    vw_workflow_phases.advice,
+    vw_workflow_phases.advice_email,
+    vw_workflow_phases.advice_file,
+    vw_workflow_phases.return_level,
+    vw_workflow_phases.required_approvals,
+    vw_workflow_phases.phase_narrative,
+    vw_workflow_phases.use_reporting,
+    approvals.approval_id,
+    approvals.org_id,
+    approvals.forward_id,
+    approvals.table_name,
+    approvals.table_id,
+    approvals.completion_date,
+    approvals.escalation_days,
+    approvals.escalation_hours,
+    approvals.escalation_time,
+    approvals.application_date,
+    approvals.approve_status,
+    approvals.action_date,
+    approvals.approval_narrative,
+    approvals.to_be_done,
+    approvals.what_is_done,
+    approvals.review_advice,
+    approvals.details,
+    oe.entity_id AS org_entity_id,
+    oe.entity_name AS org_entity_name,
+    oe.user_name AS org_user_name,
+    oe.primary_email AS org_primary_email,
+    vw_entitys.entity_id,
+    vw_entitys.entity_name,
+    vw_entitys.user_name,
+    vw_entitys.primary_email,
+    oe.org_name,
+    oe.pcc
+   FROM vw_workflow_phases
+     JOIN approvals ON vw_workflow_phases.workflow_phase_id = approvals.workflow_phase_id
+     JOIN vw_entitys oe ON approvals.org_entity_id = oe.entity_id
+     JOIN entity_subscriptions ON vw_workflow_phases.approval_entity_id = entity_subscriptions.entity_type_id
+     JOIN vw_entitys ON entity_subscriptions.entity_id = vw_entitys.entity_id
+  WHERE approvals.forward_id IS NULL AND vw_workflow_phases.use_reporting = false
+UNION
+ SELECT vw_workflow_phases.workflow_id,
+    vw_workflow_phases.workflow_name,
+    vw_workflow_phases.source_entity_id,
+    vw_workflow_phases.source_entity_name,
+    vw_workflow_phases.approval_entity_id,
+    vw_workflow_phases.approval_entity_name,
+    vw_workflow_phases.workflow_phase_id,
+    vw_workflow_phases.approval_level,
+    vw_workflow_phases.notice,
+    vw_workflow_phases.notice_email,
+    vw_workflow_phases.notice_file,
+    vw_workflow_phases.advice,
+    vw_workflow_phases.advice_email,
+    vw_workflow_phases.advice_file,
+    vw_workflow_phases.return_level,
+    vw_workflow_phases.required_approvals,
+    vw_workflow_phases.phase_narrative,
+    vw_workflow_phases.use_reporting,
+    approvals.approval_id,
+    approvals.org_id,
+    approvals.forward_id,
+    approvals.table_name,
+    approvals.table_id,
+    approvals.completion_date,
+    approvals.escalation_days,
+    approvals.escalation_hours,
+    approvals.escalation_time,
+    approvals.application_date,
+    approvals.approve_status,
+    approvals.action_date,
+    approvals.approval_narrative,
+    approvals.to_be_done,
+    approvals.what_is_done,
+    approvals.review_advice,
+    approvals.details,
+    oe.entity_id AS org_entity_id,
+    oe.entity_name AS org_entity_name,
+    oe.user_name AS org_user_name,
+    oe.primary_email AS org_primary_email,
+    vw_entitys.entity_id,
+    vw_entitys.entity_name,
+    vw_entitys.user_name,
+    vw_entitys.primary_email,
+    oe.org_name,
+    oe.pcc
+   FROM vw_workflow_phases
+     JOIN approvals ON vw_workflow_phases.workflow_phase_id = approvals.workflow_phase_id
+     JOIN vw_entitys oe ON approvals.org_entity_id = oe.entity_id
+     JOIN reporting ON approvals.org_entity_id = reporting.entity_id AND vw_workflow_phases.reporting_level = reporting.reporting_level
+     JOIN vw_entitys ON reporting.report_to_id = vw_entitys.entity_id
+  WHERE approvals.forward_id IS NULL AND reporting.primary_report = true AND reporting.is_active = true AND vw_workflow_phases.use_reporting = true;
