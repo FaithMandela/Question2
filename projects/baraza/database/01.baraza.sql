@@ -63,6 +63,7 @@ CREATE TABLE orgs (
 	is_active				boolean not null default true,
 	logo					varchar(50),
 	pin 					varchar(50),
+	pcc						varchar(12),
 
 	system_key				varchar(64),
 	system_identifier		varchar(64),
@@ -178,7 +179,7 @@ CREATE TABLE entitys (
 	entity_type_id			integer not null references entity_types,
 	org_id					integer not null references orgs,
 	entity_name				varchar(120) not null,
-	user_name				varchar(120) not null,
+	user_name				varchar(120) not null unique,
 	primary_email			varchar(120),
 	primary_telephone		varchar(50),
 	super_user				boolean default false not null,
@@ -470,7 +471,8 @@ CREATE VIEW vw_org_select AS
 	WHERE (is_active = true));
 
 CREATE VIEW vw_orgs AS
-	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
+		orgs.pin, orgs.pcc, orgs.details,
 
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
