@@ -182,6 +182,17 @@
 				<TEXTAREA w="430" title="Details" y="530" h="70" x="10">details</TEXTAREA>
 				<TEXTAREA w="430" title="Current Contact" y="390" h="70" x="10">current_contact</TEXTAREA>
 			</FORM>
+			<GRID name="Stream Classes" keyfield="stream_class_id" linkfield="stream_class_id" table="vw_stream_classes">
+				<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>
+				<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Stream Classes" keyfield="stream_class_id" linkfield="org_id" table="stream_classes">
+					<TEXTFIELD w="150" title="Class Level" y="10" h="20" x="10">class_level</TEXTFIELD>
+					<TEXTFIELD w="150" title="Stream" y="10" h="20" x="290">stream</TEXTFIELD>
+					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 		<GRID name="Stream Classes" keyfield="stream_class_id" linkfield="stream_class_id" table="vw_stream_classes">
 			<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>

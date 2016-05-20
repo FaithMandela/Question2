@@ -1838,7 +1838,7 @@
 					<TEXTAREA w="430" title="Details" y="190" h="70" x="250">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<JASPER name="KINS" reportfile="kins_members.jasper"></JASPER>
+			<JASPER name="Kins" reportfile="kins_members.jasper"></JASPER>
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="My account" key="290" h="550">

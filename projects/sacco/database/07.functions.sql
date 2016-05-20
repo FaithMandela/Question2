@@ -177,6 +177,7 @@ $BODY$
 CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
   FOR EACH ROW  EXECUTE PROCEDURE ins_members(); 
 
+  
 
 CREATE OR REPLACE FUNCTION gurrantor_accept(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -212,7 +213,7 @@ BEGIN
 	msg := 'Accepted';
 	
 	UPDATE subscriptions SET approve_status = 'Approved'
-	WHERE (subscription_id = CAST($1 as int)) And ;
+	WHERE (subscription_id = CAST($1 as int)) ;
 
 	return msg;
 END;
