@@ -18,14 +18,14 @@
 			<CHECKBOX w="75" title="Message Ready" format="boolean">message_ready</CHECKBOX>
 			<CHECKBOX w="75" title="Sent" format="boolean">sent</CHECKBOX>
 			<TEXTAREA w="175" title="message">message</TEXTAREA>
-			<FORM save.button="Send" name="SMS" keyfield="sms_id" table="sms">
+			<FORM save.button="Send" name="SMS" keyfield="sms_id" table="sms" th="110">
 				<DEFAULT default="0">folder_id</DEFAULT>
 				<USERFIELD>entity_id</USERFIELD>
-				<TEXTAREA w="430" title="Numbers" placeholder="e.g 0712838887,0733878787" y="120" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
-				<CHECKBOX w="150" title="Message Ready" default="true" y="30" h="20" x="10">message_ready</CHECKBOX>
-				<TEXTAREA w="430" placeholder="Enter the message" tab="Message" required="true" y="50" h="70" x="10" rows="8">message</TEXTAREA>
-				<MULTISELECT w="430" lptable="vw_address" tab="Addresses" lpkey="mobile" where="(mobile is not null) and (disp_name is not null) " y="50" h="70" x="10" rows="8" lpfield="disp_name">addresses</MULTISELECT>
-				<TEXTAREA w="430" tab="Details" y="120" h="70" x="10">details</TEXTAREA>
+				<TEXTAREA w="430" title="Numbers" placeholder="e.g 0712838887,0733878787" y="10" h="40" x="10" rows="4">sms_numbers</TEXTAREA>
+				<CHECKBOX w="150" title="Message Ready" default="true" y="50" h="20" x="10">message_ready</CHECKBOX>
+				<TEXTAREA w="430" placeholder="Enter the message" tab="Message" required="true" y="10" h="70" x="10" rows="8">message</TEXTAREA>
+				<MULTISELECT w="430" lptable="vw_address" tab="Addresses" lpkey="mobile" where="(mobile is not null) and (disp_name is not null) " y="10" h="70" x="10" rows="8" lpfield="disp_name">addresses</MULTISELECT>
+				<TEXTAREA w="430" tab="Details" y="10" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">
 				<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
@@ -85,10 +85,6 @@
 			<GRID name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="vw_sms_address">
 				<TEXTFIELD w="75" title="Entity Name">address_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Mobile Number">mobile</TEXTFIELD>
-				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-			</GRID>
-			<GRID name="SMS Groups" keyfield="sms_groups_id" linkfield="sms_id" table="vw_sms_groups">
-				<TEXTFIELD w="75" title="Entity Type">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			</GRID>
 		</GRID>

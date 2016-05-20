@@ -22,6 +22,15 @@ import java.text.SimpleDateFormat;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.KeyManagementException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPConnection;
@@ -74,21 +83,22 @@ public class BSoapSMS {
 		startCorrelator = node.getAttribute("startCorrelator", "12345");
 		processdelay = Integer.valueOf(node.getAttribute("processdelay", "10000")).intValue();
 
-		String orgSQL = "SELECT org_id, sp_id, service_id, sender_name, sms_rate FROM orgs WHERE (is_active = true) ORDER BY org_id";
+		String orgSQL = "SELECT org_id, sp_id, service_id, sender_name, sms_rate, send_fon FROM orgs WHERE (is_active = true) ORDER BY org_id";
 		smsOrgs =  new HashMap<String, String[]>();
 		BQuery orgRS = new BQuery(db, orgSQL);
 		while(orgRS.moveNext()) {
 			System.out.println("org_id : " + orgRS.getString("org_id"));
 
 			String orgID = orgRS.getString("org_id");
-			String[] orgParams = new String[4];
+			String[] orgParams = new String[5];
 			orgParams[0] = orgRS.getString("sp_id");
 			orgParams[1] = orgRS.getString("service_id");
 			orgParams[2] = orgRS.getString("sender_name");
 			orgParams[3] = orgRS.getString("sms_rate");
+			orgParams[4] = orgRS.getString("send_fon");
 			smsOrgs.put(orgID, orgParams);
 
-			if(orgParams[0] != null) startListener(smsReceiver, orgID);
+			//if(orgParams[0] != null) startListener(smsReceiver, orgID);
 		}
 
 		qcomms = new ArrayList<BComm>();
@@ -213,11 +223,18 @@ public class BSoapSMS {
 		mSql += smsID + "," + orgID + ", '" + number + "', " + messageParts.toString() + ", ";
 		mSql += smsOrgs.get(orgID)[3] + ")";
 		String correlator = db.executeAutoKey(mSql);
+		String sendFon = smsOrgs.get(orgID)[4];
 		
 		int retry = 1;
 		while(retry != 0) {
 			if(retry > 1) System.out.println("MESSAGE RESENDING RETRY\n");
-			String sendResults = sendSMS(number, message, linkId, smsID, orgID, correlator);
+			String sendResults = null;
+			
+			if((sendFon != null) && (number.startsWith("25473"))) {
+				sendResults = sendOFSMS(number, message, linkId, smsID, orgID, correlator);
+			} else {
+				sendResults = sendSMS(number, message, linkId, smsID, orgID, correlator);
+			}
 			
 			if(sendResults == null) {	// retry once for a error on the sending
 				try { Thread.sleep(500); } catch(InterruptedException ex) {}
@@ -321,7 +338,92 @@ public class BSoapSMS {
 
 		return sendResults;
 	}
+	
+	
+	public String sendOFSMS(String number, String message, String linkId, String smsID, String orgID, String correlator) {
+		String spId = smsOrgs.get(orgID)[0];
+		String serviceId = smsOrgs.get(orgID)[1];
+		String senderName = smsOrgs.get(orgID)[2];
+		String sendFon = smsOrgs.get(orgID)[4];
+		String sendResults = null;
+		
+		if(serviceId == null) return sendResults;
+		if(senderName == null) return sendResults;
+	
+		try {
+			MessageFactory factory = MessageFactory.newInstance();
+			
+			SOAPMessage soapMessage = factory.createMessage();
+			SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
+			soapEnvelope.addNamespaceDeclaration("bul", "http://www.example.org/bulkSms/");
 
+			SOAPHeader soadHeader = soapMessage.getSOAPHeader();
+			SOAPBody soapBody = soapMessage.getSOAPBody();
+			
+			SOAPElement soapBodyElem = soapBody.addChildElement("SMSSubmitReq", "bul");
+			SOAPElement soapBodyElem1 = soapBodyElem.addChildElement("Username");
+			soapBodyElem1.addTextNode("cwtKenya");
+			SOAPElement soapBodyElem2 = soapBodyElem.addChildElement("Password");
+			soapBodyElem2.addTextNode("Cwtk3ny@");
+			SOAPElement soapBodyElem3 = soapBodyElem.addChildElement("InterfaceID");
+			soapBodyElem3.addTextNode("bk");
+			
+			SOAPElement soapBody2Elem = soapBodyElem.addChildElement("SmsRecord");
+			SOAPElement soapBody2Elem1 = soapBody2Elem.addChildElement("SmsId");
+			soapBody2Elem1.addTextNode(correlator);
+			SOAPElement soapBody2Elem2 = soapBody2Elem.addChildElement("SmsRecipient");
+			soapBody2Elem2.addTextNode(number);
+			SOAPElement soapBody2Elem3 = soapBody2Elem.addChildElement("SmsText");
+			soapBody2Elem3.addTextNode(message);
+			SOAPElement soapBody2Elem4 = soapBody2Elem.addChildElement("SmsSenderId");
+			soapBody2Elem4.addTextNode(sendFon);
+			
+			SOAPElement soapBody3Elem = soapBodyElem.addChildElement("ReportEnabled");
+			soapBody3Elem.addTextNode("true");
+
+
+			String strMsg = getResp(soapMessage);
+			System.out.println("MESSAGE\n" + strMsg + "\n");
+
+			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
+			SOAPConnection con = scFactory.createConnection();
+			
+			TrustManager[] trustAllCerts = new TrustManager[] {
+				new X509TrustManager() {
+					public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+					public void checkClientTrusted(X509Certificate[] certs, String authType) {  }
+					public void checkServerTrusted(X509Certificate[] certs, String authType) {  }
+				}
+			};
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HostnameVerifier allHostsValid = new HostnameVerifier() {
+				public boolean verify(String hostname, SSLSession session) { return true; }
+			};
+			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+			
+			URL endpoint = new URL("https://212.100.248.24:8080/smshttppush/index.php?wsdl");
+			SOAPMessage response = con.call(soapMessage, endpoint);
+			SOAPBody respBody = response.getSOAPBody();
+			sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+			con.close();
+
+			System.out.println("RESPOSE2\n" + getResp(response) + "\n");
+			System.out.println("RESPOSE3 : " + sendResults + "\n"); 
+		} catch(SOAPException ex) {
+			System.out.println("SOAP Error : " + ex);
+		} catch(MalformedURLException ex) {
+			System.out.println("Net Error : " + ex);
+		} catch(KeyManagementException ex) {
+			System.out.println("Key Error : " + ex);
+		} catch(NoSuchAlgorithmException ex) {
+			System.out.println("NoSuchAlgorithm Error : " + ex);
+		}
+
+		return sendResults;
+	}
+	
 	public void smsStatus(String number, String requestIdentifier, String orgID) {
 		String spId = smsOrgs.get(orgID)[0];
 		String serviceId = smsOrgs.get(orgID)[1];

@@ -1,7 +1,8 @@
-ALTER TABLE orgs ADD pcc varchar(4);
+
 ALTER TABLE orgs ADD sp_id	varchar(16);
 ALTER TABLE orgs ADD service_id	varchar(32);
 ALTER TABLE orgs ADD sender_name varchar(16);
+ALTER TABLE orgs ADD send_fon varchar(16);
 ALTER TABLE orgs ADD sms_rate real default 2 not null;
 ALTER TABLE orgs ADD show_fare boolean default false;
 ALTER TABLE orgs ADD gds_free_field integer default 96;
@@ -194,16 +195,13 @@ CREATE TABLE receipts (
 CREATE INDEX receipts_mpesa_trx_id ON receipts (mpesa_trx_id);
 CREATE INDEX receipts_org_id ON receipts (org_id);
 
-CREATE OR REPLACE VIEW vw_travdoc_user AS 
- SELECT vw_orgs.org_id,vw_orgs.org_name,vw_orgs.pcc,vw_orgs.gds_free_field,vw_orgs.show_fare, vw_orgs.logo,vw_entity_address.table_id,
-    vw_entity_address.table_name, vw_entity_address.post_office_box, vw_entity_address.postal_code,vw_entity_address.premises,
-    vw_entity_address.street, vw_entity_address.town, vw_entity_address.phone_number, vw_entity_address.email,vw_entity_address.sys_country_name,
-    entitys.entity_id, entitys.entity_name, entitys.son, entitys.phone_ph, entitys.phone_pa, entitys.phone_pb,entitys.phone_pt
-   FROM entitys
-     LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id
-     JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-     JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
-     
+DROP VIEW vw_entitys;
+DROP VIEW vw_orgs;
+DROP VIEW vw_address_entitys;
+DROP VIEW vw_entity_address;
+DROP VIEW vw_org_address;
+DROP VIEW vw_address;
+
 CREATE VIEW vw_address AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name,
 		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town,
@@ -211,9 +209,29 @@ CREATE VIEW vw_address AS
 		address_types.address_type_id, address_types.address_type_name,
 		firms.firm_id, firms.firm_name,
 		(COALESCE(firms.firm_name || ', ', '') ||  address.address_name) as disp_name
+
 	FROM address INNER JOIN sys_countrys ON address.sys_country_id = sys_countrys.sys_country_id
 		LEFT JOIN address_types ON address.address_type_id = address_types.address_type_id
 		LEFT JOIN firms ON address.firm_id = firms.firm_id;
+
+CREATE VIEW vw_org_address AS
+	SELECT vw_address.sys_country_id as org_sys_country_id, vw_address.sys_country_name as org_sys_country_name,
+		vw_address.address_id as org_address_id, vw_address.table_id as org_table_id, vw_address.table_name as org_table_name,
+		vw_address.post_office_box as org_post_office_box, vw_address.postal_code as org_postal_code,
+		vw_address.premises as org_premises, vw_address.street as org_street, vw_address.town as org_town,
+		vw_address.phone_number as org_phone_number, vw_address.extension as org_extension,
+		vw_address.mobile as org_mobile, vw_address.fax as org_fax, vw_address.email as org_email,
+		vw_address.website as org_website
+	FROM vw_address
+	WHERE (vw_address.table_name = 'orgs') AND (vw_address.is_default = true);
+	
+CREATE VIEW vw_address_entitys AS
+	SELECT vw_address.address_id, vw_address.address_name, vw_address.table_id, vw_address.table_name,
+		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.is_default,
+		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
+		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
+	FROM vw_address
+	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
 
 CREATE VIEW vw_entity_address AS
 	SELECT vw_address.address_id, vw_address.address_name,
@@ -221,7 +239,31 @@ CREATE VIEW vw_entity_address AS
 		vw_address.is_default, vw_address.post_office_box, vw_address.postal_code, vw_address.premises,
 		vw_address.street, vw_address.town, vw_address.phone_number, vw_address.extension, vw_address.mobile,
 		vw_address.fax, vw_address.email, vw_address.website
-	FROM vw_address;
+	FROM vw_address
+	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
+
+CREATE VIEW vw_orgs AS
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
+		orgs.pin, orgs.pcc, orgs.sp_id, orgs.service_id, orgs.sender_name, 
+		orgs.sms_rate, orgs.show_fare, orgs.gds_free_field, orgs.details,
+
+		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
+		vw_org_address.org_address_id, vw_org_address.org_table_name,
+		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
+		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
+		vw_org_address.org_phone_number, vw_org_address.org_extension,
+		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
+	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+
+CREATE VIEW vw_travdoc_user AS 
+	SELECT vw_orgs.org_id,vw_orgs.org_name,vw_orgs.pcc,vw_orgs.gds_free_field,vw_orgs.show_fare, vw_orgs.logo,vw_entity_address.table_id,
+    	vw_entity_address.table_name, vw_entity_address.post_office_box, vw_entity_address.postal_code,vw_entity_address.premises,
+	    vw_entity_address.street, vw_entity_address.town, vw_entity_address.phone_number, vw_entity_address.email,vw_entity_address.sys_country_name,
+    	entitys.entity_id, entitys.entity_name, entitys.son, entitys.phone_ph, entitys.phone_pa, entitys.phone_pb,entitys.phone_pt
+	FROM entitys
+		LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id
+		JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
+		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
 
 CREATE VIEW vw_sms_entitys AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default as org_is_default, 
@@ -269,7 +311,7 @@ CREATE VIEW vw_sms AS
 		LEFT JOIN vw_address ON (sms.sms_number = vw_address.mobile) AND (sms.org_id = vw_address.org_id)
 		LEFT JOIN address_groups ON sms.address_group_id = address_groups.address_group_id;
 
-CREATE OR REPLACE VIEW vw_usage AS
+CREATE VIEW vw_usage AS
 	SELECT sms.sms_id, to_char(sms.sms_time, 'yyyy-mm-dd'::text) AS date,
 		sms.sms_count, sms.entity_id, sms.org_id, sms.sent, entitys.son, orgs.pcc
 	FROM sms JOIN entitys ON entitys.entity_id = sms.entity_id
