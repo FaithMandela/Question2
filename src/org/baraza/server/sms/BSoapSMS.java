@@ -98,7 +98,7 @@ public class BSoapSMS {
 			orgParams[4] = orgRS.getString("send_fon");
 			smsOrgs.put(orgID, orgParams);
 
-			//if(orgParams[0] != null) startListener(smsReceiver, orgID);
+			if(orgParams[0] != null) startListener(smsReceiver, orgID);
 		}
 
 		qcomms = new ArrayList<BComm>();
@@ -148,10 +148,13 @@ public class BSoapSMS {
 				else numberError = true;
 
 				if(numbers != null) {
+					numbers = numbers.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").trim();
+System.out.println("Sending messages for numbers : " + numbers);
 					String[] nums = numbers.split(",");
 					for(String num : nums) {
 						num = num.replace(" ", "").replace("-", "").trim();
-						if(num.startsWith("0")) num = "254" + num.substring(1, num.length());
+						if(num.length() == 9) num = "254" + num;
+						else if(num.startsWith("0")) num = "254" + num.substring(1, num.length());
 						
 						if((num.length() > 11) && (num.length() < 15)) isSent = sendSMS(num, msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 						else numberError = true;
