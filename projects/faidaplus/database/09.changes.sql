@@ -1,7 +1,27 @@
-CREATE OR REPLACE VIEW vw_products AS
-	SELECT products.product_id, products.product_name, products.product_details, products.product_uprice,
-		products.created, products.updated_by,products.image, suppliers.supplier_name, suppliers.supplier_id,
-		product_category.product_category_id,
-		product_category.product_category_name,products.is_active
-	FROM products JOIN suppliers ON products.supplier_id = suppliers.supplier_id
-		JOIN product_category ON products.product_category_id=product_category.product_category_id;
+CREATE OR REPLACE FUNCTION getbalance(integer) RETURNS real AS $$
+DECLARE
+	v_org_id 			integer;
+	v_function_role		text;
+	v_balance			real;
+BEGIN
+	v_balance = 0::real;
+	SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
+	IF(v_function_role = 'manager')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_pcc_statement
+		WHERE org_id = v_org_id;
+	END IF;
+	IF(v_function_role = 'consultant')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_son_statement
+		WHERE entity_id = $1;
+	END IF;
+
+	IF(v_function_role = 'admin')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_pcc_statement
+		WHERE org_id = 0;
+	END IF;
+	RETURN v_balance;
+END;
+$$ LANGUAGE plpgsql;

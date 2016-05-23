@@ -44,7 +44,7 @@
 	<DESK role="admin" w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD noorg="true" role="admin" w="650" name="Dashboard">
 			<TILE noorg.query="true" role="admin,staff,finance_manager" w="60" h="25" name="Birthday" where="to_char(birth_date, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm')" table="vw_entitys">
-				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="New Orders">orders</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="New Orders">birth_date</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin,finance_manager" w="60" h="25" name="New Orders" where="(lower(order_status) = lower('Processing Order'))" table="orders">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
@@ -70,7 +70,7 @@
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" h="500" name="Products" key="7">
-		<GRID noorg="true" keyfield="product_id" name="Products" tab.count="count(product_id)" table="vw_products">
+		<GRID noorg="true" keyfield="product_id" name="Products" where="is_active=true" tab.count="count(product_id)" table="vw_products">
 			<TEXTFIELD w="75" title="ID">product_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Supplier">supplier_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Category Name">product_category_name</TEXTFIELD>
@@ -1034,7 +1034,7 @@
 		</FILTER>
 	</DESK>
 	<DESK role="admin" w="700" h="500" name="Staff" key="100">
-		<GRID noorg="true" role="admin,staff" keyfield="entity_id" name="Staff" where="function_role = 'finance_manager' OR function_role = 'admin' OR function_role = 'staff' OR function_role = 'director'" key="1" table="vw_entitys">
+		<GRID noorg="true" role="admin,staff" keyfield="entity_id" name="Staff" where="is_active=true AND function_role = 'finance_manager' AND is_active=true OR function_role = 'admin' AND is_active=true OR function_role = 'staff' AND is_active=true OR function_role = 'director'" key="1" table="vw_entitys">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -1104,7 +1104,7 @@
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 			<FORM new="false" noorg="true" keyfield="org_id" name="Account Manager" linkfield="account_manager_id" table="orgs">
-				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" fnct="account_manager_id" y="10" lptable="entitys" where="function_role='staff'" title="Account Manager">entity_id</COMBOBOX>
+				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" fnct="account_manager_id" y="10" lptable="entitys" where="is_active=true AND function_role = 'finance_manager' AND is_active=true OR function_role = 'admin' AND is_active=true OR function_role = 'staff' AND is_active=true OR function_role = 'director'" title="Account Manager">entity_id</COMBOBOX>
 			</FORM>
 		</GRID>
 		<GRID role="admin" keyfield="entity_type_id" name="Entity Types" key="2" table="entity_types">
