@@ -149,15 +149,18 @@ public class BSoapSMS {
 
 				if(numbers != null) {
 					numbers = numbers.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").trim();
-System.out.println("Sending messages for numbers : " + numbers);
+					System.out.println("Sending messages for numbers : " + numbers);
+					
 					String[] nums = numbers.split(",");
 					for(String num : nums) {
-						num = num.replace(" ", "").replace("-", "").trim();
-						if(num.length() == 9) num = "254" + num;
-						else if(num.startsWith("0")) num = "254" + num.substring(1, num.length());
-						
-						if((num.length() > 11) && (num.length() < 15)) isSent = sendSMS(num, msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
-						else numberError = true;
+						if((num != null) && (num.length() > 3)) {
+							num = num.replace(" ", "").replace("-", "").trim();
+							if(num.length() == 9) num = "254" + num;
+							else if(num.startsWith("0")) num = "254" + num.substring(1, num.length());
+							
+							if((num.length() > 11) && (num.length() < 15)) isSent = sendSMS(num, msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
+							else numberError = true;
+						}
 					}
 					isSent = true;
 				}
