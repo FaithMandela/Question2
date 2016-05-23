@@ -80,36 +80,20 @@ CREATE VIEW vw_investment_types AS
 	FROM investment_types
 	INNER JOIN orgs ON investment_types.org_id = orgs.org_id;
 
-
 CREATE OR REPLACE VIEW vw_investments AS 
- SELECT currency.currency_id,
-    currency.currency_name,
-    investment_types.investment_type_id,
-    investment_types.investment_type_name,
-    bank_accounts.bank_account_id,
-    bank_accounts.bank_account_name,
-    investments.org_id,
-    investments.period_id,
-    investments.investment_id,
-    investments.investment_name,
-    investments.date_of_accrual,
-    investments.total_cost,
-    investments.status,
-     investments.total_repayment_amount,
-    investments.repayment_period,
-    investments.monthly_returns,
-    investments.monthly_payments,
-    investments.total_payment,
-    investments.default_interest,
-    investments.total_returns,
-    investments.is_complete,
-    investments.is_active,
-    investments.details
-   FROM investments
-     JOIN currency ON investments.currency_id = currency.currency_id
-     JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id
-     LEFT JOIN bank_accounts ON investments.bank_account_id = bank_accounts.bank_account_id;
-     
+ SELECT currency.currency_id, currency.currency_name,
+    investment_types.investment_type_id, investment_types.investment_type_name,
+    bank_accounts.bank_account_id, bank_accounts.bank_account_name,
+    investments.org_id, investments.investment_id, investments.investment_name, investments.date_of_accrual,
+    investments.principal, investments.interest, investments.repayment_period, investments.initial_payment, investments.monthly_payments, investments.investment_status, investments.approve_status, investments.workflow_table_id, investments.action_date, investments.is_active, investments.details,
+	get_total_repayment(investments.principal, investments.interest, investments.repayment_period) as total_repayment,
+	get_interest_amount(investments.principal, investments.interest, investments.repayment_period) as interest_amount
+FROM investments
+	JOIN currency ON investments.currency_id = currency.currency_id
+    JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id
+    LEFT JOIN bank_accounts ON investments.bank_account_id = bank_accounts.bank_account_id;
+
+  
 CREATE OR REPLACE VIEW vw_meetings AS 
 	SELECT meetings.org_id, meetings.meeting_id, meetings.meeting_date, meetings.amount_contributed, 
 	meetings.meeting_place, meetings.minutes, meetings.status, meetings.details
@@ -131,6 +115,8 @@ CREATE VIEW vw_penalty_type AS
 	FROM penalty_type
 	JOIN orgs ON penalty_type.org_id = orgs.org_id;
 	
+
+	
 CREATE OR REPLACE VIEW vw_member_meeting AS
 	SELECT members.member_id, members.surname, members.first_name,
 			meetings.meeting_id, meetings.meeting_date,
@@ -138,3 +124,64 @@ CREATE OR REPLACE VIEW vw_member_meeting AS
 	FROM member_meeting
 		JOIN members ON member_meeting.member_id = members.member_id
 		JOIN meetings ON member_meeting.meeting_id = meetings.meeting_id;
+
+DROP VIEW vws_tx_ledger;
+DROP VIEW vw_tx_ledger;
+
+CREATE VIEW vw_tx_ledger AS
+	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		entitys.entity_id, entitys.entity_name, 
+		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
+		
+		transactions.org_id, transactions.transaction_id, transactions.journal_id, transactions.investment_id, 
+		transactions.exchange_rate, transactions.tx_type, transactions.transaction_date, transactions.payment_date,
+		transactions.transaction_amount, transactions.transaction_tax_amount, transactions.reference_number, 
+		transactions.payment_number, transactions.for_processing, transactions.completed, transactions.is_cleared,
+		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
+		transactions.narrative, transactions.details,
+		
+		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
+		to_char(transactions.payment_date, 'YYYY.MM') as ledger_period,
+		to_char(transactions.payment_date, 'YYYY') as ledger_year,
+		to_char(transactions.payment_date, 'Month') as ledger_month,
+		
+		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount) as base_amount,
+		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_tax_amount) as base_tax_amount,
+		
+		(CASE WHEN transactions.completed = true THEN 
+			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
+		ELSE 0::real END) as base_balance,
+		
+		(CASE WHEN transactions.is_cleared = true THEN 
+			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
+		ELSE 0::real END) as cleared_balance,
+		
+		(CASE WHEN transactions.tx_type = 1 THEN 
+			(transactions.exchange_rate * transactions.transaction_amount)
+		ELSE 0::real END) as dr_amount,
+		
+		(CASE WHEN transactions.tx_type = -1 THEN 
+			(transactions.exchange_rate * transactions.transaction_amount) 
+		ELSE 0::real END) as cr_amount
+		
+	FROM transactions
+		INNER JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
+		INNER JOIN currency ON transactions.currency_id = currency.currency_id
+		INNER JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
+		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
+	WHERE transactions.tx_type is not null;
+
+	
+CREATE VIEW vws_tx_ledger AS
+	SELECT org_id, ledger_period, ledger_year, ledger_month, 
+		sum(base_amount) as sum_base_amount, sum(base_tax_amount) as sum_base_tax_amount,
+		sum(base_balance) as sum_base_balance, sum(cleared_balance) as sum_cleared_balance,
+		sum(dr_amount) as sum_dr_amount, sum(cr_amount) as sum_cr_amount,
+		
+		to_date(ledger_period || '.01', 'YYYY.MM.DD') as start_date,
+		sum(base_amount) + prev_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_balance_amount,
+		sum(cleared_balance) + prev_clear_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_clear_balance_amount
+			
+	FROM vw_tx_ledger
+	GROUP BY org_id, ledger_period, ledger_year, ledger_month;

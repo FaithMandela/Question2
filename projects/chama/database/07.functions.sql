@@ -148,63 +148,74 @@ CREATE TRIGGER ins_members
   FOR EACH ROW
   EXECUTE PROCEDURE ins_members();
 
+     
+CREATE OR REPLACE FUNCTION get_total_repayment(real, real, real) RETURNS real AS $$
+DECLARE
+	repayment real;
+	ri real;
+BEGIN
+	ri := (($1* $2 * $3)/1200);
+	repayment := $1 + (($1* $2 * $3)/1200);
+	RETURN repayment;
+END;
+$$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION ins_inv()
+
+
+CREATE OR REPLACE FUNCTION get_interest_amount(real,real,real) RETURNS real AS $$
+DECLARE
+	ri real;
+BEGIN
+	ri :=(($1* $2 * $3)/1200);
+RETURN ri;
+END;
+$$ LANGUAGE plpgsql;
+
+ 
+ CREATE OR REPLACE FUNCTION ins_investment()
   RETURNS trigger AS
 $BODY$
 DECLARE
-total_cost 					real;
-v_monthly_returns			real;
-v_amount					real;
-v_total_returns 			real;
-v_total_payment				real;
-v_m_payment					real;
-v_repayment_period			real;
-v_total_repayment_amount	real;
-v_default_interest			real;
-
+	v_interests			real;
+	
 BEGIN
-
-SELECT repayment_period, default_interest, monthly_returns, monthly_payments, total_payment, total_returns, total_repayment_amount INTO v_repayment_period, v_default_interest, v_monthly_returns, v_m_payment, v_total_payment, v_total_returns, v_total_repayment_amount 
-FROM investments 
-WHERE investment_id = NEW.investment_id;
-
-	SELECT interest_amount INTO v_interests FROM  investment_types 
-	WHERE investment_type_id = NEW. investment_type_id;
-	
-	NEW.default_interest := v_interests;
-	v_amount = (New.total_cost * (v_interests/100)) ;
-	NEW.total_repayment_amount := v_amount + New.total_cost;
-	
-	IF (v_m_payment is null) THEN
-		NEW.monthly_payments = v_total_repayment_amount/v_repayment_period;
-	ELSIF (v_repayment_period is null) THEN
-		NEW.repayment_period = v_total_repayment_amount/v_m_payment;
-	ELSIF (v_repayment_period AND v_m_payment is null) THEN
-		RAISE EXECPTION 'Please enter the repayment period or the monthly payments';
-	ELSEIF (v_m_payment is not null) THEN	
-		v_total_payment  = COALESCE(v_m_payment, 0) + COALESCE(NEW.monthly_payments, 0);
-		UPDATE investments SET monthly_payments = v_m_payment, total_payment = v_total_payment  WHERE is_complete = false AND investment_id = NEW.investment_id;
-	END IF;
-	END IF;
-	END IF;
+	SELECT interest_amount INTO v_interests FROM  investment_types WHERE investment_type_id = NEW. investment_type_id;
+		
+	IF (NEW.monthly_payments is null and NEW.principal is not null and  NEW.repayment_period is not null) THEN
+		NEW.monthly_payments := NEW.principal/ NEW.repayment_period;
+	ELSEIF (NEW.repayment_period is null and NEW.principal is not null and NEW.monthly_payments is not null ) THEN
+		NEW.repayment_period := NEW.principal/NEW.monthly_payments;
+	ELSEIF (NEW.repayment_period is null AND NEW.monthly_payments is null) THEN
+		RAISE EXCEPTION 'Please enter the repayment period or the monthly payments';
 	END IF;
 	
-	IF (v_total_payment >= v_m_payment) THEN
-		UPDATE investments SET is_complete = true WHERE is_complete = false;
-	END IF;
-
-	IF (v_monthly_returns is not null) THEN
-		v_total_returns = COALESCE(v_total_returns, 0) + COALESCE(NEW.monthly_returns,0);
-		UPDATE investments SET monthly_returns = v_monthly_returns, total_returns = v_total_returns WHERE investment_id = NEW.investment_id;
-
-	END IF;
-
-	
-RETURN NEW;
+	RETURN NEW;
 END;
+
 $BODY$
   LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_investment BEFORE INSERT OR UPDATE ON investments
+	FOR EACH ROW EXECUTE PROCEDURE ins_investment();
+
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+
+CREATE OR REPLACE FUNCTION investment_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 		varchar(120);
+BEGIN
+	msg := 'Investment applied';
+	
+	UPDATE investments SET approve_status = 'Completed', investment_status = 'Committed'
+	WHERE (investment_id = CAST($1 as int)) AND (approve_status = 'Draft') AND investment_status = 'Prospective';
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+  
 
 CREATE TRIGGER ins_inv
   AFTER INSERT OR UPDATE OF monthly_returns

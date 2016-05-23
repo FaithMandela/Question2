@@ -9,26 +9,26 @@ CREATE TABLE members (
 	location_id					integer references locations,
 
 	person_title				varchar(50),
-	surname 					varchar(50) not null,
-	first_name 					varchar(50) not null,
+	surname 					varchar(50) ,
+	first_name 					varchar(50) ,
   	middle_name 				varchar(50),
   	full_name					varchar(50),
-  	id_number					varchar(50) not null,
+  	id_number					varchar(50) ,
   	email						varchar(50),
   	date_of_birth 				date,
   	
 	gender 						varchar(10),
  	phone						varchar(50),
  	bank_account_number			varchar(50),
-  	nationality 				char(2) not null references sys_countrys,
-  	nation_of_birth 			char(2) not null references sys_countrys,
+  	nationality 				char(2) references sys_countrys,
+  	nation_of_birth 			char(2) references sys_countrys,
   	marital_status 				varchar(20),
 	joining_date				date,
 	exit_date					date,
-	merry_go_round_number 		varchar(10)
+	merry_go_round_number 		integer,
 
  	picture_file 				character varying(32),
-  	active 						boolean NOT NULL DEFAULT true,
+  	active 						boolean DEFAULT true,
   	details 					text
 );
 
@@ -176,28 +176,34 @@ CREATE TABLE investments (
 	currency_id                 integer references currency,
     org_id                      integer references orgs,
     bank_account_id 			integer references bank_accounts,
-    period_id					integer references periods,
-	investment_name 			varchar(120),
-	status						character varying(25) NOT NULL DEFAULT 'Prospective'
+    
+    investment_name 			varchar(120),
+	investment_status			character varying(25) NOT NULL DEFAULT 'Prospective',
 	date_of_accrual             date,
-	total_cost 					real,
-	total_repayment_amount		real
+	principal 					real,
+	interest					real,
 	repayment_period			real,
-	monthly_returns 			real,
+	initial_payment				real default 0 not null,
 	monthly_payments			real,
-	total_payment				real,
-	total_returns				real,
-	default_interest			real,
-	is_complete					boolean default false not null,
+	
+	approve_status				varchar(16) default 'Draft' not null,
+	workflow_table_id			integer,
+	action_date					timestamp,
+	
 	is_active                   boolean default true not null,
 	details                     text
 );
-
 CREATE INDEX investments_bank_account_id ON investments (bank_account_id);
 CREATE INDEX investments_investment_type_id ON investments (investment_type_id);
 CREATE INDEX investments_currency_id ON investments (currency_id);
 CREATE INDEX investments_org_id ON investments (org_id);
-CREATE INDEX investments_period_id ON investments (period_id);
+
+
+ALTER TABLE transactions ADD investment_id integer references investments;
+CREATE INDEX transactions_investment_id ON transactions (investment_id);
+
+
+
 
 CREATE TABLE member_meeting (
 	member_meeting_id					serial primary key,
