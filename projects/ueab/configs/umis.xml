@@ -1835,16 +1835,17 @@
 	</DESK>
 	<DESK w="700" name="Class Timetable" type="horl" key="164" h="500">
 		<FILTER location="250" name="Class Timetable" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
-				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
+				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" filtername="quarterid" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
+			<DRILLDOWN name="Campus" keyfield="org_id" table="orgs" noorg="true" listfield="org_name" filtername="orgid"></DRILLDOWN>
 			<JASPER filtered="true" name="Final - Class Timetable" reportfile="qtimetable.jasper"></JASPER>
 			<JASPER filtered="true" name="Tentative - Class Timetable" reportfile="qtimetableb.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Exam Timetable" type="horl" key="220" h="500">
 		<FILTER location="250" name="Exam Timetable" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Trimesters " keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Campus" keyfield="org_id" table="orgs" noorg="true" listfield="org_name" filtername="orgid"></DRILLDOWN>

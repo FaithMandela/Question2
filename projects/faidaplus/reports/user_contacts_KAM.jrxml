@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user_contacts_KAM" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="260a982a-851a-4305-b6b2-56538cfe77f3">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user_contacts_KAM" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="260a982a-851a-4305-b6b2-56538cfe77f3">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -131,24 +131,24 @@ WHERE vw_entitys.account_manager_id = '$P!{entity_id}'
 	<columnHeader>
 		<band height="19" splitType="Stretch">
 			<staticText>
-				<reportElement x="432" y="0" width="123" height="15" uuid="3cb362e2-76b1-4139-8d5e-e5903ec431c6"/>
+				<reportElement x="678" y="0" width="124" height="15" uuid="3cb362e2-76b1-4139-8d5e-e5903ec431c6"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<line>
-				<reportElement x="1" y="16" width="554" height="1" uuid="3e5c4d42-b36f-4f6f-9198-9ba21c885dfb"/>
+				<reportElement x="1" y="16" width="800" height="1" uuid="3e5c4d42-b36f-4f6f-9198-9ba21c885dfb"/>
 			</line>
 			<staticText>
-				<reportElement x="40" y="0" width="172" height="15" uuid="9d6e5df7-7b8f-4c05-92ca-17e7cbfe3e7e"/>
+				<reportElement x="40" y="0" width="193" height="15" uuid="9d6e5df7-7b8f-4c05-92ca-17e7cbfe3e7e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="212" y="0" width="220" height="15" uuid="eac39423-17ef-4136-9c7e-c7f1a93193bc"/>
+				<reportElement x="409" y="0" width="269" height="15" uuid="eac39423-17ef-4136-9c7e-c7f1a93193bc"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -158,26 +158,26 @@ WHERE vw_entitys.account_manager_id = '$P!{entity_id}'
 				<reportElement x="0" y="0" width="39" height="15" uuid="af658494-4ec3-4ba4-896d-e60fa8b6c138"/>
 				<text><![CDATA[#]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="233" y="0" width="176" height="15" uuid="6bd71e32-dc2c-4605-a76e-7bdc05358e58"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Username]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="40" y="0" width="172" height="15" uuid="52d0bd0d-7b8d-4128-b80f-90b9b3698e63"/>
+				<reportElement x="40" y="0" width="193" height="15" uuid="52d0bd0d-7b8d-4128-b80f-90b9b3698e63"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="212" y="0" width="220" height="15" uuid="cb0bdf2c-79f7-4c03-9cfd-3269bb5a6a32"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="432" y="0" width="123" height="15" uuid="d6b1a15e-ea97-4e8b-a14e-098d120ae142"/>
+				<reportElement x="678" y="0" width="124" height="15" uuid="d6b1a15e-ea97-4e8b-a14e-098d120ae142"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
@@ -186,6 +186,20 @@ WHERE vw_entitys.account_manager_id = '$P!{entity_id}'
 			<textField>
 				<reportElement x="1" y="0" width="39" height="15" uuid="62553401-7e07-4833-ba1c-fc792e60f0e9"/>
 				<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="233" y="0" width="176" height="15" uuid="68d8be65-dcb0-46c0-8861-821cfb1b9a2d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="409" y="0" width="269" height="15" uuid="cb0bdf2c-79f7-4c03-9cfd-3269bb5a6a32"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

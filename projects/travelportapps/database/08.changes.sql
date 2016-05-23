@@ -61,3 +61,13 @@ SELECT
     a.departure_country, a.entity_name, a.days_from, a.days_to, a.rate_type_id, a.approved_date
     FROM  policy_members p
     JOIN vw_passengers a ON p.passenger_id = a.passenger_id ;
+
+
+
+    drop view vw_benefits;
+    CREATE OR REPLACE VIEW vw_benefits AS
+    SELECT benefit_types.benefit_type_id,  benefit_types.benefit_type_name,  benefit_types.benefit_section,
+     vw_rate_types.rate_type_id, vw_rate_types.rate_plan_name,  benefits.benefit_id,  benefits.individual, benefits.others
+    FROM benefits
+      JOIN benefit_types ON benefits.benefit_type_id = benefit_types.benefit_type_id
+      JOIN vw_rate_types ON benefits.rate_type_id = vw_rate_types.rate_type_id;

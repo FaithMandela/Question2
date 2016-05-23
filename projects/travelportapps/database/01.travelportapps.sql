@@ -1569,12 +1569,12 @@ SELECT corporate_rate_types.rate_type_id, corporate_rate_types.rate_type_name, c
  FROM corporate_rates
    JOIN corporate_rate_types ON corporate_rates.rate_type_id = corporate_rate_types.rate_type_id;
 
-     CREATE OR REPLACE VIEW vw_benefits AS
-      SELECT benefit_types.benefit_type_id,  benefit_types.benefit_type_name,  benefit_types.benefit_section,
-         rate_types.rate_type_id, rate_types.rate_type_name,  benefits.benefit_id,  benefits.individual, benefits.others
-        FROM benefits
-          JOIN benefit_types ON benefits.benefit_type_id = benefit_types.benefit_type_id
-          JOIN rate_types ON benefits.rate_type_id = rate_types.rate_type_id;
+CREATE OR REPLACE VIEW vw_benefits AS
+SELECT benefit_types.benefit_type_id,  benefit_types.benefit_type_name,  benefit_types.benefit_section,
+ vw_rate_types.rate_type_id, vw_rate_types.rate_plan_name,  benefits.benefit_id,  benefits.individual, benefits.others
+FROM benefits
+  JOIN benefit_types ON benefits.benefit_type_id = benefit_types.benefit_type_id
+  JOIN vw_rate_types ON benefits.rate_type_id = vw_rate_types.rate_type_id;
 
 
 

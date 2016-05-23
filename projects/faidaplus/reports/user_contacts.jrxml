@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user_contacts" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5b587bf8-eef6-40ad-8717-2fdc188d80f6">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="user_contacts" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5b587bf8-eef6-40ad-8717-2fdc188d80f6">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -129,7 +129,7 @@
 	<title>
 		<band height="32" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="555" height="30" uuid="db11eda6-e84e-48af-8762-2b3e3e996f2e"/>
+				<reportElement x="0" y="0" width="802" height="30" uuid="db11eda6-e84e-48af-8762-2b3e3e996f2e"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24" isBold="true"/>
 				</textElement>
@@ -143,7 +143,7 @@
 	<columnHeader>
 		<band height="19" splitType="Stretch">
 			<staticText>
-				<reportElement x="43" y="0" width="180" height="15" uuid="dcdba84d-d422-466d-8aad-45376e6ee070"/>
+				<reportElement x="43" y="0" width="208" height="15" uuid="dcdba84d-d422-466d-8aad-45376e6ee070"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="3"/>
@@ -151,7 +151,7 @@
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="223" y="0" width="218" height="15" uuid="2222c549-6c32-4060-8d78-61ae3c3a9523"/>
+				<reportElement x="427" y="-1" width="261" height="15" uuid="2222c549-6c32-4060-8d78-61ae3c3a9523"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="3"/>
@@ -159,7 +159,7 @@
 				<text><![CDATA[Email	]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="441" y="0" width="114" height="15" uuid="17e6b60e-3552-41b1-96a1-71b3309526dd"/>
+				<reportElement x="688" y="-1" width="114" height="15" uuid="17e6b60e-3552-41b1-96a1-71b3309526dd"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="3"/>
@@ -167,18 +167,29 @@
 				<text><![CDATA[Phone]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="16" width="555" height="1" uuid="6817f788-6979-45c8-847b-cde4e279fb70"/>
+				<reportElement x="0" y="16" width="802" height="1" uuid="6817f788-6979-45c8-847b-cde4e279fb70"/>
 			</line>
 			<staticText>
 				<reportElement x="1" y="0" width="43" height="15" uuid="2f3c948a-71a6-4751-b911-55af6a8ba9da"/>
 				<text><![CDATA[#]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="251" y="0" width="176" height="15" uuid="489f9e6a-b57c-4c9a-80f4-7f102663b31c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Username]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="0" width="42" height="15" uuid="149894d5-b3a5-4e0e-b77f-3b8cc932b9cf"/>
+				<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="43" y="0" width="180" height="15" uuid="248ccc04-1063-47db-a9cc-c5cd427d2eaa"/>
+				<reportElement x="44" y="0" width="207" height="15" uuid="248ccc04-1063-47db-a9cc-c5cd427d2eaa"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4"/>
@@ -186,7 +197,7 @@
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="223" y="0" width="218" height="15" uuid="d4d55fed-9c58-4077-a453-e25ac5533a64"/>
+				<reportElement x="427" y="0" width="261" height="15" uuid="d4d55fed-9c58-4077-a453-e25ac5533a64"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4"/>
@@ -194,7 +205,7 @@
 				<textFieldExpression><![CDATA[$F{primary_email}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="441" y="0" width="114" height="15" uuid="a5c076c9-c524-470b-b7a0-b3b5970ba0b9"/>
+				<reportElement x="688" y="0" width="114" height="15" uuid="a5c076c9-c524-470b-b7a0-b3b5970ba0b9"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4"/>
@@ -202,8 +213,11 @@
 				<textFieldExpression><![CDATA[$F{primary_telephone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="0" width="42" height="15" uuid="149894d5-b3a5-4e0e-b77f-3b8cc932b9cf"/>
-				<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+				<reportElement x="251" y="0" width="176" height="15" uuid="870d5847-b54d-43ce-a7a4-9714d38dc6af"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
