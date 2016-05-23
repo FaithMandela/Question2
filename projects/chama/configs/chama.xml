@@ -905,7 +905,7 @@
 			</ACTIONS>
 			<FORM name="Investments" keyfield="investment_id" table="investments">
 				<COMBOBOX w="430" title="Investment Type" lptable="investment_types" y="10" h="20" x="10" lpfield="investment_type_name">investment_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Investment Name" y="70" h="20" x="10">investment_name</TEXTFIELD>
 				<COMBOLIST w="150" title="Investment Status" y="10" h="20" x="290">investment_status
@@ -1181,9 +1181,8 @@
 		<JASPER name="Reports" reportfile="vw_penalty.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Members" key="260" h="550">
-		<GRID name="Members" keyfield="member_id" table="vw_members">
+		<GRID name="Members" keyfield="member_id" table="members">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Branch ">bank_branch_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>

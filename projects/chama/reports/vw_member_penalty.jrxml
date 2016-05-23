@@ -25,8 +25,8 @@
 	<parameter name="organd" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_penalty.entity_id, vw_penalty.entity_name, vw_penalty.org_id, vw_penalty.penalty_type_name, vw_penalty.penalty_id, vw_penalty.date_of_accrual, vw_penalty.amount, vw_penalty.paid
