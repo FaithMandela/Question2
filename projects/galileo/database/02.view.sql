@@ -60,7 +60,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE VIEW UserView AS
+CREATE OR REPLACE VIEW UserView AS
 	SELECT UserGroups.UserGroupid, UserGroups.UserGroupName, Users.UserID, Users.SuperUser,
 		Users.RoleName, Users.username, Users.FullName, Users.Extension, Users.TelNo,
 		Users.EMail, Users.AccountManager, Users.GroupLeader, Users.IsActive, Users.GroupUser
@@ -77,7 +77,7 @@ CREATE OR REPLACE FUNCTION getMainPcc(int) RETURNS varchar(12) AS $$
 	SELECT max(pcc) FROM pccs WHERE (ClientID = $1) AND (gds = 'G') ;
 $$ LANGUAGE SQL;
 
-CREATE VIEW tomcatusers AS 
+CREATE OR REPLACE VIEW tomcatusers AS 
 	(SELECT username, userpass, rolename FROM users)
 	UNION
 	(SELECT getMainPcc(clientid), Clientpass, 'agency' FROM clients)
@@ -85,11 +85,11 @@ CREATE VIEW tomcatusers AS
 	(SELECT (getMainPcc(clients.clientid) || Consultants.SON), Consultants.agentpass, 'agent'
 	FROM Clients INNER JOIN Consultants ON Clients.ClientID = Consultants.ClientID);
 
-CREATE VIEW ClientGroupView AS
+CREATE OR REPLACE VIEW ClientGroupView AS
 	SELECT ClientAffiliates.ClientAffiliateName, ClientGroups.ClientGroupID, ClientGroups.ClientAffiliateID, ClientGroups.ClientGroupName
 	FROM ClientAffiliates INNER JOIN ClientGroups ON ClientAffiliates.ClientAffiliateID = ClientGroups.ClientAffiliateID;
 
-CREATE VIEW ClientView AS
+CREATE OR REPLACE VIEW ClientView AS
 	SELECT ClientGroupView.ClientAffiliateID, ClientGroupView.ClientAffiliateName, ClientGroupView.ClientGroupID, ClientGroupView.ClientGroupName,
  		Users.UserID, Users.FullName, ClientSystems.ClientSystemID, ClientSystems.ClientSystemName, ClientLinks.ClientLinkID, ClientLinks.ClientLinkName,
 		Clients.ClientID, Clients.ClientName, Clients.Address, Clients.ZipCode, Clients.Premises, Clients.Street, Clients.Division,
@@ -102,23 +102,23 @@ CREATE VIEW ClientView AS
 		INNER JOIN ClientSystems ON Clients.ClientSystemID = ClientSystems.ClientSystemID)
 		INNER JOIN ClientLinks ON Clients.ClientLinkID = ClientLinks.ClientLinkID);
 
-CREATE VIEW ClientAList AS
+CREATE OR REPLACE VIEW ClientAList AS
 	SELECT aid
 	FROM clientview
 	GROUP BY aid
 	ORDER BY aid;
 
-CREATE VIEW ClientTownView AS
+CREATE OR REPLACE VIEW ClientTownView AS
 	SELECT Town
 	FROM clientview
 	GROUP BY town
 	ORDER BY town;
 
-CREATE VIEW pccview AS
+CREATE OR REPLACE VIEW pccview AS
 	SELECT clients.clientid, clients.clientname, pccs.pcc, pccs.gds, pccs.pccdate
 	FROM pccs INNER JOIN clients ON pccs.clientid = clients.clientid;
 
-CREATE VIEW ConsultantView AS
+CREATE OR REPLACE VIEW ConsultantView AS
 	SELECT Clients.ClientID, Clients.ClientName, Consultants.ConsultantID, Consultants.salutation, Consultants.firstname, Consultants.othernames,
 		(COALESCE(Consultants.salutation || ', ', '')  || COALESCE(Consultants.firstname, '') || COALESCE(', ' || Consultants.othernames, '')) as consultantname,
 		Consultants.JobDefination, Consultants.TelNo, Consultants.cellphone, Consultants.Email,
@@ -133,24 +133,24 @@ CREATE OR REPLACE FUNCTION getAffiliateMin(integer, integer) RETURNS integer AS 
 	SELECT CASE WHEN max(target) is null THEN 1 ELSE max(target) + 1 END FROM AffiliateTargets WHERE (ClientAffiliateID = $1) AND (target < $2);
 $$ LANGUAGE SQL;
 
-CREATE VIEW AffiliateTargetView AS
+CREATE OR REPLACE VIEW AffiliateTargetView AS
 	SELECT ClientAffiliates.ClientAffiliateName, ClientAffiliates.ClientAffiliateID,
 		AffiliateTargets.AffiliateTargetID, AffiliateTargets.target, AffiliateTargets.marketratio,
 		AffiliateTargets.costvariance, AffiliateTargets.amount, AffiliateTargets.narrative,
 		getAffiliateMin(ClientAffiliates.ClientAffiliateID, target) as mintarget
 	FROM ClientAffiliates INNER JOIN AffiliateTargets ON ClientAffiliates.ClientAffiliateID = AffiliateTargets.ClientAffiliateID;
 
-CREATE VIEW GroupTargetView AS    
+CREATE OR REPLACE VIEW GroupTargetView AS    
 	SELECT ClientGroupView.ClientAffiliateID, ClientGroupView.ClientAffiliateName, ClientGroupView.ClientGroupID, ClientGroupView.ClientGroupName,  
 		GroupTargets.GroupTargetID, GroupTargets.target, GroupTargets.marketratio, GroupTargets.costvariance, GroupTargets.amount, GroupTargets.narrative,
 		getGroupMin(GroupTargets.ClientGroupID, target) as mintarget
 	FROM ClientGroupView INNER JOIN GroupTargets ON ClientGroupView.ClientGroupID = GroupTargets.ClientGroupID;   
 
-CREATE VIEW TargetAffilView AS
+CREATE OR REPLACE VIEW TargetAffilView AS
 	SELECT ClientAffiliateID, getAffiliateMin(ClientAffiliateID, target) as mintarget, target, marketratio, costvariance, amount
 	FROM AffiliateTargets;
 
-CREATE VIEW TargetView AS
+CREATE OR REPLACE VIEW TargetView AS
 	(SELECT ClientGroupID, getGroupMin(ClientGroupID, target) as mintarget, target, marketratio, costvariance, amount
 	FROM GroupTargets)
 	UNION
@@ -306,25 +306,25 @@ CREATE OR REPLACE FUNCTION getLastTime(integer) RETURNS TimeStamp AS $$
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE VIEW PTypeView AS
+CREATE OR REPLACE VIEW PTypeView AS
 	SELECT PClassifications.PClassificationID, PClassifications.PClassificationName, PTypes.PTypeID, PTypes.PTypeName, PTypes.Description
 	FROM (PClassifications INNER JOIN PTypes ON PClassifications.PClassificationID = PTypes.PClassificationID)
 	ORDER BY PClassifications.PClassificationName, PTypes.PTypeName;
 
-CREATE VIEW PDefinitionview AS
+CREATE OR REPLACE VIEW PDefinitionview AS
 	SELECT PClassifications.PClassificationID, PClassifications.PClassificationName, PTypes.PTypeID, PTypes.PTypeName,
 		PDefinitions.PDefinitionID, PDefinitions.PDefinitionName, PDefinitions.Description, PDefinitions.Solution
 	FROM (PClassifications INNER JOIN PTypes ON PClassifications.PClassificationID = PTypes.PClassificationID)
 		INNER JOIN PDefinitions ON PTypes.PTypeID = PDefinitions.PTypeID
 	ORDER BY PClassifications.PClassificationName, PTypes.PTypeName;
 
-CREATE VIEW stageview AS
+CREATE OR REPLACE VIEW stageview AS
 	SELECT Users.UserID, Users.FullName, stages.StageID, stages.PDefinitionID, stages.TimeInterval, 
 		stages.StageOrder, stages.isDependent, stages.Task
 	FROM Users INNER JOIN Stages ON Users.UserID = Stages.UserID
 	ORDER BY stages.StageOrder;
 
-CREATE VIEW definestageview AS
+CREATE OR REPLACE VIEW definestageview AS
 	SELECT PDefinitionview.PClassificationid, PDefinitionview.PClassificationName, PDefinitionview.PTypeid, PDefinitionview.PTypeName,
 		PDefinitionview.PDefinitionid, PDefinitionview.PDefinitionName, stageview.stageid,
 		stageview.FullName, stageview.TimeInterval, stageview.StageOrder, stageview.isDependent, stageview.Task
@@ -343,7 +343,7 @@ CREATE OR REPLACE FUNCTION getProblemOpen(integer) RETURNS bigint AS $$
 	WHERE (ProblemLogID = $1) AND (IsSolved = false);
 $$ LANGUAGE SQL;
 
-CREATE VIEW ProblemLogView AS
+CREATE OR REPLACE VIEW ProblemLogView AS
 	SELECT PDefinitionview.PClassificationID, PDefinitionview.PClassificationName, PDefinitionview.PTypeID,
 		PDefinitionview.PTypeName, PDefinitionview.PDefinitionID, PDefinitionview.PDefinitionName,
 		Clients.ClientID, Clients.ClientName, Users.UserGroupID, Users.UserID, Users.FullName, Users.Email,
@@ -361,7 +361,7 @@ CREATE VIEW ProblemLogView AS
 		INNER JOIN Users ON ProblemLog.UserID = Users.UserID)
 		INNER JOIN PLevels ON ProblemLog.PlevelID = PLevels.PLevelID;
 
-CREATE VIEW ForwardedView AS
+CREATE OR REPLACE VIEW ForwardedView AS
 	SELECT Users.UserGroupID, Users.userid, Users.UserName, Users.FullName, Users.EMail, Forwarded.ForwardID, 
 		Forwarded.SenderID, getUserFullName(Forwarded.SenderID) as SenderName, Forwarded.ProblemLogID,
 		Forwarded.ReferenceNo, Forwarded.StageOrder, Forwarded.IsDependent, Forwarded.isDelayedAction,
@@ -373,7 +373,7 @@ CREATE VIEW ForwardedView AS
 	FROM Users INNER JOIN Forwarded ON Users.UserID = Forwarded.UserID
 	ORDER BY Forwarded.StageOrder;
 
-CREATE VIEW ProblemForwardView AS
+CREATE OR REPLACE VIEW ProblemForwardView AS
 	SELECT ProblemLogView.PClassificationID, ProblemLogView.PClassificationName, ProblemLogView.PTypeID, ProblemLogView.PTypeName,
 		ProblemLogView.PDefinitionID, ProblemLogView.PDefinitionName, ProblemLogView.ClientID, ProblemLogView.ClientName,
 		ProblemLogView.UserGroupID, ProblemLogView.UserID, ProblemLogView.FullName, ProblemLogView.Email, 
@@ -399,7 +399,7 @@ CREATE OR REPLACE FUNCTION getCountERF(integer) RETURNS bigint AS $$
 	WHERE ProblemLogID = $1;
 $$ LANGUAGE SQL;
 
-CREATE VIEW EsclationForwardView AS
+CREATE OR REPLACE VIEW EsclationForwardView AS
 	SELECT ProblemForwardView.PClassificationID, ProblemForwardView.PClassificationName, ProblemForwardView.PTypeID, 
 		ProblemForwardView.PTypeName, ProblemForwardView.PDefinitionID, ProblemForwardView.PDefinitionName,
 		ProblemForwardView.ClientID, ProblemForwardView.ClientName, ProblemForwardView.UserGroupID, ProblemForwardView.UserID,
@@ -490,21 +490,21 @@ $$ LANGUAGE SQL;
 
 ----------------------------------------------- Field Support
 
-CREATE VIEW WorkScheduleView AS
+CREATE OR REPLACE VIEW WorkScheduleView AS
 	SELECT Users.UserID, Users.FullName, worktypes.worktypeid, worktypes.worktypename,
 		WorkSchedule.WorkScheduleID, WorkSchedule.WorkDate, WorkSchedule.narrative,
 		WorkSchedule.HoursSpent, WorkSchedule.IsDone, WorkSchedule.Details
 	FROM (worktypes INNER JOIN WorkSchedule ON worktypes.worktypeid = WorkSchedule.worktypeid)
 		INNER JOIN Users ON WorkSchedule.UserID = Users.UserID;
 
-CREATE VIEW FieldSupportView AS
+CREATE OR REPLACE VIEW FieldSupportView AS
 	SELECT Clients.ClientName, Users.FullName, FieldSupport.FieldSupportID, FieldSupport.UserID, FieldSupport.ClientID,
 		FieldSupport.SupportDate, FieldSupport.Reason, FieldSupport.HoursSpent, FieldSupport.timeIn, 
 		FieldSupport.IsDone, FieldSupport.IsDrop, FieldSupport.IsForAction, ActionDone
 	FROM (Clients INNER JOIN FieldSupport ON Clients.ClientID = FieldSupport.ClientID)
 		INNER JOIN Users ON Users.UserID = FieldSupport.UserID;
 	
-CREATE VIEW TransportView AS
+CREATE OR REPLACE VIEW TransportView AS
 	SELECT Cars.CarName, Users.FullName, Transport.TransportID, Transport.CarID, Transport.UserID, Transport.TransportDate, 
 		Transport.booktime,	Transport.timeGone, Transport.Location, Transport.IsDone, Transport.IsApproved,
 		(Transport.booktime + cast(('0 ' || Transport.timegone || ':00') as interval)) as bookreturn,
@@ -513,7 +513,7 @@ CREATE VIEW TransportView AS
 	FROM (Users INNER JOIN Transport ON Users.UserID = Transport.UserID)
 		LEFT JOIN Cars on Cars.CarID = Transport.CarID;
 		
-CREATE VIEW CarServiceView AS
+CREATE OR REPLACE VIEW CarServiceView AS
 	SELECT Cars.CarID, Cars.CarName, Cars.NextService, CarServices.CarServiceID, CarServices.ServiceDate,
 		CarServices.problems, CarServices.replacements
 	FROM Cars INNER JOIN CarServices ON Cars.CarID = CarServices.CarID;
@@ -531,16 +531,16 @@ CREATE OR REPLACE FUNCTION getcarbooked(integer, date, time, time) RETURNS varch
 	AND (((booktime, bookreturn) OVERLAPS ($3, $4))=true);
 $$ LANGUAGE SQL;
 
-CREATE VIEW hourview AS
+CREATE OR REPLACE VIEW hourview AS
 	SELECT CAST((generate_series || ':00') AS time) as hourvalue FROM generate_series(8,17);
 
-CREATE VIEW dayview AS
+CREATE OR REPLACE VIEW dayview AS
 	SELECT (date '2004-01-01' + generate_series) as dayvalue FROM generate_series(0, 3000);
 
-CREATE VIEW calendarview AS
+CREATE OR REPLACE VIEW calendarview AS
 	SELECT dayview.dayvalue, hourview.hourvalue FROM dayview CROSS JOIN hourview;
 
-CREATE VIEW calendarcar AS
+CREATE OR REPLACE VIEW calendarcar AS
 	SELECT cars.carid, cars.carname, calendarview.dayvalue, calendarview.hourvalue,
 		getcaravailable(cars.carid, calendarview.dayvalue, calendarview.hourvalue, calendarview.hourvalue + interval '1 hour') as carsapproved,
 		getcarbooked(cars.carid, calendarview.dayvalue, calendarview.hourvalue, calendarview.hourvalue + interval '1 hour') as carsbooked
@@ -548,7 +548,7 @@ CREATE VIEW calendarcar AS
 
 ---------------------------------------- Assets
 
-CREATE VIEW AssetSubTypeView AS
+CREATE OR REPLACE VIEW AssetSubTypeView AS
 	SELECT AssetTypes.AssetTypeID, AssetTypes.AssetTypeName, AssetSubTypes.AssetSubTypeID, AssetSubTypes.AssetSubTypeName,
 		AssetSubTypes.ClientCost, AssetSubTypes.segments
 	FROM AssetTypes INNER JOIN AssetSubTypes ON AssetTypes.AssetTypeID = AssetSubTypes.AssetTypeID;
@@ -558,7 +558,7 @@ CREATE OR REPLACE FUNCTION getClientAsset(integer) RETURNS bigint AS $$
 	WHERE (assetid = $1) AND (IsIssued = true) AND (IsRetrived = false);
 $$ LANGUAGE SQL;
 
-CREATE VIEW AssetsView AS
+CREATE OR REPLACE VIEW AssetsView AS
 	SELECT AssetTypes.AssetTypeID, AssetTypes.AssetTypeName,
 		AssetSubTypes.AssetSubTypeID, AssetSubTypes.AssetSubTypeName, AssetSubTypes.Clientcost, AssetSubTypes.segments,
 		Assets.AssetID, Assets.AssetSN, Assets.IsInStore, Assets.Purchasedate, Assets.IsOnLease, Assets.PurchaseCost, 
@@ -569,14 +569,14 @@ CREATE VIEW AssetsView AS
 	FROM (AssetTypes INNER JOIN AssetSubTypes ON AssetTypes.AssetTypeID = AssetSubTypes.AssetTypeID)
 		INNER JOIN Assets ON AssetSubTypes.AssetSubTypeID = Assets.AssetSubTypeID;
 
-CREATE VIEW DuplicateSNView AS
+CREATE OR REPLACE VIEW DuplicateSNView AS
 	SELECT AssetSubTypeID, AssetSubTypeName, assetsn, count(assetid)
 	FROM AssetsView
 	WHERE (SingularItem=true)
 	GROUP BY AssetSubTypeID, AssetSubTypeName, assetsn
 	HAVING count(assetid)>1;
 
-CREATE VIEW ClientAssetView AS
+CREATE OR REPLACE VIEW ClientAssetView AS
 	SELECT AssetsView.AssetTypeID, AssetsView.AssetTypeName, AssetsView.AssetSubTypeID, AssetsView.AssetSubTypeName, 
 		AssetsView.Clientcost, AssetsView.segments, AssetsView.AssetSN, AssetsView.lost,
 		AssetsView.IsInStore, AssetsView.Purchasedate, AssetsView.IsOnLease, AssetsView.PurchaseCost,
@@ -590,7 +590,7 @@ CREATE VIEW ClientAssetView AS
 	INNER JOIN (Clients INNER JOIN ClientGroups ON Clients.ClientGroupid = ClientGroups.ClientGroupid)
 		ON Clients.ClientID = ClientAssets.ClientID;
 
-CREATE VIEW clientassetcount AS
+CREATE OR REPLACE VIEW clientassetcount AS
 	SELECT clientid, clientname, assetsubtypeid, assetsubtypename, sum(units) as totalunits, 
 		sum(assetcost) as totalcost, sum(assetsegments) as totalsegments
 	FROM ClientAssetView
@@ -598,7 +598,7 @@ CREATE VIEW clientassetcount AS
 	GROUP BY clientid, clientname, assetsubtypeid, assetsubtypename
 	ORDER BY clientname;
 
-CREATE VIEW groupassetcount AS
+CREATE OR REPLACE VIEW groupassetcount AS
 	SELECT clientgroupid, clientgroupname, assetsubtypeid, assetsubtypename, sum(units) as totalunits, 
 		sum(assetcost) as totalcost, sum(assetsegments) as totalsegments
 	FROM ClientAssetView
@@ -606,7 +606,7 @@ CREATE VIEW groupassetcount AS
 	GROUP BY clientgroupid, clientgroupname, assetsubtypeid, assetsubtypename
 	ORDER BY clientgroupname;
 
-CREATE VIEW clientassetcost AS
+CREATE OR REPLACE VIEW clientassetcost AS
 	SELECT clientid, clientname, sum(assetcost) as totalcost, sum(assetsegments) as totalsegments
 	FROM ClientAssetView
 	WHERE (IsIssued = true) AND (IsRetrived = false)
@@ -634,14 +634,14 @@ CREATE OR REPLACE FUNCTION getClientInternet(integer) RETURNS varchar(50) AS $$
 		AND (ClientAssets.isretrived = false);
 $$ LANGUAGE SQL;
 	
-CREATE VIEW PCConfigurationView AS
+CREATE OR REPLACE VIEW PCConfigurationView AS
 	SELECT Clients.ClientName, PCConfiguration.PCConfigurationID, PCConfiguration.ClientID, PCConfiguration.CPUSN,
 		PCConfiguration.FPNET, PCConfiguration.FPConfig, PCConfiguration.ISP, PCConfiguration.Orderdate,
 		PCConfiguration.ConfigNumber, PCConfiguration.IPAddress, PCConfiguration.SubnetMask, PCConfiguration.GIClientID,
 		PCConfiguration.IWSGTID, PCConfiguration.Printer1GTID, PCConfiguration.Printer2GTID
 	FROM Clients INNER JOIN PCConfiguration ON Clients.ClientID = PCConfiguration.ClientID;
 
-CREATE VIEW ERFView AS
+CREATE OR REPLACE VIEW ERFView AS
 	SELECT Users.UserID, Users.FullName, AssetSubTypes.AssetSubTypeID, AssetSubTypes.AssetSubTypeName,
 		AssetSubTypes.ClientCost, AssetSubTypes.segments, 
 		ERF.ERFID, ERF.ProblemLogID, ERF.Replacement, ERF.Quantity,
@@ -650,7 +650,7 @@ CREATE VIEW ERFView AS
 	FROM (Users INNER JOIN ERF ON Users.UserID = ERF.UserID)
 	INNER JOIN AssetSubTypes ON AssetSubTypes.AssetSubTypeID = ERF.AssetSubTypeID;
 
-CREATE VIEW ForwardERFView AS
+CREATE OR REPLACE VIEW ForwardERFView AS
 	SELECT ForwardedView.UserGroupID, ForwardedView.userid, ForwardedView.UserName, ForwardedView.FullName, 
 		ForwardedView.ForwardID, ForwardedView.ProblemLogID, ForwardedView.ReferenceNo, ForwardedView.StageOrder,
 		ForwardedView.IsDependent, ForwardedView.Description, ForwardedView.ForwardTime, ForwardedView.SolvedTime,
@@ -658,7 +658,7 @@ CREATE VIEW ForwardERFView AS
 		ERFView.ClientCost, ERFView.segments, ERFView.ERFID, ERFView.Quantity, ERFView.erfcost, ERFView.erfsegments
 	FROM ForwardedView INNER JOIN ERFView ON ForwardedView.ProblemLogID = ERFView.ProblemLogID;
 
-CREATE VIEW vw_client_assets AS
+CREATE OR REPLACE VIEW vw_client_assets AS
 	SELECT AssetsView.assettypeid, AssetsView.assettypename, AssetsView.assetsubtypeid, 
 		AssetsView.assetsubtypename, AssetsView.assetsn,
 		AssetsView.assetid, AssetsView.purchasedate, AssetsView.isonlease, 
@@ -690,7 +690,7 @@ CREATE OR REPLACE FUNCTION getPrevPeriod(date) RETURNS integer AS $$
 		AND (extract(month from startdate) = extract(month from $1));
 $$ LANGUAGE SQL;
 
-CREATE VIEW PeriodView AS
+CREATE OR REPLACE VIEW PeriodView AS
 	SELECT Periods.PeriodID, Periods.AccountPeriod, Periods.Startdate, date_part('month', startdate) as monthid,
 	to_char(Periods.startdate, 'YYYY') as periodyear, to_char(Periods.startdate, 'Month') as periodmonth,
 	(trunc((date_part('month', startdate)-1)/3)+1) as quarter, getkqquarter(startdate) as kqquarter,
@@ -699,31 +699,31 @@ CREATE VIEW PeriodView AS
 	FROM Periods
 	ORDER BY Periods.Startdate;
 
-CREATE VIEW PeriodYearView AS
+CREATE OR REPLACE VIEW PeriodYearView AS
 	SELECT periodyear
 	FROM PeriodView
 	GROUP BY periodyear
 	ORDER BY periodyear;
 
-CREATE VIEW AccountPeriodView AS
+CREATE OR REPLACE VIEW AccountPeriodView AS
 	SELECT AccountPeriod
 	FROM PeriodView
 	GROUP BY AccountPeriod
 	ORDER BY AccountPeriod;
 
-CREATE VIEW PeriodquarterView AS
+CREATE OR REPLACE VIEW PeriodquarterView AS
 	SELECT quarter
 	FROM PeriodView
 	GROUP BY quarter
 	ORDER BY quarter;
 
-CREATE VIEW PeriodsemisterView AS
+CREATE OR REPLACE VIEW PeriodsemisterView AS
 	SELECT semister
 	FROM PeriodView
 	GROUP BY semister
 	ORDER BY semister;
 
-CREATE VIEW PeriodMonthView AS
+CREATE OR REPLACE VIEW PeriodMonthView AS
 	SELECT monthid, periodmonth
 	FROM PeriodView
 	GROUP BY monthid, periodmonth
@@ -742,14 +742,14 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER insPeriodAssetCosts AFTER INSERT ON periods
     FOR EACH ROW EXECUTE PROCEDURE insPeriodAssetCosts();
 
-CREATE VIEW periodassetcostview AS
+CREATE OR REPLACE VIEW periodassetcostview AS
 	SELECT assetsubtypeview.assettypeid, assetsubtypeview.assettypename, assetsubtypeview.assetsubtypeid, assetsubtypeview.assetsubtypename,
 		periodview.periodid, periodview.accountperiod, periodview.startdate, periodview.monthid, periodview.periodyear, periodview.periodmonth,
 		periodassetcosts.periodassetcostid, periodassetcosts.clientcost, periodassetcosts.segments
 	FROM (periodassetcosts INNER JOIN assetsubtypeview ON periodassetcosts.assetsubtypeid = assetsubtypeview.assetsubtypeid)
 		INNER JOIN periodview ON periodassetcosts.periodid = periodview.periodid;
 
-CREATE VIEW vw_assets_costing AS
+CREATE OR REPLACE VIEW vw_assets_costing AS
 	SELECT clientview.clientgroupid, clientview.clientgroupname, clientview.clientid, clientview.clientname,
 		assets.AssetSN, ClientAssets.dateIssued, ClientAssets.dateRetrived, ClientAssets.dateadded, ClientAssets.datechanged, ClientAssets.units,
 		assetsubtypeview.assettypeid, assetsubtypeview.assettypename, assetsubtypeview.assetsubtypeid, assetsubtypeview.assetsubtypename,
@@ -765,7 +765,7 @@ CREATE VIEW vw_assets_costing AS
 	WHERE (ClientAssets.IsIssued = true) AND (ClientAssets.dateIssued <= periodview.startdate + 14) 
 		AND ((ClientAssets.dateRetrived IS NULL) OR (ClientAssets.dateRetrived >= periodview.startdate + 14));
 
-CREATE VIEW vw_assets_changes AS
+CREATE OR REPLACE VIEW vw_assets_changes AS
 	SELECT clientview.clientgroupid, clientview.clientgroupname, clientview.clientid, clientview.clientname,
 		assets.AssetSN, ClientAssets.dateIssued, ClientAssets.dateRetrived, ClientAssets.dateadded, ClientAssets.datechanged,
 		assetsubtypeview.assettypeid, assetsubtypeview.assettypename, assetsubtypeview.assetsubtypeid, assetsubtypeview.assetsubtypename,
@@ -802,13 +802,13 @@ CREATE OR REPLACE FUNCTION getClientCost(integer, integer, date) RETURNS float A
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE VIEW MIDTTransactionView AS
+CREATE OR REPLACE VIEW MIDTTransactionView AS
 	SELECT periodview.periodid, periodview.accountperiod, periodview.startdate, periodview.monthid, periodview.periodyear, periodview.periodmonth, periodview.quarter, periodview.kqquarter, 
 		clients.clientid, clients.clientname, midttransactions.midttransactionid, midttransactions.crs, midttransactions.pcc, midttransactions.agency, midttransactions.prd
 	FROM (midttransactions INNER JOIN periodview ON midttransactions.periodid = periodview.periodid)
 		LEFT JOIN clients ON midttransactions.clientid = clients.clientid;
 
-CREATE VIEW CompetitionView AS
+CREATE OR REPLACE VIEW CompetitionView AS
 	SELECT periodview.periodid, periodview.accountperiod, periodview.startdate, periodview.monthid, periodview.periodyear, periodview.periodmonth, periodview.quarter, periodview.kqquarter, 
 		midttransactions.crs, sum(midttransactions.prd) as sumprd
 	FROM (midttransactions INNER JOIN periodview ON midttransactions.periodid = periodview.periodid)
@@ -820,7 +820,7 @@ CREATE OR REPLACE FUNCTION getsegs(int, int, varchar(2)) RETURNS real AS $$
 	FROM MIDTTransactions WHERE (ClientID = $1) AND (PeriodID = $2) AND (CRS = $3);
 $$ LANGUAGE SQL;
 
-CREATE VIEW TransClientView AS
+CREATE OR REPLACE VIEW TransClientView AS
 	SELECT ClientAffiliates.ClientAffiliateID, ClientAffiliates.ClientAffiliateName, ClientGroups.ClientGroupID, ClientGroups.ClientGroupName,
 		Users.UserID, Users.FullName, Clients.ClientID, Clients.ClientName, Clients.ClientSystemID, Clients.ClientLinkID,
 		Clients.TelNo, Clients.Address, Clients.ZipCode, Clients.Town, Clients.Country, Clients.IsIATA
@@ -833,7 +833,7 @@ CREATE OR REPLACE FUNCTION getPrevSegs(int, int) RETURNS bigint AS $$
 	WHERE (clientid = $1) AND (PeriodID = $2);
 $$ LANGUAGE SQL;
 
-CREATE VIEW TransactionView AS
+CREATE OR REPLACE VIEW TransactionView AS
 	SELECT TransClientView.ClientAffiliateID, TransClientView.ClientAffiliateName, TransClientView.ClientGroupID, TransClientView.ClientGroupName,
 		TransClientView.UserID, TransClientView.FullName, TransClientView.ClientID, TransClientView.ClientName, 
 		TransClientView.ClientSystemID, TransClientView.ClientLinkID, TransClientView.IsIATA, 
@@ -854,7 +854,7 @@ CREATE VIEW TransactionView AS
 		INNER JOIN PeriodView ON Transactions.PeriodID = PeriodView.PeriodID
 	ORDER BY PeriodView.Startdate;
 
-CREATE VIEW ClientCostView AS
+CREATE OR REPLACE VIEW ClientCostView AS
 	SELECT ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName, UserID, FullName,
 		ClientSystemID, ClientLinkID, TelNo, Address, ZipCode, Town, Country, IsIATA, 
 		PeriodID, AccountPeriod, Startdate, monthid, periodyear, periodmonth, quarter, kqquarter, semister, PrevPeriod, BudgetRate,
@@ -866,7 +866,7 @@ CREATE VIEW ClientCostView AS
 		(CASE WHEN (AmadeousSegs + NASegs) = 0 THEN 0 ELSE (100 * AmadeousSegs / (AmadeousSegs + NASegs)) END) as compratio
 	FROM TransactionView;
 
-CREATE VIEW ClientQuarterView AS
+CREATE OR REPLACE VIEW ClientQuarterView AS
 	SELECT ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName,
 		ClientSystemID, ClientLinkID, UserID, FullName, periodyear, quarter, semister, 
 		sum(AmadeousSegs) as SumAmadeousSegs, Sum(WorldSpanSegs) as SumWorldSpanSegs, Sum(NASegs) as SumNASegs,
@@ -877,7 +877,7 @@ CREATE VIEW ClientQuarterView AS
 	GROUP BY ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName,
 		ClientSystemID, ClientLinkID, UserID, FullName, periodyear, quarter, semister;
 
-CREATE VIEW ClientSemisterView AS
+CREATE OR REPLACE VIEW ClientSemisterView AS
 	SELECT ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName,
 		ClientSystemID, ClientLinkID, UserID, FullName, periodyear, semister, 
 		sum(AmadeousSegs) as SumAmadeousSegs, Sum(WorldSpanSegs) as SumWorldSpanSegs, Sum(NASegs) as SumNASegs,
@@ -888,7 +888,7 @@ CREATE VIEW ClientSemisterView AS
 	GROUP BY ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName,
 		ClientSystemID, ClientLinkID, UserID, FullName, periodyear, semister;
 
-CREATE VIEW ClientYearView AS
+CREATE OR REPLACE VIEW ClientYearView AS
 	SELECT ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName,
 		ClientSystemID, ClientLinkID, UserID, FullName, periodyear, 
 		sum(AmadeousSegs) as SumAmadeousSegs, Sum(WorldSpanSegs) as SumWorldSpanSegs, Sum(NASegs) as sumNASegs,
@@ -899,7 +899,7 @@ CREATE VIEW ClientYearView AS
 	GROUP BY ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName,
 		ClientSystemID, ClientLinkID, UserID, FullName, periodyear;
 
-CREATE VIEW ClientAccYearView AS
+CREATE OR REPLACE VIEW ClientAccYearView AS
 	SELECT ClientAffiliateID, ClientAffiliateName, ClientGroupID, ClientGroupName, ClientID, ClientName,
 		ClientSystemID, ClientLinkID, UserID, FullName, AccountPeriod, 
 		sum(AmadeousSegs) as SumAmadeousSegs, Sum(WorldSpanSegs) as SumWorldSpanSegs, Sum(NASegs) as sumNASegs,
@@ -948,7 +948,7 @@ CREATE OR REPLACE VIEW vw_accmanagersegs AS
 	WHERE (ClientGroupID<>0)
 	GROUP BY FullName, ClientGroupID, ClientGroupName, PeriodID, AccountPeriod, Startdate, monthid, periodyear, periodmonth, quarter, kqquarter, semister, IncentiveRate, CompetitionCost);
 
-CREATE VIEW GroupQuarterView AS
+CREATE OR REPLACE VIEW GroupQuarterView AS
 	SELECT ClientID, ClientName, periodyear, quarter, semister, 
 		sum(AmadeousSegs) as SumAmadeousSegs, Sum(WorldSpanSegs) as SumWorldSpanSegs, Sum(NASegs) as SumNASegs,
 		sum(clientcost) as sumclientcost, sum(NASegs - clientcost) as sumclientbalance, 
@@ -957,7 +957,7 @@ CREATE VIEW GroupQuarterView AS
 	FROM GroupCostView
 	GROUP BY ClientID, ClientName, periodyear, quarter, semister;
 
-CREATE VIEW GroupSemisterView AS
+CREATE OR REPLACE VIEW GroupSemisterView AS
 	SELECT ClientID, ClientName, periodyear, semister, 
 		sum(AmadeousSegs) as SumAmadeousSegs, Sum(WorldSpanSegs) as SumWorldSpanSegs, Sum(NASegs) as SumNASegs,
 		sum(clientcost) as sumclientcost, sum(NASegs - clientcost) as sumclientbalance, 
@@ -966,7 +966,7 @@ CREATE VIEW GroupSemisterView AS
 	FROM GroupCostView
 	GROUP BY ClientID, ClientName, periodyear, semister;
 
-CREATE VIEW GroupYearView AS
+CREATE OR REPLACE VIEW GroupYearView AS
 	SELECT ClientID, ClientName, periodyear, 
 		sum(AmadeousSegs) as SumAmadeousSegs, Sum(WorldSpanSegs) as SumWorldSpanSegs, Sum(NASegs) as sumNASegs,
 		sum(clientcost) as sumclientcost, sum(NASegs - clientcost) as sumclientbalance,
@@ -975,7 +975,7 @@ CREATE VIEW GroupYearView AS
 	FROM GroupCostView
 	GROUP BY ClientID, ClientName, periodyear;
 
-CREATE VIEW GroupsCostView AS
+CREATE OR REPLACE VIEW GroupsCostView AS
 	SELECT ClientGroupID, ClientGroupName, PeriodID, AccountPeriod, Startdate, monthid, periodyear, periodmonth, quarter, kqquarter, semister,
 		sum(AmadeousSegs) as AmadeousSegs, sum(WorldSpanSegs) as WorldSpanSegs, sum(NASegs) as NASegs,
 		sum(clientcost) as clientcost, sum(NASegs - clientcost) as clientbalance, 
@@ -987,7 +987,7 @@ CREATE VIEW GroupsCostView AS
 	WHERE (ClientGroupID<>0)
 	GROUP BY ClientGroupID, ClientGroupName, PeriodID, AccountPeriod, Startdate, monthid, periodyear, periodmonth, quarter, kqquarter, semister;
 
-CREATE VIEW AffiliateCostView AS
+CREATE OR REPLACE VIEW AffiliateCostView AS
 	SELECT ClientAffiliateID, ClientAffiliateName, PeriodID, AccountPeriod, Startdate, monthid, periodyear, periodmonth, quarter, kqquarter, semister,
 		sum(AmadeousSegs) as AmadeousSegs, sum(WorldSpanSegs) as WorldSpanSegs, sum(NASegs) as NASegs,
 		sum(clientcost) as clientcost, sum(NASegs - clientcost) as clientbalance, 
@@ -998,7 +998,7 @@ CREATE VIEW AffiliateCostView AS
 	FROM TransactionView	
 	GROUP BY ClientAffiliateID, ClientAffiliateName, PeriodID, AccountPeriod, Startdate, monthid, periodyear, periodmonth, quarter, kqquarter, semister;  
 
-CREATE VIEW ConsultantTransactionView AS
+CREATE OR REPLACE VIEW ConsultantTransactionView AS
 	SELECT Clients.ClientID, Clients.ClientName, ConsultantTransactions.ConsultantTransactionID, ConsultantTransactions.PeriodID, 
 		ConsultantTransactions.PCC,	ConsultantTransactions.SON,	ConsultantTransactions.prd1, ConsultantTransactions.prd2, 
 		ConsultantTransactions.prd3, ConsultantTransactions.modprod, ConsultantTransactions.target,
@@ -1056,7 +1056,7 @@ CREATE OR REPLACE FUNCTION getTQIncentive(integer, bigint) RETURNS float AS $$
 	WHERE ClientAffiliateID = $1;
 $$ LANGUAGE SQL;
 
-CREATE VIEW QuarterTransView AS
+CREATE OR REPLACE VIEW QuarterTransView AS
 	(SELECT ClientID, ClientName, AccountPeriod, periodyear, quarter, kqquarter,
 		sum(AmadeousSegs) as AmadeousSegs, sum(WorldSpanSegs) as WorldSpanSegs, sum(NASegs) as NASegs,
 		sum(clientcost) as clientcost, sum(NASegs - clientcost) as clientbalance, 
@@ -1087,7 +1087,7 @@ CREATE VIEW QuarterTransView AS
 	WHERE (ClientGroupID <> 0) AND (ClientAffiliateID = 0)
 	GROUP BY ClientGroupID, ClientGroupName, AccountPeriod, periodyear, quarter, kqquarter);  
 
-CREATE VIEW AllTransView AS
+CREATE OR REPLACE VIEW AllTransView AS
 	(SELECT ClientID, ClientName, AccountPeriod,
 		sum(AmadeousSegs) as AmadeousSegs, sum(WorldSpanSegs) as WorldSpanSegs, sum(NASegs) as NASegs,
 		sum(clientcost) as clientcost, sum(NASegs - clientcost) as clientbalance, 
@@ -1349,7 +1349,7 @@ CREATE OR REPLACE FUNCTION gettkpdistribution(integer) RETURNS float AS $$
 	END;
 $$ LANGUAGE plpgsql;
 
-CREATE VIEW consdistributionview AS
+CREATE OR REPLACE VIEW consdistributionview AS
 	SELECT clientview.clientgroupid, clientview.clientgroupname, clientview.clientid, clientview.clientname, 
 		consultanttransactions.consultanttransactionid, consultanttransactions.pcc, consultanttransactions.son, 
 		consultanttransactions.prd3, consultanttransactions.periodid, 
@@ -1358,7 +1358,7 @@ CREATE VIEW consdistributionview AS
 	FROM clientview INNER JOIN consultanttransactions ON clientview.clientid = consultanttransactions.clientid
 	ORDER BY clientview.clientid;
 
-CREATE VIEW totalproductivityview AS 
+CREATE OR REPLACE VIEW totalproductivityview AS 
 	SELECT periods.periodid, periods.startdate, sum(transactions.nasegs) AS segments, 
 		sum(getClientCost(transactions.ClientID, Periods.PeriodID, Periods.Startdate)) AS cost,
 		sum(transactions.nasegs - getClientCost(transactions.ClientID, Periods.PeriodID, Periods.Startdate)) AS balance
@@ -1366,7 +1366,7 @@ CREATE VIEW totalproductivityview AS
 	GROUP BY periods.periodid, periods.startdate 
 	ORDER BY periods.startdate;
 
-CREATE VIEW vw_contracts AS
+CREATE OR REPLACE VIEW vw_contracts AS
 	SELECT incentive_types.incentive_type_id, incentive_types.incentive_type_name, 
 		ClientGroups.ClientGroupID, ClientGroups.ClientGroupName, clients.clientid, clients.clientname,
 		contracts.contract_id, contracts.after_cost, contracts.market_share,
@@ -1376,7 +1376,7 @@ CREATE VIEW vw_contracts AS
 		LEFT JOIN ClientGroups ON contracts.ClientGroupID = ClientGroups.ClientGroupID)
 		LEFT JOIN clients ON contracts.clientid = clients.clientid;
 
-CREATE VIEW calldumpview AS
+CREATE OR REPLACE VIEW calldumpview AS
 	(SELECT (cast(replace(calldate, ' ', '') as date) + 30) as newcalldate, callmarker, cast(calltime as time) as newcalltime,
 		extension, callline, calldetails, 
 		(cast(substring(talktime from 1 for 2) as float) * 60 + cast(substring(talktime from 4 for 2) as float) + (cast(substring(talktime from 7 for 2) as float)/60)) as newtalktime,
@@ -1454,13 +1454,13 @@ CREATE OR REPLACE FUNCTION getBudgetSegs(int, date) RETURNS double precision AS 
 		AND (extract(month from startdate) = extract(month from $2));
 $$ LANGUAGE SQL;
 
-CREATE VIEW daylistview AS
+CREATE OR REPLACE VIEW daylistview AS
 	SELECT dailytransactions.prddate
 	FROM dailytransactions
 	GROUP BY dailytransactions.prddate
 	ORDER BY dailytransactions.prddate;
 
-CREATE VIEW dailytransactionview AS
+CREATE OR REPLACE VIEW dailytransactionview AS
 SELECT clientview.clientaffiliateid, clientview.clientaffiliatename, clientview.clientgroupid, clientview.clientgroupname,
 	clientview.userid, clientview.fullname, clientview.clientid, clientview.clientname, dailytransactions.dailytransactionid,
 	dailytransactions.prddate, dailytransactions.pcc, dailytransactions.dailynetsegments, dailytransactions.mtdnetsegments,
@@ -1488,13 +1488,13 @@ CREATE OR REPLACE FUNCTION getClientCost(integer, date, date) RETURNS float AS $
 $$ LANGUAGE plpgsql;
 
 ------------------------------------------------- Training
-CREATE VIEW TrainingView AS
+CREATE OR REPLACE VIEW TrainingView AS
 	SELECT Users.FullName, Training.TrainingID, Training.UserID, Training.TrainingTypeID, Training.StartDate, 
 		Training.StopDate, Training.IsDone, Training.Amount, TrainingTypes.TrainingTypeName
 	FROM (Users INNER JOIN Training ON Users.UserID = Training.UserID)
 	INNER JOIN TrainingTypes ON Training.TrainingTypeID = TrainingTypes.TrainingTypeID;
 
-CREATE VIEW ClientTrainingView AS
+CREATE OR REPLACE VIEW ClientTrainingView AS
 	SELECT ConsultantView.ClientID, ConsultantView.ClientName, ConsultantView.consultantid, ConsultantView.consultantname, 
 		ClientTraining.ClientTrainingID, ClientTraining.TrainingID,	ClientTraining.IsDone,
 		ClientTraining.IsPaid, ClientTraining.IsCert, ClientTraining.IsCompleted, ClientTraining.Marks

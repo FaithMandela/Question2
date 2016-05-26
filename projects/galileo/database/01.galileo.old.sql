@@ -61,7 +61,7 @@ CREATE TABLE ClientSystems (
 
 CREATE TABLE ClientLinks (
 	ClientLinkID		serial primary key,
-	ClientLinkName		varchar(50),
+	ClientLinkName		varchar(50) not null,
 	Details				text
 );
 
@@ -71,19 +71,19 @@ CREATE TABLE Clients (
 	ClientGroupID		integer references ClientGroups,
 	ClientSystemID		integer references ClientSystems,
 	ClientLinkID		integer references ClientLinks,
-	ClientName			varchar(120),
+	ClientName			varchar(50) not null,
 	Address				varchar(50),
-	ZipCode				varchar(16),,
-	Premises			varchar(120),
+	ZipCode				varchar(12),
+	Premises			varchar(120) not null,
 	Street				varchar(120),
-	Division			varchar(50),
-	Town				varchar(50),
+	Division			varchar(25),
+	Town				varchar(50) not null,
 	Country				varchar(50),
-	TelNo				varchar(320),
+	TelNo				varchar(150),
 	FaxNo				varchar(50),
-	Email				varchar(320),
+	Email				varchar(120),
 	website            	varchar(120),
-	IATANo				varchar(50),
+	IATANo				varchar(12),
 	IsIATA				boolean default false not null,
 	clienttarget		integer,
 	consultanttarget	integer,
@@ -380,7 +380,7 @@ CREATE INDEX ERF_UserID ON ERF (UserID);
 CREATE TABLE Assets (
 	AssetID	 				serial primary key,
 	AssetSubTypeID			integer references AssetSubTypes,
-	AssetSN					varchar(32),
+	AssetSN					varchar(32) not null,
 	IsInStore				boolean not null default false,
 	Purchasedate 			date not null default current_date,
 	IsOnLease				boolean not null default false,

@@ -39,9 +39,9 @@
 	points, bonus, orgs.org_name
 	FROM vw_org_points
 	JOIN orgs ON vw_org_points.org_id = orgs.org_id
-	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text)
-	 AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
-ORDER BY period,orgs.org_name ASC;]]>
+	WHERE period >= '$P!{minDate}'
+	 AND period <= '$P!{maxDate}'
+ORDER BY period_id,orgs.org_name ASC;]]>
 	</queryString>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="period" class="java.lang.String"/>
@@ -70,7 +70,7 @@ ORDER BY period,orgs.org_name ASC;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>
-				<text><![CDATA[CUMULATIVE PRODUCTIVITY]]></text>
+				<text><![CDATA[ANGECY CUMULATIVE PRODUCTIVITY]]></text>
 			</staticText>
 		</band>
 	</title>

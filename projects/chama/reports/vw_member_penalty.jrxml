@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_member_penalty" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e56300ae-8db5-4e35-aa42-011139e11680">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_member_penalty" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e56300ae-8db5-4e35-aa42-011139e11680">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -25,15 +25,14 @@
 	<parameter name="organd" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_penalty.entity_id, vw_penalty.entity_name, vw_penalty.org_id, vw_penalty.penalty_type_name, vw_penalty.penalty_id, vw_penalty.date_of_accrual, vw_penalty.amount, vw_penalty.paid
 FROM vw_penalty
-
-Where entity_id = $P!{entity_id}
 $P!{organd}
+Where entity_id = $P!{entity_id}
 ORDER BY penalty_type_name]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
@@ -50,7 +49,7 @@ ORDER BY penalty_type_name]]>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="1f741d7e-0258-479b-ab78-b14b3949ad6b"/>
+				<reportElement style="Title" positionType="Float" x="66" y="0" width="446" height="62" uuid="1f741d7e-0258-479b-ab78-b14b3949ad6b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -70,35 +69,28 @@ ORDER BY penalty_type_name]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="17" y="0" width="65" height="15" forecolor="#000000" uuid="d6747446-d87f-484a-9045-7cdf5b647b9b"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Entity Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="114" y="0" width="65" height="15" forecolor="#000000" uuid="f591721c-079e-4b00-8a7e-834b1565d030"/>
+				<reportElement style="Column header" x="22" y="0" width="90" height="15" forecolor="#000000" uuid="f591721c-079e-4b00-8a7e-834b1565d030"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Penalty Type Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="227" y="0" width="65" height="15" forecolor="#000000" uuid="6fa3f063-6c1b-40da-a909-8cc18baf2fb1"/>
+				<reportElement style="Column header" x="153" y="0" width="65" height="15" forecolor="#000000" uuid="6fa3f063-6c1b-40da-a909-8cc18baf2fb1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Date Of Accrual]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="336" y="0" width="65" height="15" forecolor="#000000" uuid="bb4e5aa2-dc02-4754-a386-c9c6e16bf14d"/>
+				<reportElement style="Column header" x="277" y="0" width="65" height="15" forecolor="#000000" uuid="bb4e5aa2-dc02-4754-a386-c9c6e16bf14d"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="456" y="0" width="65" height="15" forecolor="#000000" uuid="13601a8c-1c72-4073-b594-446f754574f2"/>
+				<reportElement style="Column header" x="424" y="0" width="65" height="15" forecolor="#000000" uuid="13601a8c-1c72-4073-b594-446f754574f2"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -111,35 +103,28 @@ ORDER BY penalty_type_name]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="886e52fc-8dc3-44d4-88ad-2ae78ae10d12"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="18" y="0" width="65" height="15" uuid="587fbb71-a197-468b-80ec-4eb99dad78d7"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="111" y="0" width="65" height="15" uuid="c7eb68f4-2ba0-4302-a17b-db9c2debcd8e"/>
+					<reportElement style="Detail" x="17" y="0" width="65" height="15" uuid="c7eb68f4-2ba0-4302-a17b-db9c2debcd8e"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{penalty_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="227" y="0" width="65" height="15" uuid="28768d48-7cfa-4bdb-976c-c534ee9b6db4"/>
+					<reportElement style="Detail" x="152" y="0" width="65" height="15" uuid="28768d48-7cfa-4bdb-976c-c534ee9b6db4"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{date_of_accrual}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="333" y="0" width="65" height="15" uuid="8db08d6d-1f72-4ccd-9204-8b18172e6ef2"/>
+					<reportElement style="Detail" x="274" y="0" width="65" height="15" uuid="8db08d6d-1f72-4ccd-9204-8b18172e6ef2"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="456" y="0" width="65" height="15" uuid="0365ceb2-031d-400b-a1be-36bc152b740e"/>
+					<reportElement style="Detail" x="419" y="0" width="65" height="15" uuid="0365ceb2-031d-400b-a1be-36bc152b740e"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
