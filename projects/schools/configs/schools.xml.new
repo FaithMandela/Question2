@@ -240,7 +240,16 @@
 	</DESK>
 	<DESK w="700" name="Applicant" key="30" h="550">
 		<GRID name="Applicant" keyfield="student_id" table="vw_applicant">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Session ID">session_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Session Name">session_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Stream Class ID">stream_class_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
 			<TEXTFIELD w="75" title="Student ID">student_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sys Country ID">sys_country_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Sys Country Name">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Applicant Dob">applicant_dob</TEXTDATE>
 			<TEXTFIELD w="75" title="Applicants Address">applicants_address</TEXTFIELD>
@@ -248,9 +257,24 @@
 			<TEXTFIELD w="75" title="Country Code ID">country_code_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Workflow Table ID">workflow_table_id</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Fathers Name">fathers_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fathers Tel No">fathers_tel_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fathers Email">fathers_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mothers Name">mothers_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mothers Tel No">mothers_tel_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mothers Email">mothers_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Guardian Name">guardian_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Address">g_address</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Zipcode">g_zipcode</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Town">g_town</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Countrycodeid">g_countrycodeid</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Telno">g_telno</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Email">g_email</TEXTFIELD>
 			<FORM name="Applicant" keyfield="student_id" table="applicant">
-				<DEFAULT default="0">student_id</DEFAULT>
-				<DEFAULT default="0">org_id</DEFAULT>
+				<COMBOBOX w="430" title="Student ID" lptable="students" y="10" h="20" x="10" lpfield="student_name">student_id</COMBOBOX>
 				<COMBOBOX w="430" title="Stream Class ID" lptable="stream_classes" y="30" h="20" x="10" lpfield="stream_class_id">stream_class_id</COMBOBOX>
 				<COMBOBOX w="430" title="Session ID" lptable="sessions" y="50" h="20" x="10" lpfield="session_name">session_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Applicant Name" y="70" h="20" x="10">applicant_name</TEXTFIELD>

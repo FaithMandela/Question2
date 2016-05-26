@@ -204,4 +204,48 @@ CREATE INDEX student_fees_student_id ON students_fees(student_id);
 CREATE INDEX student_fees_fees_structure_id ON students_fees(fees_structure_id);
 
 
+CREATE TABLE applicant(
+	student_id					integer references students primary key,
+	org_id						integer not null references orgs,
+	stream_class_id				integer not null references stream_classes,
+	session_id					integer not null references sessions,
+	
+	applicant_name				varchar (320),
+	applicant_DOB				date,
+	applicants_address			varchar(120),
+	gender						boolean default 'true',
+	
+	country_code_id				char(2) not null references sys_countrys,
+	telno						varchar(50),
+	email						varchar(240),
+	
+	approve_status				varchar(16) default 'Draft' not null,
+	workflow_table_id			integer,
+	action_date					timestamp,
+	
+	fathers_name				varchar(320),
+	fathers_tel_no				varchar(50),
+	fathers_email				varchar(240),
+
+	mothers_name				varchar(320),
+	mothers_tel_no				varchar(50),
+	mothers_email				varchar(240),
+
+	guardian_name				varchar(50),
+	g_address					varchar(50),
+	g_zipcode					varchar(50),
+	g_town						varchar(50),
+	g_countrycodeid				char(2) not null references sys_countrys,
+	g_telno						varchar(50),
+	g_email						varchar(240),
+	
+	current_contact				text,
+	registrar_details			text,
+	details						text
+);
+
+CREATE INDEX applicant_org_id on applicant(org_id);
+CREATE INDEX applicant_student_id on applicant(student_id);
+CREATE INDEX applicant_stream_class_id on applicant(stream_class_id );
+CREATE INDEX applicant_session_id on applicant(session_id );
 

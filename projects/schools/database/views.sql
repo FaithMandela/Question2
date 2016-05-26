@@ -88,3 +88,21 @@ CREATE VIEW vw_students_fees AS
 	INNER JOIN fees_structure ON students_fees.fees_structure_id = fees_structure.fees_structure_id
 	INNER JOIN students ON students_fees.student_id = students.student_id;
 
+
+CREATE VIEW vw_applicant AS
+	SELECT orgs.org_id, orgs.org_name, sessions.session_id, sessions.session_name, 
+	stream_classes.stream_class_id, stream_classes.stream,
+	 students.student_id, students.student_name, sys_countrys.sys_country_id, 
+	 sys_countrys.sys_country_name, applicant.applicant_name, applicant.applicant_dob, 
+	 applicant.applicants_address, applicant.gender, applicant.country_code_id, applicant.telno,
+	 applicant.email, applicant.approve_status, applicant.workflow_table_id, applicant.action_date, 
+	 applicant.fathers_name, applicant.fathers_tel_no, applicant.fathers_email, applicant.mothers_name,
+	 applicant.mothers_tel_no, applicant.mothers_email, applicant.guardian_name, applicant.g_address,
+	 applicant.g_zipcode, applicant.g_town, applicant.g_countrycodeid, applicant.g_telno, applicant.g_email,
+	  applicant.current_contact, applicant.registrar_details, applicant.details
+	FROM applicant
+	INNER JOIN orgs ON applicant.org_id = orgs.org_id
+	INNER JOIN sessions ON applicant.session_id = sessions.session_id
+	INNER JOIN stream_classes ON applicant.stream_class_id = stream_classes.stream_class_id
+	INNER JOIN students ON applicant.student_id = students.student_id
+	INNER JOIN sys_countrys ON applicant.g_countrycodeid = sys_countrys.sys_country_id;
