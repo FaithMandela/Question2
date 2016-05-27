@@ -1140,6 +1140,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
+
+
 --- Data
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');

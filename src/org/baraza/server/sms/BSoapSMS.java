@@ -142,13 +142,13 @@ public class BSoapSMS {
 			String numbers = rs.getString("sms_numbers");
 			if(number == null) number = "";
 			if(rs.getString("address_group_id") ==  null) {
-				number = number.replace(" ", "").replace("-", "").trim();
+				number = number.replace(" ", "").replace("-", "").replace("/", "").replace("\\", "").trim();
 				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
 				else numberError = true;
 
 				if(numbers != null) {
-					numbers = numbers.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").trim();
+					numbers = numbers.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").trim();
 					System.out.println("Sending messages for numbers : " + numbers);
 					
 					String[] nums = numbers.split(",");
