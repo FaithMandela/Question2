@@ -4,7 +4,6 @@
 	<APP dbpath="jdbc:postgresql://127.0.0.1:5432/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
 	<APP dbpath="jdbc:postgresql://127.0.0.1:5432/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
 	<APP dbpath="jdbc:postgresql://1localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
-	<APP dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="travelportapps.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travelport Apps</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
 	<APP dbpath="jdbc:postgresql://localhost/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
@@ -77,11 +76,11 @@
 	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
 	<APP dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="schools.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Schools</APP>
 	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Baraza</APP>
-<<<<<<< HEAD
+
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
-=======
+
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
->>>>>>> e9110d3b40b8f63e0252872db5dafe7e68362e12
+
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.server.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Modem Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.soap.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Soap Server</SERVER>

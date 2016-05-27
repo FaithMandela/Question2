@@ -451,15 +451,15 @@ CREATE VIEW vw_org_address AS
 		vw_address.website as org_website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'orgs') AND (vw_address.is_default = true);
-	
+
 CREATE VIEW vw_address_entitys AS
 	SELECT vw_address.address_id, vw_address.address_name, vw_address.table_id, vw_address.table_name,
 		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.is_default,
-		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
+		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town,
 		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
-	
+
 CREATE VIEW vw_org_select AS
 	(SELECT org_id, parent_org_id, org_name
 	FROM orgs
@@ -730,7 +730,7 @@ BEGIN
 	FROM entitys
 	WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)))
 		AND entity_id <> NEW.entity_id;
-		
+
 	IF(v_entity_id is not null)THEN
 		RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 	END IF;
@@ -1161,6 +1161,3 @@ VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');
 INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
 VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false, 'baraza');
 SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
-
-
-
