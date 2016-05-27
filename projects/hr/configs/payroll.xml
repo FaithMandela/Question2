@@ -12,7 +12,7 @@
 			<MENU name="Organisation">20</MENU>
 			<MENU name="Employees" role="admin,payroll,hr">3</MENU>
 			<MENU name="Monthly Payroll" role="admin,payroll,hr">10</MENU>
-			<MENU name="Payroll Archive" role="admin">5</MENU>
+			<MENU name="Payroll Archive" role="admin,payroll">5</MENU>
 		</MENU>
 		<MENU name="Loans" role="admin,payroll">
 			<MENU name="Loans">30</MENU>
@@ -1500,6 +1500,7 @@
 			</DRILLDOWN>
 			<JASPER name="Payroll" reportfile="vw_employee_month.jasper"></JASPER>
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
+			<JASPER name="Payroll Listing" reportfile="vw_employee_month_3.jasper"></JASPER>
 			<JASPER name="Payroll Departments" reportfile="vw_employee_month_2.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>

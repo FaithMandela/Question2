@@ -1,4 +1,7 @@
 
+
+UPDATE Tax_Types SET use_key = 3 WHERE Tax_Type_ID IN (1, 4, 8, 11);
+
 CREATE FUNCTION get_phase_entitys(integer) RETURNS varchar(320) AS $$
 DECLARE
     myrec			RECORD;

@@ -971,3 +971,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION get_balance(integer, varchar(12)) RETURNS real AS $$
+DECLARE
+	v_bal		real;
+BEGIN
+
+	SELECT COALESCE(sum(debit_amount - credit_amount), 0) INTO v_bal
+	FROM vw_trx
+	WHERE (vw_trx.approve_status = 'Approved')
+		AND (vw_trx.for_posting = true)
+		AND (vw_trx.entity_id = $1)
+		AND (vw_trx.transaction_date < $2::date);
+		
+		
+	RETURN v_bal;
+END;
+$$ LANGUAGE plpgsql;
+

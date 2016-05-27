@@ -17,19 +17,25 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_month.month_id, vw_employee_month.period_year, vw_employee_month.period_month,
 max(Period_Tax_Types.Pay_Date) as Pay_Date, sum(Employee_Tax_Types.Amount) as totaltax,
 orgs.org_name, orgs.pin
 
-FROM orgs, (vw_employee_month INNER JOIN Employee_Tax_Types ON vw_employee_month.Employee_Month_ID = Employee_Tax_Types.Employee_Month_ID
+FROM orgs, (vw_employee_month
+	INNER JOIN Employee_Tax_Types ON vw_employee_month.Employee_Month_ID = Employee_Tax_Types.Employee_Month_ID
 	INNER JOIN Period_Tax_Types ON (vw_employee_month.Period_ID = Period_Tax_Types.Period_ID)
 	AND (Employee_Tax_Types.Tax_Type_ID = Period_Tax_Types.Tax_Type_ID))
+	INNER JOIN Tax_Types ON Period_Tax_Types.Tax_Type_id = Tax_Types.Tax_Type_id
+	AND (vw_employee_month.org_id = Tax_Types.org_id)
 
-WHERE ((Employee_Tax_Types.Tax_Type_ID = 1)
-	OR (Employee_Tax_Types.Tax_Type_ID = 4))
+WHERE (Tax_Types.use_key = 3)
 AND (vw_employee_month.period_year = '$P!{periodyear}')
 $P!{organd}
 
