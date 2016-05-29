@@ -1,3 +1,10 @@
+CREATE TABLE adjustment_effects (
+	adjustment_effect_id	integer primary key,
+	adjustment_effect_name	varchar(50) not null
+);
+
+ALTER TABLE adjustments ADD adjustment_effect_id	integer references adjustment_effects;
+CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 
 
 UPDATE Tax_Types SET use_key = 3 WHERE Tax_Type_ID IN (1, 4, 8, 11);
