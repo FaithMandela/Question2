@@ -1,4 +1,169 @@
 
+CREATE TABLE adjustment_effects (
+	adjustment_effect_id	integer primary key,
+	adjustment_effect_name	varchar(50) not null
+);
+
+ALTER TABLE adjustments ADD adjustment_effect_id	integer references adjustment_effects;
+CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
+
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (10, 0, 'Job Application - acknowledgement', 'Job Application', 'Hello {{name}},<br><br>
+We acknowledge receipt of your job application for {{job}}<br><br>
+Regards,<br>
+HR Manager<br>');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (11, 0, 'Internship Application - acknowledgement', 'Job Application', 'Hello {{name}},<br><br>
+We acknowledge receipt of your Internship application<br><br>
+Regards,<br>
+HR Manager<br>');
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 11, true);
+UPDATE sys_emails SET use_type = sys_email_id;
+
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Accounting');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Banking and Financial Services');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'CEO');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'General Management');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Creative and Design');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Customer Service and Call Centre');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Education and Training');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Engineering and Construction');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Farming and Agribusiness');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Government');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Healthcare and Pharmaceutical');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Human Resources');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Insurance');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'ICT');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Telecoms');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Legal');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Manufacturing');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Marketing, Media and Brand');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'NGO, Community and Social Development');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Office and Admin');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Project and Programme Management');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Research, Science and Biotech');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Retail');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Sales');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Security');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Strategy and Consulting');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Tourism and Travel');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Trades and Services');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Transport and Logistics');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Internships and Volunteering');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Real Estate');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Hospitality');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Other');
+
+CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_entity_id				integer;
+	v_application_id		integer;
+	v_sys_email_id			integer;
+	v_address				integer;
+	c_education_id			integer;
+	c_referees				integer;
+	reca					RECORD;
+	msg 					varchar(120);
+BEGIN
+	SELECT application_id INTO v_application_id
+	FROM applications 
+	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
+	
+	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
+	FROM applicants
+	WHERE (entity_id = $2::int);
+	v_entity_id := reca.entity_id;
+	IF(reca.entity_id is null) THEN
+		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
+		FROM employees
+		WHERE (entity_id = $2::int);
+		v_entity_id := reca.entity_id;
+	END IF;
+	
+	SELECT count(address_id) INTO v_address
+	FROM vw_address
+	WHERE (table_name = 'applicant') AND (is_default = true) AND (table_id  = v_entity_id);
+	IF(v_address is null) THEN v_address = 0; END IF;
+	
+	SELECT count(education_id) INTO c_education_id
+	FROM education
+	WHERE (entity_id  = v_entity_id);
+	IF(c_education_id is null) THEN c_education_id = 0; END IF;
+	
+	SELECT count(address_id) INTO c_referees
+	FROM vw_referees
+	WHERE (table_id  = v_entity_id);
+	IF(c_referees is null) THEN c_referees = 0; END IF;
+
+	IF v_application_id is not null THEN
+		msg := 'There is another application for the post.';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (reca.previous_salary is null) OR (reca.expected_salary is null) THEN
+		msg := 'Kindly indicate your previous and expected salary';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (v_address < 1) THEN
+		msg := 'You need to have at least one full address added';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (c_education_id < 2) THEN
+		msg := 'You need to have at least two education levels added';
+		RAISE EXCEPTION '%', msg;
+	ELSIF (c_referees < 3) THEN
+		msg := 'You need to have at least three referees added';
+		RAISE EXCEPTION '%', msg;
+	ELSE
+		v_application_id := nextval('applications_application_id_seq');
+		INSERT INTO applications (application_id, intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
+		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		
+		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
+		WHERE (use_type = 10) AND (org_id = rec.org_id);
+		
+		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
+		VALUES (v_sys_email_id, rec.org_id, v_application_id, 'applications', 10);
+		
+		msg := 'Added Job application';
+	END IF;
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION ins_interns(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_intern_id			integer;
+	v_org_id			integer;
+	v_sys_email_id		integer;
+	msg					varchar(120);
+BEGIN
+	SELECT intern_id INTO v_intern_id FROM interns 
+	WHERE (internship_id = $1::int) AND (entity_id = $2::int);
+	
+	SELECT org_id INTO v_org_id FROM internships 
+	WHERE (internship_id = $1::int);
+
+	IF v_intern_id is null THEN
+		v_intern_id := nextval('interns_intern_id_seq');
+		INSERT INTO interns (intern_id, org_id, internship_id, entity_id, approve_status)
+		VALUES (v_intern_id, v_org_id, $1::int, $2::int, 'Completed');
+		
+		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
+		WHERE (use_type = 11) AND (org_id = v_org_id);
+		
+		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
+		VALUES (v_sys_email_id, v_org_id, v_intern_id, 'interns', 11);
+		
+		msg := 'Added internship application';
+	ELSE
+		msg := 'There is another application for the internship.';
+	END IF;
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+------------ End of APHRC change request
+
 
 UPDATE Tax_Types SET use_key = 3 WHERE Tax_Type_ID IN (1, 4, 8, 11);
 

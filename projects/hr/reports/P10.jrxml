@@ -28,12 +28,13 @@
 max(Period_Tax_Types.Pay_Date) as Pay_Date, sum(Employee_Tax_Types.Amount) as totaltax,
 orgs.org_name, orgs.pin
 
-FROM orgs, (vw_employee_month
+FROM vw_employee_month
 	INNER JOIN Employee_Tax_Types ON vw_employee_month.Employee_Month_ID = Employee_Tax_Types.Employee_Month_ID
 	INNER JOIN Period_Tax_Types ON (vw_employee_month.Period_ID = Period_Tax_Types.Period_ID)
-	AND (Employee_Tax_Types.Tax_Type_ID = Period_Tax_Types.Tax_Type_ID))
+	AND (Employee_Tax_Types.Tax_Type_ID = Period_Tax_Types.Tax_Type_ID)
 	INNER JOIN Tax_Types ON Period_Tax_Types.Tax_Type_id = Tax_Types.Tax_Type_id
 	AND (vw_employee_month.org_id = Tax_Types.org_id)
+	INNER JOIN orgs ON (vw_employee_month.org_id = orgs.org_id)
 
 WHERE (Tax_Types.use_key = 3)
 AND (vw_employee_month.period_year = '$P!{periodyear}')
