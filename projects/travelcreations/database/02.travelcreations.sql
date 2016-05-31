@@ -30,6 +30,7 @@ CREATE TABLE loyalty_points (
 	point_date				date,
 	segments                real default 0 not null,
 	amount                  real default 0 not null,
+	points					real default 0 not null,
 	points_amount           real default 0 not null,
 	bonus                   real default 0 not null,
 	approve_status 			character varying(16) DEFAULT 'Completed',
@@ -92,7 +93,7 @@ CREATE OR REPLACE VIEW vw_orders AS
 
 CREATE OR REPLACE VIEW vw_loyalty_points AS
 	SELECT loyalty_points.loyalty_points_id, periods.period_id, periods.start_date as period, to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
-		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount,	loyalty_points.points_amount,
+		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,
 		loyalty_points.bonus, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name
 	FROM loyalty_points JOIN vw_entitys ON loyalty_points.entity_id = vw_entitys.entity_id
 	INNER JOIN periods ON loyalty_points.period_id = periods.period_id
