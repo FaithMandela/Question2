@@ -399,63 +399,6 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{period_month}]]></textFieldExpression>
 			</textField>
-			<componentElement>
-				<reportElement key="table" style="table" x="497" y="0" width="305" height="48" uuid="0abace49-6114-470a-944c-4c710328e317"/>
-				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="ds1" uuid="c3e1e0d6-d19f-440c-a017-c95157370058">
-						<datasetParameter name="filterid">
-							<datasetParameterExpression><![CDATA[$P{filterid}]]></datasetParameterExpression>
-						</datasetParameter>
-						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					</datasetRun>
-					<jr:column width="195" uuid="a3c04857-4ec8-446d-b62f-4cb5878e3a03">
-						<jr:tableHeader style="table_TH" height="0" rowSpan="1"/>
-						<jr:tableFooter style="table_TH" height="0" rowSpan="1"/>
-						<jr:columnHeader style="table_CH" height="16" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="195" height="16" uuid="008aec42-b0bc-4795-9ae0-5f6878983f26"/>
-								<textElement>
-									<font fontName="Times New Roman" size="8"/>
-								</textElement>
-								<text><![CDATA[Approved by]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="table_CH" height="0" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="20" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="195" height="20" uuid="14d228fb-cf6b-4c24-9d91-646ff3401048"/>
-								<textElement>
-									<font fontName="Times New Roman" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{app_entity_name}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="117" uuid="3f970d64-45d7-4c5e-9249-8fee24dfb3d9">
-						<jr:tableHeader style="table_TH" height="0" rowSpan="1"/>
-						<jr:tableFooter style="table_TH" height="0" rowSpan="1"/>
-						<jr:columnHeader style="table_CH" height="16" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="117" height="16" uuid="9c47ce13-ac9d-4d92-b7d5-9156a09c4108"/>
-								<textElement>
-									<font fontName="Times New Roman" size="8"/>
-								</textElement>
-								<text><![CDATA[When]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="table_CH" height="0" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="20" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="117" height="20" uuid="52d52c46-9796-4807-ba19-71e8e067bb06"/>
-								<textElement>
-									<font fontName="Times New Roman" size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{action_date}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-				</jr:table>
-			</componentElement>
 		</band>
 	</title>
 	<pageHeader>

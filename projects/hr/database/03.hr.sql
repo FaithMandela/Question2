@@ -57,10 +57,20 @@ CREATE TABLE locations (
 );
 CREATE INDEX locations_org_id ON locations(org_id);
 
+
+CREATE TABLE jobs_category (
+	jobs_category_id		serial primary key,
+	org_id					integer references orgs,
+	jobs_category			varchar(50),
+	details					text
+);
+CREATE INDEX jobs_category_org_id ON jobs_category(org_id);
+
 CREATE TABLE department_roles (
 	department_role_id		serial primary key,
 	department_id			integer references departments,
 	ln_department_role_id	integer references department_roles,
+	jobs_category_id		integer references jobs_category,
 	org_id					integer references orgs,
 	department_role_name	varchar(240) not null,
 	active					boolean default true not null,
@@ -811,11 +821,13 @@ CREATE VIEW vw_referees AS
 CREATE VIEW vw_department_roles AS
 	SELECT departments.department_id, departments.department_name, departments.description as department_description, 
 		departments.duties as department_duties, ln_department_roles.department_role_name as parent_role_name, 
+		jobs_category.jobs_category_id, jobs_category.jobs_category,
 		department_roles.org_id, department_roles.department_role_id, department_roles.ln_department_role_id, 
 		department_roles.department_role_name, department_roles.job_description, department_roles.job_requirements, 
 		department_roles.duties, department_roles.performance_measures, department_roles.active, department_roles.details
 	FROM department_roles INNER JOIN departments ON department_roles.department_id = departments.department_id
-		LEFT JOIN department_roles as ln_department_roles ON department_roles.ln_department_role_id = ln_department_roles.department_role_id;
+		LEFT JOIN department_roles as ln_department_roles ON department_roles.ln_department_role_id = ln_department_roles.department_role_id
+		LEFT JOIN jobs_category ON jobs_category.jobs_category_id = department_roles.jobs_category_id;
 		
 CREATE VIEW vw_pay_scales AS
 	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
@@ -1035,7 +1047,6 @@ CREATE VIEW vw_employee_leave_types AS
 		employee_leave_types.leave_starting, employee_leave_types.details
 	FROM employee_leave_types INNER JOIN entitys ON employee_leave_types.entity_id = entitys.entity_id
 		INNER JOIN leave_types ON employee_leave_types.leave_type_id = leave_types.leave_type_id;
-
 		
 CREATE VIEW vw_employee_leave AS
 	SELECT entitys.entity_id, entitys.entity_name, leave_types.leave_type_id, leave_types.leave_type_name, 
@@ -1065,6 +1076,7 @@ CREATE VIEW vw_intake AS
 	SELECT vw_department_roles.department_id, vw_department_roles.department_name, vw_department_roles.department_description, 
 		vw_department_roles.department_duties, vw_department_roles.department_role_id, vw_department_roles.department_role_name,
 		vw_department_roles.parent_role_name,
+		vw_department_roles.jobs_category_id, vw_department_roles.jobs_category,
 		vw_department_roles.job_description, vw_department_roles.job_requirements, vw_department_roles.duties, 
 		vw_department_roles.performance_measures, 
 		
@@ -1340,8 +1352,6 @@ CREATE VIEW vw_intern_evaluations AS
 		ORDER BY vw_applicants.entity_id;
 
 ------- Functions
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, start_view) VALUES (0, 4, 'Applicant', 'applicant', '10:0');
-SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
 
 CREATE OR REPLACE FUNCTION get_review_entity(varchar(16)) RETURNS integer AS $$
     SELECT entity_id
@@ -1555,6 +1565,7 @@ CREATE OR REPLACE FUNCTION ins_applications(varchar(12), varchar(12), varchar(12
 DECLARE
 	v_entity_id				integer;
 	v_application_id		integer;
+	v_sys_email_id			integer;
 	v_address				integer;
 	c_education_id			integer;
 	c_referees				integer;
@@ -1607,8 +1618,16 @@ BEGIN
 		msg := 'You need to have at least three referees added';
 		RAISE EXCEPTION '%', msg;
 	ELSE
-		INSERT INTO applications (intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
-		VALUES ($1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		v_application_id := nextval('applications_application_id_seq');
+		INSERT INTO applications (application_id, intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
+		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		
+		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
+		WHERE (use_type = 10) AND (org_id = rec.org_id);
+		
+		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
+		VALUES (v_sys_email_id, rec.org_id, v_application_id, 'applications', 10);
+		
 		msg := 'Added Job application';
 	END IF;
 
@@ -1618,16 +1637,28 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_interns(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	rec RECORD;
-	msg varchar(120);
+	v_intern_id			integer;
+	v_org_id			integer;
+	v_sys_email_id		integer;
+	msg					varchar(120);
 BEGIN
-	SELECT intern_id, org_id INTO rec
-	FROM interns 
-	WHERE (internship_ID = CAST($1 as int)) AND (entity_ID = CAST($2 as int));
+	SELECT intern_id INTO v_intern_id FROM interns 
+	WHERE (internship_id = $1::int) AND (entity_id = $2::int);
+	
+	SELECT org_id INTO v_org_id FROM internships 
+	WHERE (internship_id = $1::int);
 
-	IF rec.intern_id is null THEN
-		INSERT INTO interns (org_id, internship_id, entity_id, approve_status)
-		VALUES (rec.org_id, CAST($1 as int), CAST($2 as int), 'Completed');
+	IF v_intern_id is null THEN
+		v_intern_id := nextval('interns_intern_id_seq');
+		INSERT INTO interns (intern_id, org_id, internship_id, entity_id, approve_status)
+		VALUES (v_intern_id, v_org_id, $1::int, $2::int, 'Completed');
+		
+		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
+		WHERE (use_type = 11) AND (org_id = v_org_id);
+		
+		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
+		VALUES (v_sys_email_id, v_org_id, v_intern_id, 'interns', 11);
+		
 		msg := 'Added internship application';
 	ELSE
 		msg := 'There is another application for the internship.';
