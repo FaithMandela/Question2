@@ -769,6 +769,8 @@ public class BWebBody extends BQuery {
 			}  else if(el.getAttribute("default", "").equals("today")) {
 				SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
 				response.append(" value='" + dateParse.format(new Date()) + "'");
+			} else if(!defaultvalue.equals("")) {
+				response.append(" value='" + defaultvalue + "'");
 			}
 			response.append(" size='50'/>");
 			

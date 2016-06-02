@@ -2153,13 +2153,13 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Statement" key="170" h="750">
-		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(entity_type_id = 2)">
-			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
-			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
-			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
-			<JASPER name="Statement" reportfile="statement.jasper"></JASPER>
-		</GRID>
+		<FILTER w="700" name="Statement" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" orderby="entity_name" lpkey="entity_id" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">supplierid</COMBOBOX>
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>
+			<JASPER name="Full Statement" reportfile="statement.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

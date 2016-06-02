@@ -126,13 +126,15 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
 
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
-	v_entity_id		integer;
-	v_org_id		integer;
-	v_currency_id	integer;
-	v_department_id	integer;
-	v_bank_id		integer;
-	v_org_suffix    char(2);
-	rec 			RECORD;
+	v_entity_id				integer;
+	v_org_id				integer;
+	v_currency_id			integer;
+	v_department_id			integer;
+	v_bank_id				integer;
+	v_tax_type_id			integer;
+	v_workflow_id			integer;
+	v_org_suffix			char(2);
+	myrec 					RECORD;
 BEGIN
 
 	IF (TG_OP = 'INSERT') THEN
@@ -158,10 +160,51 @@ BEGIN
 		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
 		
 		v_currency_id := nextval('currency_currency_id_seq');
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'US Dollar', 'USD');
-		v_currency_id := nextval('currency_currency_id_seq');
-		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'Euro', 'ERO');
+		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'Default Currency', 'DC');
 		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
+		
+		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);
+		
+		INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key)
+		SELECT NEW.org_id, entity_type_name, entity_role, use_key
+		FROM entity_types WHERE org_id = 1;
+		
+		INSERT INTO subscription_levels (org_id, subscription_level_name)
+		SELECT NEW.org_id, subscription_level_name
+		FROM subscription_levels WHERE org_id = 1;
+		
+		INSERT INTO jobs_category (org_id, jobs_category)
+		SELECT NEW.org_id, jobs_category
+		FROM jobs_category WHERE org_id = 1;
+
+		INSERT INTO contract_status (org_id, contract_status_name)
+		SELECT NEW.org_id, contract_status_name
+		FROM contract_status WHERE org_id = 1;
+
+		INSERT INTO kin_types (org_id, kin_type_name)
+		SELECT NEW.org_id, kin_type_name
+		FROM kin_types WHERE org_id = 1;
+
+		INSERT INTO education_class (org_id, education_class_name)
+		SELECT NEW.org_id, education_class_name
+		FROM education_class WHERE org_id = 1 ORDER BY education_class_id;
+		
+		INSERT INTO adjustments (org_id, adjustment_type, adjustment_name, visible, in_tax)
+		SELECT NEW.org_id, adjustment_type, adjustment_name, visible, in_tax
+		FROM adjustments WHERE org_id = 1;
+		
+		FOR myrec IN SELECT tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active
+			FROM tax_types WHERE org_id = 1 ORDER BY tax_type_id 
+		LOOP
+			v_tax_type_id := nextval('tax_types_tax_type_id_seq');
+			INSERT INTO tax_types (org_id, tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active)
+			VALUES (NEW.org_id, v_tax_type_id, myrec.use_key, myrec.tax_type_name, myrec.formural, myrec.tax_relief, myrec.tax_type_order, myrec.in_tax, myrec.linear, myrec.percentage, myrec.employer, myrec.employer_ps, myrec.active);
+			
+			INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
+			SELECT 1,  v_tax_type_id, tax_range, tax_rate
+			FROM tax_rates
+			WHERE org_id = 1 and tax_type_id = myrec.tax_type_id;
+		END LOOP;
 		
 		INSERT INTO pay_scales (org_id, pay_scale_name, min_pay, max_pay) VALUES (NEW.org_id, 'Basic', 0, 1000000);
 		INSERT INTO pay_groups (org_id, pay_group_name) VALUES (NEW.org_id, 'Default');
@@ -178,6 +221,39 @@ BEGIN
 		INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
 		SELECT transaction_type_id, NEW.org_id, 1
 		FROM transaction_types;
+		
+		INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
+		SELECT NEW.org_id, use_type, sys_email_name, title, details
+		FROM sys_emails
+		WHERE org_id = 1;
+		
+		INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
+		SELECT NEW.org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
+		FROM accounts_class
+		WHERE org_id = 1;
+		
+		INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
+		SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
+		FROM accounts_class a INNER JOIN account_types b ON a.accounts_class_no = b.accounts_class_id
+		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
+		
+		INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
+		SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
+		FROM account_types a INNER JOIN accounts b ON a.account_type_no = b.account_type_id
+		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
+
+		FOR myrec IN SELECT workflow_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details
+			FROM workflows WHERE org_id = 1 ORDER BY workflow_id 
+		LOOP
+			v_workflow_id := nextval('workflows_workflow_id_seq');
+			INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details)
+			VALUES(v_workflow_id, NEW.org_id, myrec.source_entity_id, myrec.workflow_name, myrec.table_name, myrec.table_link_field, myrec.table_link_id, myrec.approve_email, myrec.reject_email, myrec.approve_file, myrec.reject_file, myrec.details);
+			
+			INSERT INTO workflow_phases (org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+			SELECT NEW.org_id, v_workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details
+			FROM workflow_phases
+			WHERE workflow_id = myrec.workflow_id;
+		END LOOP;
 		
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;

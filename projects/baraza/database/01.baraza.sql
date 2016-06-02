@@ -164,13 +164,14 @@ CREATE INDEX address_table_id ON address (table_id);
 CREATE TABLE entity_types (
 	entity_type_id			serial primary key,
 	org_id					integer references orgs,
-	entity_type_name		varchar(50) unique,
+	entity_type_name		varchar(50) not null,
 	entity_role				varchar(240),
 	use_key					integer default 0 not null,
 	start_view				varchar(120),
 	group_email				varchar(120),
-	Description				text,
-	Details					text
+	description				text,
+	details					text,
+	UNIQUE(org_id, entity_type_name)
 );
 CREATE INDEX entity_types_org_id ON entity_types (org_id);
 
@@ -193,8 +194,7 @@ CREATE TABLE entitys (
 	new_password			varchar(64),
 	start_url				varchar(64),
 	is_picked				boolean default false not null,
-	details					text,
-	UNIQUE(org_id, user_name)
+	details					text
 );
 CREATE INDEX entitys_entity_type_id ON entitys (entity_type_id);
 CREATE INDEX entitys_org_id ON entitys (org_id);
@@ -1140,6 +1140,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
+
+
 --- Data
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
@@ -1152,15 +1158,18 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
 VALUES (0, 0, 1, 1);
 
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 3, 'Supplier', 'supplier');
-SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 0, 'Users', 'user', 0);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 1, 'Staff', 'staff', 1);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 2, 'Client', 'client', 2);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 3, 'Supplier', 'supplier', 3);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, start_view, use_key) VALUES (0, 4, 'Applicant', 'applicant', '10:0', 4);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 5, 'Subscription', 'subscription', 4);
+SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
 
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Manager');
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Consumer');
+SELECT pg_catalog.setval('subscription_levels_subscription_level_id_seq', 3, true);
 
 INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
 VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');

@@ -111,8 +111,8 @@ CREATE TABLE orders (
 	order_total_amount		real default 0 not null,
 	shipping_cost			real default 0 not null,
 	town_name				varchar(50),
-	phone_no 				character varying(20);
-	physical_address 		text;
+	phone_no 				character varying(20),
+	physical_address 		text,
 	batch_no				integer,
 	batch_date				date,
 	details 				text
@@ -243,7 +243,7 @@ CREATE OR REPLACE VIEW vw_entitys AS
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
-		
+
 CREATE OR REPLACE VIEW vw_products AS
 	SELECT products.product_id, products.product_name, products.product_details, products.product_uprice,
 		products.created, products.updated_by,products.image, suppliers.supplier_name, suppliers.supplier_id,

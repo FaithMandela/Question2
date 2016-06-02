@@ -12,7 +12,7 @@ INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, mode
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-04-22', 1223, 0, 1, 48, 139, '');
 
 --- UPS 
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-02-24', 115, 0, 1, 6, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-05-26', 115, 0, 1, 6, 138, '');
 
 --- Epson Printer
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-09-28', 287, 0, 1, 4, 138, '');
@@ -259,5 +259,5 @@ ALTER TABLE asset_types ADD tag_prefix				varchar(4);
 
 UPDATE assets SET tag_number = a.tag_prefix || to_char(purchase_date, 'YY') || lpad(asset_id::varchar, 5, '0')
 FROM (SELECT asset_types.tag_prefix, models.model_id FROM asset_types INNER JOIN models ON asset_types.asset_type_id = models.asset_type_id WHERE (asset_types.tag_prefix is not null)) a 
-WHERE (assets.model_id = a.model_id);
+WHERE (assets.model_id = a.model_id) AND (tag_number is null);
 
