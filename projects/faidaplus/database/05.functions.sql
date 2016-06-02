@@ -255,7 +255,7 @@ BEGIN
 		WHERE entity_id = $1;
 	END IF;
 
-	IF(v_function_role = 'admin' OR v_function_role = 'staff' OR v_function_role is null )THEN
+	IF(v_function_role = 'admin')THEN
 		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
 		FROM vw_pcc_statement
 		WHERE org_id = 0;

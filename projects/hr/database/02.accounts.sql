@@ -1,40 +1,48 @@
 CREATE TABLE accounts_class (
-	accounts_class_id		integer primary key,
+	accounts_class_id		serial primary key,
+	accounts_class_no		integer not null,
 	org_id					integer references orgs,
 	chat_type_id			integer not null,
 	chat_type_name			varchar(50) not null,
-	accounts_class_name		varchar(120) not null unique,
-	details					text
+	accounts_class_name		varchar(120) not null,
+	details					text,
+	UNIQUE(accounts_class_no, org_id),
+	UNIQUE(accounts_class_name, org_id)
 );
 CREATE INDEX accounts_class_org_id ON accounts_class (org_id);
 CREATE INDEX accounts_class_chat_type_id ON accounts_class (chat_type_id);
 
 CREATE TABLE account_types (
-	account_type_id			integer primary key,
+	account_type_id			serial primary key,
+	account_type_no			integer not null,
 	org_id					integer references orgs,
 	accounts_class_id		integer references accounts_class,
 	account_type_name		varchar(120) not null,
-	details					text
+	details					text,
+	UNIQUE(account_type_no, org_id)
 );
 CREATE INDEX account_types_org_id ON account_types (org_id);
 CREATE INDEX account_types_accounts_class_id ON account_types (accounts_class_id);
 
 CREATE TABLE accounts (
-	account_id				integer primary key,
+	account_id				serial primary key,
+	account_no				integer not null,
 	org_id					integer references orgs,
 	account_type_id			integer references account_types,
 	account_name			varchar(120) not null,
 	is_header				boolean default false not null,
 	is_active				boolean default true not null,
-	details					text
+	details					text,
+	UNIQUE(account_no, org_id)
 );
 CREATE INDEX accounts_org_id ON accounts (org_id);
 CREATE INDEX accounts_account_type_id ON accounts (account_type_id);
 
 CREATE TABLE default_accounts (
-	default_account_id		integer primary key,
+	default_account_id		serial primary key,
 	org_id					integer references orgs,
 	account_id				integer references accounts,
+	use_key					integer not null,
 	narrative				varchar(240)
 );
 CREATE INDEX default_accounts_org_id ON default_accounts (org_id);
@@ -169,15 +177,19 @@ ALTER TABLE entitys ADD	account_id		integer references accounts;
 CREATE INDEX entitys_account_id ON entitys (account_id);
 
 CREATE VIEW vw_account_types AS
-	SELECT accounts_class.accounts_class_id, accounts_class.accounts_class_name, accounts_class.chat_type_id, accounts_class.chat_type_name, 
-		account_types.account_type_id, account_types.org_id, account_types.account_type_name, account_types.details
+	SELECT accounts_class.accounts_class_id, accounts_class.accounts_class_no,
+		accounts_class.accounts_class_name, accounts_class.chat_type_id, accounts_class.chat_type_name, 
+		account_types.account_type_id, account_types.account_type_no, 
+		account_types.org_id, account_types.account_type_name, account_types.details
 	FROM account_types INNER JOIN accounts_class ON account_types.accounts_class_id = accounts_class.accounts_class_id;
 
 CREATE VIEW vw_accounts AS
-	SELECT vw_account_types.accounts_class_id, vw_account_types.chat_type_id, vw_account_types.chat_type_name, 
-		vw_account_types.accounts_class_name, vw_account_types.account_type_id, vw_account_types.account_type_name,
-		accounts.account_id, accounts.org_id, accounts.account_name, accounts.is_header, accounts.is_active, accounts.details,
-		(accounts.account_id || ' : ' || vw_account_types.accounts_class_name || ' : ' || vw_account_types.account_type_name
+	SELECT vw_account_types.chat_type_id, vw_account_types.chat_type_name, 
+		vw_account_types.accounts_class_id, vw_account_types.accounts_class_no, vw_account_types.accounts_class_name,
+		vw_account_types.account_type_id, vw_account_types.account_type_no, vw_account_types.account_type_name,
+		accounts.account_id, accounts.account_no, accounts.org_id, accounts.account_name, accounts.is_header, 
+		accounts.is_active, accounts.details,
+		(accounts.account_no || ' : ' || vw_account_types.accounts_class_name || ' : ' || vw_account_types.account_type_name
 		|| ' : ' || accounts.account_name) as account_description
 	FROM accounts INNER JOIN vw_account_types ON accounts.account_type_id = vw_account_types.account_type_id;
 
