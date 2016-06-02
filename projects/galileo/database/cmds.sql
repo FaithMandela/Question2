@@ -12,11 +12,11 @@ INSERT INTO clients(
       FROM i_clients;
 
 
-INSERT INTO clientassets(
+INSERT INTO clientassets(clientid, crmrefno, dnoteno,
             clientassetid, assetid, isissued, dateissued, 
             isretrived, units, dateretrived, narrative, dateadded, datechanged)
-   SELECT client_asset_id, asset_id, is_issued, date_issued, is_retrived, units, date_retrived, narrative, date_added, date_changed
-       FROM i_client_assets;
+   SELECT b.client_id, b.crm_ref, b.dnote_no, a.client_asset_id, a.asset_id, a.is_issued, a.date_issued, a.is_retrived, a.units, a.date_retrived, a.narrative, a.date_added, a.date_changed
+       FROM i_client_assets a INNER JOIN i_client_requests b ON a.client_request_id = b.client_request_id;
 
 
 
@@ -38,10 +38,63 @@ SELECT i_asset_types.asset_type_id, i_asset_types.asset_type_name,
 FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
 	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id;
 	
-UPDATE assets SET AssetSubTypeID = 1 WHERE assetid IN
+UPDATE assets SET AssetSubTypeID = 1 WHERE purchasedate < '2014-01-01' and assetid IN
 (SELECT i_assets.asset_id
 FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
 	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
 WHERE i_asset_types.asset_type_id = 1);
 
-	
+UPDATE assets SET AssetSubTypeID = 2 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 1);
+
+UPDATE assets SET AssetSubTypeID = 3 WHERE purchasedate < '2014-01-01' and assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 3);
+
+UPDATE assets SET AssetSubTypeID = 4 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 3);
+
+UPDATE assets SET AssetSubTypeID = 5 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 4);
+
+UPDATE assets SET AssetSubTypeID = 6 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 5);
+
+UPDATE assets SET AssetSubTypeID = 7 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 6);
+
+UPDATE assets SET AssetSubTypeID = 8 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 11);
+
+UPDATE assets SET AssetSubTypeID = 9 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 14);
+
+UPDATE assets SET AssetSubTypeID = 11 WHERE assetid IN
+(SELECT i_assets.asset_id
+FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models.asset_type_id 
+	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
+WHERE i_asset_types.asset_type_id = 15);
+
