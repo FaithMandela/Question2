@@ -28,6 +28,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="faidaplus.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Faida Plus</APP>
 	<APP dbpath="jdbc:postgresql://localhost/acord" dbname="acord" path="acord" xmlfile="acord.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Acord</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
+	<APP dbpath="jdbc:postgresql://localhost/travelcreations" dbname="travelcreations" path="travelcreations" xmlfile="travelcreations.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Creations</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="umis.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">UMIS</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Finance</APP>
@@ -44,8 +45,8 @@
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/lecturers.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Lecturer</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock Alumnae</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="web/industry.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Babcock Industry</APP>
-	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root">UEAB</APP>
-	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root">UEAB Admin</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="umis.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB</APP>
+	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="admin.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Admin</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="admissions.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Admissions</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="alumnae.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB Alumnae</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="dos.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">UEAB DOS</APP>
@@ -76,19 +77,8 @@
 	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
 	<APP dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="schools.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Schools</APP>
 	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Baraza</APP>
-	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
-<<<<<<< HEAD
-=======
-=======
-<<<<<<< HEAD
-	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
-	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
-=======
->>>>>>> b11f99ba3e459e605ce0c29398a3e0936f20b7ff
->>>>>>> 3db70e8d998cf1b0469a63d75aa34760aee6c21a
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
->>>>>>> 9feda056992d6350b295f949ea42e9506333bb5b
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.server.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Modem Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.soap.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Soap Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/cases" noaudit="false" dbname="cases" path="cases" xmlfile="reports.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Cases Reports Server</SERVER>
@@ -100,15 +90,7 @@
 	<SERVER dbpath="jdbc:postgresql://localhost/tamshi" dbname="tamshi" path="tamshi" xmlfile="sms.tamshi.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Tamshi SMS Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="true" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">School Tomcat Server</SERVER>
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mpamanech" path="mobilehealth" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Mpamanech Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/chama" dbname="chama" path="chama" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Chama Tomcat Server</SERVER>
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">FAidaplus Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelportapps Server</SERVER>
-<<<<<<< HEAD
-	<APP dbpath="jdbc:postgresql://localhost/travelcreations" dbname="travelcreations" path="travelcreations" xmlfile="travelcreations.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Creations</APP>
-=======
-	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Faidaplus Server</SERVER>
->>>>>>> 9feda056992d6350b295f949ea42e9506333bb5b
 </APPLIST>
