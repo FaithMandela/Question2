@@ -92,28 +92,12 @@ WHERE vw_orders.order_id = '$P!{order_id}';]]>
 	<field name="product_quantity" class="java.lang.Integer"/>
 	<field name="total_amount" class="java.lang.Double"/>
 	<variable name="total" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{total_amount}+$P{shipping_cost}]]></variableExpression>
+		<variableExpression><![CDATA[$F{total_amount}]]></variableExpression>
 	</variable>
 	<group name="total_sum" keepTogether="true">
 		<groupExpression><![CDATA[$F{order_id}]]></groupExpression>
 		<groupFooter>
-			<band height="31">
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="table_TD" positionType="Float" x="455" y="15" width="89" height="15" isPrintWhenDetailOverflows="true" uuid="527bb6fc-ff1c-4174-b88d-7c12cf2b0e44"/>
-					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" isBold="true"/>
-						<paragraph leftIndent="3" rightIndent="3"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement style="table_TD" positionType="Float" x="2" y="15" width="453" height="15" isPrintWhenDetailOverflows="true" uuid="71d5f8cb-987f-443d-8134-7cb5fe8e3317"/>
-					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" isBold="true"/>
-						<paragraph leftIndent="3" rightIndent="3"/>
-					</textElement>
-					<text><![CDATA[Total Cost]]></text>
-				</staticText>
+			<band height="15">
 				<staticText>
 					<reportElement style="table_TD" positionType="Float" x="2" y="0" width="453" height="15" isPrintWhenDetailOverflows="true" uuid="55e3b92b-f732-4309-a125-54df5c6b53dd"/>
 					<textElement textAlignment="Right">
@@ -208,4 +192,24 @@ WHERE vw_orders.order_id = '$P!{order_id}';]]>
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="32">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="table_TD" positionType="Float" x="455" y="0" width="89" height="15" isPrintWhenDetailOverflows="true" uuid="527bb6fc-ff1c-4174-b88d-7c12cf2b0e44"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}+$P{shipping_cost}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="table_TD" positionType="Float" x="2" y="0" width="453" height="15" isPrintWhenDetailOverflows="true" uuid="71d5f8cb-987f-443d-8134-7cb5fe8e3317"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+					<paragraph leftIndent="3" rightIndent="3"/>
+				</textElement>
+				<text><![CDATA[Total Cost]]></text>
+			</staticText>
+		</band>
+	</summary>
 </jasperReport>

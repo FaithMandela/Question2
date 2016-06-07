@@ -2,6 +2,7 @@ CREATE TABLE sys_menu_msg (
 	sys_menu_msg_id			serial primary key,
 	menu_id					integer not null,
 	menu_name				varchar(50) not null,
+	xml_file				varchar(50) not null,
 	msg						text
 );
 
@@ -63,6 +64,7 @@ CREATE TABLE orgs (
 	is_active				boolean not null default true,
 	logo					varchar(50),
 	pin 					varchar(50),
+	pcc						varchar(12),
 
 	system_key				varchar(64),
 	system_identifier		varchar(64),
@@ -163,13 +165,14 @@ CREATE INDEX address_table_id ON address (table_id);
 CREATE TABLE entity_types (
 	entity_type_id			serial primary key,
 	org_id					integer references orgs,
-	entity_type_name		varchar(50) unique,
+	entity_type_name		varchar(50) not null,
 	entity_role				varchar(240),
 	use_key					integer default 0 not null,
 	start_view				varchar(120),
 	group_email				varchar(120),
-	Description				text,
-	Details					text
+	description				text,
+	details					text,
+	UNIQUE(org_id, entity_type_name)
 );
 CREATE INDEX entity_types_org_id ON entity_types (org_id);
 
@@ -178,7 +181,7 @@ CREATE TABLE entitys (
 	entity_type_id			integer not null references entity_types,
 	org_id					integer not null references orgs,
 	entity_name				varchar(120) not null,
-	user_name				varchar(120) not null,
+	user_name				varchar(120) not null unique,
 	primary_email			varchar(120),
 	primary_telephone		varchar(50),
 	super_user				boolean default false not null,
@@ -192,8 +195,7 @@ CREATE TABLE entitys (
 	new_password			varchar(64),
 	start_url				varchar(64),
 	is_picked				boolean default false not null,
-	details					text,
-	UNIQUE(org_id, user_name)
+	details					text
 );
 CREATE INDEX entitys_entity_type_id ON entitys (entity_type_id);
 CREATE INDEX entitys_org_id ON entitys (org_id);
@@ -274,7 +276,7 @@ CREATE TABLE sys_emails (
 	org_id					integer references orgs,
 	use_type				integer default 1 not null,
 	sys_email_name			varchar(50),
-	default_email			varchar(120),
+	default_email			varchar(320),
 	title					varchar(240) not null,
 	details					text
 );
@@ -470,7 +472,8 @@ CREATE VIEW vw_org_select AS
 	WHERE (is_active = true));
 
 CREATE VIEW vw_orgs AS
-	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
+		orgs.pin, orgs.pcc, orgs.details,
 
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
@@ -1138,6 +1141,12 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
+
+
 --- Data
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');
@@ -1150,15 +1159,18 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
 VALUES (0, 0, 1, 1);
 
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 0, 'Users', 'user');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 3, 'Supplier', 'supplier');
-SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 0, 'Users', 'user', 0);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 1, 'Staff', 'staff', 1);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 2, 'Client', 'client', 2);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 3, 'Supplier', 'supplier', 3);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, start_view, use_key) VALUES (0, 4, 'Applicant', 'applicant', '10:0', 4);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 5, 'Subscription', 'subscription', 4);
+SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
 
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Manager');
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Consumer');
+SELECT pg_catalog.setval('subscription_levels_subscription_level_id_seq', 3, true);
 
 INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
 VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');

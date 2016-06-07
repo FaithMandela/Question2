@@ -139,6 +139,7 @@ CREATE TABLE investments (
 	entity_id					integer references entitys,
 	investment_type_id			integer references investment_types,
 	org_id						integer references orgs,
+	period_id  					integer references periods,
 	entity_name 				varchar(120),
 	maturity_date				date,
 	invest_amount				real,
@@ -149,7 +150,7 @@ CREATE TABLE investments (
 	default_interest 			real NOT NULL DEFAULT 1,
 	return_on_investment 		real NOT NULL DEFAULT 0,
 	
-
+	expenses 					real,
 	application_date			timestamp default now() not null,
 	approve_status				varchar(16) default 'Draft' not null,
 	workflow_table_id			integer,
@@ -158,6 +159,7 @@ CREATE TABLE investments (
 );
 CREATE INDEX investments_investment_type_id ON investments (investment_type_id);
 CREATE INDEX investments_entity_id ON investments (entity_id);
+CREATE INDEX investments_period_id ON investments (period_id);
 CREATE INDEX investments_org_id ON investments (org_id);
 
 CREATE TABLE applicants	(

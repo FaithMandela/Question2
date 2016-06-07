@@ -24,11 +24,13 @@ INSERT INTO pay_scales (org_id, pay_scale_id, pay_scale_name, min_pay, max_pay) 
 INSERT INTO pay_groups (org_id, pay_group_id, pay_group_name) VALUES (0, 0, 'Default');
 INSERT INTO locations (org_id, location_id, location_name) VALUES (0, 0, 'Main office');
 
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 1, 0, 'Human Resources and Administration');
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 2, 0, 'Sales and Marketing');
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 3, 0, 'Finance');
-INSERT INTO Departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 4, 4, 'Procurement');
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 1, 0, 'Human Resources and Administration');
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 2, 0, 'Sales and Marketing');
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 3, 0, 'Finance');
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 4, 4, 'Procurement');
 SELECT pg_catalog.setval('departments_department_id_seq', 5, true);
+
+INSERT INTO objective_types (org_id, objective_type_name) VALUES (0, 'General');
 
 INSERT INTO department_roles (org_id, department_role_id, department_id, ln_department_role_id, department_role_name, active, job_description, job_requirements, duties, performance_measures, details) VALUES (0, 1, 0, 0, 'Chief Executive Officer', true, '- Defining short term and long term corporate strategies and objectives
 - Direct overall company operations ', NULL, '- Develop and control strategic relationships with third-party companies
@@ -117,10 +119,10 @@ INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visibl
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 32, true);
 UPDATE adjustments SET org_id = 0, currency_id = 1;
 
-INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (1, 1, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, NULL);
+INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (3, 1, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, NULL);
 INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (1, 2, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, NULL);
 INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (1, 3, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true, NULL);
-INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (1, 4, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, NULL);
+INSERT INTO tax_types (use_key, tax_type_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, details) VALUES (3, 4, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, NULL);
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 4, true);
 UPDATE tax_types SET org_id = 0;
 
@@ -160,24 +162,21 @@ VALUES (1, 0, 'Application', 'Thank you for your Application', 'Thank you {{name
 Your user name is {{username}}<br> 
 Your password is {{password}}<br><br>
 Regards<br>
-Human Resources Manager<br>
-');
+Human Resources Manager<br>');
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
 VALUES (2, 0, 'New Staff', 'HR Your credentials ', 'Hello {{name}},<br><br>
 Your credentials to the HR system have been created.<br>
 Your user name is {{username}}<br> 
 Your password is {{password}}<br><br>
 Regards<br>
-Human Resources Manager<br>
-');
+Human Resources Manager<br>');
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
 VALUES (3, 0, 'Password reset', 'Password reset', 'Hello {{name}},<br><br>
 Your password has been reset to:<br><br>
 Your user name is {{username}}<br> 
 Your password is {{password}}<br><br>
 Regards<br>
-Human Resources Manager<br>
-');
+Human Resources Manager<br>');
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
 VALUES (4, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
 Welcome to OpenBaraza SaaS Platform<br><br>
@@ -185,29 +184,48 @@ Your password is:<br><br>
 Your user name is {{username}}<br> 
 Your password is {{password}}<br><br>
 Regards,<br>
-OpenBaraza<br>
-');
+OpenBaraza<br>');
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
 VALUES (5, 0, 'Subscription', 'Subscription', 'Hello {{name}},<br><br>
 Your OpenBaraza SaaS Platform application has been approved<br><br>
 Welcome to OpenBaraza SaaS Platform<br><br>
 Regards,<br>
-OpenBaraza<br>
-');
+OpenBaraza<br>');
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
 VALUES (7, 0, 'Payroll Generated', 'Payroll Generated', 'Hello {{name}},<br><br>
 They payroll has been generated for {{narrative}}<br><br>
 Regards,<br>
-HR Manager<br>
-');
+HR Manager<br>');
 INSERT INTO sys_emails (sys_email_id, use_type, org_id, sys_email_name, title, details) 
-VALUES (8, 8, 0, 'Happy Birthday', 'Happy Birthday', 'Happy Birthday {{name}},<br><br>
-A very happy birhday to you.<br><br>
+VALUES (8, 8, 0, 'Have a Happy Birthday', 'Have a Happy Birthday', 'Happy Birthday {{name}},<br><br>
+A very happy birthday to you.<br><br>
 Regards,<br>
-HR Manager<br>
-');
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 8, true);
+HR Manager<br>');
+INSERT INTO sys_emails (sys_email_id, use_type, org_id, sys_email_name, title, details) 
+VALUES (9, 9, 0, 'Happy Birthday', 'Happy Birthday', 'Hello HR,<br><br>
+{{narrative}}.<br><br>
+Regards,<br>
+HR Manager<br>');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (10, 0, 'Job Application - acknowledgement', 'Job Application', 'Hello {{name}},<br><br>
+We acknowledge receipt of your job application for {{job}}<br><br>
+Regards,<br>
+HR Manager<br>');
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, title, details) 
+VALUES (11, 0, 'Internship Application - acknowledgement', 'Job Application', 'Hello {{name}},<br><br>
+We acknowledge receipt of your Internship application<br><br>
+Regards,<br>
+HR Manager<br>');
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 11, true);
+UPDATE sys_emails SET use_type = sys_email_id;
 
+
+INSERT INTO contract_status (contract_status_name) VALUES ('Active');
+INSERT INTO contract_status (contract_status_name) VALUES ('Resigned');
+INSERT INTO contract_status (contract_status_name) VALUES ('Deceased');
+INSERT INTO contract_status (contract_status_name) VALUES ('Terminated');
+INSERT INTO contract_status (contract_status_name) VALUES ('Transferred');
+UPDATE contract_status SET org_id = 0;
 
 
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Aerospace');
@@ -235,4 +253,38 @@ INSERT INTO industry (org_id, industry_name) VALUES (0, 'Telecoms');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Transportation and Distribution');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Travel and Tours');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Other');
+
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Accounting');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Banking and Financial Services');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'CEO');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'General Management');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Creative and Design');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Customer Service and Call Centre');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Education and Training');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Engineering and Construction');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Farming and Agribusiness');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Government');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Healthcare and Pharmaceutical');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Human Resources');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Insurance');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'ICT');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Telecoms');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Legal');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Manufacturing');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Marketing, Media and Brand');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'NGO, Community and Social Development');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Office and Administration');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Project and Programme Management');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Research, Science and Biotech');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Retail');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Sales');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Security');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Strategy and Consulting');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Tourism and Travel');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Trades and Services');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Transport and Logistics');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Internships and Volunteering');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Real Estate');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Hospitality');
+INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Other');
 

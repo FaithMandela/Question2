@@ -895,7 +895,7 @@ BEGIN
 		SELECT min(approvals.approval_level) INTO min_level
 		FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
 		WHERE (approvals.table_id = reca.table_id) AND (approvals.approve_status = 'Draft')
-			AND (workflow_phases.advice = false) AND (workflow_phases.notice = false);
+			AND (workflow_phases.advice = false);
 		
 		IF(min_level is null)THEN
 			mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Approved') 
@@ -909,7 +909,7 @@ BEGIN
 			FOR recb IN SELECT workflow_phase_id, advice, notice
 			FROM workflow_phases
 			WHERE (workflow_id = reca.workflow_id) AND (approval_level >= reca.approval_level) LOOP
-				IF (recb.advice = true) or (recb.notice = true) THEN
+				IF (recb.advice = true) THEN
 					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
 					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
 				END IF;
@@ -918,7 +918,7 @@ BEGIN
 			FOR recb IN SELECT workflow_phase_id, advice, notice
 			FROM workflow_phases
 			WHERE (workflow_id = reca.workflow_id) AND (approval_level <= min_level) LOOP
-				IF (recb.advice = true) or (recb.notice = true) THEN
+				IF (recb.advice = true) THEN
 					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
 					WHERE (workflow_phase_id = recb.workflow_phase_id) 
 						AND (approve_status = 'Draft') AND (table_id = reca.table_id);
@@ -968,6 +968,24 @@ BEGIN
 	END IF;
 
 	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_balance(integer, varchar(12)) RETURNS real AS $$
+DECLARE
+	v_bal		real;
+BEGIN
+
+	SELECT COALESCE(sum(debit_amount - credit_amount), 0) INTO v_bal
+	FROM vw_trx
+	WHERE (vw_trx.approve_status = 'Approved')
+		AND (vw_trx.for_posting = true)
+		AND (vw_trx.entity_id = $1)
+		AND (vw_trx.transaction_date < $2::date);
+		
+		
+	RETURN v_bal;
 END;
 $$ LANGUAGE plpgsql;
 

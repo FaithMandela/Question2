@@ -12,7 +12,7 @@
 			<MENU name="Organisation">20</MENU>
 			<MENU name="Employees" role="admin,payroll,hr">3</MENU>
 			<MENU name="Monthly Payroll" role="admin,payroll,hr">10</MENU>
-			<MENU name="Payroll Archive" role="admin">5</MENU>
+			<MENU name="Payroll Archive" role="admin,payroll">5</MENU>
 		</MENU>
 		<MENU name="Loans" role="admin,payroll">
 			<MENU name="Loans">30</MENU>
@@ -1500,6 +1500,7 @@
 			</DRILLDOWN>
 			<JASPER name="Payroll" reportfile="vw_employee_month.jasper"></JASPER>
 			<JASPER name="Payroll Details" reportfile="vw_employee_month_1.jasper"></JASPER>
+			<JASPER name="Payroll Listing" reportfile="vw_employee_month_3.jasper"></JASPER>
 			<JASPER name="Payroll Departments" reportfile="vw_employee_month_2.jasper"></JASPER>
 			<JASPER name="Statutory Deductions" reportfile="vw_employee_tax_types.jasper"></JASPER>
 		</FILTER>
@@ -1556,7 +1557,8 @@
 				<TEXTFIELD w="75" fnct="to_char(net_pay, '9999999D9')" title="Net Pay">v_net_pay</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="to_char(advance, '9999999D9')" title="Advance">v_advance</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="to_char(advance_deduction, '9999999D9')" title="Advance Deductions">v_advance_deduction</TEXTFIELD>
-				<TEXTFIELD w="75" fnct="to_char(banked, '9999999D9')" title="Banked">v_banked</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(banked, '9999999D9')" title="Main Banked">v_banked</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="to_char(getAdjustment(employee_month_id, 4, 41), '9999999D9')" title="Other Banked">o_banked</TEXTFIELD>
 			</CROSSTAB>
 		</GRID>
 		<GRID name="SUN Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">

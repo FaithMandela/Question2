@@ -10,6 +10,7 @@ CREATE TABLE asset_types (
 	asset_type_name			varchar(50) not null,
 	depreciation_rate		real default 10 not null,
 	display_order			integer,
+	tag_prefix				varchar(4),
 	Details					text
 );
 CREATE INDEX asset_types_asset_account ON asset_types (asset_account);
