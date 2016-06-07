@@ -30,6 +30,8 @@ INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_nam
 INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 4, 4, 'Procurement');
 SELECT pg_catalog.setval('departments_department_id_seq', 5, true);
 
+INSERT INTO objective_types (org_id, objective_type_name) VALUES (0, 'General');
+
 INSERT INTO department_roles (org_id, department_role_id, department_id, ln_department_role_id, department_role_name, active, job_description, job_requirements, duties, performance_measures, details) VALUES (0, 1, 0, 0, 'Chief Executive Officer', true, '- Defining short term and long term corporate strategies and objectives
 - Direct overall company operations ', NULL, '- Develop and control strategic relationships with third-party companies
 - Guide the development of client specific systems

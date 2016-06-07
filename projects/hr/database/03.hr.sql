@@ -1082,6 +1082,7 @@ CREATE VIEW vw_intake AS
 		
 		locations.location_id, locations.location_name, pay_groups.pay_group_id, pay_groups.pay_group_name, 
 		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
+		orgs.org_name, orgs.details as org_detail,
 		
 		intake.org_id, intake.intake_id, intake.opening_date, intake.closing_date, intake.positions, intake.contract, 
 		intake.contract_period, intake.details,
@@ -1090,13 +1091,15 @@ CREATE VIEW vw_intake AS
 	FROM intake INNER JOIN vw_department_roles ON intake.department_role_id = vw_department_roles.department_role_id
 		INNER JOIN locations ON intake.location_id = locations.location_id
 		INNER JOIN pay_groups ON intake.pay_group_id = pay_groups.pay_group_id
-		INNER JOIN pay_scales ON intake.pay_scale_id = pay_scales.pay_scale_id;
+		INNER JOIN pay_scales ON intake.pay_scale_id = pay_scales.pay_scale_id
+		INNER JOIN orgs ON intake.org_id = orgs.org_id;
 
 CREATE VIEW vw_applications AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
 		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
 		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
+		vw_intake.org_name, vw_intake.org_detail,
 		entitys.entity_id, entitys.entity_name, entitys.primary_email,
 		
 		applications.org_id,
@@ -1127,9 +1130,7 @@ CREATE VIEW vw_contracting AS
 		vw_intake.job_description, vw_intake.parent_role_name,
 		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
-		entitys.entity_id, entitys.entity_name, 
-		
-		orgs.org_id, orgs.org_name,
+		entitys.entity_id, entitys.entity_name, orgs.org_name,
 		
 		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
 		contract_status.contract_status_id, contract_status.contract_status_name,
@@ -1160,12 +1161,15 @@ CREATE VIEW vw_contracting AS
 
 CREATE VIEW vw_internships AS
 	SELECT departments.department_id, departments.department_name, internships.internship_id, internships.opening_date, 
-		internships.org_id, internships.closing_date, internships.positions, internships.location, internships.details
-	FROM internships INNER JOIN departments ON internships.department_id = departments.department_id;
+		orgs.org_id, orgs.org_name, orgs.details as org_details,
+		internships.closing_date, internships.positions, internships.location, internships.details
+	FROM internships INNER JOIN departments ON internships.department_id = departments.department_id
+		INNER JOIN orgs ON internships.org_id = orgs.org_id;
 
 CREATE VIEW vw_interns AS
 	SELECT entitys.entity_id, entitys.entity_name, entitys.primary_email, entitys.primary_telephone, 
 		vw_internships.department_id, vw_internships.department_name,
+		vw_internships.org_name, vw_internships.org_details,
 		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date,
 		interns.org_id, interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, 
 		interns.application_date, interns.approve_status, interns.action_date, interns.workflow_table_id,

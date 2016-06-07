@@ -209,6 +209,7 @@ BEGIN
 		INSERT INTO pay_scales (org_id, pay_scale_name, min_pay, max_pay) VALUES (NEW.org_id, 'Basic', 0, 1000000);
 		INSERT INTO pay_groups (org_id, pay_group_name) VALUES (NEW.org_id, 'Default');
 		INSERT INTO locations (org_id, location_name) VALUES (NEW.org_id, 'Main office');
+		INSERT INTO objective_types (org_id, objective_type_name) VALUES (NEW.org_id, 'General');
 
 		v_department_id := nextval('departments_department_id_seq');
 		INSERT INTO Departments (org_id, department_id, department_name) VALUES (NEW.org_id, v_department_id, 'Board of Directors');
