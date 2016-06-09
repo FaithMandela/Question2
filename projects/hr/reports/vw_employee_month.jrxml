@@ -120,11 +120,11 @@ ORDER BY vw_employee_month.currency_name, vw_employee_month.entity_id;]]>
 					<text><![CDATA[Expense]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="444" y="23" width="55" height="15" forecolor="#000000" uuid="36452a12-84e4-41b6-ba0b-c0a59c6f188a"/>
+					<reportElement style="Column header" x="444" y="13" width="55" height="25" forecolor="#000000" uuid="36452a12-84e4-41b6-ba0b-c0a59c6f188a"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<text><![CDATA[Tax]]></text>
+					<text><![CDATA[Statutory Deductions]]></text>
 				</staticText>
 				<staticText>
 					<reportElement style="Column header" x="499" y="23" width="55" height="15" forecolor="#000000" uuid="3bcc80db-f095-438e-8872-54d8f197af7e"/>

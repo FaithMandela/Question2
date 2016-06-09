@@ -57,7 +57,6 @@ CREATE TABLE locations (
 );
 CREATE INDEX locations_org_id ON locations(org_id);
 
-
 CREATE TABLE jobs_category (
 	jobs_category_id		serial primary key,
 	org_id					integer references orgs,
@@ -82,6 +81,7 @@ CREATE TABLE department_roles (
 );
 CREATE INDEX department_roles_department_id ON department_roles (department_id);
 CREATE INDEX department_roles_ln_department_role_id ON department_roles (ln_department_role_id);
+CREATE INDEX department_roles_jobs_category_id ON department_roles (jobs_category_id);
 CREATE INDEX department_roles_org_id ON department_roles(org_id);
 INSERT INTO department_roles (org_id, department_role_id, ln_department_role_id, department_id, department_role_name) VALUES (0, 0, 0, 0, 'Chair Person');
 
@@ -122,12 +122,12 @@ CREATE TABLE employees (
 	bank_branch_id			integer not null references bank_branch,
 	disability_id			integer references disability,
 	employee_id				varchar(12) not null,
-	pay_scale_id			integer references pay_scales,
+	pay_scale_id			integer not null references pay_scales,
 	pay_scale_step_id		integer references pay_scale_steps,
-	pay_group_id			integer references pay_groups,
-	location_id				integer references locations,
-	currency_id				integer references currency,
-	org_id					integer references orgs,
+	pay_group_id			integer not null references pay_groups,
+	location_id				integer not null references locations,
+	currency_id				integer not null references currency,
+	org_id					integer not null references orgs,
 
 	person_title			varchar(7),
 	surname					varchar(50) not null,
@@ -1573,6 +1573,7 @@ DECLARE
 	v_address				integer;
 	c_education_id			integer;
 	c_referees				integer;
+	c_files					integer;
 	reca					RECORD;
 	msg 					varchar(120);
 BEGIN
@@ -1605,6 +1606,11 @@ BEGIN
 	FROM vw_referees
 	WHERE (table_id  = v_entity_id);
 	IF(c_referees is null) THEN c_referees = 0; END IF;
+	
+	SELECT count(sys_file_id) INTO c_files
+	FROM sys_files
+	WHERE (table_id  = v_entity_id);
+	IF(c_files is null) THEN c_files = 0; END IF;
 
 	IF v_application_id is not null THEN
 		msg := 'There is another application for the post.';
@@ -1621,16 +1627,19 @@ BEGIN
 	ELSIF (c_referees < 3) THEN
 		msg := 'You need to have at least three referees added';
 		RAISE EXCEPTION '%', msg;
+	ELSIF (c_files < 2) THEN
+		msg := 'CV and Cover Letter MUST be uploaded';
+		RAISE EXCEPTION '%', msg;
 	ELSE
 		v_application_id := nextval('applications_application_id_seq');
 		INSERT INTO applications (application_id, intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
 		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
 		
 		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
-		WHERE (use_type = 10) AND (org_id = rec.org_id);
+		WHERE (use_type = 10) AND (org_id = reca.org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, rec.org_id, v_application_id, 'applications', 10);
+		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 10);
 		
 		msg := 'Added Job application';
 	END IF;

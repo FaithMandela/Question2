@@ -99,6 +99,7 @@ CREATE TABLE tax_types (
 	employer_account		varchar(32),
 	active					boolean default true,
 	use_key					integer default 0 not null,
+	use_type				integer default 0 not null,
 	Details					text,
 	
 	UNIQUE(tax_type_name, org_id)

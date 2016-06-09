@@ -1,6 +1,6 @@
 -- This is how you import
 --- Laptop
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-04-22', 1232, 0, 1, 28, 139, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-06-09', 1232, 0, 1, 28, 139, '');
 
 --- CPU
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-04-26', 1223, 0, 1, 49, 139, '');
@@ -19,7 +19,7 @@ INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, mode
 
 
 ----- Assets comparison
-SELECT asset_imports.DESCRIPTION, asset_imports.Agency, asset_imports.Serial_Number, asset_imports.type, asset_imports.sheet
+SELECT asset_imports.description, asset_imports.agency, asset_imports.serial_number, asset_imports.type, asset_imports.sheet
 FROM asset_imports LEFT JOIN assets 
 	ON trim(upper(asset_imports.serial_number)) = trim(upper(assets.asset_serial))	
 WHERE (assets.asset_serial is null)
