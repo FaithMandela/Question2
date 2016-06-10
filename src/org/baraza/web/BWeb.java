@@ -1918,8 +1918,7 @@ System.out.println("repository : " + repository);
 	}
 
 	public String getMenuMsg(String xmlFile) { 
-		String mySql = "SELECT msg FROM sys_menu_msg WHERE menu_id = " + viewKeys.get(0)
-			+ " AND (xml_file = '" + xmlFile + "')";
+		String mySql = "SELECT msg FROM sys_menu_msg WHERE (menu_id = '" + viewKey + "') AND (xml_file = '" + xmlFile + "')";
 		String sMsg = db.executeFunction(mySql);
 
 		if(sMsg == null) sMsg = "";

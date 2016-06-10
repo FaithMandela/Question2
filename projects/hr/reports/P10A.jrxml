@@ -35,7 +35,7 @@ FROM vw_employee_month
 	AND (vw_employee_month.org_id = Tax_Types.org_id)
 	INNER JOIN orgs ON (vw_employee_month.org_id = orgs.org_id)
 
-WHERE (Tax_Types.use_key = 3)
+WHERE (tax_types.use_type = 3)
 AND (vw_employee_month.period_year = '$P!{periodyear}')
 $P!{organd}
 

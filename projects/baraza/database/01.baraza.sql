@@ -1,6 +1,6 @@
 CREATE TABLE sys_menu_msg (
 	sys_menu_msg_id			serial primary key,
-	menu_id					integer not null,
+	menu_id					varchar(16) not null,
 	menu_name				varchar(50) not null,
 	xml_file				varchar(50) not null,
 	msg						text

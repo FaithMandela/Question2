@@ -78,6 +78,8 @@ CREATE TABLE productions (
 	application_date		timestamp default now(),
 	action_date				timestamp,
 	
+	amount					real,
+	expiry_date				date,
 	montly_billing			boolean default false not null,
 	is_active				boolean default false not null,
 	

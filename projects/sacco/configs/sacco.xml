@@ -1,10 +1,5 @@
 <APP color="green" name="Sacco" org="org_id" password="change_password" material="true">
 	<MENU name="Sacco" background="red">
-		<MENU name="Applicant" role="applicant">24</MENU>
-		<MENU name="My Details" role="member">285</MENU>
-		<MENU name="My Account" role="member">290</MENU>
-		<MENU name="Guarantors" role="member">195</MENU>
-		<MENU name="Organisation" role="subscription,admin,staff,finance">261</MENU>
 		<MENU name="Master" role="master">
 			<MENU name="Master  Approvals">46</MENU>
 			<MENU name="Master All Approvals">51</MENU>
@@ -12,6 +7,11 @@
 			<MENU name="Organisation">260</MENU>
 			<MENU name="Master Emails">300</MENU>
 		</MENU>
+		<MENU name="Applicant" role="applicant">24</MENU>
+		<MENU name="My Details" role="member">285</MENU>
+		<MENU name="My Account" role="member">290</MENU>
+		<MENU name="Guarantors" role="member">195</MENU>
+		<MENU name="Organisation" role="subscription,admin,staff,finance">261</MENU>
 		<MENU name="Administration" role="staff,admin,manager">
 			<MENU name="Definations">295</MENU>
 			<MENU name="Members">240</MENU>
@@ -19,17 +19,15 @@
 			<MENU name="EMails" role="admin,master">60</MENU>
 			<MENU name="Entitys" role="admin">15</MENU>
 			<MENU name="Approvals" role="admin">45</MENU>
+			<MENU name="Recruiters">305</MENU>
+			<MENU name="Contributions">315</MENU>
 			<MENU name="Workflows" role="staff,manager,admin">40</MENU>
 			<MENU name="Files" role="admin">65</MENU>
 			<MENU name="All Approvals" role="manager,admin">50</MENU>
-			<MENU name="Recruiters">305</MENU>
-			<MENU name="Contributions">315</MENU>
-		</MENU>
-		<MENU name="Transactions">
-			<MENU name="Transaction Ledger">310</MENU>
 		</MENU>
 		<MENU name="Reports" role="admin, manager,member">
 			<MENU name="Statement of accounts" role="manager,admin">320</MENU>
+			<MENU name="Transaction Ledger">310</MENU>
 			<MENU name="New Members" role="manager,admin">215</MENU>
 			<MENU name="Loans and repayments" role="manager,admin">265</MENU>
 			<MENU name="Loan" role="member">245</MENU>
