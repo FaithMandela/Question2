@@ -53,18 +53,17 @@ CREATE TABLE products (
 	product_id				serial primary key,
 	org_id					integer references orgs,
 	product_name			varchar(50),
+	align_expiry			boolean default true not null,
 	is_montly_bill			boolean default false not null,
 	montly_cost				real default 0 not null,
 	is_annual_bill			boolean default true not null,
 	annual_cost				real default 0 not null,
 	
-	transaction_limit		integer not null,
-	
 	details					text
 );
 CREATE INDEX products_org_id ON products(org_id);
 
-INSERT INTO products (org_id, product_name, transaction_limit) VALUES (0, 'HCM Hosting', 5);
+INSERT INTO products (org_id, product_name, annual_cost) VALUES (0, 'HCM Hosting per employee per year', 200);
 
 CREATE TABLE productions (
 	production_id			serial primary key,
@@ -78,7 +77,8 @@ CREATE TABLE productions (
 	application_date		timestamp default now(),
 	action_date				timestamp,
 	
-	amount					real,
+	quantity				integer,
+	price					real,
 	expiry_date				date,
 	montly_billing			boolean default false not null,
 	is_active				boolean default false not null,
@@ -109,12 +109,13 @@ CREATE VIEW vw_subscriptions AS
 		LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;	
 		
 CREATE VIEW vw_productions AS
-	SELECT orgs.org_id, orgs.org_name, 
-		products.product_id, products.product_name, products.transaction_limit,
+	SELECT orgs.org_id, orgs.org_name, products.product_id, products.product_name, 
+		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
 		subscriptions.subscription_id, subscriptions.business_name, 
 		
 		productions.production_id, productions.approve_status, productions.workflow_table_id, productions.application_date, 
 		productions.action_date, productions.montly_billing, productions.is_active, 
+		productions.quantity, productions.price, productions.expiry_date,
 		productions.details
 	FROM productions INNER JOIN orgs ON productions.org_id = orgs.org_id
 		INNER JOIN products ON productions.product_id = products.product_id
