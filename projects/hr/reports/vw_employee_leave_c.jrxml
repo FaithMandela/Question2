@@ -64,12 +64,15 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT entity_id, entity_name, leave_type_id, leave_type_name,
-get_leave_approved_balance(entity_id, leave_type_id) as leave_balance
-
+		<![CDATA[SELECT
+vw_employee_leave_types.entity_id, vw_employee_leave_types.entity_name, vw_employee_leave_types.leave_type_id,
+vw_employee_leave_types.leave_type_name,
+get_leave_approved_balance(vw_employee_leave_types.entity_id, vw_employee_leave_types.leave_type_id) as leave_balance
 FROM vw_employee_leave_types
+INNER JOIN employees ON employees.entity_id = vw_employee_leave_types.entity_id
+WHERE employees.active = true
 
-$P!{orgwhere}
+$P!{organd}
 
 ORDER BY entity_name, leave_type_name;]]>
 	</queryString>
