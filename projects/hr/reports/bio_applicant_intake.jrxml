@@ -81,7 +81,7 @@ WHERE (applications.application_id = '$P!{filterid}');]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="339" splitType="Stretch">
+		<band height="315" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="6" y="5" width="99" height="15" forecolor="#000000" uuid="548e7e95-e29e-4c63-9888-f78dc302f50c"/>
 				<textElement>
@@ -245,29 +245,23 @@ WHERE (applications.application_id = '$P!{filterid}');]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_education.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="217" width="555" height="17" uuid="8118657b-609f-4645-a1be-a27c507f8613"/>
+				<reportElement positionType="Float" x="0" y="218" width="555" height="17" uuid="566b223c-f338-4e27-9cb4-a665a47a76ba"/>
+				<subreportParameter name="filterid">
+					<subreportParameterExpression><![CDATA[$F{filter_entity}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employment_a.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="238" width="555" height="17" uuid="8118657b-609f-4645-a1be-a27c507f8613"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$F{filter_entity}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_skills.jasper"]]></subreportExpression>
 			</subreport>
-			<staticText>
-				<reportElement style="Column header" positionType="Float" x="6" y="279" width="99" height="15" forecolor="#000000" uuid="d5adf06a-1ae9-4794-a891-4182de4c83a0"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Interest]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="6" y="294" width="544" height="23" uuid="b5d458f0-cf1e-4df8-a4ca-ea0c131da1aa"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{interests}]]></textFieldExpression>
-			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="319" width="555" height="17" uuid="89354ba6-8927-4b23-8281-af333f8e3f8a"/>
+				<reportElement positionType="Float" x="0" y="295" width="555" height="17" uuid="89354ba6-8927-4b23-8281-af333f8e3f8a"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$F{filter_entity}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -275,7 +269,7 @@ WHERE (applications.application_id = '$P!{filterid}');]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_referees.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="237" width="555" height="17" uuid="ece08399-3fed-4172-bf1e-b5010fc9f3a3"/>
+				<reportElement positionType="Float" x="0" y="257" width="555" height="17" uuid="ece08399-3fed-4172-bf1e-b5010fc9f3a3"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$F{filter_entity}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -283,7 +277,7 @@ WHERE (applications.application_id = '$P!{filterid}');]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_seminars.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="258" width="555" height="17" uuid="bed8fc6f-c751-4a71-8343-c5e7d4806c25"/>
+				<reportElement positionType="Float" x="0" y="276" width="555" height="17" uuid="bed8fc6f-c751-4a71-8343-c5e7d4806c25"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$F{filter_entity}]]></subreportParameterExpression>
 				</subreportParameter>

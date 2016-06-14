@@ -575,6 +575,23 @@ public class BQuery {
 
 		return ans;
 	}
+	
+	public String getBoolean(String fieldName, int fType) {
+		String ans = "Yes";
+
+		try {
+			boolean dans = rs.getBoolean(fieldName);
+			if(fType == 1) {
+				if(dans) ans = "Yes"; else ans = "No";
+			} else if(fType == 2) {
+				if(dans) ans = "True"; else ans = "False";
+			}
+		} catch (SQLException ex) {
+			log.severe("Data field read error : " + ex);
+		}
+
+		return ans;
+	}
 
 	public String getFormatField(int fieldPos) {
 		String ans = "";

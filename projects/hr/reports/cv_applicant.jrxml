@@ -81,7 +81,7 @@ $P!{organd};]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="343" splitType="Stretch">
+		<band height="324" splitType="Stretch">
 			<staticText>
 				<reportElement style="Column header" x="6" y="5" width="99" height="15" forecolor="#000000" uuid="1ae1d73d-a22c-4ec1-a536-0138fb322988"/>
 				<textElement>
@@ -245,29 +245,15 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_education.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="221" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
+				<reportElement positionType="Float" x="0" y="241" width="555" height="17" uuid="52442d5b-d941-462d-9332-6af916b43774"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_skills.jasper"]]></subreportExpression>
 			</subreport>
-			<staticText>
-				<reportElement style="Column header" positionType="Float" x="6" y="284" width="99" height="15" forecolor="#000000" uuid="eafc4893-9da3-4a27-8f53-f3c28f6cea29"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Interest]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="6" y="299" width="544" height="23" uuid="b93cf248-ccc4-499d-8f80-b022b0957be0"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{interests}]]></textFieldExpression>
-			</textField>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="323" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
+				<reportElement positionType="Float" x="0" y="304" width="555" height="17" uuid="cd2f3b21-0ef2-40f2-b895-418e99b0c313"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -275,7 +261,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_referees.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="243" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
+				<reportElement positionType="Float" x="0" y="262" width="555" height="17" uuid="5008bb74-47bd-47c9-86d7-0faf15d7a402"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -283,7 +269,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cv_seminars.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="0" y="265" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
+				<reportElement positionType="Float" x="0" y="283" width="555" height="17" uuid="f7b531ef-4593-4d61-b2ec-d4e7b9a58fe9"/>
 				<subreportParameter name="filterid">
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -332,6 +318,14 @@ $P!{organd};]]>
 				</textElement>
 				<text><![CDATA[Expected Salary :]]></text>
 			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="221" width="555" height="17" uuid="1c247c4c-5fb2-4847-a3ef-3bf5da09fe49"/>
+				<subreportParameter name="filterid">
+					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employment_a.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<columnFooter>

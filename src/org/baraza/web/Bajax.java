@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.baraza.DB.BDB;
+import org.baraza.DB.BQuery;
 import org.baraza.xml.BElement;
 
 public class Bajax extends HttpServlet {
@@ -105,6 +106,9 @@ public class Bajax extends HttpServlet {
 			response.setContentType("application/json;charset=\"utf-8\"");
 		} else if("importprocess".equals(fnct)) {
 			resp = importProcess(web.getView().getAttribute("process"));
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("product".equals(fnct)) {
+			resp = buyProduct(id, request.getParameter("units"));
 			response.setContentType("application/json;charset=\"utf-8\"");
 		}
 		
@@ -264,6 +268,25 @@ public class Bajax extends HttpServlet {
 		return resp;
 	}
 	
-	
- 
+	public String buyProduct(String productId, String units) {
+		String resp = "";
+		
+		String mysql = "SELECT product_id, product_name, is_singular, align_expiry, is_montly_bill, "
+		+ "montly_cost, is_annual_bill, annual_cost, details "
+		+ "FROM products "
+		+ "WHERE product_id = " + productId;
+		BQuery rs = new BQuery(db, mysql);
+		rs.moveFirst();
+		
+		String insSql = "INSERT INTO productions(product_id, entity_id, org_id, quantity, price) VALUES ("
+		+  productId + "," + db.getUserID() + "," + db.getOrgID() + "," + units + "," + rs.getString("annual_cost") + ")";
+		db.executeQuery(insSql);
+
+		rs.close();
+		
+		resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
+		
+		return resp;
+	}
+
 }

@@ -828,19 +828,21 @@
 		<GRID name="Products" keyfield="product_id" table="products">
 			<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Singular">is_singular</CHECKBOX>
+			<CHECKBOX w="75" title="Align Expiry">align_expiry</CHECKBOX>
 			<CHECKBOX w="75" title="Montly Bill">is_montly_bill</CHECKBOX>
 			<TEXTDECIMAL w="75" title="Montly Cost">montly_cost</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Annual Bill">is_annual_bill</CHECKBOX>
 			<TEXTDECIMAL w="75" title="Annual Cost">annual_cost</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Transaction Limit">transaction_limit</TEXTFIELD>
 			<FORM name="Products" keyfield="product_id" table="products">
 				<TEXTFIELD w="150" title="Product Name" y="10" h="20" x="10">product_name</TEXTFIELD>
-				<CHECKBOX w="150" title="Montly Bill" y="10" h="20" x="290">is_montly_bill</CHECKBOX>
-				<TEXTDECIMAL w="150" title="Montly Cost" y="30" h="20" x="10">montly_cost</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Annual Bill" y="30" h="20" x="290">is_annual_bill</CHECKBOX>
-				<TEXTDECIMAL w="150" title="Annual Cost" y="50" h="20" x="10">annual_cost</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Transaction Limit" y="50" h="20" x="290">transaction_limit</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Singular" y="10" h="20" x="290">is_singular</CHECKBOX>
+				<CHECKBOX w="150" title="Align Expiry" y="30" h="20" x="10">align_expiry</CHECKBOX>
+				<CHECKBOX w="150" title="Montly Bill" y="30" h="20" x="290">is_montly_bill</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Montly Cost" y="50" h="20" x="10">montly_cost</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Annual Bill" y="50" h="20" x="290">is_annual_bill</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Annual Cost" y="70" h="20" x="10">annual_cost</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

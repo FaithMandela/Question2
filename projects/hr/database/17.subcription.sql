@@ -53,13 +53,14 @@ CREATE TABLE products (
 	product_id				serial primary key,
 	org_id					integer references orgs,
 	product_name			varchar(50),
+	is_singular				boolean default true not null,
 	align_expiry			boolean default true not null,
 	is_montly_bill			boolean default false not null,
 	montly_cost				real default 0 not null,
 	is_annual_bill			boolean default true not null,
 	annual_cost				real default 0 not null,
 	
-	details					text
+	details					text not null
 );
 CREATE INDEX products_org_id ON products(org_id);
 
@@ -67,7 +68,6 @@ INSERT INTO products (org_id, product_name, annual_cost) VALUES (0, 'HCM Hosting
 
 CREATE TABLE productions (
 	production_id			serial primary key,
-	subscription_id			integer references subscriptions,
 	product_id				integer references products,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
@@ -79,14 +79,14 @@ CREATE TABLE productions (
 	
 	quantity				integer,
 	price					real,
-	expiry_date				date,
+	expiry_date				date not null,
 	montly_billing			boolean default false not null,
 	is_active				boolean default false not null,
 	
 	details					text
 );
-CREATE INDEX productions_subscription_id ON productions(subscription_id);
 CREATE INDEX productions_product_id ON productions(product_id);
+CREATE INDEX productions_entity_id ON productions(entity_id);
 CREATE INDEX productions_org_id ON productions(org_id);
 
 CREATE VIEW vw_subscriptions AS
@@ -111,15 +111,14 @@ CREATE VIEW vw_subscriptions AS
 CREATE VIEW vw_productions AS
 	SELECT orgs.org_id, orgs.org_name, products.product_id, products.product_name, 
 		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
-		subscriptions.subscription_id, subscriptions.business_name, 
 		
 		productions.production_id, productions.approve_status, productions.workflow_table_id, productions.application_date, 
 		productions.action_date, productions.montly_billing, productions.is_active, 
 		productions.quantity, productions.price, productions.expiry_date,
-		productions.details
+		productions.details,
+		(productions.price * productions.quantity) as amount
 	FROM productions INNER JOIN orgs ON productions.org_id = orgs.org_id
-		INNER JOIN products ON productions.product_id = products.product_id
-		INNER JOIN subscriptions ON productions.subscription_id = subscriptions.subscription_id;
+		INNER JOIN products ON productions.product_id = products.product_id;
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
