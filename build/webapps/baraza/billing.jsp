@@ -93,21 +93,27 @@
 	+ "product_id || '\" data-target=\"#ajax\" data-toggle=\"modal\"><i class=\"fa fa-edit\"></i>Buy</a>'";
 
 	String mysql = "SELECT " + buyLnk + " as buy, "
-		+ "product_id, product_name, montly_cost, annual_cost, details "
+		+ "product_id, product_name, align_expiry, annual_cost, details "
 		+ "FROM products";
 	BQuery pRs = new BQuery(db, mysql);
 	String t1 = pRs.readDocument(true, false);
 	pRs.close();
 
-	mysql = "SELECT org_id, org_name, product_id, product_name, is_montly_bill, montly_cost, "
-		+ "is_annual_bill, annual_cost, production_id, approve_status, workflow_table_id, "
-		+ "application_date, action_date, montly_billing, is_active, quantity, "
-		+ "price, amount, expiry_date, details "
+	mysql = "SELECT production_id, product_id, product_name, is_active, quantity, "
+		+ "price, amount, expiry_date "
 		+ "FROM vw_productions "
 		+ "WHERE org_id = " + web.getOrgID();
 	BQuery prRs = new BQuery(db, mysql);
 	String t2 = prRs.readDocument(true, false);
 	prRs.close();
+
+	mysql = "SELECT product_receipt_id, receipt_source_name, is_paid, receipt_amount, receipt_date, receipt_reference "
+		+ "FROM vw_product_receipts "
+		+ "WHERE org_id = " + web.getOrgID();
+	BQuery rRs = new BQuery(db, mysql);
+	String t3 = rRs.readDocument(true, false);
+	rRs.close();
+
 
 %>
 
@@ -316,11 +322,15 @@
 									<%= t1 %>
 								</div>
 
+								<div class="row"></div>
 								<div class="form-body">
 									<%= t2 %>
 								</div>
 
 								<div class="row"></div>
+								<div class="form-body">
+									<%= t3 %>
+								</div>
 
 							</div>
 						</div>

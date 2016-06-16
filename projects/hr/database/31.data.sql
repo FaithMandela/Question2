@@ -291,3 +291,11 @@ INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Other');
 
 INSERT INTO loan_types(loan_type_id, adjustment_id, org_id, loan_type_name, default_interest, reducing_balance)
 VALUES (0, 15, 0, 'Emergency', 6, true);
+
+INSERT INTO products (org_id, product_name, annual_cost, details) VALUES (0, 'HCM Hosting per employee', 200, 'HR and Payroll Hosting per employee per year');
+
+INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'MPESA');
+INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'Cash');
+INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'Cheque');
+
+

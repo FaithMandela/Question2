@@ -64,7 +64,28 @@ CREATE TABLE products (
 );
 CREATE INDEX products_org_id ON products(org_id);
 
-INSERT INTO products (org_id, product_name, annual_cost) VALUES (0, 'HCM Hosting per employee per year', 200);
+CREATE TABLE receipt_sources (
+	receipt_source_id		serial primary key,
+	org_id					integer references orgs,
+	receipt_source_name		varchar(50) not null,
+	details					text
+);
+CREATE INDEX receipt_sources_org_id ON receipt_sources(org_id);
+
+CREATE TABLE product_receipts (
+	product_receipt_id		serial primary key,
+	receipt_source_id		integer references receipt_sources,
+	org_id					integer references orgs,
+	
+	is_paid					boolean default false not null,
+	receipt_amount			real not null,
+	receipt_date			date not null,
+	receipt_time			timestamp default current_timestamp not null,
+	receipt_reference		varchar(32),
+	narrative				varchar(320)
+);
+CREATE INDEX product_receipts_receipt_source_id ON product_receipts(receipt_source_id);
+CREATE INDEX product_receipts_org_id ON product_receipts(org_id);
 
 CREATE TABLE productions (
 	production_id			serial primary key,
@@ -72,16 +93,13 @@ CREATE TABLE productions (
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
 	
-	approve_status			varchar(16) default 'draft' not null,
-	workflow_table_id		integer,
-	application_date		timestamp default now(),
-	action_date				timestamp,
-	
-	quantity				integer,
-	price					real,
+	quantity				integer not null,
+	price					real not null,
+	transaction_time		timestamp default current_timestamp not null,
 	expiry_date				date not null,
 	montly_billing			boolean default false not null,
 	is_active				boolean default false not null,
+	auto_renew				boolean default false not null,
 	
 	details					text
 );
@@ -107,14 +125,22 @@ CREATE VIEW vw_subscriptions AS
 		LEFT JOIN entitys ON subscriptions.entity_id = entitys.entity_id
 		LEFT JOIN entitys as account_manager ON subscriptions.account_manager_id = account_manager.entity_id
 		LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;	
+
+		
+CREATE VIEW vw_product_receipts AS
+	SELECT orgs.org_id, orgs.org_name, receipt_sources.receipt_source_id, receipt_sources.receipt_source_name, 
+		product_receipts.product_receipt_id, product_receipts.is_paid, product_receipts.receipt_amount, 
+		product_receipts.receipt_date, product_receipts.receipt_time, product_receipts.receipt_reference, 
+		product_receipts.narrative
+	FROM product_receipts INNER JOIN orgs ON product_receipts.org_id = orgs.org_id
+		INNER JOIN receipt_sources ON product_receipts.receipt_source_id = receipt_sources.receipt_source_id;
 		
 CREATE VIEW vw_productions AS
 	SELECT orgs.org_id, orgs.org_name, products.product_id, products.product_name, 
 		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
 		
-		productions.production_id, productions.approve_status, productions.workflow_table_id, productions.application_date, 
-		productions.action_date, productions.montly_billing, productions.is_active, 
-		productions.quantity, productions.price, productions.expiry_date,
+		productions.production_id, productions.transaction_time, productions.montly_billing, productions.is_active,
+		productions.quantity, productions.price, productions.expiry_date, productions.auto_renew,
 		productions.details,
 		(productions.price * productions.quantity) as amount
 	FROM productions INNER JOIN orgs ON productions.org_id = orgs.org_id
@@ -123,9 +149,6 @@ CREATE VIEW vw_productions AS
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
     
-CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
-    FOR EACH ROW EXECUTE PROCEDURE upd_action();
-
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
 	v_entity_id				integer;
