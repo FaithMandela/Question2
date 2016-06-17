@@ -7,7 +7,7 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT 	bonus_id, 	period_id,entity_id,org_id,son,org_name, 	pcc,start_date,end_date,
+		<![CDATA[SELECT 	bonus_id, 	period_id,entity_id,org_id,son,bonus_org_name as org_name, 	pcc,start_date,end_date,
  	percentage ,amount,	is_active,	approve_status,workflow_table_id,application_date,
  	action_date,details
 FROM vw_bonus
@@ -66,7 +66,7 @@ WHERE org_id is not null AND is_active = true AND account_manager_id = '$P!{enti
 				<text><![CDATA[Bonus ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="459" y="0" width="72" height="15" uuid="9a6c6927-6896-4b12-aaeb-fb6709277108"/>
+				<reportElement x="448" y="0" width="83" height="15" uuid="9a6c6927-6896-4b12-aaeb-fb6709277108"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -82,7 +82,7 @@ WHERE org_id is not null AND is_active = true AND account_manager_id = '$P!{enti
 				<text><![CDATA[End Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="389" y="0" width="59" height="15" uuid="46a2a0d4-aa57-4c0a-90d5-a3593e199f82"/>
+				<reportElement x="389" y="0" width="47" height="15" uuid="46a2a0d4-aa57-4c0a-90d5-a3593e199f82"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="10" rightIndent="4"/>
@@ -120,7 +120,7 @@ WHERE org_id is not null AND is_active = true AND account_manager_id = '$P!{enti
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="459" y="0" width="72" height="15" isPrintWhenDetailOverflows="true" uuid="42d63e5e-e974-4c8b-b963-71bfe9227a99"/>
+				<reportElement x="448" y="0" width="83" height="15" isPrintWhenDetailOverflows="true" uuid="42d63e5e-e974-4c8b-b963-71bfe9227a99"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -136,7 +136,7 @@ WHERE org_id is not null AND is_active = true AND account_manager_id = '$P!{enti
 				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="389" y="0" width="59" height="15" isPrintWhenDetailOverflows="true" uuid="e24d2825-b5fb-46db-a539-d6e67cee58c1"/>
+				<reportElement x="389" y="0" width="47" height="15" isPrintWhenDetailOverflows="true" uuid="e24d2825-b5fb-46db-a539-d6e67cee58c1"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="10"/>

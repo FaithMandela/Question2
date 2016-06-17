@@ -70,7 +70,7 @@ ORDER BY period_id,orgs.org_name ASC;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>
-				<text><![CDATA[ANGECY CUMULATIVE PRODUCTIVITY]]></text>
+				<text><![CDATA[AGENCY CUMULATIVE PRODUCTIVITY]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -222,7 +222,7 @@ ORDER BY period_id,orgs.org_name ASC;]]>
 		<band height="12" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch">
+		<band height="28" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="491" y="0" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="099c3c62-fd6b-437f-b5e1-2c3369e767e8"/>
 				<textElement textAlignment="Right">

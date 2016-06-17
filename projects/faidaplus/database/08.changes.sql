@@ -1,6 +1,10 @@
-delete from products where product_id in( 19, 22, 26, 30, 31, 32, 33, 34, 40, 54,
-     55,  59, 61, 62, 71, 73, 74, 75, 76,  79, 80, 81, 82, 84, 85, 86, 87, 88,
-     89, 90, 92,  95,  97, 98, 103, 104, 106, 107, 108, 109, 110,  112, 113, 114,
-     115, 116, 117, 118, 119, 120, 123, 124, 125, 126, 128, 134, 135,  138, 139,
-     140, 141, 142, 143, 144, 146, 147, 148, 149, 150, 151, 152, 154, 155, 156, 157,
-     158, 159, 160, 161, 162, 163, 164, 165, 166, 169, 170, 171, 172, 173, 174);
+CREATE OR REPLACE VIEW vw_son_points AS
+SELECT points.points_id, periods.period_id, periods.start_date as period,
+	to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
+	points.pcc, points.son, points.segments, points.amount,
+	points.points, points.bonus, vw_entitys.org_name,
+	vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name,  vw_entitys.pcc AS org_pcc,
+vw_entitys.son AS org_son,  vw_entitys.is_active, vw_entitys.account_manager_id
+FROM points JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
+	INNER JOIN periods ON points.period_id = periods.period_id
+	WHERE periods.approve_status = 'Approved';

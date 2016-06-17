@@ -12,6 +12,7 @@
 		<MENU name="Entitys">10</MENU>
 		<MENU name="Subscription Levels">17</MENU>
 		<MENU name="Workflows">21</MENU>
+		<MENU name="Emails">45</MENU>
 	</MENU>
 	<DESK w="700" h="500" name="Address" key="1">
 		<GRID keyfield="address_id" name="Address" table="vw_address">
@@ -89,49 +90,21 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Approvals" key="4">
-		<GRID keyfield="approval_id" name="Approvals" table="vw_approvals">
-			<TEXTFIELD w="75" title="Workflow ID">workflow_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Workflow Name">workflow_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Source Entity ID">source_entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Source Entity Name">source_entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Entity ID">approval_entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Entity Name">approval_entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Workflow Phase ID">workflow_phase_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval Level">approval_level</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approval ID">approval_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
-			<TEXTTIMESTAMP w="75" title="Completion Date">completion_date</TEXTTIMESTAMP>
-			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
-			<TEXTFIELD w="75" title="Approval Narrative">approval_narrative</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Entity ID">org_entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Entity Name">org_entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org User Name">org_user_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Primary Email">org_primary_email</TEXTFIELD>
-			<FORM keyfield="approval_id" name="Approvals" table="approvals">
-				<COMBOBOX w="430" h="20" lpfield="workflow_phase_id" x="10" y="10" lptable="workflow_phases" title="Workflow Phase ID">workflow_phase_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="30" lptable="entitys" title="Org Entity ID" lpkey="entity_id">org_entity_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="50" lptable="entitys" title="App Entity ID" lpkey="entity_id">app_entity_id</COMBOBOX>
-				<TEXTFIELD w="150" h="20" x="10" y="70" title="Approval Level">approval_level</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="290" y="70" title="Escalation Days">escalation_days</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="10" y="90" title="Escalation Hours">escalation_hours</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" h="20" x="290" y="90" title="Escalation Time">escalation_time</TEXTTIMESTAMP>
-				<TEXTFIELD w="150" h="20" x="10" y="110" title="Forward ID">forward_id</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="290" y="110" title="Table Name">table_name</TEXTFIELD>
-				<TEXTFIELD w="150" h="20" x="10" y="130" title="Table ID">table_id</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" h="20" x="290" y="130" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTTIMESTAMP w="150" h="20" x="10" y="150" title="Completion Date">completion_date</TEXTTIMESTAMP>
-				<TEXTTIMESTAMP w="150" h="20" x="290" y="150" title="Action Date">action_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="150" h="20" x="10" y="170" title="Approve Status">approve_status</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="190" title="Approval Narrative">approval_narrative</TEXTFIELD>
-				<TEXTAREA w="430" h="70" x="10" y="210" title="To Be Done">to_be_done</TEXTAREA>
-				<TEXTAREA w="430" h="70" x="10" y="280" title="What Done">what_is_done</TEXTAREA>
-				<TEXTAREA w="430" h="70" x="10" y="350" title="Review Advice">review_advice</TEXTAREA>
-				<TEXTAREA w="430" h="70" x="10" y="420" title="Details">details</TEXTAREA>
-			</FORM>
+		<GRID noorg="true" keyfield="approval_id" name="Approvals" where="(approve_status = 'Completed')" params="table_name, table_id" user="entity_id" table="vw_approvals_entitys">
+			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
+			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approval">approval_entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">approval_level</TEXTFIELD>
+			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Date">application_date</TEXTTIMESTAMP>
+			<ACTIONS>
+				<ACTION approval="2" fnct="upd_approvals">Approve</ACTION>
+				<ACTION approval="3" fnct="upd_approvals">Reject</ACTION>
+				<ACTION approval="4" fnct="upd_approvals">Review</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Checklists" key="5">
@@ -501,29 +474,62 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" h="500" name="Workflows" key="21">
-		<GRID keyfield="workflow_id" name="Workflows" table="vw_workflows">
-			<TEXTFIELD w="75" title="Source Entity ID">source_entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Source Entity Name">source_entity_name</TEXTFIELD>
+	<DESK w="750" h="570" name="Workflows" key="21">
+		<GRID noorg="true" keyfield="workflow_id" name="Workflows" table="vw_workflows">
 			<TEXTFIELD w="75" title="Workflow ID">workflow_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow Name">workflow_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Source">source_entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table Link Field">table_link_field</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table Link ID">table_link_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approve File">approve_file</TEXTFIELD>
-			<TEXTFIELD w="75" title="Reject File">reject_file</TEXTFIELD>
-			<FORM keyfield="workflow_id" name="Workflows" table="workflows">
-				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Source Entity ID" lpkey="entity_type_id">source_entity_id</COMBOBOX>
+			<GRID noorg="true" keyfield="workflow_phase_id" name="Workflow Phases" linkfield="workflow_id" table="vw_workflow_phases">
+				<TEXTFIELD w="75" title="Approval Level">approval_level</TEXTFIELD>
+				<TEXTFIELD w="75" title="Return Level">return_level</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approval Entity">approval_entity_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Advice">advice</CHECKBOX>
+				<CHECKBOX w="75" title="Notice">notice</CHECKBOX>
+				<TEXTFIELD w="75" title="Approvals">required_approvals</TEXTFIELD>
+				<TEXTFIELD w="75" title="Phase Narrative">phase_narrative</TEXTFIELD>
+				<GRID noorg="true" keyfield="checklist_id" name="Checklists" linkfield="workflow_phase_id" table="checklists">
+					<TEXTFIELD w="75" title="Checklist Number">checklist_number</TEXTFIELD>
+					<CHECKBOX w="75" title="Manditory">manditory</CHECKBOX>
+					<TEXTFIELD w="240" title="Requirement">requirement</TEXTFIELD>
+					<FORM th="210" keyfield="checklist_id" name="Checklists" linkfield="workflow_phase_id" table="checklists">
+						<TEXTFIELD w="150" h="20" x="10" y="10" title="Checklist Number">checklist_number</TEXTFIELD>
+						<CHECKBOX w="150" h="20" x="290" y="10" title="Manditory">manditory</CHECKBOX>
+						<TEXTAREA tab="Requirement" w="530" h="170" x="10" y="2">requirement</TEXTAREA>
+						<TEXTAREA tab="Details" w="530" h="170" x="10" y="2">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<FORM noorg="true" th="225" keyfield="workflow_phase_id" name="Workflow Phases" linkfield="workflow_id" table="workflow_phases">
+					<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Approvals" lpkey="entity_type_id">approval_entity_id</COMBOBOX>
+					<TEXTFIELD w="150" h="20" x="10" y="30" title="Approval Level">approval_level</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="290" y="30" title="Return Level">return_level</TEXTFIELD>
+					<TEXTFIELD default="0" w="150" h="20" x="10" y="50" title="Escalation Days">escalation_days</TEXTFIELD>
+					<TEXTFIELD default="3" w="150" h="20" x="290" y="50" title="Escalation Hours">escalation_hours</TEXTFIELD>
+					<TEXTFIELD default="1" w="150" h="20" x="10" y="70" title="Approvals">required_approvals</TEXTFIELD>
+					<CHECKBOX w="150" h="20" x="10" y="90" title="Advice">advice</CHECKBOX>
+					<CHECKBOX w="150" h="20" x="290" y="90" title="Notice">notice</CHECKBOX>
+					<CHECKBOX w="150" h="20" x="10" y="110" title="Use Reporting">use_reporting</CHECKBOX>
+					<TEXTFIELD w="430" h="20" x="10" y="130" title="Narrative">phase_narrative</TEXTFIELD>
+					<EDITOR default="For your approval" tab="Advice Email" w="530" h="170" x="10" y="2">advice_email</EDITOR>
+					<TEXTFIELD tab="Advice Email" w="400" h="20" x="10" y="172" title="Advice Report">advice_file</TEXTFIELD>
+					<EDITOR default="Phase approved" tab="Notice Email" w="530" h="170" x="10" y="2">notice_email</EDITOR>
+					<TEXTFIELD tab="Notice Email" w="400" h="20" x="10" y="172" title="Notice Report">notice_file</TEXTFIELD>
+					<TEXTAREA tab="Details" w="530" h="170" x="10" y="2">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM noorg="true" th="225" keyfield="workflow_id" name="Workflows" table="workflows">
+				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Source" lpkey="entity_type_id">source_entity_id</COMBOBOX>
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Workflow Name">workflow_name</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="10" y="50" title="Table Name">table_name</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="50" title="Table Link Field">table_link_field</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="10" y="70" title="Table Link ID">table_link_id</TEXTFIELD>
-				<TEXTAREA w="430" h="70" x="10" y="90" title="Approve Email">approve_email</TEXTAREA>
-				<TEXTAREA w="430" h="70" x="10" y="160" title="Reject Email">reject_email</TEXTAREA>
-				<TEXTFIELD w="430" h="20" x="10" y="230" title="Approve File">approve_file</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="250" title="Reject File">reject_file</TEXTFIELD>
-				<TEXTAREA w="430" h="70" x="10" y="270" title="Details">details</TEXTAREA>
+				<EDITOR default="Request approved" tab="Approve Email" w="530" h="170" x="10" y="2">approve_email</EDITOR>
+				<TEXTFIELD tab="Approve Email" w="400" h="20" x="10" y="175" title="Approved Report">approve_file</TEXTFIELD>
+				<EDITOR default="Request rejected" tab="Reject Email" w="530" h="170" x="10" y="2">reject_email</EDITOR>
+				<TEXTFIELD tab="Reject Email" w="400" h="20" x="10" y="175" title="Rejected Report">reject_file</TEXTFIELD>
+				<TEXTAREA tab="Details" w="530" h="170" x="10" y="2">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -597,15 +603,15 @@
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow Table ID">workflow_table_id</TEXTFIELD>
 			<FORM keyfield="loyalty_points_id" name="Loyalty Points" table="loyalty_points">
-				<COMBOBOX w="430" x="10" h="20" lpfield="entity_name" y="10" lptable="entitys" title="Entity ID">entity_id</COMBOBOX>
-				<COMBOBOX w="430" x="10" h="20" lpfield="period_id" y="30" lptable="periods" title="Period ID">period_id</COMBOBOX>
-				<TEXTDATE w="150" x="10" h="20" y="50" title="Point Date">point_date</TEXTDATE>
-				<TEXTDECIMAL w="150" x="290" h="20" y="50" title="Segments">segments</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" x="10" h="20" y="70" title="Amount">amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" x="290" h="20" y="70" title="Points Amount">points_amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" x="10" h="20" y="90" title="Bonus">bonus</TEXTDECIMAL>
-				<TEXTFIELD w="150" x="290" h="20" y="90" title="Approve Status">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" x="10" h="20" y="110" title="Workflow Table ID">workflow_table_id</TEXTFIELD>
+				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" title="Entity ID">entity_id</COMBOBOX>
+				<COMBOBOX w="430" h="20" lpfield="period_id" x="10" y="30" lptable="periods" title="Period ID">period_id</COMBOBOX>
+				<TEXTDATE w="150" h="20" x="10" y="50" title="Point Date">point_date</TEXTDATE>
+				<TEXTDECIMAL w="150" h="20" x="290" y="50" title="Segments">segments</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="10" y="70" title="Amount">amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="290" y="70" title="Points Amount">points_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="10" y="90" title="Bonus">bonus</TEXTDECIMAL>
+				<TEXTFIELD w="150" h="20" x="290" y="90" title="Approve Status">approve_status</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="110" title="Workflow Table ID">workflow_table_id</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -645,13 +651,35 @@
 			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
 			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
 			<FORM keyfield="fiscal_year_id" name="Fiscal Years" table="fiscal_years">
-				<TEXTFIELD w="150" x="10" h="20" y="10" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
-				<TEXTDATE w="150" x="290" h="20" y="10" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
-				<TEXTDATE w="150" x="10" h="20" y="30" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
-				<CHECKBOX w="150" x="290" h="20" y="30" title="Year Opened">year_opened</CHECKBOX>
-				<CHECKBOX w="150" x="10" h="20" y="50" title="Year Closed">year_closed</CHECKBOX>
-				<TEXTAREA w="430" x="10" h="70" y="70" title="Details">details</TEXTAREA>
+				<TEXTFIELD w="150" h="20" x="10" y="10" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
+				<TEXTDATE w="150" h="20" x="290" y="10" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="10" y="30" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+				<CHECKBOX w="150" h="20" x="290" y="30" title="Year Opened">year_opened</CHECKBOX>
+				<CHECKBOX w="150" h="20" x="10" y="50" title="Year Closed">year_closed</CHECKBOX>
+				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK noorg="true" w="700" h="500" name="EMails" key="45">
+		<GRID noorg="true" role="admin,staff" keyfield="sys_email_id" name="EMails" table="sys_emails">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Title">title</TEXTFIELD>
+			<FORM noorg="true" th="210" keyfield="sys_email_id" name="EMails" table="sys_emails">
+				<TEXTFIELD w="350" h="20" x="10" y="10" title="Email Name">sys_email_name</TEXTFIELD>
+				<TEXTFIELD w="430" h="20" x="10" y="30" title="Title">title</TEXTFIELD>
+				<EDITOR tab="Details" w="530" h="170" x="10" y="2">details</EDITOR>
+			</FORM>
+		</GRID>
+		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" table="vw_sys_emailed">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
+			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 		</GRID>
 	</DESK>
 </APP>

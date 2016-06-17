@@ -454,3 +454,51 @@ CREATE TRIGGER upd_action
   ON points
   FOR EACH ROW
   EXECUTE PROCEDURE upd_action();
+
+
+CREATE OR REPLACE FUNCTION getSonbalance(integer,character(20))
+  RETURNS real AS
+$$
+DECLARE
+	v_org_id 			integer;
+	v_function_role		text;
+	v_balance			real;
+BEGIN
+	v_balance = 0::real;
+	SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
+	IF(v_function_role = 'manager')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_pcc_statement
+		WHERE org_id = v_org_id AND order_date < $2::date;
+	END IF;
+	IF(v_function_role = 'consultant')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_son_statement
+		WHERE entity_id = $1 AND order_date < $2::date;
+	END IF;
+
+	IF(v_function_role = 'admin')THEN
+		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		FROM vw_pcc_statement
+		WHERE org_id = 0 AND order_date < $2::date;
+	END IF;
+	RETURN v_balance;
+END;
+$$
+  LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION emailed_dob(integer,character varying)RETURNS character varying AS $$
+DECLARE
+  v_org_id                integer;
+  v_entity_name            varchar(120);
+  v_sms_number		varchar(25);
+BEGIN
+  SELECT org_id, entity_name, primary_telephone INTO v_org_id, v_entity_name, v_sms_number
+  FROM entitys WHERE (entity_id = $2::int);
+  INSERT INTO sms (folder_id, sys_email_id, entity_id, org_id, sms_number, email_type, message)
+  VALUES (0,7,$2::int, v_org_id, v_sms_number, 1, 'Its birthday for ' || v_entity_name);
+
+  RETURN 'Done';
+END;
+$$
+  LANGUAGE plpgsql;
