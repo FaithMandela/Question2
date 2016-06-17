@@ -534,8 +534,8 @@
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="referees">table_name</DEFAULT>
-					<TEXTFIELD w="430" title="Name" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Company Name" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name" data-max="120" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Company Name" data-max="150" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
 					<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>

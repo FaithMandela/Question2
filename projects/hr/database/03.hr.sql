@@ -2,6 +2,9 @@ ALTER TABLE orgs
 ADD Bank_Header				text,
 ADD Bank_Address			text;
 
+ALTER TABLE address	ADD company_name	varchar(150);
+ALTER TABLE address	ADD position_held	varchar(150);
+
 CREATE TABLE disability (
 	disability_id			serial primary key,
 	org_id					integer references orgs,
@@ -806,8 +809,7 @@ CREATE INDEX employee_trainings_training_id ON employee_trainings (training_id);
 CREATE INDEX employee_trainings_entity_id ON employee_trainings (entity_id);
 CREATE INDEX employee_trainings_org_id ON employee_trainings(org_id);
 
-ALTER TABLE address	ADD company_name	varchar(50);
-ALTER TABLE address	ADD position_held	varchar(50);
+
 
 ----------- Views 
 CREATE VIEW vw_referees AS
