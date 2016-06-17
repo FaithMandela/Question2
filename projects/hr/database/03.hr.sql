@@ -2,6 +2,9 @@ ALTER TABLE orgs
 ADD Bank_Header				text,
 ADD Bank_Address			text;
 
+ALTER TABLE address	ADD company_name	varchar(150);
+ALTER TABLE address	ADD position_held	varchar(150);
+
 CREATE TABLE disability (
 	disability_id			serial primary key,
 	org_id					integer references orgs,
@@ -57,7 +60,6 @@ CREATE TABLE locations (
 );
 CREATE INDEX locations_org_id ON locations(org_id);
 
-
 CREATE TABLE jobs_category (
 	jobs_category_id		serial primary key,
 	org_id					integer references orgs,
@@ -82,6 +84,7 @@ CREATE TABLE department_roles (
 );
 CREATE INDEX department_roles_department_id ON department_roles (department_id);
 CREATE INDEX department_roles_ln_department_role_id ON department_roles (ln_department_role_id);
+CREATE INDEX department_roles_jobs_category_id ON department_roles (jobs_category_id);
 CREATE INDEX department_roles_org_id ON department_roles(org_id);
 INSERT INTO department_roles (org_id, department_role_id, ln_department_role_id, department_id, department_role_name) VALUES (0, 0, 0, 0, 'Chair Person');
 
@@ -122,12 +125,12 @@ CREATE TABLE employees (
 	bank_branch_id			integer not null references bank_branch,
 	disability_id			integer references disability,
 	employee_id				varchar(12) not null,
-	pay_scale_id			integer references pay_scales,
+	pay_scale_id			integer not null references pay_scales,
 	pay_scale_step_id		integer references pay_scale_steps,
-	pay_group_id			integer references pay_groups,
-	location_id				integer references locations,
-	currency_id				integer references currency,
-	org_id					integer references orgs,
+	pay_group_id			integer not null references pay_groups,
+	location_id				integer not null references locations,
+	currency_id				integer not null references currency,
+	org_id					integer not null references orgs,
 
 	person_title			varchar(7),
 	surname					varchar(50) not null,
@@ -806,8 +809,7 @@ CREATE INDEX employee_trainings_training_id ON employee_trainings (training_id);
 CREATE INDEX employee_trainings_entity_id ON employee_trainings (entity_id);
 CREATE INDEX employee_trainings_org_id ON employee_trainings(org_id);
 
-ALTER TABLE address	ADD company_name	varchar(50);
-ALTER TABLE address	ADD position_held	varchar(50);
+
 
 ----------- Views 
 CREATE VIEW vw_referees AS
@@ -1082,6 +1084,7 @@ CREATE VIEW vw_intake AS
 		
 		locations.location_id, locations.location_name, pay_groups.pay_group_id, pay_groups.pay_group_name, 
 		pay_scales.pay_scale_id, pay_scales.pay_scale_name, 
+		orgs.org_name, orgs.details as org_detail,
 		
 		intake.org_id, intake.intake_id, intake.opening_date, intake.closing_date, intake.positions, intake.contract, 
 		intake.contract_period, intake.details,
@@ -1090,13 +1093,15 @@ CREATE VIEW vw_intake AS
 	FROM intake INNER JOIN vw_department_roles ON intake.department_role_id = vw_department_roles.department_role_id
 		INNER JOIN locations ON intake.location_id = locations.location_id
 		INNER JOIN pay_groups ON intake.pay_group_id = pay_groups.pay_group_id
-		INNER JOIN pay_scales ON intake.pay_scale_id = pay_scales.pay_scale_id;
+		INNER JOIN pay_scales ON intake.pay_scale_id = pay_scales.pay_scale_id
+		INNER JOIN orgs ON intake.org_id = orgs.org_id;
 
 CREATE VIEW vw_applications AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
 		vw_intake.department_role_id, vw_intake.department_role_name, vw_intake.parent_role_name,
 		vw_intake.job_description, vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
+		vw_intake.org_name, vw_intake.org_detail,
 		entitys.entity_id, entitys.entity_name, entitys.primary_email,
 		
 		applications.org_id,
@@ -1127,9 +1132,7 @@ CREATE VIEW vw_contracting AS
 		vw_intake.job_description, vw_intake.parent_role_name,
 		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
-		entitys.entity_id, entitys.entity_name, 
-		
-		orgs.org_id, orgs.org_name,
+		entitys.entity_id, entitys.entity_name, orgs.org_name,
 		
 		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
 		contract_status.contract_status_id, contract_status.contract_status_name,
@@ -1160,12 +1163,15 @@ CREATE VIEW vw_contracting AS
 
 CREATE VIEW vw_internships AS
 	SELECT departments.department_id, departments.department_name, internships.internship_id, internships.opening_date, 
-		internships.org_id, internships.closing_date, internships.positions, internships.location, internships.details
-	FROM internships INNER JOIN departments ON internships.department_id = departments.department_id;
+		orgs.org_id, orgs.org_name, orgs.details as org_details,
+		internships.closing_date, internships.positions, internships.location, internships.details
+	FROM internships INNER JOIN departments ON internships.department_id = departments.department_id
+		INNER JOIN orgs ON internships.org_id = orgs.org_id;
 
 CREATE VIEW vw_interns AS
 	SELECT entitys.entity_id, entitys.entity_name, entitys.primary_email, entitys.primary_telephone, 
 		vw_internships.department_id, vw_internships.department_name,
+		vw_internships.org_name, vw_internships.org_details,
 		vw_internships.internship_id, vw_internships.positions, vw_internships.opening_date, vw_internships.closing_date,
 		interns.org_id, interns.intern_id, interns.payment_amount, interns.start_date, interns.end_date, 
 		interns.application_date, interns.approve_status, interns.action_date, interns.workflow_table_id,
@@ -1569,6 +1575,7 @@ DECLARE
 	v_address				integer;
 	c_education_id			integer;
 	c_referees				integer;
+	c_files					integer;
 	reca					RECORD;
 	msg 					varchar(120);
 BEGIN
@@ -1601,6 +1608,11 @@ BEGIN
 	FROM vw_referees
 	WHERE (table_id  = v_entity_id);
 	IF(c_referees is null) THEN c_referees = 0; END IF;
+	
+	SELECT count(sys_file_id) INTO c_files
+	FROM sys_files
+	WHERE (table_id  = v_entity_id);
+	IF(c_files is null) THEN c_files = 0; END IF;
 
 	IF v_application_id is not null THEN
 		msg := 'There is another application for the post.';
@@ -1617,16 +1629,19 @@ BEGIN
 	ELSIF (c_referees < 3) THEN
 		msg := 'You need to have at least three referees added';
 		RAISE EXCEPTION '%', msg;
+	ELSIF (c_files < 2) THEN
+		msg := 'CV and Cover Letter MUST be uploaded';
+		RAISE EXCEPTION '%', msg;
 	ELSE
 		v_application_id := nextval('applications_application_id_seq');
 		INSERT INTO applications (application_id, intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
 		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
 		
 		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
-		WHERE (use_type = 10) AND (org_id = rec.org_id);
+		WHERE (use_type = 10) AND (org_id = reca.org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, rec.org_id, v_application_id, 'applications', 10);
+		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 10);
 		
 		msg := 'Added Job application';
 	END IF;

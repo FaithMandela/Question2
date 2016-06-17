@@ -2046,4 +2046,7 @@
 			<JASPER filtered="true" name="Group Statement" reportfile="clientstatementge.jasper"></JASPER>
 		</FILTER>
 	</DESK>
+	<DESK w="700" name="Services Summary" key="717" h="550">
+		<JASPER filtered="false" name="Services Summary" reportfile="servicesummary.jasper"></JASPER>
+	</DESK>
 </APP>

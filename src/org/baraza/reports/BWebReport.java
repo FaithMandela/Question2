@@ -72,7 +72,7 @@ public class BWebReport  {
 		reportfile = view.getAttribute("reportfile");
 		fileName = view.getAttribute("file.name", "report");
 		fileSql = view.getAttribute("file.sql");
-		userfilter = view.getAttribute("user", "entity_id");
+		userfilter = view.getAttribute("user", "entityid");
 		groupfilter = view.getAttribute("group");
 		filterkey = view.getAttribute("filterkey");
 		filtervalue = request.getParameter("filtervalue");
@@ -101,15 +101,14 @@ public class BWebReport  {
 
 			parameters.put("orgid", db.getOrgID());
 			parameters.put("orgwhere", db.getOrgWhere(orgTable));
-			parameters.put("organd", db.getOrgAnd(orgTable));
-			parameters.put("entityid", db.getUserID());
-			parameters.put("entityname", db.getUserName());
+			parameters.put("organd", db.getOrgAnd(orgTable));		
 
 			session.setAttribute("userfield", "");
 			session.setAttribute("groupfield", "");
 			if ((userfilter != null) && (userid != null)) {
 				log.info(userfilter + " | " + userid);
 				parameters.put(userfilter, userid);
+				parameters.put("entityname", db.getUserName());
 				session.setAttribute("userfield", userfilter);
 				session.setAttribute("uservalue", userid);
 			}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employment" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="9d763c69-004b-47d8-9f89-05cc3ee2069d">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employment_a" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="9d763c69-004b-47d8-9f89-05cc3ee2069d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -28,7 +28,6 @@
 FROM vw_employment
 
 WHERE (vw_employment.entity_id = '$P!{filterid}')
-$P!{organd}
 
 ORDER BY vw_employment.date_from desc;]]>
 	</queryString>
@@ -87,7 +86,7 @@ ORDER BY vw_employment.date_from desc;]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="32" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="yyyy, MMM" isBlankWhenNull="true">
 				<reportElement style="Detail" x="1" y="0" width="77" height="15" uuid="39147a0e-88a4-473f-8566-182493da809e"/>
 				<textElement>
@@ -115,16 +114,6 @@ ORDER BY vw_employment.date_from desc;]]>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{position_held}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" positionType="Float" x="0" y="17" width="525" height="15" uuid="219e7448-afa9-4716-94d0-b96708e21d34"/>
-				<box>
-					<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
-				</box>
-				<textElement markup="none">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
