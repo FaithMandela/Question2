@@ -30,7 +30,8 @@
 FROM vw_investments
 Where vw_investments.investment_id is not null
 $P!{organd}
-order by investment_id]]>
+order by investment_id
+]]>
 	</queryString>
 	<field name="investment_id" class="java.lang.Integer"/>
 	<field name="investment_type_name" class="java.lang.String"/>

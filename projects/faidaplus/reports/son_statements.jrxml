@@ -17,17 +17,19 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT a.dr, a.cr, a.order_date::date AS order_date, a.son, a.pcc,
-		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details
+		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details,a.entity_name,
+a.curr_balance
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
-		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
-		vw_son_points.pcc, vw_son_points.org_name, vw_son_points.entity_id,
-		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details
+		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.org_son as son,
+		vw_son_points.org_pcc as pcc, vw_son_points.org_name, vw_son_points.entity_id,
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name,getSonbalance('$P!{id}','$P!{minDate}') as curr_balance
 	FROM vw_son_points)
 	UNION
 	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
 		vw_orders.order_date::date AS order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
-		get_order_details(vw_orders.order_id) AS details
+		get_order_details(vw_orders.order_id) AS details,vw_orders.entity_name,
+getSonbalance('$P!{id}','$P!{minDate}') as curr_balance
 	FROM vw_orders)) a
 	WHERE entity_id = '$P!{id}'
 AND order_date >= '$P!{minDate}'
@@ -43,8 +45,10 @@ AND order_date <= '$P!{maxDate}'
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="balance" class="java.lang.Float"/>
 	<field name="details" class="java.lang.String"/>
-	<variable name="v_balance" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="curr_balance" class="java.lang.Float"/>
+	<variable name="v_balance" class="java.lang.Float">
+		<variableExpression><![CDATA[$F{curr_balance}]]></variableExpression>
 	</variable>
 	<variable name="total_dr" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{dr}]]></variableExpression>
@@ -53,8 +57,10 @@ AND order_date <= '$P!{maxDate}'
 		<variableExpression><![CDATA[$F{cr}]]></variableExpression>
 	</variable>
 	<variable name="total_balance" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[
-$F{balance}]]></variableExpression>
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
+	<variable name="dr_cr_balance" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -74,9 +80,9 @@ $F{balance}]]></variableExpression>
 		<band height="29" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="28" splitType="Stretch">
+		<band height="26" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20" uuid="14721a4e-0063-4767-b809-71f5bbe3f337"/>
+				<reportElement x="0" y="0" width="65" height="20" uuid="14721a4e-0063-4767-b809-71f5bbe3f337"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -84,7 +90,7 @@ $F{balance}]]></variableExpression>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="0" width="355" height="20" uuid="b7a03a29-7d61-4b95-973c-b7c02fcf42ff"/>
+				<reportElement x="411" y="0" width="184" height="20" uuid="b7a03a29-7d61-4b95-973c-b7c02fcf42ff"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -92,7 +98,7 @@ $F{balance}]]></variableExpression>
 				<text><![CDATA[Details]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="455" y="0" width="120" height="20" uuid="23f3c26e-dd00-488e-8635-615673b21cbc"/>
+				<reportElement x="595" y="0" width="70" height="20" uuid="23f3c26e-dd00-488e-8635-615673b21cbc"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -100,7 +106,7 @@ $F{balance}]]></variableExpression>
 				<text><![CDATA[Dr]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="697" y="0" width="105" height="20" isPrintWhenDetailOverflows="true" uuid="d2a4bb67-32c1-453b-a023-3e1823f7d6b0"/>
+				<reportElement x="730" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="d2a4bb67-32c1-453b-a023-3e1823f7d6b0"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -108,7 +114,7 @@ $F{balance}]]></variableExpression>
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="575" y="0" width="122" height="20" uuid="c99f9f2f-f47c-43aa-a079-ee1485266734"/>
+				<reportElement x="665" y="0" width="65" height="20" uuid="c99f9f2f-f47c-43aa-a079-ee1485266734"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -118,54 +124,110 @@ $F{balance}]]></variableExpression>
 			<line>
 				<reportElement x="0" y="25" width="802" height="1" uuid="2d7b638c-e4fb-48f2-8bde-509d6408a4f8"/>
 			</line>
+			<staticText>
+				<reportElement x="65" y="0" width="139" height="20" isPrintWhenDetailOverflows="true" uuid="d8b2503e-b20f-4e60-8ab2-0f8f59d35b8e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agency Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="204" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="237478f3-f88e-49b1-be94-9ad5cf8b4891"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PCC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="0" width="115" height="20" isPrintWhenDetailOverflows="true" uuid="544fe657-a367-4226-992d-c08cf0abc5be"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consultant Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="365" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="4136fe3f-fd82-4e10-987b-3aa3bb99fb01"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SON]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="MMM-yyyy" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="c5cf82b7-340e-4e77-a08f-f2b968e0d0af"/>
+				<reportElement x="0" y="0" width="65" height="20" isPrintWhenDetailOverflows="true" uuid="c5cf82b7-340e-4e77-a08f-f2b968e0d0af"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="10"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="100" y="0" width="355" height="20" isPrintWhenDetailOverflows="true" uuid="ed3702c7-d8b6-4c1d-8be8-dd58807632c0"/>
+				<reportElement x="411" y="0" width="184" height="20" isPrintWhenDetailOverflows="true" uuid="ed3702c7-d8b6-4c1d-8be8-dd58807632c0"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12"/>
+					<font fontName="Times New Roman" size="10"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="455" y="2" width="120" height="20" isPrintWhenDetailOverflows="true" uuid="61ba9165-9450-44c4-8f9c-978cef6b53d0"/>
+				<reportElement x="595" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="61ba9165-9450-44c4-8f9c-978cef6b53d0"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="575" y="2" width="122" height="20" isPrintWhenDetailOverflows="true" uuid="c691b140-9a33-46c1-bdcf-fc648d831a6f"/>
+				<reportElement x="665" y="0" width="65" height="20" isPrintWhenDetailOverflows="true" uuid="c691b140-9a33-46c1-bdcf-fc648d831a6f"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="697" y="2" width="105" height="20" isPrintWhenDetailOverflows="true" uuid="41453f50-e283-48bd-b25b-d4c4d8dfcac9"/>
+				<reportElement x="730" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="41453f50-e283-48bd-b25b-d4c4d8dfcac9"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{v_balance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{v_balance}+$V{dr_cr_balance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="65" y="0" width="139" height="20" uuid="32fae01e-d0fa-4d68-835e-9aede1eb41bf"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="115" height="20" uuid="ebcf2357-12b5-469f-979b-08b712d0771b"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="365" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="5d0e075a-0bd8-4dc9-832e-94af7e6f73d5"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="204" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="0920ff47-0ec7-4e8a-9603-ba4328495fcf"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="7" splitType="Stretch"/>
+		<band height="5" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="11" splitType="Stretch"/>
@@ -173,28 +235,28 @@ $F{balance}]]></variableExpression>
 	<summary>
 		<band height="30" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="697" y="5" width="105" height="15" isPrintWhenDetailOverflows="true" uuid="109a6c29-cffe-49f1-aaa3-731b0c7c51ce"/>
+				<reportElement x="732" y="5" width="70" height="15" isPrintWhenDetailOverflows="true" uuid="109a6c29-cffe-49f1-aaa3-731b0c7c51ce"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{total_balance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{v_balance}+$V{dr_cr_balance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="575" y="5" width="122" height="15" isPrintWhenDetailOverflows="true" uuid="81fcdace-7c81-4e2a-943f-895230e29c99"/>
+				<reportElement x="667" y="5" width="65" height="15" isPrintWhenDetailOverflows="true" uuid="81fcdace-7c81-4e2a-943f-895230e29c99"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_cr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="455" y="5" width="120" height="15" isPrintWhenDetailOverflows="true" uuid="83f3e932-fcfc-4881-a951-91f05ab0c696"/>
+				<reportElement x="597" y="5" width="70" height="15" isPrintWhenDetailOverflows="true" uuid="83f3e932-fcfc-4881-a951-91f05ab0c696"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_dr}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="322" y="6" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="7b36e46f-0b98-4359-b6e5-75b580177fee"/>
+				<reportElement x="481" y="5" width="106" height="15" isPrintWhenDetailOverflows="true" uuid="7b36e46f-0b98-4359-b6e5-75b580177fee"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>

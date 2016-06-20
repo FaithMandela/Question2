@@ -84,7 +84,7 @@ DECLARE
 BEGIN
 	v_balance = 0::real;
 
-	SELECT COALESCE(sum(dr - cr), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
+	SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
 
 	RETURN v_balance;
 END;

@@ -175,14 +175,15 @@ BEGIN
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		
-		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
+		INSERT INTO currency(currency_name, currency_symbol, org_id) VALUES ('Kenya Shillings', 'kes', NEW.org_id);
+    
+		UPDATE entitys SET org_id = NEW.org_id, function_role='admin'
 		WHERE entity_id = NEW.entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES ( 5, NEW.org_id, NEW.entity_id, 'subscription');
 		
-		
-		
+	
 	END IF;
 	
 		

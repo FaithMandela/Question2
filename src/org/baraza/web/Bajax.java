@@ -11,7 +11,8 @@ package org.baraza.web;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Enumeration;
-
+import java.util.Calendar;
+import java.util.Date;
 import java.io.PrintWriter;
 import java.io.OutputStream;
 import java.io.InputStream;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.baraza.DB.BDB;
+import org.baraza.DB.BQuery;
 import org.baraza.xml.BElement;
 
 public class Bajax extends HttpServlet {
@@ -105,6 +107,9 @@ public class Bajax extends HttpServlet {
 			response.setContentType("application/json;charset=\"utf-8\"");
 		} else if("importprocess".equals(fnct)) {
 			resp = importProcess(web.getView().getAttribute("process"));
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("product".equals(fnct)) {
+			resp = buyProduct(id, request.getParameter("units"));
 			response.setContentType("application/json;charset=\"utf-8\"");
 		}
 		
@@ -264,6 +269,74 @@ public class Bajax extends HttpServlet {
 		return resp;
 	}
 	
-	
- 
+	public String buyProduct(String productId, String units) {
+		String resp = "";
+		
+		String mysql = "SELECT COALESCE(sum(a.cr - a.dr), 0) FROM "
+		+ "((SELECT COALESCE(sum(receipt_amount), 0) as cr, 0::real as dr FROM product_receipts "
+		+ "WHERE (is_paid = true) AND (org_id = " + db.getUserOrg() + ")) "
+		+ "UNION "
+		+ "(SELECT 0::real as cr, COALESCE(sum(quantity * price), 0) as dr FROM productions "
+		+ "WHERE (org_id = " + db.getUserOrg() + "))) as a";
+		String bals = db.executeFunction(mysql);
+System.out.println("BASE 2020 : " + bals);
+		Float bal = new Float(bals);
+		
+		mysql = "SELECT product_id, product_name, is_singular, align_expiry, is_montly_bill, "
+		+ "montly_cost, is_annual_bill, annual_cost, details "
+		+ "FROM products "
+		+ "WHERE product_id = " + productId;
+		BQuery rs = new BQuery(db, mysql);
+		rs.moveFirst();
+		
+		mysql = "SELECT production_id, product_id, product_name, is_active, quantity, price, amount, expiry_date "
+		+ "FROM vw_productions "
+		+ "WHERE (is_active = true) AND (org_id = " + web.getOrgID() 
+		+ ") AND (product_id = " + rs.getString("product_id") + ") "
+		+ "ORDER BY production_id desc";
+		BQuery rsa = new BQuery(db, mysql);
+		
+		
+		Float annualCost = rs.getFloat("annual_cost");
+		Float buyUnits = new Float(units);
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		
+		if(rs.getBoolean("align_expiry")) {
+			if(rsa.moveFirst()) {
+				Date expiryDate = rsa.getDate("expiry_date");
+				long diff = cal.getTimeInMillis() - expiryDate.getTime();
+				if(diff > 0) {
+					diff = diff / (1000 * 60 * 60 * 24);
+					
+					annualCost = annualCost * (366 - diff) / 366;
+				}
+				
+				System.out.println("expiry date " + rsa.getDate("expiry_date"));
+				System.out.println("expiry diff " + diff);
+				System.out.println("expiry cost " + annualCost);
+				
+			}
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String calS = sdf.format(cal.getTime());
+		
+		if((annualCost * buyUnits) <= bal) {
+			String insSql = "INSERT INTO productions(product_id, entity_id, org_id, quantity, price, is_active, expiry_date) VALUES ("
+			+  productId + "," + db.getUserID() + "," + db.getUserOrg() + "," + units + "," 
+			+ rs.getString("annual_cost") + ", true, '" + calS + "')";
+	System.out.println("BASE 2030 : " + insSql);
+			db.executeQuery(insSql);
+			
+			resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
+		} else {
+			resp = "{\"success\": 1, \"message\": \"Your balance is " + bals + " which not sufficent for purchase\"}";
+		}
+
+		rs.close();
+		rsa.close();
+		
+		return resp;
+	}
+
 }

@@ -45,6 +45,19 @@
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
+	<REPORT name="Birthday Email" keyfield="entity_id" action="emailed_dob" actioncount="1"
+		table="vw_entitys, sys_emails"
+		where="(vw_entitys.birth_date is not null) AND (vw_entitys.is_active = true)
+			AND (EXTRACT(month FROM vw_entitys.birth_date) = EXTRACT(month FROM current_date))
+			AND (EXTRACT(DAY FROM vw_entitys.birth_date) = EXTRACT(DAY FROM current_date))
+			AND (EXTRACT(HOUR FROM current_time) > 8)
+			AND (sys_emails.use_type = 5)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
+		<BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
+	</REPORT>
+
 	<REPORT name="Approval Advice" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
 			table="sys_emailed, vw_approvals"
 			where="(vw_approvals.approval_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
@@ -100,17 +113,6 @@
 
 
 
-	<REPORT name="Birthday Email" keyfield="entity_id" action="emailed_dob" actioncount="1"
-		table="vw_entitys, sys_emails"
-		where="(vw_entitys.birth_date is not null) AND (vw_entitys.active = true)
-			AND (EXTRACT(month FROM vw_entitys.birth_date) = EXTRACT(month FROM current_date))
-			AND (EXTRACT(DAY FROM vw_entitys.birth_date) = EXTRACT(DAY FROM current_date))
-			AND (EXTRACT(HOUR FROM current_time) > 8)
-			
-			AND (sys_emails.use_type = 1)">
-		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
-		<FIELD title="Body" basetable="sys_emails">details</FIELD>
-	</REPORT>
+
 
 </ESCALATION>

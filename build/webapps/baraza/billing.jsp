@@ -4,6 +4,8 @@
 <c:set var="mainPage" value="index.jsp" scope="page" />
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="org.baraza.DB.BDB" %>
+<%@ page import="org.baraza.DB.BQuery" %>
 <%@ page import="org.baraza.web.*" %>
 <%@ page import="org.baraza.xml.BElement" %>
 
@@ -35,7 +37,6 @@
 
 	BWeb web = new BWeb(dbconfig, xmlfile);
 	web.init(request);
-
 	web.setMainPage(String.valueOf(pageContext.getAttribute("mainPage")));
 
 	String entryformid = null;
@@ -85,6 +86,35 @@
 		out.println("		window.open('show_report?report=" + reportexport + "');");
 		out.println("	</script>");
 	}
+
+	BDB db = new BDB(dbconfig);
+
+	String buyLnk = "'<a class=\"btn btn-outline btn-circle btn-sm purple\" href=\"assets/include/billing_modals.jsp?product_id=' || "
+	+ "product_id || '\" data-target=\"#ajax\" data-toggle=\"modal\"><i class=\"fa fa-edit\"></i>Buy</a>'";
+
+	String mysql = "SELECT " + buyLnk + " as buy, "
+		+ "product_id, product_name, align_expiry, annual_cost, details "
+		+ "FROM products";
+	BQuery pRs = new BQuery(db, mysql);
+	String t1 = pRs.readDocument(true, false);
+	pRs.close();
+
+	mysql = "SELECT production_id, product_id, product_name, is_active, quantity, "
+		+ "price, amount, expiry_date "
+		+ "FROM vw_productions "
+		+ "WHERE org_id = " + web.getOrgID();
+	BQuery prRs = new BQuery(db, mysql);
+	String t2 = prRs.readDocument(true, false);
+	prRs.close();
+
+	mysql = "SELECT product_receipt_id, receipt_source_name, is_paid, receipt_amount, receipt_date, receipt_reference "
+		+ "FROM vw_product_receipts "
+		+ "WHERE org_id = " + web.getOrgID();
+	BQuery rRs = new BQuery(db, mysql);
+	String t3 = rRs.readDocument(true, false);
+	rRs.close();
+
+
 %>
 
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
@@ -289,32 +319,38 @@
 
 							<div class="portlet-body" id="portletBody" style="min-height:360px;">
 								<div class="form-body">
-									<div class="form-group">
-										<label class="col-md-12 control-label">You currenctly have </label>
-									</div>
-									<div class="form-group">
-										<label class="col-md-3 control-label">Text</label>
-										<div class="col-md-4">
-											<input type="text" class="form-control input-circle" placeholder="Enter text">
-										</div>
-									</div>
+									<%= t1 %>
 								</div>
 
 								<div class="row"></div>
-
-								<div class="form-actions">
-									<div class="row">
-										<div class="col-md-offset-3 col-md-9">
-											<button type="submit" class="btn btn-circle blue">Submit</button>
-											<button type="button" class="btn btn-circle default">Cancel</button>
-										</div>
-									</div>
+								<div class="form-body">
+									<%= t2 %>
 								</div>
+
+								<div class="row"></div>
+								<div class="form-body">
+									<%= t3 %>
+								</div>
+
 							</div>
 						</div>
 					</div>
 				</div>
             </form>
+
+			<!-- Billing modal call -->
+			<div class="modal fade" id="ajax" role="basic" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body">
+							<img src="../../assets/global/img/loading-spinner-grey.gif" alt="" class="loading">
+							<span>
+							&nbsp;&nbsp;Loading... </span>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 	<!-- END CONTENT -->
@@ -805,4 +841,7 @@ $(function () {
 <!-- END BODY -->
 </html>
 
-<% 	web.close(); %>
+<% 	
+	db.close();
+	web.close(); 
+%>

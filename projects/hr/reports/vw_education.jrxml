@@ -28,7 +28,6 @@ vw_education.date_to, vw_education.name_of_school, vw_education.examination_take
 FROM vw_education
 
 WHERE (vw_education.entity_id = '$P!{filterid}')
-$P!{organd}
 
 ORDER BY vw_education.date_from desc]]>
 	</queryString>

@@ -1,4 +1,18 @@
 
+
+DROP VIEW vw_referees;
+
+ALTER TABLE address	ALTER COLUMN company_name	TYPE varchar(150);
+ALTER TABLE address	ALTER COLUMN position_held	TYPE varchar(150);
+
+CREATE VIEW vw_referees AS
+	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name, 
+		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town, 
+		address.phone_number, address.extension, address.mobile, address.fax, address.email, address.is_default, address.website, 
+		address.company_name, address.position_held, address.details
+	FROM address INNER JOIN sys_countrys ON address.sys_country_id = sys_countrys.sys_country_id
+	WHERE (address.table_name = 'referees');
+
 CREATE TABLE adjustment_effects (
 	adjustment_effect_id	integer primary key,
 	adjustment_effect_name	varchar(50) not null

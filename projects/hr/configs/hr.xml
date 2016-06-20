@@ -534,8 +534,8 @@
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="referees">table_name</DEFAULT>
-					<TEXTFIELD w="430" title="Name" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Company Name" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name" data-max="120" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Company Name" data-max="150" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
 					<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>
@@ -828,19 +828,63 @@
 		<GRID name="Products" keyfield="product_id" table="products">
 			<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Singular">is_singular</CHECKBOX>
+			<CHECKBOX w="75" title="Align Expiry">align_expiry</CHECKBOX>
 			<CHECKBOX w="75" title="Montly Bill">is_montly_bill</CHECKBOX>
 			<TEXTDECIMAL w="75" title="Montly Cost">montly_cost</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Annual Bill">is_annual_bill</CHECKBOX>
 			<TEXTDECIMAL w="75" title="Annual Cost">annual_cost</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Transaction Limit">transaction_limit</TEXTFIELD>
 			<FORM name="Products" keyfield="product_id" table="products">
 				<TEXTFIELD w="150" title="Product Name" y="10" h="20" x="10">product_name</TEXTFIELD>
-				<CHECKBOX w="150" title="Montly Bill" y="10" h="20" x="290">is_montly_bill</CHECKBOX>
-				<TEXTDECIMAL w="150" title="Montly Cost" y="30" h="20" x="10">montly_cost</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Annual Bill" y="30" h="20" x="290">is_annual_bill</CHECKBOX>
-				<TEXTDECIMAL w="150" title="Annual Cost" y="50" h="20" x="10">annual_cost</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Transaction Limit" y="50" h="20" x="290">transaction_limit</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Singular" y="10" h="20" x="290">is_singular</CHECKBOX>
+				<CHECKBOX w="150" title="Align Expiry" y="30" h="20" x="10">align_expiry</CHECKBOX>
+				<CHECKBOX w="150" title="Montly Bill" y="30" h="20" x="290">is_montly_bill</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Montly Cost" y="50" h="20" x="10">montly_cost</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Annual Bill" y="50" h="20" x="290">is_annual_bill</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Annual Cost" y="70" h="20" x="10">annual_cost</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Productions" keyfield="production_id" linkfield="product_id" table="vw_productions">
+				<TEXTFIELD w="75" title="Production ID">production_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Organization ID">org_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Transaction Time">transaction_time</TEXTTIMESTAMP>
+				<CHECKBOX w="75" title="Montly Billing">montly_billing</CHECKBOX>
+				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Price">price</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Expiry Date">expiry_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+			</GRID>
+		</GRID>
+		<GRID name="Product Receipts" keyfield="product_receipt_id" table="vw_product_receipts" noorg="true">
+			<TEXTFIELD w="75" title="Product Receipt ID">product_receipt_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organization ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receipt Source">receipt_source_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Paid">is_paid</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Receipt Amount">receipt_amount</TEXTDECIMAL>
+			<TEXTDATE w="75" title="Receipt Date">receipt_date</TEXTDATE>
+			<TEXTTIMESTAMP w="75" title="Receipt Time">receipt_time</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Receipt Reference">receipt_reference</TEXTFIELD>
+			<FORM name="Product Receipts" keyfield="product_receipt_id" table="product_receipts" noorg="true">
+				<COMBOBOX w="430" title="Organization" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<COMBOBOX w="430" title="Receipt Source" lptable="receipt_sources" y="30" h="20" x="10" lpfield="receipt_source_name">receipt_source_id</COMBOBOX>
+				<CHECKBOX w="150" title="Paid" y="50" h="20" x="10">is_paid</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Receipt Amount" y="50" h="20" x="290">receipt_amount</TEXTDECIMAL>
+				<TEXTDATE w="150" title="Receipt Date" default="now" y="70" h="20" x="10">receipt_date</TEXTDATE>
+				<TEXTFIELD w="150" title="Receipt Reference" y="90" h="20" x="10">receipt_reference</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
+			</FORM>
+		</GRID>
+		<GRID name="Receipt Sources" keyfield="receipt_source_id" table="receipt_sources">
+			<TEXTFIELD w="75" title="Receipt Source ID">receipt_source_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receipt Source Name">receipt_source_name</TEXTFIELD>
+			<FORM name="Receipt Sources" keyfield="receipt_source_id" table="receipt_sources">
+				<TEXTFIELD w="150" title="Receipt Source Name" y="10" h="20" x="10">receipt_source_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

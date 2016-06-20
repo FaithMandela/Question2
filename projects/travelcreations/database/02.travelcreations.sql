@@ -1,6 +1,17 @@
 ---Project Database File
 ALTER TABLE entitys ADD client_code varchar(20);
 ALTER TABLE entitys ADD client_dob date;
+ALTER TABLE orders ADD client_code varchar(20);
+
+ALTER TABLE loyalty_points ADD COLUMN sector_1 character varying(10);
+ALTER TABLE loyalty_points ADD COLUMN sector_2 character varying(10);
+ALTER TABLE loyalty_points ADD COLUMN sector_3 character varying(10);
+ALTER TABLE loyalty_points ADD COLUMN sector_4 character varying(10);
+ALTER TABLE loyalty_points ADD COLUMN sector_5 character varying(10);
+ALTER TABLE loyalty_points ADD COLUMN ticket_number character varying(30);
+ALTER TABLE loyalty_points ADD COLUMN local_inter character varying(2);
+ALTER TABLE loyalty_points ADD COLUMN client_code character varying(50);
+ALTER TABLE loyalty_points ADD COLUMN loyalty_curr character varying(10);
 
 CREATE TABLE clients (
 	client_id			    serial primary key,
@@ -42,11 +53,13 @@ CREATE INDEX loyalty_points_period_id ON loyalty_points (period_id);
 
 CREATE TABLE orders (
 	order_id 				serial primary key,
+	org_id 					integer references orgs,
 	entity_id 				integer not null references entitys,
+	points 					real default 0 not null,
+	order_amount			real default 0 not null,
+	shipping_cost			real default 0 not null,
 	order_date				timestamp not null default current_timestamp,
 	order_status			varchar(50) default 'Processing order',
-	order_total_amount		real default 0 not null,
-	shipping_cost			real default 0 not null,
 	town_name				varchar(50),
 	phone_no 				character varying(20),
 	physical_address 		text,
@@ -55,6 +68,45 @@ CREATE TABLE orders (
 	details 				text
 );
 CREATE INDEX order_entity_id  ON orders(entity_id);
+CREATE INDEX orders_org_id ON orders (org_id);
+
+CREATE TABLE sambaza (
+	sambaza_id 				serial primary key,
+	org_id 					integer references orgs,
+	entity_id 				integer not null references entitys,
+	client_code				varchar(20) not null,
+	sambaza_in				real default 0 not null,
+	sambaza_out				real default 0 not null,
+	sambaza_status			varchar(50) default 'Completed',
+	sambaza_date			timestamp not null default current_timestamp,
+	details 				text
+);
+CREATE INDEX sambaza_entity_id  ON sambaza(entity_id);
+CREATE INDEX sambaza_org_id  ON sambaza(org_id);
+
+CREATE OR REPLACE FUNCTION ins_sambaza() RETURNS trigger AS $$
+DECLARE
+	rec 			RECORD;
+	v_entity_id		integer;
+BEGIN
+	IF (TG_OP = 'INSERT') THEN
+		SELECT entity_id INTO v_entity_id
+		FROM entitys
+		WHERE (trim(lower(client_code)) = trim(lower(NEW.client_code)));
+		IF(v_entity_id is null)THEN
+			RAISE EXCEPTION 'The Client does not exists';
+		END IF;
+		INSERT INTO sambaza (org_id, entity_id, client_code, sambaza_in)
+		VALUES (0, v_entity_id, NEW.client_code, NEW.sambaza_out);
+	END IF;
+	RETURN NEW;
+END;
+$$
+  LANGUAGE plpgsql ;
+CREATE TRIGGER ins_sambaza  AFTER INSERT  ON sambaza
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_sambaza();
+
 
 CREATE OR REPLACE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
@@ -84,8 +136,8 @@ CREATE OR REPLACE VIEW vw_entitys AS
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
 
 CREATE OR REPLACE VIEW vw_orders AS
-    SELECT orders.order_id, orders.order_date, orders.order_status, orders.order_total_amount, orders.batch_no,
-        orders.shipping_cost, orders.details, (orders.order_total_amount + orders.shipping_cost) as grand_total,
+    SELECT orders.order_id, orders.order_date, orders.order_status, orders.points, orders.order_amount, orders.batch_no,
+        orders.shipping_cost, orders.details, (orders.order_amount + orders.shipping_cost) as grand_total,
         orders.town_name, vw_entitys.org_premises, vw_entitys.org_street, vw_entitys.entity_name, vw_entitys.client_code,
         vw_entitys.entity_id, vw_entitys.org_name, vw_entitys.primary_email, vw_entitys.primary_telephone,
 		vw_entitys.function_role, vw_entitys.entity_role, vw_entitys.org_id, orders.physical_address, orders.phone_no
@@ -95,19 +147,34 @@ CREATE OR REPLACE VIEW vw_loyalty_points AS
 	SELECT loyalty_points.loyalty_points_id, periods.period_id, periods.start_date as period, to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
 		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,
 		loyalty_points.bonus, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name
-	FROM loyalty_points JOIN vw_entitys ON loyalty_points.entity_id = vw_entitys.entity_id
+	FROM loyalty_points JOIN vw_entitys ON loyalty_points.entity_id = vw_entitys.entity_id,loyalty_points.point_date
 	INNER JOIN periods ON loyalty_points.period_id = periods.period_id
 	WHERE periods.approve_status = 'Approved';
 
+CREATE OR REPLACE VIEW vw_sambaza AS
+ SELECT sambaza.sambaza_id, sambaza.sambaza_in, sambaza.sambaza_out, sambaza.details,
+    sambaza.sambaza_date, sambaza.sambaza_status, vw_entitys.entity_name, vw_entitys.client_code, vw_entitys.entity_id,
+    vw_entitys.org_name, vw_entitys.primary_email, vw_entitys.primary_telephone, vw_entitys.function_role,
+    vw_entitys.entity_role, vw_entitys.org_id
+   FROM sambaza
+     JOIN vw_entitys ON sambaza.entity_id = vw_entitys.entity_id;
+
 CREATE OR REPLACE VIEW vw_client_statement AS
-SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id, a.dr - a.cr AS balance
+SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
+	(a.dr+a.sambaza_in - a.cr-a.sambaza_out) AS balance, a.sambaza_in, a.sambaza_out, a.details
 	FROM ((SELECT COALESCE(vw_loyalty_points.points_amount, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
-		vw_loyalty_points.org_name, vw_loyalty_points.entity_id
+		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
+		0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
 	FROM vw_loyalty_points)
-	UNION
-	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
-		vw_orders.order_date, vw_orders.client_code, vw_orders.org_name,
-		vw_orders.entity_id
-	FROM vw_orders)) a
+	UNION ALL
+	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr, vw_orders.order_date,
+	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
+	0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
+	FROM vw_orders)
+	UNION ALL
+	(SELECT 0::real as dr, 0::real as cr, vw_sambaza.sambaza_date,
+	vw_sambaza.client_code, vw_sambaza.org_name, vw_sambaza.entity_id, COALESCE(vw_sambaza.sambaza_in,0::real) as sambaza_in,
+	COALESCE(vw_sambaza.sambaza_out,0::real) as sambaza_out, vw_sambaza.details
+	 FROM vw_sambaza)) a
 	ORDER BY a.order_date;
