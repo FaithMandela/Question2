@@ -16,8 +16,8 @@
 		<![CDATA[SELECT  period,ticket_period,
 	pcc,  segments, points, bonus, org_id,org_name
 	FROM vw_org_points
-	WHERE ticket_period >= to_char('$P!{minDate}'::date ,'mmyyyy'::text)
-	 AND ticket_period <= to_char('$P!{maxDate}'::date ,'mmyyyy'::text)
+	WHERE period >= '$P!{minDate}'
+	 AND period <= '$P!{maxDate}'
 	AND org_id = '$P!{org_id}'
 ORDER BY period DESC;]]>
 	</queryString>

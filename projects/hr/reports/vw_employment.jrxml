@@ -24,10 +24,13 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employment.date_from, vw_employment.date_to, vw_employment.employers_name, vw_employment.position_held, vw_employment.details
+
 FROM vw_employment
+
 WHERE (vw_employment.entity_id = '$P!{filterid}')
 $P!{organd}
-ORDER BY vw_employment.date_from;]]>
+
+ORDER BY vw_employment.date_from desc;]]>
 	</queryString>
 	<field name="date_from" class="java.sql.Date"/>
 	<field name="date_to" class="java.sql.Date"/>

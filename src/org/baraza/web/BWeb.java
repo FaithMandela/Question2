@@ -1917,8 +1917,9 @@ System.out.println("repository : " + repository);
 		return sMsg; 
 	}
 
-	public String getMenuMsg() { 
-		String sMsg = db.executeFunction("SELECT msg FROM sys_menu_msg WHERE menu_id = " + viewKeys.get(0));
+	public String getMenuMsg(String xmlFile) { 
+		String mySql = "SELECT msg FROM sys_menu_msg WHERE (menu_id = '" + viewKey + "') AND (xml_file = '" + xmlFile + "')";
+		String sMsg = db.executeFunction(mySql);
 
 		if(sMsg == null) sMsg = "";
 		else sMsg = "<div style='color:#0000FF; font-size:12px; font-weight:bold;'>" + sMsg + "</div>";

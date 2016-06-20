@@ -42,8 +42,7 @@ FROM address WHERE (address.table_name = 'applicant') AND (address.is_default = 
 
 ON vw_applicants.entity_id = ad.table_id
 
-WHERE (applications.application_id = '$P!{filterid}')
-$P!{organd};]]>
+WHERE (applications.application_id = '$P!{filterid}');]]>
 	</queryString>
 	<field name="filter_entity" class="java.lang.String"/>
 	<field name="applicant_name" class="java.lang.String"/>

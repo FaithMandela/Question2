@@ -1,10 +1,5 @@
 <APP color="green" name="Sacco" org="org_id" password="change_password" material="true">
 	<MENU name="Sacco" background="red">
-		<MENU name="Applicant" role="applicant">24</MENU>
-		<MENU name="My Details" role="member">285</MENU>
-		<MENU name="My Account" role="member">290</MENU>
-		<MENU name="Guarantors" role="member">195</MENU>
-		<MENU placeholder="* required currency" name="Organisation" role="subscription,admin,staff,finance">261</MENU>
 		<MENU name="Master" role="master">
 			<MENU name="Master  Approvals">46</MENU>
 			<MENU name="Master All Approvals">51</MENU>
@@ -12,6 +7,11 @@
 			<MENU name="Organisation">260</MENU>
 			<MENU name="Master Emails">300</MENU>
 		</MENU>
+		<MENU name="Applicant" role="applicant">24</MENU>
+		<MENU name="My Details" role="member">285</MENU>
+		<MENU name="My Account" role="member">290</MENU>
+		<MENU name="Guarantors" role="member">195</MENU>
+		<MENU name="Organisation" role="subscription,admin,staff,finance">261</MENU>
 		<MENU name="Administration" role="staff,admin,manager">
 			<MENU name="Definations">295</MENU>
 			<MENU name="Members">240</MENU>
@@ -19,17 +19,15 @@
 			<MENU name="EMails" role="admin,master">60</MENU>
 			<MENU name="Entitys" role="admin">15</MENU>
 			<MENU name="Approvals" role="admin">45</MENU>
+			<MENU name="Recruiters">305</MENU>
+			<MENU name="Contributions">315</MENU>
 			<MENU name="Workflows" role="staff,manager,admin">40</MENU>
 			<MENU name="Files" role="admin">65</MENU>
 			<MENU name="All Approvals" role="manager,admin">50</MENU>
-			<MENU name="Recruiters">305</MENU>
-			<MENU name="Contributions">315</MENU>
-		</MENU>
-		<MENU name="Transactions">
-			<MENU name="Transaction Ledger">310</MENU>
 		</MENU>
 		<MENU name="Reports" role="admin, manager,member">
 			<MENU name="Statement of accounts" role="manager,admin">320</MENU>
+			<MENU name="Transaction Ledger">310</MENU>
 			<MENU name="New Members" role="manager,admin">215</MENU>
 			<MENU name="Loans and repayments" role="manager,admin">265</MENU>
 			<MENU name="Loan" role="member">245</MENU>
@@ -2659,24 +2657,6 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Statement" key="320" h="550">
-		<JASPER name="Transaction Ledger Summary" reportfile="statement1.jasper"></JASPER>
-	</DESK>
-	<MENU name="Account Types">325</MENU>
-	<DESK w="700" name="Account Types" key="325" h="550">
-		<GRID name="Account Types" keyfield="account_type_id" table="vw_account_types">
-			<TEXTFIELD w="75" title="Accounts Class ID">accounts_class_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Chat Type ID">chat_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Chat Type Name">chat_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Type ID">account_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
-			<FORM name="Account Types" keyfield="account_type_id" table="account_types">
-				<TEXTFIELD w="150" title="Account Type ID" h="20" y="10" x="10">account_type_id</TEXTFIELD>
-				<COMBOBOX w="430" title="Accounts Class ID" lptable="accounts_class" h="20" y="30" lpfield="accounts_class_name" x="10">accounts_class_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Account Type Name" h="20" y="50" x="10">account_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" h="70" y="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
+		<JASPER name="Reporting Summary" reportfile="statement1.jasper"></JASPER>
 	</DESK>
 </APP>

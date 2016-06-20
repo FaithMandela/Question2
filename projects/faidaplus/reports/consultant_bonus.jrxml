@@ -11,26 +11,24 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
-    periods.start_date AS period,
     vw_entitys.pcc,
     vw_entitys.son,
-    sum(points.segments)as segments,
-    sum(points.points)as points,
-    sum(points.bonus)as bonus,
-    vw_entitys.org_name,
-    vw_entitys.entity_name,
-    vw_entitys.user_name,
+    sum(vw_points.segments)as segments,
+    sum(vw_points.points)as points,
+    sum(vw_points.bonus)as bonus,
+    vw_points.org_name,
+   vw_points.entity_name,
+   vw_points.user_name,
     vw_entitys.is_active,
-    vw_entitys.entity_id
-   FROM points
-     JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
-     JOIN periods ON points.period_id = periods.period_id
-WHERE to_char(periods.start_date, 'mmyyyy'::text) >= to_char('$P!{minDate}'::date, 'mmyyyy'::text)
-AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date, 'mmyyyy'::text)
-GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,vw_entitys.entity_name,
-    vw_entitys.user_name,  vw_entitys.is_active,  vw_entitys.entity_id ;]]>
+    vw_points.entity_id
+   FROM vw_points
+     JOIN vw_entitys ON vw_points.entity_id = vw_entitys.entity_id
+WHERE vw_points.period >= '$P!{minDate}'
+AND vw_points.period <= '$P!{maxDate}'
+GROUP BY vw_entitys.pcc,vw_entitys.son, vw_points.org_name,vw_points.entity_name,
+   vw_points.user_name,  vw_entitys.is_active,  vw_points.entity_id
+ORDER BY vw_points.user_name ASC;]]>
 	</queryString>
-	<field name="period" class="java.sql.Date"/>
 	<field name="pcc" class="java.lang.String"/>
 	<field name="son" class="java.lang.String"/>
 	<field name="segments" class="java.lang.Float"/>
@@ -47,7 +45,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 	<title>
 		<band height="35" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="35" uuid="cf5ba2c5-05b2-4717-8e40-773f6d33f54f"/>
+				<reportElement x="0" y="0" width="752" height="35" uuid="cf5ba2c5-05b2-4717-8e40-773f6d33f54f"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>
@@ -115,7 +113,7 @@ GROUP BY periods.start_date,vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name,v
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Agency]]></text>
+				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

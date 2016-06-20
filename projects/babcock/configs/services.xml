@@ -3,8 +3,10 @@
 		<MENU name="Food Services" role="foodservices">
 			<MENU name="Meal Tickets">16</MENU>
 			<MENU name="Reports">
+				<MENU name="Registred Student">515</MENU>
 				<MENU name="Student Meals List">159</MENU>
 				<MENU name="Registred Student List">160</MENU>
+				<MENU name="Students Audit">772</MENU>
 			</MENU>
 		</MENU>
 		<MENU name="ID Cards" role="idcard">
@@ -83,6 +85,36 @@
 				<TEXTFIELD w="20" title="Study Level">studylevel</TEXTFIELD>
 				<TEXTFIELD w="20" title="Course">majorname</TEXTFIELD>
 				<TEXTFIELD w="20" title="Registered">approved</TEXTFIELD>
+			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="630" name="Students Audit" key="772" h="750">
+		<GRID name="Semester" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
+			<GRID name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="vwqstudentbalances" noorg="true" where="(finaceapproval = true)">
+				<TEXTFIELD w="10" title="Matrix Num">studentid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
+				<TEXTFIELD w="20" title="Account Number">accountnumber</TEXTFIELD>
+				<TEXTFIELD w="20" title="Study Level">studylevel</TEXTFIELD>
+				<TEXTFIELD w="20" title="Programme">majorname</TEXTFIELD>
+				<TEXTFIELD w="20" title="registered">approved</TEXTFIELD>
+				<GRID name="Registered Courses" keyfield="qgradeid" linkfield="qstudentid" table="studentgradeview" noorg="true">
+					<TEXTFIELD w="10" title="Matrix Num">studentid</TEXTFIELD>
+					<TEXTFIELD w="20" title="Student">studentname</TEXTFIELD>
+					<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
+					<TEXTFIELD w="100" title="Course Title">coursetitle</TEXTFIELD>
+					<TEXTFIELD w="100" title="Lecturer">instructorname</TEXTFIELD>
+					<TEXTFIELD w="10" title="Units">chargehours</TEXTFIELD>
+					<TEXTFIELD w="5" title="Dropped">dropped</TEXTFIELD>
+				</GRID>
+				<GRID name="Approval Trail" keyfield="approvalid" linkfield="qstudentid" table="approvallist" noorg="true">
+					<TEXTFIELD w="40" title="Approval Type">approvaltype</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approved By">approvedby</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approve Date">approvedate</TEXTFIELD>
+					<TEXTFIELD w="40" title="Approval Computer">clientip</TEXTFIELD>
+				</GRID>
 			</GRID>
 		</GRID>
 	</DESK>

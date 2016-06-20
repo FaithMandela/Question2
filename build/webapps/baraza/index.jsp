@@ -350,7 +350,10 @@
 							</tr></table>
 						<% } %>
 
-						<%= web.showFooter() %>
+						<div class="note note-info note-bordered">
+							<div class="row"><%= web.showFooter() %></div>
+							<div class="row"><%= web.getMenuMsg(xmlcnf) %></div>
+						</div>
 					</div>
 
                     <% if(web.isFileImport()) { %>

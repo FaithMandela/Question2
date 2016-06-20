@@ -25,3 +25,40 @@ VALUES (New.entity_id, 0,New.org_id,NEW.contribution_amount,4);
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+  
+  
+  
+  CREATE OR REPLACE FUNCTION get_payment_period(real, real, real) RETURNS real AS $$
+DECLARE
+	paymentperiod real;
+	q real;
+BEGIN
+	q := $3/1200;
+	
+	IF ($2 = 0) OR (q = -1) OR ((q * $1) >= $2) THEN
+		paymentperiod := 1;
+	ELSIF (log(q + 1) = 0) THEN
+		paymentperiod := 1;
+	ELSE
+		paymentperiod := (log($2) - log($2 - (q * $1))) / log(q + 1);
+	END IF;
+
+	RETURN paymentperiod;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+
+CREATE OR REPLACE FUNCTION get_investments(varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+investments real;
+BEGIN
+
+	SELECT investment_amount FROM investments WHERE (investment_id = CAST($1 as int)) into investments;
+	RETURN real;
+END;

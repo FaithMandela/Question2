@@ -12,7 +12,7 @@
 	<queryString>
 		<![CDATA[SELECT
     vw_entitys.pcc,
-    points.son,
+    vw_entitys.son,
     sum(points.segments)as segments,
     sum(points.amount)as amount,
     sum(points.points)as points,
@@ -27,7 +27,7 @@
      JOIN periods ON points.period_id = periods.period_id
 WHERE to_char(periods.start_date, 'mmyyyy'::text) >= to_char('$P!{minDate}'::date, 'mmyyyy'::text)
 AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date, 'mmyyyy'::text)
-	GROUP BY  vw_entitys.pcc, points.son, vw_entitys.org_name, vw_entitys.entity_name,    vw_entitys.user_name,  vw_entitys.is_active,   vw_entitys.entity_id;]]>
+	GROUP BY  vw_entitys.pcc,vw_entitys.son, vw_entitys.org_name, vw_entitys.entity_name,    vw_entitys.user_name,  vw_entitys.is_active,   vw_entitys.entity_id;]]>
 	</queryString>
 	<field name="pcc" class="java.lang.String"/>
 	<field name="son" class="java.lang.String"/>
@@ -123,7 +123,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="317" y="0" width="141" height="20" uuid="090fb01f-7c1c-48e8-9ab1-67a5a410e75a"/>
+				<reportElement x="317" y="0" width="115" height="20" uuid="090fb01f-7c1c-48e8-9ab1-67a5a410e75a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -138,7 +138,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				<text><![CDATA[PCC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="458" y="0" width="101" height="20" isPrintWhenDetailOverflows="true" uuid="ebca8d19-4130-455b-82c8-21f41293c63e"/>
+				<reportElement x="472" y="0" width="87" height="20" isPrintWhenDetailOverflows="true" uuid="ebca8d19-4130-455b-82c8-21f41293c63e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -151,6 +151,13 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Bonus]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="432" y="0" width="40" height="20" uuid="b7d3faf9-acd2-49c4-9484-f508b42afa2d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SON]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -189,7 +196,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="458" y="0" width="101" height="15" isPrintWhenDetailOverflows="true" uuid="c8304c3a-8a60-476f-9029-4a0565ab4b9d"/>
+				<reportElement x="472" y="0" width="87" height="15" isPrintWhenDetailOverflows="true" uuid="c8304c3a-8a60-476f-9029-4a0565ab4b9d"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -211,7 +218,7 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="317" y="0" width="141" height="15" isPrintWhenDetailOverflows="true" uuid="1ee9f8d7-6104-4d24-98cf-515217af08f1"/>
+				<reportElement x="317" y="0" width="115" height="15" isPrintWhenDetailOverflows="true" uuid="1ee9f8d7-6104-4d24-98cf-515217af08f1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -224,6 +231,13 @@ AND to_char(periods.start_date, 'mmyyyy'::text) <= to_char('$P!{maxDate}'::date,
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bonus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="432" y="0" width="40" height="15" uuid="d1702832-6df5-4e6c-a762-ec1fa2c663a8"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

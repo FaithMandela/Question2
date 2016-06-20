@@ -12,7 +12,7 @@
 		<MENU role="admin" name="Workflow">40</MENU>
 		<MENU role="admin" name="Emails">60</MENU>
 		<MENU role="admin" name="Staff">100</MENU>
-		<MENU role="admin,staff" name="Birthday" page="birthday">03</MENU>
+		<MENU role="admin" name="Birthday" page="birthday">03</MENU>
 		<MENU role="admin" icon="fa fa-gift" name="Products">
 			<MENU role="admin" icon="fa fa-gift" name="Products">7</MENU>
 			<MENU role="admin" icon="fa fa-bars" name="Products Category">21</MENU>
@@ -26,7 +26,7 @@
 		<MENU role="admin" icon="fa fa-ticket" name="Tickets">
 			<MENU role="admin" name="Tickets Years">102</MENU>
 		</MENU>
-		<MENU role="admin,staff,finance_manager,director" name="Reports">
+		<MENU role="admin,staff,finance_manager,director,manager" name="Reports">
 			<MENU role="admin,staff,finance_manager,director" name="Productivity">110</MENU>
 			<MENU role="admin,finance_manager" name="Batch Orders">113</MENU>
 			<MENU role="admin,finance_manager" name="Print Batch">125</MENU>
@@ -39,11 +39,14 @@
 			<MENU role="admin,finance_manager" name="Total Redemptions">128</MENU>
 			<MENU role="staff" name="KAM Bonus">211</MENU>
 			<MENU role="staff" name="Consultant Contacts">216</MENU>
+			<MENU role="admin,finance_manager" name="Graphical Representation ">221</MENU>
+			<MENU role="manager" name="Master graphical representation">226</MENU>
+			<MENU role="staff" name="Graphical representation">227</MENU>
 		</MENU>
 	</MENU>
 	<DESK role="admin" w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD noorg="true" role="admin" w="650" name="Dashboard">
-			<TILE noorg.query="true" role="admin,staff,finance_manager" w="60" h="25" name="Birthday" where="to_char(birth_date, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm')" table="vw_entitys">
+			<TILE noorg.query="true" role="admin,finance_manager" w="60" h="25" name="Birthday" where="to_char(birth_date, 'dd-mm') = to_char(CURRENT_DATE,'dd-mm')" table="vw_entitys">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="New Orders">birth_date</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin,finance_manager" w="60" h="25" name="New Orders" where="(lower(order_status) = lower('Processing Order'))" table="orders">
@@ -238,7 +241,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="650" name="Consultants" key="9">
-		<GRID noorg="true" keyfield="applicant_id" name="Pending Consultants" orderby="applicant_id" where="approve_status='Pending'" tab.count="count(applicant_id)" table="vw_applicants">
+		<GRID noorg="true" keyfield="applicant_id" name="Pending Consultants" orderby="applicant_id" where="approve_status='Pending' OR approve_status='Pendding' " tab.count="count(applicant_id)" table="vw_applicants">
 			<TEXTFIELD w="50" title="ID">applicant_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="50" title="Pseudo Code">pseudo_code</TEXTFIELD>
@@ -284,7 +287,7 @@
 			</FORM>
 			<FORM new="false" noorg="true" keyfield="entity_id" name="Update Personal Info" delete="false" table="entitys">
 				<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
-					<DATA key="manager">Manager</DATA>
+					<DATA key="manager">Master Account Manager</DATA>
 					<DATA key="agency">Agency</DATA>
 					<DATA key="user">User</DATA>
 					<DATA key="consultant">Consultant</DATA>
@@ -869,7 +872,8 @@
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="Items Purchased" type="vert" key="batch">
 			<FILTERFORM name="Items Purchased ">
-				<TEXTFIELD w="150" h="20" x="29" y="50" title="Batch No." key="batch">batch</TEXTFIELD>
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
 				<COMBOBOX noorg="true" w="30" h="20" lpfield="product_name" x="10" y="10" lptable="products" where="is_active=true" title="Product" lpkey="product_id">product_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="batch_items_purchased.jasper" name="Items Purchased"></JASPER>
@@ -888,7 +892,7 @@
 			<FILTERFORM name="Consultant Productivity">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="50" h="20" lpfield="user_name" x="10" y="30" lptable="vw_entitys" title="Entity Username" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc_son" x="10" y="30" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_productivity.jasper" name="Consultant Productivity"></JASPER>
 		</FILTER>
@@ -989,7 +993,7 @@
 			<FILTERFORM name="Consultant Statement ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="30" h="20" lpfield="user_name" x="10" y="10" lptable="vw_entitys" title="Entity" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_statements.jasper" name="Consultant Statement"></JASPER>
 		</FILTER>
@@ -1003,6 +1007,16 @@
 		</FILTER>
 	</DESK>
 	<DESK noorg="true" w="700" h="500" name="EMails" key="60">
+		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" orderby="sys_email_id DESC" table="vw_sys_emailed">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
+			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+		</GRID>
 		<GRID noorg="true" role="admin,staff" keyfield="sys_email_id" name="EMails" table="sys_emails">
 			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
@@ -1013,20 +1027,10 @@
 				<EDITOR tab="Details" w="530" h="170" x="10" y="2">details</EDITOR>
 			</FORM>
 		</GRID>
-		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" table="vw_sys_emailed">
-			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
-			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
-			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Summary Report" key="124">
 		<FILTER split="150" w="700" h="550" name="Summary Report" type="vert" key="order_date">
-			<FILTERFORM name="Summary Report">
+			<FILTERFORM name="Summary Report ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
 			</FILTERFORM>
@@ -1170,13 +1174,6 @@
 			</FILTERFORM>
 			<JASPER reportfile="opening_balance_by_balance.jasper" name="Closing Balance"></JASPER>
 		</FILTER>
-		<FILTER split="150" w="700" h="550" name="Closing Balance by Agency" type="vert" key="order_date">
-			<FILTERFORM name="Closing Balance by Agency">
-				<TEXTDATE w="150" h="20" x="290" y="50" title="Closing Date" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="50" h="20" lpfield="org_name" x="10" y="30" lptable="orgs" title="Agency Name" lpkey="org_name">org_name</COMBOBOX>
-			</FILTERFORM>
-			<JASPER reportfile="closing_balance_by_agency.jasper" name="Closing Balance by Agency"></JASPER>
-		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Total Redemptions" key="128">
 		<FILTER split="150" w="700" h="550" name="Total Redemptions" type="vert" key="order_date">
@@ -1254,5 +1251,35 @@
 	</DESK>
 	<DESK w="700" h="550" name="Consultant Contacts" key="216">
 		<JASPER reportfile="user_contacts_KAM.jasper" name="Users Contacts Per KAM"></JASPER>
+	</DESK>
+	<DESK w="700" h="550" name="Consultant Graphical Representation " key="221">
+		<FILTER split="150" w="700" h="550" name="Consultant Graphical Representation  " type="vert" key="order_date">
+			<FILTERFORM name="Consultant Graphical Representation ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER reportfile="vw_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" h="550" name="Manager Graphical Representation " key="226">
+		<FILTER split="150" w="700" h="550" name="Consultant Graphical Representation  " type="vert" key="org_id">
+			<FILTERFORM name="Consultant Graphical Representation ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<COMBOBOX w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER reportfile="vw_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" h="550" name="Staff Graphical Representation " key="227">
+		<FILTER split="150" w="700" h="550" name="Consultant Graphical Representation  " type="vert" key="org_id">
+			<FILTERFORM name="Consultant Graphical Representation ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER reportfile="vw_manager_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

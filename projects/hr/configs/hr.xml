@@ -76,6 +76,7 @@
 		<MENU name="Payroll" role="admin,payroll,hr,reports" xml="payroll.xml">0</MENU>
 		<MENU name="Projects" role="staff,admin,payroll,hr" xml="projects.xml">0</MENU>
 		<MENU name="Finance" role="finance" xml="finance.xml">0</MENU>
+		<MENU page="billing.jsp" name="Billing" role="subscription">0</MENU>
 	</MENU>
 	<CONFIGS name="Full system configurations">
 		<AUDIT name="Full Table Audits">
@@ -216,11 +217,11 @@
 				<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
 				<FORM name="Education" keyfield="education_id" linkfield="entity_id" table="education">
 					<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
-					<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
+					<TEXTDATE w="150" title="Date From" required="true" y="30" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Name Of Institution" y="50" h="20" x="10">name_of_school</TEXTFIELD>
-					<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
-					<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name of Institution" required="true" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+					<TEXTFIELD w="430" title="Certification or Degree" placeholder="Certification or Degree: e.g. Msc Computer Science" y="70" h="20" x="10">examination_taken</TEXTFIELD>
+					<TEXTFIELD w="150" title="Grades Obtained" placeholder="Grades Obtained: e.g. Upper second-class honours" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -294,7 +295,7 @@
 				</FORM>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
-				<TEXTFIELD w="100" title="Name">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -471,8 +472,8 @@
 					<TEXTDATE w="150" title="Date From" required="true" y="30" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
 					<TEXTFIELD w="430" title="Name of Institution" required="true" y="50" h="20" x="10">name_of_school</TEXTFIELD>
-					<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
-					<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
+					<TEXTFIELD w="430" title="Certification or Degree" placeholder="Certification or Degree: e.g. Msc Computer Science" y="70" h="20" x="10">examination_taken</TEXTFIELD>
+					<TEXTFIELD w="150" title="Grades Obtained" placeholder="Grades Obtained: e.g. Upper second-class honours" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -524,7 +525,7 @@
 				</FORM>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees" user="table_id">
-				<TEXTFIELD w="100" title="Name">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -533,8 +534,8 @@
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
 					<DEFAULT default="referees">table_name</DEFAULT>
-					<TEXTFIELD w="430" title="Name" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Company Name" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name" data-max="120" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Company Name" data-max="150" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
 					<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
 					<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>
@@ -561,9 +562,9 @@
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Vacancies" key="14" h="550">
-		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" where="(closing_date > current_date)">
-			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
+		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorg="true" where="(closing_date > current_date)">
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
@@ -584,9 +585,8 @@
 			</ACTIONS>
 		</GRID>
 		<GRID name="Positions Applied" keyfield="application_id" orderby="opening_date" table="vw_applications" user="entity_id">
-			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
@@ -605,8 +605,9 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" where="(closing_date > current_date)">
-			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date > current_date)">
+			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
 			<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
@@ -617,7 +618,8 @@
 			</ACTIONS>
 		</GRID>
 		<GRID name="Internships Applied" keyfield="department_name" table="vw_interns" user="entity_id">
-			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
@@ -823,6 +825,68 @@
 				<TEXTAREA w="430" title="Details" y="290" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID name="Products" keyfield="product_id" table="products">
+			<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Singular">is_singular</CHECKBOX>
+			<CHECKBOX w="75" title="Align Expiry">align_expiry</CHECKBOX>
+			<CHECKBOX w="75" title="Montly Bill">is_montly_bill</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Montly Cost">montly_cost</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Annual Bill">is_annual_bill</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Annual Cost">annual_cost</TEXTDECIMAL>
+			<FORM name="Products" keyfield="product_id" table="products">
+				<TEXTFIELD w="150" title="Product Name" y="10" h="20" x="10">product_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Singular" y="10" h="20" x="290">is_singular</CHECKBOX>
+				<CHECKBOX w="150" title="Align Expiry" y="30" h="20" x="10">align_expiry</CHECKBOX>
+				<CHECKBOX w="150" title="Montly Bill" y="30" h="20" x="290">is_montly_bill</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Montly Cost" y="50" h="20" x="10">montly_cost</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Annual Bill" y="50" h="20" x="290">is_annual_bill</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Annual Cost" y="70" h="20" x="10">annual_cost</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Productions" keyfield="production_id" linkfield="product_id" table="vw_productions">
+				<TEXTFIELD w="75" title="Production ID">production_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Organization ID">org_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Product ID">product_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Product Name">product_name</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Transaction Time">transaction_time</TEXTTIMESTAMP>
+				<CHECKBOX w="75" title="Montly Billing">montly_billing</CHECKBOX>
+				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Price">price</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Expiry Date">expiry_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+			</GRID>
+		</GRID>
+		<GRID name="Product Receipts" keyfield="product_receipt_id" table="vw_product_receipts" noorg="true">
+			<TEXTFIELD w="75" title="Product Receipt ID">product_receipt_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organization ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receipt Source">receipt_source_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Paid">is_paid</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Receipt Amount">receipt_amount</TEXTDECIMAL>
+			<TEXTDATE w="75" title="Receipt Date">receipt_date</TEXTDATE>
+			<TEXTTIMESTAMP w="75" title="Receipt Time">receipt_time</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Receipt Reference">receipt_reference</TEXTFIELD>
+			<FORM name="Product Receipts" keyfield="product_receipt_id" table="product_receipts" noorg="true">
+				<COMBOBOX w="430" title="Organization" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<COMBOBOX w="430" title="Receipt Source" lptable="receipt_sources" y="30" h="20" x="10" lpfield="receipt_source_name">receipt_source_id</COMBOBOX>
+				<CHECKBOX w="150" title="Paid" y="50" h="20" x="10">is_paid</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Receipt Amount" y="50" h="20" x="290">receipt_amount</TEXTDECIMAL>
+				<TEXTDATE w="150" title="Receipt Date" default="now" y="70" h="20" x="10">receipt_date</TEXTDATE>
+				<TEXTFIELD w="150" title="Receipt Reference" y="90" h="20" x="10">receipt_reference</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
+			</FORM>
+		</GRID>
+		<GRID name="Receipt Sources" keyfield="receipt_source_id" table="receipt_sources">
+			<TEXTFIELD w="75" title="Receipt Source ID">receipt_source_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receipt Source Name">receipt_source_name</TEXTFIELD>
+			<FORM name="Receipt Sources" keyfield="receipt_source_id" table="receipt_sources">
+				<TEXTFIELD w="150" title="Receipt Source Name" y="10" h="20" x="10">receipt_source_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Banks" key="21" h="500">
 		<GRID name="Banks" keyfield="bank_id" table="banks">
@@ -952,8 +1016,8 @@
 			<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 			<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 			<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
-			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
-			<JASPER name="CV2" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
+			<JASPER name="BIO" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 			<FORM tw="570" name="Details" keyfield="entity_id" table="applicants" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
@@ -1013,16 +1077,16 @@
 				<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
-				<TEXTFIELD w="75" title="Name Of School">name_of_school</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name Of Institution">name_of_school</TEXTFIELD>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
 				<FORM name="Education" keyfield="education_id" linkfield="entity_id" table="education">
 					<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
-					<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
+					<TEXTDATE w="150" title="Date From" required="true" y="30" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Name Of School" y="50" h="20" x="10">name_of_school</TEXTFIELD>
-					<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
-					<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name of Institution" required="true" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+					<TEXTFIELD w="430" title="Certification or Degree" placeholder="Certification or Degree: e.g. Msc Computer Science" y="70" h="20" x="10">examination_taken</TEXTFIELD>
+					<TEXTFIELD w="150" title="Grades Obtained" placeholder="Grades Obtained: e.g. Upper second-class honours" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -1073,7 +1137,7 @@
 				</FORM>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
-				<TEXTFIELD w="100" title="Name">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -1202,17 +1266,16 @@
 				<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
-				<TEXTFIELD w="75" title="Name Of School">name_of_school</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name Of Institution">name_of_school</TEXTFIELD>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
 				<FORM name="Education" keyfield="education_id" linkfield="entity_id" table="education">
 					<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
-					<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
+					<TEXTDATE w="150" title="Date From" required="true" y="30" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Name Of School" y="50" h="20" x="10">name_of_school</TEXTFIELD>
-					<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
-					<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
-					<TEXTFIELD w="150" title="Certificate Number" y="90" h="20" x="290">certificate_number</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name of Institution" required="true" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+					<TEXTFIELD w="430" title="Certification or Degree" placeholder="Certification or Degree: e.g. Msc Computer Science" y="70" h="20" x="10">examination_taken</TEXTFIELD>
+					<TEXTFIELD w="150" title="Grades Obtained" placeholder="Grades Obtained: e.g. Upper second-class honours" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -1314,7 +1377,7 @@
 				</FORM>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" linkfield="table_id" table="vw_referees">
-				<TEXTFIELD w="100" title="Name">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -1507,14 +1570,14 @@
 				<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
-				<TEXTFIELD w="75" title="Name Of School">name_of_school</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name Of Institution">name_of_school</TEXTFIELD>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
 				<FORM new="false" name="Education" keyfield="education_id" edit="false" delete="false" linkfield="entity_id" table="education">
 					<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
 					<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Name Of School" y="50" h="20" x="10">name_of_school</TEXTFIELD>
+					<TEXTFIELD w="430" title="Name Of Institution" y="50" h="20" x="10">name_of_school</TEXTFIELD>
 					<TEXTFIELD w="430" title="Certification or Degree" y="70" h="20" x="10">examination_taken</TEXTFIELD>
 					<TEXTFIELD w="150" title="Grades Obtained" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
 					<TEXTFIELD w="150" title="Certificate Number" y="90" h="20" x="290">certificate_number</TEXTFIELD>
@@ -1862,7 +1925,7 @@
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<CHECKBOX w="75" title="Contract">contract</CHECKBOX>
-			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" where="(short_listed = 0)">
+			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 0)">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -1870,6 +1933,7 @@
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
+				<JASPER name="BIO" org.table="applications" reportfile="bio_applicant_intake.jasper"></JASPER>
 				<JASPER name="CV" org.table="applications" reportfile="cv_applicant_intake.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="add_shortlist" approval="1">Short List</ACTION>
@@ -1892,7 +1956,7 @@
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 				</FILES>
 			</GRID>
-			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" where="(short_listed = 1)">
+			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 1)">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -1900,6 +1964,7 @@
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
+				<JASPER name="BIO" org.table="applications" reportfile="bio_applicant_intake.jasper"></JASPER>
 				<JASPER name="CV" org.table="applications" reportfile="cv_applicant_intake.jasper"></JASPER>
 				<ACTIONS>
 					<ACTION fnct="add_employee">Hire</ACTION>
@@ -3956,10 +4021,10 @@
 				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
 				<CHECKBOX w="75" title="Posted">posted</CHECKBOX>
 				<ACTIONS>
-					<ACTION fnct="upd_ledger" approval="1">Process</ACTION>
-					<ACTION fnct="upd_ledger" approval="2">Un Process</ACTION>
-					<ACTION fnct="upd_ledger" approval="3">Complete</ACTION>
-					<ACTION fnct="upd_ledger" approval="4">Clear</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="3">Complete</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="4">Clear</ACTION>
 					<ACTION fnct="post_transaction" approval="1">Post</ACTION>
 				</ACTIONS>
 				<FORM name="Expenditure" keyfield="transaction_id" table="transactions">
@@ -4012,10 +4077,10 @@
 				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
 				<CHECKBOX w="75" title="Posted">posted</CHECKBOX>
 				<ACTIONS>
-					<ACTION fnct="upd_ledger" approval="1">Process</ACTION>
-					<ACTION fnct="upd_ledger" approval="2">Un Process</ACTION>
-					<ACTION fnct="upd_ledger" approval="3">Complete</ACTION>
-					<ACTION fnct="upd_ledger" approval="4">Clear</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="3">Complete</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="4">Clear</ACTION>
 					<ACTION fnct="post_transaction" approval="1">Post</ACTION>
 				</ACTIONS>
 				<FORM name="Income" keyfield="transaction_id" table="transactions">

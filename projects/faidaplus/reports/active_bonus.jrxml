@@ -4,28 +4,17 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[SELECT 	bonus_id,
- 	period_id,
- 	entity_id,
- 	org_id,
-	son,
- 	pcc,
- 	start_date,
- 	end_date,
- 	percentage ,
- 	amount,
- 	is_active,
-	approve_status,
- 	workflow_table_id,
- 	application_date,
- 	action_date,
- 	details
-FROM bonus
+		<![CDATA[SELECT 	bonus_id, 	period_id, entity_id,bonus_org_name,
+ 	org_id,son, pcc, start_date, end_date, 	percentage ,
+ 	amount, is_active,	approve_status, workflow_table_id,
+ 	application_date, action_date, details,org_name,bonus_name,market_name,entity_pcc
+FROM vw_bonus
 WHERE is_active = true;]]>
 	</queryString>
 	<field name="bonus_id" class="java.lang.Integer"/>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="bonus_org_name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="son" class="java.lang.String"/>
 	<field name="pcc" class="java.lang.String"/>
@@ -39,6 +28,10 @@ WHERE is_active = true;]]>
 	<field name="application_date" class="java.sql.Timestamp"/>
 	<field name="action_date" class="java.sql.Timestamp"/>
 	<field name="details" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="bonus_name" class="java.lang.String"/>
+	<field name="market_name" class="java.lang.String"/>
+	<field name="entity_pcc" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -59,7 +52,7 @@ WHERE is_active = true;]]>
 	<columnHeader>
 		<band height="24" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="83" height="20" uuid="dec4f4b2-db73-4555-aaa0-3768a13547d0"/>
+				<reportElement x="126" y="0" width="42" height="20" uuid="dec4f4b2-db73-4555-aaa0-3768a13547d0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -67,7 +60,7 @@ WHERE is_active = true;]]>
 				<text><![CDATA[PCC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="83" y="0" width="60" height="20" uuid="487ab98a-0185-4ce4-8a7b-0e7a2fdcb7a0"/>
+				<reportElement x="269" y="0" width="42" height="20" uuid="487ab98a-0185-4ce4-8a7b-0e7a2fdcb7a0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -75,7 +68,7 @@ WHERE is_active = true;]]>
 				<text><![CDATA[SON]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="143" y="0" width="137" height="20" uuid="9a6c6927-6896-4b12-aaeb-fb6709277108"/>
+				<reportElement x="398" y="0" width="68" height="20" uuid="9a6c6927-6896-4b12-aaeb-fb6709277108"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -83,7 +76,7 @@ WHERE is_active = true;]]>
 				<text><![CDATA[Start Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="0" width="148" height="20" uuid="72fbf14d-0c27-4868-8cdf-c6ddafdb72bc"/>
+				<reportElement x="466" y="0" width="75" height="20" uuid="72fbf14d-0c27-4868-8cdf-c6ddafdb72bc"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -91,7 +84,7 @@ WHERE is_active = true;]]>
 				<text><![CDATA[End Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="428" y="0" width="107" height="20" uuid="36ca2f6e-6cfc-4d7a-8876-77aaf835ab34"/>
+				<reportElement x="541" y="0" width="67" height="20" uuid="36ca2f6e-6cfc-4d7a-8876-77aaf835ab34"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -99,7 +92,7 @@ WHERE is_active = true;]]>
 				<text><![CDATA[Percentage	]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="535" y="0" width="112" height="20" uuid="46a2a0d4-aa57-4c0a-90d5-a3593e199f82"/>
+				<reportElement x="608" y="0" width="78" height="20" uuid="46a2a0d4-aa57-4c0a-90d5-a3593e199f82"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -107,7 +100,7 @@ WHERE is_active = true;]]>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="647" y="0" width="77" height="20" uuid="d1292c62-1e1a-4146-aa33-604ea47e9147"/>
+				<reportElement x="686" y="0" width="53" height="20" uuid="d1292c62-1e1a-4146-aa33-604ea47e9147"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -115,7 +108,7 @@ WHERE is_active = true;]]>
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="724" y="0" width="78" height="20" uuid="796cfd21-87f8-4b48-8390-00a59127d1a2"/>
+				<reportElement x="739" y="0" width="63" height="20" uuid="796cfd21-87f8-4b48-8390-00a59127d1a2"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" isStrikeThrough="false"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -125,6 +118,27 @@ WHERE is_active = true;]]>
 			<line>
 				<reportElement x="0" y="22" width="802" height="1" uuid="56c5be2f-6cbe-47f3-b2cb-69339fbf7cff"/>
 			</line>
+			<staticText>
+				<reportElement x="168" y="0" width="101" height="20" uuid="9f232d19-66bc-4bcd-9218-aa75106cab41"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consultant Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="126" height="20" uuid="87d89dc7-8a1c-4842-a6ce-81eb682c87f2"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Agency Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="311" y="0" width="87" height="20" uuid="51c06544-910a-4bfa-949b-e1b2c3ff3915"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Market Bonus]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -138,15 +152,15 @@ WHERE is_active = true;]]>
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="83" height="15" isPrintWhenDetailOverflows="true" uuid="e8cd0987-6d92-445f-8165-0fee4cdf0f90"/>
+				<reportElement x="126" y="0" width="42" height="15" isPrintWhenDetailOverflows="true" uuid="e8cd0987-6d92-445f-8165-0fee4cdf0f90"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pcc}?$F{pcc}:$F{entity_pcc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="143" y="0" width="137" height="15" isPrintWhenDetailOverflows="true" uuid="42d63e5e-e974-4c8b-b963-71bfe9227a99"/>
+				<reportElement x="398" y="0" width="68" height="15" isPrintWhenDetailOverflows="true" uuid="42d63e5e-e974-4c8b-b963-71bfe9227a99"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -154,7 +168,7 @@ WHERE is_active = true;]]>
 				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement x="280" y="0" width="148" height="15" isPrintWhenDetailOverflows="true" uuid="1bcb5b25-07a5-43a8-91bb-2b01bf40a352"/>
+				<reportElement x="466" y="0" width="75" height="15" isPrintWhenDetailOverflows="true" uuid="1bcb5b25-07a5-43a8-91bb-2b01bf40a352"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -162,7 +176,7 @@ WHERE is_active = true;]]>
 				<textFieldExpression><![CDATA[$F{end_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="667" y="0" width="57" height="15" isPrintWhenDetailOverflows="true" uuid="5f086bee-6174-42b4-af6d-458623d61148"/>
+				<reportElement x="686" y="0" width="53" height="15" isPrintWhenDetailOverflows="true" uuid="5f086bee-6174-42b4-af6d-458623d61148"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -170,7 +184,7 @@ WHERE is_active = true;]]>
 				<textFieldExpression><![CDATA[$F{is_active} ==true?"Active":"Inactive"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="428" y="0" width="107" height="15" isPrintWhenDetailOverflows="true" uuid="e19361c0-5d72-4749-b54b-f18d18e6f56c"/>
+				<reportElement x="541" y="0" width="67" height="15" isPrintWhenDetailOverflows="true" uuid="e19361c0-5d72-4749-b54b-f18d18e6f56c"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -178,7 +192,7 @@ WHERE is_active = true;]]>
 				<textFieldExpression><![CDATA[$F{percentage}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="724" y="0" width="78" height="15" isPrintWhenDetailOverflows="true" uuid="52bae040-4ea4-49d1-ae89-8d8cabee1b6f"/>
+				<reportElement x="739" y="0" width="63" height="15" isPrintWhenDetailOverflows="true" uuid="52bae040-4ea4-49d1-ae89-8d8cabee1b6f"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -186,7 +200,7 @@ WHERE is_active = true;]]>
 				<textFieldExpression><![CDATA[$F{approve_status}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="83" y="0" width="60" height="15" isPrintWhenDetailOverflows="true" uuid="62c89a0a-22c2-47bd-a7b7-63154704398e"/>
+				<reportElement x="269" y="0" width="42" height="15" isPrintWhenDetailOverflows="true" uuid="62c89a0a-22c2-47bd-a7b7-63154704398e"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -194,12 +208,33 @@ WHERE is_active = true;]]>
 				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="535" y="0" width="132" height="15" isPrintWhenDetailOverflows="true" uuid="e24d2825-b5fb-46db-a539-d6e67cee58c1"/>
+				<reportElement x="608" y="0" width="78" height="15" isPrintWhenDetailOverflows="true" uuid="e24d2825-b5fb-46db-a539-d6e67cee58c1"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="168" y="2" width="101" height="13" isPrintWhenDetailOverflows="true" uuid="319feb1e-c8b9-4190-9de8-c76c38741584"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bonus_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="126" height="16" isPrintWhenDetailOverflows="true" uuid="2c0a7232-ff6b-4034-9d3a-b48d0f71d891"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bonus_org_name}?$F{bonus_org_name}:$F{org_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="311" y="0" width="87" height="16" isPrintWhenDetailOverflows="true" uuid="87977f12-934d-4b54-88de-a5ea83167192"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{market_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -12,6 +12,7 @@
 		<MENU role="admin,manager,agency" name="Transactions">
 			<MENU role="admin,manager,agency,user" name="Insurance">80</MENU>
 			<MENU role="admin,manager" name="Payments">85</MENU>
+			<MENU role="master" name="Insurance Sales">97</MENU>
 		</MENU>
 		<MENU role="admin,agency,manager" name="Configurations">
 			<MENU role="manager,admin" name="Rates">75</MENU>
@@ -22,7 +23,7 @@
 		</MENU>
 		<MENU name="Reports">
 			<MENU role="admin,manager" name="Rates">90</MENU>
-			<MENU role="admin,manager,agency,user,brooker" name="Sales Report ">91</MENU>
+			<MENU role="admin,manager,agency,user,broker" name="Sales Report ">91</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
@@ -123,12 +124,12 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Organisation" key="10">
-		<GRID role="admin,manager" keyfield="org_id" name="Organisation" table="orgs">
+		<GRID role="admin,manager" keyfield="org_id" name="Organisation" where="org_id !=0" tab.count="count(org_id)" table="orgs">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<GRID noorg="true" role="admin,manager" keyfield="org_id" name="Travel Agencies" linkfield="parent_org_id" table="orgs">
+			<GRID noorg="true" role="admin,manager" keyfield="org_id" name="Travel Agencies" tab.count="count(org_id)" linkfield="parent_org_id" table="orgs">
 				<TEXTFIELD w="75" title="ID">org_id</TEXTFIELD>
 				<TEXTFIELD w="275" title="Name">org_name</TEXTFIELD>
 				<TEXTFIELD w="275" title="PCC">pcc</TEXTFIELD>
@@ -145,7 +146,7 @@
 					<TEXTFIELD w="50" h="20" x="10" y="130" placeholder="Organisation Sufix" title="Sufix">org_sufix</TEXTFIELD>
 					<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Details" title="Details">details</TEXTAREA>
 				</FORM>
-				<GRID noorg="false" keyfield="entity_id" name="Agency Entitys" linkfield="org_id" table="vw_entitys">
+				<GRID noorg="false" keyfield="entity_id" name="Agency Entitys" tab.count="count(entity_id)" linkfield="org_id" table="vw_entitys">
 					<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 					<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 					<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -173,7 +174,7 @@
 					</FORM>
 				</GRID>
 			</GRID>
-			<GRID noorg="false" keyfield="entity_id" name="Entitys" linkfield="org_id" table="vw_entitys">
+			<GRID noorg="false" keyfield="entity_id" name="Entitys" tab.count="count(entity_id)" linkfield="org_id" table="vw_entitys">
 				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -242,17 +243,7 @@
 			<TEXTFIELD w="275" title="PCC">pcc</TEXTFIELD>
 			<TEXTDECIMAL w="150" title="Credit Limit">credit_limit</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<FORM keyfield="org_id" name="Travel Agencies" table="orgs">
-				<TEXTFIELD w="350" h="20" x="10" y="10" title="Name">org_name</TEXTFIELD>
-				<CHECKBOX w="150" h="20" x="290" y="30" title="Active">is_active</CHECKBOX>
-				<TEXTFIELD w="350" h="20" x="10" y="50" title="Logo">logo</TEXTFIELD>
-				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="70" lptable="currency" title="Base Currency">currency_id</COMBOBOX>
-				<TEXTFIELD w="350" h="20" x="10" y="50" title="PCC">pcc</TEXTFIELD>
-				<TEXTDECIMAL w="150" h="20" x="10" y="90" title="Credit Limit">credit_limit</TEXTDECIMAL>
-				<TEXTFIELD w="50" h="20" x="10" y="110" title="Sufix">org_sufix</TEXTFIELD>
-				<TEXTAREA w="430" h="70" x="10" y="130" title="Details">details</TEXTAREA>
-			</FORM>
-			<GRID noorg="false" keyfield="entity_id" name="Entitys" linkfield="org_id" table="vw_entitys">
+			<GRID noorg="false" keyfield="entity_id" name="Entitys" tab.count="count(entity_id)" linkfield="org_id" table="vw_entitys">
 				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -300,6 +291,16 @@
 					<TEXTAREA w="430" h="70" x="10" y="210" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<FORM keyfield="org_id" name="Travel Agencies" table="orgs">
+				<TEXTFIELD w="350" h="20" x="10" y="10" title="Name">org_name</TEXTFIELD>
+				<CHECKBOX w="150" h="20" x="290" y="30" title="Active">is_active</CHECKBOX>
+				<TEXTFIELD w="350" h="20" x="10" y="50" title="Logo">logo</TEXTFIELD>
+				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="70" lptable="currency" title="Base Currency">currency_id</COMBOBOX>
+				<TEXTFIELD w="350" h="20" x="10" y="50" title="PCC">pcc</TEXTFIELD>
+				<TEXTDECIMAL w="150" h="20" x="10" y="90" title="Credit Limit">credit_limit</TEXTDECIMAL>
+				<TEXTFIELD w="50" h="20" x="10" y="110" title="Sufix">org_sufix</TEXTFIELD>
+				<TEXTAREA w="430" h="70" x="10" y="130" title="Details">details</TEXTAREA>
+			</FORM>
 		</GRID>
 		<GRID noorg="true" keyfield="currency_id" name="Currency" table="currency">
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
@@ -317,13 +318,13 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Travel Agency" key="11">
-		<GRID role="agency" keyfield="org_id" name="Travel Agencies" table="orgs">
+		<GRID role="agency" keyfield="org_id" name="Travel Agencies" where="org_id !=0" tab.count="count(org_id)" table="orgs">
 			<TEXTFIELD w="75" title="ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="PCC">pcc</TEXTFIELD>
 			<TEXTDECIMAL w="150" title="Credit Limit">credit_limit</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<GRID noorg="false" keyfield="entity_id" name="Users" linkfield="org_id" table="vw_entitys">
+			<GRID noorg="false" keyfield="entity_id" name="Users" tab.count="count(entity_id)" linkfield="org_id" table="vw_entitys">
 				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -384,7 +385,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Entitys" key="15">
-		<GRID keyfield="entity_id" name="Entitys" table="vw_entitys">
+		<GRID keyfield="entity_id" name="Entitys" tab.count="count(entity_id)" table="vw_entitys">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -973,20 +974,20 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Rates" key="75">
-		<GRID noorg="true" keyfield="rate_plan_id" name="Rate Types" table="vw_rate_plan">
+		<GRID noorg="true" keyfield="rate_plan_id" name="Rate Types" tab.count="count(rate_plan_id)" table="vw_rate_plan">
 			<TEXTFIELD w="75" title="Rate Plan ID">rate_plan_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan">rate_plan_name</TEXTFIELD>
 			<FORM noorg="true" keyfield="rate_plan_id" name="Rate Plan" linkfield="rate_plan_id" table="rate_plan">
 				<TEXTFIELD w="150" h="20" x="10" y="10" title="Rate Plan">rate_plan_name</TEXTFIELD>
 			</FORM>
 		</GRID>
-		<GRID noorg="true" keyfield="rate_type_id" name="Rate Plan" table="vw_rate_types">
+		<GRID noorg="true" keyfield="rate_type_id" name="Rate Plan" tab.count="count(rate_type_id)" table="vw_rate_types">
 			<TEXTFIELD w="75" title="Rate Type ID">rate_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Age From">age_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Age To">age_to</TEXTFIELD>
-			<GRID noorg="true" keyfield="rate_id" name="Rates" linkfield="rate_type_id" table="vw_rates">
+			<GRID noorg="true" keyfield="rate_id" name="Rates" tab.count="count(rate_id)" linkfield="rate_type_id" table="vw_rates">
 				<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -999,7 +1000,7 @@
 					<TEXTDECIMAL w="150" h="20" x="290" y="30" title="Including USA and Canada">north_america_rate</TEXTDECIMAL>
 				</FORM>
 			</GRID>
-			<GRID noorg="true" keyfield="benefit_id" name="Benefits" linkfield="rate_type_id" table="vw_benefits">
+			<GRID noorg="true" keyfield="benefit_id" name="Benefits" tab.count="count(benefit_id)" linkfield="rate_type_id" table="vw_benefits">
 				<TEXTFIELD w="75" title="Benefit Type">benefit_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="individual">individual</TEXTFIELD>
@@ -1018,7 +1019,7 @@
 				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID noorg="true" keyfield="benefit_type_id" name="Benefit Types" table="benefit_types">
+		<GRID noorg="true" keyfield="benefit_type_id" name="Benefit Types" tab.count="count(benefit_type_id)" table="benefit_types">
 			<TEXTFIELD w="75" title="Benefit Type ID">benefit_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Benefit Type Name">benefit_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Benefit Section">benefit_section</TEXTFIELD>
@@ -1028,7 +1029,7 @@
 				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID noorg="true" keyfield="rate_category_id" name="Rate Category" table="rate_category">
+		<GRID noorg="true" keyfield="rate_category_id" name="Rate Category" tab.count="count(rate_category_id)" table="rate_category">
 			<TEXTFIELD w="75" title="Category ID">rate_category_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Category Name">rate_category_name</TEXTFIELD>
 			<FORM noorg="true" keyfield="rate_category_id" name="Rate Categories" table="rate_category">
@@ -1112,7 +1113,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Insurance" key="80">
-		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Certificate" orderby="passenger_id DESC " where="(approved = true)" table="vw_passengers">
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Certificate" orderby="passenger_id DESC " where="(approved = true)" tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1134,7 +1135,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="My Insurance" key="82">
-		<GRID keyfield="passenger_id" name="Insurance" orderby="passenger_id DESC" user="entity_id" table="vw_passengers">
+		<GRID keyfield="passenger_id" name="Insurance" orderby="passenger_id DESC" tab.count="count(passenger_id)" user="entity_id" table="vw_passengers">
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -1270,19 +1271,24 @@
 		</FILTER>
 	</DESK>
 	<DESK role="admin" w="700" h="550" name="Travelport apps" key="76" superuser="true">
-		<GRID noorg="true" keyfield="apps_list_id" name="Travelport Applications" table="vw_app_list">
+		<GRID noorg="true" keyfield="apps_list_id" name="Travelport Applications" tab.count="count(apps_list_id)" table="vw_app_list">
 			<TEXTFIELD w="75" title="Application Id">apps_list_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Application Name :">descriptions</TEXTFIELD>
 			<TEXTFIELD w="75" title="Organization Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Application Code Name :">app_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Date">query_date</TEXTDATE>
+			<GRID noorg="true" keyfield="app_subscriptions_id" name="Agencies" tab.count="count(app_subscriptions_id)" linkfield="apps_list_id" table="vw_app_subscriptions">
+				<TEXTFIELD w="75" title="Org Id">org_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Application Name">descriptions</TEXTFIELD>
+			</GRID>
 			<FORM keyfield="apps_list_id" name="Application" table="apps_list">
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" title="Org">org_id</COMBOBOX>
 				<TEXTFIELD w="150" h="20" x="290" y="30" title="Application Name :">descriptions</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="30" title="Application Code Name :">app_name</TEXTFIELD>
 			</FORM>
 		</GRID>
-		<GRID noorg="true" keyfield="app_subscriptions_id" name="Application Subscription" table="vw_app_subscriptions">
+		<GRID noorg="true" keyfield="app_subscriptions_id" name="Application Subscription" tab.count="count(app_subscriptions_id)" table="vw_app_subscriptions">
 			<TEXTFIELD w="75" title="Application Subscriptions Id">app_subscriptions_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Application Name">descriptions</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
@@ -1321,6 +1327,36 @@
 			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
 			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" h="550" name="Passengers" key="97">
+		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" where="function_role='broker'" tab.count="count(passenger_id)" table="vw_passengers">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+		</GRID>
+		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" where="function_role !='broker'" tab.count="count(passenger_id)" table="vw_passengers">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 		</GRID>
 	</DESK>
 </APP>
