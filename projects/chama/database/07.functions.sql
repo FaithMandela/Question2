@@ -24,7 +24,7 @@ BEGIN
 		GROUP BY contribution_type_id,org_id;
 	v_period_id := NEW.period_id;
 	
-
+RAISE EXCEPTION '%',v_contribution_type_id;
 		UPDATE contributions SET money_in  = v_money_in WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
 			IF (v_money_out = 0)THEN
 			UPDATE contributions SET money_out  = 0 WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
@@ -58,6 +58,7 @@ EXECUTE PROCEDURE ins_contrib();
 $BODY$
 DECLARE
 	rec						RECORD;
+	recu			RECORD;
 	v_period_id		integer;
 	vi_period_id		integer;
 	reca			RECORD;
@@ -77,8 +78,9 @@ BEGIN
 
 	FOR reca IN SELECT member_id, entity_id FROM members WHERE (org_id = v_org_id) LOOP
 	
-	FOR rec IN SELECT org_id, frequency, contribution_type_id, investment_amount, merry_go_round_amount 
-	FROM contribution_types WHERE (applies_to_all = true)  AND (org_id = v_org_id) LOOP
+	FOR rec IN SELECT org_id, frequency, contribution_type_id, investment_amount, merry_go_round_amount, applies_to_all
+	FROM contribution_types WHERE  (org_id = v_org_id) LOOP
+	IF(rec.applies_to_all = true) THEN
 		IF (rec.frequency = 'Weekly') THEN
 		FOR i in 1..4 LOOP
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount, member_id, entity_id)
@@ -98,6 +100,70 @@ BEGIN
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, reca.entity_id);
 		END IF;
+		IF (rec.frequency = 'Irregularly') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+		IF (rec.frequency = 'Quarterly') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+		IF (rec.frequency = 'Semi-annually') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+		IF (rec.frequency = 'Annually') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+		END IF;
+	IF(rec.applies_to_all = false)THEN
+	SELECT contribution_type_id, entity_id INTO recu FROM contribution_defaults WHERE entity_id = reca.entity_id
+	AND contribution_type_id = rec.contribution_type_id;
+		IF (rec.frequency = 'Weekly') THEN
+		FOR i in 1..4 LOOP
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount, member_id, entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, recu.entity_id);
+		END LOOP;
+		END IF;
+		IF (rec.frequency = 'Fortnightly') THEN
+		FOR i in 1..2 LOOP
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id, entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, recu.entity_id);
+		END LOOP;
+		END IF;
+		IF (rec.frequency = 'Monthly') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, recu.entity_id);
+		END IF;
+		IF (rec.frequency = 'Irregularly') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+		IF (rec.frequency = 'Quarterly') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+		IF (rec.frequency = 'Semi-annually') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+		IF (rec.frequency = 'Annually') THEN
+			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
+			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, reca.entity_id);
+		END IF;
+	END IF;
 	
 	END LOOP;
 	
@@ -111,37 +177,79 @@ BEGIN
 RETURN msg;	
 END;
 $BODY$
+  LANGUAGE plpgsql;
+
+  CREATE OR REPLACE FUNCTION generate_paid(character varying, character varying,character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	msg		 				varchar(120);
+	v_paid				boolean;	
+BEGIN
+	SELECT paid INTO v_paid FROM contributions WHERE contribution_id = $1::int;
+	--RAISE EXCEPTION '%', v_paid;
+	IF(v_paid = false) THEN
+	UPDATE contributions SET paid = true WHERE contribution_id = $1::int ;
+	msg = 'Paid';
+	ELSE
+	msg = 'Already paid';
+	
+	END IF;
+
+	return msg;
+END;
+$BODY$
   LANGUAGE plpgsql
+  
+CREATE OR REPLACE FUNCTION upd_email()
+  RETURNS trigger AS
+$BODY$
+BEGIN
+IF (TG_OP = 'INSERT') THEN
+	INSERT INTO sys_emailed ( table_id, table_name, email_type)
+	VALUES (10, TG_TABLE_NAME, 6);
+END IF;
+
+RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+ CREATE TRIGGER upd_email AFTER INSERT ON contributions
+    FOR EACH ROW EXECUTE PROCEDURE upd_email();
 
 
- CREATE OR REPLACE FUNCTION ins_members()
+  CREATE OR REPLACE FUNCTION ins_members()
   RETURNS trigger AS
 $BODY$
 DECLARE
 	rec 			RECORD;
 	v_entity_id		integer;
-	
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
-	NEW.entity_id := nextval('entitys_entity_id_seq');
 	
+	IF (New.email is null)THEN
+		RAISE EXCEPTION 'You have to enter an Email';
+	ELSIF(NEW.first_name is null) AND (NEW.surname is null)THEN
+		RAISE EXCEPTION 'You have need to enter Surname and First Name';
+	
+	ELSE
+	Raise NOTICE 'Thank you';
+	END IF;
+	NEW.entity_id := nextval('entitys_entity_id_seq');
+
 	INSERT INTO entitys (entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details)
 	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,1,NEW.email,NEW.email,NEW.phone,'member',NEW.details) RETURNING entity_id INTO v_entity_id;
 
 	NEW.entity_id := v_entity_id;
 
-	ELSIF (TG_OP = 'UPDATE') THEN
-		UPDATE members  SET full_name = 
-(NEW.Surname || ' ' 
-|| NEW.First_name || ' ' 
-|| COALESCE(NEW.Middle_name, ''))
-	WHERE entity_id = NEW.entity_id;
+	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')) where member_id = New.member_id;
 END IF;
 	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
-  
+ 
 CREATE TRIGGER ins_members
   BEFORE INSERT
   ON members
@@ -274,3 +382,19 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_email AFTER INSERT ON investments
+    FOR EACH ROW EXECUTE PROCEDURE upd_email();
+
+ CREATE TRIGGER upd_email AFTER INSERT ON borrowing
+    FOR EACH ROW EXECUTE PROCEDURE upd_email();
+    
+ CREATE TRIGGER upd_email AFTER INSERT ON meetings
+    FOR EACH ROW EXECUTE PROCEDURE upd_email();
+    
+ CREATE TRIGGER upd_email AFTER INSERT ON drawings
+    FOR EACH ROW EXECUTE PROCEDURE upd_email();
+
+
+CREATE TRIGGER upd_email AFTER INSERT ON penalty
+    FOR EACH ROW EXECUTE PROCEDURE upd_email();
