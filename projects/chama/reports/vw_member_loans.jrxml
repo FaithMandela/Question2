@@ -31,8 +31,9 @@
 	<queryString>
 		<![CDATA[SELECT vw_loans.currency_name, vw_loans.loan_type_name, vw_loans.entity_id, vw_loans.entity_name, vw_loans.org_id, vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment,  vw_loans.repayment_period, vw_loans.initial_payment, vw_loans.repayment_amount, vw_loans.total_repayment, vw_loans.loan_balance
 FROM vw_loans
+
+Where entity_id = '$P!{entity_id}'
 $P!{organd}
-Where entity_id = $P!{entity_id}
 order by loan_type_name]]>
 	</queryString>
 	<field name="currency_name" class="java.lang.String"/>

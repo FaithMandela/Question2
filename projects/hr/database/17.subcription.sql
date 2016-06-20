@@ -260,12 +260,12 @@ BEGIN
 		
 		INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
 		SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
-		FROM accounts_class a INNER JOIN account_types b ON a.accounts_class_no = b.accounts_class_id
+		FROM accounts_class a INNER JOIN vw_account_types b ON a.accounts_class_no = b.accounts_class_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 		
 		INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
 		SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
-		FROM account_types a INNER JOIN accounts b ON a.account_type_no = b.account_type_id
+		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 
 		FOR myrec IN SELECT workflow_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details

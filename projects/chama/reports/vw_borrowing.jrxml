@@ -52,8 +52,8 @@ order by borrowing_id]]>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="428b119d-c7e2-4616-9530-a5c780edd3a3"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement style="Title" x="0" y="0" width="555" height="62" uuid="428b119d-c7e2-4616-9530-a5c780edd3a3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[Borrowing Report]]></text>

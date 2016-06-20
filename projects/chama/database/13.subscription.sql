@@ -128,7 +128,6 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
 	v_entity_id		integer;
@@ -163,23 +162,52 @@ BEGIN
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
 		VALUES(NEW.org_id, 1, NEW.chama_name, NEW.org_id, NEW.country_id);
 		
+		v_currency_id := nextval('currency_currency_id_seq');
+		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'Default Currency', 'DC');
+		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
 		v_bank_id := nextval('banks_bank_id_seq');
-		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
-		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+
+		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);
 		
+		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+
+		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+
+		INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
+		SELECT transaction_type_id, NEW.org_id, 1
+		FROM transaction_types;
+		
+
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 		
 		v_member_id := nextval('members_member_id_seq');
-		INSERT INTO members(org_id, member_id, entity_id, full_name) VALUES (NEW.org_id, v_member_id, NEW.entity_id, NEW.primary_contact);
+		INSERT INTO members(org_id, member_id, entity_id, email, surname) VALUES (NEW.org_id, v_member_id, NEW.entity_id, NEW.primary_email, NEW.primary_contact);
 
 		INSERT INTO sys_emailed ( org_id, table_id, table_name)
 		VALUES ( NEW.org_id, NEW.entity_id, 'subscription');
+		
+		INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
+		SELECT NEW.org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
+		FROM accounts_class
+		WHERE org_id = 1;
+		
+		INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
+		SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
+		FROM accounts_class a INNER JOIN vw_account_types b ON a.accounts_class_no = b.accounts_class_no
+		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
+		
+		INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
+		SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
+		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
+		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
+
 	END IF;
 		
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
   
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();

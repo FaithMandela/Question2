@@ -92,10 +92,10 @@ CREATE TABLE contributions (
 	period_id					integer references periods,
 	org_id						integer references orgs,
 	
-	contribution_date			date,
+	contribution_date			timestamp without time zone,
 	investment_amount			real not null,
 	merry_go_round_amount	 	real,
-	paid						boolean default false
+	paid						boolean default false,
 	
 	money_in					real,
 	money_out					real,
@@ -110,6 +110,23 @@ CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_org_id ON contributions (org_id);
 CREATE INDEX contributions_meeting_id ON contributions (meeting_id);
 
+CREATE TABLE drawings(
+drawing_id				serial primary key,
+org_id					integer references orgs,
+period_id				integer references periods,
+entity_id				integer references entitys,
+bank_account_id 			integer references bank_accounts,
+
+withdrawal_date			date,
+narrative				varchar(120),
+amount					real,
+details					text
+);
+
+CREATE INDEX drawings_org_id ON drawings(org_id);
+CREATE INDEX drawings_period_id ON drawings(period_id);
+CREATE INDEX drawings_entity_id ON drawings(entity_id);
+CREATE INDEX drawings_bank_account_id ON drawings(bank_account_id);
 
 CREATE TABLE penalty_type (
 	penalty_type_id				serial primary key,

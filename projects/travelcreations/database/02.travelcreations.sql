@@ -167,12 +167,12 @@ SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
 		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
 		0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
 	FROM vw_loyalty_points)
-	UNION
+	UNION ALL
 	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr, vw_orders.order_date,
 	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
 	0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
 	FROM vw_orders)
-	UNION
+	UNION ALL
 	(SELECT 0::real as dr, 0::real as cr, vw_sambaza.sambaza_date,
 	vw_sambaza.client_code, vw_sambaza.org_name, vw_sambaza.entity_id, COALESCE(vw_sambaza.sambaza_in,0::real) as sambaza_in,
 	COALESCE(vw_sambaza.sambaza_out,0::real) as sambaza_out, vw_sambaza.details
