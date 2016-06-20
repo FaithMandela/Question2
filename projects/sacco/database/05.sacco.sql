@@ -163,7 +163,8 @@ CREATE INDEX investments_period_id ON investments (period_id);
 CREATE INDEX investments_org_id ON investments (org_id);
 
 CREATE TABLE applicants	(
-	entity_id			integer references entitys primary key,
+	applicant_id			serial primary key,
+	entity_id			integer references entitys,
 	org_id 				integer references orgs,
 	person_title			character varying(7),
 	surname 			character varying(50) NOT NULL,
@@ -191,7 +192,8 @@ CREATE TABLE applicants	(
 	details 			text
 );		
  CREATE INDEX applicants_org_id ON applicants (org_id);
- --here
+ CREATE INDEX applicants_entity_id ON applicants (entity_id);
+ -
 
 CREATE TABLE recruiting_agent(
 	recruiting_agent_id  		serial primary key,
@@ -206,40 +208,42 @@ CREATE INDEX recruiting_agent_org_id ON recruiting_agent (org_id);
 
 CREATE TABLE members (
 	entity_id 			integer NOT NUll references entitys,
-	member_id			serial primary key,
-	address_id			integer references address,
+	member_id					serial primary key,
+	address_id					integer references address,
   	bank_id                 	integer references banks,
- 	org_id 				integer references orgs,
+ 	org_id 						integer references orgs,
 	recruiting_agent_id 		integer references recruiting_agent,
 
-	person_title			character varying(7),
+	person_title				character varying(7),
 	
-	full_name			 varchar (120),
-	surname 			character varying(50) NOT NULL,
-	first_name 			character varying(50) NOT NULL,
-  	middle_name 			character varying(50),
-  	date_of_birth 			date,
-  	gender 				character varying(1),
- 	phone				character varying(120),
-  	primary_email			character varying(120),
+	full_name					varchar (120),
+	surname 					character varying(50) NOT NULL,
+	first_name		 			character varying(50) NOT NULL,
+  	middle_name 				character varying(50),
+  	date_of_birth 				date,
+  	gender 						character varying(1),
+ 	phone						character varying(120),
+  	primary_email				character varying(120),
   	
-  	place_of_birth			character varying(50),
-  	marital_status 			character varying(2),
-  	appointment_date 		timestamp default now(),
+  	place_of_birth				character varying(50),
+  	marital_status 				character varying(2),
+  	appointment_date 			timestamp default now(),
  
-  	exit_date 			date,
-    	picture_file 			character varying(32),
-  	active 				boolean NOT NULL DEFAULT true,
-  	language 			character varying(320),
-	interests 			text,
-  	objective 			text,
-  	details 			text,
-  	division 			varchar (120),
-	location 			varchar (120),
-	 sub_location			varchar (120),
-  	 district			varchar (120),
-  	 county				varchar (120) not null default 'Nairobi',
-  	 residential_address 		varchar (120)
+  	exit_date 					date,
+	picture_file 				character varying(32),
+  	active 						boolean NOT NULL DEFAULT true,
+  	language 					character varying(320),
+	interests 					text,
+  	objective 					text,
+  	details 					text,
+  	division 					varchar (120),
+	location 					varchar (120),
+	 sub_location				varchar (120),
+  	 district					varchar (120),
+  	 county						varchar (120) not null default 'Nairobi',
+  	 residential_address 		varchar (120),
+  	 
+  	 expired 					boolean default 'false'
   	);
   	
 	 
@@ -249,12 +253,6 @@ CREATE INDEX members_address_id ON members (address_id);
 CREATE INDEX members_recruiting_agent_id ON members (recruiting_agent_id); 
  
 ALTER TABLE entitys ADD exit_amount REAL default 0;
-
-
-
-
-
-
 
 CREATE TABLE kin_types (
 	kin_type_id				serial primary key,
@@ -305,16 +303,11 @@ CREATE TABLE employment (
 	telephone_number 			varchar(60),
 	details					text
 );
-
-
-
-
-
 CREATE INDEX employment_entity_id ON employment (entity_id);
 CREATE INDEX employment_org_id ON employment(org_id);
 
 
-Create table member_business(
+CREATE TABLE member_business(
 	member_business_id 			serial primary key,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
@@ -332,3 +325,21 @@ Create table member_business(
 CREATE INDEX member_business_entity_id ON member_business (entity_id);
 CREATE INDEX member_business_org_id ON member_business(org_id);
 
+CREATE TABLE billing	(
+	bill_id 		serial primary key,
+	
+	entity_id		integer references entitys,
+	org_id			integer references orgs,
+	currency_id		integer references currency,
+	
+	start_date     	timestamp default now(),
+	end_date		timestamp,
+	bill_amount 	real default 200
+	
+	processed		boolean default false,
+	paid			boolean default false,
+	
+);
+CREATE INDEX billing_entity_id ON billing (entity_id);
+CREATE INDEX billing_org_id ON billing(org_id);
+CREATE INDEX billing_currency_id ON billing(currency_id);
