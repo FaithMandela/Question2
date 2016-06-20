@@ -1,0 +1,10 @@
+<APPLIST loglevel="info" dbpassword="Baraza2011" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
+	<APP dbpassword="Baraza2011" dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Sacco</APP>
+	
+		<APP dbpassword="Baraza2011" dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="payroll.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Payroll</APP>
+	<APP dbpassword="Baraza2011" dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="subscription.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Subscription</APP>
+	<APP dbpassword="Baraza2011" dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="application.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Application</APP>
+	<APP dbpassword="Baraza2011" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Baraza</APP>
+	<SERVER dbpassword="Baraza2011" dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="email.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Sacco Mailing Server</SERVER>
+	<SERVER dbpassword="Baraza2011" dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">Sacco Tomcat Server</SERVER>
+</APPLIST>
