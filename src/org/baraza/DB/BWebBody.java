@@ -583,7 +583,7 @@ public class BWebBody extends BQuery {
 			if(el.getAttribute("class") == null) response.append(" class='select2me form-control");
 			else response.append(" class='" + el.getAttribute("class"));
 			if(el.getAttribute("select.detail") != null) response.append(" detailed-select ");
-			response.append("'>"); // close the class tag and select
+			response.append("'>\n"); // close the class tag and select
 
 			String selectDetail = el.getAttribute("select.detail");
 			String nodefault = el.getAttribute("nodefault");
@@ -638,13 +638,12 @@ public class BWebBody extends BQuery {
 				response.append("<option");
 				if(eof) {
 					if(getString(el.getValue())!=null) {
-						if(getString(el.getValue()).equals(cmbrs.getString(lpkey))) {
+						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
 							response.append(" selected='selected'");
-							if(selectDetail != null) {
-								String sdc = cmbrs.getString(selectDetail);
-								if(sdc != null) response.append(" data-detail='" + sdc.replaceAll("'", "&#39;") + "'");
-							}
-						}
+					}
+					if(selectDetail != null) {
+						String sdc = cmbrs.getString(selectDetail);
+						if(sdc != null) response.append(" data-detail='" + sdc.replaceAll("'", "&#39;") + "'");
 					}
 				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
 					response.append(" selected='selected'");
