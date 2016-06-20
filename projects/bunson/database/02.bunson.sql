@@ -305,38 +305,40 @@ CREATE OR REPLACE VIEW vw_transfer_assignments AS
     drivers.driver_id, drivers.driver_name, drivers.mobile_number, 
     drivers.is_backup, drivers.air_agent_code, cars.car_type_id, 
     cars.registration_number, car_types.car_type_name, car_types.car_type_code, 
-    transfers.transfer_id, transfers.record_locator, customer_codes.customer_code, 
-    customer_codes.customer_name, transfers.currency_id, transfers.agreed_amount, 
-    transfers.booking_location, transfers.booking_date, 
-    transfers.payment_details, transfers.reference_data, transfers.pax_no, 
-    transfers.transfer_cancelled, transfers.is_group, transfers.create_source, 
-    passangers.group_contact, passangers.group_member, passangers.passanger_id, 
-    passangers.passanger_name, passangers.passanger_mobile, 
-    passangers.passanger_email, passangers.pickup_time, passangers.pickup, 
-    passangers.dropoff, passangers.other_preference, passangers.amount, 
-    passangers.processed, passangers.pax_cancelled, passangers.pickup_date, 
-    passangers.tab, transfer_assignments.transfer_assignment_id, 
-    transfer_assignments.car_id, transfer_assignments.confirmation_code, 
-    transfer_assignments.kms_out, transfer_assignments.kms_in, 
-    transfer_assignments.time_out, transfer_assignments.time_in, 
-    transfer_assignments.no_show, transfer_assignments.no_show_reason, 
-    transfer_assignments.closed, transfer_assignments.last_update, 
-    transfer_assignments.cancelled, transfer_assignments.cancel_reason, 
-    transfer_flights.transfer_flight_id, transfer_flights.start_time, 
-    transfer_flights.end_time, transfer_flights.flight_date, 
-    transfer_flights.start_airport, transfer_flights.end_airport, 
-    transfer_flights.airline, transfer_flights.flight_num, 
-    transfer_flights.create_key
+    transfers.transfer_id, transfers.record_locator, 
+    customer_codes.customer_code, customer_codes.customer_name, 
+    transfers.currency_id, transfers.agreed_amount, transfers.booking_location, 
+    transfers.booking_date, transfers.payment_details, transfers.reference_data, 
+    transfers.pax_no, transfers.transfer_cancelled, transfers.is_group, 
+    transfers.create_source, passangers.group_contact, passangers.group_member, 
+    passangers.passanger_id, passangers.passanger_name, 
+    passangers.passanger_mobile, passangers.passanger_email, 
+    passangers.pickup_time, passangers.pickup, passangers.dropoff, 
+    passangers.other_preference, passangers.amount, passangers.processed, 
+    passangers.pax_cancelled, passangers.pickup_date, passangers.tab, 
+    transfer_assignments.transfer_assignment_id, transfer_assignments.car_id, 
+    transfer_assignments.confirmation_code, transfer_assignments.kms_out, 
+    transfer_assignments.kms_in, transfer_assignments.time_out, 
+    transfer_assignments.time_in, transfer_assignments.no_show, 
+    transfer_assignments.no_show_reason, transfer_assignments.closed, 
+    transfer_assignments.last_update, transfer_assignments.cancelled, 
+    transfer_assignments.cancel_reason, transfer_flights.transfer_flight_id, 
+    transfer_flights.start_time, transfer_flights.end_time, 
+    transfer_flights.flight_date, transfer_flights.start_airport, 
+    transfer_flights.end_airport, transfer_flights.airline, 
+    transfer_flights.flight_num, transfer_flights.create_key, entitys.entity_id, 
+    entitys.entity_name, payment_types.payment_type_id, payment_types.payment_type_name
    FROM transfer_assignments
    JOIN drivers ON transfer_assignments.driver_id = drivers.driver_id
    JOIN cars ON cars.car_id = transfer_assignments.car_id
    JOIN car_types ON car_types.car_type_id = cars.car_type_id
    JOIN passangers ON transfer_assignments.passanger_id = passangers.passanger_id
    JOIN transfers ON passangers.transfer_id = transfers.transfer_id
-   JOIN customer_codes ON customer_codes.customer_code = transfers.customer_code
+   JOIN payment_types ON payment_types.payment_type_id = transfers.payment_type_id
+   JOIN entitys ON entitys.entity_id = transfers.entity_id
+   JOIN customer_codes ON customer_codes.customer_code::text = transfers.customer_code::text
    LEFT JOIN transfer_flights ON transfer_flights.transfer_id = passangers.transfer_id
   WHERE transfer_flights.tab IS NULL OR transfer_flights.tab = passangers.tab;
-
 
 
 -- DROP VIEW vw_transfer_assignments_create;
