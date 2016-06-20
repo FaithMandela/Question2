@@ -694,7 +694,7 @@
 			</GRID>
 			<FORM new="false" name="Organisation" keyfield="org_id" delete="false" table="orgs">
 				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
-				<COMBOBOX w="430" title="Base Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="Base Currency" lptable="currency" select.detail="currency_symbol" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="350" title="Default Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="50" h="20" x="10" lpfield="sys_country_name">default_country_id</COMBOBOX>
 				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="70" h="20" x="10">logo</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" placeholder="Details" y="90" h="70" x="10">details</TEXTAREA>
@@ -2386,7 +2386,7 @@
 				<EDITFIELD w="75" title="Grade" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">grade</EDITFIELD>
 				<EDITFIELD w="175" title="Narrative" editkey="evaluation_point_id" edit="true" editvalue="evaluation_points">narrative</EDITFIELD>
 				<FORM name="Evaluation Points" keyfield="evaluation_point_id" linkfield="job_review_id" table="evaluation_points">
-					<COMBOBOX w="430" title="Review Point" lptable="review_points" linkfnct="get_review_category" y="10" h="20" x="10" lpfield="review_point_name">review_point_id</COMBOBOX>
+					<COMBOBOX w="430" title="Review Point" lptable="review_points" select.detail="details" linkfnct="get_review_category" y="10" h="20" x="10" lpfield="review_point_name">review_point_id</COMBOBOX>
 					<COMBOLIST w="50" title="Grade" y="10" h="20" x="10">grade
 						<DATA key="S">S - Satisfactory</DATA>
 						<DATA key="A">A - Average</DATA>
