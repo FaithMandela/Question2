@@ -321,7 +321,14 @@ public class BWeb {
 			mymenu += "		</li>\n";
 		}
 		
-		mymenu += getSubMenu(mel, 0);
+		boolean showMenu = true;
+		if(root.getAttribute("billing", "false").equals("true")) {
+			String expStr = "SELECT org_id FROM orgs WHERE ((expiry_date is null) or (expiry_date < current_date)) AND (org_id = " + db.getUserID() + ")";
+			String expired = db.executeFunction(expStr);
+			if(expired == null) showMenu = false;
+		}
+		
+		if(showMenu) mymenu += getSubMenu(mel, 0);
 		mymenu += "	</ul>\n";
 
 		return mymenu;

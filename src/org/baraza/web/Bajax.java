@@ -9,6 +9,7 @@
 package org.baraza.web;
 
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Calendar;
@@ -308,24 +309,24 @@ System.out.println("BASE 2020 : " + bals);
 				long diff = cal.getTimeInMillis() - expiryDate.getTime();
 				if(diff > 0) {
 					diff = diff / (1000 * 60 * 60 * 24);
-					
 					annualCost = annualCost * (366 - diff) / 366;
+					
+					cal.setTime(expiryDate);
 				}
 				
 				System.out.println("expiry date " + rsa.getDate("expiry_date"));
 				System.out.println("expiry diff " + diff);
 				System.out.println("expiry cost " + annualCost);
-				
 			}
 		}
+		DecimalFormat df = new DecimalFormat("##########.#");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String calS = sdf.format(cal.getTime());
 		
 		if((annualCost * buyUnits) <= bal) {
 			String insSql = "INSERT INTO productions(product_id, entity_id, org_id, quantity, price, is_active, expiry_date) VALUES ("
-			+  productId + "," + db.getUserID() + "," + db.getUserOrg() + "," + units + "," 
-			+ rs.getString("annual_cost") + ", true, '" + calS + "')";
-	System.out.println("BASE 2030 : " + insSql);
+			+ productId + "," + db.getUserID() + "," + db.getUserOrg() + "," + units + "," 
+			+ df.format(annualCost) + ", true, '" + calS + "')";
 			db.executeQuery(insSql);
 			
 			resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
