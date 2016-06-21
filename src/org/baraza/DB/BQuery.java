@@ -628,7 +628,6 @@ public class BQuery {
 	}
 
 	public String updateRecField(String fname, String fvalue) {
-		int type;
 		String errMsg = "";
 
 		if(isEdit) {
@@ -649,13 +648,25 @@ public class BQuery {
 		    } else if(fvalue.length()<1) {
 				rs.updateNull(fname);
 		    } else {
-				type = getFieldType(columnindex);
+				int type = getFieldType(columnindex);
+				int colLen = getFieldSize(columnindex);
 	
 				//System.out.println("BASE 4015 : " + fname + " = " + fvalue + " type = " + type);
 				switch(type) {
         			case Types.CHAR:
         			case Types.VARCHAR:
         			case Types.LONGVARCHAR:
+        				if(colLen < fvalue.length()) {
+							String errFld = fname;
+							if(view != null) {
+								errFld = view.getElement(fname).getAttribute("title");
+								if(errFld == null) errFld = view.getElement(fname).getAttribute("tab");
+								if(errFld == null) errFld = fname;
+							}
+							if(errMsg == null) errMsg = errFld + " is too long maximum is : " + colLen;
+							else errMsg += "\n<br>" + errFld + " is too long maximum is : " + colLen;
+						}
+						
             			rs.updateString(fname, fvalue);
 						break;
        				case Types.BIT:
@@ -844,16 +855,31 @@ public class BQuery {
         try {
 			PreparedStatement ps = db.getDB().prepareStatement(usql, Statement.RETURN_GENERATED_KEYS);
 			int col = 1;
+			int columnindex = -1;
+			int type = -1;
+			int colLen = -1;
 			for (String field : addNewBlock.keySet()) {
 				fname = field;
 				fvalue = addNewBlock.get(field);
-				int type = getFieldType(rs.findColumn(field));
-				log.fine("BASE 1010 : " + col + " : " + fname + " : " + fvalue + " : " + type);
-
+				columnindex = rs.findColumn(field);
+				type = getFieldType(columnindex);
+				colLen = getFieldSize(columnindex);
+				log.fine("BASE 1010 : " + col + " : " + fname + " : " + fvalue + " : " + type + " : " + colLen);
+								
 				switch(type) {
         			case Types.CHAR:
         			case Types.VARCHAR:
         			case Types.LONGVARCHAR:
+						if(colLen < fvalue.length()) {
+							String errFld = fname;
+							if(view != null) {
+								errFld = view.getElement(fname).getAttribute("title");
+								if(errFld == null) errFld = view.getElement(fname).getAttribute("tab");
+								if(errFld == null) errFld = fname;
+							}
+							if(errMsg == null) errMsg = errFld + " is too long maximum is : " + colLen;
+							else errMsg += "\n<br>" + errFld + " is too long maximum is : " + colLen;
+						}
             			ps.setString(col, fvalue);
 						break;
        				case Types.BIT:
@@ -916,11 +942,12 @@ public class BQuery {
 			}
         } catch (SQLException ex) {
 			errCode = ex.getErrorCode();
-			errMsg = getErrMessage(null);
-			if(errMsg == null) errMsg = fname + " : " + ex.getMessage() + "\n";
-			else errMsg = fname + " : " + errMsg + "\n";
+			String errCodeMsg = getErrMessage(null);
+			if(errCodeMsg == null) errCodeMsg = ex.getMessage();
+			if(errMsg == null) errMsg = errCodeMsg + "\n";
+			else errMsg += "\n<br>" + errCodeMsg + "\n";
 
-        	log.severe("The SQL Exeption on update field " + fname + " : " + ex);
+        	log.severe("The SQL Exeption on new field " + fname + " : " + ex);
 			log.severe("The error code " + errCode);
         } catch (NumberFormatException ex) {
 			errMsg = fname + " : " + ex.getMessage() + "\n";

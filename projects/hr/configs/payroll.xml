@@ -726,6 +726,7 @@
 				<ACTION fnct="generate_payroll" approval="1" role="hr,admin,payrolladmin">Generate Payroll</ACTION>
 				<ACTION fnct="process_payroll" approval="1" role="payroll,admin">Process Payroll</ACTION>
 				<ACTION fnct="process_loans" role="payroll,admin">Process Loans</ACTION>
+				<ACTION fnct="compute_loans" role="payroll,admin">Re-compute Loans</ACTION>
 				<ACTION fnct="process_pensions" role="payroll,admin">Process Pensions</ACTION>
 				<ACTION fnct="process_payroll" approval="2" role="payroll,admin">Request Approval</ACTION>
 				<ACTION fnct="process_ledger" role="payroll,admin">Process Ledger</ACTION>
