@@ -702,8 +702,7 @@
 	});
 
     <% } %>
-        
-        
+                
     $('.detailed-select').change(function(){
         var $this = $(this);
         var name = $this.attr('name');

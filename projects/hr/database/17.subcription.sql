@@ -1,6 +1,8 @@
 
+
 ALTER TABLE orgs ADD employee_limit integer default 5 not null;
 ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
+ALTER TABLE orgs ADD expiry_date date;
 
 
 CREATE TABLE industry (
@@ -294,7 +296,22 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
- 
+
+CREATE OR REPLACE FUNCTION ins_productions() RETURNS trigger AS $$
+DECLARE
+BEGIN
+
+	IF(NEW.product_id = 1)THEN
+		UPDATE orgs SET employee_limit = employee_limit + NEW.quantity, expiry_date = NEW.expiry_date
+		WHERE org_id = NEW.org_id;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_productions BEFORE INSERT ON productions
+    FOR EACH ROW EXECUTE PROCEDURE ins_productions();
 
 CREATE OR REPLACE FUNCTION ins_employee_limit() RETURNS trigger AS $$
 DECLARE

@@ -259,6 +259,36 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION compute_loans(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_period_id			integer;
+	v_org_id			integer;
+	msg					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id INTO v_period_id, v_org_id
+	FROM periods
+	WHERE (period_id = $1::integer);
+	
+	DELETE FROM loan_monthly WHERE period_id = v_period_id;
+
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
+
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+
+	msg := 'Loans re-computed';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 DECLARE
 	v_default_interest	real;

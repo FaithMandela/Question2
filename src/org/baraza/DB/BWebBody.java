@@ -641,12 +641,12 @@ public class BWebBody extends BQuery {
 						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
 							response.append(" selected='selected'");
 					}
-					if(selectDetail != null) {
-						String sdc = cmbrs.getString(selectDetail);
-						if(sdc != null) response.append(" data-detail='" + sdc.replaceAll("'", "&#39;") + "'");
-					}
 				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
 					response.append(" selected='selected'");
+				}
+				if(selectDetail != null) {
+					String sdc = cmbrs.getString(selectDetail);
+					if(sdc != null) response.append(" data-detail='" + sdc.replaceAll("'", "&#39;") + "'");
 				}
 				response.append(" value='" + cmbrs.getString(lpkey));
 				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");
