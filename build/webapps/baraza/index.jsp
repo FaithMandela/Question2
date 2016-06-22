@@ -715,10 +715,6 @@
         }else{
             $('#help_' + name).html(detail);
         }
-        
-        
-        
-        
     });
 
     // MULTISELECT INITIALIZE
