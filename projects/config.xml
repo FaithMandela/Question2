@@ -94,4 +94,5 @@
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/chama" dbname="chama" path="chama" xmlfile="tomcat.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Chama Tomcat Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">FAidaplus Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelportapps Server</SERVER>
+	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelcreations" dbname="travelcreations" path="travelcreations" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelcreations Server</SERVER>
 </APPLIST>
