@@ -18,18 +18,18 @@
 	<queryString>
 		<![CDATA[SELECT a.dr, a.cr, a.order_date::date AS order_date, a.son, a.pcc,
 		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details,a.entity_name,
-a.curr_balance
+a.curr_balance,batch_no
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.org_son as son,
 		vw_son_points.org_pcc as pcc, vw_son_points.org_name, vw_son_points.entity_id,
-		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name,getSonbalance('$P!{id}','$P!{minDate}') as curr_balance
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name,getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,null::int as batch_no
 	FROM vw_son_points)
 	UNION
 	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
 		vw_orders.order_date::date AS order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
 		get_order_details(vw_orders.order_id) AS details,vw_orders.entity_name,
-getSonbalance('$P!{id}','$P!{minDate}') as curr_balance
+getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,vw_orders.batch_no
 	FROM vw_orders)) a
 	WHERE entity_id = '$P!{id}'
 AND order_date >= '$P!{minDate}'
@@ -47,6 +47,7 @@ AND order_date <= '$P!{maxDate}'
 	<field name="details" class="java.lang.String"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="curr_balance" class="java.lang.Float"/>
+	<field name="batch_no" class="java.lang.Integer"/>
 	<variable name="v_balance" class="java.lang.Float">
 		<variableExpression><![CDATA[$F{curr_balance}]]></variableExpression>
 	</variable>
@@ -80,7 +81,7 @@ AND order_date <= '$P!{maxDate}'
 		<band height="29" splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="26" splitType="Stretch">
+		<band height="29" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="65" height="20" uuid="14721a4e-0063-4767-b809-71f5bbe3f337"/>
 				<textElement>
@@ -90,15 +91,15 @@ AND order_date <= '$P!{maxDate}'
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="411" y="0" width="184" height="20" uuid="b7a03a29-7d61-4b95-973c-b7c02fcf42ff"/>
+				<reportElement x="436" y="0" width="160" height="20" uuid="b7a03a29-7d61-4b95-973c-b7c02fcf42ff"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<text><![CDATA[Details]]></text>
+				<text><![CDATA[       Details]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="595" y="0" width="70" height="20" uuid="23f3c26e-dd00-488e-8635-615673b21cbc"/>
+				<reportElement x="596" y="0" width="70" height="20" uuid="23f3c26e-dd00-488e-8635-615673b21cbc"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -106,7 +107,7 @@ AND order_date <= '$P!{maxDate}'
 				<text><![CDATA[Dr]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="730" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="d2a4bb67-32c1-453b-a023-3e1823f7d6b0"/>
+				<reportElement x="732" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="d2a4bb67-32c1-453b-a023-3e1823f7d6b0"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -114,7 +115,7 @@ AND order_date <= '$P!{maxDate}'
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="665" y="0" width="65" height="20" uuid="c99f9f2f-f47c-43aa-a079-ee1485266734"/>
+				<reportElement x="666" y="0" width="66" height="20" uuid="c99f9f2f-f47c-43aa-a079-ee1485266734"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -122,7 +123,7 @@ AND order_date <= '$P!{maxDate}'
 				<text><![CDATA[Cr]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="25" width="802" height="1" uuid="2d7b638c-e4fb-48f2-8bde-509d6408a4f8"/>
+				<reportElement x="0" y="28" width="802" height="1" uuid="2d7b638c-e4fb-48f2-8bde-509d6408a4f8"/>
 			</line>
 			<staticText>
 				<reportElement x="65" y="0" width="139" height="20" isPrintWhenDetailOverflows="true" uuid="d8b2503e-b20f-4e60-8ab2-0f8f59d35b8e"/>
@@ -132,25 +133,32 @@ AND order_date <= '$P!{maxDate}'
 				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="204" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="237478f3-f88e-49b1-be94-9ad5cf8b4891"/>
+				<reportElement x="204" y="0" width="36" height="20" isPrintWhenDetailOverflows="true" uuid="237478f3-f88e-49b1-be94-9ad5cf8b4891"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PCC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="250" y="0" width="115" height="20" isPrintWhenDetailOverflows="true" uuid="544fe657-a367-4226-992d-c08cf0abc5be"/>
+				<reportElement x="240" y="0" width="111" height="20" isPrintWhenDetailOverflows="true" uuid="544fe657-a367-4226-992d-c08cf0abc5be"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Consultant Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="365" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="4136fe3f-fd82-4e10-987b-3aa3bb99fb01"/>
+				<reportElement x="351" y="0" width="32" height="20" isPrintWhenDetailOverflows="true" uuid="4136fe3f-fd82-4e10-987b-3aa3bb99fb01"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SON]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="0" width="53" height="20" uuid="320242a5-ebc5-4bb6-85eb-6a6562644bad"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Batch No.]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -165,7 +173,7 @@ AND order_date <= '$P!{maxDate}'
 				<textFieldExpression><![CDATA[$F{order_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="411" y="0" width="184" height="20" isPrintWhenDetailOverflows="true" uuid="ed3702c7-d8b6-4c1d-8be8-dd58807632c0"/>
+				<reportElement x="436" y="0" width="160" height="20" isPrintWhenDetailOverflows="true" uuid="ed3702c7-d8b6-4c1d-8be8-dd58807632c0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -173,7 +181,7 @@ AND order_date <= '$P!{maxDate}'
 				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="595" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="61ba9165-9450-44c4-8f9c-978cef6b53d0"/>
+				<reportElement x="596" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="61ba9165-9450-44c4-8f9c-978cef6b53d0"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -181,7 +189,7 @@ AND order_date <= '$P!{maxDate}'
 				<textFieldExpression><![CDATA[$F{dr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="665" y="0" width="65" height="20" isPrintWhenDetailOverflows="true" uuid="c691b140-9a33-46c1-bdcf-fc648d831a6f"/>
+				<reportElement x="666" y="0" width="66" height="20" isPrintWhenDetailOverflows="true" uuid="c691b140-9a33-46c1-bdcf-fc648d831a6f"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -189,7 +197,7 @@ AND order_date <= '$P!{maxDate}'
 				<textFieldExpression><![CDATA[$F{cr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="730" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="41453f50-e283-48bd-b25b-d4c4d8dfcac9"/>
+				<reportElement x="732" y="0" width="70" height="20" isPrintWhenDetailOverflows="true" uuid="41453f50-e283-48bd-b25b-d4c4d8dfcac9"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -204,25 +212,32 @@ AND order_date <= '$P!{maxDate}'
 				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="250" y="0" width="115" height="20" uuid="ebcf2357-12b5-469f-979b-08b712d0771b"/>
+				<reportElement x="240" y="0" width="111" height="20" uuid="ebcf2357-12b5-469f-979b-08b712d0771b"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="365" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="5d0e075a-0bd8-4dc9-832e-94af7e6f73d5"/>
+				<reportElement x="351" y="0" width="32" height="20" isPrintWhenDetailOverflows="true" uuid="5d0e075a-0bd8-4dc9-832e-94af7e6f73d5"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="204" y="0" width="46" height="20" isPrintWhenDetailOverflows="true" uuid="0920ff47-0ec7-4e8a-9603-ba4328495fcf"/>
+				<reportElement x="204" y="0" width="36" height="20" isPrintWhenDetailOverflows="true" uuid="0920ff47-0ec7-4e8a-9603-ba4328495fcf"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="383" y="0" width="53" height="20" isPrintWhenDetailOverflows="true" uuid="03e991b9-fde3-4dce-97c8-c6d2677eac1c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{batch_no}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

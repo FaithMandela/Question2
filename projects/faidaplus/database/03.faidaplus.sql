@@ -214,8 +214,8 @@ SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		LEFT JOIN towns ON orgs.town_id = towns.town_id
 		LEFT JOIN entitys ON orgs.account_manager_id = entitys.entity_id;
 
-CREATE OR REPLACE VIEW vw_entitys AS
-	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
+	CREATE OR REPLACE VIEW vw_entitys AS
+		SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
 		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
 		vw_orgs.pcc, vw_orgs.town_id, vw_orgs.town_name,
 		vw_orgs.account_manager_id,vw_orgs.account_manager_name,
@@ -239,8 +239,8 @@ CREATE OR REPLACE VIEW vw_entitys AS
 		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
 		entitys.salutation, entitys.son,entitys.birth_date,entitys.last_login,
 		entity_types.entity_type_id, entity_types.entity_type_name,
-		entity_types.entity_role, entity_types.use_key,vw_orgs.pcc||'-'||entitys.son as pcc_son
-	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
+		entity_types.entity_role, entity_types.use_key,vw_orgs.pcc||'-'||entitys.son as pcc_son,vw_orgs.pcc||'-'||entitys.son||'-'||entity_name as pcc_son_name
+		FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
 
@@ -318,7 +318,7 @@ CREATE OR REPLACE VIEW vw_points AS
 CREATE OR REPLACE VIEW vw_org_points AS
 	SELECT periods.period_id, periods.start_date AS period, to_char(periods.start_date::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
 		vw_orgs.pcc, COALESCE(SUM(points.segments),0.0) AS segments, COALESCE(SUM(points.points),0.0) AS points,
-		COALESCE(SUM(points.bonus),0.0) AS bonus, vw_orgs.org_id,vw_orgs.org_name
+		COALESCE(SUM(points.bonus),0.0) AS bonus, vw_orgs.org_id,vw_orgs.org_name, COALESCE(count(points.son), 0::int) AS son
 	FROM points
 	 JOIN vw_orgs ON points.org_id = vw_orgs.org_id
 	 JOIN periods ON points.period_id = periods.period_id WHERE periods.approve_status = 'Approved'
@@ -357,17 +357,19 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE VIEW vw_son_statement AS
 SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
-		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details
+		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details, a.batch_no
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
 		vw_son_points.pcc, vw_son_points.org_name, vw_son_points.entity_id,
-		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,
+		NULL::integer AS batch_no
 	FROM vw_son_points)
 	UNION
 	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
-		get_order_details(vw_orders.order_id) AS details
+		get_order_details(vw_orders.order_id) AS details,
+		batch_no
 	FROM vw_orders)) a
 	ORDER BY a.order_date;
 
@@ -399,17 +401,17 @@ CREATE VIEW vw_org_bonus AS
 
 CREATE OR REPLACE VIEW vw_pcc_statement AS
 SELECT a.dr, a.cr, a.org_id, a.order_date::date, a.pcc,
-		a.org_name, a.dr - a.cr AS balance, a.details
+		a.org_name, a.dr - a.cr AS balance, a.details, a.batch_no
 	FROM ((SELECT COALESCE(vw_org_points.points, 0::real) + COALESCE(vw_org_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_org_points.period AS order_date, ''::text,
 		vw_org_points.pcc, vw_org_points.org_name, 0::integer,vw_org_points.org_id,
-		( segments||' segments sold in '|| ticket_period)as details
+		( segments||' segments sold in '|| ticket_period)as details,NULL::integer AS batch_no
 	FROM vw_org_points)
 	UNION
 	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,vw_orders.org_id,
-		get_order_details(vw_orders.order_id) AS details
+		get_order_details(vw_orders.order_id) AS details,batch_no
 	FROM vw_orders)) a
 	ORDER BY a.order_date;
 

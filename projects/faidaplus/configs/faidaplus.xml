@@ -892,7 +892,7 @@
 			<FILTERFORM name="Consultant Productivity">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc_son" x="10" y="30" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc_son_name" x="10" y="30" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_productivity.jasper" name="Consultant Productivity"></JASPER>
 		</FILTER>
@@ -903,7 +903,7 @@
 			</FILTERFORM>
 			<JASPER reportfile="comulative_productivity.jasper" name="Agency Cumulative Productivity"></JASPER>
 		</FILTER>
-		<FILTER role="admin" split="150" w="700" h="550" name="Market Productivity " type="vert">
+		<FILTER role="admin,staff" split="150" w="700" h="550" name="Market Productivity " type="vert">
 			<FILTERFORM name="Market Productivity ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
@@ -985,15 +985,15 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Users Contacts" key="118">
-		<JASPER reportfile="user_contacts.jasper" name="Users Contacts"></JASPER>
-		<JASPER reportfile="user_contacts_KAM.jasper" name="Users Contacts Per KAM"></JASPER>
+		<JASPER reportfile="user_contacts.jasper" name="User Contacts"></JASPER>
+		<JASPER reportfile="user_contacts_KAM.jasper" name="User Contacts Per KAM"></JASPER>
 	</DESK>
 	<DESK w="700" h="550" name="Consultant Statement" key="123">
 		<FILTER split="150" w="700" h="550" name="Consultant Statement " type="vert" key="order_date">
 			<FILTERFORM name="Consultant Statement ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_statements.jasper" name="Consultant Statement"></JASPER>
 		</FILTER>
@@ -1250,14 +1250,15 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Consultant Contacts" key="216">
-		<JASPER reportfile="user_contacts_KAM.jasper" name="Users Contacts Per KAM"></JASPER>
+		<JASPER reportfile="user_contacts_KAM.jasper" name="User Contacts Per KAM"></JASPER>
+		<JASPER reportfile="user_contacts.jasper" name="All User Contacts"></JASPER>
 	</DESK>
 	<DESK w="700" h="550" name="Consultant Graphical Representation " key="221">
 		<FILTER split="150" w="700" h="550" name="Consultant Graphical Representation  " type="vert" key="order_date">
 			<FILTERFORM name="Consultant Graphical Representation ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="vw_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
 		</FILTER>
@@ -1267,7 +1268,7 @@
 			<FILTERFORM name="Consultant Graphical Representation ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="vw_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
 		</FILTER>
@@ -1277,7 +1278,7 @@
 			<FILTERFORM name="Consultant Graphical Representation ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="vw_manager_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
 		</FILTER>

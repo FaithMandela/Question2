@@ -8,6 +8,11 @@ BEGIN
 		SELECT entity_id INTO v_entity_id
 		FROM entitys
 		WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)));
+		IF(v_entity_id is null)THEN
+		SELECT entity_id INTO v_entity_id
+		FROM entitys
+		WHERE (trim(lower(client_code)) = trim(lower(NEW.client_code)));
+		END IF;
 
 		IF(v_entity_id is not null)THEN
 			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
@@ -44,7 +49,7 @@ BEGIN
 		UPDATE clients SET ar_status = ps , approve_status = ps WHERE client_id = $1::integer ;
 		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, function_role, is_active, client_dob)
 		VALUES (app.org_id, 0, app.client_name, trim(lower(app.user_name)), trim(lower(app.client_email)), app.phone_no, 'client', true, app.client_dob) returning entity_id INTO myid;
-		msg := 'Customer account has been activated';
+		msg := 'Client account has been activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (2, myid, 'entitys', 3);
 	END IF;

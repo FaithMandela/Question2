@@ -1,10 +1,33 @@
-CREATE OR REPLACE VIEW vw_son_points AS
-SELECT points.points_id, periods.period_id, periods.start_date as period,
-	to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
-	points.pcc, points.son, points.segments, points.amount,
-	points.points, points.bonus, vw_entitys.org_name,
-	vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name,  vw_entitys.pcc AS org_pcc,
-vw_entitys.son AS org_son,  vw_entitys.is_active, vw_entitys.account_manager_id
-FROM points JOIN vw_entitys ON points.entity_id = vw_entitys.entity_id
-	INNER JOIN periods ON points.period_id = periods.period_id
-	WHERE periods.approve_status = 'Approved';
+CREATE OR REPLACE VIEW vw_pcc_statement AS
+SELECT a.dr, a.cr, a.org_id, a.order_date::date, a.pcc,
+		a.org_name, a.dr - a.cr AS balance, a.details, a.batch_no
+	FROM ((SELECT COALESCE(vw_org_points.points, 0::real) + COALESCE(vw_org_points.bonus, 0::real) AS dr,
+		0::real AS cr, vw_org_points.period AS order_date, ''::text,
+		vw_org_points.pcc, vw_org_points.org_name, 0::integer,vw_org_points.org_id,
+		( segments||' segments sold in '|| ticket_period)as details,NULL::integer AS batch_no
+	FROM vw_org_points)
+	UNION
+	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
+		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
+		vw_orders.entity_id,vw_orders.org_id,
+		get_order_details(vw_orders.order_id) AS details,batch_no
+	FROM vw_orders)) a
+	ORDER BY a.order_date;
+
+	CREATE OR REPLACE VIEW vw_son_statement AS
+SELECT a.dr, a.cr, a.order_date, a.son, a.pcc,
+		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details, a.batch_no
+	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
+		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
+		vw_son_points.pcc, vw_son_points.org_name, vw_son_points.entity_id,
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,
+		NULL::integer AS batch_no
+	FROM vw_son_points)
+	UNION
+	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
+		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
+		vw_orders.entity_id,
+		get_order_details(vw_orders.order_id) AS details,
+		batch_no
+	FROM vw_orders)) a
+	ORDER BY a.order_date;

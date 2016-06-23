@@ -55,6 +55,7 @@ AND vw_son_points.period <= '$P!{maxDate}'AND vw_son_points.account_manager_id =
 	<field name="org_pcc" class="java.lang.String"/>
 	<field name="org_son" class="java.lang.String"/>
 	<field name="is_active" class="java.lang.Boolean"/>
+	<variable name="period" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -112,19 +113,13 @@ AND vw_son_points.period <= '$P!{maxDate}'AND vw_son_points.account_manager_id =
 	</pageFooter>
 	<summary>
 		<band height="447" splitType="Stretch">
-			<textField>
-				<reportElement x="74" y="24" width="100" height="20" uuid="ea4cb5f1-106e-4b99-ac82-66d62b897445"/>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="66" y="24" width="216" height="20" uuid="ea4cb5f1-106e-4b99-ac82-66d62b897445"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{minDate}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="174" y="24" width="100" height="20" uuid="a3f5e23c-d113-4f32-92f4-2375d7fd4fc2"/>
-				<textElement>
-					<font fontName="Times New Roman" size="14" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{maxDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[
+new SimpleDateFormat("dd/mm/yyyy").format(new SimpleDateFormat("yyyy-mm-dd").parse($P{minDate})) + ' - ' + new SimpleDateFormat("dd/mm/yyyy").format(new SimpleDateFormat("yyyy-mm-dd").parse($P{maxDate}))]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="24" width="60" height="20" uuid="ebc331e2-f838-44cb-8a28-fad518143c29"/>
@@ -137,11 +132,10 @@ AND vw_son_points.period <= '$P!{maxDate}'AND vw_son_points.account_manager_id =
 				<reportElement x="1" y="44" width="801" height="2" uuid="0d757ffe-2037-4e97-8031-de1b8ac3bc81"/>
 			</line>
 			<xyBarChart>
-				<chart>
+				<chart isShowLegend="false">
 					<reportElement positionType="Float" x="0" y="49" width="802" height="398" uuid="07f98452-37be-4839-bcf1-d6b242d803a2">
-
-    <property name="net.sf.jasperreports.chart.domain.axis.tick.interval" value="1"/>
-  </reportElement>
+						<property name="net.sf.jasperreports.chart.domain.axis.tick.interval" value="1"/>
+					</reportElement>
 					<chartTitle>
 						<titleExpression><![CDATA["Graphical representaion of monthly segments per consultants over time"]]></titleExpression>
 					</chartTitle>
@@ -172,32 +166,32 @@ AND vw_son_points.period <= '$P!{maxDate}'AND vw_son_points.account_manager_id =
 				</barPlot>
 			</xyBarChart>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="494" y="24" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="5a71c58b-acd3-45c0-94d2-d06bd3fc577c"/>
+				<reportElement x="587" y="24" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="5a71c58b-acd3-45c0-94d2-d06bd3fc577c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{org_son}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="275" y="24" width="208" height="20" isPrintWhenDetailOverflows="true" uuid="9da15c15-c320-4d96-b592-b1b1d7544820"/>
+				<reportElement x="340" y="24" width="200" height="20" isPrintWhenDetailOverflows="true" uuid="9da15c15-c320-4d96-b592-b1b1d7544820"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="493" y="4" width="100" height="20" uuid="47aee0a4-8f39-4f6f-876f-9e154d7ba137"/>
+				<reportElement x="540" y="24" width="47" height="20" uuid="47aee0a4-8f39-4f6f-876f-9e154d7ba137"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[SON]]></text>
+				<text><![CDATA[SON:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="274" y="4" width="208" height="20" uuid="ff235e2f-bd99-4357-b9c1-0abb4b08c7cb"/>
+				<reportElement x="282" y="24" width="58" height="20" uuid="ff235e2f-bd99-4357-b9c1-0abb4b08c7cb"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
-				<text><![CDATA[NAME]]></text>
+				<text><![CDATA[NAME :]]></text>
 			</staticText>
 		</band>
 	</summary>
