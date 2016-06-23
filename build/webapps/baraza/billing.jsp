@@ -99,17 +99,17 @@
 	String t1 = pRs.readDocument(true, false);
 	pRs.close();
 
-	mysql = "SELECT production_id, product_id, product_name, is_active, quantity, "
+	mysql = "SELECT production_id, product_id, product_name, is_renewed, quantity, "
 		+ "price, amount, expiry_date "
 		+ "FROM vw_productions "
-		+ "WHERE org_id = " + web.getOrgID();
+		+ "WHERE org_id = " + web.getUserOrg();
 	BQuery prRs = new BQuery(db, mysql);
 	String t2 = prRs.readDocument(true, false);
 	prRs.close();
 
 	mysql = "SELECT product_receipt_id, receipt_source_name, is_paid, receipt_amount, receipt_date, receipt_reference "
 		+ "FROM vw_product_receipts "
-		+ "WHERE org_id = " + web.getOrgID();
+		+ "WHERE org_id = " + web.getUserOrg();
 	BQuery rRs = new BQuery(db, mysql);
 	String t3 = rRs.readDocument(true, false);
 	rRs.close();

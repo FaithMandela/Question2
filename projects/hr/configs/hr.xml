@@ -1,4 +1,4 @@
-<APP name="Human Resources" org="org_id" password="change_password" material="true">
+<APP billing="true" name="Human Resources" org="org_id" password="change_password" material="true">
 	<MENU name="Human Resources">
 		<MENU name="Service Desk">
 			<MENU name="My Details" role="staff">4</MENU>

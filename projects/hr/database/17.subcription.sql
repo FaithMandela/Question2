@@ -100,7 +100,7 @@ CREATE TABLE productions (
 	transaction_time		timestamp default current_timestamp not null,
 	expiry_date				date not null,
 	montly_billing			boolean default false not null,
-	is_active				boolean default false not null,
+	is_renewed				boolean default false not null,
 	auto_renew				boolean default false not null,
 	
 	details					text
@@ -127,7 +127,6 @@ CREATE VIEW vw_subscriptions AS
 		LEFT JOIN entitys ON subscriptions.entity_id = entitys.entity_id
 		LEFT JOIN entitys as account_manager ON subscriptions.account_manager_id = account_manager.entity_id
 		LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;	
-
 		
 CREATE VIEW vw_product_receipts AS
 	SELECT orgs.org_id, orgs.org_name, receipt_sources.receipt_source_id, receipt_sources.receipt_source_name, 
@@ -141,12 +140,30 @@ CREATE VIEW vw_productions AS
 	SELECT orgs.org_id, orgs.org_name, products.product_id, products.product_name, 
 		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
 		
-		productions.production_id, productions.transaction_time, productions.montly_billing, productions.is_active,
+		productions.production_id, productions.transaction_time, productions.montly_billing, productions.is_renewed,
 		productions.quantity, productions.price, productions.expiry_date, productions.auto_renew,
 		productions.details,
 		(productions.price * productions.quantity) as amount
 	FROM productions INNER JOIN orgs ON productions.org_id = orgs.org_id
 		INNER JOIN products ON productions.product_id = products.product_id;
+		
+CREATE VIEW vws_productions AS
+	SELECT orgs.org_id, orgs.org_name, products.product_id, products.product_name, 
+		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
+		products.details,
+		productions.is_renewed, productions.expiry_date, 
+		
+		count(productions.production_id) as count_production,
+		sum(productions.quantity) as sum_quantity,
+		sum(productions.price * productions.quantity) as amount
+		
+	FROM productions INNER JOIN orgs ON productions.org_id = orgs.org_id
+		INNER JOIN products ON productions.product_id = products.product_id
+		
+	GROUP BY orgs.org_id, orgs.org_name, products.product_id, products.product_name, 
+		products.is_montly_bill, products.montly_cost, products.is_annual_bill, products.annual_cost,
+		products.details,
+		productions.is_renewed, productions.expiry_date;
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();

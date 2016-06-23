@@ -109,10 +109,14 @@ public class Bajax extends HttpServlet {
 		} else if("importprocess".equals(fnct)) {
 			resp = importProcess(web.getView().getAttribute("process"));
 			response.setContentType("application/json;charset=\"utf-8\"");
-		} else if("product".equals(fnct)) {
+		} else if("buy_product".equals(fnct)) {
 			resp = buyProduct(id, request.getParameter("units"));
 			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("renew_product".equals(fnct)) {
+			resp = renewProduct();
+			response.setContentType("application/json;charset=\"utf-8\"");
 		}
+		
 		
 		web.close();			// close DB commections
 		out.println(resp);
@@ -270,6 +274,53 @@ public class Bajax extends HttpServlet {
 		return resp;
 	}
 	
+	public String renewProduct() {
+		String resp = "";
+		
+		String mysql = "SELECT COALESCE(sum(a.cr - a.dr), 0) FROM "
+		+ "((SELECT COALESCE(sum(receipt_amount), 0) as cr, 0::real as dr FROM product_receipts "
+		+ "WHERE (is_paid = true) AND (org_id = " + db.getUserOrg() + ")) "
+		+ "UNION "
+		+ "(SELECT 0::real as cr, COALESCE(sum(quantity * price), 0) as dr FROM productions "
+		+ "WHERE (org_id = " + db.getUserOrg() + "))) as a";
+		String bals = db.executeFunction(mysql);
+		Float bal = new Float(bals);
+		
+		String rSql = "SELECT a.product_id, a.product_name, a.details, a.annual_cost, a.expiry_date, a.sum_quantity "
+		+ "FROM vws_productions a "
+		+ "WHERE (a.is_renewed = false) AND (a.org_id = " + db.getUserOrg() + ")";
+		BQuery rRs = new BQuery(web.getDB(), rSql);
+		rRs.moveFirst();
+		String productId = rRs.getString("product_id");
+		Float annualCost = rRs.getFloat("annual_cost");
+		Integer quantity = rRs.getInt("sum_quantity");
+		rRs.close();
+		
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		DecimalFormat df = new DecimalFormat("##########.#");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String calS = sdf.format(cal.getTime());
+		
+		if((annualCost * quantity) <= bal) {
+			String updStr = "UPDATE productions SET is_renewed = true "
+			+ "WHERE (is_renewed = false) AND (a.org_id = " + db.getUserOrg()
+			+ ") AND (product_id = " + productId + ")";
+			db.executeQuery(updStr);
+			
+			String insSql = "INSERT INTO productions(product_id, entity_id, org_id, quantity, price, expiry_date) VALUES ("
+			+ productId + "," + db.getUserID() + "," + db.getUserOrg() + "," + quantity.toString() + "," 
+			+ df.format(annualCost) + ", '" + calS + "')";
+			db.executeQuery(insSql);
+			
+			resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
+		} else {
+			resp = "{\"success\": 1, \"message\": \"Your balance is " + bals + " which not sufficent for purchase\"}";
+		}
+		
+		return resp;
+	}
+	
 	public String buyProduct(String productId, String units) {
 		String resp = "";
 		
@@ -290,13 +341,12 @@ System.out.println("BASE 2020 : " + bals);
 		BQuery rs = new BQuery(db, mysql);
 		rs.moveFirst();
 		
-		mysql = "SELECT production_id, product_id, product_name, is_active, quantity, price, amount, expiry_date "
+		mysql = "SELECT production_id, product_id, product_name, is_renewed, quantity, price, amount, expiry_date "
 		+ "FROM vw_productions "
-		+ "WHERE (is_active = true) AND (org_id = " + web.getOrgID() 
+		+ "WHERE (is_renewed = false) AND (org_id = " + web.getOrgID() 
 		+ ") AND (product_id = " + rs.getString("product_id") + ") "
 		+ "ORDER BY production_id desc";
 		BQuery rsa = new BQuery(db, mysql);
-		
 		
 		Float annualCost = rs.getFloat("annual_cost");
 		Float buyUnits = new Float(units);
@@ -324,9 +374,9 @@ System.out.println("BASE 2020 : " + bals);
 		String calS = sdf.format(cal.getTime());
 		
 		if((annualCost * buyUnits) <= bal) {
-			String insSql = "INSERT INTO productions(product_id, entity_id, org_id, quantity, price, is_active, expiry_date) VALUES ("
+			String insSql = "INSERT INTO productions(product_id, entity_id, org_id, quantity, price, expiry_date) VALUES ("
 			+ productId + "," + db.getUserID() + "," + db.getUserOrg() + "," + units + "," 
-			+ df.format(annualCost) + ", true, '" + calS + "')";
+			+ df.format(annualCost) + ", '" + calS + "')";
 			db.executeQuery(insSql);
 			
 			resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
