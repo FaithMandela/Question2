@@ -1,6 +1,8 @@
 
+
 ALTER TABLE orgs ADD employee_limit integer default 5 not null;
 ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
+ALTER TABLE orgs ADD expiry_date date;
 
 
 CREATE TABLE industry (
@@ -260,12 +262,12 @@ BEGIN
 		
 		INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
 		SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
-		FROM accounts_class a INNER JOIN account_types b ON a.accounts_class_no = b.accounts_class_id
+		FROM accounts_class a INNER JOIN vw_account_types b ON a.accounts_class_no = b.accounts_class_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 		
 		INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
 		SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
-		FROM account_types a INNER JOIN accounts b ON a.account_type_no = b.account_type_id
+		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 
 		FOR myrec IN SELECT workflow_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details
@@ -294,7 +296,22 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
- 
+
+CREATE OR REPLACE FUNCTION ins_productions() RETURNS trigger AS $$
+DECLARE
+BEGIN
+
+	IF(NEW.product_id = 1)THEN
+		UPDATE orgs SET employee_limit = employee_limit + NEW.quantity, expiry_date = NEW.expiry_date
+		WHERE org_id = NEW.org_id;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_productions BEFORE INSERT ON productions
+    FOR EACH ROW EXECUTE PROCEDURE ins_productions();
 
 CREATE OR REPLACE FUNCTION ins_employee_limit() RETURNS trigger AS $$
 DECLARE

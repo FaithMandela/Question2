@@ -60,17 +60,26 @@ CREATE INDEX departments_ln_department_id ON departments (ln_department_id);
 CREATE INDEX departments_org_id ON departments (org_id);
 INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 0, 0, 'Board of Directors'); 
 
+CREATE TABLE fiscal_years (
+	fiscal_year_id			varchar(9) primary key,
+	org_id					integer references orgs,
+	fiscal_year_start		date not null,
+	fiscal_year_end			date not null,
+	year_opened				boolean default true not null,
+	year_closed				boolean default false not null,
+	details					text
+);
+CREATE INDEX fiscal_years_org_id ON fiscal_years (org_id);
+
 CREATE TABLE periods (
 	period_id				serial primary key,
+	fiscal_year_id			varchar(9) references fiscal_years,
 	org_id					integer references orgs,
 	start_date				date not null,
 	end_date				date not null,
 	opened					boolean default false not null,
 	activated				boolean default false not null,
 	closed					boolean default false not null,
-	
-	--- chama merry go round number
-	mgr_number				integer,
 
 	--- payroll details
 	overtime_rate			float default 1 not null,
@@ -85,7 +94,6 @@ CREATE TABLE periods (
 	bank_address			text,
 
     entity_id 				integer references entitys,
-    
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
@@ -94,6 +102,7 @@ CREATE TABLE periods (
 	details					text,
 	UNIQUE(org_id, start_date)
 );
+CREATE INDEX periods_fiscal_year_id ON periods (fiscal_year_id);
 CREATE INDEX periods_org_id ON periods (org_id);
 
 --- Views
@@ -158,7 +167,8 @@ CREATE VIEW vw_departments AS
 	FROM departments LEFT JOIN departments as p_departments ON departments.ln_department_id = p_departments.department_id;
 
 CREATE VIEW vw_periods AS
-	SELECT 
+	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start, fiscal_years.fiscal_year_end,
+		fiscal_years.year_opened, fiscal_years.year_closed,
 
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
@@ -170,7 +180,7 @@ CREATE VIEW vw_periods AS
 		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
 		to_char(periods.start_date, 'YYYYMM') as period_code
-	FROM periods LEFT JOIN 
+	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
 	ORDER BY periods.start_date;
 
 CREATE VIEW vw_period_year AS
@@ -197,56 +207,47 @@ CREATE VIEW vw_period_month AS
 	GROUP BY org_id, month_id, period_year, period_month
 	ORDER BY month_id, period_year, period_month;
 
-CREATE OR REPLACE FUNCTION ins_periods()
-  RETURNS trigger AS
-$BODY$
-DECLARE
-	v_period_id		integer;
-	v_mgr_number	integer;
-	v_org_id		integer;
-	v_merry_go_round_number	integer;
+CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
 BEGIN
+	INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
+	SELECT NEW.fiscal_year_id, NEW.org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
+	FROM (SELECT CAST(generate_series(fiscal_year_start, fiscal_year_end, '1 month') as date) as period_start
+		FROM fiscal_years WHERE fiscal_year_id = NEW.fiscal_year_id) as a;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_fiscal_years AFTER INSERT ON fiscal_years
+    FOR EACH ROW EXECUTE PROCEDURE ins_fiscal_years();
+
+CREATE OR REPLACE FUNCTION ins_periods() RETURNS trigger AS $$
+DECLARE
+	year_close 		BOOLEAN;
+BEGIN
+	SELECT year_closed INTO year_close
+	FROM fiscal_years
+	WHERE (fiscal_year_id = NEW.fiscal_year_id);
 	
+	IF(TG_OP = 'UPDATE')THEN    
+		IF (OLD.closed = true) AND (NEW.closed = false) THEN
+			NEW.approve_status := 'Draft';
+		END IF;
+	END IF;
+
 	IF (NEW.approve_status = 'Approved') THEN
 		NEW.opened = false;
 		NEW.activated = false;
 		NEW.closed = true;
 	END IF;
-	
-	IF(TG_OP = 'INSERT')THEN
-		SELECT mgr_number, org_id INTO v_mgr_number, v_org_id
-		FROM periods
-		WHERE (period_id = (SELECT max(period_id) FROM periods WHERE org_id = NEW.org_id));
-		
-		IF(v_mgr_number is null)THEN
-			SELECT min(merry_go_round_number) INTO v_mgr_number
-			FROM members
-			WHERE org_id = NEW.org_id;
-			
-		ELSE
-			v_mgr_number := v_mgr_number + 1;
-		END IF;
-		
-		SELECT merry_go_round_number INTO v_merry_go_round_number 
-		FROM members
-		WHERE org_id = NEW.org_id and merry_go_round_number = v_mgr_number;
-		
-		IF (v_merry_go_round_number is null) THEN
-			SELECT min(merry_go_round_number) INTO v_merry_go_round_number 
-			FROM members
-			WHERE org_id = NEW.org_id and merry_go_round_number > v_mgr_number;
-	
-			v_mgr_number := v_merry_go_round_number;
-		END IF;
-		
-		NEW.mgr_number := v_mgr_number;
-	END IF;
 
+	IF(year_close = true)THEN
+		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
+	END IF;
 
 	RETURN NEW;
 END;
-$BODY$
-  LANGUAGE plpgsql 
+$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
     FOR EACH ROW EXECUTE PROCEDURE ins_periods();

@@ -31,8 +31,9 @@
 	<queryString>
 		<![CDATA[SELECT vw_penalty.entity_id, vw_penalty.entity_name, vw_penalty.org_id, vw_penalty.penalty_type_name, vw_penalty.penalty_id, vw_penalty.date_of_accrual, vw_penalty.amount, vw_penalty.paid
 FROM vw_penalty
+
+Where entity_id = '$P!{entity_id}'
 $P!{organd}
-Where entity_id = $P!{entity_id}
 ORDER BY penalty_type_name]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

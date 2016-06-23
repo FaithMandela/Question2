@@ -578,12 +578,14 @@ public class BWebBody extends BQuery {
 			response.append("</select>\n");
 		} else if(el.getName().equals("COMBOBOX")) {
 			response.append("<select name='" + el.getValue() + "'");
-			if(el.getAttribute("class") == null) response.append(" class='select2me form-control'");
-			else response.append(" class='" + el.getAttribute("class") + "'");
 			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
-			response.append(">");
+			if(el.getAttribute("class") == null) response.append(" class='select2me form-control");
+			else response.append(" class='" + el.getAttribute("class"));
+			if(el.getAttribute("select.detail") != null) response.append(" detailed-select ");
+			response.append("'>\n"); // close the class tag and select
 
+			String selectDetail = el.getAttribute("select.detail");
 			String nodefault = el.getAttribute("nodefault");
 			String lptable = el.getAttribute("lptable");
 			String lpfield = el.getAttribute("lpfield");
@@ -592,11 +594,12 @@ public class BWebBody extends BQuery {
 			if(lpkey == null) lpkey = el.getValue();
 
 			String mysql = "";
-			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
-			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
-			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
+			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield;
+			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield;
+			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield;
+			if(selectDetail != null) mysql += ", " + selectDetail;
+			mysql += " FROM " + lptable;
 			
-
 			String cmbWhereSql = el.getAttribute("where");
 			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
 				if(cmbWhereSql == null) cmbWhereSql = "(";
@@ -640,6 +643,10 @@ public class BWebBody extends BQuery {
 					}
 				} else if(cmbrs.getString(lpkey).equals(defaultvalue)) {
 					response.append(" selected='selected'");
+				}
+				if(selectDetail != null) {
+					String sdc = cmbrs.getString(selectDetail);
+					if(sdc != null) response.append(" data-detail='" + sdc.replaceAll("'", "&#39;") + "'");
 				}
 				response.append(" value='" + cmbrs.getString(lpkey));
 				response.append("'>" + cmbrs.getString(lpfield) + "</option>\n");

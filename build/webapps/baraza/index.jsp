@@ -702,6 +702,19 @@
 	});
 
     <% } %>
+                
+    $('.detailed-select').change(function(){
+        var $this = $(this);
+        var name = $this.attr('name');
+        $this.attr('id', name);
+        var detail = $('#' + name).find(":selected").attr('data-detail');
+        
+        if( $('#help_' + name).length == 0){
+            $this.parent().append('<div style="color:#4486D8;" id="help_' + name + '" class="help-block has-info">' + detail + '</div>');
+        }else{
+            $('#help_' + name).html(detail);
+        }
+    });
 
     // MULTISELECT INITIALIZE
     $('.multi-select').multiSelect({

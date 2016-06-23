@@ -321,7 +321,14 @@ public class BWeb {
 			mymenu += "		</li>\n";
 		}
 		
-		mymenu += getSubMenu(mel, 0);
+		boolean showMenu = true;
+		if(root.getAttribute("billing", "false").equals("true")) {
+			String expStr = "SELECT org_id FROM orgs WHERE ((expiry_date is null) or (expiry_date < current_date)) AND (org_id = " + db.getUserID() + ")";
+			String expired = db.executeFunction(expStr);
+			if(expired == null) showMenu = false;
+		}
+		
+		if(showMenu) mymenu += getSubMenu(mel, 0);
 		mymenu += "	</ul>\n";
 
 		return mymenu;
@@ -1345,7 +1352,9 @@ System.out.println("repository : " + repository);
 				}
 			}
 
+			if(!"".equals(saveMsg)) saveMsg += "<br>";
 			saveMsg += qForm.recSave();
+			
 			if("".equals(saveMsg)) {
 				String jumpView = view.getAttribute("jumpview");
 				BElement fView = view.getElementByName("FORMVIEW");
@@ -1688,6 +1697,10 @@ System.out.println("repository : " + repository);
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
+		
+		if(session.getAttribute("JSONfilter2") != null) {
+			wheresql = (String)webSession.getAttribute("JSONfilter2");
+		}
 
 		int vds = viewKeys.size();
 		if(vds > 2) {
@@ -1710,7 +1723,7 @@ System.out.println("repository : " + repository);
 				else wheresql += lp[1] + " = '" + linkParam + "')";
 			}
 		}
-
+		
 		response.setContentType("text/x-csv");
 		response.setHeader("Content-Disposition", "attachment; filename=report.csv");
 

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="studentmarkview" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="ca294fc1-daab-4b84-a23f-2209c6d43a77">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -15,9 +15,9 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT studentmarkview.markid, studentmarkview.grade, studentmarkview.existingid, studentmarkview.firstquarter, studentmarkview.studentname,
-studentmarkview.degreename, studentmarkview.core_major, studentmarkview.sublevelname,
-studentmarkview.birthdate, studentmarkview.sex, studentmarkview.nationalitycountry
+		<![CDATA[SELECT studentmarkview.markid, studentmarkview.grade, studentmarkview.existingid, studentmarkview.firstquarter, initcap(studentmarkview.studentname) as studentname,
+studentmarkview.degreename, initcap(studentmarkview.core_major) as core_major, studentmarkview.sublevelname,
+Extract(year from age(studentmarkview.birthdate)) as old, studentmarkview.sex, studentmarkview.nationalitycountry
 
 FROM studentmarkview
 
@@ -33,7 +33,7 @@ ORDER BY studentmarkview.markid;]]>
 	<field name="degreename" class="java.lang.String"/>
 	<field name="core_major" class="java.lang.String"/>
 	<field name="sublevelname" class="java.lang.String"/>
-	<field name="birthdate" class="java.sql.Date"/>
+	<field name="old" class="java.lang.Double"/>
 	<field name="sex" class="java.lang.String"/>
 	<field name="nationalitycountry" class="java.lang.String"/>
 	<group name="markid">
@@ -162,7 +162,7 @@ ORDER BY studentmarkview.markid;]]>
 					<textElement>
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[DOB]]></text>
+					<text><![CDATA[Age]]></text>
 				</staticText>
 				<staticText>
 					<reportElement key="element-90" x="681" y="29" width="23" height="16" forecolor="#000000" uuid="076d39a5-8cd8-48c3-908f-988a9d43eaf7"/>
@@ -212,7 +212,7 @@ ORDER BY studentmarkview.markid;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="28" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Student Marks Report]]></text>
+				<text><![CDATA[Student  Admission Grade Report]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="element-90" x="61" y="51" width="61" height="16" forecolor="#000000" uuid="8e828369-c4fa-4436-9b1c-80c0de0c37f5"/>
@@ -329,8 +329,8 @@ ORDER BY studentmarkview.markid;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sublevelname}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement key="textField" x="617" y="1" width="64" height="14" uuid="20049619-8d46-4201-9a7a-0afcda3ac136"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement key="textField" x="617" y="1" width="47" height="14" uuid="20049619-8d46-4201-9a7a-0afcda3ac136"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -340,7 +340,7 @@ ORDER BY studentmarkview.markid;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{birthdate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{old}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField" x="681" y="1" width="23" height="14" uuid="b7c3f923-c30a-4a31-89eb-957f18ae1adf"/>

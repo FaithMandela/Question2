@@ -50,10 +50,15 @@ END LOOP;
 
 NEW.contribution_amount = NEW.deposit_amount - v_loan.monthly_repayment; 
 
+
+INSERT INTO investments (entity_id,investment_type_id, org_id, invest_amount, period_years)
+VALUES (New.entity_id, 0,New.org_id,NEW.contribution_amount,4);
+
    RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
+
 
 
   
@@ -114,6 +119,7 @@ DECLARE
     v_entity_id     integer;
     v_exist         integer;
 BEGIN
+
   IF (TG_OP = 'INSERT') then 
         Select count(applicant_email) INTO v_exist from applicants where applicant_email = NEW.applicant_email;
         IF(v_exist != 0) THEN
@@ -124,7 +130,7 @@ BEGIN
   IF (TG_OP = 'UPDATE' AND NEW.approve_status = 'Approved') THEN
          
              INSERT INTO members(entity_id,org_id, surname, first_name, middle_name,phone, 
-            gender,marital_status,primary_email,objective, details) 
+            gender,marital_status,primary_email,objective, details)  
          
     VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
     New.applicant_phone,New.gender,New.marital_status,New.applicant_email,NEW.objective, NEW.details)
@@ -142,7 +148,7 @@ $BODY$
 
 CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
   FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
-  
+ 
  CREATE OR REPLACE FUNCTION ins_members()
   RETURNS trigger AS
 $BODY$
@@ -161,23 +167,29 @@ BEGIN
 	Raise NOTICE 'Thank you';
 	END IF;
 	NEW.entity_id := nextval('entitys_entity_id_seq');
+	NEW.member_id := nextval('members_member_id_seq');
 
 	INSERT INTO entitys (entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details)
 	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details) RETURNING entity_id INTO v_entity_id;
 
 	NEW.entity_id := v_entity_id;
 
+ IF count(v_entity_id > 5) THEN
+	INSERT INTO billing(entity_id, org_id, currency_id, end_date, bill_amount)
+     VALUES (v_entity_id, New.org_id::INTEGER, 1, current_date::date + integer '365',200);     
+	END IF;	
 	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
 END IF;
 	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
+ 
+ 
 
 CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
   FOR EACH ROW  EXECUTE PROCEDURE ins_members(); 
-
-  
+ 
 
 CREATE OR REPLACE FUNCTION gurrantor_accept(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -335,6 +347,60 @@ RETURN msg;
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+  CREATE OR REPLACE FUNCTION bill_processed(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Processed';
+	
+	UPDATE billing SET processed = 'True'
+	WHERE (bill_id = CAST($1 as int));
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION bill_paid(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'PAYMENTS RECEIVED';
+	
+	UPDATE billing SET paid = 'True'
+	WHERE (bill_id = CAST($1 as int));
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION applicant_approve(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Applicant Approved';
+	
+	UPDATE applicants SET approve_status = 'Approved'
+	WHERE (applicant_id = CAST($1 as int));
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION applicant_rejected(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Applicant Rejected';
+	
+	UPDATE applicants SET approve_status = 'Rejected'
+	WHERE (applicant_id = CAST($1 as int));
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
 
 
 

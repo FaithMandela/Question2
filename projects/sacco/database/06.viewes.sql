@@ -163,26 +163,6 @@ CREATE OR REPLACE VIEW vw_bank_accounts AS
 		FULL JOIN vw_accounts ON bank_accounts.bank_account_id = vw_accounts.account_id
 		FULL JOIN currency ON bank_accounts.currency_id = currency.currency_id;
 
-CREATE OR REPLACE VIEW vw_applicants AS 
- SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, applicants.entity_id, applicants.surname,applicants.org_id,
-	applicants.first_name,applicants.middle_name,applicants.date_of_birth,applicants.nationality,applicants.identity_card,
-	applicants.interests,applicants.picture_file,applicants.details, 
-	applicants.person_title,applicants.applicant_email,applicants.applicant_phone,
-	applicants.language,applicants.objective,applicants.workflow_table_id,
-	applicants.approve_status,applicants.action_date,
-	(((applicants.surname::text || ' '::text) || applicants.first_name::text) || ' '::text) || COALESCE(applicants.middle_name, ''::character varying)::text AS applicant_name,
-	to_char(age(applicants.date_of_birth::timestamp with time zone), 'YY'::text) AS applicant_age,
-        CASE
-            WHEN applicants.gender::text = 'M'::text THEN 'Male'::text
-            ELSE 'Female'::text
-        END AS gender_name,
-        CASE
-            WHEN applicants.marital_status::text = 'M'::text THEN 'Married'::text
-            ELSE 'Single'::text
-        END AS marital_status_name
-   FROM applicants
-     JOIN sys_countrys ON applicants.nationality = sys_countrys.sys_country_id;
-     
 
 CREATE VIEW vw_loan_repayments AS
 	SELECT 	vw_loans.currency_id, vw_loans.currency_name,vw_loans.currency_symbol,
@@ -274,3 +254,13 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
    FROM investments
      JOIN entitys ON entitys.entity_id = investments.entity_id
      JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;   
+
+     
+CREATE OR REPLACE VIEW vw_billing AS
+SELECT billing.bill_id, billing.entity_id, billing.org_id, billing.currency_id, 
+	billing.start_date, billing.end_date, billing.bill_amount, billing.processed, billing.paid,entitys.entity_id,
+	entitys.entity_name, entitys.entity_leader, entitys.function_role,
+	currency.currency_name, currency.currency_symbol
+FROM currency 
+	INNER JOIN billing ON currency.currency_id = billing.currency_id
+	INNER JOIN entitys ON entitys.entity_id = billing.entity_id;
