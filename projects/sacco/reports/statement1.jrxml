@@ -14,7 +14,7 @@
 	<parameter name="filter_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String">
+	<parameter name="organd" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="orgwhere" class="java.lang.String" isForPrompting="false"/>
@@ -29,7 +29,7 @@ UNION
 UNION
 (select  entity_id, entity_name, maturity_date, 0::real, 0::real, 0::real, invest_amount from vw_investments)) AS a
 ORDER BY date DESC
-$P!{organd}]]>
+---$P!{organd}]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
