@@ -46,7 +46,6 @@ CREATE TABLE meetings (
 	meeting_id					serial primary key,
 	org_id                      integer references orgs,
 	meeting_date				date,
-	amount_contributed			real, 
 	meeting_place				varchar (120) not null,
 	minutes						varchar (120),
 	status						varchar (16) default 'Draft' not null,
@@ -86,7 +85,6 @@ CREATE INDEX contribution_defaults_entity_id ON contribution_defaults (entity_id
 CREATE TABLE contributions (
 	contribution_id				serial primary key,
 	contribution_type_id		integer references contribution_types,
-	meeting_id 					integer references meetings,
 	bank_account_id 			integer references bank_accounts,
 	entity_id					integer references entitys,
 	period_id					integer references periods,

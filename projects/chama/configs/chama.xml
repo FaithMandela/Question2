@@ -10,15 +10,15 @@
 		</MENU>
 		<MENU name="Operations" role="admin">
 			<MENU name="Locations">315</MENU>
+			<MENU name="Banks">270</MENU>
 			<MENU name="Members">260</MENU>
 			<MENU name="Periods">275</MENU>
-			<MENU name="Banks">270</MENU>
 			<MENU name="Contributions">210</MENU>
+			<MENU name="Transaction Ledger">310</MENU>
 			<MENU name="Investments">215</MENU>
 			<MENU name="Borrowing">220</MENU>
 			<MENU name="Penalty">225</MENU>
 			<MENU name="Loans">115</MENU>
-			<MENU name="Transaction Ledger">310</MENU>
 			<MENU name="Meetings">100</MENU>
 			<MENU name="Entitys" role="admin">15</MENU>
 			<MENU name="Approvals" role="admin">45</MENU>
@@ -590,17 +590,15 @@
 			<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Meeting Date">meeting_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Meeting Place">meeting_place</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Amount Contributed">amount_contributed</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Minutes">minutes</TEXTFIELD>
 			<TEXTFIELD w="75" title="Status">status</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="email_before">Send Email Before Meeting</ACTION>
-				<ACTION fnct="remove_member_meeting">Send Email after meeting</ACTION>
+				<ACTION fnct="email_after">Send Email After meeting</ACTION>
 			</ACTIONS>
 			<FORM name="Meetings" keyfield="meeting_id" table="meetings">
 				<TEXTDATE w="150" title="Meeting Date" y="10" h="20" x="10">meeting_date</TEXTDATE>
 				<TEXTFIELD w="430" title="Meeting Place" y="30" h="20" x="10">meeting_place</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Amount Contributed" y="10" h="20" x="290">amount_contributed</TEXTDECIMAL>
 				<TEXTFIELD w="430" title="Minutes" y="50" h="20" x="10">minutes</TEXTFIELD>
 				<TEXTFIELD w="150" title="Status" y="70" h="20" x="10">status</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
@@ -650,13 +648,13 @@
 				<COMBOBOX w="430" title="Loan Type" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Member" lptable="entitys" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<TEXTDATE w="150" title="Loan Date" y="70" h="20" x="290">loan_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Principle" y="50" h="20" x="10">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Interest" y="50" h="20" x="290">interest</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Monthly Repayment" y="70" h="20" x="10">monthly_repayment</TEXTDECIMAL>
-				<TEXTDATE w="150" title="Loan Date" y="70" h="20" x="290">loan_date</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Initial Payment" y="90" h="20" x="10">initial_payment</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Reducing Balance" y="90" h="20" x="290">reducing_balance</CHECKBOX>
 				<TEXTFIELD w="150" title="Repayment Period" y="110" h="20" x="10">repayment_period</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Initial Payment" y="90" h="20" x="10">initial_payment</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Monthly Repayment" y="70" h="20" x="10">monthly_repayment</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Reducing Balance" y="90" h="20" x="290">reducing_balance</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Monthly Repayment" keyfield="loan_month_id" linkfield="loan_id" table="vw_loan_monthly">
@@ -667,22 +665,20 @@
 				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
 				<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
 				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
-				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Loan Month ID">loan_month_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Period">period_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Loan Month">loan_month_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Interest Amount">interest_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Repayment">repayment</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Interest Paid">interest_paid</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Penalty">penalty</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Penalty Paid">penalty_paid</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Total Interest">total_interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Total Repayment">total_repayment</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Loan Balance">loan_balance</TEXTDECIMAL>
 				<FORM name="Monthly Repayment" keyfield="loan_month_id" linkfield="loan_id" table="loan_monthly">
-					<COMBOBOX w="430" title="Period ID" lptable="periods" y="10" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
+					<COMBOBOX w="430" title="Period" lptable="periods" y="10" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Interest Amount" y="30" h="20" x="10">interest_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Repayment" y="30" h="20" x="290">repayment</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Interest Paid" y="50" h="20" x="10">interest_paid</TEXTDECIMAL>
-					<CHECKBOX w="150" title="Penalty" y="10" h="20" x="10">penalty</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Penalty Paid" y="70" h="20" x="10">penalty_paid</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -777,9 +773,7 @@
 		</GRID>
 		<GRID name="Contributions" keyfield="contribution_id" linkfield="member_id" table="vw_member_contrib" user="entity_id">
 			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Meeting">meeting_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Bank Account name">bank_account_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Period">period_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Contribution Date">contribution_date</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
@@ -788,6 +782,9 @@
 			<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION fnct="generate_paid" role="admin">Pay</ACTION>
+			</ACTIONS>
 		</GRID>
 		<GRID name="New Contribution" keyfield="contribution_id" table="vw_all_contributions" user="entity_id">
 			<FORM name="Contributions" keyfield="contribution_id" linkfield="contribution_type_id" table="contributions">
@@ -825,9 +822,8 @@
 			</ACTIONS>
 			<GRID name="Contributions" keyfield="contribution_id" linkfield="period_id" table="vw_member_contrib">
 				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Meeting">meeting_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Bank Account name">bank_account_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Member Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Period">period_id</TEXTFIELD>
 				<TEXTDATE w="75" title="Contribution Date">contribution_date</TEXTDATE>
 				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
@@ -878,7 +874,7 @@
 			</FORM>
 			<GRID name="Contribution Defaults" keyfield="contribution_default_id" linkfield="contribution_type_id" table="vw_contribution_defaults">
 				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Member ">entity_name</TEXTFIELD>
 				<FORM name="Contribution Defaults" keyfield="contribution_default_id" linkfield="contribution_type_id" table="contribution_defaults">
 					<COMBOBOX w="430" title="Member" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
@@ -886,14 +882,14 @@
 			</GRID>
 		</GRID>
 		<GRID name="Drawings" keyfield="drawing_id" table="vw_drawings">
-			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Member">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTDATE w="75" title="Withdrawal Date">withdrawal_date</TEXTDATE>
 			<FORM name="Drawings" keyfield="drawing_id" table="drawings">
 				<COMBOBOX w="430" title="Period" lptable="periods" y="10" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
-				<COMBOBOX w="430" title="Entity" lptable="entitys" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Member" lptable="entitys" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="70" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<TEXTDATE w="150" title="Withdrawal Date" y="90" h="20" x="10">withdrawal_date</TEXTDATE>
 				<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
@@ -909,14 +905,13 @@
 			<TEXTFIELD w="75" title="Investment Name">investment_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Accrual">date_of_accrual</TEXTDATE>
 			<TEXTDECIMAL w="75" title="Principal">principal</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Repayment Period">repayment_period</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Initial Payment">initial_payment</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Monthly Payments">monthly_payments</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Investment Status">investment_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Repayment">total_repayment</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Interest Amount">interest_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Income">income</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Expenditure">expenditure</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION fnct="investment_aplication" role="admin">Apply Investment</ACTION>
 			</ACTIONS>
@@ -936,8 +931,6 @@
 				<TEXTDECIMAL w="150" title="Repayment Period" y="130" h="20" x="10">repayment_period</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Initial Payment" y="130" h="20" x="290">initial_payment</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Monthly Payments" y="150" h="20" x="10">monthly_payments</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Approve Status" y="150" h="20" x="290">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Workflow Table ID" y="170" h="20" x="10">workflow_table_id</TEXTFIELD>
 				<TEXTTIMESTAMP w="150" title="Action Date" y="170" h="20" x="290">action_date</TEXTTIMESTAMP>
 				<CHECKBOX w="150" title="Active" y="190" h="20" x="10">is_active</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
@@ -1076,9 +1069,9 @@
 			<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<FORM name="Penalty" keyfield="penalty_id" table="penalty">
-				<COMBOBOX w="430" title="Penalty Type ID" lptable="penalty_type" y="10" h="20" x="10" lpfield="penalty_type_name">penalty_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Penalty Type" lptable="penalty_type" y="10" h="20" x="10" lpfield="penalty_type_name">penalty_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account " lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Name" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Date Of Accrual" y="90" h="20" x="10">date_of_accrual</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Amount" y="90" h="20" x="290">amount</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Paid" y="130" h="20" x="290">paid</CHECKBOX>
@@ -1946,7 +1939,7 @@
 				<COMBOBOX w="430" title="Borrowing Type" lptable="borrowing_types" y="10" h="20" x="10" lpfield="borrowing_type_name">borrowing_type_id</COMBOBOX>
 				<TEXTDATE w="150" title="Borrowing Date" y="90" h="20" x="290">borrowing_date</TEXTDATE>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Bank Account ID" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Principle" y="70" h="20" x="10">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Interest" y="70" h="20" x="290">interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Monthly Repayment" y="90" h="20" x="10">monthly_repayment</TEXTDECIMAL>
@@ -1959,18 +1952,14 @@
 			<GRID name="Borrowing Repayment" keyfield="borrowing_repayment_id" linkfield="borrowing_id" table="vw_borrowing_mrepayment">
 				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
 				<TEXTFIELD w="75" title="Borrowing Type Name">borrowing_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Borrowing ID">borrowing_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
-				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				<TEXTDECIMAL w="75" title="Interest Amount">interest_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Repayment">repayment</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Interest Paid">interest_paid</TEXTDECIMAL>
-				<CHECKBOX w="75" title="Penalty">penalty</CHECKBOX>
-				<TEXTFIELD w="75" title="Penalty ID">penalty_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Penalty Paid">penalty_paid</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Total Interest">total_interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Total Repayment">total_repayment</TEXTDECIMAL>
@@ -1981,8 +1970,6 @@
 					<TEXTDECIMAL w="150" title="Interest Amount" y="50" h="20" x="10">interest_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Repayment" y="50" h="20" x="290">repayment</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Interest Paid" y="70" h="20" x="10">interest_paid</TEXTDECIMAL>
-					<CHECKBOX w="150" title="Penalty" y="70" h="20" x="290">penalty</CHECKBOX>
-					<COMBOBOX w="430" title="Penalty ID" lptable="penalty" y="90" h="20" x="10" lpfield="penalty_id">penalty_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Penalty Paid" y="110" h="20" x="10">penalty_paid</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -2001,8 +1988,6 @@
 	</DESK>
 	<DESK w="700" name="Locations" key="315" h="550">
 		<GRID name="Locations" keyfield="location_id" table="locations">
-			<TEXTFIELD w="75" title="Location ID">location_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Location Name">location_name</TEXTFIELD>
 			<FORM name="Locations" keyfield="location_id" table="locations">
 				<TEXTFIELD w="150" title="Location Name" y="10" h="20" x="10">location_name</TEXTFIELD>
