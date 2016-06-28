@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="411"/>
+	<property name="ireport.y" value="512"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -144,7 +144,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 					<font fontName="Times New Roman" size="11" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[<b>1. A candidate evades any of the processes above</b><br/>
-<b>2. A candidate does not attain the age of sixteen (16) by 26<sup>th</sup> November 2015</b>]]></text>
+<b>2. A candidate does not attain the age of sixteen (16) by 24<sup>th</sup> November 2016</b>]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" x="-1" y="539" width="513" height="59" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
