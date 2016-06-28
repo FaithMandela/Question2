@@ -28,36 +28,67 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_gurrantors AFTER INSERT OR UPDATE ON gurrantors
-	FOR EACH ROW EXECUTE PROCEDURE ins_gurrantors();
+  CREATE OR REPLACE FUNCTION ins_contributions()
 
-
-CREATE OR REPLACE FUNCTION ins_contributions()
   RETURNS trigger AS
 $BODY$
 DECLARE
 v_contrib_amount	real;
-v_loan vw_loans%rowtype;
+v_id				integer;
+v_loan          	real;
+v_bal 				real;
+rec 				record;
+v_total_all     	real;
+a_status			varchar(120);
+v_total         	real;
+msg             	varchar(120);
 BEGIN
-FOR v_loan IN SELECT * FROM vw_loans WHERE approve_status = 'Approved'
-LOOP
-INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
-	VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
+
+ IF (TG_OP = 'INSERT') then  
+ v_total_all := 0;
+FOR rec IN Select * from vw_loans where entity_id = new.entity_id
+LOOP 
+
+        IF(rec.loan_id is not null and rec.approve_status = 'Approved' ) THEN
+       
+       v_id := rec.loan_id;
+        
+         SELECT Sum(loan_balance) into v_total_all from vw_loans where entity_id = rec.entity_id;
+         
+		 New.loan_repayment:= true ;
+		 
+       IF (NEW.deposit_amount > v_total_all) then
 	
-INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
-	VALUES (v_loan.loan_id, NEW.period_id, NEW.org_id, v_loan.monthly_repayment);
+	v_bal:= NEW.deposit_amount - v_total_all;
+	--raise exception ' the balance is%',v_bal;
+	NEW.contribution_amount := v_bal; 	
+		END IF;
+		
+
+--INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
+	--VALUES (v_id, NEW.period_id, NEW.org_id, v_loan);
+		END IF;
+		
 END LOOP;
-
-NEW.contribution_amount = NEW.deposit_amount - v_loan.monthly_repayment; 
-
-
-INSERT INTO investments (entity_id,investment_type_id, org_id, invest_amount, period_years)
-VALUES (New.entity_id, 0,New.org_id,NEW.contribution_amount,4);
+	raise exception ' the balance is%',v_id;
+INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
+	VALUES (v_id, NEW.period_id, NEW.org_id, NEW.deposit_amount);
+	--msg := 'Loan repaid first of Kes%' v_total_all;
+	
+	if (v_bal is not null) then
+	INSERT INTO investments (entity_id,investment_type_id, org_id, invest_amount, period_years)
+	VALUES (New.entity_id, 0,New.org_id,v_bal,4);
+	else
+	new.contribution_amount := 0;
+	END IF;
+	
+END IF;
 
    RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
+
 
 
 
@@ -104,7 +135,7 @@ DECLARE
 BEGIN
 	msg := 'investment applied';
 	
-	UPDATE investments SET approve_status = 'Completed'
+	UPDATE investments SET approve_status = 'Approved'
 	WHERE (investment_id = CAST($1 as int)) AND (approve_status = 'Draft');
 
 	return msg;
@@ -284,70 +315,85 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
-
-  CREATE OR REPLACE FUNCTION generate_contribs(
+CREATE OR REPLACE FUNCTION generate_contribs(
     character varying,
     character varying,
     character varying)
   RETURNS character varying AS
 $BODY$
 DECLARE
-	rec						RECORD;
-	v_period_id		integer;
-	vi_period_id		integer;
-	reca			RECORD;
-	v_org_id		integer;
-	v_month_name	varchar(50);
-	v_member_id		integer;
+    rec                        RECORD;
+    recu            RECORD;
+    v_period_id        integer;
+    vi_period_id        integer;
+    reca            RECORD;
+    v_org_id        integer;
+    v_month_name    varchar(50);
+    v_member_id        integer;
 
-	msg 			varchar(120);
+    msg             varchar(120);
 BEGIN
-	SELECT period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
-	FROM periods
-	WHERE (period_id = $1::integer);
+    SELECT period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
+    FROM periods
+    WHERE (period_id = $1::integer);
 
-	SELECT period_id INTO vi_period_id FROM contributions WHERE period_id in (v_period_id) AND org_id in (v_org_id);
+    SELECT period_id INTO vi_period_id FROM contributions WHERE period_id in (v_period_id) AND org_id in (v_org_id);
 
-	IF( vi_period_id is null) THEN
+    IF( vi_period_id is null) THEN
 
-	FOR reca IN SELECT member_id, entity_id FROM members WHERE (org_id = v_org_id) LOOP
-	
-	FOR rec IN SELECT org_id, interval_days, contribution_type_id,contribution_type_name, deposit_amount
-	
-FROM contribution_types WHERE  (org_id = v_org_id) LOOP
+    FOR reca IN SELECT member_id, surname,entity_id FROM members WHERE (org_id = v_org_id) LOOP
+    
+    FOR rec IN SELECT contribution_type_id, org_id, contribution_type_name, interval_days, amount
+    FROM contribution_types WHERE  (org_id = v_org_id) LOOP
+    
+    IF(rec.loan_repayment = false) THEN
+        IF (rec.interval_days = 7 ) THEN
+        FOR i in 1..4 LOOP
+            INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount, member_id, entity_id)
+            VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+            reca.member_id, reca.entity_id);
+        END LOOP;
+        END IF;
+        IF (rec.interval_days = 14) THEN
+        FOR i in 1..2 LOOP
+             INSERT INTO contributions (period_id,entity_id, org_id, contribution_type_id, entity_name, contribution_amount, entry_date, entity_id, transaction_ref)
+            
+            VALUES(v_period_id, rec.org_id, rec.contribution_type_id, reca.entity_name, rec.amount, reca.member_id, reca.entity_id, 'Auto generated');
+        END LOOP;
+        END IF;
+        IF (rec.interval_days = 30) THEN
+            INSERT INTO contributions (period_id,entity_id, org_id, contribution_type_id, entity_name, contribution_amount, entry_date, entity_id, transaction_ref)
+            
+            VALUES(v_period_id, rec.org_id, rec.contribution_type_id, reca.entity_name, rec.amount, reca.member_id, reca.entity_id, 'Auto generated');
+        END IF;
+	        IF (rec.interval_days = 90) THEN
+              INSERT INTO contributions (period_id,entity_id, org_id, contribution_type_id, entity_name, contribution_amount, entry_date, entity_id, transaction_ref)
+            
+            VALUES(v_period_id, rec.org_id, rec.contribution_type_id, reca.entity_name, rec.amount, reca.member_id, reca.entity_id, 'Auto generated');
+        END IF;
+        IF (rec.interval_days = 180) THEN
+              INSERT INTO contributions (period_id,entity_id, org_id, contribution_type_id, entity_name, contribution_amount, entry_date, entity_id, transaction_ref)
+            VALUES(v_period_id, rec.org_id, rec.contribution_type_id, reca.entity_name, rec.amount, reca.member_id, reca.entity_id, 'Auto generated');
+        END IF;
+           IF (rec.interval_days = 365) THEN
+             INSERT INTO contributions (period_id,entity_id, org_id, contribution_type_id, entity_name, contribution_amount, entry_date, entity_id, transaction_ref)
+            VALUES(v_period_id, rec.org_id, rec.contribution_type_id, reca.entity_name, rec.amount, reca.member_id, reca.entity_id, 'Auto generated');
+        END IF;
+        END IF;
+  
+  END LOOP;
+  END LOOP;
+    msg := 'Contributions Generated';
+    ELSE
+    msg := 'Contributions already exist';
+    END IF;
+    
 
-		IF (rec.contribution_type_name = 'Weekly') THEN
-		FOR i in 1..4 LOOP
-			INSERT INTO contributions (period_id, org_id, contribution_type_id, deposit_amount, member_id, entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.deposit_amount,
-			reca.member_id, reca.entity_id);
-		END LOOP;
-		END IF;
-		IF (rec.contribution_type_name = 'Fortnightly') THEN
-		FOR i in 1..2 LOOP
-			INSERT INTO contributions (period_id, org_id, contribution_type_id, deposit_amount,member_id, entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.deposit_amount,reca.member_id, reca.entity_id);
-		END LOOP;
-		END IF;
-		IF (rec.contribution_type_name = 'Monthly') THEN
-			INSERT INTO contributions (period_id, org_id, contribution_type_id, deposit_amount,member_id,entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.deposit_amount,reca.member_id, reca.entity_id);
-		END IF;
-	
-	END LOOP;
-	
-	END LOOP;
-	msg := 'Contributions Generated';
-	ELSE
-	msg := 'Contributions already exist';
-	END IF;
-	
-
-RETURN msg;	
+RETURN msg;    
 END;
 $BODY$
   LANGUAGE plpgsql;
-
+  
   CREATE OR REPLACE FUNCTION bill_processed(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg 				varchar(120);
@@ -399,6 +445,30 @@ BEGIN
 	WHERE (applicant_id = CAST($1 as int));
 
 	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+     
+CREATE OR REPLACE FUNCTION get_total_repayment(real, real, real) RETURNS real AS $$
+DECLARE
+	repayment real;
+	ri real;
+BEGIN
+	ri := (($1* $2 * $3)/1200);
+	repayment := $1 + (($1* $2 * $3)/1200);
+	RETURN repayment;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION get_interest_amount(real,real,real) RETURNS real AS $$
+DECLARE
+	ri real;
+BEGIN
+	ri :=(($1* $2 * $3)/1200);
+RETURN ri;
 END;
 $$ LANGUAGE plpgsql;
 

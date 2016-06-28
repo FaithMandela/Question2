@@ -252,26 +252,48 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
+DECLARE
+	v_default_interest	real;
+	v_reducing_balance	boolean;
 BEGIN
 
-	IF(NEW.principle is null) OR (NEW.interest is null)THEN
-		RAISE EXCEPTION 'You have to enter a principle and interest amount';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is null)THEN
-		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is not null)THEN
-		IF(NEW.repayment_period > 0)THEN
-			NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
-		ELSE
-			RAISE EXCEPTION 'The repayment period should be greater than 0';
-		END IF;
-	ELSIF(NEW.monthly_repayment is not null) AND (NEW.repayment_period is null)THEN
-		IF(NEW.monthly_repayment > 0)THEN
-			NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
-		ELSE
-			RAISE EXCEPTION 'The monthly repayment should be greater than 0';
-		END IF;
-	END IF;
+	SELECT default_interest, reducing_balance INTO v_default_interest, v_reducing_balance
+	FROM loan_types 
+	WHERE (loan_type_id = NEW.loan_type_id);
 		
+	IF(NEW.interest is null)THEN
+		NEW.interest := v_default_interest;
+	END IF;
+	IF (NEW.reducing_balance is null)THEN
+		NEW.reducing_balance := v_reducing_balance;
+	END IF;
+	IF(NEW.monthly_repayment is null) THEN
+		NEW.monthly_repayment := 0;
+	END IF;
+	IF (NEW.repayment_period is null)THEN
+		NEW.repayment_period := 0;
+	END IF;
+	IF(NEW.approve_status = 'Draft')THEN
+		NEW.repayment_period := 0;
+	END IF;
+	
+	IF(NEW.principle is null)THEN
+		RAISE EXCEPTION 'You have to enter a principle amount';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period = 0))THEN
+		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period < 1))THEN
+		RAISE EXCEPTION 'The repayment period should be greater than 0';
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment < 1))THEN
+		RAISE EXCEPTION 'The monthly repayment should be greater than 0';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period > 0))THEN
+		NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment > 0))THEN
+		NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
+	END IF;
+	
+	IF(NEW.monthly_repayment > NEW.principle)THEN
+		RAISE EXCEPTION 'Repayment should be less than the principal amount';
+	END IF;
 	
 	RETURN NEW;
 END;
@@ -284,4 +306,6 @@ CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
+    
+    
     

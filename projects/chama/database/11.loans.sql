@@ -44,7 +44,6 @@ CREATE TABLE loan_monthly (
 	interest_amount				real default 0 not null,
 	repayment				real default 0 not null,
 	interest_paid				real default 0 not null,
-	penalty					boolean default true not null,
 	penalty_paid				real default 0 not null,
 	details					text,
 	UNIQUE (loan_id, period_id)
@@ -169,7 +168,7 @@ CREATE VIEW vw_loan_monthly AS
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, loan_monthly.repayment, loan_monthly.interest_paid, 
-		loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
+		loan_monthly.penalty_paid, loan_monthly.details,
 		get_total_interest(vw_loans.loan_id, vw_periods.start_date) as total_interest,
 		get_total_repayment(vw_loans.loan_id, vw_periods.start_date) as total_repayment,
 		(vw_loans.principle + get_total_interest(vw_loans.loan_id, vw_periods.start_date + 1) + get_penalty(vw_loans.loan_id, vw_periods.start_date + 1)

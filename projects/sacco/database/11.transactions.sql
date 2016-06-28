@@ -6,6 +6,29 @@ CREATE TABLE stores (
 );
 CREATE INDEX stores_org_id ON stores (org_id);
 
+
+
+
+
+CREATE TABLE bank_accounts (
+	bank_account_id			serial primary key,
+	org_id					integer references orgs,
+	bank_branch_id			integer references bank_branch,
+	account_id				integer references accounts,
+	currency_id				integer references currency,
+	bank_account_name		varchar(120),
+	bank_account_number		varchar(50),
+    narrative				varchar(240),
+	is_default				boolean default false not null,
+	is_active				boolean default true not null,
+    details					text
+);
+CREATE INDEX bank_accounts_org_id ON bank_accounts (org_id);
+CREATE INDEX bank_accounts_bank_branch_id ON bank_accounts (bank_branch_id);
+CREATE INDEX bank_accounts_account_id ON bank_accounts (account_id);
+CREATE INDEX bank_accounts_currency_id ON bank_accounts (currency_id);
+
+
 CREATE TABLE item_category (
 	item_category_id		serial primary key,
 	org_id					integer references orgs,

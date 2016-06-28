@@ -1132,7 +1132,7 @@ CREATE VIEW vw_contracting AS
 		vw_intake.job_description, vw_intake.parent_role_name,
 		vw_intake.job_requirements, vw_intake.duties, vw_intake.performance_measures, 
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
-		entitys.entity_id, entitys.entity_name, orgs.org_name,
+		entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name,
 		
 		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
 		contract_status.contract_status_id, contract_status.contract_status_name,

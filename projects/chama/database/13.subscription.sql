@@ -172,6 +172,8 @@ BEGIN
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+		
+		INSERT INTO locations (org_id, location_name) VALUES (NEW.org_id, 'Main');
 
 		INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
 		SELECT transaction_type_id, NEW.org_id, 1

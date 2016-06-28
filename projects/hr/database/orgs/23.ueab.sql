@@ -132,6 +132,16 @@ BEGIN
 		WHERE (period_id = CAST($1 as int));
 
 		msg := 'Application for approval';
+	ELSIF ($3 = '3') THEN
+		UPDATE periods SET closed = true
+		WHERE (period_id = CAST($1 as int));
+
+		msg := 'Period closed';
+	ELSIF ($3 = '4') THEN
+		UPDATE periods SET closed = false
+		WHERE (period_id = CAST($1 as int));
+
+		msg := 'Period opened';
 	END IF;
 
 	RETURN msg;

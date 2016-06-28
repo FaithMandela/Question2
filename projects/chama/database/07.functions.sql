@@ -42,7 +42,7 @@ RAISE EXCEPTION '%',v_contribution_type_id;
 RETURN NEW;
 END;
 $BODY$
-  LANGUAGE plpgsql
+  LANGUAGE plpgsql;
   
 CREATE TRIGGER ins_contrib
 AFTER INSERT OR UPDATE of paid
@@ -199,7 +199,7 @@ BEGIN
 	return msg;
 END;
 $BODY$
-  LANGUAGE plpgsql
+  LANGUAGE plpgsql;
   
 CREATE OR REPLACE FUNCTION upd_email()
   RETURNS trigger AS
@@ -331,7 +331,29 @@ CREATE TRIGGER ins_inv
   FOR EACH ROW
   EXECUTE PROCEDURE ins_inv();
 
+CREATE OR REPLACE FUNCTION get_total_expenditure (integer) RETURNS real AS $$
+DECLARE
+	v_transaction_amount real;
 
+BEGIN
+	SELECT SUM(transaction_amount) INTO v_transaction_amount FROM transactions WHERE tx_type = -1 and investment_id  = $1;
+	RETURN v_transaction_amount;
+
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_total_income (integer) RETURNS real AS $$
+DECLARE
+	v_transaction_amount real;
+
+BEGIN
+	SELECT SUM(transaction_amount) INTO v_transaction_amount FROM transactions WHERE tx_type = 1 and investment_id  = $1;
+	RETURN v_transaction_amount;
+
+END;
+$$ LANGUAGE plpgsql;
+  
 CREATE OR REPLACE FUNCTION add_member_meeting(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg		 				varchar(120);
@@ -398,3 +420,38 @@ CREATE TRIGGER upd_email AFTER INSERT ON investments
 
 CREATE TRIGGER upd_email AFTER INSERT ON penalty
     FOR EACH ROW EXECUTE PROCEDURE upd_email();
+
+
+CREATE OR REPLACE FUNCTION email_before(
+    integer,
+    integer,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	msg		 				varchar(120);
+BEGIN
+	INSERT INTO sys_emailed ( table_id, org_id, table_name, email_type)
+	VALUES ($1, $2, 'meetings', 7);
+msg := 'Email Sent';
+return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+  
+CREATE OR REPLACE FUNCTION email_after(
+    integer,
+    integer,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	msg		 				varchar(120);
+BEGIN
+	INSERT INTO sys_emailed ( table_id, org_id, table_name, email_type)
+	VALUES ($1, $2, 'meetings', 8);
+msg := 'Email Sent';
+return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql;

@@ -50,8 +50,6 @@ CREATE TABLE borrowing_repayment (
 	repayment				real default 0 not null,
 	interest_paid				real default 0 not null,
 	
-	penalty					boolean default true not null,
-	penalty_id					integer references penalty,
 	penalty_paid				real default 0 not null,
 	details                     text
 );
@@ -178,9 +176,7 @@ CREATE OR REPLACE VIEW vw_borrowing_mrepayment AS
 		vw_borrowing.borrowing_date, vw_borrowing.borrowing_id, vw_borrowing.principle, vw_borrowing.interest, vw_borrowing.monthly_repayment, vw_borrowing.reducing_balance, vw_borrowing.repayment_period, 
 		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		borrowing_repayment.org_id, borrowing_repayment.borrowing_repayment_id,  borrowing_repayment.interest_amount, 
-		borrowing_repayment.repayment, borrowing_repayment.interest_paid, borrowing_repayment.penalty,
-		borrowing_repayment.penalty_id, borrowing_repayment.penalty_paid, borrowing_repayment.details,
-		get_total_binterest(vw_borrowing.borrowing_id, vw_periods.start_date) as total_interest,
+		borrowing_repayment.repayment, borrowing_repayment.interest_paid, borrowing_repayment.penalty_paid, borrowing_repayment.details, get_total_binterest(vw_borrowing.borrowing_id, vw_periods.start_date) as total_interest, 
 		get_total_brepayment(vw_borrowing.borrowing_id, vw_periods.start_date) as total_repayment,
 		(vw_borrowing.principle + get_total_binterest(vw_borrowing.borrowing_id, vw_periods.start_date + 1) + get_bpenalty(vw_borrowing.borrowing_id, vw_periods.start_date + 1)
 		- vw_borrowing.initial_payment - get_total_brepayment(vw_borrowing.borrowing_id, vw_periods.start_date + 1)) as borrowing_balance
