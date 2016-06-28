@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="512"/>
+	<property name="ireport.y" value="176"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -111,7 +111,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textFieldExpression><![CDATA[$F{major_title}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="328" y="133" width="175" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
+				<reportElement x="328" y="133" width="183" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -133,7 +133,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 			</textField>
 			<staticText>
 				<reportElement x="2" y="186" width="509" height="42" uuid="952d6dc4-04b1-4bf7-aaaf-dcd06146dd41"/>
-				<textElement>
+				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[The confirmation of this offer of admission is subject to your submitting the required entry qualifications for the above degree programme for which you have been, or will be admitted.  You shall also meet the following conditions:]]></text>
@@ -283,7 +283,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Pay <u>A NON REFUNDABLE ACCEPTANCE FEE</u> OF <i>N150,000 (one hundred and fifty thousand naira only).</i><b> at any of the following banks: UBA, Diamond, WEMA, Zenith by E-tranzact or E-Bills Pay. Present your ApplicationID at the Bank. ]]></text>
+				<text><![CDATA[Pay <u>A NON REFUNDABLE ACCEPTANCE FEE</u> OF <i>N150,350 (One Hundred and Fifty Thousand, Three Hundred and Fifty Naira only).</i><b> at any of the following banks: UBA, Diamond, WEMA, Zenith by E-tranzact or E-Bills Pay. Present your ApplicationID at the Bank. ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="41" y="286" width="469" height="60" uuid="f0cb41ea-3bd5-4c95-987a-c4b0c31c99d7"/>
