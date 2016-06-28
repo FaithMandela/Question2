@@ -7,7 +7,7 @@ BEGIN
 	IF ($3 = '1') THEN
 		UPDATE employee_adjustments SET amount = 0
 		FROM employee_month 
-		WHERE (adjustment_id IN (15,16,17))
+		WHERE (adjustment_id IN (1,2))
 			AND (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
 			AND (employee_month.period_id = CAST($1 as int));
 			
@@ -80,14 +80,14 @@ BEGIN
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
 		
-		IF(reca.tax_type_id = 1)THEN 	---- PAYE
+		IF(reca.tax_type_id = 8)THEN 	---- PAYE
 			UPDATE employee_adjustments SET amount = tax * .9
-			WHERE (employee_month_id = $1) AND (adjustment_id = 15);
+			WHERE (employee_month_id = $1) AND (adjustment_id = 2);
 		END IF;
 		
-		IF(reca.tax_type_id = 3)THEN 	---- NHIF
+		IF(reca.tax_type_id = 9)THEN 	---- NHIF
 			UPDATE employee_adjustments SET amount = tax * .75
-			WHERE (employee_month_id = $1) AND (adjustment_id = 16);
+			WHERE (employee_month_id = $1) AND (adjustment_id = 1);
 		END IF;
 		
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
@@ -119,7 +119,7 @@ BEGIN
 	ELSIF ($2 = 2) THEN
 		SELECT amount INTO v_prof_allowance
 		FROM employee_adjustments
-		WHERE (employee_month_id = v_employee_month_id) AND (adjustment_id = 5);
+		WHERE (employee_month_id = v_employee_month_id) AND (adjustment_id = 82);
 		IF(v_prof_allowance is null) THEN v_prof_allowance := 0; END IF;
 		
 		v_adjustment := (v_basic_pay + v_prof_allowance) * $3;
