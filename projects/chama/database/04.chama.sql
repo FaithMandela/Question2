@@ -145,6 +145,7 @@ CREATE TABLE penalty (
 	date_of_accrual             date,
 	amount                      real not null,
 	paid						boolean default true not null,
+	penalty_paid				real default  0 not null;
 	action_date					timestamp,
 	is_active                   boolean default true not null,
 	details                     text

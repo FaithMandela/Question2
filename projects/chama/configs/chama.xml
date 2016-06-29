@@ -683,6 +683,32 @@
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<GRID name="Loan Payments" keyfield="currency_id" linkfield="loan_id" table="vw_loan_payments">
+				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name">entity_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Loan Date">loan_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
+				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Initial Payment">initial_payment</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Months">months</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Loan Balance">loan_balance</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Loan Interest">loan_intrest</TEXTDECIMAL>
+			</GRID>
+			<GRID name="Loan Projection" keyfield="org_id" linkfield="loan_id" table="vw_loan_projection">
+				<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Loan Date">loan_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Loan Months">loan_months</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Loan Paid">loan_paid</TEXTDECIMAL>
+			</GRID>
 		</GRID>
 		<GRID name="Loan Types" keyfield="loan_type_id" table="loan_types">
 			<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
@@ -837,7 +863,6 @@
 				</ACTIONS>
 				<FORM name="Contributions" keyfield="contribution_id" table="contributions">
 					<COMBOBOX w="430" title="Contribution Type" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Meeting" lptable="meetings" y="30" h="20" x="10" lpfield="meeting_id">meeting_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 					<COMBOBOX w="430" title="Member Name" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>

@@ -1,5 +1,3 @@
-
-
 CREATE OR REPLACE FUNCTION ins_contrib()
   RETURNS trigger AS
 $BODY$
@@ -11,21 +9,19 @@ DECLARE
 	v_merry_go_round_amount		real;
 	 v_mgr_number				integer;
 	 v_merry_go_round_number	integer;
-	v_money_in					real;
 	v_money_out					real;
 	v_entity_id			integer;
 
 BEGIN
 	
-	SELECT   org_id, contribution_type_id, SUM(investment_amount), SUM(merry_go_round_amount)
-	INTO  v_org_id, v_contribution_type_id, v_money_in, v_money_out
+	SELECT   org_id, contribution_type_id, SUM(merry_go_round_amount)
+	INTO  v_org_id, v_contribution_type_id, v_money_out
 	FROM contributions
 		WHERE paid = true AND period_id = NEW.period_id 
 		GROUP BY contribution_type_id,org_id;
 	v_period_id := NEW.period_id;
 	
 RAISE EXCEPTION '%',v_contribution_type_id;
-		UPDATE contributions SET money_in  = v_money_in WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
 			IF (v_money_out = 0)THEN
 			UPDATE contributions SET money_out  = 0 WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
 	ELSIF 	(v_money_out != 0)THEN
@@ -43,6 +39,8 @@ RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+
   
 CREATE TRIGGER ins_contrib
 AFTER INSERT OR UPDATE of paid
@@ -50,7 +48,67 @@ ON contributions
 FOR EACH ROW
 EXECUTE PROCEDURE ins_contrib();
 
-  CREATE OR REPLACE FUNCTION generate_contribs(
+CREATE OR REPLACE FUNCTION ins_contributions()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+reca 				record;
+rec 				record;
+reco 				record;
+v_entity_id		integer;
+recp record;
+v_bal				real;
+v_total_loan			real;
+v_investment_amount		real;
+BEGIN
+SELECT SUM(investment_amount) INTO v_investment_amount FROM contributions WHERE paid = true AND entity_id = NEW.entity_id AND period_id = NEW.period_id;
+v_entity_id := NEW.entity_id;
+FOR reca IN SELECT loan_id, approve_status FROM vw_loans WHERE entity_id = v_entity_id LOOP
+	IF(reca.approve_status = 'Approved' ) THEN
+
+		FOR rec IN  SELECT (interest_amount+repayment+penalty_paid)AS amount FROM vw_loan_monthly
+		 WHERE entity_id = v_entity_id AND period_id = NEW.period_id AND loan_id = reca.loan_id LOOP
+			v_bal := v_investment_amount - rec.amount;
+			IF (v_bal > 0) THEN
+				FOR recp IN SELECT SUM(amount - penalty_paid) AS penalty_amount, penalty_type_id, bank_account_id,
+				 currency_id, org_id, penalty_paid FROM penalty WHERE entity_id = v_entity_id GROUP BY penalty_type_id, bank_account_id,
+				 currency_id, org_id, penalty_paid  LOOP
+				 IF((v_bal <= recp.penalty_amount) )THEN
+					INSERT INTO penalty ( penalty_type_id, bank_account_id, currency_id, org_id, penalty_paid)
+					VALUES(recp.penalty_type_id, recp.bank_account_id, recp.currency_id, recp.org_id, v_bal);
+					v_bal := 0;
+				 END IF;
+				 IF((v_bal - recp.penalty_amount) > 0 )THEN
+					v_bal := v_bal - recp.penalty_amount;
+				 
+					INSERT INTO penalty ( penalty_type_id, bank_account_id, currency_id, org_id, penalty_paid)
+					VALUES(recp.penalty_type_id, recp.bank_account_id, recp.currency_id, recp.org_id, recp.penalty_amount);
+					
+				 END IF;
+					
+				END LOOP;
+				
+			END IF;
+		END LOOP;
+	END IF;
+END LOOP;
+--NEW.money_in := v_bal;
+UPDATE contributions SET money_in = v_bal WHERE contribution_id = New.contribution_id;
+--raise exception '%',v_bal;
+   RETURN NEW;
+END;
+$BODY$
+ LANGUAGE plpgsql ;
+
+ CREATE TRIGGER ins_contributions
+  AFTER INSERT OR UPDATE OF paid
+  ON contributions
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_contributions();
+
+
+
+CREATE OR REPLACE FUNCTION generate_contribs(
     character varying,
     character varying,
     character varying)
@@ -179,7 +237,10 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
-  CREATE OR REPLACE FUNCTION generate_paid(character varying, character varying,character varying)
+ CREATE OR REPLACE FUNCTION generate_paid(
+    character varying,
+    character varying,
+    character varying)
   RETURNS character varying AS
 $BODY$
 DECLARE
@@ -200,6 +261,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
+
   
 CREATE OR REPLACE FUNCTION upd_email()
   RETURNS trigger AS
