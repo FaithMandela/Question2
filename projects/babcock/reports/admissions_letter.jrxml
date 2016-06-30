@@ -147,7 +147,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 <b>2. A candidate does not attain the age of sixteen (16) by 24<sup>th</sup> November 2016</b>]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="-1" y="539" width="332" height="59" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
+				<reportElement positionType="Float" x="-1" y="539" width="332" height="78" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
 				<textElement verticalAlignment="Bottom" markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" isItalic="true" pdfFontName="Times-Italic" isPdfEmbedded="true"/>
 				</textElement>
@@ -257,10 +257,10 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				</textElement>
 				<textFieldExpression><![CDATA["22<sup>th</sup> - 27 <sup>th</sup> August, 2016"]]></textFieldExpression>
 			</textField>
-			<textField pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement x="331" y="583" width="179" height="15" uuid="6863410f-8b7f-4012-a408-c9a3c23da958"/>
+			<textField pattern="EEEEE dd MMMMM, yyyy" isBlankWhenNull="true">
+				<reportElement x="333" y="593" width="179" height="15" uuid="6863410f-8b7f-4012-a408-c9a3c23da958"/>
 				<textElement verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+					<font fontName="Times New Roman" size="11" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
