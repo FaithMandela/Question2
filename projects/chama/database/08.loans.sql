@@ -1,9 +1,10 @@
 CREATE TABLE loan_types (
 	loan_type_id			serial primary key,
-	org_id				integer references orgs,
+	org_id					integer references orgs,
 	loan_type_name			varchar(50) not null,
 	default_interest		real,
 	reducing_balance		boolean default true not null,
+	penalty					real default  0 not null,
 	details					text
 );
 CREATE INDEX loan_types_org_id ON loan_types (org_id);
@@ -142,7 +143,7 @@ $$ LANGUAGE SQL;
 CREATE VIEW vw_loan_types AS
 	SELECT	currency.currency_id, currency.currency_name, currency.currency_symbol,
 		loan_types.org_id, loan_types.loan_type_id, loan_types.loan_type_name, 
-		loan_types.default_interest, loan_types.reducing_balance, loan_types.details
+		loan_types.default_interest, loan_types.reducing_balance, loan_types.penalty, loan_types.details
 	FROM loan_types 
 		INNER JOIN currency ON loan_types.org_id = currency.org_id;
 
