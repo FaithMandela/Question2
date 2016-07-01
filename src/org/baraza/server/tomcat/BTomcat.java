@@ -55,7 +55,7 @@ public class BTomcat extends Thread {
 			File configFile = new File(contextFile);
 			context.setConfigFile(configFile.toURI().toURL());
 			context.addParameter("projectDir", projectDir);
-			if(root.getAttribute("init.xml") != null) 
+			if(root.getAttribute("init.xml") != null)
 				context.addParameter("init_xml", root.getAttribute("init.xml"));
 			
 			if(repository != null) {

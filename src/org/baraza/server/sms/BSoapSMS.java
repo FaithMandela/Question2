@@ -274,7 +274,7 @@ public class BSoapSMS {
 	
 			SOAPMessage soapMessage = factory.createMessage();
 			SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
-            soapEnvelope.addNamespaceDeclaration("loc", "http://www.csapo.org/schema/parlayx/sms/send/v2_2/local");
+			soapEnvelope.addNamespaceDeclaration("loc", "http://www.csapo.org/schema/parlayx/sms/send/v2_2/local");
 			soapEnvelope.addNamespaceDeclaration("v2", "http://www.huawei.com.cn/schema/common/v2_1");
 
 			SOAPHeader soadHeader = soapMessage.getSOAPHeader();

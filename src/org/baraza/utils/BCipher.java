@@ -23,7 +23,9 @@ public class BCipher {
 	Cipher cipher;
 	Base64 coder;
 	byte[] linebreak = {};
-
+	
+	public BCipher() {}
+	
 	public BCipher(String secret) {
 		try {
 			key = new SecretKeySpec(secret.getBytes(), "DES");
@@ -72,11 +74,24 @@ public class BCipher {
 
 		return decodedText;
 	}
-
+		
+	public String MD5(String planpw) {
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] array = md.digest(planpw.getBytes());
+			StringBuffer sb = new StringBuffer();
+			for (int i = 0; i < array.length; ++i)
+				sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+			return sb.toString();
+		} catch (NoSuchAlgorithmException e) {
+			return null;
+		}
+	}
+	
 	public String password(String  planpw) {
 		String hash = null;
 		try {
-			MessageDigest md = MessageDigest.getInstance("SHA"); 	// SHA-1 generator instance
+			MessageDigest md = MessageDigest.getInstance(type); 	// SHA-1 generator instance
 			md.update(planpw.getBytes("UTF-8")); 					// Message summary generation
 			Base64 coder = new Base64(32);
 			byte raw[] = md.digest(); 								// Message summary reception
