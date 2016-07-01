@@ -18,6 +18,7 @@
 		<MENU name="Extra Admin" role="superadm">
 			<MENU name="Grade Changes">558</MENU>
 			<MENU name="Campuses">10</MENU>
+			<MENU name="Schools">7</MENU>
 			<MENU name="User management">15</MENU>
 			<MENU name="Forms">20</MENU>
 			<MENU name="Workflows">40</MENU>
@@ -867,6 +868,61 @@
 			<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="E Tranzact No">e_tranzact_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Password">first_password</TEXTFIELD>
+		</GRID>
+	</DESK>
+	<DESK w="710" name="Schools" type="vert" key="7" h="590">
+		<GRID name="Schools" keyfield="schoolid" table="schools" noorg="true">
+			<TEXTFIELD w="40" title="School ID">schoolid</TEXTFIELD>
+			<TEXTFIELD w="240" title="School Name">schoolname</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM name="Schools" keyfield="schoolid" table="schools" noorg="true" th="210">
+				<TEXTFIELD w="100" title="School ID" y="10" h="20" x="10">schoolid</TEXTFIELD>
+				<COMBOBOX w="200" title="Campus" lptable="orgs" noorg="true" y="10" h="20" x="240" lpfield="org_name">org_id</COMBOBOX>
+				<TEXTFIELD w="350" title="School Name" y="30" h="20" x="10">schoolname</TEXTFIELD>
+				<CHECKBOX w="50" title="Active" y="50" h="20" x="10">is_active</CHECKBOX>
+				<TEXTAREA w="590" tab="Philosopy" y="2" h="170" x="10">philosopy</TEXTAREA>
+				<TEXTAREA w="590" tab="Vision" y="2" h="170" x="10">vision</TEXTAREA>
+				<TEXTAREA w="590" tab="Mission" y="2" h="170" x="10">mission</TEXTAREA>
+				<TEXTAREA w="590" tab="Objectives" y="2" h="170" x="10">objectives</TEXTAREA>
+				<TEXTAREA w="590" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Departments" keyfield="departmentid" linkfield="schoolid" table="departmentview">
+				<TEXTFIELD w="40" title="Department ID">departmentid</TEXTFIELD>
+				<TEXTFIELD w="240" title="School Name">schoolname</TEXTFIELD>
+				<TEXTFIELD w="240" title="Department Name">departmentname</TEXTFIELD>
+				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<FORM name="Departments" keyfield="departmentid" linkfield="schoolid" table="departments" th="210">
+					<TEXTFIELD w="140" title="Department ID" y="10" h="20" x="10">departmentid</TEXTFIELD>
+					<TEXTFIELD w="390" title="Department Name" y="30" h="20" x="10">departmentname</TEXTFIELD>
+					<CHECKBOX w="150" title="Active" y="50" h="20" x="10">is_active</CHECKBOX>
+					<TEXTAREA w="590" tab="Philosopy" y="2" h="170" x="10">philosopy</TEXTAREA>
+					<TEXTAREA w="590" tab="Vision" y="2" h="170" x="10">vision</TEXTAREA>
+					<TEXTAREA w="590" tab="Mission" y="2" h="170" x="10">mission</TEXTAREA>
+					<TEXTAREA w="590" tab="Objectives" y="2" h="170" x="10">objectives</TEXTAREA>
+					<TEXTAREA w="590" tab="Exposures" y="2" h="170" x="10">exposures</TEXTAREA>
+					<TEXTAREA w="590" tab="Oppotunities" y="2" h="170" x="10">oppotunities</TEXTAREA>
+					<TEXTAREA w="590" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+		</GRID>
+		<GRID name="Departments" keyfield="departmentid" table="departmentview">
+			<TEXTFIELD w="40" title="Department ID">departmentid</TEXTFIELD>
+			<TEXTFIELD w="240" title="School Name">schoolname</TEXTFIELD>
+			<TEXTFIELD w="240" title="Department Name">departmentname</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM name="Departments" keyfield="departmentid" table="departments" th="210">
+				<TEXTFIELD w="140" title="Department ID" y="10" h="20" x="10">departmentid</TEXTFIELD>
+				<COMBOBOX w="150" title="School Name" lptable="schools" lw="90" y="10" h="20" x="280" lpfield="schoolname">schoolid</COMBOBOX>
+				<TEXTFIELD w="390" title="Department Name" y="30" h="20" x="10">departmentname</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="50" h="20" x="10">is_active</CHECKBOX>
+				<TEXTAREA w="590" tab="Philosopy" y="2" h="170" x="10">philosopy</TEXTAREA>
+				<TEXTAREA w="590" tab="Vision" y="2" h="170" x="10">vision</TEXTAREA>
+				<TEXTAREA w="590" tab="Mission" y="2" h="170" x="10">mission</TEXTAREA>
+				<TEXTAREA w="590" tab="Objectives" y="2" h="170" x="10">objectives</TEXTAREA>
+				<TEXTAREA w="590" tab="Exposures" y="2" h="170" x="10">exposures</TEXTAREA>
+				<TEXTAREA w="590" tab="Oppotunities" y="2" h="170" x="10">oppotunities</TEXTAREA>
+				<TEXTAREA w="590" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 </APP>
