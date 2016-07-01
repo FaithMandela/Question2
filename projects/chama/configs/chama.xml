@@ -710,14 +710,17 @@
 				<TEXTDECIMAL w="75" title="Loan Paid">loan_paid</TEXTDECIMAL>
 			</GRID>
 		</GRID>
-		<GRID name="Loan Types" keyfield="loan_type_id" table="loan_types">
-			<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
+		<GRID name="Loan Types" keyfield="loan_type_id" linkfield="org_id" table="vw_loan_types">
+			<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Loan Type">loan_type_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Default Interest">default_interest</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
-			<FORM name="Loan Types" keyfield="loan_type_id" linkfield="loan_type_id" table="loan_types">
+			<TEXTDECIMAL w="75" title="Penalty">penalty</TEXTDECIMAL>
+			<FORM name="Loan Types" keyfield="loan_type_id" linkfield="org_id" table="loan_types">
 				<TEXTFIELD w="150" title="Loan Type Name" y="10" h="20" x="10">loan_type_name</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Default Interest" y="10" h="20" x="290">default_interest</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Reducing Balance" y="30" h="20" x="10">reducing_balance</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Penalty" y="120" h="20" x="10">penalty</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -1489,6 +1492,9 @@
 			<TEXTDECIMAL w="75" title="Quarter">quarter</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Semester">semister</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Merry Go Round Number">mgr_number</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="generate_repayment" role="admin">Generate Loan Repayment</ACTION>
+			</ACTIONS>
 			<FORM name="Periods" keyfield="period_id" table="periods">
 				<TEXTDATE w="150" title="Start Date" y="30" h="20" x="10">start_date</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>

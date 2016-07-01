@@ -517,3 +517,52 @@ return msg;
 END;
 $BODY$
   LANGUAGE plpgsql;
+  
+  
+  CREATE OR REPLACE FUNCTION generate_repayment(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	rec			RECORD;
+	recu			RECORD;
+	reca			RECORD;
+	v_penalty		real;
+	v_org_id		integer;
+	v_period_id		integer;
+	v_month_name		varchar(20);
+	vi_period_id		integer;
+	v_loan_type_id		integer;
+	v_loan_intrest		real;
+	v_loan_id		integer;
+	msg			varchar(120);
+BEGIN
+SELECT  org_id, period_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
+	FROM periods
+	WHERE (period_id = $1::integer);
+
+SELECT loan_month_id, loan_id, period_id, org_id, interest_amount, repayment, interest_paid, penalty_paid INTO recu 
+FROM loan_monthly WHERE period_id in (v_period_id) AND org_id in (v_org_id);
+
+	IF( recu.period_id is null) THEN
+	FOR reca IN SELECT member_id, entity_id FROM members WHERE (org_id = v_org_id) LOOP
+	
+	FOR rec IN SELECT org_id, loan_id, loan_type_id, monthly_repayment FROM loans WHERE  (org_id = v_org_id) LOOP
+	SELECT penalty, loan_type_id INTO v_penalty, v_loan_type_id FROM loan_types WHERE  org_id = v_org_id AND V_loan_type_id = rec.loan_type_id;
+	SELECT loan_intrest, loan_id INTO v_loan_intrest, v_loan_id FROM vw_loan_payments WHERE v_loan_id = rec.loan_id;
+	recu.repayment = rec.monthly_repayment - interest_amount;
+	
+		INSERT INTO loan_monthly (loan_id, period_id, org_id, interest_amount, repayment, interest_paid, penalty_paid)
+		VALUES(rec.loan_id, v_period_id, rec.org_id, v_loan_intrest, NEW.repayment,  v_loan_intrest, v_penalty);
+	END LOOP;
+	
+
+msg = 'Repayment Generated';
+	END IF;
+
+	return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql;
