@@ -23,7 +23,10 @@
 		</MENU>
 		<MENU name="Reports">
 			<MENU role="admin,manager" name="Rates">90</MENU>
-			<MENU role="admin,manager,agency,user,broker" name="Sales Report ">91</MENU>
+			<MENU name="Sales Report">
+				<MENU role="admin,manager" name="Sales Report">91</MENU>
+				<MENU role="master" name="All Sales">102</MENU>
+			</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
@@ -1226,12 +1229,12 @@
 			</FILTERFORM>
 			<JASPER filtered="true" reportfile="travelinsurance/agencysales.jasper" name="Agency Sales "></JASPER>
 		</FILTER>
-		<FILTER noorg="true" role="manager" split="150" w="700" h="550" name="Insurance Sales" type="vert">
-			<FILTERFORM name="Agency Sales">
+		<FILTER noorg="true" role="manager" split="150" w="700" h="550" name="All Insurance Sales" type="vert">
+			<FILTERFORM name="All Agency Sales">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER noorg="true" noorg.query="true" reportfile="travelinsurance/allsales.jasper" name="Agency Sales "></JASPER>
+			<JASPER noorg="true" noorg.query="true" reportfile="travelinsurance/allsales.jasper" name="All Agency Sales "></JASPER>
 		</FILTER>
 		<FILTER role="admin,manager" split="150" w="700" h="550" name="Insurance Sales Per Agency" type="vert">
 			<FILTERFORM name="Sales Per Agency ">
@@ -1358,5 +1361,21 @@
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 		</GRID>
+	</DESK>
+	<DESK w="700" h="550" name="Insurance Sales report" key="102">
+		<FILTER role="master" split="150" w="700" h="550" name="Bima Sales Report" type="vert">
+			<FILTERFORM name="Bima Sales Report">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travelinsurance/vw_passengers_bima.jasper" name="Bima sales report"></JASPER>
+		</FILTER>
+		<FILTER role="master" split="150" w="700" h="550" name="Consultant Sales Report" type="vert">
+			<FILTERFORM name="Consultant Sales Report">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travelinsurance/vw_passengers_consultant.jasper" name="Consultant sales report"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

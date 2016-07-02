@@ -649,6 +649,7 @@
 			<GRID noorg="false" keyfield="entity_id" name="Consultants" linkfield="org_id" table="vw_entitys">
 				<TEXTFIELD w="75" title="Consultant ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="140" title="Consultant Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="SON">son</TEXTFIELD>
 				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
 				<CHECKBOX w="75" format="boolean" title="Active">is_active</CHECKBOX>
@@ -882,8 +883,8 @@
 	<DESK w="700" h="550" name="Productivity Reports" key="110">
 		<FILTER split="150" w="700" h="550" name="Pcc Productivity " type="vert">
 			<FILTERFORM name="Pcc Productivity ">
-				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
-				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<TEXTDATE w="500" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE size="100" w="500" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
 				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc" x="10" y="30" lptable="orgs" title="PCC" lpkey="org_id">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="pcc_productivity.jasper" name="Agency Productivity"></JASPER>
