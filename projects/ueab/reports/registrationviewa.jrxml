@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="registrationview" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b703e1e1-69ea-4b0e-96b4-c28576a78cd7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="registrationviewa" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="4cbabf4a-2854-46e3-9ecf-616800aebc52">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -12,6 +12,8 @@
 		<![CDATA[SELECT registrationid, email, applicationdate, nationality, sex, lastname, firstname, middlename
 
 FROM registrationview
+
+WHERE existingid is null
 
 ORDER BY registrationid desc]]>
 	</queryString>
@@ -29,7 +31,7 @@ ORDER BY registrationid desc]]>
 	<title>
 		<band height="50" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText" x="159" y="5" width="465" height="40" uuid="55a8eca7-da21-4ae9-bfde-2657247624f9"/>
+				<reportElement key="staticText" x="159" y="5" width="465" height="40" uuid="9197990a-ab6b-44e2-84d2-889fc940862e"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -39,7 +41,7 @@ ORDER BY registrationid desc]]>
 				<textElement>
 					<font fontName="Times New Roman" size="30"/>
 				</textElement>
-				<text><![CDATA[Registration List]]></text>
+				<text><![CDATA[Applicant List]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -49,10 +51,10 @@ ORDER BY registrationid desc]]>
 	<columnHeader>
 		<band height="18" splitType="Stretch">
 			<line direction="BottomUp">
-				<reportElement key="line" x="0" y="15" width="782" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="c4009d69-ddc3-49b9-a8b5-4be362657b08"/>
+				<reportElement key="line" x="0" y="15" width="782" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="0688b656-babc-4beb-b145-6a94a3ac385c"/>
 			</line>
 			<staticText>
-				<reportElement key="staticText" x="14" y="0" width="61" height="17" forecolor="#000000" uuid="4751b0f0-8011-489b-ae46-3a0545c94919"/>
+				<reportElement key="staticText" x="1" y="0" width="74" height="17" forecolor="#000000" uuid="16f7a5dd-573d-4dd7-95fe-ddf1749650d8"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -65,7 +67,7 @@ ORDER BY registrationid desc]]>
 				<text><![CDATA[Reg. ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" x="78" y="0" width="168" height="17" forecolor="#000000" uuid="11e0435c-d714-40d8-9d62-f856210cc805"/>
+				<reportElement key="staticText" x="78" y="0" width="168" height="17" forecolor="#000000" uuid="1b145166-59a4-4b97-b74d-c34bfdcb4faf"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -78,7 +80,7 @@ ORDER BY registrationid desc]]>
 				<text><![CDATA[E-Mail]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" x="540" y="0" width="92" height="17" forecolor="#000000" uuid="4669e8d5-68cf-4aac-b79c-eff58b848264"/>
+				<reportElement key="staticText" x="540" y="0" width="92" height="17" forecolor="#000000" uuid="bc785dd7-53af-413d-9d79-af6264673255"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -91,7 +93,7 @@ ORDER BY registrationid desc]]>
 				<text><![CDATA[Application Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" x="636" y="0" width="107" height="17" forecolor="#000000" uuid="72c7cf79-ef0a-448e-b8a1-586f25ea1720"/>
+				<reportElement key="staticText" x="636" y="0" width="107" height="17" forecolor="#000000" uuid="a004c9bf-6585-4e17-b361-104c850adf19"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -104,7 +106,7 @@ ORDER BY registrationid desc]]>
 				<text><![CDATA[Nationality]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" x="744" y="0" width="35" height="17" forecolor="#000000" uuid="fd4a31a0-5b74-4555-9cc4-dfbd8de4891d"/>
+				<reportElement key="staticText" x="744" y="0" width="35" height="17" forecolor="#000000" uuid="cdeea4d4-ec54-4560-8a23-d3072f7f1b4d"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -117,7 +119,7 @@ ORDER BY registrationid desc]]>
 				<text><![CDATA[Sex]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" x="443" y="0" width="94" height="17" forecolor="#000000" uuid="535ab87a-365c-48f7-ad33-c0d288757f7d"/>
+				<reportElement key="staticText" x="443" y="0" width="94" height="17" forecolor="#000000" uuid="86c9c024-3ff0-4be2-9ab9-9a804059847b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -130,7 +132,7 @@ ORDER BY registrationid desc]]>
 				<text><![CDATA[Last Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" x="248" y="0" width="94" height="17" forecolor="#000000" uuid="1445c34b-a538-41fd-8322-3d89b3c7299c"/>
+				<reportElement key="staticText" x="248" y="0" width="94" height="17" forecolor="#000000" uuid="b2a4a4ab-3b3b-40fe-81cc-3053c7e6c820"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -143,7 +145,7 @@ ORDER BY registrationid desc]]>
 				<text><![CDATA[First Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText" x="346" y="0" width="94" height="17" forecolor="#000000" uuid="f760f33d-e65e-470d-b283-fa0d00f3e400"/>
+				<reportElement key="staticText" x="346" y="0" width="94" height="17" forecolor="#000000" uuid="71b78a89-1dda-4d25-b7e2-da11321002da"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -160,7 +162,7 @@ ORDER BY registrationid desc]]>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="14" y="1" width="61" height="17" forecolor="#000000" uuid="77d51511-abc8-473b-8997-5707344b6d06"/>
+				<reportElement key="textField" x="1" y="1" width="74" height="17" forecolor="#000000" uuid="7ff6f363-31bf-4365-bf77-6a72c2b992d5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -173,7 +175,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA[$F{registrationid}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="78" y="1" width="168" height="17" forecolor="#000000" uuid="966096f0-cde3-48f7-a7ae-e1833d8b7c28"/>
+				<reportElement key="textField" x="78" y="1" width="168" height="17" forecolor="#000000" uuid="3de20f36-2a73-45c3-8a60-19224e617c21"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -186,7 +188,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
-				<reportElement key="textField" x="540" y="1" width="92" height="17" forecolor="#000000" uuid="40e7e997-168b-43c7-b524-f3580fc2b056"/>
+				<reportElement key="textField" x="540" y="1" width="92" height="17" forecolor="#000000" uuid="dc20c87b-ff9d-4de7-949b-bc78908f8d33"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -199,7 +201,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA[$F{applicationdate}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="636" y="1" width="107" height="17" forecolor="#000000" uuid="7ce168ac-2e0d-4ae9-b6f7-1dea58e292d1"/>
+				<reportElement key="textField" x="636" y="1" width="107" height="17" forecolor="#000000" uuid="482b8a3b-717e-4dbe-8018-540b907ad068"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -212,7 +214,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA[$F{nationality}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="744" y="1" width="35" height="17" forecolor="#000000" uuid="dcce07b7-d4a7-48a9-b03e-262d2359c508"/>
+				<reportElement key="textField" x="744" y="1" width="35" height="17" forecolor="#000000" uuid="8b69cab8-ea3e-4543-80be-0f3f38045212"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -225,7 +227,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA[$F{sex}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="443" y="1" width="94" height="17" forecolor="#000000" uuid="851127e6-eecd-4095-b1f5-f3a0f4d852c5"/>
+				<reportElement key="textField" x="443" y="1" width="94" height="17" forecolor="#000000" uuid="04e119b2-f091-43db-843e-e578d70a8550"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -238,7 +240,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA[$F{lastname}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="248" y="1" width="94" height="17" forecolor="#000000" uuid="3c0be08b-ca93-4a17-934f-147f208507db"/>
+				<reportElement key="textField" x="248" y="1" width="94" height="17" forecolor="#000000" uuid="3529d860-4ec5-4eaf-b780-93800f7d79e9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -251,7 +253,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA[$F{firstname}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="346" y="1" width="94" height="17" forecolor="#000000" uuid="4c459e6e-07c6-4715-929d-74737c9807c8"/>
+				<reportElement key="textField" x="346" y="1" width="94" height="17" forecolor="#000000" uuid="66b4827d-6757-45f1-9188-93769ca67d16"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -271,7 +273,7 @@ ORDER BY registrationid desc]]>
 	<pageFooter>
 		<band height="27" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField" x="573" y="4" width="170" height="19" forecolor="#000000" uuid="6c29f702-b44a-4ff6-8941-9acad2f6502f"/>
+				<reportElement key="textField" x="573" y="4" width="170" height="19" forecolor="#000000" uuid="03390b34-f22a-464d-a043-35f5c93f9aae"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -284,7 +286,7 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
-				<reportElement key="textField" mode="Transparent" x="746" y="4" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="65e19104-ec97-4bd6-b56b-537018b9e674"/>
+				<reportElement key="textField" mode="Transparent" x="746" y="4" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="13e9cea9-6c00-4c51-8e3f-17689465814b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -297,10 +299,10 @@ ORDER BY registrationid desc]]>
 				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement key="line" x="0" y="3" width="782" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="8a422a96-34d1-4c06-9c82-0fe7d2e7f31e"/>
+				<reportElement key="line" x="0" y="3" width="782" height="1" forecolor="#000000" backcolor="#FFFFFF" uuid="f967fedc-00c7-4592-9f98-c2c0faa9aa77"/>
 			</line>
 			<textField isBlankWhenNull="false">
-				<reportElement key="textField" x="1" y="6" width="209" height="19" forecolor="#000000" uuid="b87f9c56-47ed-4df6-a1e5-075406ce8acc"/>
+				<reportElement key="textField" x="1" y="6" width="209" height="19" forecolor="#000000" uuid="3b427240-796f-4fd2-8e25-3567d3166f99"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

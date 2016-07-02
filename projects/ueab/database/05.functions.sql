@@ -1061,6 +1061,7 @@ CREATE OR REPLACE FUNCTION updqstudents() RETURNS trigger AS $$
 DECLARE
 	v_user_id		varchar(50);
 	v_user_ip		varchar(50);
+	v_narrative		varchar(120);
 	mystr 			varchar(120);
 BEGIN
 
@@ -1076,13 +1077,21 @@ BEGIN
 	END IF;
 
 	IF (OLD.finaceapproval = false) AND (NEW.finaceapproval = true) THEN
-		INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate, clientid) 
-		VALUES (NEW.qstudentid, v_user_id, 'Finance', now(), v_user_ip);
+		SELECT 'Hours ' || hours::varchar || ', fees ' || totalfees::varchar INTO v_narrative
+		FROM studentquarterview
+		WHERE (qstudentid = NEW.qstudentid);
+		
+		INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate, clientid, narrative)
+		VALUES (NEW.qstudentid, v_user_id, 'Finance', now(), v_user_ip, v_narrative);
 	END IF;
 	
 	IF (OLD.exam_clear = false) AND (NEW.exam_clear = true) THEN
-		INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate, clientid) 
-		VALUES (NEW.qstudentid, v_user_id, 'Exam Clear', now(), v_user_ip);
+		SELECT 'Balance ' || finalbalance::varchar INTO v_narrative
+		FROM studentquarterview
+		WHERE (qstudentid = NEW.qstudentid);
+		
+		INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate, clientid, narrative) 
+		VALUES (NEW.qstudentid, v_user_id, 'Exam Clear', now(), v_user_ip, v_narrative);
 	END IF;
 
 	IF (OLD.finaceapproval = true) AND (NEW.finaceapproval = false) THEN
@@ -1130,6 +1139,12 @@ BEGIN
 				RAISE EXCEPTION 'You cannot close without financial approval';
 			END IF;
 		END IF;
+		
+		IF (OLD.finaceapproval = false) AND (NEW.finaceapproval = true) THEN
+			SELECT hours, totalfees INTO NEW.approved_hours, NEW.approved_fees
+			FROM studentquarterview
+			WHERE (qstudentid = NEW.qstudentid);
+		END IF;
 
 		IF (OLD.finaceapproval = true) AND (NEW.finaceapproval = false) THEN
 			NEW.finalised := false;
@@ -1157,7 +1172,8 @@ BEGIN
 		IF(OLD.approve_late_fee = false) AND (NEW.approve_late_fee = true) THEN
 			NEW.late_fee_date := current_date;
 		END IF;
-	ELSE(TG_OP = 'INSERT')THEN
+		
+	ELSIF(TG_OP = 'INSERT')THEN
 		IF (NEW.approved = true) AND (NEW.finaceapproval = false) THEN
 			RAISE EXCEPTION 'You cannot close without financial approval';
 		END IF;
@@ -1562,27 +1578,27 @@ BEGIN
 	FROM entitys WHERE (entity_id = CAST($2 as int));
 
 	IF($3 = '1') AND (reca.finaceapproval = false) THEN
-		UPDATE qstudents SET finaceapproval = true
-		WHERE (qstudentid = CAST($1 as int));
-
 		INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate, clientid) 
 		VALUES (CAST($1 as int), v_user_name, 'Finance Approval', now(), cast(inet_client_addr() as varchar));
+
+		UPDATE qstudents SET finaceapproval = true
+		WHERE (qstudentid = CAST($1 as int));
 	END IF;
 
 	IF($3 = '2') AND (reca.finaceapproval = true) THEN
-		UPDATE qstudents SET finaceapproval = false
-		WHERE (qstudentid = CAST($1 as int));
-
 		INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate, clientid) 
 		VALUES (CAST($1 as int), v_user_name, 'Finance Opening', now(), cast(inet_client_addr() as varchar));
+
+		UPDATE qstudents SET finaceapproval = false
+		WHERE (qstudentid = CAST($1 as int));
 	END IF;
 
 	IF($3 = '3') AND (reca.exam_clear = false) THEN
-		UPDATE qstudents SET exam_clear = true, exam_clear_date = now()
-		WHERE (qstudentid = CAST($1 as int));
-
 		INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate, clientid) 
 		VALUES (CAST($1 as int), v_user_name, 'Exam Clearance', now(), cast(inet_client_addr() as varchar));
+		
+		UPDATE qstudents SET exam_clear = true, exam_clear_date = now()
+		WHERE (qstudentid = CAST($1 as int));
 	END IF;
 
 	RETURN 'Approved';

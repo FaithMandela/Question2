@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="registrationview" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b703e1e1-69ea-4b0e-96b4-c28576a78cd7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="registrationviewc" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="b703e1e1-69ea-4b0e-96b4-c28576a78cd7">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -11,7 +11,10 @@
 	<queryString>
 		<![CDATA[SELECT registrationid, email, applicationdate, nationality, sex, lastname, firstname, middlename
 
-FROM registrationview
+FROM registrationview INNER JOIN studentdegrees ON registrationview.existingid = studentdegrees.studentid
+LEFT JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid
+
+WHERE qstudents.qstudentid is null
 
 ORDER BY registrationid desc]]>
 	</queryString>
@@ -39,7 +42,7 @@ ORDER BY registrationid desc]]>
 				<textElement>
 					<font fontName="Times New Roman" size="30"/>
 				</textElement>
-				<text><![CDATA[Registration List]]></text>
+				<text><![CDATA[Applicants that have not reported]]></text>
 			</staticText>
 		</band>
 	</title>

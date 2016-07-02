@@ -1,9 +1,14 @@
 CREATE TABLE loan_types (
 	loan_type_id			serial primary key,
-	org_id				integer references orgs,
+	org_id					integer references orgs,
 	loan_type_name			varchar(50) not null,
 	default_interest		real,
 	reducing_balance		boolean default true not null,
+<<<<<<< HEAD:projects/chama/database/08.loans.sql
+	penalty					real default  0 not null,
+=======
+	penalty					real default  0 not null;
+>>>>>>> 1ec33c13976de73dbe7769559295288e445f9ae8:projects/chama/database/11.loans.sql
 	details					text
 );
 CREATE INDEX loan_types_org_id ON loan_types (org_id);
@@ -44,7 +49,6 @@ CREATE TABLE loan_monthly (
 	interest_amount				real default 0 not null,
 	repayment				real default 0 not null,
 	interest_paid				real default 0 not null,
-	penalty					boolean default true not null,
 	penalty_paid				real default 0 not null,
 	details					text,
 	UNIQUE (loan_id, period_id)
@@ -143,7 +147,7 @@ $$ LANGUAGE SQL;
 CREATE VIEW vw_loan_types AS
 	SELECT	currency.currency_id, currency.currency_name, currency.currency_symbol,
 		loan_types.org_id, loan_types.loan_type_id, loan_types.loan_type_name, 
-		loan_types.default_interest, loan_types.reducing_balance, loan_types.details
+		loan_types.default_interest, loan_types.reducing_balance, loan_types.penalty, loan_types.details
 	FROM loan_types 
 		INNER JOIN currency ON loan_types.org_id = currency.org_id;
 
@@ -169,7 +173,7 @@ CREATE VIEW vw_loan_monthly AS
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, loan_monthly.repayment, loan_monthly.interest_paid, 
-		loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
+		loan_monthly.penalty_paid, loan_monthly.details,
 		get_total_interest(vw_loans.loan_id, vw_periods.start_date) as total_interest,
 		get_total_repayment(vw_loans.loan_id, vw_periods.start_date) as total_repayment,
 		(vw_loans.principle + get_total_interest(vw_loans.loan_id, vw_periods.start_date + 1) + get_penalty(vw_loans.loan_id, vw_periods.start_date + 1)

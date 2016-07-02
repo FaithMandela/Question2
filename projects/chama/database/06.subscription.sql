@@ -1,17 +1,4 @@
-alter table orgs add default_country_id varchar(6); 
-
-CREATE TABLE locations
-(
-	location_id			serial primary key,
-	org_id 				integer references orgs,
-	location_name 			character varying(50),
-	details			 text
-);
-
-ALTER TABLE orgs ADD member_limit integer default 5 not null;
-ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
-
-
+--alter table orgs add default_country_id varchar(6); 
 -- CREATE TABLE industry (
 -- 	industry_id			serial primary key,
 -- 	org_id				integer references orgs,
@@ -104,7 +91,7 @@ CREATE VIEW vw_subscriptions AS
 		subscriptions.primary_contact, subscriptions.job_title, subscriptions.primary_email, 
 		subscriptions.approve_status, subscriptions.workflow_table_id, subscriptions.application_date, subscriptions.action_date, 
 		subscriptions.details
-	FROM 
+	FROM subscriptions
 		INNER JOIN sys_countrys ON subscriptions.country_id = sys_countrys.sys_country_id
 		LEFT JOIN entitys ON subscriptions.entity_id = entitys.entity_id
 		LEFT JOIN entitys as account_manager ON subscriptions.account_manager_id = account_manager.entity_id
@@ -172,6 +159,8 @@ BEGIN
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+		
+		INSERT INTO locations (org_id, location_name) VALUES (NEW.org_id, 'Main');
 
 		INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
 		SELECT transaction_type_id, NEW.org_id, 1

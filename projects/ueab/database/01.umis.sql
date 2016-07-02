@@ -665,6 +665,9 @@ CREATE TABLE qstudents (
 	seconddate			date,
 
 	changed_by			integer,
+	approved_hours		real,
+	approved_fees		real,
+	
 	financenarrative	text,
 	noapproval			text,
 	details				text,
@@ -687,7 +690,8 @@ CREATE TABLE approvallist (
 	approvedby			varchar(50),
 	approvaltype		varchar(25),
 	approvedate			timestamp default now(),
-	clientid			varchar(50)
+	clientid			varchar(50),
+	narrative			varchar(120)
 );
 CREATE INDEX approvallist_qstudentid ON approvallist (qstudentid);
 

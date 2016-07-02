@@ -60,7 +60,7 @@
 	$('#makePurchase').click(function() {
 		var units = $("#units").val();
 
-		$.post("ajax?fnct=product&id=" + <%= productId %> + "&units=" + units, function(data) {
+		$.post("ajax?fnct=buy_product&id=" + <%= productId %> + "&units=" + units, function(data) {
 
 			if(data.success == 0) {
 				$('#ajax').modal('hide');

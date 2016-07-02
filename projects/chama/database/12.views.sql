@@ -1,4 +1,3 @@
-
 CREATE OR REPLACE VIEW vw_members AS
 	SELECT 	bank_branch.bank_branch_id, bank_branch.bank_branch_name, 
 	banks.bank_id, banks.bank_name, 
@@ -23,7 +22,7 @@ CREATE OR REPLACE VIEW vw_expenses AS
 	FROM expenses
 	JOIN bank_accounts ON expenses.bank_account_id = bank_accounts.bank_account_id
 	JOIN currency ON expenses.currency_id = currency.currency_id
-	JOIN entitys ON expenses.entity_id = entitys.entity_id
+	JOIN entitys ON expenses.entity_id = entitys.entity_id;
 	
 CREATE OR REPLACE VIEW vw_contribution_defaults AS
 	SELECT contribution_types.contribution_type_id, contribution_types.contribution_type_name, entitys.entity_id, entitys.entity_name, contribution_defaults.org_id, contribution_defaults.contribution_default_id, contribution_defaults.investment_amount, contribution_defaults.merry_go_round_amount, contribution_defaults.details
@@ -34,7 +33,6 @@ CREATE OR REPLACE VIEW vw_contribution_defaults AS
 CREATE OR REPLACE VIEW vw_contribution_types AS
 	SELECT contribution_types.org_id, contribution_types.contribution_type_id, contribution_types.contribution_type_name, contribution_types.investment_amount, contribution_types.merry_go_round_amount, contribution_types.frequency, contribution_types.applies_to_all, contribution_types.details
 	FROM contribution_types;
-	
 
 CREATE OR REPLACE VIEW vw_contributions AS 
  SELECT bank_accounts.bank_account_id,
@@ -47,7 +45,6 @@ CREATE OR REPLACE VIEW vw_contributions AS
     members.middle_name,
     contributions.org_id,
     contributions.period_id,
-    contributions.meeting_id,
     contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
@@ -63,6 +60,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
      JOIN members ON contributions.member_id = members.member_id
      LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id;
 
+
 CREATE OR REPLACE VIEW vw_all_contributions AS 
  SELECT bank_accounts.bank_account_id,
     bank_accounts.bank_account_name,
@@ -74,7 +72,6 @@ CREATE OR REPLACE VIEW vw_all_contributions AS
     members.middle_name,
     contributions.org_id,
     contributions.period_id,
-    contributions.meeting_id,
     contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
@@ -102,8 +99,7 @@ CREATE OR REPLACE VIEW vw_contributions_unpaid AS
     members.middle_name,
     contributions.org_id,
     contributions.period_id,
-    contributions.meeting_id,
-    contributions.contribution_id,
+	contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
     contributions.merry_go_round_amount,
@@ -125,7 +121,7 @@ CREATE OR REPLACE VIEW vw_member_contrib AS
 		SELECT vw_contributions.bank_account_id, vw_contributions.bank_account_name, 
 		vw_contributions.contribution_type_id, vw_contributions.contribution_type_name,
 		vw_members.entity_id, vw_members.entity_name, vw_members.member_id, vw_members.merry_go_round_number,
-		vw_contributions.org_id, vw_contributions.period_id, vw_contributions.meeting_id,
+		vw_contributions.org_id, vw_contributions.period_id,
     vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.money_in, vw_contributions.money_out
 
 		FROM vw_contributions
@@ -153,7 +149,9 @@ CREATE OR REPLACE VIEW vw_investments AS
     investments.org_id, investments.investment_id, investments.investment_name, investments.date_of_accrual,
     investments.principal, investments.interest, investments.repayment_period, investments.initial_payment, investments.monthly_payments, investments.investment_status, investments.approve_status, investments.workflow_table_id, investments.action_date, investments.is_active, investments.details,
 	get_total_repayment(investments.principal, investments.interest, investments.repayment_period) as total_repayment,
-	get_interest_amount(investments.principal, investments.interest, investments.repayment_period) as interest_amount
+	get_interest_amount(investments.principal, investments.interest, investments.repayment_period) as interest_amount,
+	get_total_expenditure(investment_id) as expenditure,
+	get_total_income(investment_id) as income
 FROM investments
 	JOIN currency ON investments.currency_id = currency.currency_id
     JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id
@@ -161,7 +159,7 @@ FROM investments
 
   
 CREATE OR REPLACE VIEW vw_meetings AS 
-	SELECT meetings.org_id, meetings.meeting_id, meetings.meeting_date, meetings.amount_contributed, 
+	SELECT meetings.org_id, meetings.meeting_id, meetings.meeting_date, 
 	meetings.meeting_place, meetings.minutes, meetings.status, meetings.details
 	FROM meetings;
 
@@ -296,4 +294,5 @@ UNION
 FROM vw_tx_ledger
 WHERE vw_tx_ledger.tx_type = -1)) AS a
 order by date;
+
 

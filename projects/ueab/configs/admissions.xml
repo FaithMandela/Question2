@@ -11,6 +11,7 @@
 		</MENU>
 		<MENU name="Reports">
 			<MENU name="Registrations">104</MENU>
+			<MENU name="Not Reported">114</MENU>
 			<MENU name="New Students">209</MENU>
 			<MENU name="New Students By Year">210</MENU>
 			<MENU name="New Students Progress">211</MENU>
@@ -439,7 +440,11 @@
 		<JASPER filtered="false" name="Health Items" reportfile="healthitems.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Registration List" type="horl" key="104" h="500">
-		<JASPER filtered="false" name="Registration List" reportfile="registrationview.jasper"></JASPER>
+		<JASPER name="Applicants" reportfile="registrationviewa.jasper"></JASPER>
+		<JASPER name="Registration List" reportfile="registrationview.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Not Reported" type="horl" key="114" h="500">
+		<JASPER name="Not Reported" reportfile="registrationviewc.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="New Students Enrolment" type="horl" key="209" h="500">
 		<FILTER location="250" name="New Students Enrolment" type="horl">

@@ -9,19 +9,7 @@
                 <form class="form-horizontal" action="#">
                 <div class="modal-body">
                     <div id="pass_alert_div"></div>
-                       <!-- <div class="form-group">
-                            <label class="control-label">Current Password</label>
-                            <input type="password" class="form-control" id="txtOldPassword" required/>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">New Password</label>
-                            <input type="password" class="form-control" id="txtNewPassword" required/>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">Re-type New Password</label>
-                            <input type="password" class="form-control"   id="txtConfirmNew" required/>
-                        </div>-->
-                    
+                   
                     <div class="form-group">
                         <label class=" col-md-3 control-label" for="txtOldPassword">Current Password</label>
                         <div class="col-md-7">
@@ -36,20 +24,12 @@
                         </div>
                     </div>
                     
-                    
                     <div class="form-group">
                         <label class=" col-md-3 control-label" for="txtConfirmNew">Confirm Password</label>
                         <div class="col-md-7">
                             <input type="password" class="form-control" id="txtConfirmNew" name="txtConfirmNew" required/>
                         </div>
                     </div>
-                    
-                    
-                    
-                    
-                        
-                    </form>
-
                     
                 </div>
                 <div class="modal-footer">

@@ -4,6 +4,7 @@
 <c:set var="mainPage" value="index.jsp" scope="page" />
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="org.baraza.DB.BQuery" %>
 <%@ page import="org.baraza.web.*" %>
 <%@ page import="org.baraza.xml.BElement" %>
 
@@ -307,9 +308,10 @@
 						</div>
 
 						<div class="portlet-body" id="portletBody" style="min-height:360px;">
-							<%= web.getBody(request, reportPath) %>
-							<%if(!web.getLicense()) {%>
-							<%@ include file="./assets/include/licenseapply.jsp" %>
+							<% if(web.hasExpired()) {%>
+								<%@ include file="./assets/include/billing_expired.jsp" %>
+							<%} else {%>
+								<%= web.getBody(request, reportPath) %>
 							<% } %>
 						</div>
 
@@ -871,6 +873,22 @@ $(function () {
 	});
 
 <% } %>
+
+<%if(web.hasExpired()) {%>
+
+	$('#renewalApply').click(function() {
+		$.post("ajax?fnct=renew_product", function(data) {
+			if(data.success == 0) {
+				$('#ajax').modal('hide');
+			} else if(data.success == 1){
+				alert(data.message);
+			}
+
+		}, "JSON");
+	});
+
+<% } %>
+
 
 </script>
 <!-- END JAVASCRIPTS -->

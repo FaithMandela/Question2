@@ -107,7 +107,7 @@ CREATE INDEX Clients_ClientSystemID ON Clients (ClientSystemID);
 CREATE INDEX Clients_ClientLinkID ON Clients (ClientLinkID);
 
 CREATE TABLE pccs	(
-	pcc					varchar(12) primary key,
+	pcc					varchar(60) primary key,
 	ClientID			integer references Clients,
 	gds					varchar(2) not null,
 	pccdate				date default current_date
@@ -592,7 +592,7 @@ CREATE TABLE MIDTTransactions (
 	MIDTTransactionID		serial primary key,
 	ClientID				integer references Clients,
 	PeriodID				integer references periods,
-   	CRS 					varchar(12),
+   	CRS						varchar(12),
    	PCC						varchar(25),
 	Agency					varchar(120),	
 	IATANo					varchar(50),

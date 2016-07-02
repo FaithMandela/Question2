@@ -303,6 +303,7 @@
 					<TEXTFIELD w="40" title="Approval Type">approvaltype</TEXTFIELD>
 					<TEXTFIELD w="40" title="Approve Date">approvedate</TEXTFIELD>
 					<TEXTFIELD w="40" title="Client IP">clientid</TEXTFIELD>
+					<TEXTFIELD w="140" title="Narrative">narrative</TEXTFIELD>
 				</GRID>
 			</GRID>
 		</GRID>

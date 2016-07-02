@@ -46,7 +46,6 @@ CREATE TABLE meetings (
 	meeting_id					serial primary key,
 	org_id                      integer references orgs,
 	meeting_date				date,
-	amount_contributed			real, 
 	meeting_place				varchar (120) not null,
 	minutes						varchar (120),
 	status						varchar (16) default 'Draft' not null,
@@ -86,9 +85,9 @@ CREATE INDEX contribution_defaults_entity_id ON contribution_defaults (entity_id
 CREATE TABLE contributions (
 	contribution_id				serial primary key,
 	contribution_type_id		integer references contribution_types,
-	meeting_id 					integer references meetings,
 	bank_account_id 			integer references bank_accounts,
 	entity_id					integer references entitys,
+	member_id                   integer references members,
 	period_id					integer references periods,
 	org_id						integer references orgs,
 	
@@ -108,7 +107,6 @@ CREATE INDEX contributions_contributions_type_id ON contributions (contribution_
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
 CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_org_id ON contributions (org_id);
-CREATE INDEX contributions_meeting_id ON contributions (meeting_id);
 
 CREATE TABLE drawings(
 drawing_id				serial primary key,
@@ -147,6 +145,7 @@ CREATE TABLE penalty (
 	date_of_accrual             date,
 	amount                      real not null,
 	paid						boolean default true not null,
+	penalty_paid				real default  0 not null,
 	action_date					timestamp,
 	is_active                   boolean default true not null,
 	details                     text

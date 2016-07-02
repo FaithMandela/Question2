@@ -28,6 +28,7 @@ CREATE TABLE contribution_types (
 	org_id					integer references orgs,
 	contribution_type_name	varchar(20),
 	interval_days			integer,
+	amount                  real default 3000,
 	details					text
 );
 CREATE INDEX contribution_types_org_id ON contribution_types (org_id);
@@ -42,6 +43,8 @@ CREATE TABLE contributions (
 	org_id					integer references orgs, 
 	entity_name 			varchar(120),
 	contribution_amount		real,
+	loan_repayment			boolean default false,
+	
 	deposit_date			date,
 	deposit_amount			real,
 	entry_date              timestamp default CURRENT_TIMESTAMP,
@@ -343,3 +346,32 @@ CREATE TABLE billing	(
 CREATE INDEX billing_entity_id ON billing (entity_id);
 CREATE INDEX billing_org_id ON billing(org_id);
 CREATE INDEX billing_currency_id ON billing(currency_id);
+
+
+CREATE TABLE sacco_investments (
+   	sacco_investment_id               serial primary key,
+	investment_type_id			integer references investment_types, 
+	currency_id                 integer references currency,
+    org_id                      integer references orgs,
+    bank_account_id 			integer references bank_accounts,
+    
+    investment_name 			varchar(120),
+	investment_status			character varying(25) NOT NULL DEFAULT 'Prospective',
+	date_of_accrual             date,
+	principal 					real,
+	interest					real,
+	repayment_period			real,
+	initial_payment				real default 0 not null,
+	monthly_payments			real,
+	
+	approve_status				varchar(16) default 'Draft' not null,
+	workflow_table_id			integer,
+	action_date					timestamp,
+	
+	is_active                   boolean default true not null,
+	details                     text
+);
+CREATE INDEX sacco_investments_bank_account_id ON sacco_investments (bank_account_id);
+CREATE INDEX sacco_investments_investment_type_id ON sacco_investments (investment_type_id);
+CREATE INDEX sacco_investments_currency_id ON sacco_investments (currency_id);
+CREATE INDEX sacco_investments_org_id ON sacco_investments (org_id);

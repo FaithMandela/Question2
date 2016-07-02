@@ -66,6 +66,7 @@ public class BWeb {
 
 	boolean selectAll = false;
 	boolean isLicense = true;
+	boolean isExpired = false;
 	String[] deskTypes = {"CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
@@ -173,6 +174,12 @@ public class BWeb {
 			mainPage = (String)webSession.getAttribute("mainpage");
 		} else {
 			webSession.setAttribute("mainpage", "index.jsp");
+		}
+		
+		// Check if the version has expiery constraints
+		if(root.getAttribute("billing", "false").equals("true")) {
+			String expStr = "SELECT org_id FROM orgs WHERE ((expiry_date is null) or (expiry_date >= current_date)) AND (org_id = " + db.getUserID() + ")";
+			if(db.executeFunction(expStr) == null) isExpired = true;
 		}
 
 		// Get the parameters used in Views
@@ -321,14 +328,7 @@ public class BWeb {
 			mymenu += "		</li>\n";
 		}
 		
-		boolean showMenu = true;
-		if(root.getAttribute("billing", "false").equals("true")) {
-			String expStr = "SELECT org_id FROM orgs WHERE ((expiry_date is null) or (expiry_date < current_date)) AND (org_id = " + db.getUserID() + ")";
-			String expired = db.executeFunction(expStr);
-			if(expired == null) showMenu = false;
-		}
-		
-		if(showMenu) mymenu += getSubMenu(mel, 0);
+		mymenu += getSubMenu(mel, 0);
 		mymenu += "	</ul>\n";
 
 		return mymenu;
@@ -1572,9 +1572,8 @@ System.out.println("repository : " + repository);
 		return user.getUserOrgName();
 	}
 
-	public String getOrgID() {
-		return db.getOrgID();
-	}
+	public String getOrgID() { return db.getOrgID(); }
+	public String getUserOrg() { return db.getUserOrg(); }
 
 	public String getFilters() {
 		String filters = "";
@@ -2125,6 +2124,10 @@ System.out.println("repository : " + repository);
 			if(el.getName().equals("CROSSTAB")) hasSubs = true;
 		}
 		return hasSubs;
+	}
+	
+	public boolean hasExpired() {
+		return isExpired;
 	}
 	
 	public boolean getLicense() {
