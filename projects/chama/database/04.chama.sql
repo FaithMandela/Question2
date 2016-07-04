@@ -87,6 +87,7 @@ CREATE TABLE contributions (
 	contribution_type_id		integer references contribution_types,
 	bank_account_id 			integer references bank_accounts,
 	entity_id					integer references entitys,
+	member_id					integer references members,
 	period_id					integer references periods,
 	org_id						integer references orgs,
 	
