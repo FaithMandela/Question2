@@ -91,7 +91,7 @@ public class BCipher {
 	public String password(String  planpw) {
 		String hash = null;
 		try {
-			MessageDigest md = MessageDigest.getInstance(type); 	// SHA-1 generator instance
+			MessageDigest md = MessageDigest.getInstance("SHA-1"); 	// SHA-1 generator instance
 			md.update(planpw.getBytes("UTF-8")); 					// Message summary generation
 			Base64 coder = new Base64(32);
 			byte raw[] = md.digest(); 								// Message summary reception

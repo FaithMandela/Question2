@@ -34,9 +34,6 @@ public class BRealm extends RealmBase {
 		this.password = credentials;
 
 		BCipher cp =  new BCipher();
-System.out.println("System out : " + username + " : " + credentials);
-System.out.println("System out : " + cp.MD5(credentials));
-
 
 		/* dummy authentication */
 		if (this.username.equals(this.password)) {
