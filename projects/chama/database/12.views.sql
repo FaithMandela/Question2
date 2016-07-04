@@ -1,4 +1,3 @@
-
 CREATE OR REPLACE VIEW vw_members AS
 	SELECT 	bank_branch.bank_branch_id, bank_branch.bank_branch_name, 
 	banks.bank_id, banks.bank_name, 
@@ -23,7 +22,7 @@ CREATE OR REPLACE VIEW vw_expenses AS
 	FROM expenses
 	JOIN bank_accounts ON expenses.bank_account_id = bank_accounts.bank_account_id
 	JOIN currency ON expenses.currency_id = currency.currency_id
-	JOIN entitys ON expenses.entity_id = entitys.entity_id
+	JOIN entitys ON expenses.entity_id = entitys.entity_id;
 	
 CREATE OR REPLACE VIEW vw_contribution_defaults AS
 	SELECT contribution_types.contribution_type_id, contribution_types.contribution_type_name, entitys.entity_id, entitys.entity_name, contribution_defaults.org_id, contribution_defaults.contribution_default_id, contribution_defaults.investment_amount, contribution_defaults.merry_go_round_amount, contribution_defaults.details
@@ -34,7 +33,6 @@ CREATE OR REPLACE VIEW vw_contribution_defaults AS
 CREATE OR REPLACE VIEW vw_contribution_types AS
 	SELECT contribution_types.org_id, contribution_types.contribution_type_id, contribution_types.contribution_type_name, contribution_types.investment_amount, contribution_types.merry_go_round_amount, contribution_types.frequency, contribution_types.applies_to_all, contribution_types.details
 	FROM contribution_types;
-	
 
 CREATE OR REPLACE VIEW vw_contributions AS 
  SELECT bank_accounts.bank_account_id,
@@ -61,6 +59,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
      JOIN entitys ON contributions.entity_id = entitys.entity_id
      JOIN members ON contributions.member_id = members.member_id
      LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id;
+
 
 CREATE OR REPLACE VIEW vw_all_contributions AS 
  SELECT bank_accounts.bank_account_id,
@@ -295,4 +294,5 @@ UNION
 FROM vw_tx_ledger
 WHERE vw_tx_ledger.tx_type = -1)) AS a
 order by date;
+
 

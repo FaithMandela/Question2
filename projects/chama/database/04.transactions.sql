@@ -141,13 +141,12 @@ CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,
 	account_id				integer references accounts,
 	org_id					integer references orgs,
-	ledger_type_name		varchar(120) not null,
-	ledger_posting			boolean default true not null,
-	details					text,
-	UNIQUE(org_id, ledger_type_name)
+	ledger_type_name		varchar(120) not null unique,
+	details					text  
 );
 CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
 CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
+
 
 CREATE TABLE transactions (
 	transaction_id 			serial primary key,
@@ -270,7 +269,7 @@ CREATE VIEW vw_quotations AS
 		quotations.valid_to, quotations.lead_time, quotations.details
 	FROM quotations	INNER JOIN entitys ON quotations.entity_id = entitys.entity_id
 		INNER JOIN items ON quotations.item_id = items.item_id;
-		
+
 CREATE VIEW vw_ledger_types AS
 	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
 		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
@@ -278,7 +277,7 @@ CREATE VIEW vw_ledger_types AS
 		
 		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.details
 	FROM ledger_types INNER JOIN vw_accounts ON vw_accounts.account_id = ledger_types.account_id;
-
+		
 CREATE VIEW vw_transactions AS
 	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
 		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
@@ -382,50 +381,6 @@ CREATE VIEW vw_transaction_details AS
 		LEFT JOIN accounts ON transaction_details.account_id = accounts.account_id
 		LEFT JOIN stores ON transaction_details.store_id = stores.store_id;
 		
-CREATE VIEW vw_tx_ledger AS
-	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
-		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		entitys.entity_id, entitys.entity_name, 
-		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
-		
-		transactions.org_id, transactions.transaction_id, transactions.journal_id, 
-		transactions.exchange_rate, transactions.tx_type, transactions.transaction_date, transactions.payment_date,
-		transactions.transaction_amount, transactions.transaction_tax_amount, transactions.reference_number, 
-		transactions.payment_number, transactions.for_processing, transactions.completed, transactions.is_cleared,
-		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
-		transactions.narrative, transactions.details,
-		
-		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		to_char(transactions.payment_date, 'YYYY.MM') as ledger_period,
-		to_char(transactions.payment_date, 'YYYY') as ledger_year,
-		to_char(transactions.payment_date, 'Month') as ledger_month,
-		
-		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount) as base_amount,
-		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_tax_amount) as base_tax_amount,
-		
-		(CASE WHEN transactions.completed = true THEN 
-			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
-		ELSE 0::real END) as base_balance,
-		
-		(CASE WHEN transactions.is_cleared = true THEN 
-			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
-		ELSE 0::real END) as cleared_balance,
-		
-		(CASE WHEN transactions.tx_type = 1 THEN 
-			(transactions.exchange_rate * transactions.transaction_amount)
-		ELSE 0::real END) as dr_amount,
-		
-		(CASE WHEN transactions.tx_type = -1 THEN 
-			(transactions.exchange_rate * transactions.transaction_amount) 
-		ELSE 0::real END) as cr_amount
-		
-	FROM transactions
-		INNER JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
-		INNER JOIN currency ON transactions.currency_id = currency.currency_id
-		INNER JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
-		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
-	WHERE transactions.tx_type is not null;
-	
 CREATE OR REPLACE FUNCTION prev_balance(date) RETURNS real AS $$
     SELECT COALESCE(sum(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount), 0)::real
 	FROM transactions
@@ -439,20 +394,6 @@ CREATE OR REPLACE FUNCTION prev_clear_balance(date) RETURNS real AS $$
 	WHERE (transactions.payment_date < $1) AND (transactions.completed = true) 
 		AND (transactions.is_cleared = true) AND (transactions.tx_type is not null);
 $$ LANGUAGE SQL;
-	
-CREATE VIEW vws_tx_ledger AS
-	SELECT org_id, ledger_period, ledger_year, ledger_month, 
-		sum(base_amount) as sum_base_amount, sum(base_tax_amount) as sum_base_tax_amount,
-		sum(base_balance) as sum_base_balance, sum(cleared_balance) as sum_cleared_balance,
-		sum(dr_amount) as sum_dr_amount, sum(cr_amount) as sum_cr_amount,
-		
-		to_date(ledger_period || '.01', 'YYYY.MM.DD') as start_date,
-		sum(base_amount) + prev_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_balance_amount,
-		sum(cleared_balance) + prev_clear_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_clear_balance_amount
-			
-	FROM vw_tx_ledger
-	GROUP BY org_id, ledger_period, ledger_year, ledger_month;
-
 
 CREATE OR REPLACE FUNCTION upd_trx_ledger(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE

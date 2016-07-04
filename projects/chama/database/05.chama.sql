@@ -87,7 +87,11 @@ CREATE TABLE contributions (
 	contribution_type_id		integer references contribution_types,
 	bank_account_id 			integer references bank_accounts,
 	entity_id					integer references entitys,
+<<<<<<< HEAD:projects/chama/database/04.chama.sql
 	member_id					integer references members,
+=======
+	member_id                   integer references members,
+>>>>>>> b5b4a91f32c7bb18e75f77c4d8a723ed2d01c5fc:projects/chama/database/05.chama.sql
 	period_id					integer references periods,
 	org_id						integer references orgs,
 	
@@ -107,7 +111,6 @@ CREATE INDEX contributions_contributions_type_id ON contributions (contribution_
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
 CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_org_id ON contributions (org_id);
-CREATE INDEX contributions_meeting_id ON contributions (meeting_id);
 
 CREATE TABLE drawings(
 drawing_id				serial primary key,
@@ -146,7 +149,7 @@ CREATE TABLE penalty (
 	date_of_accrual             date,
 	amount                      real not null,
 	paid						boolean default true not null,
-	penalty_paid				real default  0 not null;
+	penalty_paid				real default  0 not null,
 	action_date					timestamp,
 	is_active                   boolean default true not null,
 	details                     text

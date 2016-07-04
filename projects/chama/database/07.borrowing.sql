@@ -57,7 +57,6 @@ CREATE TABLE borrowing_repayment (
 CREATE INDEX borrowing_repayment_org_id ON borrowing_repayment(org_id);
 CREATE INDEX borrowing_repayment_borrowing_id ON borrowing_repayment (borrowing_id);
 CREATE INDEX borrowing_repayment_period_id ON borrowing_repayment (period_id);
-CREATE INDEX borrowing_repayment_penalty_id ON borrowing_repayment (penalty_id);
 
 
 CREATE OR REPLACE FUNCTION get_borrowing_repayment(real, real, integer) RETURNS real AS $$

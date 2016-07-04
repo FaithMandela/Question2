@@ -1,14 +1,3 @@
-
-CREATE TABLE ledger_types (
-	ledger_type_id			serial primary key,
-	account_id				integer references accounts,
-	org_id					integer references orgs,
-	ledger_type_name		varchar(120) not null unique,
-	details					text  
-);
-CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
-CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
-
 CREATE TABLE tx_ledger (
 	tx_ledger_id 			serial primary key,
 	ledger_type_id			integer references ledger_types,
@@ -51,78 +40,65 @@ CREATE INDEX tx_ledger_workflow_table_id ON tx_ledger (workflow_table_id);
 CREATE INDEX tx_ledger_org_id ON tx_ledger (org_id);
 CREATE INDEX tx_ledger_investment_id ON tx_ledger (investment_id);
 
-
-CREATE VIEW vw_ledger_types AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
-		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
-		
-		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.details
-	FROM ledger_types INNER JOIN vw_accounts ON vw_accounts.account_id = ledger_types.account_id;
-
 CREATE VIEW vw_tx_ledger AS
 	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		entitys.entity_id, entitys.entity_name, 
-		bank_accounts.bank_account_id, bank_accounts.bank_account_name, investments.investment_id, investments.investment_name,
-		tx_ledger.bpartner_id, bpartners.entity_name as bpartner_name, 
+		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
 		
-		tx_ledger.org_id, tx_ledger.tx_ledger_id, tx_ledger.journal_id, 
-		tx_ledger.exchange_rate, tx_ledger.tx_type, tx_ledger.tx_ledger_date, tx_ledger.tx_ledger_quantity,
-		tx_ledger.tx_ledger_amount, tx_ledger.tx_ledger_tax_amount, tx_ledger.reference_number, 
-		tx_ledger.payment_reference, tx_ledger.for_processing, tx_ledger.completed, tx_ledger.is_cleared,
-		tx_ledger.application_date, tx_ledger.approve_status, tx_ledger.workflow_table_id, tx_ledger.action_date, 
-		tx_ledger.narrative, tx_ledger.details,
+		transactions.org_id, transactions.transaction_id, transactions.journal_id, transactions.investment_id, 
+		transactions.exchange_rate, transactions.tx_type, transactions.transaction_date, transactions.payment_date,
+		transactions.transaction_amount, transactions.transaction_tax_amount, transactions.reference_number, 
+		transactions.payment_number, transactions.for_processing, transactions.completed, transactions.is_cleared,
+		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
+		transactions.narrative, transactions.details,
 		
-		to_char(tx_ledger.tx_ledger_date, 'YYYY.MM') as ledger_period,
-		to_char(tx_ledger.tx_ledger_date, 'YYYY') as ledger_year,
-		to_char(tx_ledger.tx_ledger_date, 'Month') as ledger_month,
-		(tx_ledger.tx_ledger_quantity * tx_ledger.tx_ledger_amount) as amount,
-		(tx_ledger.tx_ledger_quantity * tx_ledger.tx_ledger_tax_amount) as tax_amount,
+		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
+		to_char(transactions.payment_date, 'YYYY.MM') as ledger_period,
+		to_char(transactions.payment_date, 'YYYY') as ledger_year,
+		to_char(transactions.payment_date, 'Month') as ledger_month,
 		
-		(tx_ledger.exchange_rate * tx_ledger.tx_type * tx_ledger.tx_ledger_quantity * 
-		tx_ledger.tx_ledger_amount) as base_amount,
-		(tx_ledger.exchange_rate * tx_ledger.tx_type * tx_ledger.tx_ledger_quantity *
-		tx_ledger.tx_ledger_tax_amount) as base_tax_amount,
+		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount) as base_amount,
+		(transactions.exchange_rate * transactions.tx_type * transactions.transaction_tax_amount) as base_tax_amount,
 		
-		(CASE WHEN tx_ledger.completed = true THEN 
-			(tx_ledger.exchange_rate * tx_ledger.tx_type * tx_ledger.tx_ledger_quantity * 
-			tx_ledger.tx_ledger_amount)
+		(CASE WHEN transactions.completed = true THEN 
+			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
 		ELSE 0::real END) as base_balance,
 		
-		(CASE WHEN tx_ledger.is_cleared = true THEN 
-			(tx_ledger.exchange_rate * tx_ledger.tx_type * tx_ledger.tx_ledger_quantity * 
-			tx_ledger.tx_ledger_amount)
+		(CASE WHEN transactions.is_cleared = true THEN 
+			(transactions.exchange_rate * transactions.tx_type * transactions.transaction_amount)
 		ELSE 0::real END) as cleared_balance,
 		
-		(CASE WHEN tx_ledger.tx_type = 1 THEN 
-			(tx_ledger.exchange_rate * tx_ledger.tx_ledger_quantity * tx_ledger.tx_ledger_amount)
+		(CASE WHEN transactions.tx_type = 1 THEN 
+			(transactions.exchange_rate * transactions.transaction_amount)
 		ELSE 0::real END) as dr_amount,
 		
-		(CASE WHEN tx_ledger.tx_type = -1 THEN 
-			(tx_ledger.exchange_rate * tx_ledger.tx_ledger_quantity * tx_ledger.tx_ledger_amount) 
+		(CASE WHEN transactions.tx_type = -1 THEN 
+			(transactions.exchange_rate * transactions.transaction_amount) 
 		ELSE 0::real END) as cr_amount
 		
-	FROM tx_ledger
-		INNER JOIN ledger_types ON tx_ledger.ledger_type_id = ledger_types.ledger_type_id
-		INNER JOIN currency ON tx_ledger.currency_id = currency.currency_id
-		INNER JOIN entitys ON tx_ledger.entity_id = entitys.entity_id
-		INNER JOIN bank_accounts ON tx_ledger.bank_account_id = bank_accounts.bank_account_id
-		INNER JOIN entitys as bpartners ON tx_ledger.bpartner_id = bpartners.entity_id
-		INNER JOIN investments ON tx_ledger.investment_id = investments.investment_id;
-		
-	
+	FROM transactions
+		INNER JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
+		INNER JOIN currency ON transactions.currency_id = currency.currency_id
+		INNER JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
+		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
+	WHERE transactions.tx_type is not null;
 
+	
 CREATE VIEW vws_tx_ledger AS
 	SELECT org_id, ledger_period, ledger_year, ledger_month, 
 		sum(base_amount) as sum_base_amount, sum(base_tax_amount) as sum_base_tax_amount,
 		sum(base_balance) as sum_base_balance, sum(cleared_balance) as sum_cleared_balance,
-		sum(dr_amount) as sum_dr_amount, sum(cr_amount) as sum_cr_amount
+		sum(dr_amount) as sum_dr_amount, sum(cr_amount) as sum_cr_amount,
+		
+		to_date(ledger_period || '.01', 'YYYY.MM.DD') as start_date,
+		sum(base_amount) + prev_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_balance_amount,
+		sum(cleared_balance) + prev_clear_balance(to_date(ledger_period || '.01', 'YYYY.MM.DD')) as prev_clear_balance_amount
 			
 	FROM vw_tx_ledger
 	GROUP BY org_id, ledger_period, ledger_year, ledger_month;
 
-
+	
 CREATE OR REPLACE FUNCTION upd_ledger(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg							varchar(120);

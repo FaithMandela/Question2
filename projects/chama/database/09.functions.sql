@@ -106,8 +106,6 @@ $BODY$
   FOR EACH ROW
   EXECUTE PROCEDURE ins_contributions();
 
-
-
 CREATE OR REPLACE FUNCTION generate_contribs(
     character varying,
     character varying,
@@ -262,8 +260,7 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
-  
-CREATE OR REPLACE FUNCTION upd_email()
+ CREATE OR REPLACE FUNCTION upd_email()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -318,8 +315,7 @@ CREATE TRIGGER ins_members
   FOR EACH ROW
   EXECUTE PROCEDURE ins_members();
 
-     
-CREATE OR REPLACE FUNCTION get_total_repayment(real, real, real) RETURNS real AS $$
+ CREATE OR REPLACE FUNCTION get_total_repayment(real, real, real) RETURNS real AS $$
 DECLARE
 	repayment real;
 	ri real;
@@ -384,14 +380,6 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
-
-  
-
-CREATE TRIGGER ins_inv
-  AFTER INSERT OR UPDATE OF monthly_returns
-  ON investments
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_inv();
 
 CREATE OR REPLACE FUNCTION get_total_expenditure (integer) RETURNS real AS $$
 DECLARE
@@ -518,7 +506,10 @@ END;
 $BODY$
   LANGUAGE plpgsql;
   
+<<<<<<< HEAD:projects/chama/database/09.functions.sql
+=======
   
+>>>>>>> 1ec33c13976de73dbe7769559295288e445f9ae8:projects/chama/database/07.functions.sql
   CREATE OR REPLACE FUNCTION generate_repayment(
     character varying,
     character varying,
@@ -526,6 +517,44 @@ $BODY$
   RETURNS character varying AS
 $BODY$
 DECLARE
+<<<<<<< HEAD:projects/chama/database/09.functions.sql
+    rec            RECORD;
+    recu            RECORD;
+    reca            RECORD;
+    v_penalty        real;
+    v_org_id        integer;
+    v_period_id        integer;
+    v_month_name        varchar(20);
+    vi_period_id        integer;
+    v_loan_type_id        integer;
+    v_loan_intrest        real;
+    v_loan_id        integer;
+    msg            varchar(120);
+BEGIN
+SELECT   period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
+    FROM periods
+    WHERE (period_id = $1::integer);
+SELECT loan_month_id, loan_id, period_id, org_id, interest_amount, repayment, interest_paid, penalty_paid INTO recu
+FROM loan_monthly WHERE period_id in (v_period_id) AND org_id in (v_org_id);
+
+    IF( recu.period_id is null) THEN
+    
+        FOR rec IN SELECT org_id, loan_id, loan_type_id, monthly_repayment FROM loans WHERE (org_id = v_org_id) LOOP
+        raise exception '%',rec.loan_id;    
+        SELECT loan_intrest, loan_id INTO v_loan_intrest, v_loan_id FROM vw_loan_payments WHERE v_loan_id = rec.loan_id;
+        recu.repayment = rec.monthly_repayment - v_loan_intrest;
+            
+    
+        INSERT INTO loan_monthly (loan_id, period_id, org_id, interest_amount, repayment, interest_paid)
+        VALUES(rec.loan_id, v_period_id, rec.org_id, v_loan_intrest, recu.repayment,  v_loan_intrest);
+    END LOOP;
+    
+
+msg := 'Repayment Generated';
+    END IF;
+
+    return msg;
+=======
 	rec			RECORD;
 	recu			RECORD;
 	reca			RECORD;
@@ -563,6 +592,7 @@ msg = 'Repayment Generated';
 	END IF;
 
 	return msg;
+>>>>>>> 1ec33c13976de73dbe7769559295288e445f9ae8:projects/chama/database/07.functions.sql
 END;
 $BODY$
   LANGUAGE plpgsql;

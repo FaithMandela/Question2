@@ -95,5 +95,9 @@
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">FAidaplus Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelportapps Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelcreations" dbname="travelcreations" path="travelcreations" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelcreations Server</SERVER>
+<<<<<<< HEAD
 	<APP dbpath="jdbc:postgresql://localhost/huh" dbname="huh" path="huh" xmlfile="huh.xml" dbclass="org.postgresql.Driver" dbusername="postgres">huh</APP>
+=======
+	<APP dbpath="jdbc:postgresql://localhost/new" dbname="new" path="new" xmlfile="new.xml" dbclass="org.postgresql.Driver" dbusername="postgres">new</APP>
+>>>>>>> b5b4a91f32c7bb18e75f77c4d8a723ed2d01c5fc
 </APPLIST>

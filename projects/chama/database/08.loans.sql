@@ -4,7 +4,11 @@ CREATE TABLE loan_types (
 	loan_type_name			varchar(50) not null,
 	default_interest		real,
 	reducing_balance		boolean default true not null,
+<<<<<<< HEAD:projects/chama/database/08.loans.sql
+	penalty					real default  0 not null,
+=======
 	penalty					real default  0 not null;
+>>>>>>> 1ec33c13976de73dbe7769559295288e445f9ae8:projects/chama/database/11.loans.sql
 	details					text
 );
 CREATE INDEX loan_types_org_id ON loan_types (org_id);
