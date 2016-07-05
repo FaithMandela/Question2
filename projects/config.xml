@@ -76,7 +76,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/yu" dbname="yu" path="yu" xmlfile="yu.xml" dbclass="org.postgresql.Driver" dbusername="root">YU</APP>
 	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
 	<APP dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="schools.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Schools</APP>
-	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">Baraza</APP>
+	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="baraza" auth="entity">Baraza</APP>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
 	<SERVER dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.server.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">SMS Modem Server</SERVER>
@@ -95,5 +95,4 @@
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">FAidaplus Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelportapps Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelcreations" dbname="travelcreations" path="travelcreations" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelcreations Server</SERVER>
-	<APP dbpath="jdbc:postgresql://localhost/new" dbname="new" path="new" xmlfile="new.xml" dbclass="org.postgresql.Driver" dbusername="postgres">new</APP>
 </APPLIST>
