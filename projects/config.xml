@@ -9,7 +9,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
 	<APP dbpath="jdbc:postgresql://localhost/accounts" dbname="accounts" path="accounts" xmlfile="accounts.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Accounts</APP>
-	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity" key="hr">Human Resources</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="hr" auth="entity">Human Resources</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="payroll.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Payroll</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="projects.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Projects</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Finance</APP>
@@ -95,8 +95,4 @@
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">FAidaplus Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelportapps Server</SERVER>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/travelcreations" dbname="travelcreations" path="travelcreations" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="postgres">Travelcreations Server</SERVER>
-<<<<<<< HEAD
-	</APPLIST>
-=======
 </APPLIST>
->>>>>>> 189fadd01e8056124bc49524c18d8aecf118822c
