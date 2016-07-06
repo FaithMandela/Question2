@@ -18,14 +18,15 @@
 			<MENU name="News" role="admin">55</MENU>
 			<MENU name="EMails" role="admin">60</MENU>
 			<MENU name="Files" role="admin">65</MENU>
-			<MENU name="Error Messages">70</MENU>
+			<MENU name="Error Messages">75</MENU>
 		</MENU>
 	</MENU>
-	<DESK w="700" name="Dashboard" key="1" h="500">
-		<GRID name="Dashboard" keyfield="sys_dashboard_id" table="sys_dashboard" user="entity_id">
-			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-			<TEXTFIELD w="430" title="Details">details</TEXTFIELD>
-		</GRID>
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Number of Users" table="entitys" where="(is_active = true)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Users">total_users</TEXTFIELD>
+			</TILE>
+		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Countrys" key="5" h="500">
 		<GRID name="Continents" keyfield="sys_continent_id" table="sys_continents" noorg="true">
@@ -682,7 +683,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="800" name="Error Messages" key="70" h="500">
+	<DESK w="800" name="Error Messages" key="75" h="500">
 		<GRID name="Error Messages" keyfield="sys_error_id" table="sys_errors" noorg="true">
 			<TEXTFIELD w="75" title="Error ID">sys_error_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Error">sys_error</TEXTFIELD>
