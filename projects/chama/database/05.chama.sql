@@ -87,11 +87,7 @@ CREATE TABLE contributions (
 	contribution_type_id		integer references contribution_types,
 	bank_account_id 			integer references bank_accounts,
 	entity_id					integer references entitys,
-<<<<<<< HEAD:projects/chama/database/04.chama.sql
-	member_id					integer references members,
-=======
 	member_id                   integer references members,
->>>>>>> b5b4a91f32c7bb18e75f77c4d8a723ed2d01c5fc:projects/chama/database/05.chama.sql
 	period_id					integer references periods,
 	org_id						integer references orgs,
 	
