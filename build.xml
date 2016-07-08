@@ -75,6 +75,14 @@
 		</java>
     </target>
 
+    <target name="tomcat.baraza">
+        <java jar="${build}/baraza.jar" fork="true">
+                        <arg value="tomcat"/>
+                        <arg value="${projects}"/>
+			<arg value="baraza"/>
+                </java>
+    </target>
+
     <target name="server">
         <java jar="${build}/baraza.jar" fork="true">
 			<arg value="server"/>

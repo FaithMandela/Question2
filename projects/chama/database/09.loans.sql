@@ -4,11 +4,7 @@ CREATE TABLE loan_types (
 	loan_type_name			varchar(50) not null,
 	default_interest		real,
 	reducing_balance		boolean default true not null,
-<<<<<<< HEAD:projects/chama/database/08.loans.sql
 	penalty					real default  0 not null,
-=======
-	penalty					real default  0 not null;
->>>>>>> 1ec33c13976de73dbe7769559295288e445f9ae8:projects/chama/database/11.loans.sql
 	details					text
 );
 CREATE INDEX loan_types_org_id ON loan_types (org_id);
@@ -143,6 +139,79 @@ CREATE OR REPLACE FUNCTION get_penalty(integer, date) RETURNS real AS $$
 	FROM loan_monthly INNER JOIN periods ON loan_monthly.period_id = periods.period_id
 	WHERE (loan_monthly.loan_id = $1) AND (periods.start_date < $2);
 $$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_interest_amount(real)
+  RETURNS real AS
+$BODY$
+DECLARE
+	ri real;
+BEGIN
+	ri := 1 + ($1/1200);
+RETURN ri;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_interest_amount(
+    real,
+    integer)
+  RETURNS real AS
+$BODY$
+DECLARE
+	ri real;
+BEGIN
+	ri :=($1 * $2)/1200;
+RETURN ri;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_interest_amount(
+    real,
+    real,
+    integer)
+  RETURNS real AS
+$BODY$
+DECLARE
+	ri real;
+BEGIN
+	ri :=(($1* $2 * $3)/1200);
+RETURN ri;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_interest_amount(
+    real,
+    real,
+    real)
+  RETURNS real AS
+$BODY$
+DECLARE
+	ri real;
+BEGIN
+	ri :=(($1* $2 * $3)/1200);
+RETURN ri;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_total_repayment(
+    real,
+    real,
+    integer)
+  RETURNS real AS
+$BODY$
+DECLARE
+	repayment real;
+	ri real;
+BEGIN
+	ri := (($1* $2 * $3)/1200);
+	repayment := $1 + (($1* $2 * $3)/1200);
+	RETURN repayment;
+END;
+$BODY$
+  LANGUAGE plpgsql;
 
 CREATE VIEW vw_loan_types AS
 	SELECT	currency.currency_id, currency.currency_name, currency.currency_symbol,

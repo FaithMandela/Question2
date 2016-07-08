@@ -284,3 +284,23 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON borrowing
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
     
+CREATE OR REPLACE FUNCTION get_borrowing_repayment(
+    real,
+    real,
+    real)
+  RETURNS real AS
+$BODY$
+DECLARE
+    repayment real;
+    ri real;
+BEGIN
+    ri := 1 + ($2/1200);
+    IF ((ri ^ $3) = 1) THEN
+        repayment := $1;
+    ELSE
+        repayment := $1 * (ri ^ $3) * (ri - 1) / ((ri ^ $3) - 1);
+    END IF;
+    RETURN repayment;
+END;
+$BODY$
+  LANGUAGE plpgsql; 
