@@ -9,6 +9,7 @@
 		<MENU role="manager" icon="fa fa-sitemap" name="Organisation">201</MENU>
 		<MENU role="consultant" icon="fa fa-edit" name="Update Contact Details">15</MENU>
 		<MENU role="admin" name="Approval">83</MENU>
+		<MENU role="admin" name="Bonus">231</MENU>
 		<MENU role="admin" name="Workflow">40</MENU>
 		<MENU role="admin" name="Emails">60</MENU>
 		<MENU role="admin" name="Staff">100</MENU>
@@ -696,7 +697,7 @@
 				<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="org_id" key="2" table="bonus">
+				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="org_id" user="entity_id" key="2" table="bonus">
 					<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
@@ -1008,12 +1009,12 @@
 		</FILTER>
 	</DESK>
 	<DESK noorg="true" w="700" h="500" name="EMails" key="60">
-		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" orderby="sys_email_id DESC" table="vw_sys_emailed">
-			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" orderby="sys_emailed_id DESC" table="vw_sys_emailed">
 			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
 			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
@@ -1283,5 +1284,25 @@
 			</FILTERFORM>
 			<JASPER reportfile="vw_manager_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" h="550" name="Bonus For Approval" key="231">
+		<GRID noorg="true" keyfield="bonus_id" name="Bonus" orderby="bonus_id DESC" table="vw_bonus">
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="50" title="Entity Pcc">entity_pcc</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bonus Org Name">bonus_org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bonus Name">bonus_name</TEXTFIELD>
+			<TEXTFIELD w="30" title="Son">son</TEXTFIELD>
+			<TEXTFIELD w="30" title="Pcc">pcc</TEXTFIELD>
+			<TEXTDECIMAL w="40" title="Percentage">percentage</TEXTDECIMAL>
+			<TEXTDECIMAL w="40" title="Amount">amount</TEXTDECIMAL>
+			<CHECKBOX w="30" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_bonus">Approve</ACTION>
+			</ACTIONS>
+		</GRID>
 	</DESK>
 </APP>

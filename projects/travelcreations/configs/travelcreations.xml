@@ -10,15 +10,17 @@
 		<MENU role="admin" name="Orders">50</MENU>
 		<MENU role="admin" name="Orgs">14</MENU>
 		<MENU role="admin" name="Entitys">10</MENU>
-		<MENU role="admin" name="Periods">35</MENU>
-		<MENU role="admin" icon="fa fa-file" name="Generate Points" page="period">02</MENU>
-		<MENU role="admin" name="Entity Subscriptions">8</MENU>
-		<MENU role="admin" name="Entity Types">9</MENU>
-		<MENU role="admin" name="Approvals">4</MENU>
-		<MENU role="admin" name="Subscription Levels">17</MENU>
-		<MENU role="admin" name="Workflows">21</MENU>
-		<MENU role="admin" name="Emails">45</MENU>
 		<MENU role="client" name="Update contacts">61</MENU>
+		<MENU role="admin" name="Administrator">
+			<MENU role="admin" name="Periods">35</MENU>
+			<MENU role="admin" icon="fa fa-file" name="Generate Points" page="period">02</MENU>
+			<MENU role="admin" name="Entity Subscriptions">8</MENU>
+			<MENU role="admin" name="Entity Types">9</MENU>
+			<MENU role="admin" name="Approvals">4</MENU>
+			<MENU role="admin" name="Subscription Levels">17</MENU>
+			<MENU role="admin" name="Workflows">21</MENU>
+			<MENU role="admin" name="Emails">45</MENU>
+		</MENU>
 		<MENU role="admin" name="Reports">
 			<MENU name="Orders">55</MENU>
 			<MENU name="Statement">60</MENU>
@@ -187,6 +189,7 @@
 			<TEXTFIELD w="75" title="Ticket">ticket_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Invoice">invoice_number</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Points Earned">points</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Refunds">refunds</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Bonus">bonus</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<TEXTDATE w="75" title="Point Date">point_date</TEXTDATE>
@@ -216,6 +219,7 @@
 					<TEXTFIELD w="40" title="Username">user_name</TEXTFIELD>
 					<TEXTFIELD w="40" title="Client code">client_code</TEXTFIELD>
 					<TEXTFIELD w="40" title="Total Points">points</TEXTFIELD>
+					<TEXTFIELD w="40" title="Refunds">refunds</TEXTFIELD>
 					<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
 				</GRID>
 				<GRID keyfield="bonus_id" name="Market Bonus" linkfield="period_id" table="bonus">
