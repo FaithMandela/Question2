@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="581" leftMargin="7" rightMargin="7" topMargin="7" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="118"/>
+	<property name="ireport.y" value="142"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -98,32 +98,32 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "baraza_logo.jpg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="405" y="172" width="173" height="11" uuid="58e47655-97e7-4e7b-bd46-9b1fbfa4c4b4"/>
+				<reportElement x="386" y="172" width="173" height="11" uuid="58e47655-97e7-4e7b-bd46-9b1fbfa4c4b4"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[registrar@ueab.ac.ke]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="346" y="172" width="59" height="12" uuid="5a745036-57f4-47c4-a503-07b4c655ade3"/>
+				<reportElement x="346" y="172" width="40" height="12" uuid="5a745036-57f4-47c4-a503-07b4c655ade3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[EMAIL:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="51" y="172" width="63" height="12" uuid="0bcdde47-013f-457d-8cb8-a8af31269e6e"/>
+				<reportElement x="54" y="172" width="63" height="12" uuid="0bcdde47-013f-457d-8cb8-a8af31269e6e"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[TELEPHONE :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="114" y="172" width="104" height="12" uuid="afd3ed57-1c73-4690-bcee-f3eea7545198"/>
+				<reportElement x="119" y="172" width="127" height="12" uuid="afd3ed57-1c73-4690-bcee-f3eea7545198"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[254-20-8023017 ]]></text>
+				<text><![CDATA[0721 423 592/ 0731 793 934]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -186,7 +186,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="12" isBold="false" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["This is to certify that <b>" + $F{studentname} + "ID #  " +  $F{studentid} + "</b> completed the requirements for the" + $F{degree_type}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["This is to certify that <b>" +$F{studentname}+ "</b> " + "with" + " <b>ID #  "  + $F{studentid}  + "</b> completed the requirements for the" + $F{degree_type}]]></textFieldExpression>
 			</textField>
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement x="52" y="215" width="505" height="34" uuid="2dd4cd81-24d2-4a08-8204-234fc43c0a9c"/>
@@ -246,10 +246,6 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 			<image>
 				<reportElement x="53" y="280" width="107" height="28" uuid="f36bfaeb-b402-4c78-a71e-fad581b64f0e"/>
 				<imageExpression><![CDATA["/opt/baraza/projects/ueab/reports/registrarsignature.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="160" y="263" width="121" height="59" uuid="9dbb0740-4d49-4a80-b9b7-e8cfe45dd3bf"/>
-				<imageExpression><![CDATA["/opt/baraza/projects/ueab/reports/admission_stamp.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
