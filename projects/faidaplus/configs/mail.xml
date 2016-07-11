@@ -51,6 +51,7 @@
 			AND (EXTRACT(month FROM vw_entitys.birth_date) = EXTRACT(month FROM current_date))
 			AND (EXTRACT(DAY FROM vw_entitys.birth_date) = EXTRACT(DAY FROM current_date))
 			AND (EXTRACT(HOUR FROM current_time) > 8)
+			AND (vw_entitys.dob_email != current_date)
 			AND (sys_emails.use_type = 5)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>

@@ -239,7 +239,7 @@ CREATE OR REPLACE VIEW vw_loyalty_points AS
 	SELECT loyalty_points.loyalty_points_id, periods.period_id, periods.start_date as period, to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
 		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,
 		loyalty_points.bonus, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name,
-		loyalty_points.point_date, loyalty_points.ticket_number, loyalty_points.invoice_number, loyalty_points.approve_status
+		loyalty_points.point_date, loyalty_points.ticket_number, loyalty_points.invoice_number, loyalty_points.approve_status, loyalty_points.refunds
 	FROM loyalty_points JOIN vw_entitys ON loyalty_points.entity_id = vw_entitys.entity_id
 	INNER JOIN periods ON loyalty_points.period_id = periods.period_id
 	WHERE periods.approve_status = 'Approved';
@@ -252,22 +252,23 @@ CREATE OR REPLACE VIEW vw_sambaza AS
    FROM sambaza
      JOIN vw_entitys ON sambaza.entity_id = vw_entitys.entity_id;
 
+
 CREATE OR REPLACE VIEW vw_client_statement AS
 SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
-	(a.dr+a.sambaza_in - a.cr-a.sambaza_out) AS balance, a.sambaza_in, a.sambaza_out, a.details
+	 (a.dr + a.sambaza_in - a.cr - a.sambaza_out - a.refunds) AS balance, a.sambaza_in, a.sambaza_out, a.details
 	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
 		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
-		0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
+		0::real as sambaza_in, 0::real as sambaza_out, COALESCE(vw_loyalty_points.refunds, 0::real) AS refunds, ''::text as details
 	FROM vw_loyalty_points)
 	UNION ALL
 	(SELECT 0::real AS dr, vw_orders.points::real AS cr, vw_orders.order_date,
 	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
-	0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
+	0::real as sambaza_in, 0::real as sambaza_out,  0::real AS refunds, ''::text as details
 	FROM vw_orders)
 	UNION ALL
 	(SELECT 0::real as dr, 0::real as cr, vw_sambaza.sambaza_date,
 	vw_sambaza.client_code, vw_sambaza.org_name, vw_sambaza.entity_id, COALESCE(vw_sambaza.sambaza_in,0::real) as sambaza_in,
-	COALESCE(vw_sambaza.sambaza_out,0::real) as sambaza_out, vw_sambaza.details
+	COALESCE(vw_sambaza.sambaza_out,0::real) as sambaza_out,  0::real AS refunds, vw_sambaza.details
 	 FROM vw_sambaza)) a
 	ORDER BY a.order_date;
