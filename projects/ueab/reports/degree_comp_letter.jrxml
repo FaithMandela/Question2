@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="581" leftMargin="7" rightMargin="7" topMargin="7" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="142"/>
+	<property name="ireport.y" value="102"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -245,7 +245,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 			</staticText>
 			<image>
 				<reportElement x="53" y="280" width="107" height="28" uuid="f36bfaeb-b402-4c78-a71e-fad581b64f0e"/>
-				<imageExpression><![CDATA["/opt/baraza/projects/ueab/reports/registrarsignature.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "registrarsignature.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>

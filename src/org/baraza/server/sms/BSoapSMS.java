@@ -324,9 +324,9 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
+			URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
 			SOAPMessage response = con.call(soapMessage, endpoint);
 			SOAPBody respBody = response.getSOAPBody();
 			sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getNodeValue();
@@ -480,12 +480,12 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
+			con.close();
 
 			strMsg = getResp(response);
 			System.out.println("RESPOSE\n" + strMsg + "\n");
@@ -544,12 +544,12 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/ReceiveSmsService/services/ReceiveSms");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/ReceiveSmsService/services/ReceiveSms");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
+			con.close();
 
 			strMsg = getResp(response);
 			System.out.println("RESPOSE\n" + strMsg + "\n");
@@ -613,12 +613,12 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
+			con.close();
 
 			strMsg = getResp(response);
 			System.out.println("RESPOSE\n" + strMsg + "\n");
@@ -675,12 +675,12 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
+			con.close();
 
 			strMsg = getResp(response);
 			System.out.println("RESPOSE\n" + strMsg + "\n");
