@@ -373,18 +373,10 @@ WHERE (studentdegreeid = '$P!{filterid}');]]>
 		<band splitType="Prevent"/>
 	</columnHeader>
 	<detail>
-		<band height="57" splitType="Stretch">
+		<band height="43" splitType="Stretch">
 			<elementGroup>
 				<subreport isUsingCache="true">
-					<reportElement key="subreport-3" mode="Opaque" x="0" y="0" width="794" height="15" isRemoveLineWhenBlank="true" uuid="0b3850b9-3799-4bf7-a895-dda0a6a43603"/>
-					<subreportParameter name="studentdegreeid">
-						<subreportParameterExpression><![CDATA[$F{studentdegreeid}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA[$P{reportpath} + "qgradeviewtransa.jasper"]]></subreportExpression>
-				</subreport>
-				<subreport isUsingCache="true">
-					<reportElement key="subreport-4" positionType="Float" isPrintRepeatedValues="false" mode="Opaque" x="0" y="15" width="794" height="25" isRemoveLineWhenBlank="true" uuid="fbbb67d5-2021-4eac-b8d8-5a7e35bbb987"/>
+					<reportElement key="subreport-4" positionType="Float" isPrintRepeatedValues="false" mode="Opaque" x="0" y="2" width="794" height="25" isRemoveLineWhenBlank="true" uuid="fbbb67d5-2021-4eac-b8d8-5a7e35bbb987"/>
 					<subreportParameter name="reportpath">
 						<subreportParameterExpression><![CDATA[$P{reportpath}]]></subreportParameterExpression>
 					</subreportParameter>
@@ -396,7 +388,7 @@ WHERE (studentdegreeid = '$P!{filterid}');]]>
 				</subreport>
 			</elementGroup>
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-5" positionType="Float" x="0" y="40" width="794" height="16" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="d6118dce-5cd4-4e21-997b-5326bf41e47e"/>
+				<reportElement key="subreport-5" positionType="Float" x="0" y="27" width="794" height="16" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="d6118dce-5cd4-4e21-997b-5326bf41e47e"/>
 				<subreportParameter name="studentdegreeid">
 					<subreportParameterExpression><![CDATA[$F{studentdegreeid}]]></subreportParameterExpression>
 				</subreportParameter>
