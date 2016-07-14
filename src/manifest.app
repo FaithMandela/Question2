@@ -9,5 +9,6 @@ Class-Path: lib/activation-1.1.1.jar lib/bcprov-jdk16-1.46.jar lib/commons-beanu
  lib/itextpdf-5.5.0.jar lib/jasperreports-6.3.0.jar lib/jcommon-1.0.15.jar lib/jfreechart-1.0.12.jar lib/jsch.jar lib/mail.jar 
  lib/barbecue-1.5-beta1.jar lib/jackson-databind-2.1.4.jar lib/jackson-core-2.1.4.jar  lib/barcode.jar 
  lib/core-renderer.jar lib/jtidy-r938.jar lib/xml-apis-xerces-2.9.1.jar 
- lib/mysql-connector-java-5.1.13-bin.jar lib/ojdbc6.jar lib/poi-3.10.jar lib/postgresql-9.4.1208.jre7.jar lib/server/tomcat-embed-core.jar 
+ lib/mysql-connector-java-5.1.13-bin.jar lib/ojdbc6.jar lib/poi-3.10.jar lib/poi-ooxml-3.10.jar lib/poi-ooxml-schemas-3.10.jar 
+ lib/postgresql-9.4.1208.jre7.jar lib/server/tomcat-embed-core.jar  lib/xmlbeans-2.3.0.jar lib/dom4j-1.6.1.jar 
 

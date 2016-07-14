@@ -14,16 +14,18 @@ jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-digester-2.1.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-logging-1.1.1.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO derby.jar dewciskeystore
+jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO dom4j-1.6.1.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO groovy-all-2.4.3.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jasperreports-6.3.0.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO mail.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO mysql-connector-java-5.1.13-bin.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO ojdbc6.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO poi-3.10.jar dewciskeystore
+jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO poi-ooxml-3.10.jar dewciskeystore
+jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO poi-ooxml-schemas-3.10.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO postgresql-9.4.1208.jre7.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jfreechart-1.0.12.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jcommon-1.0.15.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jackson-core-2.1.4.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jackson-databind-2.1.4.jar dewciskeystore
-
-
+jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO xmlbeans-2.3.0.jar dewciskeystore
