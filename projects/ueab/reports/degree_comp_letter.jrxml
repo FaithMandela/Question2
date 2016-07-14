@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="581" leftMargin="7" rightMargin="7" topMargin="7" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="102"/>
+	<property name="ireport.y" value="286"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -50,6 +50,7 @@ ORDER BY majors.major desc;]]>
 		<![CDATA[SELECT studentid, studentname, degreelevelid, degreelevelname,
 	sublevelid, sublevelname, degreeid, degreename, studentdegreeid,
 	completed, started, cleared, clearedate, graduated, graduatedate,
+	to_char(graduatedate,'Month,yyyy') as graduate_my,
 	(CASE WHEN degreeid = 'CERT' THEN 'Certificate in '
 	WHEN degreeid = 'DIPL' THEN 'Diploma In '
 	ELSE ' degree of <b>'  || upper (Degreename) || '</b>' END)::varchar as degree_type
@@ -72,6 +73,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 	<field name="clearedate" class="java.sql.Date"/>
 	<field name="graduated" class="java.lang.Boolean"/>
 	<field name="graduatedate" class="java.sql.Date"/>
+	<field name="graduate_my" class="java.lang.String"/>
 	<field name="degree_type" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -119,29 +121,29 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				<text><![CDATA[TELEPHONE :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="119" y="172" width="127" height="12" uuid="afd3ed57-1c73-4690-bcee-f3eea7545198"/>
+				<reportElement x="117" y="172" width="127" height="12" uuid="afd3ed57-1c73-4690-bcee-f3eea7545198"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[0721 423 592/ 0731 793 934]]></text>
+				<text><![CDATA[+254 721 423 592/ +254 731 793 934]]></text>
 			</staticText>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="340">
 			<staticText>
-				<reportElement x="52" y="3" width="129" height="20" isPrintInFirstWholeBand="true" uuid="0467657d-8729-49ae-87dc-2aaa5266500d"/>
+				<reportElement x="46" y="3" width="129" height="20" isPrintInFirstWholeBand="true" uuid="0467657d-8729-49ae-87dc-2aaa5266500d"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Office of the Registrar]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement x="52" y="30" width="129" height="16" uuid="4d3e9e44-6b76-4ad7-9cc0-7ccaa7bf7a41"/>
+				<reportElement x="44" y="29" width="147" height="16" uuid="4d3e9e44-6b76-4ad7-9cc0-7ccaa7bf7a41"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{clearedate}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="43" y="71" width="494" height="20" uuid="4678773e-97f1-4d3c-81b9-3476b4158a6e"/>
@@ -151,7 +153,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				<text><![CDATA[LETTER OF COMPLETION]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="52" y="52" width="505" height="16" uuid="b3b9a7c8-b563-47a3-83fc-578f340b9277"/>
+				<reportElement x="43" y="52" width="505" height="16" uuid="b3b9a7c8-b563-47a3-83fc-578f340b9277"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold"/>
 				</textElement>
@@ -193,7 +195,7 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				<textElement>
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["The degree will be conferred on "  + $F{graduatedate} + "  and the degree certificate will be issued at a later date subject to financial clearance."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["The degree will be conferred on "  + $F{graduate_my}+" and the degree certificate will be issued at a later date subject to financial clearance."]]></textFieldExpression>
 			</textField>
 			<componentElement>
 				<reportElement key="table" stretchType="RelativeToBandHeight" mode="Transparent" x="52" y="131" width="501" height="43" isPrintWhenDetailOverflows="true" uuid="74f4f9d5-08e2-49aa-a588-239ee1ca9f32"/>
