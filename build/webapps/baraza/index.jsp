@@ -821,7 +821,7 @@ $(function () {
         console.log(data.result.message);
         
         $('#progress').removeClass('active').removeClass('progress-striped');
-        $('#jqlist').trigger('reloadGrid');
+		$('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
 		var fileDone = $('<button>').text(data.result.message);
         $(data.context.children()[0]).append(fileDone).click(function(){ 
 			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {

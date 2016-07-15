@@ -50,7 +50,8 @@ public class BQuery {
 	List<BTableLinks> ForeignLinks = null;
 	Map<String, String> params;
 	Map<String, String> addNewBlock;
-	String keyField;
+	String keyField = null;
+	String keyFieldId = null;
 	String mysql = null;
 	String auditID = null;
 	boolean firstFetch = true;
@@ -786,7 +787,7 @@ public class BQuery {
 				errMsg = saveNewRec();
 
 				if(errMsg == null) {
-					recAudit("INSERT", null);
+					recAudit("INSERT", keyFieldId);
 					isAddNew = false;
 				}
 			} else if(isEdit) {
@@ -824,7 +825,6 @@ public class BQuery {
 		String errMsg = null;
 		String fname = "";
 		String fvalue = "";
-		String newKeyField = null;
 
 		if(auditID != null) {
 			String autoKeyID = db.insAudit(tableName, "NEW", "PREPARE");
@@ -933,11 +933,11 @@ public class BQuery {
 
 			ResultSet rsb = ps.getGeneratedKeys();
 			if(rsb.next()) {
-				newKeyField = rsb.getString(1);
-				//System.out.println(db.getDBType() + " : rowid = '" + newKeyField + "'");
+				keyFieldId = rsb.getString(1);
+				//System.out.println(db.getDBType() + " : rowid = '" + keyFieldId + "'");
 
-				if(db.getDBType() == 2) filter("rowid = '" + newKeyField + "'", null);
-				else filter(getKeyFieldName() + " = '" + newKeyField + "'", null);
+				if(db.getDBType() == 2) filter("rowid = '" + keyFieldId + "'", null);
+				else filter(getKeyFieldName() + " = '" + keyFieldId + "'", null);
 				moveFirst();
 			}
         } catch (SQLException ex) {
