@@ -1,4 +1,4 @@
-<APP>
+<APP name="GTA" password="change_password" material="true">
 	<MENU name="GTA Finance">
 		<MENU name="Entries" role="finance">
 			<MENU name="Clients">1</MENU>

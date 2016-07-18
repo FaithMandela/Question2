@@ -779,7 +779,7 @@ $(function () {
         url: 'putbarazafiles',
         dataType: 'json',
         autoUpload: true,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|doc|docx|rtf|odt|pdf|csv|txt|xls)$/i,
+        acceptFileTypes: /(\.|\/)(gif|jpeg|jpg|png|doc|docx|rtf|odt|pdf|csv|txt|xls|xlsx)$/i,
         maxFileSize: 4194304,
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
@@ -821,7 +821,7 @@ $(function () {
         console.log(data.result.message);
         
         $('#progress').removeClass('active').removeClass('progress-striped');
-        $('#jqlist').trigger('reloadGrid');
+		$('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
 		var fileDone = $('<button>').text(data.result.message);
         $(data.context.children()[0]).append(fileDone).click(function(){ 
 			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {

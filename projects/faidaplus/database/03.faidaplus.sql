@@ -33,6 +33,8 @@ ALTER TABLE entitys ADD sms_alert boolean default false;
 ALTER TABLE entitys ADD email_alert boolean default false;
 ALTER TABLE entitys ADD newsletter boolean default false;
 
+ALTER TABLE entitys ADD dob_email boolean default current_date;
+
 
 CREATE TABLE change_pccs (
 	change_pcc_id			serial primary key,
@@ -240,6 +242,7 @@ SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		entitys.salutation, entitys.son,entitys.birth_date,entitys.last_login,
 		entity_types.entity_type_id, entity_types.entity_type_name,
 		entity_types.entity_role, entity_types.use_key,vw_orgs.pcc||'-'||entitys.son as pcc_son,vw_orgs.pcc||'-'||entitys.son||'-'||entity_name as pcc_son_name
+		entitys.dob_email
 		FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;

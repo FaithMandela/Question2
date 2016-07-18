@@ -22,7 +22,7 @@
 	<COMM orgid="8"  dbclass="org.postgresql.Driver" dbpath="jdbc:postgresql://62.24.116.56:5432/bunson"
 		dbusername="root" dbpassword="invent">
 		<PROCESS sql="SELECT sms_id, sms_number, message FROM sms" where="(sent = false)" 
-			update="UPDATE sms SET sent = true WHERE sms_id = "
+			update="UPDATE sms SET folder_id = 2, sent = true WHERE sms_id = "
 			error="UPDATE sms SET number_error = true, sent = true WHERE sms_id = "></PROCESS>
 	</COMM>
 
