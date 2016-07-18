@@ -175,7 +175,7 @@ System.out.println("BASE IMPORT 1410 : " + fileName);
 						jshd.add("success", 1);
 						jshd.add("name", item.getName());
 						jshd.add("size", item.getSize());
-						jshd.add("message", "Proceessed File");
+						jshd.add("message", "Process File");
 						JsonObject jsObj = jshd.build();
 						resp = jsObj.toString();
 					}
