@@ -196,7 +196,7 @@ CREATE TABLE applicants	(
 );		
  CREATE INDEX applicants_org_id ON applicants (org_id);
  CREATE INDEX applicants_entity_id ON applicants (entity_id);
- -
+ 
 
 CREATE TABLE recruiting_agent(
 	recruiting_agent_id  		serial primary key,
@@ -337,10 +337,10 @@ CREATE TABLE billing	(
 	
 	start_date     	timestamp default now(),
 	end_date		timestamp,
-	bill_amount 	real default 200
+	bill_amount 	real default 200,
 	
 	processed		boolean default false,
-	paid			boolean default false,
+	paid			boolean default false
 	
 );
 CREATE INDEX billing_entity_id ON billing (entity_id);

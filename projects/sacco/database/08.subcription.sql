@@ -181,7 +181,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
 
 
     
-    
+    --here
     
 CREATE OR REPLACE FUNCTION ins_subscriptions()
   RETURNS trigger AS
@@ -303,29 +303,3 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_member_limit BEFORE INSERT ON members
     FOR EACH ROW EXECUTE PROCEDURE ins_member_limit();
-
-	CREATE OR REPLACE FUNCTION ins_transactions_limit() RETURNS trigger AS $$
-DECLARE
-	v_transaction_count	integer;
-	v_transaction_limit	integer;
-BEGIN
-
-	SELECT count(transaction_id) INTO v_transaction_count
-	FROM transactions
-	WHERE (org_id = NEW.org_id);
-	
-	SELECT transaction_limit INTO v_transaction_limit
-	FROM orgs
-	WHERE (org_id = NEW.org_id);
-	
-	IF(v_transaction_count > v_transaction_limit)THEN
-		RAISE EXCEPTION 'You have reached the maximum transaction limit, request for a quite for more';
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_transactions_limit BEFORE INSERT ON transactions
-    FOR EACH ROW EXECUTE PROCEDURE ins_transactions_limit();
-
