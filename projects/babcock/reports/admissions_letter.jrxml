@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="512"/>
+	<property name="ireport.y" value="48"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -176,7 +176,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" isItalic="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Dear, " + $F{fullname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Dear " + $F{fullname} +',']]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="286" y="12" width="225" height="15" uuid="3b8e4486-1ea2-41af-8589-f433a2a7670c"/>
@@ -198,7 +198,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 					<textElement verticalAlignment="Middle" markup="html">
 						<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<text><![CDATA[New Student Registration:]]></text>
+					<text><![CDATA[Registration for All New Students:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="41" y="365" width="188" height="15" uuid="c3aa341a-3c78-4c35-b731-8971165378a2"/>
@@ -229,34 +229,34 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				</textElement>
 				<text><![CDATA[<b>PLEASE NOTE:</b> <p>Babcock University reserves the right to withdraw any admission offer if:</p>]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="229" y="380" width="267" height="15" uuid="666d005d-8c96-4984-8890-9c578de1b206"/>
+			<staticText>
+				<reportElement x="229" y="380" width="267" height="15" uuid="fc0a4993-a3ae-467e-8323-299816258fe7"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["29<sup>th</sup>- 2 <sup>nd</sup>September, 2016"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="229" y="395" width="267" height="15" uuid="ab9202a8-b193-4dd1-860f-07949652566d"/>
+				<text><![CDATA[August 29 – September 2, 2016]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="395" width="267" height="15" uuid="5e15fd16-e701-4756-8ba0-22b265a32a2a"/>
 				<textElement verticalAlignment="Top" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["5<sup>th</sup> September, 2016"]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="229" y="350" width="267" height="15" uuid="1d16e061-db52-4a10-af00-98ebbad68324"/>
+				<text><![CDATA[September 5, 2016]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="350" width="267" height="15" uuid="7b51d49b-0c2a-420b-9100-9db95c75d48d"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["21<sup>st</sup> August, 2016"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="229" y="365" width="267" height="15" uuid="41625173-6908-4819-941a-3bf7cfcdcfbd"/>
+				<text><![CDATA[August 21, 2016]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="365" width="267" height="15" uuid="d9f84a06-cd6e-476c-a59e-3759d00facc4"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["22<sup>th</sup> - 27 <sup>th</sup> August, 2016"]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[August 22 – 27, 2016]]></text>
+			</staticText>
 			<textField pattern="EEEEE dd MMMMM, yyyy" isBlankWhenNull="true">
 				<reportElement x="333" y="593" width="179" height="15" uuid="6863410f-8b7f-4012-a408-c9a3c23da958"/>
 				<textElement verticalAlignment="Bottom">
