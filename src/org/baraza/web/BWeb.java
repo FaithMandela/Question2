@@ -93,15 +93,15 @@ public class BWeb {
 			if(root.getAttribute("dbclass") != null) db = new BDB(root);
 			else if(root.getAttribute("dbconfig") != null) db = new BDB(root.getAttribute("dbconfig"));
 			else db = new BDB(dbconfig);
-			
+
 			if(root.getAttribute("readonly", "false").equals("true")) db.setReadOnly(true);
-			
+
 			BElement configs = root.getElementByName("CONFIGS");
 			if(configs != null) {
 				BElement audit = configs.getElementByName("AUDIT");
 				if(audit != null) db.setFullAudit(audit);
 			}
-			
+
 			db.setOrgID(root.getAttribute("org"));
 		}
 
@@ -110,10 +110,10 @@ public class BWeb {
 
 	public void init(HttpServletRequest request) {
 		if((root == null) || (db == null)) return;	// error check
-		
+
 		// login the user
 		setUser(request.getRemoteAddr(), request.getRemoteUser());
-		
+
 		views = new ArrayList<BElement>();
 		viewKeys = new ArrayList<String>();
 		viewData = new ArrayList<String>();
@@ -133,14 +133,14 @@ public class BWeb {
 		if(viewKey == null) viewKey = "1:0";
 
 		webSession.setAttribute("viewkey", viewKey);
-		
+
 		dataItem = request.getParameter("data");
 		if(webSession.getAttribute("loaddata") != null) {
 			dataItem = (String)webSession.getAttribute("loaddata");
 			webSession.removeAttribute("loaddata");
 		}
 		if(dataItem != null) webSession.setAttribute("d" + viewKey, dataItem);
-		else if(webSession.getAttribute("d" + viewKey) != null) 
+		else if(webSession.getAttribute("d" + viewKey) != null)
 			dataItem = (String)webSession.getAttribute("d" + viewKey);
 
 		if(root.getElementByKey(viewKey.split(":")[0]) == null) viewKey = "1:0";			// Check for blank views
@@ -162,20 +162,20 @@ public class BWeb {
 			dk += viewKeys.get(i);
 			String sItems = (String)webSession.getAttribute("d" + dk);
 			if(sItems == null) sItems = "";
-			
+
 			views.add(getSub(views.get(i-1), viewKeys.get(i)));
 			viewData.add(sItems);
 			dk += ":";
 		}
 		view = views.get(views.size() - 1);
-		
+
 		// Setting the main page from session
 		if(webSession.getAttribute("mainpage") != null) {
 			mainPage = (String)webSession.getAttribute("mainpage");
 		} else {
 			webSession.setAttribute("mainpage", "index.jsp");
 		}
-		
+
 		// Check if the version has expiery constraints
 		if(root.getAttribute("billing", "false").equals("true")) {
 			String expStr = "SELECT org_id FROM orgs WHERE ((expiry_date is null) or (expiry_date >= current_date)) AND (org_id = " + db.getUserID() + ")";
@@ -194,10 +194,10 @@ public class BWeb {
 		webSession = request.getSession(true);
 		viewKey = newview;
 		webSession.setAttribute("viewkey", viewKey);
-		
+
 		dataItem = request.getParameter("data");
 		if(dataItem != null) webSession.setAttribute("d" + viewKey, dataItem);
-		else if(webSession.getAttribute("d" + viewKey) != null) 
+		else if(webSession.getAttribute("d" + viewKey) != null)
 			dataItem = (String)webSession.getAttribute("d" + viewKey);
 
 		String sv[] = viewKey.split(":");
@@ -221,33 +221,33 @@ public class BWeb {
 		// Get the parameters used in Views
 		getParams();
 	}
-	
+
 	public int checkRole(String deskKey) {
 		if((root == null) || (db == null)) return 0;	// error check
 		if(db.getUser() == null) return 1;
 
 		int toShow = 0;
-		
+
 		if(db.getUser().getSuperUser()) {
 			toShow = 1;
 		} else {
 			BElement mel = root.getFirst();
 			toShow = checkRole(mel, deskKey);
 		}
-	
+
 		return toShow;
 	}
-	
+
 	public int checkRole(BElement mel, String deskKey) {
 		int toShow = 0;
 
 		//System.out.println("BASE 2010 : " + mel.getAttribute("name"));
 
 		for(BElement smel: mel.getElements()) {
-						
+
 			if(toShow == 0) {
 				if(smel.isLeaf()) {
-					if(deskKey.equals(smel.getValue())) {						
+					if(deskKey.equals(smel.getValue())) {
 						boolean hasAccess  = checkAccess(smel.getAttribute("role"));
 						if(hasAccess) return 1;
 						else return 2;
@@ -262,16 +262,16 @@ public class BWeb {
 				}
 			}
 		}
-		
+
 		return toShow;
 	}
 
 	public BElement getSub(BElement subs, String substr) {
 		if(subs == null) return null;
-		
+
 		BElement subel = null;
 		int subno = Integer.valueOf(substr);
-		
+
 		int i = 0;
 		for(BElement sub : subs.getElements()) {
 			String elName = sub.getName();
@@ -298,7 +298,7 @@ public class BWeb {
 			}
 		}
 	}
-	
+
 	public void newUser(String userIP, String userName) {
 		if(db != null) {
 			if(userName == null) userName = "root";
@@ -314,11 +314,11 @@ public class BWeb {
 
 	public String getMenu() {
 		if((root == null) || (db == null)) return "";	// error check
-		
+
 		BElement mel = root.getFirst();
 
 		String mymenu = "	<ul class='page-sidebar-menu ' data-keep-expanded='false' data-auto-scroll='true' data-slide-speed='200'>\n";
-		
+
 		if(root.getAttribute("dashboard", "true").equals("true")) {
 			mymenu += "		<li class='start'>\n";
 			mymenu += "			<a href='" + mainPage + "?view=1:0'>\n";
@@ -327,7 +327,7 @@ public class BWeb {
 			mymenu += "			</a>\n";
 			mymenu += "		</li>\n";
 		}
-		
+
 		mymenu += getSubMenu(mel, 0);
 		mymenu += "	</ul>\n";
 
@@ -337,7 +337,7 @@ public class BWeb {
 	public String getSubMenu(BElement mel, int level) {
 		String submenu = "";
 		boolean toShow = true;
-		
+
 		for(BElement smel: mel.getElements()) {
 			toShow = checkAccess(smel.getAttribute("role"));
 
@@ -353,26 +353,26 @@ public class BWeb {
 						link = "<a href=\"" + bodypage + "?xml=" + smel.getAttribute("xml") + "&view=1:0\"" + blankpage + ">";
 						link += " <i class='" + icon + "'></i> ";
 					} else if(smel.getAttribute("url") != null) {
-						link = "<a href=\"" + smel.getAttribute("url") + "\"" + blankpage + ">"; 
+						link = "<a href=\"" + smel.getAttribute("url") + "\"" + blankpage + ">";
 						link += " <i class='" + icon + "'></i> ";
 					} else {
-						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">"; 
+						link = "<a href=\"" + bodypage + "?view=" + smel.getValue() + ":0\"" + blankpage + ">";
 						link += " <i class='" + icon + "'></i> ";
 					}
-					
+
 					if(level == 0) link += "<span class='title'>" + smel.getAttribute("name") + "</span></a>";
 					else link += "<span>" + smel.getAttribute("name") + "</span></a>";
-					
+
 					if(viewKeys.get(0).equals(smel.getValue())) submenu += "\t\t<li class='active'>\n";
 					else submenu += "\t\t<li>\n";
-					
+
 					submenu += "\t\t\t" + link + "\n";
 					submenu += "\t\t</li>\n";
 				} else {
-				
+
 					if(locateMenu(smel, viewKeys.get(0))) submenu += "\t<li class='active open'>\n";
 					else submenu += "\t<li>\n";
-					
+
 					submenu += "\t\t<a href='javascript:;'>";
 					submenu += "<i class='" + smel.getAttribute("icon", "icon-list") + "'></i>";
 					submenu += "<span class='title'>" + smel.getAttribute("name") + "</span>";
@@ -401,7 +401,7 @@ public class BWeb {
 
 	public void getParams() {
 		if(views == null) return;
-		
+
 		for(int i = 0; i < views.size()-1; i++) {
 			BElement desk = views.get(i);
 
@@ -430,7 +430,7 @@ public class BWeb {
 
 	public String getTabs() {
 		if((root == null) || (db == null)) return "";	// error check
-		
+
 		String tabs = "";
 		for(int i = 0; i < views.size()-1; i++) tabs += getTabs(i);
 
@@ -453,7 +453,7 @@ public class BWeb {
 				boolean show = true;
 				if(keyD.equals("{new}") && (!elName.equals("FORM"))) show = false;
 				if(keyD.equals("{new}") && (el.getAttribute("new", "true").equals("false"))) show = false;
-				
+
 				if(el.getAttribute("superuser", "false").equals("true")) {
 					if(!db.getUser().getSuperUser()) show = false;
 				} else {
@@ -495,7 +495,7 @@ public class BWeb {
 						String tcVal = db.executeFunction(tcSql);
 						if(tcVal != null) tabName += " <span class=\"badge badge-success\">" + tcVal + "</span>";
 					}
-					
+
 					if(viewKeys.get(i+1).equals(j.toString()))
 						tabs += "\t\t\t<li class='active'>";
 					else
@@ -519,7 +519,7 @@ public class BWeb {
 
 	public String getButtons() {
 		if((root == null) || (db == null)) return "";	// error check
-		
+
 		String buttons = "<div class='actions'>\n";
 
 		boolean showButtons = false;
@@ -528,8 +528,8 @@ public class BWeb {
 			if(view.getAttribute("display", "grid").equals("grid")) showButtons = true;
 			if(view.getAttribute("buttons", "noshow").equals("show")) showButtons = true;
 		}
-	
-		
+
+
 
 		if(showButtons) {
 			int j = -1;
@@ -543,10 +543,10 @@ public class BWeb {
 					hasForm = true;
 				}
 			}
-			
+
 			String did = "";
 			if(dataItem != null) did = "&data=" + dataItem;
-			
+
 			boolean newShow = true;
 			if(view.getAttribute("new.show") != null) {
 				String tcSql = "SELECT " + view.getAttribute("new.show") + " FROM " + view.getAttribute("table");
@@ -573,33 +573,33 @@ public class BWeb {
 				if(tcVal == null) newShow = false;
 				else if(tcVal.equals("false")) newShow = false;
 			}
-			
+
 			if(hasForm && newShow) {
 				String newBtn = view.getAttribute("new.button", "New");
 				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			}
 			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-refresh'></i>   Refresh</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
-			
+
 			if(view.getAttribute("grid.print", "false").equals("true"))
 				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
-			
+
 			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
-            
+
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
-		
+
 		if(view.getName().equals("CROSSTAB")) {
 			String did = "";
 			if(dataItem != null) did = "&data=" + dataItem;
-			
+
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 		}
-		
+
 		if(isForm()) {
 			buttons += getFormButtons();
 			//buttons += getAudit();
-		} 
+		}
 
 		buttons += "</div>\n";
 
@@ -608,10 +608,10 @@ public class BWeb {
 
 	public String getFormButtons() {
 		if((root == null) || (db == null)) return "";	// error check
-		
+
 		String buttons = "";
 
-		if(view.getName().equals("FORM")) {		
+		if(view.getName().equals("FORM")) {
 			String saveBtn = view.getAttribute("save.button", "Save");
 			if(view.getAttribute("new", "true").equals("true") && ("{new}".equals(dataItem)))
 				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
@@ -628,7 +628,7 @@ public class BWeb {
 				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'> <i class='fa fa-trash-o'></i> &nbsp; Delete</button>\n";
 			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";*/
-            
+
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
 
@@ -664,35 +664,35 @@ public class BWeb {
 
 		return buttons;
 	}
-	
+
 	public String getDashboard() {
 		if((root == null) || (db == null)) return "";	// error check
-		
+
 		String body = "";
-		
+
 		BWebDashboard webDashboard = new BWebDashboard(db);
-		
-		
+
+
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
 			boolean hasAccess  = checkAccess(el.getAttribute("role"));
 			if(hasAccess && el.getName().equals("TILE")) body += webDashboard.getTile(el);
 		}
 		body += "</div>\n";
-		
+
 		body += "<div class='row'>\n";
 		for(BElement el : view.getElements()) {
 			boolean hasAccess  = checkAccess(el.getAttribute("role"));
 			if(hasAccess && el.getName().equals("TILELIST")) body += webDashboard.getTileList(el);
 		}
 		body += "</div>\n";
-		
+
 		return body;
 	}
-	
+
 	public boolean checkAccess(String role) {
 		if(db.getUser() == null) return true;
-		
+
 		boolean hasAccess  = false;
 		if(db.getUser().getSuperUser()) {
 			hasAccess = true;
@@ -704,14 +704,14 @@ public class BWeb {
 				if(db.getUser().getUserRoles().contains(mRole)) hasAccess = true;
 			}
 		}
-		
+
 		return hasAccess;
 	}
-	
-	
+
+
 	public String getWhere(HttpServletRequest request) {
 		String linkData = "";
-			
+
 		String wherefilter = request.getParameter("wherefilter");
 		String sortfilter = request.getParameter("sortfilter");
 		if(request.getParameter("and") != null) {
@@ -759,7 +759,7 @@ public class BWeb {
 					wheresql += "(" + fieldName + " " + filterType + " '" + reportFilter + "')";
 			}
 		}
-		
+
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
@@ -779,26 +779,26 @@ public class BWeb {
 
 		return linkData;
 	}
-	
+
 
 	public String getBody(HttpServletRequest request, String reportPath) {
 		if((root == null) || (db == null)) return "";	// error check
-		
+
 		HttpSession session = request.getSession(true);
 		String body = "";
 		wheresql = null;
 		sortby = null;
-		
+
 		// Check for license
 		//if(!hasLicense()) return "";
 
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-		
+
 		session.removeAttribute("JSONfilter1");
 		session.removeAttribute("JSONfilter2");
-		
+
 		// Call the where create function
 		String linkData = getWhere(request);
 		String linkParam = null;
@@ -808,7 +808,7 @@ public class BWeb {
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
-			
+
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
@@ -835,7 +835,7 @@ public class BWeb {
 			if((linkField != null) && (formLinkData != null) && (comboField == null)) {
 				if(linkFnct == null) tableFilter = linkField + " = '" + formLinkData + "'";
 				else tableFilter = linkField + " = " + linkFnct + "('" + formLinkData + "')";
-			
+
 				if(wheresql != null) wheresql += " AND (" + tableFilter + "')";
 				else wheresql = "(" + tableFilter + "')";
 			}
@@ -865,7 +865,7 @@ public class BWeb {
 				BWebBody webbody = new BWebBody(db, view, wheresql, sortby);
 				if(vds > 2) {
 					if(linkData.equals("{new}")) {
-						if(view.getAttribute("new", "true").equals("true")) 
+						if(view.getAttribute("new", "true").equals("true"))
 							body = webbody.getForm(true, formLinkData, request);
 					} else if(view.getAttribute("edit", "true").equals("true")) {
 						body += webbody.getForm(false, formLinkData, request);
@@ -923,7 +923,7 @@ public class BWeb {
 				}
 				session.setAttribute("reportfilters", reportFilters);
 			} else {
-				String myfilter = flt.getAttribute("linkfield", "filterid");
+				String myfilter = view.getAttribute("linkfield", "filterid");
 				if((linkParam != null) && (view.getAttribute("linkparams") != null)) linkData = linkParam;
 
 				report.setParams(session, myfilter, linkData);
@@ -965,7 +965,7 @@ public class BWeb {
 					BWebBody webbody = new BWebBody(db, sv, wheresql, sortby);
 					body += webbody.getGrid(viewKeys, viewData, wgf, viewKey, false);
 					body += "</div>";
-					wgf = false;					
+					wgf = false;
 				} else if(sv.getName().equals("DRILLDOWN")) {
 					if(isFirst) body += "<div class='tab-pane active' id='" + tab + "'>\n";
 					else body += "<div class='tab-pane' id='" + tab + "'>\n";
@@ -981,7 +981,7 @@ public class BWeb {
 					body += webbody.getForm(true, formLinkData, request);
 					body += "</div>";
 				}
-				
+
 			}
 			body += "</div>\n";
 			body += "<input type='hidden' name='view' value='" + viewKey + ":0'/>\n";
@@ -1019,7 +1019,7 @@ public class BWeb {
 			operations = "";
 			Integer i = 0;
 			List<String> userRole = db.getUser().getUserRoles();
-			
+
 			for(BElement el : opt.getElements()) {
 				boolean hasAccess = true;
 				if(el.getAttribute("role") != null) {
@@ -1089,7 +1089,7 @@ public class BWeb {
 
 	public String setOperations(String operation, String ids, HttpServletRequest request) {
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
-		
+
 		String mystr = "";
 		boolean fnctError = false;
 		String mysql;
@@ -1100,7 +1100,7 @@ public class BWeb {
 			BElement opt = view.getElementByName("ACTIONS");
 			int i = Integer.valueOf(operation);
 			BElement el = opt.getElement(i);
-			
+
 			List<String> userRole = db.getUser().getUserRoles();
 			boolean hasAccess = true;
 			if(el.getAttribute("role") != null) {
@@ -1129,7 +1129,7 @@ public class BWeb {
 					if(exans == null) mystr = db.getLastErrorMsg() + "; ";
 					else mystr += exans + "; ";
 				}
-			
+
 				if(fnctError) {
 					jshd.add("msg", mystr);
 					jshd.add("error", true);
@@ -1150,24 +1150,24 @@ public class BWeb {
 				jshd.add("msg", "No access allowed for function");
 			}
 		}
-		
+
 		JsonObject jsObj = jshd.build();
-		
+
 		System.out.println("BASE 2030 : " + jsObj.toString());
 		return jsObj.toString();
 	}
-	
+
 	public void updateMultiPart(HttpServletRequest request, ServletContext config, String tmpPath) {
 		if(!ServletFileUpload.isMultipartContent(request)) {
 			updateForm(request);
 			return;
 		}
-		
+
 		int yourMaxMemorySize = 262144;
 		File yourTempDirectory = new File(tmpPath);
 		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		
+
 		Map<String, String> reqParams = new HashMap<String, String>();
 		try {
 			List items = upload.parseRequest(request);
@@ -1181,13 +1181,13 @@ public class BWeb {
 					if(pictureFile != null) reqParams.put(item.getFieldName(), pictureFile);
 				}
 			}
-			
+
 			updateForm(request, reqParams);
 		} catch (FileUploadException ex) {
 			System.out.println("File upload exception " + ex);
 		}
 	}
-	
+
 	public String savePicture(FileItem item, ServletContext config) {
 		String pictureFile = null;
 
@@ -1196,12 +1196,12 @@ public class BWeb {
 		String password = config.getInitParameter("rep_password");
 System.out.println("repository : " + repository);
 		BWebdav webdav = new BWebdav(repository, username, password);
-		
+
 		String contentType = item.getContentType();
 		String fieldName = item.getFieldName();
 		String fileName = item.getName();
 		long fs = item.getSize();
-		
+
 		BElement el = view.getElement(fieldName);
 		long maxfs = (Long.valueOf(el.getAttribute("maxfilesize", "4194304"))).longValue();
 
@@ -1227,16 +1227,16 @@ System.out.println("repository : " + repository);
 
 		return pictureFile;
 	}
-	
+
 	public void updateForm(HttpServletRequest request) {
 		Map<String, String> reqParams = new HashMap<String, String>();
-		
+
 		Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
 			String elName = (String)e.nextElement();
 			reqParams.put(elName, request.getParameter(elName));
 		}
-		
+
 		updateForm(request, reqParams);
 	}
 
@@ -1261,7 +1261,7 @@ System.out.println("repository : " + repository);
 				qForm.recAdd();
 			} else if(linkData.equals("{new}")) {
 				qForm.recAdd();
-				if(view.getAttribute("linkfield") != null) 
+				if(view.getAttribute("linkfield") != null)
 					qForm.updateField(view.getAttribute("linkfield"), viewData.get(vds - 2));
 			} else {
 				qForm.movePos(1);
@@ -1354,7 +1354,7 @@ System.out.println("repository : " + repository);
 
 			if(!"".equals(saveMsg)) saveMsg += "<br>";
 			saveMsg += qForm.recSave();
-			
+
 			if("".equals(saveMsg)) {
 				String jumpView = view.getAttribute("jumpview");
 				BElement fView = view.getElementByName("FORMVIEW");
@@ -1373,7 +1373,7 @@ System.out.println("repository : " + repository);
 					saveMsg = "<div class='Metronic-alerts alert alert-success fade in'>\n";
 					saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
 					saveMsg += view.getAttribute("save.msg", "The record has been updated.") + "\n</div>\n";
-					
+
 					viewKey = jumpView;
 					webSession.setAttribute("viewkey", jumpView);
 					webSession.setAttribute("loadviewkey", jumpView);
@@ -1386,11 +1386,11 @@ System.out.println("repository : " + repository);
 					viewKeys.add("0");
 					viewKey += ":0";
 				} else {
-								
+
 					saveMsg = "<div class='Metronic-alerts alert alert-success fade in'>\n";
 					saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
 					saveMsg += view.getAttribute("save.msg", "The record has been updated.") + "\n</div>\n";
-				
+
 					if(vds > 2) {
 						dataItem = viewData.get(vds - 2);
 						view = views.get(vds - 2);
@@ -1405,7 +1405,7 @@ System.out.println("repository : " + repository);
 				}
 			} else {
 				String tmsg = saveMsg;
-				
+
 				saveMsg = "<div class='Metronic-alerts alert alert-danger fade in'>\n";
 				saveMsg += "		<button aria-hidden='true' data-dismiss='alert' class='close' type='button'></button>\n";
 				saveMsg += tmsg + "\n</div>\n";
@@ -1468,8 +1468,8 @@ System.out.println("repository : " + repository);
 			}
 
 			dbdate = dateParse.format(psdate);
-		} catch(ParseException ex) { 
-			log.severe("Date format error : " + ex); 
+		} catch(ParseException ex) {
+			log.severe("Date format error : " + ex);
 		}
 
 		return dbdate;
@@ -1489,7 +1489,7 @@ System.out.println("repository : " + repository);
 			dateParse.applyPattern("yyyy-MM-dd HH:mm:ss");
 			dbdate = dateParse.format(psdate);
 		} catch(ParseException ex) {
-			log.severe("Date format error : " + ex); 
+			log.severe("Date format error : " + ex);
 		}
 		return dbdate;
 	}
@@ -1505,14 +1505,14 @@ System.out.println("repository : " + repository);
 			dateParse.applyPattern("HH:mm:ss");
 			dbdate = dateParse.format(psdate);
 		} catch(ParseException ex) {
-			log.severe("Date format error : " + ex); 
+			log.severe("Date format error : " + ex);
 		}
 		return dbdate;
 	}
 
 	public String getFieldTitles() {
 		String fieldTitles = null;
-		
+
 		if(view == null) return "";
 
 		BElement sview = null;
@@ -1599,10 +1599,10 @@ System.out.println("repository : " + repository);
 
 	public String getHiddenValues(HttpServletRequest request) {
 		String HiddenValues = "";
-		
+
 		String field = request.getParameter("field");
 		String formlinkdata = request.getParameter("formlinkdata");
-		
+
 		if(field != null) {
 			HiddenValues = "<input type='hidden' name='field' value='" + field + "'/>\n";
 			HiddenValues += "<input type='hidden' name='formlinkdata' value='" + formlinkdata + "'/>\n";
@@ -1692,11 +1692,11 @@ System.out.println("repository : " + repository);
 		String linkData = getWhere(request);
 		String linkParam = null;
 		String formLinkData = "";
-		
+
 		BElement sview = null;
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-		
+
 		if(session.getAttribute("JSONfilter2") != null) {
 			wheresql = (String)webSession.getAttribute("JSONfilter2");
 		}
@@ -1705,7 +1705,7 @@ System.out.println("repository : " + repository);
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
-			
+
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
@@ -1722,7 +1722,7 @@ System.out.println("repository : " + repository);
 				else wheresql += lp[1] + " = '" + linkParam + "')";
 			}
 		}
-		
+
 		response.setContentType("text/x-csv");
 		response.setHeader("Content-Disposition", "attachment; filename=report.csv");
 
@@ -1784,7 +1784,7 @@ System.out.println("repository : " + repository);
 
 	public String showFooter() {
 		String lblFt = "";
-		
+
 		int kl = views.size();
 		if(kl > 2) {
 			lblFt = "\n<ul class='breadcrumb' data-disabled='true'>";
@@ -1823,7 +1823,7 @@ System.out.println("repository : " + repository);
 		String events = "";
 
 		String wherefilter = null;
-		if((eventView.getAttribute("linkfield") != null) && (dataItem != null)) 
+		if((eventView.getAttribute("linkfield") != null) && (dataItem != null))
 			wherefilter = eventView.getAttribute("linkfield") + "='" + dataItem + "'";
 
 		BQuery crs = new BQuery(db, eventView, wherefilter, null, false);
@@ -1841,7 +1841,7 @@ System.out.println("repository : " + repository);
 			events += "', start: '" + crs.readField(3) + " " + crs.readField(4);
 			events += "', end: '" + crs.readField(5) + " " + crs.readField(6);
 			events += "', allDay: " + crs.readField(7);
-			
+
 			if(eventView.getAttribute("color")==null) events += ", backgroundColor: Metronic.getBrandColor('silver'), ";
 			else  events += ", backgroundColor: Metronic.getBrandColor('" + eventView.getAttribute("color") + "'), ";
 
@@ -1858,7 +1858,7 @@ System.out.println("repository : " + repository);
 		File yourTempDirectory = new File(tmpPath);
 		DiskFileItemFactory factory = new DiskFileItemFactory(yourMaxMemorySize, yourTempDirectory);
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		
+
 		try {
 			List items = upload.parseRequest(request);
 			Iterator itr = items.iterator();
@@ -1870,7 +1870,7 @@ System.out.println("repository : " + repository);
 			}
 
 			BElement el = view.getElement(pictureField);
-			long maxfs = (Long.valueOf(el.getAttribute("maxfilesize", "2097152"))).longValue(); 
+			long maxfs = (Long.valueOf(el.getAttribute("maxfilesize", "2097152"))).longValue();
 			if(el.getAttribute("h") != null) pictureURL = "<img height='" + el.getAttribute("h") + "' width='auto' ";
 			pictureURL += "src='" + el.getAttribute("pictures") + "?access=" + el.getAttribute("access");
 
@@ -1891,7 +1891,7 @@ System.out.println("repository : " + repository);
 
 					String ext = null;
 					int i = fileName.lastIndexOf('.');
-					if(i>0 && i<fileName.length()-1) 
+					if(i>0 && i<fileName.length()-1)
 						ext = fileName.substring(i+1).toLowerCase();
 					if(ext == null) ext = "NAI";
 					pictureFile = db.executeFunction("SELECT nextval('picture_id_seq')");
@@ -1921,33 +1921,33 @@ System.out.println("repository : " + repository);
 		return pictureFile;
 	}
 
-	public String getSaveMsg() { 
+	public String getSaveMsg() {
 		String sMsg = "";
 		if(saveMsg != null) {
 			if(!saveMsg.equals("")) sMsg = "<div style='color:#FF0000; font-size:14px; font-weight:bold;'>" + saveMsg + "</div>";
 		}
-		return sMsg; 
+		return sMsg;
 	}
 
-	public String getMenuMsg(String xmlFile) { 
+	public String getMenuMsg(String xmlFile) {
 		String mySql = "SELECT msg FROM sys_menu_msg WHERE (menu_id = '" + viewKey + "') AND (xml_file = '" + xmlFile + "')";
 		String sMsg = db.executeFunction(mySql);
 
 		if(sMsg == null) sMsg = "";
 		else sMsg = "<div style='color:#0000FF; font-size:12px; font-weight:bold;'>" + sMsg + "</div>";
 
-		return sMsg; 
+		return sMsg;
 	}
-	
+
 	public String getJSONHeader() {
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		JsonArrayBuilder jsColNames = Json.createArrayBuilder();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
-		
+
 		if(view.getAttribute("superuser", "false").equals("true")) {
 			if(!db.getUser().getSuperUser()) return "";
 		}
-		
+
 		boolean hasAction = false;
 		boolean hasSubs = false;
 		boolean hasTitle = false;
@@ -1963,28 +1963,28 @@ System.out.println("repository : " + repository);
 				if(el.getName().equals("EDITFIELD")) jsColEl.add("editable", true);
 				jsColModel.add(jsColEl);
 			}
-			
+
 			if(el.getName().equals("ACTIONS")) hasAction = true;
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
 			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
 			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
-		
+
 		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
 		jsColNames.add("CL");
 		jsColEl.add("name", "CL");
 		jsColEl.add("width", 5);
 		jsColEl.add("hidden", true);
 		jsColModel.add(jsColEl);
-		
+
 		JsonObjectBuilder jsColKF = Json.createObjectBuilder();
 		jsColNames.add("KF");
 		jsColKF.add("name", "KF");
 		jsColKF.add("width", 5);
 		jsColKF.add("hidden", true);
 		jsColModel.add(jsColKF);
-		
+
 		jshd.add("url", "jsondata");
 		jshd.add("datatype", "json");
 		jshd.add("mtype", "GET");
@@ -1995,24 +1995,24 @@ System.out.println("repository : " + repository);
 		jshd.add("gridview", true);
 		jshd.add("autoencode", true);
 		jshd.add("autowidth", true);
-		
+
 		JsonObject jsObj = jshd.build();
-		
+
 		//System.out.println("BASE 2030 : " + jsObj.toString());
 
 		return jsObj.toString();
 	}
-	
+
 	public String getJSONWhere(HttpServletRequest request, String JWheresql) {
-	
+
 		String linkData = "";
 		String linkParam = null;
 		String formLinkData = "";
-	
+
 		BElement sview = null;
 		String comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
-				
+
 		int vds = viewKeys.size();
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
@@ -2046,28 +2046,28 @@ System.out.println("repository : " + repository);
 				else JWheresql += lp[1] + " = '" + linkParam + "')";
 			}
 		}
-		
+
 		return JWheresql;
 	}
-	
+
 	public String getViewName() {
 		if(view == null) return "";
-		return view.getAttribute("name", ""); 
+		return view.getAttribute("name", "");
 	}
-	
+
 	public String getViewType() {
 		if(view == null) return "";
-		return view.getName(); 
+		return view.getName();
 	}
-	
+
 	public String getViewColour() {
 		String viewColor = "purple";
 		if(root == null) return viewColor;
 		viewColor = root.getAttribute("color", "purple");
 		if(view == null) return viewColor;
-		return view.getAttribute("color", viewColor); 
+		return view.getAttribute("color", viewColor);
 	}
-    
+
     public String getViewIcon() {
 		String viewIcon = "icon-list";
 		if(root == null) return viewIcon;
@@ -2075,9 +2075,9 @@ System.out.println("repository : " + repository);
         if(view.getName().equals("GRID")) viewIcon = "icon-list";
         if(view.getName().equals("FORM")) viewIcon = "icon-note";
         if(view.getName().equals("JASPER")) viewIcon = "icon-doc";
-		return view.getAttribute("icon", viewIcon); 
+		return view.getAttribute("icon", viewIcon);
 	}
-	
+
     public boolean isFileImport() {
 		boolean fileImport = false;
 		if(root == null) return fileImport;
@@ -2088,31 +2088,31 @@ System.out.println("repository : " + repository);
         } else if(view.getName().equals("GRID")) {
 			if(view.getAttribute("import") != null) fileImport = true;
         }
-		return fileImport; 
+		return fileImport;
 	}
-    
+
 	public boolean isMaterial() {
 		if(root == null) return false;
 		if(root.getAttribute("material", "false").equals("true")) return true;
         return false;
 	}
-	
+
 	public String getButtonNav() {
 		if(root == null) return null;
 		if(view == null) return null;
 		return view.getAttribute("button.nav");
 	}
-	
+
 	public boolean hasPasswordChange() {
 		if(root == null) return false;
 		if(root.getAttribute("password") == null) return false;
         return true;
 	}
-	
+
 	public String getEncType() {
 		if(view == null) return "";
 		if(!view.getName().equals("FORM")) return "";
-		if(view.getElementByName("PICTURE") == null) return ""; 
+		if(view.getElementByName("PICTURE") == null) return "";
 		return " enctype=\"multipart/form-data\" ";
 	}
 
@@ -2125,15 +2125,15 @@ System.out.println("repository : " + repository);
 		}
 		return hasSubs;
 	}
-	
+
 	public boolean hasExpired() {
 		return isExpired;
 	}
-	
+
 	public boolean getLicense() {
 		return isLicense;
 	}
-	
+
 	public boolean hasLicense() {
 		// Get the database ID
 		String dbName = db.getCatalogName();
@@ -2144,19 +2144,19 @@ System.out.println("repository : " + repository);
 			+ "FROM orgs WHERE org_id = 0";
 		BQuery lrs = new BQuery(db, mysql);
 		lrs.moveFirst();
-		
+
 		if((lrs.getString("org_name") != null) && (lrs.getString("system_identifier") != null) && (lrs.getString("MAC_address") != null) && (lrs.getBytes("license") != null) && (lrs.getBytes("public_key") != null)) {
 			BLicense lic = new BLicense();
 			isLicense = lic.verifyLicense(lrs.getString("org_name"), lrs.getString("system_identifier"), lrs.getString("MAC_address"), dbID, lrs.getBytes("license"), lrs.getBytes("public_key"));
 		} else {
 			isLicense = false;
 		}
-		
+
 		lrs.close();
-		
+
 		return isLicense;
 	}
-	
+
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }
 	public String getPictureURL() { return pictureURL; }
