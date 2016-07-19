@@ -318,7 +318,7 @@ public class BWebReport  {
     	parameters.put(filterName, filterValue);
 		log.info("Filter = " + filterName + " key = " + filterValue);
 	}
-
+	
 	public void	setParams(String filterName, String filterValue) {
     	parameters.put(filterName, filterName);
 		log.info("Filter = " + filterName + " key = " + filterValue);

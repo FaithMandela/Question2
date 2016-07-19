@@ -41,16 +41,16 @@ public class umisRegistration {
 			stSql += "nationalityid, birthdate, ";
 			stSql += "homeaddress, zipcode, town, birthstateid, ";
 			stSql += "phonenumber, babcock_email, guardian, majorid, denominationid, ";
-			stSql += "account_number, e_tranzact_no, first_password ";
+			stSql += "account_number, e_tranzact_no, first_password, entity_password ";
 			stSql += "FROM registrations ";
 			stSql += "WHERE is_newstudent = true and is_picked = false;";
 			
 			Connection db = DriverManager.getConnection("jdbc:postgresql://62.24.122.19/babcock", "root", "invent2k");
 			Statement st = db.createStatement();
 			ResultSet rs = st.executeQuery(stSql);
-			
+			String xml = null;
     	    while(rs.next()) {
-				String xml = "<TRANSFERS>\n";
+				xml = "<TRANSFERS>\n";
 				xml += "<TRANSFER name=\"App Students\" keyfield=\"app_student_id\" table=\"app_students\">\n";
 				xml += "	<app_student_id>" + format(rs.getString("registrationid")) + "</app_student_id>\n";
 				xml += "	<studentid>" + format(rs.getString("existingid")) + "</studentid>\n";
@@ -82,6 +82,7 @@ public class umisRegistration {
 				xml += "	<account_number>" + format(rs.getString("account_number")) + "</account_number>\n";
 				xml += "	<e_tranzact_no>" + format(rs.getString("e_tranzact_no")) + "</e_tranzact_no>\n";
 				xml += "	<first_password>" + format(rs.getString("first_password")) + "</first_password>\n";
+				xml += "	<entity_password>" + format(rs.getString("entity_password")) + "</entity_password>\n";
 				xml += "</TRANSFER>\n";
 				xml += "</TRANSFERS>\n";
 				

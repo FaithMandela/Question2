@@ -3,10 +3,23 @@ CREATE TABLE adm_import1 (
 	bussary_code			varchar(50),
 	card_number				varchar(50),
 	email_address			varchar(50),
-	first_password			varchar(50)
+	first_password			varchar(50),
+	entity_password			varchar(64)
 );
 
 DELETE FROM adm_import1;
+
+INSERT INTO adm_import1 (app_id, bussary_code, card_number) VALUES (
+
+ALTER TABLE adm_import1 ADD entity_password varchar(64);
+ALTER TABLE registrations ADD entity_password varchar(64);
+ALTER TABLE app_students ADD entity_password varchar(64);
+
+UPDATE adm_import1 SET email_address = entitys.user_name, entity_password = entitys.entity_password
+FROM entitys WHERE adm_import1.app_id = entitys.entity_id;
+
+existingid = app_id
+
 
 INSERT INTO adm_import1 (app_id, bussary_code, card_number, email_address, first_password) VALUES ('67542', 'SMAKOL0022', '7079895541845438', '67542@student.babcock.edu.ng', 'CcO2Ob11');
 INSERT INTO adm_import1 (app_id, bussary_code, card_number, email_address, first_password) VALUES ('67291', 'SCHIBL0006', '7079895541778084', '67291@student.babcock.edu.ng', 'CcO2Ob11');

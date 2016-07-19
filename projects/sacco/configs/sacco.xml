@@ -829,7 +829,7 @@
 		<JASPER name="Transaction Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Applicant" key="23" h="650">
-		<GRID name="Applicant" keyfield="applicant_id" orderby="entity_id" table="vw_applicants" tab.count="count(applicant_id)">
+		<FORMVIEW name="Applicant" keyfield="applicant_id" orderby="entity_id" table="vw_applicants" tab.count="count(applicant_id)" user="entity_id">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
@@ -842,7 +842,7 @@
 			<TEXTFIELD w="75" title="Applicant Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Applicant Phone">applicant_phone</TEXTFIELD>
 			<JASPER name="CV" reportfile="cv_applicant.jasper"></JASPER>
-			<FORM tw="570" name="Details" keyfield="applicant_id" table="applicants" th="200">
+			<FORM new="false" tw="570" name="Details" keyfield="applicant_id" table="applicants" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
 					<DATA>Mr</DATA>
@@ -896,7 +896,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-		</GRID>
+		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Applicant Details" role="applicant" key="24" h="650">
 		<GRID name="Applicants" keyfield="applicant_id" orderby="entity_id" table="vw_applicants" tab.count="count(applicant_id)" where="(approve_status = 'Draft')" org="org_id">
@@ -1221,8 +1221,8 @@
 					<TEXTDECIMAL w="150" title="Monthly Repayment" placeholder="required" y="70" h="20" x="290">monthly_repayment</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="170" h="70">details</TEXTAREA>
 				</FORM>
-				<GRID name="Gurrantors" keyfield="gurrantor_id" linkfield="loan_id" table="vw_gurrantors" tab.count="count(gurrantor_id)">
-					<TEXTFIELD w="75" title="Gurrantor Entity Name">gurrantor_entity_name</TEXTFIELD>
+				<GRID name="Guarantors" keyfield="gurrantor_id" linkfield="loan_id" table="vw_gurrantors" tab.count="count(gurrantor_id)">
+					<TEXTFIELD w="75" title="Guarantor Name">gurrantor_entity_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
 					<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
 					<CHECKBOX w="75" title="Accepted">is_accepted</CHECKBOX>
@@ -1886,7 +1886,7 @@
 			<ACTIONS>
 				<ACTION fnct="loan_aplication">Apply for Loan</ACTION>
 			</ACTIONS>
-			<FORM name="Loan" keyfield="loan_id" table="loans">
+			<FORMVIEW name="Loan" keyfield="loan_id" table="loans">
 				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="Draft">approve_status</DEFAULT>
 				<COMBOBOX w="430" title="Loan Type" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
@@ -1894,7 +1894,7 @@
 				<TEXTDECIMAL w="150" title="Interest" y="30" h="20" x="290">interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Amt per month" y="30" h="20" x="290">monthly_repayment</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
-			</FORM>
+			</FORMVIEW>
 			<FORM name="New Gurrantors" keyfield="gurrantor_id" linkfield="loan_id" table="gurrantors">
 				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
@@ -2805,9 +2805,10 @@
 				<TEXTDECIMAL w="150" title="Repayment Period" y="130" h="20" x="10">repayment_period</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Initial Payment" y="130" h="20" x="290">initial_payment</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Monthly Payments" y="150" h="20" x="10">monthly_payments</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Approve Status" y="150" h="20" x="290">approve_status</TEXTFIELD>
-				<TEXTFIELD w="150" title="Workflow Table ID" y="170" h="20" x="10">workflow_table_id</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" title="Action Date" y="170" h="20" x="290">action_date</TEXTTIMESTAMP>
+				<COMBOLIST w="150" title="Approve Status" y="130" h="20" x="10" span="true">approve_status
+					<DATA>Completed</DATA>
+					<DATA>Approved</DATA>
+				</COMBOLIST>
 				<CHECKBOX w="150" title="Active" y="190" h="20" x="10">is_active</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
 			</FORM>

@@ -302,7 +302,7 @@ public class BDevelop extends JInternalFrame implements ActionListener {
 			treemodel.reload(node);
 			
 			remove(panel);
-			String myusername = textField[dbStr.length-2].getText().trim();
+			String myusername = textField[5].getText().trim();
 			makeLogin(myusername, mypassword);
 		}		
 		fl.saveFile(configDir + "config.xml", root.getString());

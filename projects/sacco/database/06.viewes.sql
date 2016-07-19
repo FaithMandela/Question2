@@ -254,10 +254,10 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
    FROM investments
      JOIN entitys ON entitys.entity_id = investments.entity_id
      JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;   
-
+ --- here
      
 CREATE OR REPLACE VIEW vw_billing AS
-SELECT billing.bill_id, billing.entity_id, billing.org_id, billing.currency_id, 
+SELECT billing.bill_id,  billing.org_id, billing.currency_id, 
 	billing.start_date, billing.end_date, billing.bill_amount, billing.processed, billing.paid,entitys.entity_id,
 	entitys.entity_name, entitys.entity_leader, entitys.function_role,
 	currency.currency_name, currency.currency_symbol
@@ -265,16 +265,4 @@ FROM currency
 	INNER JOIN billing ON currency.currency_id = billing.currency_id
 	INNER JOIN entitys ON entitys.entity_id = billing.entity_id;
 
-	CREATE OR REPLACE VIEW vw_sacco_investments AS 
- SELECT currency.currency_id, currency.currency_name,
-    investment_types.investment_type_id, investment_types.investment_type_name,
-    bank_accounts.bank_account_id, bank_accounts.bank_account_name,
-    sacco_investments.org_id, sacco_investments.sacco_investment_id, sacco_investments.investment_name, sacco_investments.date_of_accrual,
-    sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period, sacco_investments.initial_payment, sacco_investments.monthly_payments, sacco_investments.investment_status, 
-    sacco_investments.approve_status, sacco_investments.workflow_table_id, sacco_investments.action_date, sacco_investments.is_active, sacco_investments.details,
-	get_total_repayment(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as total_repayment,
-	get_interest_amount(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as interest_amount
-FROM sacco_investments
-	JOIN currency ON sacco_investments.currency_id = currency.currency_id
-    JOIN investment_types ON sacco_investments.investment_type_id = investment_types.investment_type_id
-    LEFT JOIN bank_accounts ON sacco_investments.bank_account_id = bank_accounts.bank_account_id;
+	

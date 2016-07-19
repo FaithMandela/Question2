@@ -85,7 +85,6 @@ class BGrids extends JPanel implements ActionListener, MouseListener {
 
 	Map<String, String> linkParams;
 	Map<String, String> params;
-	String filterName = "filterid";
 	String tableFilter = null;
 	String linkFilter = null;
 	String linkValue = null;
@@ -103,7 +102,6 @@ class BGrids extends JPanel implements ActionListener, MouseListener {
 		this.logHandle = logHandle;
 		logHandle.config(log);
 
-		filterName = view.getAttribute("filtername", "filterid");
 		linkField = view.getAttribute("linkfield");
 		importType = view.getAttribute("import");
 		updateTable = view.getAttribute("update");
@@ -552,10 +550,6 @@ class BGrids extends JPanel implements ActionListener, MouseListener {
 		return table;
 	}
 
-	public String getFilterName() {
-		return filterName;
-	}
-
 	public String getKey() {
 		String key = null;
 		int aRow = table.getSelectedRow();
@@ -591,7 +585,7 @@ class BGrids extends JPanel implements ActionListener, MouseListener {
 					}
 					for(BGrids grid : grids) grid.link(key, params, tableModel.getParams());
 					for(BReport report : reports) {
-						report.putparams(filterName, key);
+						report.putLink(key);
 						report.drillReport();
 					}
 					for(BBrowser browser : browsers) browser.setPage(key);

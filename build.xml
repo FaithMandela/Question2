@@ -45,10 +45,10 @@
 			</fileset>
 		</jar>
 
-		<signjar jar="${build}/baraza.jar" tsaurl="https://timestamp.geotrust.com/tsa"
+		<signjar jar="${build}/baraza.jar" tsaurl="http://sha256timestamp.ws.symantec.com/sha256/timestamp"
 			keystore="${build.lib}/dewciskeystore.jks" alias="dewciskeystore" storepass="Baraza9NBO"/>
 
-		<signjar jar="${build}/baraza.app.jar" tsaurl="https://timestamp.geotrust.com/tsa"
+		<signjar jar="${build}/baraza.app.jar" tsaurl="http://sha256timestamp.ws.symantec.com/sha256/timestamp"
 			keystore="${build.lib}/dewciskeystore.jks" alias="dewciskeystore" storepass="Baraza9NBO"/>
 
         <delete dir="${classes.dir}"/>
