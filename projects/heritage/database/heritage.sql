@@ -88,8 +88,8 @@ CREATE TABLE passengers(
 	totalamount_covered 	real,
 	approved 				boolean DEFAULT false,
 	details 				text,
-	days_from 				character varying(20),
-	days_to 				character varying(20),
+	days_from 				date,
+	days_to 				date,
 	destown 				character varying(50),
 	approved_date 			timestamp without time zone,
 	sys_country_id 			character varying(2),
@@ -106,6 +106,12 @@ CREATE INDEX passengers_rate_id ON passengers(rate_id);
 CREATE INDEX passengers_entity_id ON passengers(entity_id);
 CREATE INDEX passengers_org_id ON passengers(org_id);
 
+CREATE TABLE policy_sequence(
+  policy_no_id 		serial NOT NULL,
+  policy_sequence_no 	character varying(50)
+);
+INSERT INTO policy_sequence (policy_sequence_no) VALUES ('000');
+
 DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
 
@@ -116,7 +122,7 @@ SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, o
 		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
 		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
-		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
+		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website, orgs.credit_limit
 	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
 CREATE OR REPLACE VIEW vw_entitys AS

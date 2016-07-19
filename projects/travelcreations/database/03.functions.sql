@@ -172,3 +172,37 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE SEQUENCE batch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1;
+
+CREATE OR REPLACE FUNCTION upd_orders_batch(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS varchar(120) AS $BODY$
+DECLARE
+	v_batch  	integer;
+	msg 		varchar(50);
+BEGIN
+	IF ($3::integer = 1) THEN
+		v_batch := (SELECT last_value FROM batch_id_seq) ;
+		UPDATE orders SET batch_no = v_batch,batch_date = now() WHERE order_id = $1::integer;
+		msg := 'Orders Batched Successfully';
+	END IF;
+
+	IF($3::integer = 2)THEN
+		v_batch :=nextval('batch_id_seq');
+		msg := 'Batch Closed';
+	END IF;
+
+	RETURN msg;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION close_batch_seq()  RETURNS integer AS $BODY$
+DECLARE
+	v_batch  integer;
+BEGIN
+	v_batch := nextval('batch_id_seq');
+	RETURN v_batch;
+END;
+
+$BODY$ LANGUAGE plpgsql ;
