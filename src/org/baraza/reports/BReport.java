@@ -46,6 +46,7 @@ public class BReport extends JPanel {
 	String reportname;
 	String jasperfile;
 	String auditTable;
+	String linkField = "filterid";
 	int printcopies;
 	Map<String, Object> parameters;
 	String viewFilter[] = new String[2];
@@ -66,7 +67,6 @@ public class BReport extends JPanel {
 		parameters.put("organd", db.getOrgAnd(null));
 		parameters.put("entityid", db.getUserID());
 		parameters.put("entityname", db.getUserName());
-
 
 		viewFilter[0] = null;
 		viewFilter[1] = null;
@@ -93,6 +93,8 @@ public class BReport extends JPanel {
 		parameters.put("organd", db.getOrgAnd(fielddef.getAttribute("org.table")));
 		parameters.put("entityid", db.getUserID());
 		parameters.put("entityname", db.getUserName());
+		
+		linkField = fielddef.getAttribute("linkfield", "filterid");
 
 
 		if(fielddef.getAttribute("user") != null)
@@ -193,10 +195,15 @@ public class BReport extends JPanel {
 
 		return printed;
 	}
+	
+	public void	putLink(String filterId) {
+    	parameters.put(linkField, filterId);
+		log.fine("Filter = " + linkField + " key = " + filterId);
+	}
 
-	public void	putparams(String filtername, String filterid) {
-    	parameters.put(filtername, filterid);
-		log.fine("Filter = " + filtername + " key = " + filterid);
+	public void	putparams(String filterName, String filterId) {
+    	parameters.put(filterName, filterId);
+		log.fine("Filter = " + filterName + " key = " + filterId);
 	}
 
 	public void	putparams(Map<String, String> param) {
