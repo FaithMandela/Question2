@@ -6,6 +6,7 @@
 			<MENU name="Current Timetable">9</MENU>
 			<MENU name="Trimester GPA">19</MENU>
 			<MENU name="Unofficial Transcript">21</MENU>
+			<MENU name="Graduation">85</MENU>
 			<MENU name="Queries" table="studentrequests">31</MENU>
 		</MENU>
 		<MENU name="Registration">
@@ -25,7 +26,6 @@
 		<MENU name="Charges">
 			<MENU name="Current Charges">33</MENU>
 			<MENU name="Full Charges">34</MENU>
-			<MENU name="Graduation">85</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Student Details" key="1" h="500">
