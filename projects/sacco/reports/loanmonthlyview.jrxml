@@ -11,7 +11,7 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
+	<parameter name="entityid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.String">
@@ -29,7 +29,7 @@ vw_loan_monthly.loan_date, vw_loan_monthly.principle, vw_loan_monthly.interest, 
 vw_loan_monthly.repayment_period, vw_loan_monthly.loan_balance,
 vw_loan_monthly.start_date, vw_loan_monthly.interest_amount, vw_loan_monthly.interest_paid, vw_loan_monthly.repayment
 FROM vw_loan_monthly
-WHERE (vw_loan_monthly.entity_id = '$P!{entity_id}')
+WHERE (vw_loan_monthly.entity_id = '$P!{entityid}')
 $P!{organd}
 ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 	</queryString>
