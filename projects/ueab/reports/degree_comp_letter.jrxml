@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="581" leftMargin="7" rightMargin="7" topMargin="7" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="275"/>
+	<property name="ireport.y" value="105"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -57,7 +57,7 @@ ORDER BY majors.major desc;]]>
 	ELSE ' degree of <b>'  || upper (Degreename) || '</b>' END)::varchar as degree_type
 
 FROM studentdegreeview
-WHERE studentdegreeid = '$P!{filterid}';]]>
+WHERE (completed = true) AND (studentdegreeid = '$P!{filterid}');]]>
 	</queryString>
 	<field name="studentid" class="java.lang.String"/>
 	<field name="studentname" class="java.lang.String"/>

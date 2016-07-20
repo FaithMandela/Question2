@@ -25,6 +25,7 @@
 		<MENU name="Charges">
 			<MENU name="Current Charges">33</MENU>
 			<MENU name="Full Charges">34</MENU>
+			<MENU name="Graduation">85</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Student Details" key="1" h="500">
@@ -519,6 +520,23 @@
 				<CHECKBOX w="75" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
 				<JASPER name="Exam Pass" showpdf="true" linkfield="filterid" reportfile="studentpass.jasper"></JASPER>
 			</GRID>
+		</FORMVIEW>
+	</DESK>
+	<DESK w="700" name="Graduation" key="85" h="500">
+		<FORMVIEW name="Completion Letter" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true) AND (completed = true)" user="studentid">
+			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
+			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Core Major">core_major</TEXTFIELD>
+			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
+			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
+			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
+			<TEXTFIELD w="45" title="Completed">completed</TEXTFIELD>
+			<TEXTFIELD w="45" title="GPA" pattern="###.#">cumm_gpa</TEXTFIELD>
+			<TEXTFIELD w="45" title="Application">grad_apply_month</TEXTFIELD>
+			<TEXTFIELD w="45" title="Graduation">grad_accept_month</TEXTFIELD>
+			<JASPER name="Completion Letter" showpdf="true" linkfield="filterid" reportfile="degree_comp_letter.jasper"></JASPER>
 		</FORMVIEW>
 	</DESK>
 </APP>
