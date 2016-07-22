@@ -9,7 +9,7 @@
 		<MENU role="admin" name="Loyalty Points">30</MENU>
 		<MENU role="admin" name="Orders">50</MENU>
 		<MENU role="admin" name="Orgs">14</MENU>
-		<MENU role="admin" name="Entitys">10</MENU>
+		<MENU role="admin" name="Entities">10</MENU>
 		<MENU role="client" name="Update contacts">61</MENU>
 		<MENU role="admin" name="Administrator">
 			<MENU role="admin" name="Periods">35</MENU>
@@ -23,7 +23,9 @@
 		</MENU>
 		<MENU role="admin" name="Reports">
 			<MENU name="Orders">55</MENU>
+			<MENU name="Batch Orders">72</MENU>
 			<MENU name="Statement">60</MENU>
+			<MENU name="Loyalty Points">71</MENU>
 		</MENU>
 	</MENU>
 	<DESK role="admin" w="700" h="500" name="Dashboard" key="1">
@@ -80,27 +82,38 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Orders" key="50">
-		<GRID noorg="true" keyfield="order_id" name="Orders" orderby="order_date DESC" where="(lower(order_status) = lower('Processing order') )" tab.count="count(order_id)" table="vw_orders">
+		<GRID noorg="true" role="admin" keyfield="order_id" name="UnBatched Orders" orderby="order_date DESC" where="(batch_no is null)" tab.count="count(order_id)" table="vw_orders">
+			<TEXTFIELD w="75" title="Order ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_amount</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Points">points</TEXTDECIMAL>
+			<TEXTFIELD w="275" title="Order Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Client Code">client_code</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_orders_batch">Batch</ACTION>
+			</ACTIONS>
+		</GRID>
+		<GRID noorg="true" role="admin" keyfield="order_id" name="Batched Orders" orderby="batch_no DESC" where="(lower(order_status) = lower('Processing Order') AND batch_no is not null )" tab.count="count(order_id)" table="vw_orders">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
-			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Total Amount">order_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_amount</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Points">points</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Ordered Status">order_status</TEXTFIELD>
-			<TEXTFIELD w="75" title="Client Code">client_code</TEXTFIELD>
-			<TEXTFIELD w="75" title="Ordered By">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
-			<TEXTFIELD w="75" title="Primary Telephone">primary_telephone</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Client Code">client_code</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_orders_status">Awaiting Collection/Shipped</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name=" Orders Awaiting Collection" orderby="order_date DESC" where="(order_status = 'Awaiting Collection')" tab.count="count(order_id)" table="vw_orders">
+		<GRID noorg="true" role="admin" keyfield="order_id" name=" Orders Awaiting Collection" orderby="order_date DESC" where="(order_status = 'Awaiting Collection')" tab.count="count(order_id)" table="vw_orders">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Total Amount">order_amount</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Points">points</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Order Status">order_status</TEXTFIELD>
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client Code">client_code</TEXTFIELD>
 			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
@@ -109,11 +122,11 @@
 				<ACTION approval="2" fnct="upd_orders_status">Collected/Delivered</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name="Orders Collected" orderby="order_date DESC" where="order_status = 'Collected'" tab.count="count(order_id)" table="vw_orders">
+		<GRID noorg="true" role="admin" keyfield="order_id" name="Orders Collected" orderby="order_date DESC" where="order_status = 'Collected'" tab.count="count(order_id)" table="vw_orders">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
 			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Total Amount">order_amount</TEXTFIELD>
-			<TEXTFIELD w="75" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Order Status">order_status</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Points">points</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Ordered By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client Code">client_code</TEXTFIELD>
@@ -471,7 +484,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="Entitys" key="10">
-		<GRID role="client" keyfield="entity_id" name="Entitys" tab.count="count(entity_id)" table="vw_entitys">
+		<GRID role="client" keyfield="entity_id" name="Entities" tab.count="count(entity_id)" table="vw_entitys">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
@@ -482,7 +495,7 @@
 			<TEXTFIELD w="75" title="Primary Telephone">primary_telephone</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
-			<FORM keyfield="entity_id" name="Entitys" table="entitys">
+			<FORM keyfield="entity_id" name="Entities" table="entitys">
 				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Entity Type ID">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" h="20" x="10" y="50" title="User Name">user_name</TEXTFIELD>
@@ -851,5 +864,11 @@
 				<TEXTDATE w="70" h="70" x="10" y="170" title="Date of Birth">client_dob</TEXTDATE>
 			</FORM>
 		</FORMVIEW>
+	</DESK>
+	<DESK w="700" h="550" name="Points Report" key="71">
+		<JASPER reportfile="vw_loyalty_points.jasper" name="Points Report"></JASPER>
+	</DESK>
+	<DESK w="700" h="550" name="Batch Orders Report" key="72">
+		<JASPER reportfile="vw_orders_batch.jasper" name="Batch Orders Report"></JASPER>
 	</DESK>
 </APP>

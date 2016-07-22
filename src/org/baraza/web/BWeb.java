@@ -923,7 +923,7 @@ public class BWeb {
 				}
 				session.setAttribute("reportfilters", reportFilters);
 			} else {
-				String myfilter = flt.getAttribute("linkfield", "filterid");
+				String myfilter = view.getAttribute("linkfield", "filterid");
 				if((linkParam != null) && (view.getAttribute("linkparams") != null)) linkData = linkParam;
 
 				report.setParams(session, myfilter, linkData);

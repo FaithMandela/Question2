@@ -11,12 +11,11 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
+	<parameter name="entityid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="organd" class="java.lang.String">
-		<defaultValueExpression><![CDATA[""
-]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
@@ -24,7 +23,7 @@
 	<queryString>
 		<![CDATA[SELECT *
 from vw_loans
-where entity_id = $P!{entity_id}
+where entity_id = '$P!{entityid}'
 $P!{orgwhere}
 ORDER BY vw_loans.approve_status]]>
 	</queryString>

@@ -24,7 +24,7 @@ a.curr_balance,batch_no
 		vw_son_points.org_pcc as pcc, vw_son_points.org_name, vw_son_points.entity_id,
 		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name,getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,null::int as batch_no
 	FROM vw_son_points)
-	UNION
+	UNION ALL
 	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
 		vw_orders.order_date::date AS order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
