@@ -184,7 +184,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Imports" type="vert" key="5" h="500">
-		<GRID process="inssales" name="Sales" keyfield="bookingid" worksheet="0" import="excel" table="tmpsales">
+		<GRID process="inssales" name="Sales" keyfield="tmpsaleid" worksheet="0" import="excel" table="tmpsales">
 			<TEXTFIELD w="40" title="GK Ref">gkref</TEXTFIELD>
 			<TEXTFIELD w="40" title="Booking">bookingid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Agent Reference">agentreference</TEXTFIELD>
@@ -202,7 +202,7 @@
 			<TEXTFIELD w="40" title="Requested Time">requestedtime</TEXTFIELD>
 			<TEXTFIELD w="40" title="Nationality">nationality</TEXTFIELD>
 		</GRID>
-		<GRID process="insmanagement" name="Management" keyfield="client" worksheet="1" import="excel" table="tmpmanagement">
+		<GRID process="insmanagement" name="Management" keyfield="tmpmanagementid" worksheet="1" import="excel" table="tmpmanagement">
 			<TEXTFIELD w="40" title="Booking">booking</TEXTFIELD>
 			<TEXTFIELD w="40" title="Agent Reference">agentreference</TEXTFIELD>
 			<TEXTFIELD w="40" title="Creation Date">creationdate</TEXTFIELD>

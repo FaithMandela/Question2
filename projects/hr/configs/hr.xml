@@ -4019,7 +4019,7 @@
 				<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
 				<CHECKBOX w="75" title="For Processing">for_processing</CHECKBOX>
 				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
-				<CHECKBOX w="75" title="Posted">posted</CHECKBOX>
+				<CHECKBOX w="75" title="Cleared">is_cleared</CHECKBOX>
 				<ACTIONS>
 					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
 					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>
@@ -4075,7 +4075,7 @@
 				<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
 				<CHECKBOX w="75" title="For Processing">for_processing</CHECKBOX>
 				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
-				<CHECKBOX w="75" title="Posted">posted</CHECKBOX>
+				<CHECKBOX w="75" title="Cleared">is_cleared</CHECKBOX>
 				<ACTIONS>
 					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
 					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>

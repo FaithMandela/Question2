@@ -1,6 +1,6 @@
 -- This is how you import
 --- Laptop
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-06-09', 1232, 0, 1, 28, 139, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-07-21', 1232, 0, 1, 39, 144, '');
 
 --- CPU
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-06-24', 1223, 0, 1, 49, 144, '');
