@@ -209,23 +209,23 @@ Where entity_id = '$P!{entity_id}']]>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
 				<reportElement x="395" y="0" width="65" height="21" uuid="8f7bd4ed-80d1-48f5-bfc2-e0756c1bbd75"/>
 				<textFieldExpression><![CDATA[$V{sumrepayments}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
 				<reportElement x="319" y="1" width="58" height="20" uuid="8bf028ad-6861-4ddc-86ad-1efcd97f890c"/>
 				<textFieldExpression><![CDATA[$V{sumloan}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
 				<reportElement x="475" y="2" width="66" height="20" uuid="94d56ff5-8402-4c89-a1e7-e6e06e1dff06"/>
 				<textFieldExpression><![CDATA[$V{sumpenalty}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0">
 				<reportElement x="242" y="2" width="65" height="20" uuid="ead8785c-12d7-47c6-b735-0089926bdb59"/>
 				<textFieldExpression><![CDATA[$V{sumdrawings}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="159" y="2" width="65" height="20" uuid="e4ebee3b-b2e8-45be-a2ae-6b6874828869"/>
 				<textFieldExpression><![CDATA[$V{sumcontributions}]]></textFieldExpression>
 			</textField>

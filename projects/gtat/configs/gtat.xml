@@ -9,6 +9,7 @@
 			<MENU name="Delete Periods">9</MENU>
 			<MENU name="Import">5</MENU>
 			<MENU name="GTA Revenue">11</MENU>
+			<MENU name="EMails">133</MENU>
 		</MENU>
 		<MENU name="Report" role="finance,reports">
 			<MENU name="Clients">102</MENU>
@@ -244,7 +245,7 @@
 			<TEXTFIELD w="40" title="Invoice Date">InvoiceDate</TEXTFIELD>
 			<TEXTFIELD w="40" title="Commission Rate">CommissionRate</TEXTFIELD>
 			<TEXTFIELD w="40" title="Mark Up Rate">markup</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">IsActive</TEXTFIELD>
+			<CHECKBOX w="40" title="Active">IsActive</CHECKBOX>
 			<FORM name="Accounting Periods" keyfield="periodid" linkfield="PeriodID" table="Period">
 				<TEXTFIELD w="150" title="Sales Period" y="10" h="20" x="10">salesperiod</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Period" y="10" h="20" x="290">AccountPeriod</TEXTFIELD>
@@ -268,7 +269,7 @@
 			<TEXTFIELD w="40" title="Invoice Date">InvoiceDate</TEXTFIELD>
 			<TEXTFIELD w="40" title="Commission Rate">CommissionRate</TEXTFIELD>
 			<TEXTFIELD w="40" title="Mark Up Rate">markup</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">IsActive</TEXTFIELD>
+			<CHECKBOX w="40" title="Active">IsActive</CHECKBOX>
 			<FORM name="Accounting Periods" keyfield="periodid" linkfield="PeriodID" table="Period" key="2">
 				<TEXTFIELD w="150" title="Sales Period" y="10" h="20" x="10">salesperiod</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Period" y="10" h="20" x="290">AccountPeriod</TEXTFIELD>
@@ -319,7 +320,11 @@
 			<TEXTFIELD w="40" title="Invoice Date">InvoiceDate</TEXTFIELD>
 			<TEXTFIELD w="40" title="Commission Rate">CommissionRate</TEXTFIELD>
 			<TEXTFIELD w="40" title="Mark Up Rate">markup</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">IsActive</TEXTFIELD>
+			<CHECKBOX w="40" title="Active">IsActive</CHECKBOX>
+			<ACTIONS>
+				<ACTION fnct="approve_period" approval="1">Approve Period</ACTION>
+				<ACTION fnct="approve_period" approval="2">Send Invoice</ACTION>
+			</ACTIONS>
 			<FORM name="Accounting Periods" keyfield="periodid" linkfield="PeriodID" table="Period" key="2">
 				<TEXTFIELD w="150" title="Sales Period" y="10" h="20" x="10">salesperiod</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Period" y="10" h="20" x="290">AccountPeriod</TEXTFIELD>
@@ -342,9 +347,9 @@
 			<TEXTFIELD w="40" title="Start Date">Startdate</TEXTFIELD>
 			<TEXTFIELD w="40" title="End Date">enddate</TEXTFIELD>
 			<TEXTFIELD w="40" title="Invoice Date">InvoiceDate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Active">IsActive</TEXTFIELD>
-			<TEXTFIELD w="40" title="Approved">Approved</TEXTFIELD>
-			<TEXTFIELD w="40" title="Picked">ispicked</TEXTFIELD>
+			<CHECKBOX w="40" title="Active">IsActive</CHECKBOX>
+			<CHECKBOX w="40" title="Approved">Approved</CHECKBOX>
+			<CHECKBOX w="40" title="Picked">ispicked</CHECKBOX>
 			<ACTIONS>
 				<ACTION fnct="del_period" title="Delete Period">Delete Period</ACTION>
 			</ACTIONS>
@@ -417,9 +422,9 @@
 	</DESK>
 	<DESK w="700" name="Group Client Invoices" type="horl" key="110" h="500">
 		<FILTER location="250" name="Group Client Invoices" type="horl">
-			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="filterid"></DRILLDOWN>
+			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="clientid"></DRILLDOWN>
 			<DRILLDOWN name="Account Period" keyfield="periodid" orderby="startdate desc" table="period" listfield="AccountPeriod" filter="periodid"></DRILLDOWN>
-			<JASPER name="Invoice" reportfile="invoice.jasper"></JASPER>
+			<JASPER name="Invoice" linkfield="clientid" reportfile="invoice.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Invoice Printing" split="250" type="vert">
 			<FILTERGRID name="Period" keyfield="periodid" orderby="startdate desc" table="period" noorg="true">
@@ -451,9 +456,9 @@
 	</DESK>
 	<DESK w="700" name="Credit Note" type="horl" key="118" h="500">
 		<FILTER location="250" name="Credit Note" type="horl">
-			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="filterid"></DRILLDOWN>
+			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="clientid"></DRILLDOWN>
 			<DRILLDOWN name="Account Period" keyfield="periodid" orderby="startdate desc" table="Period" listfield="AccountPeriod" filter="periodid"></DRILLDOWN>
-			<JASPER filtered="true" name="Credit Note" reportfile="creditnote.jasper"></JASPER>
+			<JASPER filtered="true" name="Credit Note" linkfield="clientid" reportfile="creditnote.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Client Statement" type="horl" key="123" h="500">
@@ -483,5 +488,27 @@
 			<JASPER filtered="true" name="Invoice Listing" reportfile="vwinvoicesummary.jasper"></JASPER>
 			<JASPER filtered="true" name="Credit Note Listing" reportfile="vwcreditnotesummary.jasper"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" name="EMails" key="133" h="500">
+		<GRID name="EMails" keyfield="sys_email_id" table="sys_emails" noorg="true">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Title">title</TEXTFIELD>
+			<FORM name="EMails" keyfield="sys_email_id" table="sys_emails" th="210">
+				<TEXTFIELD w="350" title="Email Name" y="10" h="20" x="10">sys_email_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Title" y="30" h="20" x="10">title</TEXTFIELD>
+				<EDITOR w="530" tab="Details" y="2" h="170" x="10">details</EDITOR>
+			</FORM>
+		</GRID>
+		<GRID name="Email List" keyfield="sys_emailed_id" table="vw_sys_emailed">
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
+			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+		</GRID>
 	</DESK>
 </APP>

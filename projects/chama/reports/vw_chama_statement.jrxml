@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_chama_statement" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0ba256b0-68bc-45c0-9180-d7abcf9717a7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_chama_statement" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0ba256b0-68bc-45c0-9180-d7abcf9717a7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -267,8 +267,11 @@ order by title]]>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="75" y="5" width="48" height="20" uuid="68efa11e-87a2-40fe-90f4-97dc1a35f6ef"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{sumcontribs}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -306,7 +309,7 @@ order by title]]>
 				<reportElement x="417" y="4" width="56" height="20" uuid="a9a55341-0c60-4920-a3ff-17e761866926"/>
 				<textFieldExpression><![CDATA[$V{sumincome}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0">
 				<reportElement x="486" y="4" width="47" height="20" uuid="c73c94b6-dd9b-4076-97bb-62e2a9a1f956"/>
 				<textFieldExpression><![CDATA[$V{sumexpend}]]></textFieldExpression>
 			</textField>

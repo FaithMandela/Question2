@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_investments" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8586ceb3-3993-463a-a051-be3c582958fe">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_investments" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8586ceb3-3993-463a-a051-be3c582958fe">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -46,6 +46,12 @@ order by investment_id]]>
 	<field name="interest_amount" class="java.lang.Float"/>
 	<field name="expenditure" class="java.lang.Float"/>
 	<field name="income" class="java.lang.Float"/>
+	<variable name="sumincome" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{income}]]></variableExpression>
+	</variable>
+	<variable name="sumexp" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{expenditure}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -217,28 +223,46 @@ order by investment_id]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{interest_amount}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.0" isBlankWhenNull="true">
 					<reportElement x="450" y="0" width="42" height="15" uuid="99935c69-756c-4107-859c-333535b75bb2"/>
 					<textFieldExpression><![CDATA[$F{income}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField pattern="#,##0.0" isBlankWhenNull="true">
 					<reportElement x="499" y="0" width="47" height="15" uuid="8186c1c5-f972-4972-a653-40cb65134b03"/>
 					<textFieldExpression><![CDATA[$F{expenditure}]]></textFieldExpression>
 				</textField>
-				<line>
-					<reportElement x="329" y="38" width="90" height="1" uuid="bcbf1252-acf5-41a4-840e-47cc55317d03"/>
-				</line>
 			</frame>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="7b339b05-5d01-4961-96cc-5afce0066913"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
+			<staticText>
+				<reportElement x="4" y="6" width="100" height="20" uuid="0f53f5dd-50a3-4012-8bda-91811692224e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="#,##0.0">
+				<reportElement x="450" y="6" width="42" height="20" uuid="dc5b6a3a-3743-42e3-b814-1f7ee1d38740"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumincome}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
+				<reportElement x="504" y="6" width="43" height="20" uuid="232d0c67-6c80-48bd-83bf-a4523f5413b8"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumexp}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>

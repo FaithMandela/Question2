@@ -43,8 +43,9 @@ CREATE OR REPLACE VIEW vw_contributions AS
     entitys.entity_name,
     members.member_id,
     members.middle_name,
+    periods.period_id,
+    periods.start_date,
     contributions.org_id,
-    contributions.period_id,
     contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
@@ -58,8 +59,8 @@ CREATE OR REPLACE VIEW vw_contributions AS
      JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN entitys ON contributions.entity_id = entitys.entity_id
      JOIN members ON contributions.member_id = members.member_id
-     LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id;
-
+     LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id
+     JOIN periods on contributions.period_id= periods.period_id;
 
 CREATE OR REPLACE VIEW vw_all_contributions AS 
  SELECT bank_accounts.bank_account_id,

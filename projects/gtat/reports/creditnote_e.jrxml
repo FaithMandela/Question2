@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="creditnote" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="aed95123-fc14-4fce-8dac-5b5b415073bf">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="creditnote_e" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="aed95123-fc14-4fce-8dac-5b5b415073bf">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5"/>
@@ -17,7 +17,7 @@
 	<parameter name="reportpath" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="clientid" class="java.lang.String">
+	<parameter name="crnoteid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -25,8 +25,7 @@
 ('TP/GTA/CR/' || crnotelist.crnoteid) as creditnotenumber
 FROM vwinvoice LEFT JOIN  crnotelist ON
 	(vwinvoice.PeriodID = crnotelist.PeriodID) AND (vwinvoice.clientid = crnotelist.clientid)
-WHERE (vwinvoice.clientid = '$P!{clientid}')  AND (vwinvoice.periodid = '$P!{periodid}')
-
+WHERE (crnotelist.crnoteid = '$P!{crnoteid}')
 AND (vwinvoice.totalprice < 0) AND (to_char(vwinvoice.StartDate, 'MMYYYY') <> to_char(vwinvoice.servicedate, 'MMYYYY'));]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
