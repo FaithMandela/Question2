@@ -544,9 +544,10 @@ CREATE TRIGGER upd_clientbranches BEFORE UPDATE ON clientbranches
     
 CREATE OR REPLACE FUNCTION approve_period(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
+	v_approved			boolean;
 	msg 				varchar(120);
 BEGIN
-	msg := 'Period Approved';
+	msg := 'No Action';
 	
 	IF ($3 = '1') THEN
 		UPDATE period SET approved = 'true'
@@ -554,17 +555,25 @@ BEGIN
 		
 		msg := 'Period Approved';
 	ELSIF ($3 = '2') THEN
-		INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
-		SELECT 1, invoiceid, 0, 'invoicelist'
-		FROM invoicelist
+		SELECT approved INTO v_approved
+		FROM period
 		WHERE (periodid = $1::integer);
 		
-		INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
-		SELECT 2, crnoteid, 0, 'crnotelist'
-		FROM crnotelist  
-		WHERE (periodid = $1::integer);
-		
-		msg := 'Email Sent';
+		IF(v_approved = true) THEN
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
+			SELECT 1, invoiceid, 0, 'invoicelist'
+			FROM invoicelist
+			WHERE (periodid = $1::integer);
+			
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
+			SELECT 2, crnoteid, 0, 'crnotelist'
+			FROM crnotelist  
+			WHERE (periodid = $1::integer);
+			
+			msg := 'Email Sent';
+		ELSE
+			msg := 'Approve the month first';
+		END IF;
 	END IF;
 	
 	return msg;
