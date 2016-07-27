@@ -51,6 +51,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
     contributions.investment_amount,
     contributions.merry_go_round_amount,
     contributions.paid,
+    contributions.extra_contrib,
     contributions.money_in,
     contributions.money_out,
     (contributions.investment_amount + contributions.merry_go_round_amount) AS total_contribution,
@@ -78,6 +79,7 @@ CREATE OR REPLACE VIEW vw_all_contributions AS
     contributions.investment_amount,
     contributions.merry_go_round_amount,
     contributions.paid,
+    contributions.extra_contrib,
     contributions.money_in,
     contributions.money_out,
     (contributions.investment_amount + contributions.merry_go_round_amount) AS total_contribution,
@@ -105,6 +107,7 @@ CREATE OR REPLACE VIEW vw_contributions_unpaid AS
     contributions.investment_amount,
     contributions.merry_go_round_amount,
     contributions.paid,
+    contributions.extra_contrib,
     contributions.money_in,
     contributions.money_out,
     (contributions.investment_amount + contributions.merry_go_round_amount) AS total_contribution,
@@ -122,11 +125,12 @@ CREATE OR REPLACE VIEW vw_member_contrib AS
 		SELECT vw_contributions.bank_account_id, vw_contributions.bank_account_name, 
 		vw_contributions.contribution_type_id, vw_contributions.contribution_type_name,
 		vw_members.entity_id, vw_members.entity_name, vw_members.member_id, vw_members.merry_go_round_number,
-		vw_contributions.org_id, vw_contributions.period_id,
+		vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date,
     vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.money_in, vw_contributions.money_out
 
 		FROM vw_contributions
 		 JOIN vw_members  ON  vw_contributions.entity_id = vw_members.entity_id;
+
 
 
 CREATE VIEW vw_drawings AS
