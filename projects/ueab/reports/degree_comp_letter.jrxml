@@ -102,14 +102,14 @@ WHERE (completed = true) AND (studentdegreeid = '$P!{filterid}');]]>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "baraza_logo.jpg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="386" y="172" width="173" height="11" uuid="58e47655-97e7-4e7b-bd46-9b1fbfa4c4b4"/>
+				<reportElement x="386" y="172" width="173" height="12" uuid="58e47655-97e7-4e7b-bd46-9b1fbfa4c4b4"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[registrar@ueab.ac.ke]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="346" y="172" width="40" height="12" uuid="5a745036-57f4-47c4-a503-07b4c655ade3"/>
+				<reportElement x="352" y="172" width="34" height="12" uuid="5a745036-57f4-47c4-a503-07b4c655ade3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
