@@ -109,7 +109,7 @@ CREATE TABLE Period (
 	Startdate				date not null,
 	enddate					date not null,
 	InvoiceDate				date not null,
-	CommissionRate			float default 0.4 not null,
+	CommissionRate			real default 0 not null,
 	markup					float,
 	IsActive				boolean not null default false,
 	Approved				boolean not null default false,
