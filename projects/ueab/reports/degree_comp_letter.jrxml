@@ -50,13 +50,14 @@ ORDER BY majors.major desc;]]>
 		<![CDATA[SELECT studentid, studentname, degreelevelid, degreelevelname,
 	sublevelid, sublevelname, degreeid, degreename, studentdegreeid,
 	completed, started, cleared, clearedate, graduated, graduatedate,
-	trim(to_char(graduatedate,'yyyy')) as graduate_y,
-	trim(to_char(graduatedate,'Month')) as graduate_m,
+	trim(to_char(expected_grad_date,'yyyy')) as graduate_y,
+	trim(to_char(expected_grad_date,'Month')) as graduate_m,
 	(CASE WHEN degreeid = 'CERT' THEN 'Certificate in '
 	WHEN degreeid = 'DIPL' THEN 'Diploma In '
 	ELSE ' degree of <b>'  || upper (Degreename) || '</b>' END)::varchar as degree_type
 
-FROM studentdegreeview
+FROM vw_studentdegrees
+
 WHERE (completed = true) AND (studentdegreeid = '$P!{filterid}');]]>
 	</queryString>
 	<field name="studentid" class="java.lang.String"/>
