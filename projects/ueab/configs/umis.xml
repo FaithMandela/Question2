@@ -84,6 +84,7 @@
 				<MENU name="Students Trimester GPA Address">204</MENU>
 				<MENU name="EAU Trimester GPA">340</MENU>
 				<MENU name="Trimester Students Details">161</MENU>
+				<MENU name="Registered Students">785</MENU>
 				<MENU name="Course Registration">162</MENU>
 				<MENU name="Class Timetable">164</MENU>
 				<MENU name="Exam Timetable">220</MENU>
@@ -2488,5 +2489,13 @@
 			<TEXTTIMESTAMP w="100" title="Rejected Date" format="date">action_date</TEXTTIMESTAMP>
 			<BROWSER title="View Form" action="ENTRYFORM" linkfield="actionvalue" baseurl="http://localhost:9090/form.jsp?action=ENTRYFORM" blankpage="true" disabled="yes">entry_form_id</BROWSER>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Registered Students" key="785" h="550">
+		<FILTER w="700" name="Registered Students" split="150" type="horl" h="550">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
+				<DRILLDOWN name="Trimesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Registered Students" reportfile="qstudentview_em.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

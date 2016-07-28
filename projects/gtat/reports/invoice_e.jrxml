@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="812" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="b2d4357f-7977-4012-9a06-7cf11d26f682">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice_e" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="812" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="b2d4357f-7977-4012-9a06-7cf11d26f682">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="71"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -14,17 +14,14 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="periodid" class="java.lang.String">
-		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="clientid" class="java.lang.String">
+	<parameter name="invoiceid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vwinvoice.clientid, vwinvoice.clientname, vwinvoice.clientbranchid, vwinvoice.branchname, vwinvoice.address, vwinvoice.periodid, vwinvoice.startdate, vwinvoice.postalcode, vwinvoice.town, vwinvoice.countryname, vwinvoice.bookingid, vwinvoice.agentreference, vwinvoice.item, vwinvoice.servicedate, vwinvoice.city, vwinvoice.name, vwinvoice.nights, vwinvoice.commission, vwinvoice.netremits, vwinvoice.totalprice, vwinvoice.amount, vwinvoice.creditnote, vwinvoice.grossearning, vwinvoice.invoicedate, vwinvoice.duedate, vwinvoice.invoicenumber, vwinvoice.invoiceid, vwinvoice.issued, vwinvoice.galileo_vat, substring(vwinvoice.gkref from 1 for 7) as gkref
 FROM vwinvoice
 
-WHERE (clientid = '$P!{clientid}')  AND (periodid = '$P!{periodid}')
+WHERE (invoiceid = '$P!{invoiceid}')
 
 AND ((totalprice > 0) OR (to_char(StartDate, 'MMYYYY') = to_char(servicedate, 'MMYYYY')));]]>
 	</queryString>
