@@ -2886,3 +2886,5 @@ INSERT INTO equipment(worksheet, item, count, item_location, invoice_no, descrip
 ('30' , 'Server' , '9' , '' , '20638' , ' HP Pro ML310e-G8' , '' , 'CZ154200XC' , '' , 'Deployed' , '' , '1375' , '04 May 2016' , '' , 'USD'),
 ('30' , 'Server' , '10' , '' , '20638' , ' HP Pro ML310e-G8' , '' , 'CZ161000Y0' , '' , 'Deployed' , '' , '1375' , '04 May 2016' , '' , 'USD'),
 ('30' , 'Server' , '1' , '' , '20639' , ' HP DL380 Gen9' , '' , 'CZJ6100096' , '' , 'Deployed' , '' , '4661' , '04 May 2016' , '' , 'USD');
+
+update equipment set details = 'with serial' where equipment_id > 116;

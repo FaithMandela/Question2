@@ -6,9 +6,13 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select * from vw_loan_repayments
-where entity_id = '$P!{entity_id}' and is_closed = 'f'
+where entity_id = '$P!{entity_id}'
+$P!{organd}
 order by application_date asc]]>
 	</queryString>
 	<field name="currency_id" class="java.lang.Integer"/>
@@ -34,7 +38,6 @@ order by application_date asc]]>
 	<field name="repayment_amount" class="java.lang.Float"/>
 	<field name="total_interest" class="java.lang.Float"/>
 	<field name="loan_balance" class="java.lang.Float"/>
-	<field name="is_closed" class="java.lang.Boolean"/>
 	<field name="loan_repayment_id" class="java.lang.Integer"/>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="loan_repayment_amount" class="java.lang.Float"/>

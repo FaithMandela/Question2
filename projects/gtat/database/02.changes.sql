@@ -1,4 +1,11 @@
 
+CREATE TABLE sys_menu_msg (
+	sys_menu_msg_id			serial primary key,
+	menu_id					varchar(16) not null,
+	menu_name				varchar(50) not null,
+	xml_file				varchar(50) not null,
+	msg						text
+);
 
 DROP VIEW vwcrnotesummary;
 DROP VIEW vwinvoicesummary;
@@ -11,7 +18,7 @@ DROP VIEW vwsales;
 
 CREATE VIEW vwsales AS
 	SELECT vwmanagement.clientid, vwmanagement.clientname, vwmanagement.clientbranchid, vwmanagement.branchname, vwmanagement.address, vwmanagement.postalcode,
-		vwmanagement.managementid, vwmanagement.town, vwmanagement.countryid, vwmanagement.countryname, vwmanagement.telno, vwmanagement.email,  
+		vwmanagement.managementid, vwmanagement.town, vwmanagement.country_id, vwmanagement.countryname, vwmanagement.telno, vwmanagement.email,  
 		vwmanagement.creationdate, vwmanagement.departuredate, vwmanagement.leadname, vwmanagement.wholesalevalue, vwmanagement.grossvalue, 
 		vwmanagement.currency, vwmanagement.subagent,
 		sales.saleid, sales.bookingID, sales.agentReference, sales.item,sales.city,sales.name,sales.serviceDate,sales.nights, sales.totalPrice, sales.commission, 
@@ -52,7 +59,7 @@ CREATE VIEW vwsales AS
 		
 CREATE VIEW vwinvoice AS
 	SELECT 	vwsales.clientid, vwsales.clientname,  vwsales.clientbranchid, vwsales.branchname, vwsales.address,
-		vwsales.periodid, vwsales.Startdate, vwsales.postalcode, vwsales.town, vwsales.countryid, vwsales.countryname,
+		vwsales.periodid, vwsales.Startdate, vwsales.postalcode, vwsales.town, vwsales.country_id, vwsales.countryname,
 		vwsales.bookingid, vwsales.agentreference, vwsales.item, vwsales.servicedate, vwsales.city, vwsales.name, 
 		vwsales.nights, vwsales.commission, vwsales.netremits, vwsales.totalprice, vwsales.amount, vwsales.creditnote, 
 		vwsales.grossearning, vwsales.InvoiceDate, vwsales.duedate, vwsales.invoicenumber, vwsales.invoiceid, vwsales.issued,
@@ -66,11 +73,11 @@ CREATE VIEW clientstatement AS
 	FROM vwinvoice;
 
 CREATE VIEW vwinvoicelist AS
-	SELECT clientid, clientname, town, countryid, countryname, 
+	SELECT clientid, clientname, town, country_id, countryname, 
 		periodid, invoiceid, issued
 	FROM vwsales
 	WHERE (clientid is not null) AND (totalprice > 0)
-	GROUP BY clientid, clientname, town, countryid, countryname, 
+	GROUP BY clientid, clientname, town, country_id, countryname, 
 		periodid, invoiceid, issued
 	ORDER BY clientid;
 
@@ -138,4 +145,19 @@ END
 $$ LANGUAGE plpgsql;
 
 
-
+CREATE OR REPLACE FUNCTION email_invoice(
+    integer,
+    integer,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	msg		 				varchar(120);
+BEGIN
+	INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
+	VALUES (1, $1, 0, 'clients');
+msg := 'Email Sent';
+return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;

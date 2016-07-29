@@ -78,7 +78,7 @@ CREATE TABLE gtarevenue (
 
 CREATE TABLE clients (
 	clientid				serial primary key,
-	countryid				char(2) references countrys,
+	country_id				char(2) references countrys,
 	clientname				varchar(50) unique,
 	address					varchar(120),
 	postalcode				varchar(12),
@@ -90,7 +90,7 @@ CREATE TABLE clients (
 	ispicked				boolean default false,
 	details					text
 );
-CREATE INDEX clients_countryid ON clients (countryid);
+CREATE INDEX clients_country_id ON clients (country_id);
 
 CREATE TABLE clientbranches (
 	clientbranchid			serial primary key,
@@ -109,7 +109,7 @@ CREATE TABLE Period (
 	Startdate				date not null,
 	enddate					date not null,
 	InvoiceDate				date not null,
-	CommissionRate			float default 0.4 not null,
+	CommissionRate			real default 0 not null,
 	markup					float,
 	IsActive				boolean not null default false,
 	Approved				boolean not null default false,
@@ -218,20 +218,20 @@ CREATE INDEX crnotelist_PeriodID ON crnotelist (PeriodID);
 CREATE INDEX crnotelist_clientid ON crnotelist (clientid);
 
 CREATE VIEW vwclients AS
-	SELECT countrys.countryid, countrys.countryname, clients.clientid, clients.clientname, clients.address, 
+	SELECT countrys.country_id, countrys.countryname, clients.clientid, clients.clientname, clients.address, 
 		clients.postalcode, clients.town, clients.telno, clients.contactperson, clients.email, 
 		clients.IsActive, clients.ispicked, clients.details
-	FROM clients INNER JOIN countrys ON clients.countryid = countrys.countryid;
+	FROM clients INNER JOIN countrys ON clients.country_id = countrys.country_id;
 	
 CREATE VIEW vwclientbranches AS
 	SELECT clients.clientid, clients.clientname, clients.address, clients.postalcode, clients.Town, clients.telno, clients.email,
-		countrys.countryid, countrys.countryname, clientbranches.clientbranchid,  clientbranches.branchname, clientbranches.details
-	FROM clientbranches LEFT JOIN (clients INNER JOIN countrys ON clients.countryid = countrys.countryid)
+		countrys.country_id, countrys.countryname, clientbranches.clientbranchid,  clientbranches.branchname, clientbranches.details
+	FROM clientbranches LEFT JOIN (clients INNER JOIN countrys ON clients.country_id = countrys.country_id)
 		ON clientbranches.clientid = clients.clientid;
 
 CREATE VIEW vwmanagement AS
 	SELECT vwclientbranches.clientid, vwclientbranches.clientname, vwclientbranches.clientbranchid, vwclientbranches.branchname, 
-		vwclientbranches.address, vwclientbranches.postalcode, vwclientbranches.Town, vwclientbranches.countryid,
+		vwclientbranches.address, vwclientbranches.postalcode, vwclientbranches.Town, vwclientbranches.country_id,
 		vwclientbranches.countryname, vwclientbranches.telno, vwclientbranches.email, management.managementid,
 		management.bookingid, management.agentreference, management.creationdate, management.departuredate, 
 		management.leadname, management.wholesalevalue, management.grossvalue, management.PeriodID,
@@ -240,7 +240,7 @@ CREATE VIEW vwmanagement AS
 
 CREATE VIEW vwsales AS
 	SELECT vwmanagement.clientid, vwmanagement.clientname, vwmanagement.clientbranchid, vwmanagement.branchname, vwmanagement.address, vwmanagement.postalcode,
-		vwmanagement.managementid, vwmanagement.town, vwmanagement.countryid, vwmanagement.countryname, vwmanagement.telno, vwmanagement.email,  
+		vwmanagement.managementid, vwmanagement.town, vwmanagement.country_id, vwmanagement.countryname, vwmanagement.telno, vwmanagement.email,  
 		vwmanagement.creationdate, vwmanagement.departuredate, vwmanagement.leadname, vwmanagement.wholesalevalue, vwmanagement.grossvalue, 
 		vwmanagement.currency, vwmanagement.subagent,
 		sales.saleid, sales.bookingID, sales.agentReference, sales.item,sales.city,sales.name,sales.serviceDate,sales.nights, sales.totalPrice, sales.commission, 
@@ -282,7 +282,7 @@ CREATE VIEW vwsales AS
 
 CREATE VIEW vwinvoice AS
 	SELECT 	vwsales.clientid, vwsales.clientname,  vwsales.clientbranchid, vwsales.branchname, vwsales.address,
-		vwsales.periodid, vwsales.Startdate, vwsales.postalcode, vwsales.town, vwsales.countryid, vwsales.countryname,
+		vwsales.periodid, vwsales.Startdate, vwsales.postalcode, vwsales.town, vwsales.country_id, vwsales.countryname,
 		vwsales.bookingid, vwsales.agentreference, vwsales.item, vwsales.servicedate, vwsales.city, vwsales.name, 
 		vwsales.nights, vwsales.commission, vwsales.netremits, vwsales.totalprice, vwsales.amount, vwsales.creditnote, 
 		vwsales.grossearning, vwsales.InvoiceDate, vwsales.duedate, vwsales.invoicenumber, vwsales.invoiceid, vwsales.issued,
@@ -296,11 +296,11 @@ CREATE VIEW clientstatement AS
 	FROM vwinvoice;
 
 CREATE VIEW vwinvoicelist AS
-	SELECT clientid, clientname, town, countryid, countryname, 
+	SELECT clientid, clientname, town, country_id, countryname, 
 		periodid, invoiceid, issued
 	FROM vwsales
 	WHERE (clientid is not null) AND (totalprice > 0)
-	GROUP BY clientid, clientname, town, countryid, countryname, 
+	GROUP BY clientid, clientname, town, country_id, countryname, 
 		periodid, invoiceid, issued
 	ORDER BY clientid;
 
@@ -540,6 +540,46 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER upd_clientbranches BEFORE UPDATE ON clientbranches
     FOR EACH ROW EXECUTE PROCEDURE upd_clientbranches();
+    
+    
+CREATE OR REPLACE FUNCTION approve_period(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_approved			boolean;
+	msg 				varchar(120);
+BEGIN
+	msg := 'No Action';
+	
+	IF ($3 = '1') THEN
+		UPDATE period SET approved = 'true'
+		WHERE (periodid = $1::integer);
+		
+		msg := 'Period Approved';
+	ELSIF ($3 = '2') THEN
+		SELECT approved INTO v_approved
+		FROM period
+		WHERE (periodid = $1::integer);
+		
+		IF(v_approved = true) THEN
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
+			SELECT 1, invoiceid, 0, 'invoicelist'
+			FROM invoicelist
+			WHERE (periodid = $1::integer);
+			
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
+			SELECT 2, crnoteid, 0, 'crnotelist'
+			FROM crnotelist  
+			WHERE (periodid = $1::integer);
+			
+			msg := 'Email Sent';
+		ELSE
+			msg := 'Approve the month first';
+		END IF;
+	END IF;
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
 
 INSERT INTO gtarevenue (gtarevenueid, ndcname, serviceid, servicename, basis, gkpercentage, tacommissionout, sharedndccommission, otherndccommission, gk, details, totalcommissionearned) VALUES (1, 'kenya', 'AP', 'APARTMENT', 'NET', 15, 0, 15, 6, 9, '	', 9);
 INSERT INTO gtarevenue (gtarevenueid, ndcname, serviceid, servicename, basis, gkpercentage, tacommissionout, sharedndccommission, otherndccommission, gk, details, totalcommissionearned) VALUES (2, 'Tanzania', 'HH', 'HOTEL', 'NET', 10, 0, 10, 4, 6, NULL, 6);
@@ -552,18 +592,18 @@ INSERT INTO gtarevenue (gtarevenueid, ndcname, serviceid, servicename, basis, gk
 
 SELECT pg_catalog.setval('gtarevenue_gtarevenueid_seq', 8, true);
 
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (4, 'Travelshoppe', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (1, 'Acharya Tours and Travel ', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (3, 'Bunson Travel', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (5, 'Uniglobe Fleet', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (6, 'Uniglobe Let''s Go', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (7, 'BCD Travel', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (8, 'Express Travel', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (9, 'HRG BON VOYAGE TRAVEL - TANZANIA', NULL, NULL, NULL, 'TZ', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (10, 'Travel Affairs', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (11, 'Uniglobe Antelope', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (12, 'Uniglobe Silverbird', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
-INSERT INTO clients (clientid, clientname, address, postalcode, town, countryid, telno, email, details) VALUES (13, 'Uniglobe Charleston', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (4, 'Travelshoppe', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (1, 'Acharya Tours and Travel ', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (3, 'Bunson Travel', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (5, 'Uniglobe Fleet', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (6, 'Uniglobe Let''s Go', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (7, 'BCD Travel', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (8, 'Express Travel', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (9, 'HRG BON VOYAGE TRAVEL - TANZANIA', NULL, NULL, NULL, 'TZ', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (10, 'Travel Affairs', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (11, 'Uniglobe Antelope', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (12, 'Uniglobe Silverbird', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
+INSERT INTO clients (clientid, clientname, address, postalcode, town, country_id, telno, email, details) VALUES (13, 'Uniglobe Charleston', NULL, NULL, 'Nairobi', 'KE', NULL, NULL, NULL);
 
 SELECT pg_catalog.setval('clients_clientid_seq', 14, true);
 
@@ -584,5 +624,6 @@ INSERT INTO clientbranches (clientbranchid, clientid, branchname, details) VALUE
 INSERT INTO clientbranches (clientbranchid, clientid, branchname, details) VALUES (18, 1, 'ACHARYA TRAVEL- RAHIMTULLA', NULL);
 
 SELECT pg_catalog.setval('clientbranches_clientbranchid_seq', 18, true);
+
 
 

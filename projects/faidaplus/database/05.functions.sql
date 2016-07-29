@@ -3,6 +3,8 @@ DECLARE
 	rec						RECORD;
 	v_period				varchar(7);
 	period					date;
+	v_start_date			date;
+	v_increment				integer;
 	v_period_id				integer;
 	v_org_id				integer;
 	v_entity_id				integer;
@@ -13,26 +15,32 @@ DECLARE
 BEGIN
 
 	v_period_id = $1::integer;
-	SELECT end_date,to_char(start_date, 'mmyyyy') INTO period, v_period
+	SELECT start_date, end_date, to_char(start_date, 'mmyyyy') INTO v_start_date, period, v_period
 	FROM periods WHERE period_id = v_period_id AND closed = false;
 	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
+
+	IF(v_start_date < '2016-06-01'::date)THEN
+		v_increment := 0;
+	ELSE
+		v_increment := 2;
+	END IF;
 
 	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
 	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP
 
 		IF(1<= rec.totalsegs::integer AND rec.totalsegs::integer <=250 ) THEN
-			v_amount := 12;
-			v_points := rec.totalsegs * 12 ;
+			v_amount := 12 + v_increment;
+			v_points := rec.totalsegs * v_amount;
 		END IF;
 
 		IF(251<= rec.totalsegs::integer AND rec.totalsegs::integer <=500) THEN
-			v_amount := 16;
-			v_points := rec.totalsegs * 16 ;
+			v_amount := 16 + v_increment;
+			v_points := rec.totalsegs * v_amount;
 		END IF;
 
 		IF(rec.totalsegs::integer >=501 ) THEN
-			v_amount := 20;
-			v_points := rec.totalsegs * 20 ;
+			v_amount := 20 + v_increment;
+			v_points := rec.totalsegs * v_amount;
 		END IF;
 
 		SELECT orgs.org_id, entitys.entity_id INTO v_org_id, v_entity_id
@@ -131,15 +139,29 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $BODY$
+CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $$
 DECLARE
 	msg 		varchar(20);
 	details 	text;
+	v_org_id                integer;
+	v_entity_id            integer;
+	v_sms_number		varchar(25);
 BEGIN
 
 	IF ($3::integer = 1) THEN
+		SELECT entity_id, phone_no INTO v_entity_id, v_sms_number
+		FROM orders WHERE (order_id = $1::integer);
+		IF(v_sms_number = '') THEN
+			SELECT org_id, entity_id, primary_telephone INTO v_org_id, v_entity_id, v_sms_number
+			FROM entitys WHERE (entity_id = v_entity_id);
+		ELSE
+			SELECT org_id INTO v_org_id
+			FROM entitys WHERE (entity_id = v_entity_id);
+		END IF;
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
 		details :='Your Order is ready for collection';
+		INSERT INTO sms (folder_id, entity_id, org_id, sms_number, message)
+	    VALUES (0,v_entity_id, v_org_id, v_sms_number, 'Your Order is ready for collection');
 	END IF;
 
 	IF ($3::integer = 2) THEN
@@ -155,7 +177,7 @@ BEGIN
 	VALUES ($1::integer,4 ,'orders', 3, 0,details);
 	RETURN 'Successfully Updated';
 END;
-$BODY$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION ins_applicants()  RETURNS trigger AS $BODY$
@@ -495,10 +517,25 @@ DECLARE
 BEGIN
   SELECT org_id, entity_name, primary_telephone INTO v_org_id, v_entity_name, v_sms_number
   FROM entitys WHERE (entity_id = $2::int);
-  INSERT INTO sms (folder_id, sys_email_id, entity_id, org_id, sms_number, email_type, message)
-  VALUES (0,7,$2::int, v_org_id, v_sms_number, 1, 'Its birthday for ' || v_entity_name);
+  UPDATE entitys SET dob_email = current_date WHERE (entity_id = $2::int);
+  INSERT INTO sms (folder_id, entity_id, org_id, sms_number, message)
+  VALUES (0,$2::int, v_org_id, v_sms_number, 'Its birthday for ' || v_entity_name);
 
   RETURN 'Done';
+END;
+$$
+  LANGUAGE plpgsql;
+
+  CREATE OR REPLACE FUNCTION upd_bonus( character varying, character varying,  character varying,  character varying)
+ RETURNS character varying AS $$
+DECLARE
+ps		varchar(16);
+msg		varchar(50);
+BEGIN
+	ps := 'Approved';
+	UPDATE bonus SET approve_status = ps WHERE (bonus_id = $1::int);
+	msg := 'Bonus Approved';
+	RETURN msg;
 END;
 $$
   LANGUAGE plpgsql;

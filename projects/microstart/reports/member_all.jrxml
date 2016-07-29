@@ -13,7 +13,7 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="entity_id" class="java.lang.String">
+	<parameter name="entityid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
@@ -26,14 +26,14 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="organd" class="java.lang.String">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="reportpath" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT * FROM vw_loans
- where entity_id = '$P!{entity_id}'
+ where entity_id = '$P!{entityid}'
 $P!{organd}
 order by loan_date asc]]>
 	</queryString>
@@ -57,7 +57,6 @@ order by loan_date asc]]>
 	<field name="loan_date" class="java.sql.Date"/>
 	<field name="action_date" class="java.sql.Timestamp"/>
 	<field name="details" class="java.lang.String"/>
-	<field name="is_closed" class="java.lang.Boolean"/>
 	<field name="repayment_amount" class="java.lang.Float"/>
 	<field name="total_repayment" class="java.lang.Float"/>
 	<field name="total_interest" class="java.lang.Float"/>

@@ -157,15 +157,25 @@ System.out.println("BASE 1020 : " + repository);
 					long fs = item.getSize();
 					
 					if(fs < maxfs) {
-System.out.println("BASE 1410 : " + fileName);
+System.out.println("BASE IMPORT 1410 : " + fileName);
+						String importType = view.getAttribute("import");
 						BImportVector iv = new BImportVector(view);
-						iv.getTextData(item.getInputStream());
+						
+						if(importType.equals("excel")) {
+							String worksheet = view.getAttribute("worksheet", "0");
+							iv.getExcelData(item.getInputStream(), fileName, worksheet);
+						} else if(importType.equals("text")) {
+							iv.getTextData(item.getInputStream());
+						} else if(importType.equals("record")) {
+							iv.getRecordData(item.getInputStream());
+						}
 						query.importData(iv.getData());
+						iv.close();
 						
 						jshd.add("success", 1);
 						jshd.add("name", item.getName());
 						jshd.add("size", item.getSize());
-						jshd.add("message", "Proceessed File");
+						jshd.add("message", "Process File");
 						JsonObject jsObj = jshd.build();
 						resp = jsObj.toString();
 					}
@@ -179,7 +189,7 @@ System.out.println("BASE 1410 : " + fileName);
 			System.out.println("File saving failed Exception " + ex);
 		}
 		
-System.out.println("BASE 1420 : " + resp);
+System.out.println("BASE IMPORT 1420 : " + resp);
 
 		return resp;
 	}

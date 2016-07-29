@@ -43,6 +43,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
     contributions.deposit_amount,
     contributions.entry_date,
     contributions.transaction_ref,
+    contributions.additional_payments,
     contributions.contribution_amount,
     entitys.entity_name,
     entitys.is_active,
@@ -254,13 +255,15 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
    FROM investments
      JOIN entitys ON entitys.entity_id = investments.entity_id
      JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;   
-
+ --- here
      
 CREATE OR REPLACE VIEW vw_billing AS
-SELECT billing.bill_id, billing.entity_id, billing.org_id, billing.currency_id, 
+SELECT billing.bill_id,  billing.org_id, billing.currency_id, 
 	billing.start_date, billing.end_date, billing.bill_amount, billing.processed, billing.paid,entitys.entity_id,
 	entitys.entity_name, entitys.entity_leader, entitys.function_role,
 	currency.currency_name, currency.currency_symbol
 FROM currency 
 	INNER JOIN billing ON currency.currency_id = billing.currency_id
 	INNER JOIN entitys ON entitys.entity_id = billing.entity_id;
+
+	

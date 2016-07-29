@@ -13,7 +13,7 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT studentname, quarter, quarteryear, gpa,
+		<![CDATA[SELECT studentname, quarter, quarteryear, gpa,qstudentid,
 (CASE WHEN quarter = '1' THEN 'st' WHEN quarter = '2' THEN 'nd'
 WHEN quarter = '3' THEN 'rd' WHEN quarter = '4' THEN 'st' END) as qend
 FROM studentquarterlist
@@ -23,6 +23,7 @@ WHERE (qstudentid = '$P!{filterid}');]]>
 	<field name="quarter" class="java.lang.String"/>
 	<field name="quarteryear" class="java.lang.String"/>
 	<field name="gpa" class="java.lang.Double"/>
+	<field name="qstudentid" class="java.lang.Integer"/>
 	<field name="qend" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>

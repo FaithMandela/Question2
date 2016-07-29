@@ -1,3 +1,23 @@
+CREATE TABLE equipment
+(
+  equipment_id serial primary key,
+  worksheet integer,
+  item character varying(50),
+  count integer,
+  item_location character varying(50),
+  invoice_no character varying(50),
+  description character varying(120),
+  agency character varying(50),
+  pc character varying(50),
+  peripherals character varying(50),
+  status character varying(50),
+  item_user character varying(50),
+  item_value character varying(50),
+  purchase_date character varying(50),
+  install_date character varying(50),
+  currency character varying(50),
+  details text
+  );
 INSERT INTO equipment(worksheet, item, count, item_location, invoice_no, description, agency, pc , peripherals, status, item_user, item_value, purchase_date, install_date, currency) VALUES
 ('19' , 'Laptop' , '1' , '' , '20179' , 'HP 450 ' , '' , '' , '' , 'Deployed' , '' , '819.50' , '10 Mar 2014' , '' , 'USD'),
 ('19' , 'Laptop' , '2' , '' , '20179' , 'HP 450 ' , '' , '' , '' , 'Deployed' , '' , '819.50' , '10 Mar 2014' , '' , 'USD'),
@@ -116,3 +136,4 @@ INSERT INTO equipment(worksheet, item, count, item_location, invoice_no, descrip
 ('24' , 'UPS' , '49' , '' , '20376' , 'BX-650CI-AF' , '' , '' , '' , 'Deployed' , '' , '10,500' , '12 Feb 2015' , '' , 'KES'),
 ('24' , 'UPS' , '50' , '' , '20376' , 'BX-650CI-AF' , '' , '' , '' , 'Deployed' , '' , '10,500' , '12 Feb 2015' , '',	'KES');
 
+update equipment set details = 'without serial';

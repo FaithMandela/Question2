@@ -4,6 +4,7 @@
 <c:set var="mainPage" value="index.jsp" scope="page" />
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="org.baraza.DB.BQuery" %>
 <%@ page import="org.baraza.web.*" %>
 <%@ page import="org.baraza.xml.BElement" %>
 
@@ -307,9 +308,10 @@
 						</div>
 
 						<div class="portlet-body" id="portletBody" style="min-height:360px;">
-							<%= web.getBody(request, reportPath) %>
-							<%if(!web.getLicense()) {%>
-							<%@ include file="./assets/include/licenseapply.jsp" %>
+							<% if(web.hasExpired()) {%>
+								<%@ include file="./assets/include/billing_expired.jsp" %>
+							<%} else {%>
+								<%= web.getBody(request, reportPath) %>
 							<% } %>
 						</div>
 
@@ -777,7 +779,7 @@ $(function () {
         url: 'putbarazafiles',
         dataType: 'json',
         autoUpload: true,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png|doc|docx|rtf|odt|pdf|csv|txt|xls)$/i,
+        acceptFileTypes: /(\.|\/)(gif|jpeg|jpg|png|doc|docx|rtf|odt|pdf|csv|txt|xls|xlsx)$/i,
         maxFileSize: 4194304,
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
@@ -819,7 +821,7 @@ $(function () {
         console.log(data.result.message);
         
         $('#progress').removeClass('active').removeClass('progress-striped');
-        $('#jqlist').trigger('reloadGrid');
+		$('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
 		var fileDone = $('<button>').text(data.result.message);
         $(data.context.children()[0]).append(fileDone).click(function(){ 
 			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {
@@ -871,6 +873,22 @@ $(function () {
 	});
 
 <% } %>
+
+<%if(web.hasExpired()) {%>
+
+	$('#renewalApply').click(function() {
+		$.post("ajax?fnct=renew_product", function(data) {
+			if(data.success == 0) {
+				$('#ajax').modal('hide');
+			} else if(data.success == 1){
+				alert(data.message);
+			}
+
+		}, "JSON");
+	});
+
+<% } %>
+
 
 </script>
 <!-- END JAVASCRIPTS -->

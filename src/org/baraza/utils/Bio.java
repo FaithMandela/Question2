@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
 public class Bio {
 	Logger log = Logger.getLogger(Bio.class.getName());
 
-	public boolean create(String configDir, String path, String xmlfile, String xmldata) {
+	public boolean create(String configDir, String path, String xmlfile, String projectName, String dbName) {
 		String ps = System.getProperty("file.separator");
 		String projectDir = configDir + path;
 		boolean success = mkdir(projectDir);
@@ -38,9 +38,18 @@ public class Bio {
 			mkdir(projectDir + "database" + ps + "setup");		
 			mkdir(projectDir + "reports");
 			mkdir(projectDir + "docs");
-
+			
+			// Copy over the config files
+			String barazaDir = getParent(projectDir) + ps + "baraza";
+			String xmldata = loadFile(barazaDir + ps + "configs" + ps + "baraza.xml");
+			xmldata = xmldata.replaceAll("Baraza", projectName);
 			saveFile(projectDir + "configs" + ps + xmlfile, xmldata);
-			saveFile(projectDir + "database" + ps + path + ".sql", "---Project Database File");
+			
+			xmldata = loadFile(barazaDir + ps + "configs" + ps + "context.xml");
+			xmldata = xmldata.replaceAll("//localhost/baraza", "//localhost/" + dbName);
+			saveFile(projectDir + "configs" + ps + "context.xml", xmldata);
+			
+			saveFile(projectDir + "database" + ps + "10." + path + ".sql", "---Project Database File");
 			saveFile(projectDir + "docs" + ps + "TODO", "TODO");
 		}
 
@@ -56,6 +65,11 @@ public class Bio {
 			log.severe("Current directory get error : " + ex);
 		}
 		return dirName;
+	}
+	
+	public String getParent(String dirName) {
+		File dir = new File(dirName);
+		return dir.getParent();
 	}
 
 	public boolean mkdir(String dirName) {

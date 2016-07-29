@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="328"/>
+	<property name="ireport.y" value="48"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -43,7 +43,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<text><![CDATA[BABCOCK ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="87" y="74" width="177" height="22" uuid="63d7a589-8be8-4b67-a1af-78164d220ce5"/>
+				<reportElement x="87" y="73" width="177" height="22" uuid="63d7a589-8be8-4b67-a1af-78164d220ce5"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="19" isBold="true"/>
 				</textElement>
@@ -111,7 +111,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textFieldExpression><![CDATA[$F{major_title}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="328" y="133" width="175" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
+				<reportElement x="328" y="133" width="183" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -133,7 +133,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 			</textField>
 			<staticText>
 				<reportElement x="2" y="186" width="509" height="42" uuid="952d6dc4-04b1-4bf7-aaaf-dcd06146dd41"/>
-				<textElement>
+				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[The confirmation of this offer of admission is subject to your submitting the required entry qualifications for the above degree programme for which you have been, or will be admitted.  You shall also meet the following conditions:]]></text>
@@ -144,15 +144,15 @@ WHERE (registrationid = '$P!{filterid}')]]>
 					<font fontName="Times New Roman" size="11" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[<b>1. A candidate evades any of the processes above</b><br/>
-<b>2. A candidate does not attain the age of sixteen (16) by 26<sup>th</sup> November 2015</b>]]></text>
+<b>2. A candidate does not attain the age of sixteen (16) by 24<sup>th</sup> November 2016</b>]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="-1" y="539" width="513" height="59" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
-				<textElement markup="html">
+				<reportElement positionType="Float" x="-1" y="539" width="332" height="78" uuid="5950b4df-629c-4450-805f-4302850acf43"/>
+				<textElement verticalAlignment="Bottom" markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" isItalic="true" pdfFontName="Times-Italic" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[
- <i><br>Babcock, The furture is bright!</br>
+ <i><br>Babcock, The future is bright!</br>
  <i><br>Jonathan C. Nwosu </i> <font size="1">PhD, FCIA,FNIM,FCPA</font><br>
  <i>Registrar
 ]]></text>
@@ -176,14 +176,14 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" isItalic="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Dear, " + $F{fullname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Dear " + $F{fullname} +',']]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="286" y="12" width="225" height="15" uuid="3b8e4486-1ea2-41af-8589-f433a2a7670c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Ref No:  Ref: BUREG/UADM/2015/2016"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Ref No:  Ref: BUREG/UADM/2016/2017"]]></textFieldExpression>
 			</textField>
 			<elementGroup>
 				<staticText>
@@ -198,7 +198,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 					<textElement verticalAlignment="Middle" markup="html">
 						<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
-					<text><![CDATA[New Student Registration:]]></text>
+					<text><![CDATA[Registration for All New Students:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="41" y="365" width="188" height="15" uuid="c3aa341a-3c78-4c35-b731-8971165378a2"/>
@@ -220,7 +220,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<textElement verticalAlignment="Bottom" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["<u><b>Beginning from Tuesday 21<sup>st</sup> July, 2015,</b></u> " + " you are to:"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<u><b>Beginning from Friday 1<sup>st</sup> July, 2016,</b></u> " + " you are to:"]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="1" y="430" width="511" height="26" uuid="afa6de77-34bd-48a4-ab8d-04e9a786fcdd"/>
@@ -229,38 +229,38 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				</textElement>
 				<text><![CDATA[<b>PLEASE NOTE:</b> <p>Babcock University reserves the right to withdraw any admission offer if:</p>]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="229" y="380" width="267" height="15" uuid="666d005d-8c96-4984-8890-9c578de1b206"/>
+			<staticText>
+				<reportElement x="229" y="380" width="267" height="15" uuid="fc0a4993-a3ae-467e-8323-299816258fe7"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["31<sup>st</sup>- 4 <sup>th</sup>September, 2015"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="229" y="395" width="267" height="15" uuid="ab9202a8-b193-4dd1-860f-07949652566d"/>
+				<text><![CDATA[August 29 – September 2, 2016]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="395" width="267" height="15" uuid="5e15fd16-e701-4756-8ba0-22b265a32a2a"/>
 				<textElement verticalAlignment="Top" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["7<sup>th</sup> September, 2015"]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="229" y="350" width="267" height="15" uuid="1d16e061-db52-4a10-af00-98ebbad68324"/>
+				<text><![CDATA[September 5, 2016]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="350" width="267" height="15" uuid="7b51d49b-0c2a-420b-9100-9db95c75d48d"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["24<sup>th</sup> August, 2015"]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="229" y="365" width="267" height="15" uuid="41625173-6908-4819-941a-3bf7cfcdcfbd"/>
+				<text><![CDATA[August 21, 2016]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="365" width="267" height="15" uuid="d9f84a06-cd6e-476c-a59e-3759d00facc4"/>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="11" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["25<sup>th</sup> - 31 <sup>th</sup> August, 2015"]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd MMMMM, yyyy" isBlankWhenNull="true">
-				<reportElement x="2" y="12" width="143" height="15" uuid="6863410f-8b7f-4012-a408-c9a3c23da958"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				<text><![CDATA[August 22 – 27, 2016]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM, yyyy" isBlankWhenNull="true">
+				<reportElement x="333" y="593" width="179" height="15" uuid="6863410f-8b7f-4012-a408-c9a3c23da958"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="11" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
@@ -272,26 +272,25 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<text><![CDATA[1.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="9" y="286" width="32" height="20" uuid="979d6501-5c86-41c7-a348-c832e2f3e45b"/>
+				<reportElement x="9" y="288" width="32" height="20" uuid="979d6501-5c86-41c7-a348-c832e2f3e45b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[2.]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="41" y="246" width="469" height="40" uuid="a362db48-18c3-4ec1-8345-55df90a99695"/>
+			<textField>
+				<reportElement x="41" y="246" width="469" height="42" uuid="f211523d-1639-4555-93cb-96ccb2608d03"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Pay <u>A NON REFUNDABLE ACCEPTANCE FEE</u> OF <i>N150,000 (one hundred and fifty thousand naira only).</i><b> UBA, Diamond and GTB using your Application ID number for E-tranzact.
-]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA["Pay <u>A NON REFUNDABLE ACCEPTANCE FEE</u> OF <i>N150,350 (One Hundred and Fifty Thousand, Three Hundred and Fifty Naira only).</i><b> at any of the following banks: UBA, Diamond, WEMA, Zenith by E-tranzact or E-Bills Pay. Present your ApplicationID " + $F{registrationid} + " at the Bank. "]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="41" y="286" width="469" height="60" uuid="f0cb41ea-3bd5-4c95-987a-c4b0c31c99d7"/>
+				<reportElement x="41" y="288" width="469" height="60" uuid="f0cb41ea-3bd5-4c95-987a-c4b0c31c99d7"/>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[At the time of registration, you will be required to present: Original(s) and four (4) photocopies of 2015 UTME results slips,8 recent passport-size photographs, birth certificates, SSCE results or their equivalents, if you are not awaiting result(s), official receipts of acceptance fees and balance of the school fees paid, evidence of payment for Babcock Post-UTME online form.<mm]]></text>
+				<text><![CDATA[At the time of registration, you will be required to present: Original(s) and four (4) photocopies of 2016 UTME results slips,8 recent passport-size photographs, birth certificates, SSCE results or their equivalents, if you are not awaiting result(s), official receipts of acceptance fees and balance of the school fees paid, evidence of payment for Babcock Post-UTME online form.<mm]]></text>
 			</staticText>
 			<image>
 				<reportElement x="2" y="510" width="227" height="29" uuid="ed7131e2-cc0b-4186-b022-0d6046557fca"/>

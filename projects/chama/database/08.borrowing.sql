@@ -50,8 +50,6 @@ CREATE TABLE borrowing_repayment (
 	repayment				real default 0 not null,
 	interest_paid				real default 0 not null,
 	
-	penalty					boolean default true not null,
-	penalty_id					integer references penalty,
 	penalty_paid				real default 0 not null,
 	details                     text
 );
@@ -59,7 +57,6 @@ CREATE TABLE borrowing_repayment (
 CREATE INDEX borrowing_repayment_org_id ON borrowing_repayment(org_id);
 CREATE INDEX borrowing_repayment_borrowing_id ON borrowing_repayment (borrowing_id);
 CREATE INDEX borrowing_repayment_period_id ON borrowing_repayment (period_id);
-CREATE INDEX borrowing_repayment_penalty_id ON borrowing_repayment (penalty_id);
 
 
 CREATE OR REPLACE FUNCTION get_borrowing_repayment(real, real, integer) RETURNS real AS $$
@@ -178,9 +175,7 @@ CREATE OR REPLACE VIEW vw_borrowing_mrepayment AS
 		vw_borrowing.borrowing_date, vw_borrowing.borrowing_id, vw_borrowing.principle, vw_borrowing.interest, vw_borrowing.monthly_repayment, vw_borrowing.reducing_balance, vw_borrowing.repayment_period, 
 		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		borrowing_repayment.org_id, borrowing_repayment.borrowing_repayment_id,  borrowing_repayment.interest_amount, 
-		borrowing_repayment.repayment, borrowing_repayment.interest_paid, borrowing_repayment.penalty,
-		borrowing_repayment.penalty_id, borrowing_repayment.penalty_paid, borrowing_repayment.details,
-		get_total_binterest(vw_borrowing.borrowing_id, vw_periods.start_date) as total_interest,
+		borrowing_repayment.repayment, borrowing_repayment.interest_paid, borrowing_repayment.penalty_paid, borrowing_repayment.details, get_total_binterest(vw_borrowing.borrowing_id, vw_periods.start_date) as total_interest, 
 		get_total_brepayment(vw_borrowing.borrowing_id, vw_periods.start_date) as total_repayment,
 		(vw_borrowing.principle + get_total_binterest(vw_borrowing.borrowing_id, vw_periods.start_date + 1) + get_bpenalty(vw_borrowing.borrowing_id, vw_periods.start_date + 1)
 		- vw_borrowing.initial_payment - get_total_brepayment(vw_borrowing.borrowing_id, vw_periods.start_date + 1)) as borrowing_balance
@@ -289,3 +284,23 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON borrowing
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
     
+CREATE OR REPLACE FUNCTION get_borrowing_repayment(
+    real,
+    real,
+    real)
+  RETURNS real AS
+$BODY$
+DECLARE
+    repayment real;
+    ri real;
+BEGIN
+    ri := 1 + ($2/1200);
+    IF ((ri ^ $3) = 1) THEN
+        repayment := $1;
+    ELSE
+        repayment := $1 * (ri ^ $3) * (ri - 1) / ((ri ^ $3) - 1);
+    END IF;
+    RETURN repayment;
+END;
+$BODY$
+  LANGUAGE plpgsql; 

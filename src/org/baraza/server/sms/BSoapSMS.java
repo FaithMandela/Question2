@@ -274,7 +274,7 @@ public class BSoapSMS {
 	
 			SOAPMessage soapMessage = factory.createMessage();
 			SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
-            soapEnvelope.addNamespaceDeclaration("loc", "http://www.csapo.org/schema/parlayx/sms/send/v2_2/local");
+			soapEnvelope.addNamespaceDeclaration("loc", "http://www.csapo.org/schema/parlayx/sms/send/v2_2/local");
 			soapEnvelope.addNamespaceDeclaration("v2", "http://www.huawei.com.cn/schema/common/v2_1");
 
 			SOAPHeader soadHeader = soapMessage.getSOAPHeader();
@@ -324,16 +324,18 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
+			URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
 			SOAPMessage response = con.call(soapMessage, endpoint);
-			SOAPBody respBody = response.getSOAPBody();
-			sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+			if(response != null) {
+				SOAPBody respBody = response.getSOAPBody();
+				sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+				
+				System.out.println("RESPOSE\n" + getResp(response) + "\n");
+				System.out.println("RESPOSE : " + sendResults + "\n");
+			}
 			con.close();
-			
-			System.out.println("RESPOSE\n" + getResp(response) + "\n");
-			System.out.println("RESPOSE : " + sendResults + "\n");
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -411,12 +413,16 @@ public class BSoapSMS {
 			
 			URL endpoint = new URL("https://212.100.248.24:8080/smshttppush/index.php?wsdl");
 			SOAPMessage response = con.call(soapMessage, endpoint);
-			SOAPBody respBody = response.getSOAPBody();
-			sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+			if(response != null) {
+				SOAPBody respBody = response.getSOAPBody();
+				sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+				
+				System.out.println("RESPOSE2\n" + getResp(response) + "\n");
+				System.out.println("RESPOSE3 : " + sendResults + "\n"); 
+			} else {
+				System.out.println("FON ERROR : Not able to send SMS on FON");
+			}
 			con.close();
-
-			System.out.println("RESPOSE2\n" + getResp(response) + "\n");
-			System.out.println("RESPOSE3 : " + sendResults + "\n"); 
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -480,15 +486,16 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
-
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			con.close();
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -544,15 +551,17 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/ReceiveSmsService/services/ReceiveSms");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/ReceiveSmsService/services/ReceiveSms");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
+			con.close();
 
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -613,15 +622,17 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
+			con.close();
 
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -675,15 +686,17 @@ public class BSoapSMS {
 			System.out.println("MESSAGE\n" + strMsg + "\n");
 
 			SOAPConnectionFactory scFactory = SOAPConnectionFactory.newInstance();
-            SOAPConnection con = scFactory.createConnection();
+			SOAPConnection con = scFactory.createConnection();
 
-            URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
-            SOAPMessage response = con.call(soapMessage, endpoint);
+			URL endpoint = new URL("http://" + serverIP + ":8310/SmsNotificationManagerService/services/SmsNotificationManager");
+			SOAPMessage response = con.call(soapMessage, endpoint);
 
-            con.close();
+			con.close();
 
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {

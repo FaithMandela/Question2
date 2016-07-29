@@ -170,7 +170,9 @@ CREATE VIEW vw_loan_monthly AS
 		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed, vw_periods.period_year,vw_periods.period_month,
-		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, loan_monthly.repayment, loan_monthly.interest_paid, 
+		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, 
+		loan_monthly.additional_payments,
+		loan_monthly.repayment, loan_monthly.interest_paid, 
 		loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
 		get_total_interest(vw_loans.loan_id, vw_periods.start_date) as total_interest,
 		get_total_repayment(vw_loans.loan_id, vw_periods.start_date) as total_repayment,
@@ -195,6 +197,7 @@ CREATE VIEW vw_period_loans AS
 	SELECT vw_loan_monthly.org_id, vw_loan_monthly.period_id,
 		sum(vw_loan_monthly.interest_amount) as sum_interest_amount, sum(vw_loan_monthly.repayment) as sum_repayment, 
 		sum(vw_loan_monthly.penalty) as sum_penalty, sum(vw_loan_monthly.penalty_paid) as sum_penalty_paid, 
+		sum( vw_loan_monthly.additional_payments) as sum_additional_payments,
 		sum(vw_loan_monthly.interest_paid) as sum_interest_paid, sum(vw_loan_monthly.loan_balance) as sum_loan_balance
 	FROM vw_loan_monthly
 	GROUP BY vw_loan_monthly.org_id, vw_loan_monthly.period_id;
@@ -252,26 +255,48 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
+DECLARE
+	v_default_interest	real;
+	v_reducing_balance	boolean;
 BEGIN
 
-	IF(NEW.principle is null) OR (NEW.interest is null)THEN
-		RAISE EXCEPTION 'You have to enter a principle and interest amount';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is null)THEN
-		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
-	ELSIF(NEW.monthly_repayment is null) AND (NEW.repayment_period is not null)THEN
-		IF(NEW.repayment_period > 0)THEN
-			NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
-		ELSE
-			RAISE EXCEPTION 'The repayment period should be greater than 0';
-		END IF;
-	ELSIF(NEW.monthly_repayment is not null) AND (NEW.repayment_period is null)THEN
-		IF(NEW.monthly_repayment > 0)THEN
-			NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
-		ELSE
-			RAISE EXCEPTION 'The monthly repayment should be greater than 0';
-		END IF;
-	END IF;
+	SELECT default_interest, reducing_balance INTO v_default_interest, v_reducing_balance
+	FROM loan_types 
+	WHERE (loan_type_id = NEW.loan_type_id);
 		
+	IF(NEW.interest is null)THEN
+		NEW.interest := v_default_interest;
+	END IF;
+	IF (NEW.reducing_balance is null)THEN
+		NEW.reducing_balance := v_reducing_balance;
+	END IF;
+	IF(NEW.monthly_repayment is null) THEN
+		NEW.monthly_repayment := 0;
+	END IF;
+	IF (NEW.repayment_period is null)THEN
+		NEW.repayment_period := 0;
+	END IF;
+	IF(NEW.approve_status = 'Draft')THEN
+		NEW.repayment_period := 0;
+	END IF;
+	
+	IF(NEW.principle is null)THEN
+		RAISE EXCEPTION 'You have to enter a principle amount';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period = 0))THEN
+		RAISE EXCEPTION 'You have need to enter either monthly repayment amount or repayment period';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period < 1))THEN
+		RAISE EXCEPTION 'The repayment period should be greater than 0';
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment < 1))THEN
+		RAISE EXCEPTION 'The monthly repayment should be greater than 0';
+	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period > 0))THEN
+		NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
+	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment > 0))THEN
+		NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
+	END IF;
+	
+	IF(NEW.monthly_repayment > NEW.principle)THEN
+		RAISE EXCEPTION 'Repayment should be less than the principal amount';
+	END IF;
 	
 	RETURN NEW;
 END;
@@ -284,4 +309,6 @@ CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
+    
+    
     

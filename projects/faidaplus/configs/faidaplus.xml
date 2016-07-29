@@ -9,6 +9,7 @@
 		<MENU role="manager" icon="fa fa-sitemap" name="Organisation">201</MENU>
 		<MENU role="consultant" icon="fa fa-edit" name="Update Contact Details">15</MENU>
 		<MENU role="admin" name="Approval">83</MENU>
+		<MENU role="admin" name="Bonus">231</MENU>
 		<MENU role="admin" name="Workflow">40</MENU>
 		<MENU role="admin" name="Emails">60</MENU>
 		<MENU role="admin" name="Staff">100</MENU>
@@ -649,6 +650,7 @@
 			<GRID noorg="false" keyfield="entity_id" name="Consultants" linkfield="org_id" table="vw_entitys">
 				<TEXTFIELD w="75" title="Consultant ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="140" title="Consultant Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="SON">son</TEXTFIELD>
 				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
 				<CHECKBOX w="75" format="boolean" title="Active">is_active</CHECKBOX>
@@ -695,7 +697,7 @@
 				<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="org_id" key="2" table="bonus">
+				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="org_id" user="entity_id" key="2" table="bonus">
 					<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
@@ -882,8 +884,8 @@
 	<DESK w="700" h="550" name="Productivity Reports" key="110">
 		<FILTER split="150" w="700" h="550" name="Pcc Productivity " type="vert">
 			<FILTERFORM name="Pcc Productivity ">
-				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
-				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<TEXTDATE w="500" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE size="100" w="500" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
 				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc" x="10" y="30" lptable="orgs" title="PCC" lpkey="org_id">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="pcc_productivity.jasper" name="Agency Productivity"></JASPER>
@@ -892,7 +894,7 @@
 			<FILTERFORM name="Consultant Productivity">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc_son" x="10" y="30" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="50" h="20" lpfield="pcc_son_name" x="10" y="30" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_productivity.jasper" name="Consultant Productivity"></JASPER>
 		</FILTER>
@@ -903,7 +905,7 @@
 			</FILTERFORM>
 			<JASPER reportfile="comulative_productivity.jasper" name="Agency Cumulative Productivity"></JASPER>
 		</FILTER>
-		<FILTER role="admin" split="150" w="700" h="550" name="Market Productivity " type="vert">
+		<FILTER role="admin,staff" split="150" w="700" h="550" name="Market Productivity " type="vert">
 			<FILTERFORM name="Market Productivity ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
@@ -985,15 +987,15 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Users Contacts" key="118">
-		<JASPER reportfile="user_contacts.jasper" name="Users Contacts"></JASPER>
-		<JASPER reportfile="user_contacts_KAM.jasper" name="Users Contacts Per KAM"></JASPER>
+		<JASPER reportfile="user_contacts.jasper" name="User Contacts"></JASPER>
+		<JASPER reportfile="user_contacts_KAM.jasper" name="User Contacts Per KAM"></JASPER>
 	</DESK>
 	<DESK w="700" h="550" name="Consultant Statement" key="123">
 		<FILTER split="150" w="700" h="550" name="Consultant Statement " type="vert" key="order_date">
 			<FILTERFORM name="Consultant Statement ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_statements.jasper" name="Consultant Statement"></JASPER>
 		</FILTER>
@@ -1007,12 +1009,12 @@
 		</FILTER>
 	</DESK>
 	<DESK noorg="true" w="700" h="500" name="EMails" key="60">
-		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" orderby="sys_email_id DESC" table="vw_sys_emailed">
-			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
+		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" orderby="sys_emailed_id DESC" table="vw_sys_emailed">
 			<TEXTFIELD w="75" title="Emailed ID">sys_emailed_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table ID">table_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email Name">sys_email_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email Type">email_type</TEXTFIELD>
 			<CHECKBOX w="75" title="Emailed">emailed</CHECKBOX>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
@@ -1250,14 +1252,15 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Consultant Contacts" key="216">
-		<JASPER reportfile="user_contacts_KAM.jasper" name="Users Contacts Per KAM"></JASPER>
+		<JASPER reportfile="user_contacts_KAM.jasper" name="User Contacts Per KAM"></JASPER>
+		<JASPER reportfile="user_contacts.jasper" name="All User Contacts"></JASPER>
 	</DESK>
 	<DESK w="700" h="550" name="Consultant Graphical Representation " key="221">
 		<FILTER split="150" w="700" h="550" name="Consultant Graphical Representation  " type="vert" key="order_date">
 			<FILTERFORM name="Consultant Graphical Representation ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="vw_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
 		</FILTER>
@@ -1267,7 +1270,7 @@
 			<FILTERFORM name="Consultant Graphical Representation ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="vw_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
 		</FILTER>
@@ -1277,9 +1280,29 @@
 			<FILTERFORM name="Consultant Graphical Representation ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="vw_manager_son_monthly_seg.jasper" name="Consultant Graphical Representation "></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" h="550" name="Bonus For Approval" key="231">
+		<GRID noorg="true" keyfield="bonus_id" name="Bonus" orderby="bonus_id DESC" table="vw_bonus">
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="50" title="Entity Pcc">entity_pcc</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bonus Org Name">bonus_org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bonus Name">bonus_name</TEXTFIELD>
+			<TEXTFIELD w="30" title="Son">son</TEXTFIELD>
+			<TEXTFIELD w="30" title="Pcc">pcc</TEXTFIELD>
+			<TEXTDECIMAL w="40" title="Percentage">percentage</TEXTDECIMAL>
+			<TEXTDECIMAL w="40" title="Amount">amount</TEXTDECIMAL>
+			<CHECKBOX w="30" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_bonus">Approve</ACTION>
+			</ACTIONS>
+		</GRID>
 	</DESK>
 </APP>

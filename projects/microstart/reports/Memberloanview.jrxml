@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Memberloanview" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="44b8b21d-4d03-48fb-9c4f-3e8b5f4dcf94">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Memberloanview" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="44b8b21d-4d03-48fb-9c4f-3e8b5f4dcf94">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -11,34 +11,33 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
+	<parameter name="entityid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="org_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="org_where" class="java.lang.String">
-		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_loans.currency_name,vw_loans.loan_type_id,vw_loans.org_id, vw_loans.loan_type_name,vw_loans.entity_id,vw_loans.entity_name,vw_loans.loan_id,vw_loans.principle,vw_loans.monthly_repayment,vw_loans.reducing_balance,vw_loans.repayment_period, vw_loans.application_date,vw_loans.approve_status,vw_loans.initial_payment,vw_loans.loan_date,vw_loans.details,vw_loans.interest,
-   vw_loans.is_closed,vw_loans.repayment_amount,vw_loans.total_repayment,vw_loans.total_interest,vw_loans.loan_balance,vw_loans.calc_repayment_period
+		<![CDATA[SELECT *
 from vw_loans
-where entity_id = $P!{entity_id}
-$P!{organd}
-ORDER BY vw_loans.approve_status;]]>
+where entity_id = '$P!{entityid}'
+$P!{orgwhere}
+ORDER BY vw_loans.approve_status]]>
 	</queryString>
+	<field name="currency_id" class="java.lang.Integer"/>
 	<field name="currency_name" class="java.lang.String"/>
+	<field name="currency_symbol" class="java.lang.String"/>
 	<field name="loan_type_id" class="java.lang.Integer"/>
-	<field name="org_id" class="java.lang.Integer"/>
 	<field name="loan_type_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="loan_id" class="java.lang.Integer"/>
 	<field name="principle" class="java.lang.Float"/>
+	<field name="interest" class="java.lang.Float"/>
 	<field name="monthly_repayment" class="java.lang.Float"/>
 	<field name="reducing_balance" class="java.lang.Boolean"/>
 	<field name="repayment_period" class="java.lang.Integer"/>
@@ -46,9 +45,8 @@ ORDER BY vw_loans.approve_status;]]>
 	<field name="approve_status" class="java.lang.String"/>
 	<field name="initial_payment" class="java.lang.Float"/>
 	<field name="loan_date" class="java.sql.Date"/>
+	<field name="action_date" class="java.sql.Timestamp"/>
 	<field name="details" class="java.lang.String"/>
-	<field name="interest" class="java.lang.Float"/>
-	<field name="is_closed" class="java.lang.Boolean"/>
 	<field name="repayment_amount" class="java.lang.Float"/>
 	<field name="total_repayment" class="java.lang.Float"/>
 	<field name="total_interest" class="java.lang.Float"/>
@@ -385,7 +383,7 @@ ORDER BY vw_loans.approve_status;]]>
 				<textFieldExpression><![CDATA[$F{loan_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField" x="310" y="1" width="65" height="14" uuid="1c1ee71b-16cc-44e4-b486-6240c203265a"/>
+				<reportElement key="textfield" x="310" y="1" width="65" height="14" uuid="1c1ee71b-16cc-44e4-b486-6240c203265a"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

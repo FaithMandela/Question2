@@ -6,15 +6,20 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[select contribution_amount,deposit_amount,contribution_type_name, entity_id, deposit_year, deposit_date from vw_contributions]]>
+		<![CDATA[select contribution_id, contribution_amount,contribution_type_name, deposit_amount,contribution_type_id,entry_date from vw_contributions
+
+$P!{orgwhere}]]>
 	</queryString>
+	<field name="contribution_id" class="java.lang.Integer"/>
 	<field name="contribution_amount" class="java.lang.Float"/>
-	<field name="deposit_amount" class="java.lang.Float"/>
 	<field name="contribution_type_name" class="java.lang.String"/>
-	<field name="entity_id" class="java.lang.Integer"/>
-	<field name="deposit_year" class="java.lang.String"/>
-	<field name="deposit_date" class="java.lang.String"/>
+	<field name="deposit_amount" class="java.lang.Float"/>
+	<field name="contribution_type_id" class="java.lang.Integer"/>
+	<field name="entry_date" class="java.sql.Timestamp"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -50,12 +55,12 @@
 				</textElement>
 				<text><![CDATA[Month]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" pattern="MMM">
 				<reportElement x="135" y="20" width="100" height="20" uuid="1c7e22ba-3584-4296-b79f-67d65d4e2f83"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deposit_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{entry_date}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="396" y="0" width="100" height="20" uuid="e8c0f82b-e9ed-424d-9bd9-3c47d57c83d0"/>
@@ -92,12 +97,12 @@
 				</textElement>
 				<text><![CDATA[Year]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true">
+			<textField isStretchWithOverflow="true" pattern="yyyy" isBlankWhenNull="false">
 				<reportElement x="632" y="1" width="100" height="20" uuid="6cd39d0f-673f-4d49-9edb-bad9cb639a85"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deposit_year}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{entry_date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

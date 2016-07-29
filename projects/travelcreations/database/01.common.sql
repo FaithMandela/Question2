@@ -95,7 +95,7 @@ CREATE TABLE periods (
 
     entity_id 				integer references entitys,
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'Draft' not null,
+	approve_status			varchar(16) default 'Completed' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 
@@ -186,33 +186,29 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_fiscal_years AFTER INSERT ON fiscal_years
     FOR EACH ROW EXECUTE PROCEDURE ins_fiscal_years();
 
-CREATE OR REPLACE FUNCTION ins_periods() RETURNS trigger AS $$
-DECLARE
-	year_close 		BOOLEAN;
-BEGIN
-	SELECT year_closed INTO year_close
-	FROM fiscal_years
-	WHERE (fiscal_year_id = NEW.fiscal_year_id);
+	CREATE OR REPLACE FUNCTION ins_periods()
+	  RETURNS trigger AS
+	$BODY$
+	DECLARE
+		year_close 		BOOLEAN;
+	BEGIN
+		SELECT year_closed INTO year_close
+		FROM fiscal_years
+		WHERE (fiscal_year_id = NEW.fiscal_year_id);
 
-	IF(TG_OP = 'UPDATE')THEN
-		IF (OLD.closed = true) AND (NEW.closed = false) THEN
-			NEW.approve_status := 'Draft';
+		IF (NEW.approve_status = 'Approved') THEN
+			NEW.opened = false;
+			NEW.activated = false;
 		END IF;
-	END IF;
 
-	IF (NEW.approve_status = 'Approved') THEN
-		NEW.opened = false;
-		NEW.activated = false;
-		NEW.closed = true;
-	END IF;
+		IF(year_close = true)THEN
+			RAISE EXCEPTION 'The year is closed not transactions are allowed.';
+		END IF;
 
-	IF(year_close = true)THEN
-		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+		RETURN NEW;
+	END;
+	$BODY$
+	  LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
     FOR EACH ROW EXECUTE PROCEDURE ins_periods();

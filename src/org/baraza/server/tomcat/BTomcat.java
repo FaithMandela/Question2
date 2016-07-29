@@ -55,7 +55,7 @@ public class BTomcat extends Thread {
 			File configFile = new File(contextFile);
 			context.setConfigFile(configFile.toURI().toURL());
 			context.addParameter("projectDir", projectDir);
-			if(root.getAttribute("init.xml") != null) 
+			if(root.getAttribute("init.xml") != null)
 				context.addParameter("init_xml", root.getAttribute("init.xml"));
 			
 			if(repository != null) {
@@ -73,6 +73,52 @@ public class BTomcat extends Thread {
 			log.severe("Tomcat Life cycle error : " + ex);
 		}
 	}
+	
+	public BTomcat(BElement appEl, String projectDir, String appKey) {
+		String ps = System.getProperty("file.separator");
+		String basePath = getCurrentDir();
+		String baseDir = basePath + ps + "build/webapps" + ps;
+		String appBase = baseDir + "baraza" + ps;
+		String repository = "repository" + ps;
+		String contextPath = "/" + appKey;
+		projectDir += ps + appEl.getAttribute("path");
+		
+		Integer port = new Integer(appEl.getAttribute("port", "9090"));
+
+		try {
+			tomcat = new Tomcat();
+			tomcat.setPort(port);
+			tomcat.setBaseDir(baseDir);
+			tomcat.enableNaming();
+
+			// Add AprLifecycleListener
+			StandardServer server = (StandardServer)tomcat.getServer();
+			AprLifecycleListener listener = new AprLifecycleListener();
+			server.addLifecycleListener(listener);
+
+			Context context = tomcat.addWebapp(contextPath, appBase);
+			String contextFile = projectDir + ps + "configs" + ps + "context.xml";
+			File configFile = new File(contextFile);
+			context.setConfigFile(configFile.toURI().toURL());
+			context.addParameter("projectDir", projectDir);
+			context.addParameter("init_xml", appEl.getAttribute("xmlfile"));
+			
+			if(repository != null) {
+				Context rpContext = tomcat.addWebapp("/repository", baseDir + repository);
+				File rpConfigFile = new File(baseDir + repository + "META-INF" + ps + "context.xml");
+				rpContext.setConfigFile(rpConfigFile.toURI().toURL());
+			}
+
+			tomcat.start();
+		} catch(javax.servlet.ServletException ex) {
+			log.severe("Tomcat startuo error : " + ex);
+		} catch(MalformedURLException ex) {
+			log.severe("Tomcat URL Malformation : " + ex);
+		} catch(LifecycleException ex) {
+			log.severe("Tomcat Life cycle error : " + ex);
+		}
+	}
+
 
 	public String getCurrentDir() {
 		File directory = new File (".");

@@ -127,7 +127,7 @@ Where entity_id = '$P!{entity_id}']]>
 				<text><![CDATA[Repayments]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="461" y="0" width="65" height="15" forecolor="#000000" uuid="9697ba38-2073-4a16-965b-44affb1372e9"/>
+				<reportElement style="Column header" x="471" y="0" width="65" height="15" forecolor="#000000" uuid="9697ba38-2073-4a16-965b-44affb1372e9"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -146,42 +146,42 @@ Where entity_id = '$P!{entity_id}']]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="90" y="0" width="69" height="15" uuid="d90b9bfc-818d-4a7f-840d-222f38ed1df9"/>
+				<textField isStretchWithOverflow="true" pattern="MMM-yy" isBlankWhenNull="true">
+					<reportElement style="Detail" x="92" y="0" width="69" height="15" uuid="d90b9bfc-818d-4a7f-840d-222f38ed1df9"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{contribution_date}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="176" y="0" width="65" height="15" uuid="d3063845-b22c-4b9d-9ede-8087504816c9"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{contribution}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="254" y="0" width="65" height="15" uuid="726a54c6-95ad-4a90-8358-03e3c6e6c60b"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{drawings}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="391" y="0" width="65" height="15" uuid="12728cd3-a156-493d-8bd5-7d077a5a2b11"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="394" y="0" width="65" height="15" uuid="12728cd3-a156-493d-8bd5-7d077a5a2b11"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{repayments}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="460" y="0" width="65" height="15" uuid="cbba0b39-c452-4401-a770-d10f1ba8c11f"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0.0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="473" y="0" width="65" height="15" uuid="cbba0b39-c452-4401-a770-d10f1ba8c11f"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{penalty}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="323" y="0" width="65" height="15" uuid="2f462e19-22c2-4d00-a4df-6f61e46ea19b"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
@@ -189,12 +189,6 @@ Where entity_id = '$P!{entity_id}']]>
 					<textFieldExpression><![CDATA[$F{loan}]]></textFieldExpression>
 				</textField>
 			</frame>
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="724a6cfd-22b2-4799-87ed-6f3f4feb0ce8"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
 			<line>
 				<reportElement x="0" y="32" width="554" height="1" uuid="dadf4440-d494-4fc2-992a-4fd690633a11"/>
 			</line>
@@ -209,24 +203,39 @@ Where entity_id = '$P!{entity_id}']]>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
 				<reportElement x="395" y="0" width="65" height="21" uuid="8f7bd4ed-80d1-48f5-bfc2-e0756c1bbd75"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{sumrepayments}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
 				<reportElement x="319" y="1" width="58" height="20" uuid="8bf028ad-6861-4ddc-86ad-1efcd97f890c"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{sumloan}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
 				<reportElement x="475" y="2" width="66" height="20" uuid="94d56ff5-8402-4c89-a1e7-e6e06e1dff06"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{sumpenalty}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0">
 				<reportElement x="242" y="2" width="65" height="20" uuid="ead8785c-12d7-47c6-b735-0089926bdb59"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{sumdrawings}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="159" y="2" width="65" height="20" uuid="e4ebee3b-b2e8-45be-a2ae-6b6874828869"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{sumcontributions}]]></textFieldExpression>
 			</textField>
 		</band>

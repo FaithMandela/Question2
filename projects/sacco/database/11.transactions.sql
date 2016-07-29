@@ -6,6 +6,9 @@ CREATE TABLE stores (
 );
 CREATE INDEX stores_org_id ON stores (org_id);
 
+
+
+
 CREATE TABLE item_category (
 	item_category_id		serial primary key,
 	org_id					integer references orgs,

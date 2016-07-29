@@ -161,9 +161,10 @@ ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 
 --------------- Adding a new student
 
-UPDATE registrations SET is_newstudent = true,
+UPDATE registrations SET is_newstudent = true, existingid = registrationid,
 	account_number = adm_import1.bussary_code, e_tranzact_no = adm_import1.card_number, 
-	first_password = adm_import1.first_password, babcock_email = adm_import1.email_address
+	first_password = adm_import1.first_password, babcock_email = adm_import1.email_address,
+	entity_password = adm_import1.entity_password
 FROM adm_import1 WHERE registrations.registrationid = adm_import1.app_id;
 
 SELECT app_students.majorid
@@ -171,27 +172,31 @@ FROM app_students LEFT JOIN majors ON app_students.majorid = majors.majorid
 WHERE majors.majorid is null
 ORDER BY app_students.majorid;
 
-UPDATE app_students SET studentid = 'NR/' || lpad(student_number::varchar, 4, '0') WHERE studentid is null;
+UPDATE app_students SET majorid = 'ACCT' WHERE majorid is null;
+
+UPDATE app_students SET studentid = app_student_id::varchar WHERE studentid is null;
+---UPDATE app_students SET studentid = 'NR/' || lpad(student_number::varchar, 4, '0') WHERE studentid is null;
 UPDATE app_students SET guardianname = trim(substr(guardianname, 1, 50)) WHERE length(guardianname) > 50;
 
 
 INSERT INTO students (studentid, denominationid, 
-	surname, firstname, othernames, sex, nationality, maritalstatus, 
-	birthdate, address, zipcode, town, countrycodeid, stateid, telno, 
-	mobile, bloodgroup, email, guardianname, gaddress, gzipcode, 
-	gtown, gcountrycodeid, gtelno, gemail,
-	accountnumber, etranzact_card_no, firstpasswd,
-	org_id, departmentid, newstudent)
-	
+surname, firstname, othernames, sex, nationality, maritalstatus, 
+birthdate, address, zipcode, town, countrycodeid, stateid, telno, 
+mobile, bloodgroup, email, guardianname, gaddress, gzipcode, 
+gtown, gcountrycodeid, gtelno, gemail,
+accountnumber, etranzact_card_no, firstpasswd,
+org_id, departmentid, newstudent)
+
 SELECT a.studentid,  a.denominationid, 
-	a.surname, a.firstname, a.othernames, a.sex, a.nationality, a.maritalstatus, 
-	a.birthdate, a.address, a.zipcode, a.town, a.countrycodeid, a.stateid, a.telno, 
-	a.mobile, a.bloodgroup, a.email, a.guardianname, a.gaddress, a.gzipcode, 
-	a.gtown, a.gcountrycodeid, a.gtelno, a.gemail,
-	a.account_number, a.e_tranzact_no, a.first_password,
-	b.org_id, b.departmentid, true
+a.surname, a.firstname, a.othernames, a.sex, a.nationality, a.maritalstatus, 
+a.birthdate, a.address, a.zipcode, a.town, a.countrycodeid, a.stateid, a.telno, 
+a.mobile, a.bloodgroup, a.email, a.guardianname, a.gaddress, a.gzipcode, 
+a.gtown, a.gcountrycodeid, a.gtelno, a.gemail,
+a.account_number, a.e_tranzact_no, a.first_password,
+b.org_id, b.departmentid, true
 FROM app_students as a INNER JOIN majors as b ON a.majorid = b.majorid
-WHERE a.is_picked = false;
+WHERE a.is_picked = false
+ORDER BY a.studentid;
        
 
 INSERT INTO studentdegrees (degreeid, studentid, sublevelid, bulletingid, org_id)
@@ -206,6 +211,10 @@ FROM app_students INNER JOIN studentdegrees ON studentdegrees.studentid = app_st
 	INNER JOIN majors ON app_students.majorid = majors.majorid
 WHERE app_students.is_picked = false;
 
+
+UPDATE entitys SET entity_password = app_students.entity_password
+FROM app_students
+WHERE (entitys.user_name = app_students.studentid) AND (app_students.is_picked = false);
 
 UPDATE app_students SET is_picked = true;
  

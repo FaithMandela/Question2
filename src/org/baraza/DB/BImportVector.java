@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.text.DecimalFormat;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
@@ -20,8 +21,14 @@ import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.apache.poi.poifs.filesystem.*;
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import org.baraza.xml.BElement;
 
@@ -158,37 +165,39 @@ public class BImportVector {
 		}
 	}
 
-	public void getExcelData(InputStream input, String worksheet) { // Get all rows.
+	public void getExcelData(InputStream input, String fileName, String worksheet) { // Get all rows.
 		rows.removeAllElements();
-
-		POIFSFileSystem fs = null;
-		HSSFWorkbook wb = null;
-		DirectoryEntry rootdir = null;
+		
+		Workbook wb = null;
 		try {
-			fs = new POIFSFileSystem(input);
-			rootdir = fs.getRoot();
-			wb = new HSSFWorkbook(fs);
+			if(fileName.indexOf(".xlsx")>1) wb = new XSSFWorkbook(input);
+		    else if(fileName.indexOf(".xls")>1) wb = new HSSFWorkbook(input);
 		} catch (IOException ex) {
 			log.severe("an I/O error occurred, or the InputStream did not provide a compatible POIFS data structure : " + ex);
 		}
 
-		HSSFSheet sheet = wb.getSheetAt(Integer.valueOf(worksheet));
-		HSSFRow row = null;
+		Sheet sheet = wb.getSheetAt(Integer.valueOf(worksheet));
+		Row row = null;
 		int i = 0;			
 		String myline = "";
 		for(i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
 			Vector<Object> myvec = new Vector<Object>();
 			row = sheet.getRow(i);
-			if(row!=null)  {
-				myline = getstrvalue(row, 0);
+			if(row != null)  {
+				myline = getCellValue(row, 0);
 
 				//System.out.println(myline);
 				for (int j=0;j<getColumnCount();j++)
-					myvec.add(getstrvalue(row, j));
+					myvec.add(getCellValue(row, j));
 				if(!myline.equals(""))
 					rows.add(myvec);
 			} else myline = "";
 		}
+	}
+	
+	public String numberFormat(double cellVal) {
+		DecimalFormat formatter = new DecimalFormat("############.###");
+		return formatter.format(cellVal);
 	}
 
 	public void clearupload() {
@@ -201,16 +210,22 @@ public class BImportVector {
 		return newstr;
 	}
 
-	public String getstrvalue(HSSFRow row, int column) {
+	public String getCellValue(Row row, int column) {
 		String mystr = "";
 
-		HSSFCell cell = row.getCell(column);
+		Cell cell = row.getCell(column);
 		if (cell == null) cell = row.createCell(column);
-		if (cell.getCellType()==cell.CELL_TYPE_STRING) {
+		if (cell.getCellType() == cell.CELL_TYPE_STRING) {
 			if(cell.getStringCellValue()!=null)
 				mystr += cell.getStringCellValue().trim();
-		} else if (cell.getCellType()==cell.CELL_TYPE_NUMERIC) {
-			mystr += cell.getNumericCellValue();
+		} else if (cell.getCellType() == cell.CELL_TYPE_NUMERIC) {
+			mystr += numberFormat(cell.getNumericCellValue());
+		} else if (cell.getCellType() == cell.CELL_TYPE_FORMULA) {
+			if(cell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {
+				mystr += numberFormat(cell.getNumericCellValue());
+			} else if(cell.getCachedFormulaResultType() == Cell.CELL_TYPE_STRING) {
+				mystr += cell.getRichStringCellValue();
+			}
 		}
 
 		return mystr;

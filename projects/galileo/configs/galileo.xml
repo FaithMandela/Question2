@@ -1638,7 +1638,7 @@
 			<DRILLDOWN name="Clients" keyfield="aid" table="ClientAList" listfield="aid">
 				<DRILLDOWN name="Clients" keyfield="clientid" wherefield="aid" table="Clientview" listfield="clientname" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Year" keyfield="PeriodYear" table="PeriodYearView" listfield="PeriodYear" filtername="yearid"></DRILLDOWN>
+			<DRILLDOWN name="Year" keyfield="PeriodYear" table="PeriodYearView" listfield="PeriodYear" filter="yearid"></DRILLDOWN>
 			<JASPER filtered="true" name="Client Statement - Internal" reportfile="clientstatemente.jasper"></JASPER>
 			<JASPER filtered="true" name="Client Statement - Client" reportfile="clientstatementea.jasper"></JASPER>
 			<JASPER filtered="true" name="Client Statement" reportfile="clientstatementc.jasper"></JASPER>

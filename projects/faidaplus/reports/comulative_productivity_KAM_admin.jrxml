@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pcc_productivity" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a85e945a-24c0-4f18-ae71-66e1e2ae9c6c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pcc_productivity" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a85e945a-24c0-4f18-ae71-66e1e2ae9c6c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -38,13 +38,13 @@
 	<queryString>
 		<![CDATA[SELECT  period_id,to_char(period,'Mon yyyy')as period,
 	ticket_period,
-	orgs.pcc, segments,
-	points, bonus, orgs.org_name
+	vw_orgs.pcc, segments,son::int,
+	points, bonus, vw_orgs.org_name,account_manager_name
 	FROM vw_org_points
-	JOIN orgs ON vw_org_points.org_id = orgs.org_id
+	JOIN vw_orgs ON vw_org_points.org_id =vw_orgs.org_id
 	WHERE period >= '$P!{minDate}'
 	 AND period <= '$P!{maxDate}'
-	AND orgs.account_manager_id = '$P!{id}'
+	AND vw_orgs.account_manager_id = '$P!{id}'
 ORDER BY period_id DESC;]]>
 	</queryString>
 	<field name="period_id" class="java.lang.Integer"/>
@@ -52,9 +52,11 @@ ORDER BY period_id DESC;]]>
 	<field name="ticket_period" class="java.lang.String"/>
 	<field name="pcc" class="java.lang.String"/>
 	<field name="segments" class="java.lang.Float"/>
+	<field name="son" class="java.lang.Integer"/>
 	<field name="points" class="java.lang.Float"/>
 	<field name="bonus" class="java.lang.Float"/>
 	<field name="org_name" class="java.lang.String"/>
+	<field name="account_manager_name" class="java.lang.String"/>
 	<variable name="total_bonus" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{bonus}]]></variableExpression>
 	</variable>
@@ -108,6 +110,20 @@ ORDER BY period_id DESC;]]>
 				</textElement>
 				<text><![CDATA[To :]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="340" y="0" width="253" height="18" uuid="600fcef3-923a-47c7-804c-c5359e4e6fff"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{account_manager_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="204" y="0" width="136" height="18" uuid="7e890d99-c465-4ade-a28f-f43ba1c01141"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Account manager :]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -127,21 +143,21 @@ ORDER BY period_id DESC;]]>
 				<text><![CDATA[PCC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="365" y="1" width="68" height="15" backcolor="#E5E5E5" uuid="4819e4ab-686d-4ab6-83e3-7d45b7c1d73d"/>
+				<reportElement x="465" y="1" width="68" height="15" backcolor="#E5E5E5" uuid="4819e4ab-686d-4ab6-83e3-7d45b7c1d73d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Segments]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="433" y="1" width="60" height="15" backcolor="#E5E5E5" uuid="b4c7a1ac-403f-4d4e-a960-f236b4db2f72"/>
+				<reportElement x="533" y="1" width="94" height="15" backcolor="#E5E5E5" uuid="b4c7a1ac-403f-4d4e-a960-f236b4db2f72"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Points]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="493" y="1" width="62" height="15" backcolor="#E5E5E5" uuid="6d0d03a5-9b8c-4a66-b1b1-99658a5127af"/>
+				<reportElement x="627" y="1" width="98" height="15" backcolor="#E5E5E5" uuid="6d0d03a5-9b8c-4a66-b1b1-99658a5127af"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -155,14 +171,21 @@ ORDER BY period_id DESC;]]>
 				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="16" width="555" height="1" uuid="c0210eba-4540-47ff-9bd9-5f4dfeb16874"/>
+				<reportElement x="0" y="16" width="802" height="1" uuid="c0210eba-4540-47ff-9bd9-5f4dfeb16874"/>
 			</line>
+			<staticText>
+				<reportElement x="365" y="1" width="100" height="15" uuid="040f7adc-8164-4199-8f45-e716b6e49bab"/>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No of Consultants]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<rectangle>
-				<reportElement x="0" y="0" width="555" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="0ba31cb7-fd7d-4f41-b1e6-23e62fcd3615">
+				<reportElement x="0" y="0" width="802" height="20" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="0ba31cb7-fd7d-4f41-b1e6-23e62fcd3615">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -170,7 +193,7 @@ ORDER BY period_id DESC;]]>
 				</graphicElement>
 			</rectangle>
 			<textField>
-				<reportElement x="0" y="2" width="64" height="15" isPrintWhenDetailOverflows="true" uuid="e2c63438-ea74-4146-9910-a03191a255ab"/>
+				<reportElement x="0" y="0" width="64" height="15" isPrintWhenDetailOverflows="true" uuid="e2c63438-ea74-4146-9910-a03191a255ab"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -178,7 +201,7 @@ ORDER BY period_id DESC;]]>
 				<textFieldExpression><![CDATA[$F{period}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="302" y="2" width="63" height="15" isPrintWhenDetailOverflows="true" uuid="c9cb359d-8562-430b-99e1-0e7e3ce3f908"/>
+				<reportElement x="302" y="0" width="63" height="15" isPrintWhenDetailOverflows="true" uuid="c9cb359d-8562-430b-99e1-0e7e3ce3f908"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -186,7 +209,7 @@ ORDER BY period_id DESC;]]>
 				<textFieldExpression><![CDATA[$F{pcc}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="493" y="2" width="62" height="15" isPrintWhenDetailOverflows="true" uuid="2c7659af-96ea-493f-b7d7-c1d55ae3fc2f"/>
+				<reportElement x="627" y="0" width="98" height="15" isPrintWhenDetailOverflows="true" uuid="2c7659af-96ea-493f-b7d7-c1d55ae3fc2f"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -194,7 +217,7 @@ ORDER BY period_id DESC;]]>
 				<textFieldExpression><![CDATA[$F{bonus}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="433" y="2" width="60" height="15" isPrintWhenDetailOverflows="true" uuid="c3238cc9-5cd5-4029-a460-5722ae056b27"/>
+				<reportElement x="533" y="0" width="94" height="15" isPrintWhenDetailOverflows="true" uuid="c3238cc9-5cd5-4029-a460-5722ae056b27"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -202,7 +225,7 @@ ORDER BY period_id DESC;]]>
 				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="64" y="2" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="862c74fa-da46-4d04-b22e-81d203b810a6"/>
+				<reportElement x="64" y="0" width="238" height="15" isPrintWhenDetailOverflows="true" uuid="862c74fa-da46-4d04-b22e-81d203b810a6"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -210,12 +233,19 @@ ORDER BY period_id DESC;]]>
 				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="365" y="2" width="68" height="15" isPrintWhenDetailOverflows="true" uuid="0e9e650a-dcd4-4d3c-97a5-7084b43dc463"/>
+				<reportElement x="465" y="0" width="68" height="15" isPrintWhenDetailOverflows="true" uuid="0e9e650a-dcd4-4d3c-97a5-7084b43dc463"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="12"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{segments}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="365" y="0" width="100" height="15" uuid="a48081eb-2527-439b-8b79-84ddad8baed6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{son}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -228,28 +258,28 @@ ORDER BY period_id DESC;]]>
 	<summary>
 		<band height="42" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="491" y="0" width="62" height="20" isPrintWhenDetailOverflows="true" uuid="099c3c62-fd6b-437f-b5e1-2c3369e767e8"/>
+				<reportElement x="627" y="0" width="98" height="20" isPrintWhenDetailOverflows="true" uuid="099c3c62-fd6b-437f-b5e1-2c3369e767e8"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_bonus}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="431" y="0" width="60" height="20" isPrintWhenDetailOverflows="true" uuid="6b8ee6d7-8376-4317-b600-bc4055d12112"/>
+				<reportElement x="533" y="0" width="94" height="20" isPrintWhenDetailOverflows="true" uuid="6b8ee6d7-8376-4317-b600-bc4055d12112"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_points}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="363" y="0" width="68" height="20" isPrintWhenDetailOverflows="true" uuid="b7ac5bef-38fa-4c37-b52a-2273cbbbb832"/>
+				<reportElement x="465" y="0" width="68" height="20" isPrintWhenDetailOverflows="true" uuid="b7ac5bef-38fa-4c37-b52a-2273cbbbb832"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_seg}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="254" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="1cb40377-0b28-4142-8c3e-79a0fa517ac3"/>
+				<reportElement x="365" y="0" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="1cb40377-0b28-4142-8c3e-79a0fa517ac3"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>

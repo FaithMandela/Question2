@@ -98,3 +98,53 @@ FROM i_asset_types INNER JOIN i_models ON i_asset_types.asset_type_id = i_models
 	INNER JOIN i_assets ON i_models.model_id = i_assets.model_id
 WHERE i_asset_types.asset_type_id = 15);
 
+
+INSERT INTO pccs( pcc,clientid, gds) 
+SELECT  i_clients.pcc, max(i_clients.client_id), '1G' 
+FROM i_clients 
+WHERE i_clients.pcc is not null
+GROUP BY i_clients.pcc;
+
+
+INSERT INTO users (userid, usergroupid, superuser, rolename, username, fullname, extension, telno, email, accountmanager, groupleader, isactive, groupuser, userpass, details) VALUES (0, 1, false, NULL, 'Default', 'Default User', '000', NULL, NULL, false, false, true, false, 'e2a7106f1cc8bb1e1318df70aa0a3540', NULL);
+
+INSERT INTO clientgroups (clientgroupid, clientaffiliateid, clientgroupname, detail) VALUES (0, 0, 'default', NULL);
+
+INSERT INTO clientsystems (clientsystemid, clientsystemname, details) VALUES (1, 'Default', NULL);
+
+INSERT INTO clientlinks (clientlinkid, clientlinkname, details) VALUES (0, 'default', NULL);
+
+UPDATE clients SET UserID = 0;
+UPDATE clients SET ClientGroupID = 0;
+UPDATE clients SET ClientSystemID = 1;
+UPDATE clients SET clientlinkid = 0;
+
+INSERT INTO midttransactions(clientid, periodid, crs, pcc,  agency, iatano, prd) 
+SELECT pccs.clientid, periods.periodid, pccs.gds, pccs.pcc,  m_segments.agency_name, m_segments.iata_number, 
+(m_segments.total_net_segments+m_segments.passive_net_segments) as prd 
+FROM m_segments inner join pccs on trim(pccs.pcc) = trim(m_segments.pcc)
+INNER JOIN clients ON pccs.clientid = clients.clientid
+INNER JOIN periods ON m_segments.booking_date::date = periods.startdate
+WHERE trim(m_segments.iata_number)= substring(clients.iatano::text, 1, 7) AND pccs.gds = '1G';
+
+
+-- SELECT pccs.pcc, pccs.clientid,  clients.clientid, m_segments.agency_name, clients.clientname, m_segments.iata_number, clients.iatano, (m_segments.total_net_segments+m_segments.passive_net_segments) as prd
+-- FROM m_segments inner join pccs on trim(pccs.pcc) = trim(m_segments.pcc)
+-- INNER JOIN clients ON pccs.clientid = clients.clientid
+-- WHERE trim(m_segments.iata_number)= substring(clients.iatano::text, 1, 7)
+-- GROUP BY pccs.pcc, pccs.clientid, m_segments.agency_name, clients.clientname, m_segments.iata_number, clients.iatano, clients.clientid, prd
+-- ORDER BY m_segments.agency_name;
+
+-- SELECT pccs.pcc, pccs.clientid, m_segments.agency_name, m_segments.iata_number, 
+-- (m_segments.total_net_segments+m_segments.passive_net_segments) as prd, m_segments.booking_date, periods.periodid, periodid
+-- FROM m_segments inner join pccs on trim(pccs.pcc) = trim(m_segments.pcc)
+-- INNER JOIN clients ON pccs.clientid = clients.clientid
+-- INNER JOIN periods ON m_segments.booking_date::date = periods.startdate
+-- WHERE trim(m_segments.iata_number)= substring(clients.iatano::text, 1, 7) AND pccs.gds = '1G';
+
+
+-------- add data from MIDT table to Transactions
+INSERT INTO Transactions (ClientID, PeriodID, UserID, PCC, NASegs)
+SELECT a.clientid, a.periodid, 0, a.pcc, a.prd
+FROM midttransactions a LEFT JOIN Transactions b ON (a.clientid = b.clientid) AND (a.periodid = b.periodid)
+WHERE b.TransactionID is null;

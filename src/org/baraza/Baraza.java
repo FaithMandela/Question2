@@ -23,6 +23,7 @@ import org.baraza.xml.BElement;
 import org.baraza.utils.BDesEncrypter;
 import org.baraza.app.BApp;
 import org.baraza.ide.BIDE;
+import org.baraza.server.tomcat.BTomcat;
 import org.baraza.server.BServer;
 import org.baraza.server.BClient;
 
@@ -56,12 +57,15 @@ public class Baraza extends JApplet implements WindowListener {
 
 		Baraza baraza = null;
 		if (args.length < 2) {
-			System.out.println("Enter the proper comman arguments");
+			System.out.println("Enter the proper command arguments : java -jar build/baraza.jar run ./projects/");
 		} else if(mode.equals("server")) {
 			BServer lserver = new BServer(configDir);
 			lserver.start();
 		} else if(mode.equals("stop")) {
 			BClient lclient =  new BClient("stop", true, configDir);
+		} else if(mode.equals("tomcat")) {
+			baraza = new Baraza();
+			baraza.tomcat(configDir, configFile, encryptionKey, dbpath);
 		} else {
 			baraza = new Baraza();
 			baraza.run(configDir, mode, dbpath, configFile, encryptionKey);
@@ -182,6 +186,47 @@ public class Baraza extends JApplet implements WindowListener {
 		}
 
 		return sm;
+	}
+	
+	/**
+	* Run the application - desktop mode
+	* Use {@link #tomcat(String, String, String, String, String)} 
+	* 
+	* @param configDir 		Directory where the configs are at
+	* @param configFile		override the configFile database path
+	* @param encryptionKey 	Use encripted key for file
+	* @param appName		name of the application that will run tomcat
+	*/
+	public void tomcat(String configDir, String configFile, String encryptionKey, String appName) {
+		BXML xml = null;
+		
+		if(appName == null) {
+			System.out.println("Tomcat launch arguments : java -jar build/baraza.jar run ./projects/ <<application>>");
+			return;
+		}
+		
+		if(encryptionKey == null) {
+			if(configFile == null) configFile = "config.xml";
+			xml = new BXML(configDir + configFile, false);
+		} else {
+			if(configFile == null) configFile = "config.cph";
+
+			// Create encrypter/decrypter class and encrypt
+			BDesEncrypter decrypter = new BDesEncrypter(encryptionKey);
+			InputStream inXml = decrypter.decrypt(configDir + configFile);
+
+			xml = new BXML(inXml);
+		}
+
+		BElement root = xml.getRoot();
+		BElement appEl = root.getElementByKey(appName);
+		if(appEl == null) {
+			System.out.println("Ensure the <<application>> is a key for the application you want to run");
+			return;
+		}
+		
+		BTomcat cat = new BTomcat(appEl, configDir, appName);
+		cat.start();
 	}
 
 	public void windowDeactivated(WindowEvent ev) {}

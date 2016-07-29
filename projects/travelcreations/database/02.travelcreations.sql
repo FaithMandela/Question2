@@ -12,6 +12,9 @@ ALTER TABLE loyalty_points ADD COLUMN ticket_number character varying(30);
 ALTER TABLE loyalty_points ADD COLUMN local_inter character varying(2);
 ALTER TABLE loyalty_points ADD COLUMN client_code character varying(50);
 ALTER TABLE loyalty_points ADD COLUMN loyalty_curr character varying(10);
+ALTER TABLE loyalty_points add column invoice_number character varying(50);
+ALTER TABLE loyalty_points add column is_oneway boolean default true not null;
+ALTER TABLE loyalty_points add column refunds real default 0 not null;
 
 CREATE TABLE clients (
 	client_id			    serial primary key,
@@ -51,6 +54,76 @@ CREATE INDEX loyalty_points_org_id ON loyalty_points (org_id);
 CREATE INDEX loyalty_points_entity_id ON loyalty_points (entity_id);
 CREATE INDEX loyalty_points_period_id ON loyalty_points (period_id);
 
+CREATE TABLE bonus (
+	bonus_id				serial primary key,
+	period_id				integer references periods,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	start_date				date,
+	end_date				date,
+	percentage 				real,
+	amount					real,
+	is_active				boolean default false,
+
+	approve_status			varchar(16) default 'Approved' not null,
+	workflow_table_id		integer,
+	application_date		timestamp default now(),
+	action_date				timestamp,
+
+	details					text
+);
+CREATE INDEX bonus_period_id ON bonus(period_id);
+CREATE INDEX bonus_entity_id ON bonus(entity_id);
+CREATE INDEX bonus_org_id ON bonus(org_id);
+
+
+CREATE TABLE suppliers (
+	supplier_id 			serial primary key,
+	supplier_name			varchar(50),
+	create_date				timestamp default now(),
+	contact_name			varchar(64),
+	email					varchar(240),
+	website					varchar(240),
+	address					text,
+	details					text
+);
+
+CREATE TABLE product_category (
+	product_category_id		serial primary key,
+	product_category_name	varchar(100),
+	details 				text,
+	icon 					character varying(50)
+);
+
+CREATE TABLE products (
+	product_id				serial primary key,
+	product_category_id 	integer references product_category,
+    supplier_id          	integer references suppliers,
+	created_by				integer references entitys,				--logged in system user who did the insert\
+
+	product_name			varchar(100),
+	product_uprice			real,
+	product_ucost			real,
+	created					date not null default current_date,
+
+	product_details 		text,
+	terms					text,
+	weight					real,
+	remarks					text,
+
+	is_active				boolean default false,
+	updated_by			    integer references entitys,				--logged in system user who did the last update
+	updated					timestamp default now(),
+
+	narrative			    text,
+    image                   varchar(50),
+
+    details					text
+);
+CREATE INDEX products_product_category_id ON products (product_category_id);
+CREATE INDEX products_supplier_id ON products (supplier_id);
+
+
 CREATE TABLE orders (
 	order_id 				serial primary key,
 	org_id 					integer references orgs,
@@ -69,6 +142,17 @@ CREATE TABLE orders (
 );
 CREATE INDEX order_entity_id  ON orders(entity_id);
 CREATE INDEX orders_org_id ON orders (org_id);
+
+CREATE TABLE order_details (
+	order_details_id 		serial primary key,
+	order_id				integer not null references orders,
+	product_id 				integer not null references products,
+	product_quantity		integer default 1 not null,
+	product_uprice			real default 0 not null,
+	status					varchar(20) NOT NULL default 'New'
+);
+CREATE INDEX order_product_id  ON order_details(product_id);
+CREATE INDEX order_details_id  ON orders(order_id);
 
 CREATE TABLE sambaza (
 	sambaza_id 				serial primary key,
@@ -143,11 +227,21 @@ CREATE OR REPLACE VIEW vw_orders AS
 		vw_entitys.function_role, vw_entitys.entity_role, vw_entitys.org_id, orders.physical_address, orders.phone_no
     FROM orders JOIN vw_entitys ON orders.entity_id = vw_entitys.entity_id;
 
+CREATE OR REPLACE VIEW vw_products AS
+	SELECT products.product_id, products.product_name, products.product_details, products.product_uprice,
+		products.created, products.updated_by,products.image, suppliers.supplier_name, suppliers.supplier_id,
+		product_category.product_category_id,
+		product_category.product_category_name,products.is_active
+	FROM products JOIN suppliers ON products.supplier_id = suppliers.supplier_id
+		JOIN product_category ON products.product_category_id=product_category.product_category_id;
+
 CREATE OR REPLACE VIEW vw_loyalty_points AS
 	SELECT loyalty_points.loyalty_points_id, periods.period_id, periods.start_date as period, to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
 		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,
-		loyalty_points.bonus, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name
-	FROM loyalty_points JOIN vw_entitys ON loyalty_points.entity_id = vw_entitys.entity_id,loyalty_points.point_date
+		loyalty_points.bonus, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name,
+		loyalty_points.point_date, loyalty_points.ticket_number, loyalty_points.invoice_number, loyalty_points.approve_status, loyalty_points.refunds,
+		periods.end_date, loyalty_points.local_inter, loyalty_points.is_return
+	FROM loyalty_points JOIN vw_entitys ON loyalty_points.entity_id = vw_entitys.entity_id
 	INNER JOIN periods ON loyalty_points.period_id = periods.period_id
 	WHERE periods.approve_status = 'Approved';
 
@@ -159,22 +253,23 @@ CREATE OR REPLACE VIEW vw_sambaza AS
    FROM sambaza
      JOIN vw_entitys ON sambaza.entity_id = vw_entitys.entity_id;
 
+
 CREATE OR REPLACE VIEW vw_client_statement AS
 SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
-	(a.dr+a.sambaza_in - a.cr-a.sambaza_out) AS balance, a.sambaza_in, a.sambaza_out, a.details
-	FROM ((SELECT COALESCE(vw_loyalty_points.points_amount, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
+	 (a.dr + a.sambaza_in - a.cr - a.sambaza_out - a.refunds) AS balance, a.sambaza_in, a.sambaza_out, a.details, a.refunds, a.entity_name
+	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
 		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
-		0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
+		0::real as sambaza_in, 0::real as sambaza_out, COALESCE(vw_loyalty_points.refunds, 0::real) AS refunds, ''::text as details, vw_loyalty_points.entity_name
 	FROM vw_loyalty_points)
 	UNION ALL
-	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr, vw_orders.order_date,
+	(SELECT 0::real AS dr, vw_orders.points::real AS cr, vw_orders.order_date,
 	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
-	0::real as sambaza_in, 0::real as sambaza_out, ''::text as details
+	0::real as sambaza_in, 0::real as sambaza_out,  0::real AS refunds, ''::text as details, vw_orders.entity_name
 	FROM vw_orders)
 	UNION ALL
 	(SELECT 0::real as dr, 0::real as cr, vw_sambaza.sambaza_date,
 	vw_sambaza.client_code, vw_sambaza.org_name, vw_sambaza.entity_id, COALESCE(vw_sambaza.sambaza_in,0::real) as sambaza_in,
-	COALESCE(vw_sambaza.sambaza_out,0::real) as sambaza_out, vw_sambaza.details
+	COALESCE(vw_sambaza.sambaza_out,0::real) as sambaza_out,  0::real AS refunds, vw_sambaza.details, vw_sambaza.entity_name
 	 FROM vw_sambaza)) a
 	ORDER BY a.order_date;

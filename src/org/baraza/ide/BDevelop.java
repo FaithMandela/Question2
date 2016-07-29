@@ -54,7 +54,7 @@ public class BDevelop extends JInternalFrame implements ActionListener {
 	BTreeNode top, node;
 	DefaultTreeModel treemodel;
 	String configDir;
-	String[] dbStr = {"project", "path", "dbname", "dbpath", "xmlfile", "dbusername", "encryption"};
+	String[] dbStr = {"project", "path", "dbname", "dbpath", "xmlfile", "dbusername", "encryption", "key"};
 	
 	BEdit edit;
 	BQBuilder qbuilder;
@@ -109,7 +109,7 @@ public class BDevelop extends JInternalFrame implements ActionListener {
 		panel.add(ldbClass);
 		panel.add(dbClassList);
 
-		String[] str = {"Project Name", "Project Path", "Database Name", "Database Path", "XML File", "User Name", "Encryption"};
+		String[] str = {"Project Name", "Project Path", "Database Name", "Database Path", "XML File", "User Name", "Encryption", "Key"};
         label = new JLabel[str.length];
         textField = new JTextField[str.length];
         for(int i = 0; i < str.length; i++) {
@@ -256,11 +256,12 @@ public class BDevelop extends JInternalFrame implements ActionListener {
 		String ps = System.getProperty("file.separator");
 		String projectName = textField[0].getText().trim();
 		String path = textField[1].getText().trim();
+		String dbName = textField[2].getText().trim();
 		String xmlfile = textField[4].getText().trim();
 		String mypassword = new String(pwPassword.getPassword());
 
 		boolean isNew = false;
-		if(desk == null) { 
+		if(desk == null) {
 			desk = new BElement("APP");
 			isNew = true;
 		}
@@ -293,7 +294,7 @@ public class BDevelop extends JInternalFrame implements ActionListener {
 			BElement newtelmn = new BElement("MENU");
 			newtelmn.setAttribute("name", projectName);
 			newtel.addNode(newtelmn);
-			fl.create(configDir, path, xmlfile, newtel.getString());
+			fl.create(configDir, path, xmlfile, projectName, dbName);
 			this.dispose();
 		} else {
 			node.setUserObject(projectName);
@@ -301,7 +302,7 @@ public class BDevelop extends JInternalFrame implements ActionListener {
 			treemodel.reload(node);
 			
 			remove(panel);
-			String myusername = textField[dbStr.length-2].getText().trim();
+			String myusername = textField[5].getText().trim();
 			makeLogin(myusername, mypassword);
 		}		
 		fl.saveFile(configDir + "config.xml", root.getString());
@@ -368,6 +369,7 @@ public class BDevelop extends JInternalFrame implements ActionListener {
 				textField[3].setText(dbPath[dbClassList.getSelectedIndex()] + projectName);
 			textField[4].setText(projectName + ".xml");
 			textField[5].setText("postgres");
+			textField[7].setText(projectName);
 		} else if("New Setup".equals(aKey)) {
 			log.info("Starting database setup");
 			BDB rootDB = new BDB(root);

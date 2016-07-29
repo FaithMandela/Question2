@@ -120,18 +120,19 @@ public class BAppLauncher extends HttpServlet {
 		appStr += "		<jar href=\"lib/activation-1.1.1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/barbecue-1.5-beta1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/commons-beanutils-1.9.0.jar\"/>\n";
-		appStr += "		<jar href=\"lib/commons-collections-3.2.1.jar\"/>\n";
+		appStr += "		<jar href=\"lib/commons-collections-3.2.2.jar\"/>\n";
 		appStr += "		<jar href=\"lib/commons-codec-1.9.jar\"/>\n";
 		appStr += "		<jar href=\"lib/commons-digester-2.1.jar\"/>\n";
 		appStr += "		<jar href=\"lib/commons-logging-1.1.1.jar\"/>\n";
-		appStr += "		<jar href=\"lib/groovy-all-2.0.1.jar\"/>\n";
-		appStr += "		<jar href=\"lib/iText-2.1.7.js2.jar\"/>\n";
-		appStr += "		<jar href=\"lib/jasperreports-6.1.0.jar\"/>\n";
+		appStr += "		<jar href=\"lib/commons-lang-2.6.jar\"/>\n";
+		appStr += "		<jar href=\"lib/groovy-all-2.4.3.jar\"/>\n";
+		appStr += "		<jar href=\"lib/itext-2.1.7.js5.jar\"/>\n";
+		appStr += "		<jar href=\"lib/jasperreports-6.3.0.jar\"/>\n";
 		appStr += "		<jar href=\"lib/jcommon-1.0.15.jar\"/>\n";
 		appStr += "		<jar href=\"lib/jfreechart-1.0.12.jar\"/>\n";
 		appStr += "		<jar href=\"lib/mail.jar\"/>\n";
 		appStr += "		<jar href=\"lib/poi-3.10.jar\"/>\n";
-		appStr += "		<jar href=\"lib/postgresql-9.3-1101.jdbc4.jar\"/>\n";
+		appStr += "		<jar href=\"lib/postgresql-9.4.1208.jre7.jar\"/>\n";
 		appStr += "		<jar href=\"lib/server/tomcat-embed-core.jar\"/>\n";
 		appStr += "	</resources>\n";
 
