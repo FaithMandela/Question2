@@ -1385,8 +1385,8 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
 DECLARE
-	rec 			RECORD;
-	v_entity_id		integer;
+	v_org_id			RECORD;
+	v_entity_id			integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		
@@ -1396,14 +1396,14 @@ BEGIN
 			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
 				
 			IF(v_entity_id is null)THEN
-				SELECT org_id INTO rec
+				SELECT min(org_id) INTO v_org_id
 				FROM orgs WHERE (is_default = true);
 
 				NEW.entity_id := nextval('entitys_entity_id_seq');
 
 				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, rec.org_id, 4, 
+				VALUES (NEW.entity_id, v_org_id, 4, 
 					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
 			ELSE

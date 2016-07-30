@@ -95,6 +95,7 @@ CREATE TABLE contributions (
 	investment_amount			real not null,
 	merry_go_round_amount	 	real,
 	paid						boolean default false,
+	extra_contrib				boolean DEFAULT false,
 	
 	money_in					real,
 	money_out					real,

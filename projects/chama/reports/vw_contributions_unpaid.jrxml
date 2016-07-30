@@ -26,7 +26,7 @@
 		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions_unpaid.contribution_type_name, vw_contributions_unpaid.entity_id, vw_contributions_unpaid.entity_name, vw_contributions_unpaid.org_id, vw_contributions_unpaid.period_id, vw_contributions_unpaid.contribution_id, vw_contributions_unpaid.contribution_date, vw_contributions_unpaid.investment_amount, vw_contributions_unpaid.merry_go_round_amount, vw_contributions_unpaid.paid, vw_contributions_unpaid.money_in, vw_contributions_unpaid.money_out, vw_contributions_unpaid.total_contribution
+		<![CDATA[SELECT vw_contributions_unpaid.contribution_type_name, vw_contributions_unpaid.entity_id, vw_contributions_unpaid.entity_name, vw_contributions_unpaid.org_id, vw_contributions_unpaid.period_id, vw_contributions_unpaid.start_date,  vw_contributions_unpaid.contribution_id, vw_contributions_unpaid.contribution_date, vw_contributions_unpaid.investment_amount, vw_contributions_unpaid.merry_go_round_amount, vw_contributions_unpaid.paid, vw_contributions_unpaid.money_in, vw_contributions_unpaid.money_out, vw_contributions_unpaid.total_contribution
 FROM vw_contributions_unpaid
 Where vw_contributions_unpaid.contribution_id is not null
 $P!{organd}
@@ -37,8 +37,9 @@ order by period_id]]>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="period_id" class="java.lang.Integer"/>
+	<field name="start_date" class="java.sql.Date"/>
 	<field name="contribution_id" class="java.lang.Integer"/>
-	<field name="contribution_date" class="java.sql.Timestamp"/>
+	<field name="contribution_date" class="java.sql.Date"/>
 	<field name="investment_amount" class="java.lang.Float"/>
 	<field name="merry_go_round_amount" class="java.lang.Float"/>
 	<field name="paid" class="java.lang.Boolean"/>
@@ -64,7 +65,7 @@ order by period_id]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Contributions Unpaid Report]]></text>
+				<text><![CDATA[Unpaid  Contributions Report]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -98,7 +99,7 @@ order by period_id]]>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Period ID]]></text>
+				<text><![CDATA[Start Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="157" y="0" width="106" height="15" forecolor="#000000" uuid="c792946e-4b54-4b79-84cc-46b5d6a9f599"/>
@@ -141,12 +142,12 @@ order by period_id]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="MMM-yy" isBlankWhenNull="true">
 					<reportElement style="Detail" x="99" y="0" width="40" height="15" uuid="f559d316-9bc2-4745-b89a-cc0c4ebcbc5a"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{period_id}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="182" y="0" width="40" height="15" uuid="2d19f678-1200-490e-bbb5-3e165f093a42"/>
@@ -181,19 +182,31 @@ order by period_id]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="13" y="6" width="100" height="20" uuid="d28bd8f3-d586-4b7c-a3fc-19cd776daaa1"/>
+				<reportElement x="1" y="6" width="100" height="20" uuid="d28bd8f3-d586-4b7c-a3fc-19cd776daaa1"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="170" y="6" width="52" height="20" uuid="4f087979-6299-4685-9d1e-bc0a5b10e9d0"/>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
+				<reportElement x="178" y="6" width="52" height="20" uuid="4f087979-6299-4685-9d1e-bc0a5b10e9d0"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{suminvamt}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
 				<reportElement x="319" y="4" width="56" height="20" uuid="b3960e69-7302-40a0-b2a9-2b1983d3d1d5"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{summgr}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="432" y="6" width="40" height="20" uuid="d635edaa-2e52-40ac-8b5c-9f243c35af90"/>
+			<textField pattern="#,##0.0" isBlankWhenNull="true">
+				<reportElement x="432" y="6" width="66" height="20" uuid="d635edaa-2e52-40ac-8b5c-9f243c35af90"/>
+				<textElement>
+					<font isBold="true" isItalic="true" isUnderline="false"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{sumtotal}]]></textFieldExpression>
 			</textField>
 		</band>

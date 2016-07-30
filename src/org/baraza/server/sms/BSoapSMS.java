@@ -328,12 +328,14 @@ public class BSoapSMS {
 
 			URL endpoint = new URL("http://" + serverIP + ":8310/SendSmsService/services/SendSms");
 			SOAPMessage response = con.call(soapMessage, endpoint);
-			SOAPBody respBody = response.getSOAPBody();
-			sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+			if(response != null) {
+				SOAPBody respBody = response.getSOAPBody();
+				sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+				
+				System.out.println("RESPOSE\n" + getResp(response) + "\n");
+				System.out.println("RESPOSE : " + sendResults + "\n");
+			}
 			con.close();
-			
-			System.out.println("RESPOSE\n" + getResp(response) + "\n");
-			System.out.println("RESPOSE : " + sendResults + "\n");
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -411,12 +413,16 @@ public class BSoapSMS {
 			
 			URL endpoint = new URL("https://212.100.248.24:8080/smshttppush/index.php?wsdl");
 			SOAPMessage response = con.call(soapMessage, endpoint);
-			SOAPBody respBody = response.getSOAPBody();
-			sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+			if(response != null) {
+				SOAPBody respBody = response.getSOAPBody();
+				sendResults = respBody.getFirstChild().getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+				
+				System.out.println("RESPOSE2\n" + getResp(response) + "\n");
+				System.out.println("RESPOSE3 : " + sendResults + "\n"); 
+			} else {
+				System.out.println("FON ERROR : Not able to send SMS on FON");
+			}
 			con.close();
-
-			System.out.println("RESPOSE2\n" + getResp(response) + "\n");
-			System.out.println("RESPOSE3 : " + sendResults + "\n"); 
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -486,9 +492,10 @@ public class BSoapSMS {
 			SOAPMessage response = con.call(soapMessage, endpoint);
 
 			con.close();
-
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -551,8 +558,10 @@ public class BSoapSMS {
 
 			con.close();
 
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -620,8 +629,10 @@ public class BSoapSMS {
 
 			con.close();
 
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {
@@ -682,8 +693,10 @@ public class BSoapSMS {
 
 			con.close();
 
-			strMsg = getResp(response);
-			System.out.println("RESPOSE\n" + strMsg + "\n");
+			if(response != null) {
+				strMsg = getResp(response);
+				System.out.println("RESPOSE\n" + strMsg + "\n");
+			}
 		} catch(SOAPException ex) {
 			System.out.println("SOAP Error : " + ex);
 		} catch(MalformedURLException ex) {

@@ -1235,10 +1235,11 @@
 						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 					</FORM>
 				</GRID>
-				<GRID name="Loan Repayment" keyfield="loan_repayment_id" linkfield="loan_id" table="vw_loan_repayments">
-					<TEXTFIELD w="75" title="#">loan_repayment_id</TEXTFIELD>
-					<TEXTDECIMAL w="75" title="Repayment Amount">repayment_amount</TEXTDECIMAL>
-					<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
+				<GRID name="Loan Repayment" keyfield="loan_month_id" linkfield="loan_id" table="vw_loan_monthly">
+					<TEXTFIELD w="75" title="Repayments">repayment</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Interestt">interest_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Month">period_month</TEXTFIELD>
+					<TEXTFIELD w="75" title="Year">period_year</TEXTFIELD>
 				</GRID>
 			</GRID>
 			<GRID name="Investments" keyfield="investment_id" linkfield="entity_id" table="vw_investments" tab.count="count(investment_id)">
@@ -1274,7 +1275,7 @@
 			</GRID>
 			<GRID name="Contributions" keyfield="contribution_id" linkfield="entity_id" table="vw_contributions" tab.count="count(contribution_id)">
 				<TEXTFIELD w="32" title="ID">contribution_id</TEXTFIELD>
-				<TEXTDATE w="75" title="Deposit Date">deposit_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="deposit_year || deposit_date" title="Deposit Date">deposit_date</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Deposit Amount">deposit_amount</TEXTDECIMAL>
 				<TEXTTIMESTAMP w="75" title="Entry Date">entry_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Transaction Ref">transaction_ref</TEXTFIELD>

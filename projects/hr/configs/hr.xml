@@ -37,7 +37,7 @@
 			<MENU name="Organisation">20</MENU>
 			<MENU name="Subscriptions" role="master">94</MENU>
 			<MENU name="Banks">21</MENU>
-			<MENU name="Departments">22</MENU>
+			<MENU name="Departments and Roles">22</MENU>
 			<MENU name="Salary Scales">55</MENU>
 			<MENU name="News Admin">19</MENU>
 			<MENU name="Entitys">80</MENU>
@@ -936,6 +936,32 @@
 		</GRID>
 	</DESK>
 	<DESK w="710" name="Departments" key="22" h="550">
+		<GRID name="Department Role" keyfield="department_role_id" linkfield="department_id" table="vw_department_roles">
+			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Designation">department_role_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Reporting To">parent_role_name</TEXTFIELD>
+			<FORM tw="570" name="Department Role" keyfield="department_role_id" linkfield="department_id" table="department_roles" th="320">
+				<COMBOBOX w="430" title="Department" lptable="departments" lpkey="department_id" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Designation" lptable="Department_Roles" lpkey="Department_Role_ID" y="30" h="20" x="10" lpfield="Department_Role_Name">LN_Department_Role_ID</COMBOBOX>
+				<TEXTFIELD w="430" title="Department Role" y="50" h="20" x="10">department_role_name</TEXTFIELD>
+				<EDITOR w="550" tab="Job Description" y="1" h="280" x="10">job_description</EDITOR>
+				<EDITOR w="550" tab="Duties" y="1" h="280" x="10">duties</EDITOR>
+				<EDITOR w="550" tab="Requirements" y="1" h="280" x="10">Job_Requirements</EDITOR>
+				<EDITOR w="550" tab="Measures" y="1" h="280" x="10">performance_measures</EDITOR>
+				<EDITOR w="550" tab="Details" y="1" h="280" x="10">details</EDITOR>
+			</FORM>
+			<FORMVIEW tw="570" name="Role Report" keyfield="department_role_id" linkfield="department_role_id" table="vw_department_roles">
+				<TEXTFIELD w="410" title="Unit" lw="140" y="30" h="20" x="10">department_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Designation" y="30" h="20" x="10">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Reporting To" y="10" h="20" x="10">parent_role_name</TEXTFIELD>
+				<TEXTFIELD w="550" title="Job Description" y="1" h="280" x="10">job_description</TEXTFIELD>
+				<TEXTFIELD w="550" title="Duties" y="1" h="280" x="10">duties</TEXTFIELD>
+				<TEXTFIELD w="550" title="Requirements" y="1" h="280" x="10">Job_Requirements</TEXTFIELD>
+				<TEXTFIELD w="550" title="Measures" y="1" h="280" x="10">performance_measures</TEXTFIELD>
+				<TEXTFIELD w="550" title="Details" y="1" h="280" x="10">details</TEXTFIELD>
+			</FORMVIEW>
+			<JASPER name="Role Details" reportfile="vw_department_role_details.jasper"></JASPER>
+		</GRID>
 		<GRID name="Departments" keyfield="department_id" orderby="department_id" table="vw_departments">
 			<TEXTFIELD w="75" title="Department ID">department_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Program">ln_department_name</TEXTFIELD>
@@ -975,32 +1001,6 @@
 				<TEXTAREA w="550" tab="Reports" y="1" h="270" x="10">reports</TEXTAREA>
 				<TEXTAREA w="550" tab="Details" y="1" h="270" x="10">details</TEXTAREA>
 			</FORM>
-		</GRID>
-		<GRID name="Department Role" keyfield="department_role_id" linkfield="department_id" table="vw_department_roles">
-			<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
-			<TEXTFIELD w="275" title="Designation">department_role_name</TEXTFIELD>
-			<TEXTFIELD w="275" title="Reporting To">parent_role_name</TEXTFIELD>
-			<FORM tw="570" name="Department Role" keyfield="department_role_id" linkfield="department_id" table="department_roles" th="320">
-				<COMBOBOX w="430" title="Department" lptable="departments" lpkey="department_id" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
-				<COMBOBOX w="430" title="Designation" lptable="Department_Roles" lpkey="Department_Role_ID" y="30" h="20" x="10" lpfield="Department_Role_Name">LN_Department_Role_ID</COMBOBOX>
-				<TEXTFIELD w="430" title="Department Role" y="50" h="20" x="10">department_role_name</TEXTFIELD>
-				<EDITOR w="550" tab="Job Description" y="1" h="280" x="10">job_description</EDITOR>
-				<EDITOR w="550" tab="Duties" y="1" h="280" x="10">duties</EDITOR>
-				<EDITOR w="550" tab="Requirements" y="1" h="280" x="10">Job_Requirements</EDITOR>
-				<EDITOR w="550" tab="Measures" y="1" h="280" x="10">performance_measures</EDITOR>
-				<EDITOR w="550" tab="Details" y="1" h="280" x="10">details</EDITOR>
-			</FORM>
-			<FORMVIEW tw="570" name="Role Report" keyfield="department_role_id" linkfield="department_role_id" table="vw_department_roles">
-				<TEXTFIELD w="410" title="Unit" lw="140" y="30" h="20" x="10">department_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Designation" y="30" h="20" x="10">department_role_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Reporting To" y="10" h="20" x="10">parent_role_name</TEXTFIELD>
-				<TEXTFIELD w="550" title="Job Description" y="1" h="280" x="10">job_description</TEXTFIELD>
-				<TEXTFIELD w="550" title="Duties" y="1" h="280" x="10">duties</TEXTFIELD>
-				<TEXTFIELD w="550" title="Requirements" y="1" h="280" x="10">Job_Requirements</TEXTFIELD>
-				<TEXTFIELD w="550" title="Measures" y="1" h="280" x="10">performance_measures</TEXTFIELD>
-				<TEXTFIELD w="550" title="Details" y="1" h="280" x="10">details</TEXTFIELD>
-			</FORMVIEW>
-			<JASPER name="Role Details" reportfile="vw_department_role_details.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Applicant" key="23" h="650">
@@ -4019,7 +4019,7 @@
 				<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
 				<CHECKBOX w="75" title="For Processing">for_processing</CHECKBOX>
 				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
-				<CHECKBOX w="75" title="Posted">posted</CHECKBOX>
+				<CHECKBOX w="75" title="Cleared">is_cleared</CHECKBOX>
 				<ACTIONS>
 					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
 					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>
@@ -4075,7 +4075,7 @@
 				<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
 				<CHECKBOX w="75" title="For Processing">for_processing</CHECKBOX>
 				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
-				<CHECKBOX w="75" title="Posted">posted</CHECKBOX>
+				<CHECKBOX w="75" title="Cleared">is_cleared</CHECKBOX>
 				<ACTIONS>
 					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
 					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>

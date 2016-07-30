@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="degree_comp_letter" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="581" leftMargin="7" rightMargin="7" topMargin="7" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="51496e27-3492-4761-b5e2-d96941b5f404">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="275"/>
+	<property name="ireport.y" value="105"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -50,14 +50,15 @@ ORDER BY majors.major desc;]]>
 		<![CDATA[SELECT studentid, studentname, degreelevelid, degreelevelname,
 	sublevelid, sublevelname, degreeid, degreename, studentdegreeid,
 	completed, started, cleared, clearedate, graduated, graduatedate,
-	trim(to_char(graduatedate,'yyyy')) as graduate_y,
-	trim(to_char(graduatedate,'Month')) as graduate_m,
+	trim(to_char(expected_grad_date,'yyyy')) as graduate_y,
+	trim(to_char(expected_grad_date,'Month')) as graduate_m,
 	(CASE WHEN degreeid = 'CERT' THEN 'Certificate in '
 	WHEN degreeid = 'DIPL' THEN 'Diploma In '
 	ELSE ' degree of <b>'  || upper (Degreename) || '</b>' END)::varchar as degree_type
 
-FROM studentdegreeview
-WHERE studentdegreeid = '$P!{filterid}';]]>
+FROM vw_studentdegrees
+
+WHERE (completed = true) AND (studentdegreeid = '$P!{filterid}');]]>
 	</queryString>
 	<field name="studentid" class="java.lang.String"/>
 	<field name="studentname" class="java.lang.String"/>
@@ -102,14 +103,14 @@ WHERE studentdegreeid = '$P!{filterid}';]]>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "baraza_logo.jpg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="386" y="172" width="173" height="11" uuid="58e47655-97e7-4e7b-bd46-9b1fbfa4c4b4"/>
+				<reportElement x="386" y="172" width="173" height="12" uuid="58e47655-97e7-4e7b-bd46-9b1fbfa4c4b4"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[registrar@ueab.ac.ke]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="346" y="172" width="40" height="12" uuid="5a745036-57f4-47c4-a503-07b4c655ade3"/>
+				<reportElement x="352" y="172" width="34" height="12" uuid="5a745036-57f4-47c4-a503-07b4c655ade3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="9" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>

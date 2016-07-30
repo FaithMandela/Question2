@@ -65,8 +65,6 @@ LOOP
 		END IF;
 		
 
---INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
-	--VALUES (v_id, NEW.period_id, NEW.org_id, v_loan);
 		END IF;
 		
 END LOOP;
@@ -74,6 +72,10 @@ END LOOP;
 INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
 	VALUES (v_id, NEW.period_id, NEW.org_id, NEW.deposit_amount);
 	--msg := 'Loan repaid first of Kes%' v_total_all;
+	
+	
+--INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
+	--VALUES (v_id, NEW.period_id, NEW.org_id, v_loan);
 	
 	if (v_bal is not null) then
 	INSERT INTO investments (entity_id,investment_type_id, org_id, invest_amount, period_years)
@@ -568,6 +570,33 @@ FROM sacco_investments
     JOIN investment_types ON sacco_investments.investment_type_id = investment_types.investment_type_id
     LEFT JOIN bank_accounts ON sacco_investments.bank_account_id = bank_accounts.bank_account_id;
 
+    
+drop funcion change_password ( character varying, character varying,character varying);
+
+CREATE OR REPLACE FUNCTION change_password(v_entityID integer, v_old_pass varchar(32), v_pass varchar(32)) RETURNS varchar(120) AS $$
+DECLARE
+    old_password    varchar(64);
+    passchange      varchar(120);
+    entityID        integer;
+BEGIN
+    passchange := 'Password Error';
+    entityID := CAST($1 AS INT);
+    SELECT Entity_password INTO old_password FROM entitys WHERE (entity_id = entityID);
+
+    IF ($2 = '0') THEN
+        passchange := first_password();
+        UPDATE entitys SET first_password = passchange, Entity_password = md5(passchange) WHERE (entity_id = entityID);
+        passchange := 'Password Changed';
+    ELSIF (old_password = md5($2)) THEN
+        UPDATE entitys SET Entity_password = md5($3) WHERE (entity_id = entityID);
+        passchange := 'Password Changed';
+    ELSE
+        passchange := null;
+    END IF;
+
+    return passchange;
+END;
+$$ LANGUAGE plpgsql;
 
 
 

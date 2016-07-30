@@ -11,7 +11,7 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
+	<parameter name="entityid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="orgwhere" class="java.lang.String">
@@ -25,7 +25,7 @@
 vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.deposit_amount,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
 vw_contributions.entity_name,vw_contributions.is_active,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
-WHERE (vw_contributions.entity_id = '$P!{entity_id}')
+WHERE (vw_contributions.entity_id = '$P!{entityid}')
 $P!{organd}
  order BY vw_contributions.deposit_date;]]>
 	</queryString>
@@ -34,7 +34,7 @@ $P!{organd}
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="payment_type_id" class="java.lang.Integer"/>
-	<field name="deposit_date" class="java.sql.Date"/>
+	<field name="deposit_date" class="java.lang.String"/>
 	<field name="deposit_amount" class="java.lang.Float"/>
 	<field name="entry_date" class="java.sql.Timestamp"/>
 	<field name="transaction_ref" class="java.lang.String"/>

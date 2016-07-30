@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_penalty" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9039caa0-e5a6-41aa-bcdc-e3c0c9cc23d4">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_penalty" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9039caa0-e5a6-41aa-bcdc-e3c0c9cc23d4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -30,8 +30,7 @@
 FROM vw_penalty
 Where vw_penalty.penalty_type_id is not null
 $P!{organd}
-order by penalty_type_name
-]]>
+order by penalty_type_name]]>
 	</queryString>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="penalty_type_id" class="java.lang.Integer"/>
@@ -39,6 +38,9 @@ order by penalty_type_name
 	<field name="penalty_type_name" class="java.lang.String"/>
 	<field name="date_of_accrual" class="java.sql.Date"/>
 	<field name="amount" class="java.lang.Float"/>
+	<variable name="sumamt" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -65,7 +67,7 @@ order by penalty_type_name
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="87" height="15" forecolor="#000000" uuid="03f3bcb4-0917-42d5-965a-6e611353efd1"/>
+				<reportElement style="Column header" x="8" y="0" width="87" height="15" forecolor="#000000" uuid="03f3bcb4-0917-42d5-965a-6e611353efd1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -99,21 +101,21 @@ order by penalty_type_name
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="93fbad98-19e9-4de7-a605-c9dd1ab8d05e"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="87" height="15" uuid="96da1e06-ed08-421f-90e3-23ada5accbe4"/>
+					<reportElement style="Detail" x="9" y="0" width="87" height="15" uuid="96da1e06-ed08-421f-90e3-23ada5accbe4"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="129" y="0" width="87" height="15" uuid="62247b9d-1d2d-48a1-a0ba-ebd0069869ce"/>
+					<reportElement style="Detail" x="137" y="0" width="87" height="15" uuid="62247b9d-1d2d-48a1-a0ba-ebd0069869ce"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{penalty_type_name}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="290" y="0" width="87" height="15" uuid="5bbfea0a-1ca2-4200-96eb-1b84cdfde447"/>
+				<textField isStretchWithOverflow="true" pattern="dd-MMM-yy" isBlankWhenNull="true">
+					<reportElement style="Detail" x="296" y="0" width="87" height="15" uuid="5bbfea0a-1ca2-4200-96eb-1b84cdfde447"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -130,13 +132,24 @@ order by penalty_type_name
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="89380575-9417-4250-9788-1f5d94efde2b"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
+			<staticText>
+				<reportElement x="1" y="4" width="100" height="20" uuid="dc959ada-dca2-49ac-a95a-f951646ebfed"/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="412" y="4" width="100" height="20" uuid="494e26c8-0092-45e5-a7b7-9683b00196aa"/>
+				<textElement>
+					<font size="10" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumamt}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnFooter>
 	<pageFooter>

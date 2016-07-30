@@ -43,6 +43,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
     contributions.deposit_amount,
     contributions.entry_date,
     contributions.transaction_ref,
+    contributions.additional_payments,
     contributions.contribution_amount,
     entitys.entity_name,
     entitys.is_active,
