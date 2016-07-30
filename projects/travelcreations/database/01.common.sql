@@ -197,8 +197,8 @@ CREATE TRIGGER ins_fiscal_years AFTER INSERT ON fiscal_years
 		WHERE (fiscal_year_id = NEW.fiscal_year_id);
 
 		IF (NEW.approve_status = 'Approved') THEN
-			NEW.opened = false;
-			NEW.activated = false;
+			NEW.opened = true;
+			NEW.activated = true;
 		END IF;
 
 		IF(year_close = true)THEN

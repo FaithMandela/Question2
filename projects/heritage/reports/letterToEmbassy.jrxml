@@ -29,7 +29,7 @@ else
 end as benefit
 
 FROM vw_passengers
-WHERE passenger_id = '$P!{filterid}' OR  passenger_id = '$P!{passenger_id}']]>
+WHERE passenger_id = '$P!{passenger_id}']]>
 	</queryString>
 	<field name="p1" class="java.lang.String"/>
 	<field name="passenger_id" class="java.lang.Integer"/>

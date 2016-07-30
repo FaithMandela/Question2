@@ -206,3 +206,49 @@ BEGIN
 END;
 
 $BODY$ LANGUAGE plpgsql ;
+
+
+CREATE OR REPLACE FUNCTION getClientbalance(
+    integer,
+    character)
+  RETURNS real AS
+$BODY$
+DECLARE
+	v_org_id 			integer;
+	v_function_role		text;
+	v_balance			real;
+BEGIN
+	v_balance = 0::real;
+	SELECT function_role INTO  v_function_role FROM vw_entitys WHERE entity_id = $1;
+
+		SELECT COALESCE(sum(dr - cr-sambaza_out+sambaza_in-refunds), 0) INTO v_balance
+		FROM vw_client_statement
+		WHERE entity_id = $1 AND order_date < $2::date;
+
+	RETURN v_balance;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_order_details(integer)
+  RETURNS text AS
+$BODY$
+DECLARE
+    rec                        RECORD;
+    order_detail            	text;
+BEGIN
+
+    order_detail := '';
+    FOR rec IN SELECT (vw_order_details.product_quantity || ' @ ' || vw_order_details.product_name ) as details
+    FROM vw_order_details WHERE order_id = $1 LOOP
+        order_detail := order_detail || ' ' || rec.details;
+    END LOOP;
+
+    order_detail := order_detail || ' added to shopping cart';
+    order_detail := trim(order_detail);
+
+    return order_detail;
+END;
+$BODY$
+  LANGUAGE plpgsql;
