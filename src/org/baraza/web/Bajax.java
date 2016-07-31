@@ -253,6 +253,9 @@ public class Bajax extends HttpServlet {
 		String fnct = web.getRoot().getAttribute("password");
 		if(fnct == null) return "{\"success\": 0, \"message\": \"Cannot change Password\"}";
 		
+		oldPass = oldPass.replaceAll("'", "''");
+		newPass = newPass.replaceAll("'", "''");
+		
 		String mysql = "SELECT " + fnct + "('" + web.getUserID() + "', '" + oldPass + "','" + newPass + "')";
 		String myoutput = web.executeFunction(mysql);
 		
@@ -289,7 +292,8 @@ public class Bajax extends HttpServlet {
 		String rSql = "SELECT a.product_id, a.product_name, a.details, a.annual_cost, a.expiry_date, a.sum_quantity "
 		+ "FROM vws_productions a "
 		+ "WHERE (a.is_renewed = false) AND (a.org_id = " + db.getUserOrg() + ")";
-		BQuery rRs = new BQuery(web.getDB(), rSql);
+		BQuery rRs = new BQuery(web.getDB(), rSql);
+
 		rRs.moveFirst();
 		String productId = rRs.getString("product_id");
 		Float annualCost = rRs.getFloat("annual_cost");

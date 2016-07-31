@@ -30,6 +30,7 @@ CREATE TABLE pc_allocations (
 	pc_allocation_id		serial primary key,
 	period_id				integer references periods,
 	department_id			integer references departments,
+	entity_id				integer	references entitys,
 	org_id					integer references orgs,
 	narrative				varchar(320),
 	
@@ -43,6 +44,7 @@ CREATE TABLE pc_allocations (
 );
 CREATE INDEX pc_allocations_period_id ON pc_allocations (period_id);
 CREATE INDEX pc_allocations_department_id ON pc_allocations (department_id);
+CREATE INDEX pc_allocations_entity_id ON pc_allocations (entity_id);
 CREATE INDEX pc_allocations_org_id ON pc_allocations (org_id);
 
 CREATE TABLE pc_budget (
