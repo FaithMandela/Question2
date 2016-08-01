@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_contributions_unpaid" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="95f0a3ae-1d01-4ced-9f46-62167f95cf02">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_extra_contributions" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7c96016c-1960-448e-a5af-e9585d42483b">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -22,40 +22,33 @@
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
-	</parameter>
-	<parameter name="entity_id" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions_unpaid.contribution_type_name, vw_contributions_unpaid.entity_id, vw_contributions_unpaid.entity_name, vw_contributions_unpaid.org_id, vw_contributions_unpaid.period_id, vw_contributions_unpaid.start_date, vw_contributions_unpaid.contribution_id, vw_contributions_unpaid.contribution_date, vw_contributions_unpaid.investment_amount, vw_contributions_unpaid.merry_go_round_amount, vw_contributions_unpaid.paid, vw_contributions_unpaid.money_in, vw_contributions_unpaid.money_out, vw_contributions_unpaid.total_contribution
-FROM vw_contributions_unpaid
-Where entity_id = '$P!{entity_id}'
+		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.member_id, vw_contributions.start_date, vw_contributions.org_id, vw_contributions.contribution_id, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.extra_contrib, vw_contributions.details
+FROM vw_contributions
+Where vw_contributions.contribution_id is not null AND vw_contributions.extra_contrib = true
+$P!{organd}
 order by period_id]]>
 	</queryString>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="org_id" class="java.lang.Integer"/>
-	<field name="period_id" class="java.lang.Integer"/>
+	<field name="member_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="contribution_id" class="java.lang.Integer"/>
-	<field name="contribution_date" class="java.sql.Date"/>
 	<field name="investment_amount" class="java.lang.Float"/>
 	<field name="merry_go_round_amount" class="java.lang.Float"/>
 	<field name="paid" class="java.lang.Boolean"/>
-	<field name="money_in" class="java.lang.Float"/>
-	<field name="money_out" class="java.lang.Float"/>
-	<field name="total_contribution" class="java.lang.Float"/>
+	<field name="extra_contrib" class="java.lang.Boolean"/>
+	<field name="details" class="java.lang.String"/>
 	<variable name="suminvamt" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{investment_amount}]]></variableExpression>
 	</variable>
-	<variable name="summgr" class="java.lang.Float" calculation="Sum">
+	<variable name="summgramt" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{merry_go_round_amount}]]></variableExpression>
-	</variable>
-	<variable name="sumtotal" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{total_contribution}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -63,11 +56,11 @@ order by period_id]]>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="c13c0fe2-bdcc-40fa-b8b3-e89c1eac2ce3"/>
+				<reportElement style="Title" x="198" y="0" width="446" height="62" uuid="8e8bda09-3733-4646-9250-5c3b2f298e89"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Contributions Unpaid Report]]></text>
+				<text><![CDATA[Extra Contributions Report]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -77,100 +70,115 @@ order by period_id]]>
 	<columnHeader>
 		<band height="16" splitType="Stretch">
 			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="1dcc837b-006b-49a1-a649-3ea53188aae0"/>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="b13754c2-5c2a-405e-8128-6eeb33af6cd3"/>
 				<graphicElement>
 					<pen lineWidth="0.5" lineColor="#999999"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="1" y="1" width="82" height="15" forecolor="#000000" uuid="85cd3c94-4806-48fe-a27d-50414339daa9"/>
+				<reportElement style="Column header" x="1" y="0" width="144" height="15" forecolor="#000000" uuid="0d088f7c-4404-46df-929b-e94670277ddd"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Type Name]]></text>
+				<text><![CDATA[Type ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="83" y="1" width="81" height="15" forecolor="#000000" uuid="99d23f22-731f-4992-bc12-ab2d77f06e96"/>
+				<reportElement style="Column header" x="145" y="0" width="144" height="15" forecolor="#000000" uuid="7d2faeb0-0523-4eba-a956-52c3653e61e2"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="164" y="1" width="55" height="15" forecolor="#000000" uuid="c618daa8-07b5-47f9-b8d4-7d73fb077913"/>
+				<reportElement style="Column header" x="289" y="0" width="61" height="15" forecolor="#000000" uuid="e86f54ad-7aa2-49ec-bcb8-cab22793c3d7"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Date]]></text>
+				<text><![CDATA[Start Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="219" y="1" width="106" height="15" forecolor="#000000" uuid="c792946e-4b54-4b79-84cc-46b5d6a9f599"/>
+				<reportElement style="Column header" x="350" y="-1" width="93" height="15" forecolor="#000000" uuid="e230ff1a-5abf-4fb5-8792-120367960438"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Investment Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="325" y="1" width="97" height="15" forecolor="#000000" uuid="8ce6a5f4-9b1b-487f-900f-0dcaa7210c48"/>
+				<reportElement style="Column header" x="443" y="0" width="108" height="15" forecolor="#000000" uuid="5e9391c2-ccb9-48a7-806c-58a50f6aeb59"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Merry Go Round Amount]]></text>
+				<text><![CDATA[MGR Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="422" y="1" width="120" height="15" forecolor="#000000" uuid="affa0a63-a01b-407b-955a-0b6e1763717b"/>
+				<reportElement style="Column header" x="551" y="0" width="43" height="15" forecolor="#000000" uuid="3cabe0e5-4c12-4714-8eac-77296e14e64b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Total Contribution]]></text>
+				<text><![CDATA[Paid]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="594" y="1" width="195" height="15" forecolor="#000000" uuid="2e72e44f-2f22-4191-94ab-bc689a497d09"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Details]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<frame>
-				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="28e2b05c-4bd9-43c2-a385-24fbb461c082"/>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="83bea420-e8b4-4849-ac5e-4399907c9fb9"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="82" height="15" uuid="f24b634e-eb9c-4e7d-a637-4dfea4ea1e1f"/>
+					<reportElement style="Detail" x="1" y="0" width="144" height="15" uuid="d9ea426f-adfc-43d7-a021-5ed16b6d613e"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{contribution_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="83" y="0" width="81" height="15" uuid="2c7e5e0c-0d53-4879-9ae8-b5c50db06f54"/>
+					<reportElement style="Detail" x="145" y="0" width="144" height="15" uuid="1e4ab298-2879-4bb4-92d8-096f03e318fe"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-					<reportElement style="Detail" x="164" y="0" width="55" height="15" uuid="f559d316-9bc2-4745-b89a-cc0c4ebcbc5a"/>
+					<reportElement style="Detail" x="289" y="0" width="61" height="15" uuid="7eb7f515-1f85-4d91-98d7-5c43d8d6fa7a"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="219" y="0" width="106" height="15" uuid="2d19f678-1200-490e-bbb5-3e165f093a42"/>
+					<reportElement style="Detail" x="350" y="0" width="93" height="15" uuid="2c0095c1-823f-40ba-8178-64732f8355d8"/>
 					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="10" isItalic="false"/>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{investment_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="325" y="0" width="97" height="15" uuid="09c94637-7e1f-4834-a407-e3ff003dce93"/>
+					<reportElement style="Detail" x="443" y="0" width="108" height="15" uuid="d9cb0302-ce41-4ed9-b8a7-8bcacb177d40"/>
 					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="10" isItalic="false"/>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{merry_go_round_amount}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="422" y="0" width="120" height="15" uuid="b1effd03-14d5-43e5-9a04-a22af4d8f925"/>
-					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="10" isItalic="false"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="551" y="0" width="43" height="15" uuid="8cd5a103-bf30-40e5-a3c0-8122b8df6cf6"/>
+					<box leftPadding="10"/>
+					<textElement>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{total_contribution}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{paid}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="594" y="0" width="195" height="15" uuid="147b19ef-2360-4104-86c7-0a6eb59720f0"/>
+					<textElement>
+						<font fontName="Times New Roman" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -181,23 +189,23 @@ order by period_id]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="d7b8bdb6-d276-4521-a9ed-cfed09a346f9"/>
+				<reportElement mode="Opaque" x="-21" y="1" width="823" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="e7b3939a-938d-4b48-aa7c-447e2b25e6ce"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="dba9533e-e12a-453d-98cc-87e5f95d5230"/>
+					<reportElement style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343" uuid="007af52a-6d03-48ba-b212-8b11a70e22a4"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="b9cd3b70-7e02-4d6f-a6cb-49ebd6b748dc"/>
+					<reportElement style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343" uuid="e3ff9bae-c535-4670-ae6b-77b2ec47acdc"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="8acf9099-d158-41a3-97ee-4a5101feeba1"/>
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="f5df91bd-9e58-4ac3-be84-2a2f1de72cfb"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>
@@ -209,44 +217,33 @@ order by period_id]]>
 	<summary>
 		<band height="32" splitType="Stretch">
 			<staticText>
-				<reportElement x="1" y="0" width="100" height="20" uuid="d28bd8f3-d586-4b7c-a3fc-19cd776daaa1"/>
+				<reportElement x="1" y="0" width="100" height="20" uuid="201bfdbc-5a62-47f8-a477-c2dc75b6eebf"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
-			<textField pattern="#,##0">
-				<reportElement x="219" y="0" width="106" height="20" uuid="4f087979-6299-4685-9d1e-bc0a5b10e9d0"/>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="350" y="0" width="93" height="15" uuid="dfd1d407-10b5-47a9-9409-1d214b81703d"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{suminvamt}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="325" y="0" width="97" height="20" uuid="b3960e69-7302-40a0-b2a9-2b1983d3d1d5"/>
+				<reportElement x="443" y="0" width="108" height="15" uuid="ee50d300-483b-4cb7-9cff-248c73f0b5b4"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{summgr}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="422" y="0" width="120" height="20" uuid="d635edaa-2e52-40ac-8b5c-9f243c35af90"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="1.0" lineStyle="Double"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumtotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{summgramt}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

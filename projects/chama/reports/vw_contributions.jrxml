@@ -169,7 +169,7 @@ order by period_id]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="MMMMM-yy" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="false">
 					<reportElement style="Detail" x="294" y="0" width="52" height="15" uuid="29ed054d-4790-4b52-9ffa-76b1fd261cc9"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
@@ -178,7 +178,7 @@ order by period_id]]>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="347" y="0" width="75" height="15" uuid="ce7c62a9-8ac1-4180-b4b7-1aa36d11b01c"/>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{investment_amount}]]></textFieldExpression>
@@ -214,7 +214,7 @@ order by period_id]]>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="571" y="0" width="40" height="15" uuid="c7d4f607-c697-4c94-a7bb-01672b40eaaf"/>
-				<box leftPadding="2"/>
+				<box leftPadding="6"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>

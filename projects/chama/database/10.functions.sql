@@ -156,11 +156,6 @@ BEGIN
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, reca.entity_id);
 		END IF;
-		IF (rec.frequency = 'Irregularly') THEN
-			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-			reca.member_id, reca.entity_id);
-		END IF;
 		IF (rec.frequency = 'Quarterly') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
@@ -198,11 +193,6 @@ BEGIN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, recu.entity_id);
-		END IF;
-		IF (rec.frequency = 'Irregularly') THEN
-			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-			reca.member_id, reca.entity_id);
 		END IF;
 		IF (rec.frequency = 'Quarterly') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
