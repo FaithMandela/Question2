@@ -8,3 +8,9 @@ CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
 	FROM loan_monthly
 	WHERE (loan_id = $1);
 $$ LANGUAGE SQL;
+
+
+
+
+
+

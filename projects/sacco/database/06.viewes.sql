@@ -165,26 +165,6 @@ CREATE OR REPLACE VIEW vw_bank_accounts AS
 		FULL JOIN currency ON bank_accounts.currency_id = currency.currency_id;
 
 
-CREATE VIEW vw_loan_repayments AS
-	SELECT 	vw_loans.currency_id, vw_loans.currency_name,vw_loans.currency_symbol,
-		vw_loans.loan_type_id, vw_loans.loan_type_name, 
-		vw_loans.entity_id, vw_loans.entity_name,
-		vw_loans.org_id, vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
-		vw_loans.repayment_period,vw_loans.application_date, vw_loans.approve_status, vw_loans.initial_payment, 
-		vw_loans.loan_date, vw_loans.action_date,vw_loans.details,
-		vw_loans.repayment_amount, vw_loans.total_interest, vw_loans. loan_balance,
-		loan_repayment.loan_repayment_id, loan_repayment.period_id,
-		loan_repayment.repayment_amount as loan_repayment_amount,
-		loan_repayment.repayment_interest,
-		loan_repayment.penalty, loan_repayment.penalty_paid,
-		loan_repayment.repayment_narrative,
-		vw_loans.calc_repayment_period
-	FROM vw_loans
-	INNER JOIN loan_repayment ON loan_repayment.loan_id = vw_loans.loan_id;
-
---here	
-
-
 CREATE OR REPLACE VIEW vw_recruiting_entity AS
 		SELECT members.entity_id,members.surname,recruiting_agent_entity.entity_name AS recruiting_agent_entity_name,
 			recruiting_agent.entity_id AS recruiting_agent_entity_id, recruiting_agent.recruiting_agent_id, 
@@ -256,14 +236,5 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
      JOIN entitys ON entitys.entity_id = investments.entity_id
      JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;   
  --- here
-     
-CREATE OR REPLACE VIEW vw_billing AS
-SELECT billing.bill_id,  billing.org_id, billing.currency_id, 
-	billing.start_date, billing.end_date, billing.bill_amount, billing.processed, billing.paid,entitys.entity_id,
-	entitys.entity_name, entitys.entity_leader, entitys.function_role,
-	currency.currency_name, currency.currency_symbol
-FROM currency 
-	INNER JOIN billing ON currency.currency_id = billing.currency_id
-	INNER JOIN entitys ON entitys.entity_id = billing.entity_id;
-
+ 
 	
