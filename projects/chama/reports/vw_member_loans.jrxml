@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_loans" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c0bbdc77-26b0-4174-970c-fb1cc7751bdd">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="125"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -91,134 +91,136 @@ order by loan_type_name]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="9" y="0" width="76" height="15" forecolor="#000000" uuid="a938f999-a24f-42ef-9526-2930dbdc575a"/>
+				<reportElement style="Column header" x="9" y="1" width="101" height="15" forecolor="#000000" uuid="a938f999-a24f-42ef-9526-2930dbdc575a"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Loan Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="95" y="0" width="58" height="15" forecolor="#000000" uuid="abb1c541-fdf2-46de-947e-768962c69da1"/>
+				<reportElement style="Column header" x="110" y="1" width="67" height="15" forecolor="#000000" uuid="abb1c541-fdf2-46de-947e-768962c69da1"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Principle]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="179" y="0" width="48" height="15" forecolor="#000000" uuid="9c9d0fb8-0d65-4a01-b3cd-c53bea567b7b"/>
+				<reportElement style="Column header" x="177" y="1" width="48" height="15" forecolor="#000000" uuid="9c9d0fb8-0d65-4a01-b3cd-c53bea567b7b"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Interest]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="247" y="0" width="115" height="15" forecolor="#000000" uuid="a830882e-a46c-4c47-ac33-d6e3d504f47e"/>
+				<reportElement style="Column header" x="225" y="1" width="115" height="15" forecolor="#000000" uuid="a830882e-a46c-4c47-ac33-d6e3d504f47e"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Monthly Repayment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="382" y="0" width="101" height="15" forecolor="#000000" uuid="29df28a2-9d7f-4d35-868d-8bcd5b591a2f"/>
+				<reportElement style="Column header" x="340" y="1" width="101" height="15" forecolor="#000000" uuid="29df28a2-9d7f-4d35-868d-8bcd5b591a2f"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Repayment Period]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="493" y="0" width="83" height="15" forecolor="#000000" uuid="5b662e67-0438-49af-91d6-54c4a1f5987b"/>
+				<reportElement style="Column header" x="441" y="1" width="83" height="15" forecolor="#000000" uuid="5b662e67-0438-49af-91d6-54c4a1f5987b"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Initial Payment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="599" y="0" width="70" height="15" forecolor="#000000" uuid="4b410839-1487-46c3-9523-eef0b5812a6a"/>
+				<reportElement style="Column header" x="524" y="1" width="96" height="15" forecolor="#000000" uuid="4b410839-1487-46c3-9523-eef0b5812a6a"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Repayment Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="689" y="0" width="37" height="15" forecolor="#000000" uuid="3f5dd744-ca50-4752-bbd4-29dbd3e88eae"/>
+				<reportElement style="Column header" x="620" y="1" width="95" height="15" forecolor="#000000" uuid="3f5dd744-ca50-4752-bbd4-29dbd3e88eae"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Total Repayment]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="734" y="0" width="49" height="15" forecolor="#000000" uuid="4ce82194-64a0-49aa-affd-4d591f3adb40"/>
+				<reportElement style="Column header" x="715" y="1" width="49" height="15" forecolor="#000000" uuid="4ce82194-64a0-49aa-affd-4d591f3adb40"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="19fd3695-1637-4926-9bfd-f3f238f5d864"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="9" y="0" width="37" height="15" uuid="fb87050b-0477-439c-8088-05b344a3c778"/>
+					<reportElement style="Detail" x="9" y="0" width="101" height="15" uuid="fb87050b-0477-439c-8088-05b344a3c778"/>
 					<textElement>
-						<font fontName="Times New Roman"/>
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{loan_type_name}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="110" y="0" width="37" height="15" uuid="e77461f0-cda7-4a3a-a8c8-7c5ff90c456b"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="110" y="0" width="67" height="15" uuid="e77461f0-cda7-4a3a-a8c8-7c5ff90c456b"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{principle}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="178" y="0" width="37" height="15" uuid="e997ddc9-fc43-4880-8f4a-d1e3ee7c5d99"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="177" y="0" width="48" height="15" uuid="e997ddc9-fc43-4880-8f4a-d1e3ee7c5d99"/>
+					<box leftPadding="11"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{interest}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="276" y="0" width="37" height="15" uuid="8d8aeeae-2126-43c7-9ac9-41d7f019e2ad"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="225" y="0" width="115" height="15" uuid="8d8aeeae-2126-43c7-9ac9-41d7f019e2ad"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{monthly_repayment}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="413" y="0" width="37" height="15" uuid="223b6ef0-92ca-498f-b4ab-3d0bb203cb38"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="340" y="0" width="101" height="15" uuid="223b6ef0-92ca-498f-b4ab-3d0bb203cb38"/>
+					<box leftPadding="11"/>
+					<textElement textAlignment="Justified">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{repayment_period}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="515" y="0" width="37" height="15" uuid="8376f5fa-1b4a-4a9a-b36e-88b59d611ecd"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="441" y="0" width="83" height="15" uuid="8376f5fa-1b4a-4a9a-b36e-88b59d611ecd"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{initial_payment}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="620" y="0" width="37" height="15" uuid="727fddc1-f572-4a9a-beac-7c2f911bdc7b"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="524" y="0" width="96" height="15" uuid="727fddc1-f572-4a9a-beac-7c2f911bdc7b"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{repayment_amount}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="689" y="0" width="37" height="15" uuid="01325242-b7ed-418c-92b9-1c414af5986b"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="620" y="0" width="95" height="15" uuid="01325242-b7ed-418c-92b9-1c414af5986b"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{total_repayment}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="752" y="0" width="37" height="15" uuid="4fc33421-3d06-4f97-8f28-3d37c9adc1ca"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
+				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement style="Detail" x="715" y="0" width="49" height="15" uuid="4fc33421-3d06-4f97-8f28-3d37c9adc1ca"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{loan_balance}]]></textFieldExpression>
 				</textField>
@@ -226,56 +228,7 @@ order by loan_type_name]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="30" splitType="Stretch">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="5e317069-9615-4e8c-9b19-67d4031514fa"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
-			<staticText>
-				<reportElement x="20" y="4" width="47" height="20" uuid="0e0896b8-b67f-42f2-ac94-39459e597a9c"/>
-				<textElement>
-					<font size="12" isBold="true" isItalic="false"/>
-				</textElement>
-				<text><![CDATA[Total]]></text>
-			</staticText>
-			<textField pattern="#,##0.0" isBlankWhenNull="true">
-				<reportElement x="110" y="7" width="43" height="20" uuid="2c26b316-366c-4818-a32f-568eccd191de"/>
-				<textElement>
-					<font isBold="true" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumprinci}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.0" isBlankWhenNull="true">
-				<reportElement x="261" y="7" width="66" height="20" uuid="39529b41-19b1-4a4d-b76b-31d6925e17af"/>
-				<textElement>
-					<font isBold="true" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumrepayment}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.0" isBlankWhenNull="true">
-				<reportElement x="599" y="7" width="53" height="20" uuid="b9f436cb-9a5c-4225-aa50-f060a2b3f0f1"/>
-				<textElement>
-					<font isBold="true" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumrepaymentotal}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.0" isBlankWhenNull="true">
-				<reportElement x="669" y="7" width="57" height="20" uuid="f1caad7c-8766-4c30-9455-ac61338e3f73"/>
-				<textElement>
-					<font isBold="true" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumtotal}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.0" isBlankWhenNull="true">
-				<reportElement x="734" y="5" width="68" height="20" uuid="2067e48d-da81-4a14-8a99-25c19aa6fdd0"/>
-				<textElement>
-					<font isBold="true" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumbalance}]]></textFieldExpression>
-			</textField>
-		</band>
+		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
@@ -306,6 +259,69 @@ order by loan_type_name]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band splitType="Stretch"/>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="9" y="0" width="101" height="15" uuid="0e0896b8-b67f-42f2-ac94-39459e597a9c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="110" y="0" width="67" height="15" uuid="2c26b316-366c-4818-a32f-568eccd191de"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumprinci}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="225" y="0" width="115" height="15" uuid="39529b41-19b1-4a4d-b76b-31d6925e17af"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumrepayment}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="524" y="0" width="96" height="15" uuid="b9f436cb-9a5c-4225-aa50-f060a2b3f0f1"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumrepaymentotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="620" y="0" width="95" height="15" uuid="f1caad7c-8766-4c30-9455-ac61338e3f73"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumtotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="715" y="0" width="49" height="15" uuid="2067e48d-da81-4a14-8a99-25c19aa6fdd0"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumbalance}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_client_statement" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="395e9a01-2db2-4a30-b6a5-52e553f580f0">
-	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -25,21 +25,48 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2012-01-02"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2012-01-01"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_client_statement.dr, vw_client_statement.cr, vw_client_statement.order_date, vw_client_statement.client_code, vw_client_statement.balance, vw_client_statement.sambaza_in, vw_client_statement.sambaza_out,vw_client_statement.refunds,vw_client_statement.entity_name,
-vw_client_statement.details
-FROM vw_client_statement]]>
+		<![CDATA[SELECT a.dr, a.cr, a.order_date::date AS order_date, a.client_code, a.refunds,
+		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details,a.entity_name,
+a.curr_balance,batch_no
+	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
+		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,vw_loyalty_points.refunds,
+		 vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
+		('Earnings @ Ksh '||amount||' per point for '|| points||' Earned in '|| ticket_period)as details,vw_loyalty_points.entity_name,getClientBalance(vw_loyalty_points.entity_id,'$P!{minDate}') as curr_balance,null::int as batch_no
+	FROM vw_loyalty_points)
+	UNION ALL
+	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
+		vw_orders.order_date::date AS order_date, vw_orders.client_code,
+0::int as refunds, vw_orders.org_name,
+		vw_orders.entity_id,
+		get_order_details(vw_orders.order_id) AS details,vw_orders.entity_name,
+getClientBalance(vw_orders.entity_id,'$P!{minDate}') as curr_balance,vw_orders.batch_no
+	FROM vw_orders)) a
+	WHERE order_date >= '$P!{minDate}'
+AND order_date <= '$P!{maxDate}'
+	ORDER BY a.order_date ASC;]]>
 	</queryString>
 	<field name="dr" class="java.lang.Float"/>
 	<field name="cr" class="java.lang.Float"/>
 	<field name="order_date" class="java.sql.Date"/>
 	<field name="client_code" class="java.lang.String"/>
-	<field name="balance" class="java.lang.Float"/>
-	<field name="sambaza_in" class="java.lang.Float"/>
-	<field name="sambaza_out" class="java.lang.Float"/>
 	<field name="refunds" class="java.lang.Float"/>
-	<field name="entity_name" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="balance" class="java.lang.Float"/>
 	<field name="details" class="java.lang.String"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="curr_balance" class="java.lang.Float"/>
+	<field name="batch_no" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -66,14 +93,14 @@ FROM vw_client_statement]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="441" y="0" width="89" height="15" forecolor="#000000" uuid="e0804450-c090-4c21-a415-a262f08d0225"/>
+				<reportElement style="Column header" x="277" y="0" width="89" height="15" forecolor="#000000" uuid="e0804450-c090-4c21-a415-a262f08d0225"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Dr]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="530" y="0" width="71" height="15" forecolor="#000000" uuid="20040b7f-38b9-4691-9508-7f9e80ba65bd"/>
+				<reportElement style="Column header" x="366" y="0" width="71" height="15" forecolor="#000000" uuid="20040b7f-38b9-4691-9508-7f9e80ba65bd"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -87,39 +114,32 @@ FROM vw_client_statement]]>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="331" y="0" width="110" height="15" forecolor="#000000" uuid="07d9ce56-2683-47db-9083-8e040d43be9d"/>
+				<reportElement style="Column header" x="495" y="0" width="234" height="15" forecolor="#000000" uuid="07d9ce56-2683-47db-9083-8e040d43be9d"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Details]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="601" y="0" width="58" height="15" forecolor="#000000" uuid="a2de9a62-1d64-4098-afb0-4148c9cec385"/>
+				<reportElement style="Column header" x="437" y="0" width="58" height="15" forecolor="#000000" uuid="a2de9a62-1d64-4098-afb0-4148c9cec385"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Refunds]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="659" y="0" width="70" height="15" forecolor="#000000" uuid="efb15df2-6a19-482d-8eb8-ae78c5607eb7"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Sambaza In]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="729" y="0" width="73" height="15" forecolor="#000000" uuid="54554078-258c-41cc-9f7d-65ce1139dbe1"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Sambaza Out]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="111" y="0" width="220" height="15" uuid="1614cfcf-56b8-457d-90af-c6a4c9809247"/>
+				<reportElement x="111" y="0" width="166" height="15" uuid="1614cfcf-56b8-457d-90af-c6a4c9809247"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Client Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="729" y="0" width="73" height="15" uuid="e5ffcb2c-b21f-4d34-bd56-a02683a13f84"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balance]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -128,14 +148,14 @@ FROM vw_client_statement]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="4abb10fd-d911-4878-a580-e99dd2eb79ff"/>
 				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="441" y="0" width="89" height="15" isPrintWhenDetailOverflows="true" uuid="ae4059cb-c22a-4c38-9647-4c7d4b031db7"/>
+					<reportElement style="Detail" x="277" y="0" width="89" height="15" isPrintWhenDetailOverflows="true" uuid="ae4059cb-c22a-4c38-9647-4c7d4b031db7"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{dr}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="530" y="0" width="71" height="15" isPrintWhenDetailOverflows="true" uuid="c5e98304-5595-4102-b4e6-9254493b4011"/>
+					<reportElement style="Detail" x="366" y="0" width="71" height="15" isPrintWhenDetailOverflows="true" uuid="c5e98304-5595-4102-b4e6-9254493b4011"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -148,46 +168,39 @@ FROM vw_client_statement]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{order_date}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="331" y="0" width="110" height="15" uuid="dea305a4-6842-4f47-84da-a1f2c0e53b85"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="601" y="0" width="58" height="15" isPrintWhenDetailOverflows="true" uuid="92c5c4fe-26e7-4d37-8a49-7c949ee6f6ed"/>
+					<reportElement style="Detail" x="437" y="0" width="58" height="15" isPrintWhenDetailOverflows="true" uuid="92c5c4fe-26e7-4d37-8a49-7c949ee6f6ed"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{refunds}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="659" y="0" width="70" height="15" isPrintWhenDetailOverflows="true" uuid="88e8fbed-5d0c-46a4-ad04-1f18eb3d799e"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{sambaza_in}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="729" y="0" width="73" height="15" isPrintWhenDetailOverflows="true" uuid="2bec3564-a355-4fe1-b5b9-49ebb55b2fcb"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{sambaza_out}]]></textFieldExpression>
-				</textField>
 				<textField>
-					<reportElement x="111" y="0" width="220" height="15" uuid="27937953-5b30-4f3f-9c86-b8cd5c43b85a"/>
+					<reportElement x="111" y="0" width="166" height="15" uuid="27937953-5b30-4f3f-9c86-b8cd5c43b85a"/>
 					<textElement>
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="Detail" x="495" y="0" width="234" height="15" uuid="dea305a4-6842-4f47-84da-a1f2c0e53b85"/>
+					<textElement>
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="729" y="0" width="73" height="15" uuid="ef0da6f1-2e7d-4e8a-95fa-336eb8b43c01"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{curr_balance}]]></textFieldExpression>
+				</textField>
 			</frame>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
+		<band height="12" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="b6ca31fa-c5c9-41b5-826c-f0be0bd8b156"/>
 				<graphicElement>
@@ -199,7 +212,7 @@ FROM vw_client_statement]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="-21" y="1" width="841" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="6e554668-a8af-4055-a05d-c4cb42520dc1"/>
+				<reportElement mode="Opaque" x="-21" y="1" width="823" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="6e554668-a8af-4055-a05d-c4cb42520dc1"/>
 				<textField evaluationTime="Report">
 					<reportElement style="Column header" x="771" y="1" width="40" height="20" forecolor="#736343" uuid="b2e09516-4ab5-4d49-89c4-90fbd8f892c5"/>
 					<textElement verticalAlignment="Middle">

@@ -614,6 +614,19 @@ public class BDB {
 		return preparedStatement;
 	}
     
+    public static PreparedStatement getStatement(Connection con, String sql) {
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = con.prepareStatement(sql);
+            log2.info("Preparing Statement..");
+		} catch (SQLException e) {
+            log2.severe("Unable to Prepare Statement : " + e.toString());
+		} catch (Exception ex) {
+            log2.severe("Error Preparing Statement : " + ex.toString());
+		}
+		return preparedStatement;
+	}
+    
     
     public static Integer executeStatement(PreparedStatement preparedStatement) {
 		Integer es = null;

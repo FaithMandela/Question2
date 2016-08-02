@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sales" language="groovy" pageWidth="1010" pageHeight="553" orientation="Landscape" columnWidth="968" leftMargin="21" rightMargin="21" topMargin="21" bottomMargin="0" uuid="b340a841-8561-4aa4-bb4d-8a4675f5f246">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="15"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="maxDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
@@ -13,10 +13,10 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.org_id as org_id, vw_passengers.org_name, vw_passengers.rate_type_id, vw_passengers.rate_plan_name, vw_passengers.rate_id, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.standard_rate,vw_passengers.policy_number, vw_passengers.north_america_rate,(vw_passengers.approved_date::Date)as approved_date, vw_passengers.entity_id,vw_passengers.entity_name, vw_passengers.passenger_id, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_age,vw_passengers.destown, vw_passengers.days_covered, vw_passengers.nok_name, vw_passengers.nok_mobile, vw_passengers.nok_national_id, vw_passengers.cover_amount,vw_passengers.totalAmount_covered, vw_passengers.is_north_america, vw_passengers.details,vw_passengers.pin_no,vw_passengers.sys_country_name,get_benefit_section_a(rate_type_id)
-FROM vw_passengers
-WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as Date) <= '$P!{maxDate} '
-ORDER BY vw_passengers.passenger_id DESC]]>
+		<![CDATA[SELECT vw_allpassengers.passenger_id,vw_allpassengers.org_id as org_id, vw_allpassengers.org_name, vw_allpassengers.rate_type_id, vw_allpassengers.rate_plan_name, vw_allpassengers.rate_id, vw_allpassengers.days_from, vw_allpassengers.days_to, vw_allpassengers.standard_rate,vw_allpassengers.policy_number, vw_allpassengers.north_america_rate,(vw_allpassengers.approved_date::Date)as approved_date, vw_allpassengers.entity_id,vw_allpassengers.entity_name, vw_allpassengers.passenger_id, vw_allpassengers.passenger_name, vw_allpassengers.passenger_mobile, vw_allpassengers.passenger_email, vw_allpassengers.passenger_age,vw_allpassengers.destown, vw_allpassengers.days_covered, vw_allpassengers.nok_name, vw_allpassengers.nok_mobile, vw_allpassengers.passport_number, vw_allpassengers.cover_amount,vw_allpassengers.totalAmount_covered, vw_allpassengers.is_north_america, vw_allpassengers.details,vw_allpassengers.pin_no,vw_allpassengers.sys_country_name,get_benefit_section_a(rate_type_id)
+    FROM vw_allpassengers
+    WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as Date) <= '$P!{maxDate} '
+    ORDER BY vw_allpassengers.passenger_id DESC]]>
 	</queryString>
 	<field name="passenger_id" class="java.lang.Integer"/>
 	<field name="org_id" class="java.lang.Integer"/>
@@ -40,7 +40,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 	<field name="days_covered" class="java.lang.Integer"/>
 	<field name="nok_name" class="java.lang.String"/>
 	<field name="nok_mobile" class="java.lang.String"/>
-	<field name="nok_national_id" class="java.lang.String"/>
+	<field name="passport_number" class="java.lang.String"/>
 	<field name="cover_amount" class="java.lang.Float"/>
 	<field name="totalamount_covered" class="java.lang.Float"/>
 	<field name="is_north_america" class="java.lang.Boolean"/>
@@ -48,13 +48,22 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 	<field name="pin_no" class="java.lang.String"/>
 	<field name="sys_country_name" class="java.lang.String"/>
 	<field name="get_benefit_section_a" class="java.lang.String"/>
+	<variable name="total_sum" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalamount_covered}]]></variableExpression>
+	</variable>
+	<variable name="premium" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{cover_amount}]]></variableExpression>
+	</variable>
+	<variable name="duty" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[($F{cover_amount}+0.45)/100+0.5]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="131" splitType="Stretch">
 			<staticText>
-				<reportElement x="196" y="0" width="772" height="38" uuid="d2310959-a4e7-4bec-8e2f-ad8333feb10c"/>
+				<reportElement x="207" y="37" width="434" height="69" uuid="d2310959-a4e7-4bec-8e2f-ad8333feb10c"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24" isBold="true"/>
 				</textElement>
@@ -84,21 +93,21 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Justified" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Policy No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="711" y="0" width="46" height="35" uuid="4983e0f0-643b-47ff-aa7c-de347339da42"/>
+				<reportElement x="707" y="0" width="49" height="35" uuid="4983e0f0-643b-47ff-aa7c-de347339da42"/>
 				<textElement textAlignment="Center" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Plan Rate]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="909" y="0" width="59" height="35" isPrintWhenDetailOverflows="true" uuid="4afee9cc-329b-499b-8502-a32421df9ea2"/>
+				<reportElement x="908" y="0" width="59" height="35" isPrintWhenDetailOverflows="true" uuid="4afee9cc-329b-499b-8502-a32421df9ea2"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -107,7 +116,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Center" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Total Premium]]></text>
@@ -115,13 +124,13 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 			<staticText>
 				<reportElement stretchType="RelativeToTallestObject" x="483" y="0" width="61" height="35" isPrintWhenDetailOverflows="true" uuid="ea923a3d-8656-4853-b09f-50799a0b4b7e"/>
 				<textElement textAlignment="Center" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Country of Residence]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="655" y="0" width="53" height="35" isPrintWhenDetailOverflows="true" uuid="c0624142-8371-4e6d-8324-a6049f858d72"/>
+				<reportElement x="654" y="0" width="53" height="35" isPrintWhenDetailOverflows="true" uuid="c0624142-8371-4e6d-8324-a6049f858d72"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -130,7 +139,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Center" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Country of Travel]]></text>
@@ -145,7 +154,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Justified" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
@@ -160,13 +169,13 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Justified" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Insured Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="545" y="0" width="58" height="35" isPrintWhenDetailOverflows="true" uuid="cbf52403-2482-48aa-a781-877a4366a519"/>
+				<reportElement x="544" y="0" width="58" height="35" isPrintWhenDetailOverflows="true" uuid="cbf52403-2482-48aa-a781-877a4366a519"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -175,7 +184,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Justified" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Departure Date]]></text>
@@ -183,7 +192,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 			<staticText>
 				<reportElement x="372" y="0" width="52" height="35" uuid="342a6b5d-b75d-40be-ab31-3c8cfb7adc98"/>
 				<textElement rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Passport Number]]></text>
@@ -198,15 +207,15 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Justified" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Agency]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="757" y="0" width="47" height="35" uuid="e7500477-12fb-4465-82c1-33b1239dc78a"/>
+				<reportElement x="756" y="0" width="47" height="35" uuid="e7500477-12fb-4465-82c1-33b1239dc78a"/>
 				<textElement textAlignment="Center" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[S.I]]></text>
@@ -214,13 +223,13 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 			<staticText>
 				<reportElement x="424" y="0" width="59" height="35" uuid="30c858d3-4f41-470e-b240-b66b0afb8efb"/>
 				<textElement rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[PIN    Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="603" y="0" width="52" height="35" isPrintWhenDetailOverflows="true" uuid="afdaa321-f00a-45c9-9753-84600aa8beee"/>
+				<reportElement x="602" y="0" width="52" height="35" isPrintWhenDetailOverflows="true" uuid="afdaa321-f00a-45c9-9753-84600aa8beee"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -229,13 +238,13 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Return Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" x="853" y="0" width="56" height="35" isPrintWhenDetailOverflows="true" uuid="2026c24d-cec1-45f3-b3e4-bd4d2b3ca4e9"/>
+				<reportElement stretchType="RelativeToTallestObject" x="852" y="0" width="56" height="35" isPrintWhenDetailOverflows="true" uuid="2026c24d-cec1-45f3-b3e4-bd4d2b3ca4e9"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -244,13 +253,13 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Center" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Levy/Stamp Duty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="804" y="0" width="49" height="35" isPrintWhenDetailOverflows="true" uuid="68c879f9-b683-44a8-8935-1b588e29b2ae"/>
+				<reportElement x="803" y="0" width="49" height="35" isPrintWhenDetailOverflows="true" uuid="68c879f9-b683-44a8-8935-1b588e29b2ae"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -259,7 +268,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Center" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Basic Premium]]></text>
@@ -274,7 +283,7 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Justified" rotation="None">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
 				</textElement>
 				<text><![CDATA[Booking By]]></text>
@@ -284,114 +293,114 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 	<detail>
 		<band height="25" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="757" y="0" width="47" height="25" isPrintWhenDetailOverflows="true" uuid="dee6cab3-9818-4691-a464-99ee3533bc16"/>
+				<reportElement x="756" y="0" width="47" height="25" isPrintWhenDetailOverflows="true" uuid="dee6cab3-9818-4691-a464-99ee3533bc16"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{get_benefit_section_a}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="483" y="0" width="61" height="25" isPrintWhenDetailOverflows="true" uuid="22be2c09-9316-4297-af74-c6dc825305fd"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sys_country_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="545" y="0" width="58" height="25" isPrintWhenDetailOverflows="true" uuid="e7f53f2e-907d-4ad9-9b5e-d1079ce851f1"/>
+				<reportElement x="544" y="0" width="58" height="25" isPrintWhenDetailOverflows="true" uuid="e7f53f2e-907d-4ad9-9b5e-d1079ce851f1"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{days_from}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yy" isBlankWhenNull="true">
 				<reportElement x="145" y="0" width="49" height="25" isPrintWhenDetailOverflows="true" uuid="0e514d5a-4ede-48df-86e8-ab553595e04d"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{approved_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="908" y="0" width="60" height="25" isPrintWhenDetailOverflows="true" uuid="a9187a5d-7bfe-4d5a-993a-5eefb73a465f"/>
+				<reportElement x="908" y="0" width="59" height="25" isPrintWhenDetailOverflows="true" uuid="a9187a5d-7bfe-4d5a-993a-5eefb73a465f"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{totalamount_covered}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="194" y="0" width="102" height="25" isPrintWhenDetailOverflows="true" uuid="ca62706c-fd0e-478b-91f4-e08f3a11b7e7"/>
 				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<font fontName="Garamond-Normal" size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="603" y="0" width="52" height="25" isPrintWhenDetailOverflows="true" uuid="e4dee65d-2064-4b5c-87a3-e7e2415991d1"/>
+				<reportElement x="602" y="0" width="52" height="25" isPrintWhenDetailOverflows="true" uuid="e4dee65d-2064-4b5c-87a3-e7e2415991d1"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{days_to}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="804" y="0" width="49" height="25" isPrintWhenDetailOverflows="true" uuid="14af6a33-7122-4256-af4f-4bdfd4444684"/>
+				<reportElement x="803" y="0" width="49" height="25" isPrintWhenDetailOverflows="true" uuid="14af6a33-7122-4256-af4f-4bdfd4444684"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cover_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="711" y="0" width="46" height="25" isPrintWhenDetailOverflows="true" uuid="89f7ab38-a249-4f9b-a1cb-cb31d9598ef5"/>
+				<reportElement x="707" y="0" width="49" height="25" isPrintWhenDetailOverflows="true" uuid="89f7ab38-a249-4f9b-a1cb-cb31d9598ef5"/>
 				<textElement textAlignment="Center">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rate_plan_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
-				<reportElement x="853" y="0" width="55" height="25" isPrintWhenDetailOverflows="true" uuid="39814c58-ee83-4454-9652-1e1c48cbc043"/>
+				<reportElement x="852" y="0" width="56" height="25" isPrintWhenDetailOverflows="true" uuid="39814c58-ee83-4454-9652-1e1c48cbc043"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{cover_amount}+0.45)/100+0.5]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="296" y="0" width="76" height="25" isPrintWhenDetailOverflows="true" uuid="835f5b17-33b0-49bd-8d73-e0c137f7f867"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{passenger_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="75" y="0" width="70" height="25" isPrintWhenDetailOverflows="true" uuid="2e1f0250-aaaa-414c-95aa-2492644a9590"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="424" y="0" width="59" height="25" isPrintWhenDetailOverflows="true" uuid="25ba54f2-63c2-4481-888a-755c634f8b30"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pin_no}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="655" y="0" width="53" height="25" isPrintWhenDetailOverflows="true" uuid="6ea3e095-f731-46b2-a4e7-0551a261100d"/>
+				<reportElement x="654" y="0" width="53" height="25" isPrintWhenDetailOverflows="true" uuid="6ea3e095-f731-46b2-a4e7-0551a261100d"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destown}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="372" y="0" width="52" height="25" isPrintWhenDetailOverflows="true" uuid="46fddba9-40c8-42d4-9cd0-a18e351c6992"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nok_national_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{passport_number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="75" height="25" isPrintWhenDetailOverflows="true" uuid="d440425d-f094-41b9-a92d-ccc843702a0d"/>
 				<textElement>
-					<font fontName="Times New Roman" size="10"/>
+					<font fontName="Garamond-Normal" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
 			</textField>
@@ -409,6 +418,38 @@ ORDER BY vw_passengers.passenger_id DESC]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="909" y="15" width="59" height="20" isPrintWhenDetailOverflows="true" uuid="dcf60d5e-fdc1-42a1-af8d-bff277168b76"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_sum}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="692" y="15" width="100" height="20" uuid="a111cb9f-406f-46f8-82d4-5d62ca2cb675"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ TOTAL :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="543" y="5" width="425" height="1" uuid="93057088-9a0c-433e-ac42-323e9587344e"/>
+			</line>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="853" y="15" width="56" height="20" isPrintWhenDetailOverflows="true" uuid="10aad44c-fb1c-4aea-919e-0dd7b1f7af03"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{duty}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="792" y="15" width="61" height="20" isPrintWhenDetailOverflows="true" uuid="72278ff4-db16-4930-a1d2-cca575ee5ea7"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{premium}]]></textFieldExpression>
+			</textField>
+		</band>
 	</summary>
 </jasperReport>

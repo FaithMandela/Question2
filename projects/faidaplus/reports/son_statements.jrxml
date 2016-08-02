@@ -16,20 +16,20 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT a.dr, a.cr, a.order_date::date AS order_date, a.son, a.pcc,
+		<![CDATA[SELECT a.dr, a.cr, a.order_date::date AS order_date, a.client_code,
 		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details,a.entity_name,
 a.curr_balance,batch_no
-	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,
-		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.org_son as son,
-		vw_son_points.org_pcc as pcc, vw_son_points.org_name, vw_son_points.entity_id,
-		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name,getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,null::int as batch_no
-	FROM vw_son_points)
+	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
+		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
+		 vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_loyalty_points.entity_name,getClientBalance('$P!{id}','$P!{minDate}') as curr_balance,null::int as batch_no
+	FROM vw_loyalty_points)
 	UNION ALL
 	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
-		vw_orders.order_date::date AS order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
+		vw_orders.order_date::date AS order_date, vw_orders.client_code, vw_orders.org_name,
 		vw_orders.entity_id,
 		get_order_details(vw_orders.order_id) AS details,vw_orders.entity_name,
-getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,vw_orders.batch_no
+getClientBalance('$P!{id}','$P!{minDate}') as curr_balance,vw_orders.batch_no
 	FROM vw_orders)) a
 	WHERE entity_id = '$P!{id}'
 AND order_date >= '$P!{minDate}'
@@ -39,8 +39,7 @@ AND order_date <= '$P!{maxDate}'
 	<field name="dr" class="java.lang.Float"/>
 	<field name="cr" class="java.lang.Float"/>
 	<field name="order_date" class="java.sql.Date"/>
-	<field name="son" class="java.lang.String"/>
-	<field name="pcc" class="java.lang.String"/>
+	<field name="client_code" class="java.lang.String"/>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="balance" class="java.lang.Float"/>

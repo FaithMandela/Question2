@@ -45,3 +45,24 @@ CREATE TRIGGER ins_policy_number
     ON passengers
     FOR EACH ROW
     EXECUTE PROCEDURE ins_policy_number();
+
+
+
+CREATE OR REPLACE FUNCTION upd_passenger(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 		varchar(50);
+BEGIN
+	IF ($3::integer = 1) THEN
+
+		UPDATE passengers SET approved = false WHERE passenger_id = $1::integer;
+		msg := 'Emergency Card Canceled Successfully';
+	END IF;
+
+	IF($3::integer = 2)THEN
+    UPDATE passengers SET approved = true WHERE passenger_id = $1::integer;
+    msg := 'Emergency Card Reverted Successfully';
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;

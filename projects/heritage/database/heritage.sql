@@ -107,10 +107,57 @@ CREATE INDEX passengers_entity_id ON passengers(entity_id);
 CREATE INDEX passengers_org_id ON passengers(org_id);
 
 CREATE TABLE policy_sequence(
-  policy_no_id 		serial NOT NULL,
+  policy_no_id 		serial PRIMARY KEY,
   policy_sequence_no 	character varying(50)
 );
 INSERT INTO policy_sequence (policy_sequence_no) VALUES ('000');
+
+CREATE TABLE corporate_rate_category
+(
+  corporate_rate_category_id serial primary key,
+  corporate_rate_category_name character varying(120)
+);
+
+CREATE TABLE corporate_rate_types  (
+  rate_type_id 		serial PRIMARY KEY,
+  corporate_rate_category_id integer references corporate_rate_category,
+  rate_type_name 	character varying(100),
+  age_limit 		integer DEFAULT 80,
+  details 		text
+);
+CREATE INDEX corporate_rate_types_rate_category_id ON corporate_rate_types(corporate_rate_category_id);
+
+CREATE TABLE corporate_benefit_types  (
+  corporate_benefit_type_id 		serial PRIMARY KEY,
+  corporate_section                 character varying(5),
+  corporate_benefit_type_name 		character varying(100),
+  details 			    			text
+);
+
+CREATE TABLE corporate_benefits (
+  benefit_id 		    		serial PRIMARY KEY,
+  rate_type_id 					integer references corporate_rate_types,
+  corporate_benefit_type_id 	integer references corporate_benefit_types,
+  individual 		    		text,
+  others 		        		text
+);
+CREATE INDEX corporate_benefits_benefit_type_id ON corporate_benefits(corporate_benefit_type_id);
+CREATE INDEX corporate_rate_types_rate_type_id ON corporate_benefits(rate_type_id);
+
+
+
+CREATE TABLE corporate_rates   (
+	corporate_rate_id 		        serial PRIMARY KEY,
+	rate_type_id 		    		integer references corporate_rate_types,
+	days_from 		    			integer,
+	days_to 		      			integer,
+	standard_rate 	    			real,
+	north_america_rate 				real
+	);
+CREATE INDEX corporate_rates_rate_type_id ON corporate_rates(rate_type_id);
+
+
+
 
 DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
@@ -192,3 +239,28 @@ SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_rates.rate_type_id, vw_rates.
    JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
    JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id
    JOIN sys_countrys ON passengers.sys_country_id = sys_countrys.sys_country_id;
+
+
+
+
+   CREATE OR REPLACE VIEW vw_corporate_rates AS
+   SELECT corporate_rate_types.rate_type_id, corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
+     corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate
+    FROM corporate_rates
+      JOIN corporate_rate_types ON corporate_rates.rate_type_id = corporate_rate_types.rate_type_id;
+
+
+   CREATE OR REPLACE VIEW vw_corporate_benefits AS
+   SELECT corporate_benefits.corporate_benefit_type_id,  corporate_benefit_types.corporate_benefit_type_name,
+     corporate_benefits.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_benefits.benefit_id,
+     corporate_benefits.individual,  corporate_benefits.others
+    FROM corporate_benefits
+      JOIN corporate_benefit_types ON corporate_benefits.corporate_benefit_type_id = corporate_benefit_types.corporate_benefit_type_id
+      JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
+
+
+   CREATE OR REPLACE VIEW vw_corporate_rate_types AS
+   SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_rate_types.age_limit,
+      corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name
+     FROM corporate_rate_types
+     JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id ;
