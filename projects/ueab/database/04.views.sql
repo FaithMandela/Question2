@@ -253,7 +253,7 @@ CREATE VIEW vw_studentdegrees AS
 		studentdegrees.graduated, studentdegrees.graduatedate, studentdegrees.dropout, studentdegrees.transferin, studentdegrees.transferout,
 		
 		studentdegrees.grad_apply, studentdegrees.grad_apply_date, studentdegrees.grad_finance, studentdegrees.grad_finance_date,
-		studentdegrees.grad_accept, studentdegrees.grad_accept_date,
+		studentdegrees.grad_accept, studentdegrees.grad_accept_date, studentdegrees.expected_grad_date,
 		
 		studentdegrees.mathplacement, studentdegrees.englishplacement, studentdegrees.details,
 		

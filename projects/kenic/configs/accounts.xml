@@ -3,8 +3,8 @@
 	  processdelay="3">
 	<EXPORT name="Clients" table="client" keyfield="clid" marker="(ispicked=false)" marked="ispicked = true" psql="INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');">
 		<TEXTFIELD w="75" title="Clid">clid</TEXTFIELD>
-		<TEXTFIELD w="75" title="Name">name</TEXTFIELD>
-		<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
+		<TEXTFIELD w="75" fnct="trim(substr(name, 1, 99))" title="Name">fv_name</TEXTFIELD>
+		<TEXTFIELD w="75" fnct="trim(substr(address, 1, 254))" title="Address">fv_address</TEXTFIELD>
 		<TEXTFIELD w="75" fnct="CAST('KES' as varchar(16))" title="curr_code">curr_code</TEXTFIELD>
 		<TEXTFIELD w="75" fnct="CAST(1 as int)" title="payment_terms">payment_terms</TEXTFIELD>
 		<TEXTFIELD w="75" fnct="CAST(1 as int)" title="credit_status">credit_status</TEXTFIELD>

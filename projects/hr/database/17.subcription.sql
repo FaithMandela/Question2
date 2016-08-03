@@ -237,15 +237,15 @@ BEGIN
 		SELECT NEW.org_id, adjustment_type, adjustment_name, visible, in_tax
 		FROM adjustments WHERE org_id = 1;
 		
-		FOR myrec IN SELECT tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active
+		FOR myrec IN SELECT tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type
 			FROM tax_types WHERE org_id = 1 ORDER BY tax_type_id 
 		LOOP
 			v_tax_type_id := nextval('tax_types_tax_type_id_seq');
-			INSERT INTO tax_types (org_id, tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active)
-			VALUES (NEW.org_id, v_tax_type_id, myrec.use_key, myrec.tax_type_name, myrec.formural, myrec.tax_relief, myrec.tax_type_order, myrec.in_tax, myrec.linear, myrec.percentage, myrec.employer, myrec.employer_ps, myrec.active);
+			INSERT INTO tax_types (org_id, tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type, currency_id)
+			VALUES (NEW.org_id, v_tax_type_id, myrec.use_key, myrec.tax_type_name, myrec.formural, myrec.tax_relief, myrec.tax_type_order, myrec.in_tax, myrec.linear, myrec.percentage, myrec.employer, myrec.employer_ps, myrec.active, myrec.use_type, v_currency_id);
 			
 			INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
-			SELECT 1,  v_tax_type_id, tax_range, tax_rate
+			SELECT NEW.org_id,  v_tax_type_id, tax_range, tax_rate
 			FROM tax_rates
 			WHERE org_id = 1 and tax_type_id = myrec.tax_type_id;
 		END LOOP;

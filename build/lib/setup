@@ -12,6 +12,7 @@ jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-codec-1.9.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-collections-3.2.2.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-digester-2.1.jar dewciskeystore
+jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-lang-2.6.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO commons-logging-1.1.1.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO derby.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO dom4j-1.6.1.jar dewciskeystore
@@ -29,3 +30,5 @@ jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jackson-core-2.1.4.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO jackson-databind-2.1.4.jar dewciskeystore
 jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO xmlbeans-2.3.0.jar dewciskeystore
+jarsigner -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp -keystore dewciskeystore.jks -storepass Baraza9NBO -keypass Baraza9NBO server/tomcat-embed-core.jar dewciskeystore
+

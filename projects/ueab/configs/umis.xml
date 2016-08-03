@@ -731,6 +731,7 @@
 				<TEXTDATE w="150" title="Cleared Date" tab="Graduating" y="70" h="20" x="290">clearedate</TEXTDATE>
 				<CHECKBOX w="150" title="Graduated" tab="Graduating" y="90" h="20" x="10">graduated</CHECKBOX>
 				<TEXTDATE w="150" title="Graduation Date" tab="Graduating" y="90" h="20" x="290">graduatedate</TEXTDATE>
+				<TEXTDATE w="150" title="Exp. Graduation" tab="Graduating" y="110" h="20" x="290">expected_grad_date</TEXTDATE>
 				<TEXTAREA w="530" tab="Details" y="150" h="120" x="10">details</TEXTAREA>
 			</FORM>
 			<JASPER name="Grade Summary" reportfile="gradesummary_d.jasper"></JASPER>
