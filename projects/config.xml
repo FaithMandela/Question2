@@ -8,8 +8,8 @@
 	<APP dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
 	<APP dbpath="jdbc:postgresql://localhost/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
-	<APP dbpath="jdbc:postgresql://localhost/business" dbname="business" path="business" xmlfile="business.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity" key="business">Business</APP>
-	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity" key="hr">Human Resources</APP>
+	<APP dbpath="jdbc:postgresql://localhost/business" dbname="business" path="business" xmlfile="business.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" key="business" auth="entity">Business</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="hr" auth="entity">Human Resources</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="payroll.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Payroll</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="projects.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Projects</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Finance</APP>
@@ -77,6 +77,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/yu" dbname="yu" path="yu" xmlfile="yu.xml" dbclass="org.postgresql.Driver" dbusername="root">YU</APP>
 	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
 	<APP dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="schools.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="school">Schools</APP>
+	<APP dbpath="jdbc:postgresql://localhost/barazapesa" dbname="barazapesa" path="barazapesa" xmlfile="barazapesa.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="barazapesa">Baraza Pesa</APP>
 	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="baraza" auth="entity">Baraza</APP>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="root">HR Mailing Server</SERVER>
