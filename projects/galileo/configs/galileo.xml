@@ -2059,7 +2059,7 @@
 			<TEXTFIELD w="75" title="Booking Type">booking_type</TEXTFIELD>
 			<TEXTFIELD w="75" title="Boi Booking Date">boi_booking_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pcc">pcc</TEXTFIELD>
-			<TEXTFIELD w="75" title="Count">count</TEXTFIELD>
+			<TEXTFIELD w="75" title="C Count">c_count</TEXTFIELD>
 			<TEXTFIELD w="75" title="Acs Crs Number">acs_crs_number</TEXTFIELD>
 		</GRID>
 	</DESK>

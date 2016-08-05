@@ -107,28 +107,28 @@ ORDER BY vw_contributions.period_id]]>
 				<text><![CDATA[Investment Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="363" y="0" width="141" height="15" forecolor="#000000" uuid="37306836-9294-4d70-91da-6f71e17ea06d"/>
+				<reportElement style="Column header" x="363" y="0" width="77" height="15" forecolor="#000000" uuid="37306836-9294-4d70-91da-6f71e17ea06d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Merry Go Round Amount]]></text>
+				<text><![CDATA[MGR Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="504" y="0" width="40" height="15" forecolor="#000000" uuid="d6e902d0-dd20-4e7e-a4c4-e13e37c583d5"/>
+				<reportElement style="Column header" x="440" y="0" width="40" height="15" forecolor="#000000" uuid="d6e902d0-dd20-4e7e-a4c4-e13e37c583d5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="544" y="0" width="69" height="15" forecolor="#000000" uuid="58f81eb5-bda9-4eb1-8b7f-4a733663c4fe"/>
+				<reportElement style="Column header" x="480" y="0" width="69" height="15" forecolor="#000000" uuid="58f81eb5-bda9-4eb1-8b7f-4a733663c4fe"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Money In]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="613" y="0" width="61" height="15" forecolor="#000000" uuid="e81bdeae-0ece-4a69-afbc-7e359b69de6f"/>
+				<reportElement style="Column header" x="549" y="0" width="61" height="15" forecolor="#000000" uuid="e81bdeae-0ece-4a69-afbc-7e359b69de6f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -162,7 +162,7 @@ ORDER BY vw_contributions.period_id]]>
 					<textFieldExpression><![CDATA[$F{investment_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="362" y="0" width="141" height="15" uuid="6357f4ae-d12b-45d7-ab5c-2c63c6b6c557"/>
+					<reportElement style="Detail" x="362" y="0" width="77" height="15" uuid="6357f4ae-d12b-45d7-ab5c-2c63c6b6c557"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -170,21 +170,21 @@ ORDER BY vw_contributions.period_id]]>
 				</textField>
 			</frame>
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement style="Detail" x="543" y="0" width="69" height="15" uuid="63105981-e166-48e2-8714-97421de02984"/>
+				<reportElement style="Detail" x="479" y="0" width="69" height="15" uuid="63105981-e166-48e2-8714-97421de02984"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{money_in}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement style="Detail" x="612" y="0" width="61" height="15" uuid="2787ab9b-4c33-4bf6-88bb-e87a1adad198"/>
+				<reportElement style="Detail" x="548" y="0" width="61" height="15" uuid="2787ab9b-4c33-4bf6-88bb-e87a1adad198"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{money_out}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="503" y="0" width="40" height="15" uuid="929631c8-7600-46ea-b706-d82791ace43f"/>
+				<reportElement style="Detail" x="439" y="0" width="40" height="15" uuid="929631c8-7600-46ea-b706-d82791ace43f"/>
 				<box leftPadding="8"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
@@ -245,7 +245,7 @@ ORDER BY vw_contributions.period_id]]>
 				<textFieldExpression><![CDATA[$V{suminvestmentant}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="362" y="0" width="141" height="20" uuid="caad5a4d-384a-442a-92a5-6d856693654a"/>
+				<reportElement x="362" y="0" width="77" height="20" uuid="caad5a4d-384a-442a-92a5-6d856693654a"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -256,7 +256,7 @@ ORDER BY vw_contributions.period_id]]>
 				<textFieldExpression><![CDATA[$V{summgr}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="543" y="0" width="69" height="20" uuid="ef2693e6-622c-47ed-9b78-df5840987310"/>
+				<reportElement x="479" y="0" width="69" height="20" uuid="ef2693e6-622c-47ed-9b78-df5840987310"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -267,7 +267,7 @@ ORDER BY vw_contributions.period_id]]>
 				<textFieldExpression><![CDATA[$V{summoneyin}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="612" y="0" width="61" height="20" uuid="a3c16642-b7fe-49f6-a676-d94f95aed7f4"/>
+				<reportElement x="548" y="0" width="61" height="20" uuid="a3c16642-b7fe-49f6-a676-d94f95aed7f4"/>
 				<box>
 					<topPen lineWidth="0.5" lineStyle="Solid"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
