@@ -65,7 +65,8 @@ public class BVirtualMin {
 	public boolean runCMD(String cmd) {
 		boolean domainCreated = true;
 		try {
-			URL url = new URL("https://twiga.tamshi.com:8443/virtual-server/remote.cgi?" + cmd);
+			String fullCmd = "https://twiga.tamshi.com:8443/virtual-server/remote.cgi?" + cmd);
+			URL url = new URL(fullCmd);
 			URLConnection con = url.openConnection();
 			Reader reader = new InputStreamReader(con.getInputStream());
 			while (true) {

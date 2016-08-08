@@ -185,6 +185,7 @@
 						<CHECKBOX w="150" title="Retrived" y="90" h="20" x="10">is_retrived</CHECKBOX>
 						<TEXTDATE w="150" title="Date Retrived" default="now" y="90" h="20" x="290">date_retrived</TEXTDATE>
 						<TEXTFIELD w="150" title="Units" default="1" y="110" h="20" x="10">units</TEXTFIELD>
+						<CHECKBOX w="150" title="For Client" y="110" h="20" x="290">is_for_client</CHECKBOX>
 						<TEXTFIELD w="430" title="Equipment Status" y="130" h="20" x="10">equipment_status</TEXTFIELD>
 						<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
@@ -953,6 +954,8 @@
 				<TEXTAREA w="75" title="GTIDS">gtids</TEXTAREA>
 				<TEXTAREA w="75" title="Details">details</TEXTAREA>
 			</GRID>
+			<JASPER name="PM System" reportfile="pm_system_f.jasper"></JASPER>
+			<JASPER name="System PM" reportfile="system_pm_f.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Outstanding Requests" key="84" h="550">

@@ -156,11 +156,6 @@ BEGIN
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, reca.entity_id);
 		END IF;
-		IF (rec.frequency = 'Irregularly') THEN
-			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-			reca.member_id, reca.entity_id);
-		END IF;
 		IF (rec.frequency = 'Quarterly') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
@@ -198,11 +193,6 @@ BEGIN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, recu.entity_id);
-		END IF;
-		IF (rec.frequency = 'Irregularly') THEN
-			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-			reca.member_id, reca.entity_id);
 		END IF;
 		IF (rec.frequency = 'Quarterly') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
@@ -260,6 +250,33 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION weeks_in_range(date, date, integer) RETURNS integer AS $$
+DECLARE
+	v_days				integer;
+	v_weeks				integer;
+	v_rem				integer;
+	v_fdow				integer;
+	v_ldow				integer;
+BEGIN
+	v_days := 1 + $2 - $1;
+	v_weeks := v_days / 7;
+	v_rem := v_days - (v_weeks * 7);
+	v_fdow := EXTRACT(DOW FROM $1);
+	v_ldow := EXTRACT(DOW FROM $2);
+	
+	RAISE NOTICE 'Days %,  weeks %, rem %, DOW %', v_days, v_weeks, v_rem, v_fdow;
+	
+	IF($3 <= v_rem) AND ($3 >= v_fdow) THEN
+		v_weeks := v_weeks + 1;
+	ELSIF($3 <= v_rem) AND ($3 <= v_ldow) THEN
+		v_weeks := v_weeks + 1;
+	END IF;
+
+
+	return v_weeks;
+END;
+$$ LANGUAGE plpgsql;
+  
  CREATE OR REPLACE FUNCTION upd_email()
   RETURNS trigger AS
 $BODY$

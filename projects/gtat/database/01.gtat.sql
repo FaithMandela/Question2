@@ -540,7 +540,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER upd_clientbranches BEFORE UPDATE ON clientbranches
     FOR EACH ROW EXECUTE PROCEDURE upd_clientbranches();
-    
+
     
 CREATE OR REPLACE FUNCTION approve_period(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE

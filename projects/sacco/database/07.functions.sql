@@ -1,4 +1,97 @@
 
+drop view vw_periods cascade;
+
+CREATE VIEW vw_periods AS
+	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start, fiscal_years.fiscal_year_end,
+		fiscal_years.year_opened, fiscal_years.year_closed,
+
+		periods.period_id, periods.org_id, 
+		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
+		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
+		periods.gl_payroll_account, periods.gl_bank_account, periods.gl_advance_account,
+		periods.bank_header, periods.bank_address, periods.details,
+
+		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
+		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
+		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
+		to_char(periods.start_date, 'YYYYMM') as period_code
+	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
+	ORDER BY periods.start_date;
+
+CREATE VIEW vw_period_year AS
+	SELECT org_id, period_year
+	FROM vw_periods
+	GROUP BY org_id, period_year
+	ORDER BY period_year;
+
+CREATE VIEW vw_period_quarter AS
+	SELECT org_id, quarter
+	FROM vw_periods
+	GROUP BY org_id, quarter
+	ORDER BY quarter;
+
+CREATE VIEW vw_period_semister AS
+	SELECT org_id, semister
+	FROM vw_periods
+	GROUP BY org_id, semister
+	ORDER BY semister;
+
+CREATE VIEW vw_period_month AS
+	SELECT org_id, month_id, period_year, period_month
+	FROM vw_periods
+	GROUP BY org_id, month_id, period_year, period_month
+	ORDER BY month_id, period_year, period_month;
+
+
+
+CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
+BEGIN
+	INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
+	SELECT NEW.fiscal_year_id, NEW.org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
+	FROM (SELECT CAST(generate_series(fiscal_year_start, fiscal_year_end, '1 month') as date) as period_start
+		FROM fiscal_years WHERE fiscal_year_id = NEW.fiscal_year_id) as a;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+CREATE OR REPLACE FUNCTION ins_periods() RETURNS trigger AS $$
+DECLARE
+	year_close 		BOOLEAN;
+BEGIN
+	SELECT year_closed INTO year_close
+	FROM fiscal_years
+	WHERE (fiscal_year_id = NEW.fiscal_year_id);
+	
+	IF(TG_OP = 'UPDATE')THEN    
+		IF (OLD.closed = true) AND (NEW.closed = false) THEN
+			NEW.approve_status := 'Draft';
+		END IF;
+	END IF;
+
+	IF (NEW.approve_status = 'Approved') THEN
+		NEW.opened = false;
+		NEW.activated = false;
+		NEW.closed = true;
+	END IF;
+
+	IF(year_close = true)THEN
+		RAISE EXCEPTION 'The year is closed not transactions are allowed.';
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+------------Hooks to approval trigger
+
+
+
+
+
 CREATE OR REPLACE FUNCTION ins_gurrantors()
   RETURNS trigger AS
 $BODY$
@@ -28,7 +121,7 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
-  CREATE OR REPLACE FUNCTION ins_contributions()
+   CREATE OR REPLACE FUNCTION ins_contributions()
 
   RETURNS trigger AS
 $BODY$
@@ -69,13 +162,11 @@ LOOP
 		
 END LOOP;
 	raise exception ' the balance is%',v_id;
-INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
-	VALUES (v_id, NEW.period_id, NEW.org_id, NEW.deposit_amount);
-	--msg := 'Loan repaid first of Kes%' v_total_all;
 	
+		NEW.period_id := nextval('periods_period_id_seq');
 	
---INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
-	--VALUES (v_id, NEW.period_id, NEW.org_id, v_loan);
+INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
+	VALUES (v_id, NEW.period_id, NEW.org_id, v_loan);
 	
 	if (v_bal is not null) then
 	INSERT INTO investments (entity_id,investment_type_id, org_id, invest_amount, period_years)
@@ -83,20 +174,21 @@ INSERT INTO loan_repayment(loan_id, period_id, org_id, repayment_amount)
 	else
 	new.contribution_amount := 0;
 	END IF;
-	
+ELSE IF NEW.additional_payments > 0 THEN
+INSERT INTO loan_monthly(loan_id, period_id, org_id, additional_payments)
+	VALUES (v_id, NEW.period_id, NEW.org_id, NEW.additional_payments);
 END IF;
+END IF;
+
 
    RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
 
-
-
-
   
 CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE On contributions
-   FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
+  FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
 
   
 
@@ -597,6 +689,23 @@ BEGIN
     return passchange;
 END;
 $$ LANGUAGE plpgsql;
+
+alter table contributions add additional_payments real not null default 0;
+alter table loan_monthly add additional_payments real not null default 0;
+
+
+CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
+	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid - additional_payments) is null THEN 0 
+		ELSE sum(repayment + interest_paid + penalty_paid - additional_payments) END
+	FROM loan_monthly
+	WHERE (loan_id = $1);
+$$ LANGUAGE SQL;
+
+
+
+
+
+
 
 
 

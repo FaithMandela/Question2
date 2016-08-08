@@ -1,9 +1,10 @@
 UPDATE orgs SET org_name = 'Dew CIS Solutions Ltd', cert_number = 'C.102554', pin = 'P051165288J', vat_number = '0142653A', 
 invoice_footer = 'Make all payments to : Dew CIS Solutions ltd
 Thank you for your Business
-We Turn your information into profitability';
+We Turn your information into profitability'
+WHERE org_id = 0;
 
-UPDATE transaction_types SET document_number = '10001';
+UPDATE transaction_counters SET document_number = '10001';
 
 INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, super_user, entity_leader, function_role, date_enroled, is_active, entity_password, first_password, details, account_id, attention) 
 VALUES (2, 0, 2, 'Kenya Aiways', 'travelport', false, false, 'client', '2011-11-16 09:48:12.983091', true, 'cdaab4aa7870bb7758599fb9473bf16a', '94J860RR', NULL, 30000, 'Travelport Kenya');

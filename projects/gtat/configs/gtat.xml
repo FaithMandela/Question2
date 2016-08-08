@@ -277,8 +277,8 @@
 				<TEXTDATE w="150" title="Start Date" y="30" h="20" x="290">Startdate</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">enddate</TEXTDATE>
 				<TEXTDATE w="150" title="Invoice Date" y="50" h="20" x="290">InvoiceDate</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Commission Rate" default="0" y="70" h="20" x="10">CommissionRate</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Mark up Rate" default="0" y="70" h="20" x="290">markup</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Commission Rate" y="70" h="20" x="10">CommissionRate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Mark up Rate" y="70" h="20" x="290">markup</TEXTDECIMAL>
 				<CHECKBOX w="50" title="Active" y="90" h="20" x="10">IsActive</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="110" h="50" x="10">details</TEXTAREA>
 			</FORM>

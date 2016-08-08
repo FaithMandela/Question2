@@ -78,20 +78,6 @@ create index additional_funds_entity_id on additional_funds(entity_id);
 create index additional_funds_period_id on additional_funds(period_id);
 create index additional_funds_payment_type_id on additional_funds(payment_type_id);
 
-CREATE TABLE loan_repayment (
-	loan_repayment_id		serial primary key,
-	loan_id				integer references loans,
-	period_id			integer references periods,
-	org_id				integer references orgs,
-	repayment_amount		real not null default 0,
-	repayment_interest		real not null default 0,
-	penalty				real default 0 not null,
-	penalty_paid			real default 0 not null,
-	repayment_narrative		text
-);
-CREATE INDEX loan_repayment_loan_id ON loan_repayment (loan_id);
-CREATE INDEX loan_repayment_period_id ON loan_repayment (period_id);
-CREATE INDEX loan_repayment_org_id ON loan_repayment (org_id);
 
 CREATE TABLE collateral_types (
   collateral_type_id 		serial primary key,
@@ -328,24 +314,6 @@ CREATE TABLE member_business(
 CREATE INDEX member_business_entity_id ON member_business (entity_id);
 CREATE INDEX member_business_org_id ON member_business(org_id);
 
-CREATE TABLE billing	(
-	bill_id 		serial primary key,
-	
-	entity_id		integer references entitys,
-	org_id			integer references orgs,
-	currency_id		integer references currency,
-	
-	start_date     	timestamp default now(),
-	end_date		timestamp,
-	bill_amount 	real default 200,
-	
-	processed		boolean default false,
-	paid			boolean default false
-	
-);
-CREATE INDEX billing_entity_id ON billing (entity_id);
-CREATE INDEX billing_org_id ON billing(org_id);
-CREATE INDEX billing_currency_id ON billing(currency_id);
 
 
 CREATE TABLE sacco_investments (

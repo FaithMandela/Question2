@@ -437,6 +437,7 @@ CREATE TABLE studentdegrees (
 	grad_finance_date	date,
 	grad_accept			boolean not null default false,
 	grad_accept_date	date,
+	expected_grad_date	date,
 	
 	graduated			boolean not null default false,
 	graduatedate		date,

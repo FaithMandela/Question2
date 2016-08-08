@@ -16,6 +16,14 @@ CREATE TABLE holidays (
 );
 CREATE INDEX holidays_org_id ON holidays (org_id);
 
+CREATE TABLE industry (
+	industry_id				serial primary key,
+	org_id					integer references orgs,
+	industry_name			varchar(50) not null,
+	details					text
+);
+CREATE INDEX industry_org_id ON industry(org_id);
+
 CREATE TABLE banks (
 	bank_id					serial primary key,
 	sys_country_id			char(2) references sys_countrys,
@@ -47,6 +55,8 @@ CREATE TABLE departments (
 	ln_department_id		integer references departments,
 	org_id					integer references orgs,
 	department_name			varchar(120),
+	department_account		varchar(50),
+	function_code			varchar(50),
 	active					boolean default true not null,
 	petty_cash				boolean default false not null,
 	description				text,
@@ -86,6 +96,7 @@ CREATE TABLE periods (
 	loan_approval			boolean default false not null,
 	gl_payroll_account		varchar(32),
 	gl_bank_account			varchar(32),
+	gl_advance_account		varchar(32),
 
 	bank_header				text,
 	bank_address			text,
@@ -134,19 +145,20 @@ CREATE VIEW vw_entitys AS
 		vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
 		vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
 		vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
-		vw_address.address_id, vw_address.address_name,
-		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_name, vw_address.is_default,
-		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
-		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website,
+		
+		addr.address_id, addr.address_name,
+		addr.sys_country_id, addr.sys_country_name, addr.table_name, addr.is_default,
+		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
+		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
+		
 		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
 		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone,
 		entity_types.entity_type_id, entity_types.entity_type_name, 
 		entity_types.entity_role, entity_types.use_key
-	FROM (entitys LEFT JOIN vw_address ON entitys.entity_id = vw_address.table_id)
+	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id 
-	WHERE ((vw_address.table_name = 'entitys') OR (vw_address.table_name is null));
+		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
 
 CREATE VIEW vw_bank_branch AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_name,
@@ -168,8 +180,9 @@ CREATE VIEW vw_periods AS
 
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
-		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, periods.bank_header, 
-		periods.gl_payroll_account, periods.gl_bank_account, periods.bank_address, periods.details,
+		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
+		periods.gl_payroll_account, periods.gl_bank_account, periods.gl_advance_account,
+		periods.bank_header, periods.bank_address, periods.details,
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
 		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
@@ -223,6 +236,12 @@ BEGIN
 	SELECT year_closed INTO year_close
 	FROM fiscal_years
 	WHERE (fiscal_year_id = NEW.fiscal_year_id);
+	
+	IF(TG_OP = 'UPDATE')THEN    
+		IF (OLD.closed = true) AND (NEW.closed = false) THEN
+			NEW.approve_status := 'Draft';
+		END IF;
+	END IF;
 
 	IF (NEW.approve_status = 'Approved') THEN
 		NEW.opened = false;

@@ -2099,3 +2099,66 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION process_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec 		RECORD;
+	msg 		varchar(120);
+BEGIN
+	IF ($3 = '1') THEN
+
+	
+CREATE OR REPLACE FUNCTION generate_charges(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_year				integer;
+	v_quarter			varchar(2);
+	v_old_qid			varchar(12);
+
+	msg 				varchar(120);
+BEGIN
+
+	msg := 'No Function selected';
+	
+	SELECT substring(quarters.quarterid from 1 for 4)::integer, 
+		trim(substring(quarters.quarterid from 11 for 2)) INTO v_year, v_quarter
+	FROM quarters
+	WHERE quarterid = $1;
+	
+	v_old_qid := (v_year-1)::varchar(4) || '/' || v_year::varchar(4) || '.' || v_quarter;
+
+	IF ($3 = '1') THEN
+		INSERT INTO qresidences (quarterid, residenceid, org_id, residenceoption, charges, full_charges, active, details)
+		SELECT $1, residenceid, org_id, residenceoption, charges, full_charges, active, details
+		FROM qresidences a LEFT JOIN 
+			(SELECT qresidenceid, residenceid FROM qresidences WHERE quarterid = $1) as b ON a.residenceid = b.residenceid
+		WHERE (a.quarterid = v_old_qid) AND (b.qresidenceid is null);
+		
+		INSERT INTO qcharges(quarterid, degreelevelid, org_id, studylevel, fullfees, 
+			fullmeal2fees, fullmeal3fees, fees, meal2fees, meal3fees, premiumhall, 
+			minimalfees, firstinstalment, firstdate, secondinstalment, seconddate, narrative, sublevelid)
+		SELECT $1, degreelevelid, org_id, studylevel, fullfees, 
+			fullmeal2fees, fullmeal3fees, fees, meal2fees, meal3fees, premiumhall, 
+			minimalfees, firstinstalment, firstdate, secondinstalment, seconddate, narrative, sublevelid
+		FROM qcharges a LEFT JOIN 
+			(SELECT qchargeid, degreelevelid, studylevel FROM qcharges WHERE quarterid = $1) b
+		ON (a.degreelevelid = b.degreelevelid) AND (a.studylevel = b.studylevel)
+		WHERE (a.quarterid = v_old_qid) AND (b.qchargeid is null);
+		
+		INSERT INTO qmcharges(quarterid, majorid, org_id, studylevel, charge, fullcharge, 
+			meal2charge, meal3charge, phallcharge, narrative, sublevelid)
+		SELECT $1, majorid, org_id, studylevel, charge, fullcharge, 
+			meal2charge, meal3charge, phallcharge, narrative, sublevelid
+		FROM qmcharges a LEFT JOIN 
+			(SELECT qmchargeid, quarterid, majorid, studylevel FROM qmcharges WHERE quarterid = $1) b
+		ON (a.quarterid = b.quarterid) AND (a.majorid = b.majorid) AND (a.studylevel = b.studylevel)
+		WHERE (a.quarterid = v_old_qid) AND (b.qmchargeid is null);
+		
+		msg := 'Charges Generated';
+	END IF;
+	
+	
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+

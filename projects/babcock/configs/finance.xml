@@ -107,13 +107,16 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="650" name="Semesters" key="12" h="650">
+	<DESK w="750" name="Semesters" key="12" h="650">
 		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
 			<TEXTFIELD w="40" title="Quarter ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 			<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
 			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="generate_charges" approval="1">Generate Charges</ACTION>
+			</ACTIONS>
 			<GRID name="Semester Charges" keyfield="qchargeid" linkfield="quarterid" table="chargeview" noorg="true">
 				<TEXTFIELD w="40" title="Quarter ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="140" title="Degree Level">degreelevelname</TEXTFIELD>
@@ -174,8 +177,8 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="655" name="Charge Definations" key="14" h="650">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
+	<DESK w="750" name="Charge Definations" key="14" h="650">
+		<GRID new="false" name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
 			<TEXTFIELD w="40" title="Quarter ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>

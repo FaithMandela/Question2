@@ -10,6 +10,7 @@ DECLARE
 	v_entity_id				integer;
 	v_points				real;
 	v_points_id				integer;
+	v_root_points			integer;
 	v_amount				real;
 	msg 					varchar(120);
 BEGIN
@@ -24,9 +25,14 @@ BEGIN
 	ELSE
 		v_increment := 2;
 	END IF;
+	
+	v_root_points := 0;
 
 	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
 	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP
+	
+		--- Compute rooot points
+		v_root_points := v_root_points + rec.totalsegs;
 
 		IF(1<= rec.totalsegs::integer AND rec.totalsegs::integer <=250 ) THEN
 			v_amount := 12 + v_increment;
@@ -70,6 +76,11 @@ BEGIN
 			WHERE points_id = v_points_id;
 		END IF;
 	END LOOP;
+	
+	IF(v_start_date >= '2016-06-01'::date)THEN
+
+
+	END IF;
 
 	IF(rec IS NULL)THEN
 		RAISE EXCEPTION 'There are no segments for this month';
