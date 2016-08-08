@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pm_system_f" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2dfcfbe4-7f27-4901-bbd3-947650d426ce">
-	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -17,11 +17,10 @@
 		<defaultValueExpression><![CDATA["956"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT aa.checklistid, aa.pm_schedule_id, aa.date_done,
+		<![CDATA[SELECT DISTINCT aa.checklistid, aa.pm_schedule_id, aa.date_done,
     aa.asset_type_name,  aa.pm_serial_number,
-    aa.client_id, aa.client_name, aa.asset_type_id,
-    bb.asset_type_name, bb.asset_serial,
-    bb.model_name
+    aa.client_id, aa.client_name, aa.asset_type_id
+
 FROM
 (SELECT a.asset_type_id, a.asset_type_name,
     a.checklistid, a.pm_schedule_id, a.pm_serial_number,
@@ -51,8 +50,6 @@ ORDER BY aa.client_name, aa.asset_type_id;]]>
 	<field name="client_id" class="java.lang.Integer"/>
 	<field name="client_name" class="java.lang.String"/>
 	<field name="asset_type_id" class="java.lang.Integer"/>
-	<field name="asset_serial" class="java.lang.String"/>
-	<field name="model_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -79,32 +76,25 @@ ORDER BY aa.client_name, aa.asset_type_id;]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="1" y="1" width="99" height="15" forecolor="#161513" backcolor="#985B5B" uuid="4c9f2eee-16a8-404e-9906-869e0330d96f"/>
+				<reportElement style="Column header" mode="Opaque" x="0" y="1" width="124" height="15" forecolor="#161513" backcolor="#985B5B" uuid="4c9f2eee-16a8-404e-9906-869e0330d96f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Asset Type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="217" y="1" width="129" height="15" forecolor="#161513" backcolor="#985B5B" uuid="edf25f8b-4338-4b87-ba94-00b2be2dbe83"/>
+				<reportElement style="Column header" mode="Opaque" x="124" y="1" width="129" height="15" forecolor="#161513" backcolor="#985B5B" uuid="edf25f8b-4338-4b87-ba94-00b2be2dbe83"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[PM  serial ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="346" y="1" width="205" height="15" forecolor="#161513" backcolor="#985B5B" uuid="79b35971-25bd-4fc6-bc75-74ecf67ffb5f"/>
+				<reportElement style="Column header" mode="Opaque" x="253" y="1" width="205" height="15" forecolor="#161513" backcolor="#985B5B" uuid="79b35971-25bd-4fc6-bc75-74ecf67ffb5f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Client]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" mode="Opaque" x="100" y="1" width="117" height="15" forecolor="#161513" backcolor="#985B5B" uuid="c05ecbfb-32ef-477f-a430-6db8115e8a03"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Asset Model]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -113,28 +103,21 @@ ORDER BY aa.client_name, aa.asset_type_id;]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="1" y="0" width="555" height="12" uuid="825cd9fe-e5d6-437f-aa1b-a767fc5f8d3c"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="100" y="0" width="117" height="12" uuid="7e9eefec-2ce4-4add-9270-3fdb3c37c21e"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{model_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="217" y="0" width="129" height="12" uuid="1c11a722-07a7-4a26-a341-cbf02ac82106"/>
+					<reportElement style="Detail" x="124" y="0" width="129" height="12" uuid="1c11a722-07a7-4a26-a341-cbf02ac82106"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{pm_serial_number}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="346" y="0" width="205" height="12" uuid="872fb51b-e37d-4939-949c-f4bc96e613b1"/>
+					<reportElement style="Detail" x="253" y="0" width="205" height="12" uuid="872fb51b-e37d-4939-949c-f4bc96e613b1"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{client_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="99" height="12" uuid="c154f193-33fd-46be-a986-d75de4e6cf32"/>
+					<reportElement style="Detail" x="0" y="0" width="124" height="12" uuid="c154f193-33fd-46be-a986-d75de4e6cf32"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
