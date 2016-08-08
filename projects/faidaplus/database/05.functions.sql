@@ -25,12 +25,12 @@ BEGIN
 	ELSE
 		v_increment := 2;
 	END IF;
-	
+
 	v_root_points := 0;
 
 	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
 	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP
-	
+
 		--- Compute rooot points
 		v_root_points := v_root_points + rec.totalsegs;
 
@@ -76,9 +76,18 @@ BEGIN
 			WHERE points_id = v_points_id;
 		END IF;
 	END LOOP;
-	
-	IF(v_start_date >= '2016-06-01'::date)THEN
 
+	IF(v_start_date >= '2016-06-01'::date)THEN
+		SELECT points_id INTO v_points_id
+		FROM points WHERE (period_id = v_period_id) AND (entity_id = 0) AND (pcc is null) AND (son is null);
+
+		IF(v_points_id is null )THEN
+			INSERT INTO points (point_date, period_id, org_id, entity_id, amount, points)
+			VALUES (period, v_period_id, 0, 0, 2, v_root_points * 2);
+		ELSE
+			UPDATE points SET amount = 2, points = v_root_points * 2
+			WHERE points_id = v_points_id;
+		END IF;
 
 	END IF;
 
@@ -278,18 +287,18 @@ BEGIN
 	v_balance = 0::real;
 	SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
 	IF(v_function_role = 'manager')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
 		FROM vw_pcc_statement
 		WHERE org_id = v_org_id;
 	END IF;
 	IF(v_function_role = 'consultant')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
 		FROM vw_son_statement
 		WHERE entity_id = $1;
 	END IF;
 
 	IF(v_function_role = 'admin')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
 		FROM vw_pcc_statement
 		WHERE org_id = 0;
 	END IF;
@@ -500,18 +509,18 @@ BEGIN
 	v_balance = 0::real;
 	SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
 	IF(v_function_role = 'manager')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
 		FROM vw_pcc_statement
 		WHERE org_id = v_org_id AND order_date < $2::date;
 	END IF;
 	IF(v_function_role = 'consultant')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
 		FROM vw_son_statement
 		WHERE entity_id = $1 AND order_date < $2::date;
 	END IF;
 
 	IF(v_function_role = 'admin')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
+		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
 		FROM vw_pcc_statement
 		WHERE org_id = 0 AND order_date < $2::date;
 	END IF;

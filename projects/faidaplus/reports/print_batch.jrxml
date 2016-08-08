@@ -180,9 +180,9 @@
 		</band>
 	</title>
 	<detail>
-		<band height="241" splitType="Stretch">
+		<band height="249" splitType="Stretch">
 			<subreport isUsingCache="false" runToBottom="false">
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="211" width="555" height="28" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="a9b89c35-1098-410b-98fb-3545c79f1ecd"/>
+				<reportElement positionType="Float" x="0" y="218" width="555" height="28" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="a9b89c35-1098-410b-98fb-3545c79f1ecd"/>
 				<subreportParameter name="shipping_cost">
 					<subreportParameterExpression><![CDATA[$F{shipping_cost}]]></subreportParameterExpression>
 				</subreportParameter>
@@ -209,7 +209,7 @@
 				<text><![CDATA[Shipping]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_TH" positionType="Float" x="3" y="164" width="141" height="45" isPrintInFirstWholeBand="true" backcolor="#E5E5E5" uuid="7e3fa3c3-3ae1-4aad-a55e-40f0668385d7"/>
+				<reportElement style="table_TH" positionType="Float" x="3" y="164" width="141" height="54" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" backcolor="#E5E5E5" uuid="7e3fa3c3-3ae1-4aad-a55e-40f0668385d7"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="2"/>
@@ -368,7 +368,7 @@
 				<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="145" y="194" width="305" height="15" isPrintWhenDetailOverflows="true" uuid="dd5268dc-bc3d-42db-8104-c5cd47a66602"/>
+				<reportElement positionType="Float" x="145" y="194" width="305" height="24" isPrintWhenDetailOverflows="true" uuid="dd5268dc-bc3d-42db-8104-c5cd47a66602"/>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
 					<pen lineWidth="0.5"/>
 					<topPen lineWidth="0.5"/>
