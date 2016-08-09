@@ -92,6 +92,7 @@
 				<MENU name="Statistics Summary">568</MENU>
 				<MENU name="Overload List">605</MENU>
 				<MENU name="Guardian Details">768</MENU>
+				<MENU name="Major Level Summary">679</MENU>
 			</MENU>
 			<MENU name="Exams Records" role="records,admin,par">
 				<MENU name="Instructor's submitted Score">355</MENU>
@@ -2169,6 +2170,14 @@
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="Quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Semester State Summary" reportfile="stats_summary.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Major Level Summary" key="679" h="550">
+		<FILTER location="250" name="Major Level Summary" type="horl">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
+				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Major Level Summary" reportfile="vw_major_level_count.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>

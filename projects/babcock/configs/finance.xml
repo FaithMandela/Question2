@@ -184,6 +184,9 @@
 			<TEXTFIELD w="40" title="Last Drop">qlastdrop</TEXTFIELD>
 			<TEXTFIELD w="40" title="End">qend</TEXTFIELD>
 			<TEXTFIELD w="40" title="Active">active</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="generate_charges" approval="2">Generate Defination</ACTION>
+			</ACTIONS>
 			<GRID name="Charge Definations" keyfield="qchargedefinationid" linkfield="quarterid" table="vwqchargedefinations" noorg="true">
 				<TEXTFIELD w="40" title="Charge Type">chargetypename</TEXTFIELD>
 				<TEXTFIELD w="40" title="Semester">quarterid</TEXTFIELD>
