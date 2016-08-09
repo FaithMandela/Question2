@@ -111,6 +111,23 @@ CREATE INDEX ledger_domain_id ON domains (domain_id);
 CREATE INDEX ledger_mpesa_trx_id ON mpesa_trxs (mpesa_trx_id);
 CREATE INDEX ledger_entity_id ON entitys (entity_id);
 
+CREATE TABLE hosting_server (
+    hosting_server_id           serial primary key,
+    hosting_id                  integer REFERENCES hosting,
+    domain_id                   integer REFERENCES domains,
+    entity_id                   integer REFERENCES entitys,
+    created_date               	date NOT NULL default now(),
+    expiry_date                 date,
+    updated			            date,
+    status                      varchar(20) NOT NULL default 'Active',
+    details                     text
+
+);
+
+CREATE INDEX hosting_server_domain_id ON domains (domain_id);
+CREATE INDEX hosting_server_hosting_id ON hosting (hosting_id);
+CREATE INDEX hosting_server_entity_id ON entitys (entity_id);
+
 CREATE OR REPLACE VIEW vw_domains AS
 	SELECT entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.first_password,
 		zones.zone_id, zones.zone_name, domains.domain_id, domains.domain_name, domains.auth_info, domains.created_date,

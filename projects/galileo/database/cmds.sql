@@ -148,3 +148,58 @@ INSERT INTO Transactions (ClientID, PeriodID, UserID, PCC, NASegs)
 SELECT a.clientid, a.periodid, 0, a.pcc, a.prd
 FROM midttransactions a LEFT JOIN Transactions b ON (a.clientid = b.clientid) AND (a.periodid = b.periodid)
 WHERE b.TransactionID is null;
+
+//pcc match
+SELECT a.pcc, c.pcc, a.sub_id_name, a.mst_cus_id
+FROM tmpnbosegment a 
+INNER JOIN pccs c ON (a.pcc = c.pcc);
+
+//pccs dont match
+SELECT a.pcc, c.pcc, a.sub_id_name, a.mst_cus_id
+FROM tmpnbosegment a 
+INNER JOIN pccs c ON (a.pcc <> c.pcc) and a.pcc <> 'PCC';
+
+//grouping with pccs
+SELECT sub_id_name, mst_cus_id from tmpnbosegment
+WHERE pcc = substring(sub_id_name::text, 14, 3);
+
+ALTER TABLE transactions ADD COLUMN ticketedsegs varchar(50);
+ALTER TABLE transactions ADD COLUMN bookedsegs varchar(50);
+ALTER TABLE transactions ADD COLUMN carsegs varchar(50);
+ALTER TABLE transactions ADD COLUMN hotelsegs varchar(50);
+
+//Inserting ticketed  transactions
+INSERT INTO Transactions (ticketedsegs)
+select tmpnbosegment.c_count
+from tmpnbosegment
+JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
+where booking_type = 'ATS';
+
+//Inserting booked transactions
+INSERT INTO Transactions (bookedsegs)
+select tmpnbosegment.c_count
+from tmpnbosegment
+JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
+where booking_type = 'A';
+
+//Inserting car transactions, zero found
+INSERT INTO Transactions (carsegs)
+select tmpnbosegment.c_count
+from tmpnbosegment 
+JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
+where booking_type = 'C'; 
+
+//Inserting Hotel  transactions
+INSERT INTO Transactions (hotelsegs)
+select tmpnbosegment.c_count
+from tmpnbosegment 
+JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
+where booking_type = 'H'; 
+
+
+
+
+
+
+
+

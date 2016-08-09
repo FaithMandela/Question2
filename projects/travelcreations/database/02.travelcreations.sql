@@ -192,6 +192,50 @@ CREATE TRIGGER ins_sambaza  AFTER INSERT  ON sambaza
   EXECUTE PROCEDURE ins_sambaza();
 
 
+
+CREATE TABLE booking_types (
+		booking_type_id 		serial primary key,
+		booking_type_name		character varying(20),
+		details 				text
+);
+CREATE TABLE class_categorys (
+		class_id		 		serial primary key,
+		booking_type_id			integer references booking_types,
+		class_name				character varying(20),
+		details 				text
+);
+CREATE TABLE points_scaling (
+		scaling_id		 		serial primary key,
+		class_id				integer references class_categorys,
+		one_way					real,
+		isreturn				real,
+		start_date				date,
+		end_date				date,
+		code 					character varying(10),
+		details 				text
+);
+CREATE INDEX class_categorys_booking_type_id  ON class_categorys(booking_type_id);
+CREATE INDEX points_scaling_class_id  ON points_scaling(class_id);
+CREATE TABLE points_value (
+		point_value_id		 		serial primary key,
+		point_value					real,
+		start_date				date,
+		end_date				date,
+		details 				text
+);
+
+CREATE OR REPLACE VIEW vw_booking_type_class AS
+	SELECT c.class_id, c.class_name, c.details, b.booking_type_id, b.booking_type_name
+	FROM  class_categorys c
+	INNER JOIN booking_types b ON b.booking_type_id = c. booking_type_id;
+
+CREATE OR REPLACE VIEW vw_points_scaling AS
+	SELECT c.class_id, c.class_name, c.details, c.booking_type_id, c.booking_type_name,
+		p.scaling_id, p.one_way, p.isreturn, p.start_date, p.end_date,p.code
+	FROM points_scaling p
+	INNER JOIN vw_booking_type_class c ON c.class_id = p. class_id;
+
+
 CREATE OR REPLACE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
 		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,

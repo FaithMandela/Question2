@@ -1,7 +1,6 @@
 <APP name="Chama" org="org_id" password="change_password">
 	<MENU name="Chama">
 		<MENU name="Service Desk">
-			<MENU name="My Details">230</MENU>
 			<MENU name="My account">205</MENU>
 			<MENU name="Loans">360</MENU>
 			<MENU name="Investments">110</MENU>
@@ -782,7 +781,7 @@
 			</ACTIONS>
 		</GRID>
 		<JASPER name="Summary Contribution Report" reportfile="vw_member_contributions.jasper"></JASPER>
-		<JASPER name="Extra Contributions" reportfile="vw_extra_contributions.jasper"></JASPER>
+		<JASPER name="Extra Contributions" reportfile="vw_member_extra_contributions.jasper"></JASPER>
 		<GRID name="Make Contribution" keyfield="contribution_id" table="vw_all_contributions" user="entity_id">
 			<FORM name="Contributions" keyfield="contribution_id" linkfield="contribution_type_id" table="contributions">
 				<USERFIELD>entity_id</USERFIELD>
@@ -927,6 +926,8 @@
 					<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
 					<CHECKBOX w="150" title="Paid" y="240" h="20" x="10">paid</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Money In" y="150" h="20" x="10">money_in</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="290">money_out</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
@@ -936,6 +937,7 @@
 			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Frequency">frequency</TEXTFIELD>
+			<TEXTFIELD w="75" title="Contribution Day">day_of_contrib</TEXTFIELD>
 			<CHECKBOX w="75" title="Applies To All">applies_to_all</CHECKBOX>
 			<FORM name="Contribution Types" keyfield="contribution_type_id" table="contribution_types">
 				<TEXTFIELD w="430" title="Contribution Type Name" y="10" h="20" x="10">contribution_type_name</TEXTFIELD>
@@ -949,6 +951,15 @@
 					<DATA value="4">Quarterly.</DATA>
 					<DATA value="5">Semi-annually</DATA>
 					<DATA value="6">Annually</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="Contribution Day" y="10" h="20" x="290">day_of_contrib
+					<DATA value="0">Monday</DATA>
+					<DATA value="1">Tuesday</DATA>
+					<DATA value="2">Wednesday</DATA>
+					<DATA value="3">Thursday</DATA>
+					<DATA value="4">Friday</DATA>
+					<DATA value="5">Saturday</DATA>
+					<DATA value="6">Sunday</DATA>
 				</COMBOLIST>
 				<CHECKBOX w="150" title="Applies To All" y="50" h="20" x="290">applies_to_all</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
@@ -1382,6 +1393,8 @@
 					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
 					<CHECKBOX w="150" title="Extra Contrib" y="240" h="20" x="10">extra_contrib</CHECKBOX>
 					<CHECKBOX w="150" title="Paid" y="240" h="20" x="10">paid</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Money In" y="150" h="20" x="10">money_in</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="290">money_out</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>

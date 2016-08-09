@@ -2052,15 +2052,14 @@
 	</DESK>
 	<DESK w="700" name="Import" type="horl" key="722" h="500">
 		<GRID name="Tmpnbosegment" keyfield="tmpnbosegment_id" worksheet="0" import="excel" table="tmpnbosegment">tmpnbosegment_id
-			<TEXTFIELD w="75" title="ID">tmpnbosegment_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Smo Cd">smo_cd</TEXTFIELD>
 			<TEXTFIELD w="75" title="Mst Cus ID">mst_cus_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Sub ID Name">sub_id_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Boi Cntry Cd">boi_cntry_cd</TEXTFIELD>
 			<TEXTFIELD w="75" title="Booking Type">booking_type</TEXTFIELD>
-			<TEXTDATE w="75" title="Boi Booking Date">boi_booking_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Boi Booking Date">boi_booking_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pcc">pcc</TEXTFIELD>
-			<TEXTFIELD w="75" title="Count">count</TEXTFIELD>
+			<TEXTFIELD w="75" title="C Count">c_count</TEXTFIELD>
 			<TEXTFIELD w="75" title="Acs Crs Number">acs_crs_number</TEXTFIELD>
 		</GRID>
 	</DESK>

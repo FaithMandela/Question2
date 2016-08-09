@@ -6,6 +6,7 @@
 			<MENU name="Applied Forms">30</MENU>
 			<MENU name="Approvals">45</MENU>
 		</MENU>
+		<MENU name="Operations"></MENU>
 		<MENU name="Configurations" role="admin">
 			<MENU name="Countrys" role="admin">5</MENU>
 			<MENU name="Organisation" role="admin">10</MENU>
@@ -20,10 +21,11 @@
 			<MENU name="Files" role="admin">65</MENU>
 			<MENU name="Error Messages">75</MENU>
 		</MENU>
+		<MENU name="Reports"></MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE name="Number of Users" table="entitys" where="(is_active = true)">
+			<TILE name="Number of Users" groupby="org_id" table="entitys" where="(is_active = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Users">total_users</TEXTFIELD>
 			</TILE>
 		</DASHBOARD>

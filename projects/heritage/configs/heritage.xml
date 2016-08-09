@@ -234,9 +234,16 @@
 				<TEXTFIELD w="150" title="Rate Category Name" y="10" h="20" x="10">corporate_rate_category_name</TEXTFIELD>
 			</FORM>
 		</GRID>
+		<GRID name="Corporate Rate Plans" keyfield="rate_plan_id" table="vw_corporate_rate_plan" tab.count="count(rate_plan_id)" noorg="true">
+			<TEXTFIELD w="75" title="Corporate Rate Plan ID">rate_plan_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Corporate Rate Plan">rate_plan_name</TEXTFIELD>
+			<FORM name="Corporate Rate Plan" keyfield="rate_plan_id" linkfield="rate_plan_id" table="corporate_rate_plan" noorg="true">
+				<TEXTFIELD w="150" title="Corporate Rate Plan" y="10" h="20" x="10">rate_plan_name</TEXTFIELD>
+			</FORM>
+		</GRID>
 		<GRID name="Corporate Rate Types" keyfield="rate_type_id" table="vw_corporate_rate_types" noorg="true">
 			<TEXTFIELD w="75" title="Rate Type ID">rate_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Rate Type">rate_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Age Limit">age_limit</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category">corporate_rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Details">details</TEXTFIELD>
@@ -264,8 +271,8 @@
 					<TEXTAREA w="430" title="Others" y="100" h="70" x="10">others</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Rate Types" keyfield="rate_type_id" table="corporate_rate_types" noorg="true">
-				<TEXTFIELD w="150" title="Rate Type" y="10" h="20" x="10">rate_type_name</TEXTFIELD>
+			<FORM name="Corporate Rate Types" keyfield="rate_type_id" table="corporate_rate_types" noorg="true">
+				<COMBOBOX w="150" title="Rate Type" lptable="corporate_rate_plan" y="30" h="20" x="10" lpfield="rate_plan_name">rate_plan_id</COMBOBOX>
 				<COMBOBOX w="150" title="Rate Category" lptable="corporate_rate_category" y="30" h="20" x="10" lpfield="corporate_rate_category_name">corporate_rate_category_id</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -282,7 +289,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Insurance Sold" key="35" h="550">
-		<GRID name="Insurance Sold" keyfield="passenger_id" table="vw_passengers" where="approved is true">
+		<GRID name="Insurance Sold" keyfield="passenger_id" table="vw_passengers" where="approved is true AND customer_code is  null">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
@@ -314,6 +321,25 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION fnct="upd_passenger" approval="2">Revert</ACTION>
+			</ACTIONS>
+			<JASPER name="Emergency Card" linkfield="passenger_id" reportfile="certificate.jasper"></JASPER>
+			<JASPER name="Letter To Embassy" linkfield="passenger_id" reportfile="letterToEmbassy.jasper"></JASPER>
+		</GRID>
+		<GRID name="Corporate Insurance" keyfield="passenger_id" table="vw_passengers" where="approved is true AND customer_code is not null">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date To">days_to</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile Number">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION fnct="upd_passenger" approval="2">Revert</ACTION>
 			</ACTIONS>

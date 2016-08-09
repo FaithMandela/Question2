@@ -20,6 +20,7 @@
 			<MENU name="Subscription Levels" role="admin">17</MENU>
 			<MENU name="Workflows" role="admin">21</MENU>
 			<MENU name="Emails" role="admin">45</MENU>
+			<MENU name="Points Scaling Settings" role="admin">97</MENU>
 		</MENU>
 		<MENU name="Reports" role="admin">
 			<MENU name="Orders">55</MENU>
@@ -229,7 +230,7 @@
 					<TEXTFIELD w="40" title="Refunds">refunds</TEXTFIELD>
 					<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
 				</GRID>
-				<GRID name="Market Bonus" keyfield="bonus_id" linkfield="period_id" table="bonus">
+				<GRID name="Market Bonus" keyfield="bonus_id" linkfield="period_id" table="bonus" noorg="true">
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
 					<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
@@ -239,7 +240,7 @@
 						<CHECKBOX w="75" title="Is Active">is_active</CHECKBOX>
 					</FORM>
 				</GRID>
-				<FORM name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="periods">
+				<FORM name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="periods" noorg="true">
 					<USERFIELD>entity_id</USERFIELD>
 					<TEXTDATE w="150" title="Period Start" y="10" h="20" x="10">start_date</TEXTDATE>
 					<TEXTDATE w="150" title="Period End" y="10" h="20" x="290">end_date</TEXTDATE>
@@ -248,7 +249,7 @@
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
+			<FORM name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years" noorg="true">
 				<TEXTFIELD w="250" title="Fiscal Year" y="10" h="20" x="10">fiscal_year_id</TEXTFIELD>
 				<TEXTDATE w="150" title="Fiscal Year Start" y="30" h="20" x="10">fiscal_year_start</TEXTDATE>
 				<TEXTDATE w="150" title="Fiscal Year End" y="30" h="20" x="290">fiscal_year_end</TEXTDATE>
@@ -626,6 +627,55 @@
 				<TEXTFIELD w="150" title="Logo" y="90" h="20" x="10">logo</TEXTFIELD>
 				<TEXTFIELD w="150" title="Pin" y="90" h="20" x="290">pin</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Points Scaling" noorg="true" key="97" h="500">
+		<GRID name="Booking Types" keyfield="booking_type_id" role="admin" table="booking_types" noorg="true" order_by="booking_type_id ASC">
+			<TEXTFIELD w="75" title="Booking ID">booking_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Booking Name">booking_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Booking Details">details</TEXTFIELD>
+			<FORM name="Booking Types" keyfield="booking_type_id" table="booking_types" noorg="true" th="210">
+				<TEXTFIELD w="350" title="Booking Name" y="10" h="20" x="10">booking_type_name</TEXTFIELD>
+				<TEXTAREA w="530" title="Details" y="2" h="170" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Category" keyfield="class_id" role="admin" linkfield="booking_type_id" table="vw_booking_type_class" noorg="true">
+				<TEXTFIELD w="75" title="Category ID">class_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Booking Name">booking_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Class Name">class_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Booking Details">details</TEXTFIELD>
+				<FORM name="Booking Types" keyfield="class_id" linkfield="booking_type_id" table="class_categorys" noorg="true" th="210">
+					<TEXTFIELD w="350" title="Category Name" y="10" h="20" x="10">class_name</TEXTFIELD>
+					<TEXTAREA w="530" title="Details" y="2" h="170" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+		</GRID>
+		<GRID name="Points Scaling" keyfield="scaling_id" role="admin" table="vw_points_scaling" noorg="true">
+			<TEXTFIELD w="75" title="Scaling ID">scaling_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Booking Type">booking_type_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Category Name">class_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="One Way">one_way</TEXTFIELD>
+			<TEXTFIELD w="275" title="Return">isreturn</TEXTFIELD>
+			<TEXTFIELD w="275" title="From">start_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="To">end_date</TEXTFIELD>
+			<FORM name="Points Scaling" keyfield="scaling_id" table="points_scaling" noorg="true" th="210">
+				<COMBOBOX w="430" title="Booking class" lptable="vw_booking_type_class" cmb_fnct="booking_type_name  || ' -  ' || class_name" y="10" h="20" x="10" lpfield="class_name">class_id</COMBOBOX>
+				<TEXTFIELD w="350" title="One Way" y="10" h="20" x="10">one_way</TEXTFIELD>
+				<TEXTFIELD w="430" title="Return" y="30" h="20" x="10">isreturn</TEXTFIELD>
+				<TEXTDATE w="530" title="Active From" y="2" h="170" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="530" title="Active To" y="2" h="170" x="10">end_date</TEXTDATE>
+				<TEXTFIELD w="530" title="Code" y="2" h="170" x="10">code</TEXTFIELD>
+			</FORM>
+		</GRID>
+		<GRID name="Points Value Settings" keyfield="point_value_id" role="admin" table="points_value" noorg="true">
+			<TEXTFIELD w="75" title="Point ID">point_value_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Point value">point_value</TEXTFIELD>
+			<TEXTFIELD w="275" title="From">start_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="To">end_date</TEXTFIELD>
+			<FORM name="Points value" keyfield="point_value_id" table="points_value" noorg="true" th="210">
+				<TEXTFIELD w="350" title="Point value" y="10" h="20" x="10">point_value</TEXTFIELD>
+				<TEXTDATE w="530" title="Active From" y="2" h="170" x="10">start_date</TEXTDATE>
+				<TEXTDATE w="530" title="Active To" y="2" h="170" x="10">end_date</TEXTDATE>
 			</FORM>
 		</GRID>
 	</DESK>

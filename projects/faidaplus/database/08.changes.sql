@@ -1,34 +1,101 @@
+CREATE OR REPLACE FUNCTION generate_points(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec						RECORD;
+	v_period				varchar(7);
+	period					date;
+	v_start_date			date;
+	v_increment				integer;
+	v_period_id				integer;
+	v_org_id				integer;
+	v_entity_id				integer;
+	v_points				real;
+	v_points_id				integer;
+	v_root_points			integer;
+	v_amount				real;
+	msg 					varchar(120);
+BEGIN
 
-CREATE OR REPLACE VIEW vw_org_points AS
- SELECT periods.period_id,
-    periods.start_date AS period,
-    to_char(periods.start_date::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
-    vw_orgs.pcc,
-    COALESCE(sum(points.segments), 0.0::real) AS segments,
-    COALESCE(sum(points.points), 0.0::real) AS points,
-    COALESCE(sum(points.bonus), 0.0::real) AS bonus,
-    vw_orgs.org_id,
-    vw_orgs.org_name,
-    COALESCE(count(points.son), 0::bigint) AS son,points.amount
-   FROM points
-     JOIN vw_orgs ON points.org_id = vw_orgs.org_id
-     JOIN periods ON points.period_id = periods.period_id
-  WHERE periods.approve_status::text = 'Approved'::text
-  GROUP BY periods.period_id, periods.start_date, vw_orgs.pcc, vw_orgs.org_id, vw_orgs.org_name,points.amount
-  ORDER BY periods.start_date DESC;
+	v_period_id = $1::integer;
+	SELECT start_date, end_date, to_char(start_date, 'mmyyyy') INTO v_start_date, period, v_period
+	FROM periods WHERE period_id = v_period_id AND closed = false;
+	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
 
-CREATE OR REPLACE VIEW vw_pcc_statement AS
-SELECT a.dr, a.cr, a.org_id, a.order_date::date, a.pcc,
-		a.org_name, a.dr - a.cr AS balance, a.details, a.batch_no
-	FROM ((SELECT COALESCE(vw_org_points.points, 0::real) + COALESCE(vw_org_points.bonus, 0::real) AS dr,
-		0::real AS cr, vw_org_points.period AS order_date, ''::text,
-		vw_org_points.pcc, vw_org_points.org_name, 0::integer,vw_org_points.org_id,
-		( 'Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,NULL::integer AS batch_no
-	FROM vw_org_points)
-	UNION
-	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
-		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
-		vw_orders.entity_id,vw_orders.org_id,
-		get_order_details(vw_orders.order_id) AS details,batch_no
-	FROM vw_orders)) a
-	ORDER BY a.order_date;
+	IF(v_start_date < '2016-06-01'::date)THEN
+		v_increment := 0;
+	ELSE
+		v_increment := 2;
+	END IF;
+
+	v_root_points := 0;
+
+	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
+	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP
+
+		--- Compute rooot points
+		v_root_points := v_root_points + rec.totalsegs;
+
+		IF(1<= rec.totalsegs::integer AND rec.totalsegs::integer <=250 ) THEN
+			v_amount := 12 + v_increment;
+			v_points := rec.totalsegs * v_amount;
+		END IF;
+
+		IF(251<= rec.totalsegs::integer AND rec.totalsegs::integer <=500) THEN
+			v_amount := 16 + v_increment;
+			v_points := rec.totalsegs * v_amount;
+		END IF;
+
+		IF(rec.totalsegs::integer >=501 ) THEN
+			v_amount := 20 + v_increment;
+			v_points := rec.totalsegs * v_amount;
+		END IF;
+
+		SELECT orgs.org_id, entitys.entity_id INTO v_org_id, v_entity_id
+		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
+		WHERE (entitys.is_active = true) AND (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
+
+		IF(v_entity_id is null)THEN
+			SELECT entity_id INTO v_entity_id
+			FROM change_pccs
+			WHERE (approve_status = 'Approved') AND (pcc = rec.pcc) AND (son = rec.son);
+			SELECT org_id INTO v_org_id
+			FROM entitys
+			WHERE (entitys.is_active = true) AND (entity_id = v_entity_id);
+			IF(v_org_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
+		END IF;
+		IF(v_entity_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
+
+		SELECT points_id INTO v_points_id
+		FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
+			AND (pcc = rec.pcc) AND (son = rec.son);
+
+		IF(v_points_id is null)THEN
+			INSERT INTO points (point_date, period_id, org_id, entity_id, pcc, son, segments, amount, points)
+			VALUES (period, v_period_id, v_org_id, v_entity_id, rec.pcc, rec.son, rec.totalsegs, v_amount, v_points);
+		ELSE
+			UPDATE points SET segments = rec.totalsegs, amount = v_amount, points = v_points
+			WHERE points_id = v_points_id;
+		END IF;
+	END LOOP;
+
+	IF(v_start_date >= '2016-06-01'::date)THEN
+		SELECT points_id INTO v_points_id
+		FROM points WHERE (period_id = v_period_id) AND (entity_id = 0) AND (pcc is null) AND (son is null);
+
+		IF(v_points_id is null )THEN
+			INSERT INTO points (point_date, period_id, org_id, entity_id, amount, points)
+			VALUES (period, v_period_id, 0, 0, 2, v_root_points * 2);
+		ELSE
+			UPDATE points SET amount = 2, points = v_root_points * 2
+			WHERE points_id = v_points_id;
+		END IF;
+
+	END IF;
+
+	IF(rec IS NULL)THEN
+		RAISE EXCEPTION 'There are no segments for this month';
+	ELSE
+		msg := 'Points computed';
+	END IF;
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;

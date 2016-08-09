@@ -17,7 +17,7 @@ CREATE TABLE leads (
 	
 	primary_contact			varchar(120),
 	job_title				varchar(120),
-	primary_email			varchar(120),
+	primary_email			varchar(120) not null,
 
 	contact_date			date default current_date,
 	
@@ -35,9 +35,9 @@ CREATE TABLE lead_items (
 	entity_id				integer references entitys,
 	item_id					integer references items,
 	org_id					integer references orgs,
-	pitch_date				date,
-	units					integer,
-	price					real,
+	pitch_date				date  not null,
+	units					integer not null,
+	price					real not null,
 	narrative				varchar(320),
 	details					text
 );
