@@ -175,6 +175,8 @@ CREATE OR REPLACE VIEW vw_recruiting_entity AS
 		
 
 	
+
+
 CREATE OR REPLACE VIEW vw_contributions_month AS 
  SELECT vw_periods.period_id,
     vw_periods.start_date,
@@ -190,16 +192,18 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
     vw_periods.bank_header,
     vw_periods.bank_address,
     vw_periods.is_posted,
-     contributions.contribution_id,
+    contributions.contribution_id,
     contributions.org_id,
     contributions.entity_id,
-     contributions.payment_type_id,
+    contributions.payment_type_id,
     contributions.deposit_amount,
     contributions.entry_date,
+    contributions.loan_repayment as for_repayment,
     contributions.transaction_ref,
+    contributions.additional_payments,
     contributions.contribution_amount,
     entitys.entity_name,
-    entitys.is_active,
+     entitys.is_active,
     contribution_types.contribution_type_id,
     contribution_types.contribution_type_name,
     payment_types.payment_type_name,

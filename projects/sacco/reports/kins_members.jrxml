@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="kins_members" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" uuid="5abdf8fb-30be-4041-8fe6-3788949ec26c">
-	<property name="ireport.zoom" value="0.75"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="kins_members" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" uuid="5abdf8fb-30be-4041-8fe6-3788949ec26c">
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -13,7 +13,7 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="entity_id" class="java.lang.String">
+	<parameter name="entityid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="orgwhere" class="java.lang.String">
@@ -23,14 +23,15 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT kins.entity_id, kins.kin_type_id, kins.full_names, kins.date_of_birth, kins.identification, kins.relation, kins.emergency_contact, kins.beneficiary, kins.beneficiary_ps, kins.details, kins.postal_address, kins.tel_number, kins.email_address, kins.pin, kins.org_id
-FROM kins
- where kins.entity_id='$P!{entity_id}'
- $P!{organd}
+		<![CDATA[SELECT * FROM kins
+where entity_id = '$P!{entityid}'
+$P!{organd}
 Order by kins.kin_type_id;]]>
 	</queryString>
+	<field name="kin_id" class="java.lang.Integer"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="kin_type_id" class="java.lang.Integer"/>
+	<field name="org_id" class="java.lang.Integer"/>
 	<field name="full_names" class="java.lang.String"/>
 	<field name="date_of_birth" class="java.sql.Date"/>
 	<field name="identification" class="java.lang.String"/>
@@ -38,12 +39,12 @@ Order by kins.kin_type_id;]]>
 	<field name="emergency_contact" class="java.lang.Boolean"/>
 	<field name="beneficiary" class="java.lang.Boolean"/>
 	<field name="beneficiary_ps" class="java.lang.Float"/>
-	<field name="details" class="java.lang.String"/>
 	<field name="postal_address" class="java.lang.String"/>
 	<field name="tel_number" class="java.lang.String"/>
 	<field name="email_address" class="java.lang.String"/>
 	<field name="pin" class="java.lang.String"/>
-	<field name="org_id" class="java.lang.Integer"/>
+	<field name="postal_code" class="java.lang.String"/>
+	<field name="details" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
