@@ -1322,6 +1322,8 @@ BEGIN
 
 	IF(v_tax is null) THEN
 		v_tax := 0;
+	ELSIF(v_tax < 0) THEN
+		v_tax := 0;
 	END IF;
 
 	RETURN v_tax;
