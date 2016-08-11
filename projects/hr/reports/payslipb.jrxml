@@ -23,7 +23,7 @@
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entity_id" class="java.lang.String">
+	<parameter name="entityid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -34,7 +34,7 @@ true as is_inpayoll, false as not_inpayroll
 
 FROM vw_employee_month
 WHERE (employee_month_id = '$P!{filterid}')
-AND (entity_id = '$P!{entity_id}')
+AND (entity_id = '$P!{entityid}')
 $P!{organd};]]>
 	</queryString>
 	<field name="employee_month_id" class="java.lang.Integer"/>
