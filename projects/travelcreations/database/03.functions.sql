@@ -252,3 +252,31 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+
+  CREATE OR REPLACE FUNCTION ins_sys_reset()
+    RETURNS trigger AS
+  $BODY$
+  DECLARE
+  	v_entity_id			integer;
+  	v_org_id			integer;
+  	v_password			varchar(32);
+  BEGIN
+  	SELECT entity_id, org_id INTO v_entity_id, v_org_id
+  	FROM entitys
+  	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email)));
+
+  	IF(v_entity_id is not null) THEN
+  		v_password := upper(substring(md5(random()::text) from 3 for 9));
+
+  		UPDATE entitys SET first_password = v_password, entity_password = md5(v_password)
+  		WHERE entity_id = v_entity_id;
+
+  		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
+  		VALUES(v_org_id, 6, v_entity_id, 'entitys', 2);
+  	END IF;
+
+  	RETURN NULL;
+  END;
+  $BODY$
+    LANGUAGE plpgsql;

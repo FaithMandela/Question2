@@ -279,6 +279,16 @@ CREATE OR REPLACE VIEW vw_products AS
 	FROM products JOIN suppliers ON products.supplier_id = suppliers.supplier_id
 		JOIN product_category ON products.product_category_id=product_category.product_category_id;
 
+CREATE OR REPLACE VIEW vw_order_details AS
+	SELECT order_details.order_details_id, vw_orders.order_id, vw_orders.order_date, vw_orders.order_status,
+		vw_orders.org_id, vw_orders.org_name, vw_products.product_id, vw_products.product_name,
+		vw_products.supplier_name, vw_products.supplier_id, vw_products.product_category_id,
+		vw_products.product_category_name,vw_products.image, vw_orders.entity_name, vw_orders.entity_id,
+		vw_orders.batch_no, order_details.product_uprice, order_details.product_quantity,
+		(order_details.product_uprice * order_details.product_quantity) as total_amount
+	FROM order_details JOIN vw_orders ON order_details.order_id = vw_orders.order_id
+		JOIN vw_products ON vw_products.product_id = order_details.product_id;
+
 CREATE OR REPLACE VIEW vw_loyalty_points AS
 	SELECT loyalty_points.loyalty_points_id, periods.period_id, periods.start_date as period, to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
 		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,
