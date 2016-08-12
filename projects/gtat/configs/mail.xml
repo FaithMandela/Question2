@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<ESCALATION title="GTA Mail" processdelay="2"
-	host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent"  mailfrom="info@openbaraza.org" 
-	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
+<ESCALATION title="GTA Mail" processdelay="2" testemail="evalyne.wahome@dewcis.com"
+	host="mail.travelport-kenya.com" mailuser="crm" mailpassword="Invent2k"
+	mailfrom="crm@travelport-kenya.com"
+	inbox="INBOX" sentbox="Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/gtat/reports/">
 
 	<REPORT name="Invoice" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
@@ -16,7 +17,7 @@
  		<REPORT fnct="'invoice_e.jasper'::varchar">invoice_file</REPORT>
 	</REPORT>
 
-<REPORT name="Credit Note" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
+	<REPORT name="Credit Note" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, clients, crnotelist"
 			where="( (clients.clientid = crnotelist.clientid) AND (crnotelist.crnoteid = sys_emailed.table_id) AND (sys_emailed.emailed = false)  AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 2))">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
