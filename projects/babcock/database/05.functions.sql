@@ -904,17 +904,16 @@ DECLARE
 	resCount		int;
 BEGIN
 	myqstud := getqstudentid($2);
-	myres := CAST($1 AS integer);
+	myres := $1::integer;
 
-	SELECT qstudentid, finalised, financeclosed, finaceapproval, mealtype, mealticket
-	INTO myrec
+	SELECT qstudentid, finalised, financeclosed, finaceapproval, mealtype, mealticket INTO myrec
 	FROM qstudents WHERE (qstudentid = myqstud);
 	
 	SELECT sum(residencecapacitys.capacity) INTO resCapacity
 	FROM residencecapacitys INNER JOIN qresidences ON residencecapacitys.residenceid = qresidences.residenceid
 	WHERE (qresidenceid = myres);
 	
-	SELECT count(qstudentid) as resCount
+	SELECT count(qstudentid) INTO resCount
 	FROM qstudents
 	WHERE (qresidenceid = myres);
 

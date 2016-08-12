@@ -420,6 +420,7 @@ public class BSoapSMS {
 				System.out.println("RESPOSE2\n" + getResp(response) + "\n");
 				System.out.println("RESPOSE3 : " + sendResults + "\n"); 
 			} else {
+				sendResults = null;
 				System.out.println("FON ERROR : Not able to send SMS on FON");
 			}
 			con.close();
