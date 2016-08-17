@@ -160,12 +160,20 @@ ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 
 
 --------------- Adding a new student
+DELETE FROM adm_import1;
+INSERT INTO adm_import1 (app_id, bussary_code, card_number) VALUES ();
 
 UPDATE registrations SET is_newstudent = true, existingid = registrationid,
 	account_number = adm_import1.bussary_code, e_tranzact_no = adm_import1.card_number, 
 	first_password = adm_import1.first_password, babcock_email = adm_import1.email_address,
 	entity_password = adm_import1.entity_password
 FROM adm_import1 WHERE registrations.registrationid = adm_import1.app_id;
+
+UPDATE registrations SET first_password = entitys.first_password, babcock_email = entitys.primary_email,
+	entity_password = entitys.entity_password
+FROM entitys WHERE registrations.registrationid = entitys.entity_id;
+
+--- Start babcock import
 
 SELECT app_students.majorid
 FROM app_students LEFT JOIN majors ON app_students.majorid = majors.majorid
@@ -208,7 +216,7 @@ WHERE app_students.is_picked = false;
 INSERT INTO studentmajors (studentdegreeid, majorid, org_id)
 SELECT studentdegrees.studentdegreeid, app_students.majorid, majors.org_id
 FROM app_students INNER JOIN studentdegrees ON studentdegrees.studentid = app_students.studentid
-	INNER JOIN majors ON app_students.majorid = majors.majorid
+INNER JOIN majors ON app_students.majorid = majors.majorid
 WHERE app_students.is_picked = false;
 
 

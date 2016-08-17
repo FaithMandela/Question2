@@ -92,7 +92,7 @@ ORDER BY a.entity_name ASC;]]>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<text><![CDATA[Balance points]]></text>
+				<text><![CDATA[Balance KES]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="21" width="802" height="1" uuid="85e9567d-c9ae-4e00-be38-cb0b63c46522"/>

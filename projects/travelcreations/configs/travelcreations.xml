@@ -919,7 +919,26 @@
 		<JASPER name="Points Report" reportfile="vw_loyalty_points.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Batch Orders Report" key="72" h="550">
-		<JASPER name="Batch Orders Report" reportfile="vw_orders_batch.jasper"></JASPER>
+		<FILTER w="700" name="Batch Orders Report " split="150" type="vert" key="batch_no" h="550">
+			<FILTERFORM name="Batch Orders Report ">
+				<TEXTFIELD w="150" title="Batch No." y="50" key="batch_no" h="20" x="290">batch_no</TEXTFIELD>
+			</FILTERFORM>
+			<JASPER name="Batch Orders Report" reportfile="vw_orders_batch.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Batch Items " split="150" type="vert" key="batch" h="550">
+			<FILTERFORM name="Batch Items ">
+				<TEXTFIELD w="150" title="Batch No." y="50" key="batch" h="20" x="290">batch</TEXTFIELD>
+			</FILTERFORM>
+			<JASPER name="Batch Items" reportfile="batch_items.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Items Purchased" split="150" type="vert" key="batch" h="550">
+			<FILTERFORM name="Items Purchased ">
+				<TEXTDATE w="150" title="Starting From" y="50" key="mindate" h="10" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" key="maxdate" h="20" x="290">maxDate</TEXTDATE>
+				<COMBOBOX w="30" title="Product" lptable="products" noorg="true" lpkey="product_id" where="is_active=true" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Items Purchased" reportfile="batch_items_purchased.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Bonus Report" key="82" h="550">
 		<JASPER name="Bonus Report" reportfile="bonus.jasper"></JASPER>

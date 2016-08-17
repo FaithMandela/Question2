@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
-<ESCALATION title="GTA Mail" processdelay="2"
-	host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent"  mailfrom="info@openbaraza.org" 
-	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
+<ESCALATION title="GTA Mail" processdelay="2" testemail="evalyne.wahome@dewcis.com"
+	host="mail.travelport-kenya.com" mailuser="crm" mailpassword="Invent2k"
+	mailfrom="crm@travelport-kenya.com"
+	inbox="INBOX" sentbox="Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/gtat/reports/">
 
 	<REPORT name="Invoice" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 

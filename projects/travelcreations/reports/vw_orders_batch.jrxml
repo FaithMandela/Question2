@@ -25,17 +25,20 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
-		<![CDATA[SELECT vw_orders.order_date, vw_orders.order_status, vw_orders.points, vw_orders.order_amount, vw_orders.batch_no, vw_orders.shipping_cost, vw_orders.grand_total, vw_orders.entity_name
-FROM vw_orders]]>
+	<parameter name="batch_no" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT vw_orders.order_date::date, vw_orders.order_status, vw_orders.points, vw_orders.order_amount, vw_orders.batch_no, vw_orders.shipping_cost, vw_orders.grand_total, vw_orders.entity_name
+FROM vw_orders WHERE batch_no = '$P!{batch_no}']]>
 	</queryString>
-	<field name="order_date" class="java.sql.Timestamp"/>
+	<field name="order_date" class="java.sql.Date"/>
 	<field name="order_status" class="java.lang.String"/>
-	<field name="points" class="java.lang.Double"/>
-	<field name="order_amount" class="java.lang.Double"/>
+	<field name="points" class="java.lang.Float"/>
+	<field name="order_amount" class="java.lang.Float"/>
 	<field name="batch_no" class="java.lang.Integer"/>
-	<field name="shipping_cost" class="java.lang.Double"/>
-	<field name="grand_total" class="java.lang.Double"/>
+	<field name="shipping_cost" class="java.lang.Float"/>
+	<field name="grand_total" class="java.lang.Float"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -124,8 +127,8 @@ FROM vw_orders]]>
 		<band height="15" splitType="Stretch">
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="afa8dede-a8be-42da-a50a-9544a3e4e39c"/>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="51" height="15" uuid="fa88426e-83a8-4a85-9ca1-1167c8ff7a0b"/>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yy" isBlankWhenNull="true">
+					<reportElement style="Detail" x="1" y="0" width="51" height="15" isPrintWhenDetailOverflows="true" uuid="fa88426e-83a8-4a85-9ca1-1167c8ff7a0b"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
