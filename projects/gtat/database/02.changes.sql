@@ -163,12 +163,12 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 
 
-UPDATE clients SET contact_person=ut.substr FROM 
-(SELECT clientid, substr(email, 1 , position('@' in email) - 1) from clients WHERE position('@' in email) > 0) as ut
-WHERE ut.clientid= clients.clientid;
-
-UPDATE clients SET contact_person=ut.cname FROM 
-(SELECT clients.email, tmpmanes.email, clients.clientname, tmpmanes.aname, tmpmanes.cname
- FROM tmpmanes 
-LEFT JOIN clients on clients.clientname= tmpmanes.aname) as ut
-WHERE ut.aname= clients.clientname; 
+-- UPDATE clients SET contact_person=ut.substr FROM 
+-- (SELECT clientid, substr(email, 1 , position('@' in email) - 1) from clients WHERE position('@' in email) > 0) as ut
+-- WHERE ut.clientid= clients.clientid;
+-- 
+-- UPDATE clients SET contact_person=ut.cname FROM 
+-- (SELECT clients.email, tmpmanes.email, clients.clientname, tmpmanes.aname, tmpmanes.cname
+--  FROM tmpmanes 
+-- LEFT JOIN clients on clients.clientname= tmpmanes.aname) as ut
+-- WHERE ut.aname= clients.clientname; 
