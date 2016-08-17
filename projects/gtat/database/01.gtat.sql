@@ -219,12 +219,23 @@ CREATE TABLE crnotelist (
 CREATE INDEX crnotelist_PeriodID ON crnotelist (PeriodID);
 CREATE INDEX crnotelist_clientid ON crnotelist (clientid);
 
-CREATE VIEW vwclients AS
-	SELECT countrys.country_id, countrys.countryname, clients.clientid, clients.clientname, clients.address, 
-		clients.postalcode, clients.town, clients.telno, clients.contactperson, clients.email, 
-		clients.IsActive, clients.ispicked, clients.details
-	FROM clients INNER JOIN countrys ON clients.country_id = countrys.country_id;
-	
+CREATE OR REPLACE VIEW vwclients AS 
+ SELECT countrys.countryid,
+    countrys.countryname,
+    clients.clientid,
+    clients.clientname,
+    clients.address,
+    clients.postalcode,
+    clients.town,
+    clients.telno,
+    clients.contact_person,
+    clients.email,
+    clients.isactive,
+    clients.ispicked,
+    clients.details
+   FROM clients
+     JOIN countrys ON clients.countryid = countrys.countryid;
+
 CREATE VIEW vwclientbranches AS
 	SELECT clients.clientid, clients.clientname, clients.address, clients.postalcode, clients.Town, clients.telno, clients.email,
 		countrys.country_id, countrys.countryname, clientbranches.clientbranchid,  clientbranches.branchname, clientbranches.details
