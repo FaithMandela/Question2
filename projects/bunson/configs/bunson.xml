@@ -1871,7 +1871,7 @@
 				<TEXTFIELD w="75" title="Airline">airline</TEXTFIELD>
 				<TEXTFIELD w="75" title="Flight Num">flight_num</TEXTFIELD>
 				<TEXTFIELD w="75" title="Tab">tab_name</TEXTFIELD>
-				<FORM name="Transfer Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true">
+				<FORM name="Transfer Flights" keyfield="transfer_flight_id" delete="false" linkfield="transfer_id" table="transfer_flights" noorg="true">
 					<DEFAULT default="2">create_key</DEFAULT>
 					<SPINTIME w="150" title="Start Time" y="10" h="20" x="10">start_time</SPINTIME>
 					<SPINTIME w="150" title="End Time" y="10" h="20" x="290">end_time</SPINTIME>
@@ -1886,7 +1886,7 @@
 					</COMBOLIST>
 				</FORM>
 			</GRID>
-			<FORM new="false" name="Passenger" keyfield="passanger_id" linkfield="transfer_id" table="passangers" noorg="true">
+			<FORM new="false" name="Passenger" keyfield="passanger_id" delete="false" linkfield="transfer_id" table="passangers" noorg="true">
 				<CHECKBOX w="150" title="Pax Cancelled" y="260" h="20" x="290">pax_cancelled</CHECKBOX>
 				<CHECKBOX w="150" title="Processed" y="240" h="20" x="290">processed</CHECKBOX>
 				<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
@@ -1968,7 +1968,7 @@
 				<TEXTFIELD w="75" title="Airline">airline</TEXTFIELD>
 				<TEXTFIELD w="75" title="Flight Num">flight_num</TEXTFIELD>
 				<TEXTFIELD w="75" title="Tab">tab_name</TEXTFIELD>
-				<FORM name="Transfer Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true">
+				<FORM name="Transfer Flights" keyfield="transfer_flight_id" delete="false" linkfield="transfer_id" table="transfer_flights" noorg="true">
 					<DEFAULT default="2">create_key</DEFAULT>
 					<SPINTIME w="150" title="Start Time" y="10" h="20" x="10">start_time</SPINTIME>
 					<SPINTIME w="150" title="End Time" y="10" h="20" x="290">end_time</SPINTIME>
@@ -2022,7 +2022,7 @@
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
-					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
+					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" delete="false" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
@@ -2045,7 +2045,7 @@
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
 					<TEXTTIMESTAMP w="75" title="Last Update">last_update</TEXTTIMESTAMP>
 				</GRID>
-				<FORM name="Passenger" keyfield="passanger_id" linkfield="transfer_id" table="passangers" noorg="true">
+				<FORM name="Passenger" keyfield="passanger_id" delete="false" linkfield="transfer_id" table="passangers" noorg="true">
 					<DEFAULT default="1">tab</DEFAULT>
 					<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
@@ -2071,7 +2071,7 @@
 				<TEXTFIELD w="75" title="Airline">airline</TEXTFIELD>
 				<TEXTFIELD w="75" title="Flight Num">flight_num</TEXTFIELD>
 				<TEXTFIELD w="75" title="Tab">tab</TEXTFIELD>
-				<FORM name="Transfer Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true">
+				<FORM name="Transfer Flights" keyfield="transfer_flight_id" delete="false" linkfield="transfer_id" table="transfer_flights" noorg="true">
 					<DEFAULT default="1">tab</DEFAULT>
 					<SPINTIME w="150" title="Start Time" y="30" h="20" x="10">start_time</SPINTIME>
 					<SPINTIME w="150" title="End Time" y="30" h="20" x="290">end_time</SPINTIME>
@@ -2111,7 +2111,7 @@
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
-					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true">
+					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" delete="false" linkfield="passanger_id" table="transfer_assignments" noorg="true">
 						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
@@ -2135,14 +2135,17 @@
 					<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
 					<TEXTTIMESTAMP w="75" title="Last Update">last_update</TEXTTIMESTAMP>
 				</GRID>
-				<FORM name="Passenger" keyfield="passanger_id" linkfield="transfer_id" table="passangers" noorg="true">
+				<FORM name="Passenger" keyfield="passanger_id" delete="false" linkfield="transfer_id" table="passangers" noorg="true">
 					<DEFAULT default="2">tab</DEFAULT>
 					<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Email" y="30" h="20" x="10">passanger_email</TEXTFIELD>
 					<COMBOBOX w="430" title="Car Type Code" lptable="car_types" y="50" h="20" x="10" lpfield="car_type_code">car_type_code</COMBOBOX>
 					<TEXTFIELD w="150" title="Pickup Time" placeholder="e.g. 2200" y="70" h="20" x="10">pickup_time</TEXTFIELD>
-					<TEXTFIELD w="430" title="Pickup Location" y="90" h="20" x="10">pickup</TEXTFIELD>
+					<COMBOLIST w="50" title="Pickup Location" y="10" h="20" x="10">pickup
+						<DATA>JKIA</DATA>
+						<DATA>WILSON</DATA>
+					</COMBOLIST>
 					<TEXTFIELD w="430" title="Dropoff Location" y="110" h="20" x="10">dropoff</TEXTFIELD>
 					<TEXTDATE w="150" title="Pickup Date" y="220" h="20" x="290">pickup_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Amount" y="240" h="20" x="10">amount</TEXTDECIMAL>
@@ -2161,7 +2164,7 @@
 				<TEXTFIELD w="75" title="Airline">airline</TEXTFIELD>
 				<TEXTFIELD w="75" title="Flight Num">flight_num</TEXTFIELD>
 				<TEXTFIELD w="75" title="Tab">tab</TEXTFIELD>
-				<FORM name="Transfer Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true">
+				<FORM name="Transfer Flights" keyfield="transfer_flight_id" delete="false" linkfield="transfer_id" table="transfer_flights" noorg="true">
 					<DEFAULT default="2">tab</DEFAULT>
 					<SPINTIME w="150" title="Start Time" y="30" h="20" x="10">start_time</SPINTIME>
 					<SPINTIME w="150" title="End Time" y="30" h="20" x="290">end_time</SPINTIME>
@@ -2172,7 +2175,7 @@
 					<TEXTFIELD w="150" title="Flight Num" y="90" h="20" x="10">flight_num</TEXTFIELD>
 				</FORM>
 			</GRID>
-			<FORM name="Finance" keyfield="transfer_id" table="transfers" noorg="true">
+			<FORM name="Finance" keyfield="transfer_id" delete="false" table="transfers" noorg="true">
 				<DEFAULT default="2">create_source</DEFAULT>
 				<DEFAULT default="xxx">record_locator</DEFAULT>
 				<DEFAULT default="KES">currency_id</DEFAULT>
@@ -2255,7 +2258,7 @@
 					<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 					<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 				</FILES>
-				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
+				<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" delete="false" linkfield="passanger_id" table="transfer_assignments" noorg="true" new.button="Assign">
 					<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
 					<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
@@ -2291,7 +2294,7 @@
 				<TEXTFIELD w="75" title="Airline">airline</TEXTFIELD>
 				<TEXTFIELD w="75" title="Flight Num">flight_num</TEXTFIELD>
 				<TEXTFIELD w="75" title="Tab">tab</TEXTFIELD>
-				<FORM name="Transfer Flights" keyfield="transfer_flight_id" linkfield="transfer_id" table="transfer_flights" noorg="true">
+				<FORM name="Transfer Flights" keyfield="transfer_flight_id" delete="false" linkfield="transfer_id" table="transfer_flights" noorg="true">
 					<SPINTIME w="150" title="Start Time" y="10" h="20" x="10">start_time</SPINTIME>
 					<SPINTIME w="150" title="End Time" y="10" h="20" x="290">end_time</SPINTIME>
 					<TEXTDATE w="150" title="Flight Date" y="30" h="20" x="10">flight_date</TEXTDATE>
