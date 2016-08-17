@@ -86,9 +86,11 @@ CREATE TABLE clients (
 	telno					varchar(120),
 	contactperson			varchar(120),
 	email					varchar(120),
+	contact_person			varchar(120);
 	IsActive				boolean default true not null,
 	ispicked				boolean default false,
 	details					text
+	contact_person varchar(120);
 );
 CREATE INDEX clients_country_id ON clients (country_id);
 

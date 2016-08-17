@@ -953,13 +953,13 @@
 					<DATA value="6">Annually</DATA>
 				</COMBOLIST>
 				<COMBOLIST w="150" title="Contribution Day" y="10" h="20" x="290">day_of_contrib
-					<DATA value="0">Monday</DATA>
-					<DATA value="1">Tuesday</DATA>
-					<DATA value="2">Wednesday</DATA>
-					<DATA value="3">Thursday</DATA>
-					<DATA value="4">Friday</DATA>
-					<DATA value="5">Saturday</DATA>
-					<DATA value="6">Sunday</DATA>
+					<DATA value="0">Sunday</DATA>
+					<DATA value="1">Monday</DATA>
+					<DATA value="2">Tuesday</DATA>
+					<DATA value="3">Wednesday</DATA>
+					<DATA value="4">Thursday.</DATA>
+					<DATA value="5">Friday</DATA>
+					<DATA value="6">Saturday</DATA>
 				</COMBOLIST>
 				<CHECKBOX w="150" title="Applies To All" y="50" h="20" x="290">applies_to_all</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>

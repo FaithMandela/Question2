@@ -161,3 +161,8 @@ return msg;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
+
+
+UPDATE clients SET contact_person=ut.substr FROM 
+(SELECT clientid, substr(email, 1 , position('@' in email) - 1) from clients WHERE position('@' in email) > 0) as ut
+WHERE ut.clientid= clients.clientid;
