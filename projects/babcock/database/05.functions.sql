@@ -896,18 +896,25 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION selQResidence(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
 DECLARE
-	mystr 			VARCHAR(120);
-	myrec 			RECORD;
-	myqstud 		int;
-	myres			int;
-	resCapacity		int;
-	resCount		int;
+	myrec 				RECORD;
+	resrec				RECORD;
+	myqstud 			int;
+	myres				int;
+	resCapacity			int;
+	resCount			int;
+	v_qstudentid		int;
+	allowMajors			boolean;
+	mystr 				varchar(120);
 BEGIN
 	myqstud := getqstudentid($2);
 	myres := $1::integer;
 
-	SELECT qstudentid, finalised, financeclosed, finaceapproval, mealtype, mealticket INTO myrec
+	SELECT qstudentid, finalised, financeclosed, finaceapproval, mealtype, mealticket, studylevel INTO myrec
 	FROM qstudents WHERE (qstudentid = myqstud);
+	
+	SELECT sex, min_level, max_level, majors INTO resrec
+	FROM residences INNER JOIN qresidences ON residences.residenceid = qresidences.residenceid
+	WHERE (qresidenceid = myres);	
 	
 	SELECT sum(residencecapacitys.capacity) INTO resCapacity
 	FROM residencecapacitys INNER JOIN qresidences ON residencecapacitys.residenceid = qresidences.residenceid
@@ -916,6 +923,19 @@ BEGIN
 	SELECT count(qstudentid) INTO resCount
 	FROM qstudents
 	WHERE (qresidenceid = myres);
+	
+	allowMajors := true;
+	IF(resrec.majors is not null)THEN
+		SELECT qstudents.qstudentid INTO v_qstudentid
+		FROM qstudents INNER JOIN qresidences ON qstudents.qresidenceid = qresidences.qresidenceid
+			INNER JOIN residences ON qresidences.residenceid = residences.residenceid
+			INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
+			INNER JOIN studentmajors ON studentdegrees.studentdegreeid = studentmajors.studentdegreeid
+		WHERE (qstudents.qstudentid = myqstud) AND (residences.majors ILIKE '%' || studentmajors.majorid || '%');
+		IF(v_qstudentid is not null)THEN
+			allowMajors := false;
+		END IF;
+	END IF;
 
 	IF (myrec.qstudentid is null) THEN
 		RAISE EXCEPTION 'Register for the semester first';
@@ -923,8 +943,12 @@ BEGIN
 		RAISE EXCEPTION 'You cannot make changes after submiting your payment unless you apply on the post for it to be opened by finance.';
 	ELSIF (myrec.finalised = true) THEN
 		RAISE EXCEPTION 'You have closed the selection.';
+	ELSIF (myrec.studylevel < resrec.min_level) OR (myrec.studylevel < resrec.max_level) THEN
+		RAISE EXCEPTION 'The study levels allowed are between % and %', resrec.min_level, resrec.max_level;
 	ELSIF (resCount > resCapacity) THEN
 		RAISE EXCEPTION 'The residence you have selected is full.';
+	ELSIF(allowMajors = false)THEN
+		RAISE EXCEPTION 'The hall selected is not for the course you are doing';
 	ELSE
 		UPDATE qstudents SET qresidenceid = myres, roomnumber = null WHERE (qstudentid = myqstud);
 		mystr := 'Residence registered awaiting approval';
@@ -1398,17 +1422,19 @@ BEGIN
 			IF(OLD.amount <> NEW.amount)THEN
 				RAISE EXCEPTION 'You cannot change amount value after transaction approval.';
 			END IF;
+		ELSE
+			IF(OLD.amount <> NEW.amount)THEN
+				new.old_amount := NEW.amount;
+			END IF;
 		END IF;
 	END IF;
 
-	IF (reca.studylevel = 100) AND (reca.departmentid = 'CSMA') THEN
-		NEW.terminalid = '0690000082';
-	ELSIF (reca.schoolid = 'COEN') THEN
+	IF (reca.schoolid = 'COEN') THEN
 		NEW.terminalid = '7000000089';
 	ELSE
 		NEW.terminalid = '0690000082';
 	END IF;
-
+	
 	IF(NEW.narrative is null) THEN
 		NEW.narrative = CAST(NEW.studentpaymentid as text) || ';Pay;' || reca.quarterid || ';' || reca.accountnumber;
 	END IF;

@@ -24,6 +24,8 @@
 				<MENU name="Clients Address">127</MENU>
 				<MENU name="Duplicate IATA NO.">584</MENU>
 				<MENU name="IATA Clients">597</MENU>
+				<MENU name="Missing PCCSs">727</MENU>
+				<MENU name="Custid Groups">732</MENU>
 			</MENU>
 			<MENU name="Import">722</MENU>
 		</MENU>
@@ -392,9 +394,11 @@
 			<TEXTFIELD w="140" title="Client Group ID">ClientGroupID</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Affiliate Name">ClientAffiliatename</TEXTFIELD>
 			<TEXTFIELD w="240" title="Client Group Name">Clientgroupname</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mst Cus ID">mst_cus_id</TEXTFIELD>
 			<FORM name="Client Groups" keyfield="clientgroupid" table="clientgroups" key="2">
 				<TEXTFIELD w="150" title="Client Gr. Name" y="10" h="20" x="10">Clientgroupname</TEXTFIELD>
 				<COMBOBOX w="150" title="Client Affiliate" lptable="clientAffiliates" y="10" h="20" x="290" lpfield="clientAffiliatename">clientAffiliateid</COMBOBOX>
+				<TEXTFIELD w="150" title="Mst Cus ID" y="120" h="20" x="10">mst_cus_id</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="110" x="10">detail</TEXTAREA>
 			</FORM>
 			<GRID name="GroupTargetView" keyfield="grouptargetid" linkfield="clientgroupid" table="GroupTargetView" key="3">
@@ -2051,7 +2055,7 @@
 		<JASPER filtered="false" name="Services Summary" reportfile="servicesummary.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Import" type="horl" key="722" h="500">
-		<GRID name="Tmpnbosegment" keyfield="tmpnbosegment_id" worksheet="0" import="excel" table="tmpnbosegment">tmpnbosegment_id
+		<GRID process="inssegs" name="Tmpnbosegment" keyfield="tmpnbosegment_id" worksheet="0" import="excel" table="tmpnbosegment">
 			<TEXTFIELD w="75" title="Smo Cd">smo_cd</TEXTFIELD>
 			<TEXTFIELD w="75" title="Mst Cus ID">mst_cus_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Sub ID Name">sub_id_name</TEXTFIELD>
@@ -2062,5 +2066,11 @@
 			<TEXTFIELD w="75" title="C Count">c_count</TEXTFIELD>
 			<TEXTFIELD w="75" title="Acs Crs Number">acs_crs_number</TEXTFIELD>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Missing PCCSs" type="horl" key="727" h="500">
+		<JASPER filtered="true" name="Missing PCCSs" reportfile="vw_missing_pccs.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Custid Groups" key="732" h="550">
+		<JASPER filtered="true" name="Custid Groups Report" reportfile="vw_custid_groups.jasper"></JASPER>
 	</DESK>
 </APP>

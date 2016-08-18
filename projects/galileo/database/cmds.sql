@@ -149,57 +149,171 @@ SELECT a.clientid, a.periodid, 0, a.pcc, a.prd
 FROM midttransactions a LEFT JOIN Transactions b ON (a.clientid = b.clientid) AND (a.periodid = b.periodid)
 WHERE b.TransactionID is null;
 
-//pcc match
+---pcc match
 SELECT a.pcc, c.pcc, a.sub_id_name, a.mst_cus_id
 FROM tmpnbosegment a 
 INNER JOIN pccs c ON (a.pcc = c.pcc);
 
-//pccs dont match
+---pccs dont match
 SELECT a.pcc, c.pcc, a.sub_id_name, a.mst_cus_id
 FROM tmpnbosegment a 
 INNER JOIN pccs c ON (a.pcc <> c.pcc) and a.pcc <> 'PCC';
 
-//grouping with pccs
+----grouping with pccs
 SELECT sub_id_name, mst_cus_id from tmpnbosegment
 WHERE pcc = substring(sub_id_name::text, 14, 3);
+
+--- inserting into clientgroups
+INSERT INTO clientgroups(mst_cus_id, clientaffiliateid, clientgroupname, detail)
+SELECT mst_cus_id, 0, max(substring(sub_id_name::text, 20)), count(sub_id_name) AS count
+FROM tmpnbosegment
+GROUP BY mst_cus_id
+having count(sub_id_name) > 1;
+
+---select * from clientgroups
 
 ALTER TABLE transactions ADD COLUMN ticketedsegs varchar(50);
 ALTER TABLE transactions ADD COLUMN bookedsegs varchar(50);
 ALTER TABLE transactions ADD COLUMN carsegs varchar(50);
 ALTER TABLE transactions ADD COLUMN hotelsegs varchar(50);
 
-//Inserting ticketed  transactions
-INSERT INTO Transactions (ticketedsegs)
-select tmpnbosegment.c_count
-from tmpnbosegment
-JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
-where booking_type = 'ATS';
+-- -----Inserting ticketed  transactions
+INSERT INTO Transactions (clientid, pcc, periodid, ticketedsegs)
+SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is null) AND booking_type = 'ATS';-- 
 
-//Inserting booked transactions
-INSERT INTO Transactions (bookedsegs)
-select tmpnbosegment.c_count
-from tmpnbosegment
-JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
-where booking_type = 'A';
+-- //Inserting booked transactions
+INSERT INTO Transactions (clientid, pcc, periodid, bookedsegs)
+(SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is not null) AND booking_type = 'A');
+-- 
+-- //Inserting car transactions, zero found
+INSERT INTO Transactions (clientid, pcc, periodid, carsegs)
+SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is null) AND booking_type = 'C';
+-- 
+-- //Inserting Hotel  transactions
+INSERT INTO Transactions (clientid, pcc, periodid, hotelsegs)
+SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is null) AND booking_type = 'H';
 
-//Inserting car transactions, zero found
-INSERT INTO Transactions (carsegs)
-select tmpnbosegment.c_count
+--upate transactions booked
+UPDATE transactions SET bookedsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'A') ut 
+WHERE transactions.clientid = ut.clientid AND transactions.periodid = ut.periodid;
+
+--upate transactions ticketedsegs
+UPDATE transactions SET ticketedsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'ATS') ut 
+WHERE transactions.clientid = ut.clientid AND transactions.periodid = ut.periodid;
+
+--upate transactions carsegs
+UPDATE transactions SET carsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'C') ut 
+WHERE transactions.clientid = ut.clientid AND transactions.periodid = ut.periodid;
+
+--upate transactions hotelsegs
+UPDATE transactions SET hotelsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'H') ut 
+WHERE transactions.clientid = ut.clientid AND transactions.periodid = ut.periodid;
+
+-- -----Inserting ticketed  midttransactions
+INSERT INTO midttransactions (clientid, pcc, periodid, ticketedsegs)
+SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is null) AND booking_type = 'ATS';-- 
+
+-- //Inserting booked midttransactions
+INSERT INTO midttransactions (clientid, pcc, periodid, bookedsegs)
+(SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is not null) AND booking_type = 'A');
+-- 
+-- //Inserting car midttransactions, zero found
+INSERT INTO Transactions (clientid, pcc, periodid, carsegs)
+SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is null) AND booking_type = 'C';
+-- 
+-- //Inserting Hotel  midttransactions
+INSERT INTO midttransactions (clientid, pcc, periodid, hotelsegs)
+SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' AND (transactions.transactionid is null) AND booking_type = 'H';
+
+--upate midttransactions booked
+UPDATE midttransactions SET bookedsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'A') ut 
+WHERE midttransactions.clientid = ut.clientid AND midttransactions.periodid = ut.periodid;
+
+--upate midttransactions ticketedsegs
+UPDATE midttransactions SET ticketedsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'ATS') ut 
+WHERE midttransactions.clientid = ut.clientid AND midttransactions.periodid = ut.periodid;
+
+--upate midttransactions carsegs
+UPDATE midttransactions SET carsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'C') ut 
+WHERE midttransactions.clientid = ut.clientid AND midttransactions.periodid = ut.periodid;
+
+--upate midttransactions hotelsegs
+UPDATE midttransactions SET hotelsegs = ut.c_count
+FROM (SELECT pccs.clientid, tmpnbosegment.pcc, periods.periodid, c_count
+FROM tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+WHERE smo_cd <> 'SMO_CD' AND booking_type = 'H') ut 
+WHERE midttransactions.clientid = ut.clientid AND midttransactions.periodid = ut.periodid;
+
+---  Select unused data
+SELECT tmpnbosegment_id, c_count,  mst_cus_id, sub_id_name, booking_type, tmpnbosegment.pcc 
 from tmpnbosegment 
-JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
-where booking_type = 'C'; 
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int
+LEFT JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc) AND (periods.periodid = transactions.periodid)
+WHERE  booking_type = 'A'  AND transactions.bookedsegs IS NULL;
 
-//Inserting Hotel  transactions
-INSERT INTO Transactions (hotelsegs)
-select tmpnbosegment.c_count
-from tmpnbosegment 
-JOIN transactions ON (tmpnbosegment.pcc = transactions.pcc)
-where booking_type = 'H'; 
-
-
-
-
-
-
-
-
+SELECT '1899-12-30'::date + boi_booking_date::int, *
+FROM (tmpnbosegment INNER JOIN pccs ON pccs.pcc = tmpnbosegment.pcc
+INNER JOIN periods ON periods.startdate = '1899-12-30'::date + boi_booking_date::int)
+LEFT JOIN transactions ON (pccs.clientid = transactions.clientid) AND (periods.periodid = transactions.periodid)
+WHERE smo_cd <> 'SMO_CD' --- AND booking_type = 'A' ;
