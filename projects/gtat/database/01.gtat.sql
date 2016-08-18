@@ -308,35 +308,25 @@ CREATE VIEW clientstatement AS
 		vwinvoice.netremits, vwinvoice.grossearning, vwinvoice.vat_rate, vwinvoice.galileo_vat
 	FROM vwinvoice;
 
-CREATE OR REPLACE VIEW vwinvoicelist AS 
- SELECT vwsales.clientid, vwsales.clientname,
-    vwsales.town,
-    vwsales.countryid,
-    vwsales.countryname,
-    vwsales.periodid,
-    EXTRACT(month FROM period.invoicedate) as month,
-  period.salesperiod,
-    vwsales.invoiceid,
-    vwsales.issued
-   FROM vwsales
-   INNER JOIN period ON period.periodid = vwsales.periodid
-  WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
-   GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, 
-   period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.issued
-  ORDER BY vwsales.clientid;
+CREATE VIEW vwinvoicelist AS 
+	SELECT vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid,
+		period.salesperiod, vwsales.invoiceid, vwsales.issued,
+		to_char(period.invoicedate, 'Month YYYY') as month_disp
+	FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
+	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
+	GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, 
+		period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.issued
+	ORDER BY vwsales.clientid;
 
 
 CREATE OR REPLACE VIEW vwcrnotelist AS 
- SELECT vwsales.clientid,
-    vwsales.periodid,
-    EXTRACT(month FROM period.invoicedate) as month,
-    crnotelist.crnoteid
-   FROM vwsales
-     LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
-      INNER JOIN period ON period.periodid = vwsales.periodid
-  WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
-  GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid, period.invoicedate
-  ORDER BY vwsales.clientid;
+	SELECT vwsales.clientid, vwsales.periodid, crnotelist.crnoteid,
+		to_char(period.invoicedate, 'Month YYYY') as month_disp
+	FROM vwsales LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
+		INNER JOIN period ON period.periodid = vwsales.periodid
+	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
+	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid, period.invoicedate
+	ORDER BY vwsales.clientid;
 
 CREATE VIEW vwinvoicesummary AS 
 	SELECT 	vwsales.clientid, vwsales.clientname, vwsales.InvoiceDate, vwsales.invoiceid, vwsales.invoicenumber,
