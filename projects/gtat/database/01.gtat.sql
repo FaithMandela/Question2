@@ -119,6 +119,9 @@ CREATE TABLE Period (
 	Details					text
 );
 
+ALTER TABLE period ALTER COLUMN accountperiod SET DEFAULT 0;
+ALTER TABLE period ALTER COLUMN KQAccountPeriod SET DEFAULT 0;
+
 CREATE TABLE management (
 	managementid			serial primary key,
 	clientbranchid			integer references clientbranches,
@@ -533,8 +536,7 @@ BEGIN
 		DELETE FROM sales WHERE periodid is null;
 		DELETE FROM netrates WHERE periodid is null;
 
-		DELETE FROM period WHERE periodid = $1;
-
+		
 		DELETE FROM tmpnetrates;
 		DELETE FROM tmpmanagement;
 		DELETE FROM tmpsales;
