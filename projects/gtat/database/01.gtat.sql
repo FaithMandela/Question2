@@ -322,7 +322,7 @@ CREATE VIEW vwinvoicelist AS
 	ORDER BY vwsales.clientid;
 
 
-CREATE OR REPLACE VIEW vwcrnotelist AS 
+CREATE VIEW vwcrnotelist AS 
 	SELECT vwsales.clientid, vwsales.periodid, crnotelist.crnoteid,
 		to_char(period.invoicedate, 'Month YYYY') as month_disp
 	FROM vwsales LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
