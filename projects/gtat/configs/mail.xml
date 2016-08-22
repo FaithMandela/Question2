@@ -12,7 +12,7 @@
 		<PARAM basetable="invoicelist" >invoiceid</PARAM>
 		<ADDRESS title="address" >clients.email</ADDRESS>
 		<BODYFIELD reference="{{contactperson}}" basetable="clients">contact_person</BODYFIELD>
-		<BODYFIELD reference="{{month_disp}}" basetable="vwinvoicelist">month_disp</BODYFIELD>
+		<BODYFIELD reference="{{month_disp}}" fnct="to_char(period.invoicedate - '1 Month'::interval, 'Month YYYY')" basetable="vwinvoicelist">month_disp</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
  		<REPORT fnct="'invoice_e.jasper'::varchar">invoice_file</REPORT>
 	</REPORT>
@@ -24,7 +24,7 @@
 		<PARAM basetable="crnotelist" >crnoteid</PARAM>
 		<ADDRESS title="address" >clients.email</ADDRESS>
 		<BODYFIELD reference="{{contactperson}}" basetable="clients">contact_person</BODYFIELD>
-		<BODYFIELD reference="{{month_disp}}" basetable="vwcrnotelist">month_disp</BODYFIELD>
+		<BODYFIELD reference="{{month_disp}}" fnct="to_char(period.invoicedate - '1 Month'::interval, 'Month YYYY')" basetable="vwcrnotelist">month_disp</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 		<REPORT fnct="'creditnote_e.jasper'::varchar">crnote_file</REPORT>
 	</REPORT>
