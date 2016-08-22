@@ -150,7 +150,7 @@ public class BMail {
 		attachFile = fileName;
 	}
 
-	public boolean sendMail(String messageto, String subject, String mymail, boolean infile, Map<String, String> headers, Map<String, String> reports) {
+	public boolean sendMail(String messageto, String ccto, String subject, String mymail, boolean infile, Map<String, String> headers, Map<String, String> reports) {
 		boolean sent = false;
 		
 		try { 
@@ -183,6 +183,10 @@ public class BMail {
 			Address fromAddress = new InternetAddress(mailfrom);
 			message.setFrom(fromAddress);
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(messageto, false));
+			
+			if(ccto != null) {
+				message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(ccto, false));
+			}
 
 			message.setSubject(subject);
 			//message.setContent(mymail, "text/html");

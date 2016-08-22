@@ -119,6 +119,9 @@ CREATE TABLE Period (
 	Details					text
 );
 
+ALTER TABLE period ALTER COLUMN accountperiod SET DEFAULT 0;
+ALTER TABLE period ALTER COLUMN KQAccountPeriod SET DEFAULT 0;
+
 CREATE TABLE management (
 	managementid			serial primary key,
 	clientbranchid			integer references clientbranches,
@@ -308,21 +311,24 @@ CREATE VIEW clientstatement AS
 		vwinvoice.netremits, vwinvoice.grossearning, vwinvoice.vat_rate, vwinvoice.galileo_vat
 	FROM vwinvoice;
 
-CREATE VIEW vwinvoicelist AS
-	SELECT clientid, clientname, town, country_id, countryname, 
-		periodid, invoiceid, issued
-	FROM vwsales
-	WHERE (clientid is not null) AND (totalprice > 0)
-	GROUP BY clientid, clientname, town, country_id, countryname, 
-		periodid, invoiceid, issued
-	ORDER BY clientid;
+CREATE VIEW vwinvoicelist AS 
+	SELECT vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid,
+		period.salesperiod, vwsales.invoiceid, vwsales.issued,
+		to_char(period.invoicedate, 'Month YYYY') as month_disp
+	FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
+	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
+	GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, 
+		period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.issued
+	ORDER BY vwsales.clientid;
 
-CREATE VIEW vwcrnotelist AS
-	SELECT vwsales.clientid, vwsales.periodid,crnotelist.crnoteid
-	FROM vwsales LEFT JOIN crnotelist ON
-		(vwsales.PeriodID = crnotelist.PeriodID) AND (vwsales.clientid = crnotelist.clientid)
-	WHERE (vwsales.clientid is not null) AND (vwsales.totalprice < 0) AND (to_char(StartDate, 'MMYYYY') <> to_char(servicedate, 'MMYYYY'))
-	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid
+
+CREATE VIEW vwcrnotelist AS 
+	SELECT vwsales.clientid, vwsales.periodid, crnotelist.crnoteid,
+		to_char(period.invoicedate, 'Month YYYY') as month_disp
+	FROM vwsales LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
+		INNER JOIN period ON period.periodid = vwsales.periodid
+	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
+	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid, period.invoicedate
 	ORDER BY vwsales.clientid;
 
 CREATE VIEW vwinvoicesummary AS 
@@ -530,8 +536,7 @@ BEGIN
 		DELETE FROM sales WHERE periodid is null;
 		DELETE FROM netrates WHERE periodid is null;
 
-		DELETE FROM period WHERE periodid = $1;
-
+		
 		DELETE FROM tmpnetrates;
 		DELETE FROM tmpmanagement;
 		DELETE FROM tmpsales;

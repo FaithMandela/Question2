@@ -1202,7 +1202,8 @@
 			<CHECKBOX w="75" title="Reducing Balance">reducing_balance</CHECKBOX>
 			<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
-			<GRID name="Loan Monthly" keyfield="loan_month_id" linkfield="loan_id" table="vw_loan_monthly">
+			<GRID name="Loan Monthly" keyfield="loan_month_id" orderby="start_date desc" linkfield="loan_id" table="vw_loan_monthly">
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Loan Month">loan_month_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Interest Amount">interest_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Repayment">repayment</TEXTDECIMAL>
