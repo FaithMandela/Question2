@@ -313,22 +313,21 @@ CREATE VIEW clientstatement AS
 
 CREATE VIEW vwinvoicelist AS 
 	SELECT vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid,
-		period.salesperiod, vwsales.invoiceid, vwsales.issued,
-		to_char(period.invoicedate, 'Month YYYY') as month_disp
+		vwsales.invoiceid, vwsales.issued, 
+		period.salesperiod, period.invoicedate
 	FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
 	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
 	GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, 
 		period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.issued
 	ORDER BY vwsales.clientid;
 
-
 CREATE VIEW vwcrnotelist AS 
 	SELECT vwsales.clientid, vwsales.periodid, crnotelist.crnoteid,
-		to_char(period.invoicedate, 'Month YYYY') as month_disp
+		period.salesperiod, period.invoicedate
 	FROM vwsales LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
 		INNER JOIN period ON period.periodid = vwsales.periodid
 	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
-	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid, period.invoicedate
+	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid, period.salesperiod, period.invoicedate
 	ORDER BY vwsales.clientid;
 
 CREATE VIEW vwinvoicesummary AS 
@@ -535,7 +534,6 @@ BEGIN
 		DELETE FROM management WHERE periodid is null;
 		DELETE FROM sales WHERE periodid is null;
 		DELETE FROM netrates WHERE periodid is null;
-
 		
 		DELETE FROM tmpnetrates;
 		DELETE FROM tmpmanagement;
@@ -578,13 +576,13 @@ BEGIN
 		WHERE (periodid = $1::integer);
 		
 		IF(v_approved = true) THEN
-			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
-			SELECT 1, invoiceid, 0, 'invoicelist'
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name, email_type)
+			SELECT 1, invoiceid, 0, 'invoicelist', 1
 			FROM invoicelist
 			WHERE (periodid = $1::integer);
 			
-			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
-			SELECT 2, crnoteid, 0, 'crnotelist'
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name, email_type)
+			SELECT 2, crnoteid, 0, 'crnotelist', 2
 			FROM crnotelist  
 			WHERE (periodid = $1::integer);
 			
