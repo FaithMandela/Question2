@@ -37,6 +37,7 @@
 			<TEXTFIELD w="40" title="Country">countryname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Tel No.">telno</TEXTFIELD>
 			<TEXTFIELD w="40" title="Email">email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Contact Person">contact_person</TEXTFIELD>
 			<FORM name="Clients" keyfield="clientid" table="clients">
 				<TEXTFIELD w="150" title="Client Name" y="10" h="20" x="10">clientname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Address" y="10" h="20" x="290">address</TEXTFIELD>
@@ -45,6 +46,7 @@
 				<COMBOBOX w="150" title="Country" lptable="countrys" y="50" h="20" x="10" lpfield="countryname">countryid</COMBOBOX>
 				<TEXTFIELD w="150" title="Tel No." y="50" h="20" x="290">telno</TEXTFIELD>
 				<TEXTFIELD w="150" title="Email" y="70" h="20" x="10">email</TEXTFIELD>
+				<TEXTFIELD w="430" title="Contact Person" y="260" h="20" x="10">contact_person</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="70" h="20" x="290">IsActive</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -248,8 +250,6 @@
 			<CHECKBOX w="40" title="Active">IsActive</CHECKBOX>
 			<FORM name="Accounting Periods" keyfield="periodid" linkfield="PeriodID" table="Period">
 				<TEXTFIELD w="150" title="Sales Period" y="10" h="20" x="10">salesperiod</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Period" y="10" h="20" x="290">AccountPeriod</TEXTFIELD>
-				<TEXTFIELD w="150" title="KQ Account Period" y="30" h="20" x="10">KQAccountPeriod</TEXTFIELD>
 				<TEXTDATE w="150" title="Start Date" y="30" h="20" x="290">Startdate</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" y="50" h="20" x="10">enddate</TEXTDATE>
 				<TEXTDATE w="150" title="Invoice Date" y="50" h="20" x="290">InvoiceDate</TEXTDATE>

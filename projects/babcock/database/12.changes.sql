@@ -1,70 +1,54 @@
-CREATE OR REPLACE FUNCTION generate_charges(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+
+ALTER TABLE residences 
+ADD	min_level			integer default 100,
+ADD	max_level			integer default 500,
+ADD	majors				text;
+
+
+ALTER TABLE studentpayments ADD old_amount			real;
+
+CREATE OR REPLACE FUNCTION updstudentpayments() RETURNS trigger AS $$
 DECLARE
-	v_year				integer;
-	v_quarter			varchar(2);
-	v_old_qid			varchar(12);
-
-	msg 				varchar(120);
+	reca 					RECORD;
+	old_studentpaymentid 	integer;
 BEGIN
+	SELECT departments.schoolid, departments.departmentid, students.accountnumber, qstudents.quarterid, qstudents.studylevel 
+		INTO reca
+	FROM ((departments INNER JOIN students ON students.departmentid = departments.departmentid)
+		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
+		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid
+	WHERE (qstudents.qstudentid = NEW.qstudentid);
 
-	msg := 'No Function selected';
-	
-	SELECT substring(quarters.quarterid from 1 for 4)::integer, 
-		trim(substring(quarters.quarterid from 11 for 2)) INTO v_year, v_quarter
-	FROM quarters
-	WHERE quarterid = $1;
-	
-	v_old_qid := (v_year-1)::varchar(4) || '/' || v_year::varchar(4) || '.' || v_quarter;
+	IF (TG_OP = 'INSERT') THEN
+		SELECT studentpaymentid INTO old_studentpaymentid
+		FROM studentpayments 
+		WHERE (approved = false) AND (qstudentid = NEW.qstudentid);
 
-	IF ($3 = '1') THEN
-		INSERT INTO qresidences (quarterid, residenceid, org_id, residenceoption, charges, full_charges, active, details)
-		SELECT $1, a.residenceid, a.org_id, a.residenceoption, a.charges, a.full_charges, a.active, a.details
-		FROM qresidences a LEFT JOIN 
-			(SELECT qresidenceid, residenceid FROM qresidences WHERE quarterid = $1) as b ON a.residenceid = b.residenceid
-		WHERE (a.quarterid = v_old_qid) AND (b.qresidenceid is null);
-		
-		INSERT INTO qcharges(quarterid, degreelevelid, org_id, studylevel, fullfees, 
-			fullmeal2fees, fullmeal3fees, fees, meal2fees, meal3fees, premiumhall, 
-			minimalfees, firstinstalment, firstdate, secondinstalment, seconddate, narrative, sublevelid)
-		SELECT $1, a.degreelevelid, a.org_id, a.studylevel, a.fullfees, 
-			a.fullmeal2fees, a.fullmeal3fees, a.fees, a.meal2fees, a.meal3fees, a.premiumhall, 
-			a.minimalfees, a.firstinstalment, a.firstdate, a.secondinstalment, a.seconddate, a.narrative, a.sublevelid
-		FROM qcharges a LEFT JOIN 
-			(SELECT qchargeid, degreelevelid, studylevel FROM qcharges WHERE quarterid = $1) b
-		ON (a.degreelevelid = b.degreelevelid) AND (a.studylevel = b.studylevel)
-		WHERE (a.quarterid = v_old_qid) AND (b.qchargeid is null);
-		
-		INSERT INTO qmcharges(quarterid, majorid, org_id, studylevel, charge, fullcharge, 
-			meal2charge, meal3charge, phallcharge, narrative, sublevelid)
-		SELECT $1, a.majorid, a.org_id, a.studylevel, a.charge, a.fullcharge, 
-			a.meal2charge, a.meal3charge, a.phallcharge, a.narrative, a.sublevelid
-		FROM qmcharges a LEFT JOIN 
-			(SELECT qmchargeid, majorid, studylevel FROM qmcharges WHERE quarterid = $1) b
-		ON (a.majorid = b.majorid) AND (a.studylevel = b.studylevel)
-		WHERE (a.quarterid = v_old_qid) AND (b.qmchargeid is null);
-		
-		msg := 'Charges Generated';
+		IF(old_studentpaymentid is not null)THEN
+			RAISE EXCEPTION 'You have another uncleared payment, ammend that first and pay';
+		END IF;
+	ELSE
+		IF(OLD.approved = true) AND (NEW.approved = true)THEN
+			IF(OLD.amount <> NEW.amount)THEN
+				RAISE EXCEPTION 'You cannot change amount value after transaction approval.';
+			END IF;
+		ELSE
+			IF(OLD.amount <> NEW.amount)THEN
+				new.old_amount := NEW.amount;
+			END IF;
+		END IF;
 	END IF;
 
-	IF ($3 = '2') THEN
-		INSERT INTO qchargedefinations(quarterid, chargetypeid, studylevel, amount, narrative, sublevelid, org_id)
-		SELECT $1, a.chargetypeid, a.studylevel, a.amount, a.narrative, a.sublevelid, a.org_id
-		FROM qchargedefinations a LEFT JOIN
-			(SELECT qchargedefinationid, chargetypeid, studylevel FROM qchargedefinations WHERE quarterid = $1) b
-		ON (a.chargetypeid = b.chargetypeid) AND (a.studylevel = b.studylevel)
-		WHERE (a.quarterid = v_old_qid) AND (b.qchargedefinationid is null);
-		
-		INSERT INTO qmchargedefinations(quarterid, chargetypeid, majorid, org_id, studylevel, amount, narrative, sublevelid)
-		SELECT $1, a.chargetypeid, a.majorid, a.org_id, a.studylevel, a.amount, a.narrative, a.sublevelid
-		FROM qmchargedefinations a LEFT JOIN
-			(SELECT qmchargedefinationid, chargetypeid, majorid, studylevel FROM qmchargedefinations WHERE quarterid = $1) b
-		ON (a.chargetypeid = b.chargetypeid) AND (a.majorid = b.majorid) AND (a.studylevel = b.studylevel)
-		WHERE (a.quarterid = v_old_qid) AND (b.qmchargedefinationid is null);
-	
-		msg := 'Charges Defination Generated';
-	END IF;	
+	IF (reca.schoolid = 'COEN') THEN
+		NEW.terminalid = '7000000089';
+	ELSE
+		NEW.terminalid = '0690000082';
+	END IF;
 
-	RETURN msg;
+	IF(NEW.narrative is null) THEN
+		NEW.narrative = CAST(NEW.studentpaymentid as text) || ';Pay;' || reca.quarterid || ';' || reca.accountnumber;
+	END IF;
+
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-

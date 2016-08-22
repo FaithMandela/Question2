@@ -86,9 +86,11 @@ CREATE TABLE clients (
 	telno					varchar(120),
 	contactperson			varchar(120),
 	email					varchar(120),
+	contact_person			varchar(120);
 	IsActive				boolean default true not null,
 	ispicked				boolean default false,
 	details					text
+	contact_person varchar(120);
 );
 CREATE INDEX clients_country_id ON clients (country_id);
 
@@ -116,6 +118,9 @@ CREATE TABLE Period (
 	IsPicked				boolean not null default false,
 	Details					text
 );
+
+ALTER TABLE period ALTER COLUMN accountperiod SET DEFAULT 0;
+ALTER TABLE period ALTER COLUMN KQAccountPeriod SET DEFAULT 0;
 
 CREATE TABLE management (
 	managementid			serial primary key,
@@ -217,12 +222,23 @@ CREATE TABLE crnotelist (
 CREATE INDEX crnotelist_PeriodID ON crnotelist (PeriodID);
 CREATE INDEX crnotelist_clientid ON crnotelist (clientid);
 
-CREATE VIEW vwclients AS
-	SELECT countrys.country_id, countrys.countryname, clients.clientid, clients.clientname, clients.address, 
-		clients.postalcode, clients.town, clients.telno, clients.contactperson, clients.email, 
-		clients.IsActive, clients.ispicked, clients.details
-	FROM clients INNER JOIN countrys ON clients.country_id = countrys.country_id;
-	
+CREATE OR REPLACE VIEW vwclients AS 
+ SELECT countrys.countryid,
+    countrys.countryname,
+    clients.clientid,
+    clients.clientname,
+    clients.address,
+    clients.postalcode,
+    clients.town,
+    clients.telno,
+    clients.contact_person,
+    clients.email,
+    clients.isactive,
+    clients.ispicked,
+    clients.details
+   FROM clients
+     JOIN countrys ON clients.countryid = countrys.countryid;
+
 CREATE VIEW vwclientbranches AS
 	SELECT clients.clientid, clients.clientname, clients.address, clients.postalcode, clients.Town, clients.telno, clients.email,
 		countrys.country_id, countrys.countryname, clientbranches.clientbranchid,  clientbranches.branchname, clientbranches.details
@@ -295,21 +311,23 @@ CREATE VIEW clientstatement AS
 		vwinvoice.netremits, vwinvoice.grossearning, vwinvoice.vat_rate, vwinvoice.galileo_vat
 	FROM vwinvoice;
 
-CREATE VIEW vwinvoicelist AS
-	SELECT clientid, clientname, town, country_id, countryname, 
-		periodid, invoiceid, issued
-	FROM vwsales
-	WHERE (clientid is not null) AND (totalprice > 0)
-	GROUP BY clientid, clientname, town, country_id, countryname, 
-		periodid, invoiceid, issued
-	ORDER BY clientid;
+CREATE VIEW vwinvoicelist AS 
+	SELECT vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid,
+		vwsales.invoiceid, vwsales.issued, 
+		period.salesperiod, period.invoicedate
+	FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
+	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
+	GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, 
+		period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.issued
+	ORDER BY vwsales.clientid;
 
-CREATE VIEW vwcrnotelist AS
-	SELECT vwsales.clientid, vwsales.periodid,crnotelist.crnoteid
-	FROM vwsales LEFT JOIN crnotelist ON
-		(vwsales.PeriodID = crnotelist.PeriodID) AND (vwsales.clientid = crnotelist.clientid)
-	WHERE (vwsales.clientid is not null) AND (vwsales.totalprice < 0) AND (to_char(StartDate, 'MMYYYY') <> to_char(servicedate, 'MMYYYY'))
-	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid
+CREATE VIEW vwcrnotelist AS 
+	SELECT vwsales.clientid, vwsales.periodid, crnotelist.crnoteid,
+		period.salesperiod, period.invoicedate
+	FROM vwsales LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
+		INNER JOIN period ON period.periodid = vwsales.periodid
+	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
+	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid, period.salesperiod, period.invoicedate
 	ORDER BY vwsales.clientid;
 
 CREATE VIEW vwinvoicesummary AS 
@@ -516,9 +534,7 @@ BEGIN
 		DELETE FROM management WHERE periodid is null;
 		DELETE FROM sales WHERE periodid is null;
 		DELETE FROM netrates WHERE periodid is null;
-
-		DELETE FROM period WHERE periodid = $1;
-
+		
 		DELETE FROM tmpnetrates;
 		DELETE FROM tmpmanagement;
 		DELETE FROM tmpsales;
@@ -560,13 +576,13 @@ BEGIN
 		WHERE (periodid = $1::integer);
 		
 		IF(v_approved = true) THEN
-			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
-			SELECT 1, invoiceid, 0, 'invoicelist'
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name, email_type)
+			SELECT 1, invoiceid, 0, 'invoicelist', 1
 			FROM invoicelist
 			WHERE (periodid = $1::integer);
 			
-			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name)
-			SELECT 2, crnoteid, 0, 'crnotelist'
+			INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name, email_type)
+			SELECT 2, crnoteid, 0, 'crnotelist', 2
 			FROM crnotelist  
 			WHERE (periodid = $1::integer);
 			

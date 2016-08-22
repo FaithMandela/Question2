@@ -2,6 +2,14 @@
 
 --- Get ticket report
 
+SELECT ticketid, ticketdate, ticketpcc, bookpcc, bpcc, son, pcc, line1, 
+       line2, line3, segs, tvoid, topen, tused, texch, trfnd, tarpt, 
+       tckin, tlftd, tunvl, tprtd, tsusp, 
+       (topen + tused + tarpt + tckin + tlftd + tprtd + tunvl) as activesegs
+FROM tickets
+WHERE bpcc = '36Q9' 
+AND to_char(ticketdate, 'MMYYYY') = '032016'
+ORDER BY ticketdate;
 
 
 --- DB clean ups

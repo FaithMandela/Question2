@@ -105,6 +105,40 @@ $BODY$
   ON contributions
   FOR EACH ROW
   EXECUTE PROCEDURE ins_contributions();
+  
+CREATE OR REPLACE FUNCTION weeks_in_range(
+    date,
+    date,
+    integer)
+  RETURNS integer AS
+$BODY$
+DECLARE
+    v_days                integer;
+    v_weeks                integer;
+    v_fdow                integer;
+    v_ldow                integer;
+BEGIN
+    v_days := 1 + $2 - $1;
+    v_fdow := EXTRACT(DOW FROM $1);
+    v_ldow := EXTRACT(DOW FROM $2);
+
+    v_weeks := v_days / 7;
+    IF(v_fdow > v_ldow)THEN
+        IF($3 >= v_fdow) OR ($3 <= v_ldow) THEN
+            v_weeks := (v_days + 7) / 7;           
+        END IF;
+    ELSE
+        IF($3 >= v_fdow) AND ($3 <= v_ldow) THEN
+            v_weeks := (v_days + 7) / 7;
+        END IF;
+    END IF;
+   
+    RAISE NOTICE 'Days %,  weeks %, DOW %, FDOW %, LDOW %', v_days, v_weeks, $3, v_fdow, v_ldow;
+
+    return v_weeks;
+END;
+$BODY$
+  LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION generate_contribs(
     character varying,
@@ -120,11 +154,14 @@ DECLARE
 	reca			RECORD;
 	v_org_id		integer;
 	v_month_name	varchar(50);
+	v_start_date		date;
+	v_end_date		date;
+	v_day			varchar(12);
 	v_member_id		integer;
-
+	v_weeks			integer;
 	msg 			varchar(120);
 BEGIN
-	SELECT period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
+	SELECT period_id, org_id, start_date, end_date, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_start_date, v_end_date, v_month_name
 	FROM periods
 	WHERE (period_id = $1::integer);
 
@@ -134,11 +171,20 @@ BEGIN
 
 	FOR reca IN SELECT member_id, entity_id FROM members WHERE (org_id = v_org_id) LOOP
 	
-	FOR rec IN SELECT org_id, frequency, contribution_type_id, investment_amount, merry_go_round_amount, applies_to_all
+	FOR rec IN SELECT  day_of_contrib, org_id, frequency, contribution_type_id, investment_amount, merry_go_round_amount, applies_to_all,
+		CASE  WHEN  day_of_contrib='Sunday' THEN 0
+			WHEN day_of_contrib= 'Monday' THEN  1
+			WHEN day_of_contrib= 'Tuesday' THEN  2
+			WHEN day_of_contrib ='Wednesday' THEN 3
+			WHEN day_of_contrib= 'Thursay' THEN 4
+			WHEN day_of_contrib='Friday' THEN 5
+			ELSE  6
+		END as v_days
 	FROM contribution_types WHERE  (org_id = v_org_id) LOOP
 	IF(rec.applies_to_all = true) THEN
-		IF (rec.frequency = 'Weekly') THEN
-		FOR i in 1..4 LOOP
+			IF (rec.frequency = 'Weekly') THEN
+		v_weeks := (SELECT weeks_in_range(v_start_date, v_end_date, rec.v_days::integer ));
+		FOR i in 1..v_weeks LOOP
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount, member_id, entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, reca.entity_id);
@@ -176,7 +222,8 @@ BEGIN
 	SELECT contribution_type_id, entity_id INTO recu FROM contribution_defaults WHERE entity_id = reca.entity_id
 	AND contribution_type_id = rec.contribution_type_id;
 		IF (rec.frequency = 'Weekly') THEN
-		FOR i in 1..4 LOOP
+		v_weeks := (SELECT weeks_in_range(v_start_date, v_end_date, rec.v_days::integer ));
+		FOR i in 1..v_weeks LOOP
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount, member_id, entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, recu.entity_id);

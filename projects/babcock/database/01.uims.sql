@@ -112,8 +112,11 @@ CREATE TABLE residences (
 	residencename		varchar(50) not null unique,
 	defaultrate			float default 0 not null,
 	offcampus			boolean not null default false,
-	Sex					varchar(1),
+	sex					varchar(1),
 	residencedean		varchar(50),
+	min_level			integer default 100,
+	max_level			integer default 500,
+	majors				text,
 	details				text
 );
 
@@ -666,6 +669,7 @@ CREATE TABLE studentpayments (
 	phistoryid			integer default -100,
 	applydate			timestamp not null default now(),
 	amount				real not null,
+	old_amount			real,
 	approved			boolean not null default false,
 	approvedtime		timestamp,
 	Picked				boolean default false not null,

@@ -161,7 +161,7 @@ ALTER TABLE studentdegrees ALTER COLUMN studentid SET NOT NULL;
 
 --------------- Adding a new student
 DELETE FROM adm_import1;
-INSERT INTO adm_import1 (app_id, bussary_code, card_number) VALUES ();
+INSERT INTO adm_import1 (app_id, bussary_code, card_number) VALUES ('');
 
 UPDATE registrations SET is_newstudent = true, existingid = registrationid,
 	account_number = adm_import1.bussary_code, e_tranzact_no = adm_import1.card_number, 

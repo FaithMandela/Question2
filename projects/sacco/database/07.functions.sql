@@ -120,9 +120,11 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
+-- Function: ins_contributions()
 
-   CREATE OR REPLACE FUNCTION ins_contributions()
+-- DROP FUNCTION ins_contributions();
 
+CREATE OR REPLACE FUNCTION ins_contributions()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -139,6 +141,7 @@ BEGIN
 
  IF (TG_OP = 'INSERT') then  
  v_total_all := 0;
+ 
 FOR rec IN Select * from vw_loans where entity_id = new.entity_id
 LOOP 
 
@@ -148,35 +151,37 @@ LOOP
         
          SELECT Sum(loan_balance) into v_total_all from vw_loans where entity_id = rec.entity_id;
          
-		 New.loan_repayment:= true ;
+		 New.loan_repayment:= 'True' ;
 		 
        IF (NEW.deposit_amount > v_total_all) then
 	
 	v_bal:= NEW.deposit_amount - v_total_all;
-	--raise exception ' the balance is%',v_bal;
+	
 	NEW.contribution_amount := v_bal; 	
+		
 		END IF;
 		
 
 		END IF;
-		
+			
+INSERT INTO loan_monthly(loan_id, period_id, org_id,repayment)
+	VALUES (v_id, NEW.period_id, NEW.org_id,v_bal);
+	
 END LOOP;
-	raise exception ' the balance is%',v_id;
+	--raise exception ' the balance is%',v_id;
 	
 		NEW.period_id := nextval('periods_period_id_seq');
-	
-INSERT INTO loan_monthly(loan_id, period_id, org_id, repayment)
-	VALUES (v_id, NEW.period_id, NEW.org_id, v_loan);
-	
+
 	if (v_bal is not null) then
 	INSERT INTO investments (entity_id,investment_type_id, org_id, invest_amount, period_years)
 	VALUES (New.entity_id, 0,New.org_id,v_bal,4);
 	else
 	new.contribution_amount := 0;
 	END IF;
+	
 ELSE IF NEW.additional_payments > 0 THEN
-INSERT INTO loan_monthly(loan_id, period_id, org_id, additional_payments)
-	VALUES (v_id, NEW.period_id, NEW.org_id, NEW.additional_payments);
+INSERT INTO loan_monthly(loan_id, period_id, org_id, additional_payments,repayment)
+	VALUES (v_id, NEW.period_id, NEW.org_id, NEW.additional_payments,0);
 END IF;
 END IF;
 
@@ -184,13 +189,7 @@ END IF;
    RETURN NEW;
 END;
 $BODY$
-  LANGUAGE plpgsql;
-
-  
-CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE On contributions
-  FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
-
-  
+  LANGUAGE plpgsq;
 
 
 CREATE OR REPLACE FUNCTION ins_investment()
@@ -574,6 +573,43 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION loan_approved(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Approved';
+	
+	UPDATE loans SET approve_status = 'Approved'
+	WHERE (loan_id = CAST($1 as int));
+
+	return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+  CREATE OR REPLACE FUNCTION loan_rejected(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	msg 				varchar(120);
+BEGIN
+	msg := 'Rejected';
+	
+	UPDATE loans SET approve_status = 'Rejected'
+	WHERE (loan_id = CAST($1 as int));
+
+	return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql;
 
 
 
