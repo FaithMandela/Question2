@@ -643,6 +643,7 @@
 				<CHECKBOX w="50" title="Approved">approved</CHECKBOX>
 				<TEXTFIELD w="100" title="Narrative">narrative</TEXTFIELD>
 				<TEXTFIELD w="120" title="Make Payment">makepayment</TEXTFIELD>
+				<TEXTFIELD w="120" title="Visa Payment">visapayment</TEXTFIELD>
 				<TEXTFIELD w="120" title="Query Transaction">querypayment</TEXTFIELD>
 				<TEXTFIELD w="120" title="Transaction Status">PHistoryName</TEXTFIELD>
 				<FORM name="Additional Payments" keyfield="studentpaymentid" delete="false" linkfield="qstudentid" table="studentpayments">

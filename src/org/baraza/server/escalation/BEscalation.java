@@ -93,26 +93,29 @@ public class BEscalation {
 				Map<String, String> headers = new HashMap<String, String>();
 				Map<String, String> reports = new HashMap<String, String>();
 
+				String ccto = null;
 				String subject = rs.getString("emailsubject");
 				String msg = "<HTML>\n<HEAD></HEAD>\n<BODY>\n";
 				
 				for(BElement el : ell.getElements()) {
 					if(el.getName().equals("FIELD")) {
-						if(rs.getString(el.getValue())!=null)
+						if(rs.getString(el.getValue()) != null)
 							msg += "<p>" + rs.getString(el.getValue()) + "</p>\n";
 					} else if(el.getName().equals("BODYFIELD")) {
 						String reference = el.getAttribute("reference");
-						if(rs.getString(el.getValue())!=null)
+						if(rs.getString(el.getValue()) != null)
 							params.put(reference, rs.getString(el.getValue()));
 						else
 							params.put(reference, "");
 					} else if(el.getName().equals("HEADER")) {
 						String reference = el.getAttribute("reference");
-						if(rs.getString(el.getValue())!=null)
+						if(rs.getString(el.getValue()) != null)
 							headers.put(reference, rs.getString(el.getValue()));
 					} else if(el.getName().equals("PARAM")) {
-						if(rs.getString(el.getValue())!=null)
+						if(rs.getString(el.getValue()) != null)
 							rptParams.put(el.getValue(), rs.getString(el.getValue()));
+					} else if(el.getName().equals("CCTO")) {
+						if(rs.getString(el.getValue()) != null) ccto = rs.getString(el.getValue());
 					} else if(el.getName().equals("REPORT")) {
 						if(rs.getString(el.getValue())!=null)
 							reports.put(el.getValue(), rs.getString(el.getValue()));
@@ -145,7 +148,7 @@ public class BEscalation {
 
 				if(emailaddress != null) {
 					if(emailaddress.indexOf("@")>1)
-						mail.sendMail(emailaddress, subject, msg, gotreport, headers, reports);
+						mail.sendMail(emailaddress, ccto, subject, msg, gotreport, headers, reports);
 				}
 										
 				/* Close the problem log */

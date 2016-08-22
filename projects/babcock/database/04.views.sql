@@ -1144,8 +1144,8 @@ CREATE VIEW vwstudentpayments AS
 		ELSE 'The payment is completed and updated' END) as makepayment,
 
 		(CASE WHEN studentpayments.approved = false THEN 
-		'<a href="payments/paymentClient.new.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
-		|| '" target="_blank"><IMG SRC="resources/images/etranzact.jpg" WIDTH=120 HEIGHT=24 ALT=""></a>'
+		'<a href="payments/paymentVisa.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
+		|| '" target="_blank"><IMG SRC="resources/images/visa.jpeg" WIDTH=575 HEIGHT=29 ALT=""></a>'
 		ELSE 'The payment is completed and updated' END) as visapayment,
 
 		(CASE WHEN studentpayments.approved = false THEN 

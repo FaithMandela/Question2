@@ -6,11 +6,12 @@
 	reportpath="/opt/baraza/projects/gtat/reports/">
 
 	<REPORT name="Invoice" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-			table="sys_emails, sys_emailed, clients, invoicelist, vwinvoicelist"
-			where="( (clients.clientid = invoicelist.clientid) AND (invoicelist.invoiceid = sys_emailed.table_id) AND(sys_emailed.emailed = false)  AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 1))">
+			table="sys_emails, sys_emailed, clients, vwinvoicelist"
+			where="( (clients.clientid = vwinvoicelist.clientid) AND (vwinvoicelist.invoiceid = sys_emailed.table_id) AND(sys_emailed.emailed = false)  AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 1))">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<PARAM basetable="invoicelist" >invoiceid</PARAM>
 		<ADDRESS title="address" >clients.email</ADDRESS>
+		<CCTO title="cc" fnct="'kenyafinance@travelport.com'::varchar">ccto</CCTO>
+		<PARAM basetable="vwinvoicelist" >invoiceid</PARAM>
 		<BODYFIELD reference="{{contactperson}}" basetable="clients">contact_person</BODYFIELD>
 		<BODYFIELD reference="{{month_disp}}" basetable="vwinvoicelist">month_disp</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
@@ -18,11 +19,12 @@
 	</REPORT>
 
 	<REPORT name="Credit Note" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-			table="sys_emails, sys_emailed, clients, crnotelist, vwcrnotelist"
-			where="( (clients.clientid = crnotelist.clientid) AND (crnotelist.crnoteid = sys_emailed.table_id) AND (sys_emailed.emailed = false)  AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 2))">
+			table="sys_emails, sys_emailed, clients, vwcrnotelist"
+			where="( (clients.clientid = vwcrnotelist.clientid) AND (vwcrnotelist.crnoteid = sys_emailed.table_id) AND (sys_emailed.emailed = false)  AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 2))">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<PARAM basetable="crnotelist" >crnoteid</PARAM>
 		<ADDRESS title="address" >clients.email</ADDRESS>
+		<CCTO title="cc" fnct="'kenyafinance@travelport.com'::varchar">ccto</CCTO>
+		<PARAM basetable="vwcrnotelist" >crnoteid</PARAM>
 		<BODYFIELD reference="{{contactperson}}" basetable="clients">contact_person</BODYFIELD>
 		<BODYFIELD reference="{{month_disp}}" basetable="vwcrnotelist">month_disp</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
