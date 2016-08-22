@@ -1,27 +1,10 @@
-CREATE OR REPLACE FUNCTION getbalance(integer) RETURNS real AS $$
-DECLARE
-	v_org_id 			integer;
-	v_function_role		text;
-	v_balance			real;
-BEGIN
-	v_balance = 0::real;
-	SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
-	IF(v_function_role = 'manager')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
-		FROM vw_pcc_statement
-		WHERE org_id = v_org_id;
-	END IF;
-	IF(v_function_role = 'consultant')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
-		FROM vw_son_statement
-		WHERE entity_id = $1;
-	END IF;
-
-	IF(v_function_role = 'admin')THEN
-		SELECT COALESCE(sum(dr - cr), 0) INTO v_balance
-		FROM vw_pcc_statement
-		WHERE org_id = 0;
-	END IF;
-	RETURN v_balance;
-END;
-$$ LANGUAGE plpgsql;
+CREATE OR REPLACE VIEW vw_org_points AS
+  SELECT periods.period_id, periods.start_date AS period, to_char(periods.start_date::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
+	  vw_orgs.pcc, COALESCE(SUM(points.segments),0.0) AS segments, COALESCE(SUM(points.points),0.0) AS points,
+	  COALESCE(SUM(points.bonus),0.0) AS bonus, vw_orgs.org_id,vw_orgs.org_name, COALESCE(count(points.son), 0::int) AS son,points.amount,
+	  vw_orgs.account_manager_id,vw_orgs.account_manager_name
+  FROM points
+   JOIN vw_orgs ON points.org_id = vw_orgs.org_id
+   JOIN periods ON points.period_id = periods.period_id WHERE periods.approve_status = 'Approved'
+   GROUP BY periods.period_id,periods.start_date,vw_orgs.pcc,vw_orgs.account_manager_id,vw_orgs.account_manager_name,vw_orgs.org_id,vw_orgs.org_name,periods.approve_status,points.amount
+  ORDER BY period desc;
