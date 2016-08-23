@@ -441,6 +441,22 @@ CREATE SEQUENCE workflow_table_id_seq;
 
 CREATE SEQUENCE picture_id_seq;
 
+CREATE TABLE jp_pay (
+	jp_id					serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	jp_tranid				varchar(320),
+	jp_merchant_orderid			integer references passengers,
+	jp_amount				real,
+	jp_currency				varchar(10),
+	jp_timestamp				timestamp default now(),
+	jp_password				varchar(240),
+	details					text
+);
+CREATE INDEX jp_pay_entity_id ON jp_pay (entity_id);
+CREATE INDEX jp_pay_org_id ON jp_pay (org_id);
+
+
 CREATE VIEW vw_sys_emailed AS
 	SELECT sys_emails.sys_email_id, sys_emails.org_id, sys_emails.sys_email_name, sys_emails.title, sys_emails.details,
 		sys_emailed.sys_emailed_id, sys_emailed.table_id, sys_emailed.table_name, sys_emailed.email_type,
@@ -1584,7 +1600,7 @@ CREATE OR REPLACE VIEW vw_passengers AS
 	passengers.totalAmount_covered,  passengers.is_north_america,  passengers.details,  passengers.passenger_dob,
 	passengers.policy_number,  vw_entitys.entity_name,  passengers.destown,  sys_countrys.sys_country_name,
 	passengers.approved_date,  passengers.corporate_id,  passengers.pin_no, passengers.reason_for_travel,
-	passengers.departure_country, vw_entitys.entity_role, vw_entitys.function_role, vw_entitys.is_active
+	passengers.departure_country, vw_entitys.entity_role, vw_entitys.function_role, vw_entitys.is_active,passengers.physical_address
 	FROM passengers
 	 JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
 	 JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id

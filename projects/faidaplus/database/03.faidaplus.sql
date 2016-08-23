@@ -321,11 +321,12 @@ CREATE OR REPLACE VIEW vw_points AS
 CREATE OR REPLACE VIEW vw_org_points AS
 	SELECT periods.period_id, periods.start_date AS period, to_char(periods.start_date::timestamp with time zone, 'mmyyyy'::text) AS ticket_period,
 		vw_orgs.pcc, COALESCE(SUM(points.segments),0.0) AS segments, COALESCE(SUM(points.points),0.0) AS points,
-		COALESCE(SUM(points.bonus),0.0) AS bonus, vw_orgs.org_id,vw_orgs.org_name, COALESCE(count(points.son), 0::int) AS son,points.amount
+		COALESCE(SUM(points.bonus),0.0) AS bonus, vw_orgs.org_id,vw_orgs.org_name, COALESCE(count(points.son), 0::int) AS son,points.amount,
+		vw_orgs.account_manager_id,vw_orgs.account_manager_name
 	FROM points
 	 JOIN vw_orgs ON points.org_id = vw_orgs.org_id
 	 JOIN periods ON points.period_id = periods.period_id WHERE periods.approve_status = 'Approved'
-	 GROUP BY periods.period_id,periods.start_date,vw_orgs.pcc,vw_orgs.org_id,vw_orgs.org_name,points.approve_status,points.amount
+	 GROUP BY periods.period_id,periods.start_date,vw_orgs.pcc,vw_orgs.account_manager_id,vw_orgs.account_manager_name,vw_orgs.org_id,vw_orgs.org_name,periods.approve_status,points.amount
 	ORDER BY period desc;
 
 CREATE OR REPLACE VIEW vw_son_points AS
@@ -359,15 +360,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE VIEW vw_son_statement AS
-SELECT a.dr, a.cr, a.order_date::date, a.son, a.pcc,
+SELECT a.dr, a.cr, a.order_date, a.son, a.pcc,
 		a.org_name, a.entity_id, a.dr+ a.bonus - a.cr AS balance, a.details, a.batch_no,a.bonus
-	FROM ((SELECT COALESCE(vw_son_points.points, 0::real) ) AS dr,
-		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
+	FROM ((SELECT (COALESCE(vw_son_points.points, 0::real) ) AS dr,0::real AS cr, vw_son_points.period AS order_date, vw_son_points.son,
 		vw_son_points.pcc, vw_son_points.org_name, vw_son_points.entity_id,
 		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,
-		NULL::integer AS batch_no, (COALESCE(vw_son_points.bonus, 0::real) as bonus
+		NULL::integer AS batch_no, (COALESCE(vw_son_points.bonus, 0::real)) as bonus
 	FROM vw_son_points)
-	UNION
+	UNION ALL
 	(SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
 		vw_orders.order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,

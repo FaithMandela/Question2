@@ -2,7 +2,7 @@
 <ESCALATION title="Heritage Mail" processdelay="2"
 	host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent" mailfrom="info@openbaraza.org"
 	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
-	reportpath="/opt/baraza/projects/heritage/reports">
+	reportpath="/opt/baraza/projects/heritage/reports/">
 
 	<REPORT name="Insurance" keyfield="sys_emailed_id" action="Emailed" actioncount="1" infile="true"
 			table="sys_emails, sys_emailed, vw_passengers,vw_entitys"
@@ -11,6 +11,7 @@
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
+		<BODYFIELD reference="{{rate_plan}}" basetable="vw_passengers" >rate_plan_id</BODYFIELD>
 		<PARAM basetable="vw_passengers">passenger_id</PARAM>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 		<REPORT fnct="'letterToEmbassy.jasper'::varchar">letterToEmbassy</REPORT>

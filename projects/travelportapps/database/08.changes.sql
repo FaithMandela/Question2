@@ -56,3 +56,19 @@ FROM ((
         is_active
     FROM  vw_policy_members )
 )a order by passenger_id DESC;
+
+
+CREATE TABLE jp_pay (
+	jp_id					serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	jp_tranid				varchar(320),
+	jp_merchant_orderid			integer references passengers,
+	jp_amount				real,
+	jp_currency				varchar(10),
+	jp_timestamp				timestamp default now(),
+	jp_password				varchar(240),
+	details					text
+);
+CREATE INDEX jp_pay_entity_id ON jp_pay (entity_id);
+CREATE INDEX jp_pay_org_id ON jp_pay (org_id);
