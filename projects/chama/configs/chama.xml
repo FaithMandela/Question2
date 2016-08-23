@@ -1547,6 +1547,8 @@
 			<TEXTDECIMAL w="75" title="Semester">semister</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Merry Go Round Number">mgr_number</TEXTFIELD>
 			<ACTIONS>
+				<ACTION fnct="compute_loans">Process Loans</ACTION>
+				<ACTION fnct="compute_contributions">Generate contribs</ACTION>
 				<ACTION fnct="generate_repayment" role="admin">Generate Loan Repayment</ACTION>
 			</ACTIONS>
 			<FORM name="Periods" keyfield="period_id" table="periods">
