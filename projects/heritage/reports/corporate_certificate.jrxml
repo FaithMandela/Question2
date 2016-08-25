@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificate" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bde80f65-3883-4a11-bf6d-677cc05588fd">
 	<property name="ireport.zoom" value="1.2078825000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="559"/>
+	<property name="ireport.y" value="181"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -76,27 +76,11 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 				<text><![CDATA[Insurer: The Heritage Insurance Co. Ltd]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="77" width="91" height="20" uuid="0ac88570-6ed7-4d05-8011-a1e20d122c07"/>
+				<reportElement x="1" y="77" width="197" height="20" uuid="0ac88570-6ed7-4d05-8011-a1e20d122c07"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Policy Number:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="303" width="244" height="25" uuid="85d2a74e-b652-4e38-b5bc-05764fbcdee1"/>
-				<textElement>
-					<font fontName="Times New Roman" size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SPECIALTY ASSIST]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="436" width="243" height="46" uuid="6360ca90-1789-414e-8d6f-9b539ee49c1d"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Philadelphia, USA
-Tel: +1215 489 3785 Tel: +662 645 3932
-Fax: +1215 489 8525]]></text>
+				<text><![CDATA[ATTACHING TO POLICY NO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="224" y="131" width="131" height="20" uuid="b8d93010-36d4-4576-8f80-278f1ad3229b"/>
@@ -113,33 +97,19 @@ Fax: +1215 489 8525]]></text>
 				<text><![CDATA[In the event of an emergency, please call the numbers below:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="224" y="77" width="74" height="20" forecolor="#000000" uuid="8b704241-efcc-4962-863c-250e0d543fd1"/>
+				<reportElement style="Column header" x="224" y="77" width="218" height="20" forecolor="#000000" uuid="8b704241-efcc-4962-863c-250e0d543fd1"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Cover From:]]></text>
+				<text><![CDATA[ENDORSEMENT/REGISTRATION NO]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Detail" x="298" y="77" width="98" height="20" uuid="961573de-9c96-4f18-86f7-3365b30811d4"/>
-				<textElement>
-					<font fontName="Times New Roman" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{days_from}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement style="Column header" x="396" y="77" width="62" height="20" forecolor="#000000" uuid="20b02b9f-5c9c-4f81-b8fb-43857434b135"/>
+				<reportElement style="Column header" x="298" y="51" width="62" height="20" forecolor="#000000" uuid="20b02b9f-5c9c-4f81-b8fb-43857434b135"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Cover TO:]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement style="Detail" x="458" y="77" width="97" height="20" uuid="c56e7657-6004-4318-99af-61b6668e0ed1"/>
-				<textElement>
-					<font fontName="Times New Roman" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{days_to}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement style="Column header" x="0" y="131" width="49" height="20" forecolor="#000000" uuid="b2091842-96da-4404-99ca-acc5f4efc67c"/>
 				<textElement>
@@ -168,79 +138,20 @@ Fax: +1215 489 8525]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rate_plan_name}.toUpperCase()]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="338" width="244" height="66" uuid="1cb73940-c278-4dcb-91c5-fd6898c4d062"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[London, UK
-Tel: +44(0) 20 7902 7405
-Fax:+44 (0) 20 7928 4748]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="482" width="243" height="23" uuid="1afbb73b-7fcd-42b3-bbf7-4805767a3a5b"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Email: assistance@specialty-group.com]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="405" width="243" height="20" uuid="4df7b0cb-8c0d-46f5-9715-5d1a21574084"/>
-				<textElement>
-					<font fontName="Times New Roman" size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SPECIALTY ASSIST]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="334" y="436" width="196" height="46" uuid="931c28cd-78f1-4cdd-959b-bf3c36e35804"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Bangkok, Thailand
-Tel: +662 645 3932
-Fax: +662 645 3732]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="334" y="333" width="196" height="71" uuid="bf224ed2-cc4d-4861-8a60-d19168075fae"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12"/>
-				</textElement>
-				<text><![CDATA[Johannesburg, South Africa
-Tel: +27 10 209 8300
-Fax:+27 10 209 8405]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="334" y="303" width="196" height="20" uuid="b8a35209-9d27-4fc0-9876-3ff4bb27a641"/>
-				<textElement>
-					<font fontName="Times New Roman" size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SPECIALTY ASSIST]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="334" y="405" width="196" height="20" uuid="3f332a2b-868a-4081-8906-301f4a974f2c"/>
-				<textElement>
-					<font fontName="Times New Roman" size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[SPECIALTY ASSIST]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="92" y="77" width="132" height="20" uuid="36cf9adc-bc29-4425-982d-5f6714de5176"/>
+				<reportElement style="Detail" x="3" y="97" width="167" height="20" uuid="36cf9adc-bc29-4425-982d-5f6714de5176"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="355" y="131" width="132" height="20" uuid="ab552b26-22a4-44d9-a7f2-c4adaaf49fd9"/>
+				<reportElement style="Detail" x="224" y="97" width="132" height="20" uuid="ab552b26-22a4-44d9-a7f2-c4adaaf49fd9"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destown}.toUpperCase()]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="266" width="236" height="20" uuid="42572b7d-b831-4770-a5bb-80506528f1be"/>
-				<text><![CDATA[For Assistance Worldwide, Contact]]></text>
-			</staticText>
 		</band>
 	</detail>
 	<columnFooter>

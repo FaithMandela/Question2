@@ -88,9 +88,7 @@ DECLARE
 	v_balance			real;
 BEGIN
 	v_balance = 0::real;
-
 	SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
-
 	RETURN v_balance;
 END;
 $$ LANGUAGE plpgsql;
@@ -208,27 +206,39 @@ END;
 $BODY$ LANGUAGE plpgsql ;
 
 
-CREATE OR REPLACE FUNCTION getClientbalance(
-    integer,
-    character)
-  RETURNS real AS
-$BODY$
+CREATE OR REPLACE FUNCTION getClientbalance( integer)  RETURNS real AS
+$$
 DECLARE
 	v_org_id 			integer;
 	v_function_role		text;
 	v_balance			real;
+	v_value				real;
 BEGIN
 	v_balance = 0::real;
 	SELECT function_role INTO  v_function_role FROM vw_entitys WHERE entity_id = $1;
+	SELECT point_value INTO  v_value FROM points_value;
 
-		SELECT COALESCE(sum(dr - cr-sambaza_out+sambaza_in-refunds), 0) INTO v_balance
-		FROM vw_client_statement
-		WHERE entity_id = $1 AND order_date < $2::date;
-
+	SELECT COALESCE(sum(balance), 0) INTO v_balance
+	FROM vw_client_statement
+	WHERE entity_id = $1 ;
+	v_balance := v_balance*v_value;
 	RETURN v_balance;
 END;
-$BODY$
+$$
   LANGUAGE plpgsql;
+
+  CREATE OR REPLACE FUNCTION getValue()  RETURNS real AS
+  $$
+  DECLARE
+  	v_value				real;
+  BEGIN
+  	v_value = 0::real;
+  	SELECT COALESCE(point_value, 0) INTO  v_value FROM points_value;
+
+  	RETURN v_value;
+  END;
+  $$
+    LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION get_order_details(integer)

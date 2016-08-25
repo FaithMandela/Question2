@@ -289,7 +289,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Insurance Sold" key="35">
-		<GRID noorg="true" keyfield="passenger_id" name="Insurance Sold" where="approved is true AND customer_code is  null" tab.count="count(passenger_id)" table="vw_passengers">
+		<GRID noorg="true" keyfield="passenger_id" name="Insurance Sold" where="approved is true AND customer_code is  null AND incountry is false" tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
@@ -308,7 +308,7 @@
 			<JASPER reportfile="certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Insurance Canceled" where="approved is false" tab.count="count(passenger_id)" table="vw_passengers">
+		<GRID noorg="true" keyfield="passenger_id" name="In Country Insurance" where="approved is true AND incountry is true" tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
@@ -324,6 +324,8 @@
 			<ACTIONS>
 				<ACTION approval="2" fnct="upd_passenger">Revert</ACTION>
 			</ACTIONS>
+			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
+			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID noorg="true" keyfield="passenger_id" name="Corporate Insurance" where="approved is true AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
@@ -343,6 +345,42 @@
 			</ACTIONS>
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
+		</GRID>
+		<GRID noorg="true" keyfield="passenger_id" name="Corporate incountry Insurance" where="approved is true AND customer_code is not null AND incountry is true" tab.count="count(passenger_id)" table="vw_corporate_passengers">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">corporate_rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date To">days_to</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile Number">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION approval="2" fnct="upd_passenger">Revert</ACTION>
+			</ACTIONS>
+			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
+			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
+		</GRID>
+		<GRID noorg="true" keyfield="passenger_id" name="Insurance Canceled" where="approved is false" tab.count="count(passenger_id)" table="vw_passengers">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date To">days_to</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile Number">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION approval="2" fnct="upd_passenger">Revert</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="500" name="EMails" key="60">

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="432"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="filterid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[78]]></defaultValueExpression>
 	</parameter>
@@ -10,7 +10,8 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,vw_passengers.approved_date,vw_passengers.passenger_id_no,vw_passengers.destown ||',' as destown,vw_passengers.policy_number,vw_passengers.nok_national_id,
+		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,vw_passengers.approved_date,vw_passengers.passenger_id_no,vw_passengers.destown ||',' as destown,vw_passengers.policy_number,vw_passengers.nok_national_id,countries,
+array_length(regexp_split_to_array(countries, ','), 1) as countries_no,
 ('The policy is valid from '|| vw_passengers.days_from)as days_from,(vw_passengers.days_to ||'.')as days_to,'The policy benefits includes Emergency Medical and Evacuation benefits of USD '||get_benefit_section_a(rate_type_id)||' and USD '||get_benefit_section_b(rate_type_id)|| ' respectively and is applicable worldwide including all Schengen States.' as benefit FROM vw_passengers
 WHERE passenger_id = '$P!{filterid}']]>
 	</queryString>
@@ -22,14 +23,19 @@ WHERE passenger_id = '$P!{filterid}']]>
 	<field name="destown" class="java.lang.String"/>
 	<field name="policy_number" class="java.lang.String"/>
 	<field name="nok_national_id" class="java.lang.String"/>
+	<field name="countries" class="java.lang.String"/>
+	<field name="countries_no" class="java.lang.Integer"/>
 	<field name="days_from" class="java.lang.String"/>
 	<field name="days_to" class="java.lang.String"/>
 	<field name="benefit" class="java.lang.String"/>
+	<variable name="countries" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{countries_no}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="114" splitType="Stretch">
+		<band height="110" splitType="Stretch">
 			<image>
 				<reportElement x="170" y="0" width="153" height="110" uuid="907327d0-5dc7-48df-a96d-fb08b71a6c2c"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "ICEA-LION-Travel-Insurance-Logo.png"]]></imageExpression>
@@ -55,10 +61,11 @@ WHERE passenger_id = '$P!{filterid}']]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="4" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
-		<band height="473" splitType="Stretch">
+		<band height="468" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{countries} > 0]]></printWhenExpression>
 			<staticText>
 				<reportElement x="0" y="24" width="409" height="25" uuid="73bae524-e17b-4afa-b939-2c1323520978"/>
 				<textElement>
@@ -144,14 +151,14 @@ WHERE passenger_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{passenger_name}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="209" width="557" height="33" uuid="1da5a194-daf2-4cb6-95b1-6aeb242f5fb3"/>
+				<reportElement x="0" y="206" width="557" height="33" uuid="1da5a194-daf2-4cb6-95b1-6aeb242f5fb3"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[This is to confirm we have issued overseas travel insurance to the above named person who is scheduled to travel abroad.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="319" width="256" height="20" uuid="2554e182-29ad-4719-8772-f95e0f0975f1"/>
+				<reportElement x="0" y="316" width="256" height="20" uuid="2554e182-29ad-4719-8772-f95e0f0975f1"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -161,7 +168,7 @@ WHERE passenger_id = '$P!{filterid}']]>
 				<reportElement x="0" y="205" width="550" height="1" uuid="13f30510-24e8-4720-a01d-b0bf638d02ea"/>
 			</line>
 			<staticText>
-				<reportElement x="-1" y="436" width="268" height="33" uuid="ee72dfbd-6c74-4b9e-b283-9a8f8787dc8a"/>
+				<reportElement x="-1" y="433" width="268" height="33" uuid="ee72dfbd-6c74-4b9e-b283-9a8f8787dc8a"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -176,21 +183,21 @@ Manager, Business Development]]></text>
 				<text><![CDATA[RE: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="295" width="555" height="20" uuid="b0299be3-28b1-402c-b529-e8c3483c3e94"/>
+				<reportElement x="0" y="292" width="555" height="20" uuid="b0299be3-28b1-402c-b529-e8c3483c3e94"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[For any inquiries, please contact the undersigned.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="339" width="256" height="20" uuid="b1af8a53-ab92-4ba9-b0cc-d14d246869d9"/>
+				<reportElement x="0" y="336" width="256" height="20" uuid="b1af8a53-ab92-4ba9-b0cc-d14d246869d9"/>
 				<textElement textAlignment="Justified">
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[For and on behalf of ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="359" width="256" height="20" uuid="7cfc1952-a6bc-4425-9986-774c0c028962"/>
+				<reportElement x="0" y="356" width="256" height="20" uuid="7cfc1952-a6bc-4425-9986-774c0c028962"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -204,7 +211,7 @@ Manager, Business Development]]></text>
 				<textFieldExpression><![CDATA[$F{approved_date}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="0" y="379" width="145" height="57" uuid="d7f3a314-9edd-47a0-b82b-534ce7789805"/>
+				<reportElement x="0" y="376" width="145" height="57" uuid="d7f3a314-9edd-47a0-b82b-534ce7789805"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "file-page1.png"]]></imageExpression>
 			</image>
 			<staticText>
@@ -212,23 +219,27 @@ Manager, Business Development]]></text>
 				<text><![CDATA[.]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="242" width="557" height="33" isPrintWhenDetailOverflows="true" uuid="e5038bf7-5e09-40ba-87f7-a074e2fc4e4b"/>
+				<reportElement x="0" y="239" width="557" height="33" isPrintWhenDetailOverflows="true" uuid="e5038bf7-5e09-40ba-87f7-a074e2fc4e4b"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{benefit}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="275" width="557" height="20" isPrintWhenDetailOverflows="true" uuid="9046a7b2-2642-40be-b955-df61cc765298"/>
+				<reportElement x="0" y="272" width="557" height="20" isPrintWhenDetailOverflows="true" uuid="9046a7b2-2642-40be-b955-df61cc765298"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{days_from} + ' to '+$F{days_to}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="420" y="103" width="100" height="20" uuid="e1d18ddf-5f35-42a5-8c09-87b444b613df"/>
+				<textFieldExpression><![CDATA[$V{countries}]]></textFieldExpression>
+			</textField>
 		</band>
-		<band height="68">
+		<band height="51">
 			<subreport>
-				<reportElement positionType="Float" x="-1" y="0" width="555" height="66" isPrintWhenDetailOverflows="true" uuid="de0ac49e-7f46-4298-9394-daab29bd7741"/>
+				<reportElement positionType="Float" x="-1" y="0" width="555" height="50" isPrintWhenDetailOverflows="true" uuid="de0ac49e-7f46-4298-9394-daab29bd7741"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
