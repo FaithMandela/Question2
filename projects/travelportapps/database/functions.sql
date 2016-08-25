@@ -7,16 +7,20 @@ CREATE FUNCTION ins_policy_number() RETURNS trigger AS $$
 	  v_policy_no integer;
 	  sequence_no char(50);
 	BEGIN
-	IF(NEW.approved is true)THEN
-		v_policy_no := nextval('policy_no_seq'),
-		yr :=(SELECT to_char as year from to_char(current_timestamp, 'YY'));
-		passenger_no := (SELECT TO_CHAR(v_policy_no,'fm0000'));
+	IF (TG_OP = 'INSERT') THEN
+		IF(NEW.approved is true)THEN
+			v_policy_no := nextval('policy_no_seq');
+			yr :=(SELECT to_char as year from to_char(current_timestamp, 'YY'));
+			passenger_no := (SELECT TO_CHAR(v_policy_no,'fm0000'));
 
-		sequence_no :=(SELECT policy_sequence_no from policy_sequence);
-		base_val := trim(sequence_no || passenger_no || '-' || yr);
-		NEW.policy_number := base_val;
+			sequence_no :=(SELECT policy_sequence_no from policy_sequence);
+			base_val := trim(sequence_no || passenger_no || '-' || yr);
+			NEW.policy_number := base_val;
 		END IF;
-		RETURN NEW;
+
+	END IF;
+
+	RETURN NEW;
 END; $$ LANGUAGE plpgsql;
 
 
@@ -25,20 +29,30 @@ CREATE TRIGGER ins_policy_number
   FOR EACH ROW EXECUTE PROCEDURE ins_policy_number();
 
 
-      CREATE OR REPLACE FUNCTION upd_passengers()
-        RETURNS trigger AS
-      	$BODY$
-      	DECLARE
-      	BEGIN
-      	IF(NEW.approved = true) THEN
-      		NEW.approved_date = CURRENT_TIMESTAMP;
-      	END IF;
-      	RETURN NEW;
-      	END;
-      	$BODY$
-        LANGUAGE plpgsql VOLATILE
-        COST 100;
+CREATE OR REPLACE FUNCTION upd_passengers() RETURNS trigger AS	$$
+	DECLARE
+		base_val  char(50);
+		yr 	integer;
+		passenger_no char(4);
+		v_policy_no integer;
+		sequence_no char(50);
+	BEGIN
+		IF(NEW.approved = true) THEN
+			NEW.approved_date = CURRENT_TIMESTAMP;
+			v_policy_no := nextval('policy_no_seq');
+			yr :=(SELECT to_char as year from to_char(current_timestamp, 'YY'));
+			passenger_no := (SELECT TO_CHAR(v_policy_no,'fm0000'));
 
+			sequence_no :=(SELECT policy_sequence_no from policy_sequence);
+			base_val := trim(sequence_no || passenger_no || '-' || yr);
+			NEW.policy_number := base_val;
+		END IF;
+		RETURN NEW;
+	END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_passengers BEFORE UPDATE ON passengers
+FOR EACH ROW  EXECUTE PROCEDURE upd_passengers();
 
 
 CREATE OR REPLACE FUNCTION ins_passengers()  RETURNS trigger AS

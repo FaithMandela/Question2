@@ -284,14 +284,16 @@ FROM corporate_rate_plan;
 
    CREATE OR REPLACE VIEW vw_corporate_rate_types AS
    SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_rate_types.age_limit,
-      corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name,corporate_rate_plan.rate_plan_name, corporate_rate_plan.rate_plan_id
+      corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name,corporate_rate_plan.rate_plan_name, corporate_rate_plan.rate_plan_id,
+	  corporate_rate_types.corporate_rate_category_id
      FROM corporate_rate_types
-     JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id ;
+     JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id 
 	 JOIN corporate_rate_plan ON corporate_rate_plan.rate_plan_id = corporate_rate_types.rate_plan_id;
 
 	 CREATE OR REPLACE VIEW vw_corporate_rates AS
      SELECT vw_corporate_rate_types.rate_type_id, vw_corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
        corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate,
-  	 vw_corporate_rate_types.rate_plan_name,vw_corporate_rate_types.corporate_rate_category_name,vw_corporate_rate_types.rate_plan_id
+  	 vw_corporate_rate_types.rate_plan_name,vw_corporate_rate_types.corporate_rate_category_name,vw_corporate_rate_types.rate_plan_id,
+	 vw_corporate_rate_types.corporate_rate_category_id
       FROM corporate_rates
         JOIN vw_corporate_rate_types ON corporate_rates.rate_type_id = vw_corporate_rate_types.rate_type_id;

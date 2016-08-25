@@ -340,4 +340,50 @@ CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-    
+
+CREATE OR REPLACE FUNCTION generate_repayment(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	rec			RECORD;
+	recu			RECORD;
+	reca			RECORD;
+	v_penalty		real;
+	v_org_id		integer;
+	v_period_id		integer;
+	v_month_name		varchar(20);
+	vi_period_id		integer;
+	v_loan_type_id		integer;
+	v_loan_intrest		real;
+	v_loan_id		integer;
+	msg			varchar(120);
+BEGIN
+SELECT   period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
+	FROM periods
+	WHERE (period_id = $1::integer);
+SELECT loan_month_id, loan_id, period_id, org_id, interest_amount, repayment, interest_paid, penalty_paid INTO recu 
+FROM loan_monthly WHERE period_id in (v_period_id) AND org_id in (v_org_id);
+
+	IF( recu.period_id is null) THEN
+	
+		FOR rec IN SELECT org_id, loan_id, loan_type_id, monthly_repayment FROM loans WHERE (org_id = v_org_id) LOOP
+		raise exception '%',rec.loan_id;	
+		SELECT loan_intrest, loan_id INTO v_loan_intrest, v_loan_id FROM vw_loan_payments WHERE v_loan_id = rec.loan_id;
+		recu.repayment = rec.monthly_repayment - v_loan_intrest;
+			
+	
+		INSERT INTO loan_monthly (loan_id, period_id, org_id, interest_amount, repayment, interest_paid)
+		VALUES(rec.loan_id, v_period_id, rec.org_id, v_loan_intrest, recu.repayment,  v_loan_intrest);
+	END LOOP;
+	
+
+msg := 'Repayment Generated';
+	END IF;
+
+	return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql
