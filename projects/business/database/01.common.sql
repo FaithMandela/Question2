@@ -151,11 +151,13 @@ CREATE VIEW vw_entitys AS
 		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
 		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
 		
+		entity_types.entity_type_id, entity_types.entity_type_name, 
+		entity_types.entity_role, entity_types.use_key,
+		
 		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
-		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone,
-		entity_types.entity_type_id, entity_types.entity_type_name, 
-		entity_types.entity_role, entity_types.use_key
+		entitys.function_role, entitys.use_function, entitys.attention, entitys.primary_email, entitys.primary_telephone
+
 	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;

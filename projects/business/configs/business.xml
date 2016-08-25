@@ -104,7 +104,7 @@
 					</FORM>
 				</GRID>
 				<FORM name="Lead Items" keyfield="lead_item_id" linkfield="lead_id" table="lead_items">
-					<COMBOBOX w="430" title="By" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="By" lptable="entitys" where="(use_function = 0)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Item" lptable="items" y="30" h="20" x="10" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTDATE w="150" title="Pitch Date" y="50" h="20" x="10">pitch_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Units" y="50" h="20" x="290">units</TEXTFIELD>
@@ -116,7 +116,7 @@
 			</GRID>
 			<FORM name="Leads" keyfield="lead_id" table="leads">
 				<COMBOBOX w="430" title="Industry" lptable="industry" y="10" h="20" x="10" lpfield="industry_name">industry_id</COMBOBOX>
-				<COMBOBOX w="430" title="By" lptable="entitys" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="By" lptable="entitys" where="(use_function = 0)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Business Name" y="50" h="20" x="10">business_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Business Address" y="50" h="20" x="290">business_address</TEXTFIELD>
 				<TEXTFIELD w="150" title="City" y="70" h="20" x="10">city</TEXTFIELD>
@@ -239,7 +239,7 @@
 					</FORM>
 				</GRID>
 				<FORM name="Lead Items" keyfield="lead_item_id" linkfield="lead_id" table="lead_items">
-					<COMBOBOX w="430" title="By" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="By" lptable="entitys" where="(use_function = 0)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Item" lptable="items" y="30" h="20" x="10" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTDATE w="150" title="Pitch Date" y="50" h="20" x="10">pitch_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Units" y="50" h="20" x="290">units</TEXTFIELD>
@@ -251,7 +251,7 @@
 			</GRID>
 			<FORM name="Leads" keyfield="lead_id" table="leads">
 				<COMBOBOX w="430" title="Industry" lptable="industry" y="10" h="20" x="10" lpfield="industry_name">industry_id</COMBOBOX>
-				<COMBOBOX w="430" title="By" lptable="entitys" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="By" lptable="entitys" where="(use_function = 0)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Business Name" y="50" h="20" x="10">business_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Business Address" y="50" h="20" x="290">business_address</TEXTFIELD>
 				<TEXTFIELD w="150" title="City" y="70" h="20" x="10">city</TEXTFIELD>
@@ -965,7 +965,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Entitys" key="20" h="500">
-		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(entity_type_id = 2)">
+		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(use_function = 2)">
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -998,9 +998,9 @@
 				</FORM>
 			</GRID>
 			<FORM name="Clients" keyfield="entity_id" table="entitys">
-				<DEFAULT default="2">entity_type_id</DEFAULT>
 				<DEFAULT default="client">Function_Role</DEFAULT>
-				<DEFAULT default="0">org_id</DEFAULT>
+				<DEFAULT default="2">use_function</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<GRIDBOX w="430" title="Account" default="30000" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
 					<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
 						<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
@@ -1017,7 +1017,7 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Supplier" keyfield="entity_id" table="entitys" where="(entity_type_id = 3)">
+		<GRID name="Supplier" keyfield="entity_id" table="entitys" where="(use_function = 3)">
 			<TEXTFIELD w="75" title="Supplier ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Supplier Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -1050,9 +1050,9 @@
 				</FORM>
 			</GRID>
 			<FORM name="Supplier" keyfield="entity_id" table="entitys">
-				<DEFAULT default="3">entity_type_id</DEFAULT>
 				<DEFAULT default="supplier">Function_Role</DEFAULT>
-				<DEFAULT default="0">org_id</DEFAULT>
+				<DEFAULT default="3">use_function</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key = 3)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<GRIDBOX w="430" title="Account" default="40000" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
 					<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
 						<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
@@ -1069,7 +1069,7 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Users" keyfield="entity_id" table="entitys" where="(entity_type_id = 0)">
+		<GRID name="Users" keyfield="entity_id" table="entitys" where="(use_function = 0)">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -1103,8 +1103,8 @@
 				</FORM>
 			</GRID>
 			<FORM name="Users" keyfield="entity_id" table="entitys">
-				<DEFAULT default="0">entity_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Org" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<DEFAULT default="0">use_function</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key = 0)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Full Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<CHECKBOX w="50" title="Super User" y="70" h="20" x="10">super_user</CHECKBOX>

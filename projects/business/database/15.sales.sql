@@ -16,7 +16,7 @@ CREATE TABLE leads (
 	
 	primary_contact			varchar(120),
 	job_title				varchar(120),
-	primary_email			varchar(120) not null,
+	primary_email			varchar(120),
 	prospect_level			integer default 1 not null,
 
 	contact_date			date default current_date,
