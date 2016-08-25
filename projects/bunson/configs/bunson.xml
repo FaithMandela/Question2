@@ -1802,7 +1802,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Consultant Transfers" key="35" h="550">
-		<GRID name="Unprocessed Transfer Passengers" keyfield="passanger_id" orderby="pickup_date ASC, pickup_date ASC, pickup_time ASC" linkfield="transfer_id" table="vw_passangers" noorg="true" where="(processed= false AND pax_cancelled = false)" user="entity_id">
+		<GRID name="Unprocessed Transfer Passengers" keyfield="passanger_id" orderby="pickup_date ASC, pickup_date ASC, pickup_time ASC" linkfield="transfer_id" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(processed= false AND cancelled = false)" user="entity_id">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
@@ -1900,7 +1900,7 @@
 				<TEXTAREA w="430" title="Other Preference" y="130" h="70" x="10">other_preference</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Processed Transfer Passengers" keyfield="passanger_id" orderby="pickup_date ASC, pickup_time ASC" linkfield="transfer_id" table="vw_passangers" noorg="true" where="(processed= true)" user="entity_id">
+		<GRID name="Processed Transfer Passengers" keyfield="passanger_id" orderby="pickup_date ASC, pickup_time ASC" linkfield="transfer_id" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(processed= true)" user="entity_id">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
@@ -2200,7 +2200,7 @@
 				<CHECKBOX w="150" title="Email Ready" y="310" h="20" x="290">email_ready</CHECKBOX>
 			</FORM>
 		</GRID>
-		<GRID color="bunson" name="Cancelled Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(is_group = false AND pax_cancelled = true)" user="entity_id">
+		<GRID color="bunson" name="Cancelled Pax" keyfield="passanger_id" orderby="pickup_time ASC" table="vw_passangers" tab.count="count(passanger_id)" noorg="true" where="(is_group = false AND cancelled = true)" user="entity_id">
 			<TEXTFIELD w="75" title="Passenger ID">passanger_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passanger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passanger_mobile</TEXTFIELD>
