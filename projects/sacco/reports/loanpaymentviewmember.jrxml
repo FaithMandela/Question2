@@ -18,8 +18,7 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="entityid" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[""
-]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT currency_id, currency_name, currency_symbol, loan_type_id, loan_type_name,
@@ -28,7 +27,7 @@
        approve_status, initial_payment, org_id, action_date, months,
        loan_balance, loan_intrest,calc_repayment_period, repayment_amount
   FROM vw_loan_payments
-WHERE (vw_loan_payments.loan_id = '$P!{filterid}')
+WHERE (vw_loan_payments.entity_id = '$P!{filterid}')
 $P!{organd}
 ORDER BY vw_loan_payments.months;]]>
 	</queryString>
@@ -75,7 +74,7 @@ ORDER BY vw_loan_payments.months;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="28" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Loan Payment Report]]></text>
+				<text><![CDATA[Loan Amortisation Report]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="element-90" x="9" y="72" width="73" height="16" forecolor="#000000" uuid="205a4259-8c84-4099-8a12-2b57efdebbd3"/>

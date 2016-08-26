@@ -49,3 +49,65 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ REATE OR REPLACE FUNCTION compute_contributions(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	v_period_id			integer;
+	v_org_id			integer;
+	msg					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id INTO v_period_id, v_org_id
+	FROM periods
+	WHERE (period_id = $1::integer);
+	
+	DELETE FROM contributions WHERE period_id = v_period_id;
+
+	INSERT INTO contributions (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
+
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+
+	msg := 'Loans re-computed';
+
+	RETURN msg;
+END;
+$BODY$
+  LANGUAGE plpgsql

@@ -198,12 +198,13 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
     contributions.payment_type_id,
     contributions.deposit_amount,
     contributions.entry_date,
-    contributions.loan_repayment as for_repayment,
+    contributions.loan_repayment AS for_repayment,
     contributions.transaction_ref,
     contributions.additional_payments,
     contributions.contribution_amount,
+   members.contribution as member_contribution,
     entitys.entity_name,
-     entitys.is_active,
+    entitys.is_active,
     contribution_types.contribution_type_id,
     contribution_types.contribution_type_name,
     payment_types.payment_type_name,
@@ -212,9 +213,11 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
     to_char(vw_periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
    FROM contributions
      JOIN entitys ON contributions.entity_id = entitys.entity_id
+      JOIN members on members.entity_id = contributions.entity_id 
      JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
-     JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
-     JOIN vw_periods ON contributions.period_id = vw_periods.period_id;
+      JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
+       JOIN vw_periods ON contributions.period_id = vw_periods.period_id;
+
 
  CREATE OR REPLACE VIEW vw_investments AS 
  SELECT entitys.entity_id,

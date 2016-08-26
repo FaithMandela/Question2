@@ -233,6 +233,7 @@ CREATE TABLE members (
   	 residential_address 		varchar (120),
   	 
   	 expired 					boolean default 'false'
+  	 contribution				real default '2000';
   	);
   	
 	 

@@ -124,73 +124,51 @@ $BODY$
 
 -- DROP FUNCTION ins_contributions();
 
-CREATE OR REPLACE FUNCTION ins_contributions()
-  RETURNS trigger AS
-$BODY$
+-- Function: ins_contributions()
+
+-- DROP FUNCTION ins_contributions();
+
+CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $BODY$
 DECLARE
-v_contrib_amount	real;
-v_id				integer;
-v_loan          	real;
-v_bal 				real;
-rec 				record;
-v_total_all     	real;
-a_status			varchar(120);
-v_total         	real;
-msg             	varchar(120);
+v_period        record;
+v_loan          record;
+v_count         integer;
+v_contrib_amount    real;
+v_deposit_amount    real;
+msg                 varchar(120);
+
 BEGIN
+    v_contrib_amount := NEW.deposit_amount;
+    v_count := 0;
+    SELECT period_id, start_date, end_date INTO v_period from periods where opened = true and activated = true;
+    NEW.period_id := v_period.period_id; 
+    IF (TG_OP = 'INSERT') THEN  
+        FOR v_loan IN Select * from vw_loans where  approve_status = 'Approved' AND loan_balance > 0 AND  entity_id = NEW.entity_id
+        LOOP 
+            SELECT count(loan_month_id) INTO v_count FROM loan_monthly WHERE loan_id = v_loan.loan_id AND period_id = v_period.period_id;
+            IF( v_count = 0) THEN
+                IF(v_contrib_amount >= v_loan.monthly_repayment) THEN
+                    
+                    INSERT INTO loan_monthly(loan_id, period_id, org_id,repayment, interest_amount, interest_paid, penalty,                                     penalty_paid, details, additional_payments)
+                    VALUES (v_loan.loan_id, v_period.period_id, NEW.org_id, v_loan.monthly_repayment, 
+                        (v_loan.loan_balance * v_loan.interest / 1200), 
+                        (v_loan.loan_balance * v_loan.interest / 1200), 0, 0, 'Loan Repayment', 0);
 
- IF (TG_OP = 'INSERT') then  
- v_total_all := 0;
- 
-FOR rec IN Select * from vw_loans where entity_id = new.entity_id
-LOOP 
+                    NEW.loan_repayment = true;
+                    v_contrib_amount := (v_contrib_amount - v_loan.monthly_repayment);
+                END IF;
+            END IF;
 
-        IF(rec.loan_id is not null and rec.approve_status = 'Approved' ) THEN
-       
-       v_id := rec.loan_id;
-        
-         SELECT Sum(loan_balance) into v_total_all from vw_loans where entity_id = rec.entity_id;
-         
-		 New.loan_repayment:= 'True' ;
-		 
-       IF (NEW.deposit_amount > v_total_all) then
-	
-	v_bal:= NEW.deposit_amount - v_total_all;
-	
-	NEW.contribution_amount := v_bal; 	
-		
-		END IF;
-		
-
-		END IF;
-			
-INSERT INTO loan_monthly(loan_id, period_id, org_id,repayment)
-	VALUES (v_id, NEW.period_id, NEW.org_id,v_bal);
-	
-END LOOP;
-	--raise exception ' the balance is%',v_id;
-	
-		NEW.period_id := nextval('periods_period_id_seq');
-
-	if (v_bal is not null) then
-	INSERT INTO investments (entity_id,investment_type_id, org_id, invest_amount, period_years)
-	VALUES (New.entity_id, 0,New.org_id,v_bal,4);
-	else
-	new.contribution_amount := 0;
-	END IF;
-	
-ELSE IF NEW.additional_payments > 0 THEN
-INSERT INTO loan_monthly(loan_id, period_id, org_id, additional_payments,repayment)
-	VALUES (v_id, NEW.period_id, NEW.org_id, NEW.additional_payments,0);
-END IF;
-END IF;
-
-
+        END LOOP;
+    END IF;
+    NEW.contribution_amount := v_contrib_amount;
    RETURN NEW;
 END;
 $BODY$
-  LANGUAGE plpgsq;
-
+  LANGUAGE plpgsql;
+  
+CREATE TRIGGER ins_contributions  BEFORE INSERT OR UPDATE  ON contributions
+  FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
 
 CREATE OR REPLACE FUNCTION ins_investment()
   RETURNS trigger AS
@@ -611,6 +589,41 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
+  
+  REATE OR REPLACE FUNCTION compute_loans(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	v_period_id			integer;
+	v_org_id			integer;
+	msg					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id INTO v_period_id, v_org_id
+	FROM periods
+	WHERE (period_id = $1::integer);
+	
+	DELETE FROM loan_monthly WHERE period_id = v_period_id;
+
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
+
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+
+	msg := 'Loans re-computed';
+
+	RETURN msg;
+END;
+$BODY$
+  LANGUAGE plpgsql
 
 
 
