@@ -616,6 +616,7 @@ CREATE TABLE qstudents (
 
 	studylevel			integer,
 	applicationtime		timestamp not null default now(),
+	residence_time		timestamp not null default now(),
 	firstclosetime		timestamp,
 	lateregdate			timestamp,
 	paymenttype			integer default 1 not null,
@@ -643,6 +644,7 @@ CREATE TABLE qstudents (
 	ArrivalDate			timestamp,
 	hallreceipt			integer,
 	mealticket			integer,
+	
 	financenarrative	text,
 	noapproval			text,
 	details				text,

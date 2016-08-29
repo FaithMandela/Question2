@@ -19,7 +19,7 @@ CREATE TABLE leads (
 	primary_email			varchar(120),
 	prospect_level			integer default 1 not null,
 
-	contact_date			date default current_date,
+	contact_date			date default current_date not null,
 	
 	details					text
 );
@@ -35,9 +35,9 @@ CREATE TABLE lead_items (
 	entity_id				integer references entitys,
 	item_id					integer references items,
 	org_id					integer references orgs,
-	pitch_date				date not null,
+	pitch_date				date default current_date not null,
 	units					integer default 1 not null,
-	price					real not null,
+	price					real default 0 not null,
 	lead_level				integer default 1 not null,
 	narrative				varchar(320),
 	details					text
@@ -53,8 +53,8 @@ CREATE TABLE follow_up (
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
 	create_time				timestamp default current_timestamp not null,
-	follow_date				date not null,
-	follow_time				time not null,
+	follow_date				date default current_date not null,
+	follow_time				time default current_time not null,
 	done					boolean default false not null,
 	narrative				varchar(240),
 	details					text
