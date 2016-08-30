@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="print_batch" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7f91f0d3-a979-478b-b8d7-1441880767a1">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="295"/>
+	<property name="ireport.y" value="151"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -103,7 +103,6 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<scriptlet name="scriptlet1" class="com.dewcis.faidaplus.Encode"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/opt/baraza/projects/faidaplus/reports/"]]></defaultValueExpression>
 	</parameter>
@@ -120,7 +119,7 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_orders.order_id,  (vw_orders.batch_no||' - '||vw_orders.order_id)as order_no, encode(((vw_orders.order_id*2||md5('faida+2016'))::text)::bytea, 'base64') as v_order_id,  vw_orders.order_date::date,
+		<![CDATA[SELECT vw_orders.order_id,  (vw_orders.batch_no||' - '||vw_orders.order_id)as order_no, encode(((vw_orders.order_id*141||md5('faida+2016'))::text)::bytea, 'base64') as v_order_id,  vw_orders.order_date::date,
 vw_orders.order_status, ('Town : ' || vw_orders.town_name) as town_name,
 ('Mobile Number : ' || vw_orders.phone_no) as phone_no,
 ( 'Address : '|| vw_orders.physical_address) as address,  vw_orders.order_total_amount,
@@ -372,7 +371,7 @@ AND  vw_orders.order_status ='Awaiting Collection';]]>
 		<band height="108" splitType="Stretch">
 			<image>
 				<reportElement x="368" y="5" width="187" height="103" uuid="bcee6746-58c3-4e90-a1ce-f613fc3f9168"/>
-				<imageExpression><![CDATA[new com.onbarcode.barcode.jasper.JasperRenderer(com.onbarcode.barcode.jasper.BarcodeGenerator.draw(102,"http://demo.dewcis.com/faidaplus/document.jsp?ref="+$F{v_order_id}, "", "X=2&Y=60"))]]></imageExpression>
+				<imageExpression><![CDATA[new com.onbarcode.barcode.jasper.JasperRenderer(com.onbarcode.barcode.jasper.BarcodeGenerator.draw(102,"http://apps.faidaplus.com/faidaplus/document.jsp?ref="+$F{v_order_id}, "", "X=2&Y=60"))]]></imageExpression>
 			</image>
 		</band>
 	</columnFooter>

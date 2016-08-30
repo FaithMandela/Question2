@@ -31,9 +31,6 @@ BEGIN
 	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
 	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP
 
-		--- Compute rooot points
-		v_root_points := v_root_points + rec.totalsegs;
-
 		IF(1<= rec.totalsegs::integer AND rec.totalsegs::integer <=250 ) THEN
 			v_amount := 12 + v_increment;
 			v_points := rec.totalsegs * v_amount;
@@ -64,6 +61,11 @@ BEGIN
 		END IF;
 		IF(v_entity_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
 
+		--- Compute rooot points
+		IF(v_entity_id <> 0)THEN
+			v_root_points := v_root_points + rec.totalsegs;
+		END IF;
+
 		SELECT points_id INTO v_points_id
 		FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
 			AND (pcc = rec.pcc) AND (son = rec.son);
@@ -88,7 +90,6 @@ BEGIN
 			UPDATE points SET amount = 2, points = v_root_points * 2
 			WHERE points_id = v_points_id;
 		END IF;
-
 	END IF;
 
 	IF(rec IS NULL)THEN
@@ -278,33 +279,64 @@ END;
 $BODY$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION getbalance(integer) RETURNS real AS $$
-DECLARE
-	v_org_id 			integer;
-	v_function_role		text;
-	v_balance			real;
-BEGIN
-	v_balance = 0::real;
-	SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
-	IF(v_function_role = 'manager')THEN
-		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
-		FROM vw_pcc_statement
-		WHERE org_id = v_org_id;
-	END IF;
-	IF(v_function_role = 'consultant')THEN
-		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
-		FROM vw_son_statement
-		WHERE entity_id = $1;
-	END IF;
 
-	IF(v_function_role = 'admin')THEN
-		SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
-		FROM vw_pcc_statement
-		WHERE org_id = 0;
-	END IF;
-	RETURN v_balance;
+CREATE OR REPLACE FUNCTION getbalance(integer)  RETURNS real AS $$
+DECLARE
+    v_org_id 			integer;
+    v_function_role		text;
+    v_balance			real;
+BEGIN
+    v_balance = 0::real;
+    SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
+
+    IF(v_function_role = 'manager')THEN
+        SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
+        FROM vw_balance
+        WHERE org_id = v_org_id;
+    END IF;
+
+    IF(v_function_role = 'consultant')THEN
+        SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
+        FROM vw_son_statement
+        WHERE entity_id = $1;
+    END IF;
+
+    IF(v_function_role = 'admin')THEN
+        SELECT COALESCE(sum(a.dr+a.bonus - a.cr), 0) INTO v_balance
+        FROM ( SELECT COALESCE(vw_son_points.points, 0::real) AS dr,   0::real AS cr, vw_son_points.period AS order_date,
+            vw_son_points.org_id,vw_son_points.son, vw_son_points.pcc, vw_son_points.entity_id, COALESCE(vw_son_points.bonus, 0::real) AS bonus
+        FROM vw_son_points WHERE entity_id = 0 AND org_id = 0 AND pcc is null AND son is null AND vw_son_points.period::date >= '2016-01-01'::date
+        UNION ALL
+        SELECT 0::real AS float4, vw_orders.grand_total AS order_total_amount, vw_orders.order_date, vw_orders.org_id, vw_orders.son,
+            vw_orders.pcc, vw_orders.entity_id,  0::real AS bonus
+        FROM vw_orders WHERE entity_id = $1) a;
+    END IF;
+    RETURN v_balance;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION getUnclaimbalance(integer)  RETURNS real AS $$
+DECLARE
+    v_org_id 			integer;
+    v_function_role		text;
+    v_balance			real;
+	v_lbalance			real;
+BEGIN
+    v_balance = 0::real;
+    SELECT org_id,function_role INTO v_org_id, v_function_role FROM vw_entitys WHERE entity_id = $1;
+
+    IF(v_function_role = 'admin')THEN
+        SELECT COALESCE(sum(balance), 0) INTO v_balance
+        FROM vw_balance  WHERE  org_id = 0 AND order_date < '2016-01-01'::date;
+		SELECT COALESCE(sum(balance), 0) INTO v_lbalance
+        FROM vw_balance  WHERE  org_id = 0 AND pcc is not null AND son is not null AND entity_id != 0 AND order_date >= '2016-01-01'::date;
+		v_balance := v_balance + v_lbalance;
+
+    END IF;
+    RETURN v_balance;
+END;
+$$ LANGUAGE plpgsql;
+
 
 
 CREATE SEQUENCE batch_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 1;

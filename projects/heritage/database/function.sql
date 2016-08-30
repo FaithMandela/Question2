@@ -7,17 +7,28 @@ $$LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_policy_number()  RETURNS trigger AS $$
 DECLARE
-  base_val  char(50);
-  yr 	integer;
-  passenger_no char(4);
-  sequence_no char(50);
+  base_val          char(50);
+  yr 	             char(4);
+  passenger_no      char(4);
+  sequence_no       char(50);
+  v_policy_no       integer;
 BEGIN
 	yr := (SELECT to_char as year from to_char(current_timestamp, 'YY'));
-	passenger_no := (SELECT TO_CHAR(NEW.passenger_id,'fm0000'));
+    IF (NEW.incountry is false) THEN
+        v_policy_no := nextval('policy_no_seq');
+    	passenger_no := (SELECT TO_CHAR(v_policy_no,'fm0000'));
+    	sequence_no :=(SELECT policy_sequence_no from policy_sequence);
+    	base_val := trim(11||yr||sequence_no || passenger_no);
+    	NEW.policy_number := base_val;
+    END IF;
 
-	sequence_no :=(SELECT policy_sequence_no from policy_sequence);
-	base_val := trim(11||yr||sequence_no || passenger_no);
-	NEW.policy_number := base_val;
+    IF(NEW.incountry is true)THEN
+        v_policy_no := nextval('policy_no_incountry_seq');
+        passenger_no := (SELECT TO_CHAR(v_policy_no,'fm0000'));
+        sequence_no :=(SELECT policy_sequence_no from policy_sequence);
+        base_val := trim(12||yr||sequence_no || passenger_no);
+        NEW.policy_number := base_val;
+    END IF;
 	RETURN NEW ;
 END;
 $$
@@ -66,3 +77,7 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE SEQUENCE policy_no_seq  INCREMENT 1  MINVALUE 1  MAXVALUE 9223372036854775807  START 1  CACHE 1;
+CREATE SEQUENCE policy_no_incountry_seq  INCREMENT 1  MINVALUE 1  MAXVALUE 9223372036854775807  START 1  CACHE 1;

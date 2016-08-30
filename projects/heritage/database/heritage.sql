@@ -103,6 +103,7 @@ CREATE TABLE passengers(
 	customer_name 			character varying(100)
 	postal_code 			character varying(50),
 	expiry_date 			character varying(20),
+	incountry				boolean default false,
 	physical_address 		text
 );
 CREATE INDEX passengers_rate_id ON passengers(rate_id);
@@ -245,7 +246,8 @@ SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_rates.rate_type_id, vw_rates.
   passengers.passenger_age, passengers.days_covered, passengers.nok_name, passengers.nok_mobile, passengers.passenger_id_no, passengers.passport_num,
   passengers.cover_amount, passengers.totalamount_covered, passengers.is_north_america, passengers.details, passengers.passenger_dob,
   passengers.policy_number, vw_entitys.entity_name, passengers.destown, sys_countrys.sys_country_name, passengers.approved_date, passengers.pin_no,
-  passengers.reason_for_travel, passengers.departure_country, vw_entitys.function_role, vw_entitys.is_active,passengers.customer_code,passengers.customer_name
+  passengers.reason_for_travel, passengers.departure_country, vw_entitys.function_role, vw_entitys.is_active,passengers.customer_code,passengers.customer_name,
+  passengers.incountry
  FROM passengers
    JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
    JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id
@@ -258,7 +260,8 @@ SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_corporate_rates.rate_type_id,
  passengers.passenger_age, passengers.days_covered, passengers.nok_name, passengers.nok_mobile, passengers.passenger_id_no, passengers.passport_num,
  passengers.cover_amount, passengers.totalamount_covered, passengers.is_north_america, passengers.details, passengers.passenger_dob,
  passengers.policy_number, vw_entitys.entity_name, passengers.destown, sys_countrys.sys_country_name, passengers.approved_date, passengers.pin_no,
- passengers.reason_for_travel, passengers.departure_country, vw_entitys.function_role, vw_entitys.is_active,passengers.customer_code,passengers.customer_name
+ passengers.reason_for_travel, passengers.departure_country, vw_entitys.function_role, vw_entitys.is_active,passengers.customer_code,passengers.customer_name,
+ passengers.incountry
 FROM passengers
   JOIN vw_corporate_rates ON passengers.corporate_rate_id = vw_corporate_rates.corporate_rate_id
   JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id
@@ -287,7 +290,7 @@ FROM corporate_rate_plan;
       corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name,corporate_rate_plan.rate_plan_name, corporate_rate_plan.rate_plan_id,
 	  corporate_rate_types.corporate_rate_category_id
      FROM corporate_rate_types
-     JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id 
+     JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id
 	 JOIN corporate_rate_plan ON corporate_rate_plan.rate_plan_id = corporate_rate_types.rate_plan_id;
 
 	 CREATE OR REPLACE VIEW vw_corporate_rates AS

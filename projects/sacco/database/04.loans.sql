@@ -187,7 +187,7 @@ CREATE VIEW vw_loan_payments AS
 		vw_loans.entity_id, vw_loans.entity_name,vw_loans.loan_date,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_loans.application_date, vw_loans.approve_status, vw_loans.initial_payment, 
-		vw_loans.org_id, vw_loans.action_date,
+		vw_loans.org_id, vw_loans.action_date,vw_loans.calc_repayment_period,vw_loans.repayment_amount ,
 		generate_series(1, repayment_period) as months,
 		get_loan_period(principle, interest, generate_series(1, repayment_period), repayment_amount) as loan_balance, 
 		(get_loan_period(principle, interest, generate_series(1, repayment_period) - 1, repayment_amount) * (interest/1200)) as loan_intrest 

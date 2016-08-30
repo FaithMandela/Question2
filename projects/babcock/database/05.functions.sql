@@ -142,7 +142,7 @@ BEGIN
 	ELSIF (myrec.finaceapproval = true) THEN
 		RAISE EXCEPTION 'You have been finacially approved, Visit busuary to get your payments opened.';
 	ELSE
-		UPDATE qstudents SET finaceapproval = false, financeclosed = false WHERE qstudentid = myrec.qstudentid;
+		UPDATE qstudents SET financeclosed = false WHERE qstudentid = myrec.qstudentid;
 		mystr := 'Your financial application has been opened for adjustments.';
 	END IF;
 		
@@ -272,13 +272,8 @@ BEGIN
 	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
 		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
 	ELSIF (myrec.qstudentid IS NULL) THEN
-		IF (myqresidentid is null) THEN
-			INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, currbalance, charges, financenarrative, paymenttype, org_id)
-			VALUES ($1, mydegreeid, mystudylevel, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);
-		ELSE
-			INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, qresidenceid, blockname, roomnumber, currbalance, charges, financenarrative, paymenttype, org_id)
-			VALUES ($1, mydegreeid, mystudylevel, myqresidentid, mystud.blockname, mystud.roomnumber, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);
-		END IF;
+		INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, currbalance, charges, financenarrative, paymenttype, org_id)
+		VALUES ($1, mydegreeid, mystudylevel, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);
 		
 		mycurrqs := getqstudentid($2);
 		creditcount := 0;
@@ -909,7 +904,7 @@ BEGIN
 	myqstud := getqstudentid($2);
 	myres := $1::integer;
 
-	SELECT qstudentid, finalised, financeclosed, finaceapproval, mealtype, mealticket, studylevel INTO myrec
+	SELECT qstudentid, quarterid, finalised, financeclosed, finaceapproval, mealtype, mealticket, studylevel INTO myrec
 	FROM qstudents WHERE (qstudentid = myqstud);
 	
 	SELECT sex, min_level, max_level, majors INTO resrec
@@ -919,6 +914,10 @@ BEGIN
 	SELECT sum(residencecapacitys.capacity) INTO resCapacity
 	FROM residencecapacitys INNER JOIN qresidences ON residencecapacitys.residenceid = qresidences.residenceid
 	WHERE (qresidenceid = myres);
+	
+	UPDATE qstudents SET qresidenceid = null, financeclosed = false
+	WHERE (finaceapproval = false) AND (age(residence_time) > '1 day'::interval) AND (offcampus = false)
+		AND (quarterid = myrec.quarterid);
 	
 	SELECT count(qstudentid) INTO resCount
 	FROM qstudents
@@ -943,15 +942,15 @@ BEGIN
 		RAISE EXCEPTION 'You cannot make changes after submiting your payment unless you apply on the post for it to be opened by finance.';
 	ELSIF (myrec.finalised = true) THEN
 		RAISE EXCEPTION 'You have closed the selection.';
-	ELSIF (myrec.studylevel < resrec.min_level) OR (myrec.studylevel < resrec.max_level) THEN
-		RAISE EXCEPTION 'The study levels allowed are between % and %', resrec.min_level, resrec.max_level;
+	ELSIF (myrec.studylevel < resrec.min_level) OR (myrec.studylevel > resrec.max_level) THEN
+		RAISE EXCEPTION 'The study levels allowed are between % and % for your level %', resrec.min_level, resrec.max_level, resrec.min_level;
 	ELSIF (resCount > resCapacity) THEN
 		RAISE EXCEPTION 'The residence you have selected is full.';
 	ELSIF(allowMajors = false)THEN
 		RAISE EXCEPTION 'The hall selected is not for the course you are doing';
 	ELSE
-		UPDATE qstudents SET qresidenceid = myres, roomnumber = null WHERE (qstudentid = myqstud);
-		mystr := 'Residence registered awaiting approval';
+		UPDATE qstudents SET qresidenceid = myres, roomnumber = null, residence_time = now() WHERE (qstudentid = myqstud);
+		mystr := 'Residence registered. You need to pay fees and get finacial approval today or you will loose the residence selection.';
 	END IF;
 
     RETURN mystr;

@@ -1,54 +1,70 @@
 
-ALTER TABLE residences 
-ADD	min_level			integer default 100,
-ADD	max_level			integer default 500,
-ADD	majors				text;
 
-
-ALTER TABLE studentpayments ADD old_amount			real;
-
-CREATE OR REPLACE FUNCTION updstudentpayments() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION selQResidence(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
 DECLARE
-	reca 					RECORD;
-	old_studentpaymentid 	integer;
+	myrec 				RECORD;
+	resrec				RECORD;
+	myqstud 			int;
+	myres				int;
+	resCapacity			int;
+	resCount			int;
+	v_qstudentid		int;
+	allowMajors			boolean;
+	mystr 				varchar(120);
 BEGIN
-	SELECT departments.schoolid, departments.departmentid, students.accountnumber, qstudents.quarterid, qstudents.studylevel 
-		INTO reca
-	FROM ((departments INNER JOIN students ON students.departmentid = departments.departmentid)
-		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
-		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid
-	WHERE (qstudents.qstudentid = NEW.qstudentid);
+	myqstud := getqstudentid($2);
+	myres := $1::integer;
 
-	IF (TG_OP = 'INSERT') THEN
-		SELECT studentpaymentid INTO old_studentpaymentid
-		FROM studentpayments 
-		WHERE (approved = false) AND (qstudentid = NEW.qstudentid);
-
-		IF(old_studentpaymentid is not null)THEN
-			RAISE EXCEPTION 'You have another uncleared payment, ammend that first and pay';
+	SELECT qstudentid, quarterid, finalised, financeclosed, finaceapproval, mealtype, mealticket, studylevel INTO myrec
+	FROM qstudents WHERE (qstudentid = myqstud);
+	
+	SELECT sex, min_level, max_level, majors INTO resrec
+	FROM residences INNER JOIN qresidences ON residences.residenceid = qresidences.residenceid
+	WHERE (qresidenceid = myres);	
+	
+	SELECT sum(residencecapacitys.capacity) INTO resCapacity
+	FROM residencecapacitys INNER JOIN qresidences ON residencecapacitys.residenceid = qresidences.residenceid
+	WHERE (qresidenceid = myres);
+	
+	UPDATE qstudents SET qresidenceid = null, financeclosed = false
+	WHERE (finaceapproval = false) AND (age(residence_time) > '1 day'::interval) AND (offcampus = false)
+		AND (quarterid = myrec.quarterid);
+	
+	SELECT count(qstudentid) INTO resCount
+	FROM qstudents
+	WHERE (qresidenceid = myres);
+	
+	allowMajors := true;
+	IF(resrec.majors is not null)THEN
+		SELECT qstudents.qstudentid INTO v_qstudentid
+		FROM qstudents INNER JOIN qresidences ON qstudents.qresidenceid = qresidences.qresidenceid
+			INNER JOIN residences ON qresidences.residenceid = residences.residenceid
+			INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
+			INNER JOIN studentmajors ON studentdegrees.studentdegreeid = studentmajors.studentdegreeid
+		WHERE (qstudents.qstudentid = myqstud) AND (residences.majors ILIKE '%' || studentmajors.majorid || '%');
+		IF(v_qstudentid is not null)THEN
+			allowMajors := false;
 		END IF;
+	END IF;
+
+	IF (myrec.qstudentid is null) THEN
+		RAISE EXCEPTION 'Register for the semester first';
+	ELSIF (myrec.financeclosed = true) OR (myrec.finaceapproval = true) THEN
+		RAISE EXCEPTION 'You cannot make changes after submiting your payment unless you apply on the post for it to be opened by finance.';
+	ELSIF (myrec.finalised = true) THEN
+		RAISE EXCEPTION 'You have closed the selection.';
+	ELSIF (myrec.studylevel < resrec.min_level) OR (myrec.studylevel > resrec.max_level) THEN
+		RAISE EXCEPTION 'The study levels allowed are between % and % for your level %', resrec.min_level, resrec.max_level, resrec.min_level;
+	ELSIF (resCount > resCapacity) THEN
+		RAISE EXCEPTION 'The residence you have selected is full.';
+	ELSIF(allowMajors = false)THEN
+		RAISE EXCEPTION 'The hall selected is not for the course you are doing';
 	ELSE
-		IF(OLD.approved = true) AND (NEW.approved = true)THEN
-			IF(OLD.amount <> NEW.amount)THEN
-				RAISE EXCEPTION 'You cannot change amount value after transaction approval.';
-			END IF;
-		ELSE
-			IF(OLD.amount <> NEW.amount)THEN
-				new.old_amount := NEW.amount;
-			END IF;
-		END IF;
+		UPDATE qstudents SET qresidenceid = myres, roomnumber = null, residence_time = now() WHERE (qstudentid = myqstud);
+		mystr := 'Residence registered. You need to pay fees and get finacial approval today or you will loose the residence selection.';
 	END IF;
 
-	IF (reca.schoolid = 'COEN') THEN
-		NEW.terminalid = '7000000089';
-	ELSE
-		NEW.terminalid = '0690000082';
-	END IF;
-
-	IF(NEW.narrative is null) THEN
-		NEW.narrative = CAST(NEW.studentpaymentid as text) || ';Pay;' || reca.quarterid || ';' || reca.accountnumber;
-	END IF;
-
-	RETURN NEW;
+    RETURN mystr;
 END;
 $$ LANGUAGE plpgsql;
+

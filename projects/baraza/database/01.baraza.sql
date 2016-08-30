@@ -187,6 +187,7 @@ CREATE TABLE entitys (
 	super_user				boolean default false not null,
 	entity_leader			boolean default false not null,
 	no_org					boolean default false not null,
+	use_function			integer,
 	function_role			varchar(240),
 	date_enroled			timestamp default now(),
 	is_active				boolean default true,
@@ -509,12 +510,14 @@ CREATE VIEW vw_entitys AS
 		vw_entity_address.premises, vw_entity_address.street, vw_entity_address.town,
 		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile,
 		vw_entity_address.fax, vw_entity_address.email, vw_entity_address.website,
+		
+		entity_types.entity_type_id, entity_types.entity_type_name,
+		entity_types.entity_role, entity_types.use_key,
 
 		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
-		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
-		entity_types.entity_type_id, entity_types.entity_type_name,
-		entity_types.entity_role, entity_types.use_key
+		entitys.function_role, entitys.use_function, entitys.primary_email, entitys.primary_telephone
+		
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
@@ -1141,6 +1144,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION get_default_country(int) RETURNS char(2) AS $$
+	SELECT default_country_id::varchar(2)
+	FROM orgs
+	WHERE (org_id = $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_currency(int) RETURNS int AS $$
+	SELECT currency_id
+	FROM orgs
+	WHERE (org_id = $1);
+$$ LANGUAGE SQL;
+
 
 CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
 	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
@@ -1164,7 +1179,7 @@ INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role,
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 2, 'Client', 'client', 2);
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 3, 'Supplier', 'supplier', 3);
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, start_view, use_key) VALUES (0, 4, 'Applicant', 'applicant', '10:0', 4);
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 5, 'Subscription', 'subscription', 4);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 5, 'Subscription', 'subscription', 5);
 SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
 
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');

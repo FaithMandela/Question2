@@ -1302,7 +1302,7 @@
 			<FILTERFORM name="Agency Graphical Representation ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
-				<COMBOBOX cmb_fnct="pcc || '-'|| org_name " noorg="true" w="30" h="20" lpfield="org_name" x="10" y="10" lptable="vw_orgs" title="PCC" lpkey="org_id">id</COMBOBOX>
+				<COMBOBOX cmb_fnct="pcc || '-'|| org_name " noorg="true" w="30" h="20" lpfield="org_name" x="10" y="10" lptable="vw_orgs" title="PCC" lpkey="org_id" user="account_manager_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="vw_manager_pcc_monthly_seg.jasper" name="Agency Graphical Representation "></JASPER>
 		</FILTER>
