@@ -7,7 +7,7 @@
 	<queryString>
 		<![CDATA[SELECT client_name, asset_type_name, asset_id
 FROM vw_client_assets
-WHERE (is_issued = true) AND (is_retrived = false);]]>
+WHERE (is_issued = true) AND (retrived is null);]]>
 	</queryString>
 	<field name="client_name" class="java.lang.String"/>
 	<field name="asset_type_name" class="java.lang.String"/>

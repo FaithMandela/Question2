@@ -72,15 +72,16 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Students" type="vert" key="3" h="560">
-		<GRID name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Security" edit="true">seesecurity</TEXTFIELD>
-			<TEXTFIELD w="40" title="Student Support" edit="true">seesss</TEXTFIELD>
-			<TEXTFIELD w="40" title="SDC" edit="true">seesdc</TEXTFIELD>
-			<TEXTFIELD w="40" title="Halls Probation" edit="true">seehalls</TEXTFIELD>
 			<TEXTFIELD w="40" title="Off campus" edit="true">offcampus</TEXTFIELD>
-			<TEXTFIELD w="40" title="On Probation" edit="true">onprobation</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Security" edit="true">seesecurity</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Support" edit="true">seesss</TEXTFIELD>
+			<TEXTFIELD w="40" title="See SDC" edit="true">seesdc</TEXTFIELD>
+			<TEXTFIELD w="40" title="Halls Probation" edit="true">seehalls</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Chaplain">seechaplain</TEXTFIELD>
+			<TEXTFIELD w="40" title="On Probation">onprobation</TEXTFIELD>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
@@ -99,16 +100,17 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Students" type="vert" key="4" h="560">
-		<GRID name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
+	<DESK w="700" name="Students Hall" type="vert" key="4" h="560">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Security" edit="false">seesecurity</TEXTFIELD>
+			<TEXTFIELD w="40" title="Off campus" edit="false">offcampus</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Security" edit="false">seesecurity</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Support" edit="false">seesss</TEXTFIELD>
 			<TEXTFIELD w="40" title="SDC" edit="false">seesdc</TEXTFIELD>
 			<TEXTFIELD w="40" title="Halls Probation" edit="true">seehalls</TEXTFIELD>
-			<TEXTFIELD w="40" title="Off campus" edit="false">offcampus</TEXTFIELD>
-			<TEXTFIELD w="40" title="On Probation" edit="false">onprobation</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Chaplain">seechaplain</TEXTFIELD>
+			<TEXTFIELD w="40" title="On Probation">onprobation</TEXTFIELD>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>

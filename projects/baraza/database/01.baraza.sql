@@ -650,7 +650,7 @@ CREATE VIEW vw_approvals_entitys AS
 		AND (vw_workflow_phases.use_reporting = true));
 
 CREATE VIEW tomcat_users AS
-	SELECT entitys.user_name, entitys.Entity_password, entity_types.entity_role
+	SELECT entitys.user_name, entitys.entity_password, entity_types.entity_role
 	FROM (Entity_subscriptions
 		INNER JOIN entitys ON Entity_subscriptions.entity_id = entitys.entity_id)
 		INNER JOIN entity_types ON Entity_subscriptions.entity_type_id = entity_types.entity_type_id
