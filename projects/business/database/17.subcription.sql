@@ -194,6 +194,9 @@ BEGIN
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
 		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
 		
+		INSERT INTO address (address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
+		VALUES (NEW.business_name, NEW.country_id, 'orgs', NEW.org_id, NEW.business_address, NEW.city, NEW.telephone, NEW.website, true);
+		
 		v_currency_id := nextval('currency_currency_id_seq');
 		INSERT INTO currency (org_id, currency_id, currency_name, currency_symbol) VALUES (NEW.org_id, v_currency_id, 'Default Currency', 'DC');
 		UPDATE orgs SET currency_id = v_currency_id WHERE org_id = NEW.org_id;
@@ -241,20 +244,7 @@ BEGIN
 		SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
 		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
-
-		FOR myrec IN SELECT workflow_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details
-			FROM workflows WHERE org_id = 1 ORDER BY workflow_id 
-		LOOP
-			v_workflow_id := nextval('workflows_workflow_id_seq');
-			INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details)
-			VALUES(v_workflow_id, NEW.org_id, myrec.source_entity_id, myrec.workflow_name, myrec.table_name, myrec.table_link_field, myrec.table_link_id, myrec.approve_email, myrec.reject_email, myrec.approve_file, myrec.reject_file, myrec.details);
-			
-			INSERT INTO workflow_phases (org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-			SELECT NEW.org_id, v_workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details
-			FROM workflow_phases
-			WHERE workflow_id = myrec.workflow_id;
-		END LOOP;
-		
+	
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 
