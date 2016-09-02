@@ -1,54 +1,43 @@
 
-ALTER TABLE residences 
-ADD	min_level			integer default 100,
-ADD	max_level			integer default 500,
-ADD	majors				text;
+ALTER TABLE registrations ADD admission_level	integer default 100 not null;
 
+DROP VIEW registrymarkview;
+DROP VIEW registrationview;
+CREATE VIEW registrationview AS
+	SELECT registrations.registrationid, registrations.email, registrations.phonenumber,
+		registrations.submitapplication, 
+		registrations.isaccepted, registrations.isreported, registrations.isdeferred, registrations.isrejected,
+		registrations.applicationdate, ca.countryname as nationality,
+		registrations.sex, registrations.surname, registrations.firstname, registrations.othernames, 
+		(registrations.surname || ', ' ||  registrations.firstname || ' ' || registrations.othernames) as fullname,
+		registrations.existingid, registrations.firstchoiceid, registrations.secondchoiceid, registrations.offcampus,
+		registrations.org_id, registrations.entry_form_id, registrations.admission_level,
+		
+		(CASE WHEN registrations.org_id = 0 THEN 'UNDERGRADUATE' ELSE 'POSTGRADUATE' END) as selection_name,
+		(CASE WHEN registrations.af_success = '0' THEN 'The payment is completed' ELSE 'Payment has not been done' END) as paymentStatus,
+		
+		registrations.acceptance_fees, registrations.af_date, registrations.af_amount, registrations.af_success,
+		registrations.af_payment_code, registrations.af_trans_no, registrations.af_card_type, 
+		registrations.af_picked, registrations.af_picked_date, registrations.account_number,
+		
+		applications.applicationid, applications.exam_date_id, applications.quarterid,
+		
+		majorview.majorid, majorview.majorname, majorview.minlevel, majorview.maxlevel, majorview.major_title,
+		majorview.departmentid, majorview.departmentname, majorview.schoolid, majorview.schoolname,
+		
+		firstchoice.majorname as firstchoice, secondmajor.majorname as secondchoise
+	FROM registrations 
+		INNER JOIN applications ON registrations.registrationid = applications.applicationid
+		LEFT JOIN majorview ON registrations.majorid = majorview.majorid
+		INNER JOIN majors as firstchoice ON registrations.firstchoiceid = firstchoice.majorid
+		INNER JOIN majors as secondmajor ON registrations.secondchoiceid = secondmajor.majorid
+		INNER JOIN countrys as ca ON registrations.nationalityid = ca.countryid;
 
-ALTER TABLE studentpayments ADD old_amount			real;
-
-CREATE OR REPLACE FUNCTION updstudentpayments() RETURNS trigger AS $$
-DECLARE
-	reca 					RECORD;
-	old_studentpaymentid 	integer;
-BEGIN
-	SELECT departments.schoolid, departments.departmentid, students.accountnumber, qstudents.quarterid, qstudents.studylevel 
-		INTO reca
-	FROM ((departments INNER JOIN students ON students.departmentid = departments.departmentid)
-		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
-		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid
-	WHERE (qstudents.qstudentid = NEW.qstudentid);
-
-	IF (TG_OP = 'INSERT') THEN
-		SELECT studentpaymentid INTO old_studentpaymentid
-		FROM studentpayments 
-		WHERE (approved = false) AND (qstudentid = NEW.qstudentid);
-
-		IF(old_studentpaymentid is not null)THEN
-			RAISE EXCEPTION 'You have another uncleared payment, ammend that first and pay';
-		END IF;
-	ELSE
-		IF(OLD.approved = true) AND (NEW.approved = true)THEN
-			IF(OLD.amount <> NEW.amount)THEN
-				RAISE EXCEPTION 'You cannot change amount value after transaction approval.';
-			END IF;
-		ELSE
-			IF(OLD.amount <> NEW.amount)THEN
-				new.old_amount := NEW.amount;
-			END IF;
-		END IF;
-	END IF;
-
-	IF (reca.schoolid = 'COEN') THEN
-		NEW.terminalid = '7000000089';
-	ELSE
-		NEW.terminalid = '0690000082';
-	END IF;
-
-	IF(NEW.narrative is null) THEN
-		NEW.narrative = CAST(NEW.studentpaymentid as text) || ';Pay;' || reca.quarterid || ';' || reca.accountnumber;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+CREATE VIEW registrymarkview AS
+	SELECT registrationview.registrationid, registrationview.fullname, 
+		registrationview.org_id, registrationview.entry_form_id,
+		subjects.subjectid, subjects.subjectname, 
+		marks.markid, marks.grade, registrymarks.registrymarkid, registrymarks.narrative
+	FROM ((registrationview INNER JOIN registrymarks ON registrationview.registrationid = registrymarks.registrationid)
+		INNER JOIN subjects ON registrymarks.subjectid = subjects.subjectid)
+		INNER JOIN marks ON registrymarks.markid =  marks.markid;

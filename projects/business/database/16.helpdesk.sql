@@ -71,5 +71,5 @@ CREATE VIEW vw_helpdesk AS
 		INNER JOIN plevels ON helpdesk.plevel_id = plevels.plevel_id
 		INNER JOIN entitys as clients ON helpdesk.client_id = clients.entity_id
 		INNER JOIN entitys as recorder ON helpdesk.recorded_by = recorder.entity_id
-		INNER JOIN entitys as closer ON helpdesk.closed_by = closer.entity_id;
+		LEFT JOIN entitys as closer ON helpdesk.closed_by = closer.entity_id;
 	

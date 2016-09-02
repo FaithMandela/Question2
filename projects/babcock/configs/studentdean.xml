@@ -15,6 +15,7 @@
 		</MENU>
 		<MENU name="Reports" role="deans,hostel">
 			<MENU name="Hostel Residence Students">214</MENU>
+			<MENU name="Residence Reports">225</MENU>
 			<MENU name="Off-Campus">215</MENU>
 			<MENU name="Semester Paid Students">551</MENU>
 			<MENU name="Students Audit">772</MENU>
@@ -38,7 +39,9 @@
 			<TEXTFIELD w="140" title="Residence Name">residencename</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
 			<TEXTFIELD w="80" title="Residence Dean">residencedean</TEXTFIELD>
-			<FORM name="Residences" keyfield="residenceid" table="residences" noorg="true">
+			<TEXTFIELD w="75" title="Min Level">min_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Max Level">max_level</TEXTFIELD>
+			<FORM name="Residences" keyfield="residenceid" table="residences" noorg="true" th="170">
 				<TEXTFIELD w="50" title="Residence ID" y="10" h="20" x="10">residenceid</TEXTFIELD>
 				<TEXTFIELD w="250" title="Residence Name" y="10" h="20" x="190">residencename</TEXTFIELD>
 				<TEXTFIELD w="150" title="Residence Dean" y="30" h="20" x="10">residencedean</TEXTFIELD>
@@ -48,7 +51,10 @@
 					<DATA>F</DATA>
 					<DATA>N</DATA>
 				</COMBOLIST>
-				<TEXTAREA w="430" title="Details" y="50" h="120" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="Min Level" y="50" h="20" x="10">min_level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Max Level" y="50" h="20" x="290">max_level</TEXTFIELD>
+				<TEXTAREA w="430" tab="Majors" y="2" h="150" x="10">majors</TEXTAREA>
+				<TEXTAREA w="430" tab="Details" y="2" h="150" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Residence Capacity" keyfield="residencecapacityid" linkfield="residenceid" table="residencecapacityview" noorg="true">
 				<TEXTFIELD w="40" title="Residence ID">residenceid</TEXTFIELD>
@@ -56,7 +62,7 @@
 				<TEXTFIELD w="40" title="Block Name">blockname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Capacity">capacity</TEXTFIELD>
 				<TEXTFIELD w="40" title="Room Size">roomsize</TEXTFIELD>
-				<FORM name="Residence Capacity" keyfield="residencecapacityid" linkfield="residenceid" table="residenceCapacitys" noorg="true">
+				<FORM name="Residence Capacity" keyfield="residencecapacityid" linkfield="residenceid" table="residenceCapacitys" noorg="true" inputkey="1">
 					<TEXTFIELD w="50" title="Block Name" y="10" h="20" x="10">blockname</TEXTFIELD>
 					<TEXTFIELD w="50" title="Capacity" y="10" h="20" x="190">capacity</TEXTFIELD>
 					<TEXTFIELD w="50" title="Roomsize" y="10" h="20" x="390">roomsize</TEXTFIELD>
@@ -66,15 +72,16 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Students" type="vert" key="3" h="560">
-		<GRID name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Security" edit="true">seesecurity</TEXTFIELD>
-			<TEXTFIELD w="40" title="Student Support" edit="true">seesss</TEXTFIELD>
-			<TEXTFIELD w="40" title="SDC" edit="true">seesdc</TEXTFIELD>
-			<TEXTFIELD w="40" title="Halls Probation" edit="true">seehalls</TEXTFIELD>
 			<TEXTFIELD w="40" title="Off campus" edit="true">offcampus</TEXTFIELD>
-			<TEXTFIELD w="40" title="On Probation" edit="true">onprobation</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Security" edit="true">seesecurity</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Support" edit="true">seesss</TEXTFIELD>
+			<TEXTFIELD w="40" title="See SDC" edit="true">seesdc</TEXTFIELD>
+			<TEXTFIELD w="40" title="Halls Probation" edit="true">seehalls</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Chaplain">seechaplain</TEXTFIELD>
+			<TEXTFIELD w="40" title="On Probation">onprobation</TEXTFIELD>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
@@ -93,16 +100,17 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Students" type="vert" key="4" h="560">
-		<GRID name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
+	<DESK w="700" name="Students Hall" type="vert" key="4" h="560">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Security" edit="false">seesecurity</TEXTFIELD>
+			<TEXTFIELD w="40" title="Off campus" edit="false">offcampus</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Security" edit="false">seesecurity</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Support" edit="false">seesss</TEXTFIELD>
 			<TEXTFIELD w="40" title="SDC" edit="false">seesdc</TEXTFIELD>
 			<TEXTFIELD w="40" title="Halls Probation" edit="true">seehalls</TEXTFIELD>
-			<TEXTFIELD w="40" title="Off campus" edit="false">offcampus</TEXTFIELD>
-			<TEXTFIELD w="40" title="On Probation" edit="false">onprobation</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Chaplain">seechaplain</TEXTFIELD>
+			<TEXTFIELD w="40" title="On Probation">onprobation</TEXTFIELD>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
@@ -367,5 +375,26 @@
 				</GRID>
 			</GRID>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Residence Reports" type="horl" key="225" h="600">
+		<FILTER location="250" name="Full Residence List" type="horl">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
+				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Residence Summary" reportfile="vw_qresidence_summary.jasper"></JASPER>
+			<JASPER name="Residence Charge" reportfile="qstudentviewrs4.jasper"></JASPER>
+			<JASPER name="Full Residence List" reportfile="qstudentviewrs3.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Residence Report" split="250" type="vert">
+			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarters" noorg="true">
+				<TEXTFIELD w="240" title="Quarter ID">quarterid</TEXTFIELD>
+				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+				<FILTERGRID name="Q Residence" keyfield="qresidenceid" linkfield="quarterid" table="qresidenceview" noorg="true">
+					<TEXTFIELD w="40" title="Residence">residencename</TEXTFIELD>
+					<TEXTFIELD w="40" title="Off Campus">offcampus</TEXTFIELD>
+				</FILTERGRID>
+			</FILTERGRID>
+			<JASPER name="Residence Report" reportfile="qstudentviewrs2.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

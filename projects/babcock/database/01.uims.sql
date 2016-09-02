@@ -278,6 +278,7 @@ CREATE TABLE students (
 	studentid			varchar(12) primary key,
 	departmentid		varchar(12) references departments,
 	denominationid		varchar(12) references denominations,
+	sys_audit_trail_id	integer references sys_audit_trail,
 	org_id				integer references orgs,
 	studentname			varchar(100) not null,
 	surname				varchar(50) not null,
@@ -310,13 +311,14 @@ CREATE TABLE students (
 	staff				boolean default false not null,
 	alumnae				boolean default false not null,
 	postcontacts		boolean default false not null,
+	
 	onprobation			boolean default false not null,
 	seesecurity			boolean default false not null,
-
 	seesss				boolean default false not null, 
 	seesdc				boolean default false not null, 
 	seehalls			boolean default false not null,
 	seeregistrar		boolean default false not null,
+	seechaplain			boolean default false not null,
 
 	offcampus			boolean default false not null,
 	fullbursary			boolean default false not null,
@@ -341,6 +343,19 @@ CREATE INDEX students_countrycodeid ON students (countrycodeid);
 CREATE INDEX students_gcountrycodeid ON students (gcountrycodeid);
 CREATE INDEX students_accountnumber ON students (accountnumber);
 CREATE INDEX students_org_id ON students (org_id);
+CREATE INDEX students_sys_audit_trail_id  ON students (sys_audit_trail_id);
+
+CREATE TABLE probation_list (
+	probation_list_id	serial primary key,
+	studentid			varchar(12) references students,
+	org_id				integer references orgs,
+	approvedby			varchar(50),
+	approvaltype		varchar(25),
+	approvedate			timestamp default now(),
+	clientip			varchar(50)
+);
+CREATE INDEX probation_list_studentid ON probation_list (studentid);
+CREATE INDEX probation_list_org_id ON probation_list (org_id);
 
 CREATE TABLE studentdegrees (
 	studentdegreeid		serial primary key,
@@ -616,6 +631,7 @@ CREATE TABLE qstudents (
 
 	studylevel			integer,
 	applicationtime		timestamp not null default now(),
+	residence_time		timestamp not null default now(),
 	firstclosetime		timestamp,
 	lateregdate			timestamp,
 	paymenttype			integer default 1 not null,
@@ -643,6 +659,7 @@ CREATE TABLE qstudents (
 	ArrivalDate			timestamp,
 	hallreceipt			integer,
 	mealticket			integer,
+	
 	financenarrative	text,
 	noapproval			text,
 	details				text,

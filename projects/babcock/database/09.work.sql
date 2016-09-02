@@ -175,7 +175,7 @@ FROM entitys WHERE registrations.registrationid = entitys.entity_id;
 
 --- Start babcock import
 
-SELECT app_students.majorid
+SELECT app_students.app_student_id, app_students.majorid
 FROM app_students LEFT JOIN majors ON app_students.majorid = majors.majorid
 WHERE majors.majorid is null
 ORDER BY app_students.majorid;
