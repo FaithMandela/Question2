@@ -44,10 +44,12 @@ CREATE TABLE contributions (
 	entity_name 			varchar(120),
 	contribution_amount		real,
 	loan_repayment			boolean default false,
+	is_paid 				boolean default false,
 	
 	deposit_date			date,
 	deposit_amount			real,
 	entry_date              timestamp default CURRENT_TIMESTAMP,
+	additional_payments 	real not null default 0,
 	transaction_ref         varchar(50),
 	narrative				varchar(255)
 );
