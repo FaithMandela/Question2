@@ -1597,6 +1597,24 @@
 			<JASPER name="Banking by Bank" reportfile="banking_2.jasper"></JASPER>
 			<JASPER name="Full Banking" reportfile="banking_3.jasper"></JASPER>
 		</FILTER>
+		<GRID name="Banking Export" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+			<TEXTFIELD w="45" title="Period ID">period_id</TEXTFIELD>
+			<TEXTFIELD w="45" title="Period Code">period_code</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<GRID name="Employee Pay" keyfield="entity_id" linkfield="period_id" table="vw_employee_month">
+				<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Bank Account">gl_bank_account</TEXTFIELD>
+				<TEXTFIELD w="75" title="Branch Name">bank_branch_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Bank Code">bank_branch_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Employee Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Bank Account No">bank_account</TEXTFIELD>
+				<TEXTDECIMAL w="75" fnct="round(cast(banked as numeric), 1)" title="Banked Amount">banked_amount</TEXTDECIMAL>
+			</GRID>
+		</GRID>
 	</DESK>
 	<DESK w="770" name="Adjustments" key="107" h="750">
 		<FILTER w="770" name="Payroll" split="150" type="horl" key="6" h="550">

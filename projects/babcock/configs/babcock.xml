@@ -714,13 +714,17 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Students Probation" type="vert" key="30" h="560">
-		<GRID limit="200" name="Students" keyfield="studentid" updatetable="students" orderby="studentid" table="studentview">
+		<GRID limit="200" auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" orderby="studentid" table="vw_students">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Department">departmentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Security Probation">seesecurity</TEXTFIELD>
-			<TEXTFIELD w="40" title="DSA Probation">onprobation</TEXTFIELD>
 			<TEXTFIELD w="40" title="Off campus">offcampus</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Security">seesecurity</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Support">seesss</TEXTFIELD>
+			<TEXTFIELD w="40" title="SDC">seesdc</TEXTFIELD>
+			<TEXTFIELD w="40" title="Halls Probation">seehalls</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Chaplain">seechaplain</TEXTFIELD>
+			<TEXTFIELD w="40" title="On Probation">onprobation</TEXTFIELD>
 			<TEXTFIELD w="40" title="Registrar Probation" edit="true">seeregistrar</TEXTFIELD>
 			<TEXTFIELD w="140" title="Details" edit="true">details</TEXTFIELD>
 			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" key="2">

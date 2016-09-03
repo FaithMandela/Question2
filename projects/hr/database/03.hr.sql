@@ -1385,7 +1385,7 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
 DECLARE
-	v_org_id			RECORD;
+	v_org_id			integer;
 	v_entity_id			integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
