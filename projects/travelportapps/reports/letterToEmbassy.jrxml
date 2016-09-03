@@ -2,17 +2,18 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
-	<parameter name="filterid" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[78]]></defaultValueExpression>
+	<property name="ireport.y" value="169"/>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,vw_passengers.approved_date,vw_passengers.passenger_id_no,vw_passengers.destown ||',' as destown,vw_passengers.policy_number,vw_passengers.nok_national_id,countries,
+		<![CDATA[SELECT vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,vw_passengers.approved_date,vw_passengers.passenger_id_no,vw_passengers.destown ||',' as destown,vw_passengers.policy_number,vw_passengers.nok_national_id,countries,s.token,
 array_length(regexp_split_to_array(countries, ','), 1) as countries_no,
-('The policy is valid from '|| vw_passengers.days_from)as days_from,(vw_passengers.days_to ||'.')as days_to,'The policy benefits includes Emergency Medical and Evacuation benefits of USD '||get_benefit_section_a(rate_type_id)||' and USD '||get_benefit_section_b(rate_type_id)|| ' respectively and is applicable worldwide including all Schengen States.' as benefit FROM vw_passengers
+('The policy is valid from '|| vw_passengers.days_from)as days_from,(vw_passengers.days_to ||'.')as days_to,'The policy benefits includes Emergency Medical and Evacuation benefits of USD '||get_benefit_section_a(rate_type_id)||' and USD '||get_benefit_section_b(rate_type_id)|| ' respectively and is applicable worldwide including all Schengen States.' as benefit
+ FROM vw_passengers, unnest(string_to_array(vw_passengers.countries, ','))  s(token)
 WHERE passenger_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="passenger_id" class="java.lang.Integer"/>
@@ -24,6 +25,7 @@ WHERE passenger_id = '$P!{filterid}']]>
 	<field name="policy_number" class="java.lang.String"/>
 	<field name="nok_national_id" class="java.lang.String"/>
 	<field name="countries" class="java.lang.String"/>
+	<field name="token" class="java.lang.String"/>
 	<field name="countries_no" class="java.lang.Integer"/>
 	<field name="days_from" class="java.lang.String"/>
 	<field name="days_to" class="java.lang.String"/>
@@ -64,8 +66,8 @@ WHERE passenger_id = '$P!{filterid}']]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
-		<band height="468" splitType="Stretch">
-			<printWhenExpression><![CDATA[$V{countries} > 0]]></printWhenExpression>
+		<band height="466" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{countries}>=1]]></printWhenExpression>
 			<staticText>
 				<reportElement x="0" y="24" width="409" height="25" uuid="73bae524-e17b-4afa-b939-2c1323520978"/>
 				<textElement>
@@ -106,7 +108,7 @@ WHERE passenger_id = '$P!{filterid}']]>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{destown}.toUpperCase()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{token}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="29" y="164" width="103" height="20" uuid="501283b1-0159-4764-976b-0cda7f37996d"/>
@@ -132,21 +134,21 @@ WHERE passenger_id = '$P!{filterid}']]>
 			<textField isBlankWhenNull="true">
 				<reportElement x="147" y="184" width="226" height="20" uuid="0bc1696c-1146-42d9-85e7-e0f61b6b9a02"/>
 				<textElement>
-					<font fontName="Garamond-Normal" size="10"/>
+					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nok_national_id}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="133" y="164" width="240" height="20" uuid="00c2565f-f68d-441b-991a-af9a19e9649e"/>
 				<textElement>
-					<font fontName="Garamond-Normal" size="10"/>
+					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="80" y="144" width="293" height="20" uuid="4413232b-798d-4950-b766-c41c183bc7a0"/>
 				<textElement>
-					<font fontName="Garamond-Normal" size="10"/>
+					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{passenger_name}.toUpperCase()]]></textFieldExpression>
 			</textField>
@@ -232,19 +234,15 @@ Manager, Business Development]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{days_from} + ' to '+$F{days_to}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="420" y="103" width="100" height="20" uuid="e1d18ddf-5f35-42a5-8c09-87b444b613df"/>
-				<textFieldExpression><![CDATA[$V{countries}]]></textFieldExpression>
-			</textField>
 		</band>
-		<band height="51">
+		<band height="50">
 			<subreport>
-				<reportElement positionType="Float" x="-1" y="0" width="555" height="50" isPrintWhenDetailOverflows="true" uuid="de0ac49e-7f46-4298-9394-daab29bd7741"/>
+				<reportElement x="2" y="0" width="548" height="50" isPrintWhenDetailOverflows="true" uuid="4fb0d878-0857-4c85-96d6-ba9ed64ae9f7"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$F{passenger_id}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "letterToEmbassy_subreport1.jasper"]]></subreportExpression>
