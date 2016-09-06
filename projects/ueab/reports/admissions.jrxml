@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions" language="groovy" pageWidth="595" pageHeight="842" columnWidth="453" leftMargin="28" rightMargin="20" topMargin="20" bottomMargin="20" uuid="81fb2e84-f44f-4fe0-bb90-6ab7f22b5286">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="453" leftMargin="28" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="81fb2e84-f44f-4fe0-bb90-6ab7f22b5286">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -9,7 +9,7 @@
 to_char(applicationdate, 'DD Month YYYY') as applicationdate,schoolname,degreename,majorname FROM registrations
 INNER JOIN majorview on registrations.majorid = majorview.majorid
 INNER JOIN degreeview ON registrations.degreeid = degreeview.degreeid
-WHERE registrationid = $P!{filterid} ]]>
+WHERE registrationid = $P!{filterid}]]>
 	</queryString>
 	<field name="registrationid" class="java.lang.Integer"/>
 	<field name="fullname" class="java.lang.String"/>
@@ -23,7 +23,7 @@ WHERE registrationid = $P!{filterid} ]]>
 	<title>
 		<band height="99" splitType="Stretch">
 			<image>
-				<reportElement x="228" y="10" width="105" height="86" uuid="aea7bb28-7258-4861-9bb3-80d12b51deeb"/>
+				<reportElement x="193" y="4" width="122" height="95" uuid="aea7bb28-7258-4861-9bb3-80d12b51deeb"/>
 				<imageExpression><![CDATA["/opt/baraza/projects/ueab/reports/baraza_logo.jpg"]]></imageExpression>
 			</image>
 		</band>
