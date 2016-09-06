@@ -5,18 +5,24 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="filterid" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT registrationid, lastname ||' '||firstname ||' '|| middlename as fullname,
-to_char(applicationdate, 'DD Month YYYY') as applicationdate,schoolname,degreename,majorname FROM registrations
-INNER JOIN majorview on registrations.majorid = majorview.majorid
-INNER JOIN degreeview ON registrations.degreeid = degreeview.degreeid
-WHERE registrationid = $P!{filterid}]]>
+		<![CDATA[SELECT
+     studentmajorview.studentid,
+     studentmajorview.studentname,
+     studentmajorview.schoolname,
+     studentmajorview.degreename,
+     studentmajorview.majorname,
+     to_char(coalesce(studentmajorview.started, current_date), 'YYYY Month') as admission_date
+FROM
+     studentmajorview
+WHERE
+     studentid = '$P!{filterid}']]>
 	</queryString>
-	<field name="registrationid" class="java.lang.Integer"/>
-	<field name="fullname" class="java.lang.String"/>
-	<field name="applicationdate" class="java.lang.String"/>
+	<field name="studentid" class="java.lang.String"/>
+	<field name="studentname" class="java.lang.String"/>
 	<field name="schoolname" class="java.lang.String"/>
 	<field name="degreename" class="java.lang.String"/>
 	<field name="majorname" class="java.lang.String"/>
+	<field name="admission_date" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -67,7 +73,7 @@ WHERE registrationid = $P!{filterid}]]>
 				<textElement verticalAlignment="Middle" markup="html">
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Dear Pr/Mr/Mrs/Miss "+ "<b><u>"+$F{fullname}+"</b>" +  " ("+"<u><b>" +$F{registrationid}+")"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Dear Pr/Mr/Mrs/Miss "+ "<b><u>"+$F{studentname}+"</b>" + " (ID NO:" +"<u><b>" +$F{studentid}+")"]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
 				<reportElement x="0" y="26" width="284" height="20" uuid="e15f4888-77bc-4a9c-a24e-5be9738916a8"/>
@@ -85,7 +91,7 @@ WHERE registrationid = $P!{filterid}]]>
 				<textElement markup="html">
 					<font fontName="Times New Roman" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["I am happy to inform you that you have been admitted into the School of " + $F{schoolname} + "  to pursue a " +$F{degreename} +  " subject to presentation of your original academic certificate for Verification on the day of registration.<br><p>You are expected to report to the University on " + $F{applicationdate} + "Kindly visit http://ueab.ac.ke/index/node/83 to access the fee structure. On the registration day you are required to pay the fees before you are registered.  All payments must be made in banker’s cheque or money order only payable to the University of Eastern Africa, Baraton." +"<br><p>You will be required to abide by the rules and regulations as stipulated in the Student Handbook and the correct Academic Bulletin."+"<p><br>Boarding facilities are available for interested students at a fee as stipulated in the free structure. Borders are advised to come with their own bedding: blankets, bed sheets, pillow and pillowcase and other personal items. A mattress may be purchased at the University Bookstore. Rental facilities are available outside the University for day students.<br></p>" + "<p>Interested students are advised to apply for HELB loans by 30th September 2016. To apply visit www.helb.co.ke for more information.</p>" + "<p>During the orientation week, you will be required to do a full medical checkup at the University Hospital at a cost of Ksh 2500 (Two thousand five hundred shillings only).</p>" +"<p>We look forward to seeing you here as a student and trust that you will find your studies enjoyable and fulfilling in a Christian environment.</p>" +"<p>Yours faithfully,</p>"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["I am happy to inform you that you have been admitted into the School of " + $F{schoolname} + "  to pursue a " +$F{degreename} +  " subject to presentation of your original academic certificate for Verification on the day of registration.<br><p>You are expected to report to the University on " + $F{admission_date} + " Kindly visit http://ueab.ac.ke/index/node/83 to access the fee structure. On the registration day you are required to pay the fees before you are registered.  All payments must be made in banker’s cheque or money order only payable to the University of Eastern Africa, Baraton." +"<br><p>You will be required to abide by the rules and regulations as stipulated in the Student Handbook and the correct Academic Bulletin."+"<p><br>Boarding facilities are available for interested students at a fee as stipulated in the free structure. Borders are advised to come with their own bedding: blankets, bed sheets, pillow and pillowcase and other personal items. A mattress may be purchased at the University Bookstore. Rental facilities are available outside the University for day students.<br></p>" + "<p>Interested students are advised to apply for HELB loans by 30th September 2016. To apply visit www.helb.co.ke for more information.</p>" + "<p>During the orientation week, you will be required to do a full medical checkup at the University Hospital at a cost of Ksh 2500 (Two thousand five hundred shillings only).</p>" +"<p>We look forward to seeing you here as a student and trust that you will find your studies enjoyable and fulfilling in a Christian environment.</p>" +"<p>Yours faithfully,</p>"]]></textFieldExpression>
 			</textField>
 			<image>
 				<reportElement x="6" y="334" width="132" height="27" uuid="8ffaef93-103e-43e6-a36a-ea277df85d70"/>
