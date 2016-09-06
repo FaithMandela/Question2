@@ -370,20 +370,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_assets BEFORE INSERT OR UPDATE ON assets
 	FOR EACH ROW EXECUTE PROCEDURE upd_assets();
 
-CREATE OR REPLACE FUNCTION aft_asset_movements() RETURNS trigger AS $$
-BEGIN
 
-	IF(NEW.asset_location_id = 1)THEN
-		UPDATE assets SET asset_status_id = 1 WHERE (asset_id = NEW.asset_id);
-	ELSIF(NEW.asset_location_id = 2)THEN
-		UPDATE assets SET asset_status_id = 3 WHERE (asset_id = NEW.asset_id);
-	END IF;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER aft_asset_movements AFTER INSERT OR UPDATE ON asset_movements
-	FOR EACH ROW EXECUTE PROCEDURE aft_asset_movements();
 
 

@@ -125,7 +125,8 @@ CREATE TABLE registrations (
 	evaluationofficer		varchar(50),
 	admissionstatus			varchar(25) not null default 'Regular',
 	picturefile				varchar(240),
-	socialproblems			text,	
+	socialproblems			text,
+	admission_level			integer default 100 not null,
 	
 	acceptance_fees			real,
 	af_date					timestamp,
@@ -298,7 +299,7 @@ CREATE VIEW registrationview AS
 		registrations.sex, registrations.surname, registrations.firstname, registrations.othernames, 
 		(registrations.surname || ', ' ||  registrations.firstname || ' ' || registrations.othernames) as fullname,
 		registrations.existingid, registrations.firstchoiceid, registrations.secondchoiceid, registrations.offcampus,
-		registrations.org_id, registrations.entry_form_id,
+		registrations.org_id, registrations.entry_form_id, registrations.admission_level,
 		
 		(CASE WHEN registrations.org_id = 0 THEN 'UNDERGRADUATE' ELSE 'POSTGRADUATE' END) as selection_name,
 		(CASE WHEN registrations.af_success = '0' THEN 'The payment is completed' ELSE 'Payment has not been done' END) as paymentStatus,

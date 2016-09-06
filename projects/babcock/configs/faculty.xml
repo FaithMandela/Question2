@@ -323,7 +323,6 @@
 			<JASPER filtered="true" name="GPA Ranking" reportfile="vwqstudentmajors.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	
 	<DESK w="800" name="Semester Un Official" type="vert" key="362" h="500">
 		<GRID name="Semesters" keyfield="quarterid" table="quarterview" filterkey="9" key="1">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
@@ -338,5 +337,4 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	
 </APP>

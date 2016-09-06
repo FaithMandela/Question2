@@ -168,6 +168,67 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- update the person who approved a student
+CREATE OR REPLACE FUNCTION upd_students() RETURNS trigger AS $$
+DECLARE
+	v_user_id		varchar(50);
+	v_user_ip		varchar(50);
+	mystr 			varchar(120);
+BEGIN
+
+	SELECT user_id, user_ip INTO v_user_id, v_user_ip
+	FROM sys_audit_trail
+	WHERE (sys_audit_trail_id = NEW.sys_audit_trail_id);
+	IF(v_user_id is null)THEN
+		v_user_id := current_user;
+		v_user_ip := cast(inet_client_addr() as varchar);
+	ELSE
+		SELECT user_name INTO v_user_id
+		FROM entitys WHERE entity_id::varchar = v_user_id;
+	END IF;
+	
+	IF(OLD.onprobation <> NEW.onprobation)THEN
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Probation ' || NEW.onprobation::text, now(), v_user_ip);
+	END IF;
+	IF(OLD.seeregistrar <> NEW.seeregistrar)THEN
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Registrar ' || NEW.seeregistrar::text, now(), v_user_ip);
+	END IF;
+	IF(OLD.seesecurity <> NEW.seesecurity)THEN 
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Security ' || NEW.seesecurity::text, now(), v_user_ip);
+	END IF;
+	IF(OLD.seesss <> NEW.seesss)THEN
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Student Support ' || NEW.seesss::text, now(), v_user_ip);
+	END IF;
+	IF(OLD.seesdc <> NEW.seesdc)THEN
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Dean of Students ' || NEW.seesdc::text, now(), v_user_ip);
+	END IF;
+	IF(OLD.seehalls <> NEW.seehalls)THEN
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Halls ' || NEW.seehalls::text, now(), v_user_ip);
+	END IF;
+	IF(OLD.seechaplain <> NEW.seechaplain)THEN
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Chaplain ' || NEW.seechaplain::text, now(), v_user_ip);
+	END IF;
+	IF(OLD.offcampus <> NEW.offcampus)THEN
+		INSERT INTO probation_list(studentid, approvedby, approvaltype, approvedate, clientip) 
+		VALUES (NEW.studentid, v_user_id, 'Off Campus ' || NEW.offcampus::text, now(), v_user_ip);
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_students AFTER UPDATE ON students
+    FOR EACH ROW EXECUTE PROCEDURE upd_students();
+    
+
+
 CREATE OR REPLACE FUNCTION insQStudent(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
 DECLARE
 	mystud RECORD;
@@ -186,10 +247,11 @@ DECLARE
 	mynarrative VARCHAR(120);
 BEGIN
 	SELECT s.org_id, s.onprobation, s.residenceid, s.blockname, s.roomnumber,
-		s.currentbalance, s.accountnumber, s.newstudent, s.seeregistrar,		
+		s.currentbalance, s.accountnumber, s.newstudent, 
 		s.sex, s.nationality, s.maritalstatus, s.birthdate, s.address, s.zipcode, s.town, s.countrycodeid, 
 		s.stateid, s.telno, s.mobile, s.email,  s.guardianname, s.gaddress, s.gzipcode, s.gtown, 
 		s.gcountrycodeid, s.gtelno, s.gemail, 
+		s.seeregistrar, s.seesecurity, s.seesss, s.seesdc, s.seehalls, s.seechaplain, 
 		entitys.entity_password, entitys.first_password
 		INTO mystud
 	FROM students as s INNER JOIN entitys ON s.studentid = entitys.user_name
@@ -261,6 +323,16 @@ BEGIN
 		RAISE EXCEPTION 'Student on Probation cannot proceed.';
 	ELSIF (mystud.seeregistrar = true) THEN
 		RAISE EXCEPTION 'Cannot Proceed, See Registars office.';
+	ELSIF (mystud.seesecurity = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See security office.';
+	ELSIF (mystud.seesss = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See Student Support office.';
+	ELSIF (mystud.seesdc = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See the dean of students.';
+	ELSIF (mystud.seehalls = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See hall dean office.';
+	ELSIF (mystud.seechaplain = true) THEN
+		RAISE EXCEPTION 'Cannot Proceed, See the chaplain office.';
 	ELSIF (mystud.entity_password = md5(mystud.first_password)) THEN
 		RAISE EXCEPTION 'You must change your password first before proceeding.';
 	ELSIF (mystud.accountnumber IS NULL) THEN
@@ -917,7 +989,7 @@ BEGIN
 	
 	UPDATE qstudents SET qresidenceid = null, financeclosed = false
 	WHERE (finaceapproval = false) AND (age(residence_time) > '1 day'::interval) AND (offcampus = false)
-		AND (quarterid = myrec.quarterid);
+		AND (qresidenceid is not null) AND (quarterid = myrec.quarterid);
 	
 	SELECT count(qstudentid) INTO resCount
 	FROM qstudents
@@ -943,7 +1015,7 @@ BEGIN
 	ELSIF (myrec.finalised = true) THEN
 		RAISE EXCEPTION 'You have closed the selection.';
 	ELSIF (myrec.studylevel < resrec.min_level) OR (myrec.studylevel > resrec.max_level) THEN
-		RAISE EXCEPTION 'The study levels allowed are between % and % for your level %', resrec.min_level, resrec.max_level, resrec.min_level;
+		RAISE EXCEPTION 'The study levels allowed are between % and % for your level %', resrec.min_level, resrec.max_level, myrec.studylevel;
 	ELSIF (resCount > resCapacity) THEN
 		RAISE EXCEPTION 'The residence you have selected is full.';
 	ELSIF(allowMajors = false)THEN
@@ -956,6 +1028,7 @@ BEGIN
     RETURN mystr;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION selQRoom(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(50) AS $$
 DECLARE

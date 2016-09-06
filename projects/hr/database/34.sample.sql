@@ -6,11 +6,10 @@ WHERE org_id = 0;
 
 UPDATE transaction_counters SET document_number = '10001';
 
-INSERT INTO address (address_id, address_name, sys_country_id, table_name, table_id, post_office_box, postal_code, premises, street, town, phone_number, extension, mobile, fax, email, website, is_default, first_password, details) VALUES (1, NULL, 'KE', 'orgs', 0, '45689', '00100', '16th Floor, view park towers', 'Utalii Lane', 'Nairobi', '+254 (20) 2227100/2243097', NULL, '+254 725 819505 or +254 738 819505', NULL, 'accounts@dewcis.com', 'www.dewcis.com', true, NULL, NULL);
+INSERT INTO address (sys_country_id, table_name, table_id, post_office_box, postal_code, premises, street, town, phone_number, extension, mobile, fax, email, website, is_default, first_password, details) 
+VALUES ('KE', 'orgs', 0, '45689', '00100', '16th Floor, view park towers', 'Utalii Lane', 'Nairobi', '+254 (20) 2227100/2243097', NULL, '+254 725 819505 or +254 738 819505', NULL, 'accounts@dewcis.com', 'www.dewcis.com', true, NULL, NULL);
 
 UPDATE orgs SET employee_limit = 1000, transaction_limit = 1000000;
-
-
 
 INSERT INTO employees (org_id, currency_id, employee_id, department_role_id, pay_scale_id, pay_group_id, location_id, bank_branch_id, surname, first_name, middle_name, date_of_birth, gender, nationality, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, interests, objective, details) 
 VALUES (0, 1, '5628', 2, 0, 0, 0, 0, 'Patibandla', 'Ramya', 'sree', '1990-10-15', 'F', 'IN', 'S', '2012-02-09', NULL, NULL, true, 2, 'Full Time', 'Passport', 5000, '1234567890', NULL, true, 'English', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);

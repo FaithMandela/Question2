@@ -2,12 +2,12 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy_subreport1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0529e38a-f10a-46f5-bbc8-88a122973561">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="302"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="filterid" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[78]]></defaultValueExpression>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_policy_members.passenger_id,vw_policy_members.member_name,vw_policy_members.destown ||',' as destown,vw_policy_members.policy_number, passport_number,
@@ -15,7 +15,7 @@
 
 FROM vw_policy_members
 
-WHERE passenger_id = '$P!{filterid}']]>
+WHERE vw_policy_members.passenger_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="passenger_id" class="java.lang.Integer"/>
 	<field name="member_name" class="java.lang.String"/>

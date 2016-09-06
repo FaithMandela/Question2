@@ -29,34 +29,34 @@ SELECT
     FROM  policy_members p
     JOIN vw_passengers a ON p.passenger_id = a.passenger_id ;
 
-	CREATE OR REPLACE VIEW vw_allpassengers AS
-SELECT a.org_id,  a.org_name, a.rate_type_id,a.rate_plan_id, a.rate_category_name,
-    a.rate_id,a.rate_plan_name, a.standard_rate, a.north_america_rate,a.days_from,  a.days_to,  a.corporate_rate_id,
-    a.approved, a.entity_id, a.countries, a.passenger_id,  a.passenger_name,  a.passenger_mobile,
-    a.passenger_email,  a.passenger_age,  a.days_covered,  a.nok_name, a.nok_mobile,  a.passenger_id_no,
-    a.passport_number,  round(a.cover_amount::DECIMAL,2)::real as cover_amount,  round(a.totalAmount_covered::DECIMAL,2)::real as totalAmount_covered,  a.is_north_america,  a.details,  a.passenger_dob,
-    a.policy_number,  a.entity_name,  a.destown,  a.sys_country_name, a.approved_date,  a.corporate_id,
-    a.pin_no, a.reason_for_travel,  a.departure_country, a.entity_role, a.function_role, a.is_active
-FROM ((
-    SELECT org_id,org_name,rate_type_id, rate_plan_id, rate_category_name,rate_id, rate_plan_name, standard_rate, north_america_rate,
-        days_from,  days_to,  corporate_rate_id,   approved,  entity_id,  countries,  passenger_id,  passenger_name,  passenger_mobile,
-        passenger_email,  passenger_age,  days_covered,  nok_name,  nok_mobile,  passenger_id_no,  nok_national_id as passport_number,  cover_amount,
-        totalAmount_covered,  is_north_america,  details,  passenger_dob,  policy_number,  entity_name,  destown,  sys_country_name,
-        approved_date,  corporate_id,  pin_no, reason_for_travel,  departure_country, entity_role, function_role, is_active
-    FROM vw_passengers  )
-    UNION ALL
-    (SELECT org_id,org_name, rate_type_id,  rate_plan_id,  rate_category_name, rate_id,    rate_plan_name,  standard_rate,
-        north_america_rate, days_from,days_to,   null::integer as corporate_rate_id,  approved,  entity_id,
-        countries,passenger_id, member_name as passenger_name,  phone_number as passenger_mobile,
-        primary_email as passenger_email , age as  passenger_age,    null::integer as days_covered, ''::text as nok_name,
-        ''::text as nok_mobile,  ''::text as passenger_id_no, passport_number, amount_covered as cover_amount,
-        totalamount_covered,  null::boolean as is_north_america, ''::text as details, passenger_dob::text,policy_number,
-        entity_name, destown, sys_country_name, approved_date, null::integer as corporate_id, pin_number as pin_no,
-        reason_for_travel,     departure_country,   entity_role, function_role ,
-        is_active
-    FROM  vw_policy_members )
-)a order by passenger_id DESC;
 
+    	CREATE OR REPLACE VIEW vw_allpassengers AS
+    SELECT a.org_id,  a.org_name, a.rate_type_id,a.rate_plan_id, a.rate_category_name,
+    	a.rate_id,a.rate_plan_name, a.standard_rate, a.north_america_rate,a.days_from,  a.days_to,  a.corporate_rate_id,
+    	a.approved, a.entity_id, a.countries, a.passenger_id,  a.passenger_name,  a.passenger_mobile,
+    	a.passenger_email,  a.passenger_age,  a.days_covered,  a.nok_name, a.nok_mobile,  a.passenger_id_no,
+    	a.passport_number,  round(a.cover_amount::DECIMAL,2)::real as cover_amount,  round(a.totalAmount_covered::DECIMAL,2)::real as totalAmount_covered,  a.is_north_america,  a.details,  a.passenger_dob,
+    	a.policy_number,  a.entity_name,  a.destown,  a.sys_country_name, a.approved_date,  a.corporate_id,
+    	a.pin_no, a.reason_for_travel,  a.departure_country, a.entity_role, a.function_role, a.is_active,a.is_valid
+    FROM ((
+    	SELECT org_id,org_name,rate_type_id, rate_plan_id, rate_category_name,rate_id, rate_plan_name, standard_rate, north_america_rate,
+    		days_from,  days_to,  corporate_rate_id,   approved,  entity_id,  countries,  passenger_id,  passenger_name,  passenger_mobile,
+    		passenger_email,  passenger_age,  days_covered,  nok_name,  nok_mobile,  passenger_id_no,  nok_national_id as passport_number,  cover_amount,
+    		totalAmount_covered,  is_north_america,  details,  passenger_dob,  policy_number,  entity_name,  destown,  sys_country_name,
+    		approved_date,  corporate_id,  pin_no, reason_for_travel,  departure_country, entity_role, function_role, is_active,is_valid
+    	FROM vw_passengers  )
+    	UNION ALL
+    	(SELECT org_id,org_name, rate_type_id,  rate_plan_id,  rate_category_name, rate_id,    rate_plan_name,  standard_rate,
+    		north_america_rate, days_from,days_to,   null::integer as corporate_rate_id,  approved,  entity_id,
+    		countries,passenger_id, member_name as passenger_name,  phone_number as passenger_mobile,
+    		primary_email as passenger_email , age as  passenger_age,    null::integer as days_covered, ''::text as nok_name,
+    		''::text as nok_mobile,  ''::text as passenger_id_no, passport_number, amount_covered as cover_amount,
+    		totalamount_covered,  null::boolean as is_north_america, ''::text as details, passenger_dob::text,policy_number,
+    		entity_name, destown, sys_country_name, approved_date, null::integer as corporate_id, pin_number as pin_no,
+    		reason_for_travel,     departure_country,   entity_role, function_role ,
+    		is_active, null::boolean as is_valid
+    	FROM  vw_policy_members )
+    )a order by passenger_id DESC;
 
 CREATE TABLE jp_pay (
 	jp_id					serial primary key,
