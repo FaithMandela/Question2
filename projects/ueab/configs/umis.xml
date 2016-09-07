@@ -80,9 +80,9 @@
 				<MENU name="Semester Charges">158</MENU>
 				<MENU name="Charge Summary">425</MENU>
 				<MENU name="Semester Un Official">362</MENU>
-				<MENU name="Students Trimester GPA">203</MENU>
-				<MENU name="Students Trimester GPA Address">204</MENU>
-				<MENU name="EAU Trimester GPA">340</MENU>
+				<MENU name="Students Semester GPA">203</MENU>
+				<MENU name="Students Semester GPA Address">204</MENU>
+				<MENU name="EAU Semester GPA">340</MENU>
 				<MENU name="Semester Students Details">161</MENU>
 				<MENU name="Registered Students">785</MENU>
 				<MENU name="Course Registration">162</MENU>
@@ -145,7 +145,7 @@
 			<MENU name="Yearly Majors">402</MENU>
 			<MENU name="Academic Year Summary">439</MENU>
 			<MENU name="Admision Marks Summary">441</MENU>
-			<MENU name="Study Year by Trimester">771</MENU>
+			<MENU name="Study Year by Semester">771</MENU>
 			<MENU name="Study Year by Year">772</MENU>
 		</MENU>
 		<MENU name="Administration" role="records">
@@ -488,8 +488,8 @@
 			<TEXTFIELD w="40" title="Elective Credit">electivecredit</TEXTFIELD>
 			<GRID name="Bulletings" keyfield="bulletingid" orderby="startingquarter desc" table="bulleting" noorg="true">
 				<TEXTFIELD w="75" title="Bulleting">bulletingname</TEXTFIELD>
-				<TEXTFIELD w="75" title="Starting Trimester">startingquarter</TEXTFIELD>
-				<TEXTFIELD w="75" title="Ending Trimester">endingquarter</TEXTFIELD>
+				<TEXTFIELD w="75" title="Starting Semester">startingquarter</TEXTFIELD>
+				<TEXTFIELD w="75" title="Ending Semester">endingquarter</TEXTFIELD>
 				<CHECKBOX w="75" title="Is Current">iscurrent</CHECKBOX>
 				<GRID name="Major Contents" keyfield="majorcontentid" orderby="courseid" linkfield="bulletingid" table="majorcontentview" noorg="true" linkparams="majorid=majorid">
 					<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
@@ -554,13 +554,13 @@
 			<TEXTFIELD w="40" title="Bulleting ID">bulletingid</TEXTFIELD>
 			<TEXTFIELD w="140" title="Bulleting Name">bulletingname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Current">iscurrent</TEXTFIELD>
-			<TEXTFIELD w="80" title="Starting Trimester">startingquarter</TEXTFIELD>
-			<TEXTFIELD w="80" title="Ending Trimester">endingquarter</TEXTFIELD>
+			<TEXTFIELD w="80" title="Starting Semester">startingquarter</TEXTFIELD>
+			<TEXTFIELD w="80" title="Ending Semester">endingquarter</TEXTFIELD>
 			<FORM name="Bulleting" keyfield="bulletingid" table="bulleting" noorg="true">
 				<TEXTFIELD w="150" title="Bulleting Name" y="10" h="20" x="10">bulletingname</TEXTFIELD>
 				<CHECKBOX w="50" title="Current" y="10" h="20" x="290">iscurrent</CHECKBOX>
-				<TEXTFIELD w="150" title="Starting Trimester" y="30" h="20" x="10">startingquarter</TEXTFIELD>
-				<TEXTFIELD w="150" title="Ending Trimester" y="30" h="20" x="290">endingquarter</TEXTFIELD>
+				<TEXTFIELD w="150" title="Starting Semester" y="30" h="20" x="10">startingquarter</TEXTFIELD>
+				<TEXTFIELD w="150" title="Ending Semester" y="30" h="20" x="290">endingquarter</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -898,7 +898,7 @@
 			</GRID>
 			<FORM name="Semesters" keyfield="quarterid" table="quarters" noorg="true">
 				<TEXTFIELD w="150" title="Semester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
-				<TEXTFIELD w="150" title="Name" default="Trimester" y="10" h="20" x="290">quarter_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Name" default="Semester" y="10" h="20" x="290">quarter_name</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="30" h="20" x="10">active</CHECKBOX>
 				<CHECKBOX w="50" title="Closed" y="30" h="20" x="290">closed</CHECKBOX>
 				<TEXTDATE w="150" title="Semester Start" y="50" h="20" x="10">qstart</TEXTDATE>
@@ -917,8 +917,8 @@
 				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<ACTIONS>
-				<ACTION fnct="OpenQuarter">Open Trimester</ACTION>
-				<ACTION fnct="CloseQuarter">Close Trimester</ACTION>
+				<ACTION fnct="OpenQuarter">Open Semester</ACTION>
+				<ACTION fnct="CloseQuarter">Close Semester</ACTION>
 				<ACTION fnct="ExamBalances">Exam Balances</ACTION>
 			</ACTIONS>
 		</GRID>
@@ -1734,8 +1734,8 @@
 			<JASPER filtered="true" name="Quater Students Details" reportfile="studentdetails.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="Students Trimester GPA" type="horl" key="203" h="585">
-		<FILTER w="700" name="Students Trimester GPA" split="250" type="vert" h="750">
+	<DESK w="800" name="Students Semester GPA" type="horl" key="203" h="585">
+		<FILTER w="700" name="Students Semester GPA" split="250" type="vert" h="750">
 			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
 				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
@@ -1749,8 +1749,8 @@
 			<JASPER filtered="true" name="GPA Courses" printcopies="1" reportfile="qstudentviewc.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="Students Trimester GPA Address" type="horl" key="204" h="585">
-		<FILTER w="700" name="Students Trimester GPA Address" split="250" type="vert" h="750">
+	<DESK w="800" name="Students Semester GPA Address" type="horl" key="204" h="585">
+		<FILTER w="700" name="Students Semester GPA Address" split="250" type="vert" h="750">
 			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
 				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
@@ -1764,8 +1764,8 @@
 			<JASPER filtered="true" name="GPA Address" printcopies="1" reportfile="qstudentgpadd.jasper" key="3"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="EAU Trimester GPA" type="horl" key="340" h="500">
-		<FILTER w="700" name="EAU Trimester GPA" split="250" type="vert" h="750">
+	<DESK w="800" name="EAU Semester GPA" type="horl" key="340" h="500">
+		<FILTER w="700" name="EAU Semester GPA" split="250" type="vert" h="750">
 			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
 				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
@@ -1972,7 +1972,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Enrolment by Residence" type="horl" key="214" h="595">
-		<FILTER w="700" name="Students Trimester GPA" split="250" type="vert" h="750">
+		<FILTER w="700" name="Students Semester GPA" split="250" type="vert" h="750">
 			<FILTERGRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview" noorg="true">
 				<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
@@ -2308,14 +2308,14 @@
 			<JASPER name="Hours Load Range" reportfile="deanslist3.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Study Year by Trimester" type="horl" key="771" h="500">
-		<FILTER location="250" name="Study Year by Trimester" type="horl">
+	<DESK w="700" name="Study Year by Semester" type="horl" key="771" h="500">
+		<FILTER location="250" name="Study Year by Semester" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<DRILLDOWN name="Sub Level" keyfield="sublevelid" table="sublevels" noorg="true" listfield="sublevelname" filtername="sublevelid"></DRILLDOWN>
-			<JASPER filtered="true" name="Study Year by Trimester - Summary" reportfile="studyyearb.jasper"></JASPER>
-			<JASPER filtered="true" name="Study Year by Trimester" reportfile="studyyeara.jasper"></JASPER>
+			<JASPER filtered="true" name="Study Year by Semester - Summary" reportfile="studyyearb.jasper"></JASPER>
+			<JASPER filtered="true" name="Study Year by Semester" reportfile="studyyeara.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Study Year by Year" type="horl" key="772" h="500">

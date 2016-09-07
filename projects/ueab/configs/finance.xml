@@ -168,7 +168,7 @@
 			</GRID>
 			<FORM name="Semesters" keyfield="quarterid" table="quarters" noorg="true">
 				<TEXTFIELD w="150" title="Semester ID" y="10" h="20" x="10">quarterid</TEXTFIELD>
-				<TEXTFIELD w="150" title="Name" default="Trimester" y="10" h="20" x="290">quarter_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Name" default="Semester" y="10" h="20" x="290">quarter_name</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="30" h="20" x="10">active</CHECKBOX>
 				<CHECKBOX w="50" title="Closed" y="30" h="20" x="290">closed</CHECKBOX>
 				<TEXTDATE w="150" title="Semester Start" y="50" h="20" x="10">qstart</TEXTDATE>
@@ -183,8 +183,8 @@
 				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<ACTIONS>
-				<ACTION fnct="OpenQuarter">Open Trimester</ACTION>
-				<ACTION fnct="CloseQuarter">Close Trimester</ACTION>
+				<ACTION fnct="OpenQuarter">Open Semester</ACTION>
+				<ACTION fnct="CloseQuarter">Close Semester</ACTION>
 				<ACTION fnct="ExamBalances">Exam Balances</ACTION>
 			</ACTIONS>
 		</GRID>

@@ -56,8 +56,8 @@
 				<MENU name="Instructor's Grade Report">255</MENU>
 				<MENU name="Semester Charges">158</MENU>
 				<MENU name="Semester Un Official">362</MENU>
-				<MENU name="Students Trimester GPA">203</MENU>
-				<MENU name="EAU Trimester GPA">340</MENU>
+				<MENU name="Students Semester GPA">203</MENU>
+				<MENU name="EAU Semester GPA">340</MENU>
 				<MENU name="Semester Students Details">161</MENU>
 				<MENU name="Course Registration">162</MENU>
 				<MENU name="Class Timetable">164</MENU>
@@ -944,7 +944,7 @@
 			<JASPER filtered="true" name="Quater Students Details" reportfile="studentdetails.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="800" name="Students Trimester GPA" type="horl" key="203" h="500">
+	<DESK w="800" name="Students Semester GPA" type="horl" key="203" h="500">
 		<GRID name="Semesters" keyfield="quarterid" table="quarterview" filterkey="9">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
@@ -957,7 +957,7 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="800" name="EAU Trimester GPA" type="horl" key="340" h="500">
+	<DESK w="800" name="EAU Semester GPA" type="horl" key="340" h="500">
 		<GRID name="Semesters" keyfield="quarterid" table="quarterview" filterkey="9">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
