@@ -2,8 +2,11 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="453" leftMargin="28" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="81fb2e84-f44f-4fe0-bb90-6ab7f22b5286">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="221"/>
 	<parameter name="filterid" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
      studentmajorview.studentid,
@@ -30,7 +33,7 @@ WHERE
 		<band height="99" splitType="Stretch">
 			<image>
 				<reportElement x="193" y="4" width="122" height="95" uuid="aea7bb28-7258-4861-9bb3-80d12b51deeb"/>
-				<imageExpression><![CDATA["/opt/baraza/projects/ueab/reports/baraza_logo.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "baraza_logo.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -95,7 +98,7 @@ WHERE
 			</textField>
 			<image>
 				<reportElement x="6" y="334" width="132" height="27" uuid="8ffaef93-103e-43e6-a36a-ea277df85d70"/>
-				<imageExpression><![CDATA["/opt/baraza/projects/ueab/reports/registrarsignature.png"]]></imageExpression>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "registrarsignature.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="0" y="361" width="193" height="28" uuid="732e1d9c-ab5a-4aa2-b0b3-5effb54bb94f"/>

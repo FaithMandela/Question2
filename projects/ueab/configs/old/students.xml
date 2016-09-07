@@ -152,6 +152,7 @@
 			<TEXTFIELD w="75" title="Option">majoroptionname</TEXTFIELD>
 			<CHECKBOX w="75" title="Major" format="boolean" ischar="true">major</CHECKBOX>
 		</GRID>
+		<JASPER name="Admission Letter" user="filterid" reportfile="admissions.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="School" key="10" h="500">
 		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true">
@@ -281,7 +282,7 @@
 			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending">qend</TEXTFIELD>
-			<ACTION fnct="insQStudent" title="Register" action="Registrer for the Trimester" jumpview="49:0">quarterid</ACTION>
+			<ACTION fnct="insQStudent" title="Register" action="Registrer for the Semester" jumpview="49:0">quarterid</ACTION>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Residence Selection" key="23" h="500">
