@@ -1,10 +1,10 @@
+import java.util.Calendar;
 import java.sql.Timestamp;
-import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Calendar;
+import java.sql.SQLException;
 
 public class BookingFeedMonitor {
 
