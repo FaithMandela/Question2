@@ -209,6 +209,12 @@ CREATE VIEW vw_client_requests AS
 		client_requests.application_date, client_requests.approve_status, 
 		client_requests.workflow_table_id, client_requests.action_date
 	FROM vw_clients INNER JOIN client_requests ON vw_clients.client_id = client_requests.client_id;
+	
+CREATE OR REPLACE FUNCTION check_retrived(int, int) RETURNS int AS $$
+	SELECT max(client_assets.client_asset_id)
+	FROM client_requests INNER JOIN client_assets ON client_requests.client_request_id = client_assets.client_request_id
+	WHERE (client_requests.client_id = $1) AND (client_assets.replaced_asset_id = $2) AND (client_assets.is_retrived = true);
+$$ LANGUAGE SQL;
 
 CREATE VIEW vw_client_assets AS
 	SELECT vw_client_requests.client_id, vw_client_requests.client_name, vw_client_requests.address, vw_client_requests.zipcode, 
@@ -234,6 +240,8 @@ CREATE VIEW vw_client_assets AS
 		vw_assets.purchase_value, vw_assets.disposal_amount, vw_assets.disposal_date, vw_assets.disposal_posting, vw_assets.lost, 
 		vw_assets.stolen, vw_assets.tag_number, vw_assets.asset_condition, 
 		vw_assets.asset_disp,
+		check_retrived(vw_client_requests.client_id, client_assets.asset_id) as retrived,
+		
 
 		r_assets.asset_type_id as r_asset_type_id, r_assets.asset_type_name as r_asset_type_name, 
 		r_assets.manufacturer_id as r_manufacturer_id, r_assets.manufacturer_name as r_manufacturer_name,
@@ -304,6 +312,23 @@ CREATE VIEW vw_client_provisions AS
 		INNER JOIN provision_types ON client_provisions.provision_type_id = provision_types.provision_type_id;
 
 
+CREATE OR REPLACE FUNCTION ins_client_assets() RETURNS trigger AS $$
+DECLARE
+	v_client_id				integer;
+	v_client_asset_id		integer;
+BEGIN
+
+	IF (NEW.is_retrived = true) AND (NEW.replaced_asset_id is null) THEN
+		RAISE EXCEPTION 'Enter the serial number for retrived equipment';
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_client_assets AFTER INSERT OR UPDATE ON client_assets
+	FOR EACH ROW EXECUTE PROCEDURE ins_client_assets();
+
 CREATE OR REPLACE FUNCTION aft_client_assets() RETURNS trigger AS $$
 DECLARE
 	v_client_id				integer;
@@ -317,19 +342,10 @@ BEGIN
 			UPDATE assets SET asset_status_id = 2 WHERE (asset_id = OLD.asset_id);
 		END IF;
 	ELSE
-		IF(NEW.replaced_asset_id is not null)THEN 
-			SELECT client_id INTO v_client_id
-			FROM vw_client_assets
-			WHERE (client_request_id = NEW.client_request_id);
-
-			UPDATE client_assets SET is_retrived = true, date_retrived = NEW.date_issued
-			WHERE (is_retrived = false) AND (asset_id = NEW.replaced_asset_id) 
-				AND (client_request_id IN (SELECT client_request_id FROM client_requests WHERE client_id = v_client_id));
-		END IF;
-
 		IF(NEW.is_retrived = true)THEN
-			UPDATE assets SET asset_status_id = 1 WHERE (asset_id = NEW.asset_id);
-		ELSIF(NEW.is_issued = true)THEN
+			UPDATE assets SET asset_status_id = 1 WHERE (asset_id = NEW.replaced_asset_id);
+		END IF;
+		IF(NEW.is_issued = true)THEN
 			UPDATE assets SET asset_status_id = 2 WHERE (asset_id = NEW.asset_id);
 		END IF;
 	END IF;
@@ -340,3 +356,22 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER aft_client_assets AFTER INSERT OR UPDATE OR DELETE ON client_assets
 	FOR EACH ROW EXECUTE PROCEDURE aft_client_assets();
+
+CREATE OR REPLACE FUNCTION aft_asset_movements() RETURNS trigger AS $$
+BEGIN
+
+	IF(NEW.asset_location_id = 1)THEN
+		UPDATE assets SET asset_status_id = 1 WHERE (asset_id = NEW.asset_id);
+	ELSIF(NEW.asset_location_id = 2)THEN
+		UPDATE assets SET asset_status_id = 3 WHERE (asset_id = NEW.asset_id);
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_asset_movements AFTER INSERT OR UPDATE ON asset_movements
+	FOR EACH ROW EXECUTE PROCEDURE aft_asset_movements();
+	
+	
+

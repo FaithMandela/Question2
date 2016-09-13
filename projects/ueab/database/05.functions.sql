@@ -644,19 +644,19 @@ DECLARE
 BEGIN
 	myoverload := false;
 
-	IF ($1=14) THEN
+	IF ($1=18) THEN
 		IF (($3<1.99) AND ($2<>9)) THEN
 			myoverload := true;
-		ELSIF ($3 is null) AND ($2 > 14) THEN
+		ELSIF ($3 is null) AND ($2 > 18) THEN
 			myoverload := true;
-		ELSIF (($4>=110) AND ($3>=2.70) AND ($2<=17)) THEN
+		ELSIF (($4>=110) AND ($3>=2.70) AND ($2<=21)) THEN
 			myoverload := false;
 		ELSE
-			IF (($3<3) AND ($2>14)) THEN
+			IF (($3<3) AND ($2>18)) THEN
 				myoverload := true;
-			ELSIF (($3<3.5) AND ($2>15)) THEN
+			ELSIF (($3<3.5) AND ($2>19)) THEN
 				myoverload := true;
-			ELSIF ($2>16) THEN
+			ELSIF ($2>20) THEN
 				myoverload := true;
 			END IF;
 		END IF;

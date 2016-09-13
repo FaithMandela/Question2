@@ -11,6 +11,15 @@ WHERE bpcc = '36Q9'
 AND to_char(ticketdate, 'MMYYYY') = '032016'
 ORDER BY ticketdate;
 
+--- Ticket summary
+SELECT to_char(ticketdate, 'YYYY-MM'), bookpcc, bpcc, son, pcc, 
+       sum(topen + tused + tarpt + tckin + tlftd + tprtd + tunvl) as activesegs
+FROM tickets
+WHERE bpcc = '3L3N' AND for_incentive = false
+AND ticketdate >= '2016-01-01'::date
+GROUP BY to_char(ticketdate, 'YYYY-MM'), bookpcc, bpcc, son, pcc
+ORDER BY to_char(ticketdate, 'YYYY-MM');
+
 
 --- DB clean ups
 ALTER TABLE tickets

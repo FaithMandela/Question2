@@ -1,70 +1,56 @@
 
 
-CREATE OR REPLACE FUNCTION selQResidence(varchar(12), varchar(12), varchar(12)) RETURNS VARCHAR(120) AS $$
-DECLARE
-	myrec 				RECORD;
-	resrec				RECORD;
-	myqstud 			int;
-	myres				int;
-	resCapacity			int;
-	resCount			int;
-	v_qstudentid		int;
-	allowMajors			boolean;
-	mystr 				varchar(120);
-BEGIN
-	myqstud := getqstudentid($2);
-	myres := $1::integer;
+UPDATE studentpayments SET approved = true, amount = 400000.00 WHERE narrative = '178662;Pay;2016/2017.1M;SAMOIJ0001';
+UPDATE studentpayments SET approved = true, amount = 691153.00 WHERE narrative = '59128Fees;2016/2017.1;SIHAAN0001';
+UPDATE studentpayments SET approved = true, amount = 2640700.00 WHERE narrative = '59501Fees;2016/2017.1M;SOKHIN0001';
+UPDATE studentpayments SET approved = true, amount = 870180.00 WHERE narrative = '60007Fees;2016/2017.1;SUKAMA0004';
+UPDATE studentpayments SET approved = true, amount = 898408.00 WHERE narrative = '60501Fees;2016/2017.1;SIKUOL0004';
+UPDATE studentpayments SET approved = true, amount = 485618.00 WHERE narrative = '61224Fees;2016/2017.1;SBASPR0001';
+UPDATE studentpayments SET approved = true, amount = 524070.00 WHERE narrative = '61263Fees;2016/2017.1;SIFIDE0001';
+UPDATE studentpayments SET approved = true, amount = 551003.00 WHERE narrative = '61444Fees;2016/2017.1;SADEOG0012';
+UPDATE studentpayments SET approved = true, amount = 1028240.00 WHERE narrative = '61455Fees;2016/2017.1;SALOCH0005';
+UPDATE studentpayments SET approved = true, amount = 1596000.00 WHERE narrative = '61551Fees;2016/2017.1M;SBABOY0002';
 
-	SELECT qstudentid, quarterid, finalised, financeclosed, finaceapproval, mealtype, mealticket, studylevel INTO myrec
-	FROM qstudents WHERE (qstudentid = myqstud);
-	
-	SELECT sex, min_level, max_level, majors INTO resrec
-	FROM residences INNER JOIN qresidences ON residences.residenceid = qresidences.residenceid
-	WHERE (qresidenceid = myres);	
-	
-	SELECT sum(residencecapacitys.capacity) INTO resCapacity
-	FROM residencecapacitys INNER JOIN qresidences ON residencecapacitys.residenceid = qresidences.residenceid
-	WHERE (qresidenceid = myres);
-	
-	UPDATE qstudents SET qresidenceid = null, financeclosed = false
-	WHERE (finaceapproval = false) AND (age(residence_time) > '1 day'::interval) AND (offcampus = false)
-		AND (quarterid = myrec.quarterid);
-	
-	SELECT count(qstudentid) INTO resCount
-	FROM qstudents
-	WHERE (qresidenceid = myres);
-	
-	allowMajors := true;
-	IF(resrec.majors is not null)THEN
-		SELECT qstudents.qstudentid INTO v_qstudentid
-		FROM qstudents INNER JOIN qresidences ON qstudents.qresidenceid = qresidences.qresidenceid
-			INNER JOIN residences ON qresidences.residenceid = residences.residenceid
-			INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
-			INNER JOIN studentmajors ON studentdegrees.studentdegreeid = studentmajors.studentdegreeid
-		WHERE (qstudents.qstudentid = myqstud) AND (residences.majors ILIKE '%' || studentmajors.majorid || '%');
-		IF(v_qstudentid is not null)THEN
-			allowMajors := false;
-		END IF;
-	END IF;
 
-	IF (myrec.qstudentid is null) THEN
-		RAISE EXCEPTION 'Register for the semester first';
-	ELSIF (myrec.financeclosed = true) OR (myrec.finaceapproval = true) THEN
-		RAISE EXCEPTION 'You cannot make changes after submiting your payment unless you apply on the post for it to be opened by finance.';
-	ELSIF (myrec.finalised = true) THEN
-		RAISE EXCEPTION 'You have closed the selection.';
-	ELSIF (myrec.studylevel < resrec.min_level) OR (myrec.studylevel > resrec.max_level) THEN
-		RAISE EXCEPTION 'The study levels allowed are between % and % for your level %', resrec.min_level, resrec.max_level, resrec.min_level;
-	ELSIF (resCount > resCapacity) THEN
-		RAISE EXCEPTION 'The residence you have selected is full.';
-	ELSIF(allowMajors = false)THEN
-		RAISE EXCEPTION 'The hall selected is not for the course you are doing';
-	ELSE
-		UPDATE qstudents SET qresidenceid = myres, roomnumber = null, residence_time = now() WHERE (qstudentid = myqstud);
-		mystr := 'Residence registered. You need to pay fees and get finacial approval today or you will loose the residence selection.';
-	END IF;
+ALTER TABLE registrations ADD admission_level	integer default 100 not null;
 
-    RETURN mystr;
-END;
-$$ LANGUAGE plpgsql;
+DROP VIEW registrymarkview;
+DROP VIEW registrationview;
+CREATE VIEW registrationview AS
+	SELECT registrations.registrationid, registrations.email, registrations.phonenumber,
+		registrations.submitapplication, 
+		registrations.isaccepted, registrations.isreported, registrations.isdeferred, registrations.isrejected,
+		registrations.applicationdate, ca.countryname as nationality,
+		registrations.sex, registrations.surname, registrations.firstname, registrations.othernames, 
+		(registrations.surname || ', ' ||  registrations.firstname || ' ' || registrations.othernames) as fullname,
+		registrations.existingid, registrations.firstchoiceid, registrations.secondchoiceid, registrations.offcampus,
+		registrations.org_id, registrations.entry_form_id, registrations.admission_level,
+		
+		(CASE WHEN registrations.org_id = 0 THEN 'UNDERGRADUATE' ELSE 'POSTGRADUATE' END) as selection_name,
+		(CASE WHEN registrations.af_success = '0' THEN 'The payment is completed' ELSE 'Payment has not been done' END) as paymentStatus,
+		
+		registrations.acceptance_fees, registrations.af_date, registrations.af_amount, registrations.af_success,
+		registrations.af_payment_code, registrations.af_trans_no, registrations.af_card_type, 
+		registrations.af_picked, registrations.af_picked_date, registrations.account_number,
+		
+		applications.applicationid, applications.exam_date_id, applications.quarterid,
+		
+		majorview.majorid, majorview.majorname, majorview.minlevel, majorview.maxlevel, majorview.major_title,
+		majorview.departmentid, majorview.departmentname, majorview.schoolid, majorview.schoolname,
+		
+		firstchoice.majorname as firstchoice, secondmajor.majorname as secondchoise
+	FROM registrations 
+		INNER JOIN applications ON registrations.registrationid = applications.applicationid
+		LEFT JOIN majorview ON registrations.majorid = majorview.majorid
+		INNER JOIN majors as firstchoice ON registrations.firstchoiceid = firstchoice.majorid
+		INNER JOIN majors as secondmajor ON registrations.secondchoiceid = secondmajor.majorid
+		INNER JOIN countrys as ca ON registrations.nationalityid = ca.countryid;
 
+CREATE VIEW registrymarkview AS
+	SELECT registrationview.registrationid, registrationview.fullname, 
+		registrationview.org_id, registrationview.entry_form_id,
+		subjects.subjectid, subjects.subjectname, 
+		marks.markid, marks.grade, registrymarks.registrymarkid, registrymarks.narrative
+	FROM ((registrationview INNER JOIN registrymarks ON registrationview.registrationid = registrymarks.registrationid)
+		INNER JOIN subjects ON registrymarks.subjectid = subjects.subjectid)
+		INNER JOIN marks ON registrymarks.markid =  marks.markid;

@@ -109,7 +109,7 @@ BEGIN
 			ELSE IF (v_total_guranteed > v_amount) THEN
 			RAISE EXCEPTION 'The amount gurranteed has been exceeded by %' ,(v_amount-v_total_guranteed);
 			New.amount:= 0;
-				END IF;
+				END IF;TG_OP = 'Update') and
 			END IF;
 	IF (TG_OP = 'UPDATE') THEN
 	  UPDATE loans
@@ -120,13 +120,10 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
--- Function: ins_contributions()
 
--- DROP FUNCTION ins_contributions();
+  CREATE TRIGGER ins_gurrantors  BEFORE INSERT OR UPDATE  ON gurrantors
+  FOR EACH ROW   EXECUTE PROCEDURE ins_gurrantors();
 
--- Function: ins_contributions()
-
--- DROP FUNCTION ins_contributions();
 
 CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $BODY$
 DECLARE
@@ -138,11 +135,13 @@ v_deposit_amount    real;
 msg                 varchar(120);
 
 BEGIN
+ 
     v_contrib_amount := NEW.deposit_amount;
     v_count := 0;
     SELECT period_id, start_date, end_date INTO v_period from periods where opened = true and activated = true;
     NEW.period_id := v_period.period_id; 
-    IF (TG_OP = 'INSERT') THEN  
+    
+    IF (New.is_paid = 'True') THEN  
         FOR v_loan IN Select * from vw_loans where  approve_status = 'Approved' AND loan_balance > 0 AND  entity_id = NEW.entity_id
         LOOP 
             SELECT count(loan_month_id) INTO v_count FROM loan_monthly WHERE loan_id = v_loan.loan_id AND period_id = v_period.period_id;
@@ -154,7 +153,7 @@ BEGIN
                         (v_loan.loan_balance * v_loan.interest / 1200), 
                         (v_loan.loan_balance * v_loan.interest / 1200), 0, 0, 'Loan Repayment', 0);
 
-                    NEW.loan_repayment = true;
+                    NEW.loan_repayment = True;
                     v_contrib_amount := (v_contrib_amount - v_loan.monthly_repayment);
                 END IF;
             END IF;
@@ -167,31 +166,11 @@ END;
 $BODY$
   LANGUAGE plpgsql;
   
-CREATE TRIGGER ins_contributions  BEFORE INSERT OR UPDATE  ON contributions
-  FOR EACH ROW EXECUTE PROCEDURE ins_contributions();
-
-CREATE OR REPLACE FUNCTION ins_investment()
-  RETURNS trigger AS
-$BODY$
-DECLARE
-	v_interests			real;
-	v_invest			real;
-	v_totals			real;
-BEGIN
-	SELECT interest_type INTO v_interests FROM  investment_types WHERE investment_type_id = NEW. investment_type_id;
-		
-		NEW.default_interest := v_interests;
-		v_invest := NEW.invest_amount + (NEW.invest_amount * NEW.default_interest/100 );
-		NEW.return_on_investment := v_invest - NEW.invest_amount;
-		NEW.yearly_dividend :=(v_invest/ NEW.period_years);
-		NEW.withdrwal_amount := v_invest;
-		
-	RETURN NEW;
-END;
-
-$BODY$
-  LANGUAGE plpgsql;
-   
+  CREATE TRIGGER ins_contributions  BEFORE INSERT OR UPDATE  ON contributions
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_contributions();
+  
+  
 CREATE TRIGGER ins_investment BEFORE INSERT OR UPDATE ON investments
 	FOR EACH ROW EXECUTE PROCEDURE ins_investment();
 
@@ -251,6 +230,7 @@ $BODY$
 CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
   FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
  
+
  CREATE OR REPLACE FUNCTION ins_members()
   RETURNS trigger AS
 $BODY$
@@ -264,20 +244,21 @@ BEGIN
 		RAISE EXCEPTION 'You have to enter an Email';
 	ELSIF(NEW.first_name is null) AND (NEW.surname is null)THEN
 		RAISE EXCEPTION 'You have need to enter Sur name and full Name';
-	
+	ELSEIF(new.contribution is null) then
+	RAISE EXCEPTION 'You have need to enter contribution amount';
 	ELSE
 	Raise NOTICE 'Thank you';
 	END IF;
 	NEW.entity_id := nextval('entitys_entity_id_seq');
 	NEW.member_id := nextval('members_member_id_seq');
 
-	INSERT INTO entitys (entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details)
-	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details) RETURNING entity_id INTO v_entity_id;
+	INSERT INTO entitys (entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount)
+	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution) RETURNING entity_id INTO v_entity_id;
 
 	NEW.entity_id := v_entity_id;
 
 
-	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
+	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')) where entity_id = v_entity_id ;
 END IF;
 	RETURN NEW;
 END;
@@ -302,6 +283,7 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
 
 
 CREATE OR REPLACE FUNCTION applicant_accept(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
@@ -520,35 +502,25 @@ $$ LANGUAGE SQL;
 
 
 
- CREATE OR REPLACE FUNCTION compute_contributions(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION compute_contributions(v_period_id varchar(12), v_org_id varchar(12), v_approval varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_period_id			integer;
-	v_org_id			integer;
-	msg					varchar(120);
+    msg                 varchar(120);
 BEGIN
+	msg := 'Contributions generated';
+    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id =  v_org_id::integer ;
+    DELETE FROM contributions WHERE period_id = v_period_id::integer;
+    
+    INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
+            entity_name, deposit_amount, loan_repayment, entry_date,
+             transaction_ref, additional_payments,is_paid)
+             
+    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0, first_name, contribution, 'False', 
+            now()::date, 'Auto generated', 0, 'False'
+        FROM members;
 
-	SELECT period_id, org_id INTO v_period_id, v_org_id
-	FROM periods
-	WHERE (period_id = $1::integer);
-	
-	DELETE FROM contributions WHERE period_id = v_period_id;
-		
-	INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
-            entity_name, contribution_amount, loan_repayment,deposit_amount, entry_date,
-             transaction_ref, additional_payments)
-	SELECT v_period_id, v_org_id,entity_id, 0,0, entity_name, contribution_amount, 'False', 
-            deposit_amount, entry_date, transaction_ref, additional_payments
-		FROM vw_contributions_month
-		WHERE (for_repayment = 'False');
-		
- 
-	
-	msg := 'Contributions  re-generated';
-	
-
-	RETURN msg;
+    RETURN msg;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql; 
 
 
 CREATE OR REPLACE FUNCTION loan_approved(
@@ -589,44 +561,71 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
-  
-  REATE OR REPLACE FUNCTION compute_loans(
+
+
+  CREATE OR REPLACE FUNCTION loan_paid(
     character varying,
     character varying,
     character varying)
   RETURNS character varying AS
 $BODY$
 DECLARE
-	v_period_id			integer;
-	v_org_id			integer;
-	msg					varchar(120);
+	msg 				varchar(120);
 BEGIN
-
-	SELECT period_id, org_id INTO v_period_id, v_org_id
-	FROM periods
-	WHERE (period_id = $1::integer);
+	msg := 'Paid';
 	
-	DELETE FROM loan_monthly WHERE period_id = v_period_id;
+	UPDATE loan_monthly  SET is_paid = 'True'
+	WHERE (loan_month_id = CAST($1 as int));
 
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
-	FROM vw_loans 
-	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
-
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
-	FROM vw_loans 
-	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
-
-	msg := 'Loans re-computed';
-
-	RETURN msg;
+	return msg;
 END;
 $BODY$
-  LANGUAGE plpgsql
+  LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION compute_contributions(
+    v_period_id character varying,
+    v_org_id character varying,
+    v_approval character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+    msg                 varchar(120);
+BEGIN
+    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id = v_org_id::integer;
+    
+    
+    DELETE FROM contributions WHERE period_id = v_period_id::integer;
+
+    
+    INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
+            entity_name, deposit_amount, loan_repayment, entry_date,
+             transaction_ref, additional_payments,is_paid)
+		
+             
+    SELECT v_period_id::integer, org_id::integer,entity_id, 0,0, first_name, contribution, 'False', 
+            now()::date, 'Auto generated', 0, 'False'
+        FROM members;
+msg = ' Its done';
+    
+    RETURN msg;
+END;
+$BODY$
+  LANGUAGE plpgsql;
 
 
+  
+  CREATE OR REPLACE FUNCTION contribution_paid (varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 				varchar(120);
+
+BEGIN
+	msg := 'Contribution paid';
+	
+	UPDATE contributions  SET is_paid = 'TRUE'
+	WHERE (contribution_id = CAST($1 as int));
 
 
-
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
 

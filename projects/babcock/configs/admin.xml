@@ -1,6 +1,7 @@
 <APP name="UMIS" org="org_id" password="change_password">
 	<MENU name="Babcock Administrator" role="admin,superadmin">
 		<MENU name="Administration" role="admin,superadm">
+			<MENU name="Students Probations">5</MENU>
 			<MENU name="Semesters">12</MENU>
 			<MENU name="Selections">1</MENU>
 			<MENU name="Late Registration">16</MENU>
@@ -923,6 +924,39 @@
 				<TEXTAREA w="590" tab="Oppotunities" y="2" h="170" x="10">oppotunities</TEXTAREA>
 				<TEXTAREA w="590" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Students Probations" key="5" h="560">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
+			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Off campus">offcampus</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Security">seesecurity</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Support">seesss</TEXTFIELD>
+			<TEXTFIELD w="40" title="See SDC">seesdc</TEXTFIELD>
+			<TEXTFIELD w="40" title="Halls Probation">seehalls</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Chaplain">seechaplain</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Registrar">seeregistrar</TEXTFIELD>
+			<TEXTFIELD w="40" title="On Probation">onprobation</TEXTFIELD>
+			<GRID name="Probation List" keyfield="probation_list_id" linkfield="studentid" table="probation_list">
+				<TEXTFIELD w="75" title="Probation List ID">probation_list_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Student ID">studentid</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approved By">approvedby</TEXTFIELD>
+				<TEXTFIELD w="75" title="Approval Type">approvaltype</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Approvedate">approvedate</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Clientip">clientip</TEXTFIELD>
+			</GRID>
+			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
+				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
+				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
+				<TEXTFIELD w="140" title="Student">studentname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
+				<GRID name="Student's Programme" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
+					<TEXTFIELD w="40" title="Programme Id">majorid</TEXTFIELD>
+					<TEXTFIELD w="140" title="Programme Name">majorname</TEXTFIELD>
+					<TEXTFIELD w="40" title="Core Programme">major</TEXTFIELD>
+				</GRID>
+			</GRID>
 		</GRID>
 	</DESK>
 </APP>

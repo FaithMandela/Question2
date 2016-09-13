@@ -46,6 +46,7 @@ CREATE TABLE loan_monthly (
 	interest_paid			real default 0 not null,
 	penalty					real default 0 not null,
 	penalty_paid			real default 0 not null,
+	extra_payment			real default 0 not null,
 	details					text,
 	UNIQUE (loan_id, period_id)
 );
@@ -115,8 +116,8 @@ CREATE OR REPLACE FUNCTION get_total_interest(integer, date) RETURNS real AS $$
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
-	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid) is null THEN 0 
-		ELSE sum(repayment + interest_paid + penalty_paid) END
+	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid + extra_payment) is null THEN 0 
+		ELSE sum(repayment + interest_paid + penalty_paid + extra_payment) END
 	FROM loan_monthly
 	WHERE (loan_id = $1);
 $$ LANGUAGE SQL;
@@ -128,8 +129,8 @@ CREATE OR REPLACE FUNCTION get_intrest_repayment(integer, date) RETURNS real AS 
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_total_repayment(integer, date) RETURNS real AS $$
-	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid) is null THEN 0 
-		ELSE sum(repayment + interest_paid + penalty_paid) END
+	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid + extra_payment) is null THEN 0 
+		ELSE sum(repayment + interest_paid + penalty_paid + extra_payment) END
 	FROM loan_monthly INNER JOIN periods ON loan_monthly.period_id = periods.period_id
 	WHERE (loan_monthly.loan_id = $1) AND (periods.start_date < $2);
 $$ LANGUAGE SQL;
@@ -173,7 +174,8 @@ CREATE VIEW vw_loan_monthly AS
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, loan_monthly.repayment, loan_monthly.interest_paid, 
-		loan_monthly.employee_adjustment_id, loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
+		loan_monthly.employee_adjustment_id, loan_monthly.penalty, loan_monthly.penalty_paid, 
+		loan_monthly.extra_payment, loan_monthly.details,
 		get_total_interest(vw_loans.loan_id, vw_periods.start_date) as total_interest,
 		get_total_repayment(vw_loans.loan_id, vw_periods.start_date) as total_repayment,
 		(vw_loans.principle + get_total_interest(vw_loans.loan_id, vw_periods.start_date + 1) + get_penalty(vw_loans.loan_id, vw_periods.start_date + 1)

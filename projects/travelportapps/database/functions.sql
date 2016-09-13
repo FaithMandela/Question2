@@ -68,3 +68,22 @@ CREATE OR REPLACE FUNCTION ins_passengers()  RETURNS trigger AS
 
 CREATE TRIGGER ins_passengers AFTER INSERT ON passengers
 FOR EACH ROW  EXECUTE PROCEDURE ins_passengers();
+
+CREATE OR REPLACE FUNCTION upd_passenger(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 		varchar(50);
+BEGIN
+	IF ($3::integer = 1) THEN
+
+		UPDATE passengers SET is_valid = false WHERE passenger_id = $1::integer;
+		msg := 'Certificate Canceled Successfully';
+	END IF;
+
+	IF($3::integer = 2)THEN
+    UPDATE passengers SET is_valid = true WHERE passenger_id = $1::integer;
+    msg := 'Certificate Reverted Successfully';
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;

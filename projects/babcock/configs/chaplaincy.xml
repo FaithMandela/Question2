@@ -58,28 +58,33 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Students" type="vert" key="3" h="560">
-		<GRID name="Students" keyfield="studentid" updatetable="students" table="students" filterkey="10" key="1">
+		<GRID auditid="sys_audit_trail_id" name="Students" keyfield="studentid" updatetable="students" table="students" noorg="true">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Security">seesecurity</TEXTFIELD>
-			<TEXTFIELD w="40" title="Student Support">seesss</TEXTFIELD>
-			<TEXTFIELD w="40" title="SDC">seesdc</TEXTFIELD>
-			<TEXTFIELD w="40" title="Halls Probation">seehalls</TEXTFIELD>
 			<TEXTFIELD w="40" title="Off campus">offcampus</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Security">seesecurity</TEXTFIELD>
+			<TEXTFIELD w="40" title="Student Support">seesss</TEXTFIELD>
+			<TEXTFIELD w="40" title="See SDC">seesdc</TEXTFIELD>
+			<TEXTFIELD w="40" title="Halls Probation">seehalls</TEXTFIELD>
+			<TEXTFIELD w="40" title="See Chaplain" edit="true">seechaplain</TEXTFIELD>
 			<TEXTFIELD w="40" title="On Probation">onprobation</TEXTFIELD>
-		</GRID>
-			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" key="2">
+			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" noorg="true">
 				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
 				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
 				<TEXTFIELD w="140" title="Student">studentname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
-				<GRID name="Student's Programme" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" key="5">
+				<GRID name="Student's Programme" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" noorg="true">
 					<TEXTFIELD w="40" title="Programme Id">majorid</TEXTFIELD>
 					<TEXTFIELD w="140" title="Programme Name">majorname</TEXTFIELD>
 					<TEXTFIELD w="40" title="Core Programme">major</TEXTFIELD>
 				</GRID>
-				</GRID>
-			
+			</GRID>
+			<FORM name="Residence Allocation" keyfield="studentid" table="students" noorg="true">
+				<COMBOBOX w="430" title="Residence" lptable="residences" noorg="true" y="10" h="20" x="10" lpfield="residencename">residenceid</COMBOBOX>
+				<TEXTFIELD w="50" title="Block" y="30" h="20" x="10">blockname</TEXTFIELD>
+				<TEXTFIELD w="50" title="Room Number" y="30" h="20" x="290">roomnumber</TEXTFIELD>
+			</FORM>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Students Address" type="vert" key="5" h="560">
 		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" filterkey="10" key="1">
@@ -90,20 +95,18 @@
 			<TEXTFIELD w="40" title="Student Number">telno</TEXTFIELD>
 			<TEXTFIELD w="40" title="Guardian Address">gaddress</TEXTFIELD>
 			<JASPER name="Students Details" keyfield="studentid" reportfile="vwwstudentdetails.jasper"></JASPER>
+		</GRID>
+		<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" key="2">
+			<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
+			<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
+			<TEXTFIELD w="140" title="Student">studentname</TEXTFIELD>
+			<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
+			<GRID name="Student's Programme" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" key="5">
+				<TEXTFIELD w="40" title="Programme Id">majorid</TEXTFIELD>
+				<TEXTFIELD w="140" title="Programme Name">majorname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Core Programme">major</TEXTFIELD>
 			</GRID>
-			
-			<GRID name="Student's Degree" keyfield="studentdegreeid" linkfield="studentid" table="studentdegreeview" key="2">
-				<TEXTFIELD w="140" title="Degree">degreename</TEXTFIELD>
-				<TEXTFIELD w="140" title="Sub Level">sublevelname</TEXTFIELD>
-				<TEXTFIELD w="140" title="Student">studentname</TEXTFIELD>
-				<TEXTFIELD w="40" title="Completed">completed</TEXTFIELD>
-				<GRID name="Student's Programme" keyfield="studentmajorid" linkfield="studentdegreeid" table="studentmajorview" key="5">
-					<TEXTFIELD w="40" title="Programme Id">majorid</TEXTFIELD>
-					<TEXTFIELD w="140" title="Programme Name">majorname</TEXTFIELD>
-					<TEXTFIELD w="40" title="Core Programme">major</TEXTFIELD>
-				</GRID>
-				</GRID>
-				
+		</GRID>
 	</DESK>
 	<DESK w="705" name="Semesters" key="11" h="550">
 		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
@@ -272,7 +275,7 @@
 	</DESK>
 	<DESK w="700" name="Label" type="horl" key="2115" h="500">
 		<FILTER location="250" name="Label" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" listfield="quarteryear" noorg="true"  orderby="quarteryear desc">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Student Labels" reportfile="studentlabel.jasper"></JASPER>
@@ -280,7 +283,7 @@
 	</DESK>
 	<DESK w="700" name="Off-Campus" type="horl" key="215" h="500">
 		<FILTER location="250" name="Off-Campus" type="horl">
-			<DRILLDOWN name="Year" keyfield="quarteryear" table="yearview" listfield="quarteryear" noorg="true"  orderby="quarteryear desc">
+			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Quarters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="All Off Campus" reportfile="offcampus.jasper"></JASPER>

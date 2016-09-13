@@ -1207,6 +1207,7 @@
 				<TEXTFIELD w="75" title="Loan Month">loan_month_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Interest Amount">interest_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Repayment">repayment</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Extra Payment">extra_payment</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Interest Paid">interest_paid</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
 				<FORM name="Loan Monthly" keyfield="loan_month_id" linkfield="loan_id" table="loan_monthly">
@@ -1215,7 +1216,8 @@
 					<TEXTDECIMAL w="150" title="Penalty" default="0" y="30" h="20" x="290">penalty</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Interest Amount" y="50" h="20" x="10">interest_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Interest Paid" y="50" h="20" x="290">interest_paid</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					<TEXTDECIMAL w="150" title="Extra Payment" y="70" h="20" x="10">extra_payment</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<FORM name="Loan" keyfield="loan_id" table="loans">

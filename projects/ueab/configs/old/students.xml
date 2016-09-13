@@ -1,17 +1,18 @@
-<APP auth.name="studentid" name="UEAB" auth.id="studentid" org="org_id" password="change_password" auth.table="students">
+<APP name="UEAB" org="org_id" password="change_password">
 	<MENU title="Students">
 		<MENU name="Student">
 			<MENU name="Student Details">1</MENU>
 			<MENU name="School">10</MENU>
 			<MENU name="Current Timetable">9</MENU>
-			<MENU name="Trimester GPA">19</MENU>
+			<MENU name="Semester GPA">19</MENU>
 			<MENU name="Unofficial Transcript">21</MENU>
+			<MENU name="Confirmation">80</MENU>
 			<MENU name="Graduation">85</MENU>
 			<MENU name="Queries" table="studentrequests">31</MENU>
 		</MENU>
 		<MENU name="Registration">
 			<MENU page="a_statement.jsp" name="Finance Statement">22</MENU>
-			<MENU name="Trimester Register">22</MENU>
+			<MENU name="Semester Register">22</MENU>
 			<MENU name="Sabath Classes">49</MENU>
 			<MENU name="Residence Selection">23</MENU>
 			<MENU name="Select Courses">24</MENU>
@@ -29,7 +30,7 @@
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Student Details" key="1" h="500">
-		<FORMVIEW w="550" new="false" name="Student Details" lw="120" keyfield="studentid" table="vw_students" params="schoolid,student_edit" user="studentid">
+		<GRID w="550" name="Student Details" lw="120" keyfield="studentid" display="form" table="vw_students" params="schoolid,student_edit" user="studentid">
 			<CHECKBOX w="75" title="On Probation" format="boolean" ischar="true">onprobation</CHECKBOX>
 			<CHECKBOX w="75" title="Off Campus" format="boolean" ischar="true">offcampus</CHECKBOX>
 			<CHECKBOX w="75" title="See Registrar" format="boolean" ischar="true">seeregistrar</CHECKBOX>
@@ -44,7 +45,7 @@
 			<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
 			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country">addresscountry</TEXTFIELD>
-			<FORMVIEW name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true" linkparams="schoolid=schoolid">
+			<GRID name="School" keyfield="schoolid" orderby="schoolid" display="form" table="schools" noorg="true" linkparams="schoolid=schoolid">
 				<TEXTFIELD w="75" title="School ID">schoolid</TEXTFIELD>
 				<TEXTFIELD w="250" title="School">schoolname</TEXTFIELD>
 				<GRID name="Department" keyfield="departmentid" orderby="departmentid" linkfield="schoolid" table="departmentview" noorg="true" reporttitle="schoolname">
@@ -59,7 +60,7 @@
 							<TEXTFIELD w="75" title="Credit Hours">credithours</TEXTFIELD>
 							<TEXTFIELD w="75" title="Content Type">contenttypename</TEXTFIELD>
 							<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-							<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" table="majorcontentview" noorg="true">
+							<GRID w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" display="form" table="majorcontentview" noorg="true">
 								<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 								<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 								<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
@@ -71,7 +72,7 @@
 									<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 									<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 								</GRID>
-							</FORMVIEW>
+							</GRID>
 						</GRID>
 					</GRID>
 					<GRID name="Courses Listing" keyfield="courseid" orderby="courseid" linkfield="departmentid" table="courses" noorg="true" where="(iscurrent = true)">
@@ -79,7 +80,7 @@
 						<TEXTFIELD w="250" title="Course Title">coursetitle</TEXTFIELD>
 						<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 						<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-						<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" table="courses" noorg="true">
+						<GRID w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" display="form" table="courses" noorg="true">
 							<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 							<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 							<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
@@ -91,9 +92,9 @@
 								<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 								<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 							</GRID>
-						</FORMVIEW>
+						</GRID>
 					</GRID>
-					<FORMVIEW w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" table="departmentview" noorg="true">
+					<GRID w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" display="form" table="departmentview" noorg="true">
 						<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 						<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 						<TEXTFIELD title="Department Name">Departmentname</TEXTFIELD>
@@ -104,9 +105,9 @@
 						<TEXTFIELD title="Exposures">exposures</TEXTFIELD>
 						<TEXTFIELD title="Oppotunities">oppotunities</TEXTFIELD>
 						<TEXTFIELD title="Details">details</TEXTFIELD>
-					</FORMVIEW>
+					</GRID>
 				</GRID>
-				<FORMVIEW w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" table="schools" noorg="true">
+				<GRID w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" display="form" table="schools" noorg="true">
 					<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 					<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 					<TEXTFIELD title="Philosopy">philosopy</TEXTFIELD>
@@ -114,36 +115,35 @@
 					<TEXTFIELD title="Mission">mission</TEXTFIELD>
 					<TEXTFIELD title="Objectives">objectives</TEXTFIELD>
 					<TEXTFIELD title="Details">details</TEXTFIELD>
-				</FORMVIEW>
-			</FORMVIEW>
-			<FORM new="false" name="Edit Details" keyfield="studentid" table="students" user="studentid" viewfilter="student_edit=allow">
-				<TEXTFIELD w="150" title="Email" y="130" h="20" x="290">email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Address" y="50" h="20" x="290">address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Zipcode" y="70" h="20" x="10">zipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="Town" y="70" h="20" x="290">town</TEXTFIELD>
-				<COMBOBOX w="150" title="Country" lptable="countrys" noorg="true" lpkey="countryid" y="90" h="20" x="10" lpfield="countryname">countrycodeid</COMBOBOX>
-				<TEXTFIELD w="150" title="Tel No" y="90" h="20" x="290">telno</TEXTFIELD>
-				<COMBOBOX w="150" title="County" lptable="countys" noorg="true" lpkey="county_id" y="110" h="20" x="10" lpfield="county_name">county_id</COMBOBOX>
-				<CHECKBOX w="50" title="National ID" lw="70" y="110" h="20" x="290">national_id</CHECKBOX>
-				<CHECKBOX w="50" title="Passport" lw="70" y="110" h="20" x="440">passport</CHECKBOX>
-				<TEXTFIELD w="150" title="Identification No" y="130" h="20" x="10">identification_no</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Name" y="170" h="20" x="10">guardianname</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Email" y="230" h="20" x="10">gemail</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Address" y="170" h="20" x="290">gaddress</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Zip Code" y="190" h="20" x="10">gzipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="G. Town" y="190" h="20" x="290">gtown</TEXTFIELD>
-				<COMBOBOX w="150" title="G. Country" lptable="countrys" noorg="true" lpkey="countryid" y="210" h="20" x="10" lpfield="countryname">gcountrycodeid</COMBOBOX>
-				<TEXTFIELD w="150" title="G. Tel No" y="210" h="20" x="290">gtelno</TEXTFIELD>
-				<COMBOBOX w="150" title="Nationality" lptable="countrys" noorg="true" lpkey="countryid" y="230" h="20" x="290" lpfield="countryname">Nationality</COMBOBOX>
-				<COMBOLIST w="80" title="Disability" default="No" y="270" h="20" x="10">disability
+				</GRID>
+			</GRID>
+			<FORM new="false" keyfield="studentid" name="Edit Details" user="studentid" viewfilter="student_edit=allow" table="students">
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="50" title="Address">address</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="70" title="Zipcode">zipcode</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="70" title="Town">town</TEXTFIELD>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="countryname" x="10" y="90" lptable="countrys" title="Country" lpkey="countryid">countrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="290" y="90" title="Tel No">telno</TEXTFIELD>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="county_name" x="10" y="110" lptable="countys" title="County" lpkey="county_id">county_id</COMBOBOX>
+				<CHECKBOX w="50" h="20" x="290" y="110" lw="70" title="National ID">national_id</CHECKBOX>
+				<CHECKBOX w="50" h="20" x="440" y="110" lw="70" title="Passport">passport</CHECKBOX>
+				<TEXTFIELD w="150" h="20" x="10" y="130" title="Identification No">identification_no</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="170" title="Guardian Name">guardianname</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="230" title="G. Email">gemail</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="170" title="G. Address">gaddress</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="190" title="G. Zip Code">gzipcode</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="190" title="G. Town">gtown</TEXTFIELD>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="countryname" x="10" y="210" lptable="countrys" title="G. Country" lpkey="countryid">gcountrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="290" y="210" title="G. Tel No">gtelno</TEXTFIELD>
+				<COMBOBOX noorg="true" w="150" h="20" lpfield="countryname" x="290" y="230" lptable="countrys" title="Nationality" lpkey="countryid">Nationality</COMBOBOX>
+				<COMBOLIST default="No" w="80" h="20" x="10" y="270" title="Disability">disability
 					<DATA>No</DATA>
 					<DATA>Yes</DATA>
 				</COMBOLIST>
-				<TEXTAREA w="430" title="if yes, give details" y="290" h="40" x="10">dis_details</TEXTAREA>
+				<TEXTAREA w="430" h="40" x="10" y="290" title="if yes, give details">dis_details</TEXTAREA>
 			</FORM>
-			<JASPER name="Admission Letter" user="filterid" reportfile="admissions.jasper"></JASPER>
-		</FORMVIEW>
-		<FORMVIEW w="550" name="Degree" lw="120" table="studentmajorview" noorg="true" user="studentid">
+		</GRID>
+		<GRID w="550" name="Degree" lw="120" display="form" table="studentmajorview" noorg="true" user="studentid">
 			<TEXTFIELD w="75" title="Level">degreelevelname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Sub">sublevelname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Degree">degreename</TEXTFIELD>
@@ -151,7 +151,8 @@
 			<TEXTFIELD w="75" title="Major">majorname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Option">majoroptionname</TEXTFIELD>
 			<CHECKBOX w="75" title="Major" format="boolean" ischar="true">major</CHECKBOX>
-		</FORMVIEW>
+		</GRID>
+		<JASPER name="Admission Letter" user="filterid" reportfile="admissions.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="School" key="10" h="500">
 		<GRID name="School" keyfield="schoolid" orderby="schoolid" table="schools" noorg="true">
@@ -169,7 +170,7 @@
 						<TEXTFIELD w="75" title="Credit Hours">credithours</TEXTFIELD>
 						<TEXTFIELD w="75" title="Content Type">contenttypename</TEXTFIELD>
 						<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-						<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" table="majorcontentview" noorg="true">
+						<GRID w="570" name="Courses Details" lw="100" keyfield="majorcontentid" linkfield="majorcontentid" display="form" table="majorcontentview" noorg="true">
 							<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 							<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 							<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
@@ -181,7 +182,7 @@
 								<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 								<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 							</GRID>
-						</FORMVIEW>
+						</GRID>
 					</GRID>
 				</GRID>
 				<GRID name="Courses Listing" keyfield="courseid" orderby="courseid" linkfield="departmentid" table="courses" noorg="true" where="(iscurrent = true)">
@@ -189,7 +190,7 @@
 					<TEXTFIELD w="250" title="Course Title">coursetitle</TEXTFIELD>
 					<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 					<CHECKBOX w="75" title="No GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-					<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" table="courses" noorg="true">
+					<GRID w="570" name="Courses Details" lw="100" keyfield="courseid" linkfield="courseid" display="form" table="courses" noorg="true">
 						<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 						<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 						<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
@@ -201,9 +202,9 @@
 							<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 							<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 						</GRID>
-					</FORMVIEW>
+					</GRID>
 				</GRID>
-				<FORMVIEW w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" table="departmentview" noorg="true">
+				<GRID w="570" name="Department Details" lw="100" keyfield="departmentid" linkfield="departmentid" display="form" table="departmentview" noorg="true">
 					<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 					<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 					<TEXTFIELD title="Department Name">Departmentname</TEXTFIELD>
@@ -214,9 +215,9 @@
 					<TEXTFIELD title="Exposures">exposures</TEXTFIELD>
 					<TEXTFIELD title="Oppotunities">oppotunities</TEXTFIELD>
 					<TEXTFIELD title="Details">details</TEXTFIELD>
-				</FORMVIEW>
+				</GRID>
 			</GRID>
-			<FORMVIEW w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" table="schools" noorg="true">
+			<GRID w="550" name="School Details" lw="120" keyfield="schoolid" linkfield="schoolid" display="form" table="schools" noorg="true">
 				<TEXTFIELD title="School ID">schoolid</TEXTFIELD>
 				<TEXTFIELD title="School Name">schoolname</TEXTFIELD>
 				<TEXTFIELD title="Philosopy">philosopy</TEXTFIELD>
@@ -224,7 +225,7 @@
 				<TEXTFIELD title="Mission">mission</TEXTFIELD>
 				<TEXTFIELD title="Objectives">objectives</TEXTFIELD>
 				<TEXTFIELD title="Details">details</TEXTFIELD>
-			</FORMVIEW>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Current Timetable" key="9" h="500">
@@ -247,15 +248,15 @@
 			<TEXTFIELD w="50" title="Building">building</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Trimester List" key="19" h="500">
-		<GRID name="Trimester List" keyfield="qstudentid" table="qstudentsummary" noorg="true" where="(approved = true)" user="studentid">
-			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+	<DESK w="700" name="Semester List" key="19" h="500">
+		<GRID name="Semester List" keyfield="qstudentid" table="qstudentsummary" noorg="true" where="(approved = true)" user="studentid">
+			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Hours">credit</TEXTFIELD>
 			<TEXTFIELD w="75" title="gpa" format="double">gpa</TEXTFIELD>
 			<TEXTFIELD w="75" title="C. Hours">cummcredit</TEXTFIELD>
 			<TEXTFIELD w="75" title="C. gpa" format="double">cummgpa</TEXTFIELD>
-			<GRID name="Trimester Course List" linkfield="qstudentid" table="qgradeview" noorg="true">
-				<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
+			<GRID name="Semester Course List" linkfield="qstudentid" table="qgradeview" noorg="true">
+				<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
 				<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 				<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="120" title="Instuctor">instructorname</TEXTFIELD>
@@ -267,7 +268,7 @@
 	</DESK>
 	<DESK w="700" name="Course List" key="21" h="500">
 		<GRID name="Course List" table="studentgradeview" noorg="true" user="studentid">
-			<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="120" title="Instuctor">instructorname</TEXTFIELD>
@@ -275,19 +276,14 @@
 			<TEXTFIELD w="50" title="Grade">gradeid</TEXTFIELD>
 			<TEXTFIELD w="50" title="GP" format="double">gpa</TEXTFIELD>
 		</GRID>
-		<GRID name="Transfered Credits" table="transferedcreditsview" noorg="true" user="studentid">
-			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
-			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
-			<TEXTFIELD w="50" title="Credit Hours">credithours</TEXTFIELD>
-		</GRID>
 	</DESK>
-	<DESK w="700" name="Trimester Register" key="22" h="500">
-		<FORMVIEW name="Trimester Register" keyfield="quarterid" table="activequarter" noorg="true">
-			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+	<DESK w="700" name="Semester Register" key="22" h="500">
+		<GRID name="Semester Register" keyfield="quarterid" display="form" table="activequarter" noorg="true">
+			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending">qend</TEXTFIELD>
-			<ACTION fnct="insQStudent" title="Register" action="Registrer for the Trimester" jumpview="49:0">quarterid</ACTION>
-		</FORMVIEW>
+			<ACTION fnct="insQStudent" title="Register" action="Registrer for the Semester" jumpview="49:0">quarterid</ACTION>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Residence Selection" key="23" h="500">
 		<GRID name="Residence Selection" keyfield="qresidenceid" table="currentresidenceview" params="residenceid" user="studentid">
@@ -332,13 +328,13 @@
 			<TEXTFIELD w="75" title="Option">classoption</TEXTFIELD>
 			<TEXTFIELD w="25" title="Credit Hours">credithours</TEXTFIELD>
 			<CHECKBOX w="40" title="No. GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-			<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="qcourseid" linkfield="qcourseid" table="qcourseview">
+			<GRID w="570" name="Courses Details" lw="100" keyfield="qcourseid" linkfield="qcourseid" display="form" table="qcourseview">
 				<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 				<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 				<TEXTFIELD w="70" title="Year Taken">yeartaken</TEXTFIELD>
 				<TEXTFIELD w="70" title="Details">details</TEXTFIELD>
-			</FORMVIEW>
+			</GRID>
 			<ACTIONS jumpview="27:0">
 				<ACTION fnct="insqcourse">Select</ACTION>
 			</ACTIONS>
@@ -356,13 +352,13 @@
 				<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
 				<TEXTFIELD w="50" title="Credit Hours">credithours</TEXTFIELD>
 				<CHECKBOX w="40" title="No. GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-				<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="qcourseid" linkfield="qcourseid" table="qcourseview">
+				<GRID w="570" name="Courses Details" lw="100" keyfield="qcourseid" linkfield="qcourseid" display="form" table="qcourseview">
 					<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 					<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 					<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
 					<TEXTFIELD w="70" title="Year Taken">yeartaken</TEXTFIELD>
 					<TEXTFIELD w="70" title="Details">details</TEXTFIELD>
-				</FORMVIEW>
+				</GRID>
 				<ACTIONS>
 					<ACTION fnct="insQSpecialCourse">Select</ACTION>
 				</ACTIONS>
@@ -381,7 +377,7 @@
 	</DESK>
 	<DESK w="700" name="Selected Course List" key="27" h="500">
 		<GRID name="Selected Course List" keyfield="qgradeid" table="selectedgradeview" user="studentid">
-			<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="150" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="75" title="Instuctor">instructorname</TEXTFIELD>
@@ -415,16 +411,16 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Close Registration" key="29" h="500">
-		<FORMVIEW name="Close Registration" keyfield="quarterid" table="activequarter" noorg="true">
-			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+		<GRID name="Close Registration" keyfield="quarterid" display="form" table="activequarter" noorg="true">
+			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending">qend</TEXTFIELD>
 			<ACTION fnct="insQClose" title="Close Registration">quarterid</ACTION>
-		</FORMVIEW>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Registration Status" key="30" h="500">
-		<FORMVIEW name="Registration Status" table="qcurrstudentdegreeview" user="studentid">
-			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+		<GRID name="Registration Status" display="form" table="qcurrstudentdegreeview" user="studentid">
+			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Residence">residencename</TEXTFIELD>
 			<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 			<CHECKBOX w="55" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
@@ -432,7 +428,7 @@
 			<CHECKBOX w="55" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
 			<CHECKBOX w="55" title="Student Dean" format="boolean" ischar="true">studentdeanapproval</CHECKBOX>
 			<TEXTFIELD w="250" title="Not Approved">noapproval</TEXTFIELD>
-		</FORMVIEW>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Post" key="31" h="500">
 		<GRID name="Post Reply" keyfield="studentrequestid" table="studentrequestview" user="studentid">
@@ -451,7 +447,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Current Charges" key="33" h="500">
-		<FORMVIEW title="quarterid" name="Current Charges" keyfield="qstudentid" table="studentquarterview" where="(active = true)" user="studentid">
+		<GRID title="quarterid" name="Current Charges" keyfield="qstudentid" display="form" table="studentquarterview" where="(active = true)" user="studentid">
 			<TEXTFIELD w="75" title="Total Units">hours</TEXTFIELD>
 			<TEXTFIELD w="50" title="Units Charge" format="double">unitcharge</TEXTFIELD>
 			<TEXTFIELD w="50" title="Lab Charge" format="double">labcharge</TEXTFIELD>
@@ -468,11 +464,11 @@
 				<TEXTFIELD title="To pay by (DD/MM/YYYY)">seconddate</TEXTFIELD>
 				<TEXTAREA title="Narration">financenarrative</TEXTAREA>
 			</FORM>
-		</FORMVIEW>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Full Charges" key="34" h="500">
 		<GRID name="Full Charges" table="studentquarterview" user="studentid">
-			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Total Units">hours</TEXTFIELD>
 			<TEXTFIELD w="40" title="Units Charge" format="double">unitcharge</TEXTFIELD>
 			<TEXTFIELD w="40" title="Lab Charge" format="double">labcharge</TEXTFIELD>
@@ -484,7 +480,7 @@
 	</DESK>
 	<DESK w="700" name="Selected Course List" key="57" h="500">
 		<GRID name="Selected Course List" table="selectedgradeview" filterkey="qstudentid" reporttitle="studentname">
-			<TEXTFIELD w="75" title="Trimester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
 			<TEXTFIELD w="75" title="Instuctor">instructorname</TEXTFIELD>
@@ -495,8 +491,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Registration Confirmation" key="80" h="500">
-		<FORMVIEW name="Registration Confirmation" keyfield="qstudentid" table="qcurrstudentdegreeview" where="(finalised = true) AND (studentdeanapproval = true) AND (finaceapproval = true) AND (majorapproval = true)" user="studentid">
-			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+		<GRID name="Registration Confirmation" keyfield="qstudentid" display="form" table="qcurrstudentdegreeview" where="(finalised = true) AND (studentdeanapproval = true) AND (finaceapproval = true) AND (majorapproval = true)" user="studentid">
+			<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 			<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 			<CHECKBOX w="75" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
 			<CHECKBOX w="75" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
@@ -504,7 +500,7 @@
 			<CHECKBOX w="75" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
 			<ACTION fnct="setConfirmation" title="Registration Confirmation">qstudentid</ACTION>
 			<GRID name="Registration Confirmation" keyfield="qstudentid" table="qcurrstudentdegreeview" where="(approved = true)" user="studentid">
-				<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 				<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 				<CHECKBOX w="75" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
 				<CHECKBOX w="75" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
@@ -513,7 +509,7 @@
 				<JASPER name="Selections" showpdf="true" linkfield="filterid" reportfile="studentdetailsa.jasper"></JASPER>
 			</GRID>
 			<GRID name="Exam Pass" keyfield="qstudentid" table="qcurrstudentdegreeview" where="(exam_clear = true)" user="studentid">
-				<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
+				<TEXTFIELD w="75" title="Semester">quarterid</TEXTFIELD>
 				<CHECKBOX w="50" title="Closed Registration" format="boolean" ischar="true">finalised</CHECKBOX>
 				<CHECKBOX w="75" title="Finance" format="boolean" ischar="true">finaceapproval</CHECKBOX>
 				<CHECKBOX w="75" title="Major Advisor" format="boolean" ischar="true">majorapproval</CHECKBOX>
@@ -521,10 +517,10 @@
 				<CHECKBOX w="75" title="Registar" format="boolean" ischar="true">approved</CHECKBOX>
 				<JASPER name="Exam Pass" showpdf="true" linkfield="filterid" reportfile="studentpass.jasper"></JASPER>
 			</GRID>
-		</FORMVIEW>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Graduation" key="85" h="500">
-		<FORMVIEW name="Completion Letter" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true) AND (completed = true)" user="studentid">
+		<GRID name="Completion Letter" display="form" keyfield="studentdegreeid" table="vw_studentdegrees" noorg="true" where="(grad_apply = true) AND (completed = true)" user="studentid">
 			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
 			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
@@ -538,6 +534,6 @@
 			<TEXTFIELD w="45" title="Application">grad_apply_month</TEXTFIELD>
 			<TEXTFIELD w="45" title="Graduation">grad_accept_month</TEXTFIELD>
 			<JASPER name="Completion Letter" showpdf="true" linkfield="filterid" reportfile="degree_comp_letter.jasper"></JASPER>
-		</FORMVIEW>
+		</GRID>
 	</DESK>
 </APP>
