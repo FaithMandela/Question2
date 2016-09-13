@@ -388,14 +388,6 @@ CREATE TABLE survey_100(
 
 
 
-
-
-
-
-
-
-
-
 CREATE OR REPLACE FUNCTION ins_surveys_515() RETURNS trigger AS $$
 DECLARE
 BEGIN
