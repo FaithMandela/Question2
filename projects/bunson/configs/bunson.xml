@@ -1584,7 +1584,6 @@
 				<TEXTDECIMAL w="150" title="Agreed Amount" y="70" h="20" x="290">agreed_amount</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Pax No" y="270" h="20" x="10">pax_no</TEXTFIELD>
 				<TEXTFIELD w="150" title="Booking Location" y="90" h="20" x="10">booking_location</TEXTFIELD>
-				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 				<TEXTAREA w="430" title="Reference Data" y="180" h="70" x="10">reference_data</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -2197,7 +2196,6 @@
 					<DATA key="9">9</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="LPO" y="270" h="20" x="10">reference_data</TEXTFIELD>
-				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 				<CHECKBOX w="150" title="Email Ready" y="310" h="20" x="290">email_ready</CHECKBOX>
 			</FORM>
 		</GRID>
@@ -3667,7 +3665,6 @@
 				<TEXTDECIMAL w="150" title="Agreed Amount" y="70" h="20" x="290">agreed_amount</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Pax No" y="270" h="20" x="10">pax_no</TEXTFIELD>
 				<TEXTFIELD w="150" title="Booking Location" y="90" h="20" x="10">booking_location</TEXTFIELD>
-				<TEXTAREA w="430" title="Payment Details" y="110" h="70" x="10">payment_details</TEXTAREA>
 				<TEXTAREA w="430" title="Reference Data" y="180" h="70" x="10">reference_data</TEXTAREA>
 			</FORM>
 		</GRID>
