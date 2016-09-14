@@ -67,7 +67,7 @@ public class BComm {
 		while(rs.moveNext()) {
 			String smsNumber = rs.readField(2);
 			if(smsNumber == null) smsNumber = "";
-			smsNumber = smsNumber.replace(" ", "").replace("-", "").replace(",", "").trim();
+			smsNumber = smsNumber.replace(" ", "").replace("-", "").replace(",", "").replace("/", "").replace("\\", "").trim();
 			int sNl = smsNumber.length();
 
 			if((sNl==10) && smsNumber.startsWith("0")) smsNumber = "254" + smsNumber.substring(1, 10);
@@ -82,7 +82,7 @@ public class BComm {
 System.out.println("BASE 3040 : " + sNl + " : " + nf.getError());
 			
 			// Insert the SMS
-			if((sNl == 12) && (nf.getError() == 0)) {
+			if((sNl == 12) && (nf.getError() == 0) && BNumberFormat.isNumeric(smsNumber)) {
 				mysql = "INSERT INTO sms (message_ready, folder_id, org_id, link_id, sms_number, message) VALUES (";
 				mysql += "true, 0, " + orgID + ", ";
 				mysql += rs.readField(1) + ", '" + smsNumber + "',  '" + msg + "');";

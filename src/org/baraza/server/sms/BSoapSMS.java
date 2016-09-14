@@ -47,6 +47,7 @@ import org.baraza.DB.BDB;
 import org.baraza.DB.BQuery;
 import org.baraza.xml.BElement;
 import org.baraza.server.comm.BComm;
+import org.baraza.utils.BNumberFormat;
 import org.baraza.utils.BLogHandle;
 
 /* Enviroments
@@ -144,8 +145,12 @@ public class BSoapSMS {
 			if(rs.getString("address_group_id") ==  null) {
 				number = number.replace(" ", "").replace("-", "").replace("/", "").replace("\\", "").trim();
 				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
-				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
-				else numberError = true;
+				
+				if((number.length() > 11) && (number.length() < 15) && BNumberFormat.isNumeric(number)) {
+					isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
+				} else {
+					numberError = true;
+				}
 
 				if(numbers != null) {
 					numbers = numbers.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").trim();
@@ -158,8 +163,11 @@ public class BSoapSMS {
 							if(num.length() == 9) num = "254" + num;
 							else if(num.startsWith("0")) num = "254" + num.substring(1, num.length());
 							
-							if((num.length() > 11) && (num.length() < 15)) isSent = sendSMS(num, msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
-							else numberError = true;
+							if((num.length() > 11) && (num.length() < 15) && BNumberFormat.isNumeric(num)) {
+								isSent = sendSMS(num, msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
+							} else {
+								numberError = true;
+							}
 						}
 					}
 					isSent = true;
@@ -176,8 +184,11 @@ public class BSoapSMS {
 				number = number.replace(" ", "").replace("-", "").trim();
 				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				
-				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
-				else numberError = true;
+				if((number.length() > 11) && (number.length() < 15) && BNumberFormat.isNumeric(number)) {
+					isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
+				} else {
+					numberError = true;
+				}
 				isSent = true;
 			}
 			rsa.close();
@@ -193,8 +204,11 @@ public class BSoapSMS {
 				number = number.replace(" ", "").replace("-", "").trim();
 				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				
-				if((number.length() > 11) && (number.length() < 15)) isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
-				else numberError = true;
+				if((number.length() > 11) && (number.length() < 15) && BNumberFormat.isNumeric(number)) {
+					isSent = sendSMS(number.trim(), msg, rs.getString("linkid"), rs.getString("sms_id"), rs.getString("org_id"), false);
+				} else {
+					numberError = true;
+				}
 				isSent = true;
 			}
 			rsg.close();
@@ -243,15 +257,22 @@ public class BSoapSMS {
 			}
 			
 			if(sendResults == null) {	// retry once for a error on the sending
-				try { Thread.sleep(500); } catch(InterruptedException ex) {}
+				try { Thread.sleep(1000); } catch(InterruptedException ex) {}
 				if(retry < 5) retry++;
 				else retry = 0;
 			} else if(sendResults.equals("SVC0901")) { // retry twice for a error on the sending
-				try { Thread.sleep(500); } catch(InterruptedException ex) {}
+				try { Thread.sleep(1000); } catch(InterruptedException ex) {}
 				if(retry < 5) retry++;
 				else retry = 0;
 			} else {
 				db.executeUpdate("UPDATE sms_queue SET send_results = '" + sendResults + "' WHERE sms_queue_id = " + correlator);
+				
+				mSql = "UPDATE sms_configs SET send_code = '" + sendResults + "' last_sent = current_timestamp, ";
+				if("POL0904".equals(sendResults)) mSql += "send_error = true, narrative = 'Need credit top up', ";
+				else mSql += "send_error = false, narrative = null, ";
+				mSql += "WHERE sms_config_id  = 0";
+				db.executeUpdate(mSql);
+				
 				retry = 0;
 				isSent = true;
 			}
