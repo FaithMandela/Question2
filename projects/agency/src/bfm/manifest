@@ -1,2 +1,0 @@
-Main-Class: BookingFeedMonitor
-Class-Path: ../../../../build/lib/postgresql-9.3-1101.jdbc4.jar ../../../../build/lib/sqljdbc4.jar 

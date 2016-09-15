@@ -267,9 +267,9 @@ public class BSoapSMS {
 			} else {
 				db.executeUpdate("UPDATE sms_queue SET send_results = '" + sendResults + "' WHERE sms_queue_id = " + correlator);
 				
-				mSql = "UPDATE sms_configs SET send_code = '" + sendResults + "' last_sent = current_timestamp, ";
-				if("POL0904".equals(sendResults)) mSql += "send_error = true, narrative = 'Need credit top up', ";
-				else mSql += "send_error = false, narrative = null, ";
+				mSql = "UPDATE sms_configs SET send_code = '" + sendResults + "', last_sent = current_timestamp, ";
+				if("POL0904".equals(sendResults)) mSql += "send_error = true, narrative = 'Need credit top up' ";
+				else mSql += "send_error = false, narrative = null ";
 				mSql += "WHERE sms_config_id  = 0";
 				db.executeUpdate(mSql);
 				

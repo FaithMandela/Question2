@@ -205,7 +205,7 @@ CREATE TABLE sms_configs (
 	narrative				varchar(200)
 );
 INSERT INTO sms_configs (sms_config_id, last_sent, send_error, error_email, email_time, narrative)
-VALUES (0, current_timestamp, false, false, current_timestamp, '');
+VALUES (0, current_timestamp, false, false, current_timestamp, null);
 	
 DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
