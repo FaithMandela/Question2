@@ -1,4 +1,4 @@
-<APP color="green" name="Sacco" org="org_id" password="change_password" material="true">
+<APP color="blue" name="Sacco" org="org_id" password="change_password" material="true">
 	<MENU name="Sacco" background="red">
 		<MENU name="Master" role="master">
 			<MENU name="Master  Approvals">46</MENU>
@@ -32,7 +32,8 @@
 		<MENU name="Reports" role="admin, staff, manager,member">
 			<MENU name="Statement of accounts" role="staff,admin,manager">320</MENU>
 			<MENU name="New Members" role="manager,admin">215</MENU>
-			<MENU name="Loans and repayments" role="staff, manager,admin">265</MENU>
+			<MENU name="Loans" role="staff, manager,admin">265</MENU>
+			<MENU name="My summary" role="member">345</MENU>
 			<MENU name="Loan" role="member">245</MENU>
 			<MENU name="Contributions" role="member">250</MENU>
 			<MENU name="Investments" role="member">255</MENU>
@@ -45,21 +46,16 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
 		<DASHBOARD w="650" name="Dashboard">
-			<TILE w="25" name="Active Members" role="admin" noorg.query="true" table="vw_entitys_types" where="(is_active = true and entity_id Not in (0,1) and function_role= 'member')" h="25">
-				<TEXTFIELD w="25" fnct="COALESCE(count(entity_id), 0)" title="Total Members">total_Members</TEXTFIELD>
-			</TILE>
-			<TILE name="Total contributions" role="admin" noorg.query="true" table="contributions" where="(entity_id Not in (0,1) and is_paid = 'True')">
-				<TEXTFIELD w="60" fnct="to_char(COALESCE(sum(deposit_amount),0), '999,999,999,990D00')" title="Total Deposits">Total_deposits</TEXTFIELD>
-			</TILE>
-			<TILE name="Month Balance" role="admin" noorg.query="true" table="vw_loan_monthly" where="(entity_id Not in (0,1))">
-				<TEXTFIELD w="60" fnct="to_char(COALESCE(sum(loan_balance),0), '999,999,999,990D00')" title="Total Loans" h="60">Pending_loans</TEXTFIELD>
-			</TILE>
 			<TILE name="My Active Loans" role="member" noorg.query="true" table="public.loans" where="(approve_status = 'Approved')" user="entity_id">
 				<TEXTFIELD w="60" fnct="COALESCE(COUNT(loan_Id))" title="My Active Loans" h="60">My_Active_loans</TEXTFIELD>
 			</TILE>
 			<TILE name="My investments" role="member" noorg.query="true" table="investments" where="(approve_status = 'Approved')" user="entity_id">
 				<TEXTFIELD w="60" fnct="to_char(COALESCE(sum(yearly_dividend),0), '999,999,999,990D00')" title="Total investments" h="60">My_Yearly_dividends</TEXTFIELD>
 			</TILE>
+			<TILELIST name="News" keyfield="sys_news_id" role="member" table="sys_news" where="(publish = true)">
+				<TEXTFIELD w="40" title="News Title">sys_news_title</TEXTFIELD>
+				<TEXTAREA w="20" title="Details" h="60">details</TEXTAREA>
+			</TILELIST>
 			<TILELIST name="My contributions" keyfield="contribution_id" role="member" orderby="contribution_id asc" noorg.query="true" LIMIT="5" table="vw_contributions" user="entity_id">
 				<TEXTFIELD w="75" title="#">contribution_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Type">payment_type_name</TEXTFIELD>
@@ -72,6 +68,15 @@
 				<TEXTFIELD w="75" title="Balance">loan_balance</TEXTFIELD>
 				<TEXTFIELD w="75" title="Interest Accured">total_interest</TEXTFIELD>
 			</TILELIST>
+			<TILE w="25" name="Active Members" role="admin" noorg.query="true" table="vw_entitys_types" where="(is_active = true and entity_id Not in (0,1) and function_role= 'member')" h="25">
+				<TEXTFIELD w="25" fnct="COALESCE(count(entity_id), 0)" title="Total Members">total_Members</TEXTFIELD>
+			</TILE>
+			<TILE name="Total contributions" role="admin" noorg.query="true" table="contributions" where="(entity_id Not in (0,1) and is_paid = 'True')">
+				<TEXTFIELD w="60" fnct="to_char(COALESCE(sum(deposit_amount),0), '999,999,999,990D00')" title="Total Deposits">Total_deposits</TEXTFIELD>
+			</TILE>
+			<TILE name="Month Balance" role="admin" noorg.query="true" table="vw_loan_monthly" where="(entity_id Not in (0,1))">
+				<TEXTFIELD w="60" fnct="to_char(COALESCE(sum(loan_balance),0), '999,999,999,990D00')" title="Total Loans" h="60">Pending_loans</TEXTFIELD>
+			</TILE>
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Entitys" key="15" h="500">
@@ -803,9 +808,6 @@
 			<TEXTTIMESTAMP w="85" title="Action Date">action_date</TEXTTIMESTAMP>
 			<CHECKBOX w="75" title="Accepted">is_accepted</CHECKBOX>
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-			<ACTIONS>
-				<ACTION fnct="gurrantor_accept">Accept</ACTION>
-			</ACTIONS>
 			<FORM new="false" name="Gurrantors" keyfield="gurrantor_id" linkfield="loan_id" table="gurrantors">
 				<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
@@ -1189,7 +1191,7 @@
 			<TEXTDECIMAL w="75" title="Contribution">contribution</TEXTDECIMAL>
 			<GRID name="Loans" keyfield="loan_id" orderby="application_date" linkfield="entity_id" table="vw_loans">
 				<TEXTFIELD w="25" title="ID">loan_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Type">loan_type_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
@@ -1197,15 +1199,18 @@
 				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Initial Payment">initial_payment</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Repayment Amount">repayment_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="88" title="Repayment">repayment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Total Repayment">total_repayment</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Total Interest">total_interest</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Loan Balance">loan_balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Calc Repayment Period">calc_repayment_period</TEXTDECIMAL>
+				<ACTIONS>
+					<ACTION fnct="loan_approved" approval="0">Approved</ACTION>
+					<ACTION fnct="loan_rejected" approval="0">Rejected</ACTION>
+				</ACTIONS>
 				<FORM cols="2" tw="570" name="Loans" keyfield="loan_id" linkfield="entity_id" table="loans" th="180">
 					<COMBOBOX w="430" title="Loan Type" lptable="loan_types" y="10" h="20" x="290" lpfield="loan_type_name">loan_type_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Principle" placeholder="required" y="50" h="20" x="10" span="true">principle</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Interest" y="50" h="20" x="290">interest</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Loan Date" y="70" h="20" x="290" span="true">loan_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Initial Payment" y="90" h="20" x="10">initial_payment</TEXTDECIMAL>
 					<CHECKBOX w="150" title="Reducing Balance" y="90" h="20" x="290" span="true">reducing_balance</CHECKBOX>
@@ -1214,7 +1219,7 @@
 						<DATA>Completed</DATA>
 						<DATA>Approved</DATA>
 					</COMBOLIST>
-					<TEXTDECIMAL w="150" title="Monthly Repayment" placeholder="required" y="70" h="20" x="290">monthly_repayment</TEXTDECIMAL>
+				
 					<TEXTAREA w="430" title="Details" y="170" h="70">details</TEXTAREA>
 				</FORM>
 				<GRID name="Guarantors" keyfield="gurrantor_id" linkfield="loan_id" table="vw_gurrantors" tab.count="count(gurrantor_id)">
@@ -1277,12 +1282,14 @@
 				<TEXTTIMESTAMP w="75" title="Entry Date">entry_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Transaction Ref">transaction_ref</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Contribution Amount">contribution_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Additional Payments">additional_payments</TEXTDECIMAL>
 				<FORM cols="2" tw="570" name="Contributions" keyfield="contribution_id" linkfield="entity_id" table="contributions" th="50">
-					<COMBOBOX w="430" title="Member" lptable="entitys" linkfield="entity_id" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Period" lptable="periods" cmb_fnct="to_char(start_date::timestamp, 'MONTH yyyy')" y="30" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
 					<COMBOBOX w="430" title="Payment Type" lptable="payment_types" y="30" h="20" x="10" span="true" lpfield="payment_type_name">payment_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Contribution Type" lptable="contribution_types" y="50" h="20" x="290" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Deposit Amount" y="70" h="20" x="10" span="true">deposit_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Additional Amount" y="70" h="20" x="10" span="true">additional_payments</TEXTDECIMAL>
+					<CHECKBOX w="150" title="Paid" y="190" h="20" x="290">is_paid</CHECKBOX>
 					<TEXTFIELD w="150" title="Transaction Ref" y="90" h="20" x="290">transaction_ref</TEXTFIELD>
 					<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10" span="true">narrative</TEXTFIELD>
 				</FORM>
@@ -1399,12 +1406,11 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Member Loans" key="245" h="550">
-		<JASPER name="My details" reportfile="member_all.jasper"></JASPER>
+	<DESK w="700" name="Loans Report" key="245" h="550">
+		<JASPER name="Reporting Summary" reportfile="statement_2.jasper"></JASPER>
 		<JASPER name="Loans" reportfile="Memberloanview.jasper"></JASPER>
 		<JASPER name="Repayment" reportfile="loanmonthlyview.jasper"></JASPER>
 		<JASPER name="Loan Projection" reportfile="loanpaymentviewmember.jasper"></JASPER>
-		<JASPER name="Loan 2" reportfile="vw_loans_2.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Contributions" key="250" h="550">
 		<JASPER name="Contributions" reportfile="membermonthlyview.jasper"></JASPER>
@@ -1672,25 +1678,41 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Loans and Repayment" key="265" h="550">loanview
-		<JASPER name="Details" reportfile="kins_members.jasper"></JASPER>
 		<JASPER name="Approved Loans" reportfile="loanview.jasper"></JASPER>
-		<JASPER name="Un Approved Loans" reportfile="loanviewc.jasper"></JASPER>
+		<JASPER name=" Pending Loans" reportfile="loanviewc.jasper"></JASPER>
+		<FILTER w="700" name="Repayments " split="150" type="vert" h="550">
+			<FILTERFORM name="Member">
+				<COMBOBOX w="430" title="Repayments" lptable="entitys" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Loan Repayment By member" reportfile="loanmonthlyviewb.jasper"></JASPER>
+		</FILTER>
 		<JASPER name="Monthly Repayment" reportfile="loanmonthlyviewa.jasper"></JASPER>
-		<JASPER name="Loan Repayment By member" reportfile="loanmonthlyviewb.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Contributions" key="270" h="550">
+		<FILTER w="700" name="Member Contrib " split="150" type="vert" h="550">
+			<FILTERFORM name="Member">
+				<COMBOBOX w="430" title="Member" lptable="entitys" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name=" Member Contribs" reportfile="member_contributions.jasper"></JASPER>
+		</FILTER>
 		<JASPER name="Contributions" reportfile="membermonthlyviewa.jasper"></JASPER>
-		<JASPER name="Contributions all" reportfile="contributions_members.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="admin Investments " key="275" h="550">
 		<JASPER name="Investments" reportfile="Memberloanviewinvestall.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Repayments" key="280" h="550">
-		<FILTER w="700" name="Repayments" split="150" type="horl" key="6" h="550">
-			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year_id" pos="top">
-				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
-			</DRILLDOWN>
+		<FILTER w="700" name="Repayments" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
 			<JASPER name="Loan Repayment" reportfile="loanmonthlyviewb.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Repayments " split="150" type="vert" h="550">
+			<FILTERFORM name="Member">
+				<COMBOBOX w="430" title="Repayments" lptable="entitys" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Loan Repayment By member" reportfile="loanmonthlyviewb.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="xxx" key="285" h="550">
@@ -1861,18 +1883,18 @@
 				<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
 				<CHECKBOX w="75" title="Accepted">is_accepted</CHECKBOX>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<GRID name="Repayments" keyfield="loan_month_id" orderby="loan_id ASC" linkfield=" loan_id" table="vw_loan_monthly" tab.count="count(loan_month_id)" user="entity_id">
-					<TEXTFIELD w="75" title="#">loan_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Year">period_year</TEXTFIELD>
-					<TEXTFIELD w="75" title="Month">period_month</TEXTFIELD>
-					<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
-					<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
-					<TEXTDECIMAL w="75" title="Repayment">repayment</TEXTDECIMAL>
-					<TEXTDECIMAL w="75" title="Interest">interest_paid</TEXTDECIMAL>
-					<TEXTDECIMAL w="75" title="Interest">total_interest</TEXTDECIMAL>
-					<TEXTDECIMAL w="75" title="Repayment">total_repayment</TEXTDECIMAL>
-					<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
-				</GRID>
+			</GRID>
+			<GRID name="Repayments" keyfield="loan_month_id" orderby="loan_id ASC" linkfield=" loan_id" table="vw_loan_monthly" tab.count="count(loan_month_id)" user="entity_id">
+				<TEXTFIELD w="75" title="#">loan_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Year">period_year</TEXTFIELD>
+				<TEXTFIELD w="75" title="Month">period_month</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Repayment">repayment</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Interest">interest_paid</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Interest">total_interest</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Repayment">total_repayment</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Balance">loan_balance</TEXTDECIMAL>
 			</GRID>
 			<GRID name="Contributions" keyfield="period_year" orderby="period_year desc" table="vw_period_year">
 				<TEXTFIELD w="430" title="Year" y="10" h="70" x="10">period_year</TEXTFIELD>
@@ -1920,12 +1942,14 @@
 				<TEXTFIELD w="75" title="Gurrantor ID">gurrantor_id</TEXTFIELD>
 				<CHECKBOX w="75" title="Accepted">is_accepted</CHECKBOX>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<TEXTFIELD w="75" title="Gurrantor Entity Name">gurrantor_entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Gurrantor Entity ID">gurrantor_entity_id</TEXTFIELD>
-				<FORM name="gurrantor" keyfield="gurrantor_id" linkfield="loan_id" table="gurrantors">
-					<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="75" title="Gurrantor Name">gurrantor_entity_name</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="gurantee_loan">Accept</ACTION>
+				</ACTIONS>
+				<FORM name="Gurrantors" keyfield="gurrantor_id" linkfield="loan_id" table="gurrantors">
+					<COMBOBOX w="430" title="Member" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Amount" y="70" h="20" x="10">amount</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<FORM name="Loan" keyfield="loan_id" table="loans">
@@ -1934,7 +1958,6 @@
 				<COMBOBOX w="430" title="Loan Type" lptable="loan_types" y="10" h="20" x="10" lpfield="loan_type_name">loan_type_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Principle" y="30" h="20" x="10">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Repayment Period" placeholder="*** required" y="30" h="20" x="290">repayment_period</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Amt per month" placeholder="*** required" y="30" h="20" x="290">monthly_repayment</TEXTDECIMAL>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -2062,12 +2085,12 @@
 				<TEXTAREA w="430" title="Details" y="190" h="70" x="250">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<FORM cols="2" tw="570" name="My details" keyfield="member_id" linkfield="entity_id" table="members" user="entity_id" th="120">
-			<TEXTFIELD w="150" title="Surname" y="50" h="20" x="10" span="true">surname</TEXTFIELD>
-			<TEXTFIELD w="150" title="First Name" lw="130" y="50" h="20" x="250">first_name</TEXTFIELD>
+		<FORM cols="2" tw="570" name="My Details" keyfield="entity_id" linkfield="member_id" table="members" user="entity_id" th="120">
+			<TEXTFIELD w="150" title="Surname" placeholder="* required field" y="50" h="20" x="10" span="true">surname</TEXTFIELD>
+			<TEXTFIELD w="150" title="First Name" placeholder="* required field" lw="130" y="50" h="20" x="250">first_name</TEXTFIELD>
 			<TEXTFIELD w="150" title="Middle Name" y="50" h="20" x="10" span="true">middle_name</TEXTFIELD>
 			<TEXTDATE w="150" title="Date Of Birth" lw="130" y="50" h="20" x="250">date_of_birth</TEXTDATE>
-			<COMBOLIST w="150" title="Gender" y="50" h="20" x="10" span="true">gender
+			<COMBOLIST w="150" title="Gender" placeholder="* required field" y="50" h="20" x="10" span="true">gender
 				<DATA key="M">Male</DATA>
 				<DATA key="F">Female</DATA>
 			</COMBOLIST>
@@ -2075,9 +2098,9 @@
 				<DATA key="S">Single</DATA>
 				<DATA key="M">Married</DATA>
 			</COMBOLIST>
-			<TEXTFIELD w="430" title="Phone" y="50" h="20" x="10" span="true">phone</TEXTFIELD>
-			<TEXTFIELD w="430" title="Primary Email" y="50" h="20" x="250">primary_email</TEXTFIELD>
 			<TEXTDECIMAL w="150" title="Contribution" y="660" h="20" x="10">contribution</TEXTDECIMAL>
+			<TEXTFIELD w="430" title="Phone" y="50" h="20" x="10" span="true">phone</TEXTFIELD>
+			<TEXTFIELD w="430" title="Primary Email" placeholder="* required field" y="50" h="20" x="250">primary_email</TEXTFIELD>
 			<TEXTFIELD w="430" title="County" y="50" h="20" x="10" span="true">county</TEXTFIELD>
 			<TEXTFIELD w="430" title="District" y="50" h="20" x="250">district</TEXTFIELD>
 			<TEXTFIELD w="430" title="Division" y="50" h="20" x="10" span="true">division</TEXTFIELD>
@@ -2085,7 +2108,7 @@
 			<TEXTFIELD w="430" title="Location" y="50" h="20" x="10" span="true">location</TEXTFIELD>
 			<TEXTFIELD w="430" title="Residential Address" y="50" h="20" x="250">residential_address</TEXTFIELD>
 		</FORM>
-		<JASPER name="Kins" reportfile="kins_members.jasper"></JASPER>
+		<JASPER name="Reporting Summary" reportfile="statement_2.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Definations" noorg="false" key="295" h="550">
 		<GRID name="Investment Types" keyfield="investment_type_id" linkfield="org_id" table="investment_types">
@@ -2717,7 +2740,12 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Statement" key="320" h="550">
-		<JASPER name="Reporting Summary" reportfile="statement1.jasper"></JASPER>
+		<FILTER w="700" name="Summary " split="150" type="vert" h="550">
+			<FILTERFORM name="Member Summary">
+				<COMBOBOX w="430" title="Summary" lptable="entitys" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reporting Summary" reportfile="statement1.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Sacco Investments" key="325" h="550">
 		<GRID name="Investments" keyfield="sacco_investment_id" table="vw_sacco_investments">
@@ -2858,7 +2886,7 @@
 					<DATA>Completed</DATA>
 					<DATA>Approved</DATA>
 				</COMBOLIST>
-				<TEXTDECIMAL w="150" title="Monthly Repayment" placeholder="required" y="70" h="20" x="290">monthly_repayment</TEXTDECIMAL>
+				
 				<TEXTAREA w="430" title="Details" y="170" h="70">details</TEXTAREA>
 			</FORM>
 			<GRID name="Gurrantors" keyfield="gurrantor_id" linkfield="loan_id" table="vw_gurrantors" tab.count="count(gurrantor_id)">
@@ -2942,53 +2970,6 @@
 			<TEXTDECIMAL w="75" title="Total Interest">total_interest</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Loan Balance">loan_balance</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Calc Repayment Period">calc_repayment_period</TEXTDECIMAL>
-			<GRID name="Guarantors" keyfield="gurrantor_id" linkfield="loan_id" table="vw_gurrantors" tab.count="count(gurrantor_id)">
-				<TEXTFIELD w="75" title="Guarantor Name">gurrantor_entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Status">approve_status</TEXTFIELD>
-				<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
-				<CHECKBOX w="75" title="Accepted">is_accepted</CHECKBOX>
-				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<FORM name="Gurrantors" keyfield="gurrantor_id" linkfield="loan_id" table="gurrantors">
-					<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-					<CHECKBOX w="150" title="Accepted" y="30" h="20" x="290">is_accepted</CHECKBOX>
-					<CHECKBOX w="150" title="Approved" y="50" h="20" x="10">is_approved</CHECKBOX>
-					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
-				</FORM>
-			</GRID>
-			<GRID name="Loan Repayment" keyfield="loan_month_id" linkfield="loan_id" table="vw_loan_monthly">
-				<TEXTFIELD w="75" title="Repayments">repayment</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Interestt">interest_amount</TEXTDECIMAL>
-				<TEXTFIELD w="75" title="Month">period_month</TEXTFIELD>
-				<TEXTFIELD w="75" title="Year">period_year</TEXTFIELD>
-			</GRID>
-		</GRID>
-		<GRID name="Loan Projection" keyfield="loan_id" orderby="loan_date DESC" table="vw_loan_projection">
-			<TEXTFIELD w="75" title="Loan ID">loan_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
-			<TEXTDATE w="75" title="Loan Date">loan_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Loan Months">loan_months</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Loan Paid">loan_paid</TEXTDECIMAL>
-		</GRID>
-		<GRID name="Loan Summary" keyfield="currency_id" orderby="(loan_date)" table="vw_loan_payments">
-			<TEXTFIELD w="20" title="#">loan_id</TEXTFIELD>
-			<TEXTFIELD w="45" title="$">currency_symbol</TEXTFIELD>
-			<TEXTFIELD w="100" title="Loan Type Name">loan_type_name</TEXTFIELD>
-			<TEXTFIELD w="115" title="Entity Name">entity_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Loan Date">loan_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Interest">interest</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Initial Payment">initial_payment</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Calc Repayment Period">calc_repayment_period</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Repayment Amount">repayment_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Months">months</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Loan Balance">loan_balance</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Loan Intrest">loan_intrest</TEXTDECIMAL>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Periods" key="335" h="550">
@@ -3023,7 +3004,7 @@
 				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
 				<TEXTFIELD w="75" title="Loan Month ID">loan_month_id</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Repayment">repayment</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="R epayment">repayment</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Interest Paid">interest_paid</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Penalty Paid">penalty_paid</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Total Interest">total_interest</TEXTDECIMAL>
@@ -3046,19 +3027,18 @@
 					<CHECKBOX w="150" title="Paid" y="180" h="20" x="290">is_paid</CHECKBOX>
 				</FORM>
 			</GRID>
+			<JASPER name="Loan Monthly" reportfile="vw_loan_monthly_1.jasper"></JASPER>
 			<GRID name="Contributions" keyfield="contribution_id" linkfield="period_id" table="vw_contributions">
-				<TEXTFIELD w="75" title="ID">contribution_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="#">contribution_id</TEXTFIELD>
+				<TEXTFIELD w="120" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Deposit Amount">deposit_amount</TEXTDECIMAL>
 				<TEXTTIMESTAMP w="75" title="Entry Date">entry_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Transaction Ref">transaction_ref</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Additional Payments">additional_payments</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Contribution Amount">contribution_amount</TEXTDECIMAL>
-				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Payment Type Name">payment_type_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Paid">is_paid</CHECKBOX>
 				<ACTIONS>
-					<ACTION fnct="contribution_paid">contribution_paid</ACTION>
+					<ACTION fnct="contribution_paid">pay_contribs</ACTION>
 				</ACTIONS>
 				<FORM name="Contributions" keyfield="contribution_id" linkfield="period_id" table="contributions">
 					<COMBOBOX w="430" title="Name" lptable="entitys" y="10" h="20" x="10" lpfield="entity_id">entity_id</COMBOBOX>
@@ -3075,14 +3055,8 @@
 					<CHECKBOX w="150" title="Paid" y="190" h="20" x="290">is_paid</CHECKBOX>
 				</FORM>
 			</GRID>
+			<JASPER name="Contribution Monthly" reportfile="vw_contributions_monthly_1.jasper"></JASPER>
 		</GRID>
-		<FILTER w="700" name="Summary Reports" split="150" type="vert" h="550">
-			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">maxDate</TEXTDATE>
-			</FILTERFORM>
-			<JASPER name="Loan Monthly" reportfile="vw_loan_monthly_1.jasper"></JASPER>
-		</FILTER>
 	</DESK>
 	<DESK w="700" name="Entitys" key="340" h="550">
 		<GRID name="Entitys" keyfield="entity_id" linkfield="org_id" table="vw_entitys_types" tab.count="count(entity_id)" where="entity_id Not in (0,1)">
@@ -3202,19 +3176,6 @@
 				<TEXTFIELD w="430" title="Residential Address" y="50" h="20" x="250">residential_address</TEXTFIELD>
 			</FORM>
 		</GRID>
-		<GRID name="Billing" keyfield="bill_id" linkfield="org_id" table="vw_billing" tab.count="count(bill_id)">
-			<TEXTFIELD w="75" title="#">bill_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Member ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Member Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
-			<CHECKBOX w="75" title="Entity Leader">entity_leader</CHECKBOX>
-			<TEXTFIELD w="75" title="Function Role">function_role</TEXTFIELD>
-			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
-			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Bill Amount">bill_amount</TEXTDECIMAL>
-			<CHECKBOX w="75" title="Processed">processed</CHECKBOX>
-			<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
-		</GRID>
 		<GRID name="Entity Types" keyfield="entity_type_id" linkfield="org_id" table="entity_types" tab.count="count(entity_type_id)" where="(entity_type_name not like 'Master')">
 			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 			<TEXTFIELD w="175" title="Entity Type Name">entity_type_name</TEXTFIELD>
@@ -3249,5 +3210,8 @@
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="My Summary" key="345" h="550">
+		<JASPER name="Reporting Summary" reportfile="statement_2.jasper"></JASPER>
 	</DESK>
 </APP>

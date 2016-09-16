@@ -1,30 +1,37 @@
-
-CREATE OR REPLACE FUNCTION compute_contributions(
-    v_period_id character varying,
-    v_org_id character varying,
-    v_approval character varying)
-  RETURNS character varying AS
+CREATE OR REPLACE FUNCTION ins_gurrantors() RETURNS trigger AS
 $BODY$
 DECLARE
+    v_total_amount      real;
+    v_balance     real;
+    v_already_g           real;
+    loanamount            real;
+    v_shares           real;
+    v_loan              record;
+    v_amount            integer;
+    v_gurrantor          boolean;
     msg                 varchar(120);
 BEGIN
-    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id = v_org_id::integer;
+msg := 'Loan gurranteed';
+v_gurrantor  = true;
+ --check mainas share/contribution value
+ SELECT  sum(contribution_amount + additional_payments) into  v_shares from contributions where entity_id = NEW.entity_id;
+     v_already_g := 0;
+     
+     --haha get the total amount for guarantors of that loan 
+     select sum(amount) into v_already_g from gurrantors where loan_id  = NEW.loan_id;---this
+     -- haha naho get the principle amount for the loan
+     select principle into loanamount from loans where loan_id  = NEW.loan_id;
     
+    -- haha rî display values uone kama ziko sawa, ukimaliza comment out so that it can proceed
+    raise exception 'v_already_g % | loanamount % | guarantee amount %', v_already_g, loanamount, NEW.amount ;
     
-    DELETE FROM contributions WHERE period_id = v_period_id::integer;
+    -- haha tondü niho utaranyita rî compare the amount for the new guarantor you are trying to add and see if it will exceed the remaining amount to be guaranteed
+    
+     if NEW.amount > (loanamount - v_already_g) then
+         raise exception 'amount remaining for guarantee is %',(loanamount - v_already_g);
+     -- îno else unaweza kula na thufu ukishaona how much is already guaranteed
 
-    
-    INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
-            entity_name, deposit_amount, loan_repayment, entry_date,
-             transaction_ref, additional_payments,is_paid)
-		
-             
-    SELECT v_period_id::integer, org_id::integer,entity_id, 0,0, first_name, contribution, 'False', 
-            now()::date, 'Auto generated', 0, 'False'
-        FROM members;
-msg = ' Its done';
-    
-    RETURN msg;
-END;
-$BODY$
-  LANGUAGE plpgsql;
+     else 
+         raise exception 'loans are %', v_already_g ;
+     end if;
+-- The above is the easiest gükü küngî ndioî üküririra kü   nonga kîoro ø˚∆  

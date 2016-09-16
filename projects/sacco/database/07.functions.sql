@@ -91,43 +91,11 @@ $$ LANGUAGE plpgsql;
 
 
 
-
-CREATE OR REPLACE FUNCTION ins_gurrantors()
+CREATE OR REPLACE FUNCTION ins_contributions()
   RETURNS trigger AS
 $BODY$
 DECLARE
-	v_total_guranteed 	real;
-	v_monthly_repayment	real;
-	v_period		real;
-	v_amount  		real;
-BEGIN
-	SELECT SUM(amount) INTO v_total_guranteed FROM gurrantors WHERE loan_id = NEW.loan_id ;
-	SELECT (repayment_period * monthly_repayment) INTO v_amount FROM loans WHERE loan_id = NEW.loan_id;
-			
-			IF((NEW.amount) > v_amount ) THEN
-			RAISE EXCEPTION 'The Max amount for this entry is %', (v_amount - v_total_guranteed );
-			ELSE IF (v_total_guranteed > v_amount) THEN
-			RAISE EXCEPTION 'The amount gurranteed has been exceeded by %' ,(v_amount-v_total_guranteed);
-			New.amount:= 0;
-				END IF;TG_OP = 'Update') and
-			END IF;
-	IF (TG_OP = 'UPDATE') THEN
-	  UPDATE loans
-    SET approve_status = 'Completed';
-	RAISE NOTICE ' Loan Completed';
-	 END IF;
-	RETURN NEW;
-END;
-$BODY$
-  LANGUAGE plpgsql;
-
-  CREATE TRIGGER ins_gurrantors  BEFORE INSERT OR UPDATE  ON gurrantors
-  FOR EACH ROW   EXECUTE PROCEDURE ins_gurrantors();
-
-
-CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $BODY$
-DECLARE
-v_period        record;
+v_period        integer;
 v_loan          record;
 v_count         integer;
 v_contrib_amount    real;
@@ -135,23 +103,24 @@ v_deposit_amount    real;
 msg                 varchar(120);
 
 BEGIN
- 
+   IF (TG_OP = 'UPDATE' and New.is_paid = 'True') THEN  
     v_contrib_amount := NEW.deposit_amount;
+   
     v_count := 0;
-    SELECT period_id, start_date, end_date INTO v_period from periods where opened = true and activated = true;
-    NEW.period_id := v_period.period_id; 
+  SELECT period_id, start_date, end_date INTO v_period from periods where opened = true and activated = true;
+     v_period := NEW.period_id ; 
     
-    IF (New.is_paid = 'True') THEN  
+  
         FOR v_loan IN Select * from vw_loans where  approve_status = 'Approved' AND loan_balance > 0 AND  entity_id = NEW.entity_id
         LOOP 
-            SELECT count(loan_month_id) INTO v_count FROM loan_monthly WHERE loan_id = v_loan.loan_id AND period_id = v_period.period_id;
+            SELECT count(loan_month_id) INTO v_count FROM loan_monthly WHERE loan_id = v_loan.loan_id AND period_id = v_period;
             IF( v_count = 0) THEN
                 IF(v_contrib_amount >= v_loan.monthly_repayment) THEN
                     
-                    INSERT INTO loan_monthly(loan_id, period_id, org_id,repayment, interest_amount, interest_paid, penalty,                                     penalty_paid, details, additional_payments)
-                    VALUES (v_loan.loan_id, v_period.period_id, NEW.org_id, v_loan.monthly_repayment, 
+                    INSERT INTO loan_monthly(loan_id, period_id, org_id,repayment, interest_amount, interest_paid, penalty,                                     penalty_paid, details, additional_payments,is_paid)
+                    VALUES (v_loan.loan_id, v_period, NEW.org_id, v_loan.monthly_repayment, 
                         (v_loan.loan_balance * v_loan.interest / 1200), 
-                        (v_loan.loan_balance * v_loan.interest / 1200), 0, 0, 'Loan Repayment', 0);
+                        (v_loan.loan_balance * v_loan.interest / 1200), 0, 0, 'Loan Repayment', 0,'True');
 
                     NEW.loan_repayment = True;
                     v_contrib_amount := (v_contrib_amount - v_loan.monthly_repayment);
@@ -165,6 +134,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
+
   
   CREATE TRIGGER ins_contributions  BEFORE INSERT OR UPDATE  ON contributions
   FOR EACH ROW
@@ -269,6 +239,84 @@ $BODY$
 
 CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
   FOR EACH ROW  EXECUTE PROCEDURE ins_members(); 
+  
+  
+  CREATE OR REPLACE FUNCTION ins_gurrantors() RETURNS trigger AS $$
+DECLARE
+    rec_loan            record;
+    v_shares            real;
+    v_grnt_shares           real;
+    v_active_loans          integer;
+    v_active_loans_grnt     integer;
+    v_tot_loan_balance      real;
+    v_tot_loan_balance_grnt     real;
+    v_amount_already_grntd      real;
+    can_gurrantee           boolean;
+    msg                         varchar(120);
+BEGIN
+    msg := 'Loan gurranteed';
+    can_gurrantee  := true;
+    v_active_loans := 0;
+    v_tot_loan_balance_grnt := 0;
+    v_amount_already_grntd := 0;
+    
+    SELECT * INTO rec_loan FROM vw_loans WHERE loan_id = NEW.loan_id; --LOAN TO BE GURRANTEED
+    
+    SELECT COALESCE(SUM(contribution_amount + additional_payments), 0) INTO v_shares FROM contributions where entity_id = rec_loan.entity_id; -- LOANEE SHARES
+    SELECT COALESCE(SUM(contribution_amount + additional_payments), 0) INTO v_grnt_shares FROM contributions where entity_id = NEW.entity_id; -- GRNT SHARES
+
+    SELECT COALESCE(SUM(loan_balance), 0) INTO v_tot_loan_balance FROM vw_loans WHERE entity_id = rec_loan.entity_id AND approve_status = 'Approved' AND loan_balance > 0; --LOANEE ACTIVE LOAN SUM
+    SELECT COALESCE(SUM(loan_balance), 0) INTO v_tot_loan_balance_grnt FROM vw_loans WHERE entity_id = NEW.entity_id AND approve_status = 'Approved' AND loan_balance > 0; --GRNT ACTIVE LOAN SUM
+    
+    SELECT COALESCE(COUNT(loan_id), 0) INTO v_active_loans FROM vw_loans WHERE entity_id = rec_loan.entity_id AND approve_status = 'Approved' AND loan_balance > 0; --LOANEE COUNT
+    SELECT COALESCE(COUNT(loan_id), 0) INTO v_active_loans_grnt FROM vw_loans WHERE entity_id = NEW.entity_id AND approve_status = 'Approved' AND loan_balance > 0; --GRNT COUNT
+
+    SELECT COALESCE(SUM(amount), 0) INTO v_tot_loan_balance_grnt FROM gurrantors WHERE loan_id = NEW.loan_id; --CHECK ALREADY GURRANTEED AMOUNT;
+    --RAISE EXCEPTION 'rec_loan.principle % | v_tot_loan_balance_grnt: %', rec_loan.principle, v_tot_loan_balance_grnt;
+    --SELECT coalesce(SUM(amount),0) FROM gurrantors WHERE loan_id = 342
+
+    -- GET AMOUNT GUARANTOR HAS ALREADY GURtd OTHER PEOPLE
+    SELECT COALESCE(SUM(amount), 0) INTO v_amount_already_grntd FROM vw_gurrantors WHERE gurrantor_entity_id = NEW.entity_id AND is_accepted = true AND loan_balance > 0;
+
+    
+    IF(NEW.amount > (rec_loan.principle - v_tot_loan_balance_grnt)) THEN
+        RAISE EXCEPTION '% is greater than the amount remaining to be gurranteed %', NEW.amount,  (rec_loan.principle - v_tot_loan_balance_grnt);
+    ELSE
+        IF(v_active_loans_grnt = 0) THEN --GRNT HAS NO LOAN
+            IF((v_grnt_shares - v_amount_already_grntd)  >= NEW.amount) THEN
+                can_gurrantee := true;
+            ELSE
+                can_gurrantee := false;
+                RAISE EXCEPTION 'This person does not qualify to gurrantee you';
+            END IF;
+        ELSE-- HAS LOAN
+		IF (v_active_loans_grnt > 0) THEN
+			IF (v_grnt_shares > v_tot_loan_balance_grnt) THEN
+			can_gurrantee := true;
+			ELSE 
+			can_gurrantee := false;
+			--RAISE EXCEPTION ' This persons balance is %,COALESCE (v_grnt_shares,0) - COALESCE(v_tot_loan_balance_grnt,0)';
+			END IF;
+
+		end if;
+           -- RAISE EXCEPTION 'This person has a loan %', v_active_loans_grnt;
+        END IF;
+    END IF;
+    
+   IF(can_gurrantee = false) THEN
+        RAISE EXCEPTION 'Cannot Gurantee  Loan' ;
+    ELSE
+        RETURN NEW;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+  
+CREATE TRIGGER ins_gurrantors BEFORE INSERT OR UPDATE ON gurrantors
+  FOR EACH ROW  EXECUTE PROCEDURE ins_gurrantors(); 
+  
+  
+    
+  
  
 
 CREATE OR REPLACE FUNCTION gurrantor_accept(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
@@ -489,6 +537,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+
+
+
+
+
+
+
+
+
+
 alter table contributions add additional_payments real not null default 0;
 alter table loan_monthly add additional_payments real not null default 0;
 
@@ -621,7 +680,7 @@ DECLARE
 BEGIN
 	msg := 'Contribution paid';
 	
-	UPDATE contributions  SET is_paid = 'TRUE'
+	UPDATE contributions  SET is_paid = 'True'
 	WHERE (contribution_id = CAST($1 as int));
 
 

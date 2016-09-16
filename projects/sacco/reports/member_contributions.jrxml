@@ -20,14 +20,16 @@
 	<parameter name="org_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,vw_contributions.org_id,
 vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.deposit_amount,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
 vw_contributions.entity_name,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
-where member_is_active = 'true' and is_paid = 'true'
- $P!{organd}
-ORDER BY vw_contributions.entity_id asc;]]>
+where member_is_active = 'true' and is_paid = 'true' and entity_id = '$P!{entity_id}'
+]]>
 	</queryString>
 	<field name="contribution_id" class="java.lang.Integer"/>
 	<field name="entity_id" class="java.lang.Integer"/>
@@ -69,33 +71,7 @@ ORDER BY vw_contributions.entity_id asc;]]>
 				<text><![CDATA[Member Contribution Report]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="element-90" x="135" y="56" width="51" height="16" forecolor="#000000" uuid="3322930f-ca83-449e-a309-84c958813e36"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<text><![CDATA[Month]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="element-91" x="9" y="56" width="39" height="16" forecolor="#000000" uuid="6bced486-b4c9-4c8a-8b2f-89dbfc2bdb3a"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Left">
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<text><![CDATA[Year]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" pattern="MMMMM" isBlankWhenNull="true">
-				<reportElement key="textField" x="186" y="56" width="104" height="16" uuid="baecb3ca-8d65-48e1-a3b7-58e4670aa5c5"/>
+				<reportElement key="element-90" x="6" y="45" width="180" height="16" forecolor="#000000" uuid="56c28362-676c-448b-ac2f-46ab0f2ec53c"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -105,10 +81,10 @@ ORDER BY vw_contributions.entity_id asc;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{entry_date}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="yyyy" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="48" y="56" width="87" height="16" uuid="17f1599a-4fba-4427-ad03-17d12a92b0c6"/>
+				<text><![CDATA[Member Name]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement key="textField" x="210" y="47" width="180" height="14" uuid="a661fc5c-17a1-4353-91eb-095b53c4d5f8"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -116,9 +92,9 @@ ORDER BY vw_contributions.entity_id asc;]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{entry_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -139,19 +115,6 @@ ORDER BY vw_contributions.entity_id asc;]]>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Member ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="element-90" x="82" y="1" width="180" height="16" forecolor="#000000" uuid="56c28362-676c-448b-ac2f-46ab0f2ec53c"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<text><![CDATA[Member Name]]></text>
 			</staticText>
 			<line>
 				<reportElement key="line" x="0" y="17" width="535" height="1" forecolor="#000000" uuid="88b5bbf2-a3a7-4aad-8ba7-a04bea7a4e84"/>
@@ -198,6 +161,32 @@ ORDER BY vw_contributions.entity_id asc;]]>
 				</textElement>
 				<text><![CDATA[Contribution]]></text>
 			</staticText>
+			<staticText>
+				<reportElement key="element-91" x="114" y="2" width="39" height="16" forecolor="#000000" uuid="6bced486-b4c9-4c8a-8b2f-89dbfc2bdb3a"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Year]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="element-90" x="211" y="2" width="51" height="16" forecolor="#000000" uuid="3322930f-ca83-449e-a309-84c958813e36"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Month]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -214,19 +203,6 @@ ORDER BY vw_contributions.entity_id asc;]]>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_id}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="82" y="1" width="180" height="14" uuid="a661fc5c-17a1-4353-91eb-095b53c4d5f8"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField" x="262" y="1" width="87" height="14" uuid="966c98d9-3203-4217-a9c2-e1765b1b4f67"/>
@@ -266,6 +242,32 @@ ORDER BY vw_contributions.entity_id asc;]]>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{contribution_amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="yyyy" isBlankWhenNull="true">
+				<reportElement key="textField-1" x="114" y="-2" width="87" height="16" uuid="17f1599a-4fba-4427-ad03-17d12a92b0c6"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entry_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="MMMMM" isBlankWhenNull="true">
+				<reportElement key="textField" x="211" y="-2" width="104" height="16" uuid="baecb3ca-8d65-48e1-a3b7-58e4670aa5c5"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entry_date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -308,7 +310,7 @@ ORDER BY vw_contributions.entity_id asc;]]>
 				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="EEE, d MMM yyyy HH:mm:ss" isBlankWhenNull="false">
-				<reportElement key="textField" x="1" y="6" width="209" height="19" uuid="6ee66503-4d4d-4666-8d7a-dc5c79cdf822"/>
+				<reportElement key="textField" x="1" y="2" width="209" height="19" uuid="6ee66503-4d4d-4666-8d7a-dc5c79cdf822"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
