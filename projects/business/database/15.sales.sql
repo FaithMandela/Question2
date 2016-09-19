@@ -5,6 +5,7 @@ CREATE TABLE leads (
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
 
+	business_id				integer,
 	business_name			varchar(50) not null unique,
 	business_address		varchar(100),
 	city					varchar(30),
@@ -107,3 +108,44 @@ CREATE VIEW vw_follow_up AS
 		INNER JOIN entitys ON follow_up.entity_id = entitys.entity_id;
 	
 	
+CREATE OR REPLACE FUNCTION add_client(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec					RECORD;
+	v_entity_id			integer;
+	msg 				varchar(120);
+BEGIN
+
+	msg := null;
+
+	SELECT org_id, business_id, business_name, business_address, city,
+		state, country_id, number_of_employees, telephone, website,
+		primary_contact, job_title, primary_email
+	INTO rec
+	FROM leads WHERE lead_id = $1::integer;
+	
+	SELECT entity_id INTO v_entity_id
+	FROM entitys WHERE user_name = lower(trim(NEW.primary_email));
+
+	IF($3 = '1')THEN
+		IF(rec.business_id is not null)THEN
+			msg := 'The business is already added.';
+		ELSIF(rec.primary_email is null)THEN
+			RAISE EXCEPTION 'You must enter an email address';
+		ELSIF(v_entity_id is null)THEN
+			RAISE EXCEPTION 'You must have a unique email address';
+		ELSE
+			v_entity_id := nextval('entitys_entity_id_seq');
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, primary_email,  function_role, use_function)
+			VALUES (v_entity_id, 0, 5, rec.primary_contact, lower(trim(rec.primary_email)), lower(trim(rec.primary_email)), 'client', 2);
+			
+			INSERT INTO address (address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
+			VALUES (rec.business_name, rec.country_id, 'entitys', rec.org_id, rec.business_address, rec.city, rec.telephone, rec.website, true);
+			
+			msg := 'You have added the client';
+		END IF;
+	END IF;
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
