@@ -172,7 +172,7 @@ BEGIN
 		FROM leads 
 		WHERE (business_id = rec.entity_id) OR (lower(trim(business_name)) = lower(trim(rec.entity_name)));
 		
-		IF(rec.business_id is not null)THEN
+		IF(v_lead_id is not null)THEN
 			msg := 'The business is already added.';
 		ELSE		
 			SELECT min(industry_id) INTO v_industry_id

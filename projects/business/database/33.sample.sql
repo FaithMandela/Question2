@@ -10,7 +10,7 @@ UPDATE transaction_counters SET document_number = '10001';
 INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, primary_email, entity_leader, super_user, no_org, first_password, use_function)
 VALUES (2, 0, 0, 'Jane Wangu', 'jane', 'jane@localhost', true, true, false, 'baraza', 0);
 INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, super_user, entity_leader, function_role, is_active, entity_password, first_password, details, account_id, attention, use_function) 
-VALUES (3, 0, 2, 'ABCD Kenya', 'abcd', false, false, 'client', true, 'cdaab4aa7870bb7758599fb9473bf16a', '94J860RR', NULL, 30000, 'Travelport Kenya', 2);
+VALUES (3, 0, 2, 'ABCD Kenya', 'abcd', false, false, 'client', true, 'cdaab4aa7870bb7758599fb9473bf16a', '94J860RR', NULL, 30000, 'Jane Kamango', 2);
 INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password, use_function)
 VALUES (4, 0, 0, 'XYZ Kenya', 'xyz', 'xyz@localhost', true, true, false, 'baraza', 3);
 SELECT pg_catalog.setval('entitys_entity_id_seq', 4, true);

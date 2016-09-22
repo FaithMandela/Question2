@@ -69,19 +69,22 @@ CREATE INDEX departments_org_id ON departments (org_id);
 INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 0, 0, 'Board of Directors'); 
 
 CREATE TABLE fiscal_years (
-	fiscal_year_id			varchar(9) primary key,
+	fiscal_year_id			serial primary key,
+	fiscal_year				varchar(9) not null,
 	org_id					integer references orgs,
 	fiscal_year_start		date not null,
 	fiscal_year_end			date not null,
 	year_opened				boolean default true not null,
 	year_closed				boolean default false not null,
-	details					text
+	details					text,
+	
+	UNIQUE(fiscal_year, org_id)
 );
 CREATE INDEX fiscal_years_org_id ON fiscal_years (org_id);
 
 CREATE TABLE periods (
 	period_id				serial primary key,
-	fiscal_year_id			varchar(9) references fiscal_years,
+	fiscal_year_id			integer references fiscal_years,
 	org_id					integer references orgs,
 	start_date				date not null,
 	end_date				date not null,
@@ -177,8 +180,8 @@ CREATE VIEW vw_departments AS
 	FROM departments LEFT JOIN departments as p_departments ON departments.ln_department_id = p_departments.department_id;
 
 CREATE VIEW vw_periods AS
-	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start, fiscal_years.fiscal_year_end,
-		fiscal_years.year_opened, fiscal_years.year_closed,
+	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year, fiscal_years.fiscal_year_start, 
+		fiscal_years.fiscal_year_end, fiscal_years.year_opened, fiscal_years.year_closed,
 
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
