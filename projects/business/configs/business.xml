@@ -7,7 +7,6 @@
 			<MENU name="Transaction Ledger">32</MENU>
 			<MENU name="Budget">55</MENU>
 			<MENU name="Requisitions">60</MENU>
-			<MENU name="Item Use">65</MENU>
 			<MENU name="Assets">70</MENU>
 			<MENU name="Fiscal Years">10</MENU>
 			<MENU name="Journals">35</MENU>
@@ -43,6 +42,8 @@
 			<MENU name="income and Expenditure">155</MENU>
 			<MENU name="Balance Sheet">160</MENU>
 			<MENU name="Statement">170</MENU>
+			<MENU name="Leads">175</MENU>
+			<MENU name="Issues">180</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
@@ -841,6 +842,9 @@
 			<TEXTFIELD w="75" title="Reported By">reported_by</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Recoded Time">recoded_time</TEXTTIMESTAMP>
 			<TEXTFIELD w="75" title="Current Status">curr_status</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="close_issue" approval="1">Close Issue</ACTION>
+			</ACTIONS>
 			<FORM name="Helpdesk" keyfield="helpdesk_id" table="helpdesk">
 				<USERFIELD>recorded_by</USERFIELD>
 				<COMBOBOX w="430" title="Definition" lptable="pdefinitions" y="10" h="20" x="10" lpfield="pdefinition_name">pdefinition_id</COMBOBOX>
@@ -916,7 +920,7 @@
 				<DEFAULT default="true">for_processing</DEFAULT>
 				<DEFAULT default="21">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_function = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
@@ -964,7 +968,7 @@
 				<DEFAULT default="22">transaction_type_id</DEFAULT>
 				<DEFAULT default="true">for_processing</DEFAULT>
 				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_function = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
@@ -1034,7 +1038,7 @@
 					<DEFAULT default="21">transaction_type_id</DEFAULT>
 					<DEFAULT default="Draft">approve_status</DEFAULT>
 					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_function = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
@@ -1090,7 +1094,7 @@
 					<DEFAULT default="1">tx_type</DEFAULT>
 					<DEFAULT default="22">transaction_type_id</DEFAULT>
 					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_function = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
@@ -2375,8 +2379,6 @@
 			</FORM>
 			<JASPER name="Requisitions Report" reportfile="requisition.jasper"></JASPER>
 		</GRID>
-	</DESK>
-	<DESK w="700" name="Item Use" key="65" h="500">
 		<GRID name="Item Use" keyfield="transaction_id" table="vw_transactions" where="(transaction_type_id = 17)">
 			<TEXTFIELD w="75" title="Doc. No.">document_number</TEXTFIELD>
 			<TEXTDATE w="75" title="Date">transaction_date</TEXTDATE>
@@ -2402,10 +2404,10 @@
 					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Item Use" keyfield="transaction_id" table="transactions">
+			<FORM name="Item Use" keyfield="transaction_id" jumpview="60:1:0" table="transactions">
 				<DEFAULT default="17">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
-				<TEXTDATE w="150" title="Transaction Date" y="30" h="20" x="10">transaction_date</TEXTDATE>
+				<TEXTDATE w="150" title="Transaction Date" default="now" y="30" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTFIELD w="150" title="Order Number" y="50" h="20" x="10">order_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Payment Terms" y="50" h="20" x="290">payment_terms</TEXTFIELD>
 				<TEXTFIELD w="430" title="Job" y="70" h="20" x="10">job</TEXTFIELD>
@@ -2775,5 +2777,11 @@
 			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>
 			<JASPER name="Full Statement" reportfile="statement.jasper"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" name="Leads" key="175" h="550">
+		<JASPER name="Leads" reportfile="vw_lead_items.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Issues" key="180" h="550">
+		<JASPER name="Issues" reportfile="vw_helpdesk.jasper"></JASPER>
 	</DESK>
 </APP>
