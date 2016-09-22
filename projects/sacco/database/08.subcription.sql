@@ -32,7 +32,7 @@ CREATE TABLE subscriptions (
 	city					varchar(30),
 	state					varchar(50),
 	country_id				char(2) references sys_countrys,
-	number_of_employees		integer,
+	number_of_members		integer,
 	telephone				varchar(50),
 	website					varchar(120),
 	
@@ -124,7 +124,7 @@ CREATE VIEW vw_subscriptions AS
 		
 		subscriptions.subscription_id, subscriptions.business_name, 
 		subscriptions.business_address, subscriptions.city, subscriptions.state, subscriptions.country_id, 
-		subscriptions.number_of_employees, subscriptions.telephone, subscriptions.website, 
+		subscriptions.number_of_members, subscriptions.telephone, subscriptions.website, 
 		subscriptions.primary_contact, subscriptions.job_title, subscriptions.primary_email, 
 		subscriptions.approve_status, subscriptions.workflow_table_id, subscriptions.application_date, subscriptions.action_date, 
 		subscriptions.system_key, subscriptions.subscribed, subscriptions.subscribed_date,
@@ -202,7 +202,7 @@ BEGIN
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
+			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription,admin', null);
 		
 	
 			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
@@ -222,7 +222,6 @@ BEGIN
 		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
 		
 		
-	
 		
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
@@ -244,9 +243,6 @@ BEGIN
 
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 
-		INSERT INTO transaction_counters(transaction_type_id, org_id, document_number)
-		SELECT transaction_type_id, NEW.org_id, 1
-		FROM transaction_types;
 		
 		
 		INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
@@ -273,6 +269,8 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
+
+ 
 
     
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions

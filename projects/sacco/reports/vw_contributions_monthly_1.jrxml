@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Monthly Contributions" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c88c4285-bfa0-4fc9-b381-a14288953f08">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="146"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -27,10 +27,8 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT * FROM vw_contributions
-WHERE vw_contributions.period_id=  '$P!{filterid} '
- $P!{organd}
-
-]]>
+WHERE vw_contributions.period_id =  '$P!{filterid} ' AND is_paid = 'True'
+ $P!{organd}]]>
 	</queryString>
 	<field name="contribution_id" class="java.lang.Integer"/>
 	<field name="org_id" class="java.lang.Integer"/>
@@ -44,6 +42,7 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 	<field name="contribution_amount" class="java.lang.Float"/>
 	<field name="is_paid" class="java.lang.Boolean"/>
 	<field name="entity_name" class="java.lang.String"/>
+	<field name="shares" class="java.lang.Float"/>
 	<field name="member_is_active" class="java.lang.Boolean"/>
 	<field name="contribution_type_id" class="java.lang.Integer"/>
 	<field name="contribution_type_name" class="java.lang.String"/>
@@ -58,7 +57,7 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 		<variableExpression><![CDATA[$F{deposit_amount}-$F{contribution_amount}]]></variableExpression>
 	</variable>
 	<variable name="SumShares" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{contribution_amount}]]></variableExpression>
+		<variableExpression><![CDATA[$F{shares}]]></variableExpression>
 	</variable>
 	<variable name="SumAdditional" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{additional_payments}]]></variableExpression>
@@ -103,7 +102,7 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 				<text><![CDATA[#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="58" y="0" width="140" height="15" forecolor="#000000" uuid="daab8926-961d-4cd3-b7a1-86c5d82659f1"/>
+				<reportElement style="Column header" x="58" y="0" width="211" height="15" forecolor="#000000" uuid="daab8926-961d-4cd3-b7a1-86c5d82659f1"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -131,13 +130,6 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 				<text><![CDATA[Shares]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="353" y="0" width="79" height="15" forecolor="#000000" uuid="270e2b39-5877-4ea5-8d5f-ff5c47626772"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Transaction Ref]]></text>
-			</staticText>
-			<staticText>
 				<reportElement style="Column header" x="719" y="0" width="70" height="15" forecolor="#000000" uuid="7bca18cd-e825-4f6a-a9c6-92751da6c4ec"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
@@ -145,7 +137,7 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 				<text><![CDATA[Additional Pay]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="208" y="0" width="108" height="15" forecolor="#000000" uuid="ea9f14cb-e92c-4d5e-ae5d-83634e301666"/>
+				<reportElement style="Column header" x="311" y="0" width="108" height="15" forecolor="#000000" uuid="ea9f14cb-e92c-4d5e-ae5d-83634e301666"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -169,14 +161,7 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{contribution_amount}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-					<reportElement style="Detail" x="353" y="0" width="92" height="15" uuid="dd1de40f-3f16-4867-90b5-90d13634dbe1"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{transaction_ref}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{shares}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement style="Detail" x="715" y="0" width="70" height="15" uuid="7831e310-4b0f-4e3a-9772-e4d8befdad38"/>
@@ -200,7 +185,7 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 					<textFieldExpression><![CDATA[$F{deposit_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="208" y="0" width="108" height="15" uuid="d64008fc-4854-415c-ba5c-1293517adc08"/>
+					<reportElement style="Detail" x="311" y="0" width="108" height="15" uuid="d64008fc-4854-415c-ba5c-1293517adc08"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -208,7 +193,7 @@ WHERE vw_contributions.period_id=  '$P!{filterid} '
 				</textField>
 			</frame>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="58" y="0" width="140" height="15" uuid="ee5d9bbf-8f87-4341-9025-df87b4f7a284"/>
+				<reportElement style="Detail" x="58" y="0" width="211" height="15" uuid="ee5d9bbf-8f87-4341-9025-df87b4f7a284"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>

@@ -175,11 +175,8 @@ CREATE OR REPLACE VIEW vw_recruiting_entity AS
 	left JOIN entitys recruiting_agent_entity ON recruiting_agent_entity.entity_id = recruiting_agent.entity_id;
 		
 
-	
-
-
 CREATE OR REPLACE VIEW vw_contributions_month AS 
- SELECT vw_periods.period_id,
+SELECT vw_periods.period_id,
     vw_periods.start_date,
     vw_periods.end_date,
     vw_periods.overtime_rate,
@@ -203,7 +200,9 @@ CREATE OR REPLACE VIEW vw_contributions_month AS
     contributions.additional_payments,
     contributions.is_paid,
     contributions.contribution_amount,
-    members.contribution AS member_contribution,
+    case when  ((deposit_amount - contribution_amount + additional_payments) < 0 ) or ((deposit_amount - contribution_amount + additional_payments) is null) then 0
+		  else  (deposit_amount - contribution_amount + additional_payments) end as shares,
+      members.contribution AS intial_contribution,
     members.first_name,
     members.expired,
     contribution_types.contribution_type_id,

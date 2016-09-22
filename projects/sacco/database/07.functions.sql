@@ -570,10 +570,10 @@ BEGIN
     DELETE FROM contributions WHERE period_id = v_period_id::integer;
     
     INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
-            entity_name, deposit_amount, loan_repayment, entry_date,
+            entity_name, deposit_amount,  entry_date,
              transaction_ref, additional_payments,is_paid)
              
-    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0, first_name, contribution, 'False', 
+    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0, first_name, contribution,
             now()::date, 'Auto generated', 0, 'False'
         FROM members;
 
@@ -688,3 +688,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION ins_kins() RETURNS trigger AS $$
+DECLARE
+	beneficiary_ps_total   	real;
+	v_entity_id    integer;
+	
+BEGIN
+
+	IF (NEW.beneficiary_ps > 100 and New.beneficiary = 'True')THEN
+		raise exception 'Percentage total has to be 100';
+end if;
+	
+	select  beneficiary_ps, entity_id from kins into beneficiary_ps_total, v_entity_id where kin_id = NEW.kin_id and  New.beneficiary = 'True';
+	
+	
+	if (beneficiary_ps_total > 100 ) then
+	
+	New. beneficiary_ps := 0;
+	end if;
+
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
