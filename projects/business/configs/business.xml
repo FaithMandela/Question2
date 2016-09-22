@@ -2,18 +2,19 @@
 	<MENU name="Business">
 		<MENU name="Transactions">
 			<MENU name="Sales Pipeline">15</MENU>
-			<MENU name="Sales">20</MENU>
+			<MENU name="Sales">2</MENU>
 			<MENU name="Purchase">27</MENU>
 			<MENU name="Transaction Ledger">32</MENU>
 			<MENU name="Budget">55</MENU>
 			<MENU name="Requisitions">60</MENU>
 			<MENU name="Item Use">65</MENU>
 			<MENU name="Assets">70</MENU>
-			<MENU name="Fiscal Years">35</MENU>
-			<MENU name="Journals">57</MENU>
+			<MENU name="Fiscal Years">10</MENU>
+			<MENU name="Journals">35</MENU>
 			<MENU name="Entitys">20</MENU>
 			<MENU name="Stock Take">80</MENU>
 			<MENU name="Petty Cash">90</MENU>
+			<MENU name="Petty Cash Request">92</MENU>
 			<MENU name="Issue Tracking">95</MENU>
 			<MENU name="Approvals">41</MENU>
 		</MENU>
@@ -323,10 +324,10 @@
 			</GRID>
 			<FORM name="Sales Quotation" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="14">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Client" lptable="entitys" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
-				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
+				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Payment Terms" default="Immediate" y="90" h="20" x="290">payment_terms</TEXTFIELD>
@@ -368,7 +369,7 @@
 			</GRID>
 			<FORM name="Sales Order" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="1">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Client" lptable="entitys" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -420,7 +421,7 @@
 			</GRID>
 			<FORM name="Delivery Note" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="11">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Client" lptable="entitys" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -466,7 +467,7 @@
 			</GRID>
 			<FORM name="Sales" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="2">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Client" lptable="entitys" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -495,7 +496,7 @@
 			</ACTIONS>
 			<FORM name="Receipts" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="7">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Client" lptable="entitys" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="vw_bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="70" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
@@ -539,7 +540,7 @@
 			</GRID>
 			<FORM name="Credit Note" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="9">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Client" lptable="entitys" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -586,7 +587,7 @@
 			</GRID>
 			<FORM name="Purchase Quotation" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="15">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -642,7 +643,7 @@
 			</GRID>
 			<FORM name="Purchase Order" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="4">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -694,7 +695,7 @@
 			</GRID>
 			<FORM name="Receipt Note" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="12">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -740,7 +741,7 @@
 			</GRID>
 			<FORM name="Sales" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="5">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -769,7 +770,7 @@
 			</ACTIONS>
 			<FORM name="Payments" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="8">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="vw_bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="70" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
@@ -813,7 +814,7 @@
 			</GRID>
 			<FORM name="Debit Note" keyfield="transaction_id" table="transactions">
 				<DEFAULT default="10">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -839,9 +840,7 @@
 			<TEXTFIELD w="75" title="Description">description</TEXTFIELD>
 			<TEXTFIELD w="75" title="Reported By">reported_by</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Recoded Time">recoded_time</TEXTTIMESTAMP>
-			<TEXTTIMESTAMP w="75" title="Solved Time">solved_time</TEXTTIMESTAMP>
-			<TEXTFIELD w="75" title="Curr Action">curr_action</TEXTFIELD>
-			<TEXTFIELD w="75" title="Curr Status">curr_status</TEXTFIELD>
+			<TEXTFIELD w="75" title="Current Status">curr_status</TEXTFIELD>
 			<FORM name="Helpdesk" keyfield="helpdesk_id" table="helpdesk">
 				<USERFIELD>recorded_by</USERFIELD>
 				<COMBOBOX w="430" title="Definition" lptable="pdefinitions" y="10" h="20" x="10" lpfield="pdefinition_name">pdefinition_id</COMBOBOX>
@@ -849,8 +848,8 @@
 				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_function = 2)" y="50" h="20" x="10" lpfield="entity_name">client_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Description" y="110" h="20" x="10">description</TEXTFIELD>
 				<TEXTFIELD w="150" title="Reported By" y="130" h="20" x="10">reported_by</TEXTFIELD>
-				<TEXTFIELD w="150" title="Curr Action" y="170" h="20" x="10">curr_action</TEXTFIELD>
-				<TEXTFIELD w="150" title="Curr Status" y="170" h="20" x="290">curr_status</TEXTFIELD>
+				<TEXTFIELD w="150" title="Current Action" y="170" h="20" x="10">curr_action</TEXTFIELD>
+				<TEXTFIELD w="150" title="Current Status" y="170" h="20" x="290">curr_status</TEXTFIELD>
 				<TEXTAREA w="430" title="Problem" y="190" h="70" x="10">problem</TEXTAREA>
 				<TEXTAREA w="430" title="Solution" y="260" h="70" x="10">solution</TEXTAREA>
 			</FORM>
@@ -868,8 +867,8 @@
 			<TEXTTIMESTAMP w="75" title="Recoded Time">recoded_time</TEXTTIMESTAMP>
 			<TEXTTIMESTAMP w="75" title="Solved Time">solved_time</TEXTTIMESTAMP>
 			<FORM new="false" name="Helpdesk" keyfield="helpdesk_id" table="helpdesk">
-				<TEXTFIELD w="150" title="Curr Action" y="170" h="20" x="10">curr_action</TEXTFIELD>
-				<TEXTFIELD w="150" title="Curr Status" y="170" h="20" x="290">curr_status</TEXTFIELD>
+				<TEXTFIELD w="150" title="Current Action" y="170" h="20" x="10">curr_action</TEXTFIELD>
+				<TEXTFIELD w="150" title="Current Status" y="170" h="20" x="290">curr_status</TEXTFIELD>
 				<TEXTAREA w="430" title="Problem" y="190" h="70" x="10">problem</TEXTAREA>
 				<TEXTAREA w="430" title="Solution" y="260" h="70" x="10">solution</TEXTAREA>
 			</FORM>
@@ -1335,7 +1334,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="800" name="Journals" key="15" h="500">
+	<DESK w="800" name="Journals" key="35" h="500">
 		<GRID name="Periods" keyfield="period_id" table="vw_periods" where="(opened = true) AND (closed = false)">
 			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
@@ -1413,8 +1412,14 @@
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Attention">attention</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
 			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
 			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+			<ACTIONS>
+				<ACTION fnct="add_client" approval="2">Add to Pipeline</ACTION>
+			</ACTIONS>
 			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
 				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
@@ -1456,15 +1461,20 @@
 				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
-				<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
-				<TEXTFIELD w="150" title="First Password" y="90" h="20" x="290">first_password</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Telephone" y="110" h="20" x="10">primary_telephone</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="130" h="20" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="First Password" y="130" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Supplier" keyfield="entity_id" table="entitys" where="(use_function = 3)">
 			<TEXTFIELD w="75" title="Supplier ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Supplier Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Attention">attention</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
 			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
 			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
 			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
@@ -1508,9 +1518,11 @@
 				<TEXTFIELD w="430" title="Supplier" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
-				<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
-				<TEXTFIELD w="150" title="First Password" y="90" h="20" x="290">first_password</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Telephone" y="110" h="20" x="10">primary_telephone</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="130" h="20" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="First Password" y="130" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Users" keyfield="entity_id" table="entitys" where="(use_function = 0)">

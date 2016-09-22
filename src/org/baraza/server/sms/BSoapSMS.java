@@ -143,7 +143,7 @@ public class BSoapSMS {
 			String numbers = rs.getString("sms_numbers");
 			if(number == null) number = "";
 			if(rs.getString("address_group_id") ==  null) {
-				number = number.replace(" ", "").replace("-", "").replace("/", "").replace("\\", "").trim();
+				number = number.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").replace("+", "").trim();
 				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				
 				if((number.length() > 11) && (number.length() < 15) && BNumberFormat.isNumeric(number)) {
@@ -153,13 +153,13 @@ public class BSoapSMS {
 				}
 
 				if(numbers != null) {
-					numbers = numbers.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").trim();
+					numbers = numbers.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").replace("+", "").trim();
 					System.out.println("Sending messages for numbers : " + numbers);
 					
 					String[] nums = numbers.split(",");
 					for(String num : nums) {
 						if((num != null) && (num.length() > 3)) {
-							num = num.replace(" ", "").replace("-", "").trim();
+							num = num.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").replace("+", "").trim();
 							if(num.length() == 9) num = "254" + num;
 							else if(num.startsWith("0")) num = "254" + num.substring(1, num.length());
 							
@@ -181,7 +181,7 @@ public class BSoapSMS {
 			while(rsa.moveNext()) {
 				number = rsa.getString("mobile");
 				if(number == null) number = "";
-				number = number.replace(" ", "").replace("-", "").trim();
+				number = number.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").replace("+", "").trim();
 				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				
 				if((number.length() > 11) && (number.length() < 15) && BNumberFormat.isNumeric(number)) {
@@ -201,7 +201,7 @@ public class BSoapSMS {
 			while(rsg.moveNext()) {
 				number = rsg.getString("mobile");
 				if(number == null) number = "";
-				number = number.replace(" ", "").replace("-", "").trim();
+				number = number.replace("\n", ",").replace("\r", "").replace("\"", "").replace("'", "").replace("/", "").replace("+", "").trim();
 				if(number.startsWith("0")) number = "254" + number.substring(1, number.length());
 				
 				if((number.length() > 11) && (number.length() < 15) && BNumberFormat.isNumeric(number)) {

@@ -67,7 +67,7 @@ public class BComm {
 		while(rs.moveNext()) {
 			String smsNumber = rs.readField(2);
 			if(smsNumber == null) smsNumber = "";
-			smsNumber = smsNumber.replace(" ", "").replace("-", "").replace(",", "").replace("/", "").replace("\\", "").trim();
+			smsNumber = smsNumber.replace(" ", "").replace("-", "").replace(",", "").replace("/", "").replace("\\", "").replace("+", "").trim();
 			int sNl = smsNumber.length();
 
 			if((sNl==10) && smsNumber.startsWith("0")) smsNumber = "254" + smsNumber.substring(1, 10);
