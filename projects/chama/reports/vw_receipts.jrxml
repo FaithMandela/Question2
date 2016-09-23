@@ -28,9 +28,9 @@
 	<queryString>
 		<![CDATA[SELECT vw_receipts.entity_id, vw_receipts.entity_name, vw_receipts.start_date, vw_receipts.org_id, vw_receipts.receipts_id, vw_receipts.receipts_date, vw_receipts.narrative, vw_receipts.ref_number, vw_receipts.amount, vw_receipts.remaining_amount, vw_receipts.remit_all
 FROM vw_receipts
-Where vw_receipts.receipts_id is not null
+Where vw_receipts.receipts_id is not null AND period_id = '$P!{filterid}'
 $P!{organd}
-ORDER BY vw_receipts.receipts_id]]>
+ORDER BY period_id]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>

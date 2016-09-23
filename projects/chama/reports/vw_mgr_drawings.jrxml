@@ -28,7 +28,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_drawings.entity_id, vw_drawings.entity_name, vw_drawings.period_id, vw_drawings.start_date, vw_drawings.org_id, vw_drawings.drawing_id, vw_drawings.amount, vw_drawings.narrative, vw_drawings.ref_number, vw_drawings.recieved, vw_drawings.withdrawal_date
 FROM vw_drawings
-Where vw_drawings.drawing_id is not null AND vw_drawings.narrative ilike '%merry go round%'
+Where vw_drawings.drawing_id is not null AND vw_drawings.narrative ilike '%merry go round%' AND period_id = '$P!{filterid}'
 $P!{organd}
 ORDER BY vw_drawings.drawing_id]]>
 	</queryString>

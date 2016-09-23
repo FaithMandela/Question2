@@ -28,7 +28,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_contributions_unpaid.contribution_type_name, vw_contributions_unpaid.entity_id, vw_contributions_unpaid.entity_name, vw_contributions_unpaid.org_id, vw_contributions_unpaid.period_id, vw_contributions_unpaid.start_date,  vw_contributions_unpaid.contribution_id, vw_contributions_unpaid.contribution_date, vw_contributions_unpaid.investment_amount, vw_contributions_unpaid.merry_go_round_amount, vw_contributions_unpaid.loan_contrib, vw_contributions_unpaid.paid, vw_contributions_unpaid.total_contribution
 FROM vw_contributions_unpaid
-Where vw_contributions_unpaid.contribution_id is not null
+Where vw_contributions_unpaid.contribution_id is not null AND period_id = '$P!{filterid}'
 $P!{organd}
 order by period_id]]>
 	</queryString>

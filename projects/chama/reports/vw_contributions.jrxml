@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_contributions" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a45903d1-cf6a-4ca8-a4b8-38b693728cc8">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="132"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -28,7 +28,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date, vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.extra_contrib, vw_contributions.total_contribution, vw_contributions.paid
 FROM vw_contributions
-Where vw_contributions.contribution_id is not null
+Where vw_contributions.contribution_id is not null AND period_id = '$P!{filterid}'
 $P!{organd}
 order by period_id]]>
 	</queryString>
@@ -126,13 +126,6 @@ order by period_id]]>
 				<text><![CDATA[Total Contribution]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="691" y="0" width="40" height="24" forecolor="#000000" uuid="b5ed769e-7c40-4bf0-930f-2efc3c929ceb"/>
-				<textElement verticalAlignment="Bottom">
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Paid]]></text>
-			</staticText>
-			<staticText>
 				<reportElement style="Column header" x="523" y="0" width="76" height="24" forecolor="#000000" uuid="f81789b5-2af9-4574-a4e2-dc2dadaa05ef"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10"/>
@@ -188,14 +181,6 @@ order by period_id]]>
 					<textFieldExpression><![CDATA[$F{total_contribution}]]></textFieldExpression>
 				</textField>
 			</frame>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="691" y="2" width="40" height="15" uuid="c7d4f607-c697-4c94-a7bb-01672b40eaaf"/>
-				<box leftPadding="11"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{paid}]]></textFieldExpression>
-			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="522" y="0" width="64" height="15" uuid="b374fdbd-88fb-4358-823a-5237a89c91ec"/>
 				<textElement textAlignment="Right">
