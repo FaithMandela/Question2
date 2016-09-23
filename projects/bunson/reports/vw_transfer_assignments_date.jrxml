@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_date" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e20d1bee-7f37-4951-a531-a7afb609a2e2">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="8"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -25,6 +25,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name, vw_transfer_assignments.car_type_code, customer_name, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, closed, cancelled, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num, '$P!{date}'::date AS today,
 vw_transfer_assignments.entity_name,
+vw_transfer_assignments.pax_no,
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_pickup_time,
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_time_in,
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_time_out
@@ -74,6 +75,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 	<field name="flight_num" class="java.lang.String"/>
 	<field name="today" class="java.sql.Date"/>
 	<field name="entity_name" class="java.lang.String"/>
+	<field name="pax_no" class="java.lang.Integer"/>
 	<field name="display_pickup_time" class="java.lang.String"/>
 	<field name="display_time_in" class="java.lang.String"/>
 	<field name="display_time_out" class="java.lang.String"/>
@@ -81,7 +83,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="144" splitType="Stretch">
+		<band height="143" splitType="Stretch">
 			<staticText>
 				<reportElement style="Title" x="1" y="105" width="802" height="18" uuid="09faac59-7a76-4b79-9bda-d4b15f28ae01"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -119,7 +121,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="650" y="0" width="78" height="21" forecolor="#000000" uuid="e6b7a176-8b6d-4c31-a892-83973786d7ef"/>
+				<reportElement style="Column header" x="657" y="0" width="77" height="21" forecolor="#000000" uuid="e6b7a176-8b6d-4c31-a892-83973786d7ef"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -147,7 +149,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[Passenger Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="430" y="0" width="50" height="21" forecolor="#000000" uuid="7a97c002-ed63-41e1-b8dc-cf9f255a7ea6"/>
+				<reportElement style="Column header" x="419" y="0" width="50" height="21" forecolor="#000000" uuid="7a97c002-ed63-41e1-b8dc-cf9f255a7ea6"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -161,7 +163,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[Pickup Time]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="299" y="0" width="66" height="21" forecolor="#000000" uuid="468da546-2c2f-482e-8fc1-74cb9c5ca2ea"/>
+				<reportElement style="Column header" x="288" y="0" width="66" height="21" forecolor="#000000" uuid="468da546-2c2f-482e-8fc1-74cb9c5ca2ea"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -175,7 +177,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[From]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="365" y="0" width="65" height="21" forecolor="#000000" uuid="6ff0635f-7c09-4777-9e2d-d332b43b106e"/>
+				<reportElement style="Column header" x="354" y="0" width="65" height="21" forecolor="#000000" uuid="6ff0635f-7c09-4777-9e2d-d332b43b106e"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -189,7 +191,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[To]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="535" y="0" width="54" height="21" forecolor="#000000" uuid="359047c7-e05b-4313-8ea8-9937a54ba301"/>
+				<reportElement style="Column header" x="524" y="0" width="54" height="21" forecolor="#000000" uuid="359047c7-e05b-4313-8ea8-9937a54ba301"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -217,7 +219,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[#]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="231" y="0" width="68" height="21" forecolor="#000000" uuid="928af8ed-f7c3-425e-a20a-a5c4573281a1"/>
+				<reportElement style="Column header" x="231" y="0" width="57" height="21" forecolor="#000000" uuid="928af8ed-f7c3-425e-a20a-a5c4573281a1"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -231,7 +233,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[Org]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="728" y="0" width="34" height="21" forecolor="#000000" uuid="8514e4cb-4602-46ab-860c-bd309c57e9c5"/>
+				<reportElement style="Column header" x="734" y="0" width="28" height="21" forecolor="#000000" uuid="8514e4cb-4602-46ab-860c-bd309c57e9c5"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -245,7 +247,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[Closed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="589" y="0" width="61" height="21" forecolor="#000000" uuid="b31b7b7d-a6b3-470c-98d6-d01c33a94eb9"/>
+				<reportElement style="Column header" x="578" y="0" width="31" height="21" forecolor="#000000" uuid="b31b7b7d-a6b3-470c-98d6-d01c33a94eb9"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -256,7 +258,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Voucher #]]></text>
+				<text><![CDATA[Pax No.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="164" y="0" width="67" height="21" forecolor="#000000" uuid="0976adb0-ff7f-42f2-8aa9-f2786fd3d951"/>
@@ -301,7 +303,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<text><![CDATA[Cancelled]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="480" y="0" width="55" height="21" forecolor="#000000" uuid="1ba2ce82-11e2-4e5c-8928-3bdf19498f74"/>
+				<reportElement style="Column header" x="469" y="0" width="55" height="21" forecolor="#000000" uuid="1ba2ce82-11e2-4e5c-8928-3bdf19498f74"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -313,6 +315,20 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 					<font fontName="Times New Roman" size="8" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[FLT No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="609" y="0" width="48" height="21" forecolor="#000000" uuid="c197cd5b-f981-4bf6-9910-6fa3d30c5018"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Car Type]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -333,7 +349,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{passanger_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="299" y="0" width="66" height="21" uuid="48140a64-76a1-4f13-8e56-1e51321ef305"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="288" y="0" width="66" height="21" uuid="48140a64-76a1-4f13-8e56-1e51321ef305"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -347,7 +363,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{pickup}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="365" y="0" width="65" height="21" uuid="48939d9d-75af-44cc-a7f7-c29e43923fea"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="354" y="0" width="65" height="21" uuid="48939d9d-75af-44cc-a7f7-c29e43923fea"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -361,7 +377,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{dropoff}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="430" y="0" width="50" height="21" uuid="df5fdb9f-be5d-4382-8d80-e69fa1051e58"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="419" y="0" width="50" height="21" uuid="df5fdb9f-be5d-4382-8d80-e69fa1051e58"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -375,7 +391,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{display_pickup_time}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="535" y="0" width="54" height="21" uuid="fa8ca314-8c68-4430-be28-ffcdf2f7f03e"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="524" y="0" width="54" height="21" uuid="fa8ca314-8c68-4430-be28-ffcdf2f7f03e"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -389,7 +405,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{start_airport} + "-" + $F{end_airport}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="650" y="0" width="78" height="21" uuid="a51e8796-8dd9-4a30-b29a-08efe9df1353"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="657" y="0" width="77" height="21" uuid="a51e8796-8dd9-4a30-b29a-08efe9df1353"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -417,7 +433,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="231" y="0" width="68" height="21" uuid="b3d63172-4c6f-4610-95fb-159ec831f582"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="231" y="0" width="57" height="21" uuid="b3d63172-4c6f-4610-95fb-159ec831f582"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -431,7 +447,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="728" y="0" width="34" height="21" uuid="0c0082c0-9298-471a-a82f-427fca5ea2cc"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="734" y="0" width="28" height="21" uuid="0c0082c0-9298-471a-a82f-427fca5ea2cc"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -445,7 +461,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{closed} ? "Yes" : "No"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="589" y="0" width="61" height="21" uuid="c999dae5-2b4b-4d6a-a588-c796cd7d7941"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="578" y="0" width="31" height="21" uuid="c999dae5-2b4b-4d6a-a588-c796cd7d7941"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -456,7 +472,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{transfer_id}+ "/" + $F{passanger_id} + "/" + $F{transfer_assignment_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pax_no}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="164" y="0" width="67" height="21" uuid="06111c84-bcc6-4bce-93e8-83da569d41a9"/>
@@ -501,7 +517,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textFieldExpression><![CDATA[$F{cancelled} ? "Yes" : "No"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="480" y="0" width="55" height="21" uuid="a4e2ecee-c8f2-425e-8306-60b211367f10"/>
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="469" y="0" width="55" height="21" uuid="a4e2ecee-c8f2-425e-8306-60b211367f10"/>
 				<box leftPadding="3">
 					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
 					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
@@ -513,6 +529,20 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{airline} + " " + $F{flight_num}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" stretchType="RelativeToTallestObject" x="609" y="0" width="48" height="21" uuid="5c456af7-c70c-4198-9a24-7e8cda5cf3cd"/>
+				<box leftPadding="3">
+					<pen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<topPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<leftPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<bottomPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+					<rightPen lineWidth="0.75" lineStyle="Solid" lineColor="#BFBFBF"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{car_type_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

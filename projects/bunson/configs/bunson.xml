@@ -2022,15 +2022,6 @@
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
-					<FORM save.button="Assign" name="Transfer Assignments" keyfield="transfer_assignment_id" delete="false" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car ID" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
-						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
-						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
-						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
-						<SPINTIME w="150" title="Time In" y="90" h="20" x="10">time_in</SPINTIME>
-						<CHECKBOX w="150" title="Closed" y="90" h="20" x="290">closed</CHECKBOX>
-					</FORM>
 				</GRID>
 				<GRID name="Closed Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" display="form" table="vw_transfer_assignments_create" noorg="true" where="(closed=true)">
 					<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
@@ -2047,14 +2038,14 @@
 				</GRID>
 				<FORM name="Passenger" keyfield="passanger_id" delete="false" linkfield="transfer_id" table="passangers" noorg="true">
 					<DEFAULT default="1">tab</DEFAULT>
-					<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
+					<TEXTFIELD w="150" title="Passenger Name" required="true" y="10" h="20" x="10">passanger_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" required="true" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Email" y="30" h="20" x="10">passanger_email</TEXTFIELD>
 					<COMBOBOX w="430" title="Car Type Code" lptable="car_types" y="50" h="20" x="10" lpfield="car_type_code">car_type_code</COMBOBOX>
-					<TEXTFIELD w="150" title="Pickup Time" placeholder="e.g. 2200" y="70" h="20" x="10">pickup_time</TEXTFIELD>
-					<TEXTFIELD w="430" title="Pickup Location" y="90" h="20" x="10">pickup</TEXTFIELD>
-					<TEXTFIELD w="430" title="Dropoff Location" y="110" h="20" x="10">dropoff</TEXTFIELD>
-					<TEXTDATE w="150" title="Pickup Date" y="220" h="20" x="290">pickup_date</TEXTDATE>
+					<TEXTFIELD w="150" title="Pickup Time" placeholder="e.g. 2200" required="true" y="70" h="20" x="10">pickup_time</TEXTFIELD>
+					<TEXTFIELD w="430" title="Pickup Location" required="true" y="90" h="20" x="10">pickup</TEXTFIELD>
+					<TEXTFIELD w="430" title="Dropoff Location" required="true" y="110" h="20" x="10">dropoff</TEXTFIELD>
+					<TEXTDATE w="150" title="Pickup Date" required="true" y="220" h="20" x="290">pickup_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Amount" y="240" h="20" x="10">amount</TEXTDECIMAL>
 					<CHECKBOX w="150" title="Cancelled" y="260" h="20" x="10">cancelled</CHECKBOX>
 					<TEXTAREA w="430" title="Other Preference" y="130" h="70" x="10">other_preference</TEXTAREA>
@@ -2111,15 +2102,6 @@
 						<TEXTFIELD w="75" title="File Type">file_type</TEXTFIELD>
 						<TEXTFIELD w="75" title="File Size">file_size</TEXTFIELD>
 					</FILES>
-					<FORM name="Transfer Assignments" keyfield="transfer_assignment_id" delete="false" linkfield="passanger_id" table="transfer_assignments" noorg="true">
-						<COMBOBOX w="430" title="Driver" lptable="drivers" where="(active=true)" y="10" h="20" x="10" lpfield="driver_name">driver_id</COMBOBOX>
-						<COMBOBOX w="430" title="Car" lptable="cars" y="10" h="20" x="10" lpfield="registration_number">car_id</COMBOBOX>
-						<TEXTFIELD w="150" title="Kms Out" y="30" h="20" x="290">kms_out</TEXTFIELD>
-						<SPINTIME w="150" title="Time Out" y="70" h="20" x="290">time_out</SPINTIME>
-						<TEXTFIELD w="150" title="Kms In" y="50" h="20" x="10">kms_in</TEXTFIELD>
-						<SPINTIME w="150" title="Time In" y="90" h="20" x="10">time_in</SPINTIME>
-						<CHECKBOX w="150" title="Closed" y="90" h="20" x="290">closed</CHECKBOX>
-					</FORM>
 				</GRID>
 				<GRID name="Closed Transfer Assignments" keyfield="transfer_assignment_id" linkfield="passanger_id" table="vw_transfer_assignments_create" noorg="true" where="(closed=true)">
 					<TEXTFIELD w="75" title="Transfer Assignment ID">transfer_assignment_id</TEXTFIELD>
@@ -2137,17 +2119,17 @@
 				</GRID>
 				<FORM name="Passenger" keyfield="passanger_id" delete="false" linkfield="transfer_id" table="passangers" noorg="true">
 					<DEFAULT default="2">tab</DEFAULT>
-					<TEXTFIELD w="150" title="Passenger Name" y="10" h="20" x="10">passanger_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
+					<TEXTFIELD w="150" title="Passenger Name" required="true" y="10" h="20" x="10">passanger_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Passenger Mobile" placeholder="e.g 254712345678" required="true" y="10" h="20" x="290">passanger_mobile</TEXTFIELD>
 					<TEXTFIELD w="150" title="Passenger Email" y="30" h="20" x="10">passanger_email</TEXTFIELD>
 					<COMBOBOX w="430" title="Car Type Code" lptable="car_types" y="50" h="20" x="10" lpfield="car_type_code">car_type_code</COMBOBOX>
-					<TEXTFIELD w="150" title="Pickup Time" placeholder="e.g. 2200" y="70" h="20" x="10">pickup_time</TEXTFIELD>
+					<TEXTFIELD w="150" title="Pickup Time" placeholder="e.g. 2200" required="true" y="70" h="20" x="10">pickup_time</TEXTFIELD>
 					<COMBOLIST w="50" title="Pickup Location" y="10" h="20" x="10">pickup
 						<DATA>JKIA</DATA>
 						<DATA>WILSON</DATA>
 					</COMBOLIST>
-					<TEXTFIELD w="430" title="Dropoff Location" y="110" h="20" x="10">dropoff</TEXTFIELD>
-					<TEXTDATE w="150" title="Pickup Date" y="220" h="20" x="290">pickup_date</TEXTDATE>
+					<TEXTFIELD w="430" title="Dropoff Location" required="true" y="110" h="20" x="10">dropoff</TEXTFIELD>
+					<TEXTDATE w="150" title="Pickup Date" required="true" y="220" h="20" x="290">pickup_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Amount" y="240" h="20" x="10">amount</TEXTDECIMAL>
 					<CHECKBOX w="150" title="Cancelled" y="260" h="20" x="10">cancelled</CHECKBOX>
 					<TEXTAREA w="430" title="Other Preference" y="130" h="70" x="10">other_preference</TEXTAREA>
@@ -2175,14 +2157,14 @@
 					<TEXTFIELD w="150" title="Flight Num" y="90" h="20" x="10">flight_num</TEXTFIELD>
 				</FORM>
 			</GRID>
-			<FORM name="Finance" keyfield="transfer_id" delete="false" table="transfers" noorg="true">
+			<FORM name="Finance" keyfield="transfer_id" delete="false" jumpview="35:2:0" table="transfers" noorg="true">
 				<DEFAULT default="2">create_source</DEFAULT>
 				<DEFAULT default="xxx">record_locator</DEFAULT>
 				<DEFAULT default="KES">currency_id</DEFAULT>
 				<DEFAULT default="01">booking_location</DEFAULT>
 				<COMBOBOX w="430" title="Entity ID" lptable="entitys" user="entity_id" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<COMBOBOX w="430" title="Customer Name" lptable="customer_codes" y="50" h="20" x="10" lpfield="customer_name">customer_code</COMBOBOX>
-				<COMBOBOX w="430" title="Payment Type ID" lptable="payment_types" y="50" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Customer Code" lptable="customer_codes" y="50" h="20" x="10" lpfield="customer_name">customer_code</COMBOBOX>
+				<COMBOBOX w="430" title="Payment Type" lptable="payment_types" y="50" h="20" x="10" lpfield="payment_type_name">payment_type_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Agreed Amount" y="70" h="20" x="290">agreed_amount</TEXTDECIMAL>
 				<COMBOLIST w="150" title="Pax No" y="70" h="20" x="10">pax_no
 					<DATA key="1">1</DATA>
