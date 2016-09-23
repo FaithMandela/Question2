@@ -13,8 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="filter_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	<parameter name="filterid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
@@ -32,7 +32,7 @@
 		<![CDATA[SELECT vw_loans.currency_name, vw_loans.loan_type_name, vw_loans.entity_id, vw_loans.entity_name, vw_loans.org_id, vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment,  vw_loans.repayment_period, vw_loans.initial_payment, vw_loans.repayment_amount, vw_loans.total_repayment, vw_loans.loan_balance
 FROM vw_loans
 
-Where entity_id = '$P!{entity_id}'
+Where entity_id = '$P!{filterid}'
 $P!{organd}
 order by loan_type_name]]>
 	</queryString>

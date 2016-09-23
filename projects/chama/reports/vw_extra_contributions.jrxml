@@ -26,7 +26,7 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.member_id, vw_contributions.start_date, vw_contributions.org_id, vw_contributions.contribution_id, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.extra_contrib, vw_contributions.details
+		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date, vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.extra_contrib, vw_contributions.total_contribution, vw_contributions.paid, vw_contributions.details
 FROM vw_contributions
 Where vw_contributions.contribution_id is not null AND vw_contributions.extra_contrib = true
 $P!{organd}
@@ -35,20 +35,26 @@ order by period_id]]>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="member_id" class="java.lang.Integer"/>
-	<field name="start_date" class="java.sql.Date"/>
 	<field name="org_id" class="java.lang.Integer"/>
+	<field name="period_id" class="java.lang.Integer"/>
+	<field name="start_date" class="java.sql.Date"/>
 	<field name="contribution_id" class="java.lang.Integer"/>
+	<field name="contribution_date" class="java.sql.Timestamp"/>
 	<field name="investment_amount" class="java.lang.Float"/>
 	<field name="merry_go_round_amount" class="java.lang.Float"/>
-	<field name="paid" class="java.lang.Boolean"/>
+	<field name="loan_contrib" class="java.lang.Float"/>
 	<field name="extra_contrib" class="java.lang.Boolean"/>
+	<field name="total_contribution" class="java.lang.Float"/>
+	<field name="paid" class="java.lang.Boolean"/>
 	<field name="details" class="java.lang.String"/>
 	<variable name="suminvamt" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{investment_amount}]]></variableExpression>
 	</variable>
 	<variable name="summgramt" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{merry_go_round_amount}]]></variableExpression>
+	</variable>
+	<variable name="sumloan" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{loan_contrib}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -68,7 +74,7 @@ order by period_id]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="16" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="b13754c2-5c2a-405e-8128-6eeb33af6cd3"/>
 				<graphicElement>
@@ -111,18 +117,25 @@ order by period_id]]>
 				<text><![CDATA[MGR Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="551" y="0" width="43" height="15" forecolor="#000000" uuid="3cabe0e5-4c12-4714-8eac-77296e14e64b"/>
+				<reportElement style="Column header" x="627" y="0" width="43" height="15" forecolor="#000000" uuid="3cabe0e5-4c12-4714-8eac-77296e14e64b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="594" y="1" width="195" height="15" forecolor="#000000" uuid="2e72e44f-2f22-4191-94ab-bc689a497d09"/>
+				<reportElement style="Column header" x="670" y="1" width="132" height="15" forecolor="#000000" uuid="2e72e44f-2f22-4191-94ab-bc689a497d09"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Details]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="551" y="0" width="76" height="15" forecolor="#000000" uuid="5067461d-d34e-4d48-9e50-767ce862ea72"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Loan Amount]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -166,7 +179,7 @@ order by period_id]]>
 					<textFieldExpression><![CDATA[$F{merry_go_round_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="551" y="0" width="43" height="15" uuid="8cd5a103-bf30-40e5-a3c0-8122b8df6cf6"/>
+					<reportElement style="Detail" x="615" y="0" width="43" height="15" uuid="8cd5a103-bf30-40e5-a3c0-8122b8df6cf6"/>
 					<box leftPadding="10"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
@@ -174,11 +187,18 @@ order by period_id]]>
 					<textFieldExpression><![CDATA[$F{paid}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="594" y="0" width="195" height="15" uuid="147b19ef-2360-4104-86c7-0a6eb59720f0"/>
+					<reportElement style="Detail" x="658" y="0" width="132" height="15" uuid="147b19ef-2360-4104-86c7-0a6eb59720f0"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement x="551" y="0" width="64" height="15" uuid="6ba2981d-c1a0-48ba-921b-75730cd40574"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{loan_contrib}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>
@@ -244,6 +264,17 @@ order by period_id]]>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{summgramt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="551" y="0" width="64" height="15" uuid="e432fd3d-d6a1-4cae-a2cd-9b592054d730"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="1.0" lineStyle="Double"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumloan}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

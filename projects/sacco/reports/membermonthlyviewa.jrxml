@@ -25,7 +25,7 @@
 vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.deposit_amount,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
 vw_contributions.entity_name,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
-where vw_contributions.is_active = 'true'
+where member_is_active = 'true' and is_paid = 'true'
  $P!{organd}
 ORDER BY vw_contributions.entity_id asc;]]>
 	</queryString>
@@ -183,7 +183,7 @@ ORDER BY vw_contributions.entity_id asc;]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Deposit Aamt]]></text>
+				<text><![CDATA[Deposit Amt]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="element-90" x="436" y="1" width="87" height="16" forecolor="#000000" uuid="4cca6280-126b-4e02-bf73-842b626eae1b"/>

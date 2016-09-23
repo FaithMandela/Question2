@@ -94,11 +94,9 @@ CREATE TABLE contributions (
 	contribution_date			timestamp without time zone,
 	investment_amount			real not null,
 	merry_go_round_amount	 	real,
-	paid						boolean default false,
+	loan_contrib				real DEFAULT 0,
+	paid						boolean DEFAULT false,
 	extra_contrib				boolean DEFAULT false,
-	
-	money_in					real,
-	money_out					real,
 	
 	details						text
 );
@@ -114,11 +112,13 @@ drawing_id				serial primary key,
 org_id					integer references orgs,
 period_id				integer references periods,
 entity_id				integer references entitys,
-bank_account_id 			integer references bank_accounts,
+bank_account_id 		integer references bank_accounts,
 
 withdrawal_date			date,
 narrative				varchar(120),
+ref_number				varchar(24),
 amount					real,
+recieved				boolean DEFAULT false,
 details					text
 );
 
@@ -126,6 +126,27 @@ CREATE INDEX drawings_org_id ON drawings(org_id);
 CREATE INDEX drawings_period_id ON drawings(period_id);
 CREATE INDEX drawings_entity_id ON drawings(entity_id);
 CREATE INDEX drawings_bank_account_id ON drawings(bank_account_id);
+
+CREATE TABLE receipts(
+receipts_id				serial primary key,
+org_id					integer references orgs,
+period_id				integer references periods,
+entity_id				integer references entitys,
+bank_account_id 		integer references bank_accounts,
+
+receipts_date			date,
+narrative				varchar(120),
+ref_number				varchar(24),
+amount					real,
+remaining_amount		real default 0,
+remit_all				boolean default false,
+details					text
+);
+
+CREATE INDEX receipts_org_id ON receipts(org_id);
+CREATE INDEX receipts_period_id ON receipts(period_id);
+CREATE INDEX receipts_entity_id ON receipts(entity_id);
+CREATE INDEX receipts_bank_account_id ON receipts(bank_account_id);
 
 CREATE TABLE penalty_type (
 	penalty_type_id				serial primary key,

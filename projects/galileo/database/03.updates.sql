@@ -22,7 +22,7 @@ ALTER TABLE midttransactions ADD COLUMN carsegs varchar(50);
 ALTER TABLE midttransactions ADD COLUMN hotelsegs varchar(50); 
 
 
-CREATE OR REPLACE FUNCTION inssegs(varchar(50), varchar(50)) RETURNS varchar(50) AS $$
+CREATE OR REPLACE FUNCTION inssegs(v_org character varying, v_user_id character varying, v_param character varying) RETURNS varchar(50) AS $$
 DECLARE
 	myrec RECORD;
 BEGIN 

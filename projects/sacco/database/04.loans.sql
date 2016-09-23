@@ -293,7 +293,7 @@ BEGIN
 	ELSIF((NEW.monthly_repayment = 0) AND (NEW.repayment_period > 0))THEN
 		NEW.monthly_repayment := NEW.principle / NEW.repayment_period;
 	ELSIF((NEW.repayment_period = 0) AND (NEW.monthly_repayment > 0))THEN
-		NEW.repayment_period := NEW.principle / NEW.monthly_repayment;
+		NEW.repayment_period := ceil(NEW.principle / NEW.monthly_repayment);
 	END IF;
 	
 	IF(NEW.monthly_repayment > NEW.principle)THEN
@@ -328,8 +328,7 @@ BEGIN
 	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true);
 
 	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id::integer, org_id::integer, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
-	FROM vw_loans 
+	SELECT v_period_id::integer, org_id::integer, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)	FROM vw_loans 
 	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) ;
 
 	msg := ' Repayments Computed';

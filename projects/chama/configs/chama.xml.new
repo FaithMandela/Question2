@@ -1,7 +1,6 @@
 <APP>
 	<MENU name="Chama">
 		<MENU name="Service Desk">
-			<MENU name="My Details">null</MENU>
 			<MENU name="My account">null</MENU>
 			<MENU name="Loans">null</MENU>
 			<MENU name="Investments">null</MENU>
@@ -41,16 +40,17 @@
 			<MENU name="Master EMails">null</MENU>
 		</MENU>
 		<MENU name="Reports">
+			<MENU name=" Members" role="manager,admin">null</MENU>
 			<MENU name="Contributions" role="manager,admin">null</MENU>
 			<MENU name="Investments" role="manager,admin">null</MENU>
 			<MENU name="Borrowing" role="manager,admin">null</MENU>
 			<MENU name="Loans" role="manager,admin">null</MENU>
 			<MENU name="Penalty" role="manager,admin">null</MENU>
-			<MENU name="Member Statement">null</MENU>
-			<MENU name="Member Contributions">null</MENU>
-			<MENU name="Member Loans">null</MENU>
-			<MENU name="Member Penalty">null</MENU>
-			<MENU name="Chama Statement" role="manager,admin">null</MENU>
+			<MENU name="My Statement">null</MENU>
+			<MENU name="My Contributions">null</MENU>
+			<MENU name="My Loans">null</MENU>
+			<MENU name="My Penalties">null</MENU>
+			<MENU name="Statement" role="manager,admin">null</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" h="500">
@@ -60,6 +60,9 @@
 			</TILE>
 			<TILE name="My Total Contributions" noorg.query="true" table="Contributions" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="My Contributions">total_contribs</TEXTFIELD>
+			</TILE>
+			<TILE name="My Total Overpayments" noorg.query="true" table="Receipts" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(remaining_amount),'999,999,999,990D00'))" title="My Overpayments">total_overpayments</TEXTFIELD>
 			</TILE>
 			<TILE name="My Unpaid Contributions" noorg.query="true" table="Contributions" where="(paid= 'false')" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="Total Deposits">total_ucontribs</TEXTFIELD>

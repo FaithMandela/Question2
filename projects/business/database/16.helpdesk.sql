@@ -73,3 +73,22 @@ CREATE VIEW vw_helpdesk AS
 		INNER JOIN entitys as recorder ON helpdesk.recorded_by = recorder.entity_id
 		LEFT JOIN entitys as closer ON helpdesk.closed_by = closer.entity_id;
 	
+
+CREATE OR REPLACE FUNCTION close_issue(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg 					varchar(120);
+BEGIN
+
+	msg := null;
+	
+	IF($3 = '1')THEN
+		UPDATE helpdesk SET closed_by = $2::integer, solved_time = current_timestamp, is_solved = true
+		WHERE helpdesk_id = $1::integer;
+		
+		msg := 'Closed the call';
+	END IF;
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+

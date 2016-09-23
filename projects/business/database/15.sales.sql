@@ -5,6 +5,7 @@ CREATE TABLE leads (
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
 
+	business_id				integer,
 	business_name			varchar(50) not null unique,
 	business_address		varchar(100),
 	city					varchar(30),
@@ -107,3 +108,92 @@ CREATE VIEW vw_follow_up AS
 		INNER JOIN entitys ON follow_up.entity_id = entitys.entity_id;
 	
 	
+CREATE OR REPLACE FUNCTION add_client(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec						RECORD;
+	v_lead_id				integer;
+	v_entity_id				integer;
+	v_entity_type_id		integer;
+	v_industry_id			integer;
+	v_sales_id				integer;
+	msg 					varchar(120);
+BEGIN
+
+	msg := null;
+
+	IF($3 = '1')THEN
+		SELECT org_id, business_id, business_name, business_address, city,
+			state, country_id, number_of_employees, telephone, website,
+			primary_contact, job_title, primary_email
+		INTO rec
+		FROM leads WHERE lead_id = $1::integer;
+		
+		SELECT entity_id INTO v_entity_id
+		FROM entitys WHERE user_name = lower(trim(rec.primary_email));
+		
+		SELECT max(entity_type_id) INTO v_entity_type_id
+		FROM entity_types
+		WHERE (org_id = rec.org_id) AND (use_key = 2);
+
+		IF(rec.business_id is not null)THEN
+			msg := 'The business is already added.';
+		ELSIF(rec.primary_email is null)THEN
+			RAISE EXCEPTION 'You must enter an email address';
+		ELSIF(v_entity_id is not null)THEN
+			RAISE EXCEPTION 'You must have a unique email address';
+		ELSIF(v_entity_type_id is null)THEN
+			RAISE EXCEPTION 'You must and entity type with use key being 2';
+		ELSE
+			v_entity_id := nextval('entitys_entity_id_seq');
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, attention, user_name, primary_email,  function_role, use_function)
+			VALUES (v_entity_id, 0, v_entity_type_id, rec.business_name, rec.primary_contact, lower(trim(rec.primary_email)), lower(trim(rec.primary_email)), 'client', 2);
+			
+			INSERT INTO address (address_name, sys_country_id, table_name, org_id, table_id, premises, town, phone_number, website, is_default) 
+			VALUES (rec.business_name, rec.country_id, 'entitys', rec.org_id, v_entity_id, rec.business_address, rec.city, rec.telephone, rec.website, true);
+			
+			UPDATE leads SET business_id = v_entity_id WHERE (lead_id = $1::integer);
+			
+			msg := 'You have added the client';
+		END IF;
+	ELSIF($3 = '2')THEN
+		SELECT a.org_id, a.entity_id, a.entity_type_id, a.org_id, a.entity_name, a.user_name, a.primary_email, 
+			a.primary_telephone, a.attention, b.sys_country_id, b.address_name, 
+			b.post_office_box, b.postal_code, b.premises, b.town, b.website INTO rec
+		FROM entitys a LEFT JOIN
+			(SELECT address_id, address_type_id, sys_country_id, org_id, address_name, 
+			table_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, mobile, email, website
+			FROM address
+			WHERE (is_default = true) AND (table_name = 'entitys')) b
+		ON a.entity_id = b.table_id
+		WHERE (a.entity_id = $1::integer);
+		
+		SELECT lead_id INTO v_lead_id
+		FROM leads 
+		WHERE (business_id = rec.entity_id) OR (lower(trim(business_name)) = lower(trim(rec.entity_name)));
+		
+		IF(v_lead_id is not null)THEN
+			msg := 'The business is already added.';
+		ELSE		
+			SELECT min(industry_id) INTO v_industry_id
+			FROM industry WHERE (org_id = rec.org_id);
+			
+			SELECT min(entity_id) INTO v_sales_id
+			FROM entitys
+			WHERE (org_id = rec.org_id) AND (use_function = 0);
+	
+			INSERT INTO leads(industry_id, entity_id, org_id, business_id, business_name, 
+				business_address, city, country_id, 
+				telephone, primary_contact, primary_email, website)
+			VALUES (v_industry_id, v_sales_id, rec.org_id, rec.entity_id, rec.entity_name,
+				rec.premises, rec.town, rec.sys_country_id,
+				rec.primary_telephone, rec.attention, rec.primary_email, rec.website);
+			
+            msg := 'You have added the lead';
+		END IF;
+	END IF;
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+

@@ -13,9 +13,6 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="filterid" class="java.lang.String">
-		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
-	</parameter>
 	<parameter name="orgid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
@@ -23,30 +20,34 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="organd" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<parameter name="entityid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
+	<parameter name="filterid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions.contribution_type_id, vw_contributions.contribution_type_name, vw_contributions.entity_name, vw_contributions.org_id, vw_contributions.start_date, vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.money_in, vw_contributions.money_out, vw_contributions.entity_id
+		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date, vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.extra_contrib, vw_contributions.total_contribution, vw_contributions.paid, vw_contributions.entity_id
 FROM vw_contributions
-Where entity_id = '$P!{entityid}'
-ORDER BY vw_contributions.period_id]]>
+where entity_id= '$P!{filterid}'
+ORDER BY vw_contributions.contribution_date DESC]]>
 	</queryString>
-	<field name="contribution_type_id" class="java.lang.Integer"/>
 	<field name="contribution_type_name" class="java.lang.String"/>
+	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
+	<field name="period_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
 	<field name="contribution_id" class="java.lang.Integer"/>
-	<field name="contribution_date" class="java.sql.Date"/>
+	<field name="contribution_date" class="java.sql.Timestamp"/>
 	<field name="investment_amount" class="java.lang.Float"/>
 	<field name="merry_go_round_amount" class="java.lang.Float"/>
+	<field name="loan_contrib" class="java.lang.Float"/>
+	<field name="extra_contrib" class="java.lang.Boolean"/>
+	<field name="total_contribution" class="java.lang.Float"/>
 	<field name="paid" class="java.lang.Boolean"/>
-	<field name="money_in" class="java.lang.Float"/>
-	<field name="money_out" class="java.lang.Float"/>
-	<field name="entity_id" class="java.lang.Integer"/>
 	<variable name="suminvestmentant" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{investment_amount}]]></variableExpression>
 		<initialValueExpression><![CDATA[]]></initialValueExpression>
@@ -54,11 +55,8 @@ ORDER BY vw_contributions.period_id]]>
 	<variable name="summgr" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{merry_go_round_amount}]]></variableExpression>
 	</variable>
-	<variable name="summoneyin" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{money_in}]]></variableExpression>
-	</variable>
-	<variable name="summoneyout" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{money_out}]]></variableExpression>
+	<variable name="sumloan" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{loan_contrib}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -114,25 +112,18 @@ ORDER BY vw_contributions.period_id]]>
 				<text><![CDATA[MGR Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="440" y="0" width="40" height="15" forecolor="#000000" uuid="d6e902d0-dd20-4e7e-a4c4-e13e37c583d5"/>
+				<reportElement style="Column header" x="516" y="0" width="120" height="15" forecolor="#000000" uuid="d6e902d0-dd20-4e7e-a4c4-e13e37c583d5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Paid]]></text>
+				<text><![CDATA[Ritwa]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="480" y="0" width="69" height="15" forecolor="#000000" uuid="58f81eb5-bda9-4eb1-8b7f-4a733663c4fe"/>
-				<textElement>
+				<reportElement style="Column header" x="440" y="0" width="76" height="15" forecolor="#000000" uuid="0a5b3466-8a25-4e8c-9895-ae8e87ca64c8"/>
+				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Money In]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="549" y="0" width="61" height="15" forecolor="#000000" uuid="e81bdeae-0ece-4a69-afbc-7e359b69de6f"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Money Out]]></text>
+				<text><![CDATA[Loan Amount]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -168,28 +159,21 @@ ORDER BY vw_contributions.period_id]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{merry_go_round_amount}]]></textFieldExpression>
 				</textField>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement x="439" y="0" width="76" height="15" uuid="e617a7c4-527c-47e6-8873-8815e27c2927"/>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{loan_contrib}]]></textFieldExpression>
+				</textField>
 			</frame>
-			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement style="Detail" x="479" y="0" width="69" height="15" uuid="63105981-e166-48e2-8714-97421de02984"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{money_in}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement style="Detail" x="548" y="0" width="61" height="15" uuid="2787ab9b-4c33-4bf6-88bb-e87a1adad198"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{money_out}]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="439" y="0" width="40" height="15" uuid="929631c8-7600-46ea-b706-d82791ace43f"/>
+				<reportElement style="Detail" x="515" y="0" width="155" height="15" uuid="929631c8-7600-46ea-b706-d82791ace43f"/>
 				<box leftPadding="8"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{paid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -256,26 +240,15 @@ ORDER BY vw_contributions.period_id]]>
 				<textFieldExpression><![CDATA[$V{summgr}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="479" y="0" width="69" height="20" uuid="ef2693e6-622c-47ed-9b78-df5840987310"/>
+				<reportElement x="439" y="0" width="76" height="20" uuid="6fa23862-6469-4e69-afd9-2ddd4bbe3b7f"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Double"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{summoneyin}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="548" y="0" width="61" height="20" uuid="a3c16642-b7fe-49f6-a676-d94f95aed7f4"/>
-				<box>
-					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="1.0" lineStyle="Double"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{summoneyout}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{sumloan}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

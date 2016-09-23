@@ -420,10 +420,10 @@ CREATE VIEW vw_tx_ledger AS
 		ELSE 0::real END) as cr_amount
 		
 	FROM transactions
-		INNER JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
-		INNER JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
 		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
+		LEFT JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
+		LEFT JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
 	WHERE transactions.tx_type is not null;
 	
 CREATE OR REPLACE FUNCTION prev_balance(date) RETURNS real AS $$
@@ -600,18 +600,31 @@ BEGIN
 			FROM orgs
 			WHERE (org_id = NEW.org_id);
 		END IF;
+		
+		IF(NEW.payment_date is null) AND (NEW.transaction_date is not null)THEN
+			NEW.payment_date := NEW.transaction_date;
+		END IF;
 	ELSE
 		IF ((OLD.approve_status = 'Draft') AND (NEW.completed = true)) THEN
 			NEW.approve_status := 'Completed';
 		END IF;
 	
 		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
+		ELSIF ((OLD.approve_status != 'Completed') AND (NEW.approve_status = 'Completed')) THEN
+			NEW.completed = true;
 		ELSIF ((OLD.approve_status = 'Completed') AND (NEW.approve_status != 'Completed')) THEN
 		ELSIF ((OLD.journal_id is not null) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already posted no changes are allowed.', NEW.transaction_id;
 		ELSIF ((OLD.transaction_status_id > 1) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already completed no changes are allowed.', NEW.transaction_id;
 		END IF;
+	END IF;
+	
+	IF(NEW.transaction_type_id = 7)THEN
+		NEW.tx_type := 1;
+	END IF;
+	IF(NEW.transaction_type_id = 8)THEN
+		NEW.tx_type := -1;
 	END IF;
 
 	RETURN NEW;
