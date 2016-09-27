@@ -182,8 +182,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
 
     
     --here
-    
-CREATE OR REPLACE FUNCTION ins_subscriptions()
+ CREATE OR REPLACE FUNCTION ins_subscriptions()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -202,7 +201,7 @@ BEGIN
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription,admin', null);
+			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'admin', null);
 		
 	
 			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
@@ -221,7 +220,9 @@ BEGIN
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
 		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
 		
-		
+		UPDATE entitys SET org_id = NEW.org_id, function_role='admin'
+		WHERE entity_id = NEW.entity_id;
+
 		
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
@@ -229,9 +230,7 @@ BEGIN
 		
 		INSERT INTO currency(currency_name, currency_symbol, org_id) VALUES ('Kenya Shillings', 'kes', NEW.org_id);
     
-		UPDATE entitys SET org_id = NEW.org_id, function_role='admin'
-		WHERE entity_id = NEW.entity_id;
-
+		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES ( 5, NEW.org_id, NEW.entity_id, 'subscription');
 		
@@ -268,6 +267,8 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
+  
+  
 
 
  
