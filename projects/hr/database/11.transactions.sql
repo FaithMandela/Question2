@@ -521,18 +521,18 @@ $$ LANGUAGE plpgsql;
 		
 CREATE OR REPLACE FUNCTION upd_transaction_details() RETURNS trigger AS $$
 DECLARE
-	statusID 	INTEGER;
-	journalID 	INTEGER;
-	v_for_sale	BOOLEAN;
-	accountid 	INTEGER;
-	taxrate 	REAL;
+	statusid 			integer;
+	journalid 			integer;
+	v_for_sale			boolean;
+	accountid 			integer;
+	taxrate 			real;
 BEGIN
 	SELECT transactions.transaction_status_id, transactions.journal_id, transaction_types.for_sales
-		INTO statusID, journalID, v_for_sale
+		INTO statusid, journalid, v_for_sale
 	FROM transaction_types INNER JOIN transactions ON transaction_types.transaction_type_id = transactions.transaction_type_id
 	WHERE (transaction_id = NEW.transaction_id);
 
-	IF ((statusID > 1) OR (journalID is not null)) THEN
+	IF ((statusid > 1) or (journalid is not null)) THEN
 		RAISE EXCEPTION 'Transaction is already posted no changes are allowed.';
 	END IF;
 

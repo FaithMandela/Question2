@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <SOAPSMS sppassword="Eti*q#15"
-	endpoint="http://172.31.183.242:9090/kannel/smsnotice" 
-	smsreceiver="http://172.31.183.242:9090/kannel/smslisten" 
+	endpoint="http://172.31.183.242:8080/kannel/smsnotice" 
+	smsreceiver="http://172.31.183.242:8080/kannel/smslisten" 
 	duration="30000">
 
 	<COMM orgid="8" dbpassword="galileo" dbpath="jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_BTS;selectMethod=cursor" 

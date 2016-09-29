@@ -59,6 +59,8 @@ CREATE TABLE departments (
 	function_code			varchar(50),
 	active					boolean default true not null,
 	petty_cash				boolean default false not null,
+	cost_center				boolean default true not null,
+	revenue_center			boolean default true not null,
 	description				text,
 	duties					text,
 	reports					text,
@@ -175,8 +177,9 @@ CREATE VIEW vw_bank_branch AS
 		
 CREATE VIEW vw_departments AS
 	SELECT departments.ln_department_id, p_departments.department_name as ln_department_name, 
-		departments.department_id, departments.org_id, departments.department_name, departments.active, departments.description, 
-		departments.duties, departments.reports, departments.details
+		departments.department_id, departments.org_id, departments.department_name, departments.active, 
+		departments.function_code, departments.petty_cash, departments.cost_center, departments.revenue_center,
+		departments.description, departments.duties, departments.reports, departments.details
 	FROM departments LEFT JOIN departments as p_departments ON departments.ln_department_id = p_departments.department_id;
 
 CREATE VIEW vw_periods AS

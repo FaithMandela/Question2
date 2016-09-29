@@ -18,7 +18,7 @@ public class BSMSMonitoring {
 	public void monitor() {
 		System.out.println("Staring SMS monitoring");
 		
-		Connection monDB = getConnection("jdbc:postgresql://localhost:5432/hr", "postgres", "");
+		Connection monDB = getConnection("jdbc:postgresql://localhost:5432/hr", "postgres", "Invent2k");
 		if(monDB == null) return;
 		
 		Connection bunsonDB = getConnection("jdbc:postgresql://62.24.116.56:5432/bunson", "root", "invent");
@@ -39,7 +39,7 @@ public class BSMSMonitoring {
 			else System.out.println("faidaPlus SMS okay");
 		}
 		
-		Connection smsDB = getConnection("jdbc:postgresql://localhost:5432/sms", "postgres", "");
+		Connection smsDB = getConnection("jdbc:postgresql://192.168.0.9:5432/sms", "postgres", "Invent2k");
 		if(smsDB == null) {
 			addEMail(monDB, "Cannot connect to SMS database");
 		} else {
