@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -29,6 +31,7 @@ FROM vw_budget_lines
 WHERE (vw_budget_lines.fiscal_year_id = '$P!{filterid}')
 	AND (vw_budget_lines.budget_type = 3)
 	AND (vw_budget_lines.approve_status = 'Approved')
+$P!{organd}
 
 ORDER BY vw_budget_lines.income_expense desc, vw_budget_lines.start_date]]>
 	</queryString>

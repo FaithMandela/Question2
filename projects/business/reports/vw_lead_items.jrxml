@@ -29,6 +29,7 @@
 		<![CDATA[SELECT vw_lead_items.lead_level, vw_lead_items.entity_name, vw_lead_items.item_name, vw_lead_items.business_name, vw_lead_items.sys_country_name, vw_lead_items.city, vw_lead_items.primary_contact, vw_lead_items.pitch_date, vw_lead_items.units, vw_lead_items.lead_value
 
 FROM vw_lead_items
+$P!{orgwhere}
 
 ORDER BY vw_lead_items.lead_level desc, vw_lead_items.pitch_date]]>
 	</queryString>

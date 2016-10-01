@@ -185,7 +185,7 @@ UPDATE app_students SET majorid = 'ACCT' WHERE majorid is null;
 UPDATE app_students SET studentid = app_student_id::varchar WHERE studentid is null;
 ---UPDATE app_students SET studentid = 'NR/' || lpad(student_number::varchar, 4, '0') WHERE studentid is null;
 UPDATE app_students SET guardianname = trim(substr(guardianname, 1, 50)) WHERE length(guardianname) > 50;
-
+UPDATE app_students SET is_picked = true WHERE studentid IN (SELECT studentid FROM students);
 
 INSERT INTO students (studentid, denominationid, 
 surname, firstname, othernames, sex, nationality, maritalstatus, 
@@ -247,5 +247,43 @@ UPDATE registrations SET af_date = pin_acc1.PAYMENT_DATE::timestamp,
 	af_card_type = 'eTrazact'
 FROM pin_acc1 
 WHERE (registrations.af_success is null) AND (registrations.registrationid = pin_acc1.MATRIC_TELLER);
+
+
+--- etranzact reconsilation
+
+CREATE TABLE etranzact_logs (
+        etranzact_log                   serial primary key,
+        trans_date                              varchar(50),
+        etz_ref                                 varchar(50),
+        card_number                             varchar(50),
+        narration                               varchar(50),
+        amount                                  varchar(50)
+);
+
+INSERT INTO etranzact_logs(trans_date, etz_ref, card_number, narration, amount) VALUES ('');
+
+SELECT *
+FROM etranzact_logs LEFT JOIN studentpayments ON trim(etranzact_logs.narration) = trim(studentpayments.narrative)
+WHERE studentpayments.narrative is null;
+
+SELECT etranzact_logs.*, to_char(studentpayments.amount, '9999999999')
+FROM etranzact_logs LEFT JOIN studentpayments ON trim(etranzact_logs.narration) = trim(studentpayments.narrative)
+WHERE studentpayments.approved = false;
+
+
+SELECT etranzact_logs.*, to_char(studentpayments.amount, '9999999'), etranzact_logs.amount
+FROM etranzact_logs LEFT JOIN studentpayments ON trim(etranzact_logs.narration) = trim(studentpayments.narrative)
+WHERE abs(etranzact_logs.amount::real - studentpayments.amount::real) > 100;
+
+SELECT etranzact_logs.*, to_char(studentpayments.amount, '9999999')
+FROM etranzact_logs LEFT JOIN studentpayments ON trim(etranzact_logs.narration) = trim(studentpayments.narrative)
+WHERE narration IN
+(SELECT etranzact_logs.narration
+FROM etranzact_logs LEFT JOIN studentpayments ON trim(etranzact_logs.narration) = trim(studentpayments.narrative)
+WHERE abs(etranzact_logs.amount::real - studentpayments.amount::real) > 100)
+ORDER BY narration;
+
+
+UPDATE studentpayments SET approved = true, phistoryid = 0, amount = WHERE narrative = '';
 
 

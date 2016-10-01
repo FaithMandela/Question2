@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -25,6 +27,7 @@ vw_budget_lines.amount, vw_budget_lines.tax_amount
 
 FROM vw_budget_lines
 WHERE (vw_budget_lines.budget_id = '$P!{filterid}')
+$P!{organd}
 
 ORDER BY vw_budget_lines.income_expense desc]]>
 	</queryString>

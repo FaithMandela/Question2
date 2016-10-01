@@ -13,13 +13,18 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.premises, vw_entitys.street, vw_entitys.town, vw_entitys.sys_country_name, vw_entitys.phone_number, vw_entitys.mobile, vw_entitys.email
 FROM vw_entitys
+
 WHERE (vw_entitys.Is_Active = true) AND (vw_entitys.use_function = 3)
+$P!{organd}
+
 ORDER BY vw_entitys.entity_name, vw_entitys.entity_id, is_default desc;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>

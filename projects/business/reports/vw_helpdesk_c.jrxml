@@ -30,7 +30,8 @@
 
 FROM vw_helpdesk
 
-WHERE vw_helpdesk.is_solved = true
+WHERE (vw_helpdesk.is_solved = true)
+$P!{organd}
 
 ORDER BY vw_helpdesk.ptype_name, vw_helpdesk.recoded_time]]>
 	</queryString>

@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -20,6 +22,7 @@
 		<![CDATA[SELECT vw_accounts.chat_type_name, vw_accounts.accounts_class_no, vw_accounts.accounts_class_name, vw_accounts.account_type_no, vw_accounts.account_type_name, vw_accounts.account_no, vw_accounts.account_name
 
 FROM vw_accounts
+$P!{orgwhere}
 
 ORDER BY vw_accounts.accounts_class_no, vw_accounts.account_type_no, vw_accounts.account_no]]>
 	</queryString>
