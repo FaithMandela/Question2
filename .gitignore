@@ -1,7 +1,8 @@
 #ignore report binaries
+projects/config.xml
+baraza.log
 build/webapps/work/
 build/baraza.jar
 build/baraza.app.jar
-baraza.log
-projects/config.xml
+
 
