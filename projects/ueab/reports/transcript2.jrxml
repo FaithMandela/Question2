@@ -359,7 +359,7 @@ WHERE (studentdegreeid = '$P!{filterid}');]]>
 		<band splitType="Prevent"/>
 	</columnHeader>
 	<detail>
-		<band height="37" splitType="Stretch">
+		<band height="38" splitType="Stretch">
 			<elementGroup>
 				<subreport isUsingCache="true">
 					<reportElement key="subreport-4" positionType="Float" isPrintRepeatedValues="false" mode="Opaque" x="0" y="2" width="782" height="18" isRemoveLineWhenBlank="true" uuid="98a62685-963d-4f62-8481-8a58c062106c"/>
