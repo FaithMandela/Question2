@@ -359,7 +359,7 @@ WHERE (studentdegreeid = '$P!{filterid}');]]>
 		<band splitType="Prevent"/>
 	</columnHeader>
 	<detail>
-		<band height="53" splitType="Stretch">
+		<band height="54" splitType="Stretch">
 			<elementGroup>
 				<subreport isUsingCache="true">
 					<reportElement key="subreport-4" positionType="Float" isPrintRepeatedValues="false" mode="Opaque" x="0" y="0" width="782" height="36" isRemoveLineWhenBlank="true" uuid="0146989b-fae5-41b4-8ef1-a6069202b941"/>
@@ -374,7 +374,7 @@ WHERE (studentdegreeid = '$P!{filterid}');]]>
 				</subreport>
 			</elementGroup>
 			<subreport isUsingCache="true">
-				<reportElement key="subreport-5" positionType="Float" x="0" y="36" width="782" height="16" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="40efeded-2062-4319-ba99-eea28dd0a5dd"/>
+				<reportElement key="subreport-5" positionType="Float" x="0" y="37" width="782" height="16" isRemoveLineWhenBlank="true" isPrintInFirstWholeBand="true" uuid="40efeded-2062-4319-ba99-eea28dd0a5dd"/>
 				<subreportParameter name="studentdegreeid">
 					<subreportParameterExpression><![CDATA[$F{studentdegreeid}]]></subreportParameterExpression>
 				</subreportParameter>

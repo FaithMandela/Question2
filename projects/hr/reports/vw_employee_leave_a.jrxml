@@ -214,7 +214,7 @@ ORDER BY EXTRACT(YEAR FROM vw_employee_leave.leave_from) desc, vw_employee_leave
 	<title>
 		<band height="120" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="370f54a5-0cdc-4aad-9d2f-969b24ffeeb8"/>
+				<reportElement style="Title" x="139" y="0" width="277" height="62" uuid="370f54a5-0cdc-4aad-9d2f-969b24ffeeb8"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
