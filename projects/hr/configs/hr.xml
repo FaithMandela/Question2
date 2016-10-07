@@ -2027,7 +2027,7 @@
 				<FORM name="Contract Details" keyfield="application_id" linkfield="employee_id" table="applications" th="210">
 					<COMBOBOX w="430" title="Contract Type" lptable="contract_types" y="10" h="20" x="10" lpfield="contract_type_name">contract_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Contract Status" lptable="contract_status" y="30" h="20" x="10" lpfield="contract_status_name">contract_status_id</COMBOBOX>
-					<COMBOBOX w="430" title="Intake" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
+					<COMBOBOX w="430" title="Contract" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="70" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="70" h="20" x="290">contract_start</TEXTDATE>
 					<TEXTFIELD w="150" title="Contract Period" y="90" h="20" x="10">contract_period</TEXTFIELD>
