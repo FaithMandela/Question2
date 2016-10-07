@@ -1,7 +1,7 @@
 CREATE TABLE budgets (
 	budget_id				serial primary key,
 	org_id					integer references orgs,
-	fiscal_year_id			varchar(9) references fiscal_years,
+	fiscal_year_id			integer references fiscal_years,
 	department_id			integer	references departments,
 	link_budget_id			integer references budgets,
 	entity_id				integer references entitys,
@@ -134,15 +134,15 @@ CREATE INDEX contracts_bidder_id ON contracts (bidder_id);
 
 CREATE VIEW vw_budgets AS
 	SELECT departments.department_id, departments.department_name, fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start,
-		fiscal_years.fiscal_year_end, fiscal_years.year_opened, fiscal_years.year_closed,
+		fiscal_years.fiscal_year, fiscal_years.fiscal_year_end, fiscal_years.year_opened, fiscal_years.year_closed,
 		budgets.budget_id, budgets.org_id, budgets.budget_type, budgets.budget_name, budgets.application_date, 
 		budgets.approve_status, budgets.workflow_table_id, budgets.action_date, budgets.details
 	FROM budgets INNER JOIN departments ON budgets.department_id = departments.department_id
 		INNER JOIN fiscal_years ON budgets.fiscal_year_id = fiscal_years.fiscal_year_id;
 
 CREATE VIEW vw_budget_lines AS
-	SELECT vw_budgets.department_id, vw_budgets.department_name, vw_budgets.fiscal_year_id, vw_budgets.fiscal_year_start,
-		vw_budgets.fiscal_year_end, vw_budgets.year_opened, vw_budgets.year_closed,
+	SELECT vw_budgets.department_id, vw_budgets.department_name, vw_budgets.fiscal_year_id, vw_budgets.fiscal_year,
+		vw_budgets.fiscal_year_start, vw_budgets.fiscal_year_end, vw_budgets.year_opened, vw_budgets.year_closed,
 		vw_budgets.budget_id, vw_budgets.budget_name, vw_budgets.budget_type, vw_budgets.approve_status, 
 
 		periods.period_id, periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
@@ -169,7 +169,7 @@ CREATE VIEW vw_budget_lines AS
 		LEFT JOIN vw_items ON budget_lines.item_id = vw_items.item_id;
 
 CREATE VIEW vw_budget_pds AS
-	SELECT vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id, 
+	SELECT vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id, vw_budget_lines.fiscal_year,
 		vw_budget_lines.fiscal_year_start, vw_budget_lines.fiscal_year_end, vw_budget_lines.year_opened, vw_budget_lines.year_closed,
 		vw_budget_lines.period_id, vw_budget_lines.start_date, vw_budget_lines.end_date, vw_budget_lines.opened, 
 		vw_budget_lines.closed, vw_budget_lines.month_id, vw_budget_lines.period_year, vw_budget_lines.period_month, 
@@ -188,7 +188,7 @@ CREATE VIEW vw_budget_pds AS
 		sum(vw_budget_lines.dr_budget - vw_budget_lines.cr_budget) as budget_diff
 	FROM vw_budget_lines
 	WHERE (vw_budget_lines.approve_status = 'Approved')
-	GROUP BY vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id, 
+	GROUP BY vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id,  vw_budget_lines.fiscal_year,
 		vw_budget_lines.fiscal_year_start, vw_budget_lines.fiscal_year_end, vw_budget_lines.year_opened, vw_budget_lines.year_closed,
 		vw_budget_lines.period_id, vw_budget_lines.start_date, vw_budget_lines.end_date, vw_budget_lines.opened, 
 		vw_budget_lines.closed, vw_budget_lines.month_id, vw_budget_lines.period_year, vw_budget_lines.period_month, 
@@ -203,7 +203,7 @@ CREATE VIEW vw_budget_pds AS
 		vw_budget_lines.spend_type_name, vw_budget_lines.income_budget, vw_budget_lines.income_expense;
 
 CREATE VIEW vw_budget_ads AS
-	SELECT vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id, 
+	SELECT vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id,  vw_budget_lines.fiscal_year,
 		vw_budget_lines.fiscal_year_start, vw_budget_lines.fiscal_year_end, vw_budget_lines.year_opened, vw_budget_lines.year_closed,
 		vw_budget_lines.budget_type,
 		vw_budget_lines.accounts_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
@@ -218,7 +218,7 @@ CREATE VIEW vw_budget_ads AS
 		sum(vw_budget_lines.dr_budget - vw_budget_lines.cr_budget) as budget_diff
 	FROM vw_budget_lines
 	WHERE (vw_budget_lines.approve_status = 'Approved')
-	GROUP BY vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id, 
+	GROUP BY vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id,  vw_budget_lines.fiscal_year,
 		vw_budget_lines.fiscal_year_start, vw_budget_lines.fiscal_year_end, vw_budget_lines.year_opened, vw_budget_lines.year_closed,
 		vw_budget_lines.budget_type,
 		vw_budget_lines.accounts_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
@@ -229,7 +229,7 @@ CREATE VIEW vw_budget_ads AS
 		vw_budget_lines.income_budget, vw_budget_lines.income_expense;
 
 CREATE VIEW vw_budget_pdc AS
-	SELECT vw_budget_ads.department_id, vw_budget_ads.department_name, vw_budget_ads.fiscal_year_id, 
+	SELECT vw_budget_ads.department_id, vw_budget_ads.department_name, vw_budget_ads.fiscal_year_id,  vw_budget_ads.fiscal_year,
 		vw_budget_ads.fiscal_year_start, vw_budget_ads.fiscal_year_end, vw_budget_ads.year_opened, vw_budget_ads.year_closed,
 		vw_budget_ads.budget_type,
 		vw_budget_ads.accounts_class_id, vw_budget_ads.chat_type_id, vw_budget_ads.chat_type_name, 
@@ -351,7 +351,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION create_budget(integer, varchar(9), integer) RETURNS integer AS $$
+CREATE OR REPLACE FUNCTION create_budget(integer, integer, integer) RETURNS integer AS $$
 DECLARE
 	rec 	RECORD;
 	

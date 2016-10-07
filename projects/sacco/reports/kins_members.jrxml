@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="kins_members" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" uuid="5abdf8fb-30be-4041-8fe6-3788949ec26c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="kins_members" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" whenResourceMissingType="Empty" uuid="5abdf8fb-30be-4041-8fe6-3788949ec26c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -23,9 +23,11 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT * FROM kins
-where entity_id = '$P!{entityid}'
-$P!{organd}
+		<![CDATA[SELECT kin_id, entity_id, kin_type_id, org_id, full_names, date_of_birth,
+       identification, relation, emergency_contact, beneficiary, beneficiary_ps,
+       postal_address, tel_number, email_address, pin, postal_code,
+       details FROM kins
+where entity_id= '$P!{entityid}'
 Order by kins.kin_type_id;]]>
 	</queryString>
 	<field name="kin_id" class="java.lang.Integer"/>

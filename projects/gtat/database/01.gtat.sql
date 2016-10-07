@@ -504,6 +504,20 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER updPeriod AFTER UPDATE ON Period
     FOR EACH ROW EXECUTE PROCEDURE updPeriod();
+    
+CREATE OR REPLACE FUNCTION ins_period() RETURNS trigger AS $$
+BEGIN
+	IF(NEW.salesperiod is not null)THEN
+		NEW.accountperiod := NEW.salesperiod;
+		NEW.kqaccountperiod := NEW.salesperiod;
+	END IF;
+
+	RETURN NEW;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_period BEFORE INSERT OR UPDATE ON period
+    FOR EACH ROW EXECUTE PROCEDURE ins_period();
 
 CREATE OR REPLACE FUNCTION del_period(varchar(16), varchar(16), varchar(16)) RETURNS varchar(50) AS $$
 DECLARE

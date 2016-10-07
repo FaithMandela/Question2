@@ -40,16 +40,17 @@
 			<MENU name="Master EMails">335</MENU>
 		</MENU>
 		<MENU name="Reports">
+			<MENU name=" Members" role="manager,admin">365</MENU>
 			<MENU name="Contributions" role="manager,admin">235</MENU>
 			<MENU name="Investments" role="manager,admin">240</MENU>
 			<MENU name="Borrowing" role="manager,admin">245</MENU>
 			<MENU name="Loans" role="manager,admin">250</MENU>
 			<MENU name="Penalty" role="manager,admin">255</MENU>
-			<MENU name="Member Statement">340</MENU>
-			<MENU name="Member Contributions">285</MENU>
-			<MENU name="Member Loans">290</MENU>
-			<MENU name="Member Penalty">295</MENU>
-			<MENU name="Chama Statement" role="manager,admin">345</MENU>
+			<MENU name="My Statement">340</MENU>
+			<MENU name="My Contributions">285</MENU>
+			<MENU name="My Loans">290</MENU>
+			<MENU name="My Penalties">295</MENU>
+			<MENU name="Statement" role="manager,admin">345</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
@@ -59,6 +60,9 @@
 			</TILE>
 			<TILE name="My Total Contributions" noorg.query="true" table="Contributions" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="My Contributions">total_contribs</TEXTFIELD>
+			</TILE>
+			<TILE name="My Total Overpayments" noorg.query="true" table="Receipts" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(remaining_amount),'999,999,999,990D00'))" title="My Overpayments">total_overpayments</TEXTFIELD>
 			</TILE>
 			<TILE name="My Unpaid Contributions" noorg.query="true" table="Contributions" where="(paid= 'false')" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="Total Deposits">total_ucontribs</TEXTFIELD>
@@ -620,8 +624,6 @@
 			<TEXTFIELD w="75" title="Meeting ID">meeting_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Meeting Date">meeting_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Meeting Place">meeting_place</TEXTFIELD>
-			<TEXTFIELD w="75" title="Minutes">minutes</TEXTFIELD>
-			<TEXTFIELD w="75" title="Status">status</TEXTFIELD>
 			<ACTIONS>
 				<ACTION fnct="email_before">Send Email Before Meeting</ACTION>
 				<ACTION fnct="email_after">Send Email After meeting</ACTION>
@@ -630,7 +632,6 @@
 				<TEXTDATE w="150" title="Meeting Date" y="10" h="20" x="10">meeting_date</TEXTDATE>
 				<TEXTFIELD w="430" title="Meeting Place" y="30" h="20" x="10">meeting_place</TEXTFIELD>
 				<TEXTFIELD w="430" title="Minutes" y="50" h="20" x="10">minutes</TEXTFIELD>
-				<TEXTFIELD w="150" title="Status" y="70" h="20" x="10">status</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Attendance" keyfield="member_id" table="vw_member_meeting">
@@ -639,7 +640,6 @@
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 			</GRID>
 			<GRID name="Add Members" keyfield="member_id" table="vw_members">
-				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Bank Branch ">bank_branch_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
 				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
@@ -765,20 +765,17 @@
 			<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Entitys" key="205" h="550">
+	<DESK w="700" name="My account" key="205" h="550">
 		<GRID name="Contributions" keyfield="contribution_id" linkfield="member_id" table="vw_member_contrib" user="entity_id">
-			<TEXTFIELD w="100" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
-			<TEXTFIELD w="100" title="Bank Account name">bank_account_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date">start_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account name">bank_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Member Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Start date">start_date</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-			<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
-			<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="MGR Number">merry_go_round_number</TEXTDECIMAL>
-			<ACTIONS>
-				<ACTION fnct="generate_paid" role="admin">Pay</ACTION>
-			</ACTIONS>
+			<TEXTDECIMAL w="150" title="Loan Contrib" y="240" h="20" x="290">loan_contrib</TEXTDECIMAL>
+			<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
 		</GRID>
 		<JASPER name="Summary Contribution Report" reportfile="vw_member_contributions.jasper"></JASPER>
 		<JASPER name="Extra Contributions" reportfile="vw_member_extra_contributions.jasper"></JASPER>
@@ -790,6 +787,7 @@
 				<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Loan Contrib" y="240" h="20" x="290">loan_contrib</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Extra Contrib" y="240" h="20" x="10">extra_contrib</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -859,10 +857,7 @@
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
 			<FORM new="false" cols="2" tw="570" name="Details" keyfield="entity_id" linkfield="member_id" table="members" user="entity_id" th="120">
-				<COMBOBOX w="430" title="Bank" lptable="banks" y="30" h="20" x="10" span="true" lpfield="bank_name">bank_id</COMBOBOX>
-				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-				<COMBOBOX w="430" title="Bank Branch" lptable="bank_branch" y="70" h="20" x="10" span="true" lpfield="bank_branch_name">bank_branch_id</COMBOBOX>
-				<COMBOBOX w="430" title="Location" lptable="locations" y="110" h="20" x="10" lpfield="location_name">location_id</COMBOBOX>
+				<COMBOBOX w="430" title="Branch" lptable="locations" y="110" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
 				<COMBOLIST w="150" title="Title" y="10" h="20" x="290">person_title
 					<DATA>Mr</DATA>
 					<DATA>Ms</DATA>
@@ -871,17 +866,20 @@
 					<DATA>Dr.</DATA>
 					<DATA>Prof</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="150" title="Surname" placeholder="required field" y="130" h="20" x="290" span="true">surname</TEXTFIELD>
-				<TEXTFIELD w="150" title="First Name" y="150" h="20" x="10">first_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Middle Name" y="150" h="20" x="290" span="true">middle_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="ID Number" y="170" h="20" x="10">id_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Email" placeholder="required field" y="170" h="20" x="290" span="true">email</TEXTFIELD>
-				<TEXTDATE w="150" title="Date Of Birth" y="190" h="20" x="10">date_of_birth</TEXTDATE>
+				<TEXTFIELD w="150" title="Surname" placeholder="required field" y="90" h="20" x="290" span="true">surname</TEXTFIELD>
+				<TEXTFIELD w="150" title="First Name" placeholder="required field" y="110" h="20" x="10">first_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Middle Name" y="110" h="20" x="290" span="true">middle_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="ID Number" placeholder="required field" y="130" h="20" x="10">id_number</TEXTFIELD>
+				<TEXTDATE w="150" title="Date Of Birth" y="130" h="20" x="290" span="true">date_of_birth</TEXTDATE>
+				<TEXTFIELD w="150" title="Email" placeholder="required field" y="170" h="20" x="290">email</TEXTFIELD>
 				<COMBOLIST w="150" title="Gender" y="10" h="20" x="290" span="true">gender
 					<DATA>Male</DATA>
 					<DATA>Female</DATA>
+					<DATA>Other</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Phone" y="210" h="20" x="10">phone</TEXTFIELD>
+				<COMBOBOX w="430" title="Bank" lptable="banks" y="30" h="20" x="10" span="true" lpfield="bank_name">bank_id</COMBOBOX>
+				<COMBOBOX w="430" title="Bank Branch" lptable="bank_branch" y="70" h="20" x="10" lpfield="bank_branch_name">bank_branch_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Bank Account Number" y="210" h="20" x="290" span="true">bank_account_number</TEXTFIELD>
 				<COMBOBOX w="430" title="Nationality" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="230" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
 				<COMBOBOX w="430" title="Nation Of Birth" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="250" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
@@ -889,7 +887,11 @@
 					<DATA>Married</DATA>
 					<DATA>Single</DATA>
 				</COMBOLIST>
-				<TEXTAREA w="430" title="Details" y="1" h="170" x="10" span="true">details</TEXTAREA>
+				<TEXTFIELD w="150" title="Merry Go Round Number" y="420" h="20" x="10" span="true">merry_go_round_number</TEXTFIELD>
+				<TEXTDATE w="150" title="Joining Date" y="210" h="20" x="290">joining_date</TEXTDATE>
+				<TEXTDATE w="150" title="Exit Date" y="230" h="20" x="10" span="true">exit_date</TEXTDATE>
+				<CHECKBOX w="150" title="Active" y="250" h="20" x="10">active</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="270" h="70" x="10" span="true">details</TEXTAREA>
 			</FORM>
 		</FORMVIEW>
 	</DESK>
@@ -899,29 +901,27 @@
 			<TEXTFIELD w="45" title="Period Code">period_code</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
 				<ACTION fnct="generate_contribs" role="admin">Generate Contributionsl</ACTION>
 			</ACTIONS>
 			<GRID name="Contributions" keyfield="contribution_id" linkfield="period_id" table="vw_member_contrib">
-				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Bank Account name">bank_account_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Member Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Member Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Start date">start_date</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
-				<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
-				<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Loan Contrib" y="240" h="20" x="290">loan_contrib</TEXTDECIMAL>
+				<CHECKBOX w="50" title="Paid">paid</CHECKBOX>
+				<TEXTDECIMAL w="50" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
 				<ACTIONS>
 					<ACTION fnct="generate_paid" role="admin">Pay</ACTION>
 				</ACTIONS>
-				<FORM name="Contributions" keyfield="contribution_id" table="contributions">
+				<FORM name="Contributions" keyfield="contribution_id" linkfield="contribution_id" table="contributions">
 					<COMBOBOX w="430" title="Contribution Type" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-					<COMBOBOX w="430" title="Member Name" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
@@ -932,6 +932,12 @@
 				</FORM>
 			</GRID>
 		</GRID>
+		<FILTER w="700" location="250" name="Contributions Summary" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Contributions" reportfile="vw_contributions.jasper"></JASPER>
+		</FILTER>
 		<GRID name="Contribution Types" keyfield="contribution_type_id" table="vw_contribution_types">
 			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
@@ -968,25 +974,50 @@
 				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Member ">entity_name</TEXTFIELD>
 				<FORM name="Contribution Defaults" keyfield="contribution_default_id" linkfield="contribution_type_id" table="contribution_defaults">
-					<COMBOBOX w="430" title="Member" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>
 		<GRID name="Drawings" keyfield="drawing_id" table="vw_drawings">
 			<TEXTFIELD w="75" title="Member">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTFIELD w="75" title="Ref Number">ref_number</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTDATE w="75" title="Withdrawal Date">withdrawal_date</TEXTDATE>
+			<CHECKBOX w="75" title="Recieved">recieved</CHECKBOX>
 			<FORM name="Drawings" keyfield="drawing_id" table="drawings">
-				<COMBOBOX w="430" title="Period" lptable="periods" y="10" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
-				<COMBOBOX w="430" title="Member" lptable="entitys" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Start Date" lptable="periods" y="10" h="20" x="10" lpfield="start_date">period_id</COMBOBOX>
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="70" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<TEXTDATE w="150" title="Withdrawal Date" y="90" h="20" x="10">withdrawal_date</TEXTDATE>
 				<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTFIELD w="75" title="Ref Number">ref_number</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Amount" y="130" h="20" x="10">amount</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Recieved" y="200" h="20" x="10">recieved</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Receipts" keyfield="receipts_id" linkfield="org_id" table="vw_receipts">
+			<TEXTFIELD w="75" title="Member">entity_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="Receipt Date">receipts_date</TEXTDATE>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTFIELD w="75" title="Ref Number">ref_number</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Remit All">remit_all</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Remaining Amount">remaining_amount</TEXTDECIMAL>
+			<FORM name="Receipts" keyfield="receipts_id" linkfield="receipts_id" table="receipts">
+				<COMBOBOX w="430" title="Period Start Date" lptable="periods" y="10" h="20" x="10" lpfield="start_date">period_id</COMBOBOX>
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<TEXTDATE w="150" title="Receipt Date" y="70" h="20" x="10">receipts_date</TEXTDATE>
+				<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTFIELD w="150" title="Ref Number" y="200" h="20" x="290">ref_number</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">amount</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Remit All" y="170" h="20" x="10">remit_all</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -1154,7 +1185,6 @@
 	</DESK>
 	<DESK w="700" name="Penalty" key="225" h="550">
 		<GRID name="Penalty" keyfield="penalty_id" table="vw_penalty">
-			<TEXTFIELD w="75" title="Bank Account">bank_account_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Penalty Type Name">penalty_type_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Date Of Accrual">date_of_accrual</TEXTDATE>
@@ -1276,23 +1306,42 @@
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Contributions" key="235" h="550">
-		<FILTER w="700" name="Paid Contributions" split="150" type="vert" h="550">
-			<COMBOBOX w="430" title="Member" lptable="entitys" lpkey="entity_id" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
-			</FILTERFORM>
-			<JASPER name="Contributions" reportfile="vw_contributions.jasper"></JASPER>
+		<FILTER w="700" location="250" name="Paid Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Contributions" reportfile="vw_contributions_paid.jasper"></JASPER>
 		</FILTER>
 		<FILTER w="700" name="Unpaid Contributions" split="150" type="vert" h="550">
-			<COMBOBOX w="430" title="Member" lptable="entitys" lpkey="entity_id" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
-			</FILTERFORM>
-			<JASPER name="Contributions" reportfile="vw_contributions_unpaid.jasper"></JASPER>
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Contributions" reportfile="vw_contributions_unpaid.jasper"></JASPER>
 		</FILTER>
-		<JASPER name="Extra Contributions" reportfile="vw_extra_contributions.jasper"></JASPER>
+		<FILTER w="700" location="250" name="Extra Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Extra Contributions" reportfile="vw_extra_contributions.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" location="250" name="Receipts" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Receipts" reportfile="vw_receipts.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" location="250" name="Drawings" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Drawings" reportfile="vw_drawings.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" location="250" name="Merry Go Round Drawings" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Merry Go Round Drawings" reportfile="vw_mgr_drawings.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Investments" key="240" h="550">
 		<JASPER name="Reports" reportfile="vw_investments.jasper"></JASPER>
@@ -1312,7 +1361,6 @@
 	</DESK>
 	<DESK w="700" name="Penalty" key="255" h="550">
 		<FILTER w="700" name="Penalty" split="150" type="vert" h="550">
-			<COMBOBOX w="430" title="Member" lptable="entitys" lpkey="entity_id" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
 				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
@@ -1321,7 +1369,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Members" key="260" h="550">
-		<GRID name="Members" keyfield="member_id" table="vw_members">
+		<GRID name="Members" keyfield="entity_id" table="vw_members">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Person Title">person_title</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
@@ -1334,7 +1382,7 @@
 			<TEXTFIELD w="75" title="Merry Go Round Number">merry_go_round_number</TEXTFIELD>
 			<TEXTDATE w="75" title="Joining Date">joining_date</TEXTDATE>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
-			<FORM cols="2" tw="570" name="Members" keyfield="member_id" linkfield="member_id" table="members" th="120">
+			<FORM cols="2" tw="570" name="Members" keyfield="entity_id" linkfield="entity_id" table="members" th="120">
 				<COMBOBOX w="430" title="Branch" lptable="locations" y="110" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
 				<COMBOLIST w="150" title="Title" y="10" h="20" x="290">person_title
 					<DATA>Mr</DATA>
@@ -1371,34 +1419,32 @@
 				<CHECKBOX w="150" title="Active" y="250" h="20" x="10">active</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="270" h="70" x="10" span="true">details</TEXTAREA>
 			</FORM>
-			<GRID name="Contributions" keyfield="contribution_id" orderby="contribution_type_name" linkfield="member_id" table="vw_member_contrib">
+			<GRID name="Contributions" keyfield="contribution_id" orderby="contribution_type_name" linkfield="entity_id" table="vw_member_contrib">
 				<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Bank Account name">bank_account_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Member Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Start date">start_date</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Investment Amount">investment_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Loan Contrib" y="240" h="20" x="290">loan_contrib</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Paid">paid</CHECKBOX>
-				<TEXTDECIMAL w="75" title="Money In">money_in</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Money Out">money_out</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
 				<ACTIONS>
 					<ACTION fnct="generate_paid" role="admin">Pay</ACTION>
 				</ACTIONS>
-				<FORM name="Contributions" keyfield="member_id" linkfield="member_id" table="contributions">
+				<FORM name="Contributions" keyfield="contribution_id" table="contributions">
 					<COMBOBOX w="430" title="Contribution Type" lptable="contribution_types" y="10" h="20" x="10" lpfield="contribution_type_name">contribution_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-					<COMBOBOX w="430" title="Start Date" lptable="periods" y="90" h="20" x="10" lpfield="start_date">period_id</COMBOBOX>
+					<COMBOBOX w="430" title="Member Name" lptable="entitys" y="70" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contribution Date" y="110" h="20" x="10">contribution_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Investment Amount" y="110" h="20" x="290">investment_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Merry Go Round Amount" y="130" h="20" x="10">merry_go_round_amount</TEXTDECIMAL>
-					<CHECKBOX w="150" title="Extra Contrib" y="240" h="20" x="10">extra_contrib</CHECKBOX>
 					<CHECKBOX w="150" title="Paid" y="240" h="20" x="10">paid</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Money In" y="150" h="20" x="10">money_in</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Money Out" y="150" h="20" x="290">money_out</TEXTDECIMAL>
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<JASPER name="Summary Contributions Report" reportfile="vw_member_contributions.jasper"></JASPER>
 			<GRID name="Loans" keyfield="loan_id" linkfield="entity_id" table="vw_loans">
 				<TEXTFIELD w="75" title="Loan Type Name">loan_type_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
@@ -1473,6 +1519,7 @@
 					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<JASPER name="Summary Statement Report" reportfile="vw_member_statement.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Banks" key="270" h="550">
@@ -1605,40 +1652,30 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Member Contributions" key="285" h="550">
-		<FILTER w="700" name="Paid Contributions" split="150" type="vert" h="550">
-			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
-			</FILTERFORM>
-			<JASPER name="Reports" reportfile="vw_member_contributions.jasper"></JASPER>
-		</FILTER>
+	<DESK w="700" name="My Contributions" key="285" h="550">
+		<JASPER name="Reports" reportfile="vw_member_contributions1.jasper"></JASPER>
 		<FILTER w="700" name="Unpaid Contributions" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
 				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="Reports" reportfile="vw_unpaid_member_contributions.jasper"></JASPER>
+			<JASPER name="Reports" reportfile="vw_unpaid_member_contributions1.jasper"></JASPER>
 		</FILTER>
-		<JASPER name="Extra Contributions" reportfile="vw_member_extra_contributions.jasper"></JASPER>
+		<JASPER name="Receipts" reportfile="vw_member_receipts1.jasper"></JASPER>
+		<JASPER name="Drawings" reportfile="vw_member_drawings1.jasper"></JASPER>
+		<JASPER name="Merry Go Round Drawings" reportfile="vw_membermgr_drawings1.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Member Loans" key="290" h="550">
+	<DESK w="700" name="My Loans" key="290" h="550">
 		<FILTER w="700" name="Member Loans" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
 				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="Reports" reportfile="vw_member_loans.jasper"></JASPER>
+			<JASPER name="Reports" reportfile="vw_member_loans1.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Member Penalty" key="295" h="550">
-		<FILTER w="700" name="Member Penalty" split="150" type="vert" h="550">
-			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
-			</FILTERFORM>
-			<JASPER name="Reports" reportfile="vw_member_penalty.jasper"></JASPER>
-		</FILTER>
+	<DESK w="700" name="My Penalties" key="295" h="550">
+		<JASPER name="Reports" reportfile="vw_member_penalty1.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Expenses" key="305" h="550">
 		<GRID name="Expenses" keyfield="expense_id" table="vw_expenses">
@@ -2288,7 +2325,7 @@
 					<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<GRID name="Entitys" keyfield="entity_id" linkfield="org_id" table="vw_entity_types" tab.count="count(entity_id)" noorg="true">
+			<GRID name="Entitys" keyfield="entity_id" linkfield="org_id" table="vw_entitys_types" tab.count="count(entity_id)" noorg="true">
 				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
 				<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
@@ -2333,12 +2370,14 @@
 				</GRID>
 				<FORM name="Entitys" keyfield="entity_id" table="entitys">
 					<COMBOBOX w="430" title="Org" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
-					<COMBOBOX w="430" title="Entity Type" lptable="entity_types" y="30" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Entity Type" lptable="entity_types" noorg="true" y="30" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
 					<TEXTFIELD w="430" title="Primary Email" y="70" h="20" x="10">primary_email</TEXTFIELD>
 					<TEXTFIELD w="250" title="Primary Telephone" y="90" h="20" x="10">primary_telephone</TEXTFIELD>
+					<CHECKBOX w="150" title="Super User" y="110" h="20" x="10">super_user</CHECKBOX>
 					<CHECKBOX w="150" title="Entity Leader" y="110" h="20" x="290">entity_leader</CHECKBOX>
+					<CHECKBOX w="150" title="No Org" y="130" h="20" x="10">no_org</CHECKBOX>
 					<TEXTFIELD w="150" title="Function Role" y="130" h="20" x="290">function_role</TEXTFIELD>
 					<CHECKBOX w="150" title="Active" y="150" h="20" x="10">is_active</CHECKBOX>
 					<TEXTFIELD w="150" title="First Password" y="150" h="20" x="290">first_password</TEXTFIELD>
@@ -2524,17 +2563,22 @@
 		</GRID>
 		<JASPER name="Summary Investment Reports" reportfile="vw_investments.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Member Statement" key="340" h="550">
+	<DESK w="700" name="My Statement" key="340" h="550">
 		<FILTER w="700" name="Member Statement" split="340" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
 				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">maxDate</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="Reports" reportfile="vw_member_statement.jasper"></JASPER>
+			<JASPER name="Reports" reportfile="vw_member_statement1.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Chama Statement" key="345" h="550">
-		<JASPER name="Reports" reportfile="vw_chama_statement.jasper"></JASPER>
+	<DESK w="700" name="Statement" key="345" h="550">
+		<FILTER location="250" name="Monthly Summaries" type="horl">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER filtered="true" name="Reports" reportfile="vw_chama_statement.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Drawings" key="350" h="550">
 		<GRID name="Drawings" keyfield="drawing_id" linkfield="org_id" table="vw_drawings">
@@ -2601,5 +2645,62 @@
 				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Members " key="365" h="550">
+		<JASPER name="Reports" reportfile="vw_members.jasper"></JASPER>
+		<FILTER w="700" name="Paid Contributions" split="150" type="vert" h="550">
+			<FILTERFORM name="Member Contributions">
+				<COMBOBOX w="430" fnct="entity_id" title="Summary" lptable="members" cmb_fnct="surname || ' '|| first_name" lpkey="entity_id" lpfield="entity_name">filterid</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_member_contributions.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="UnPaid Contributions" split="150" type="vert" h="550">
+			<FILTERFORM name="Member Contributions">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_unpaid_member_contributions.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Extra Contributions" split="150" type="vert" h="550">
+			<FILTERFORM name="Member  Extra Contributions">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_member_extra_contributions.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Receipts" split="150" type="vert" h="550">
+			<FILTERFORM name="Member Receipts">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_member_receipts.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Drawings" split="150" type="vert" h="550">
+			<FILTERFORM name="Member Drawings">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_member_drawings.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="MGR Drawings" split="150" type="vert" h="550">
+			<FILTERFORM name="Member MGR Drawings">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_membermgr_drawings.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Loans" split="150" type="vert" h="550">
+			<FILTERFORM name="Member Loans">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_member_loans.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Penalties" split="150" type="vert" h="550">
+			<FILTERFORM name="Member Penalties">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_member_penalty.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Statement" split="150" type="vert" h="550">
+			<FILTERFORM name="Member Statement">
+				<COMBOBOX w="430" title="Member" lptable="members" cmb_fnct="surname || ' '|| first_name" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Reports" reportfile="vw_member_statement.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

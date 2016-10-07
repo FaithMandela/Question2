@@ -287,22 +287,24 @@ CREATE VIEW vw_transactions AS
 		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
 		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
 		departments.department_id, departments.department_name,
+		ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id as ledger_account_id, ledger_types.ledger_posting,
 		transaction_status.transaction_status_id, transaction_status.transaction_status_name, transactions.journal_id, 
 		transactions.transaction_id, transactions.org_id, transactions.transaction_date, transactions.transaction_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) 
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 22)  
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 21) 
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
 		LEFT JOIN entitys ON transactions.entity_id = entitys.entity_id
 		LEFT JOIN vw_bank_accounts ON vw_bank_accounts.bank_account_id = transactions.bank_account_id
-		LEFT JOIN departments ON transactions.department_id = departments.department_id;
+		LEFT JOIN departments ON transactions.department_id = departments.department_id
+		LEFT JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id;
 
 CREATE VIEW vw_trx AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
@@ -332,9 +334,9 @@ CREATE VIEW vw_trx AS
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) 
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 22)
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 21) 
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
@@ -383,7 +385,7 @@ CREATE VIEW vw_transaction_details AS
 		LEFT JOIN stores ON transaction_details.store_id = stores.store_id;
 		
 CREATE VIEW vw_tx_ledger AS
-	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
+	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id, ledger_types.ledger_posting,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		entitys.entity_id, entitys.entity_name, 
 		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
@@ -420,10 +422,10 @@ CREATE VIEW vw_tx_ledger AS
 		ELSE 0::real END) as cr_amount
 		
 	FROM transactions
-		INNER JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
-		INNER JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
 		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
+		LEFT JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
+		LEFT JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
 	WHERE transactions.tx_type is not null;
 	
 CREATE OR REPLACE FUNCTION prev_balance(date) RETURNS real AS $$
@@ -466,7 +468,7 @@ BEGIN
 		UPDATE transactions SET for_processing = false WHERE transaction_id = $1::integer;
 		msg := 'Closed for processing';
 	ELSIF ($3 = '3') THEN
-		UPDATE transactions  SET tx_ledger_date = current_date, completed = true
+		UPDATE transactions  SET payment_date = current_date, completed = true
 		WHERE transaction_id = $1::integer AND completed = false;
 		msg := 'Completed';
 	ELSIF ($3 = '4') THEN
@@ -580,7 +582,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER af_upd_transaction_details AFTER INSERT OR UPDATE OR DELETE ON transaction_details
     FOR EACH ROW EXECUTE PROCEDURE af_upd_transaction_details();
 
-CREATE OR REPLACE FUNCTION upd_transactions() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_transactions() RETURNS trigger AS $$
 DECLARE
 	v_counter_id	integer;
 	transid 		integer;
@@ -600,26 +602,42 @@ BEGIN
 			FROM orgs
 			WHERE (org_id = NEW.org_id);
 		END IF;
-	ELSE
-		IF ((OLD.approve_status = 'Draft') AND (NEW.completed = true)) THEN
-			NEW.approve_status := 'Completed';
+				
+		IF(NEW.payment_date is null) AND (NEW.transaction_date is not null)THEN
+			NEW.payment_date := NEW.transaction_date;
 		END IF;
-	
+	ELSE
+			
 		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
+		ELSIF ((OLD.approve_status != 'Completed') AND (NEW.approve_status = 'Completed')) THEN
+			NEW.completed = true;
 		ELSIF ((OLD.approve_status = 'Completed') AND (NEW.approve_status != 'Completed')) THEN
+		ELSIF ((OLD.is_cleared = false) AND (NEW.is_cleared = true)) THEN
 		ELSIF ((OLD.journal_id is not null) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already posted no changes are allowed.', NEW.transaction_id;
 		ELSIF ((OLD.transaction_status_id > 1) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already completed no changes are allowed.', NEW.transaction_id;
 		END IF;
 	END IF;
+	
+	IF ((NEW.approve_status = 'Draft') AND (NEW.completed = true)) THEN
+		NEW.approve_status := 'Completed';
+		NEW.transaction_status_id := 2;
+	END IF;
+	
+	IF(NEW.transaction_type_id = 7)THEN
+		NEW.tx_type := 1;
+	END IF;
+	IF(NEW.transaction_type_id = 8)THEN
+		NEW.tx_type := -1;
+	END IF;
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER upd_transactions BEFORE INSERT OR UPDATE ON transactions
-    FOR EACH ROW EXECUTE PROCEDURE upd_transactions();
+CREATE TRIGGER ins_transactions BEFORE INSERT OR UPDATE ON transactions
+    FOR EACH ROW EXECUTE PROCEDURE ins_transactions();
 
 CREATE OR REPLACE FUNCTION get_period(date) RETURNS INTEGER AS $$
 	SELECT period_id FROM periods WHERE (start_date <= $1) AND (end_date >= $1); 
@@ -636,7 +654,7 @@ DECLARE
 	bankacc INTEGER;
 	msg varchar(120);
 BEGIN
-	SELECT transaction_id, transaction_type_id, transaction_status_id INTO rec
+	SELECT transaction_id, transaction_type_id, transaction_status_id, bank_account_id INTO rec
 	FROM transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
@@ -644,12 +662,21 @@ BEGIN
 		UPDATE transactions SET transaction_status_id = 4 
 		WHERE transaction_id = rec.transaction_id;
 		msg := 'Transaction Archived';
-	ELSIF(rec.transaction_status_id = 1) THEN
-		IF($3 = '1') THEN
+	ELSIF($3 = '1') AND (rec.transaction_status_id = 1)THEN
+		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
+			IF(rec.bank_account_id is null)THEN
+				msg := 'Transaction completed.';
+				RAISE EXCEPTION 'No active period to post.';
+			ELSE
+				UPDATE transactions SET transaction_status_id = 2, approve_status = 'Completed'
+				WHERE transaction_id = rec.transaction_id;
+				msg := 'Transaction completed.';
+			END IF;
+		ELSE
 			UPDATE transactions SET transaction_status_id = 2, approve_status = 'Completed'
 			WHERE transaction_id = rec.transaction_id;
+			msg := 'Transaction completed.';
 		END IF;
-		msg := 'Transaction completed.';
 	ELSE
 		msg := 'Transaction alerady completed.';
 	END IF;
@@ -742,7 +769,8 @@ BEGIN
 	SELECT org_id, department_id, transaction_id, transaction_type_id, transaction_type_name as tx_name, 
 		transaction_status_id, journal_id, gl_bank_account_id, currency_id, exchange_rate,
 		transaction_date, transaction_amount, document_number, credit_amount, debit_amount,
-		entity_account_id, entity_name, approve_status INTO rec
+		entity_account_id, entity_name, approve_status, 
+		ledger_account_id, ledger_posting INTO rec
 	FROM vw_transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
@@ -759,6 +787,9 @@ BEGIN
 	ELSIF(rec.approve_status != 'Approved') THEN
 		msg := 'Transaction is not yet approved.';
 		RAISE EXCEPTION 'Transaction is not yet approved.';
+	ELSIF((rec.ledger_account_id is not null) AND (rec.ledger_posting = false)) THEN
+		msg := 'Transaction not for posting.';
+		RAISE EXCEPTION 'Transaction not for posting.';
 	ELSE
 		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
 		VALUES (rec.org_id, rec.department_id, rec.currency_id, periodid, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
@@ -768,6 +799,15 @@ BEGIN
 		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 
 		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+		ELSIF((rec.transaction_type_id = 21) or (rec.transaction_type_id = 22)) THEN
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, journalid, rec.entity_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, journalid, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
 			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 		ELSE

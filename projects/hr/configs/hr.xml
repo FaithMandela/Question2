@@ -48,6 +48,7 @@
 		</MENU>
 		<MENU name="Staff Reports" role="staff">
 			<MENU name="Supervisor Review Report" role="staff">165</MENU>
+			<MENU name="Leave Summary">220</MENU>
 		</MENU>
 		<MENU name="Training" role="training">
 			<MENU name="Employee Trainings">50</MENU>
@@ -343,7 +344,7 @@
 				<DEFAULT default="Draft">approve_status</DEFAULT>
 				<COMBOBOX w="430" title="Leave Type" lptable="vw_employee_leave_types" user="entity_id" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Contact Person" lptable="vw_employees" lpkey="entity_id" y="30" h="20" x="10" lpfield="employee_name">contact_entity_id</COMBOBOX>
-				<TEXTDATE w="150" title="Leave From" y="50" h="20" x="10">leave_from</TEXTDATE>
+				<TEXTDATE w="150" title="Leave From" required="true" y="50" h="20" x="10">leave_from</TEXTDATE>
 				<TEXTDATE w="150" title="Leave To" y="50" h="20" x="290">leave_to</TEXTDATE>
 				<CHECKBOX w="150" title="Start Half Day" y="70" h="20" x="10">Start_Half_Day</CHECKBOX>
 				<CHECKBOX w="150" title="End Half Day" y="70" h="20" x="290">End_Half_Day</CHECKBOX>
@@ -428,8 +429,9 @@
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10">identity_card</TEXTFIELD>
 				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="150" h="20" x="10">previous_salary</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="150" h="20" x="290">expected_salary</TEXTDECIMAL>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="170" h="20" x="10">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10">interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10">field_of_study</TEXTAREA>
@@ -1933,6 +1935,8 @@
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Expected Salary">expected_salary</TEXTDECIMAL>
 				<JASPER name="BIO" org.table="applications" reportfile="bio_applicant_intake.jasper"></JASPER>
 				<JASPER name="CV" org.table="applications" reportfile="cv_applicant_intake.jasper"></JASPER>
 				<ACTIONS>
@@ -2023,7 +2027,7 @@
 				<FORM name="Contract Details" keyfield="application_id" linkfield="employee_id" table="applications" th="210">
 					<COMBOBOX w="430" title="Contract Type" lptable="contract_types" y="10" h="20" x="10" lpfield="contract_type_name">contract_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Contract Status" lptable="contract_status" y="30" h="20" x="10" lpfield="contract_status_name">contract_status_id</COMBOBOX>
-					<COMBOBOX w="430" title="Intake" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
+					<COMBOBOX w="430" title="Contract" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="70" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="70" h="20" x="290">contract_start</TEXTDATE>
 					<TEXTFIELD w="150" title="Contract Period" y="90" h="20" x="10">contract_period</TEXTFIELD>
@@ -2059,6 +2063,7 @@
 			<TEXTFIELD w="275" title="Contract Type Name">contract_type_name</TEXTFIELD>
 			<FORM name="Contract Types" keyfield="contract_type_id" table="contract_types">
 				<TEXTFIELD w="150" title="Contract Type Name" y="10" h="20" x="10">contract_type_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Notice Period" y="30" h="20" x="10">notice_period</TEXTFIELD>
 				<EDITOR w="430" tab="Contract" y="30" h="70" x="10">contract_text</EDITOR>
 				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -3757,8 +3762,15 @@
 			<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
 			<JASPER name="Leave Balance - by type" reportfile="leave_balance_field.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="Leave" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="10" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Leave" reportfile="vw_employee_leave_e.jasper"></JASPER>
+			<JASPER name="Leave Full" reportfile="vw_employee_leave.jasper"></JASPER>
+		</FILTER>
 		<JASPER name="Approvals" reportfile="leave_approvals.jasper"></JASPER>
-		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Intake" key="110" h="550">
@@ -4330,5 +4342,23 @@
 			<CHECKBOX w="75" title="Subscribed">subscribed</CHECKBOX>
 			<TEXTTIMESTAMP w="75" title="Subscribed Date">subscribed_date</TEXTTIMESTAMP>
 		</FORMVIEW>
+	</DESK>
+	<DESK w="700" name="Leave Summary" key="220" h="500">
+		<FILTER w="700" name="Leave Summary" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOLIST w="150" title="Status" y="30" h="20" x="10">approve_status
+					<DATA>Completed</DATA>
+					<DATA>Draft</DATA>
+					<DATA>Approved</DATA>
+					<DATA>Rejected</DATA>
+				</COMBOLIST>
+				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Leave List" reportfile="vw_employee_leave_e.jasper"></JASPER>
+			<JASPER name="Leave Approvals" org.table="vw_employee_leave" reportfile="employee_leave.jasper"></JASPER>
+			<JASPER name="Leave Staff Summary" reportfile="employee_leave_report.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

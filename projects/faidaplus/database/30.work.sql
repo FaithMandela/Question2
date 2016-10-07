@@ -11,6 +11,27 @@ WHERE bpcc = '36Q9'
 AND to_char(ticketdate, 'MMYYYY') = '032016'
 ORDER BY ticketdate;
 
+--- Ticket summary
+SELECT to_char(ticketdate, 'YYYY-MM'), bookpcc, bpcc, son, pcc, 
+       sum(topen + tused + tarpt + tckin + tlftd + tprtd + tunvl) as activesegs
+FROM tickets
+WHERE bpcc = '3L3N' AND for_incentive = false
+AND ticketdate >= '2016-01-01'::date
+GROUP BY to_char(ticketdate, 'YYYY-MM'), bookpcc, bpcc, son, pcc
+ORDER BY to_char(ticketdate, 'YYYY-MM');
+
+--- Ticket details
+
+SELECT tickets.ticketid, ticketdate, ticketpcc, bookpcc, bpcc, son, pcc, line1, 
+       line2, line3, segs, tvoid, topen, tused, texch, trfnd, tarpt, 
+       tckin, tlftd, tunvl, tprtd, tsusp, 
+       tes.details,
+       (topen + tused + tarpt + tckin + tlftd + tprtd + tunvl) as activesegs
+
+FROM tickets INNER JOIN tes ON tickets.ticketid = tes.ticketid
+WHERE tickets.bpcc = '3L3N' 
+ORDER BY tickets.ticketdate;
+
 
 --- DB clean ups
 ALTER TABLE tickets

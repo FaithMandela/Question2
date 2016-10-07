@@ -10,6 +10,7 @@ package org.baraza.utils;
 
 import java.util.logging.Logger;
 import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.text.ParseException;
 import java.lang.Number;
 
@@ -58,5 +59,12 @@ public class BNumberFormat {
 		}
 
 		return myNum;
+	}
+	
+	public static boolean isNumeric(String str) {
+		NumberFormat formatter = NumberFormat.getInstance();
+		ParsePosition pos = new ParsePosition(0);
+		formatter.parse(str, pos);
+		return str.length() == pos.getIndex();
 	}
 }

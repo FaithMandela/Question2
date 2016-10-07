@@ -1,4 +1,17 @@
 
+
+UPDATE studentpayments SET approved = true, amount = 400000.00 WHERE narrative = '178662;Pay;2016/2017.1M;SAMOIJ0001';
+UPDATE studentpayments SET approved = true, amount = 691153.00 WHERE narrative = '59128Fees;2016/2017.1;SIHAAN0001';
+UPDATE studentpayments SET approved = true, amount = 2640700.00 WHERE narrative = '59501Fees;2016/2017.1M;SOKHIN0001';
+UPDATE studentpayments SET approved = true, amount = 870180.00 WHERE narrative = '60007Fees;2016/2017.1;SUKAMA0004';
+UPDATE studentpayments SET approved = true, amount = 898408.00 WHERE narrative = '60501Fees;2016/2017.1;SIKUOL0004';
+UPDATE studentpayments SET approved = true, amount = 485618.00 WHERE narrative = '61224Fees;2016/2017.1;SBASPR0001';
+UPDATE studentpayments SET approved = true, amount = 524070.00 WHERE narrative = '61263Fees;2016/2017.1;SIFIDE0001';
+UPDATE studentpayments SET approved = true, amount = 551003.00 WHERE narrative = '61444Fees;2016/2017.1;SADEOG0012';
+UPDATE studentpayments SET approved = true, amount = 1028240.00 WHERE narrative = '61455Fees;2016/2017.1;SALOCH0005';
+UPDATE studentpayments SET approved = true, amount = 1596000.00 WHERE narrative = '61551Fees;2016/2017.1M;SBABOY0002';
+
+
 ALTER TABLE registrations ADD admission_level	integer default 100 not null;
 
 DROP VIEW registrymarkview;

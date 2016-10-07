@@ -214,11 +214,10 @@ UPDATE default_accounts set org_id = 0;
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
 VALUES (0, 0, 1, 0, '33000', 'Cash Account', true);
 
+UPDATE tax_types SET account_id = 90000;
 INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'Exempt', 0, '42005');
 INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'VAT', 16, '42005');
-
 UPDATE tax_types SET currency_id = 1;
-UPDATE tax_types SET account_id = 90000;
 
 
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 

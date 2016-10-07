@@ -29,7 +29,7 @@
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Student Details" key="1" h="500">
-		<FORMVIEW w="550" name="Student Details" lw="120" keyfield="studentid" table="vw_students" params="schoolid,student_edit" user="studentid">
+		<FORMVIEW w="550" new="false" name="Student Details" lw="120" keyfield="studentid" table="vw_students" params="schoolid,student_edit" user="studentid">
 			<CHECKBOX w="75" title="On Probation" format="boolean" ischar="true">onprobation</CHECKBOX>
 			<CHECKBOX w="75" title="Off Campus" format="boolean" ischar="true">offcampus</CHECKBOX>
 			<CHECKBOX w="75" title="See Registrar" format="boolean" ischar="true">seeregistrar</CHECKBOX>
@@ -116,7 +116,7 @@
 					<TEXTFIELD title="Details">details</TEXTFIELD>
 				</FORMVIEW>
 			</FORMVIEW>
-			<FORM name="Edit Details" keyfield="studentid" table="students" user="studentid" viewfilter="student_edit=allow">
+			<FORM new="false" name="Edit Details" keyfield="studentid" table="students" user="studentid" viewfilter="student_edit=allow">
 				<TEXTFIELD w="150" title="Email" y="130" h="20" x="290">email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Address" y="50" h="20" x="290">address</TEXTFIELD>
 				<TEXTFIELD w="150" title="Zipcode" y="70" h="20" x="10">zipcode</TEXTFIELD>
@@ -141,6 +141,7 @@
 				</COMBOLIST>
 				<TEXTAREA w="430" title="if yes, give details" y="290" h="40" x="10">dis_details</TEXTAREA>
 			</FORM>
+			<JASPER name="Admission Letter" user="filterid" reportfile="admissions.jasper"></JASPER>
 		</FORMVIEW>
 		<FORMVIEW w="550" name="Degree" lw="120" table="studentmajorview" noorg="true" user="studentid">
 			<TEXTFIELD w="75" title="Level">degreelevelname</TEXTFIELD>

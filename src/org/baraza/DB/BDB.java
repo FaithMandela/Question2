@@ -605,7 +605,6 @@ public class BDB {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = getConnection(datasource).prepareStatement(sql);
-            log2.info("Preparing Statement..");
 		} catch (SQLException e) {
             log2.severe("Unable to Prepare Statement : " + e.toString());
 		} catch (Exception ex) {
@@ -618,7 +617,6 @@ public class BDB {
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = con.prepareStatement(sql);
-            log2.info("Preparing Statement..");
 		} catch (SQLException e) {
             log2.severe("Unable to Prepare Statement : " + e.toString());
 		} catch (Exception ex) {
@@ -632,7 +630,6 @@ public class BDB {
 		Integer es = null;
 		try {
 			es = preparedStatement.executeUpdate(); // execute insert statement
-            log2.info("Executing Statement..");
 		} catch (SQLException e) {
             log2.severe("Error Executing Statement" + e.getMessage());
 			es = null;

@@ -215,9 +215,11 @@ CREATE VIEW vw_journals AS
 		INNER JOIN departments ON journals.department_id = departments.department_id;
 
 CREATE VIEW vw_gls AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
-		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+	SELECT vw_accounts.accounts_class_id, vw_accounts.accounts_class_no, vw_accounts.accounts_class_name,
+		vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
+		vw_accounts.account_type_id, vw_accounts.account_type_no, vw_accounts.account_type_name,
+		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, 
+		vw_accounts.is_header, vw_accounts.is_active,
 		vw_journals.fiscal_year_id, vw_journals.fiscal_year_start, vw_journals.fiscal_year_end,
 		vw_journals.year_opened, vw_journals.year_closed,
 		vw_journals.period_id, vw_journals.start_date, vw_journals.end_date, vw_journals.opened, vw_journals.closed, 
@@ -230,9 +232,10 @@ CREATE VIEW vw_gls AS
 		INNER JOIN vw_journals ON gls.journal_id = vw_journals.journal_id;
 
 CREATE VIEW vw_sm_gls AS
-	SELECT vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.chat_type_id, vw_gls.chat_type_name, 
-		vw_gls.accounts_class_name, vw_gls.account_type_id, vw_gls.account_type_name, 
-		vw_gls.account_id, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
+	SELECT vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.accounts_class_no, vw_gls.accounts_class_name,
+		vw_gls.chat_type_id, vw_gls.chat_type_name, 
+		vw_gls.account_type_id, vw_gls.account_type_no, vw_gls.account_type_name, 
+		vw_gls.account_id, vw_gls.account_no, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
 		vw_gls.fiscal_year_id, vw_gls.fiscal_year_start, vw_gls.fiscal_year_end, 
 		vw_gls.year_opened, vw_gls.year_closed, vw_gls.period_id, vw_gls.start_date, 
 		vw_gls.end_date, vw_gls.opened, vw_gls.closed, vw_gls.month_id, 
@@ -241,9 +244,10 @@ CREATE VIEW vw_sm_gls AS
 		sum(vw_gls.base_debit) as acc_base_debit, sum(vw_gls.base_credit) as acc_base_credit
 	FROM vw_gls
 	WHERE (vw_gls.posted = true)
-	GROUP BY vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.chat_type_id, vw_gls.chat_type_name, 
-		vw_gls.accounts_class_name, vw_gls.account_type_id, vw_gls.account_type_name, 
-		vw_gls.account_id, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
+	GROUP BY vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.accounts_class_no, vw_gls.accounts_class_name,
+		vw_gls.chat_type_id, vw_gls.chat_type_name, 
+		vw_gls.account_type_id, vw_gls.account_type_no, vw_gls.account_type_name, 
+		vw_gls.account_id, vw_gls.account_no, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
 		vw_gls.fiscal_year_id, vw_gls.fiscal_year_start, vw_gls.fiscal_year_end, 
 		vw_gls.year_opened, vw_gls.year_closed, vw_gls.period_id, vw_gls.start_date,
 		vw_gls.end_date, vw_gls.opened, vw_gls.closed, vw_gls.month_id, 
@@ -251,9 +255,10 @@ CREATE VIEW vw_sm_gls AS
 	ORDER BY vw_gls.account_id;
 
 CREATE VIEW vw_ledger AS
-	SELECT vw_sm_gls.org_id, vw_sm_gls.accounts_class_id, vw_sm_gls.chat_type_id, vw_sm_gls.chat_type_name, 
-		vw_sm_gls.accounts_class_name, vw_sm_gls.account_type_id, vw_sm_gls.account_type_name, 
-		vw_sm_gls.account_id, vw_sm_gls.account_name, vw_sm_gls.is_header, vw_sm_gls.is_active, 
+	SELECT vw_sm_gls.org_id, vw_sm_gls.accounts_class_id, vw_sm_gls.accounts_class_no, vw_sm_gls.accounts_class_name,
+		vw_sm_gls.chat_type_id, vw_sm_gls.chat_type_name, 
+		vw_sm_gls.account_type_id, vw_sm_gls.account_type_no, vw_sm_gls.account_type_name, 
+		vw_sm_gls.account_id, vw_sm_gls.account_no, vw_sm_gls.account_name, vw_sm_gls.is_header, vw_sm_gls.is_active, 
 		vw_sm_gls.fiscal_year_id, vw_sm_gls.fiscal_year_start, vw_sm_gls.fiscal_year_end, 
 		vw_sm_gls.year_opened, vw_sm_gls.year_closed, vw_sm_gls.period_id, vw_sm_gls.start_date,
 		vw_sm_gls.end_date, vw_sm_gls.opened, vw_sm_gls.closed, vw_sm_gls.month_id, 
@@ -267,13 +272,16 @@ CREATE VIEW vw_ledger AS
 	FROM vw_sm_gls;
 
 CREATE VIEW vw_budget_ledger AS
-	SELECT journals.org_id, periods.fiscal_year_id, journals.department_id, gls.account_id,
+	SELECT journals.org_id, periods.fiscal_year_id, journals.department_id, 
+		accounts.account_id, accounts.account_no, accounts.account_type_id, accounts.account_name,
 		sum(journals.exchange_rate * gls.debit) as bl_debit, sum(journals.exchange_rate * gls.credit) as bl_credit,
 		sum(journals.exchange_rate * (gls.debit - gls.credit)) as bl_diff
 	FROM journals INNER JOIN gls ON journals.journal_id = gls.journal_id
+		INNER JOIN accounts ON gls.account_id = accounts.account_id
 		INNER JOIN periods ON journals.period_id = periods.period_id
 	WHERE (journals.posted = true)
-	GROUP BY journals.org_id, periods.fiscal_year_id, journals.department_id, gls.account_id;
+	GROUP BY journals.org_id, periods.fiscal_year_id, journals.department_id, 
+		accounts.account_id, accounts.account_no, accounts.account_type_id, accounts.account_name;
 		
 CREATE VIEW vw_tax_types AS
 	SELECT vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name, 

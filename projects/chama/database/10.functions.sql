@@ -1,46 +1,66 @@
-CREATE OR REPLACE FUNCTION ins_contrib()
+CREATE OR REPLACE FUNCTION ins_id()
   RETURNS trigger AS
 $BODY$
 DECLARE
-	v_investment_amount			real;
-	v_period_id					integer;
-	v_org_id					integer;
-	v_contribution_type_id		integer;
-	v_merry_go_round_amount		real;
-	 v_mgr_number				integer;
-	 v_merry_go_round_number	integer;
-	v_money_out					real;
-	v_entity_id			integer;
-
+v_entity_id	integer;
 BEGIN
-	
-	SELECT   org_id, contribution_type_id, SUM(merry_go_round_amount)
-	INTO  v_org_id, v_contribution_type_id, v_money_out
-	FROM contributions
-		WHERE paid = true AND period_id = NEW.period_id 
-		GROUP BY contribution_type_id,org_id;
-	v_period_id := NEW.period_id;
-	
-RAISE EXCEPTION '%',v_contribution_type_id;
-			IF (v_money_out = 0)THEN
-			UPDATE contributions SET money_out  = 0 WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id;
-	ELSIF 	(v_money_out != 0)THEN
-	
-		SELECT mgr_number INTO v_mgr_number FROM periods  WHERE period_id = NEW.period_id AND org_id = v_org_id;
-		SELECT entity_id, merry_go_round_number INTO v_entity_id, v_merry_go_round_number 
-		FROM vw_member_contrib 
-		WHERE merry_go_round_number = v_mgr_number;
-		
-			UPDATE contributions SET money_out  = v_money_out WHERE paid = true AND period_id =  v_period_id AND contribution_type_id = v_contribution_type_id AND entity_id = v_entity_id;
-	
-	END IF;
-
+IF (NEW.entity_id is null) THEN
+	SELECT entity_id INTO v_entity_id from members where member_id = NEW.member_id;
+	NEW.entity_id = v_entity_id;
+END IF;
 RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
 
+CREATE TRIGGER ins_id
+  BEFORE INSERT
+  ON contributions
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_id();
 
+CREATE OR REPLACE FUNCTION ins_contrib()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+v_mgr_number			integer;
+v_org_id				integer;
+v_contribution_type_id	integer;
+v_money_out				real;
+v_period_id				integer;
+v_entity_id				integer;
+v_merry_go_round_number	integer;
+rec				record;
+v_amount  real;
+
+BEGIN
+SELECT  org_id, contribution_type_id, SUM(NEW.merry_go_round_amount)
+	INTO  v_org_id, v_contribution_type_id, v_money_out
+	FROM contributions
+		WHERE paid = true AND period_id = NEW.period_id 
+		GROUP BY contribution_type_id,org_id, merry_go_round_amount;
+	v_period_id := NEW.period_id;
+		
+SELECT mgr_number INTO v_mgr_number FROM periods  WHERE period_id = NEW.period_id AND org_id = v_org_id;
+		SELECT entity_id, merry_go_round_number INTO v_entity_id, v_merry_go_round_number 
+		FROM vw_member_contrib 
+		WHERE merry_go_round_number = v_mgr_number AND org_id = v_org_id;
+IF (v_entity_id is not null) AND (v_merry_go_round_number is not null) THEN
+	SELECT org_id, period_id, entity_id, amount INTO rec FROM drawings 
+	WHERE org_id = v_org_id AND period_id = v_period_id AND entity_id = v_entity_id;
+	IF (rec.org_id= v_org_id) AND (rec.period_id = v_period_id) AND (rec.entity_id = v_entity_id) THEN 
+		v_amount := rec.amount+v_money_out;
+			UPDATE drawings SET amount = v_amount WHERE org_id = v_org_id AND period_id = v_period_id AND entity_id = v_entity_id;
+	ELSE
+		INSERT INTO drawings(org_id, period_id, entity_id,narrative, amount)
+		VALUES(v_org_id, v_period_id, v_entity_id,'Merry go round Cash', v_money_out);
+	END IF;
+END IF;
+--raise exception '%',v_money_out;
+RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
   
 CREATE TRIGGER ins_contrib
 AFTER INSERT OR UPDATE of paid
@@ -92,20 +112,17 @@ FOR reca IN SELECT loan_id, approve_status FROM vw_loans WHERE entity_id = v_ent
 		END LOOP;
 	END IF;
 END LOOP;
---NEW.money_in := v_bal;
-UPDATE contributions SET money_in = v_bal WHERE contribution_id = New.contribution_id;
---raise exception '%',v_bal;
    RETURN NEW;
 END;
 $BODY$
- LANGUAGE plpgsql ;
+  LANGUAGE plpgsql;
 
  CREATE TRIGGER ins_contributions
   AFTER INSERT OR UPDATE OF paid
   ON contributions
   FOR EACH ROW
   EXECUTE PROCEDURE ins_contributions();
-  
+
 CREATE OR REPLACE FUNCTION weeks_in_range(
     date,
     date,
@@ -218,43 +235,43 @@ BEGIN
 			reca.member_id, reca.entity_id);
 		END IF;
 		END IF;
-	IF(rec.applies_to_all = false)THEN
-	SELECT contribution_type_id, entity_id INTO recu FROM contribution_defaults WHERE entity_id = reca.entity_id
-	AND contribution_type_id = rec.contribution_type_id;
-		IF (rec.frequency = 'Weekly') THEN
+	IF(rec.applies_to_all = false) THEN
+	SELECT contribution_type_id, entity_id INTO recu FROM contribution_defaults WHERE contribution_type_id = rec.contribution_type_id 
+	AND entity_id = reca.entity_id ANd org_id = rec.org_id;
+			IF (rec.frequency = 'Weekly') THEN
 		v_weeks := (SELECT weeks_in_range(v_start_date, v_end_date, rec.v_days::integer ));
 		FOR i in 1..v_weeks LOOP
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount, member_id, entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			VALUES(v_period_id, rec.org_id, recu.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, recu.entity_id);
 		END LOOP;
 		END IF;
 		IF (rec.frequency = 'Fortnightly') THEN
 		FOR i in 1..2 LOOP
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id, entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			VALUES(v_period_id, rec.org_id, recu.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, recu.entity_id);
 		END LOOP;
 		END IF;
 		IF (rec.frequency = 'Monthly') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			VALUES(v_period_id, rec.org_id, recu.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
 			reca.member_id, recu.entity_id);
 		END IF;
 		IF (rec.frequency = 'Quarterly') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
-			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-			reca.member_id, reca.entity_id);
+			VALUES(v_period_id, rec.org_id, recu.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
+			reca.member_id, recu.entity_id);
 		END IF;
 		IF (rec.frequency = 'Semi-annually') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-			reca.member_id, reca.entity_id);
+			reca.member_id, recu.entity_id);
 		END IF;
 		IF (rec.frequency = 'Annually') THEN
 			INSERT INTO contributions (period_id, org_id, contribution_type_id, investment_amount, merry_go_round_amount,member_id,entity_id)
 			VALUES(v_period_id, rec.org_id, rec.contribution_type_id, rec.investment_amount, rec.merry_go_round_amount,
-			reca.member_id, reca.entity_id);
+			reca.member_id, recu.entity_id);
 		END IF;
 	END IF;
 	
@@ -323,8 +340,68 @@ BEGIN
 	return v_weeks;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION ins_receipt()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+rec		record;
+reca		record;
+v_amount	real;
+v_remainder	real;
+v_total 	real;
+v_id 		integer;
+v_sum		real;
+v_inv_amount	real;
+BEGIN
+v_amount := NEW.amount;
+v_total := 0;
+FOR rec IN SELECT remaining_amount, receipts_id FROM receipts 
+WHERE period_id=NEW.period_id AND entity_id = NEW.entity_id LOOP
+	v_amount := v_amount +	rec.remaining_amount;
+	UPDATE receipts SET remaining_amount = 0 WHERE receipts_id = rec.receipts_id;
+
+END LOOP;
+--RAISE EXCEPTION '%',v_amount;
+For reca In SELECT contribution_id, investment_amount, merry_go_round_amount, loan_contrib, entity_id, period_id, org_id 
+FROM contributions 
+WHERE paid = false AND entity_id = NEW.entity_id AND org_id = NEW.org_id LOOP
+v_sum := reca.investment_amount + reca.merry_go_round_amount + reca.loan_contrib;
+v_total := v_sum;
+v_inv_amount := reca.investment_amount;
+--v_remainder := v_amount - v_sum;
+	IF (v_amount >= v_sum) THEN 
+		UPDATE contributions SET paid = true WHERE contribution_id= reca.contribution_id;
+		v_amount := v_amount - v_sum;
+		v_id = reca.contribution_id;
+	END IF;
+	--raise exception '%',	v_amount;
+	END LOOP;
+	--raise exception '%,%',	NEW.receipts_id,v_amount;
+IF (v_amount > 0) THEN 
+
+	IF (NEW.remit_all is true) THEN  
+		UPDATE contributions SET investment_amount = (v_inv_amount + v_amount) WHERE contribution_id= v_id;
+--raise exception '%', v_id;
+	END IF;
+	IF (NEW.remit_all is false) THEN 
+		UPDATE receipts SET remaining_amount = v_amount WHERE receipts_id = NEW.receipts_id;
+	END IF;
+END IF;
+
+RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_receipt
+  AFTER INSERT OR UPDATE OF amount
+  ON receipts
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_receipt();
+
   
- CREATE OR REPLACE FUNCTION upd_email()
+CREATE OR REPLACE FUNCTION upd_email()
   RETURNS trigger AS
 $BODY$
 BEGIN
@@ -616,3 +693,6 @@ msg := 'Repayment Generated';
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+
+

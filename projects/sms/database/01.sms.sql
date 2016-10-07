@@ -195,16 +195,18 @@ CREATE TABLE receipts (
 CREATE INDEX receipts_mpesa_trx_id ON receipts (mpesa_trx_id);
 CREATE INDEX receipts_org_id ON receipts (org_id);
 
-
 CREATE TABLE sms_configs (
-	sms_config				serial primary key,
+	sms_config_id			serial primary key,
 	last_sent				timestamp,
 	send_error				boolean,
 	error_email				boolean,
 	email_time				timestamp,
+	send_code				varchar(64),
 	narrative				varchar(200)
 );
-
+INSERT INTO sms_configs (sms_config_id, last_sent, send_error, error_email, email_time, narrative)
+VALUES (0, current_timestamp, false, false, current_timestamp, null);
+	
 DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
 DROP VIEW vw_address_entitys;

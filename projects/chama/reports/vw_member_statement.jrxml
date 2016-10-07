@@ -13,8 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="filterid" class="java.lang.String">
-		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	<parameter name="filterid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<parameter name="orgid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
@@ -34,7 +34,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_member_statement.entity_id, vw_member_statement.entity_name, vw_member_statement.contribution_date, vw_member_statement.contribution, vw_member_statement.drawings, vw_member_statement.loan, vw_member_statement.repayments, vw_member_statement.penalty
 FROM vw_member_statement
-Where entity_id = '$P!{entity_id}']]>
+Where entity_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>

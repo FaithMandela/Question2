@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="admissions_letter" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="511" leftMargin="46" rightMargin="38" topMargin="22" bottomMargin="22" isFloatColumnFooter="true" whenResourceMissingType="Empty" uuid="bfc43611-e802-4c0a-8542-419b43d8a460">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="407"/>
+	<property name="ireport.y" value="104"/>
 	<subDataset name="dataset1" uuid="772d561c-36a5-4462-b7f5-67006807428b"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -12,7 +12,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT registrationid, departmentid, departmentname, schoolid, schoolname,fullname, acceptance_fees, applicationdate, major_title,
-registrationid, (maxlevel / 100) as course_year
+registrationid, admission_level, (maxlevel / 100) as course_year
 FROM registrationview
 WHERE (registrationid = '$P!{filterid}')]]>
 	</queryString>
@@ -25,6 +25,7 @@ WHERE (registrationid = '$P!{filterid}')]]>
 	<field name="acceptance_fees" class="java.lang.Float"/>
 	<field name="applicationdate" class="java.sql.Date"/>
 	<field name="major_title" class="java.lang.String"/>
+	<field name="admission_level" class="java.lang.Integer"/>
 	<field name="course_year" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -62,21 +63,21 @@ WHERE (registrationid = '$P!{filterid}')]]>
 	<summary>
 		<band height="617" splitType="Stretch">
 			<staticText>
-				<reportElement x="2" y="127" width="70" height="15" uuid="a19cca92-13e1-466c-a38f-5b1fcf387e6e"/>
+				<reportElement x="2" y="133" width="70" height="15" uuid="a19cca92-13e1-466c-a38f-5b1fcf387e6e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[SCHOOL:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="2" y="156" width="69" height="15" uuid="7f6a0398-2c4a-4d43-bacf-5264ca3b012f"/>
+				<reportElement x="2" y="162" width="69" height="15" uuid="7f6a0398-2c4a-4d43-bacf-5264ca3b012f"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[DEGREE:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="244" y="149" width="47" height="15" uuid="8ff3989c-8b82-4496-aa2e-b41072a47aa3"/>
+				<reportElement x="244" y="156" width="47" height="17" uuid="8ff3989c-8b82-4496-aa2e-b41072a47aa3"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
@@ -90,42 +91,42 @@ WHERE (registrationid = '$P!{filterid}')]]>
 				<text><![CDATA[DEPARTMENT:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="291" y="149" width="36" height="15" uuid="92338511-a339-4f19-8b41-0136c99cdae4"/>
+				<reportElement x="291" y="156" width="36" height="17" uuid="92338511-a339-4f19-8b41-0136c99cdae4"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA["100"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{admission_level}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="74" y="127" width="170" height="29" uuid="3cff5569-34f0-4948-a460-e801083e0922"/>
-				<textElement verticalAlignment="Bottom">
+				<reportElement x="73" y="126" width="170" height="29" uuid="3cff5569-34f0-4948-a460-e801083e0922"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{schoolname}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="156" width="169" height="26" uuid="f000d3a6-6ef2-43a1-93b7-51bf429c5db5"/>
-				<textElement>
+				<reportElement x="73" y="156" width="168" height="26" uuid="f000d3a6-6ef2-43a1-93b7-51bf429c5db5"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{major_title}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="328" y="133" width="183" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
-				<textElement verticalAlignment="Bottom">
+				<reportElement x="328" y="132" width="183" height="15" uuid="7f7982f9-2c34-422f-8ed7-ddffa4edfe92"/>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{departmentname}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="331" y="149" width="73" height="15" uuid="8d7b5b82-99c8-40b4-b429-3d21b088ae2c"/>
+				<reportElement x="331" y="157" width="73" height="15" uuid="8d7b5b82-99c8-40b4-b429-3d21b088ae2c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[DURATION:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="404" y="149" width="107" height="15" uuid="02bf9f67-d0cf-4f09-a77d-68570ff12668"/>
+				<reportElement x="404" y="157" width="107" height="15" uuid="02bf9f67-d0cf-4f09-a77d-68570ff12668"/>
 				<textElement>
 					<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>

@@ -31,6 +31,9 @@
 	<parameter name="maxDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-12-31"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="period_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_loan_monthly.currency_symbol, vw_loan_monthly.loan_type_name,
 	vw_loan_monthly.entity_name, vw_loan_monthly.loan_date,
@@ -40,8 +43,8 @@
 	vw_loan_monthly.loan_balance
 
 FROM vw_loan_monthly
-WHERE (start_date >= '$P!{minDate}') AND (start_date <= '$P!{maxDate}')
-$P!{organd}]]>
+WHERE period_id=  '$P!{filterid} '
+ $P!{organd}]]>
 	</queryString>
 	<field name="currency_symbol" class="java.lang.String"/>
 	<field name="loan_type_name" class="java.lang.String"/>
