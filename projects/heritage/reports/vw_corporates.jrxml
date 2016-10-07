@@ -26,12 +26,12 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.org_name, vw_passengers.rate_category_name, vw_passengers.rate_plan_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_id_no, vw_passengers.totalamount_covered, vw_passengers.entity_name, vw_passengers.sys_country_name,
+		<![CDATA[SELECT vw_corporate_passengers.org_name, vw_corporate_passengers.corporate_rate_category_name, vw_corporate_passengers.rate_plan_name, vw_corporate_passengers.days_from, vw_corporate_passengers.days_to, vw_corporate_passengers.passenger_name, vw_corporate_passengers.passenger_mobile, vw_corporate_passengers.passenger_email, vw_corporate_passengers.passenger_id_no, vw_corporate_passengers.totalamount_covered, vw_corporate_passengers.entity_name, vw_corporate_passengers.sys_country_name,
 policy_number
-FROM vw_passengers]]>
+FROM vw_corporate_passengers]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
-	<field name="rate_category_name" class="java.lang.String"/>
+	<field name="corporate_rate_category_name" class="java.lang.String"/>
 	<field name="rate_plan_name" class="java.lang.String"/>
 	<field name="days_from" class="java.sql.Date"/>
 	<field name="days_to" class="java.sql.Date"/>
@@ -56,7 +56,7 @@ FROM vw_passengers]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Sales Report]]></text>
+				<text><![CDATA[Corporate Sales Report]]></text>
 			</staticText>
 		</band>
 	</title>

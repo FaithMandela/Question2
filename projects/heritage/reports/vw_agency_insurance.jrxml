@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_passengers" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="79072d11-7a3f-4561-8dd3-ea9838f9861c">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_agency_insurance" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="79072d11-7a3f-4561-8dd3-ea9838f9861c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -25,10 +25,20 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="org_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_passengers.org_name, vw_passengers.rate_category_name, vw_passengers.rate_plan_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_id_no, vw_passengers.totalamount_covered, vw_passengers.entity_name, vw_passengers.sys_country_name,
 policy_number
-FROM vw_passengers]]>
+FROM vw_passengers WHERE vw_passengers.org_id = '$P!{org_id}'
+AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date;]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="rate_category_name" class="java.lang.String"/>
@@ -61,7 +71,22 @@ FROM vw_passengers]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band splitType="Stretch"/>
+		<band height="50">
+			<staticText>
+				<reportElement style="Column header" x="1" y="0" width="120" height="15" forecolor="#000000" uuid="c59cc6e6-5fbd-4e0b-baba-176566c0021e"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<text><![CDATA[Agency Name]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="121" y="0" width="120" height="15" uuid="f9f64a3f-1163-44ba-915c-aff330a0650a"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageHeader>
 	<columnHeader>
 		<band height="16" splitType="Stretch">
@@ -72,14 +97,7 @@ FROM vw_passengers]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="1" y="0" width="120" height="15" forecolor="#000000" uuid="c59cc6e6-5fbd-4e0b-baba-176566c0021e"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Agency Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Column header" x="207" y="0" width="93" height="15" forecolor="#000000" uuid="01c87b99-c427-49c4-b64f-9479420e340a"/>
+				<reportElement style="Column header" x="140" y="0" width="160" height="15" forecolor="#000000" uuid="01c87b99-c427-49c4-b64f-9479420e340a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -107,7 +125,7 @@ FROM vw_passengers]]>
 				<text><![CDATA[Passenger Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="121" y="0" width="86" height="15" forecolor="#000000" uuid="d18ca1c3-b7c8-4437-bf70-d4e13736325b"/>
+				<reportElement style="Column header" x="1" y="0" width="139" height="15" forecolor="#000000" uuid="d18ca1c3-b7c8-4437-bf70-d4e13736325b"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -141,14 +159,7 @@ FROM vw_passengers]]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="c3ffb300-b37a-4003-9d91-0d6a72299a57"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="1" y="0" width="120" height="15" uuid="f9f64a3f-1163-44ba-915c-aff330a0650a"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{org_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="207" y="0" width="93" height="15" uuid="1209196d-1619-49c8-88ce-caaa29afa72f"/>
+					<reportElement style="Detail" x="140" y="0" width="160" height="15" uuid="1209196d-1619-49c8-88ce-caaa29afa72f"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -176,7 +187,7 @@ FROM vw_passengers]]>
 					<textFieldExpression><![CDATA[$F{passenger_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="121" y="0" width="86" height="15" uuid="5e193ab8-f37c-4a9f-b90e-2d74d7ffc39d"/>
+					<reportElement style="Detail" x="1" y="0" width="139" height="15" uuid="5e193ab8-f37c-4a9f-b90e-2d74d7ffc39d"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>

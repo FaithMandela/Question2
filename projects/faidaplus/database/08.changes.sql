@@ -1,4 +1,3 @@
-
 CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $$
 DECLARE
 	msg 		varchar(20);
@@ -40,3 +39,15 @@ BEGIN
 	RETURN 'Successfully Updated';
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
+DECLARE
+	v_order integer;
+BEGIN
+
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+	VALUES (5, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'We have received your order and its under process');
+	RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;

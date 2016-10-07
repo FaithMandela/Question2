@@ -22,7 +22,7 @@ a.curr_balance,batch_no,a.bonus
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real)  AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.org_son as son,
 		vw_son_points.org_pcc as pcc, vw_son_points.org_name, vw_son_points.entity_id,
-		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name,getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,null::int as batch_no, COALESCE(vw_son_points.bonus, 0::real) as bonus
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name, getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,null::int as batch_no, COALESCE(vw_son_points.bonus, 0::real) as bonus
 	FROM vw_son_points)
 	UNION ALL
 	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,

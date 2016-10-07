@@ -149,7 +149,9 @@ BEGIN
 		v_bonus := (rec.points * v_period_bonus_ps / 100) + (rec.segments * v_period_bonus_amount);
 		v_bonus := v_bonus + (rec.points * v_pcc_bonus_ps / 100) + (rec.segments * v_pcc_bonus_amount);
 		v_bonus := v_bonus + (rec.points * v_son_bonus_ps / 100) + (rec.segments * v_son_bonus_amount);
-
+		IF(v_bonus is null)THEN
+			v_bonus :=0;
+		END IF;
 		UPDATE points SET bonus = v_bonus WHERE points_id = rec.points_id;
 
 	END LOOP;
@@ -164,6 +166,7 @@ CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(1
 DECLARE
 	msg 		varchar(20);
 	details 	text;
+	or_details 	text;
 	v_org_id                integer;
 	v_entity_id            integer;
 	v_sms_number		varchar(25);
@@ -182,9 +185,9 @@ BEGIN
 			FROM entitys WHERE (entity_id = v_entity_id);
 		END IF;
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
-		details :='Order# '||v_batch_no||'-'||v_order_no||' is ready for collection Login to Faidaplus, go to orders click on collection document, print & complete details & present it on order collection.';
+		or_details :='Order# '||v_batch_no||'-'||v_order_no||' is ready for collection Login to Faidaplus, go to orders click on collection document, print & complete details & present it on order collection.';
 		INSERT INTO sms (folder_id, entity_id, org_id, sms_number, message)
-	    VALUES (0,v_entity_id, v_org_id, v_sms_number, details);
+	    VALUES (0,v_entity_id, v_org_id, v_sms_number, or_details);
 	END IF;
 
 	IF ($3::integer = 2) THEN
@@ -293,7 +296,7 @@ BEGIN
 
     IF(v_function_role = 'manager')THEN
         SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
-        FROM vw_balance
+        FROM vw_pcc_statement
         WHERE org_id = v_org_id;
     END IF;
 
@@ -393,7 +396,7 @@ DECLARE
 BEGIN
 
 	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
-	VALUES (5, NEW.order_id , 'vw_orders', 4, get_order_details(NEW.order_id), 'We have received your order and its under process');
+	VALUES (5, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'We have received your order and its under process');
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
