@@ -26,16 +26,15 @@
 		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_members.entity_id, vw_members.entity_name, vw_members.org_id, vw_members.member_id, vw_members.person_title, vw_members.surname, vw_members.first_name, vw_members.middle_name, vw_members.email, vw_members.merry_go_round_number, vw_members.active
+		<![CDATA[SELECT vw_members.entity_id, vw_members.full_name, vw_members.org_id,  vw_members.person_title, vw_members.surname, vw_members.first_name, vw_members.middle_name, vw_members.email, vw_members.merry_go_round_number, vw_members.active
 FROM vw_members
-Where vw_members.member_id is not null and vw_members.active is true
+Where vw_members.entity_id is not null and vw_members.active is true
 $P!{organd}
-ORDER BY vw_members.member_id]]>
+ORDER BY vw_members.entity_id]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
-	<field name="entity_name" class="java.lang.String"/>
+	<field name="full_name" class="java.lang.String"/>
 	<field name="org_id" class="java.lang.Integer"/>
-	<field name="member_id" class="java.lang.Integer"/>
 	<field name="person_title" class="java.lang.String"/>
 	<field name="surname" class="java.lang.String"/>
 	<field name="first_name" class="java.lang.String"/>

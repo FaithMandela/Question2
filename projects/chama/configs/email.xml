@@ -35,7 +35,7 @@
     </REPORT>
 
     <REPORT name="Next Meeting" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-            table="sys_emails,sys_emailed,subscriptions,vw_entitys"
+            table="sys_emails,sys_emailed,subscriptions,vw_entitys, meetings"
          where="(subscriptions.subscription_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
             AND (vw_entitys.entity_id = subscriptions.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
         
@@ -43,14 +43,14 @@
         
         <ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
         <BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
-        <BODYFIELD reference="{{username}}" basetable="vw_entitys">user_name</BODYFIELD>
-        <BODYFIELD reference="{{Password}}" basetable="vw_entitys">first_password</BODYFIELD>
+        <BODYFIELD reference="{{meeting_date}}" basetable="meetings">meeting_date</BODYFIELD>
+	<BODYFIELD reference="{{meeting_place}}" basetable="meetings">meeting_place</BODYFIELD>
         <FIELD title="Body" basetable="sys_emails">details</FIELD>
         
     </REPORT>
 
  <REPORT name="Last Meeting" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-            table="sys_emails,sys_emailed,subscriptions,vw_entitys"
+            table="sys_emails,sys_emailed,subscriptions,vw_entitys, meetings"
          where="(subscriptions.subscription_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
             AND (vw_entitys.entity_id = subscriptions.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
         
@@ -58,6 +58,9 @@
         
         <ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
         <BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
+	<BODYFIELD reference="{{meeting_date}}" basetable="meetings">meeting_date</BODYFIELD>
+	<BODYFIELD reference="{{meeting_place}}" basetable="meetings">meeting_place</BODYFIELD>
+	<BODYFIELD reference="{{minutes}}" basetable="meetings">minutes</BODYFIELD>
         <FIELD title="Body" basetable="sys_emails">details</FIELD>
         
     </REPORT>

@@ -817,6 +817,7 @@ $(function () {
         $('#progress .progress-bar').css('width', progress + '%');
     }).on('fileuploaddone', function (e, data) {
         console.log('BASE 5');
+        console.log(data);
         console.log(data.result);
         console.log(data.result.message);
         

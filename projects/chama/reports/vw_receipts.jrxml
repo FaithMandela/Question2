@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_receipts" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d751d521-141a-4f0d-ae45-d0b1ccfbe267">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="134"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -26,7 +26,7 @@
 		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_receipts.entity_id, vw_receipts.entity_name, vw_receipts.start_date, vw_receipts.org_id, vw_receipts.receipts_id, vw_receipts.receipts_date, vw_receipts.narrative, vw_receipts.ref_number, vw_receipts.amount, vw_receipts.remaining_amount, vw_receipts.remit_all
+		<![CDATA[SELECT vw_receipts.entity_id, vw_receipts.entity_name, vw_receipts.start_date, vw_receipts.org_id, vw_receipts.receipts_id, vw_receipts.receipts_date, vw_receipts.narrative, vw_receipts.ref_number, vw_receipts.amount, vw_receipts.remaining_amount
 FROM vw_receipts
 Where vw_receipts.receipts_id is not null AND period_id = '$P!{filterid}'
 $P!{organd}
@@ -42,7 +42,6 @@ ORDER BY period_id]]>
 	<field name="ref_number" class="java.lang.String"/>
 	<field name="amount" class="java.lang.Float"/>
 	<field name="remaining_amount" class="java.lang.Float"/>
-	<field name="remit_all" class="java.lang.Boolean"/>
 	<variable name="sumamt" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
 	</variable>
@@ -117,13 +116,6 @@ ORDER BY period_id]]>
 				<text><![CDATA[Remaining Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="732" y="1" width="52" height="15" forecolor="#000000" uuid="ac3db5b6-8792-4986-9cca-62abb1f8c63f"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<text><![CDATA[Remit All]]></text>
-			</staticText>
-			<staticText>
 				<reportElement style="Column header" x="514" y="1" width="62" height="15" forecolor="#000000" uuid="601ac70c-94c4-49d6-b9e7-7da1d3624a0e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
@@ -177,14 +169,6 @@ ORDER BY period_id]]>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{remaining_amount}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="732" y="0" width="52" height="15" uuid="9a4ad441-1d0c-4d3b-955b-b90c7e01d39b"/>
-					<box leftPadding="10"/>
-					<textElement>
-						<font fontName="Times New Roman" size="10"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{remit_all}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="514" y="0" width="62" height="15" uuid="1fe1a96a-7096-4732-b55c-0617980f2bf3"/>
