@@ -222,20 +222,36 @@ CREATE VIEW vw_period_month AS
 	FROM vw_periods
 	GROUP BY org_id, month_id, period_year, period_month
 	ORDER BY month_id, period_year, period_month;
-
-CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
+	
+CREATE OR REPLACE FUNCTION add_periods(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id			integer;
+	v_period_id			integer;
+	msg					varchar(120);
 BEGIN
-	INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
-	SELECT NEW.fiscal_year_id, NEW.org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
-	FROM (SELECT CAST(generate_series(fiscal_year_start, fiscal_year_end, '1 month') as date) as period_start
-		FROM fiscal_years WHERE fiscal_year_id = NEW.fiscal_year_id) as a;
 
-	RETURN NULL;
+	SELECT org_id INTO v_org_id
+	FROM fiscal_years
+	WHERE (fiscal_year_id = $1::int);
+	
+	SELECT period_id INTO v_period_id
+	FROM periods
+	WHERE (fiscal_year_id = $1::int) AND (org_id = v_org_id);
+	
+	IF(v_period_id is null)THEN
+		INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
+		SELECT $1::int, v_org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
+		FROM (SELECT CAST(generate_series(fiscal_year_start, fiscal_year_end, '1 month') as date) as period_start
+			FROM fiscal_years WHERE fiscal_year_id = $1::int) as a;
+		msg := 'Months for the year generated';
+	ELSE
+		msg := 'Months year already created';
+	END IF;
+
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_fiscal_years AFTER INSERT ON fiscal_years
-    FOR EACH ROW EXECUTE PROCEDURE ins_fiscal_years();
 
 CREATE OR REPLACE FUNCTION ins_periods() RETURNS trigger AS $$
 DECLARE

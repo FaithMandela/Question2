@@ -252,7 +252,7 @@ ORDER BY vw_pm_schedule.start_date
 
 UPDATE assets SET asset_status_id = 8, disposal_amount = 0, disposal_date = '2015-07-30'::date WHERE asset_serial = '';
 
-	
+
 -------- Generate asset tags
 
 ALTER TABLE asset_types ADD tag_prefix				varchar(4);
@@ -260,4 +260,19 @@ ALTER TABLE asset_types ADD tag_prefix				varchar(4);
 UPDATE assets SET tag_number = a.tag_prefix || to_char(purchase_date, 'YY') || lpad(asset_id::varchar, 5, '0')
 FROM (SELECT asset_types.tag_prefix, models.model_id FROM asset_types INNER JOIN models ON asset_types.asset_type_id = models.asset_type_id WHERE (asset_types.tag_prefix is not null)) a 
 WHERE (assets.model_id = a.model_id) AND (tag_number is null);
+
+--------- Store asset count
+
+SELECT a.asset_type_name, a.model, a.purchase_date, a.asset_serial, max(b.client_name)
+
+FROM
+(SELECT asset_id, asset_type_id, asset_type_name, model, purchase_date, asset_serial
+FROM vw_assets
+WHERE (asset_type_id IN (1, 3)) AND (asset_status_id = 1) AND (purchase_date < '2016-01-01'::date)
+AND (asset_serial NOT IN (SELECT serial_number FROM tmp1))) a
+LEFT JOIN vw_client_assets b ON a.asset_id = b.asset_id
+
+GROUP BY a.asset_type_id, a.asset_type_name, a.model, a.purchase_date, a.asset_serial
+ORDER BY a.asset_type_id, a.purchase_date, a.model
+
 

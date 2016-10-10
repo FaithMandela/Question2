@@ -1213,6 +1213,7 @@
 			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
 			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
 			<ACTIONS>
+				<ACTION fnct="add_periods">Generate Months</ACTION>
 				<ACTION fnct="close_year" approval="1">Close Year</ACTION>
 			</ACTIONS>
 			<GRID name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="vw_periods">
