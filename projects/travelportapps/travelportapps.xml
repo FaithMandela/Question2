@@ -171,7 +171,7 @@
 						<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 						<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
 							<DATA key="manager">Manager</DATA>
-							<DATA key="agency">Agency Manager</DATA>
+							<DATA key="agency">Agency</DATA>
 							<DATA key="user">User</DATA>
 							<DATA key="broker">Broker</DATA>
 						</COMBOLIST>
@@ -199,7 +199,7 @@
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 					<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
 						<DATA key="manager">Manager</DATA>
-						<DATA key="agency">Agency Manager</DATA>
+						<DATA key="agency">Agency</DATA>
 						<DATA key="user">User</DATA>
 						<DATA key="broker">Broker</DATA>
 					</COMBOLIST>
@@ -267,7 +267,7 @@
 					<TEXTFIELD w="150" h="20" x="290" y="50" title="User Name">user_name</TEXTFIELD>
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 					<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
-						<DATA key="agency">Agency Manager</DATA>
+						<DATA key="agency">Agency</DATA>
 						<DATA key="user">User</DATA>
 					</COMBOLIST>
 					<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
@@ -336,7 +336,7 @@
 					<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
 					<TEXTFIELD w="150" h="20" x="290" y="130" title="SON">son</TEXTFIELD>
 					<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
-						<DATA key="agency">Agency Manager</DATA>
+						<DATA key="agency">Agency</DATA>
 						<DATA key="user">User</DATA>
 					</COMBOLIST>
 					<CHECKBOX w="150" h="20" x="10" y="150" title="Active">is_active</CHECKBOX>
@@ -1125,7 +1125,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Insurance Sales Per Agency" key="81">
-		<GRID keyfield="passenger_id" name=" Insurance Sold" where="(approved = true AND is_valid = true)" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID keyfield="passenger_id" name=" Insurance Sold" where="(approved = true AND is_valid = true)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
@@ -1143,14 +1143,15 @@
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
-			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
+			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Insurance" key="80">
-		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Insurance Sold" orderby="passenger_id,passenger_age DESC" where="(approved = true AND is_valid = true)" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Certificate" orderby="passenger_id,passenger_age DESC" where="(approved = true AND is_valid = true)" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
@@ -1165,26 +1166,10 @@
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
-			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
+			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
-			</ACTIONS>
-		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Insurance Canceled" where="is_valid is false" tab.count="count(passenger_id)" table="vw_passengers">
-			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
-			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
-			<TEXTFIELD w="75" title="Date To">days_to</TEXTFIELD>
-			<TEXTFIELD w="75" title="Name">passenger_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Mobile Number">passenger_mobile</TEXTFIELD>
-			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
-			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
-			<ACTIONS>
-				<ACTION approval="2" fnct="upd_passenger">Revert</ACTION>
 			</ACTIONS>
 		</GRID>
 	</DESK>
@@ -1378,8 +1363,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="My Certificate" key="83">
-		<GRID role="admin,manager,agency,user" keyfield="passenger_id" name=" Certificates" orderby="passenger_id,passenger_age DESC" where="(approved = true) AND is_valid is true" user="entity_id" table="vw_allpassengers">
-			<TEXTFIELD w="90" title="Policy Number">policy_number</TEXTFIELD>
+		<GRID role="admin,manager,agency,user" keyfield="passenger_id" name=" Certificates" orderby="passenger_id,passenger_age DESC" where="(approved = true)" user="entity_id" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_plan_name</TEXTFIELD>
@@ -1392,14 +1376,15 @@
 			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="PIN Number">pin_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER reportfile="travelinsurance/certificate.jasper" name="Certificate"></JASPER>
-			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 			<JASPER reportfile="travelinsurance/policy_document.jasper" name="Policy Document"></JASPER>
+			<JASPER reportfile="travelinsurance/letterToEmbassy.jasper" name="Letter to Embassy"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Passengers" key="97">
-		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="function_role='broker' AND is_valid is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="function_role='broker'" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
@@ -1413,7 +1398,7 @@
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="function_role !='broker' AND is_valid is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="function_role !='broker'" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>

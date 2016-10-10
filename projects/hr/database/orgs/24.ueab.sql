@@ -9,7 +9,7 @@ BEGIN
 	IF ($3 = '1') THEN
 		UPDATE employee_adjustments SET amount = 0
 		FROM employee_month 
-		WHERE (adjustment_id IN (15,16,17))
+		WHERE (adjustment_id IN (15, 16, 17))
 			AND (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
 			AND (employee_month.period_id = CAST($1 as int));
 			
@@ -76,7 +76,7 @@ BEGIN
 		INTO tax;
 		
 		IF(reca.tax_type_id = 1)THEN 	---- PAYE
-			UPDATE employee_adjustments SET amount = tax * .9
+			UPDATE employee_adjustments SET amount = tax * .7
 			WHERE (employee_month_id = $1) AND (adjustment_id = 15);
 		END IF;
 		

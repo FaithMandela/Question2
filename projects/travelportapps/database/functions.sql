@@ -1,5 +1,5 @@
 
-CREATE FUNCTION ins_policy_number() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_policy_number() RETURNS trigger AS $$
 	DECLARE
 	  base_val  char(50);
 	  yr 	integer;
@@ -16,6 +16,9 @@ CREATE FUNCTION ins_policy_number() RETURNS trigger AS $$
 			sequence_no :=(SELECT policy_sequence_no from policy_sequence);
 			base_val := trim(sequence_no || passenger_no || '-' || yr);
 			NEW.policy_number := base_val;
+			INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
+			VALUES(2,NEW.org_id,NEW.passenger_id,'passengers','Certificate Number:'||NEW.passenger_id||'\n\nPassanger Name:'||NEW.passenger_name);
+
 		END IF;
 
 	END IF;
@@ -46,6 +49,10 @@ CREATE OR REPLACE FUNCTION upd_passengers() RETURNS trigger AS	$$
 			sequence_no :=(SELECT policy_sequence_no from policy_sequence);
 			base_val := trim(sequence_no || passenger_no || '-' || yr);
 			NEW.policy_number := base_val;
+
+			INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
+			VALUES(2,NEW.org_id,NEW.passenger_id,'passengers','Certificate Number:'||NEW.passenger_id||'\n\nPassanger Name:'||NEW.passenger_name);
+
 		END IF;
 		RETURN NEW;
 	END;
@@ -54,20 +61,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_passengers BEFORE UPDATE ON passengers
 FOR EACH ROW  EXECUTE PROCEDURE upd_passengers();
 
-
-CREATE OR REPLACE FUNCTION ins_passengers()  RETURNS trigger AS
-	$BODY$
-	BEGIN
-	 INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
-	 VALUES(1,NEW.org_id,NEW.passenger_id,'passengers','Certificate Number:'||NEW.passenger_id||'\n\nPassanger Name:'||NEW.passenger_name);
-
-	RETURN NEW;
-	END;
-	$BODY$
-	LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_passengers AFTER INSERT ON passengers
-FOR EACH ROW  EXECUTE PROCEDURE ins_passengers();
 
 CREATE OR REPLACE FUNCTION upd_passenger(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS varchar(120) AS $$
 DECLARE
@@ -87,3 +80,8 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE SEQUENCE policy_no_seq  INCREMENT 1  MINVALUE 1  MAXVALUE 9223372036854775807  START 44  CACHE 1;
+ALTER TABLE policy_no_seq
+  OWNER TO postgres;

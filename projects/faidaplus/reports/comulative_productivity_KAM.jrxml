@@ -36,7 +36,7 @@
 		<![CDATA[SELECT  period_id,to_char(period,'Mon yyyy')as period,
 	ticket_period,
 	vw_orgs.pcc, segments,
-	points, bonus, vw_orgs.org_name,son::int,account_manager_name
+	points, bonus, vw_orgs.org_name,son::int,vw_org_points.account_manager_name
 	FROM vw_org_points
 	JOIN vw_orgs ON vw_org_points.org_id = vw_orgs.org_id
 	WHERE period >= '$P!{minDate}'
@@ -253,7 +253,7 @@ ORDER BY period_id DESC;]]>
 		<band height="12" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch">
+		<band height="31" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="641" y="0" width="109" height="20" isPrintWhenDetailOverflows="true" uuid="099c3c62-fd6b-437f-b5e1-2c3369e767e8"/>
 				<textElement textAlignment="Right">

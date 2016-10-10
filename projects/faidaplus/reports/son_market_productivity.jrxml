@@ -271,35 +271,35 @@ GROUP BY ticket_period, vw_entitys.entity_name, vw_son_points.period,vw_entitys.
 	<summary>
 		<band height="42" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="650" y="8" width="151" height="20" isPrintWhenDetailOverflows="true" uuid="751b449d-5fb7-49d3-859a-64db032ae773"/>
+				<reportElement x="706" y="8" width="95" height="20" isPrintWhenDetailOverflows="true" uuid="751b449d-5fb7-49d3-859a-64db032ae773"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_points}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="532" y="8" width="118" height="20" uuid="13c4c1fa-fcfe-4069-94dd-cbf69633c863"/>
+				<reportElement x="604" y="8" width="102" height="20" uuid="13c4c1fa-fcfe-4069-94dd-cbf69633c863"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_bonus}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="429" y="8" width="103" height="20" uuid="d7c6e54f-bc1f-42e2-a1e5-6646f97ac414"/>
+				<reportElement x="511" y="8" width="93" height="20" uuid="d7c6e54f-bc1f-42e2-a1e5-6646f97ac414"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{points}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="250" y="8" width="100" height="20" uuid="84f8ddde-6201-4a95-ab0d-72629b9944f4"/>
+				<reportElement x="312" y="8" width="100" height="20" uuid="84f8ddde-6201-4a95-ab0d-72629b9944f4"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="361" y="8" width="68" height="20" isPrintWhenDetailOverflows="true" uuid="49aba459-a258-4912-b658-e4cc0344777c"/>
+				<reportElement x="444" y="8" width="67" height="20" isPrintWhenDetailOverflows="true" uuid="49aba459-a258-4912-b658-e4cc0344777c"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>

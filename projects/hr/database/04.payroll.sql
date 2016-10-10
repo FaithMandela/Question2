@@ -695,7 +695,7 @@ CREATE VIEW vw_employee_tax_month AS
 		emp.net_adjustment, emp.per_diem, emp.advance, emp.advance_deduction,
 		emp.net_pay, emp.banked, emp.cost,
 		
-		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, 
+		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, tax_types.use_type,
 		employee_tax_types.employee_tax_type_id, employee_tax_types.tax_identification, 
 		employee_tax_types.amount, employee_tax_types.exchange_rate as tax_exchange_rate,
 		employee_tax_types.additional, employee_tax_types.employer, employee_tax_types.narrative,

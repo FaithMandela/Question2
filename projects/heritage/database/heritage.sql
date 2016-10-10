@@ -62,7 +62,8 @@ CREATE TABLE rates(
     days_from           integer,
     days_to             integer,
     standard_rate       real,
-    north_america_rate  real
+    north_america_rate  real,
+	incountry_rate		real
 );
 CREATE INDEX rates_rate_type_id ON rates(rate_type_id);
 
@@ -104,7 +105,9 @@ CREATE TABLE passengers(
 	postal_code 			character varying(50),
 	expiry_date 			character varying(20),
 	incountry				boolean default false,
-	physical_address 		text
+	physical_address 		text,
+	exchange_rate			real ,
+	kesamount				real
 );
 CREATE INDEX passengers_rate_id ON passengers(rate_id);
 CREATE INDEX passengers_corporate_rate_id ON passengers(corporate_rate_id);
@@ -234,7 +237,7 @@ CREATE OR REPLACE VIEW vw_rate_plan AS
 CREATE OR REPLACE VIEW vw_rates AS
     SELECT vw_rate_types.rate_type_id, vw_rate_types.rate_type_name, rates.rate_id, rates.days_from, rates.days_to, rates.standard_rate,
      rates.north_america_rate,  vw_rate_types.rate_category_name, vw_rate_types.rate_category_id, vw_rate_types.rate_plan_id,
-     vw_rate_types.rate_plan_name, vw_rate_types.age_from, vw_rate_types.age_to
+     vw_rate_types.rate_plan_name, vw_rate_types.age_from, vw_rate_types.age_to,rates.incountry_rate
     FROM rates
       JOIN vw_rate_types ON rates.rate_type_id = vw_rate_types.rate_type_id;
 
@@ -269,20 +272,17 @@ FROM passengers
 
 
 
-
-
-
 CREATE OR REPLACE VIEW vw_corporate_rate_plan AS
 SELECT corporate_rate_plan.rate_plan_id, corporate_rate_plan.rate_plan_name
 FROM corporate_rate_plan;
 
-   CREATE OR REPLACE VIEW vw_corporate_benefits AS
-   SELECT corporate_benefits.corporate_benefit_type_id,  corporate_benefit_types.corporate_benefit_type_name,
-     corporate_benefits.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_benefits.benefit_id,
-     corporate_benefits.individual,  corporate_benefits.others
-    FROM corporate_benefits
-      JOIN corporate_benefit_types ON corporate_benefits.corporate_benefit_type_id = corporate_benefit_types.corporate_benefit_type_id
-      JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
+CREATE OR REPLACE VIEW vw_corporate_benefits AS
+SELECT corporate_benefits.corporate_benefit_type_id,  corporate_benefit_types.corporate_benefit_type_name,
+  corporate_benefits.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_benefits.benefit_id,
+  corporate_benefits.individual,  corporate_benefits.others, corporate_benefit_types.corporate_section
+ FROM corporate_benefits
+   JOIN corporate_benefit_types ON corporate_benefits.corporate_benefit_type_id = corporate_benefit_types.corporate_benefit_type_id
+   JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
 
 
    CREATE OR REPLACE VIEW vw_corporate_rate_types AS
@@ -293,10 +293,16 @@ FROM corporate_rate_plan;
      JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id
 	 JOIN corporate_rate_plan ON corporate_rate_plan.rate_plan_id = corporate_rate_types.rate_plan_id;
 
-	 CREATE OR REPLACE VIEW vw_corporate_rates AS
-     SELECT vw_corporate_rate_types.rate_type_id, vw_corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
-       corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate,
-  	 vw_corporate_rate_types.rate_plan_name,vw_corporate_rate_types.corporate_rate_category_name,vw_corporate_rate_types.rate_plan_id,
-	 vw_corporate_rate_types.corporate_rate_category_id
-      FROM corporate_rates
-        JOIN vw_corporate_rate_types ON corporate_rates.rate_type_id = vw_corporate_rate_types.rate_type_id;
+	CREATE OR REPLACE VIEW vw_corporate_rates AS
+	SELECT vw_corporate_rate_types.rate_type_id, vw_corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
+	corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate,
+	 vw_corporate_rate_types.rate_plan_name,vw_corporate_rate_types.corporate_rate_category_name,vw_corporate_rate_types.rate_plan_id,
+	vw_corporate_rate_types.corporate_rate_category_id
+	FROM corporate_rates
+	JOIN vw_corporate_rate_types ON corporate_rates.rate_type_id = vw_corporate_rate_types.rate_type_id;
+
+	CREATE OR REPLACE VIEW vw_exchange_rates AS
+	 SELECT currency.currency_id AS base_currency_id,  currency.currency_name AS base_currency_name,
+	    currency.currency_symbol AS base_currency_symbol,  currency_rates.exchange_date, currency_rates.exchange_rate
+	   FROM currency_rates
+	     JOIN currency ON currency_rates.currency_id = currency.currency_id;
