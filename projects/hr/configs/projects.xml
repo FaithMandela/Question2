@@ -4,6 +4,7 @@
 			<MENU name="Project">5</MENU>
 			<MENU name="Clients">10</MENU>
 			<MENU name="Attendance">15</MENU>
+			<MENU name="Shifts">25</MENU>
 			<MENU name="My Tasks">20</MENU>
 		</MENU>
 		<MENU name="Reports">
@@ -158,6 +159,46 @@
 				<TEXTFIELD w="150" title="Project Account" y="170" h="20" x="10">project_account</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
 			</FORM>
+			<GRID name="Shifts" keyfield="shift_id" linkfield="project_id" table="vw_shifts">
+				<TEXTFIELD w="75" title="Shift ID">shift_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Shift Name">shift_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Shift Hours">shift_hours</TEXTFIELD>
+				<CHECKBOX w="75" title="Include Holiday">include_holiday</CHECKBOX>
+				<CHECKBOX w="75" title="Include Mon">include_mon</CHECKBOX>
+				<CHECKBOX w="75" title="Include Tue">include_tue</CHECKBOX>
+				<CHECKBOX w="75" title="Include Wed">include_wed</CHECKBOX>
+				<CHECKBOX w="75" title="Include Thu">include_thu</CHECKBOX>
+				<CHECKBOX w="75" title="Include Fri">include_fri</CHECKBOX>
+				<CHECKBOX w="75" title="Include Sat">include_sat</CHECKBOX>
+				<CHECKBOX w="75" title="Include Sun">include_sun</CHECKBOX>
+				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
+				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
+				<FORM name="Shifts" keyfield="shift_id" linkfield="project_id" table="shifts">
+					<TEXTFIELD w="150" title="Shift Name" y="10" h="20" x="10">shift_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Shift Hours" y="10" h="20" x="290">shift_hours</TEXTFIELD>
+					<CHECKBOX w="150" title="Include Holiday" y="30" h="20" x="10">include_holiday</CHECKBOX>
+					<CHECKBOX w="150" title="Include Mon" y="30" h="20" x="290">include_mon</CHECKBOX>
+					<CHECKBOX w="150" title="Include Tue" y="50" h="20" x="10">include_tue</CHECKBOX>
+					<CHECKBOX w="150" title="Include Wed" y="50" h="20" x="290">include_wed</CHECKBOX>
+					<CHECKBOX w="150" title="Include Thu" y="70" h="20" x="10">include_thu</CHECKBOX>
+					<CHECKBOX w="150" title="Include Fri" y="70" h="20" x="290">include_fri</CHECKBOX>
+					<CHECKBOX w="150" title="Include Sat" y="90" h="20" x="10">include_sat</CHECKBOX>
+					<CHECKBOX w="150" title="Include Sun" y="90" h="20" x="290">include_sun</CHECKBOX>
+					<SPINTIME w="150" title="Time In" y="110" h="20" x="10">time_in</SPINTIME>
+					<SPINTIME w="150" title="Time Out" y="110" h="20" x="290">time_out</SPINTIME>
+					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Shift Schedule" keyfield="shift_schedule_id" linkfield="shift_id" table="vw_shift_schedule">
+					<TEXTFIELD w="75" title="Shift Schedule ID">shift_schedule_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+					<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+					<FORM name="Shift Schedule" keyfield="shift_schedule_id" linkfield="shift_id" table="shift_schedule">
+						<COMBOBOX w="430" title="Entity" lptable="vw_employees" where="(active = true)" h="20" y="10" lpfield="entity_name" x="10">entity_id</COMBOBOX>
+						<CHECKBOX w="150" title="Active" h="20" y="30" x="10">is_active</CHECKBOX>
+						<TEXTAREA w="430" title="Details" h="70" y="50" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
 		</GRID>
 		<GRID name="Project Types" keyfield="project_type_id" table="project_types">
 			<TEXTFIELD w="75" title="Project Type ID">project_type_id</TEXTFIELD>
@@ -377,6 +418,49 @@
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<JASPER name="Attendance" reportfile="vw_week_attendance_b.jasper"></JASPER>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Shifts" key="25" h="550">
+		<GRID name="Shifts" keyfield="shift_id" table="vw_shifts">
+			<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Shift Name">shift_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Shift Hours">shift_hours</TEXTFIELD>
+			<CHECKBOX w="75" title="Include Holiday">include_holiday</CHECKBOX>
+			<CHECKBOX w="75" title="Include Mon">include_mon</CHECKBOX>
+			<CHECKBOX w="75" title="Include Tue">include_tue</CHECKBOX>
+			<CHECKBOX w="75" title="Include Wed">include_wed</CHECKBOX>
+			<CHECKBOX w="75" title="Include Thu">include_thu</CHECKBOX>
+			<CHECKBOX w="75" title="Include Fri">include_fri</CHECKBOX>
+			<CHECKBOX w="75" title="Include Sat">include_sat</CHECKBOX>
+			<CHECKBOX w="75" title="Include Sun">include_sun</CHECKBOX>
+			<SPINTIME w="75" title="Time In">time_in</SPINTIME>
+			<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
+			<FORM name="Shifts" keyfield="shift_id" table="shifts">
+				<COMBOBOX w="430" title="Project" lptable="projects" y="10" h="20" x="10" lpfield="project_name">project_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Shift Name" y="30" h="20" x="10">shift_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Shift Hours" y="30" h="20" x="290">shift_hours</TEXTFIELD>
+				<CHECKBOX w="150" title="Include Holiday" y="50" h="20" x="10">include_holiday</CHECKBOX>
+				<CHECKBOX w="150" title="Include Mon" y="50" h="20" x="290">include_mon</CHECKBOX>
+				<CHECKBOX w="150" title="Include Tue" y="70" h="20" x="10">include_tue</CHECKBOX>
+				<CHECKBOX w="150" title="Include Wed" y="70" h="20" x="290">include_wed</CHECKBOX>
+				<CHECKBOX w="150" title="Include Thu" y="90" h="20" x="10">include_thu</CHECKBOX>
+				<CHECKBOX w="150" title="Include Fri" y="90" h="20" x="290">include_fri</CHECKBOX>
+				<CHECKBOX w="150" title="Include Sat" y="110" h="20" x="10">include_sat</CHECKBOX>
+				<CHECKBOX w="150" title="Include Sun" y="110" h="20" x="290">include_sun</CHECKBOX>
+				<SPINTIME w="150" title="Time In" y="130" h="20" x="10">time_in</SPINTIME>
+				<SPINTIME w="150" title="Time Out" y="130" h="20" x="290">time_out</SPINTIME>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Shift Schedule" keyfield="shift_schedule_id" linkfield="shift_id" table="vw_shift_schedule">
+				<TEXTFIELD w="75" title="Shift Schedule ID">shift_schedule_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<FORM name="Shift Schedule" keyfield="shift_schedule_id" linkfield="shift_id" table="shift_schedule">
+					<COMBOBOX w="430" title="Entity" lptable="vw_employees" where="(active = true)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<CHECKBOX w="150" title="Active" y="30" h="20" x="10">is_active</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 </APP>
