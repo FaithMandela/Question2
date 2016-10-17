@@ -1358,7 +1358,8 @@ BEGIN
 			 period_tax_types.employer, period_tax_types.employer_ps
 		FROM employee_tax_types INNER JOIN period_tax_types ON (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
 		WHERE (employee_month_id = $1) AND (Period_Tax_Types.Period_ID = $2)
-		ORDER BY Period_Tax_Types.Tax_Type_order LOOP
+		ORDER BY Period_Tax_Types.Tax_Type_order 
+	LOOP
 
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
@@ -1676,7 +1677,8 @@ BEGIN
 		
 		FOR rec IN SELECT employee_month_id, exchange_rate
 			FROM employee_month 
-			WHERE (period_id = v_period_id) LOOP
+			WHERE (period_id = v_period_id) 
+		LOOP
 			
 			IF(adj.formural is not null)THEN
 				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || rec.employee_month_id
@@ -1699,7 +1701,8 @@ BEGIN
 	ELSIF ($3 = '2') THEN	
 		FOR rec IN SELECT entity_id
 			FROM employees
-			WHERE (active = true) AND (org_id = adj.org_id) LOOP
+			WHERE (active = true) AND (org_id = adj.org_id) 
+		LOOP
 			
 			SELECT default_adjustment_id INTO v_default_adjustment_id
 			FROM default_adjustments
@@ -1738,9 +1741,10 @@ BEGIN
 	FROM periods WHERE period_id = $1::int;
 	
 	FOR rec IN SELECT pension_id, entity_id, adjustment_id, contribution_id, 
-       pension_company, pension_number, amount, use_formura, 
-       employer_ps, employer_amount, employer_formural
-	FROM pensions WHERE (active = true) AND (org_id = v_org_id) LOOP
+		pension_company, pension_number, amount, use_formura, 
+		employer_ps, employer_amount, employer_formural
+		FROM pensions WHERE (active = true) AND (org_id = v_org_id) 
+	LOOP
 	
 		SELECT employee_month_id, currency_id, exchange_rate 
 			INTO v_employee_month_id, v_currency_id, v_exchange_rate

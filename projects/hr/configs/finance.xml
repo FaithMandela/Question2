@@ -45,6 +45,7 @@
 			<MENU name="Sales Pipeline">175</MENU>
 			<MENU name="Issues">180</MENU>
 		</MENU>
+		<MENU name="HR" xml="hr.xml">0</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
