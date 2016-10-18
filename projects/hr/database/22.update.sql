@@ -428,4 +428,11 @@ CREATE VIEW vw_intern_evaluations AS
 		WHERE education.education_class_id > 6
 		ORDER BY vw_applicants.entity_id;
 		
-		
+CREATE OR REPLACE FUNCTION get_leave_taken(integer, integer) RETURNS real AS $$
+	SELECT COALESCE(sum(leave_days), 0)
+	FROM employee_leave
+	WHERE (approve_status = 'Approved') AND (to_char(leave_from, 'YYYY') = to_char(current_date, 'YYYY'))
+		AND (entity_id = $1) AND (leave_type_id = $2);
+$$ LANGUAGE SQL;
+
+

@@ -1830,6 +1830,13 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION get_leave_taken(integer, integer) RETURNS real AS $$
+	SELECT COALESCE(sum(leave_days), 0)
+	FROM employee_leave
+	WHERE (approve_status = 'Approved') AND (to_char(leave_from, 'YYYY') = to_char(current_date, 'YYYY'))
+		AND (entity_id = $1) AND (leave_type_id = $2);
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION get_leave_balance(integer, integer) RETURNS real AS $$
 DECLARE
 	reca					RECORD;
