@@ -1,7 +1,6 @@
 ---Project Database File
 ALTER TABLE orgs ADD credit_limit real not null default 0;
-ALTER TABLE orgs ADD pcc varchar(7);
-ALTER TABLE entitys ADD son varchar(7);
+ALTER TABLE entitys ADD son varchar(15);
 ALTER TABLE entitys ADD last_login timestamp;
 ALTER TABLE entitys ADD salutation varchar(7);
 ALTER TABLE entitys ADD birth_date date;
@@ -67,52 +66,6 @@ CREATE TABLE rates(
 );
 CREATE INDEX rates_rate_type_id ON rates(rate_type_id);
 
-CREATE TABLE passengers(
-	passenger_id 			serial primary key,
-	rate_id 				integer REFERENCES rates ,
-	corporate_id			integer REFERENCES corporate_rates,
-	entity_id 				integer REFERENCES entitys,
-	org_id 					integer REFERENCES orgs,
-	policy_number 			character varying(50),
-	passenger_name 			character varying(100),
-	passenger_mobile 		character varying(15),
-	passenger_email 		character varying(100),
-	passenger_age 			integer DEFAULT 0,
-	passenger_id_no 		character varying(20),
-	passenger_dob 			character varying(20),
-	pin_no 					character varying(25),
-	days_covered 			integer,
-	nok_name 				character varying(100),
-	nok_mobile 				character varying(15),
-	passport_num 			character varying(20),
-	is_north_america 		boolean DEFAULT false,
-	cover_amount 			real,
-	totalamount_covered 	real,
-	approved 				boolean DEFAULT false,
-	details 				text,
-	days_from 				date,
-	days_to 				date,
-	destown 				character varying(50),
-	approved_date 			timestamp without time zone,
-	sys_country_id 			character varying(2),
-	countries 				text,
-	relationship 			character varying(120),
-	address 				text,
-	departure_country 		character varying(50),
-	reason_for_travel 		text,
-	customer_code 			character varying(50),
-	customer_name 			character varying(100)
-	postal_code 			character varying(50),
-	expiry_date 			character varying(20),
-	incountry				boolean default false,
-	physical_address 		text,
-	exchange_rate			real ,
-	kesamount				real
-);
-CREATE INDEX passengers_rate_id ON passengers(rate_id);
-CREATE INDEX passengers_corporate_rate_id ON passengers(corporate_rate_id);
-CREATE INDEX passengers_entity_id ON passengers(entity_id);
-CREATE INDEX passengers_org_id ON passengers(org_id);
 
 CREATE TABLE policy_sequence(
   policy_no_id 		serial PRIMARY KEY,
@@ -171,6 +124,53 @@ CREATE TABLE corporate_rates   (
 	);
 CREATE INDEX corporate_rates_rate_type_id ON corporate_rates(rate_type_id);
 
+
+CREATE TABLE passengers(
+	passenger_id 			serial primary key,
+	rate_id 				integer REFERENCES rates ,
+	corporate_rate_id			integer REFERENCES corporate_rates,
+	entity_id 				integer REFERENCES entitys,
+	org_id 					integer REFERENCES orgs,
+	policy_number 			character varying(50),
+	passenger_name 			character varying(100),
+	passenger_mobile 		character varying(15),
+	passenger_email 		character varying(100),
+	passenger_age 			integer DEFAULT 0,
+	passenger_id_no 		character varying(20),
+	passenger_dob 			character varying(20),
+	pin_no 					character varying(25),
+	days_covered 			integer,
+	nok_name 				character varying(100),
+	nok_mobile 				character varying(15),
+	passport_num 			character varying(20),
+	is_north_america 		boolean DEFAULT false,
+	cover_amount 			real,
+	totalamount_covered 	real,
+	approved 				boolean DEFAULT false,
+	details 				text,
+	days_from 				date,
+	days_to 				date,
+	destown 				character varying(50),
+	approved_date 			timestamp without time zone,
+	sys_country_id 			character varying(2),
+	countries 				text,
+	relationship 			character varying(120),
+	address 				text,
+	departure_country 		character varying(50),
+	reason_for_travel 		text,
+	customer_code 			character varying(50),
+	customer_name 			character varying(100),
+	postal_code 			character varying(50),
+	expiry_date 			character varying(20),
+	incountry				boolean default false,
+	physical_address 		text,
+	exchange_rate			real ,
+	kesamount				real
+);
+CREATE INDEX passengers_rate_id ON passengers(rate_id);
+CREATE INDEX passengers_corporate_rate_id ON passengers(corporate_rate_id);
+CREATE INDEX passengers_entity_id ON passengers(entity_id);
+CREATE INDEX passengers_org_id ON passengers(org_id);
 
 
 
@@ -256,6 +256,22 @@ SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_rates.rate_type_id, vw_rates.
    JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id
    JOIN sys_countrys ON passengers.sys_country_id = sys_countrys.sys_country_id;
 
+   CREATE OR REPLACE VIEW vw_corporate_rate_types AS
+   SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_rate_types.age_limit,
+  	corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name,corporate_rate_plan.rate_plan_name, corporate_rate_plan.rate_plan_id,
+  	corporate_rate_types.corporate_rate_category_id
+     FROM corporate_rate_types
+     JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id
+     JOIN corporate_rate_plan ON corporate_rate_plan.rate_plan_id = corporate_rate_types.rate_plan_id;
+
+    CREATE OR REPLACE VIEW vw_corporate_rates AS
+    SELECT vw_corporate_rate_types.rate_type_id, vw_corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
+    corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate,
+     vw_corporate_rate_types.rate_plan_name,vw_corporate_rate_types.corporate_rate_category_name,vw_corporate_rate_types.rate_plan_id,
+    vw_corporate_rate_types.corporate_rate_category_id
+    FROM corporate_rates
+    JOIN vw_corporate_rate_types ON corporate_rates.rate_type_id = vw_corporate_rate_types.rate_type_id;
+
 CREATE OR REPLACE VIEW vw_corporate_passengers AS
 SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_corporate_rates.rate_type_id, vw_corporate_rates.rate_plan_id, vw_corporate_rates.corporate_rate_category_name, vw_corporate_rates.corporate_rate_id,
  vw_corporate_rates.rate_plan_name, vw_corporate_rates.standard_rate, vw_corporate_rates.north_america_rate, passengers.days_from, passengers.days_to, passengers.approved,
@@ -285,21 +301,6 @@ SELECT corporate_benefits.corporate_benefit_type_id,  corporate_benefit_types.co
    JOIN corporate_rate_types ON corporate_benefits.rate_type_id = corporate_rate_types.rate_type_id;
 
 
-   CREATE OR REPLACE VIEW vw_corporate_rate_types AS
-   SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name,  corporate_rate_types.age_limit,
-      corporate_rate_types.details,  corporate_rate_category.corporate_rate_category_name,corporate_rate_plan.rate_plan_name, corporate_rate_plan.rate_plan_id,
-	  corporate_rate_types.corporate_rate_category_id
-     FROM corporate_rate_types
-     JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id
-	 JOIN corporate_rate_plan ON corporate_rate_plan.rate_plan_id = corporate_rate_types.rate_plan_id;
-
-	CREATE OR REPLACE VIEW vw_corporate_rates AS
-	SELECT vw_corporate_rate_types.rate_type_id, vw_corporate_rate_types.rate_type_name, corporate_rates.corporate_rate_id,
-	corporate_rates.days_from, corporate_rates.days_to, corporate_rates.standard_rate, corporate_rates.north_america_rate,
-	 vw_corporate_rate_types.rate_plan_name,vw_corporate_rate_types.corporate_rate_category_name,vw_corporate_rate_types.rate_plan_id,
-	vw_corporate_rate_types.corporate_rate_category_id
-	FROM corporate_rates
-	JOIN vw_corporate_rate_types ON corporate_rates.rate_type_id = vw_corporate_rate_types.rate_type_id;
 
 	CREATE OR REPLACE VIEW vw_exchange_rates AS
 	 SELECT currency.currency_id AS base_currency_id,  currency.currency_name AS base_currency_name,

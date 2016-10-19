@@ -41,7 +41,7 @@
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">applicants.applicant_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="applicants">applicant_email</BODYFIELD>
-		<BODYFIELD reference="{{details}}" basetable="applicants">details</BODYFIELD>
+		<BODYFIELD reference="{{details}}"  fnct="applicants.details">reason</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
