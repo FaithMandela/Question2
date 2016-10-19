@@ -29,7 +29,7 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.member_id, vw_contributions.start_date, vw_contributions.org_id, vw_contributions.contribution_id, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.paid, vw_contributions.extra_contrib, vw_contributions.details
+		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.start_date, vw_contributions.org_id, vw_contributions.contribution_id, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.paid, vw_contributions.extra_contrib, vw_contributions.details
 FROM vw_contributions
 Where entity_id = '$P!{entityid}' AND vw_contributions.extra_contrib = true
 ORDER BY vw_contributions.period_id]]>
@@ -37,7 +37,6 @@ ORDER BY vw_contributions.period_id]]>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="member_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="contribution_id" class="java.lang.Integer"/>
@@ -103,28 +102,28 @@ ORDER BY vw_contributions.period_id]]>
 				<text><![CDATA[Investment Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="322" y="1" width="87" height="15" forecolor="#000000" uuid="5c20935f-76e6-45a4-acbc-422d26ee4e43"/>
+				<reportElement style="Column header" x="322" y="0" width="87" height="15" forecolor="#000000" uuid="5c20935f-76e6-45a4-acbc-422d26ee4e43"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[MGR Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="496" y="1" width="67" height="15" forecolor="#000000" uuid="e73cc8dc-b42e-4884-bd09-116081fbb01e"/>
+				<reportElement style="Column header" x="496" y="0" width="67" height="15" forecolor="#000000" uuid="e73cc8dc-b42e-4884-bd09-116081fbb01e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Paid]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="563" y="1" width="239" height="15" forecolor="#000000" uuid="834fc0fd-5ba8-4c50-9ff8-e3097bd265f8"/>
+				<reportElement style="Column header" x="563" y="0" width="239" height="15" forecolor="#000000" uuid="834fc0fd-5ba8-4c50-9ff8-e3097bd265f8"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Details]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="409" y="1" width="87" height="15" forecolor="#000000" uuid="4b6c6804-b29d-44d0-9d4d-e6225f6a5057"/>
+				<reportElement style="Column header" x="409" y="0" width="87" height="15" forecolor="#000000" uuid="4b6c6804-b29d-44d0-9d4d-e6225f6a5057"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>

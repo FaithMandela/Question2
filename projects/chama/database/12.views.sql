@@ -1,20 +1,16 @@
 CREATE OR REPLACE VIEW vw_members AS
 	SELECT 	bank_branch.bank_branch_id, bank_branch.bank_branch_name, 
 	banks.bank_id, banks.bank_name, 
-	currency.currency_id, currency.currency_name, 
-	entitys.entity_id, entitys.entity_name, 
 	locations.location_id, locations.location_name,
 	sys_countrys.sys_country_id, sys_countrys.sys_country_name, 
-	members.org_id, members.member_id, members.person_title, members.surname, members.first_name, members.middle_name, members.full_name, members.id_number, members.email, members.date_of_birth, members.gender, members.phone, members.bank_account_number, members.nationality, members.nation_of_birth, members.marital_status, members.joining_date, members.exit_date, members.picture_file, members.active, members.details, members.merry_go_round_number
+	members.org_id, members.entity_id, members.person_title, members.surname, members.first_name, members.middle_name, members.full_name, members.id_number, members.email, members.date_of_birth, members.gender, members.phone, members.bank_account_number, members.nationality, members.nation_of_birth, members.marital_status, members.joining_date, members.exit_date, members.picture_file, members.active, members.details, members.merry_go_round_number
 	FROM members
 	JOIN bank_branch ON members.bank_branch_id = bank_branch.bank_branch_id
 	JOIN banks ON members.bank_id = banks.bank_id
-	JOIN currency ON members.currency_id = currency.currency_id
 	JOIN entitys ON members.entity_id = entitys.entity_id
 	JOIN locations ON members.location_id = locations.location_id
 	JOIN sys_countrys ON members.nationality = sys_countrys.sys_country_id;
 
-	
 CREATE OR REPLACE VIEW vw_expenses AS
 	SELECT bank_accounts.bank_account_id, bank_accounts.bank_account_name, currency.currency_id,
 	currency.currency_name, entitys.entity_id, entitys.entity_name, expenses.org_id,  expenses.expense_id, expenses.date_accrued, 
@@ -31,21 +27,17 @@ CREATE OR REPLACE VIEW vw_contribution_defaults AS
 	JOIN entitys ON contribution_defaults.entity_id = entitys.entity_id;
 
 CREATE OR REPLACE VIEW vw_contribution_types AS
-	SELECT contribution_types.org_id, contribution_types.contribution_type_id, contribution_types.contribution_type_name, contribution_types.investment_amount, contribution_types.merry_go_round_amount, contribution_types.frequency, contribution_types.applies_to_all, contribution_types.details
+	SELECT contribution_types.org_id, contribution_types.contribution_type_id, contribution_types.contribution_type_name, contribution_types.investment_amount, contribution_types.merry_go_round_amount, contribution_types.frequency, contribution_types.day_of_contrib, contribution_types.applies_to_all, contribution_types.details
 	FROM contribution_types;
 
 CREATE OR REPLACE VIEW vw_contributions AS 
- SELECT bank_accounts.bank_account_id,
-    bank_accounts.bank_account_name,
-    contribution_types.contribution_type_id,
+ SELECT contribution_types.contribution_type_id,
     contribution_types.contribution_type_name,
+    periods.period_id,
     entitys.entity_id,
     entitys.entity_name,
-    members.member_id,
-    members.middle_name,
-    periods.period_id,
     periods.start_date,
-    contributions.org_id,
+   contributions.org_id,
     contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
@@ -58,21 +50,16 @@ CREATE OR REPLACE VIEW vw_contributions AS
    FROM contributions
      JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN entitys ON contributions.entity_id = entitys.entity_id
-     JOIN members ON contributions.member_id = members.member_id
-     LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id
-     JOIN periods on contributions.period_id= periods.period_id;
+     JOIN periods ON contributions.period_id= periods.period_id;
 
 CREATE OR REPLACE VIEW vw_all_contributions AS 
- SELECT bank_accounts.bank_account_id,
-    bank_accounts.bank_account_name,
-    contribution_types.contribution_type_id,
+ SELECT contribution_types.contribution_type_id,
     contribution_types.contribution_type_name,
+    periods.period_id,
     entitys.entity_id,
     entitys.entity_name,
-    members.member_id,
-    members.middle_name,
-    contributions.org_id,
-    contributions.period_id,
+    periods.start_date,
+   contributions.org_id,
     contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
@@ -80,24 +67,19 @@ CREATE OR REPLACE VIEW vw_all_contributions AS
     contributions.paid,
     contributions.extra_contrib,
     contributions.loan_contrib,
-    (contributions.investment_amount + contributions.merry_go_round_amount) AS total_contribution,
+    (contributions.investment_amount + contributions.merry_go_round_amount + contributions.loan_contrib ) AS total_contribution,
     contributions.details
    FROM contributions
      JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN entitys ON contributions.entity_id = entitys.entity_id
-     JOIN members ON contributions.member_id = members.member_id
-     LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id;
+     JOIN periods ON contributions.period_id= periods.period_id;
 
 CREATE OR REPLACE VIEW vw_contributions_unpaid AS 
- SELECT bank_accounts.bank_account_id,
-    bank_accounts.bank_account_name,
-    contribution_types.contribution_type_id,
+ SELECT contribution_types.contribution_type_id,
     contribution_types.contribution_type_name,
+    periods.period_id,
     entitys.entity_id,
     entitys.entity_name,
-    members.member_id,
-    members.middle_name,
-    periods.period_id,
     periods.start_date,
     contributions.org_id,
     contributions.contribution_id,
@@ -112,17 +94,14 @@ CREATE OR REPLACE VIEW vw_contributions_unpaid AS
    FROM contributions
      JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN entitys ON contributions.entity_id = entitys.entity_id
-     JOIN members ON contributions.member_id = members.member_id
-     LEFT JOIN bank_accounts ON contributions.bank_account_id = bank_accounts.bank_account_id
      JOIN periods ON contributions.period_id = periods.period_id
-  WHERE contributions.paid = false;
+     WHERE contributions.paid = false;
 
 
 CREATE OR REPLACE VIEW vw_member_contrib AS
-SELECT vw_contributions.bank_account_id, vw_contributions.bank_account_name, 
-		vw_contributions.contribution_type_id, vw_contributions.contribution_type_name,
-		vw_members.entity_id, vw_members.entity_name, vw_members.member_id, vw_members.merry_go_round_number,
-		vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date,
+SELECT 	vw_contributions.contribution_type_id, vw_contributions.contribution_type_name,
+		vw_members.entity_id, vw_members.full_name, vw_members.merry_go_round_number,
+		vw_contributions.org_id, vw_contributions.entity_name, vw_contributions.period_id, vw_contributions.start_date,
 		vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.loan_contrib
 	FROM vw_contributions
 		 JOIN vw_members  ON  vw_contributions.entity_id = vw_members.entity_id;
@@ -161,8 +140,7 @@ CREATE OR REPLACE VIEW vw_receipts AS
     receipts.ref_number,
     receipts.amount,
     receipts.remaining_amount,
-    receipts.remit_all,
-    receipts.details
+     receipts.details
    FROM receipts
      LEFT JOIN bank_accounts ON receipts.bank_account_id = bank_accounts.bank_account_id
      JOIN entitys ON receipts.entity_id = entitys.entity_id
@@ -191,7 +169,7 @@ FROM investments
   
 CREATE OR REPLACE VIEW vw_meetings AS 
 	SELECT meetings.org_id, meetings.meeting_id, meetings.meeting_date, 
-	meetings.meeting_place, meetings.minutes, meetings.status, meetings.details
+	meetings.meeting_place, meetings.status, meetings.details
 	FROM meetings;
 
 
@@ -211,28 +189,28 @@ CREATE VIEW vw_penalty_type AS
 	JOIN orgs ON penalty_type.org_id = orgs.org_id;
 	
 CREATE OR REPLACE VIEW vw_member_statement AS
-SELECT entity_id, entity_name, contribution_date, contribution, drawings, receipts, loan, repayments, penalty FROM 
-((SELECT  entity_id, entity_name, contribution_date, vw_contributions.investment_amount + vw_contributions.merry_go_round_amount  AS contribution,  0::real AS drawings, 
+SELECT org_id, entity_id, entity_name, contribution_date, contribution, drawings, receipts, loan, repayments, penalty FROM 
+((SELECT  org_id, entity_id, entity_name, contribution_date, vw_contributions.investment_amount + vw_contributions.merry_go_round_amount  AS contribution,  0::real AS drawings, 
 0::real AS receipts, 0::real AS loan, 0::real AS repayments, 0::real AS penalty FROM vw_contributions WHERE vw_contributions.paid = true)
 UNION
-(SELECT  entity_id, entity_name, withdrawal_date, 0::real, amount, 0::real,0::real, 0::real, 0::real FROM vw_drawings)
+(SELECT  org_id, entity_id, entity_name, withdrawal_date, 0::real, amount, 0::real,0::real, 0::real, 0::real FROM vw_drawings)
 UNION
-(SELECT  entity_id, entity_name, receipts_date, 0::real, 0::real, amount, 0::real,  0::real, 0::real FROM vw_receipts)
+(SELECT  org_id, entity_id, entity_name, receipts_date, 0::real, 0::real, amount, 0::real,  0::real, 0::real FROM vw_receipts)
 UNION
-(SELECT entity_id, entity_name, application_date, 0::real,0::real, 0::real, principle, 0::real, 0::real FROM vw_loans)
+(SELECT org_id, entity_id, entity_name, application_date, 0::real,0::real, 0::real, principle, 0::real, 0::real FROM vw_loans)
 UNION
-(SELECT  entity_id, entity_name, start_date, 0::real, 0::real, 0::real,  0::real, total_repayment, 0::real FROM vw_loan_monthly)
+(SELECT  org_id, entity_id, entity_name, start_date, 0::real, 0::real, 0::real,  0::real, total_repayment, 0::real FROM vw_loan_monthly)
 UNION
-(SELECT entity_id, entity_name, date_of_accrual, 0::real, 0::real, 0::real, 0::real, 0::real, amount FROM vw_penalty
+(SELECT org_id, entity_id, entity_name, date_of_accrual, 0::real, 0::real, 0::real, 0::real, 0::real, amount FROM vw_penalty
 )) AS a
 ORDER BY contribution_date;
 
 CREATE OR REPLACE VIEW vw_member_meeting AS
-	SELECT members.member_id, members.surname, members.first_name,
+	SELECT members.entity_id, members.surname, members.first_name,
 			meetings.meeting_id, meetings.meeting_date,
 			member_meeting.org_id ,member_meeting.member_meeting_id, member_meeting.narrative
 	FROM member_meeting
-		JOIN members ON member_meeting.member_id = members.member_id
+		JOIN members ON member_meeting.entity_id = members.entity_id
 		JOIN meetings ON member_meeting.meeting_id = meetings.meeting_id;
 
 DROP VIEW vws_tx_ledger;

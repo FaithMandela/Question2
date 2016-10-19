@@ -115,7 +115,9 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_subscriptions()
+  RETURNS trigger AS
+$BODY$
 DECLARE
 	v_entity_id		integer;
 	v_org_id		integer;
@@ -157,8 +159,10 @@ BEGIN
 		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);
 		
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
-
+		
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
+
+		INSERT INTO bank_accounts (org_id, currency_id, bank_account_id, account_id, bank_branch_id, bank_account_name, bank_account_number) VALUES (NEW.org_id, v_currency_id, v_bank_id, '33000', '0','Cash', '0');
 		
 		INSERT INTO locations (org_id, location_name) VALUES (NEW.org_id, 'Main');
 
@@ -166,12 +170,10 @@ BEGIN
 		SELECT transaction_type_id, NEW.org_id, 1
 		FROM transaction_types;
 		
-
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 		
-		v_member_id := nextval('members_member_id_seq');
-		INSERT INTO members(org_id, member_id, entity_id, email, surname) VALUES (NEW.org_id, v_member_id, NEW.entity_id, NEW.primary_email, NEW.primary_contact);
+		INSERT INTO members(org_id, entity_id, email, surname) VALUES (NEW.org_id, NEW.entity_id, NEW.primary_email, NEW.primary_contact);
 
 		INSERT INTO sys_emailed ( org_id, table_id, table_name)
 		VALUES ( NEW.org_id, NEW.entity_id, 'subscription');
@@ -195,8 +197,8 @@ BEGIN
 		
 	RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
-
+$BODY$
+  LANGUAGE plpgsql;
   
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();

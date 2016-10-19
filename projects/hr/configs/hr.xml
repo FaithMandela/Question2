@@ -343,7 +343,7 @@
 				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="Draft">approve_status</DEFAULT>
 				<COMBOBOX w="430" title="Leave Type" lptable="vw_employee_leave_types" user="entity_id" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Contact Person" lptable="vw_employees" lpkey="entity_id" y="30" h="20" x="10" lpfield="employee_name">contact_entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Contact Person" lptable="vw_employees" lpkey="entity_id" where="(active = true)" y="30" h="20" x="10" lpfield="employee_name">contact_entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Leave From" required="true" y="50" h="20" x="10">leave_from</TEXTDATE>
 				<TEXTDATE w="150" title="Leave To" y="50" h="20" x="290">leave_to</TEXTDATE>
 				<CHECKBOX w="150" title="Start Half Day" y="70" h="20" x="10">Start_Half_Day</CHECKBOX>
@@ -1784,7 +1784,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
@@ -2145,7 +2144,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<GRID name="Employee Objectives" keyfield="employee_objective_id" linkfield="entity_id" table="vw_employee_objectives" params="approve_status">
@@ -2250,7 +2248,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>

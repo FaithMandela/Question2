@@ -1,10 +1,8 @@
 CREATE TABLE members (
-	member_id					serial primary key,
-	entity_id 					integer references entitys,
+	entity_id 					integer primary key references entitys,
 	bank_id						integer references banks,
 	bank_account_id				integer references bank_accounts,
 	bank_branch_id 				integer references bank_branch,
-	currency_id 				integer references currency,
  	org_id 						integer references orgs,
 	location_id					integer references locations,
 
@@ -36,7 +34,6 @@ CREATE INDEX members_bank_id ON members (bank_id);
 CREATE INDEX members_entity_id ON members (entity_id);
 CREATE INDEX members_bank_branch_id ON members (bank_branch_id);
 CREATE INDEX members_bank_account_id ON members (bank_account_id);
-CREATE INDEX members_currency_id ON members (currency_id);
 CREATE INDEX members_org_id ON members (org_id);
 CREATE INDEX members_location_id ON members (location_id);
 CREATE INDEX members_nationality ON members (nationality);
@@ -47,8 +44,8 @@ CREATE TABLE meetings (
 	org_id                      integer references orgs,
 	meeting_date				date,
 	meeting_place				varchar (120) not null,
-	minutes						varchar (120),
 	status						varchar (16) default 'Draft' not null,
+	minutes						text,
 	details						text
 );
 
@@ -62,6 +59,7 @@ CREATE TABLE contribution_types (
 	merry_go_round_amount		real default 0 not null,
 	frequency					varchar (15),		--- Irregural, Weekly, Fortnighly, Monthly,  quartely, semi-annually, annually
 	applies_to_all				boolean default true not null,
+	day_of_contrib				varchar(12),
 	details						text
 );	
 CREATE INDEX contribution_types_org_id ON contribution_types (org_id);
@@ -85,13 +83,11 @@ CREATE INDEX contribution_defaults_entity_id ON contribution_defaults (entity_id
 CREATE TABLE contributions (
 	contribution_id				serial primary key,
 	contribution_type_id		integer references contribution_types,
-	bank_account_id 			integer references bank_accounts,
 	entity_id					integer references entitys,
-	member_id                   integer references members,
 	period_id					integer references periods,
 	org_id						integer references orgs,
 	
-	contribution_date			timestamp without time zone,
+	contribution_date			date,
 	investment_amount			real not null,
 	merry_go_round_amount	 	real,
 	loan_contrib				real DEFAULT 0,
@@ -101,25 +97,24 @@ CREATE TABLE contributions (
 	details						text
 );
 
-CREATE INDEX contributions_bank_account_id ON contributions (bank_account_id);
 CREATE INDEX contributions_contributions_type_id ON contributions (contribution_type_id);
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
 CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_org_id ON contributions (org_id);
 
-CREATE TABLE drawings(
-drawing_id				serial primary key,
-org_id					integer references orgs,
-period_id				integer references periods,
-entity_id				integer references entitys,
-bank_account_id 		integer references bank_accounts,
+CREATE TABLE drawings (
+	drawing_id				serial primary key,
+	org_id					integer references orgs,
+	period_id				integer references periods,
+	entity_id				integer references entitys,
+	bank_account_id 		integer references bank_accounts,
 
-withdrawal_date			date,
-narrative				varchar(120),
-ref_number				varchar(24),
-amount					real,
-recieved				boolean DEFAULT false,
-details					text
+	withdrawal_date			date,
+	narrative				varchar(120),
+	ref_number				varchar(24),
+	amount					real,
+	recieved				boolean DEFAULT false,
+	details					text
 );
 
 CREATE INDEX drawings_org_id ON drawings(org_id);
@@ -127,20 +122,19 @@ CREATE INDEX drawings_period_id ON drawings(period_id);
 CREATE INDEX drawings_entity_id ON drawings(entity_id);
 CREATE INDEX drawings_bank_account_id ON drawings(bank_account_id);
 
-CREATE TABLE receipts(
-receipts_id				serial primary key,
-org_id					integer references orgs,
-period_id				integer references periods,
-entity_id				integer references entitys,
-bank_account_id 		integer references bank_accounts,
+CREATE TABLE receipts (
+	receipts_id				serial primary key,
+	org_id					integer references orgs,
+	period_id				integer references periods,
+	entity_id				integer references entitys,
+	bank_account_id 		integer references bank_accounts,
 
-receipts_date			date,
-narrative				varchar(120),
-ref_number				varchar(24),
-amount					real,
-remaining_amount		real default 0,
-remit_all				boolean default false,
-details					text
+	receipts_date			date,
+	narrative				varchar(120),
+	ref_number				varchar(24),
+	amount					real,
+	remaining_amount		real default 0,
+	details					text
 );
 
 CREATE INDEX receipts_org_id ON receipts(org_id);
@@ -245,12 +239,11 @@ CREATE INDEX transactions_investment_id ON transactions (investment_id);
 
 CREATE TABLE member_meeting (
 	member_meeting_id					serial primary key,
-	member_id 					integer references members,
+	entity_id 					integer references entitys,
 	meeting_id					integer references meetings,
 	org_id                      			integer references orgs,
 	narrative						text
 	);
 
-
-
+ALTER TABLE periods ADD COLUMN mgr_number integer;
 

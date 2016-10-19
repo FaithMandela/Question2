@@ -1796,8 +1796,9 @@ BEGIN
 		END IF;
 
 		FOR reca IN SELECT workflows.workflow_id, workflows.table_name, workflows.table_link_field, workflows.table_link_id
-		FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
-		WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) LOOP
+			FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
+			WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) 
+		LOOP
 			iswf := false;
 			IF(reca.table_link_field is null)THEN
 				iswf := true;
@@ -1828,6 +1829,13 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_leave_taken(integer, integer) RETURNS real AS $$
+	SELECT COALESCE(sum(leave_days), 0)
+	FROM employee_leave
+	WHERE (approve_status = 'Approved') AND (to_char(leave_from, 'YYYY') = to_char(current_date, 'YYYY'))
+		AND (entity_id = $1) AND (leave_type_id = $2);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_leave_balance(integer, integer) RETURNS real AS $$
 DECLARE

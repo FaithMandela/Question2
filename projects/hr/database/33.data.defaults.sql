@@ -105,3 +105,6 @@ VALUES (11, 1, 11, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 11, true);
 
 
+UPDATE transaction_counters SET document_number = '10001';
+
+UPDATE orgs SET employee_limit = 1000, transaction_limit = 1000000;

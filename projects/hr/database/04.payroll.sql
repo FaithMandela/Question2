@@ -582,6 +582,7 @@ CREATE VIEW vw_employee_month AS
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister, vw_periods.bank_header, vw_periods.bank_address,
 		vw_periods.gl_payroll_account, vw_periods.gl_bank_account, vw_periods.is_posted,
+		
 		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
 		pay_groups.pay_group_id, pay_groups.pay_group_name, vw_department_roles.department_id, vw_department_roles.department_name,
@@ -1114,46 +1115,61 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION generate_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_period_id		integer;
-	v_org_id		integer;
-	v_month_name	varchar(50);
+	v_period_tax_type_id		integer;
+	v_employee_month_id			integer;
+	v_period_id					integer;
+	v_org_id					integer;
+	v_month_name				varchar(50);
 
-	msg 			varchar(120);
+	msg 						varchar(120);
 BEGIN
 	SELECT period_id, org_id, to_char(start_date, 'Month YYYY') INTO v_period_id, v_org_id, v_month_name
 	FROM periods
 	WHERE (period_id = CAST($1 as integer));
-
-	INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id)
-	SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id
-	FROM tax_types
-	WHERE (active = true) AND (org_id = v_org_id);
-
-	INSERT INTO employee_month (period_id, org_id, pay_group_id, entity_id, bank_branch_id, department_role_id, currency_id, bank_account, basic_pay)
-	SELECT v_period_id, org_id, pay_group_id, entity_id, bank_branch_id, department_role_id, currency_id, bank_account, basic_salary
-	FROM employees
-	WHERE (employees.active = true) and (employees.org_id = v_org_id);
-
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
-	FROM vw_loans 
-	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
-
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
-	FROM vw_loans 
-	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
-
-	PERFORM updTax(employee_month_id, Period_id)
-	FROM employee_month
-	WHERE (period_id = v_period_id);
 	
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, narrative, org_id)
-	SELECT 7, entity_id, 'periods', v_month_name, v_org_id
-	FROM entity_subscriptions
-	WHERE entity_type_id = 6;
+	SELECT period_tax_type_id INTO v_period_tax_type_id
+	FROM period_tax_types
+	WHERE (period_id = v_period_id) AND (org_id = v_org_id);
+	
+	SELECT employee_month_id INTO v_employee_month_id
+	FROM employee_month
+	WHERE (period_id = v_period_id) AND (org_id = v_org_id);
 
-	msg := 'Payroll Generated';
+	IF(v_period_tax_type_id is null) AND (v_employee_month_id is null)THEN
+
+		INSERT INTO period_tax_types (period_id, org_id, tax_type_id, period_tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id)
+		SELECT v_period_id, org_id, tax_type_id, tax_type_name, formural, tax_relief, percentage, linear, employer, employer_ps, tax_type_order, in_tax, account_id
+		FROM tax_types
+		WHERE (active = true) AND (org_id = v_org_id);
+
+		INSERT INTO employee_month (period_id, org_id, pay_group_id, entity_id, bank_branch_id, department_role_id, currency_id, bank_account, basic_pay)
+		SELECT v_period_id, org_id, pay_group_id, entity_id, bank_branch_id, department_role_id, currency_id, bank_account, basic_salary
+		FROM employees
+		WHERE (employees.active = true) and (employees.org_id = v_org_id);
+
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+		SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+		FROM vw_loans 
+		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
+
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
+		SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+		FROM vw_loans 
+		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+
+		PERFORM updTax(employee_month_id, Period_id)
+		FROM employee_month
+		WHERE (period_id = v_period_id);
+		
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, narrative, org_id)
+		SELECT 7, entity_id, 'periods', v_month_name, v_org_id
+		FROM entity_subscriptions
+		WHERE entity_type_id = 6;
+	
+		msg := 'Payroll Generated';
+	ELSE
+		msg := 'Payroll was previously Generated';
+	END IF;
 
 	RETURN msg;
 END;
@@ -1342,7 +1358,8 @@ BEGIN
 			 period_tax_types.employer, period_tax_types.employer_ps
 		FROM employee_tax_types INNER JOIN period_tax_types ON (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
 		WHERE (employee_month_id = $1) AND (Period_Tax_Types.Period_ID = $2)
-		ORDER BY Period_Tax_Types.Tax_Type_order LOOP
+		ORDER BY Period_Tax_Types.Tax_Type_order 
+	LOOP
 
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
@@ -1660,7 +1677,8 @@ BEGIN
 		
 		FOR rec IN SELECT employee_month_id, exchange_rate
 			FROM employee_month 
-			WHERE (period_id = v_period_id) LOOP
+			WHERE (period_id = v_period_id) 
+		LOOP
 			
 			IF(adj.formural is not null)THEN
 				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || rec.employee_month_id
@@ -1683,7 +1701,8 @@ BEGIN
 	ELSIF ($3 = '2') THEN	
 		FOR rec IN SELECT entity_id
 			FROM employees
-			WHERE (active = true) AND (org_id = adj.org_id) LOOP
+			WHERE (active = true) AND (org_id = adj.org_id) 
+		LOOP
 			
 			SELECT default_adjustment_id INTO v_default_adjustment_id
 			FROM default_adjustments
@@ -1722,9 +1741,10 @@ BEGIN
 	FROM periods WHERE period_id = $1::int;
 	
 	FOR rec IN SELECT pension_id, entity_id, adjustment_id, contribution_id, 
-       pension_company, pension_number, amount, use_formura, 
-       employer_ps, employer_amount, employer_formural
-	FROM pensions WHERE (active = true) AND (org_id = v_org_id) LOOP
+		pension_company, pension_number, amount, use_formura, 
+		employer_ps, employer_amount, employer_formural
+		FROM pensions WHERE (active = true) AND (org_id = v_org_id) 
+	LOOP
 	
 		SELECT employee_month_id, currency_id, exchange_rate 
 			INTO v_employee_month_id, v_currency_id, v_exchange_rate
