@@ -41,18 +41,22 @@ END;
 $$
 LANGUAGE plpgsql ;
 
-CREATE OR REPLACE FUNCTION ins_passengers() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_passengers()
+  RETURNS trigger AS
+$BODY$
 DECLARE
 v_credit_limit real;
 v_credit real;
 BEGIN
-
+	v_credit := 0;
+	v_credit_limit := 0;
     SELECT credit_limit INTO v_credit FROM orgs WHERE org_id = NEW.org_id;
-    IF(NEW.incountry) THEN
-        v_credit_limit := v_credit -(NEW.kesamount::real/NEW.exchange_rate::real);
+    IF(NEW.incountry IS TRUE AND NEW.customer_code IS null) THEN
+        v_credit_limit := v_credit - (NEW.kesamount::real/NEW.exchange_rate::real);
     ELSE
         v_credit_limit := v_credit - NEW.totalamount_covered;
-    ENDIF;
+    END IF;
+    --raise exception '%',v_credit_limit;
     UPDATE orgs SET credit_limit = v_credit_limit WHERE org_id = NEW.org_id;
 
 	INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
@@ -60,7 +64,7 @@ BEGIN
 
 RETURN NEW;
 END;
-$$
+$BODY$
   LANGUAGE plpgsql;
 
 
@@ -75,8 +79,6 @@ CREATE TRIGGER ins_policy_number
     ON passengers
     FOR EACH ROW
     EXECUTE PROCEDURE ins_policy_number();
-
-
 
 CREATE OR REPLACE FUNCTION upd_passenger(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS varchar(120) AS $$
 DECLARE

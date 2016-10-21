@@ -27,6 +27,7 @@ BEGIN
 	END IF;
 
 	v_root_points := 0;
+	DELETE FROM points WHERE period_id = v_period_id AND entity_id = 0;
 
 	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
 	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP

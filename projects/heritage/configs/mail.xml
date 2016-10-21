@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ESCALATION title="Heritage Mail" processdelay="2"
-	host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent" mailfrom="info@openbaraza.org"
+	host="mail.travelport.co.ke" mailuser="heritage.app" mailpassword="Z3jB4MgoDeb4" mailfrom="heritage.app@travelport.co.ke"
 	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/heritage/reports/">
 

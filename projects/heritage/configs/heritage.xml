@@ -38,7 +38,7 @@
 		</DASHBOARD>
 	</DESK>
 	<DESK role="consultant" w="700" h="500" name="Consultant Profile" key="4">
-		<FORMVIEW new="false" role="consultant" keyfield="entity_id" name="Update Contact Details" delete="false" user="entity_id" key="5" table="vw_entitys" gohint="Click on GO to edit your details of change travel agency">
+		<FORMVIEW new="false" role="consultant" keyfield="entity_id" name="Update Contact Details" delete="false" user="entity_id" key="5" table="vw_entitys" gohint="Click on button to edit your Profile">
 			<TEXTFIELD w="75" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Full Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -61,7 +61,6 @@
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="75" title="SON">son</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="User Name">user_name</TEXTFIELD>
@@ -78,7 +77,11 @@
 				<TEXTFIELD w="430" h="20" x="10" y="50" title="SON">son</TEXTFIELD>
 				<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
-				<TEXTFIELD w="430" h="20" x="10" y="130" title="Function Role">function_role</TEXTFIELD>
+				<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
+					<DATA key="manager">Manager</DATA>
+					<DATA key="consultant">Consultant</DATA>
+					<DATA key="user">User</DATA>
+				</COMBOLIST>
 				<CHECKBOX w="150" h="20" x="290" y="150" title="Active">is_active</CHECKBOX>
 				<TEXTFIELD w="150" h="20" x="290" y="170" title="First Password">first_password</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="230" title="Details">details</TEXTAREA>
@@ -97,7 +100,6 @@
 			<GRID keyfield="entity_id" name="Entitys" linkfield="org_id" table="vw_entitys">
 				<TEXTFIELD w="75" title="Agency ID">org_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
@@ -146,7 +148,6 @@
 			<GRID noorg="true" keyfield="entity_id" name="Entitys" linkfield="org_id" table="vw_entitys">
 				<TEXTFIELD w="75" title="Agency ID">org_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
@@ -164,7 +165,11 @@
 					<TEXTFIELD w="430" h="20" x="10" y="50" title="User Name">user_name</TEXTFIELD>
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 					<TEXTFIELD w="150" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
-					<TEXTFIELD w="430" h="20" x="10" y="130" title="Function Role">function_role</TEXTFIELD>
+					<COMBOLIST w="150" h="20" x="10" y="50" title="Function Role">function_role
+						<DATA key="manager">Manager</DATA>
+						<DATA key="consultant">Consultant</DATA>
+						<DATA key="user">User</DATA>
+					</COMBOLIST>
 					<CHECKBOX w="150" h="20" x="290" y="150" title="Active">is_active</CHECKBOX>
 					<TEXTFIELD w="150" h="20" x="290" y="170" title="First Password">first_password</TEXTFIELD>
 					<TEXTAREA w="430" h="70" x="10" y="230" title="Details">details</TEXTAREA>
@@ -204,7 +209,7 @@
 			<TEXTFIELD w="75" title="Subscription Level Name">subscription_level_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Subscription ID">entity_subscription_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<FORM keyfield="entity_subscription_id" name="Entity Subscriptions" table="entity_subscriptions">
+			<FORM noorg="true" keyfield="entity_subscription_id" name="Entity Subscriptions" linkfield="entity_subscription_id" table="entity_subscriptions">
 				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Entity Type ID">entity_type_id</COMBOBOX>
 				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="30" lptable="entitys" title="Entity ID">entity_id</COMBOBOX>
 				<COMBOBOX w="430" h="20" lpfield="subscription_level_name" x="10" y="50" lptable="subscription_levels" title="Subscription Level ID">subscription_level_id</COMBOBOX>
@@ -319,7 +324,7 @@
 			<TEXTFIELD w="75" title="Age Limit">age_limit</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category">corporate_rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Details">details</TEXTFIELD>
-			<GRID noorg="true" keyfield="rate_type_id" name="Rates" tab.count="count(rate_type_id)" linkfield="rate_type_id" table="vw_corporate_rates">
+			<GRID noorg="true" keyfield="corporate_rate_id" name="Rates" tab.count="count(corporate_rate_id)" linkfield="rate_type_id" table="vw_corporate_rates">
 				<TEXTFIELD w="75" title="Rate Type">rate_plan_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 				<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
