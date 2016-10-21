@@ -1147,13 +1147,15 @@ BEGIN
 		FROM employees
 		WHERE (employees.active = true) and (employees.org_id = v_org_id);
 
-		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-		SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+		SELECT v_period_id, org_id, loan_id, (loan_balance * interest / 1200), (loan_balance * interest / 1200),
+			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
 
-		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-		SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+		SELECT v_period_id, org_id, loan_id, (principle * interest / 1200), (principle * interest / 1200),
+			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
 
