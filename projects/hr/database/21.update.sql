@@ -1,4 +1,88 @@
 
+
+ALTER TABLE review_category ADD rate_objectives			boolean default true not null;
+
+UPDATE review_category SET rate_objectives = false WHERE review_category_id = 5;
+
+CREATE TRIGGER upd_action BEFORE UPDATE ON applications
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
+    
+CREATE OR REPLACE FUNCTION ins_applications() RETURNS trigger AS $$
+DECLARE
+	typeid	integer;
+BEGIN
+	
+	IF ((NEW.entity_id is null) AND (NEW.employee_id is not null)) THEN
+		NEW.entity_id := NEW.employee_id;
+		NEW.approve_status := 'Completed';
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_applications BEFORE INSERT ON applications
+    FOR EACH ROW EXECUTE PROCEDURE ins_applications();
+    
+CREATE OR REPLACE FUNCTION add_employee(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_application_id		integer;
+	v_entity_id				integer;
+	v_employee_id			integer;
+	msg		 				varchar(120);
+BEGIN
+
+	v_application_id := CAST($1 as int);
+	SELECT employees.entity_id, applications.employee_id INTO v_entity_id, v_employee_id
+	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
+	WHERE (application_id = v_application_id);
+
+	IF(v_employee_id is null) AND (v_entity_id is null)THEN
+		INSERT INTO employees (org_id, currency_id, bank_branch_id,
+			department_role_id, pay_scale_id, pay_group_id, location_id,  
+			person_title, surname, first_name, middle_name,
+			date_of_birth, gender, nationality, marital_status,
+			picture_file, identity_card, language, interests, objective,
+			contract, appointment_date, current_appointment, contract_period,
+			basic_salary)
+
+		SELECT orgs.org_id, orgs.currency_id, 0,
+			intake.department_role_id, intake.pay_scale_id, intake.pay_group_id, intake.location_id,
+			applicants.person_title, applicants.surname, applicants.first_name, applicants.middle_name,  
+			applicants.date_of_birth, applicants.gender, applicants.nationality, applicants.marital_status, 
+			applicants.picture_file, applicants.identity_card, applicants.language, applicants.interests, applicants.objective,
+			
+			
+			intake.contract, applications.contract_date, applications.contract_start, 
+			applications.contract_period, applications.initial_salary
+		FROM orgs INNER JOIN applicants ON orgs.org_id = applicants.org_id
+			INNER JOIN applications ON applicants.entity_id = applications.entity_id
+			INNER JOIN intake ON applications.intake_id = intake.intake_id
+			
+		WHERE (applications.application_id = v_application_id);
+		
+		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Completed'
+		WHERE (application_id = v_application_id);
+			
+		msg := 'Employee added';
+	ELSIF(v_employee_id is null)THEN
+		UPDATE applications SET employee_id = v_employee_id, 
+			department_role_id = intake.department_role_id, pay_scale_id = intake.pay_scale_id, 
+			pay_group_id = intake.pay_group_id, location_id = intake.location_id,
+			approve_status = 'Completed'
+		FROM intake  
+		WHERE (applications.intake_id = intake.intake_id) AND (applications.application_id = v_application_id);
+		
+		msg := 'Employee details updated';
+	ELSE
+		msg := 'Employeed already added to the system';
+	END IF;
+	
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
 ALTER TABLE contract_types ADD notice_period			integer default 30 not null;
 
 ALTER TABLE applications ADD 	notice_email			boolean default false not null;
@@ -281,3 +365,86 @@ Kindly note that the contract for {{entity_name}} is due to employment.<br><br>
 Regards,<br>
 HR Manager<br>');
 
+CREATE OR REPLACE FUNCTION process_loans(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec							RECORD;
+	v_exchange_rate				real;
+	v_employee_adjustment_id	integer;
+	msg							varchar(120);
+BEGIN
+	
+	FOR rec IN SELECT vw_loan_monthly.loan_month_id, vw_loan_monthly.loan_id, vw_loan_monthly.entity_id, vw_loan_monthly.period_id, 
+		vw_loan_monthly.employee_adjustment_id, vw_loan_monthly.adjustment_id, vw_loan_monthly.loan_balance, 
+		vw_loan_monthly.repayment, (vw_loan_monthly.interest_paid + vw_loan_monthly.penalty_paid) as total_interest,
+		(vw_loan_monthly.repayment + vw_loan_monthly.interest_paid + vw_loan_monthly.penalty_paid) as total_deduction,
+		employee_month.employee_month_id, employee_month.org_id, 
+		employee_month.currency_id, employee_month.exchange_rate,
+		adjustments.currency_id as adj_currency_id
+	FROM vw_loan_monthly INNER JOIN employee_month ON (vw_loan_monthly.entity_id = employee_month.entity_id) AND (vw_loan_monthly.period_id = employee_month.period_id)
+		INNER JOIN adjustments ON vw_loan_monthly.adjustment_id = adjustments.adjustment_id
+	WHERE (vw_loan_monthly.period_id = CAST($1 as int)) LOOP
+	
+		IF(rec.currency_id = rec.adj_currency_id)THEN
+			v_exchange_rate := 1;
+		ELSE
+			v_exchange_rate := 1 / rec.exchange_rate;
+		END IF;
+
+		IF(rec.employee_adjustment_id is null)THEN
+			v_employee_adjustment_id := nextval('employee_adjustments_employee_adjustment_id_seq');
+			
+			INSERT INTO employee_adjustments (employee_month_id, adjustment_id, adjustment_type, adjustment_factor,
+				amount, balance, in_tax, org_id, exchange_rate, employee_adjustment_id)
+			VALUES (rec.employee_month_id, rec.adjustment_id, 2, -1,
+				rec.total_deduction, rec.loan_balance, false, rec.org_id, v_exchange_rate, v_employee_adjustment_id);
+
+			UPDATE loan_monthly SET employee_adjustment_id = v_employee_adjustment_id
+			WHERE (loan_month_id = rec.loan_month_id);
+		ELSE
+			UPDATE employee_adjustments SET amount = rec.total_deduction, balance = rec.loan_balance, exchange_rate = v_exchange_rate
+			WHERE (employee_adjustment_id = rec.employee_adjustment_id);
+		END IF;
+
+	END LOOP;
+
+	msg := 'Payroll Processed';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION compute_loans(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_period_id			integer;
+	v_org_id			integer;
+	msg					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id INTO v_period_id, v_org_id
+	FROM periods
+	WHERE (period_id = $1::integer);
+	
+	DELETE FROM employee_adjustment_id WHERE employee_adjustment_id IN
+	(SELECT employee_adjustment_id FROM loan_monthly WHERE period_id = v_period_id);
+	DELETE FROM loan_monthly WHERE period_id = v_period_id;
+
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+	SELECT v_period_id, org_id, loan_id, (loan_balance * interest / 1200), (loan_balance * interest / 1200),
+		(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
+
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+	SELECT v_period_id, org_id, loan_id, (principle * interest / 1200), (principle * interest / 1200),
+		(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
+	FROM vw_loans 
+	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+
+	msg := 'Loans re-computed';
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+	

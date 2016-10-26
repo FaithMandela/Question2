@@ -547,14 +547,14 @@ CREATE TABLE applications (
 	contract_period			integer,
 	contract_terms			text,
 	initial_salary			real,
-	
+
 	notice_email			boolean default false not null,
 
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
-	
+
 	short_listed			integer default 0 not null,
 	previous_salary			real,
 	expected_salary			real,
@@ -683,6 +683,7 @@ CREATE TABLE review_category (
 	review_category_id		serial primary key,
 	org_id					integer references orgs,
 	review_category_name	varchar(320),
+	rate_objectives			boolean default true not null,
 	details					text
 );
 CREATE INDEX review_category_org_id ON review_category(org_id);
@@ -1398,8 +1399,9 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
 DECLARE
-	v_org_id			integer;
-	v_entity_id			integer;
+	v_org_id				integer;
+	v_entity_id				integer;
+	v_entity_type_id		integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		
@@ -1409,14 +1411,22 @@ BEGIN
 			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
 				
 			IF(v_entity_id is null)THEN
-				SELECT min(org_id) INTO v_org_id
-				FROM orgs WHERE (is_default = true);
+				v_org_id := NEW.org_id;
+				IF(v_org_id is null)THEN
+					SELECT min(org_id) INTO v_org_id
+					FROM orgs WHERE (is_default = true);
+				END IF;
+				
+				SELECT entity_type_id INTO v_entity_type_id
+				FROM entity_types 
+				WHERE (org_id = v_org_id) AND (use_key = 4);
 
 				NEW.entity_id := nextval('entitys_entity_id_seq');
 
-				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
+				INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+					entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, v_org_id, 4, 
+				VALUES (NEW.entity_id, v_org_id, v_entity_type_id, 4, 
 					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
 			ELSE
@@ -1440,6 +1450,7 @@ CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
 
 CREATE OR REPLACE FUNCTION ins_employees() RETURNS trigger AS $$
 DECLARE
+	v_entity_type_id	integer;
 	v_use_type			integer;
 	v_org_sufix 		varchar(4);
 	v_first_password	varchar(12);
@@ -1455,9 +1466,13 @@ BEGIN
 
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 
-			IF(NEW.Employee_ID is null) THEN
-				NEW.Employee_ID := NEW.entity_id;
+			IF(NEW.employee_id is null) THEN
+				NEW.employee_id := NEW.entity_id;
 			END IF;
+			
+			SELECT entity_type_id INTO v_entity_type_id
+			FROM entity_types 
+			WHERE (org_id = NEW.org_id) AND (use_key = 1);
 
 			v_first_password := first_password();
 			v_user_name := lower(v_org_sufix || '.' || NEW.First_name || '.' || NEW.Surname);
@@ -1467,9 +1482,10 @@ BEGIN
 			WHERE (org_id = NEW.org_id) AND (user_name = v_user_name);
 			IF(v_user_count > 0) THEN v_user_name := v_user_name || v_user_count::varchar; END IF;
 
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, function_role, 
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+				entity_name, user_name, function_role, 
 				first_password, entity_password)
-			VALUES (NEW.entity_id, NEW.org_id, 1, 
+			VALUES (NEW.entity_id, NEW.org_id, v_entity_type_id, 1, 
 				(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 				v_user_name, 'staff',
 				v_first_password, md5(v_first_password));
@@ -1724,21 +1740,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION upd_applications() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_applications() RETURNS trigger AS $$
 DECLARE
 	typeid	integer;
 BEGIN
 	
-	IF (NEW.approve_status = 'Approved') THEN
-		NEW.action_date := now();
-	END IF;
-	IF (NEW.approve_status = 'Rejected') THEN
-		NEW.action_date := now();
+	IF ((NEW.entity_id is null) AND (NEW.employee_id is not null)) THEN
+		NEW.entity_id := NEW.employee_id;
+		NEW.approve_status := 'Completed';
 	END IF;
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_applications BEFORE INSERT ON applications
+    FOR EACH ROW EXECUTE PROCEDURE ins_applications();
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_leave
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
@@ -1746,8 +1763,8 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_leave
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON leave_work_days
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-CREATE TRIGGER upd_applications BEFORE UPDATE ON applications
-    FOR EACH ROW EXECUTE PROCEDURE upd_applications();
+CREATE TRIGGER upd_action BEFORE UPDATE ON applications
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON casual_application
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
@@ -2120,17 +2137,19 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION job_review_check(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_self_rating		integer;
-	v_objective_ps		real;
-	sum_ods_ps			real;
-	v_point_check		integer;
-	rec					RECORD;
-	msg 				varchar(120);
+	rec							RECORD;
+	v_rate_objectives			boolean;
+	v_self_rating				integer;
+	v_objective_ps				real;
+	sum_ods_ps					real;
+	v_point_check				integer;
+	msg 						varchar(120);
 BEGIN
 	
 	SELECT sum(objectives.objective_ps) INTO v_objective_ps
 	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int));
+	
 	SELECT sum(ods_ps) INTO sum_ods_ps
 	FROM objective_details INNER JOIN evaluation_points ON evaluation_points.objective_id = objective_details.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int));
@@ -2140,15 +2159,20 @@ BEGIN
 	WHERE (evaluation_points.job_review_id = CAST($1 as int))
 		AND (objectives.objective_ps > 0) AND (evaluation_points.points = 0);
 		
-	SELECT self_rating INTO v_self_rating
-	FROM job_reviews
-	WHERE (job_review_id = $1::int);
+	SELECT job_reviews.self_rating, review_category.rate_objectives INTO v_self_rating, v_rate_objectives
+	FROM job_reviews INNER JOIN review_category ON job_reviews.review_category_id = review_category.review_category_id
+	WHERE (job_reviews.job_review_id = $1::int);
 	IF(v_self_rating is null) THEN v_self_rating := 0; END IF;
-	
+		
 	IF(sum_ods_ps is null)THEN
 		sum_ods_ps := 100;
 	END IF;
 	IF(sum_ods_ps = 0)THEN
+		sum_ods_ps := 100;
+	END IF;
+	
+	IF(v_rate_objectives = false)THEN
+		v_objective_ps := 100;
 		sum_ods_ps := 100;
 	END IF;
 
@@ -2330,14 +2354,15 @@ BEGIN
 			
 		WHERE (applications.application_id = v_application_id);
 		
-		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Approved'
+		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Completed'
 		WHERE (application_id = v_application_id);
 			
 		msg := 'Employee added';
 	ELSIF(v_employee_id is null)THEN
 		UPDATE applications SET employee_id = v_employee_id, 
 			department_role_id = intake.department_role_id, pay_scale_id = intake.pay_scale_id, 
-			pay_group_id = intake.pay_group_id, location_id = intake.location_id
+			pay_group_id = intake.pay_group_id, location_id = intake.location_id,
+			approve_status = 'Completed'
 		FROM intake  
 		WHERE (applications.intake_id = intake.intake_id) AND (applications.application_id = v_application_id);
 		

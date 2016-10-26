@@ -2166,6 +2166,8 @@ System.out.println("repository : " + repository);
 	public BUser getUser() { return db.getUser(); }
 	public void setReadOnly(boolean readOnly) { db.setReadOnly(readOnly); }
 	public String executeQuery(String mysql) { return db.executeQuery(mysql); }
+	
+	public BQuery getQuery(String mysql) { return new BQuery(db, mysql); }
 
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }

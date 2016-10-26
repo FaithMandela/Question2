@@ -2321,6 +2321,7 @@
 		<GRID name="Review Category" keyfield="review_category_id" table="review_category">
 			<TEXTFIELD w="75" title="Review Category ID">review_category_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Review Category Name">review_category_name</TEXTFIELD>
+			<CHECKBOX w="50" title="Rate Objectives">rate_objectives</CHECKBOX>
 			<GRID name="Review Points" keyfield="review_point_id" linkfield="review_category_id" table="vw_review_points">
 				<TEXTFIELD w="75" title="Review Point ID">review_point_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Review Point">review_point_name</TEXTFIELD>
@@ -2333,7 +2334,8 @@
 			</GRID>
 			<FORM name="Review Category" keyfield="review_category_id" table="review_category">
 				<TEXTFIELD w="350" title="Review Category" y="10" h="20" x="10">review_category_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Rate Objectives" y="30" h="20" x="10">rate_objectives</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Career Development" keyfield="career_development_id" table="career_development">

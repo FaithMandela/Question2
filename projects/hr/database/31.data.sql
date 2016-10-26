@@ -306,4 +306,6 @@ INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'MPESA');
 INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'Cash');
 INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'Cheque');
 
+INSERT INTO review_category (review_category_id, org_id, review_category_name) VALUES (0, 0, 'Annual Review');
+
 

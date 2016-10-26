@@ -109,16 +109,16 @@ CREATE VIEW vwdayssegs AS
 	GROUP BY vwtickets.ticketperiod, vwtickets.segperiod, vwtickets.ticketdate;
 
 CREATE VIEW vwbookedsegs AS
-	SELECT pccs.pcc, pccs.agencyname, vwtickets.ticketperiod, vwtickets.segperiod, 
+	SELECT pccs.pcc, pccs.agencyname, vwtickets.bookpcc, vwtickets.ticketperiod, vwtickets.segperiod, 
 		sum(vwtickets.activesegs) as totalsegs
 	FROM (pccs INNER JOIN vwtickets ON pccs.pcc = vwtickets.bpcc)
-	GROUP BY pccs.pcc, pccs.agencyname, vwtickets.ticketperiod, vwtickets.segperiod;
+	GROUP BY pccs.pcc, pccs.agencyname, vwtickets.bookpcc, vwtickets.ticketperiod, vwtickets.segperiod;
 
 CREATE VIEW vwsonsegs AS
-	SELECT pccs.pcc, pccs.agencyname, vwtickets.son, vwtickets.ticketperiod, vwtickets.segperiod, 
+	SELECT pccs.pcc, pccs.agencyname, vwtickets.bookpcc, vwtickets.son, vwtickets.ticketperiod, vwtickets.segperiod, 
 		sum(vwtickets.activesegs) as totalsegs
-	FROM (pccs INNER JOIN vwtickets ON pccs.pcc = vwtickets.bpcc)
-	GROUP BY pccs.pcc, pccs.agencyname, vwtickets.son, vwtickets.ticketperiod, vwtickets.segperiod;
+	FROM (vwtickets LEFT JOIN pccs ON vwtickets.bpcc = pccs.pcc)
+	GROUP BY pccs.pcc, pccs.agencyname, vwtickets.bookpcc, vwtickets.son, vwtickets.ticketperiod, vwtickets.segperiod;
 
 CREATE VIEW vwsegements AS
 	SELECT Segments.yearmonth, Segments.pcc as spcc, Segments.agency, 
