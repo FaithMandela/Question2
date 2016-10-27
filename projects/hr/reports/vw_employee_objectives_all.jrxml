@@ -20,8 +20,12 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT
 vw_evaluation_objectives.entity_id,	vw_evaluation_objectives.entity_name,
@@ -29,11 +33,14 @@ vw_evaluation_objectives.objective_type_id,	vw_evaluation_objectives.objective_t
 vw_evaluation_objectives.objective_name,vw_evaluation_objectives.objective_ps,vw_evaluation_objectives.application_date,
 vw_evaluation_objectives.narrative, vw_evaluation_objectives.points,
 vw_evaluation_objectives.reviewer_narrative,vw_evaluation_objectives.reviewer_points
+
 FROM job_reviews INNER JOIN vw_evaluation_objectives
 ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
-AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date))
+
+WHERE (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date))
 AND EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = '$P!{filterid}'::integer
 $P!{organd}
+
 GROUP BY vw_evaluation_objectives.entity_id,vw_evaluation_objectives.entity_name,vw_evaluation_objectives.job_review_id,
 vw_evaluation_objectives.objective_type_id,	vw_evaluation_objectives.objective_type_name,
 vw_evaluation_objectives.objective_id,vw_evaluation_objectives.objective_name,vw_evaluation_objectives.objective_ps,vw_evaluation_objectives.application_date,
@@ -105,9 +112,9 @@ ORDER BY vw_evaluation_objectives.job_review_id, vw_evaluation_objectives.object
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="77" splitType="Stretch">
+		<band height="49" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="1" y="32" width="554" height="45" uuid="49edbed3-47d2-4d9e-a5e9-a8baac644b30"/>
+				<reportElement style="Title" x="1" y="3" width="554" height="45" uuid="49edbed3-47d2-4d9e-a5e9-a8baac644b30"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>

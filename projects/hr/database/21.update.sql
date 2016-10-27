@@ -98,42 +98,6 @@ DROP VIEW vw_intern_evaluations;
 DROP VIEW vw_applications;
 DROP VIEW vw_applicants;
 
-DROP VIEW vw_employee_tax_month;
-
-CREATE VIEW vw_employee_tax_month AS
-	SELECT emp.period_id, emp.start_date, emp.end_date, emp.overtime_rate, 
-		emp.activated, emp.closed, emp.month_id, emp.period_year, emp.period_month,
-		emp.quarter, emp.semister, emp.bank_header, emp.bank_address,
-		emp.gl_payroll_account, emp.gl_bank_account, emp.is_posted,
-		emp.bank_id, emp.bank_name, emp.bank_branch_id, 
-		emp.bank_branch_name, emp.bank_branch_code,
-		emp.pay_group_id, emp.pay_group_name, emp.department_id, emp.department_name,
-		emp.department_role_id, emp.department_role_name, 
-		emp.entity_id, emp.entity_name,
-		emp.employee_id, emp.surname, emp.first_name, emp.middle_name, emp.date_of_birth, 
-		emp.gender, emp.nationality, emp.marital_status, emp.appointment_date, emp.exit_date, 
-		emp.contract, emp.contract_period, emp.employment_terms, emp.identity_card,
-		emp.employee_name,
-		emp.currency_id, emp.currency_name, emp.currency_symbol, emp.exchange_rate,
-		
-		emp.org_id, emp.employee_month_id, emp.bank_account, emp.basic_pay, emp.details,
-		emp.overtime, emp.full_allowance, emp.payroll_allowance, emp.tax_allowance,
-		emp.full_deduction, emp.payroll_deduction, emp.tax_deduction, emp.full_expense,
-		emp.payroll_expense, emp.tax_expense, emp.payroll_tax, emp.tax_tax,
-		emp.net_adjustment, emp.per_diem, emp.advance, emp.advance_deduction,
-		emp.net_pay, emp.banked, emp.cost,
-		(CASE WHEN emp.nationality = 'KE' THEN 'Resident' ELSE 'Non resident') as residence,
-		
-		tax_types.tax_type_id, tax_types.tax_type_name, tax_types.account_id, tax_types.use_type,
-		employee_tax_types.employee_tax_type_id, employee_tax_types.tax_identification, 
-		employee_tax_types.amount, employee_tax_types.exchange_rate as tax_exchange_rate,
-		employee_tax_types.additional, employee_tax_types.employer, employee_tax_types.narrative,
-		
-		(employee_tax_types.amount * employee_tax_types.exchange_rate) as tax_base_amount
-
-	FROM vw_employee_month as emp INNER JOIN employee_tax_types ON emp.employee_month_id = employee_tax_types.employee_month_id
-		INNER JOIN tax_types ON employee_tax_types.tax_type_id = tax_types.tax_type_id;
-
 
 CREATE VIEW vw_applicants AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name,
@@ -335,7 +299,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id				integer;
 	v_entity_name			varchar(120);

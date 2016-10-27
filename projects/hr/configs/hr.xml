@@ -68,10 +68,10 @@
 			<MENU name="Leave" role="hr">109</MENU>
 			<MENU name="Intake" role="hr">110</MENU>
 			<MENU name="Internships" role="hr">111</MENU>
-			<MENU name="Work Review" role="hr">112</MENU>
+			<MENU name="Perfomance Review" role="hr">112</MENU>
+			<MENU name="Review Reports" role="admin,hr">160</MENU>
 			<MENU name="Arbitration" role="hr">113</MENU>
 			<MENU name="Staff Contracts" role="hr">155</MENU>
-			<MENU name="Review Reports" role="admin,hr">160</MENU>
 			<MENU name="Transaction ledger">195</MENU>
 		</MENU>
 		<MENU name="Payroll" role="admin,payroll,hr,reports" xml="payroll.xml">0</MENU>
@@ -579,8 +579,6 @@
 				<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 				<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 				<TEXTFIELD w="550" title="Job Description" y="1" h="280" x="10">job_description</TEXTFIELD>
-				<TEXTFIELD w="550" title="Duties" y="1" h="280" x="10">duties</TEXTFIELD>
-				<TEXTFIELD w="550" title="Details" y="1" h="280" x="10">details</TEXTFIELD>
 			</FORMVIEW>
 			<ACTIONS>
 				<ACTION fnct="Ins_applications">Apply For Post</ACTION>
@@ -3268,6 +3266,16 @@
 				<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
 				<CHECKBOX w="75" title="Request">is_request</CHECKBOX>
+				<FORM name="Expenditure" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="pc_expenditure">
+					<COMBOBOX w="430" title="Item" lptable="pc_items" y="10" h="20" x="10" lpfield="pc_item_name">pc_item_id</COMBOBOX>
+					<COMBOBOX w="430" title="Type" lptable="pc_types" y="30" h="20" x="10" lpfield="pc_type_name">pc_type_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Units" y="50" h="20" x="10">units</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Unit Price" y="50" h="20" x="290">unit_price</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Receipt Number" y="70" h="20" x="10">receipt_number</TEXTFIELD>
+					<TEXTDATE w="150" title="Exp Date" y="70" h="20" x="290">exp_date</TEXTDATE>
+					<CHECKBOX w="150" title="Request" y="90" h="20" x="10">is_request</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				</FORM>
 			</GRID>
 			<GRID name="Payroll" keyfield="period_id" orderby="start_date desc" table="periods" viewfilter="table_name=periods" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
@@ -3780,18 +3788,22 @@
 		<JASPER name="Internships" reportfile="vw_internships.jasper"></JASPER>
 		<JASPER name="Interns" reportfile="vw_interns.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Job Review" key="112" h="550">
-		<JASPER name="Job Review" reportfile="vw_evaluation_points.jasper"></JASPER>
-		<JASPER name="Appraisal Ratings" reportfile="vw_appraisal_ratings.jasper"></JASPER>
-		<JASPER name="Review Category" reportfile="vw_review_points.jasper"></JASPER>
-		<FILTER w="700" name="Career Development" split="150" type="horl" key="6" h="550">
+	<DESK w="700" name="Perfomance Review" key="112" h="550">
+		<FILTER w="700" name="Individual Reports" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Perfomance Review" reportfile="vw_evaluation_points.jasper"></JASPER>
+			<JASPER name="Appraisal Ratings" org.table="vw_evaluation_points" reportfile="vw_appraisal_ratings.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Annual Reports" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year"></DRILLDOWN>
+			<JASPER name="Perfomance Review" reportfile="vw_evaluation_points_a.jasper"></JASPER>
+			<JASPER name="Appraisal Ratings" org.table="vw_evaluation_points" reportfile="vw_appraisal_ratings_a.jasper"></JASPER>
 			<JASPER name="Career Development" reportfile="vw_career_development.jasper"></JASPER>
+			<JASPER name="Objectives" org.table="job_reviews" reportfile="vw_employee_objectives_all.jasper"></JASPER>
 		</FILTER>
-		<FILTER w="700" name="Objectives" split="150" type="horl" key="6" h="550">
-			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year"></DRILLDOWN>
-			<JASPER name="Objectives" reportfile="vw_employee_objectives_all.jasper"></JASPER>
-		</FILTER>
+		<JASPER name="Review Category" reportfile="vw_review_points.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Arbitration" key="113" h="550">
 		<JASPER name="Cases" reportfile="vw_employee_cases.jasper"></JASPER>

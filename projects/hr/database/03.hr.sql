@@ -2580,7 +2580,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id				integer;
 	v_entity_name			varchar(120);
