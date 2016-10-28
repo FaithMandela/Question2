@@ -944,7 +944,7 @@
 			<TEXTDATE w="75" title="Date">qstart_date</TEXTDATE>
 			<TEXTDATE w="75" title="Date">qstop_date</TEXTDATE>
 			<CHECKBOX w="75" title="Completed">qcompleted</CHECKBOX>
-			<GRID name="Analysis" keyfield="pm_schedule_id" linkfield="pm_quarter_id" table="vw_pm_schedule_a">
+			<GRID name="Analysis" keyfield="pm_schedule_id" linkfield="pm_quarter_id" table="vw_pm_schedule_a" where="(completed = true)">
 				<TEXTAREA w="75" title="Schedule Date">schedule_date</TEXTAREA>
 				<TEXTFIELD w="150" title="Client Name">client_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
@@ -953,6 +953,8 @@
 				<TEXTAREA w="75" title="Version">gd_version</TEXTAREA>
 				<TEXTAREA w="75" title="GTIDS">gtids</TEXTAREA>
 				<TEXTAREA w="75" title="Details">details</TEXTAREA>
+				<JASPER name="PM System" reportfile="pm_system.jasper"></JASPER>
+				<JASPER name="System PM" reportfile="system_pm.jasper"></JASPER>
 			</GRID>
 			<JASPER name="PM System" reportfile="pm_system_f.jasper"></JASPER>
 			<JASPER name="System PM" reportfile="system_pm_f.jasper"></JASPER>
