@@ -411,4 +411,160 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP VIEW vw_career_development;
+DROP VIEW vw_evaluation_objectives;
+DROP VIEW vw_evaluation_points;
+DROP VIEW vw_all_job_reviews;
+DROP VIEW vw_review_year;
+DROP VIEW vw_job_reviews;
+
+CREATE VIEW vw_job_reviews AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+		review_category.review_category_id, review_category.review_category_name, review_category.rate_objectives,
+		job_reviews.org_id, job_reviews.job_review_id, job_reviews.total_points, 
+		job_reviews.review_date, job_reviews.review_done, 
+		job_reviews.approve_status, job_reviews.workflow_table_id, job_reviews.application_date, job_reviews.action_date,
+		job_reviews.recomendation, job_reviews.reviewer_comments, job_reviews.pl_comments, job_reviews.details,
+		EXTRACT(YEAR FROM job_reviews.review_date) as review_year
+	FROM job_reviews INNER JOIN entitys ON job_reviews.entity_id = entitys.entity_id
+		INNER JOIN  review_category ON job_reviews.review_category_id = review_category.review_category_id;
 	
+CREATE VIEW vw_review_year AS
+	SELECT vw_job_reviews.org_id, vw_job_reviews.review_year
+	FROM vw_job_reviews
+	WHERE vw_job_reviews.review_year is not null
+	GROUP BY vw_job_reviews.org_id, vw_job_reviews.review_year;
+
+CREATE VIEW vw_all_job_reviews AS
+	SELECT a.org_id, a.review_year,  a.entity_id, a.employee_id, a.employee_name,
+		b.job_review_id, b.total_points, b.approve_status
+	FROM 
+		(SELECT vw_review_year.review_year, employees.org_id, employees.entity_id,
+			employees.employee_id, 
+			(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name
+		FROM vw_review_year INNER JOIN employees ON vw_review_year.org_id = employees.org_id
+		WHERE employees.active = true) as a
+	LEFT JOIN
+		(SELECT job_review_id, total_points, approve_status, entity_id, review_year
+		FROM vw_job_reviews) as b
+		
+	ON (a.entity_id = b.entity_id) AND (a.review_year = b.review_year);
+	
+CREATE VIEW vw_evaluation_points AS
+	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, 
+		vw_job_reviews.review_category_id, vw_job_reviews.review_category_name, vw_job_reviews.rate_objectives,
+		vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
+		vw_job_reviews.review_date, vw_job_reviews.review_done, vw_job_reviews.recomendation, vw_job_reviews.reviewer_comments,
+		vw_job_reviews.pl_comments,
+		vw_job_reviews.approve_status, vw_job_reviews.workflow_table_id, vw_job_reviews.application_date, vw_job_reviews.action_date,
+		vw_review_points.review_point_id, vw_review_points.review_point_name, vw_review_points.review_points,
+		
+		evaluation_points.org_id, evaluation_points.evaluation_point_id, evaluation_points.points, evaluation_points.grade,  
+		evaluation_points.reviewer_points, evaluation_points.reviewer_grade, evaluation_points.reviewer_narrative,
+		evaluation_points.narrative, evaluation_points.details
+	FROM evaluation_points INNER JOIN vw_job_reviews ON evaluation_points.job_review_id = vw_job_reviews.job_review_id
+		INNER JOIN vw_review_points ON evaluation_points.review_point_id = vw_review_points.review_point_id;
+
+CREATE VIEW vw_evaluation_objectives AS
+	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, 
+		vw_job_reviews.review_category_id, vw_job_reviews.review_category_name, vw_job_reviews.rate_objectives,
+		vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
+		vw_job_reviews.review_date, vw_job_reviews.review_done, vw_job_reviews.recomendation, vw_job_reviews.reviewer_comments,
+		vw_job_reviews.pl_comments,
+		vw_job_reviews.approve_status, vw_job_reviews.workflow_table_id, vw_job_reviews.application_date, vw_job_reviews.action_date,
+		
+		vw_objectives.objective_type_id, vw_objectives.objective_type_name, 
+		vw_objectives.objective_id, vw_objectives.date_set, vw_objectives.objective_ps, vw_objectives.objective_name, 
+		vw_objectives.objective_completed, vw_objectives.details as objective_details,
+
+		evaluation_points.org_id, evaluation_points.evaluation_point_id, evaluation_points.points,
+		evaluation_points.reviewer_points, evaluation_points.reviewer_narrative,
+		evaluation_points.narrative, evaluation_points.details
+	FROM evaluation_points INNER JOIN vw_job_reviews ON evaluation_points.job_review_id = vw_job_reviews.job_review_id
+		INNER JOIN vw_objectives ON evaluation_points.objective_id = vw_objectives.objective_id;
+
+
+CREATE VIEW vw_career_development AS
+	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
+		vw_job_reviews.review_date, vw_job_reviews.review_done, vw_job_reviews.recomendation, vw_job_reviews.reviewer_comments,
+		vw_job_reviews.pl_comments,
+		vw_job_reviews.approve_status, vw_job_reviews.workflow_table_id, vw_job_reviews.application_date, vw_job_reviews.action_date,
+		
+		career_development.career_development_id, career_development.career_development_name, 
+		career_development.details as career_development_details,
+
+		evaluation_points.org_id, evaluation_points.evaluation_point_id, evaluation_points.points,
+		evaluation_points.reviewer_points, evaluation_points.reviewer_narrative,
+		evaluation_points.narrative, evaluation_points.details
+	FROM evaluation_points INNER JOIN vw_job_reviews ON evaluation_points.job_review_id = vw_job_reviews.job_review_id
+		INNER JOIN career_development ON evaluation_points.career_development_id = career_development.career_development_id;
+		
+		
+
+CREATE OR REPLACE FUNCTION job_review_check(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	rec							RECORD;
+	v_approve_status			varchar(16);
+	v_rate_objectives			boolean;
+	v_self_rating				integer;
+	v_objective_ps				real;
+	sum_ods_ps					real;
+	v_point_check				integer;
+	msg 						varchar(120);
+BEGIN
+	
+	SELECT sum(objectives.objective_ps) INTO v_objective_ps
+	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
+	WHERE (evaluation_points.job_review_id = CAST($1 as int));
+	
+	SELECT sum(ods_ps) INTO sum_ods_ps
+	FROM objective_details INNER JOIN evaluation_points ON evaluation_points.objective_id = objective_details.objective_id
+	WHERE (evaluation_points.job_review_id = CAST($1 as int));
+	
+	SELECT evaluation_points.evaluation_point_id INTO v_point_check
+	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
+	WHERE (evaluation_points.job_review_id = CAST($1 as int))
+		AND (objectives.objective_ps > 0) AND (evaluation_points.points = 0);
+		
+	SELECT job_reviews.self_rating, review_category.rate_objectives, job_reviews.approve_status
+		INTO v_self_rating, v_rate_objectives, v_approve_status
+	FROM job_reviews INNER JOIN review_category ON job_reviews.review_category_id = review_category.review_category_id
+	WHERE (job_reviews.job_review_id = $1::int);
+	IF(v_self_rating is null) THEN v_self_rating := 0; END IF;
+		
+	IF(sum_ods_ps is null)THEN
+		sum_ods_ps := 100;
+	END IF;
+	IF(sum_ods_ps = 0)THEN
+		sum_ods_ps := 100;
+	END IF;
+	
+	IF(v_rate_objectives = false)THEN
+		v_objective_ps := 100;
+		sum_ods_ps := 100;
+	END IF;
+
+	IF(v_approve_status <> 'Draft')THEN
+		msg := 'The review is already submitted';
+	ELSIF(v_objective_ps <> 100)THEN
+		msg := 'Objective % must add up to 100';
+		RAISE EXCEPTION '%', msg;
+	ELSIF(sum_ods_ps <> 100)THEN
+		msg := 'Objective details % must add up to 100';
+		RAISE EXCEPTION '%', msg;
+	ELSIF(v_self_rating = 0) AND (v_rate_objectives = true)THEN
+		msg := 'Indicate your self rating';
+		RAISE EXCEPTION '%', msg;
+	ELSIF(v_point_check is not null)THEN
+		msg := 'All objective evaluations points must be between 1 to 4';
+		RAISE EXCEPTION '%', msg;
+	ELSE
+		UPDATE job_reviews SET approve_status = 'Completed'
+		WHERE (job_review_id = CAST($1 as int));
+
+		msg := 'Review Applied';
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;

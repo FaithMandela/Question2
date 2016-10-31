@@ -2348,6 +2348,7 @@
 	<DESK w="700" name="Perfomance Management" key="44" h="550">
 		<GRID name="Work Reviews" keyfield="job_review_id" orderby="review_date desc" table="vw_job_reviews" params="approve_status" user="entity_id">
 			<TEXTFIELD w="75" fnct="to_char(review_date, 'YYYY') || ' Review'" title="Review Title">review_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Review Category">review_category_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Total Points">total_points</TEXTFIELD>
 			<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
