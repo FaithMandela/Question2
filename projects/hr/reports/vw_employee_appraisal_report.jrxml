@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_appraisal_report" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33a5cf3b-78f1-4bc5-8667-959d25428d96">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="442"/>
+	<property name="ireport.y" value="356"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -44,10 +44,10 @@ vw_department_roles.department_role_name AS job_title,
 vw_department_roles.parent_role_name AS supervisor,
 vw_reporting.rpt_name,
 job_reviews.review_date, job_reviews.workflow_table_id,
-get_approver(job_reviews.workflow_table_id) AS approver,
-get_approval_date(job_reviews.workflow_table_id) AS approval_date,
-applications.contract_start
+applications.contract_start,
 
+COALESCE(get_approver(job_reviews.workflow_table_id), vw_reporting.rpt_name) AS approver,
+get_approval_date(job_reviews.workflow_table_id) AS approval_date
 
 FROM employees INNER JOIN vw_department_roles ON employees.department_role_id = vw_department_roles.department_role_id
 INNER JOIN job_reviews ON employees.entity_id = job_reviews.entity_id
@@ -69,9 +69,9 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 	<field name="rpt_name" class="java.lang.String"/>
 	<field name="review_date" class="java.sql.Date"/>
 	<field name="workflow_table_id" class="java.lang.Integer"/>
+	<field name="contract_start" class="java.sql.Date"/>
 	<field name="approver" class="java.lang.String"/>
 	<field name="approval_date" class="java.sql.Date"/>
-	<field name="contract_start" class="java.sql.Date"/>
 	<variable name="workflow_table_id" class="java.lang.Integer">
 		<variableExpression><![CDATA[$F{workflow_table_id}]]></variableExpression>
 	</variable>
@@ -344,7 +344,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rpt_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{approver}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="383" y="445" width="161" height="20" uuid="ba02c350-079f-429a-941f-db60f60c9879"/>
@@ -421,7 +421,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rpt_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{approver}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="25" y="581" width="80" height="20" uuid="28a59e2d-2fb9-4d22-9fc7-f62b51ae508f"/>
@@ -477,7 +477,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rpt_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{approver}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="25" y="670" width="80" height="20" uuid="e50853f1-ebdd-46f4-9f77-4d3fb65a76d7"/>
