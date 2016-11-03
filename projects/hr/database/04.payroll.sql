@@ -1506,19 +1506,23 @@ CREATE TRIGGER upd_employee_adjustments AFTER INSERT OR UPDATE ON employee_adjus
 
 CREATE OR REPLACE FUNCTION upd_employee_per_diem() RETURNS trigger AS $$
 DECLARE
-	periodid integer;
-	taxLimit real;
+	v_period_id			integer;
+	v_tax_limit			real;
 BEGIN
-	SELECT Periods.Period_ID, Periods.Per_Diem_tax_limit INTO periodid, taxLimit
-	FROM Employee_Month INNER JOIN Periods ON Employee_Month.Period_id = Periods.Period_id
-	WHERE Employee_Month_ID = NEW.Employee_Month_ID;
+	SELECT periods.period_id, periods.per_diem_tax_limit INTO v_period_id, v_tax_limit
+	FROM employee_month INNER JOIN periods ON employee_month.period_id = periods.period_id
+	WHERE employee_month_id = NEW.employee_month_id;
+	
+	IF(NEW.days_travelled  is null)THEN
+		NEW.days_travelled := NEW.return_date - NEW.travel_date;
+	END IF;
 
-	IF(NEW.Cash_paid = 0) THEN
-		NEW.Cash_paid := NEW.Per_Diem;
+	IF(NEW.cash_paid = 0) THEN
+		NEW.cash_paid := NEW.per_diem;
 	END IF;
 	IF(NEW.tax_amount = 0) THEN
-		NEW.full_amount := (NEW.Per_Diem - (taxLimit * NEW.days_travelled * 0.3)) / 0.7;
-		NEW.tax_amount := NEW.full_amount - (taxLimit * NEW.days_travelled);
+		NEW.full_amount := (NEW.per_diem - (v_tax_limit * NEW.days_travelled * 0.3)) / 0.7;
+		NEW.tax_amount := NEW.full_amount - (v_tax_limit * NEW.days_travelled);
 	END IF;
 
 	RETURN NEW;

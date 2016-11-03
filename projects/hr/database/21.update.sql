@@ -568,3 +568,26 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE FUNCTION get_reporting_list(integer) RETURNS varchar(320) AS $$
+DECLARE
+    myrec	RECORD;
+	mylist	varchar(320);
+BEGIN
+	mylist := null;
+	FOR myrec IN SELECT entitys.entity_name
+		FROM reporting INNER JOIN entitys ON reporting.report_to_id = entitys.entity_id
+		WHERE (reporting.primary_report = true) AND (reporting.entity_id = $1) 
+	LOOP
+
+		IF (mylist is null) THEN
+			mylist := myrec.entity_name;
+		ELSE
+			mylist := mylist || ', ' || myrec.entity_name;
+		END IF;
+	END LOOP;
+
+	RETURN mylist;
+END;
+$$ LANGUAGE plpgsql;
+
