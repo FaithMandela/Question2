@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments_date" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e20d1bee-7f37-4951-a531-a7afb609a2e2">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="8"/>
+	<property name="ireport.x" value="2"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -23,7 +23,7 @@
 		<defaultValueExpression><![CDATA["2015-08-28"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name, vw_transfer_assignments.car_type_code, customer_name, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, closed, cancelled, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num, '$P!{date}'::date AS today,
+		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id, vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name, vw_transfer_assignments.car_type_code, tc_car_type_code, customer_name, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, closed, cancelled, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num, '$P!{date}'::date AS today,
 vw_transfer_assignments.entity_name,
 vw_transfer_assignments.pax_no,
 substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_pickup_time,
@@ -40,6 +40,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 	<field name="registration_number" class="java.lang.String"/>
 	<field name="car_type_name" class="java.lang.String"/>
 	<field name="car_type_code" class="java.lang.String"/>
+	<field name="tc_car_type_code" class="java.lang.String"/>
 	<field name="customer_name" class="java.lang.String"/>
 	<field name="passanger_id" class="java.lang.Integer"/>
 	<field name="passanger_name" class="java.lang.String"/>
@@ -542,7 +543,7 @@ ORDER BY substring(vw_transfer_assignments.pickup_time from 1 for 4)::time ASC]]
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{car_type_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tc_car_type_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
