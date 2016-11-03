@@ -22,6 +22,11 @@ import java.util.Vector;
 import java.lang.NumberFormatException;
 import java.sql.*;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
+
 import org.baraza.xml.BElement;
 import org.baraza.utils.BCipher;
 import org.baraza.utils.Bio;
@@ -1166,6 +1171,36 @@ public class BQuery {
 
 		return mystr.toString();
 	}
+	
+	public String getJSON() {
+		JsonArrayBuilder myja = Json.createArrayBuilder();
+		
+		try {
+			rs.beforeFirst();
+			while (rs.next()) {
+				JsonObjectBuilder myjo = Json.createObjectBuilder();
+				
+				if(view == null) {
+					for(int column = 0; column < titles.size(); column++)
+						myjo.add(titles.get(column), rs.getString(column + 1));
+				} else {
+					for(BElement el : view.getElements()) {
+						if(!el.getValue().equals(""))
+							myjo.add(el.getValue(), formatData(el));
+					}
+				}
+				
+				myja.add(myjo);
+			}           	
+ 		} catch (SQLException ex) {
+			log.severe("Field read data error : " + ex);
+		}
+
+		JsonArray jsTb = myja.build();
+		
+		return jsTb.toString();
+	}	
+
 
 	public String getFooter() {
 		StringBuffer mystr = new StringBuffer();

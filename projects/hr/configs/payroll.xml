@@ -733,12 +733,12 @@
 				<ACTION fnct="process_payroll" approval="3" role="payroll,admin">Close Period</ACTION>
 			</ACTIONS>
 			<GRID name="Employee Month" keyfield="employee_month_id" orderby="entity_name" linkfield="period_id" table="vw_employee_month">
+				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
 				<FORM name="Details" keyfield="employee_month_id" linkfield="period_id" table="employee_month">
 					<COMBOBOX w="430" title="Department Role" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
 					<COMBOBOX w="430" title="Employee" lptable="entitys" where="(entity_type_id = 1)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
@@ -970,12 +970,12 @@
 			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<GRID name="Employee Month" keyfield="employee_month_id" orderby="entity_name" linkfield="period_id" table="vw_employee_month">
+				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Name">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Department Role Name">department_role_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Employee ID">employee_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Basic Pay">basic_pay</TEXTDECIMAL>
 				<GRID name="Advances" keyfield="employee_advance_id" linkfield="employee_month_id" table="vw_employee_advances">
 					<TEXTFIELD w="75" title="Employee Advance ID">employee_advance_id</TEXTFIELD>
 					<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
@@ -1762,6 +1762,23 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="P10" key="112" h="750">
+		<GRID name="Full Payroll" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<GRID name="Payroll" keyfield="employee_tax_type_id" linkfield="period_id" table="vw_employee_tax_month" where="(use_type=3)">
+				<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
+				<TEXTFIELD w="75" title="PIN Number">tax_identification</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name of Employee">employee_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Residence Status">residence</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'Primary Employee'::text" title="Type of Employee">type_of_employee</TEXTFIELD>
+				<TEXTDECIMAL w="75" fnct="to_char(basic_pay, '9999999D9')" title="Basic Pay">v_basic_pay</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" fnct="to_char(payroll_allowance, '9999999D9')" title="Total Allowance">v_payroll_allowance</TEXTDECIMAL>
+				<TEXTFIELD w="75" fnct="to_char(amount, '9999999D9')" title="PAYE">v_amount</TEXTFIELD>
+			</GRID>
+		</GRID>
 		<FILTER w="700" name="P10" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" filter="periodyear" pos="top"></DRILLDOWN>
 			<DRILLDOWN name="Quarter" keyfield="quarter" table="vw_Period_Quarter" listfield="quarter" filter="quarter" pos="top"></DRILLDOWN>

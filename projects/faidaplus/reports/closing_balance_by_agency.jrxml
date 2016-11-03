@@ -28,6 +28,18 @@ ORDER BY a.org_name;]]>
 	<field name="amount" class="java.lang.Float"/>
 	<field name="rates" class="java.lang.Float"/>
 	<field name="balance" class="java.lang.Float"/>
+	<variable name="total_seg" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{segments}]]></variableExpression>
+	</variable>
+	<variable name="total_earnings" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{points}]]></variableExpression>
+	</variable>
+	<variable name="total_amount" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="balance" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -185,12 +197,51 @@ ORDER BY a.org_name;]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+		<band height="8" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="10" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="42" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="623" y="16" width="99" height="20" isPrintWhenDetailOverflows="true" uuid="6d016f8e-2c02-4102-bd29-b56bc2587e8e"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{balance}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="523" y="15" width="100" height="20" isPrintWhenDetailOverflows="true" uuid="9fc15142-e403-4a27-9402-3abc5a9e7b11"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="441" y="15" width="82" height="20" isPrintWhenDetailOverflows="true" uuid="5fdd0662-b3ad-4c8f-8f6e-a7eab3e8f1cc"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_earnings}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="353" y="15" width="88" height="20" isPrintWhenDetailOverflows="true" uuid="72622ff2-cf9c-4377-8c81-00d2b0655cfc"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_seg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="238" y="16" width="100" height="20" uuid="acc78466-aabb-4e84-a550-44390c06384c"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="353" y="5" width="432" height="1" uuid="eaeef6b4-ddb1-41c7-8f92-786f5ea93874"/>
+			</line>
+		</band>
 	</summary>
 </jasperReport>

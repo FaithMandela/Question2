@@ -1,4 +1,4 @@
-<APP color="green" name="Schools" password="change_password" material="true">
+<APP color="blue" name="Schools" org="org_id" password="change_password" material="true">
 	<MENU name="School" background="red">
 		<MENU name="Students">1</MENU>
 		<MENU name="Staff">20</MENU>
@@ -130,68 +130,62 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" hide="true" name="Students" key="1" h="550">
-		<GRID name="Students" keyfield="student_id" table="vw_students">
-			<TEXTFIELD w="20" title="ID">student_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
-			<CHECKBOX w="75" title="Sex">sex</CHECKBOX>
-			<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
-			<TEXTDATE w="75" title="Birth Date">birth_date</TEXTDATE>
-			<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
-			<TEXTFIELD w="75" title="Zipcode">zipcode</TEXTFIELD>
-			<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
-			<TEXTFIELD w="75" title="Country Code ID">country_code_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
-			<TEXTFIELD w="75" title="Fathers Name">fathers_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Fathers Tel No">fathers_tel_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Mothers Name">mothers_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Mothers Tel No">mothers_tel_no</TEXTFIELD>
-			<FORM cols="2" tw="570" name="Students" keyfield="student_id" table="students" th="180">
-				<TEXTFIELD w="150" title="Student Name" y="30" h="20" x="10">student_name</TEXTFIELD>
-				<COMBOLIST w="150" title="Gender" y="50" ischar="true" h="20" x="10" span="true">sex
-					<DATA>M</DATA>
-					<DATA>F</DATA>
-				</COMBOLIST>
-				<COMBOLIST w="150" title="Nationality" y="50" ischar="true" h="20" x="10">nationality
-					<DATA>KE</DATA>
-				</COMBOLIST>
-				<TEXTDATE w="150" title="Birth Date" y="70" h="20" x="10" span="true">birth_date</TEXTDATE>
-				<TEXTFIELD w="150" title="Address" y="70" h="20" x="290">address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Zipcode" y="90" h="20" x="10" span="true">zipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="Town" y="90" h="20" x="290">town</TEXTFIELD>
-				<COMBOLIST w="150" title="Nationality" y="50" ischar="true" h="20" x="10" span="true">country_code_id
-					<DATA>KE</DATA>
-				</COMBOLIST>
-				<TEXTFIELD w="150" title="Telno" y="130" h="20" x="290" span="true">telno</TEXTFIELD>
-				<TEXTFIELD w="430" title="Email" y="150" h="20" x="10">email</TEXTFIELD>
-				<TEXTFIELD w="430" title="Fathers Name" y="170" h="20" x="290" span="true">fathers_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Fathers Tel No" y="190" h="20" x="10">fathers_tel_no</TEXTFIELD>
-				<TEXTFIELD w="430" title="Fathers Email" y="210" h="20" x="290" span="true">fathers_email</TEXTFIELD>
-				<TEXTFIELD w="430" title="Mothers Name" y="230" h="20" x="10">mothers_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Mothers Tel No" y="250" h="20" x="290" span="true">mothers_tel_no</TEXTFIELD>
-				<TEXTFIELD w="430" title="Mothers Email" y="270" h="20" x="10">mothers_email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Name" y="290" h="20" x="290" span="true">guardian_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Address" y="290" h="20" x="10">g_address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Zipcode" y="310" h="20" x="290" span="true">g_zipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Town" y="310" h="20" x="290">g_town</TEXTFIELD>
-				<COMBOLIST w="150" title="Guardian Nationality" y="50" ischar="true" h="20" x="10" span="true">g_countrycodeid
-					<DATA>KE</DATA>
-				</COMBOLIST>
-				<TEXTFIELD w="150" title="Guardian Telno" y="350" h="20" x="10">g_telno</TEXTFIELD>
-				<TEXTFIELD w="430" title="Guardian Email" y="370" h="20" x="10">g_email</TEXTFIELD>
-				<TEXTAREA w="430" title="Registrar Details" y="460" h="70" x="290" span="true">registrar_details</TEXTAREA>
-				<TEXTAREA w="430" title="Details" y="530" h="70" x="10">details</TEXTAREA>
-				<TEXTAREA w="430" title="Current Contact" y="390" h="70" x="10">current_contact</TEXTAREA>
+		<GRID name="Stream Classes" keyfield="stream_class_id" table="stream_classes">
+			<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>
+			<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<FORM name="Stream Classes" keyfield="stream_class_id" linkfield="stream_class_id" table="stream_classes">
+				<TEXTFIELD w="150" title="Class Level" y="10" h="20" x="10">class_level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Stream" y="10" h="20" x="290">stream</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
-			<GRID name="Stream Classes" keyfield="stream_class_id" linkfield="stream_class_id" table="vw_stream_classes">
-				<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>
-				<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
-				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-				<FORM name="Stream Classes" keyfield="stream_class_id" linkfield="org_id" table="stream_classes">
-					<TEXTFIELD w="150" title="Class Level" y="10" h="20" x="10">class_level</TEXTFIELD>
-					<TEXTFIELD w="150" title="Stream" y="10" h="20" x="290">stream</TEXTFIELD>
-					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			<GRID name="Students" keyfield="student_id" linkfield="stream_class_id" table="students">
+				<TEXTFIELD w="20" title="ID">student_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Sex">sex</CHECKBOX>
+				<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
+				<TEXTDATE w="75" title="Birth Date">birth_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Address">address</TEXTFIELD>
+				<TEXTFIELD w="75" title="Zipcode">zipcode</TEXTFIELD>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="75" title="Country Code ID">country_code_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Fathers Name">fathers_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Fathers Tel No">fathers_tel_no</TEXTFIELD>
+				<TEXTFIELD w="75" title="Mothers Name">mothers_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Mothers Tel No">mothers_tel_no</TEXTFIELD>
+				<FORM cols="2" tw="570" name="Students" keyfield="student_id" table="students" th="180">
+					<TEXTFIELD w="150" title="Student Name" placeholder="required" y="30" h="20" x="10" span="true">student_name</TEXTFIELD>
+					<COMBOLIST w="150" title="Gender" y="50" ischar="true" h="20" x="290">sex
+						<DATA>M</DATA>
+						<DATA>F</DATA>
+					</COMBOLIST>
+					<DEFAULT default="KE">nationality</DEFAULT>
+					<TEXTDATE w="150" title="Birth Date" placeholder="00-00-2000" required="true" y="70" h="20" x="10" span="true">birth_date</TEXTDATE>
+					<TEXTFIELD w="150" title="Address" y="70" h="20" x="290">address</TEXTFIELD>
+					<TEXTFIELD w="150" title="Zipcode" y="90" h="20" x="10" span="true">zipcode</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="90" h="20" x="290">town</TEXTFIELD>
+					<DEFAULT default="KE">country_code_id</DEFAULT>
+					<TEXTFIELD w="150" title="Telno" y="130" h="20" x="290" span="true">telno</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="150" h="20" x="10">email</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fathers Name" placeholder="required" y="170" h="20" x="290" span="true">fathers_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Fathers Tel No" placeholder="required" y="190" h="20" x="10">fathers_tel_no</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fathers Email" y="210" h="20" x="290" span="true">fathers_email</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mothers Name" placeholder="required" y="230" h="20" x="10">mothers_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Mothers Tel No" placeholder="required" y="250" h="20" x="290" span="true">mothers_tel_no</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mothers Email" y="270" h="20" x="10">mothers_email</TEXTFIELD>
+					<TEXTFIELD w="150" title="Guardian Name" y="290" h="20" x="290" span="true">guardian_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="Guardian Address" y="290" h="20" x="10">g_address</TEXTFIELD>
+					<TEXTFIELD w="150" title="Guardian Zipcode" y="310" h="20" x="290" span="true">g_zipcode</TEXTFIELD>
+					<TEXTFIELD w="150" title="Guardian Town" y="310" h="20" x="290">g_town</TEXTFIELD>
+					<DEFAULT default="KE">g_countrycodeid</DEFAULT>
+					<TEXTFIELD w="150" title="Guardian Telno" y="350" h="20" x="10">g_telno</TEXTFIELD>
+					<TEXTFIELD w="430" title="Guardian Email" y="370" h="20" x="10">g_email</TEXTFIELD>
+					<TEXTAREA w="430" title="Registrar Details" y="460" h="70" x="290" span="true">registrar_details</TEXTAREA>
+					<TEXTAREA w="430" title="Details" y="530" h="70" x="10">details</TEXTAREA>
+					<TEXTAREA w="430" title="Current Contact" y="390" h="70" x="10">current_contact</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>
@@ -223,9 +217,7 @@
 				<SPINTIME w="75" title="End Time">end_time</SPINTIME>
 			</GRID>
 		</GRID>
-		<GRID w="700" name="Students" h="550">
-			<JASPER name="Reports" reportfile="vw_students.jasper"></JASPER>
-		</GRID>
+		<JASPER name="Reports" reportfile="vw_students.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Subjects" key="25" h="550">
 		<GRID name="Subjects" keyfield="subject_id" table="vw_subjects">

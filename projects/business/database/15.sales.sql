@@ -116,6 +116,7 @@ DECLARE
 	v_entity_type_id		integer;
 	v_industry_id			integer;
 	v_sales_id				integer;
+	v_account_id			integer;
 	msg 					varchar(120);
 BEGIN
 
@@ -134,6 +135,10 @@ BEGIN
 		SELECT max(entity_type_id) INTO v_entity_type_id
 		FROM entity_types
 		WHERE (org_id = rec.org_id) AND (use_key = 2);
+		
+		SELECT account_id INTO v_account_id
+		FROM default_accounts 
+		WHERE (org_id = rec.org_id) AND (use_key = 3);
 
 		IF(rec.business_id is not null)THEN
 			msg := 'The business is already added.';
@@ -145,8 +150,8 @@ BEGIN
 			RAISE EXCEPTION 'You must and entity type with use key being 2';
 		ELSE
 			v_entity_id := nextval('entitys_entity_id_seq');
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, attention, user_name, primary_email,  function_role, use_function)
-			VALUES (v_entity_id, 0, v_entity_type_id, rec.business_name, rec.primary_contact, lower(trim(rec.primary_email)), lower(trim(rec.primary_email)), 'client', 2);
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, account_id, entity_name, attention, user_name, primary_email,  function_role, use_function)
+			VALUES (v_entity_id, 0, v_entity_type_id, v_account_id, rec.business_name, rec.primary_contact, lower(trim(rec.primary_email)), lower(trim(rec.primary_email)), 'client', 2);
 			
 			INSERT INTO address (address_name, sys_country_id, table_name, org_id, table_id, premises, town, phone_number, website, is_default) 
 			VALUES (rec.business_name, rec.country_id, 'entitys', rec.org_id, v_entity_id, rec.business_address, rec.city, rec.telephone, rec.website, true);

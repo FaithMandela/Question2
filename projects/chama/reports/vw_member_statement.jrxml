@@ -85,49 +85,49 @@ Where entity_id = '$P!{filterid}']]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="12" y="1" width="78" height="15" forecolor="#000000" uuid="47027070-d1cd-4afd-b872-7d8aa5cddc4b"/>
+				<reportElement style="Column header" x="12" y="1" width="139" height="15" forecolor="#000000" uuid="47027070-d1cd-4afd-b872-7d8aa5cddc4b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="90" y="1" width="78" height="15" forecolor="#000000" uuid="22fed049-ee2d-46e4-8274-51666237d650"/>
+				<reportElement style="Column header" x="151" y="1" width="78" height="15" forecolor="#000000" uuid="22fed049-ee2d-46e4-8274-51666237d650"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="168" y="1" width="78" height="15" forecolor="#000000" uuid="f892c9f9-f3c1-4a66-8898-0dc22632ed07"/>
+				<reportElement style="Column header" x="229" y="1" width="60" height="15" forecolor="#000000" uuid="f892c9f9-f3c1-4a66-8898-0dc22632ed07"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Contribution]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="246" y="1" width="78" height="15" forecolor="#000000" uuid="e2d07b52-d163-41ce-bac1-b06799b232f0"/>
+				<reportElement style="Column header" x="289" y="1" width="45" height="15" forecolor="#000000" uuid="e2d07b52-d163-41ce-bac1-b06799b232f0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Drawings]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="324" y="1" width="78" height="15" forecolor="#000000" uuid="73cad708-d98f-4c72-a0bd-c3e78990cc39"/>
+				<reportElement style="Column header" x="334" y="1" width="29" height="15" forecolor="#000000" uuid="73cad708-d98f-4c72-a0bd-c3e78990cc39"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Loan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="402" y="1" width="78" height="15" forecolor="#000000" uuid="d2c81dd1-156b-419c-81b4-89c2c7c091d1"/>
+				<reportElement style="Column header" x="363" y="1" width="56" height="15" forecolor="#000000" uuid="d2c81dd1-156b-419c-81b4-89c2c7c091d1"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Repayments]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="480" y="1" width="71" height="15" forecolor="#000000" uuid="9697ba38-2073-4a16-965b-44affb1372e9"/>
+				<reportElement style="Column header" x="419" y="1" width="44" height="15" forecolor="#000000" uuid="9697ba38-2073-4a16-965b-44affb1372e9"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -140,49 +140,49 @@ Where entity_id = '$P!{filterid}']]>
 			<frame>
 				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="da888bcf-12a3-4680-810b-b848aa39a856"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="14" y="0" width="78" height="15" uuid="6624e3d0-a5a0-4258-b74e-3afdec03f0fc"/>
+					<reportElement style="Detail" x="12" y="0" width="139" height="15" uuid="6624e3d0-a5a0-4258-b74e-3afdec03f0fc"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-					<reportElement style="Detail" x="92" y="0" width="78" height="15" uuid="d90b9bfc-818d-4a7f-840d-222f38ed1df9"/>
+					<reportElement style="Detail" x="151" y="0" width="78" height="15" uuid="d90b9bfc-818d-4a7f-840d-222f38ed1df9"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{contribution_date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="170" y="0" width="78" height="15" uuid="d3063845-b22c-4b9d-9ede-8087504816c9"/>
+					<reportElement style="Detail" x="229" y="0" width="60" height="15" uuid="d3063845-b22c-4b9d-9ede-8087504816c9"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{contribution}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="248" y="0" width="78" height="15" uuid="726a54c6-95ad-4a90-8358-03e3c6e6c60b"/>
+					<reportElement style="Detail" x="289" y="0" width="45" height="15" uuid="726a54c6-95ad-4a90-8358-03e3c6e6c60b"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{drawings}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="404" y="0" width="78" height="15" uuid="12728cd3-a156-493d-8bd5-7d077a5a2b11"/>
+					<reportElement style="Detail" x="363" y="0" width="56" height="15" uuid="12728cd3-a156-493d-8bd5-7d077a5a2b11"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{repayments}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="482" y="0" width="71" height="15" uuid="cbba0b39-c452-4401-a770-d10f1ba8c11f"/>
+					<reportElement style="Detail" x="419" y="0" width="44" height="15" uuid="cbba0b39-c452-4401-a770-d10f1ba8c11f"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{penalty}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="326" y="0" width="78" height="15" uuid="2f462e19-22c2-4d00-a4df-6f61e46ea19b"/>
+					<reportElement style="Detail" x="334" y="0" width="29" height="15" uuid="2f462e19-22c2-4d00-a4df-6f61e46ea19b"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -232,7 +232,7 @@ Where entity_id = '$P!{filterid}']]>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="404" y="0" width="78" height="21" uuid="8f7bd4ed-80d1-48f5-bfc2-e0756c1bbd75"/>
+				<reportElement x="363" y="0" width="56" height="21" uuid="8f7bd4ed-80d1-48f5-bfc2-e0756c1bbd75"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -243,7 +243,7 @@ Where entity_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$V{sumrepayments}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="326" y="0" width="78" height="21" uuid="8bf028ad-6861-4ddc-86ad-1efcd97f890c"/>
+				<reportElement x="334" y="0" width="29" height="21" uuid="8bf028ad-6861-4ddc-86ad-1efcd97f890c"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -254,7 +254,7 @@ Where entity_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$V{sumloan}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="482" y="0" width="71" height="21" uuid="94d56ff5-8402-4c89-a1e7-e6e06e1dff06"/>
+				<reportElement x="419" y="0" width="44" height="21" uuid="94d56ff5-8402-4c89-a1e7-e6e06e1dff06"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -265,7 +265,7 @@ Where entity_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$V{sumpenalty}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="248" y="0" width="78" height="21" uuid="ead8785c-12d7-47c6-b735-0089926bdb59"/>
+				<reportElement x="289" y="0" width="45" height="21" uuid="ead8785c-12d7-47c6-b735-0089926bdb59"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -276,7 +276,7 @@ Where entity_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$V{sumdrawings}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="170" y="0" width="78" height="21" uuid="e4ebee3b-b2e8-45be-a2ae-6b6874828869"/>
+				<reportElement x="229" y="0" width="60" height="21" uuid="e4ebee3b-b2e8-45be-a2ae-6b6874828869"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>

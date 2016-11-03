@@ -218,9 +218,10 @@ CREATE VIEW vw_loan_projection AS
 
 CREATE OR REPLACE FUNCTION process_loans(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	rec					RECORD;
-	v_exchange_rate		real;
-	msg					varchar(120);
+	rec							RECORD;
+	v_exchange_rate				real;
+	v_employee_adjustment_id	integer;
+	msg							varchar(120);
 BEGIN
 	
 	FOR rec IN SELECT vw_loan_monthly.loan_month_id, vw_loan_monthly.loan_id, vw_loan_monthly.entity_id, vw_loan_monthly.period_id, 
@@ -230,9 +231,11 @@ BEGIN
 		employee_month.employee_month_id, employee_month.org_id, 
 		employee_month.currency_id, employee_month.exchange_rate,
 		adjustments.currency_id as adj_currency_id
-	FROM vw_loan_monthly INNER JOIN employee_month ON (vw_loan_monthly.entity_id = employee_month.entity_id) AND (vw_loan_monthly.period_id = employee_month.period_id)
-		INNER JOIN adjustments ON vw_loan_monthly.adjustment_id = adjustments.adjustment_id
-	WHERE (vw_loan_monthly.period_id = CAST($1 as int)) LOOP
+		
+		FROM vw_loan_monthly INNER JOIN employee_month ON (vw_loan_monthly.entity_id = employee_month.entity_id) AND (vw_loan_monthly.period_id = employee_month.period_id)
+			INNER JOIN adjustments ON vw_loan_monthly.adjustment_id = adjustments.adjustment_id
+		WHERE (vw_loan_monthly.period_id = CAST($1 as int)) 
+	LOOP
 	
 		IF(rec.currency_id = rec.adj_currency_id)THEN
 			v_exchange_rate := 1;
@@ -241,12 +244,14 @@ BEGIN
 		END IF;
 
 		IF(rec.employee_adjustment_id is null)THEN
+			v_employee_adjustment_id := nextval('employee_adjustments_employee_adjustment_id_seq');
+			
 			INSERT INTO employee_adjustments (employee_month_id, adjustment_id, adjustment_type, adjustment_factor,
-				amount, balance, in_tax, org_id, exchange_rate)
+				amount, balance, in_tax, org_id, exchange_rate, employee_adjustment_id)
 			VALUES (rec.employee_month_id, rec.adjustment_id, 2, -1,
-				rec.total_deduction, rec.loan_balance, false, rec.org_id, v_exchange_rate);
+				rec.total_deduction, rec.loan_balance, false, rec.org_id, v_exchange_rate, v_employee_adjustment_id);
 
-			UPDATE loan_monthly SET employee_adjustment_id = currval('employee_adjustments_employee_adjustment_id_seq') 
+			UPDATE loan_monthly SET employee_adjustment_id = v_employee_adjustment_id
 			WHERE (loan_month_id = rec.loan_month_id);
 		ELSE
 			UPDATE employee_adjustments SET amount = rec.total_deduction, balance = rec.loan_balance, exchange_rate = v_exchange_rate
@@ -264,24 +269,31 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION compute_loans(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_period_id			integer;
-	v_org_id			integer;
-	msg					varchar(120);
+	rec							RECORD;
+	v_period_id					integer;
+	v_org_id					integer;
+	msg							varchar(120);
 BEGIN
 
 	SELECT period_id, org_id INTO v_period_id, v_org_id
 	FROM periods
 	WHERE (period_id = $1::integer);
 	
-	DELETE FROM loan_monthly WHERE period_id = v_period_id;
-
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+	FOR rec IN SELECT loan_month_id, employee_adjustment_id FROM loan_monthly WHERE period_id = v_period_id
+	LOOP
+		DELETE FROM loan_monthly WHERE loan_month_id = rec.loan_month_id;
+		DELETE FROM employee_adjustments WHERE employee_adjustment_id = rec.employee_adjustment_id;
+	END LOOP;
+	
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+	SELECT v_period_id, org_id, loan_id, (loan_balance * interest / 1200), (loan_balance * interest / 1200),
+		(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 	FROM vw_loans 
 	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
 
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+	SELECT v_period_id, org_id, loan_id, (principle * interest / 1200), (principle * interest / 1200),
+		(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 	FROM vw_loans 
 	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
 

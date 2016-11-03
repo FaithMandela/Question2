@@ -4,15 +4,6 @@ ALTER TABLE orgs ADD employee_limit integer default 5 not null;
 ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
 ALTER TABLE orgs ADD expiry_date date;
 
-
-CREATE TABLE industry (
-	industry_id				serial primary key,
-	org_id					integer references orgs,
-	industry_name			varchar(50) not null,
-	details					text
-);
-CREATE INDEX industry_org_id ON industry(org_id);
-
 CREATE TABLE subscriptions (
 	subscription_id			serial primary key,
 	industry_id				integer references industry,

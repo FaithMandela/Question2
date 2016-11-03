@@ -39,7 +39,7 @@
 		<![CDATA[SELECT  period_id,to_char(period,'Mon yyyy')as period,
 	ticket_period,
 	vw_orgs.pcc, segments,son::int,
-	points, bonus, vw_orgs.org_name,account_manager_name
+	points, bonus, vw_orgs.org_name,vw_org_points.account_manager_name
 	FROM vw_org_points
 	JOIN vw_orgs ON vw_org_points.org_id =vw_orgs.org_id
 	WHERE period >= '$P!{minDate}'

@@ -47,7 +47,7 @@ b.model_name,
 c.pm_schedule_id, c.pm_quarter_id
 FROM vw_client_assets as b
 INNER JOIN pm_schedule c ON b.client_id = c.client_id
-WHERE (b.is_issued = true) AND (b.retrived is null)) as bb
+WHERE (c.completed = true) AND (b.is_issued = true) AND (b.retrived is null)) as bb
 
 LEFT OUTER JOIN
 

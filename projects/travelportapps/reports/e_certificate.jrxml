@@ -355,7 +355,7 @@ WHERE passenger_id = '$P!{passenger_id}';]]>
 					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "certificate_subreport1.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "e_certificate_subreport1.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

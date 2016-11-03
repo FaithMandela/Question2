@@ -13,12 +13,16 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT vw_tax_types.account_id, vw_tax_types.account_type_name, vw_tax_types.account_name, vw_tax_types.tax_type_name, vw_tax_types.tax_rate, vw_tax_types.tax_inclusive
-FROM vw_tax_types]]>
+FROM vw_tax_types
+$P!{orgwhere}
+]]>
 	</queryString>
 	<field name="account_id" class="java.lang.Integer"/>
 	<field name="account_type_name" class="java.lang.String"/>

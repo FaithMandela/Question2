@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="supplierid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -43,6 +45,7 @@ WHERE (vw_trx.approve_status = 'Approved')
 	AND (vw_trx.for_posting = true)
 	AND (vw_trx.entity_id = '$P!{supplierid}')
 	AND (vw_trx.transaction_date >= '$P!{startrange}'::date)
+$P!{organd}
 
 ORDER BY vw_trx.transaction_date, vw_trx.transaction_id;]]>
 	</queryString>

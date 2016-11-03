@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <ESCALATION title="Faida Plus Mail" processdelay="2"
-        host="mail.travelport-kenya.com" mailuser="faidaplus" mailpassword="misnomer-soak-lank"
-        mailfrom="faidaplus@travelport-kenya.com"
-        inbox="INBOX" sentbox="Sent" smtppauth="true"
-        reportpath="/opt/baraza/projects/faidaplus/reports/">
-
+	host="mail.travelport-kenya.com" mailuser="faidaplus" mailpassword="misnomer-soak-lank"
+	mailfrom="faidaplus@travelport-kenya.com"
+	inbox="INBOX" sentbox="Sent" smtppauth="true"
+	reportpath="/opt/baraza/projects/faidaplus/reports/">
 
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
 			table="sys_emails, sys_emailed, entitys"
@@ -42,7 +41,7 @@
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">applicants.applicant_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="applicants">applicant_email</BODYFIELD>
-		<BODYFIELD reference="{{details}}" basetable="applicants">details</BODYFIELD>
+		<BODYFIELD reference="{{details}}"  fnct="applicants.details">reason</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="certificate_subreport1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="541" leftMargin="27" rightMargin="27" topMargin="20" bottomMargin="5" uuid="1fa3ba50-c949-4a5d-9b2a-a8a239f9432a">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="104"/>
 	<parameter name="filterid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA["78"]]></defaultValueExpression>
 	</parameter>
@@ -12,7 +12,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT  days_from,days_to, countries,passenger_id,member_name,
-     passport_number, passenger_dob, policy_number, sys_country_name,  departure_country
+     passport_number, passenger_dob::text, policy_number, sys_country_name,  departure_country, rate_plan_name
 FROM vw_policy_members
 WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 	</queryString>
@@ -26,6 +26,7 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 	<field name="policy_number" class="java.lang.String"/>
 	<field name="sys_country_name" class="java.lang.String"/>
 	<field name="departure_country" class="java.lang.String"/>
+	<field name="rate_plan_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -71,21 +72,14 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				<textFieldExpression><![CDATA[$F{passport_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="166" width="318" height="16" uuid="35f51ffe-ee6b-4553-ab56-884f84a3410b"/>
-				<textElement>
-					<font fontName="Garamond-Normal" size="12"/>
-				</textElement>
-				<text><![CDATA[Option :]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="143" width="110" height="23" uuid="552a4c77-72b8-412f-b93e-d8e3a6c2cb54"/>
+				<reportElement x="0" y="158" width="132" height="23" uuid="552a4c77-72b8-412f-b93e-d8e3a6c2cb54"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
 				<text><![CDATA[Date of Travel - From :]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="110" y="143" width="365" height="23" uuid="f4992b06-7e00-48b0-acfa-3707c9e07c2f"/>
+				<reportElement x="143" y="158" width="332" height="23" uuid="f4992b06-7e00-48b0-acfa-3707c9e07c2f"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="12"/>
 				</textElement>
@@ -336,6 +330,20 @@ WHERE vw_policy_members.passenger_id = '$P!{filterid}';]]>
 				</textElement>
 				<text><![CDATA[P.O Box 46143-00100 or 30190-00100 Nairobi	]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="1" y="143" width="142" height="15" uuid="a419991d-5063-4a48-a2f9-2ff26038d9d1"/>
+				<textElement>
+					<font fontName="Garamond-Normal" size="12"/>
+				</textElement>
+				<text><![CDATA[Cover Plan:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="143" width="100" height="15" uuid="2401e78b-874e-4973-9248-9440ab339242"/>
+				<textElement>
+					<font fontName="Garamond-Normal"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rate_plan_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>

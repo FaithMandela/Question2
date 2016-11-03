@@ -42,7 +42,7 @@
 			<MENU name="income and Expenditure">155</MENU>
 			<MENU name="Balance Sheet">160</MENU>
 			<MENU name="Statement">170</MENU>
-			<MENU name="Leads">175</MENU>
+			<MENU name="Sales Pipeline">175</MENU>
 			<MENU name="Issues">180</MENU>
 		</MENU>
 	</MENU>
@@ -125,7 +125,7 @@
 			<FORM name="Leads" keyfield="lead_id" jumpview="15:0:0" table="leads">
 				<COMBOBOX w="430" title="Industry" lptable="industry" y="10" h="20" x="10" lpfield="industry_name">industry_id</COMBOBOX>
 				<COMBOBOX w="430" title="By" lptable="entitys" where="(use_function = 0)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Business Name" y="50" h="20" x="10">business_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Business Name" required="true" y="50" h="20" x="10">business_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Business Address" y="50" h="20" x="290">business_address</TEXTFIELD>
 				<TEXTFIELD w="150" title="City" y="70" h="20" x="10">city</TEXTFIELD>
 				<TEXTFIELD w="150" title="State" y="70" h="20" x="290">state</TEXTFIELD>
@@ -327,7 +327,7 @@
 				<DEFAULT default="14">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -372,7 +372,7 @@
 				<DEFAULT default="1">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -424,7 +424,7 @@
 				<DEFAULT default="11">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -470,7 +470,7 @@
 				<DEFAULT default="2">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -500,7 +500,7 @@
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="vw_bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="70" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="70" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="90" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">transaction_amount</TEXTDECIMAL>
@@ -543,7 +543,7 @@
 				<DEFAULT default="9">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -590,7 +590,7 @@
 				<DEFAULT default="15">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -646,7 +646,7 @@
 				<DEFAULT default="4">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -698,7 +698,7 @@
 				<DEFAULT default="12">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -744,7 +744,7 @@
 				<DEFAULT default="5">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -774,7 +774,7 @@
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="vw_bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="70" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="70" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="90" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">transaction_amount</TEXTDECIMAL>
@@ -817,7 +817,7 @@
 				<DEFAULT default="10">transaction_type_id</DEFAULT>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_function = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Department" lptable="departments" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order Number" y="90" h="20" x="10">order_number</TEXTFIELD>
@@ -922,6 +922,7 @@
 				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_function = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
@@ -970,6 +971,7 @@
 				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_function = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
@@ -1040,6 +1042,7 @@
 					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_function = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+					<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
@@ -1096,6 +1099,7 @@
 					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_function = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+					<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
@@ -1209,6 +1213,7 @@
 			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
 			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
 			<ACTIONS>
+				<ACTION fnct="add_periods">Generate Months</ACTION>
 				<ACTION fnct="close_year" approval="1">Close Year</ACTION>
 			</ACTIONS>
 			<GRID name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="vw_periods">
@@ -1997,6 +2002,8 @@
 				<COMBOBOX w="430" title="Primary Department" lptable="departments" lpkey="department_id" y="10" h="20" x="10" lpfield="department_name">ln_department_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Department Name" y="30" h="20" x="10">department_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="50" h="20" x="10">active</CHECKBOX>
+				<CHECKBOX w="150" title="Cost Center" y="70" h="20" x="10">cost_center</CHECKBOX>
+				<CHECKBOX w="150" title="Revenue Center" y="70" h="20" x="290">revenue_center</CHECKBOX>
 				<TEXTAREA w="530" tab="Description" y="2" h="170" x="10">description</TEXTAREA>
 				<TEXTAREA w="530" tab="Duties" y="2" h="170" x="10">duties</TEXTAREA>
 				<TEXTAREA w="530" tab="Reports" y="2" h="170" x="10">reports</TEXTAREA>
@@ -2725,7 +2732,7 @@
 	</DESK>
 	<DESK w="700" name="Journals" key="110" h="750">
 		<FILTER w="700" name="Journals" split="150" type="horl" key="6" h="550">
-			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year_id" pos="top">
+			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Journals" reportfile="vw_gls.jasper"></JASPER>
@@ -2733,7 +2740,7 @@
 	</DESK>
 	<DESK w="700" name="Transaction Ledger" key="145" h="750">
 		<FILTER w="700" name="Transaction Ledger" split="150" type="horl" key="6" h="550">
-			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year_id" pos="top">
+			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Transaction Ledger" reportfile="vw_ledgerb.jasper"></JASPER>
@@ -2753,7 +2760,7 @@
 	</DESK>
 	<DESK w="700" name="income and Expenditure" key="155" h="750">
 		<FILTER w="700" name="income and Expenditure" split="150" type="horl" key="6" h="550">
-			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year_id" pos="top">
+			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year" pos="top">
 				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="income and Expenditure" reportfile="vw_ie.jasper"></JASPER>
@@ -2778,10 +2785,11 @@
 			<JASPER name="Full Statement" reportfile="statement.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Leads" key="175" h="550">
+	<DESK w="700" name="Sales Pipeline" key="175" h="550">
 		<JASPER name="Leads" reportfile="vw_lead_items.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Issues" key="180" h="550">
-		<JASPER name="Issues" reportfile="vw_helpdesk.jasper"></JASPER>
+		<JASPER name="Open Issues" reportfile="vw_helpdesk.jasper"></JASPER>
+		<JASPER name="Closed Issues" reportfile="vw_helpdesk_c.jasper"></JASPER>
 	</DESK>
 </APP>

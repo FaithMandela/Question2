@@ -48,6 +48,7 @@
 		</MENU>
 		<MENU name="Staff Reports" role="staff">
 			<MENU name="Supervisor Review Report" role="staff">165</MENU>
+			<MENU name="Leave Summary">220</MENU>
 		</MENU>
 		<MENU name="Training" role="training">
 			<MENU name="Employee Trainings">50</MENU>
@@ -67,10 +68,10 @@
 			<MENU name="Leave" role="hr">109</MENU>
 			<MENU name="Intake" role="hr">110</MENU>
 			<MENU name="Internships" role="hr">111</MENU>
-			<MENU name="Work Review" role="hr">112</MENU>
+			<MENU name="Perfomance Review" role="hr">112</MENU>
+			<MENU name="Review Reports" role="admin,hr">160</MENU>
 			<MENU name="Arbitration" role="hr">113</MENU>
 			<MENU name="Staff Contracts" role="hr">155</MENU>
-			<MENU name="Review Reports" role="admin,hr">160</MENU>
 			<MENU name="Transaction ledger">195</MENU>
 		</MENU>
 		<MENU name="Payroll" role="admin,payroll,hr,reports" xml="payroll.xml">0</MENU>
@@ -342,8 +343,8 @@
 				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="Draft">approve_status</DEFAULT>
 				<COMBOBOX w="430" title="Leave Type" lptable="vw_employee_leave_types" user="entity_id" y="10" h="20" x="10" lpfield="leave_type_name">leave_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Contact Person" lptable="vw_employees" lpkey="entity_id" y="30" h="20" x="10" lpfield="employee_name">contact_entity_id</COMBOBOX>
-				<TEXTDATE w="150" title="Leave From" y="50" h="20" x="10">leave_from</TEXTDATE>
+				<COMBOBOX w="430" title="Contact Person" lptable="vw_employees" lpkey="entity_id" where="(active = true)" y="30" h="20" x="10" lpfield="employee_name">contact_entity_id</COMBOBOX>
+				<TEXTDATE w="150" title="Leave From" required="true" y="50" h="20" x="10">leave_from</TEXTDATE>
 				<TEXTDATE w="150" title="Leave To" y="50" h="20" x="290">leave_to</TEXTDATE>
 				<CHECKBOX w="150" title="Start Half Day" y="70" h="20" x="10">Start_Half_Day</CHECKBOX>
 				<CHECKBOX w="150" title="End Half Day" y="70" h="20" x="290">End_Half_Day</CHECKBOX>
@@ -428,8 +429,9 @@
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10">identity_card</TEXTFIELD>
 				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
-				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="150" h="20" x="10">previous_salary</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="150" h="20" x="290">expected_salary</TEXTDECIMAL>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="170" h="20" x="10">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10">interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10">field_of_study</TEXTAREA>
@@ -577,8 +579,6 @@
 				<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 				<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 				<TEXTFIELD w="550" title="Job Description" y="1" h="280" x="10">job_description</TEXTFIELD>
-				<TEXTFIELD w="550" title="Duties" y="1" h="280" x="10">duties</TEXTFIELD>
-				<TEXTFIELD w="550" title="Details" y="1" h="280" x="10">details</TEXTFIELD>
 			</FORMVIEW>
 			<ACTIONS>
 				<ACTION fnct="Ins_applications">Apply For Post</ACTION>
@@ -1782,7 +1782,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
@@ -1933,6 +1932,8 @@
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
 				<TEXTFIELD w="50" title="Experience">emp_experince</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Expected Salary">expected_salary</TEXTDECIMAL>
 				<JASPER name="BIO" org.table="applications" reportfile="bio_applicant_intake.jasper"></JASPER>
 				<JASPER name="CV" org.table="applications" reportfile="cv_applicant_intake.jasper"></JASPER>
 				<ACTIONS>
@@ -2023,7 +2024,7 @@
 				<FORM name="Contract Details" keyfield="application_id" linkfield="employee_id" table="applications" th="210">
 					<COMBOBOX w="430" title="Contract Type" lptable="contract_types" y="10" h="20" x="10" lpfield="contract_type_name">contract_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Contract Status" lptable="contract_status" y="30" h="20" x="10" lpfield="contract_status_name">contract_status_id</COMBOBOX>
-					<COMBOBOX w="430" title="Intake" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
+					<COMBOBOX w="430" title="Contract" lptable="vw_intake" y="50" h="20" x="10" lpfield="intake_disp">intake_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="70" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="70" h="20" x="290">contract_start</TEXTDATE>
 					<TEXTFIELD w="150" title="Contract Period" y="90" h="20" x="10">contract_period</TEXTFIELD>
@@ -2059,6 +2060,7 @@
 			<TEXTFIELD w="275" title="Contract Type Name">contract_type_name</TEXTFIELD>
 			<FORM name="Contract Types" keyfield="contract_type_id" table="contract_types">
 				<TEXTFIELD w="150" title="Contract Type Name" y="10" h="20" x="10">contract_type_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Notice Period" y="30" h="20" x="10">notice_period</TEXTFIELD>
 				<EDITOR w="430" tab="Contract" y="30" h="70" x="10">contract_text</EDITOR>
 				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -2140,7 +2142,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<GRID name="Employee Objectives" keyfield="employee_objective_id" linkfield="entity_id" table="vw_employee_objectives" params="approve_status">
@@ -2245,7 +2246,6 @@
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
@@ -2319,6 +2319,7 @@
 		<GRID name="Review Category" keyfield="review_category_id" table="review_category">
 			<TEXTFIELD w="75" title="Review Category ID">review_category_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Review Category Name">review_category_name</TEXTFIELD>
+			<CHECKBOX w="50" title="Rate Objectives">rate_objectives</CHECKBOX>
 			<GRID name="Review Points" keyfield="review_point_id" linkfield="review_category_id" table="vw_review_points">
 				<TEXTFIELD w="75" title="Review Point ID">review_point_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Review Point">review_point_name</TEXTFIELD>
@@ -2331,7 +2332,8 @@
 			</GRID>
 			<FORM name="Review Category" keyfield="review_category_id" table="review_category">
 				<TEXTFIELD w="350" title="Review Category" y="10" h="20" x="10">review_category_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Rate Objectives" y="30" h="20" x="10">rate_objectives</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Career Development" keyfield="career_development_id" table="career_development">
@@ -2346,6 +2348,7 @@
 	<DESK w="700" name="Perfomance Management" key="44" h="550">
 		<GRID name="Work Reviews" keyfield="job_review_id" orderby="review_date desc" table="vw_job_reviews" params="approve_status" user="entity_id">
 			<TEXTFIELD w="75" fnct="to_char(review_date, 'YYYY') || ' Review'" title="Review Title">review_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Review Category">review_category_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Review Date">review_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Total Points">total_points</TEXTFIELD>
 			<CHECKBOX w="75" title="Review Done">review_done</CHECKBOX>
@@ -3264,6 +3267,16 @@
 				<TEXTDECIMAL w="75" title="Unit Price">unit_price</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Items Cost">items_cost</TEXTDECIMAL>
 				<CHECKBOX w="75" title="Request">is_request</CHECKBOX>
+				<FORM name="Expenditure" keyfield="pc_expenditure_id" linkfield="pc_allocation_id" table="pc_expenditure">
+					<COMBOBOX w="430" title="Item" lptable="pc_items" y="10" h="20" x="10" lpfield="pc_item_name">pc_item_id</COMBOBOX>
+					<COMBOBOX w="430" title="Type" lptable="pc_types" y="30" h="20" x="10" lpfield="pc_type_name">pc_type_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Units" y="50" h="20" x="10">units</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Unit Price" y="50" h="20" x="290">unit_price</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Receipt Number" y="70" h="20" x="10">receipt_number</TEXTFIELD>
+					<TEXTDATE w="150" title="Exp Date" y="70" h="20" x="290">exp_date</TEXTDATE>
+					<CHECKBOX w="150" title="Request" y="90" h="20" x="10">is_request</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				</FORM>
 			</GRID>
 			<GRID name="Payroll" keyfield="period_id" orderby="start_date desc" table="periods" viewfilter="table_name=periods" linkparams="table_id=workflow_table_id">
 				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
@@ -3757,8 +3770,15 @@
 			<JASPER name="Leave Balance" reportfile="vw_employee_leave_c.jasper"></JASPER>
 			<JASPER name="Leave Balance - by type" reportfile="leave_balance_field.jasper"></JASPER>
 		</FILTER>
+		<FILTER w="700" name="Leave" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="10" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Leave" reportfile="vw_employee_leave_e.jasper"></JASPER>
+			<JASPER name="Leave Full" reportfile="vw_employee_leave.jasper"></JASPER>
+		</FILTER>
 		<JASPER name="Approvals" reportfile="leave_approvals.jasper"></JASPER>
-		<JASPER name="Leave" reportfile="vw_employee_leave.jasper"></JASPER>
 		<JASPER name="Leave Types" reportfile="leave_types.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Intake" key="110" h="550">
@@ -3769,18 +3789,22 @@
 		<JASPER name="Internships" reportfile="vw_internships.jasper"></JASPER>
 		<JASPER name="Interns" reportfile="vw_interns.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Job Review" key="112" h="550">
-		<JASPER name="Job Review" reportfile="vw_evaluation_points.jasper"></JASPER>
-		<JASPER name="Appraisal Ratings" reportfile="vw_appraisal_ratings.jasper"></JASPER>
-		<JASPER name="Review Category" reportfile="vw_review_points.jasper"></JASPER>
-		<FILTER w="700" name="Career Development" split="150" type="horl" key="6" h="550">
+	<DESK w="700" name="Perfomance Review" key="112" h="550">
+		<FILTER w="700" name="Individual Reports" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Perfomance Review" reportfile="vw_evaluation_points.jasper"></JASPER>
+			<JASPER name="Appraisal Ratings" org.table="vw_evaluation_points" reportfile="vw_appraisal_ratings.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Annual Reports" split="150" type="horl" key="6" h="550">
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year"></DRILLDOWN>
+			<JASPER name="Perfomance Review" reportfile="vw_evaluation_points_a.jasper"></JASPER>
+			<JASPER name="Appraisal Ratings" org.table="vw_evaluation_points" reportfile="vw_appraisal_ratings_a.jasper"></JASPER>
 			<JASPER name="Career Development" reportfile="vw_career_development.jasper"></JASPER>
+			<JASPER name="Objectives" org.table="job_reviews" reportfile="vw_employee_objectives_all.jasper"></JASPER>
 		</FILTER>
-		<FILTER w="700" name="Objectives" split="150" type="horl" key="6" h="550">
-			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year"></DRILLDOWN>
-			<JASPER name="Objectives" reportfile="vw_employee_objectives_all.jasper"></JASPER>
-		</FILTER>
+		<JASPER name="Review Category" reportfile="vw_review_points.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Arbitration" key="113" h="550">
 		<JASPER name="Cases" reportfile="vw_employee_cases.jasper"></JASPER>
@@ -4330,5 +4354,23 @@
 			<CHECKBOX w="75" title="Subscribed">subscribed</CHECKBOX>
 			<TEXTTIMESTAMP w="75" title="Subscribed Date">subscribed_date</TEXTTIMESTAMP>
 		</FORMVIEW>
+	</DESK>
+	<DESK w="700" name="Leave Summary" key="220" h="500">
+		<FILTER w="700" name="Leave Summary" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Employee" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOLIST w="150" title="Status" y="30" h="20" x="10">approve_status
+					<DATA>Completed</DATA>
+					<DATA>Draft</DATA>
+					<DATA>Approved</DATA>
+					<DATA>Rejected</DATA>
+				</COMBOLIST>
+				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Leave List" reportfile="vw_employee_leave_e.jasper"></JASPER>
+			<JASPER name="Leave Approvals" org.table="vw_employee_leave" reportfile="employee_leave.jasper"></JASPER>
+			<JASPER name="Leave Staff Summary" reportfile="employee_leave_report.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

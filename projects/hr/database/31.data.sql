@@ -217,7 +217,12 @@ VALUES (11, 0, 'Internship Application - acknowledgement', 'Job Application', 'H
 We acknowledge receipt of your Internship application<br><br>
 Regards,<br>
 HR Manager<br>');
-SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 11, true);
+INSERT INTO sys_emails (sys_email_id, use_type, org_id, sys_email_name, title, details) 
+VALUES (12, 12, 0, 'Contract Ending', 'Contract Ending - {{entity_name}}', 'Hello,<br><br>
+Kindly note that the contract for {{entity_name}} is due to employment.<br><br>
+Regards,<br>
+HR Manager<br>');
+SELECT pg_catalog.setval('sys_emails_sys_email_id_seq', 12, true);
 UPDATE sys_emails SET use_type = sys_email_id;
 
 
@@ -289,6 +294,9 @@ INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Real Estate');
 INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Hospitality');
 INSERT INTO jobs_category (org_id, jobs_category) VALUES (0, 'Other');
 
+INSERT INTO leave_types (org_id, leave_type_id, leave_type_name, allowed_leave_days, leave_days_span, use_type)
+VALUES (0, 0, 'Annual Leave', 21, 7, 1);
+
 INSERT INTO loan_types(loan_type_id, adjustment_id, org_id, loan_type_name, default_interest, reducing_balance)
 VALUES (0, 15, 0, 'Emergency', 6, true);
 
@@ -297,5 +305,7 @@ INSERT INTO products (org_id, product_name, annual_cost, details) VALUES (0, 'HC
 INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'MPESA');
 INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'Cash');
 INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'Cheque');
+
+INSERT INTO review_category (review_category_id, org_id, review_category_name) VALUES (0, 0, 'Annual Review');
 
 

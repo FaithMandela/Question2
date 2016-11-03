@@ -88,20 +88,23 @@ WHERE (a.org_id = 1) AND (b.org_id = 0);
 
 
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (9, 1, 7, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
+VALUES (20, 1, 7, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (10, 1, 7, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
+VALUES (21, 1, 7, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (11, 1, 7, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflows_workflow_id_seq', 11, true);
+VALUES (22, 1, 7, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflows_workflow_id_seq', 22, true);
 
 
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (9, 1, 9, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+VALUES (20, 1, 20, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (10, 1, 10, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+VALUES (21, 1, 21, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (11, 1, 11, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 11, true);
+VALUES (22, 1, 22, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 22, true);
 
 
+UPDATE transaction_counters SET document_number = '10001';
+
+UPDATE orgs SET employee_limit = 1000, transaction_limit = 1000000;

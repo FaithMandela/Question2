@@ -242,7 +242,6 @@ CREATE VIEW vw_client_assets AS
 		vw_assets.asset_disp,
 		check_retrived(vw_client_requests.client_id, client_assets.asset_id) as retrived,
 		
-
 		r_assets.asset_type_id as r_asset_type_id, r_assets.asset_type_name as r_asset_type_name, 
 		r_assets.manufacturer_id as r_manufacturer_id, r_assets.manufacturer_name as r_manufacturer_name,
 		r_assets.model_id as r_model_id, r_assets.model_name as r_model_name, r_assets.model as r_model,

@@ -13,12 +13,16 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_items.item_category_name, vw_items.item_id, vw_items.item_name, vw_items.sales_account_id, vw_items.sales_account_name, vw_items.purchase_account_id, vw_items.purchase_account_name, vw_items.tax_type_name, vw_items.tax_rate, vw_items.item_unit_name, vw_items.sales_price, vw_items.purchase_price
 FROM vw_items
+$P!{orgwhere}
+
 ORDER BY vw_items.item_category_name;]]>
 	</queryString>
 	<field name="item_category_name" class="java.lang.String"/>

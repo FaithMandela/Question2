@@ -91,6 +91,7 @@ INSERT INTO department_roles (org_id, department_role_id, ln_department_role_id,
 CREATE TABLE applicants (
 	entity_id				integer references entitys primary key,
 	disability_id			integer references disability,
+	currency_id				integer references currency,
 	org_id					integer references orgs,
 
 	person_title			varchar(7),
@@ -117,6 +118,8 @@ CREATE TABLE applicants (
 	objective				text,
 	details					text
 );
+CREATE INDEX applicants_disability_id ON applicants(disability_id);
+CREATE INDEX applicants_currency_id ON applicants(currency_id);
 CREATE INDEX applicants_org_id ON applicants(org_id);
 
 CREATE TABLE employees (
@@ -430,8 +433,6 @@ CREATE TABLE leave_types (
 	details					text
 );
 CREATE INDEX leave_types_org_id ON leave_types(org_id);
-INSERT INTO leave_types (org_id, leave_type_id, leave_type_name, allowed_leave_days, leave_days_span)
-VALUES (0, 0, 'Annual Leave', 21, 7);
 
 CREATE TABLE employee_leave_types (
 	employee_leave_type_id	serial primary key,
@@ -515,6 +516,7 @@ CREATE INDEX intake_org_id ON intake(org_id);
 CREATE TABLE contract_types (
 	contract_type_id		serial primary key,
 	org_id					integer references orgs,
+	notice_period			integer default 30 not null,
 	contract_type_name		varchar(50) not null,
 	contract_text			text,
 	details					text
@@ -536,33 +538,38 @@ CREATE TABLE applications (
 	contract_status_id		integer references contract_status,
 	entity_id				integer references entitys,
 	employee_id				integer references employees,
+	currency_id				integer references currency,
 	org_id					integer references orgs,
 
 	contract_date			date,
-	contract_close			date,
 	contract_start			date,
+	contract_close			date,
 	contract_period			integer,
 	contract_terms			text,
 	initial_salary			real,
+
+	notice_email			boolean default false not null,
 
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
-	
+
 	short_listed			integer default 0 not null,
 	previous_salary			real,
 	expected_salary			real,
+	exchange_rate			real default 1,
 	review_rating			integer,
 	
 	applicant_comments		text,
 	review					text
 );
-CREATE INDEX applications_intake_id ON applications (intake_id);
-CREATE INDEX applications_contract_type_id ON applications (contract_type_id);
-CREATE INDEX applications_contract_status_id ON applications (contract_status_id);
-CREATE INDEX applications_entity_id ON applications (entity_id);
-CREATE INDEX applications_employee_id ON applications (employee_id);
+CREATE INDEX applications_intake_id ON applications(intake_id);
+CREATE INDEX applications_contract_type_id ON applications(contract_type_id);
+CREATE INDEX applications_contract_status_id ON applications(contract_status_id);
+CREATE INDEX applications_entity_id ON applications(entity_id);
+CREATE INDEX applications_employee_id ON applications(employee_id);
+CREATE INDEX applications_currency_id ON applications(currency_id);
 CREATE INDEX applications_org_id ON applications(org_id);
 
 CREATE TABLE internships (
@@ -676,6 +683,7 @@ CREATE TABLE review_category (
 	review_category_id		serial primary key,
 	org_id					integer references orgs,
 	review_category_name	varchar(320),
+	rate_objectives			boolean default true not null,
 	details					text
 );
 CREATE INDEX review_category_org_id ON review_category(org_id);
@@ -879,8 +887,10 @@ CREATE VIEW vw_employment_max AS
 	ON employment.entity_id = c.entity_id;
 
 CREATE VIEW vw_applicants AS
-	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, applicants.entity_id, applicants.surname, 
-		applicants.org_id, applicants.first_name, applicants.middle_name, applicants.date_of_birth, applicants.nationality, 
+	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		applicants.org_id, applicants.entity_id, applicants.surname, 
+		applicants.first_name, applicants.middle_name, applicants.date_of_birth, applicants.nationality, 
 		applicants.identity_card, applicants.language, applicants.objective, applicants.interests, applicants.picture_file, applicants.details,
 		applicants.person_title, applicants.field_of_study, applicants.applicant_email, applicants.applicant_phone, 
 		applicants.previous_salary, applicants.expected_salary,
@@ -902,7 +912,8 @@ CREATE VIEW vw_applicants AS
 		
 	FROM applicants INNER JOIN sys_countrys ON applicants.nationality = sys_countrys.sys_country_id
 		LEFT JOIN vw_education_max ON applicants.entity_id = vw_education_max.entity_id
-		LEFT JOIN vw_employment_max ON applicants.entity_id = vw_employment_max.entity_id;
+		LEFT JOIN vw_employment_max ON applicants.entity_id = vw_employment_max.entity_id
+		LEFT JOIN currency ON applicants.currency_id = currency.currency_id;
 
 CREATE VIEW vw_employees AS
 	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
@@ -1103,13 +1114,14 @@ CREATE VIEW vw_applications AS
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		vw_intake.org_name, vw_intake.org_detail,
 		entitys.entity_id, entitys.entity_name, entitys.primary_email,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		
 		applications.org_id,
 		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 
 		applications.contract_start, applications.contract_period, applications.contract_terms, applications.initial_salary, 
 		applications.application_date, applications.approve_status, applications.workflow_table_id, applications.action_date, 
 		applications.applicant_comments, applications.review, applications.short_listed,
-		applications.previous_salary, applications.expected_salary, applications.review_rating,
+		applications.previous_salary, applications.expected_salary, applications.exchange_rate, applications.review_rating,
 
 		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
 		vw_education_max.name_of_school, vw_education_max.examination_taken, 
@@ -1124,7 +1136,8 @@ CREATE VIEW vw_applications AS
 	FROM applications INNER JOIN entitys ON applications.entity_id = entitys.entity_id
 		INNER JOIN vw_intake ON applications.intake_id = vw_intake.intake_id
 		LEFT JOIN vw_education_max ON entitys.entity_id = vw_education_max.entity_id
-		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id;
+		LEFT JOIN vw_employment_max ON entitys.entity_id = vw_employment_max.entity_id
+		LEFT JOIN currency ON applications.currency_id = currency.currency_id;
 		
 CREATE VIEW vw_contracting AS
 	SELECT vw_intake.department_id, vw_intake.department_name, vw_intake.department_description, vw_intake.department_duties,
@@ -1134,13 +1147,14 @@ CREATE VIEW vw_contracting AS
 		vw_intake.intake_id, vw_intake.opening_date, vw_intake.closing_date, vw_intake.positions, 
 		entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name,
 		
-		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.contract_text,
+		contract_types.contract_type_id, contract_types.contract_type_name, contract_types.notice_period, contract_types.contract_text,
 		contract_status.contract_status_id, contract_status.contract_status_name,
 		
 		applications.application_id, applications.employee_id, applications.contract_date, applications.contract_close, 
 		applications.contract_start, applications.contract_period, applications.contract_terms, applications.initial_salary, 
 		applications.application_date, applications.approve_status, applications.workflow_table_id, applications.action_date, 
 		applications.applicant_comments, applications.review, 
+		applications.notice_email, (current_date - applications.contract_close) as days_end_contract,
 
 		vw_education_max.education_class_name, vw_education_max.date_from, vw_education_max.date_to, 
 		vw_education_max.name_of_school, vw_education_max.examination_taken, 
@@ -1236,13 +1250,16 @@ CREATE VIEW vw_review_points AS
 	FROM review_points INNER JOIN review_category ON review_points.review_category_id = review_category.review_category_id;
 	
 CREATE VIEW vw_job_reviews AS
-	SELECT entitys.entity_id, entitys.entity_name, job_reviews.job_review_id, job_reviews.total_points, 
-		job_reviews.org_id, job_reviews.review_date, job_reviews.review_done, 
+	SELECT entitys.entity_id, entitys.entity_name, 
+		review_category.review_category_id, review_category.review_category_name, review_category.rate_objectives,
+		job_reviews.org_id, job_reviews.job_review_id, job_reviews.total_points, 
+		job_reviews.review_date, job_reviews.review_done, 
 		job_reviews.approve_status, job_reviews.workflow_table_id, job_reviews.application_date, job_reviews.action_date,
 		job_reviews.recomendation, job_reviews.reviewer_comments, job_reviews.pl_comments, job_reviews.details,
 		EXTRACT(YEAR FROM job_reviews.review_date) as review_year
-	FROM job_reviews INNER JOIN entitys ON job_reviews.entity_id = entitys.entity_id;
-
+	FROM job_reviews INNER JOIN entitys ON job_reviews.entity_id = entitys.entity_id
+		INNER JOIN  review_category ON job_reviews.review_category_id = review_category.review_category_id;
+	
 CREATE VIEW vw_review_year AS
 	SELECT vw_job_reviews.org_id, vw_job_reviews.review_year
 	FROM vw_job_reviews
@@ -1266,12 +1283,13 @@ CREATE VIEW vw_all_job_reviews AS
 	
 
 CREATE VIEW vw_evaluation_points AS
-	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
+	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, 
+		vw_job_reviews.review_category_id, vw_job_reviews.review_category_name, vw_job_reviews.rate_objectives,
+		vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
 		vw_job_reviews.review_date, vw_job_reviews.review_done, vw_job_reviews.recomendation, vw_job_reviews.reviewer_comments,
 		vw_job_reviews.pl_comments,
 		vw_job_reviews.approve_status, vw_job_reviews.workflow_table_id, vw_job_reviews.application_date, vw_job_reviews.action_date,
-		vw_review_points.review_category_id, vw_review_points.review_category_name, vw_review_points.review_point_id, 
-		vw_review_points.review_point_name, vw_review_points.review_points,	
+		vw_review_points.review_point_id, vw_review_points.review_point_name, vw_review_points.review_points,
 		
 		evaluation_points.org_id, evaluation_points.evaluation_point_id, evaluation_points.points, evaluation_points.grade,  
 		evaluation_points.reviewer_points, evaluation_points.reviewer_grade, evaluation_points.reviewer_narrative,
@@ -1280,7 +1298,9 @@ CREATE VIEW vw_evaluation_points AS
 		INNER JOIN vw_review_points ON evaluation_points.review_point_id = vw_review_points.review_point_id;
 
 CREATE VIEW vw_evaluation_objectives AS
-	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
+	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, 
+		vw_job_reviews.review_category_id, vw_job_reviews.review_category_name, vw_job_reviews.rate_objectives,
+		vw_job_reviews.job_review_id, vw_job_reviews.total_points, 
 		vw_job_reviews.review_date, vw_job_reviews.review_done, vw_job_reviews.recomendation, vw_job_reviews.reviewer_comments,
 		vw_job_reviews.pl_comments,
 		vw_job_reviews.approve_status, vw_job_reviews.workflow_table_id, vw_job_reviews.application_date, vw_job_reviews.action_date,
@@ -1385,8 +1405,9 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
 DECLARE
-	v_org_id			integer;
-	v_entity_id			integer;
+	v_org_id				integer;
+	v_entity_id				integer;
+	v_entity_type_id		integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		
@@ -1396,14 +1417,22 @@ BEGIN
 			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
 				
 			IF(v_entity_id is null)THEN
-				SELECT min(org_id) INTO v_org_id
-				FROM orgs WHERE (is_default = true);
+				v_org_id := NEW.org_id;
+				IF(v_org_id is null)THEN
+					SELECT min(org_id) INTO v_org_id
+					FROM orgs WHERE (is_default = true);
+				END IF;
+				
+				SELECT entity_type_id INTO v_entity_type_id
+				FROM entity_types 
+				WHERE (org_id = v_org_id) AND (use_key = 4);
 
 				NEW.entity_id := nextval('entitys_entity_id_seq');
 
-				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
+				INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+					entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, v_org_id, 4, 
+				VALUES (NEW.entity_id, v_org_id, v_entity_type_id, 4, 
 					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
 			ELSE
@@ -1427,6 +1456,7 @@ CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
 
 CREATE OR REPLACE FUNCTION ins_employees() RETURNS trigger AS $$
 DECLARE
+	v_entity_type_id	integer;
 	v_use_type			integer;
 	v_org_sufix 		varchar(4);
 	v_first_password	varchar(12);
@@ -1442,9 +1472,13 @@ BEGIN
 
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 
-			IF(NEW.Employee_ID is null) THEN
-				NEW.Employee_ID := NEW.entity_id;
+			IF(NEW.employee_id is null) THEN
+				NEW.employee_id := NEW.entity_id;
 			END IF;
+			
+			SELECT entity_type_id INTO v_entity_type_id
+			FROM entity_types 
+			WHERE (org_id = NEW.org_id) AND (use_key = 1);
 
 			v_first_password := first_password();
 			v_user_name := lower(v_org_sufix || '.' || NEW.First_name || '.' || NEW.Surname);
@@ -1454,9 +1488,10 @@ BEGIN
 			WHERE (org_id = NEW.org_id) AND (user_name = v_user_name);
 			IF(v_user_count > 0) THEN v_user_name := v_user_name || v_user_count::varchar; END IF;
 
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, function_role, 
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+				entity_name, user_name, function_role, 
 				first_password, entity_password)
-			VALUES (NEW.entity_id, NEW.org_id, 1, 
+			VALUES (NEW.entity_id, NEW.org_id, v_entity_type_id, 1, 
 				(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 				v_user_name, 'staff',
 				v_first_password, md5(v_first_password));
@@ -1465,10 +1500,10 @@ BEGIN
 		v_use_type := 2;
 		IF(NEW.gender = 'M')THEN v_use_type := 3; END IF;
 
-		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id)
-		SELECT NEW.entity_id, NEW.org_id, leave_type_id
+		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
+		SELECT NEW.entity_id, NEW.org_id, leave_type_id, 0
 		FROM leave_types
-		WHERE (use_type = 1) OR (use_type = v_use_type);
+		WHERE (org_id = NEW.org_id) AND ((use_type = 1) OR (use_type = v_use_type));
 	ELSIF (TG_OP = 'UPDATE') THEN
 		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
 		WHERE entity_id = NEW.entity_id;
@@ -1480,6 +1515,34 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_employees BEFORE INSERT OR UPDATE ON employees
     FOR EACH ROW EXECUTE PROCEDURE ins_employees();
+    
+CREATE OR REPLACE FUNCTION insf_leave_types() RETURNS trigger AS $$
+BEGIN
+
+	IF(NEW.use_type = 1)THEN
+		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
+		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
+		FROM employees
+		WHERE (org_id = NEW.org_id) AND (active = true);
+	ELSIF(NEW.use_type = 2)THEN
+		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
+		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
+		FROM employees
+		WHERE (org_id = NEW.org_id) AND (active = true) AND (gender = 'F');
+	ELSIF(NEW.use_type = 1)THEN
+		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
+		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
+		FROM employees
+		WHERE (org_id = NEW.org_id) AND (active = true) AND (gender = 'M');
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insf_leave_types AFTER INSERT ON leave_types
+    FOR EACH ROW EXECUTE PROCEDURE insf_leave_types();
+
 
 CREATE OR REPLACE FUNCTION ins_employee_leave() RETURNS trigger AS $$
 BEGIN
@@ -1583,12 +1646,12 @@ BEGIN
 	FROM applications 
 	WHERE (intake_id = $1::int) AND (entity_id = $2::int);
 	
-	SELECT org_id, entity_id, previous_salary, expected_salary INTO reca
+	SELECT org_id, entity_id, currency_id, previous_salary, expected_salary INTO reca
 	FROM applicants
 	WHERE (entity_id = $2::int);
 	v_entity_id := reca.entity_id;
 	IF(reca.entity_id is null) THEN
-		SELECT org_id, entity_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
+		SELECT org_id, entity_id, currency_id, basic_salary as previous_salary, basic_salary as expected_salary INTO reca
 		FROM employees
 		WHERE (entity_id = $2::int);
 		v_entity_id := reca.entity_id;
@@ -1634,8 +1697,8 @@ BEGIN
 		RAISE EXCEPTION '%', msg;
 	ELSE
 		v_application_id := nextval('applications_application_id_seq');
-		INSERT INTO applications (application_id, intake_id, org_id, entity_id, previous_salary, expected_salary, approve_status)
-		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.previous_salary, reca.expected_salary, 'Completed');
+		INSERT INTO applications (application_id, intake_id, org_id, entity_id, currency_id, previous_salary, expected_salary, approve_status)
+		VALUES (v_application_id, $1::int, reca.org_id, reca.entity_id, reca.currency_id, reca.previous_salary, reca.expected_salary, 'Completed');
 		
 		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
 		WHERE (use_type = 10) AND (org_id = reca.org_id);
@@ -1683,21 +1746,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION upd_applications() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_applications() RETURNS trigger AS $$
 DECLARE
 	typeid	integer;
 BEGIN
 	
-	IF (NEW.approve_status = 'Approved') THEN
-		NEW.action_date := now();
-	END IF;
-	IF (NEW.approve_status = 'Rejected') THEN
-		NEW.action_date := now();
+	IF ((NEW.entity_id is null) AND (NEW.employee_id is not null)) THEN
+		NEW.entity_id := NEW.employee_id;
+		NEW.approve_status := 'Completed';
 	END IF;
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_applications BEFORE INSERT ON applications
+    FOR EACH ROW EXECUTE PROCEDURE ins_applications();
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_leave
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
@@ -1705,8 +1769,8 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_leave
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON leave_work_days
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-CREATE TRIGGER upd_applications BEFORE UPDATE ON applications
-    FOR EACH ROW EXECUTE PROCEDURE upd_applications();
+CREATE TRIGGER upd_action BEFORE UPDATE ON applications
+    FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON casual_application
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
@@ -1755,8 +1819,9 @@ BEGIN
 		END IF;
 
 		FOR reca IN SELECT workflows.workflow_id, workflows.table_name, workflows.table_link_field, workflows.table_link_id
-		FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
-		WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) LOOP
+			FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
+			WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) 
+		LOOP
 			iswf := false;
 			IF(reca.table_link_field is null)THEN
 				iswf := true;
@@ -1787,6 +1852,13 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_leave_taken(integer, integer) RETURNS real AS $$
+	SELECT COALESCE(sum(leave_days), 0)
+	FROM employee_leave
+	WHERE (approve_status = 'Approved') AND (to_char(leave_from, 'YYYY') = to_char(current_date, 'YYYY'))
+		AND (entity_id = $1) AND (leave_type_id = $2);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_leave_balance(integer, integer) RETURNS real AS $$
 DECLARE
@@ -2071,17 +2143,20 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION job_review_check(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_self_rating		integer;
-	v_objective_ps		real;
-	sum_ods_ps			real;
-	v_point_check		integer;
-	rec					RECORD;
-	msg 				varchar(120);
+	rec							RECORD;
+	v_approve_status			varchar(16);
+	v_rate_objectives			boolean;
+	v_self_rating				integer;
+	v_objective_ps				real;
+	sum_ods_ps					real;
+	v_point_check				integer;
+	msg 						varchar(120);
 BEGIN
 	
 	SELECT sum(objectives.objective_ps) INTO v_objective_ps
 	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int));
+	
 	SELECT sum(ods_ps) INTO sum_ods_ps
 	FROM objective_details INNER JOIN evaluation_points ON evaluation_points.objective_id = objective_details.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int));
@@ -2091,38 +2166,46 @@ BEGIN
 	WHERE (evaluation_points.job_review_id = CAST($1 as int))
 		AND (objectives.objective_ps > 0) AND (evaluation_points.points = 0);
 		
-	SELECT self_rating INTO v_self_rating
-	FROM job_reviews
-	WHERE (job_review_id = $1::int);
+	SELECT job_reviews.self_rating, review_category.rate_objectives, job_reviews.approve_status
+		INTO v_self_rating, v_rate_objectives, v_approve_status
+	FROM job_reviews INNER JOIN review_category ON job_reviews.review_category_id = review_category.review_category_id
+	WHERE (job_reviews.job_review_id = $1::int);
 	IF(v_self_rating is null) THEN v_self_rating := 0; END IF;
-	
+		
 	IF(sum_ods_ps is null)THEN
 		sum_ods_ps := 100;
 	END IF;
 	IF(sum_ods_ps = 0)THEN
 		sum_ods_ps := 100;
 	END IF;
+	
+	IF(v_rate_objectives = false)THEN
+		v_objective_ps := 100;
+		sum_ods_ps := 100;
+	END IF;
 
-	IF(v_objective_ps = 100) AND (sum_ods_ps = 100)THEN
-		UPDATE job_reviews SET approve_status = 'Completed'
-		WHERE (job_review_id = CAST($1 as int));
-
-		msg := 'Review Applied';
+	IF(v_approve_status <> 'Draft')THEN
+		msg := 'The review is already submitted';
+	ELSIF(v_objective_ps <> 100)THEN
+		msg := 'Objective % must add up to 100';
+		RAISE EXCEPTION '%', msg;
 	ELSIF(sum_ods_ps <> 100)THEN
 		msg := 'Objective details % must add up to 100';
 		RAISE EXCEPTION '%', msg;
-	ELSIF(v_self_rating = 0)THEN
+	ELSIF(v_self_rating = 0) AND (v_rate_objectives = true)THEN
 		msg := 'Indicate your self rating';
 		RAISE EXCEPTION '%', msg;
 	ELSIF(v_point_check is not null)THEN
 		msg := 'All objective evaluations points must be between 1 to 4';
 		RAISE EXCEPTION '%', msg;
 	ELSE
-		msg := 'Objective % must add up to 100';
-		RAISE EXCEPTION '%', msg;
+		UPDATE job_reviews SET approve_status = 'Completed'
+		WHERE (job_review_id = CAST($1 as int));
+
+		msg := 'Review Applied';
 	END IF;
 
-	return msg;
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -2281,14 +2364,15 @@ BEGIN
 			
 		WHERE (applications.application_id = v_application_id);
 		
-		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Approved'
+		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Completed'
 		WHERE (application_id = v_application_id);
 			
 		msg := 'Employee added';
 	ELSIF(v_employee_id is null)THEN
 		UPDATE applications SET employee_id = v_employee_id, 
 			department_role_id = intake.department_role_id, pay_scale_id = intake.pay_scale_id, 
-			pay_group_id = intake.pay_group_id, location_id = intake.location_id
+			pay_group_id = intake.pay_group_id, location_id = intake.location_id,
+			approve_status = 'Completed'
 		FROM intake  
 		WHERE (applications.intake_id = intake.intake_id) AND (applications.application_id = v_application_id);
 		
@@ -2506,7 +2590,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION emailed_dob(integer, varchar(64)) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id				integer;
 	v_entity_name			varchar(120);
@@ -2514,10 +2598,20 @@ BEGIN
 	SELECT org_id, entity_name INTO v_org_id, v_entity_name
 	FROM entitys WHERE (entity_id = $2::int);
 	
-    UPDATE employees SET dob_email = current_date WHERE (entity_id = $2::int);
-    INSERT INTO sys_emailed (sys_email_id, org_id, email_type, narrative)
+	INSERT INTO sys_emailed (sys_email_id, org_id, email_type, narrative)
 	VALUES (9, 0, 9, 'Its birthday for ' || v_entity_name);
-	
-    RETURN 'Done';
+
+	UPDATE employees SET dob_email = current_date WHERE (entity_id = $2::int);
+
+	RETURN 'Done';
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE FUNCTION emailed_contract(integer, varchar(64)) RETURNS varchar(120) AS $$
+BEGIN
+	UPDATE applications SET notice_email = true WHERE (application_id = $2::int);
+	RETURN 'Done';
+END;
+$$ LANGUAGE plpgsql;
+
+

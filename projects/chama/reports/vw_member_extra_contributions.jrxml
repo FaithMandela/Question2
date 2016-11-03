@@ -29,7 +29,7 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.member_id, vw_contributions.start_date, vw_contributions.org_id, vw_contributions.contribution_id, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.paid, vw_contributions.extra_contrib, vw_contributions.details
+		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.start_date, vw_contributions.org_id, vw_contributions.contribution_id, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.paid, vw_contributions.extra_contrib, vw_contributions.details
 FROM vw_contributions
 Where entity_id = '$P!{filterid}' AND vw_contributions.extra_contrib = true
 ORDER BY vw_contributions.period_id]]>
@@ -37,7 +37,6 @@ ORDER BY vw_contributions.period_id]]>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="member_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="contribution_id" class="java.lang.Integer"/>

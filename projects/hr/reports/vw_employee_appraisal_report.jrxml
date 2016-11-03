@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_appraisal_report" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33a5cf3b-78f1-4bc5-8667-959d25428d96">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="442"/>
+	<property name="ireport.y" value="288"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -42,22 +42,23 @@ employees.appointment_date AS date_joined,
 employees.current_appointment AS current_appointment_date,
 vw_department_roles.department_role_name AS job_title,
 vw_department_roles.parent_role_name AS supervisor,
-vw_reporting.rpt_name,
-job_reviews.review_date, job_reviews.workflow_table_id,
-get_approver(job_reviews.workflow_table_id) AS approver,
-get_approval_date(job_reviews.workflow_table_id) AS approval_date,
-applications.contract_start
 
+job_reviews.review_date, job_reviews.workflow_table_id,
+applications.contract_start,
+
+COALESCE(get_approver(job_reviews.workflow_table_id), get_reporting_list(employees.entity_id)) AS supervisor_name,
+
+get_approver(job_reviews.workflow_table_id) as approver,
+get_approval_date(job_reviews.workflow_table_id) AS approval_date
 
 FROM employees INNER JOIN vw_department_roles ON employees.department_role_id = vw_department_roles.department_role_id
 INNER JOIN job_reviews ON employees.entity_id = job_reviews.entity_id
-LEFT JOIN vw_reporting ON vw_reporting.entity_id = job_reviews.entity_id
 LEFT JOIN applications ON applications.employee_id = employees.entity_id
 
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
 $P!{organd}
 
-AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is null));]]>
+;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="employee_id" class="java.lang.String"/>
@@ -66,12 +67,12 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 	<field name="current_appointment_date" class="java.sql.Date"/>
 	<field name="job_title" class="java.lang.String"/>
 	<field name="supervisor" class="java.lang.String"/>
-	<field name="rpt_name" class="java.lang.String"/>
 	<field name="review_date" class="java.sql.Date"/>
 	<field name="workflow_table_id" class="java.lang.Integer"/>
+	<field name="contract_start" class="java.sql.Date"/>
+	<field name="supervisor_name" class="java.lang.String"/>
 	<field name="approver" class="java.lang.String"/>
 	<field name="approval_date" class="java.sql.Date"/>
-	<field name="contract_start" class="java.sql.Date"/>
 	<variable name="workflow_table_id" class="java.lang.Integer">
 		<variableExpression><![CDATA[$F{workflow_table_id}]]></variableExpression>
 	</variable>
@@ -127,70 +128,70 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 	VI. Career Development Planning]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="281" y="259" width="271" height="20" backcolor="#FFFFFF" uuid="27e27c11-e13c-4dcf-969f-ac472681ee19"/>
+				<reportElement positionType="Float" x="281" y="255" width="270" height="20" backcolor="#FFFFFF" uuid="27e27c11-e13c-4dcf-969f-ac472681ee19"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{job_title}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="8" y="333" width="272" height="20" backcolor="#FFFFFF" uuid="3e26ad55-1532-4377-ad21-0724ee3af756"/>
+				<reportElement positionType="Float" mode="Opaque" x="9" y="341" width="272" height="20" backcolor="#FFFFFF" uuid="3e26ad55-1532-4377-ad21-0724ee3af756"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[  Appraisal Cylce (Dates)]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="281" y="280" width="271" height="20" backcolor="#FFFFFF" uuid="c87da159-cfc1-4a88-8fc8-1411a1764eab"/>
+				<reportElement positionType="Float" x="281" y="276" width="270" height="20" backcolor="#FFFFFF" uuid="c87da159-cfc1-4a88-8fc8-1411a1764eab"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{date_joined}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="8" y="355" width="272" height="20" backcolor="#FFFFFF" uuid="9184a129-a728-4b07-abd0-9a324c2bfd9b"/>
+				<reportElement positionType="Float" mode="Opaque" x="9" y="363" width="272" height="20" backcolor="#FFFFFF" uuid="9184a129-a728-4b07-abd0-9a324c2bfd9b"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[  Date of Review Meeting]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="8" y="301" width="272" height="20" backcolor="#FFFFFF" uuid="b885f94b-91bb-4fdb-a345-27bf05fa1734"/>
+				<reportElement positionType="Float" mode="Opaque" x="9" y="297" width="272" height="20" backcolor="#FFFFFF" uuid="b885f94b-91bb-4fdb-a345-27bf05fa1734"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[  Date appointed to current Grade/Position]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="8" y="280" width="272" height="20" backcolor="#FFFFFF" uuid="d87752a3-9820-4f48-9d23-7993068e4484"/>
+				<reportElement positionType="Float" mode="Opaque" x="9" y="276" width="272" height="20" backcolor="#FFFFFF" uuid="d87752a3-9820-4f48-9d23-7993068e4484"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[  Date Joined APHRC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="8" y="259" width="272" height="20" backcolor="#FFFFFF" uuid="56bf34b4-76a2-474b-994e-20ba0cd5fc93"/>
+				<reportElement positionType="Float" mode="Opaque" x="9" y="255" width="272" height="20" backcolor="#FFFFFF" uuid="56bf34b4-76a2-474b-994e-20ba0cd5fc93"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[  Job Title]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="281" y="238" width="271" height="20" backcolor="#FFFFFF" uuid="03bc9d1d-f363-467c-8737-808a783ec924"/>
+				<reportElement positionType="Float" x="281" y="234" width="270" height="20" backcolor="#FFFFFF" uuid="03bc9d1d-f363-467c-8737-808a783ec924"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{employee_name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="281" y="302" width="271" height="20" backcolor="#FFFFFF" uuid="bd401724-3802-4144-b2c2-9cb985d02af7"/>
+				<reportElement positionType="Float" x="281" y="298" width="270" height="20" backcolor="#FFFFFF" uuid="bd401724-3802-4144-b2c2-9cb985d02af7"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{contract_start}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="9" y="238" width="272" height="20" backcolor="#FFFFFF" uuid="e727e1c0-2c68-4109-81ef-760fb7aefe60"/>
+				<reportElement positionType="Float" mode="Opaque" x="9" y="234" width="272" height="20" backcolor="#FFFFFF" uuid="e727e1c0-2c68-4109-81ef-760fb7aefe60"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -205,7 +206,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<text><![CDATA[  Performance Agreement drawn up (include copy of entire agreement):]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="1" y="380" width="551" height="25" backcolor="#FFFFFF" uuid="b74dd2e5-b020-4415-90cf-1f7a99d33551"/>
+				<reportElement positionType="Float" x="1" y="388" width="551" height="25" backcolor="#FFFFFF" uuid="b74dd2e5-b020-4415-90cf-1f7a99d33551"/>
 				<box leftPadding="10"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
@@ -344,7 +345,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rpt_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{approver}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="383" y="445" width="161" height="20" uuid="ba02c350-079f-429a-941f-db60f60c9879"/>
@@ -421,7 +422,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rpt_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{approver}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="25" y="581" width="80" height="20" uuid="28a59e2d-2fb9-4d22-9fc7-f62b51ae508f"/>
@@ -452,7 +453,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<text><![CDATA[Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="282" y="356" width="272" height="20" backcolor="#FFFFFF" uuid="b9db2175-287c-4168-9bb5-99190fa45a80"/>
+				<reportElement positionType="Float" x="281" y="364" width="270" height="20" backcolor="#FFFFFF" uuid="b9db2175-287c-4168-9bb5-99190fa45a80"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -477,7 +478,7 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rpt_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{approver}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement positionType="Float" x="25" y="670" width="80" height="20" uuid="e50853f1-ebdd-46f4-9f77-4d3fb65a76d7"/>
@@ -529,20 +530,26 @@ AND ((vw_reporting.primary_report = true) OR (vw_reporting.primary_report is nul
 				<textFieldExpression><![CDATA[$F{approval_date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy">
-				<reportElement positionType="Float" x="282" y="335" width="270" height="20" backcolor="#FFFFFF" uuid="2585b1b4-14f8-4069-8819-0155f76a7ff3"/>
+				<reportElement positionType="Float" x="281" y="343" width="270" height="20" backcolor="#FFFFFF" uuid="2585b1b4-14f8-4069-8819-0155f76a7ff3"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{review_date}]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement positionType="Float" x="9" y="322" width="543" height="4" uuid="38acebc4-9fc2-4f0e-92a5-2fb3b912838f"/>
-				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$F{entity_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_appraisal_reporting.jasper"]]></subreportExpression>
-			</subreport>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="9" y="323" width="272" height="20" backcolor="#FFFFFF" uuid="f5f8d1c4-ae72-4028-9609-cd8c9c237686"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[  Supervisor's Name]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="281" y="321" width="270" height="20" backcolor="#FFFFFF" uuid="a4d354d1-eda0-4630-8460-f4971cd4e102"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{supervisor_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
