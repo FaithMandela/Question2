@@ -548,7 +548,6 @@
 	<DESK w="700" name="Statements" type="horl" key="143" h="500">
 		<FILTER location="250" name="Clients Statements" type="horl">
 			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="clientid"></DRILLDOWN>
-			<DRILLDOWN name="Account Period" keyfield="periodid" orderby="startdate desc" table="period" listfield="AccountPeriod" filter="periodid"></DRILLDOWN>
 			<JASPER name="Clients Statements" linkfield="clientid" reportfile="clienttotalstatementa.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Clients Total Statements" printcopies="1" linkfield="clientid" reportfile="clienttotalstatement.jasper"></JASPER>

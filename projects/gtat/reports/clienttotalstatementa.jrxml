@@ -32,13 +32,16 @@
 		<parameter name="filterid" class="java.lang.String">
 			<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 		</parameter>
+		<parameter name="clientid" class="java.lang.String">
+			<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[SELECT clientid, clientname, SUM(invoice_amount) AS Invoiced , SUM(credit_amount) AS Credited, SUM(payments) AS Payments
 
 FROM vw_statement
 
 
-WHERE clientid = '$P!{filterid}'
+WHERE clientid = '$P!{clientid}'
 
 GROUP BY clientid, clientname]]>
 		</queryString>
@@ -66,13 +69,16 @@ GROUP BY clientid, clientname]]>
 	<parameter name="SUB_REPORT" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="clientid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT item_name, clientid, clientname, periodid, invoicedate, invoice_amount,
        credit_amount, payments
 
 FROM vw_statement
 
-WHERE clientid = '$P!{filterid}'AND (periodid = '$P!{periodid}')]]>
+WHERE clientid = '$P!{clientid}']]>
 	</queryString>
 	<field name="item_name" class="java.lang.String"/>
 	<field name="clientid" class="java.lang.Integer"/>
@@ -117,9 +123,12 @@ WHERE clientid = '$P!{filterid}'AND (periodid = '$P!{periodid}')]]>
 			<componentElement>
 				<reportElement key="table" style="table" x="6" y="193" width="360" height="46" uuid="66dec627-94e4-4b66-ad0e-ed413d4131ea"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="ds1" uuid="cf8711cb-19f3-40b8-b1bf-648ac221b681">
+					<datasetRun subDataset="ds1" uuid="3959142a-10d7-454c-91bc-8e4417974f7f">
 						<datasetParameter name="filterid">
 							<datasetParameterExpression><![CDATA[$P{filterid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="clientid">
+							<datasetParameterExpression><![CDATA[$P{clientid}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
