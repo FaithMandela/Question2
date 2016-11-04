@@ -324,22 +324,6 @@ CREATE INDEX employee_banking_bank_branch_id ON employee_banking (bank_branch_id
 CREATE INDEX employee_banking_currency_id ON employee_banking (currency_id);
 CREATE INDEX employee_banking_org_id ON employee_banking(org_id);
 
-CREATE TABLE payroll_ledger (
-	payroll_ledger_id		serial primary key,
-	currency_id				integer references currency,
-	org_id					integer references orgs,
-	period_id				integer, 
-	posting_date			date, 
-	description				varchar(240), 
-	payroll_account			varchar(16), 
-	dr_amt					numeric(12, 2),
-	cr_amt					numeric(12, 2),
-	exchange_rate			real default 1 not null,
-	posted					boolean default false
-);
-CREATE INDEX payroll_ledger_currency_id ON payroll_ledger(currency_id);
-CREATE INDEX payroll_ledger_org_id ON payroll_ledger(org_id);
-
 CREATE VIEW vw_adjustments AS
 	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
 		adjustments.org_id, adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, 
@@ -1147,13 +1131,15 @@ BEGIN
 		FROM employees
 		WHERE (employees.active = true) and (employees.org_id = v_org_id);
 
-		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-		SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+		SELECT v_period_id, org_id, loan_id, (loan_balance * interest / 1200), (loan_balance * interest / 1200),
+			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
 
-		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-		SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+		SELECT v_period_id, org_id, loan_id, (principle * interest / 1200), (principle * interest / 1200),
+			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
 
@@ -1520,19 +1506,23 @@ CREATE TRIGGER upd_employee_adjustments AFTER INSERT OR UPDATE ON employee_adjus
 
 CREATE OR REPLACE FUNCTION upd_employee_per_diem() RETURNS trigger AS $$
 DECLARE
-	periodid integer;
-	taxLimit real;
+	v_period_id			integer;
+	v_tax_limit			real;
 BEGIN
-	SELECT Periods.Period_ID, Periods.Per_Diem_tax_limit INTO periodid, taxLimit
-	FROM Employee_Month INNER JOIN Periods ON Employee_Month.Period_id = Periods.Period_id
-	WHERE Employee_Month_ID = NEW.Employee_Month_ID;
+	SELECT periods.period_id, periods.per_diem_tax_limit INTO v_period_id, v_tax_limit
+	FROM employee_month INNER JOIN periods ON employee_month.period_id = periods.period_id
+	WHERE employee_month_id = NEW.employee_month_id;
+	
+	IF(NEW.days_travelled  is null)THEN
+		NEW.days_travelled := NEW.return_date - NEW.travel_date;
+	END IF;
 
-	IF(NEW.Cash_paid = 0) THEN
-		NEW.Cash_paid := NEW.Per_Diem;
+	IF(NEW.cash_paid = 0) THEN
+		NEW.cash_paid := NEW.per_diem;
 	END IF;
 	IF(NEW.tax_amount = 0) THEN
-		NEW.full_amount := (NEW.Per_Diem - (taxLimit * NEW.days_travelled * 0.3)) / 0.7;
-		NEW.tax_amount := NEW.full_amount - (taxLimit * NEW.days_travelled);
+		NEW.full_amount := (NEW.per_diem - (v_tax_limit * NEW.days_travelled * 0.3)) / 0.7;
+		NEW.tax_amount := NEW.full_amount - (v_tax_limit * NEW.days_travelled);
 	END IF;
 
 	RETURN NEW;
@@ -1544,28 +1534,52 @@ CREATE TRIGGER upd_Employee_Per_Diem BEFORE INSERT OR UPDATE ON Employee_Per_Die
 
 CREATE OR REPLACE FUNCTION process_ledger(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	isposted boolean;
-	ledger_diff real;
-	msg varchar(120);
+	v_journal_id			integer;
+	v_account_id			integer;
+	v_period_id				integer;
+	v_is_posted				boolean;
+	v_opened				boolean;
+	v_closed				boolean;
+	ledger_diff				real;
+	msg						varchar(120);
 BEGIN
 
-	SELECT is_posted INTO isposted
+	SELECT period_id, is_posted, opened, closed INTO v_period_id, v_is_posted, v_opened, v_closed
 	FROM Periods
-	WHERE (period_id = CAST($1 as int));
+	WHERE (period_id = $1::int);
 
 	SELECT abs(sum(dr_amt) - sum(cr_amt)) INTO ledger_diff
 	FROM vw_payroll_ledger
-	WHERE (period_id = CAST($1 as int));
+	WHERE (period_id = v_period_id);
+	
+	SELECT accounts.account_id INTO v_account_id
+	FROM vw_payroll_ledger LEFT JOIN accounts ON (vw_payroll_ledger.gl_payroll_account = accounts.account_no::text)
+		AND (vw_payroll_ledger.org_id = accounts.org_id)
+	WHERE (vw_payroll_ledger.period_id = v_period_id);
+	
+	IF(v_is_posted = true)THEN
+		msg := 'The payroll for this period is already posted';
+	ELSIF(ledger_diff < 1) THEN
+		msg := 'The ledger is not balanced';
+	ELSIF((v_opened = false) OR (v_closed = true)) THEN
+		msg := 'Transaction period has to be opened and not closed.';
+	ELSIF(v_account_id is not null) THEN
+		msg := 'Ensure the accounts match the ledger accounts';
+	ELSE
+		v_journal_id := nextval('journals_journal_id_seq');
+		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
+		VALUES (rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
 
-	msg := 'Payroll Ledger not posted';
-	IF((isposted = false) AND (ledger_diff < 5)) THEN
+		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+
 		INSERT INTO payroll_ledger (period_id, posting_date, description, payroll_account, dr_amt, cr_amt)
 		SELECT period_id, end_date, description, gl_payroll_account, ROUND(CAST(dr_amt as numeric), 2), ROUND(CAST(cr_amt as numeric), 2)
 		FROM vw_payroll_ledger
-		WHERE (period_id = CAST($1 as int));
+		WHERE (period_id = v_period_id);
 
 		UPDATE Periods SET is_posted = true
-		WHERE (period_id = CAST($1 as int));
+		WHERE (period_id = v_period_id);
 
 		msg := 'Payroll Ledger Processed';
 	END IF;

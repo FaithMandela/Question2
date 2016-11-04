@@ -20,13 +20,16 @@
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="filterid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_loans.currency_name,vw_loans.loan_type_id, vw_loans.loan_type_name,vw_loans.entity_id,vw_loans.entity_name,vw_loans.loan_id,
 vw_loans.principle,vw_loans.monthly_repayment,vw_loans.reducing_balance,vw_loans.repayment_period, vw_loans.application_date,vw_loans.approve_status,vw_loans.initial_payment,
 vw_loans.loan_date,vw_loans.details,vw_loans.interest,vw_loans.repayment_amount
 ,vw_loans.total_repayment,vw_loans.total_interest,vw_loans.loan_balance,vw_loans.calc_repayment_period
 from vw_loans
-WHERE (vw_loans.approve_status = 'Approved')
+WHERE (vw_loans.approve_status = 'Approved' and filterid='$P!{entity_id}')
 $P!{organd}
 ORDER BY vw_loans.loan_type_name;]]>
 	</queryString>
@@ -159,9 +162,7 @@ ORDER BY vw_loans.loan_type_name;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Interest
-%
-]]></text>
+					<text><![CDATA[Interest%]]></text>
 				</staticText>
 				<staticText>
 					<reportElement key="element-90" x="414" y="25" width="59" height="44" forecolor="#000000" uuid="d55b5d82-1ee8-437f-ba9c-16ff2763c999"/>
@@ -200,7 +201,7 @@ ORDER BY vw_loans.loan_type_name;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Calculated Monthly Repayment ]]></text>
+					<text><![CDATA[Amount]]></text>
 				</staticText>
 				<staticText>
 					<reportElement key="element-90" x="650" y="25" width="59" height="44" forecolor="#000000" uuid="2fde275c-a0d3-4de3-8f5b-1316b7abfced"/>

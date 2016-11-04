@@ -761,10 +761,10 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION post_transaction(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	rec RECORD;
-	periodid INTEGER;
-	journalid INTEGER;
-	msg varchar(120);
+	rec					RECORD;
+	v_period_id			int;
+	v_journal_id		int;
+	msg					varchar(120);
 BEGIN
 	SELECT org_id, department_id, transaction_id, transaction_type_id, transaction_type_name as tx_name, 
 		transaction_status_id, journal_id, gl_bank_account_id, currency_id, exchange_rate,
@@ -774,8 +774,8 @@ BEGIN
 	FROM vw_transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
-	periodid := get_open_period(rec.transaction_date);
-	IF(periodid is null) THEN
+	v_period_id := get_open_period(rec.transaction_date);
+	IF(v_period_id is null) THEN
 		msg := 'No active period to post.';
 		RAISE EXCEPTION 'No active period to post.';
 	ELSIF(rec.journal_id is not null) THEN
@@ -791,39 +791,39 @@ BEGIN
 		msg := 'Transaction not for posting.';
 		RAISE EXCEPTION 'Transaction not for posting.';
 	ELSE
+		v_journal_id := nextval('journals_journal_id_seq');
 		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
-		VALUES (rec.org_id, rec.department_id, rec.currency_id, periodid, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
-		journalid := currval('journals_journal_id_seq');
-
+		VALUES (rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
+		
 		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+		VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 
 		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 		ELSIF((rec.transaction_type_id = 21) or (rec.transaction_type_id = 22)) THEN
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.entity_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 			
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 			
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 		ELSE
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			SELECT org_id, journalid, trans_account_id, full_debit_amount, full_credit_amount, rec.tx_name || ' - ' || item_name
+			SELECT org_id, v_journal_id, trans_account_id, full_debit_amount, full_credit_amount, rec.tx_name || ' - ' || item_name
 			FROM vw_transaction_details
 			WHERE (transaction_id = rec.transaction_id) AND (full_amount > 0);
 
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			SELECT org_id, journalid, tax_account_id, tax_debit_amount, tax_credit_amount, rec.tx_name || ' - ' || item_name
+			SELECT org_id, v_journal_id, tax_account_id, tax_debit_amount, tax_credit_amount, rec.tx_name || ' - ' || item_name
 			FROM vw_transaction_details
 			WHERE (transaction_id = rec.transaction_id) AND (full_tax_amount > 0);
 		END IF;
 
-		UPDATE transactions SET journal_id = journalid WHERE (transaction_id = rec.transaction_id);
-		msg := process_journal(CAST(journalid as varchar),'0','0');
+		UPDATE transactions SET journal_id = v_journal_id WHERE (transaction_id = rec.transaction_id);
+		msg := process_journal(CAST(v_journal_id as varchar),'0','0');
 	END IF;
 
 	return msg;

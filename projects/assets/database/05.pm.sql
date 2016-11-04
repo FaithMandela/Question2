@@ -156,7 +156,7 @@ CREATE VIEW vw_pm_checklist AS
 		vw_pm_schedule.pm_quarter_id, vw_pm_schedule.qperiod_year,
 		vw_pm_schedule.qstart_date, vw_pm_schedule.qstop_date, vw_pm_schedule.qcompleted,
 		vw_pm_schedule.pm_schedule_id, vw_pm_schedule.start_date, vw_pm_schedule.end_date, 
-		vw_pm_schedule.pm_group, vw_pm_schedule.date_done,
+		vw_pm_schedule.pm_group, vw_pm_schedule.date_done, vw_pm_schedule.completed,
 
 		entitys.entity_id, entitys.entity_name, 
 
@@ -208,7 +208,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE VIEW vw_pm_schedule_a AS
-	SELECT vw_pm_schedule.pm_schedule_id, vw_pm_schedule.pm_quarter_id,
+	SELECT vw_pm_schedule.pm_schedule_id, vw_pm_schedule.pm_quarter_id, vw_pm_schedule.completed,
 		to_char(vw_pm_schedule.start_date, 'DD/MM/YYYY') as schedule_date, vw_pm_schedule.client_name, vw_pm_schedule.town, 
 		(CASE WHEN vw_pm_schedule.completed = true THEN to_char(vw_pm_schedule.date_done, 'DD/MM/YYYY') ELSE 'Not Done' END) as pm_status,
 		trim((CASE WHEN (SELECT count(pm_checklist.checklistid) FROM pm_checklist WHERE pm_checklist.pm_schedule_id = vw_pm_schedule.pm_schedule_id) = 0 THEN '' ELSE 'Equipment' END) 
@@ -253,7 +253,8 @@ CREATE VIEW vw_pms_assets AS
 		vw_pm_assets.checklistid, vw_pm_assets.pm_schedule_id, vw_pm_assets.pm_serial_number,
 		pm_schedule.pm_quarter_id, pm_schedule.client_id, pm_schedule.date_done
 	FROM asset_types INNER JOIN vw_pm_assets ON asset_types.asset_type_id = vw_pm_assets.pm_asset_type_id
-		INNER JOIN pm_schedule ON vw_pm_assets.pm_schedule_id = pm_schedule.pm_schedule_id;
+		INNER JOIN pm_schedule ON vw_pm_assets.pm_schedule_id = pm_schedule.pm_schedule_id
+	WHERE (pm_schedule.completed = true);
 		
 		
 SELECT aa.checklistid, aa.pm_schedule_id, aa.date_done,

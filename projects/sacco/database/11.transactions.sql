@@ -6,9 +6,26 @@ CREATE TABLE stores (
 );
 CREATE INDEX stores_org_id ON stores (org_id);
 
+CREATE TABLE bank_accounts (
+	bank_account_id			serial primary key,
+	org_id					integer references orgs,
+	bank_branch_id			integer references bank_branch,
+	account_id				integer references accounts,
+	currency_id				integer references currency,
+	bank_account_name		varchar(120),
+	bank_account_number		varchar(50),
+    narrative				varchar(240),
+	is_default				boolean default false not null,
+	is_active				boolean default true not null,
+    details					text
+);
+CREATE INDEX bank_accounts_org_id ON bank_accounts (org_id);
+CREATE INDEX bank_accounts_bank_branch_id ON bank_accounts (bank_branch_id);
+CREATE INDEX bank_accounts_account_id ON bank_accounts (account_id);
+CREATE INDEX bank_accounts_currency_id ON bank_accounts (currency_id);
 
 
-
+--- from here
 CREATE TABLE item_category (
 	item_category_id		serial primary key,
 	org_id					integer references orgs,
@@ -121,7 +138,7 @@ INSERT INTO transaction_status (transaction_status_id, transaction_status_name) 
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (2, 'Completed');
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (3, 'Processed');
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (4, 'Archive');
-
+-- here
 CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,
 	account_id				integer references accounts,
@@ -176,6 +193,7 @@ CREATE TABLE transactions (
     narrative				varchar(120),
     details					text
 );
+--help
 CREATE INDEX transactions_entity_id ON transactions (entity_id);
 CREATE INDEX transactions_transaction_type_id ON transactions (transaction_type_id);
 CREATE INDEX transactions_bank_account_id ON transactions (bank_account_id);
@@ -217,13 +235,15 @@ CREATE TABLE transaction_links (
 	quantity				integer default 0  not null,
 	narrative				varchar(240)
 );
+--here
+
 CREATE INDEX transaction_links_org_id ON transaction_links (org_id);
 CREATE INDEX transaction_links_transaction_id ON transaction_links (transaction_id);
 CREATE INDEX transaction_links_transaction_to ON transaction_links (transaction_to);
 CREATE INDEX transaction_links_transaction_detail_id ON transaction_links (transaction_detail_id);
 CREATE INDEX transaction_links_transaction_detail_to ON transaction_links (transaction_detail_to);
 
-drop view vw_bank_accounts;
+
 CREATE VIEW vw_bank_accounts AS
 	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
 		vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name,
@@ -289,102 +309,45 @@ CREATE VIEW vw_transactions AS
 		LEFT JOIN vw_bank_accounts ON vw_bank_accounts.bank_account_id = transactions.bank_account_id
 		LEFT JOIN departments ON transactions.department_id = departments.department_id;
 
-CREATE OR REPLACE VIEW vw_trx AS 
- SELECT vw_orgs.org_id,
-    vw_orgs.org_name,
-    vw_orgs.is_default AS org_is_default,
-    vw_orgs.is_active AS org_is_active,
-    vw_orgs.logo AS org_logo,
-    vw_orgs.org_sys_country_id,
-    vw_orgs.org_sys_country_name,
-    vw_orgs.org_address_id,
-    vw_orgs.org_table_name,
-    vw_orgs.org_post_office_box,
-    vw_orgs.org_postal_code,
-    vw_orgs.org_street,
-    vw_orgs.org_town,
-    vw_orgs.org_phone_number,
-    vw_orgs.org_extension,
-    vw_orgs.org_mobile,
-    vw_orgs.org_fax,
-    vw_orgs.org_email,
-    vw_orgs.org_website,
-    vw_entitys.address_id,
-    vw_entitys.address_name,
-    vw_entitys.sys_country_id,
-    vw_entitys.sys_country_name,
-    vw_entitys.table_name,
-    vw_entitys.is_default,
-    vw_entitys.post_office_box,
-    vw_entitys.postal_code,
-    vw_entitys.premises,
-    vw_entitys.street,
-    vw_entitys.town,
-    vw_entitys.phone_number,
-    vw_entitys.extension,
-    vw_entitys.mobile,
-    vw_entitys.fax,
-    vw_entitys.email,
-    vw_entitys.website,
-    vw_entitys.entity_id,
-    vw_entitys.entity_name,
-    vw_entitys.user_name,
-    vw_entitys.super_user,
-    vw_entitys.date_enroled,
-    vw_entitys.is_active,
-    vw_entitys.entity_type_id,
-    vw_entitys.entity_type_name,
-    vw_entitys.entity_role,
-    vw_entitys.use_key,
-    transaction_types.transaction_type_id,
-    transaction_types.transaction_type_name,
-    transaction_types.document_prefix,
-    transaction_types.for_sales,
-    transaction_types.for_posting,
-    transaction_status.transaction_status_id,
-    transaction_status.transaction_status_name,
-    currency.currency_id,
-    currency.currency_name,
-    currency.currency_symbol,
-    departments.department_id,
-    departments.department_name,
-    transactions.journal_id,
-    transactions.bank_account_id,
-    transactions.transaction_id,
-    transactions.transaction_date,
-    transactions.transaction_amount,
-    transactions.application_date,
-    transactions.approve_status,
-    transactions.workflow_table_id,
-    transactions.action_date,
-    transactions.narrative,
-    transactions.document_number,
-    transactions.payment_number,
-    transactions.order_number,
-    transactions.exchange_rate,
-    transactions.payment_terms,
-    transactions.job,
-    transactions.details,
-        CASE
-            WHEN transactions.journal_id IS NULL THEN 'Not Posted'::text
-            ELSE 'Posted'::text
-        END AS posted,
-        CASE
-            WHEN transactions.transaction_type_id = 2 OR transactions.transaction_type_id = 8 OR transactions.transaction_type_id = 10 THEN transactions.transaction_amount
-            ELSE 0::real
-        END AS debit_amount,
-        CASE
-            WHEN transactions.transaction_type_id = 5 OR transactions.transaction_type_id = 7 OR transactions.transaction_type_id = 9 THEN transactions.transaction_amount
-            ELSE 0::real
-        END AS credit_amount
-   FROM transactions
-     JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
-     JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
-     JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
-     JOIN currency ON transactions.currency_id = currency.currency_id
-     LEFT JOIN vw_entitys ON transactions.entity_id = vw_entitys.entity_id
-     LEFT JOIN departments ON transactions.department_id = departments.department_id;
-     
+CREATE VIEW vw_trx AS
+	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
+		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
+		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
+		vw_orgs.sys_country_id as org_sys_country_id, vw_orgs.sys_country_name as org_sys_country_name, 
+		vw_orgs.address_id as org_address_id, vw_orgs.table_name as org_table_name,
+		vw_orgs.post_office_box as org_post_office_box, vw_orgs.postal_code as org_postal_code, 
+		vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
+		vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
+		vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
+		vw_entitys.address_id, vw_entitys.address_name,
+		vw_entitys.sys_country_id, vw_entitys.sys_country_name, vw_entitys.table_name, vw_entitys.is_default,
+		vw_entitys.post_office_box, vw_entitys.postal_code, vw_entitys.premises, vw_entitys.street, vw_entitys.town, 
+		vw_entitys.phone_number, vw_entitys.extension, vw_entitys.mobile, vw_entitys.fax, vw_entitys.email, vw_entitys.website,
+		vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.User_name, vw_entitys.Super_User, vw_entitys.attention, 
+		vw_entitys.Date_Enroled, vw_entitys.Is_Active, vw_entitys.entity_type_id, vw_entitys.entity_type_name,
+		vw_entitys.entity_role, vw_entitys.use_key,
+		transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
+		transaction_types.document_prefix, transaction_types.for_sales, transaction_types.for_posting,
+		transaction_status.transaction_status_id, transaction_status.transaction_status_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		departments.department_id, departments.department_name,
+		transactions.journal_id, transactions.bank_account_id,
+		transactions.transaction_id, transactions.transaction_date, transactions.transaction_amount,
+		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
+		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
+		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
+		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) 
+			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) 
+			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
+	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
+		INNER JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
+		INNER JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
+		INNER JOIN currency ON transactions.currency_id = currency.currency_id
+		LEFT JOIN vw_entitys ON transactions.entity_id = vw_entitys.entity_id
+		LEFT JOIN departments ON transactions.department_id = departments.department_id;
+
 CREATE VIEW vw_trx_sum AS
 	SELECT transaction_details.transaction_id, 
 		SUM(transaction_details.quantity * transaction_details.amount) as total_amount,
@@ -462,10 +425,10 @@ CREATE VIEW vw_tx_ledger AS
 		ELSE 0::real END) as cr_amount
 		
 	FROM transactions
-		INNER JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
-		INNER JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
 		INNER JOIN entitys ON transactions.entity_id = entitys.entity_id
+		LEFT JOIN bank_accounts ON transactions.bank_account_id = bank_accounts.bank_account_id
+		LEFT JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id
 	WHERE transactions.tx_type is not null;
 	
 CREATE OR REPLACE FUNCTION prev_balance(date) RETURNS real AS $$
@@ -642,18 +605,31 @@ BEGIN
 			FROM orgs
 			WHERE (org_id = NEW.org_id);
 		END IF;
+		
+		IF(NEW.payment_date is null) AND (NEW.transaction_date is not null)THEN
+			NEW.payment_date := NEW.transaction_date;
+		END IF;
 	ELSE
 		IF ((OLD.approve_status = 'Draft') AND (NEW.completed = true)) THEN
 			NEW.approve_status := 'Completed';
 		END IF;
 	
 		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
+		ELSIF ((OLD.approve_status != 'Completed') AND (NEW.approve_status = 'Completed')) THEN
+			NEW.completed = true;
 		ELSIF ((OLD.approve_status = 'Completed') AND (NEW.approve_status != 'Completed')) THEN
 		ELSIF ((OLD.journal_id is not null) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already posted no changes are allowed.', NEW.transaction_id;
 		ELSIF ((OLD.transaction_status_id > 1) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already completed no changes are allowed.', NEW.transaction_id;
 		END IF;
+	END IF;
+	
+	IF(NEW.transaction_type_id = 7)THEN
+		NEW.tx_type := 1;
+	END IF;
+	IF(NEW.transaction_type_id = 8)THEN
+		NEW.tx_type := -1;
 	END IF;
 
 	RETURN NEW;
@@ -908,7 +884,8 @@ DECLARE
 	msg 		varchar(120);
 BEGIN
 	app_id := CAST($1 as int);
-	SELECT approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, approvals.review_advice,
+	SELECT approvals.approval_id, approvals.org_id, approvals.table_name, approvals.table_id, 
+		approvals.approval_level, approvals.review_advice,
 		workflow_phases.workflow_phase_id, workflow_phases.workflow_id, workflow_phases.return_level INTO reca
 	FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
 	WHERE (approvals.approval_id = app_id);
@@ -936,7 +913,7 @@ BEGIN
 		SELECT min(approvals.approval_level) INTO min_level
 		FROM approvals INNER JOIN workflow_phases ON approvals.workflow_phase_id = workflow_phases.workflow_phase_id
 		WHERE (approvals.table_id = reca.table_id) AND (approvals.approve_status = 'Draft')
-			AND (workflow_phases.advice = false) AND (workflow_phases.notice = false);
+			AND (workflow_phases.advice = false);
 		
 		IF(min_level is null)THEN
 			mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Approved') 
@@ -946,16 +923,27 @@ BEGIN
 
 			INSERT INTO sys_emailed (table_id, table_name, email_type)
 			VALUES (reca.table_id, 'vw_workflow_approvals', 1);
-		ELSE
-			FOR recb IN SELECT workflow_phase_id, advice
+			
+			FOR recb IN SELECT workflow_phase_id, advice, notice
 			FROM workflow_phases
-			WHERE (workflow_id = reca.workflow_id) AND (approval_level = min_level) LOOP
+			WHERE (workflow_id = reca.workflow_id) AND (approval_level >= reca.approval_level) LOOP
 				IF (recb.advice = true) THEN
 					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
 					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
+				END IF;
+			END LOOP;
+		ELSE
+			FOR recb IN SELECT workflow_phase_id, advice, notice
+			FROM workflow_phases
+			WHERE (workflow_id = reca.workflow_id) AND (approval_level <= min_level) LOOP
+				IF (recb.advice = true) THEN
+					UPDATE approvals SET approve_status = 'Approved', action_date = now(), completion_date = now()
+					WHERE (workflow_phase_id = recb.workflow_phase_id) 
+						AND (approve_status = 'Draft') AND (table_id = reca.table_id);
 				ELSE
 					UPDATE approvals SET approve_status = 'Completed', completion_date = now()
-					WHERE (workflow_phase_id = recb.workflow_phase_id) AND (table_id = reca.table_id);
+					WHERE (workflow_phase_id = recb.workflow_phase_id) 
+						AND (approve_status = 'Draft') AND (table_id = reca.table_id);
 				END IF;
 			END LOOP;
 		END IF;
@@ -975,23 +963,47 @@ BEGIN
 	ELSIF ($3 = '4') AND (reca.return_level = 0) THEN
 		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
 		WHERE approval_id = app_id;
-		
-		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Draft') 
+
+		mysql := 'UPDATE ' || reca.table_name || ' SET approve_status = ' || quote_literal('Draft')
 		|| ', action_date = now()'
 		|| ' WHERE workflow_table_id = ' || reca.table_id;
 		EXECUTE mysql;
-		
+
 		msg := 'Forwarded for review';
 	ELSIF ($3 = '4') AND (reca.return_level <> 0) THEN
+		UPDATE approvals SET approve_status = 'Review',  action_date = now(), app_entity_id = CAST($2 as int)
+		WHERE approval_id = app_id;
+
 		INSERT INTO approvals (org_id, workflow_phase_id, table_name, table_id, org_entity_id, escalation_days, escalation_hours, approval_level, approval_narrative, to_be_done, approve_status)
 		SELECT org_id, workflow_phase_id, reca.table_name, reca.table_id, CAST($2 as int), escalation_days, escalation_hours, approval_level, phase_narrative, reca.review_advice, 'Completed'
 		FROM vw_workflow_entitys
 		WHERE (workflow_id = reca.workflow_id) AND (approval_level = reca.return_level)
 		ORDER BY workflow_phase_id;
+
+		UPDATE approvals SET approve_status = 'Draft' WHERE approval_id = app_id;
+
 		msg := 'Forwarded to owner for review';
 	END IF;
 
 	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_balance(integer, varchar(12)) RETURNS real AS $$
+DECLARE
+	v_bal		real;
+BEGIN
+
+	SELECT COALESCE(sum(debit_amount - credit_amount), 0) INTO v_bal
+	FROM vw_trx
+	WHERE (vw_trx.approve_status = 'Approved')
+		AND (vw_trx.for_posting = true)
+		AND (vw_trx.entity_id = $1)
+		AND (vw_trx.transaction_date < $2::date);
+		
+		
+	RETURN v_bal;
 END;
 $$ LANGUAGE plpgsql;
 

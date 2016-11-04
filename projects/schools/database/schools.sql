@@ -249,3 +249,49 @@ CREATE INDEX applicant_student_id on applicant(student_id);
 CREATE INDEX applicant_stream_class_id on applicant(stream_class_id );
 CREATE INDEX applicant_session_id on applicant(session_id );
 
+
+
+
+
+
+CREATE OR REPLACE FUNCTION ins_students() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+	rec 			RECORD;
+	v_entity_id		integer;
+DECLARE
+BEGIN
+	IF (TG_OP = 'INSERT') THEN
+	
+		IF (New.student_name is null)THEN
+			RAISE EXCEPTION 'You have to enter your full name';
+			ELSEIF (NEW.email is null) THEN
+			RAISE EXCEPTION 'Fill your current email';
+			ELSIF(NEW.fathers_name is null) THEN
+			RAISE EXCEPTION 'You have need to enter either father or mothers name';
+			ELSEIF(NEW.fathers_tel_no is null) THEN
+			RAISE EXCEPTION 'Fathers contact must be filled';
+			ELSEIF (NEW.mothers_name is null) THEN
+			RAISE EXCEPTION 'Kindly attach mothers name' ;
+			ELSIF (NEW.mothers_tel_no is null)THEN
+			RAISE EXCEPTION 'You need to enter mothers telephone number';
+			
+			ELSEIF ( date_part('year', NEW.birth_date) < 1991 )THEN
+			RAISE EXCEPTION 'You are too old for school';
+		END IF;
+			
+		NEW.entity_id := nextval('entitys_entity_id_seq');
+		NEW.student_id := nextval('students_student_id_seq');
+		
+		INSERT INTO entitys(entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details)
+			VALUES (New.entity_id,New.student_name,New.org_id::INTEGER,0,NEW.email,NEW.email,NEW.current_contact,'student',NEW.registrar_details) RETURNING entity_id INTO v_entity_id;
+			NEW.entity_id := v_entity_id;
+	END IF;
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+ 
+CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
+  FOR EACH ROW  EXECUTE PROCEDURE ins_students();	
+	

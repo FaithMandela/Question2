@@ -486,5 +486,3 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
-
-

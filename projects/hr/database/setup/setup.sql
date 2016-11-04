@@ -60,7 +60,8 @@ BEGIN
 		
 		FOR rec IN SELECT employee_month_id, exchange_rate
 			FROM employee_month 
-			WHERE (period_id = v_period_id) LOOP
+			WHERE (period_id = v_period_id) 
+		LOOP
 			
 			IF(adj.formural is not null)THEN
 				EXECUTE 'SELECT ' || adj.formural || ' FROM employee_month WHERE employee_month_id = ' || rec.employee_month_id
@@ -83,7 +84,8 @@ BEGIN
 	ELSIF ($3 = '2') THEN	
 		FOR rec IN SELECT entity_id
 			FROM employees
-			WHERE (active = true) AND (org_id = adj.org_id) LOOP
+			WHERE (active = true) AND (org_id = adj.org_id) 
+		LOOP
 			
 			SELECT default_adjustment_id INTO v_default_adjustment_id
 			FROM default_adjustments
@@ -252,14 +254,15 @@ BEGIN
 			
 		WHERE (applications.application_id = v_application_id);
 		
-		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Approved'
+		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Completed'
 		WHERE (application_id = v_application_id);
 			
 		msg := 'Employee added';
 	ELSIF(v_employee_id is null)THEN
 		UPDATE applications SET employee_id = v_employee_id, 
 			department_role_id = intake.department_role_id, pay_scale_id = intake.pay_scale_id, 
-			pay_group_id = intake.pay_group_id, location_id = intake.location_id
+			pay_group_id = intake.pay_group_id, location_id = intake.location_id,
+			approve_status = 'Completed'
 		FROM intake  
 		WHERE (applications.intake_id = intake.intake_id) AND (applications.application_id = v_application_id);
 		
@@ -292,6 +295,10 @@ BEGIN
 	SELECT org_id INTO v_org_id
 	FROM fiscal_years
 	WHERE (fiscal_year_id = $1::int);
+	
+	UPDATE periods SET fiscal_year_id = fiscal_years.fiscal_year_id
+	FROM fiscal_years WHERE (fiscal_years.fiscal_year_id = $1::int)
+		AND (fiscal_years.fiscal_year_start <= start_date) AND (fiscal_years.fiscal_year_end >= end_date);
 	
 	SELECT period_id INTO v_period_id
 	FROM periods
@@ -775,6 +782,34 @@ $_$;
 ALTER FUNCTION public.close_issue(character varying, character varying, character varying, character varying) OWNER TO postgres;
 
 --
+-- Name: close_periods(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION close_periods(character varying, character varying, character varying) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE
+	msg 					varchar(120);
+BEGIN
+	
+	IF(v_period_id is null)THEN
+		INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
+		SELECT $1::int, v_org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
+		FROM (SELECT CAST(generate_series(fiscal_year_start, fiscal_year_end, '1 month') as date) as period_start
+			FROM fiscal_years WHERE fiscal_year_id = $1::int) as a;
+		msg := 'Months for the year generated';
+	ELSE
+		msg := 'Months year already created';
+	END IF;
+
+	RETURN msg;
+END;
+$_$;
+
+
+ALTER FUNCTION public.close_periods(character varying, character varying, character varying) OWNER TO postgres;
+
+--
 -- Name: close_year(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -907,24 +942,31 @@ CREATE FUNCTION compute_loans(character varying, character varying, character va
     LANGUAGE plpgsql
     AS $_$
 DECLARE
-	v_period_id			integer;
-	v_org_id			integer;
-	msg					varchar(120);
+	rec							RECORD;
+	v_period_id					integer;
+	v_org_id					integer;
+	msg							varchar(120);
 BEGIN
 
 	SELECT period_id, org_id INTO v_period_id, v_org_id
 	FROM periods
 	WHERE (period_id = $1::integer);
 	
-	DELETE FROM loan_monthly WHERE period_id = v_period_id;
-
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+	FOR rec IN SELECT loan_month_id, employee_adjustment_id FROM loan_monthly WHERE period_id = v_period_id
+	LOOP
+		DELETE FROM loan_monthly WHERE loan_month_id = rec.loan_month_id;
+		DELETE FROM employee_adjustments WHERE employee_adjustment_id = rec.employee_adjustment_id;
+	END LOOP;
+	
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+	SELECT v_period_id, org_id, loan_id, (loan_balance * interest / 1200), (loan_balance * interest / 1200),
+		(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 	FROM vw_loans 
 	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
 
-	INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-	SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+	INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+	SELECT v_period_id, org_id, loan_id, (principle * interest / 1200), (principle * interest / 1200),
+		(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 	FROM vw_loans 
 	WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
 
@@ -1204,6 +1246,40 @@ $_$;
 ALTER FUNCTION public.emailed_dob(integer, character varying) OWNER TO postgres;
 
 --
+-- Name: farm_payroll(character varying, character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION farm_payroll(character varying, character varying, character varying, character varying) RETURNS character varying
+    LANGUAGE plpgsql
+    AS $_$
+DECLARE
+	rec 		RECORD;
+	msg 		varchar(120);
+BEGIN
+	IF ($3 = '1') THEN
+		FOR rec IN SELECT works.entity_id, sum(works.work_amount) as sum_amount
+			FROM works INNER JOIN day_works ON works.day_work_id = day_works.day_work_id
+			WHERE (day_works.period_id = $1::int) 
+			GROUP BY works.entity_id
+		LOOP
+		
+			UPDATE employee_month SET basic_pay = rec.sum_amount
+			WHERE (entity_id = rec.entity_id) 
+				AND (period_id = $1::int);
+				
+		END LOOP;
+		
+		msg := 'Payroll Processed';
+	END IF;
+
+	return msg;
+END;
+$_$;
+
+
+ALTER FUNCTION public.farm_payroll(character varying, character varying, character varying, character varying) OWNER TO postgres;
+
+--
 -- Name: first_password(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -1270,13 +1346,15 @@ BEGIN
 		FROM employees
 		WHERE (employees.active = true) and (employees.org_id = v_org_id);
 
-		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-		SELECT v_period_id, org_id, loan_id, monthly_repayment, (loan_balance * interest / 1200), (loan_balance * interest / 1200)
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+		SELECT v_period_id, org_id, loan_id, (loan_balance * interest / 1200), (loan_balance * interest / 1200),
+			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  true) AND (org_id = v_org_id);
 
-		INSERT INTO loan_monthly (period_id, org_id, loan_id, repayment, interest_amount, interest_paid)
-		SELECT v_period_id, org_id, loan_id, monthly_repayment, (principle * interest / 1200), (principle * interest / 1200)
+		INSERT INTO loan_monthly (period_id, org_id, loan_id, interest_amount, interest_paid, repayment)
+		SELECT v_period_id, org_id, loan_id, (principle * interest / 1200), (principle * interest / 1200),
+			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
 
@@ -1882,6 +1960,22 @@ $_$;
 
 
 ALTER FUNCTION public.get_leave_days(date, date, integer) OWNER TO postgres;
+
+--
+-- Name: get_leave_taken(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION get_leave_taken(integer, integer) RETURNS real
+    LANGUAGE sql
+    AS $_$
+	SELECT COALESCE(sum(leave_days), 0)
+	FROM employee_leave
+	WHERE (approve_status = 'Approved') AND (to_char(leave_from, 'YYYY') = to_char(current_date, 'YYYY'))
+		AND (entity_id = $1) AND (leave_type_id = $2);
+$_$;
+
+
+ALTER FUNCTION public.get_leave_taken(integer, integer) OWNER TO postgres;
 
 --
 -- Name: get_loan_period(real, real, integer, real); Type: FUNCTION; Schema: public; Owner: postgres
@@ -2596,8 +2690,9 @@ CREATE FUNCTION ins_applicants() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
-	v_org_id			integer;
-	v_entity_id			integer;
+	v_org_id				integer;
+	v_entity_id				integer;
+	v_entity_type_id		integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		
@@ -2607,14 +2702,22 @@ BEGIN
 			WHERE (trim(lower(user_name)) = trim(lower(NEW.applicant_email)));
 				
 			IF(v_entity_id is null)THEN
-				SELECT min(org_id) INTO v_org_id
-				FROM orgs WHERE (is_default = true);
+				v_org_id := NEW.org_id;
+				IF(v_org_id is null)THEN
+					SELECT min(org_id) INTO v_org_id
+					FROM orgs WHERE (is_default = true);
+				END IF;
+				
+				SELECT entity_type_id INTO v_entity_type_id
+				FROM entity_types 
+				WHERE (org_id = v_org_id) AND (use_key = 4);
 
 				NEW.entity_id := nextval('entitys_entity_id_seq');
 
-				INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, 
+				INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+					entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
-				VALUES (NEW.entity_id, v_org_id, 4, 
+				VALUES (NEW.entity_id, v_org_id, v_entity_type_id, 4, 
 					(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 					lower(NEW.applicant_email), lower(NEW.applicant_email), NEW.applicant_phone, 'applicant');
 			ELSE
@@ -2635,6 +2738,29 @@ $$;
 
 
 ALTER FUNCTION public.ins_applicants() OWNER TO postgres;
+
+--
+-- Name: ins_applications(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ins_applications() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+	typeid	integer;
+BEGIN
+	
+	IF ((NEW.entity_id is null) AND (NEW.employee_id is not null)) THEN
+		NEW.entity_id := NEW.employee_id;
+		NEW.approve_status := 'Completed';
+	END IF;
+
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.ins_applications() OWNER TO postgres;
 
 --
 -- Name: ins_applications(character varying, character varying, character varying); Type: FUNCTION; Schema: public; Owner: postgres
@@ -3064,6 +3190,7 @@ CREATE FUNCTION ins_employees() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
 DECLARE
+	v_entity_type_id	integer;
 	v_use_type			integer;
 	v_org_sufix 		varchar(4);
 	v_first_password	varchar(12);
@@ -3079,9 +3206,13 @@ BEGIN
 
 			NEW.entity_id := nextval('entitys_entity_id_seq');
 
-			IF(NEW.Employee_ID is null) THEN
-				NEW.Employee_ID := NEW.entity_id;
+			IF(NEW.employee_id is null) THEN
+				NEW.employee_id := NEW.entity_id;
 			END IF;
+			
+			SELECT entity_type_id INTO v_entity_type_id
+			FROM entity_types 
+			WHERE (org_id = NEW.org_id) AND (use_key = 1);
 
 			v_first_password := first_password();
 			v_user_name := lower(v_org_sufix || '.' || NEW.First_name || '.' || NEW.Surname);
@@ -3091,9 +3222,10 @@ BEGIN
 			WHERE (org_id = NEW.org_id) AND (user_name = v_user_name);
 			IF(v_user_count > 0) THEN v_user_name := v_user_name || v_user_count::varchar; END IF;
 
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, function_role, 
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+				entity_name, user_name, function_role, 
 				first_password, entity_password)
-			VALUES (NEW.entity_id, NEW.org_id, 1, 
+			VALUES (NEW.entity_id, NEW.org_id, v_entity_type_id, 1, 
 				(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 				v_user_name, 'staff',
 				v_first_password, md5(v_first_password));
@@ -3910,6 +4042,33 @@ $$;
 ALTER FUNCTION public.ins_transactions_limit() OWNER TO postgres;
 
 --
+-- Name: ins_works(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION ins_works() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+
+	IF(NEW.work_weight = 0) AND (NEW.work_pay = 0)THEN
+		NEW.work_pay = 1;
+	END IF;
+	
+	SELECT (work_rates.weight_rate * NEW.work_weight + work_rates.work_rate * NEW.work_pay +
+		work_rates.overtime_rate * NEW.overtime + work_rates.special_rate * NEW.special_time) INTO NEW.work_amount
+	
+	FROM work_rates 
+	WHERE work_rate_id = NEW.work_rate_id;
+	
+
+	RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.ins_works() OWNER TO postgres;
+
+--
 -- Name: insa_employee_objectives(); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -3971,17 +4130,19 @@ CREATE FUNCTION job_review_check(character varying, character varying, character
     LANGUAGE plpgsql
     AS $_$
 DECLARE
-	v_self_rating		integer;
-	v_objective_ps		real;
-	sum_ods_ps			real;
-	v_point_check		integer;
-	rec					RECORD;
-	msg 				varchar(120);
+	rec							RECORD;
+	v_rate_objectives			boolean;
+	v_self_rating				integer;
+	v_objective_ps				real;
+	sum_ods_ps					real;
+	v_point_check				integer;
+	msg 						varchar(120);
 BEGIN
 	
 	SELECT sum(objectives.objective_ps) INTO v_objective_ps
 	FROM objectives INNER JOIN evaluation_points ON evaluation_points.objective_id = objectives.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int));
+	
 	SELECT sum(ods_ps) INTO sum_ods_ps
 	FROM objective_details INNER JOIN evaluation_points ON evaluation_points.objective_id = objective_details.objective_id
 	WHERE (evaluation_points.job_review_id = CAST($1 as int));
@@ -3991,15 +4152,20 @@ BEGIN
 	WHERE (evaluation_points.job_review_id = CAST($1 as int))
 		AND (objectives.objective_ps > 0) AND (evaluation_points.points = 0);
 		
-	SELECT self_rating INTO v_self_rating
-	FROM job_reviews
-	WHERE (job_review_id = $1::int);
+	SELECT job_reviews.self_rating, review_category.rate_objectives INTO v_self_rating, v_rate_objectives
+	FROM job_reviews INNER JOIN review_category ON job_reviews.review_category_id = review_category.review_category_id
+	WHERE (job_reviews.job_review_id = $1::int);
 	IF(v_self_rating is null) THEN v_self_rating := 0; END IF;
-	
+		
 	IF(sum_ods_ps is null)THEN
 		sum_ods_ps := 100;
 	END IF;
 	IF(sum_ods_ps = 0)THEN
+		sum_ods_ps := 100;
+	END IF;
+	
+	IF(v_rate_objectives = false)THEN
+		v_objective_ps := 100;
 		sum_ods_ps := 100;
 	END IF;
 
@@ -4249,10 +4415,10 @@ CREATE FUNCTION post_transaction(character varying, character varying, character
     LANGUAGE plpgsql
     AS $_$
 DECLARE
-	rec RECORD;
-	periodid INTEGER;
-	journalid INTEGER;
-	msg varchar(120);
+	rec					RECORD;
+	v_period_id			int;
+	v_journal_id		int;
+	msg					varchar(120);
 BEGIN
 	SELECT org_id, department_id, transaction_id, transaction_type_id, transaction_type_name as tx_name, 
 		transaction_status_id, journal_id, gl_bank_account_id, currency_id, exchange_rate,
@@ -4262,8 +4428,8 @@ BEGIN
 	FROM vw_transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
-	periodid := get_open_period(rec.transaction_date);
-	IF(periodid is null) THEN
+	v_period_id := get_open_period(rec.transaction_date);
+	IF(v_period_id is null) THEN
 		msg := 'No active period to post.';
 		RAISE EXCEPTION 'No active period to post.';
 	ELSIF(rec.journal_id is not null) THEN
@@ -4279,39 +4445,39 @@ BEGIN
 		msg := 'Transaction not for posting.';
 		RAISE EXCEPTION 'Transaction not for posting.';
 	ELSE
+		v_journal_id := nextval('journals_journal_id_seq');
 		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
-		VALUES (rec.org_id, rec.department_id, rec.currency_id, periodid, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
-		journalid := currval('journals_journal_id_seq');
-
+		VALUES (rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
+		
 		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+		VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 
 		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 		ELSIF((rec.transaction_type_id = 21) or (rec.transaction_type_id = 22)) THEN
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.entity_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 			
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 			
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			VALUES (rec.org_id, v_journal_id, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 		ELSE
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			SELECT org_id, journalid, trans_account_id, full_debit_amount, full_credit_amount, rec.tx_name || ' - ' || item_name
+			SELECT org_id, v_journal_id, trans_account_id, full_debit_amount, full_credit_amount, rec.tx_name || ' - ' || item_name
 			FROM vw_transaction_details
 			WHERE (transaction_id = rec.transaction_id) AND (full_amount > 0);
 
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			SELECT org_id, journalid, tax_account_id, tax_debit_amount, tax_credit_amount, rec.tx_name || ' - ' || item_name
+			SELECT org_id, v_journal_id, tax_account_id, tax_debit_amount, tax_credit_amount, rec.tx_name || ' - ' || item_name
 			FROM vw_transaction_details
 			WHERE (transaction_id = rec.transaction_id) AND (full_tax_amount > 0);
 		END IF;
 
-		UPDATE transactions SET journal_id = journalid WHERE (transaction_id = rec.transaction_id);
-		msg := process_journal(CAST(journalid as varchar),'0','0');
+		UPDATE transactions SET journal_id = v_journal_id WHERE (transaction_id = rec.transaction_id);
+		msg := process_journal(CAST(v_journal_id as varchar),'0','0');
 	END IF;
 
 	return msg;
@@ -4504,28 +4670,52 @@ CREATE FUNCTION process_ledger(character varying, character varying, character v
     LANGUAGE plpgsql
     AS $_$
 DECLARE
-	isposted boolean;
-	ledger_diff real;
-	msg varchar(120);
+	v_journal_id			integer;
+	v_account_id			integer;
+	v_period_id				integer;
+	v_is_posted				boolean;
+	v_opened				boolean;
+	v_closed				boolean;
+	ledger_diff				real;
+	msg						varchar(120);
 BEGIN
 
-	SELECT is_posted INTO isposted
+	SELECT period_id, is_posted, opened, closed INTO v_period_id, v_is_posted, v_opened, v_closed
 	FROM Periods
-	WHERE (period_id = CAST($1 as int));
+	WHERE (period_id = $1::int);
 
 	SELECT abs(sum(dr_amt) - sum(cr_amt)) INTO ledger_diff
 	FROM vw_payroll_ledger
-	WHERE (period_id = CAST($1 as int));
+	WHERE (period_id = v_period_id);
+	
+	SELECT accounts.account_id INTO v_account_id
+	FROM vw_payroll_ledger LEFT JOIN accounts ON (vw_payroll_ledger.gl_payroll_account = accounts.account_no::text)
+		AND (vw_payroll_ledger.org_id = accounts.org_id)
+	WHERE (vw_payroll_ledger.period_id = v_period_id);
+	
+	IF(v_is_posted = true)THEN
+		msg := 'The payroll for this period is already posted';
+	ELSIF(ledger_diff < 1) THEN
+		msg := 'The ledger is not balanced';
+	ELSIF((v_opened = false) OR (v_closed = true)) THEN
+		msg := 'Transaction period has to be opened and not closed.';
+	ELSIF(v_account_id is not null) THEN
+		msg := 'Ensure the accounts match the ledger accounts';
+	ELSE
+		v_journal_id := nextval('journals_journal_id_seq');
+		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
+		VALUES (rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
 
-	msg := 'Payroll Ledger not posted';
-	IF((isposted = false) AND (ledger_diff < 5)) THEN
+		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+
 		INSERT INTO payroll_ledger (period_id, posting_date, description, payroll_account, dr_amt, cr_amt)
 		SELECT period_id, end_date, description, gl_payroll_account, ROUND(CAST(dr_amt as numeric), 2), ROUND(CAST(cr_amt as numeric), 2)
 		FROM vw_payroll_ledger
-		WHERE (period_id = CAST($1 as int));
+		WHERE (period_id = v_period_id);
 
 		UPDATE Periods SET is_posted = true
-		WHERE (period_id = CAST($1 as int));
+		WHERE (period_id = v_period_id);
 
 		msg := 'Payroll Ledger Processed';
 	END IF;
@@ -4545,9 +4735,10 @@ CREATE FUNCTION process_loans(character varying, character varying, character va
     LANGUAGE plpgsql
     AS $_$
 DECLARE
-	rec					RECORD;
-	v_exchange_rate		real;
-	msg					varchar(120);
+	rec							RECORD;
+	v_exchange_rate				real;
+	v_employee_adjustment_id	integer;
+	msg							varchar(120);
 BEGIN
 	
 	FOR rec IN SELECT vw_loan_monthly.loan_month_id, vw_loan_monthly.loan_id, vw_loan_monthly.entity_id, vw_loan_monthly.period_id, 
@@ -4557,9 +4748,11 @@ BEGIN
 		employee_month.employee_month_id, employee_month.org_id, 
 		employee_month.currency_id, employee_month.exchange_rate,
 		adjustments.currency_id as adj_currency_id
-	FROM vw_loan_monthly INNER JOIN employee_month ON (vw_loan_monthly.entity_id = employee_month.entity_id) AND (vw_loan_monthly.period_id = employee_month.period_id)
-		INNER JOIN adjustments ON vw_loan_monthly.adjustment_id = adjustments.adjustment_id
-	WHERE (vw_loan_monthly.period_id = CAST($1 as int)) LOOP
+		
+		FROM vw_loan_monthly INNER JOIN employee_month ON (vw_loan_monthly.entity_id = employee_month.entity_id) AND (vw_loan_monthly.period_id = employee_month.period_id)
+			INNER JOIN adjustments ON vw_loan_monthly.adjustment_id = adjustments.adjustment_id
+		WHERE (vw_loan_monthly.period_id = CAST($1 as int)) 
+	LOOP
 	
 		IF(rec.currency_id = rec.adj_currency_id)THEN
 			v_exchange_rate := 1;
@@ -4568,12 +4761,14 @@ BEGIN
 		END IF;
 
 		IF(rec.employee_adjustment_id is null)THEN
+			v_employee_adjustment_id := nextval('employee_adjustments_employee_adjustment_id_seq');
+			
 			INSERT INTO employee_adjustments (employee_month_id, adjustment_id, adjustment_type, adjustment_factor,
-				amount, balance, in_tax, org_id, exchange_rate)
+				amount, balance, in_tax, org_id, exchange_rate, employee_adjustment_id)
 			VALUES (rec.employee_month_id, rec.adjustment_id, 2, -1,
-				rec.total_deduction, rec.loan_balance, false, rec.org_id, v_exchange_rate);
+				rec.total_deduction, rec.loan_balance, false, rec.org_id, v_exchange_rate, v_employee_adjustment_id);
 
-			UPDATE loan_monthly SET employee_adjustment_id = currval('employee_adjustments_employee_adjustment_id_seq') 
+			UPDATE loan_monthly SET employee_adjustment_id = v_employee_adjustment_id
 			WHERE (loan_month_id = rec.loan_month_id);
 		ELSE
 			UPDATE employee_adjustments SET amount = rec.total_deduction, balance = rec.loan_balance, exchange_rate = v_exchange_rate
@@ -4662,9 +4857,10 @@ BEGIN
 	FROM periods WHERE period_id = $1::int;
 	
 	FOR rec IN SELECT pension_id, entity_id, adjustment_id, contribution_id, 
-       pension_company, pension_number, amount, use_formura, 
-       employer_ps, employer_amount, employer_formural
-	FROM pensions WHERE (active = true) AND (org_id = v_org_id) LOOP
+		pension_company, pension_number, amount, use_formura, 
+		employer_ps, employer_amount, employer_formural
+		FROM pensions WHERE (active = true) AND (org_id = v_org_id) 
+	LOOP
 	
 		SELECT employee_month_id, currency_id, exchange_rate 
 			INTO v_employee_month_id, v_currency_id, v_exchange_rate
@@ -4892,8 +5088,9 @@ BEGIN
 		END IF;
 
 		FOR reca IN SELECT workflows.workflow_id, workflows.table_name, workflows.table_link_field, workflows.table_link_id
-		FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
-		WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) LOOP
+			FROM workflows INNER JOIN entity_subscriptions ON workflows.source_entity_id = entity_subscriptions.entity_type_id
+			WHERE (workflows.table_name = TG_TABLE_NAME) AND (entity_subscriptions.entity_id= NEW.entity_id) 
+		LOOP
 			iswf := false;
 			IF(reca.table_link_field is null)THEN
 				iswf := true;
@@ -4927,31 +5124,6 @@ $$;
 
 
 ALTER FUNCTION public.upd_action() OWNER TO postgres;
-
---
--- Name: upd_applications(); Type: FUNCTION; Schema: public; Owner: postgres
---
-
-CREATE FUNCTION upd_applications() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-DECLARE
-	typeid	integer;
-BEGIN
-	
-	IF (NEW.approve_status = 'Approved') THEN
-		NEW.action_date := now();
-	END IF;
-	IF (NEW.approve_status = 'Rejected') THEN
-		NEW.action_date := now();
-	END IF;
-
-	RETURN NEW;
-END;
-$$;
-
-
-ALTER FUNCTION public.upd_applications() OWNER TO postgres;
 
 --
 -- Name: upd_approvals(); Type: FUNCTION; Schema: public; Owner: postgres
@@ -5570,6 +5742,27 @@ $_$;
 ALTER FUNCTION public.upd_trx_ledger(character varying, character varying, character varying, character varying) OWNER TO postgres;
 
 --
+-- Name: upd_work_rates(); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION upd_work_rates() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+
+	INSERT INTO work_rate_changes (work_rate_id, org_id, work_rate_name, work_rate_code, work_rate,
+		weight_rate, overtime_rate, special_rate)
+	VALUES (NEW.work_rate_id, NEW.org_id, NEW.work_rate_name, NEW.work_rate_code, NEW.work_rate,
+		NEW.weight_rate, NEW.overtime_rate, NEW.special_rate);	
+
+	RETURN NULL;
+END;
+$$;
+
+
+ALTER FUNCTION public.upd_work_rates() OWNER TO postgres;
+
+--
 -- Name: updtax(integer, integer); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
@@ -5587,7 +5780,8 @@ BEGIN
 			 period_tax_types.employer, period_tax_types.employer_ps
 		FROM employee_tax_types INNER JOIN period_tax_types ON (employee_tax_types.tax_type_id = period_tax_types.tax_type_id)
 		WHERE (employee_month_id = $1) AND (Period_Tax_Types.Period_ID = $2)
-		ORDER BY Period_Tax_Types.Tax_Type_order LOOP
+		ORDER BY Period_Tax_Types.Tax_Type_order 
+	LOOP
 
 		EXECUTE 'SELECT ' || reca.formural || ' FROM employee_tax_types WHERE employee_tax_type_id = ' || reca.employee_tax_type_id 
 		INTO tax;
@@ -10351,48 +10545,6 @@ ALTER SEQUENCE pay_scales_pay_scale_id_seq OWNED BY pay_scales.pay_scale_id;
 
 
 --
--- Name: payroll_ledger; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE TABLE payroll_ledger (
-    payroll_ledger_id integer NOT NULL,
-    currency_id integer,
-    org_id integer,
-    period_id integer,
-    posting_date date,
-    description character varying(240),
-    payroll_account character varying(16),
-    dr_amt numeric(12,2),
-    cr_amt numeric(12,2),
-    exchange_rate real DEFAULT 1 NOT NULL,
-    posted boolean DEFAULT false
-);
-
-
-ALTER TABLE public.payroll_ledger OWNER TO postgres;
-
---
--- Name: payroll_ledger_payroll_ledger_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE payroll_ledger_payroll_ledger_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.payroll_ledger_payroll_ledger_id_seq OWNER TO postgres;
-
---
--- Name: payroll_ledger_payroll_ledger_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE payroll_ledger_payroll_ledger_id_seq OWNED BY payroll_ledger.payroll_ledger_id;
-
-
---
 -- Name: pc_allocations; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -11464,6 +11616,7 @@ CREATE TABLE review_category (
     review_category_id integer NOT NULL,
     org_id integer,
     review_category_name character varying(320),
+    rate_objectives boolean DEFAULT true NOT NULL,
     details text
 );
 
@@ -19156,6 +19309,25 @@ CREATE VIEW vw_workflow_entitys AS
 ALTER TABLE public.vw_workflow_entitys OWNER TO postgres;
 
 --
+-- Name: work_rates; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE work_rates (
+    work_rate_id integer NOT NULL,
+    org_id integer,
+    work_rate_name character varying(50),
+    work_rate_code character varying(50),
+    work_rate real DEFAULT 0 NOT NULL,
+    weight_rate real DEFAULT 0 NOT NULL,
+    overtime_rate real DEFAULT 0 NOT NULL,
+    special_rate real DEFAULT 0 NOT NULL,
+    details text
+);
+
+
+ALTER TABLE public.work_rates OWNER TO postgres;
+
+--
 -- Name: works; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -19163,11 +19335,14 @@ CREATE TABLE works (
     work_id integer NOT NULL,
     day_work_id integer NOT NULL,
     entity_id integer NOT NULL,
+    work_rate_id integer NOT NULL,
     org_id integer,
     work_weight real DEFAULT 0 NOT NULL,
     work_pay integer DEFAULT 0 NOT NULL,
     overtime real DEFAULT 0 NOT NULL,
-    special_time real DEFAULT 0 NOT NULL
+    special_time real DEFAULT 0 NOT NULL,
+    work_amount real DEFAULT 0 NOT NULL,
+    narrative character varying(320)
 );
 
 
@@ -19201,15 +19376,21 @@ CREATE VIEW vw_works AS
     vw_day_works.factory_weight,
     entitys.entity_id AS worker_id,
     entitys.entity_name AS worker_name,
+    work_rates.work_rate_id,
+    work_rates.work_rate_name,
+    work_rates.work_rate_code,
     works.org_id,
     works.work_id,
     works.work_weight,
     works.work_pay,
     works.overtime,
-    works.special_time
-   FROM ((works
+    works.special_time,
+    works.work_amount,
+    works.narrative
+   FROM (((works
      JOIN vw_day_works ON ((works.day_work_id = vw_day_works.day_work_id)))
-     JOIN entitys ON ((works.entity_id = entitys.entity_id)));
+     JOIN entitys ON ((works.entity_id = entitys.entity_id)))
+     JOIN work_rates ON ((works.work_rate_id = work_rates.work_rate_id)));
 
 
 ALTER TABLE public.vw_works OWNER TO postgres;
@@ -19359,22 +19540,45 @@ CREATE VIEW vws_tx_ledger AS
 ALTER TABLE public.vws_tx_ledger OWNER TO postgres;
 
 --
--- Name: work_rates; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
+-- Name: work_rate_changes; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
-CREATE TABLE work_rates (
-    work_rate_id integer NOT NULL,
+CREATE TABLE work_rate_changes (
+    work_rate_change integer NOT NULL,
+    work_rate_id integer,
     org_id integer,
     work_rate_name character varying(50),
+    work_rate_code character varying(50),
     work_rate real DEFAULT 0 NOT NULL,
     weight_rate real DEFAULT 0 NOT NULL,
     overtime_rate real DEFAULT 0 NOT NULL,
     special_rate real DEFAULT 0 NOT NULL,
-    details text
+    change_date timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
-ALTER TABLE public.work_rates OWNER TO postgres;
+ALTER TABLE public.work_rate_changes OWNER TO postgres;
+
+--
+-- Name: work_rate_changes_work_rate_change_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE work_rate_changes_work_rate_change_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.work_rate_changes_work_rate_change_seq OWNER TO postgres;
+
+--
+-- Name: work_rate_changes_work_rate_change_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE work_rate_changes_work_rate_change_seq OWNED BY work_rate_changes.work_rate_change;
+
 
 --
 -- Name: work_rates_work_rate_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
@@ -20313,13 +20517,6 @@ ALTER TABLE ONLY pay_scales ALTER COLUMN pay_scale_id SET DEFAULT nextval('pay_s
 
 
 --
--- Name: payroll_ledger_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY payroll_ledger ALTER COLUMN payroll_ledger_id SET DEFAULT nextval('payroll_ledger_payroll_ledger_id_seq'::regclass);
-
-
---
 -- Name: pc_allocation_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -20751,6 +20948,13 @@ ALTER TABLE ONLY transaction_links ALTER COLUMN transaction_link_id SET DEFAULT 
 --
 
 ALTER TABLE ONLY transactions ALTER COLUMN transaction_id SET DEFAULT nextval('transactions_transaction_id_seq'::regclass);
+
+
+--
+-- Name: work_rate_change; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY work_rate_changes ALTER COLUMN work_rate_change SET DEFAULT nextval('work_rate_changes_work_rate_change_seq'::regclass);
 
 
 --
@@ -21766,7 +21970,7 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 5, true);
 --
 
 INSERT INTO currency_rates (currency_rate_id, currency_id, org_id, exchange_date, exchange_rate) VALUES (0, 1, 0, '2016-10-03', 1);
-INSERT INTO currency_rates (currency_rate_id, currency_id, org_id, exchange_date, exchange_rate) VALUES (1, 5, 1, '2016-10-17', 1);
+INSERT INTO currency_rates (currency_rate_id, currency_id, org_id, exchange_date, exchange_rate) VALUES (1, 5, 1, '2016-10-27', 1);
 
 
 --
@@ -21860,13 +22064,16 @@ SELECT pg_catalog.setval('default_banking_default_banking_id_seq', 1, false);
 -- Data for Name: default_tax_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO default_tax_types (default_tax_type_id, entity_id, tax_type_id, org_id, tax_identification, narrative, additional, active) VALUES (1, 2, 3, 0, NULL, NULL, 0, true);
+INSERT INTO default_tax_types (default_tax_type_id, entity_id, tax_type_id, org_id, tax_identification, narrative, additional, active) VALUES (2, 2, 2, 0, NULL, NULL, 0, true);
+INSERT INTO default_tax_types (default_tax_type_id, entity_id, tax_type_id, org_id, tax_identification, narrative, additional, active) VALUES (3, 2, 1, 0, NULL, NULL, 0, true);
 
 
 --
 -- Name: default_tax_types_default_tax_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('default_tax_types_default_tax_type_id_seq', 1, false);
+SELECT pg_catalog.setval('default_tax_types_default_tax_type_id_seq', 3, true);
 
 
 --
@@ -22065,13 +22272,14 @@ SELECT pg_catalog.setval('employee_leave_employee_leave_id_seq', 1, false);
 -- Data for Name: employee_leave_types; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO employee_leave_types (employee_leave_type_id, entity_id, leave_type_id, org_id, leave_balance, leave_starting, details) VALUES (1, 2, 0, 0, 0, '2016-10-27', NULL);
 
 
 --
 -- Name: employee_leave_types_employee_leave_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('employee_leave_types_employee_leave_type_id_seq', 1, false);
+SELECT pg_catalog.setval('employee_leave_types_employee_leave_type_id_seq', 1, true);
 
 
 --
@@ -22156,6 +22364,7 @@ SELECT pg_catalog.setval('employee_trainings_employee_training_id_seq', 1, false
 -- Data for Name: employees; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO employees (entity_id, department_role_id, bank_branch_id, disability_id, employee_id, pay_scale_id, pay_scale_step_id, pay_group_id, location_id, currency_id, org_id, person_title, surname, first_name, middle_name, date_of_birth, dob_email, gender, phone, nationality, nation_of_birth, place_of_birth, marital_status, appointment_date, current_appointment, exit_date, contract, contract_period, employment_terms, identity_card, basic_salary, bank_account, picture_file, active, language, desg_code, inc_mth, previous_sal_point, current_sal_point, halt_point, bio_metric_number, height, weight, blood_group, allergies, field_of_study, interests, objective, details) VALUES (2, 1, 0, NULL, '142134', 0, NULL, 0, 0, 1, 0, 'Miss', 'Gichangi', 'Vincent', 'Mwendwa', '2016-10-04', '2016-01-01', 'M', '2134234', 'KE', 'KE', NULL, 'M', NULL, NULL, NULL, false, 0, NULL, '2314324', 0, '0100345415700', NULL, true, 'English, Kiswahili, Kamba', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 
 --
@@ -22177,13 +22386,14 @@ SELECT pg_catalog.setval('employment_employment_id_seq', 1, false);
 
 INSERT INTO entity_subscriptions (entity_subscription_id, entity_type_id, entity_id, subscription_level_id, org_id, details) VALUES (1, 0, 0, 0, 0, NULL);
 INSERT INTO entity_subscriptions (entity_subscription_id, entity_type_id, entity_id, subscription_level_id, org_id, details) VALUES (2, 0, 1, 0, 0, NULL);
+INSERT INTO entity_subscriptions (entity_subscription_id, entity_type_id, entity_id, subscription_level_id, org_id, details) VALUES (3, 1, 2, 0, 0, NULL);
 
 
 --
 -- Name: entity_subscriptions_entity_subscription_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('entity_subscriptions_entity_subscription_id_seq', 2, true);
+SELECT pg_catalog.setval('entity_subscriptions_entity_subscription_id_seq', 3, true);
 
 
 --
@@ -22215,13 +22425,14 @@ SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 9, true);
 
 INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, use_function, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (0, 0, 0, 'root', 'root', 'root@localhost', NULL, true, true, false, NULL, NULL, '2016-10-03 09:34:49.208538', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
 INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, use_function, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', NULL, false, true, false, NULL, NULL, '2016-10-03 09:34:49.208538', true, 'b6f0038dfd42f8aa6ca25354cd2e3660', 'baraza', NULL, NULL, false, NULL, NULL, NULL, NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email, primary_telephone, super_user, entity_leader, no_org, use_function, function_role, date_enroled, is_active, entity_password, first_password, new_password, start_url, is_picked, details, attention, account_id, bio_code) VALUES (2, 1, 0, 'Gichangi Vincent Mwendwa', 'dc.vincent.gichangi', NULL, NULL, false, false, false, 1, 'staff', '2016-10-27 12:16:16.698204', true, '93ba078cb21c40183674f4824d1e5ae7', '746S675XE', NULL, NULL, false, NULL, NULL, NULL, NULL);
 
 
 --
 -- Name: entitys_entity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
+SELECT pg_catalog.setval('entitys_entity_id_seq', 2, true);
 
 
 --
@@ -22862,19 +23073,6 @@ SELECT pg_catalog.setval('pay_scales_pay_scale_id_seq', 1, false);
 
 
 --
--- Data for Name: payroll_ledger; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-
-
---
--- Name: payroll_ledger_payroll_ledger_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('payroll_ledger_payroll_ledger_id_seq', 1, false);
-
-
---
 -- Data for Name: pc_allocations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -23227,6 +23425,7 @@ SELECT pg_catalog.setval('reporting_reporting_id_seq', 1, false);
 -- Data for Name: review_category; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO review_category (review_category_id, org_id, review_category_name, rate_objectives, details) VALUES (0, 0, 'Annual Review', true, NULL);
 
 
 --
@@ -23447,13 +23646,14 @@ SELECT pg_catalog.setval('subscriptions_subscription_id_seq', 1, false);
 -- Data for Name: sys_audit_trail; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO sys_audit_trail (sys_audit_trail_id, user_id, user_ip, change_date, table_name, record_id, change_type, narrative) VALUES (1, '0', '127.0.0.1', '2016-10-27 12:16:16.739348', 'employees', '2', 'INSERT', NULL);
 
 
 --
 -- Name: sys_audit_trail_sys_audit_trail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('sys_audit_trail_sys_audit_trail_id_seq', 1, false);
+SELECT pg_catalog.setval('sys_audit_trail_sys_audit_trail_id_seq', 1, true);
 
 
 --
@@ -23897,14 +24097,24 @@ SELECT pg_catalog.setval('sys_files_sys_file_id_seq', 1, false);
 -- Data for Name: sys_logins; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2016-10-17 13:18:47.175072', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (1, 0, '2016-10-27 10:58:19.515385', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (2, 0, '2016-10-27 12:14:56.09036', 'joto.dewcis.co.ke/127.0.0.1', 'TOMCAT');
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (3, 0, '2016-10-27 12:14:57.407466', 'joto.dewcis.co.ke/127.0.0.1', 'ESCALATION');
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (4, 0, '2016-10-27 12:15:12.294524', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (5, 0, '2016-10-27 12:15:12.974953', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (6, 0, '2016-10-27 12:15:26.142639', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (7, 0, '2016-10-27 12:15:30.054763', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (8, 0, '2016-10-27 12:15:30.62201', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (9, 0, '2016-10-27 12:15:31.845344', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (10, 0, '2016-10-27 12:16:16.622342', '127.0.0.1', NULL);
+INSERT INTO sys_logins (sys_login_id, entity_id, login_time, login_ip, narrative) VALUES (11, 0, '2016-10-27 12:16:17.303928', '127.0.0.1', NULL);
 
 
 --
 -- Name: sys_logins_sys_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 1, true);
+SELECT pg_catalog.setval('sys_logins_sys_login_id_seq', 11, true);
 
 
 --
@@ -24230,6 +24440,19 @@ SELECT pg_catalog.setval('transactions_transaction_id_seq', 1, false);
 
 
 --
+-- Data for Name: work_rate_changes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Name: work_rate_changes_work_rate_change_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('work_rate_changes_work_rate_change_seq', 1, false);
+
+
+--
 -- Data for Name: work_rates; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -24267,16 +24490,20 @@ INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id,
 INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (6, 6, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (7, 7, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (8, 8, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (9, 9, 0, 1, 1, 0, 0, 6, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (10, 10, 0, 1, 1, 0, 0, 6, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (11, 11, 0, 1, 1, 0, 0, 6, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (9, 9, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (10, 10, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (11, 11, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (12, 12, 0, 0, 1, 0, 0, 3, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (20, 20, 0, 1, 1, 0, 0, 6, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (21, 21, 0, 1, 1, 0, 0, 6, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, workflow_id, approval_entity_id, org_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, reporting_level, use_reporting, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) VALUES (22, 22, 0, 1, 1, 0, 0, 6, 1, 1, false, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 
 
 --
 -- Name: workflow_phases_workflow_phase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 11, true);
+SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 22, true);
 
 
 --
@@ -24304,16 +24531,20 @@ INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, tab
 INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (6, 1, 0, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (7, 1, 0, 'Loan', 'loans', NULL, NULL, 'Loan approved', 'Loan rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (8, 1, 0, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (9, 7, 1, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (10, 7, 1, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (11, 7, 1, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (9, 4, 0, 'Hire', 'applications', NULL, NULL, 'Hire approved', 'Hire rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (10, 1, 0, 'Contract', 'applications', NULL, NULL, 'Contract approved', 'Contract rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (11, 1, 0, 'Employee Objectives', 'employee_objectives', NULL, NULL, 'Objectives approved', 'Objectives rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (12, 1, 0, 'Review Objectives', 'job_reviews', NULL, NULL, 'Review approved', 'Review rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (20, 7, 1, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (21, 7, 1, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, source_entity_id, org_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) VALUES (22, 7, 1, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
 
 
 --
 -- Name: workflows_workflow_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('workflows_workflow_id_seq', 11, true);
+SELECT pg_catalog.setval('workflows_workflow_id_seq', 22, true);
 
 
 --
@@ -25482,14 +25713,6 @@ ALTER TABLE ONLY pay_scales
 
 
 --
--- Name: payroll_ledger_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
---
-
-ALTER TABLE ONLY payroll_ledger
-    ADD CONSTRAINT payroll_ledger_pkey PRIMARY KEY (payroll_ledger_id);
-
-
---
 -- Name: pc_allocations_period_id_department_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -26154,6 +26377,14 @@ ALTER TABLE ONLY transactions
 
 
 --
+-- Name: work_rate_changes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY work_rate_changes
+    ADD CONSTRAINT work_rate_changes_pkey PRIMARY KEY (work_rate_change);
+
+
+--
 -- Name: work_rates_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -26191,6 +26422,14 @@ ALTER TABLE ONLY workflow_sql
 
 ALTER TABLE ONLY workflows
     ADD CONSTRAINT workflows_pkey PRIMARY KEY (workflow_id);
+
+
+--
+-- Name: works_day_work_id_entity_id_key; Type: CONSTRAINT; Schema: public; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY works
+    ADD CONSTRAINT works_day_work_id_entity_id_key UNIQUE (day_work_id, entity_id);
 
 
 --
@@ -28351,20 +28590,6 @@ CREATE INDEX pay_scales_org_id ON pay_scales USING btree (org_id);
 
 
 --
--- Name: payroll_ledger_currency_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX payroll_ledger_currency_id ON payroll_ledger USING btree (currency_id);
-
-
---
--- Name: payroll_ledger_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
---
-
-CREATE INDEX payroll_ledger_org_id ON payroll_ledger USING btree (org_id);
-
-
---
 -- Name: pc_allocations_department_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -29331,6 +29556,20 @@ CREATE INDEX transactions_workflow_table_id ON transactions USING btree (workflo
 
 
 --
+-- Name: work_rate_changes_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX work_rate_changes_org_id ON work_rate_changes USING btree (org_id);
+
+
+--
+-- Name: work_rate_changes_work_rate_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX work_rate_changes_work_rate_id ON work_rate_changes USING btree (work_rate_id);
+
+
+--
 -- Name: work_rates_org_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
 --
 
@@ -29415,6 +29654,13 @@ CREATE INDEX works_org_id ON works USING btree (org_id);
 
 
 --
+-- Name: works_work_rate_id; Type: INDEX; Schema: public; Owner: postgres; Tablespace: 
+--
+
+CREATE INDEX works_work_rate_id ON works USING btree (work_rate_id);
+
+
+--
 -- Name: af_upd_transaction_details; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -29433,6 +29679,13 @@ CREATE TRIGGER ins_address BEFORE INSERT OR UPDATE ON address FOR EACH ROW EXECU
 --
 
 CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants FOR EACH ROW EXECUTE PROCEDURE ins_applicants();
+
+
+--
+-- Name: ins_applications; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER ins_applications BEFORE INSERT ON applications FOR EACH ROW EXECUTE PROCEDURE ins_applications();
 
 
 --
@@ -29639,6 +29892,13 @@ CREATE TRIGGER ins_transactions_limit BEFORE INSERT ON transactions FOR EACH ROW
 
 
 --
+-- Name: ins_works; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER ins_works BEFORE INSERT ON works FOR EACH ROW EXECUTE PROCEDURE ins_works();
+
+
+--
 -- Name: insa_employee_objectives; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -29678,6 +29938,13 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON employee_leave FOR EACH ROW
 --
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON leave_work_days FOR EACH ROW EXECUTE PROCEDURE upd_action();
+
+
+--
+-- Name: upd_action; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER upd_action BEFORE UPDATE ON applications FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
 
 --
@@ -29786,13 +30053,6 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions FOR EACH ROW 
 
 
 --
--- Name: upd_applications; Type: TRIGGER; Schema: public; Owner: postgres
---
-
-CREATE TRIGGER upd_applications BEFORE UPDATE ON applications FOR EACH ROW EXECUTE PROCEDURE upd_applications();
-
-
---
 -- Name: upd_approvals; Type: TRIGGER; Schema: public; Owner: postgres
 --
 
@@ -29846,6 +30106,13 @@ CREATE TRIGGER upd_objective_details AFTER INSERT OR UPDATE ON objective_details
 --
 
 CREATE TRIGGER upd_transaction_details BEFORE INSERT OR UPDATE ON transaction_details FOR EACH ROW EXECUTE PROCEDURE upd_transaction_details();
+
+
+--
+-- Name: upd_work_rates; Type: TRIGGER; Schema: public; Owner: postgres
+--
+
+CREATE TRIGGER upd_work_rates AFTER UPDATE ON work_rates FOR EACH ROW EXECUTE PROCEDURE upd_work_rates();
 
 
 --
@@ -32369,22 +32636,6 @@ ALTER TABLE ONLY pay_scales
 
 
 --
--- Name: payroll_ledger_currency_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY payroll_ledger
-    ADD CONSTRAINT payroll_ledger_currency_id_fkey FOREIGN KEY (currency_id) REFERENCES currency(currency_id);
-
-
---
--- Name: payroll_ledger_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY payroll_ledger
-    ADD CONSTRAINT payroll_ledger_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
-
-
---
 -- Name: pc_allocations_department_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -33521,6 +33772,22 @@ ALTER TABLE ONLY transactions
 
 
 --
+-- Name: work_rate_changes_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY work_rate_changes
+    ADD CONSTRAINT work_rate_changes_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+
+
+--
+-- Name: work_rate_changes_work_rate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY work_rate_changes
+    ADD CONSTRAINT work_rate_changes_work_rate_id_fkey FOREIGN KEY (work_rate_id) REFERENCES work_rates(work_rate_id);
+
+
+--
 -- Name: work_rates_org_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -33614,6 +33881,14 @@ ALTER TABLE ONLY works
 
 ALTER TABLE ONLY works
     ADD CONSTRAINT works_org_id_fkey FOREIGN KEY (org_id) REFERENCES orgs(org_id);
+
+
+--
+-- Name: works_work_rate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY works
+    ADD CONSTRAINT works_work_rate_id_fkey FOREIGN KEY (work_rate_id) REFERENCES work_rates(work_rate_id);
 
 
 --

@@ -1162,6 +1162,28 @@ CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
 $$ LANGUAGE SQL;
 
 
+CREATE FUNCTION get_reporting_list(integer) RETURNS varchar(320) AS $$
+DECLARE
+    myrec	RECORD;
+	mylist	varchar(320);
+BEGIN
+	mylist := null;
+	FOR myrec IN SELECT entitys.entity_name
+		FROM reporting INNER JOIN entitys ON reporting.report_to_id = entitys.entity_id
+		WHERE (reporting.primary_report = true) AND (reporting.entity_id = $1) 
+	LOOP
+
+		IF (mylist is null) THEN
+			mylist := myrec.entity_name;
+		ELSE
+			mylist := mylist || ', ' || myrec.entity_name;
+		END IF;
+	END LOOP;
+
+	RETURN mylist;
+END;
+$$ LANGUAGE plpgsql;
+
 --- Data
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (1, 'Kenya Shillings', 'KES');
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'US Dollar', 'USD');

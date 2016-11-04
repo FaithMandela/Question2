@@ -26,7 +26,7 @@ public class BSMSMonitoring {
 			addEMail(monDB, "Cannot connect to Bunsons database");
 		} else {
 			String smsError = remoteChecks(bunsonDB);
-			if(smsError != null) addEMail(monDB, "Bunsons SMS sending error : " + smsError);
+			if(smsError != null) addEMail(monDB, "Bunsons SMS : " + smsError);
 			else System.out.println("Bunsons SMS okay");
 		}
 		
@@ -35,7 +35,7 @@ public class BSMSMonitoring {
 			addEMail(monDB, "Cannot connect to faidaPlus database");
 		} else {
 			String smsError = remoteChecks(faidaplusDB);
-			if(smsError != null) addEMail(monDB, "faidaPlus SMS sending error : " + smsError);
+			if(smsError != null) addEMail(monDB, "faidaPlus SMS : " + smsError);
 			else System.out.println("faidaPlus SMS okay");
 		}
 		
@@ -44,7 +44,7 @@ public class BSMSMonitoring {
 			addEMail(monDB, "Cannot connect to SMS database");
 		} else {
 			String smsError = execute(smsDB);
-			if(smsError != null) addEMail(monDB, "SMS sending error : " + smsError);
+			if(smsError != null) addEMail(monDB, smsError);
 			else System.out.println("SMS system okay");
 		}
 		
@@ -71,7 +71,7 @@ public class BSMSMonitoring {
 			
 			if(rs2.next()) {
 				boolean sendError = rs2.getBoolean("send_error");
-				if(sendError) smsError = "SMS sending error : " + rs2.getBoolean("narrative");
+				if(sendError) smsError = "SMS sending error : " + rs2.getString("narrative");
 			
 				if(rs1.next()) {
 					Timestamp smsTime = rs1.getTimestamp("sms_time");
@@ -124,8 +124,10 @@ public class BSMSMonitoring {
 	
 	public void addEMail(Connection monDB, String narrative) {
 		try {
+			System.out.println("Adding Error Email : " + narrative);
+			
 			String insEmail = "INSERT INTO sys_emailed(org_id, sys_email_id, table_name, email_type, narrative) ";
-			insEmail = "VALUES (0, 10, 'SMS error', 10, '" + narrative + "');";        
+			insEmail += "VALUES (0, 10, 'SMS error', 10, '" + narrative + "');";        
 		
 			Statement st = monDB.createStatement();
 			st.execute(insEmail);
