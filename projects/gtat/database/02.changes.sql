@@ -173,3 +173,84 @@ $BODY$
 --  FROM tmpmanes 
 -- LEFT JOIN clients on clients.clientname= tmpmanes.aname) as ut
 -- WHERE ut.aname= clients.clientname; 
+
+
+CREATE TABLE clientpayments (
+	clientpaymentsid		serial primary key,
+	clientid 				integer references clients,
+	PeriodID				integer references period,
+	currency				varchar(50),
+	amount					real,
+	payment_reference		varchar(250)
+);
+
+CREATE TABLE tmpclientpayments (
+	clientpaymentsid		serial primary key,
+	clientid 				varchar(4),
+	clientname				varchar(250),
+	accountdate				varchar(16),
+	currency				varchar(50),
+	amount					varchar(16),
+	payment_reference		varchar(250)
+);
+
+CREATE INDEX clientpayments_clientid ON clientpayments (clientid);
+CREATE INDEX clientpayments_PeriodID ON clientpayments (PeriodID);
+
+CREATE OR REPLACE VIEW vw_clientpayments AS 
+SELECT clients.clientid, clients.clientname, period.periodid, period.startdate, period.enddate, 
+	clientpayments.clientpaymentsid, clientpayments.currency, clientpayments.amount, clientpayments.payment_reference
+	FROM clientpayments
+	JOIN clients ON clientpayments.clientid = clients.clientid
+	JOIN period ON clientpayments.periodid = period.periodid;
+	
+-- CREATE OR REPLACE FUNCTION get_total_credit(integer) RETURNS real AS $$
+-- SELECT SUM(amount) as Credit
+--  FROM vwinvoice
+--  WHERE (clientid = $1) AND  (vwinvoice.totalprice < 0) AND
+--  (to_char(StartDate, 'MMYYYY') <> to_char(servicedate, 'MMYYYY'));
+--   $$ LANGUAGE SQL;
+-- 
+-- CREATE OR REPLACE FUNCTION get_total_invoice(integer) RETURNS real AS $$
+-- SELECT SUM(amount) as Invoice
+--  FROM vwinvoice
+--  WHERE (clientid = $1) AND ((totalprice > 0) OR (to_char(StartDate, 'MMYYYY') = to_char(servicedate, 'MMYYYY')));
+--   $$ LANGUAGE SQL;
+-- 
+-- CREATE OR REPLACE FUNCTION get_total_Payments(integer) RETURNS real AS $$
+-- SELECT SUM(amount) as Payments
+--  FROM vw_clientpayments
+--  WHERE  (clientid = $1);
+--   $$ LANGUAGE SQL;
+-- 
+-- CREATE OR REPLACE VIEW vw_total_statements AS 
+--  SELECT vwinvoice.clientid, vwinvoice.clientname,
+-- 		get_total_credit(vwinvoice.clientid) AS Credit,
+-- 		get_total_invoice(vwinvoice.clientid) AS Invoice,
+-- 		get_total_Payments(vwinvoice.clientid) AS Payments
+-- FROM vwinvoice;
+
+
+CREATE OR REPLACE VIEW vw_statement AS
+SELECT item_name, clientid, clientname, periodid, invoicedate, invoice_amount, credit_amount, payments 
+FROM 
+((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, invoice_amount, '0'::real as credit_amount, '0'::real as payments
+FROM vwinvoicelist)
+  UNION ALL 
+ (SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, '0'::real, invoice_amount, '0'::real
+FROM vwcrnotelist)
+  UNION ALL 
+ (SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, periodid, enddate, '0'::real, '0'::real, amount 
+	FROM vw_clientpayments)) as a 
+ORDER BY invoicedate DESC;
+
+-- CREATE OR REPLACE VIEW vw_statement AS
+-- SELECT clientid, clientname, periodid, startdate, amount FROM 
+-- ((SELECT clientid, clientname, periodid, startdate, amount FROM vwinvoice
+-- 	WHERE creditnote = false AND (vwinvoice.totalprice < 0) AND
+--         (to_char(StartDate, 'MMYYYY') <> to_char(servicedate, 'MMYYYY')))
+--   UNION ALL 
+--  (SELECT clientid, clientname, periodid, startdate, amount FROM vwinvoice
+-- 	WHERE ((totalprice > 0) OR (to_char(StartDate, 'MMYYYY') = to_char(servicedate, 'MMYYYY'))))
+--   UNION ALL 
+--  (SELECT clientid, clientname, periodid, enddate, amount FROM vw_clientpayments)) as a ORDER BY startdate DESC;
