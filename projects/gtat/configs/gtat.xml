@@ -536,7 +536,7 @@
 				</FORM>
 			</GRID>
 		</GRID>
-		<GRID name="Import Client Payments" keyfield="clientpaymentsid" worksheet="0" import="excel" table="tmpclientpayments">
+		<GRID process="inspayments" name="Import Client Payments" keyfield="clientpaymentsid" worksheet="0" import="excel" table="tmpclientpayments">
 			<TEXTFIELD w="75" title="Clientid">clientid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Clientname">clientname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Accountdate">accountdate</TEXTFIELD>

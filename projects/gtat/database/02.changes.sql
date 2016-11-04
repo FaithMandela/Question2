@@ -244,6 +244,23 @@ FROM vwcrnotelist)
 	FROM vw_clientpayments)) as a 
 ORDER BY invoicedate DESC;
 
+
+CREATE OR REPLACE FUNCTION inspayments(character varying, character varying, character varying) 
+RETURNS varchar(50) AS $$
+DECLARE
+	myrec RECORD;
+BEGIN 
+INSERT INTO clientpayments(clientid, periodid, currency, amount, payment_reference)
+SELECT tmpclientpayments.clientid::int, periodid, currency, amount::real, payment_reference
+  FROM tmpclientpayments 
+INNER JOIN clients ON tmpclientpayments.clientid::int = clients.clientid
+INNER JOIN period ON period.enddate = '1899-12-30'::date + accountdate::int;
+
+DELETE FROM tmpclientpayments; 
+	RETURN 'Done';
+END
+$$ LANGUAGE plpgsql;
+
 -- CREATE OR REPLACE VIEW vw_statement AS
 -- SELECT clientid, clientname, periodid, startdate, amount FROM 
 -- ((SELECT clientid, clientname, periodid, startdate, amount FROM vwinvoice
