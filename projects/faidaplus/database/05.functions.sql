@@ -29,8 +29,9 @@ BEGIN
 	v_root_points := 0;
 	DELETE FROM points WHERE period_id = v_period_id AND entity_id = 0;
 
-	FOR rec IN SELECT pcc, son, ticketperiod, totalsegs
-	FROM t_sonsegs WHERE (ticketperiod = v_period) LOOP
+	FOR rec IN SELECT pcc, son, bookpcc, ticketperiod, totalsegs, substring(bookpcc from 1 for 6) as svcb_son
+		FROM t_sonsegs WHERE (ticketperiod = v_period) AND (totalsegs > 0)
+	LOOP
 
 		IF(1<= rec.totalsegs::integer AND rec.totalsegs::integer <=250 ) THEN
 			v_amount := 12 + v_increment;
@@ -58,8 +59,19 @@ BEGIN
 			SELECT org_id INTO v_org_id
 			FROM entitys
 			WHERE (entitys.is_active = true) AND (entity_id = v_entity_id);
+
+		END IF;
+
+		IF(v_entity_id is null)THEN
+			SELECT entity_id INTO v_entity_id
+			FROM entitys
+			WHERE (is_active = true) AND (svcb_son = rec.svcb_son);
+			SELECT org_id INTO v_org_id
+			FROM entitys
+			WHERE (entitys.is_active = true) AND (entity_id = v_entity_id);
 			IF(v_org_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
 		END IF;
+
 		IF(v_entity_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
 
 		--- Compute rooot points
@@ -70,6 +82,12 @@ BEGIN
 		SELECT points_id INTO v_points_id
 		FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
 			AND (pcc = rec.pcc) AND (son = rec.son);
+
+		IF(v_points_id is null)THEN
+			SELECT points_id INTO v_points_id
+			FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
+				AND (son = rec.son);
+		END IF;
 
 		IF(v_points_id is null)THEN
 			INSERT INTO points (point_date, period_id, org_id, entity_id, pcc, son, segments, amount, points)
@@ -239,6 +257,7 @@ DECLARE
 	app				RECORD;
 	msg				varchar(120);
 	myid 			integer;
+	v_primary_email varchar(50);
 BEGIN
 
 	IF ($3::integer = 1) THEN
@@ -250,6 +269,10 @@ BEGIN
 			RAISE EXCEPTION 'Pseudo Code Does not Exist';
 		END IF;
 
+		SELECT primary_email INTO v_primary_email FROM entitys WHERE trim(lower(primary_email)) = trim(lower(app.applicant_email)) AND is_active = true;
+		IF(v_primary_email is not null) THEN
+			RAISE EXCEPTION 'Email address already exist Please used a different email address or reset your password';
+		END IF;
 		UPDATE applicants SET status = ps , org_id = rec.org_id, approve_status = ps WHERE applicant_id = $1::integer ;
 		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, son, function_role, is_active, birth_date)
 		VALUES (rec.org_id, 0, trim(upper(app.son)), trim(app.user_name), trim(lower(app.applicant_email)), app.phone_no, trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
@@ -511,7 +534,7 @@ DECLARE
 BEGIN
 	SELECT entity_id, org_id INTO v_entity_id, v_org_id
 	FROM entitys
-	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email)));
+	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email))) AND is_active = true;
 
 	IF(v_entity_id is not null) THEN
 		v_password := upper(substring(md5(random()::text) from 3 for 9));

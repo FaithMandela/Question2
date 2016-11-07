@@ -25,13 +25,17 @@
 			<TILE noorg.query="true" role="consultant,user,agency" name="Total Amount" where="approved is true" table="vw_passengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE) AND approved is true" table="vw_passengers">
+			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE) AND approved is true" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="admin,manager" name="Total Amount" where="approved is true" table="vw_passengers">
+			<TILE noorg="true" noorg.query="true" role="admin,manager" name="Total Amount" where="approved is true" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
-			<TILELIST noorg="true" noorg.query="true" role="admin,manager" name="Insurance Sales" orderby="(org_name)" where="(approved = 'true')" groupby="org_name" table="vw_passengers">
+			<TILELIST noorg="true" noorg.query="true" role="admin,manager" name="Individual Insurance Sales" orderby="(org_name)" where="(approved = 'true')" groupby="org_name" table="vw_passengers">
+				<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric, 2)" title="Total Amount">totalamount_covered</TEXTFIELD>
+			</TILELIST>
+			<TILELIST noorg="true" noorg.query="true" role="admin,manager" name="Corporate Insurance Sales" orderby="(org_name)" where="(approved = 'true')" groupby="org_name" table="vw_corporate_passengers">
 				<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric, 2)" title="Total Amount">totalamount_covered</TEXTFIELD>
 			</TILELIST>
@@ -478,6 +482,7 @@
 			</ACTIONS>
 			<JASPER reportfile="certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
+			<JASPER role="finance_manager" reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID noorg="true" keyfield="passenger_id" name="Corporate Insurance Sold" where="approved is true AND incountry is false AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
@@ -497,6 +502,7 @@
 			</ACTIONS>
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
+			<JASPER reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID noorg="true" keyfield="passenger_id" name="In Country Insurance Sold" where="approved is true AND customer_code is  null AND incountry is true " tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
@@ -533,6 +539,7 @@
 				<ACTION approval="2" fnct="upd_passenger">Revert</ACTION>
 			</ACTIONS>
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
+			<JASPER reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID noorg="true" keyfield="passenger_id" name="Insurance Canceled" where="approved is false" tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
@@ -567,7 +574,7 @@
 			<TEXTFIELD w="75" title="Email ID">sys_email_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Email Name">sys_email_name</TEXTFIELD>
 			<TEXTFIELD w="275" title="Title">title</TEXTFIELD>
-			<FORM th="210" keyfield="sys_email_id" name="EMails" table="sys_emails">
+			<FORM noorg="true" th="210" keyfield="sys_email_id" name="EMails" table="sys_emails">
 				<TEXTFIELD w="350" h="20" x="10" y="10" title="Email Name">sys_email_name</TEXTFIELD>
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Title">title</TEXTFIELD>
 				<EDITOR tab="Details" w="530" h="170" x="10" y="2">details</EDITOR>
@@ -575,7 +582,8 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Sales Report" key="40">
-		<JASPER reportfile="vw_passengers.jasper" name="Sales Report"></JASPER>
+		<JASPER reportfile="vw_passengers.jasper" name="Individual Sales Report"></JASPER>
+		<JASPER reportfile="vw_corporates.jasper" name="Corporate Sales Report"></JASPER>
 		<FILTER split="150" w="700" h="550" name="Agency Insurance Sales Report" type="vert" key="order_date">
 			<FILTERFORM name="Agency Insurance Sales Report ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>

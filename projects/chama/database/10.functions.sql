@@ -463,14 +463,13 @@ CREATE TRIGGER ins_receipt
   FOR EACH ROW
   EXECUTE PROCEDURE ins_receipt();
 
-  
 CREATE OR REPLACE FUNCTION upd_email()
   RETURNS trigger AS
 $BODY$
 BEGIN
 IF (TG_OP = 'INSERT') THEN
-	INSERT INTO sys_emailed ( table_id, table_name, email_type)
-	VALUES (10, TG_TABLE_NAME, 5);
+	INSERT INTO sys_emailed ( table_id, sys_email_id, table_name, email_type)
+	VALUES (10, 6, TG_TABLE_NAME, 5);
 END IF;
 
 RETURN NEW;
@@ -478,8 +477,8 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
- CREATE TRIGGER upd_email AFTER INSERT ON contributions
-    FOR EACH ROW EXECUTE PROCEDURE upd_email();
+--  CREATE TRIGGER upd_email AFTER INSERT ON contributions
+--     FOR EACH ROW EXECUTE PROCEDURE upd_email();
 
 
 CREATE OR REPLACE FUNCTION ins_members() RETURNS trigger AS $$
@@ -670,8 +669,8 @@ CREATE TRIGGER upd_email AFTER INSERT ON investments
  CREATE TRIGGER upd_email AFTER INSERT ON borrowing
     FOR EACH ROW EXECUTE PROCEDURE upd_email();
     
- CREATE TRIGGER upd_email AFTER INSERT ON meetings
-    FOR EACH ROW EXECUTE PROCEDURE upd_email();
+--  CREATE TRIGGER upd_email AFTER INSERT ON meetings
+--     FOR EACH ROW EXECUTE PROCEDURE upd_email();
     
  CREATE TRIGGER upd_email AFTER INSERT ON drawings
     FOR EACH ROW EXECUTE PROCEDURE upd_email();
@@ -679,23 +678,6 @@ CREATE TRIGGER upd_email AFTER INSERT ON investments
 
 CREATE TRIGGER upd_email AFTER INSERT ON penalty
     FOR EACH ROW EXECUTE PROCEDURE upd_email();
-
-CREATE OR REPLACE FUNCTION email_after(
-    integer,
-    integer,
-    character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-	msg		 				varchar(120);
-BEGIN
-	INSERT INTO sys_emailed ( table_id, org_id, table_name, email_type)
-	VALUES ($1, $2, 'meetings', 7);
-msg := 'Email Sent';
-return msg;
-END;
-$BODY$
-  LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION email_before(
     integer,
@@ -706,8 +688,25 @@ $BODY$
 DECLARE
 	msg		 				varchar(120);
 BEGIN
-	INSERT INTO sys_emailed ( table_id, org_id, table_name, email_type)
-	VALUES ($1, $2, 'meetings', 6);
+	INSERT INTO sys_emailed (sys_email_id, table_id, org_id, table_name, email_type)
+	VALUES (7, $1, $2, 'meetings', 7);
+msg := 'Email Sent';
+return msg;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+  
+CREATE OR REPLACE FUNCTION email_after(
+    integer,
+    integer,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	msg		 				varchar(120);
+BEGIN
+	INSERT INTO sys_emailed ( sys_email_id, table_id, org_id, table_name, email_type)
+	VALUES (8, $1, $2, 'meetings', 8);
 msg := 'Email Sent';
 return msg;
 END;
@@ -761,5 +760,38 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION get_total_contribs(integer, integer) RETURNS real AS $$
+SELECT SUM(total_contribution) as contributions
+ FROM vw_contributions
+  WHERE (entity_id = $1) and (org_id = $2);
+  $$ LANGUAGE SQL;
+  
+CREATE OR REPLACE FUNCTION get_total_drawings(integer, integer) RETURNS real AS $$
+SELECT SUM(amount) as drawings
+ FROM vw_drawings
+  WHERE (entity_id = $1) and (org_id = $2);
+  $$ LANGUAGE SQL;
+  
+CREATE OR REPLACE FUNCTION get_total_receipts(integer, integer) RETURNS real AS $$
+SELECT SUM(amount) as receipts
+ FROM vw_receipts
+  WHERE (entity_id = $1) and (org_id = $2);
+  $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_total_loans(integer, integer) RETURNS real AS $$
+SELECT SUM(principle) as loans
+ FROM vw_loans
+  WHERE (entity_id = $1) and (org_id = $2);
+  $$ LANGUAGE SQL;
+  
+CREATE OR REPLACE FUNCTION get_total_loan_monthly(integer, integer) RETURNS real AS $$
+SELECT SUM(total_repayment) as loan_monthly
+ FROM vw_loan_monthly
+  WHERE (entity_id = $1) and (org_id = $2);
+  $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_total_penalty(integer, integer) RETURNS real AS $$
+SELECT SUM(amount) as penalty
+ FROM vw_penalty
+  WHERE paid= false AND (entity_id = $1) AND (org_id = $2);
+  $$ LANGUAGE SQL;

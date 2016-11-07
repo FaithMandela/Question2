@@ -313,8 +313,8 @@ CREATE VIEW clientstatement AS
 
 CREATE VIEW vwinvoicelist AS 
 	SELECT vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid,
-		vwsales.invoiceid, vwsales.issued, 
-		period.salesperiod, period.invoicedate
+		vwsales.invoiceid, vwsales.issued, period.salesperiod, period.invoicedate, 
+		sum(vwsales.amount) as invoice_amount, sum(vwsales.netremits) as gta_totals
 	FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
 	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
 	GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, 
@@ -322,12 +322,13 @@ CREATE VIEW vwinvoicelist AS
 	ORDER BY vwsales.clientid;
 
 CREATE VIEW vwcrnotelist AS 
-	SELECT vwsales.clientid, vwsales.periodid, crnotelist.crnoteid,
-		period.salesperiod, period.invoicedate
+	SELECT vwsales.clientid, vwsales.clientname, vwsales.periodid, crnotelist.crnoteid,
+		period.salesperiod, period.invoicedate,
+		sum(vwsales.amount) as invoice_amount, sum(vwsales.netremits) as gta_totals
 	FROM vwsales LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
 		INNER JOIN period ON period.periodid = vwsales.periodid
 	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
-	GROUP BY vwsales.clientid, vwsales.periodid, crnotelist.crnoteid, period.salesperiod, period.invoicedate
+	GROUP BY vwsales.clientid, vwsales.clientname, vwsales.periodid, crnotelist.crnoteid, period.salesperiod, period.invoicedate
 	ORDER BY vwsales.clientid;
 
 CREATE VIEW vwinvoicesummary AS 

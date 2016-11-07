@@ -671,6 +671,7 @@
 					</COMBOLIST>
 					<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
 					<TEXTFIELD w="150" h="20" x="290" y="130" title="SON">son</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="290" y="130" title="SVCB SON">svcb_son</TEXTFIELD>
 					<CHECKBOX w="150" h="20" x="10" y="150" title="Active">is_active</CHECKBOX>
 					<CHECKBOX w="75" title="Can Redeem">can_redeem</CHECKBOX>
 					<TEXTAREA w="430" h="70" x="10" y="170" title="Details">details</TEXTAREA>
@@ -778,6 +779,7 @@
 					</COMBOLIST>
 					<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
 					<TEXTFIELD w="150" h="20" x="290" y="130" title="SON">son</TEXTFIELD>
+					<TEXTFIELD w="150" h="20" x="290" y="130" title="SVCB SON">svcb_son</TEXTFIELD>
 					<CHECKBOX w="150" h="20" x="10" y="150" title="Active">is_active</CHECKBOX>
 					<CHECKBOX w="75" title="Can Redeem">can_redeem</CHECKBOX>
 					<TEXTAREA w="430" h="70" x="10" y="170" title="Details">details</TEXTAREA>
