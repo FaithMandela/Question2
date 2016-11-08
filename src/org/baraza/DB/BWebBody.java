@@ -435,7 +435,7 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("TEXTFIELD")) {
 			response.append("<input name='" + el.getValue() + "'");
 
-			//whitelabel additions - using whitelabel syntax/semantics
+			
 			if(el.getAttribute("type") == null) response.append(" type='text'");
 			else response.append(" type='" + el.getAttribute("type") + "'");
 
@@ -444,10 +444,12 @@ public class BWebBody extends BQuery {
 			if(el.getAttribute("w") != null) response.append(" size='" + el.getAttribute("w") + "'");
 			else response.append(" size='50'");
 
+			//whitelabel additions - using whitelabel syntax/semantics
 			if(el.getAttribute("style") != null) response.append(" style='" + el.getAttribute("style") + "'");
 			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("tooltip") != null) response.append(" title='" + el.getAttribute("tooltip") + "'");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+			if(el.getAttribute("maxlength") != null) response.append(" maxlength='" + el.getAttribute("maxlength") + "'");
 			if(el.getAttribute("data-instant") != null) response.append(" data-instant='" + el.getAttribute("data-instant") + "'");
 			if(el.getAttribute("data-min") != null) response.append(" data-min='" + el.getAttribute("data-min") + "'");
 			if(el.getAttribute("data-max") != null) response.append(" data-max='" + el.getAttribute("data-max") + "'");
