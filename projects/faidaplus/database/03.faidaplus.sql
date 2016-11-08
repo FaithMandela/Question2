@@ -15,6 +15,7 @@ CREATE INDEX orgs_account_manager_id ON orgs (account_manager_id);
 ALTER TABLE orgs DROP CONSTRAINT orgs_org_name_key;
 ALTER TABLE orgs DROP CONSTRAINT orgs_org_sufix_key;
 
+ALTER TABLE entitys ADD svcb_son  varchar(20);
 ALTER TABLE entitys ADD can_redeem boolean default true;
 ALTER TABLE entitys ADD salutation varchar(7);
 ALTER TABLE entitys ADD pcc_son varchar(7);
@@ -242,7 +243,7 @@ SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		entitys.salutation, entitys.son,entitys.birth_date,entitys.last_login,
 		entity_types.entity_type_id, entity_types.entity_type_name,
 		entity_types.entity_role, entity_types.use_key,vw_orgs.pcc||'-'||entitys.son as pcc_son,vw_orgs.pcc||'-'||entitys.son||'-'||entity_name as pcc_son_name
-		entitys.dob_email
+		entitys.dob_email, entitys.svcb_son
 		FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;

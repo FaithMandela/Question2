@@ -2019,8 +2019,9 @@
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
-			<JASPER filtered="true" name="Course List - Regural" reportfile="courselist.jasper"></JASPER>
-			<JASPER filtered="true" name="Course List - Intersesion" reportfile="courselistb.jasper"></JASPER>
+			<JASPER name="Course List - Regural" reportfile="courselist.jasper"></JASPER>
+			<JASPER name="Course List - Intersesion" reportfile="courselistb.jasper"></JASPER>
+			<JASPER name="Course List - Sub Level" reportfile="courselist_sl.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Department Course List" type="horl" key="417" h="500">
@@ -2093,9 +2094,11 @@
 	</DESK>
 	<DESK w="700" name="Hour Load" type="vert" key="225" h="500">
 		<FILTER name="Filter" key="14">
-			<COMBOBOX w="150" title="Semester ID" lptable="quarterview" lw="90" y="10" h="20" x="10" lpfield="quarterid">quarterid</COMBOBOX>
-			<TEXTFIELD w="100" title="Hours From" lw="90" defaultvalue="190" y="10" h="20" x="290">datefrom</TEXTFIELD>
-			<TEXTFIELD w="100" title="Hours To" lw="90" defaultvalue="500" y="10" h="20" x="490">dateto</TEXTFIELD>
+			<FILTERFORM name="Filter">
+				<COMBOBOX w="150" title="Semester ID" lptable="quarterview" lw="90" orderby="quarterid desc" noorg="true" y="10" h="20" x="10" lpfield="quarterid">quarterid</COMBOBOX>
+				<TEXTFIELD w="100" title="Hours From" lw="90" defaultvalue="190" y="10" h="20" x="290">datefrom</TEXTFIELD>
+				<TEXTFIELD w="100" title="Hours To" lw="90" defaultvalue="500" y="10" h="20" x="490">dateto</TEXTFIELD>
+			</FILTERFORM>
 			<JASPER name="Hours Load" reportfile="hoursload.jasper"></JASPER>
 		</FILTER>
 	</DESK>

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <ESCALATION title="Chama Mails"  processdelay="2"
-    host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent" mailfrom="info@openbaraza.org"
+    host="mail.dewcis.com" mailuser="chama" mailpassword="Bvi8xd6K6zDC" mailfrom="chama@dewcis.com"
     inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
-    reportpath="/opt/baraza/projects/sacco/">
+    reportpath="/opt/baraza/projects/chama/">
 
     <REPORT name="Subscription Notifications" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
             table="sys_emails,sys_emailed,subscriptions,vw_entitys"
@@ -35,9 +35,9 @@
     </REPORT>
 
     <REPORT name="Next Meeting" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-            table="sys_emails,sys_emailed,subscriptions,vw_entitys, meetings"
-         where="(subscriptions.subscription_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
-            AND (vw_entitys.entity_id = subscriptions.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+            table="sys_emails,sys_emailed, vw_members,vw_entitys, meetings, vw_member_meeting"
+         where="(meetings.meeting_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
+            AND (vw_members.entity_id = vw_member_meeting.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
         
          <SUBJECT title="subject">sys_emails.title</SUBJECT>
         
@@ -50,9 +50,9 @@
     </REPORT>
 
  <REPORT name="Last Meeting" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-            table="sys_emails,sys_emailed,subscriptions,vw_entitys, meetings"
-         where="(subscriptions.subscription_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
-            AND (vw_entitys.entity_id = subscriptions.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+            table="sys_emails,sys_emailed, vw_members, vw_entitys, meetings, vw_member_meeting"
+         where="(meetings.meeting_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
+            AND (vw_members.entity_id = vw_member_meeting.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
         
          <SUBJECT title="subject">sys_emails.title</SUBJECT>
         
@@ -66,7 +66,7 @@
     </REPORT>
 
  <REPORT name="Transaction" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
-            table="sys_emails,sys_emailed,subscriptions,vw_entitys"
+            table="sys_emails, sys_emailed, vw_entitys"
          where="(subscriptions.subscription_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
             AND (vw_entitys.entity_id = subscriptions.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
         

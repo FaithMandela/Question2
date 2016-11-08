@@ -13,10 +13,10 @@ INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (1, 5, 1)
 --INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key) VALUES (1, 'Staff', 'staff', 1);
 --INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key) VALUES (1, 'Client', 'client', 2);
 --INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key) VALUES (1, 'Supplier', 'supplier', 3);
-INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (4, 0, 'Applicant', 'applicant', 0, '10:0', NULL, NULL, NULL);
+--INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (4, 0, 'Applicant', 'applicant', 0, '10:0', NULL, NULL, NULL);
 INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (6, 0, 'Admin', 'admin', 0, NULL, NULL, NULL, NULL);
 INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (8, 0, 'Member', 'member', 1, NULL, NULL, NULL, NULL);
-INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (5, 0, 'Subscriber', 'subscriptions', 3, NULL, NULL, NULL, NULL);
+--INSERT INTO entity_types (entity_type_id, org_id, entity_type_name, entity_role, use_key, start_view, group_email, description, details) VALUES (5, 0, 'Subscriber', 'subscriptions', 3, NULL, NULL, NULL, NULL);
 
 
 --INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Basic');

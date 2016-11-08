@@ -65,7 +65,7 @@ ORDER BY vw_contributions.period_id]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Extra Member Contributions Report]]></text>
+				<text><![CDATA[Extra Contributions Report]]></text>
 			</staticText>
 		</band>
 	</title>
