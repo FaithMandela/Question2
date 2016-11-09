@@ -13,32 +13,43 @@ import java.text.ParseException;
 import java.lang.NumberFormatException;
 
 public class BAmountInWords {  
-      
-	protected String amountInWords;  
-	protected String words = "";  
+
 	final static String units[] = {"","One ", "Two ", "Three ", "Four ", "Five ", "Six ", "Seven ", "Eight ", "Nine ", "Ten ", "Eleven ", "Twelve ", "Thirteen ", "Fourteen ", "Fifteen ", "Sixteen ", "Seventeen ", "Eighteen ", "Nineteen "};
-    final static String tens[] = {"", "Ten ", "Twenty ", "Thirty ", "Forty ", "Fifty ", "Sixty ", "Seventy ", "Eighty ", "Ninety "};  
+	final static String tens[] = {"", "Ten ", "Twenty ", "Thirty ", "Forty ", "Fifty ", "Sixty ", "Seventy ", "Eighty ", "Ninety "};  
 
-	public BAmountInWords() { }
-
-	public BAmountInWords(int amount) {
-		this.amountInWords = convert(amount);    
+	
+	public static String convertCurrency(Float amount, String main, String part) {
+		int cba = amount.intValue();
+		String resp = convert(cba) + " " + main;
+		
+		Float bal = (amount - cba) * 100;
+		if(bal > 1) {
+			int cbc = bal.intValue();
+			resp += " and " + convert(cbc) + " " + part;
+		}
+		
+		return resp;
 	}
 	
-	public BAmountInWords(String amount) {
+	public static String convert(String amount) {
+		String words = "";
 		try {
 			DecimalFormat df = new DecimalFormat();
 			Number d = df.parse(amount);
 			
-			this.amountInWords = convert(d.intValue());
+			words = convert(d.intValue());
 		} catch(NumberFormatException ex) {
 			System.out.println("Number error : " + ex);
 		} catch(ParseException ex) {
 			System.out.println("Amount Conversion error : " + ex);
 		}
+		
+		return words;
 	}
 
-	public String convert(int amount) {  
+	public static String convert(int amount) {
+		String words = "";
+		
 		int millions = amount / 1000000;   
 		String tword = threeDigits(millions);  
 		if(tword.length()>1) words = tword + "Million ";  
@@ -54,7 +65,7 @@ public class BAmountInWords {
 		return words;
     }
 
-    public String threeDigits(int digits) {  
+    public static String threeDigits(int digits) {  
 		String digWord = "";  
 		int hnd = digits / 100;  
 		if(hnd > 0) digWord += units[hnd] + "Hundred ";  
@@ -66,19 +77,9 @@ public class BAmountInWords {
 			digWord +=tens[tenth];  
 			int last = ten - tenth * 10;  
 			digWord += units[last];
-       }  
+		}  
 
-       return digWord;  
+		return digWord;  
     }  
-         
-	public String getAmountInWords() {  
-		return amountInWords;  
-	}  
-  
-	public void setAmountInWords(String amountInWords) {  
-		this.amountInWords = amountInWords;  
-	}  
+ 
 }
-
-
-

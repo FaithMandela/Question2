@@ -290,8 +290,7 @@ public class BSMSMessage {
 					DecimalFormat df = new DecimalFormat();
 					Number d = df.parse(amount);
 					rs.updateField("amount", d.toString());
-					BAmountInWords dw = new BAmountInWords(d.intValue());
-					rs.updateField("in_words", dw.getAmountInWords());
+					rs.updateField("in_words", BAmountInWords.convert(d.intValue()));
 				} catch(NumberFormatException ex) {
 					log.severe("Number error : " + ex);
 				} catch(ParseException ex) {
