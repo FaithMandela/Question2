@@ -127,7 +127,7 @@ BEGIN
 	DECLARE cur1 CURSOR FOR 
 	SELECT type, trans_no, tran_date, alloc, (ov_amount - alloc) as balance
 	FROM debtor_trans
-	WHERE (ov_amount <> alloc) AND (debtor_no = debtor) AND ((type = 11) OR (type = 12))
+	WHERE (ov_amount > alloc) AND (debtor_no = debtor) AND ((type = 11) OR (type = 12))
 	ORDER BY tran_date;
 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag1 = 'END';
@@ -190,7 +190,7 @@ BEGIN
 	DECLARE cur1 CURSOR FOR 
 	SELECT type, trans_no, tran_date, debtor_no, ov_amount, (ov_amount - alloc) as balance
 	FROM debtor_trans
-	WHERE (ov_amount <> alloc) AND (type = 10)
+	WHERE (ov_amount > alloc) AND (type = 10)
 	ORDER BY tran_date;
 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag1 = 'END';

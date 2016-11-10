@@ -155,3 +155,29 @@ CREATE TRIGGER tg_audit_ledger AFTER INSERT OR UPDATE OR DELETE ON ledger
 FOR EACH ROW EXECUTE PROCEDURE tg_audit_ledger();
 
 
+
+---------------- Accounts update 2016.11.09
+
+DELETE sales_order_details FROM sales_order_details INNER JOIN sales_orders
+WHERE (sales_orders.order_no = sales_order_details.order_no) AND (sales_orders.ord_date < '2016-01-01');
+
+DELETE debtor_trans_details FROM debtor_trans_details INNER JOIN debtor_trans
+WHERE (debtor_trans_details.debtor_trans_no = debtor_trans.trans_no) AND debtor_trans.tran_date < '2016-01-01';
+
+DELETE FROM sales_orders WHERE ord_date < '2016-01-01';
+
+DELETE FROM trans_tax_details WHERE tran_date < '2016-01-01';
+
+DELETE FROM debtor_trans WHERE tran_date < '2016-01-01';
+
+DELETE FROM gl_trans WHERE tran_date < '2016-01-01' AND person_id = 860;
+
+DELETE FROM bank_trans WHERE trans_date < '2016-01-01' AND person_id = 860;
+
+UPDATE debtor_trans SET alloc = 0 WHERE (type = 10) OR (type = 11) OR (type = 12);
+
+DELETE FROM gl_trans WHERE type_no = 11 and type = 11;
+DELETE FROM gl_trans WHERE type_no = 12 and type = 12;
+
+DELETE FROM cust_allocations WHERE trans_type_from = 10;
+
