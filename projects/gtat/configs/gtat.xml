@@ -30,6 +30,7 @@
 			<MENU name="GK GTA Revenue">124</MENU>
 			<MENU name="Invoice Listing">128</MENU>
 			<MENU name="Statements">143</MENU>
+			<MENU name="Receipt">148</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Clients" type="vert" key="1" h="500">
@@ -513,7 +514,7 @@
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Clientpayments" key="138" h="550">
+	<DESK w="700" name="Client Payments" key="138" h="550">
 		<GRID name="Active Clients" keyfield="clientid" orderby="clientname" table="vwclients" where="(IsActive = true)">
 			<TEXTFIELD w="140" title="Client Name">clientname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Town">Town</TEXTFIELD>
@@ -521,23 +522,24 @@
 			<TEXTFIELD w="40" title="Tel No.">telno</TEXTFIELD>
 			<TEXTFIELD w="40" title="Email">email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Contact Person">contact_person</TEXTFIELD>
-			<GRID name="Clientpayments" keyfield="clientpaymentsid" linkfield="clientid" table="vw_clientpayments">
+			<GRID name="Client Payments" keyfield="clientpaymentsid" linkfield="clientid" table="vw_clientpayments">
 				<TEXTFIELD w="75" title="Clientname">clientname</TEXTFIELD>
 				<TEXTDATE w="75" title="Startdate">startdate</TEXTDATE>
 				<TEXTDATE w="75" title="Enddate">enddate</TEXTDATE>
 				<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Payment Reference">payment_reference</TEXTFIELD>
-				<FORM name="Clientpayments" keyfield="clientpaymentsid" linkfield="clientid" table="clientpayments">
+				<FORM name="Client Payment" keyfield="clientpaymentsid" linkfield="clientid" table="clientpayments">
 					<COMBOBOX w="430" title="Start Date" lptable="period" y="30" h="20" x="10" lpfield="startdate">periodid</COMBOBOX>
 					<TEXTFIELD w="150" title="Currency" y="50" h="20" x="10">currency</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Payment Reference" y="70" h="20" x="10">payment_reference</TEXTFIELD>
 				</FORM>
+				<JASPER name="Receipt" linkfield="clientid" reportfile="receipt.jasper"></JASPER>
 			</GRID>
 		</GRID>
 		<GRID process="inspayments" name="Import Client Payments" keyfield="clientpaymentsid" worksheet="0" import="excel" table="tmpclientpayments">
-			<TEXTFIELD w="75" title="Clientid">clientid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mst_cus_id">mst_cus_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Clientname">clientname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Accountdate">accountdate</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>

@@ -765,7 +765,8 @@
 			<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="My account" key="205" h="550">
+	<DESK w="700" name="My account" user="entity_id" key="205" h="550">
+		<JASPER name="Statement" reportfile="vw_member_statement1.jasper"></JASPER>
 		<JASPER name="Summary Contribution Report" reportfile="vw_member_contributions1.jasper"></JASPER>
 		<GRID name="Contributions" keyfield="contribution_id" linkfield="entity_id" table="vw_member_contrib" user="entity_id">
 			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
@@ -804,7 +805,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Remaining Amount">remaining_amount</TEXTDECIMAL>
 		</GRID>
-		<FORMVIEW new="false" name="My Details" keyfield="entity_id" table="members">
+		<FORMVIEW new="false" name="My Details" keyfield="entity_id" table="members" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
