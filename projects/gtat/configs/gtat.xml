@@ -30,7 +30,7 @@
 			<MENU name="GK GTA Revenue">124</MENU>
 			<MENU name="Invoice Listing">128</MENU>
 			<MENU name="Statements">143</MENU>
-			<MENU name="Receipt">148</MENU>
+			<MENU name="Client Payments">148</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Clients" type="vert" key="1" h="500">
@@ -553,5 +553,11 @@
 			<JASPER name="Clients Statements" linkfield="clientid" reportfile="clienttotalstatementa.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Clients Total Statements" printcopies="1" linkfield="clientid" reportfile="clienttotalstatement.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Client Payments" type="horl" key="148" h="500">
+		<FILTER location="250" name="Client Payments" type="horl">
+			<DRILLDOWN name="Account Period" keyfield="periodid" orderby="startdate desc" table="period" listfield="AccountPeriod" filter="periodid"></DRILLDOWN>
+			<JASPER filtered="true" name="Client Payments" reportfile="payments.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>
