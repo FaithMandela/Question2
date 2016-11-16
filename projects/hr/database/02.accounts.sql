@@ -15,45 +15,46 @@ CREATE INDEX accounts_class_chat_type_id ON accounts_class (chat_type_id);
 CREATE TABLE account_types (
 	account_type_id			serial primary key,
 	account_type_no			integer not null,
-	org_id					integer references orgs,
 	accounts_class_id		integer references accounts_class,
+	org_id					integer references orgs,
 	account_type_name		varchar(120) not null,
 	details					text,
 	UNIQUE(account_type_no, org_id)
 );
-CREATE INDEX account_types_org_id ON account_types (org_id);
 CREATE INDEX account_types_accounts_class_id ON account_types (accounts_class_id);
+CREATE INDEX account_types_org_id ON account_types (org_id);
 
 CREATE TABLE accounts (
 	account_id				serial primary key,
 	account_no				integer not null,
-	org_id					integer references orgs,
 	account_type_id			integer references account_types,
+	org_id					integer references orgs,
 	account_name			varchar(120) not null,
 	is_header				boolean default false not null,
 	is_active				boolean default true not null,
 	details					text,
 	UNIQUE(account_no, org_id)
 );
-CREATE INDEX accounts_org_id ON accounts (org_id);
 CREATE INDEX accounts_account_type_id ON accounts (account_type_id);
+CREATE INDEX accounts_org_id ON accounts (org_id);
 
 CREATE TABLE default_accounts (
 	default_account_id		serial primary key,
-	org_id					integer references orgs,
 	account_id				integer references accounts,
-	use_key					integer not null,
+	use_key_id				integer not null references use_keys,
+	org_id					integer references orgs,
 	narrative				varchar(240)
 );
-CREATE INDEX default_accounts_org_id ON default_accounts (org_id);
 CREATE INDEX default_accounts_account_id ON default_accounts (account_id);
+CREATE INDEX default_accounts_use_key_id ON default_accounts (use_key_id);
+CREATE INDEX default_accounts_org_id ON default_accounts (org_id);
 
 CREATE TABLE journals (
 	journal_id				serial primary key,
-	org_id					integer references orgs,
 	period_id				integer not null references periods,
 	currency_id				integer references currency,
 	department_id			integer	references departments,
+	org_id					integer references orgs,
 	exchange_rate			real default 1 not null,
 	journal_date			date not null,
 	posted					boolean not null default false,
@@ -61,27 +62,29 @@ CREATE TABLE journals (
 	narrative				varchar(240),
 	details					text
 );
-CREATE INDEX journals_org_id ON journals (org_id);
 CREATE INDEX journals_period_id ON journals (period_id);
 CREATE INDEX journals_currency_id ON journals (currency_id);
+CREATE INDEX journals_department_id ON journals (department_id);
+CREATE INDEX journals_org_id ON journals (org_id);
 
 CREATE TABLE gls (
 	gl_id					serial primary key,
-	org_id					integer references orgs,
 	journal_id				integer not null references journals,
 	account_id				integer not null references accounts,
+	org_id					integer references orgs,
 	debit					real not null default 0,
 	credit					real not null default 0,
 	gl_narrative			varchar(240)
 );
-CREATE INDEX gls_org_id ON gls (org_id);
 CREATE INDEX gls_journal_id ON gls (journal_id);
 CREATE INDEX gls_account_id ON gls (account_id);
+CREATE INDEX gls_org_id ON gls (org_id);
 
 CREATE TABLE tax_types (
 	tax_type_id				serial primary key,
 	account_id				integer references accounts,
 	currency_id				integer references currency,
+	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
 	tax_type_name			varchar(50) not null,
 	tax_type_number			varchar(50),
@@ -98,14 +101,13 @@ CREATE TABLE tax_types (
 	account_number			varchar(32),
 	employer_account		varchar(32),
 	active					boolean default true,
-	use_key					integer default 0 not null,
-	use_type				integer default 0 not null,
 	Details					text,
 	
 	UNIQUE(tax_type_name, org_id)
 );
 CREATE INDEX tax_types_account_id ON tax_types (account_id);
 CREATE INDEX tax_types_currency_id ON tax_types (currency_id);
+CREATE INDEX tax_types_use_key_id ON tax_types (use_key_id);
 CREATE INDEX tax_types_org_id ON tax_types (org_id);
 
 CREATE TABLE tax_rates (
@@ -286,12 +288,13 @@ CREATE VIEW vw_budget_ledger AS
 CREATE VIEW vw_tax_types AS
 	SELECT vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
 		tax_types.org_id, tax_types.tax_type_id, tax_types.tax_type_name, tax_types.formural, tax_types.tax_relief, 
 		tax_types.tax_type_order, tax_types.in_tax, tax_types.tax_rate, tax_types.tax_inclusive, tax_types.linear, 
 		tax_types.percentage, tax_types.employer, tax_types.employer_ps, tax_types.account_number, 
-		tax_types.employer_account, tax_types.active, 
-		tax_types.tax_type_number, tax_types.use_key, tax_types.details
+		tax_types.employer_account, tax_types.active, tax_types.tax_type_number, tax_types.details
 	FROM tax_types INNER JOIN currency ON tax_types.currency_id = currency.currency_id
+		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id
 		LEFT JOIN vw_accounts ON tax_types.account_id = vw_accounts.account_id;
 
 CREATE VIEW vw_tax_rates AS
@@ -304,7 +307,7 @@ CREATE VIEW vw_period_tax_types AS
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister,
 		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, tax_types.tax_type_number,
-		period_tax_types.period_tax_type_name, tax_types.use_key,
+		period_tax_types.period_tax_type_name, tax_types.use_key_id,
 		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, period_tax_types.percentage, 
 		period_tax_types.formural, period_tax_types.details
 	FROM period_tax_types INNER JOIN vw_periods ON period_tax_types.period_id = vw_periods.period_id
@@ -383,6 +386,12 @@ CREATE OR REPLACE FUNCTION curr_base_returns(date, date) RETURNS real AS $$
 	FROM vw_gls
 	WHERE (chat_type_id > 3) AND (posted = true) AND (year_closing = false)
 		AND (journal_date >= $1) AND (journal_date <= $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_account(integer, integer) RETURNS integer AS $$
+    SELECT accounts.account_no
+	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
+	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION process_journal(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$

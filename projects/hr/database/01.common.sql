@@ -100,7 +100,6 @@ CREATE TABLE periods (
 	is_posted				boolean default false not null,
 	loan_approval			boolean default false not null,
 	gl_payroll_account		varchar(32),
-	gl_bank_account			varchar(32),
 	gl_advance_account		varchar(32),
 
 	bank_header				text,
@@ -156,12 +155,11 @@ CREATE VIEW vw_entitys AS
 		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
 		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
 		
-		entity_types.entity_type_id, entity_types.entity_type_name, 
-		entity_types.entity_role, entity_types.use_key,
+		entity_types.entity_type_id, entity_types.entity_type_name, entity_types.entity_role, 
 		
-		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
+		entitys.entity_id, entitys.use_key_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
-		entitys.function_role, entitys.use_function, entitys.attention, entitys.primary_email, entitys.primary_telephone
+		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone
 
 	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
@@ -189,7 +187,7 @@ CREATE VIEW vw_periods AS
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
 		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
-		periods.gl_payroll_account, periods.gl_bank_account, periods.gl_advance_account,
+		periods.gl_payroll_account, periods.gl_advance_account,
 		periods.bank_header, periods.bank_address, periods.details,
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 

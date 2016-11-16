@@ -9,10 +9,10 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 5, true);
 
 INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (1, 5, 1);
 
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key) VALUES (1, 'Users', 'user', 0);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key) VALUES (1, 'Staff', 'staff', 1);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key) VALUES (1, 'Client', 'client', 2);
-INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key) VALUES (1, 'Supplier', 'supplier', 3);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Users', 'user', 0);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Staff', 'staff', 1);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Client', 'client', 2);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Supplier', 'supplier', 3);
 
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Basic');
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Manager');
@@ -49,12 +49,12 @@ INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visibl
 UPDATE adjustments SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 50, true);
 
-INSERT INTO tax_types (tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type) VALUES (7, 1, 'PAYE', 'get_employee_tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, 3);
-INSERT INTO tax_types (tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type) VALUES (8, 1, 'FULL PAYE', 'get_employee_tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, 3);
-INSERT INTO tax_types (tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type) VALUES (9, 1, 'NSSF', 'get_employee_tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, 1);
-INSERT INTO tax_types (tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type) VALUES (10, 1, 'NHIF', 'get_employee_tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true, 1);
-INSERT INTO tax_types (tax_type_id, use_key, org_id, tax_type_name, tax_rate) VALUES (11, 0, 1, 'Exempt', 0);
-INSERT INTO tax_types (tax_type_id, use_key, org_id, tax_type_name, tax_rate) VALUES (12, 0, 1, 'VAT', 16);
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (7, 11, 'PAYE', 'get_employee_tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true);
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (8, 12, 'NSSF', 'get_employee_tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true);
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (9, 12, 'NHIF', 'get_employee_tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true);
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (10, 11, 'FULL PAYE', 'get_employee_tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false);
+INSERT INTO tax_types (tax_type_id, use_key_id, org_id, tax_type_name, tax_rate) VALUES (11, 15, 1, 'Exempt', 0);
+INSERT INTO tax_types (tax_type_id, use_key_id, org_id, tax_type_name, tax_rate) VALUES (12, 15, 1, 'VAT', 16);
 UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
 

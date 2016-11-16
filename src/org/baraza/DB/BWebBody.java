@@ -422,8 +422,14 @@ public class BWebBody extends BQuery {
 		String defaultvalue = el.getAttribute("default", "");
 		String default_fnct = el.getAttribute("default_fnct");
 		String default_org_fnct = el.getAttribute("default_org_fnct");
-		if(default_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
-		if(default_org_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
+		if(default_fnct != null) {
+			if(default_fnct.indexOf("(") > 1) db.executeFunction("SELECT " + default_fnct + ", '" + db.getUserID() + "')");
+			else defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
+		}
+		if(default_org_fnct != null) {
+			if(default_org_fnct.indexOf("(") > 1) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + ", " + userOrg + ")");
+			else defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
+		}
 
 		if(formCols > 1) response.append("<div class='col-md-6'>\n");
 		response.append("	<div class='form-group'>\n");

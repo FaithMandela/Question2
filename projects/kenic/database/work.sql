@@ -181,3 +181,10 @@ DELETE FROM gl_trans WHERE type_no = 12 and type = 12;
 
 DELETE FROM cust_allocations WHERE trans_type_from = 10;
 
+
+
+---- opening balance
+
+INSERT INTO ledger (id, client_roid, description, currency, tax, total, created, exdate, previous_expiry_date, months_posted, trans_type, refund_for_id, documentnumber, ChequeNo)
+VALUES ('1001', 'SAL8', 'Cheque Receipt', 'KES', NULL, '-8404433.10', '2015-12-31', '2015-12-31', '2015-12-31', '0', 'Payment', NULL, '1001', '1001');
+

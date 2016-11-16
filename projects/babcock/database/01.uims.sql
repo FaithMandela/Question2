@@ -691,9 +691,11 @@ CREATE TABLE studentpayments (
 	approvedtime		timestamp,
 	Picked				boolean default false not null,
 	Pickeddate			timestamp,
+	first_attempt		timestamp,
 	ns_amount			real,
 	payment_code		varchar(50),
 	terminalid			varchar(12),
+	mechant_code		varchar(16),
 	narrative			varchar(240),
 	purpose				varchar(240)
 );	

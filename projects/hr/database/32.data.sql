@@ -116,16 +116,14 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90005'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90010',900,'AIRTIME ');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90012',900,'TRANSPORT ALLOWANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90015',900,'REMOTE ACCESS');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90020',900,'ICEA EMPLOYER PENSION CONTRIBUTION');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90020',900,'EMPLOYER PENSION CONTRIBUTION');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90025',900,'NSSF EMPLOYER CONTRIBUTION');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90035',900,'CAPACITY BUILDING - TRAINING');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90040',900,'INTERNSHIP ALLOWANCES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90045',900,'BONUSES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90050',900,'LEAVE ACCRUAL');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90055',900,'WELFARE');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90056',900,'STAFF WELLFARE: WATER');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90057',900,'STAFF WELLFARE: TEA');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90058',900,'STAFF WELLFARE: OTHER CONSUMABLES');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90056',900,'STAFF WELLFARE: CONSUMABLES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90060',900,'MEDICAL INSURANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90065',900,'GROUP PERSONAL ACCIDENT AND WIBA');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90070',900,'STAFF SATISFACTION SURVEY');
@@ -207,17 +205,29 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99999'
 UPDATE accounts set org_id = 0, account_id = account_no;
 SELECT pg_catalog.setval('accounts_account_id_seq', 99999, true);
 
-INSERT INTO default_accounts (use_key, account_id, narrative) VALUES (1, 99999, 'SURPLUS/DEFICIT ACCOUNT');
-INSERT INTO default_accounts (use_key, account_id, narrative) VALUES (2, 61000, 'RETAINED EARNINGS ACCOUNT');
-UPDATE default_accounts set org_id = 0;
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (15, 'Transaction Tax', 2);
+
+UPDATE tax_types SET account_id = 90000;
+INSERT INTO tax_types (org_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (0, 15, 'Exempt', 0, '42005');
+INSERT INTO tax_types (org_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (0, 15, 'VAT', 16, '42005');
+UPDATE tax_types SET currency_id = 1;
+
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (21, 'Suplus/Deficit', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (22, 'Retained Earnings', 3);
+
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (23, 'Travel Cost', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (24, 'Travel Payment', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (25, 'Travel Tax', 3);
+
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 21, 99999);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 22, 61000);
+
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 23, 90012);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 24, 30005);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 25, 40045);
 
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
 VALUES (0, 0, 1, 0, '33000', 'Cash Account', true);
-
-UPDATE tax_types SET account_id = 90000;
-INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'Exempt', 0, '42005');
-INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'VAT', 16, '42005');
-UPDATE tax_types SET currency_id = 1;
 
 
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 

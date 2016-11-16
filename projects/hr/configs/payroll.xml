@@ -865,7 +865,7 @@
 						<TEXTDECIMAL w="150" title="Full Amount" y="70" h="20" x="10">full_amount</TEXTDECIMAL>
 						<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
 						<TEXTFIELD w="430" title="Travel To" y="90" h="20" x="10">travel_to</TEXTFIELD>
-						<TEXTFIELD w="150" title="Account" default="8225" y="110" h="20" x="10">post_account</TEXTFIELD>
+						<TEXTFIELD w="150" title="Account" default_org_fnct="get_default_account(23" y="110" h="20" x="10">post_account</TEXTFIELD>
 						<COMBOLIST w="150" title="Approve" y="110" h="20" x="290">approve_status
 							<DATA>Approved</DATA>
 							<DATA>Rejected</DATA>

@@ -1,5 +1,9 @@
 
 
+
+ALTER TABLE studentpayments ADD first_attempt timestamp;
+ALTER TABLE studentpayments ADD mechant_code varchar(16);
+
 UPDATE studentpayments SET approved = true, amount = 400000.00 WHERE narrative = '178662;Pay;2016/2017.1M;SAMOIJ0001';
 UPDATE studentpayments SET approved = true, amount = 691153.00 WHERE narrative = '59128Fees;2016/2017.1;SIHAAN0001';
 UPDATE studentpayments SET approved = true, amount = 2640700.00 WHERE narrative = '59501Fees;2016/2017.1M;SOKHIN0001';

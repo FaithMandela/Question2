@@ -32,8 +32,8 @@ VALUES (0, 'Gichangi', 'Dennis', 'Wachira', 'dennisgichangi@gmail.com', '1979-03
 UPDATE entitys SET first_password = 'baraza';
 
 
-INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, super_user, entity_leader, function_role, is_active, account_id, attention, use_function) 
-VALUES (0, 2, 'ABCD Kenya', 'abcd', false, false, 'client', true, 30000, 'Jane Kamango', 2);
+INSERT INTO entitys (org_id, entity_type_id, use_key_id, entity_name, user_name, super_user, entity_leader, function_role, is_active, account_id, attention) 
+VALUES (0, 2, 2, 'ABCD Kenya', 'abcd', false, false, 'client', true, 30000, 'Jane Kamango');
 
 INSERT INTO project_types (project_type_name) VALUES ('Software Development');
 
