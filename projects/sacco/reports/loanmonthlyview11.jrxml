@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanmonthlyview" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="5f623bbe-12af-47c4-92d1-9c793e6e2ebc">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanmonthlyview" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="5f623bbe-12af-47c4-92d1-9c793e6e2ebc">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -12,7 +12,7 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="entityid" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
@@ -26,9 +26,8 @@
 	<queryString>
 		<![CDATA[SELECT *
 FROM vw_loan_monthly
-WHERE (vw_loan_monthly.entity_id = '$P!{entityid}')
-
-ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
+WHERE (entity_id = '$P!{entityid}')
+]]>
 	</queryString>
 	<field name="currency_id" class="java.lang.Integer"/>
 	<field name="currency_name" class="java.lang.String"/>
@@ -65,21 +64,21 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 	<field name="total_interest" class="java.lang.Float"/>
 	<field name="total_repayment" class="java.lang.Float"/>
 	<field name="loan_balance" class="java.lang.Float"/>
-	<variable name="suminterestamount" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{interest_amount}]]></variableExpression>
+	<variable name="balancePenalty" class="java.lang.Float">
+		<variableExpression><![CDATA[$F{penalty}-$F{penalty_paid}]]></variableExpression>
 	</variable>
-	<variable name="suminterestpaid" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{interest_paid}]]></variableExpression>
+	<variable name="BalInterest" class="java.lang.Float">
+		<variableExpression><![CDATA[$F{interest_amount}-$F{interest_paid}]]></variableExpression>
 	</variable>
-	<variable name="sumrepayment" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{repayment_paid}]]></variableExpression>
+	<variable name="Balrepayment" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{monthly_repayment}-$F{repayment_paid}]]></variableExpression>
 	</variable>
 	<group name="loanid">
 		<groupExpression><![CDATA[$F{loan_id}]]></groupExpression>
 		<groupHeader>
 			<band height="100" splitType="Stretch">
 				<line>
-					<reportElement key="line" x="0" y="95" width="535" height="1" forecolor="#000000" uuid="58c4c424-02b4-42e5-984d-99c723f204e4"/>
+					<reportElement key="line" x="0" y="95" width="690" height="1" forecolor="#000000" uuid="58c4c424-02b4-42e5-984d-99c723f204e4"/>
 					<graphicElement>
 						<pen lineWidth="2.0" lineStyle="Solid"/>
 					</graphicElement>
@@ -176,7 +175,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<text><![CDATA[Monthly Repayment]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="165" y="77" width="85" height="16" forecolor="#000000" uuid="d02dccb8-5997-42ff-8640-579872247a1a"/>
+					<reportElement key="element-90" x="260" y="53" width="85" height="16" forecolor="#000000" uuid="d02dccb8-5997-42ff-8640-579872247a1a"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -202,7 +201,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<text><![CDATA[Year]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="250" y="77" width="85" height="16" forecolor="#000000" uuid="cd47d9be-139b-4000-af79-d7a47363217e"/>
+					<reportElement key="element-90" x="352" y="77" width="67" height="16" forecolor="#000000" uuid="cd47d9be-139b-4000-af79-d7a47363217e"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -215,7 +214,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<text><![CDATA[Interest Amount]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="335" y="77" width="85" height="16" forecolor="#000000" uuid="ea9fddeb-2cdb-43c4-bafc-b8d322037696"/>
+					<reportElement key="element-90" x="499" y="77" width="85" height="16" forecolor="#000000" uuid="ea9fddeb-2cdb-43c4-bafc-b8d322037696"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -225,10 +224,10 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Interest Paid]]></text>
+					<text><![CDATA[Reapayment]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="element-90" x="420" y="77" width="85" height="16" forecolor="#000000" uuid="6b0f1cb7-ebb5-43c1-9e9a-5edef0513992"/>
+					<reportElement key="element-90" x="584" y="77" width="85" height="16" forecolor="#000000" uuid="6b0f1cb7-ebb5-43c1-9e9a-5edef0513992"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -238,7 +237,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Repayment]]></text>
+					<text><![CDATA[Paid]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 					<reportElement key="textField" x="104" y="5" width="156" height="16" uuid="7e945fa0-2985-478e-8807-65cb48ed444c"/>
@@ -344,12 +343,64 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					</textElement>
 					<text><![CDATA[Month]]></text>
 				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+					<reportElement key="textField" x="366" y="55" width="85" height="14" uuid="168f2a27-48a2-4e15-aa46-846de137bb29"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="Times New Roman" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{loan_balance}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement key="element-90" x="419" y="77" width="67" height="16" forecolor="#000000" uuid="ddd0e2b6-1a7f-4293-a72a-6abe6051ca86"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Paid]]></text>
+				</staticText>
+				<staticText>
+					<reportElement key="element-90" x="178" y="77" width="67" height="16" forecolor="#000000" uuid="945642ab-0e52-4199-8fdb-6dc181beaad3"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Penalty]]></text>
+				</staticText>
+				<staticText>
+					<reportElement key="element-90" x="249" y="77" width="67" height="16" forecolor="#000000" uuid="84288eb3-3d18-47ad-be4a-1a387bf0665a"/>
+					<box leftPadding="2" rightPadding="2">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Paid]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 		<groupFooter>
 			<band height="29" splitType="Stretch">
 				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement key="textField-2" x="250" y="7" width="85" height="16" uuid="ce0ed5c7-b041-415e-962e-a31dd3a3b975"/>
+					<reportElement key="textField-2" x="182" y="6" width="134" height="16" uuid="ce0ed5c7-b041-415e-962e-a31dd3a3b975"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -359,10 +410,10 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{suminterestamount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{balancePenalty}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement key="textField-3" x="335" y="7" width="85" height="16" uuid="8b9a315b-a218-4215-b231-38551b8dbe60"/>
+					<reportElement key="textField-3" x="359" y="7" width="114" height="16" uuid="8b9a315b-a218-4215-b231-38551b8dbe60"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -372,10 +423,10 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{suminterestpaid}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{BalInterest}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement key="textField-4" x="420" y="7" width="85" height="16" uuid="56b1bc20-b38b-4bdd-b6c8-117aa72736d7"/>
+					<reportElement key="textField-4" x="547" y="6" width="85" height="16" uuid="56b1bc20-b38b-4bdd-b6c8-117aa72736d7"/>
 					<box leftPadding="2" rightPadding="2">
 						<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -385,7 +436,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{sumrepayment}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{Balrepayment}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement key="element-92" x="4" y="6" width="71" height="16" forecolor="#000000" uuid="b72ecd33-445a-4d1a-aefb-2104ac77dd58"/>
@@ -398,7 +449,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<textElement>
 						<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 					</textElement>
-					<text><![CDATA[Total]]></text>
+					<text><![CDATA[UNPAID]]></text>
 				</staticText>
 			</band>
 		</groupFooter>
@@ -419,60 +470,8 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="28" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Loan Payment Report]]></text>
+				<text><![CDATA[Loan Repayment Report]]></text>
 			</staticText>
-			<staticText>
-				<reportElement key="element-90" x="14" y="52" width="69" height="16" forecolor="#000000" uuid="42d1016b-9834-4b76-9164-a35d38f6037a"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<text><![CDATA[Member ID]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="element-90" x="120" y="52" width="73" height="16" forecolor="#000000" uuid="df4441af-8eda-475c-8d17-5210100fa720"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<text><![CDATA[Member Name]]></text>
-			</staticText>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="83" y="52" width="37" height="16" uuid="f9521379-edc9-4072-95ff-87a126420d07"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_id}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement key="textField" x="193" y="52" width="251" height="16" uuid="a9f7dfa1-40d7-494a-80d3-51072ebbb2ab"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
-			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -483,19 +482,6 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
-			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField" x="165" y="0" width="85" height="14" uuid="168f2a27-48a2-4e15-aa46-846de137bb29"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman" size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{loan_balance}]]></textFieldExpression>
-			</textField>
 			<textField isStretchWithOverflow="true" pattern="yyyy" isBlankWhenNull="true">
 				<reportElement key="textField" x="5" y="0" width="71" height="14" uuid="3d0412e8-6335-4a1f-bc0e-68a034ece18d"/>
 				<box leftPadding="2" rightPadding="2">
@@ -510,7 +496,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField" x="250" y="0" width="85" height="14" uuid="a66d0769-5025-494e-9c84-b48879207182"/>
+				<reportElement key="textField" x="352" y="0" width="67" height="14" uuid="a66d0769-5025-494e-9c84-b48879207182"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -523,7 +509,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 				<textFieldExpression><![CDATA[$F{interest_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField" x="335" y="0" width="85" height="14" uuid="64518ff5-1150-445b-a9da-ca51ef200cd6"/>
+				<reportElement key="textField" x="499" y="0" width="85" height="14" uuid="64518ff5-1150-445b-a9da-ca51ef200cd6"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -536,7 +522,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 				<textFieldExpression><![CDATA[$F{interest_paid}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField" x="420" y="0" width="85" height="14" uuid="5355b1f0-12ce-40aa-94ca-729cea287c10"/>
+				<reportElement key="textField" x="584" y="0" width="85" height="14" uuid="5355b1f0-12ce-40aa-94ca-729cea287c10"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -560,6 +546,45 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField" x="419" y="0" width="67" height="14" uuid="09ed69c6-4652-4a39-b048-b2733c3890f4"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interest_amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField" x="182" y="1" width="67" height="14" uuid="1465b8ca-dc5c-461b-a83e-c94cd1a053be"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interest_amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField" x="249" y="1" width="67" height="14" uuid="c0248201-6ee2-4974-bffc-adebff224f1f"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interest_amount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

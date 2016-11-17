@@ -18,8 +18,7 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="entityid" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[""
-]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT currency_id, currency_name, currency_symbol, loan_type_id, loan_type_name,

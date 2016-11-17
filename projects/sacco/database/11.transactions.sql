@@ -1,3 +1,5 @@
+--Drop table stores cascade; 
+
 CREATE TABLE stores (
 	store_id				serial primary key,
 	org_id					integer references orgs,
@@ -5,6 +7,8 @@ CREATE TABLE stores (
 	details					text
 );
 CREATE INDEX stores_org_id ON stores (org_id);
+
+--Drop table bank_accounts cascade; 
 
 CREATE TABLE bank_accounts (
 	bank_account_id			serial primary key,
@@ -24,8 +28,8 @@ CREATE INDEX bank_accounts_bank_branch_id ON bank_accounts (bank_branch_id);
 CREATE INDEX bank_accounts_account_id ON bank_accounts (account_id);
 CREATE INDEX bank_accounts_currency_id ON bank_accounts (currency_id);
 
+--Drop table item_category cascade; 
 
---- from here
 CREATE TABLE item_category (
 	item_category_id		serial primary key,
 	org_id					integer references orgs,
@@ -37,6 +41,8 @@ INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Services');
 INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Goods');
 INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Utilities');
 
+--Drop table item_units cascade; 
+
 CREATE TABLE item_units (
 	item_unit_id			serial primary key,
 	org_id					integer references orgs,
@@ -47,6 +53,9 @@ CREATE INDEX item_units_org_id ON item_units (org_id);
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Each');
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Man Hours');
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, '100KG');
+
+
+--Drop table items cascade; 
 
 CREATE TABLE items (
 	item_id					serial primary key,
@@ -75,6 +84,7 @@ CREATE INDEX items_item_unit_id ON items (item_unit_id);
 CREATE INDEX items_sales_account_id ON items (sales_account_id);
 CREATE INDEX items_purchase_account_id ON items (purchase_account_id);
 
+--Drop table quotations cascade; 
 CREATE TABLE quotations (
 	quotation_id 			serial primary key,
 	org_id					integer references orgs,
@@ -90,6 +100,8 @@ CREATE TABLE quotations (
 CREATE INDEX quotations_org_id ON quotations (org_id);
 CREATE INDEX quotations_item_id ON quotations (item_id);
 CREATE INDEX quotations_entity_id ON quotations (entity_id);
+
+--Drop table transaction_types cascade; 
 
 CREATE TABLE transaction_types (
 	transaction_type_id		integer primary key,
@@ -117,6 +129,8 @@ INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_s
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (21, 'Direct Expenditure', true, true);
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (22, 'Direct Income', false, true);
 
+--Drop table transaction_counters cascade; 
+
 CREATE TABLE transaction_counters (
 	transaction_counter_id	serial primary key,
 	transaction_type_id		integer references transaction_types,
@@ -130,6 +144,7 @@ SELECT transaction_type_id, 0, 1
 FROM transaction_types;
 
 
+--Drop table transaction_status cascade; 
 CREATE TABLE transaction_status (
 	transaction_status_id	integer primary key,
 	transaction_status_name	varchar(50) not null
@@ -138,7 +153,8 @@ INSERT INTO transaction_status (transaction_status_id, transaction_status_name) 
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (2, 'Completed');
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (3, 'Processed');
 INSERT INTO transaction_status (transaction_status_id, transaction_status_name) VALUES (4, 'Archive');
--- here
+
+--Drop table ledger_types cascade; 
 CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,
 	account_id				integer references accounts,
@@ -151,6 +167,7 @@ CREATE TABLE ledger_types (
 CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
 CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
 
+--Drop table transactions cascade; 
 CREATE TABLE transactions (
 	transaction_id 			serial primary key,
 	entity_id 				integer references entitys,
@@ -193,7 +210,6 @@ CREATE TABLE transactions (
     narrative				varchar(120),
     details					text
 );
---help
 CREATE INDEX transactions_entity_id ON transactions (entity_id);
 CREATE INDEX transactions_transaction_type_id ON transactions (transaction_type_id);
 CREATE INDEX transactions_bank_account_id ON transactions (bank_account_id);
@@ -204,6 +220,8 @@ CREATE INDEX transactions_department_id ON transactions (department_id);
 CREATE INDEX transactions_workflow_table_id ON transactions (workflow_table_id);
 CREATE INDEX transactions_entered_by ON transactions (entered_by);
 CREATE INDEX transactions_org_id ON transactions (org_id);
+
+--Drop table transaction_details cascade; 
 
 CREATE TABLE transaction_details (
 	transaction_detail_id 	serial primary key,
@@ -224,6 +242,7 @@ CREATE INDEX transaction_details_account_id ON transaction_details (account_id);
 CREATE INDEX transaction_details_item_id ON transaction_details (item_id);
 CREATE INDEX transaction_details_org_id ON transaction_details (org_id);
 
+--Drop table transaction_links cascade; 
 CREATE TABLE transaction_links (
 	transaction_link_id		serial primary key,
 	org_id					integer references orgs,
@@ -235,8 +254,6 @@ CREATE TABLE transaction_links (
 	quantity				integer default 0  not null,
 	narrative				varchar(240)
 );
---here
-
 CREATE INDEX transaction_links_org_id ON transaction_links (org_id);
 CREATE INDEX transaction_links_transaction_id ON transaction_links (transaction_id);
 CREATE INDEX transaction_links_transaction_to ON transaction_links (transaction_to);
@@ -292,38 +309,40 @@ CREATE VIEW vw_transactions AS
 		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
 		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
 		departments.department_id, departments.department_name,
+		ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id as ledger_account_id, ledger_types.ledger_posting,
 		transaction_status.transaction_status_id, transaction_status.transaction_status_name, transactions.journal_id, 
 		transactions.transaction_id, transactions.org_id, transactions.transaction_date, transactions.transaction_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) 
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 22)  
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 21) 
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
 		INNER JOIN currency ON transactions.currency_id = currency.currency_id
 		LEFT JOIN entitys ON transactions.entity_id = entitys.entity_id
 		LEFT JOIN vw_bank_accounts ON vw_bank_accounts.bank_account_id = transactions.bank_account_id
-		LEFT JOIN departments ON transactions.department_id = departments.department_id;
+		LEFT JOIN departments ON transactions.department_id = departments.department_id
+		LEFT JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id;
+
+
 
 CREATE VIEW vw_trx AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
-		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
-		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		vw_orgs.sys_country_id as org_sys_country_id, vw_orgs.sys_country_name as org_sys_country_name, 
-		vw_orgs.address_id as org_address_id, vw_orgs.table_name as org_table_name,
-		vw_orgs.post_office_box as org_post_office_box, vw_orgs.postal_code as org_postal_code, 
-		vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
-		vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
-		vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
+		vw_orgs.logo as org_logo, 
+		vw_orgs.org_address_id as org_address_id, vw_orgs.org_table_name as org_table_name,
+		vw_orgs.org_post_office_box as org_post_office_box, vw_orgs.org_postal_code as org_postal_code, 
+		vw_orgs.org_premises as org_premises, vw_orgs.org_street as org_street, vw_orgs.org_town as org_town, 
+		vw_orgs.org_phone_number as org_phone_number, vw_orgs.org_extension as org_extension, 
+		vw_orgs.org_mobile as org_mobile, vw_orgs.org_fax as org_fax, vw_orgs.org_email as org_email, vw_orgs.org_website as org_website,
 		vw_entitys.address_id, vw_entitys.address_name,
 		vw_entitys.sys_country_id, vw_entitys.sys_country_name, vw_entitys.table_name, vw_entitys.is_default,
 		vw_entitys.post_office_box, vw_entitys.postal_code, vw_entitys.premises, vw_entitys.street, vw_entitys.town, 
 		vw_entitys.phone_number, vw_entitys.extension, vw_entitys.mobile, vw_entitys.fax, vw_entitys.email, vw_entitys.website,
-		vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.User_name, vw_entitys.Super_User, vw_entitys.attention, 
+		vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.User_name, vw_entitys.Super_User, 
 		vw_entitys.Date_Enroled, vw_entitys.Is_Active, vw_entitys.entity_type_id, vw_entitys.entity_type_name,
 		vw_entitys.entity_role, vw_entitys.use_key,
 		transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
@@ -337,9 +356,9 @@ CREATE VIEW vw_trx AS
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) 
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 22)
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 21) 
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
@@ -388,7 +407,7 @@ CREATE VIEW vw_transaction_details AS
 		LEFT JOIN stores ON transaction_details.store_id = stores.store_id;
 		
 CREATE VIEW vw_tx_ledger AS
-	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
+	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id, ledger_types.ledger_posting,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		entitys.entity_id, entitys.entity_name, 
 		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
@@ -471,7 +490,7 @@ BEGIN
 		UPDATE transactions SET for_processing = false WHERE transaction_id = $1::integer;
 		msg := 'Closed for processing';
 	ELSIF ($3 = '3') THEN
-		UPDATE transactions  SET tx_ledger_date = current_date, completed = true
+		UPDATE transactions  SET payment_date = current_date, completed = true
 		WHERE transaction_id = $1::integer AND completed = false;
 		msg := 'Completed';
 	ELSIF ($3 = '4') THEN
@@ -585,7 +604,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER af_upd_transaction_details AFTER INSERT OR UPDATE OR DELETE ON transaction_details
     FOR EACH ROW EXECUTE PROCEDURE af_upd_transaction_details();
 
-CREATE OR REPLACE FUNCTION upd_transactions() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_transactions() RETURNS trigger AS $$
 DECLARE
 	v_counter_id	integer;
 	transid 		integer;
@@ -605,24 +624,27 @@ BEGIN
 			FROM orgs
 			WHERE (org_id = NEW.org_id);
 		END IF;
-		
+				
 		IF(NEW.payment_date is null) AND (NEW.transaction_date is not null)THEN
 			NEW.payment_date := NEW.transaction_date;
 		END IF;
 	ELSE
-		IF ((OLD.approve_status = 'Draft') AND (NEW.completed = true)) THEN
-			NEW.approve_status := 'Completed';
-		END IF;
-	
+			
 		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
 		ELSIF ((OLD.approve_status != 'Completed') AND (NEW.approve_status = 'Completed')) THEN
 			NEW.completed = true;
 		ELSIF ((OLD.approve_status = 'Completed') AND (NEW.approve_status != 'Completed')) THEN
+		ELSIF ((OLD.is_cleared = false) AND (NEW.is_cleared = true)) THEN
 		ELSIF ((OLD.journal_id is not null) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already posted no changes are allowed.', NEW.transaction_id;
 		ELSIF ((OLD.transaction_status_id > 1) AND (OLD.transaction_status_id = NEW.transaction_status_id)) THEN
 			RAISE EXCEPTION 'Transaction % is already completed no changes are allowed.', NEW.transaction_id;
 		END IF;
+	END IF;
+	
+	IF ((NEW.approve_status = 'Draft') AND (NEW.completed = true)) THEN
+		NEW.approve_status := 'Completed';
+		NEW.transaction_status_id := 2;
 	END IF;
 	
 	IF(NEW.transaction_type_id = 7)THEN
@@ -636,8 +658,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER upd_transactions BEFORE INSERT OR UPDATE ON transactions
-    FOR EACH ROW EXECUTE PROCEDURE upd_transactions();
+CREATE TRIGGER ins_transactions BEFORE INSERT OR UPDATE ON transactions
+    FOR EACH ROW EXECUTE PROCEDURE ins_transactions();
 
 CREATE OR REPLACE FUNCTION get_period(date) RETURNS INTEGER AS $$
 	SELECT period_id FROM periods WHERE (start_date <= $1) AND (end_date >= $1); 
@@ -654,7 +676,7 @@ DECLARE
 	bankacc INTEGER;
 	msg varchar(120);
 BEGIN
-	SELECT transaction_id, transaction_type_id, transaction_status_id INTO rec
+	SELECT transaction_id, transaction_type_id, transaction_status_id, bank_account_id INTO rec
 	FROM transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
@@ -662,12 +684,21 @@ BEGIN
 		UPDATE transactions SET transaction_status_id = 4 
 		WHERE transaction_id = rec.transaction_id;
 		msg := 'Transaction Archived';
-	ELSIF(rec.transaction_status_id = 1) THEN
-		IF($3 = '1') THEN
+	ELSIF($3 = '1') AND (rec.transaction_status_id = 1)THEN
+		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
+			IF(rec.bank_account_id is null)THEN
+				msg := 'Transaction completed.';
+				RAISE EXCEPTION 'No active period to post.';
+			ELSE
+				UPDATE transactions SET transaction_status_id = 2, approve_status = 'Completed'
+				WHERE transaction_id = rec.transaction_id;
+				msg := 'Transaction completed.';
+			END IF;
+		ELSE
 			UPDATE transactions SET transaction_status_id = 2, approve_status = 'Completed'
 			WHERE transaction_id = rec.transaction_id;
+			msg := 'Transaction completed.';
 		END IF;
-		msg := 'Transaction completed.';
 	ELSE
 		msg := 'Transaction alerady completed.';
 	END IF;
@@ -760,7 +791,8 @@ BEGIN
 	SELECT org_id, department_id, transaction_id, transaction_type_id, transaction_type_name as tx_name, 
 		transaction_status_id, journal_id, gl_bank_account_id, currency_id, exchange_rate,
 		transaction_date, transaction_amount, document_number, credit_amount, debit_amount,
-		entity_account_id, entity_name, approve_status INTO rec
+		entity_account_id, entity_name, approve_status, 
+		ledger_account_id, ledger_posting INTO rec
 	FROM vw_transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
@@ -777,6 +809,9 @@ BEGIN
 	ELSIF(rec.approve_status != 'Approved') THEN
 		msg := 'Transaction is not yet approved.';
 		RAISE EXCEPTION 'Transaction is not yet approved.';
+	ELSIF((rec.ledger_account_id is not null) AND (rec.ledger_posting = false)) THEN
+		msg := 'Transaction not for posting.';
+		RAISE EXCEPTION 'Transaction not for posting.';
 	ELSE
 		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
 		VALUES (rec.org_id, rec.department_id, rec.currency_id, periodid, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
@@ -786,6 +821,15 @@ BEGIN
 		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 
 		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+		ELSIF((rec.transaction_type_id = 21) or (rec.transaction_type_id = 22)) THEN
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, journalid, rec.entity_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, journalid, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
 			VALUES (rec.org_id, journalid, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
 		ELSE

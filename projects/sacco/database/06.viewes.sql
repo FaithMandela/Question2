@@ -262,17 +262,6 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION get_shares(integer, real, real) RETURNS real AS $$
-DECLARE
-	shares real;
-BEGIN
-	SELECT sum(deposit_amount - contribution_amount) INTO shares
-	FROM vw_contributions
-	WHERE (contribution_id = $1) ;
-
-RETURN shares;
-END;
-$$ LANGUAGE plpgsql;
 
 
 
@@ -317,16 +306,23 @@ CREATE OR REPLACE VIEW vw_gurrantors AS
 
 
 CREATE OR REPLACE VIEW vw_contributions AS 
- SELECT contributions.contribution_id,
-    contributions.org_id,
+ SELECT 
+ contributions.contribution_id,
+   contributions.org_id,
     contributions.entity_id,
     contributions.period_id,
     contributions.payment_type_id,
-    contributions.deposit_amount,
+    contributions.receipt,
+contributions.receipt_date,
+	 contributions.balance,
     contributions.entry_date,
     contributions.transaction_ref,
-    contributions.additional_payments,
     contributions.contribution_amount,
+    contributions.contribution_paid ,
+    
+    contributions.deposit_amount,
+    contributions.deposit_date as deposit_dates,
+	
     contributions.is_paid,
     entitys.entity_name,
     entitys.is_active AS member_is_active,
@@ -334,7 +330,8 @@ CREATE OR REPLACE VIEW vw_contributions AS
     contribution_types.contribution_type_name,
     payment_types.payment_type_name,
     payment_types.payment_narrative,
- (contributions.contribution_amount + contributions.additional_payments) AS shares,
+    (get_balance_interest_penalty (contributions.entity_id) + get_shares (contributions.entity_id) )as active_balance, 
+	get_shares (contributions.entity_id,  contributions.period_id) as shares,
     to_char(periods.start_date::timestamp with time zone, 'YYYY'::text) AS deposit_year,
     to_char(periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
    FROM contributions
@@ -342,7 +339,52 @@ CREATE OR REPLACE VIEW vw_contributions AS
      JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
      JOIN periods ON contributions.period_id = periods.period_id;
+  
 
+
+
+   CREATE OR REPLACE VIEW vw_contributions_month AS 
+SELECT vw_periods.period_id,
+    vw_periods.start_date,
+    vw_periods.end_date,
+    vw_periods.overtime_rate,
+    vw_periods.activated,
+    vw_periods.closed,
+    vw_periods.month_id,
+    vw_periods.period_year,
+    vw_periods.period_month,
+    vw_periods.quarter,
+    vw_periods.semister,
+    vw_periods.bank_header,
+    vw_periods.bank_address,
+    vw_periods.is_posted,
+    contributions.contribution_id,
+    contributions.org_id,
+    contributions.balance,
+    contributions.entity_id,
+    contributions.payment_type_id,
+     contributions.contribution_amount,
+      contributions.contribution_paid ,
+    contributions.deposit_amount,
+	contributions.entry_date,
+	contributions.transaction_ref,
+      contributions.is_paid,
+    	get_shares(contributions.entity_id) AS shares,
+	members.contribution AS intial_contribution,
+    members.first_name,
+    members.expired,
+    contribution_types.contribution_type_id,
+    contribution_types.contribution_type_name,
+    payment_types.payment_type_name,
+    payment_types.payment_narrative,
+    to_char(vw_periods.start_date::timestamp with time zone, 'YYYY'::text) AS year,
+    to_char(vw_periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
+   FROM contributions
+     JOIN members ON contributions.entity_id = members.entity_id
+     JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
+     JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
+     JOIN vw_periods ON contributions.period_id = vw_periods.period_id;
+   
 
 DROP VIEW vw_entitys;
 
@@ -458,49 +500,6 @@ CREATE OR REPLACE VIEW vw_recruiting_entity AS
 	JOIN recruiting_agent on members.recruiting_agent_id = recruiting_agent.recruiting_agent_id
 	left JOIN entitys recruiting_agent_entity ON recruiting_agent_entity.entity_id = recruiting_agent.entity_id;
 		
-
-CREATE OR REPLACE VIEW vw_contributions_month AS 
-SELECT vw_periods.period_id,
-    vw_periods.start_date,
-    vw_periods.end_date,
-    vw_periods.overtime_rate,
-    vw_periods.activated,
-    vw_periods.closed,
-    vw_periods.month_id,
-    vw_periods.period_year,
-    vw_periods.period_month,
-    vw_periods.quarter,
-    vw_periods.semister,
-    vw_periods.bank_header,
-    vw_periods.bank_address,
-    vw_periods.is_posted,
-    contributions.contribution_id,
-    contributions.org_id,
-    contributions.entity_id,
-    contributions.payment_type_id,
-    contributions.deposit_amount,
-    contributions.entry_date,
-	contributions.transaction_ref,
-    contributions.additional_payments,
-    contributions.is_paid,
-    contributions.contribution_amount,
-  (contributions.contribution_amount + contributions.additional_payments) AS shares,
-      members.contribution AS intial_contribution,
-    members.first_name,
-    members.expired,
-    contribution_types.contribution_type_id,
-    contribution_types.contribution_type_name,
-    payment_types.payment_type_name,
-    payment_types.payment_narrative,
-    to_char(vw_periods.start_date::timestamp with time zone, 'YYYY'::text) AS year,
-    to_char(vw_periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
-   FROM contributions
-     JOIN members ON contributions.entity_id = members.entity_id
-     JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
-     JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
-     JOIN vw_periods ON contributions.period_id = vw_periods.period_id;
-
-
 
 
  CREATE OR REPLACE VIEW vw_investments AS 

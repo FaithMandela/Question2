@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contributions_members.jasper" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6372b564-d18a-4ee4-a6da-cec80fbe07be">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="577"/>
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -27,7 +27,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,
-vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.deposit_amount,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
+vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.receipt,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
 vw_contributions.entity_name,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions where member_is_active = true and is_paid = true
 ORDER BY vw_contributions.entity_id asc]]>
@@ -37,7 +37,7 @@ ORDER BY vw_contributions.entity_id asc]]>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="payment_type_id" class="java.lang.Integer"/>
 	<field name="deposit_date" class="java.lang.String"/>
-	<field name="deposit_amount" class="java.lang.Float"/>
+	<field name="receipt" class="java.lang.Float"/>
 	<field name="entry_date" class="java.sql.Timestamp"/>
 	<field name="transaction_ref" class="java.lang.String"/>
 	<field name="contribution_amount" class="java.lang.Float"/>
@@ -83,7 +83,7 @@ ORDER BY vw_contributions.entity_id asc]]>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Deposit]]></text>
+				<text><![CDATA[Receipt]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="27" y="1" width="122" height="15" forecolor="#000000" uuid="761cb982-d23e-4ea6-b383-a774718e624c"/>
@@ -159,7 +159,7 @@ ORDER BY vw_contributions.entity_id asc]]>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{deposit_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{receipt}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="432" y="0" width="118" height="15" uuid="01743b3d-a299-46d1-8519-98dabd7b04f6"/>

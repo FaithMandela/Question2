@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_loans_2" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="814" leftMargin="14" rightMargin="14" topMargin="20" bottomMargin="20" uuid="a72330fb-267a-4604-a9b4-74fbaad10b71">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="32"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -26,30 +26,47 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT entity_name, loan_type_name, loan_date,  principle, interest,
-	monthly_repayment, reducing_balance, repayment_period,
-	initial_payment,entity_id,loan_id,
-	repayment_amount, total_repayment, total_interest, loan_balance
+		<![CDATA[SELECT *
 
-FROM vw_loans
-WHERE (vw_loans.loan_id = '$P!{filterid}')
+FROM vw_loan_monthly
+WHERE (vw_loan_monthly.loan_id = '$P!{filterid}')
 $P!{organd}
 ORDER BY  loan_date, loan_type_name;]]>
 	</queryString>
-	<field name="entity_name" class="java.lang.String"/>
+	<field name="currency_id" class="java.lang.Integer"/>
+	<field name="currency_name" class="java.lang.String"/>
+	<field name="currency_symbol" class="java.lang.String"/>
+	<field name="loan_type_id" class="java.lang.Integer"/>
 	<field name="loan_type_name" class="java.lang.String"/>
+	<field name="approve_status" class="java.lang.String"/>
+	<field name="entity_id" class="java.lang.Integer"/>
+	<field name="entity_name" class="java.lang.String"/>
 	<field name="loan_date" class="java.sql.Date"/>
+	<field name="loan_id" class="java.lang.Integer"/>
 	<field name="principle" class="java.lang.Float"/>
 	<field name="interest" class="java.lang.Float"/>
 	<field name="monthly_repayment" class="java.lang.Float"/>
 	<field name="reducing_balance" class="java.lang.Boolean"/>
 	<field name="repayment_period" class="java.lang.Integer"/>
-	<field name="initial_payment" class="java.lang.Float"/>
-	<field name="entity_id" class="java.lang.Integer"/>
-	<field name="loan_id" class="java.lang.Integer"/>
-	<field name="repayment_amount" class="java.lang.Float"/>
-	<field name="total_repayment" class="java.lang.Float"/>
+	<field name="period_id" class="java.lang.Integer"/>
+	<field name="start_date" class="java.sql.Date"/>
+	<field name="end_date" class="java.sql.Date"/>
+	<field name="activated" class="java.lang.Boolean"/>
+	<field name="closed" class="java.lang.Boolean"/>
+	<field name="period_year" class="java.lang.String"/>
+	<field name="period_month" class="java.lang.String"/>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="loan_month_id" class="java.lang.Integer"/>
+	<field name="interest_amount" class="java.lang.Float"/>
+	<field name="additional_payments" class="java.lang.Float"/>
+	<field name="is_paid" class="java.lang.Boolean"/>
+	<field name="repayment_paid" class="java.lang.Float"/>
+	<field name="interest_paid" class="java.lang.Float"/>
+	<field name="penalty" class="java.lang.Float"/>
+	<field name="penalty_paid" class="java.lang.Float"/>
+	<field name="details" class="java.lang.String"/>
 	<field name="total_interest" class="java.lang.Float"/>
+	<field name="total_repayment" class="java.lang.Float"/>
 	<field name="loan_balance" class="java.lang.Float"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -158,14 +175,14 @@ ORDER BY  loan_date, loan_type_name;]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Initial Repayment]]></text>
+				<text><![CDATA[Repayment Paid]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="462" y="0" width="55" height="32" forecolor="#000000" uuid="b0094c98-88e4-43eb-a95e-d5de10bf6d6c"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<text><![CDATA[Repayment Amount]]></text>
+				<text><![CDATA[Total Interest]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="517" y="0" width="55" height="32" forecolor="#000000" uuid="a626769f-7bea-4e01-b7ea-80a2e70e2b6c"/>
@@ -248,14 +265,14 @@ ORDER BY  loan_date, loan_type_name;]]>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{initial_payment}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{repayment_paid}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="462" y="0" width="55" height="15" uuid="4187e245-efe0-4311-bf97-b9678ce94102"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{repayment_amount}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{total_interest}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement style="Detail" x="517" y="0" width="55" height="15" uuid="dc5d6d86-5ca1-4c33-b5f8-3b0c8a8dafec"/>

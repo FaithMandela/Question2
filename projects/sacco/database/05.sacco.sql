@@ -41,13 +41,17 @@ CREATE TABLE contributions (
 	payment_type_id         integer references payment_types,
 	contribution_type_id 	integer references contribution_types,
 	org_id					integer references orgs, 
+	
 	entity_name 			varchar(120),
-	contribution_amount		real,
+	contribution_amount		real default 0 not null,
+	contribution_paid		real default 0 not null,
+
 	loan_repayment			boolean default false,
 	is_paid 				boolean default false,
 	
 	deposit_date			date,
-	deposit_amount			real,
+	receipt					real default 0 not null,
+	
 	entry_date              timestamp default CURRENT_TIMESTAMP,
 	additional_payments 	real not null default 0,
 	transaction_ref         varchar(50),
@@ -235,7 +239,7 @@ CREATE TABLE members (
   	 residential_address 		varchar (120),
   	 
   	 expired 					boolean default 'false'
-  	 contribution				real default '2000';
+  	 contribution				real not null default 0;
   	);
   	
 	 

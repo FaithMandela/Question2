@@ -22,9 +22,7 @@
        date_enroled, is_active, entity_password, first_password,attention,new_password,
        function_role, primary_email, org_id, primary_telephone,
        entity_type_id, entity_type_name, entity_role
-
 FROM vw_entitys_types
-
 WHERE (entity_type_name not like 'subscriptions' and entity_id not in(0,1))
 $P!{organd}
 
