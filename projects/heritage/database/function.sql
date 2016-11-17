@@ -59,8 +59,13 @@ BEGIN
     --raise exception '%',v_credit_limit;
     UPDATE orgs SET credit_limit = v_credit_limit WHERE org_id = NEW.org_id;
 
-	INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
-	VALUES(2, NEW.org_id, NEW.passenger_id, 'passengers','Policy Number:'||NEW.policy_number||'\n\nPassanger Name:'||NEW.passenger_name);
+    IF(NEW.customer_code IS null) THEN
+    	INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
+    	VALUES(2, NEW.org_id, NEW.passenger_id, 'passengers','Policy Number:'||NEW.policy_number||'\n\nPassanger Name:'||NEW.passenger_name);
+    ELSE
+        INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
+    	VALUES(3, NEW.org_id, NEW.passenger_id, 'passengers','Policy Number:'||NEW.policy_number||'\n\nPassanger Name:'||NEW.passenger_name);
+    END IF;
 
 RETURN NEW;
 END;

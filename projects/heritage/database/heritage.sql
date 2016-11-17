@@ -165,7 +165,8 @@ CREATE TABLE passengers(
 	incountry				boolean default false,
 	physical_address 		text,
 	exchange_rate			real ,
-	kesamount				real
+	kesamount				real,
+	pnrno					character varying(50)
 );
 CREATE INDEX passengers_rate_id ON passengers(rate_id);
 CREATE INDEX passengers_corporate_rate_id ON passengers(corporate_rate_id);

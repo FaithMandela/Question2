@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" language="groovy" pageWidth="595" pageHeight="842" columnWidth="523" leftMargin="36" rightMargin="36" topMargin="50" bottomMargin="36" uuid="d38d45e8-3145-4bcd-856b-92309d755928">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="335"/>
+	<property name="ireport.y" value="334"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -10,14 +10,14 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.org_name, vw_passengers.rate_category_name, vw_passengers.rate_plan_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_id_no, vw_passengers.totalamount_covered, vw_passengers.entity_name, vw_passengers.sys_country_name,
-vw_passengers.policy_number,vw_passengers.countries,vw_passengers.destown,vw_passengers.approved_date,
-vw_passengers.cover_amount,pnrno
-FROM vw_passengers
+		<![CDATA[SELECT vw_corporate_passengers.org_name, vw_corporate_passengers.corporate_rate_category_name, vw_corporate_passengers.rate_plan_name, vw_corporate_passengers.days_from, vw_corporate_passengers.days_to, vw_corporate_passengers.passenger_name, vw_corporate_passengers.passenger_mobile, vw_corporate_passengers.passenger_email, vw_corporate_passengers.passenger_id_no, vw_corporate_passengers.totalamount_covered, vw_corporate_passengers.entity_name, vw_corporate_passengers.sys_country_name,
+vw_corporate_passengers.policy_number,vw_corporate_passengers.countries,vw_corporate_passengers.destown,
+vw_corporate_passengers.pnrno,vw_corporate_passengers.cover_amount,vw_corporate_passengers.approved_date
+FROM vw_corporate_passengers
 WHERE passenger_id = '$P!{passenger_id}']]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
-	<field name="rate_category_name" class="java.lang.String"/>
+	<field name="corporate_rate_category_name" class="java.lang.String"/>
 	<field name="rate_plan_name" class="java.lang.String"/>
 	<field name="days_from" class="java.sql.Date"/>
 	<field name="days_to" class="java.sql.Date"/>
@@ -31,9 +31,9 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 	<field name="policy_number" class="java.lang.String"/>
 	<field name="countries" class="java.lang.String"/>
 	<field name="destown" class="java.lang.String"/>
-	<field name="approved_date" class="java.sql.Timestamp"/>
-	<field name="cover_amount" class="java.lang.Float"/>
 	<field name="pnrno" class="java.lang.String"/>
+	<field name="cover_amount" class="java.lang.Float"/>
+	<field name="approved_date" class="java.sql.Timestamp"/>
 	<variable name="policyholders" class="java.lang.Integer">
 		<initialValueExpression><![CDATA[0.06]]></initialValueExpression>
 	</variable>
