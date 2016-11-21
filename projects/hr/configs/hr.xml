@@ -76,7 +76,7 @@
 		</MENU>
 		<MENU name="Payroll" role="admin,payroll,hr,reports" xml="payroll.xml">0</MENU>
 		<MENU name="Projects" role="staff,admin,payroll,hr" xml="projects.xml">0</MENU>
-		<MENU name="Finance" role="finance" xml="finance.xml">0</MENU>
+		<MENU name="Finance" role="finance" xml="business.xml">0</MENU>
 		<MENU page="billing.jsp" name="Billing" role="subscription">0</MENU>
 	</MENU>
 	<CONFIGS name="Full system configurations">
