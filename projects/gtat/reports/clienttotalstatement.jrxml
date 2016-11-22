@@ -29,7 +29,7 @@
 		</box>
 	</style>
 	<parameter name="filterid" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["2017-01-01"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="periodid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
@@ -42,17 +42,22 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT clientid, clientname, SUM(invoice_amount) AS Invoiced , SUM(credit_amount) AS Credited, SUM(payments) AS Payments,
-SUM(invoice_amount + credit_amount - payments) AS Total
+		<![CDATA[SELECT clientid, clientname, period.startdate as statement_date,
+	SUM(invoiced) AS Invoiced , SUM(credit_amount) AS Credited,
+	SUM(payments) AS Payments, SUM(invoiced + credit_amount - payments) AS Total
 
 FROM vw_statement
+JOIN period ON period.periodid = vw_statement.periodid
 
-GROUP BY clientid, clientname
+WHERE  vw_statement.periodid = '$P!{periodid}'
+
+GROUP BY clientid, clientname, period.startdate
 
 ORDER BY clientname]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
 	<field name="clientname" class="java.lang.String"/>
+	<field name="statement_date" class="java.sql.Date"/>
 	<field name="invoiced" class="java.lang.Float"/>
 	<field name="credited" class="java.lang.Float"/>
 	<field name="payments" class="java.lang.Float"/>
@@ -75,17 +80,17 @@ ORDER BY clientname]]>
 	<title>
 		<band height="159" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-13" x="145" y="106" width="233" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
+				<reportElement key="staticText-13" x="145" y="106" width="264" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="18" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[CLIENT STATEMENT]]></text>
+				<text><![CDATA[GTA SUMMARY STATEMENT]]></text>
 			</staticText>
 			<image scaleImage="FillFrame">
 				<reportElement key="image-1" x="1" y="1" width="534" height="100" uuid="34197c32-1fff-4498-b7c2-989ab69cdf4c"/>
 				<imageExpression><![CDATA[$P{reportpath} + "gklogo.jpg"]]></imageExpression>
 			</image>
-			<textField pattern="EEE, d MMM yyyy HH:mm:ss" isBlankWhenNull="false">
+			<textField pattern="EEE, d MMM yyyy HH:mm:ss" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="193" y="129" width="164" height="19" uuid="84ab4659-9292-4353-8e05-8285b2d7ecc2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -96,7 +101,7 @@ ORDER BY clientname]]>
 				<textElement>
 					<font fontName="Times New Roman" size="13"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{statement_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="145" y="129" width="48" height="20" uuid="cca3e64f-7a20-4f92-aaf9-8b68221763cf"/>

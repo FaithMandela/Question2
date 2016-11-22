@@ -121,7 +121,7 @@ GROUP BY entity_id, entity_name, org_id]]>
 	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date, vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.extra_contrib, vw_contributions.total_contribution, vw_contributions.paid, vw_contributions.entity_id
 FROM vw_contributions
-where entity_id= '$P!{entityid}'
+where entity_id= '$P!{entityid}' AND period_id = '$P!{filterid}'
 ORDER BY vw_contributions.start_date DESC]]>
 	</queryString>
 	<field name="contribution_type_name" class="java.lang.String"/>
@@ -180,7 +180,7 @@ ORDER BY vw_contributions.start_date DESC]]>
 						<jr:columnHeader style="table 2_CH" height="30">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" uuid="9c665848-6011-4a10-a423-c3e22dcf1d9c"/>
-								<text><![CDATA[Investment Amount]]></text>
+								<text><![CDATA[Total Investment Amount]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20">
@@ -195,7 +195,7 @@ ORDER BY vw_contributions.start_date DESC]]>
 						<jr:columnHeader style="table 2_CH" height="30">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" uuid="9ee404ea-a62f-4825-a03e-7ab8f7b95d8c"/>
-								<text><![CDATA[MGR Amount]]></text>
+								<text><![CDATA[Total MGR Amount]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20">
@@ -210,7 +210,7 @@ ORDER BY vw_contributions.start_date DESC]]>
 						<jr:columnHeader style="table 2_CH" height="30">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" uuid="2d628e0f-e387-430f-a6b1-fa7785631607"/>
-								<text><![CDATA[Loan Amount]]></text>
+								<text><![CDATA[Total Loan Amount]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:detailCell style="table 2_TD" height="20">

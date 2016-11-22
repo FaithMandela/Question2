@@ -5,6 +5,7 @@
 		<MENU name="Control Panel">15</MENU>
 		<MENU name="Subjects">25</MENU>
 		<MENU name="Applicant">30</MENU>
+		<MENU name="Event Calendar">35</MENU>
 	</MENU>
 	<DESK w="700" name="Control Panel" key="15" h="550">
 		<GRID name="Sessions" keyfield="session_id" linkfield="org_id" table="vw_sessions">
@@ -273,5 +274,25 @@
 				<TEXTAREA w="430" title="Details" y="610" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Event Calendar" key="35" h="550">
+		<DIARY name="Event Calendar" keyfield="event_id" orderby="event_date" table="vw_event" where="(event_date > current_date-360)">
+			<TEXTFIELD w="75" title="Event Id">event_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Event">event_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Activity Date">event_date</TEXTDATE>
+			<TEXTDATE w="75" title="Finish Date">finish_date</TEXTDATE>
+			<TEXTFIELD w="75" fnct="'false'" title="All Day">all_day</TEXTFIELD>
+			<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			<DIARY name="Events" keyfield="org_event_id" table="org_events" where="(start_date > current_date-360)">
+				<TEXTFIELD w="75" title="Event ID">org_event_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Event Name">org_event_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'08:00'::time" title="Start Time">start_time</TEXTFIELD>
+				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'17:00'::time" title="End Time">end_time</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'true'" title="All Day">all_day</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			</DIARY>
+		</DIARY>
 	</DESK>
 </APP>

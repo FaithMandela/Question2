@@ -552,7 +552,10 @@
 			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="clientid"></DRILLDOWN>
 			<JASPER name="Clients Statements" linkfield="clientid" reportfile="clienttotalstatementa.jasper"></JASPER>
 		</FILTER>
-		<JASPER name="Clients Total Statements" printcopies="1" linkfield="clientid" reportfile="clienttotalstatement.jasper"></JASPER>
+		<FILTER location="250" name="Client Payments" type="horl">
+			<DRILLDOWN name="Account Period" keyfield="periodid" orderby="startdate desc" table="period" listfield="AccountPeriod" filter="periodid"></DRILLDOWN>
+			<JASPER name="GTA Summary Statements" printcopies="1" linkfield="clientid" reportfile="clienttotalstatement.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Client Payments" type="horl" key="148" h="500">
 		<FILTER location="250" name="Client Payments" type="horl">

@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="65"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -99,7 +99,7 @@ GROUP BY clientid, clientname]]>
 		</group>
 	</subDataset>
 	<parameter name="filterid" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="periodid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
@@ -114,26 +114,40 @@ GROUP BY clientid, clientname]]>
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_statement.item_name, vw_statement.clientid, vw_statement.clientname, vw_statement.periodid, vw_statement.invoicedate, invoicenumber,
-vw_statement.invoice_amount, vw_statement.credit_amount, payments, countryname, address, postalcode, town
-FROM vw_statement
-JOIN vwclients ON vw_statement.clientid = vwclients.clientid
+		<![CDATA[SELECT aa.clientid, aa.clientname, aa.countryname, aa.address, aa.postalcode, aa.town,
+	bb.item_name, bb.invoicedate, bb.invoicenumber,
+	bb.invoice_amount, bb.credit_amount, bb.payments
 
-WHERE vw_statement.clientid = '$P!{clientid}']]>
+FROM vwclients aa INNER JOIN
+((SELECT a.item_name, a.clientid, a.invoicedate, a.invoicenumber,
+a.invoice_amount, a.credit_amount, a.payments
+FROM vw_statement a
+WHERE a.invoicedate >= '$P!{filterid}')
+UNION
+(SELECT 'Opening Balance', b.clientid, '$P!{filterid}'::date, '-',
+sum(b.invoice_amount), sum(b.credit_amount), sum(b.payments)
+FROM vw_statement b
+WHERE b.invoicedate < '$P!{filterid}'
+GROUP BY b.clientid)) bb
+
+ ON aa.clientid = bb.clientid
+
+WHERE aa.clientid = '$P!{clientid}'
+
+ORDER BY bb.invoicedate]]>
 	</queryString>
-	<field name="item_name" class="java.lang.String"/>
 	<field name="clientid" class="java.lang.Integer"/>
 	<field name="clientname" class="java.lang.String"/>
-	<field name="periodid" class="java.lang.Integer"/>
+	<field name="countryname" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="postalcode" class="java.lang.String"/>
+	<field name="town" class="java.lang.String"/>
+	<field name="item_name" class="java.lang.String"/>
 	<field name="invoicedate" class="java.sql.Date"/>
 	<field name="invoicenumber" class="java.lang.String"/>
 	<field name="invoice_amount" class="java.lang.Float"/>
 	<field name="credit_amount" class="java.lang.Float"/>
 	<field name="payments" class="java.lang.Float"/>
-	<field name="countryname" class="java.lang.String"/>
-	<field name="address" class="java.lang.String"/>
-	<field name="postalcode" class="java.lang.String"/>
-	<field name="town" class="java.lang.String"/>
 	<variable name="suminvoiceamount" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{invoice_amount}]]></variableExpression>
 	</variable>
@@ -251,7 +265,7 @@ WHERE vw_statement.clientid = '$P!{clientid}']]>
 				<textElement>
 					<font fontName="Times New Roman" size="13"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{filterid}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="3" y="154" width="164" height="18" uuid="faa872e2-dc86-4c29-a940-d935b61af54c"/>
@@ -299,7 +313,7 @@ WHERE vw_statement.clientid = '$P!{clientid}']]>
 				<reportElement key="line-1" x="0" y="19" width="535" height="1" uuid="89a4fab0-d555-4b6c-9740-55f71a225771"/>
 			</line>
 			<staticText>
-				<reportElement key="staticText-1" x="70" y="0" width="145" height="20" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
+				<reportElement key="staticText-1" x="70" y="-1" width="145" height="20" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
