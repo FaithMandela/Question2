@@ -730,35 +730,45 @@ CREATE OR REPLACE VIEW vwcrnotelist AS
   GROUP BY vwsales.clientid, vwsales.clientname, vwsales.periodid, crnotelist.crnoteid, vwcrnotesummary.creditnotenumber, period.salesperiod, period.invoicedate
   ORDER BY vwsales.clientid;
 
+CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
+  
 CREATE OR REPLACE VIEW vw_statement AS
-	SELECT item_name, clientid, clientname, periodid, invoicedate, invoiced, credit_amount, payments, amount
+	SELECT item_name, clientid, clientname, periodid, invoicedate, invoicenumber, invoiced, credit_amount, payments, amount
 	FROM 
-		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real  as amount
+		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real  as amount
 		FROM vwinvoicelist)
 		UNION ALL 
-		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
+		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
 		FROM vwcrnotelist)
 		UNION ALL 
-		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, periodid, enddate, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
+		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, periodid, enddate, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
 		FROM vw_clientpayments)) as a 
 ORDER BY invoicedate ASC;
 
 
-CREATE OR REPLACE FUNCTION inspayments(character varying, character varying, character varying) 
-	RETURNS varchar(50) AS $$
-	DECLARE
-		myrec RECORD;
-	BEGIN 
-		INSERT INTO clientpayments(clientid, periodid, currency, amount, payment_reference)
-		SELECT clients.clientid, periodid, currency, amount::real, payment_reference
-		FROM tmpclientpayments 
-		INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id
-		INNER JOIN period ON period.enddate = '1899-12-30'::date + accountdate::int;
+CREATE OR REPLACE FUNCTION inspayments(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	myrec RECORD;
+BEGIN 
+	DELETE FROM tmpclientpayments WHERE tmpclientpayments.Accounting_Date = 'Accounting Date';
+	INSERT INTO clientpayments(clientid, periodid, currency, amount, payment_reference)
+	SELECT clients.clientid, periodid, currency, Credit::real, Line_Description
+	FROM tmpclientpayments 
+	INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id
+	INNER JOIN period ON period.enddate = '1899-12-30'::date + Accounting_Date::int;
 
-		DELETE FROM tmpclientpayments; 
-		RETURN 'Done';
+	DELETE FROM tmpclientpayments; 
+	RETURN 'Done';
 END
-$$ LANGUAGE plpgsql;
+$BODY$
+  LANGUAGE plpgsql;
 
 CREATE OR REPLACE VIEW vw_receipt AS
 	SELECT vw_clientpayments.clientid, vwclients.clientname, periodid, enddate, clientpaymentsid, 

@@ -174,31 +174,77 @@ $BODY$
 -- LEFT JOIN clients on clients.clientname= tmpmanes.aname) as ut
 -- WHERE ut.aname= clients.clientname; 
 
+CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
 
+DROP TABLE tmpclientpayments;
 CREATE TABLE tmpclientpayments (
 	clientpaymentsid		serial primary key,
-	mst_cus_id 				varchar(10),
-	clientname				varchar(250),
-	accountdate				varchar(16),
-	currency				varchar(50),
-	amount					varchar(16),
-	payment_reference		varchar(250)
+	Category				varchar(250),
+	Currency				varchar(16),
+	Accounting_Date			varchar(16),
+	Company					varchar(250),
+	Location				varchar(250),
+	Cost_Center				varchar(250),
+	Account					varchar(250),
+	BUD						varchar(250),
+	Intercompany			varchar(250),
+	Debit					varchar(250),
+	Credit					varchar(250),
+	Conversion_Type			varchar(16),
+	ConversionDate			varchar(16),
+	Conversion_Rate			varchar(250),
+	Journal_Name			varchar(250),
+	Journal_Description		varchar(250),
+	Reverse_Journal			varchar(250),
+	Reversal_Period			varchar(250),
+	Line_Description		varchar(250),
+	Messages				varchar(250),
+	MST_CUS_ID				varchar(10)
 );
 
+CREATE OR REPLACE FUNCTION inspayments(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	myrec RECORD;
+BEGIN 
+	DELETE FROM tmpclientpayments WHERE tmpclientpayments.Accounting_Date = 'Accounting Date';
+	INSERT INTO clientpayments(clientid, periodid, currency, amount, payment_reference)
+	SELECT clients.clientid, periodid, currency, Credit::real, Line_Description
+	FROM tmpclientpayments 
+	INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id
+	INNER JOIN period ON period.enddate = '1899-12-30'::date + Accounting_Date::int;
+
+	DELETE FROM tmpclientpayments; 
+	RETURN 'Done';
+END
+$BODY$
+  LANGUAGE plpgsql;
+  
 DROP VIEW vw_statement;
 
+DROP VIEW vw_statement;
 CREATE OR REPLACE VIEW vw_statement AS
-	SELECT item_name, clientid, clientname, periodid, invoicedate, invoiced, credit_amount, payments, amount
+	SELECT item_name, clientid, clientname, a.periodid, a.invoicedate, invoicenumber, invoiced, credit_amount, payments, amount, period.startdate
 	FROM 
-		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real  as amount
+		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real  as amount
 		FROM vwinvoicelist)
 		UNION ALL 
-		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
+		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
 		FROM vwcrnotelist)
 		UNION ALL 
-		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, periodid, enddate, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
+		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, periodid, enddate, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
 		FROM vw_clientpayments)) as a 
-ORDER BY invoicedate ASC;-- CREATE OR REPLACE FUNCTION get_total_credit(integer) RETURNS real AS $$
+		Inner JOIN Period ON period.periodid = a.periodid
+ORDER BY invoicedate ASC;
+
+
+-- CREATE OR REPLACE FUNCTION get_total_credit(integer) RETURNS real AS $$
 -- SELECT SUM(amount) as Credit
 --  FROM vwinvoice
 --  WHERE (clientid = $1) AND  (vwinvoice.totalprice < 0) AND
