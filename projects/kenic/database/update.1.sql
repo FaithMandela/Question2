@@ -33,7 +33,7 @@ FOR EACH ROW EXECUTE PROCEDURE tg_audit_ledger();
 
 
 --- get list of fully iddle clients
-SELECT client.clid
+SELECT client.clid, client.name
 FROM client LEFT JOIN domain ON client.clid = domain.clid
 LEFT JOIN contact ON client.clid = contact.clid
 LEFT JOIN (SELECT id, client_roid FROM ledger WHERE description <> 'Membership Fee') lt ON client.clid = lt.client_roid
@@ -47,7 +47,8 @@ DELETE FROM contact WHERE id IN
 (SELECT contact.id
 FROM contact LEFT JOIN domain_contact ON contact.id = domain_contact.contact_id
 LEFT JOIN domain ON contact.id = domain.registrant
-WHERE (domain_contact.contact_id is null) AND (domain.registrant is null));
+LEFT JOIN application ON contact.id = application.registrant
+WHERE (domain_contact.contact_id is null) AND (domain.registrant is null) AND (application.registrant is null));
 
 DELETE FROM host_address WHERE host_name IN
 (SELECT host.name
@@ -65,7 +66,7 @@ DELETE FROM login_role WHERE username IN
 FROM client LEFT JOIN domain ON client.clid = domain.clid
 LEFT JOIN (SELECT id, client_roid FROM ledger WHERE description <> 'Membership Fee') lt ON client.clid = lt.client_roid
 LEFT JOIN login ON client.clid = login.clid
-WHERE (domain.clid is null) AND (lt.client_roid));
+WHERE (domain.clid is null) AND (lt.client_roid is null));
 
 DELETE FROM login WHERE clid IN
 (SELECT client.clid
