@@ -50,11 +50,11 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 	<field name="active_balance" class="java.lang.Float"/>
 	<field name="deposit_year" class="java.lang.String"/>
 	<field name="deposit_date" class="java.lang.String"/>
-	<variable name="sumdepositamount" class="java.lang.Float" calculation="Sum">
+	<variable name="sumreceipt" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{receipt}]]></variableExpression>
 	</variable>
-	<variable name="sumcontribution" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{contribution_amount}]]></variableExpression>
+	<variable name="sumcontribution_paid" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{contribution_paid}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -176,7 +176,7 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Deposit Amt]]></text>
+				<text><![CDATA[Receipt]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="element-90" x="327" y="1" width="87" height="16" forecolor="#000000" uuid="4cca6280-126b-4e02-bf73-842b626eae1b"/>
@@ -331,7 +331,7 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 	<summary>
 		<band height="32" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-3" x="349" y="5" width="87" height="19" uuid="63c6444d-506f-42a7-b18c-d51161faa771"/>
+				<reportElement key="textField-4" x="327" y="0" width="87" height="14" uuid="53edc77d-70c2-4bd2-8418-2d85e795de27"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -341,23 +341,10 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{sumdepositamount}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-4" x="436" y="5" width="87" height="19" uuid="53edc77d-70c2-4bd2-8418-2d85e795de27"/>
-				<box leftPadding="2" rightPadding="2">
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumcontribution}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{sumcontribution_paid}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="element-92" x="82" y="5" width="180" height="21" forecolor="#000000" uuid="b4f2d606-a2fc-42cd-ad98-1c0d7a61bb5e"/>
+				<reportElement key="element-92" x="82" y="0" width="180" height="14" forecolor="#000000" uuid="b4f2d606-a2fc-42cd-ad98-1c0d7a61bb5e"/>
 				<box leftPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -369,6 +356,19 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-3" x="273" y="0" width="54" height="14" uuid="63c6444d-506f-42a7-b18c-d51161faa771"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumreceipt}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>

@@ -524,8 +524,15 @@ CREATE OR REPLACE VIEW vw_recruiting_entity AS
     investment_types.investment_type_name
    FROM investments
      JOIN entitys ON entitys.entity_id = investments.entity_id
-     JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;   
- --- here
+     JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;  
+
+     
+CREATE OR REPLACE VIEW vw_additional_funds AS 
+	SELECT contributions.contribution_amount,contributions.contribution_paid,contributions.contribution_id, additional_funds.payment_type_id, additional_funds.org_id, additional_funds.additional_amount, additional_funds.deposit_date, additional_funds.entry_date, additional_funds.transaction_ref,additional_funds.additional_funds_id,
+			additional_funds.narrative, vw_contributions.deposit_year, vw_contributions.deposit_date, payment_types.payment_type_name
+	FROM additional_funds
+	JOIN vw_contributions ON vw_contributions.contribution_id = additional_funds. contribution_id
+	JOIN payment_types ON payment_types.payment_type_id = additional_funds.payment_type_id-- here
 
  
 CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
