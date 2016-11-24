@@ -148,10 +148,8 @@ CREATE OR REPLACE FUNCTION get_loan_balance (integer, integer) RETURNS double pr
 	WHERE (loan_id = $1) and (months <= $2);
 $$ LANGUAGE SQL;
 
-
-
-
 ALTER TABLE contributions ADD COLUMN additional_funds integer references additional_funds ;
+
 CREATE INDEX contributions_additional_funds ON contributions (additional_funds_id);
    
  DROP TRIGGER ins_contributions on contributions;
@@ -183,7 +181,7 @@ BEGIN
 		--Get new  amount on previous contributions 
 		
 		SELECT sum(contributions.receipt - contributions.contribution_paid+ additional_funds.additional_amount) INTO v_contributions
-		FROM contributions INNER JOIN periods ON contributions.period_id = periods.period_id INNER JOIN  additional_funds on additional_funds.contribution_id = contributions.contribution_id
+		FROM contributions INNER JOIN periods ON contributions.period_id = periods.period_id INNER JOIN  additional_funds ON additional_funds.contribution_id = contributions.contribution_id
 		WHERE (contributions.contribution_id <> NEW.contribution_id) AND (contributions.entity_id = NEW.entity_id)
 			AND (periods.end_date <= NEW.entry_date);
 		IF(v_contributions is null)THEN v_contributions = 0; END IF;
@@ -237,7 +235,7 @@ BEGIN
 		-- get sum before doing the insert not to affect current insert 
 
 		
-		SELECT sum(contribution_amount - contribution_paid + + additional_funds.additional_amount) INTO v_contribution
+		SELECT sum(contribution_amount - contribution_paid +  additional_funds.additional_amount) INTO v_contribution
 		FROM contributions INNER JOIN periods ON contributions.period_id = periods.period_id  INNER JOIN  additional_funds on additional_funds.contribution_id = contributions.contribution_id
 		WHERE (contributions.contribution_id <> NEW.contribution_id) AND (contributions.entity_id = NEW.entity_id)
 			AND (periods.end_date <= NEW.entry_date);
