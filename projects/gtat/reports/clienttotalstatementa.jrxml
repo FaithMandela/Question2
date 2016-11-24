@@ -76,8 +76,8 @@
 			<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[SELECT clientid, clientname, SUM(invoice_amount) AS Invoiced , SUM(credit_amount) AS Credited, SUM(payments) AS Payments,
-SUM(invoice_amount + credit_amount - payments) AS Total
+			<![CDATA[SELECT clientid, clientname, SUM(invoiced) AS Invoiced , SUM(credit_amount) AS Credited, SUM(payments) AS Payments,
+SUM(invoiced + credit_amount - payments) AS Total
 FROM vw_statement
 
 
@@ -115,17 +115,16 @@ GROUP BY clientid, clientname]]>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT aa.clientid, aa.clientname, aa.countryname, aa.address, aa.postalcode, aa.town,
-	bb.item_name, bb.invoicedate, bb.invoicenumber,
-	bb.invoice_amount, bb.credit_amount, bb.payments
-
-FROM vwclients aa INNER JOIN
+	bb.item_name, bb.invoicedate, bb.invoicenumber, bb.amount
+FROM vwclients aa
+INNER JOIN
 ((SELECT a.item_name, a.clientid, a.invoicedate, a.invoicenumber,
-a.invoice_amount, a.credit_amount, a.payments
+a.amount
 FROM vw_statement a
 WHERE a.invoicedate >= '$P!{filterid}')
 UNION
-(SELECT 'Opening Balance', b.clientid, '$P!{filterid}'::date, '-',
-sum(b.invoice_amount), sum(b.credit_amount), sum(b.payments)
+(SELECT 'Opening Balance', b.clientid,'$P!{filterid}'::date, '-',
+sum(b.amount)
 FROM vw_statement b
 WHERE b.invoicedate < '$P!{filterid}'
 GROUP BY b.clientid)) bb
@@ -133,7 +132,6 @@ GROUP BY b.clientid)) bb
  ON aa.clientid = bb.clientid
 
 WHERE aa.clientid = '$P!{clientid}'
-
 ORDER BY bb.invoicedate]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
@@ -145,17 +143,12 @@ ORDER BY bb.invoicedate]]>
 	<field name="item_name" class="java.lang.String"/>
 	<field name="invoicedate" class="java.sql.Date"/>
 	<field name="invoicenumber" class="java.lang.String"/>
-	<field name="invoice_amount" class="java.lang.Float"/>
-	<field name="credit_amount" class="java.lang.Float"/>
-	<field name="payments" class="java.lang.Float"/>
-	<variable name="suminvoiceamount" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{invoice_amount}]]></variableExpression>
+	<field name="amount" class="java.lang.Float"/>
+	<variable name="sum_total" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
 	</variable>
-	<variable name="sumcreditamount" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{credit_amount}]]></variableExpression>
-	</variable>
-	<variable name="sumpayment" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{payments}]]></variableExpression>
+	<variable name="sumtotal" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$V{sumtotal}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -324,14 +317,7 @@ ORDER BY bb.invoicedate]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Invoiced]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="staticText-9" x="384" y="0" width="67" height="20" uuid="2afd4c9c-0b32-4e6e-beaf-4433f41954ab"/>
-				<textElement>
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<text><![CDATA[Credited]]></text>
+				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="staticText-10" x="0" y="0" width="70" height="20" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
@@ -341,18 +327,18 @@ ORDER BY bb.invoicedate]]>
 				<text><![CDATA[Invoice Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-28" x="451" y="0" width="50" height="20" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
+				<reportElement key="staticText-28" x="384" y="0" width="50" height="20" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Payments]]></text>
+				<text><![CDATA[Total]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="staticText-8" x="215" y="0" width="101" height="20" uuid="da0677e1-0d58-4eb1-8147-431f693e479e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Payment Number]]></text>
+				<text><![CDATA[Details]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -370,14 +356,14 @@ ORDER BY bb.invoicedate]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{invoice_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-13" x="451" y="0" width="50" height="18" uuid="860f55ae-a633-4c15-a0ba-865cffd9403a"/>
+				<reportElement key="textField-13" x="384" y="0" width="50" height="18" uuid="860f55ae-a633-4c15-a0ba-865cffd9403a"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{payments}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{sum_total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="0" y="0" width="70" height="18" uuid="89b0ae66-ca11-454a-b543-7af2c82aff3d"/>
@@ -385,13 +371,6 @@ ORDER BY bb.invoicedate]]>
 					<font fontName="Times New Roman" size="8" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{invoicedate}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="384" y="0" width="67" height="18" uuid="34c65485-b65b-49d4-9e8d-67b052a82994"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{credit_amount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="215" y="0" width="101" height="18" uuid="34fe39e7-aa22-4e78-9f14-53b4f913e13a"/>
@@ -465,25 +444,18 @@ ORDER BY bb.invoicedate]]>
 				<reportElement key="line-3" x="0" y="0" width="535" height="1" uuid="484b001b-b0fc-4ea2-a8be-b0a0c715d1f4"/>
 			</line>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-16" x="384" y="5" width="67" height="18" uuid="a130ecd1-1c8b-499e-9318-676a024edd90"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{sumcreditamount}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-17" x="316" y="6" width="68" height="18" uuid="42d3b40d-f595-44be-9a84-88cce93bb236"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{suminvoiceamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{sum_total}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
-				<reportElement key="textField-10" x="451" y="5" width="50" height="18" uuid="f42c55fa-fe10-49aa-aecd-996edbb18a8e"/>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement key="textField-10" x="384" y="5" width="50" height="18" uuid="f42c55fa-fe10-49aa-aecd-996edbb18a8e"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{sumpayment}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{sumtotal}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

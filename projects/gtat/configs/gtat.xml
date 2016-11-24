@@ -539,22 +539,42 @@
 			</GRID>
 		</GRID>
 		<GRID process="inspayments" name="Import Client Payments" keyfield="clientpaymentsid" worksheet="0" import="excel" table="tmpclientpayments">
-			<TEXTFIELD w="75" title="Mst_cus_id">mst_cus_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Clientname">clientname</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accountdate">accountdate</TEXTFIELD>
+			<TEXTFIELD w="75" title="Category">category</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>
-			<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
-			<TEXTFIELD w="75" title="Payment Reference">payment_reference</TEXTFIELD>
+			<TEXTFIELD w="75" title="Accounting Date">accounting_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Company">company</TEXTFIELD>
+			<TEXTFIELD w="75" title="Location">location</TEXTFIELD>
+			<TEXTFIELD w="75" title="Cost Center">cost_center</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account">account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bud">bud</TEXTFIELD>
+			<TEXTFIELD w="75" title="Intercompany">intercompany</TEXTFIELD>
+			<TEXTFIELD w="75" title="Debit">debit</TEXTFIELD>
+			<TEXTFIELD w="75" title="Credit">credit</TEXTFIELD>
+			<TEXTFIELD w="75" title="Conversion Type">conversion_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="Conversiondate">conversiondate</TEXTFIELD>
+			<TEXTFIELD w="75" title="Conversion Rate">conversion_rate</TEXTFIELD>
+			<TEXTFIELD w="75" title="Journal Name">journal_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Journal Description">journal_description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Reverse Journal">reverse_journal</TEXTFIELD>
+			<TEXTFIELD w="75" title="Reversal Period">reversal_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Line Description">line_description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Messages">messages</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mst Cus ID">mst_cus_id</TEXTFIELD>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Statements" type="horl" key="143" h="500">
 		<FILTER location="250" name="Clients Statements" type="horl">
-			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="clientid"></DRILLDOWN>
+			<FILTERFORM name="Clients Statements">
+				<COMBOBOX w="430" title="Client" lptable="clients" y="10" h="20" x="10" lpfield="clientname">clientid</COMBOBOX>
+				<TEXTDATE w="150" title="Up to" y="30" h="20" default_fnct="get_start_year" x="10">filterid</TEXTDATE>
+			</FILTERFORM>
 			<JASPER name="Clients Statements" linkfield="clientid" reportfile="clienttotalstatementa.jasper"></JASPER>
 		</FILTER>
-		<FILTER location="250" name="Client Payments" type="horl">
-			<DRILLDOWN name="Account Period" keyfield="periodid" orderby="startdate desc" table="period" listfield="AccountPeriod" filter="periodid"></DRILLDOWN>
-			<JASPER name="GTA Summary Statements" printcopies="1" linkfield="clientid" reportfile="clienttotalstatement.jasper"></JASPER>
+		<FILTER location="250" name="GTA Summary Statements" type="horl">
+			<FILTERFORM name="GTA Summary Statements">
+				<TEXTDATE w="150" title="Up to" y="30" h="20" default_fnct="get_start_year" x="10">filterid</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="GTA Summary Statements" reportfile="clienttotalstatement.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Client Payments" type="horl" key="148" h="500">
