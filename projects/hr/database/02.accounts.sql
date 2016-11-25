@@ -43,7 +43,8 @@ CREATE TABLE default_accounts (
 	account_id				integer references accounts,
 	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
-	narrative				varchar(240)
+	narrative				varchar(240),
+	UNIQUE(account_id, use_key_id, org_id)
 );
 CREATE INDEX default_accounts_account_id ON default_accounts (account_id);
 CREATE INDEX default_accounts_use_key_id ON default_accounts (use_key_id);
@@ -197,11 +198,13 @@ CREATE VIEW vw_accounts AS
 	FROM accounts INNER JOIN vw_account_types ON accounts.account_type_id = vw_account_types.account_type_id;
 
 CREATE VIEW vw_default_accounts AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
+	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name,
 		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
 		default_accounts.default_account_id, default_accounts.org_id, default_accounts.narrative
-	FROM vw_accounts INNER JOIN default_accounts ON vw_accounts.account_id = default_accounts.account_id;
+	FROM vw_accounts INNER JOIN default_accounts ON vw_accounts.account_id = default_accounts.account_id
+		INNER JOIN use_keys ON default_accounts.use_key_id = use_keys.use_key_id;
 	
 CREATE VIEW vw_journals AS
 	SELECT vw_periods.fiscal_year_id, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end,
@@ -214,7 +217,7 @@ CREATE VIEW vw_journals AS
 		journals.exchange_rate, journals.details
 	FROM journals INNER JOIN vw_periods ON journals.period_id = vw_periods.period_id
 		INNER JOIN currency ON journals.currency_id = currency.currency_id
-		INNER JOIN departments ON journals.department_id = departments.department_id;
+		LEFT JOIN departments ON journals.department_id = departments.department_id;
 
 CREATE VIEW vw_gls AS
 	SELECT vw_accounts.accounts_class_id, vw_accounts.accounts_class_no, vw_accounts.accounts_class_name,

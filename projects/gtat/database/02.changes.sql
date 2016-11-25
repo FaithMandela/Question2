@@ -214,6 +214,25 @@ CREATE TABLE clientpayments (
 	payment_type			varchar(250),
 	payment_reference		varchar(250)
 );
+CREATE INDEX clientpayments_clientid ON clientpayments (clientid);
+CREATE INDEX clientpayments_PeriodID ON clientpayments (PeriodID);
+
+CREATE OR REPLACE VIEW vw_clientpayments AS 
+ SELECT clients.clientid,
+    clients.clientname,
+    period.periodid,
+    period.startdate,
+    period.enddate,
+    clientpayments.clientpaymentsid,
+    clientpayments.currency,
+    clientpayments.amount,
+    'TP/GTA/PAY/'::text || clientpayments.clientpaymentsid AS clientpaymentsnumber,
+    clientpayments.payment_reference,
+    clientpayments.payment_type
+   FROM clientpayments
+     JOIN clients ON clientpayments.clientid = clients.clientid
+     JOIN period ON clientpayments.periodid = period.periodid;
+	
 
 CREATE OR REPLACE FUNCTION inspayments(
     character varying,
@@ -225,8 +244,8 @@ DECLARE
 	myrec RECORD;
 BEGIN 
 	DELETE FROM tmpclientpayments WHERE tmpclientpayments.Accounting_Date = 'Accounting Date';
-	INSERT INTO clientpayments(clientid, periodid, currency, amount, payment_reference)
-	SELECT clients.clientid, periodid, currency, Credit::real, Line_Description
+	INSERT INTO clientpayments(clientid, periodid, currency, amount, payment_type, payment_reference)
+	SELECT clients.clientid, periodid, currency, Credit::real, split_part(tmpclientpayments.line_description, ':', 1), split_part(tmpclientpayments.line_description, ':', 2)
 	FROM tmpclientpayments 
 	INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id
 	INNER JOIN period ON period.enddate = '1899-12-30'::date + Accounting_Date::int;

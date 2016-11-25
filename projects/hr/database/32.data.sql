@@ -76,7 +76,7 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('34000'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('34005',340,'DEPOSITS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('34010',340,'TAX RECOVERABLE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('34015',340,'TOTAL REGISTRAR DEPOSITS');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40000',400,'CREDITORS- ACCRUALS');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40000',400,'TRADE CREDITORS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40005',400,'ADVANCE BILLING');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40010',400,'LEAVE - ACCRUALS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40015',400,'ACCRUED LIABILITIES: CORPORATE TAX');
@@ -87,9 +87,10 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40035'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40040',400,'HELB');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40045',400,'PAYE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40050',400,'PENSION');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40055',400,'PAYROLL LIABILITIES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('41000',410,'ADVANCED BILLING');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42000',420,'INPUT');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42005',420,'OUTPUT');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42000',420,'INPUT VAT');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42005',420,'OUTPUT VAT');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42010',420,'REMITTANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('43000',430,'WITHHOLDING TAX');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('50000',500,'BANK LOANS');
@@ -207,24 +208,36 @@ SELECT pg_catalog.setval('accounts_account_id_seq', 99999, true);
 
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (15, 'Transaction Tax', 2);
 
-UPDATE tax_types SET account_id = 90000;
-INSERT INTO tax_types (org_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (0, 15, 'Exempt', 0, '42005');
-INSERT INTO tax_types (org_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (0, 15, 'VAT', 16, '42005');
+INSERT INTO tax_types (org_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (0, 15, 'Exempt', 0, '42000');
+INSERT INTO tax_types (org_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (0, 15, 'VAT', 16, '42000');
 UPDATE tax_types SET currency_id = 1;
 
-INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (21, 'Suplus/Deficit', 3);
-INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (22, 'Retained Earnings', 3);
+---- Default account for payroll
 
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (23, 'Travel Cost', 3);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (24, 'Travel Payment', 3);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (25, 'Travel Tax', 3);
-
-INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 21, 99999);
-INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 22, 61000);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (26, 'Salary Payment', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (27, 'Basic Salary', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (28, 'Payroll Advance', 3);
 
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 23, 90012);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 24, 30005);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 25, 40045);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 26, 40055);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 27, 90000);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 28, 40055);
+
+---- Default account for 
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (51, 'Client Account', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (52, 'Supplier Account', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (53, 'Suplus/Deficit', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (54, 'Retained Earnings', 3);
+
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 51, 30000);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 52, 40000);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 53, 99999);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 54, 61000);
 
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
 VALUES (0, 0, 1, 0, '33000', 'Cash Account', true);

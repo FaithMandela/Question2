@@ -1,17 +1,15 @@
 <APPLIST loglevel="info" dbpassword="invent" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
 	<APP dbpath="jdbc:postgresql://1localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
-	<APP dbpath="jdbc:postgresql://localhost/mashtakapay" dbname="mashtakapay" path="mashtakapay" xmlfile="mashtakapay.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="mashtakapay">Mashtaka Pay</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelportapps" dbname="travelportapps" path="travelportapps" xmlfile="travelportapps.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="travelportapps">Travelport Apps</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mpamanech" dbname="mobilehealth" path="mobilehealth" xmlfile="mobilehealth.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Mobile Health</APP>
 	<APP dbpath="jdbc:postgresql://localhost/bunson" dbname="bunson" path="bunson" xmlfile="bunson.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Bunson</APP>
-	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
-	<APP dbpath="jdbc:postgresql://localhost/business" dbname="business" path="business" xmlfile="business.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" key="business" auth="entity">Business</APP>
-	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="hr" auth="entity">Human Resources</APP>
-	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="payroll.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Payroll</APP>
-	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="projects.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Projects</APP>
-	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Finance</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="business.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Business</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="hr.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="hr" auth="entity">Human Resources</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="payroll.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Payroll</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="projects.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Projects</APP>
 	<APP dbpath="jdbc:postgresql://localhost/chama" dbname="chama" path="chama" xmlfile="chama.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="chama">Chama</APP>
 	<APP dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.xml" dbclass="org.postgresql.Driver" dbusername="root" key="sms">SMS</APP>
+	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
 	<APP dbpath="jdbc:postgresql://localhost/tamshi" dbname="tamshi" path="tamshi" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="root">Tamshi</APP>
 	<APP dbpath="jdbc:postgresql://localhost/gtat" dbname="gtat" path="gtat" xmlfile="gtat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres" key="gtat">GTA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/assets" dbname="assets" path="assets" xmlfile="assets.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="assets">Assets</APP>
@@ -88,6 +86,7 @@
 	<SERVER dbpath="jdbc:postgresql://localhost/tamshi" dbname="tamshi" path="tamshi" xmlfile="sms.tamshi.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">Tamshi SMS Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="true" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
+<<<<<<< HEAD
 <APPLIST mode="run" encryption="accessbaaccessba" dbclass="org.postgresql.Driver" dbpassword="invent" dbtemplate="baraza" logfile="baraza.log" greeting="Open Baraza Server" loglevel="info" dbusername="postgres" dbpath="jdbc:postgresql://localhost/postgres">
 	<APP path="healthfacility" dbname="healthfacility" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://192.168.0.4:5432/healthfacility" xmlfile="healthfacility.xml">Health Facility</APP>
 	<APP path="travelportapps" dbname="travelportapps" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/travelportapps" xmlfile="travelportapps.xml">Travelport Apps</APP>
@@ -186,4 +185,6 @@
 	<SERVER path="travelportapps" dbname="travelportapps" dbclass="org.postgresql.Driver" dbpassword="invent2k" disable="true" dbusername="postgres" dbpath="jdbc:postgresql://localhost/travelportapps" xmlfile="mail.xml">Travelportapps Server</SERVER>
 	<APP path="travelcreations" dbname="travelcreations" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/travelcreations" xmlfile="travelcreations.xml">Travel Creations</APP>
 </APPLIST>
+=======
+>>>>>>> fad3746292f954982c4c5cbf784e3378c686955f
 </APPLIST>

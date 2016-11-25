@@ -665,12 +665,12 @@ CREATE TABLE clientpayments (
 	PeriodID				integer references period,
 	currency				varchar(50),
 	amount					real,
+	payment_type			varchar(250),
 	payment_reference		varchar(250)
 );
-
-
 CREATE INDEX clientpayments_clientid ON clientpayments (clientid);
 CREATE INDEX clientpayments_PeriodID ON clientpayments (PeriodID);
+
 
 CREATE OR REPLACE VIEW vw_clientpayments AS 
  SELECT clients.clientid,
