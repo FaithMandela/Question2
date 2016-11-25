@@ -682,7 +682,8 @@ CREATE OR REPLACE VIEW vw_clientpayments AS
     clientpayments.currency,
     clientpayments.amount,
     'TP/GTA/PAY/'::text || clientpayments.clientpaymentsid AS clientpaymentsnumber,
-    clientpayments.payment_reference
+    clientpayments.payment_reference,
+    clientpayments.payment_type
    FROM clientpayments
      JOIN clients ON clientpayments.clientid = clients.clientid
      JOIN period ON clientpayments.periodid = period.periodid;
@@ -735,17 +736,18 @@ CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
 $$ LANGUAGE SQL;
   
 CREATE OR REPLACE VIEW vw_statement AS
-	SELECT item_name, clientid, clientname, periodid, invoicedate, invoicenumber, invoiced, credit_amount, payments, amount
+	SELECT item_name, clientid, clientname, salesperiod, periodid, invoicedate, invoicenumber, invoiced, credit_amount, payments, amount
 	FROM 
-		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real  as amount
+		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, salesperiod, periodid, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real as amount
 		FROM vwinvoicelist)
 		UNION ALL 
-		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, periodid, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
+		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, salesperiod, periodid, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
 		FROM vwcrnotelist)
 		UNION ALL 
-		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, periodid, enddate, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
+		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, payment_type, periodid, enddate, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
 		FROM vw_clientpayments)) as a 
 ORDER BY invoicedate ASC;
+
 
 
 CREATE OR REPLACE FUNCTION inspayments(
