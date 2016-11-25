@@ -2044,7 +2044,7 @@
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 				<TEXTDECIMAL w="75" title="%">ps_reporting</TEXTDECIMAL>
 				<FORM name="Reporting" keyfield="reporting_id" linkfield="entity_id" table="reporting">
-					<COMBOBOX w="430" title="Report To" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 1)" y="10" h="20" x="10" lpfield="entity_name">report_to_id</COMBOBOX>
+					<COMBOBOX w="430" title="Report To" lptable="vw_employees" lpkey="entity_id" y="10" h="20" x="10" lpfield="employee_name">report_to_id</COMBOBOX>
 					<TEXTDATE w="150" title="Date From" y="30" h="20" x="10">date_from</TEXTDATE>
 					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
 					<CHECKBOX w="150" title="Primary" y="50" h="20" x="10">primary_report</CHECKBOX>
@@ -2745,7 +2745,10 @@
 			<TEXTFIELD w="75" title="Pay Group Name">pay_group_name</TEXTFIELD>
 			<FORM name="Pay Groups" keyfield="pay_group_id" table="pay_groups">
 				<TEXTFIELD w="430" title="Pay Group Name" y="10" h="20" x="10">pay_group_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="Payment GL" default_org_fnct="get_default_account(26" y="70" h="20" x="290">gl_payment_account</TEXTFIELD>
+				<TEXTAREA w="550" tab="Bank Address" y="1" h="170" x="10">bank_address</TEXTAREA>
+				<TEXTAREA w="550" tab="Bank Header" y="1" h="170" x="10">bank_header</TEXTAREA>
+				<TEXTAREA w="550" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

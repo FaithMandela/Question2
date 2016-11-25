@@ -30,6 +30,7 @@ SELECT tickets.ticketid, ticketdate, ticketpcc, bookpcc, bpcc, son, pcc, line1,
 
 FROM tickets INNER JOIN tes ON tickets.ticketid = tes.ticketid
 WHERE tickets.bpcc = '3L3N' 
+AND ticketdate >= '2016-01-01'::date
 ORDER BY tickets.ticketdate;
 
 

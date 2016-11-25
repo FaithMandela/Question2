@@ -22,6 +22,10 @@ INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Co
 --- Copy over data
 INSERT INTO jobs_category (org_id, jobs_category) VALUES (1, 'General Management');
 
+INSERT INTO pay_scales (org_id, pay_scale_name, min_pay, max_pay) VALUES (1, 'Basic', 0, 1000000);
+INSERT INTO locations (org_id, location_name) VALUES (1, 'Main office');
+INSERT INTO pay_groups (org_id, pay_group_name, gl_payment_account) VALUES (1, 'Default', '40055');
+
 INSERT INTO contract_status (org_id, contract_status_name)
 SELECT 1, contract_status_name
 FROM contract_status
@@ -49,12 +53,13 @@ INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visibl
 UPDATE adjustments SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 50, true);
 
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (7, 11, 'PAYE', 'get_employee_tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true);
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (8, 12, 'NSSF', 'get_employee_tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true);
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (9, 12, 'NHIF', 'get_employee_tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true);
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (10, 11, 'FULL PAYE', 'get_employee_tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false);
-INSERT INTO tax_types (tax_type_id, use_key_id, org_id, tax_type_name, tax_rate) VALUES (11, 15, 1, 'Exempt', 0);
-INSERT INTO tax_types (tax_type_id, use_key_id, org_id, tax_type_name, tax_rate) VALUES (12, 15, 1, 'VAT', 16);
+
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (7, 11, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, '40045', '40045');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (8, 12, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, '40030', '40030');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (9, 12, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true, '40035', '40035');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (10, 11, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, '40045', '40045');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (11, 15, 'Exempt', 0, '42000');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (12, 15, 'VAT', 16, '42000');
 UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
 
@@ -87,6 +92,13 @@ FROM account_types a INNER JOIN accounts b ON a.account_type_no = b.account_type
 WHERE (a.org_id = 1) AND (b.org_id = 0);
 
 
+INSERT INTO default_accounts (org_id, use_key_id, account_id)
+SELECT b.org_id, a.use_key_id, b.account_id
+FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_no
+WHERE (a.org_id = 0) AND (b.org_id = 1);
+
+
+
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
 VALUES (20, 1, 7, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
@@ -103,7 +115,6 @@ VALUES (21, 1, 21, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
 VALUES (22, 1, 22, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 22, true);
-
 
 UPDATE transaction_counters SET document_number = '10001';
 

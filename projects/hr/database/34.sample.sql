@@ -1,8 +1,11 @@
 UPDATE orgs SET org_name = 'Dew CIS Solutions Ltd', cert_number = 'C.102554', pin = 'P051165288J', vat_number = '0142653A', 
+default_country_id = 'KE', currency_id = 1,
 invoice_footer = 'Make all payments to : Dew CIS Solutions ltd
 Thank you for your Business
 We Turn your information into profitability'
 WHERE org_id = 0;
+
+INSERT INTO project_types (project_type_name) VALUES ('Software Development');
 
 UPDATE transaction_counters SET document_number = '10001';
 
@@ -29,11 +32,22 @@ INSERT INTO applicants (org_id, surname, first_name, middle_name, applicant_emai
 VALUES (0, 'Joseph', 'Kamau', 'Karanja', 'joseph.kamau@obmails.com', '1974-07-05', 'M', 'KE', 'M', NULL, '79798797998', 'English', 'Programming, study, novels', 'Career development', NULL);
 INSERT INTO applicants (org_id, surname, first_name, middle_name, applicant_email, date_of_birth, gender, nationality, marital_status, picture_file, identity_card, language, interests, objective, details) 
 VALUES (0, 'Gichangi', 'Dennis', 'Wachira', 'dennisgichangi@gmail.com', '1979-03-29', 'M', 'KE', 'M', NULL, '7878787', 'English', NULL, NULL, NULL);
+
+INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, user_name, super_user, entity_leader, function_role, is_active, account_id, attention, use_key_id) 
+VALUES (10, 0, 2, 'ABCD Kenya', 'abcd', false, false, 'client', true, 30000, 'Jane Kamango', 2);
+INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email,  account_id, use_key_id)
+VALUES (11, 0, 3, 'XYZ Kenya', 'xyz', 'xyz@localhost',  40000, 3);
+
 UPDATE entitys SET first_password = 'baraza';
+SELECT pg_catalog.setval('entitys_entity_id_seq', 11, true);
 
+INSERT INTO address (sys_country_id, table_name, table_id, post_office_box, postal_code, premises, street, town, phone_number, extension, mobile, fax, email, website, is_default, first_password, details) 
+VALUES ('KE', 'entitys', 10, '41010', '00100', 'Barclays Plaza, 7th Floor', 'Loita Street', 'Nairobi', '+254 20 3274233/5', NULL, NULL, NULL, 'info@abcdkenya.com', 'www.abcdkenya.com', true, NULL, NULL);
+INSERT INTO address (sys_country_id, table_name, table_id, post_office_box, postal_code, premises, street, town, phone_number, extension, mobile, fax, email, website, is_default, first_password, details) 
+VALUES ('KE', 'entitys', 11, '41010', '00100', 'Barclays Plaza, 8th Floor', 'Loita Street', 'Nairobi', '+254 20 32742243', NULL, NULL, NULL, 'info@xyzkenya.com', 'www.xyzkenya.com', true, NULL, NULL);
 
-INSERT INTO entitys (org_id, entity_type_id, use_key_id, entity_name, user_name, super_user, entity_leader, function_role, is_active, account_id, attention) 
-VALUES (0, 2, 2, 'ABCD Kenya', 'abcd', false, false, 'client', true, 30000, 'Jane Kamango');
-
-INSERT INTO project_types (project_type_name) VALUES ('Software Development');
-
+INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, details) VALUES (1, 0, 1, 2, 1, 70010, 80000, 'Domains', NULL, false, true, false, 5000, 0, NULL, NULL, true, NULL);
+INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, details) VALUES (2, 0, 1, 2, 1, 70010, 80000, 'Baraza HCMS', NULL, false, true, false, 0, 0, NULL, NULL, true, NULL);
+INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, details) VALUES (3, 0, 1, 2, 1, 70010, 80000, 'Systems Support', NULL, false, true, false, 0, 0, NULL, NULL, false, NULL);
+INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, details) VALUES (4, 0, 3, 2, 1, 70005, 95500, 'Office Rent', NULL, false, false, true, 0, 0, NULL, NULL, true, NULL);
+SELECT pg_catalog.setval('items_item_id_seq', 4, true);
