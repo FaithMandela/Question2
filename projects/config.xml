@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <APPLIST loglevel="info" dbpassword="invent" greeting="Open Baraza Server" encryption="accessbaaccessba" dbtemplate="baraza" dbpath="jdbc:postgresql://localhost/postgres" dbclass="org.postgresql.Driver" dbusername="postgres" logfile="baraza.log" mode="run">
 	<APP dbpath="jdbc:postgresql://1localhost/healthfacility" dbname="healthfacility" path="healthfacility" xmlfile="healthfacility.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Health Facility</APP>
 	<APP dbpath="jdbc:postgresql://localhost/mashtakapay" dbname="mashtakapay" path="mashtakapay" xmlfile="mashtakapay.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="mashtakapay">Mashtaka Pay</APP>
@@ -90,7 +89,6 @@
 	<SERVER dbpassword="invent" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" dbname="agency" path="agency" xmlfile="ticket_email.xml" disable="true" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbusername="sa">Agency Polling</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://umisdb/ueab" dbname="ueab" path="ueab" xmlfile="mail.xml" disable="true" dbclass="org.postgresql.Driver" dbusername="root">UEAB Emails</SERVER>
 	<APP dbpath="jdbc:postgresql://localhost/mitchy" dbname="mitchy" path="mitchy" xmlfile="mitchy.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="mitchy">mitchy</APP>
-=======
 <APPLIST mode="run" encryption="accessbaaccessba" dbclass="org.postgresql.Driver" dbpassword="invent" dbtemplate="baraza" logfile="baraza.log" greeting="Open Baraza Server" loglevel="info" dbusername="postgres" dbpath="jdbc:postgresql://localhost/postgres">
 	<APP path="healthfacility" dbname="healthfacility" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://1localhost/healthfacility" xmlfile="healthfacility.xml">Health Facility</APP>
 	<APP path="travelportapps" dbname="travelportapps" dbclass="org.postgresql.Driver" dbusername="postgres" dbpath="jdbc:postgresql://localhost/travelportapps" key="travelportapps" xmlfile="travelportapps.xml">Travelport Apps</APP>
@@ -179,5 +177,4 @@
 	<SERVER path="tamshi" dbname="tamshi" dbclass="org.postgresql.Driver" disable="true" dbusername="root" dbpath="jdbc:postgresql://localhost/tamshi" xmlfile="sms.tamshi.xml">Tamshi SMS Server</SERVER>
 	<SERVER path="agency" dbname="agency" dbclass="com.microsoft.sqlserver.jdbc.SQLServerDriver" dbpassword="invent" disable="true" dbusername="sa" dbpath="jdbc:sqlserver://192.168.0.78:1433;databaseName=GIDS;selectMethod=cursor" noaudit="true" xmlfile="ticket_email.xml">Agency Polling</SERVER>
 	<SERVER path="ueab" dbname="ueab" dbclass="org.postgresql.Driver" dbpassword="invent" disable="true" dbusername="root" dbpath="jdbc:postgresql://umisdb/ueab" xmlfile="mail.xml">UEAB Emails</SERVER>
->>>>>>> dd9158f1576a4cfe70cd76a6c27c70b23c2005bf
-</APPLIST>
+</APPLIST></APPLIST>
