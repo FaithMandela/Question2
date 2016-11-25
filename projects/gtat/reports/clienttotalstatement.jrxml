@@ -35,32 +35,31 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["/root/baraza/projects/gatf/reports/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUB_REPORT" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT clientid, clientname, period.startdate as statement_date,
+		<![CDATA[SELECT clientid, clientname, '$P!{filterid}' as statement_date,
 	SUM(invoiced) AS Invoiced , SUM(credit_amount) AS Credited,
-	SUM(payments) AS Payments, SUM(invoiced + credit_amount - payments) AS Total
+	SUM(payments * -1) AS Payments, SUM(invoiced + credit_amount - payments) AS Total
 
 FROM vw_statement
-JOIN period ON period.periodid = vw_statement.periodid
 
-WHERE  vw_statement.periodid = '$P!{periodid}'
+WHERE vw_statement.invoicedate <= '$P!{filterid}'
 
-GROUP BY clientid, clientname, period.startdate
+GROUP BY clientid, clientname
 
 ORDER BY clientname]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
 	<field name="clientname" class="java.lang.String"/>
-	<field name="statement_date" class="java.sql.Date"/>
+	<field name="statement_date" class="java.lang.String"/>
 	<field name="invoiced" class="java.lang.Float"/>
 	<field name="credited" class="java.lang.Float"/>
-	<field name="payments" class="java.lang.Float"/>
+	<field name="payments" class="java.lang.Double"/>
 	<field name="total" class="java.lang.Float"/>
 	<variable name="suminvoiced" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{invoiced}]]></variableExpression>
@@ -78,7 +77,7 @@ ORDER BY clientname]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="159" splitType="Stretch">
+		<band height="170" splitType="Stretch">
 			<staticText>
 				<reportElement key="staticText-13" x="145" y="106" width="264" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
 				<textElement>
@@ -91,7 +90,7 @@ ORDER BY clientname]]>
 				<imageExpression><![CDATA[$P{reportpath} + "gklogo.jpg"]]></imageExpression>
 			</image>
 			<textField pattern="EEE, d MMM yyyy HH:mm:ss" isBlankWhenNull="true">
-				<reportElement key="textField-1" x="193" y="129" width="164" height="19" uuid="84ab4659-9292-4353-8e05-8285b2d7ecc2"/>
+				<reportElement key="textField-1" x="193" y="129" width="164" height="20" uuid="84ab4659-9292-4353-8e05-8285b2d7ecc2"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -99,16 +98,30 @@ ORDER BY clientname]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement>
-					<font fontName="Times New Roman" size="13"/>
+					<font fontName="Times New Roman" size="13" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{statement_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{filterid}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="145" y="129" width="48" height="20" uuid="cca3e64f-7a20-4f92-aaf9-8b68221763cf"/>
+				<reportElement x="145" y="128" width="48" height="20" uuid="cca3e64f-7a20-4f92-aaf9-8b68221763cf"/>
 				<textElement>
-					<font fontName="Times New Roman" size="15"/>
+					<font fontName="Times New Roman" size="15" isBold="true"/>
 				</textElement>
 				<text><![CDATA[As at]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-14" x="204" y="148" width="39" height="18" uuid="90876288-7bd4-4f60-a727-e9e3ed492936"/>
+				<textElement>
+					<font fontName="Times New Roman" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[USD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-14" x="145" y="148" width="59" height="18" uuid="ff118cd6-132b-44ee-acac-0d17b79562c5"/>
+				<textElement>
+					<font fontName="Times New Roman" size="13" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Currency]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -116,40 +129,40 @@ ORDER BY clientname]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="38" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-1" x="0" y="5" width="195" height="32" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
+				<reportElement key="staticText-1" x="0" y="0" width="195" height="18" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Client]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-8" x="195" y="5" width="68" height="32" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
+				<reportElement key="staticText-8" x="195" y="0" width="68" height="18" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Invoiced]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-9" x="263" y="5" width="68" height="32" uuid="2afd4c9c-0b32-4e6e-beaf-4433f41954ab"/>
+				<reportElement key="staticText-9" x="263" y="0" width="68" height="18" uuid="2afd4c9c-0b32-4e6e-beaf-4433f41954ab"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Credited]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-10" x="399" y="5" width="68" height="32" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
+				<reportElement key="staticText-10" x="399" y="0" width="68" height="18" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<line>
-				<reportElement key="line-1" x="0" y="37" width="535" height="1" uuid="89a4fab0-d555-4b6c-9740-55f71a225771"/>
+				<reportElement key="line-1" x="0" y="17" width="535" height="1" uuid="89a4fab0-d555-4b6c-9740-55f71a225771"/>
 			</line>
 			<staticText>
-				<reportElement key="staticText-28" x="331" y="5" width="68" height="32" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
+				<reportElement key="staticText-28" x="331" y="0" width="68" height="18" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -246,14 +259,14 @@ ORDER BY clientname]]>
 				<reportElement key="line-3" x="0" y="0" width="535" height="1" uuid="484b001b-b0fc-4ea2-a8be-b0a0c715d1f4"/>
 			</line>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
-				<reportElement key="textField-10" x="399" y="4" width="68" height="18" uuid="3b19def7-cc32-417e-b9f6-b10842913aa2"/>
+				<reportElement key="textField-10" x="399" y="6" width="68" height="18" uuid="3b19def7-cc32-417e-b9f6-b10842913aa2"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{sumtotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-16" x="263" y="5" width="68" height="18" uuid="a130ecd1-1c8b-499e-9318-676a024edd90"/>
+				<reportElement key="textField-16" x="263" y="6" width="68" height="18" uuid="a130ecd1-1c8b-499e-9318-676a024edd90"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -267,7 +280,7 @@ ORDER BY clientname]]>
 				<textFieldExpression><![CDATA[$V{suminvoiced}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
-				<reportElement key="textField-10" x="331" y="5" width="68" height="18" uuid="f42c55fa-fe10-49aa-aecd-996edbb18a8e"/>
+				<reportElement key="textField-10" x="331" y="6" width="68" height="18" uuid="f42c55fa-fe10-49aa-aecd-996edbb18a8e"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>

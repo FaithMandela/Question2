@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanviewc" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="44b8b21d-4d03-48fb-9c4f-3e8b5f4dcf94">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanviewc" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="44b8b21d-4d03-48fb-9c4f-3e8b5f4dcf94">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="0.75"/>
@@ -24,7 +24,7 @@
 		<![CDATA[SELECT vw_loans.currency_name,vw_loans.loan_type_id, vw_loans.loan_type_name,vw_loans.entity_id,vw_loans.entity_name,vw_loans.loan_id,vw_loans.principle,vw_loans.monthly_repayment,vw_loans.reducing_balance,vw_loans.repayment_period, vw_loans.application_date,vw_loans.approve_status,vw_loans.initial_payment,vw_loans.loan_date,vw_loans.details,vw_loans.interest,
    vw_loans.repayment_amount,vw_loans.total_repayment,vw_loans.total_interest,vw_loans.loan_balance,vw_loans.calc_repayment_period
 from vw_loans
-WHERE (vw_loans.approve_status NOT LIKE 'Approved')
+WHERE (vw_loans.approve_status = 'Rejected')
 $P!{organd}
 ORDER BY vw_loans.loan_type_name asc;]]>
 	</queryString>
@@ -314,7 +314,7 @@ ORDER BY vw_loans.loan_type_name asc;]]>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="28" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<text><![CDATA[Un Approved Loans Report]]></text>
+				<text><![CDATA[Rejected Loans Report]]></text>
 			</staticText>
 		</band>
 	</title>
