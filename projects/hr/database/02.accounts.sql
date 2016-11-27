@@ -397,6 +397,12 @@ CREATE OR REPLACE FUNCTION get_default_account(integer, integer) RETURNS integer
 	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_default_account_id(integer, integer) RETURNS integer AS $$
+    SELECT accounts.account_id
+	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
+	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION process_journal(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	rec RECORD;

@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -20,6 +22,8 @@
 		<![CDATA[SELECT vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, vw_bank_accounts.narrative
 FROM vw_bank_accounts
 WHERE (vw_bank_accounts.Is_Active = true)
+$P!{organd}
+
 ORDER BY vw_bank_accounts.bank_name;]]>
 	</queryString>
 	<field name="bank_name" class="java.lang.String"/>

@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -36,7 +38,8 @@ FROM (SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_account
 	vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
 	prev_acct(vw_accounts.account_id, CAST('$P!{startrange}' as date)) AS prev_amount,
 	get_acct(vw_accounts.account_id, CAST('$P!{startrange}' as date), CAST('$P!{endrange}' as date)) AS curr_amount
-FROM vw_accounts WHERE vw_accounts.chat_type_id < 4) as ledger
+FROM vw_accounts WHERE (vw_accounts.chat_type_id < 4)
+$P!{organd}) as ledger
 WHERE (prev_amount <> 0) OR (curr_amount <> 0)
 ORDER BY account_id;]]>
 	</queryString>

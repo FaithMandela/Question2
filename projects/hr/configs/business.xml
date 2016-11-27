@@ -1354,7 +1354,7 @@
 				<DEFAULT default="client">Function_Role</DEFAULT>
 				<DEFAULT default="2">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
@@ -1404,7 +1404,7 @@
 				<DEFAULT default="supplier">Function_Role</DEFAULT>
 				<DEFAULT default="3">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account(52" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(52" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Supplier" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
@@ -1803,10 +1803,10 @@
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<FORM name="Items" keyfield="item_id" table="items">
 				<COMBOBOX w="430" title="Item Category" lptable="item_category" y="10" h="20" x="10" lpfield="item_category_name">item_category_id</COMBOBOX>
-				<COMBOBOX w="430" title="Tax Type" lptable="tax_types" y="30" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Tax Type" lptable="tax_types" where="(use_key_id = 15)" y="30" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Item Unit" default="1" lptable="item_units" y="50" h="20" x="10" lpfield="item_unit_name">item_unit_id</COMBOBOX>
-				<COMBOBOX w="430" title="Sales Account" default="70005" lptable="vw_accounts" lpkey="account_id" y="70" h="20" x="10" lpfield="account_description">sales_account_id</COMBOBOX>
-				<COMBOBOX w="430" title="Purchase Account" default="80000" lptable="vw_accounts" lpkey="account_id" y="90" h="20" x="10" lpfield="account_description">purchase_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Sales Account" default_org_fnct="get_default_account_id(53" lpkey="account_id" y="70" h="20" x="10" lpfield="account_description">sales_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Purchase Account" lptable="vw_accounts" default_org_fnct="get_default_account_id(54" lpkey="account_id" y="90" h="20" x="10" lpfield="account_description">purchase_account_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Item Name" y="110" h="20" x="10">item_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Inventory" y="130" h="20" x="10">inventory</CHECKBOX>
 				<CHECKBOX w="150" title="For Sale" y="130" h="20" x="290">for_sale</CHECKBOX>
