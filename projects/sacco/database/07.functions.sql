@@ -61,7 +61,7 @@ BEGIN
 		FROM loan_monthly INNER JOIN loans ON loan_monthly.loan_id = loans.loan_id
 		WHERE(loans.entity_id = $1);
 		
-	SELECT CASE WHEN  sum(contribution_paid) IS NULL THEN 0   
+	SELECT CASE WHEN  sum(contribution_paid ) IS NULL THEN 0   
 	ELSE sum(contribution_paid) END 
 	 INTO v_contributions
 		FROM contributions

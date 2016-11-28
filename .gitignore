@@ -1,4 +1,5 @@
 #ignore report binaries
+
 projects/config.xml
 baraza.log
 build/webapps/work/
