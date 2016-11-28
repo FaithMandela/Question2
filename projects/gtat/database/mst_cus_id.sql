@@ -1,4 +1,5 @@
 Create table tmpmustid(
+tmpmustid	serial primary key,
 MST_CUS_ID	varchar(120),
 Client Name	varchar(256));
 

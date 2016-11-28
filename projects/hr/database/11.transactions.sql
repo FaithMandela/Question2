@@ -666,7 +666,7 @@ BEGIN
 		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
 			IF(rec.bank_account_id is null)THEN
 				msg := 'Transaction completed.';
-				RAISE EXCEPTION 'No active period to post.';
+				RAISE EXCEPTION 'You need to add the bank account to receive the funds';
 			ELSE
 				UPDATE transactions SET transaction_status_id = 2, approve_status = 'Completed'
 				WHERE transaction_id = rec.transaction_id;
@@ -792,8 +792,8 @@ BEGIN
 		RAISE EXCEPTION 'Transaction not for posting.';
 	ELSE
 		v_journal_id := nextval('journals_journal_id_seq');
-		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
-		VALUES (rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
+		INSERT INTO journals (journal_id, org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
+		VALUES (v_journal_id, rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
 		
 		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
 		VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);

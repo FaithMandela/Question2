@@ -60,11 +60,8 @@
 			<TILE name="My Total Contributions" noorg.query="true" table="Contributions" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="My Contributions">total_contribs</TEXTFIELD>
 			</TILE>
-			<TILE name="My Total Overpayments" noorg.query="true" table="Receipts" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(remaining_amount),'999,999,999,990D00'))" title="My Overpayments">total_overpayments</TEXTFIELD>
-			</TILE>
-			<TILE name="My Unpaid Contributions" noorg.query="true" table="Contributions" where="(paid= 'false')" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="Total Deposits">total_ucontribs</TEXTFIELD>
+			<TILE name="My Unpaid Contributions" noorg.query="true" table="vw_contributions_unpaid" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(vw_contributions_unpaid.total_contribution),'999,999,999,990D00'))" title="Total unpaid">total_unpaidcontribs</TEXTFIELD>
 			</TILE>
 			<TILE name="Total Investments" noorg.query="true" table="investments">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(principal), '999,999,999,990D00'))" title="Total Invested">Total_invested</TEXTFIELD>

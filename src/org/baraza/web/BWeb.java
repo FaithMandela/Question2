@@ -584,7 +584,7 @@ public class BWeb {
 			if(view.getAttribute("grid.print", "false").equals("true"))
 				buttons += "<a class='btn green btn-sm' target='_blank' href='b_print.jsp?view=" + viewKey + did + "&action=print'><i class='fa fa-print'></i>   Print</a>\n";
 			
-			if(isEditField()) buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
+			//if(isEditField()) buttons += "<button type='button' class='btn btn-success i_tick icon small' name='btProcess' id='btProcess' value='Submit'><i class='fa  fa-save'></i> &nbsp; Submit</button>\n";
             
             buttons += "<a class='btn btn-circle btn-icon-only btn-default btn-sm fullscreen' href='javascript:;' data-original-title='' title=''></a>";
 		}
@@ -671,7 +671,6 @@ public class BWeb {
 		String body = "";
 		
 		BWebDashboard webDashboard = new BWebDashboard(db);
-		
 		
 		body += "<div class='row margin-top-5'>\n";
 		for(BElement el : view.getElements()) {
@@ -1613,30 +1612,35 @@ System.out.println("repository : " + repository);
 
 	public String submitGrid(HttpServletRequest request) {
 		String responce = "";
+		
+		
+log.info("BASE : 3020 " + request.getParameter("data"));
 
-		Enumeration e = request.getParameterNames();
-        while (e.hasMoreElements()) {
-            String name = (String)e.nextElement();
-			if(name.indexOf(":")>0) {
-				String pap[] = name.split(":");
-				BElement opt = view.getElement(pap[0]);
+		String tbName = view.getAttribute("updatetable");
+		String editKey = view.getAttribute("keyfield");
+log.info("BASE : 3030 " + tbName);
+		for(BElement el : view.getElements()) {
+			if(el.getName().equals("EDITFIELD")) {
+				String name = el.getValue();
+				String prms = request.getParameter(name);
+log.info("BASE : 3040 : " + name);
+log.info("BASE : 3045 : " + prms);
 
-				String tbName = opt.getAttribute("edittable");
-				if(tbName == null) tbName = opt.getAttribute("editvalue");
-				String editKey = opt.getAttribute("editkey");
-				if(editKey == null) editKey = view.getAttribute("keyfield");
-
-				String autoKeyID = db.insAudit(tbName, pap[1], "EDIT");
-
-				String mysql = "UPDATE " + tbName;
-				mysql += " SET " + opt.getValue();
-				mysql += " = '" + request.getParameter(name) + "'";
-				if(view.getAttribute("auditid") != null) mysql += ", " + view.getAttribute("auditid") + " = " + autoKeyID;
-				mysql += " WHERE " + editKey + " = '" + pap[1] + "'";
-
-				responce = db.executeQuery(mysql);
-
-				log.fine("BASE : " + mysql);
+				if(prms != null) {
+					String paps[] = prms.split(":");
+					for(String pap : paps) {
+						
+						String mysql = "UPDATE " + tbName + " SET " + name + " = '" + pap + "'";
+						if(view.getAttribute("auditid") != null) {
+							String autoKeyID = db.insAudit(tbName, pap, "EDIT");
+							mysql += ", " + view.getAttribute("auditid") + " = " + autoKeyID;
+						}
+						mysql += " WHERE " + editKey + " = '" + pap + "'";
+				
+log.severe("BASE : " + mysql);
+				//responce = db.executeQuery(mysql);
+					}
+				}
 			}
 		}
 

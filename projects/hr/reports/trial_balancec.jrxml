@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -37,6 +39,7 @@ FROM (SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_account
 		SUM(COALESCE(prev_acct(vw_accounts.account_id, CAST('$P!{startrange}' as date)), 0)) AS prev_amount,
 		SUM(COALESCE(get_acct(vw_accounts.account_id, CAST('$P!{startrange}' as date), CAST('$P!{endrange}' as date)), 0)) AS curr_amount
 	FROM vw_accounts
+	$P!{orgwhere}
 	GROUP BY vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name,
 		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name) as ledger
 WHERE (prev_amount <> 0) OR (curr_amount <> 0)

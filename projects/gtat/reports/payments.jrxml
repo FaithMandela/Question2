@@ -29,7 +29,7 @@
 		</box>
 	</style>
 	<parameter name="filterid" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="periodid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
@@ -45,12 +45,15 @@
 	<parameter name="clientid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="filter2id" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT clientid, clientname, periodid, startdate, enddate, clientpaymentsid,
        currency, amount, clientpaymentsnumber, payment_reference
   FROM vw_clientpayments
-WHERE (vw_clientpayments.periodid = '$P!{periodid}')
-ORDER BY clientid]]>
+WHERE vw_clientpayments.enddate <= '$P!{filterid}' AND vw_clientpayments.enddate >= '$P!{filter2id}'
+ORDER BY enddate ASC]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
 	<field name="clientname" class="java.lang.String"/>
@@ -89,21 +92,21 @@ ORDER BY clientid]]>
 	<columnHeader>
 		<band height="38" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-1" x="327" y="5" width="130" height="32" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
+				<reportElement key="staticText-1" x="224" y="6" width="130" height="32" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Payment Allocation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-8" x="156" y="5" width="68" height="32" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
+				<reportElement key="staticText-8" x="156" y="6" width="68" height="32" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-10" x="457" y="4" width="68" height="32" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
+				<reportElement key="staticText-10" x="457" y="6" width="68" height="32" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -113,14 +116,14 @@ ORDER BY clientid]]>
 				<reportElement key="line-1" x="0" y="37" width="535" height="1" uuid="89a4fab0-d555-4b6c-9740-55f71a225771"/>
 			</line>
 			<staticText>
-				<reportElement key="staticText-1" x="0" y="3" width="156" height="32" uuid="00ddebb0-66da-4e10-a7b9-9b2a9f26a69c"/>
+				<reportElement key="staticText-1" x="0" y="6" width="156" height="32" uuid="00ddebb0-66da-4e10-a7b9-9b2a9f26a69c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Client]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-1" x="224" y="5" width="103" height="32" uuid="cccbbc5f-dc86-4c3b-9ed8-0421c90b8380"/>
+				<reportElement key="staticText-1" x="354" y="6" width="103" height="32" uuid="cccbbc5f-dc86-4c3b-9ed8-0421c90b8380"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -130,14 +133,6 @@ ORDER BY clientid]]>
 	</columnHeader>
 	<detail>
 		<band height="19" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement key="textField" x="327" y="0" width="130" height="18" uuid="0b7bb81e-aa98-46b7-ad75-51a21164d333"/>
-				<box leftPadding="12"/>
-				<textElement textAlignment="Justified">
-					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{payment_reference}]]></textFieldExpression>
-			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="457" y="0" width="68" height="18" uuid="89b0ae66-ca11-454a-b543-7af2c82aff3d"/>
 				<textElement textAlignment="Right">
@@ -146,7 +141,7 @@ ORDER BY clientid]]>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement key="textField-14" x="156" y="1" width="68" height="18" uuid="c7e3c0cc-4c6b-4df0-a01f-cd346ad17b1c"/>
+				<reportElement key="textField-14" x="156" y="0" width="68" height="18" uuid="c7e3c0cc-4c6b-4df0-a01f-cd346ad17b1c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
@@ -159,8 +154,16 @@ ORDER BY clientid]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{clientname}]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="textField" x="224" y="0" width="130" height="18" uuid="0b7bb81e-aa98-46b7-ad75-51a21164d333"/>
+				<box leftPadding="12"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{payment_reference}]]></textFieldExpression>
+			</textField>
 			<textField pattern="#,##0.00;-#,##0.00">
-				<reportElement x="224" y="0" width="103" height="18" uuid="7e144055-2adb-4411-b3f4-393896631763"/>
+				<reportElement x="354" y="0" width="103" height="18" uuid="7e144055-2adb-4411-b3f4-393896631763"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="false"/>
 				</textElement>
