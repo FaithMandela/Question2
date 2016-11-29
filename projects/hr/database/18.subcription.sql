@@ -282,10 +282,11 @@ BEGIN
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 		
 		INSERT INTO default_accounts (org_id, use_key_id, account_id)
-		SELECT b.org_id, a.use_key_id, b.account_id
+		SELECT c.org_id, a.use_key_id, c.account_id
 		FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_id
-		WHERE (a.org_id = 1) AND (b.org_id = NEW.org_id);
-		
+			INNER JOIN accounts c ON b.account_no = c.account_no
+		WHERE (a.org_id = 1) AND (c.org_id = NEW.org_id);
+				
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 

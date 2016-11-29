@@ -140,13 +140,17 @@ INSERT INTO transaction_status (transaction_status_id, transaction_status_name) 
 CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,
 	account_id				integer references accounts,
+	tax_account_id			integer references accounts,
 	org_id					integer references orgs,
 	ledger_type_name		varchar(120) not null,
 	ledger_posting			boolean default true not null,
+	income_ledger			boolean default true not null,
+	expense_ledger			boolean default true not null,
 	details					text,
 	UNIQUE(org_id, ledger_type_name)
 );
 CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
+CREATE INDEX ledger_types_tax_account_id ON ledger_types (tax_account_id);
 CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
 
 CREATE TABLE transactions (
