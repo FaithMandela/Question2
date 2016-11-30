@@ -2568,8 +2568,7 @@
 					<ACTION fnct="contribution_paid">pay_contribs</ACTION>
 				</ACTIONS>
 				<FORM new="false" name="Contributions" keyfield="contribution_id" linkfield="period_id" table="contributions">
-					<USERFIELD>entity_id</USERFIELD>
-					<TEXTDECIMAL w="150" title="Receipt" y="130" h="20" x="290">receipt</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Received Amount" y="130" h="20" x="290">receipt</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Receipt Date" required="true" y="170" h="20" x="10">receipt_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Contribution Amount" y="110" h="20" x="10">contribution_amount</TEXTDECIMAL>
 					<TEXTFIELD w="150" title="Transaction Ref" y="150" h="20" x="290">transaction_ref</TEXTFIELD>

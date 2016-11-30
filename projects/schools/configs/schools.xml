@@ -241,34 +241,39 @@
 			<TEXTFIELD w="75" title="Country Code ID">country_code_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
 			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
-			<FORM name="Applicant" keyfield="student_id" table="applicant">
+			<FORM tw="570" name="Applicant" keyfield="student_id" table="applicant" th="200">
 				<DEFAULT default="0">student_id</DEFAULT>
-				<DEFAULT default="0">org_id</DEFAULT>
 				<COMBOBOX w="430" title="Stream Class ID" lptable="stream_classes" y="30" h="20" x="10" lpfield="stream_class_id">stream_class_id</COMBOBOX>
 				<COMBOBOX w="430" title="Session ID" lptable="sessions" y="50" h="20" x="10" lpfield="session_name">session_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Applicant Name" y="70" h="20" x="10">applicant_name</TEXTFIELD>
-				<TEXTDATE w="150" title="Applicant Dob" y="90" h="20" x="10">applicant_dob</TEXTDATE>
-				<TEXTFIELD w="430" title="Applicants Address" y="110" h="20" x="10">applicants_address</TEXTFIELD>
-				<CHECKBOX w="150" title="Gender" y="130" h="20" x="10">gender</CHECKBOX>
-				<COMBOBOX w="430" title="Country Code ID" lptable="sys_countrys" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">country_code_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Telno" y="170" h="20" x="10">telno</TEXTFIELD>
+				<TEXTFIELD w="430" title="Applicant Name" placeholder="**required" required="true" y="70" h="20" x="10" span="true">applicant_name</TEXTFIELD>
+				<TEXTDATE w="150" title="DOB" required="true" y="90" h="20" x="190">applicant_dob</TEXTDATE>
+				<TEXTFIELD w="430" title="Address" y="110" h="20" x="10">applicants_address</TEXTFIELD>
+				<COMBOLIST w="150" title="Gender" y="50" ischar="true" h="20" x="290">gender
+					<DATA>Male</DATA>
+					<DATA>Female</DATA>
+				</COMBOLIST>
+				<COMBOBOX w="430" title="Country" lptable="sys_countrys" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">country_code_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Telno" y="170" h="20" x="190">telno</TEXTFIELD>
 				<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Approve Status" y="210" h="20" x="10">approve_status</TEXTFIELD>
+				<COMBOLIST w="150" title="Status" y="130" h="20" x="190">approve_status
+					<DATA>Draft</DATA>
+					<DATA>Rejected</DATA>
+					<DATA>Approved</DATA>
+				</COMBOLIST>
 				<TEXTFIELD w="150" title="Workflow Table ID" y="210" h="20" x="290">workflow_table_id</TEXTFIELD>
-				<TEXTTIMESTAMP w="150" title="Action Date" y="230" h="20" x="10">action_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="430" title="Fathers Name" y="250" h="20" x="10">fathers_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Fathers Tel No" y="270" h="20" x="10">fathers_tel_no</TEXTFIELD>
 				<TEXTFIELD w="430" title="Fathers Email" y="290" h="20" x="10">fathers_email</TEXTFIELD>
-				<TEXTFIELD w="430" title="Mothers Name" y="310" h="20" x="10">mothers_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Mothers Tel No" y="330" h="20" x="10">mothers_tel_no</TEXTFIELD>
+				<TEXTFIELD w="430" title="Mothers Name" required="true" y="310" h="20" x="10">mothers_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Mothers Tel No" required="true" y="330" h="20" x="10">mothers_tel_no</TEXTFIELD>
 				<TEXTFIELD w="430" title="Mothers Email" y="350" h="20" x="10">mothers_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Guardian Name" y="370" h="20" x="10">guardian_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="G Address" y="370" h="20" x="290">g_address</TEXTFIELD>
-				<TEXTFIELD w="150" title="G Zipcode" y="390" h="20" x="10">g_zipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="G Town" y="390" h="20" x="290">g_town</TEXTFIELD>
-				<COMBOBOX w="430" title="G Countrycodeid" lptable="sys_countrys" lpkey="sys_country_id" y="410" h="20" x="10" lpfield="sys_country_name">g_countrycodeid</COMBOBOX>
-				<TEXTFIELD w="150" title="G Telno" y="430" h="20" x="10">g_telno</TEXTFIELD>
-				<TEXTFIELD w="430" title="G Email" y="450" h="20" x="10">g_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guardian Address" y="370" h="20" x="290">g_address</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guardian Zipcode" y="390" h="20" x="10">g_zipcode</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guardian Town" y="390" h="20" x="290">g_town</TEXTFIELD>
+				<COMBOBOX w="430" title="Guardian Countrycodeid" lptable="sys_countrys" lpkey="sys_country_id" y="410" h="20" x="10" lpfield="sys_country_name">g_countrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" title="Guardian Telno" y="430" h="20" x="10">g_telno</TEXTFIELD>
+				<TEXTFIELD w="430" title="Guardian Email" y="450" h="20" x="10">g_email</TEXTFIELD>
 				<TEXTAREA w="430" title="Current Contact" y="470" h="70" x="10">current_contact</TEXTAREA>
 				<TEXTAREA w="430" title="Registrar Details" y="540" h="70" x="10">registrar_details</TEXTAREA>
 				<TEXTAREA w="430" title="Details" y="610" h="70" x="10">details</TEXTAREA>

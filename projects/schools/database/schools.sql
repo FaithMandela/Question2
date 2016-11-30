@@ -295,3 +295,5 @@ $BODY$
 CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
   FOR EACH ROW  EXECUTE PROCEDURE ins_students();	
 	
+	
+
