@@ -158,7 +158,7 @@ CREATE VIEW vws_productions AS
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
-    
+
 CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
 	v_entity_id				integer;
@@ -178,8 +178,8 @@ BEGIN
 
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
+			INSERT INTO entitys (entity_id, org_id, use_key_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
+			VALUES (NEW.entity_id, 0, 5, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'subscription', null);
 		
 			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 			VALUES (4, 0, NEW.entity_id, 'subscription');
@@ -203,8 +203,8 @@ BEGIN
 		
 		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);
 		
-		INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key)
-		SELECT NEW.org_id, entity_type_name, entity_role, use_key
+		INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id)
+		SELECT NEW.org_id, entity_type_name, entity_role, use_key_id
 		FROM entity_types WHERE org_id = 1;
 		
 		INSERT INTO subscription_levels (org_id, subscription_level_name)
@@ -231,12 +231,12 @@ BEGIN
 		SELECT NEW.org_id, adjustment_type, adjustment_name, visible, in_tax
 		FROM adjustments WHERE org_id = 1;
 		
-		FOR myrec IN SELECT tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type
+		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active
 			FROM tax_types WHERE org_id = 1 ORDER BY tax_type_id 
 		LOOP
 			v_tax_type_id := nextval('tax_types_tax_type_id_seq');
-			INSERT INTO tax_types (org_id, tax_type_id, use_key, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, use_type, currency_id)
-			VALUES (NEW.org_id, v_tax_type_id, myrec.use_key, myrec.tax_type_name, myrec.formural, myrec.tax_relief, myrec.tax_type_order, myrec.in_tax, myrec.linear, myrec.percentage, myrec.employer, myrec.employer_ps, myrec.active, myrec.use_type, v_currency_id);
+			INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, currency_id)
+			VALUES (NEW.org_id, v_tax_type_id, myrec.use_key_id, myrec.tax_type_name, myrec.formural, myrec.tax_relief, myrec.tax_type_order, myrec.in_tax, myrec.linear, myrec.percentage, myrec.employer, myrec.employer_ps, myrec.active, v_currency_id);
 			
 			INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
 			SELECT NEW.org_id,  v_tax_type_id, tax_range, tax_rate
@@ -250,7 +250,7 @@ BEGIN
 		INSERT INTO objective_types (org_id, objective_type_name) VALUES (NEW.org_id, 'General');
 
 		v_department_id := nextval('departments_department_id_seq');
-		INSERT INTO Departments (org_id, department_id, department_name) VALUES (NEW.org_id, v_department_id, 'Board of Directors');
+		INSERT INTO departments (org_id, department_id, department_name) VALUES (NEW.org_id, v_department_id, 'Board of Directors');
 		INSERT INTO department_roles (org_id, department_id, department_role_name, active) VALUES (NEW.org_id, v_department_id, 'Board of Directors', true);
 		
 		v_bank_id := nextval('banks_bank_id_seq');
@@ -281,6 +281,12 @@ BEGIN
 		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 		
+		INSERT INTO default_accounts (org_id, use_key_id, account_id)
+		SELECT c.org_id, a.use_key_id, c.account_id
+		FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_id
+			INNER JOIN accounts c ON b.account_no = c.account_no
+		WHERE (a.org_id = 1) AND (c.org_id = NEW.org_id);
+				
 		UPDATE entitys SET org_id = NEW.org_id, function_role='subscription,admin,staff,finance'
 		WHERE entity_id = NEW.entity_id;
 

@@ -8,6 +8,7 @@ CREATE TABLE adjustments (
 	currency_id				integer references currency,
 	adjustment_effect_id	integer references adjustment_effects,
 	org_id					integer references orgs,
+	ledger_type_id			integer,
 	adjustment_name			varchar(50) not null,
 	adjustment_type			integer not null,
 	adjustment_order		integer default 0 not null,
@@ -33,6 +34,7 @@ CREATE TABLE adjustments (
 CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
 CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
+CREATE INDEX adjustments_ledger_type_id ON adjustments(ledger_type_id);
 
 CREATE TABLE claim_types (
 	claim_type_id			serial primary key,

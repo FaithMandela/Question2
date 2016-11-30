@@ -140,13 +140,17 @@ INSERT INTO transaction_status (transaction_status_id, transaction_status_name) 
 CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,
 	account_id				integer references accounts,
+	tax_account_id			integer references accounts,
 	org_id					integer references orgs,
 	ledger_type_name		varchar(120) not null,
 	ledger_posting			boolean default true not null,
+	income_ledger			boolean default true not null,
+	expense_ledger			boolean default true not null,
 	details					text,
 	UNIQUE(org_id, ledger_type_name)
 );
 CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
+CREATE INDEX ledger_types_tax_account_id ON ledger_types (tax_account_id);
 CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
 
 CREATE TABLE transactions (
@@ -279,6 +283,12 @@ CREATE VIEW vw_ledger_types AS
 		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.details
 	FROM ledger_types INNER JOIN vw_accounts ON vw_accounts.account_id = ledger_types.account_id;
 
+CREATE VIEW vw_transaction_counters AS
+	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
+		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
+		transaction_counters.org_id, transaction_counters.transaction_counter_id, transaction_counters.document_number
+	FROM transaction_counters INNER JOIN transaction_types ON transaction_counters.transaction_type_id = transaction_types.transaction_type_id;
+	
 CREATE VIEW vw_transactions AS
 	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
 		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
@@ -916,9 +926,11 @@ BEGIN
 	FROM approval_checklists
 	WHERE (approval_id = app_id) AND (manditory = true) AND (done = false);
 
-	SELECT transaction_type_id, get_budgeted(transaction_id, transaction_date, department_id) as budget_var INTO recd
-	FROM transactions
-	WHERE (workflow_table_id = reca.table_id);
+	SELECT orgs.org_id, transactions.transaction_type_id, orgs.enforce_budget,
+		get_budgeted(transactions.transaction_id, transactions.transaction_date, transactions.department_id) as budget_var 
+		INTO recd
+	FROM orgs INNER JOIN transactions ON orgs.org_id = transactions.org_id
+	WHERE (transactions.workflow_table_id = reca.table_id);
 
 	IF ($3 = '1') THEN
 		UPDATE approvals SET approve_status = 'Completed', completion_date = now()
@@ -926,7 +938,7 @@ BEGIN
 		msg := 'Completed';
 	ELSIF ($3 = '2') AND (recc.cl_count <> 0) THEN
 		msg := 'There are manditory checklist that must be checked first.';
-	ELSIF (recd.transaction_type_id = 5) AND (recd.budget_var < 0) THEN
+	ELSIF (recd.transaction_type_id = 5) AND (recd.enforce_budget = true) AND (recd.budget_var < 0) THEN
 		msg := 'You need a budget to approve the expenditure.';
 	ELSIF ($3 = '2') AND (recc.cl_count = 0) THEN
 		UPDATE approvals SET approve_status = 'Approved', action_date = now(), app_entity_id = CAST($2 as int)

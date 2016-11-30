@@ -89,8 +89,7 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40045'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40050',400,'PENSION');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('40055',400,'PAYROLL LIABILITIES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('41000',410,'ADVANCED BILLING');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42000',420,'INPUT VAT');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42005',420,'OUTPUT VAT');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42000',420,'Value Added Tax (VAT)');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('42010',420,'REMITTANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('43000',430,'WITHHOLDING TAX');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('50000',500,'BANK LOANS');
@@ -113,8 +112,8 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71030'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('71035',710,'TRAINING, FORUM, MEETINGS and WORKSHOPS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('80000',800,'COST OF GOODS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90000',900,'BASIC SALARY');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90005',900,'LEAVE ALLOWANCES');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90010',900,'AIRTIME ');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90005',900,'STAFF ALLOWANCES');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90010',900,'AIRTIME');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90012',900,'TRANSPORT ALLOWANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90015',900,'REMOTE ACCESS');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90020',900,'EMPLOYER PENSION CONTRIBUTION');
@@ -127,7 +126,7 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90055'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90056',900,'STAFF WELLFARE: CONSUMABLES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90060',900,'MEDICAL INSURANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90065',900,'GROUP PERSONAL ACCIDENT AND WIBA');
-INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90070',900,'STAFF SATISFACTION SURVEY');
+INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90070',900,'STAFF EXPENDITURE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90075',900,'GROUP LIFE INSURANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90500',905,'FIXED LINES');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('90505',905,'CALLING CARDS');
@@ -220,6 +219,9 @@ INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (25, 'Trave
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (26, 'Salary Payment', 3);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (27, 'Basic Salary', 3);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (28, 'Payroll Advance', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (29, 'Staff Allowance', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (30, 'Staff Remitance', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (31, 'Staff Expenditure', 3);
 
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 23, 90012);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 24, 30005);
@@ -227,22 +229,28 @@ INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 25, 400
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 26, 40055);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 27, 90000);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 28, 40055);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 29, 90005);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 30, 40055);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 31, 90070);
+
 
 ---- Default account for 
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (51, 'Client Account', 3);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (52, 'Supplier Account', 3);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (53, 'Sales Account', 3);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (54, 'Purchase Account', 3);
-INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (55, 'Suplus/Deficit', 3);
-INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (56, 'Retained Earnings', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (55, 'VAT Account', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (56, 'Suplus/Deficit', 3);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (57, 'Retained Earnings', 3);
 
 
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 51, 30000);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 52, 40000);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 53, 70005);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 54, 80000);
-INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 55, 99999);
-INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 56, 61000);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 55, 42000);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 56, 99999);
+INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 57, 61000);
 
 
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 

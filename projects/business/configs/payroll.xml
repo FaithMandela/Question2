@@ -40,7 +40,7 @@
 			<MENU name="P10">112</MENU>
 			<MENU name="Payroll Ledger">115</MENU>
 		</MENU>
-		<MENU name="HR" role="admin,payroll,reports" xml="hr.xml">0</MENU>
+		<MENU name="Business" xml="business.xml">0</MENU>
 	</MENU>
 	<CONFIGS name="Full system configurations">
 		<AUDIT name="Full Table Audits">
