@@ -64,6 +64,7 @@ CREATE INDEX departments_org_id ON departments (org_id);
 
 CREATE TABLE grades (
 	gradeid				varchar(2) primary key,
+	org_id				integer references orgs,
 	gradeweight			float default 0 not null,
 	minrange			integer,
 	maxrange			integer,
@@ -71,6 +72,7 @@ CREATE TABLE grades (
 	narrative			varchar(240),
 	details				text
 );
+CREATE INDEX grades_org_id ON grades (org_id);
 
 CREATE TABLE degreelevels (
 	degreelevelid		varchar(12) primary key,

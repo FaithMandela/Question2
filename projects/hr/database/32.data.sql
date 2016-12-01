@@ -21,7 +21,7 @@ INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name
 INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('340', '30', 'PRE-PAYMMENTS');
 INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('400', '40', 'CREDITORS');
 INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('410', '40', 'ADVANCED BILLING');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('420', '40', 'VAT');
+INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('420', '40', 'TAX');
 INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('430', '40', 'WITHHOLDING TAX');
 INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('500', '50', 'LOANS');
 INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('600', '60', 'CAPITAL GRANTS');
