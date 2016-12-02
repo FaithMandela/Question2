@@ -49,17 +49,15 @@
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT clientid, clientname, periodid, startdate, enddate, clientpaymentsid,
+		<![CDATA[SELECT clientid, clientname, accounting_date, clientpaymentsid,
        currency, amount, clientpaymentsnumber, payment_reference
   FROM vw_clientpayments
-WHERE vw_clientpayments.enddate <= '$P!{filterid}' AND vw_clientpayments.enddate >= '$P!{filter2id}'
-ORDER BY enddate ASC]]>
+WHERE vw_clientpayments.accounting_date <= '$P!{filterid}' AND vw_clientpayments.accounting_date >= '$P!{filter2id}'
+ORDER BY accounting_date ASC]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
 	<field name="clientname" class="java.lang.String"/>
-	<field name="periodid" class="java.lang.Integer"/>
-	<field name="startdate" class="java.sql.Date"/>
-	<field name="enddate" class="java.sql.Date"/>
+	<field name="accounting_date" class="java.sql.Date"/>
 	<field name="clientpaymentsid" class="java.lang.Integer"/>
 	<field name="currency" class="java.lang.String"/>
 	<field name="amount" class="java.lang.Float"/>
@@ -145,7 +143,7 @@ ORDER BY enddate ASC]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{enddate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{accounting_date}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="0" y="0" width="156" height="18" uuid="5d170cb8-958a-4aac-b1b6-c4fcd4ed112d"/>

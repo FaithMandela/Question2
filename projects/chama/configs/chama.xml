@@ -922,6 +922,7 @@
 				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Loan Contrib" y="240" h="20" x="290">loan_contrib</TEXTDECIMAL>
 				<CHECKBOX w="50" title="Paid">paid</CHECKBOX>
+				<CHECKBOX w="75" title="Extra Contrib">extra_contrib</CHECKBOX>
 				<TEXTDECIMAL w="50" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
 				<ACTIONS>
 					<ACTION fnct="generate_paid" role="admin">Pay</ACTION>

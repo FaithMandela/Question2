@@ -204,35 +204,19 @@ CREATE TABLE tmpclientpayments (
 	MST_CUS_ID				varchar(10)
 );
 
+
 DROP TABLE clientpayments CASCADE;
 CREATE TABLE clientpayments (
 	clientpaymentsid		serial primary key,
 	clientid 				integer references clients,
-	PeriodID				integer references period,
+	accounting_date			date,
 	currency				varchar(50),
 	amount					real,
 	payment_type			varchar(250),
 	payment_reference		varchar(250)
 );
 CREATE INDEX clientpayments_clientid ON clientpayments (clientid);
-CREATE INDEX clientpayments_PeriodID ON clientpayments (PeriodID);
 
-CREATE OR REPLACE VIEW vw_clientpayments AS 
- SELECT clients.clientid,
-    clients.clientname,
-    period.periodid,
-    period.startdate,
-    period.enddate,
-    clientpayments.clientpaymentsid,
-    clientpayments.currency,
-    clientpayments.amount,
-    'TP/GTA/PAY/'::text || clientpayments.clientpaymentsid AS clientpaymentsnumber,
-    clientpayments.payment_reference,
-    clientpayments.payment_type
-   FROM clientpayments
-     JOIN clients ON clientpayments.clientid = clients.clientid
-     JOIN period ON clientpayments.periodid = period.periodid;
-	
 
 CREATE OR REPLACE FUNCTION inspayments(
     character varying,
@@ -244,33 +228,72 @@ DECLARE
 	myrec RECORD;
 BEGIN 
 	DELETE FROM tmpclientpayments WHERE tmpclientpayments.Accounting_Date = 'Accounting Date';
-	INSERT INTO clientpayments(clientid, periodid, currency, amount, payment_type, payment_reference)
-	SELECT clients.clientid, periodid, currency, Credit::real, split_part(tmpclientpayments.line_description, ':', 1), split_part(tmpclientpayments.line_description, ':', 2)
+	INSERT INTO clientpayments(clientid, accounting_date, currency, amount, payment_reference)
+	SELECT clients.clientid,('1899-12-30'::date + Accounting_Date::int) as accounting_date, currency, Credit::real, Line_Description
 	FROM tmpclientpayments 
-	INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id
-	INNER JOIN period ON period.enddate = '1899-12-30'::date + Accounting_Date::int;
+	INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id;
 
-	DELETE FROM tmpclientpayments; 
+	DELETE FROM tmpclientpayments WHERE mst_cus_id  IN
+	(SELECT DISTINCT mst_cus_id FROM clients); 
+
 	RETURN 'Done';
 END
 $BODY$
   LANGUAGE plpgsql;
-  
-DROP VIEW vw_statement;
+
+CREATE OR REPLACE VIEW vw_clientpayments AS 
+ SELECT clients.clientid,
+    clients.clientname,
+    clientpayments.clientpaymentsid,
+    clientpayments.currency,
+    clientpayments.amount,
+	clientpayments.accounting_date,
+    'TP/GTA/PAY/'::text || clientpayments.clientpaymentsid AS clientpaymentsnumber,
+    clientpayments.payment_reference,
+    clientpayments.payment_type
+   FROM clientpayments
+     JOIN clients ON clientpayments.clientid = clients.clientid;
+
 CREATE OR REPLACE VIEW vw_statement AS
-	SELECT item_name, clientid, clientname, salesperiod, periodid, invoicedate, invoicenumber, invoiced, credit_amount, payments, amount
+	SELECT item_name, clientid, clientname, salesperiod, invoicedate, invoicenumber, invoiced, credit_amount, payments, amount
 	FROM 
-		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, salesperiod, periodid, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real as amount
+		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, salesperiod, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real as amount
 		FROM vwinvoicelist)
 		UNION ALL 
-		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, salesperiod, periodid, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
+		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, salesperiod, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
 		FROM vwcrnotelist)
 		UNION ALL 
-		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, payment_type, periodid, enddate, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
+		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, payment_type, accounting_date, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
 		FROM vw_clientpayments)) as a 
 ORDER BY invoicedate ASC;
 
+CREATE OR REPLACE VIEW vw_receipt AS
+	SELECT vw_clientpayments.clientid, vwclients.clientname, accounting_date, clientpaymentsid, 
+       currency, amount, clientpaymentsnumber, payment_reference, countryname, address, postalcode, town
+	FROM vw_clientpayments 
+	JOIN vwclients ON vw_clientpayments.clientid = vwclients.clientid;
 
+
+-- select to_char(sum(credit::real), '9,999,999,999,999')
+-- from tmpclientpayments
+-- INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id;
+-- 
+-- SELECT tmpclientpayments.mst_cus_id
+-- FROM tmpclientpayments LEFT JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id
+-- WHERE clients.mst_cus_id is null
+-- GROUP BY tmpclientpayments.mst_cus_id;
+-- 
+-- SELECT clients.clientid, clients.clientname, clients.mst_cus_id
+-- FROM clients
+-- WHERE clients.mst_cus_id IN
+-- (SELECT clients.mst_cus_id
+-- FROM clients
+-- GROUP BY clients.mst_cus_id
+-- HAVING count(clients.clientid) > 1)
+-- AND clients.mst_cus_id is not null 
+-- ORDER BY mst_cus_id;
+	
+	
 -- CREATE OR REPLACE FUNCTION get_total_credit(integer) RETURNS real AS $$
 -- SELECT SUM(amount) as Credit
 --  FROM vwinvoice
