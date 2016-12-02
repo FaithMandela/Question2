@@ -1,5 +1,28 @@
 
+ALTER TABLE grades ADD org_id integer references orgs;
+CREATE INDEX grades_org_id ON grades (org_id);
+UPDATE grades SET org_id = 0;
 
+INSERT INTO grades (gradeid, org_id, gradeweight, minrange, maxrange, gpacount, narrative)
+VALUES ('A*', 1, 0, 70, 100, false, 'Distinction'), ('P*', 1, 0, 50, 69, false, 'Pass'), ('F*', 1, 0, 0, 40, false, 'Fail');
+
+CREATE OR REPLACE FUNCTION getdbgradeid(integer, integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(gradeid) is null THEN 'NG' ELSE max(gradeid) END
+	FROM grades 
+	WHERE (minrange <= $1) AND (maxrange >= $1) AND (org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION updqcoursegrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+BEGIN
+	UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, qgrades.org_id)
+	WHERE (qgrades.qcourseid = CAST($1 as int));
+	
+	UPDATE qcourses SET facultysubmit = true, fsdate = now()
+	WHERE (qcourseid = CAST($1 as int));
+	
+	RETURN 'Final Grade Submitted to Registry Correctly';
+END;
+$$ LANGUAGE plpgsql;
 
 ALTER TABLE studentpayments ADD first_attempt timestamp;
 ALTER TABLE studentpayments ADD mechant_code varchar(16);

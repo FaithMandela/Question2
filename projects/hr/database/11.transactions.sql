@@ -140,13 +140,17 @@ INSERT INTO transaction_status (transaction_status_id, transaction_status_name) 
 CREATE TABLE ledger_types (
 	ledger_type_id			serial primary key,
 	account_id				integer references accounts,
+	tax_account_id			integer references accounts,
 	org_id					integer references orgs,
 	ledger_type_name		varchar(120) not null,
 	ledger_posting			boolean default true not null,
+	income_ledger			boolean default true not null,
+	expense_ledger			boolean default true not null,
 	details					text,
 	UNIQUE(org_id, ledger_type_name)
 );
 CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
+CREATE INDEX ledger_types_tax_account_id ON ledger_types (tax_account_id);
 CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
 
 CREATE TABLE transactions (
@@ -274,11 +278,25 @@ CREATE VIEW vw_quotations AS
 CREATE VIEW vw_ledger_types AS
 	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
 		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, 
+		vw_accounts.is_header, vw_accounts.is_active,
 		
-		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.details
-	FROM ledger_types INNER JOIN vw_accounts ON vw_accounts.account_id = ledger_types.account_id;
+		ta.accounts_class_id as t_accounts_class_id, ta.chat_type_id as t_chat_type_id, 
+		ta.chat_type_name as t_chat_type_name, ta.accounts_class_name as t_accounts_class_name, 
+		ta.account_type_id as t_account_type_id, ta.account_type_name as t_account_type_name,
+		ta.account_id as t_account_id, ta.account_no as t_account_no, ta.account_name as t_account_name, 
+		
+		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
+		ledger_types.ledger_posting, ledger_types.income_ledger, ledger_types.expense_ledger, ledger_types.details
+	FROM ledger_types INNER JOIN vw_accounts ON ledger_types.account_id = vw_accounts.account_id
+		INNER JOIN vw_accounts ta ON ledger_types.tax_account_id = ta.account_id;
 
+CREATE VIEW vw_transaction_counters AS
+	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
+		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
+		transaction_counters.org_id, transaction_counters.transaction_counter_id, transaction_counters.document_number
+	FROM transaction_counters INNER JOIN transaction_types ON transaction_counters.transaction_type_id = transaction_types.transaction_type_id;
+	
 CREATE VIEW vw_transactions AS
 	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
 		transaction_types.document_prefix, transaction_types.for_posting, transaction_types.for_sales, 
@@ -666,7 +684,7 @@ BEGIN
 		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
 			IF(rec.bank_account_id is null)THEN
 				msg := 'Transaction completed.';
-				RAISE EXCEPTION 'No active period to post.';
+				RAISE EXCEPTION 'You need to add the bank account to receive the funds';
 			ELSE
 				UPDATE transactions SET transaction_status_id = 2, approve_status = 'Completed'
 				WHERE transaction_id = rec.transaction_id;
@@ -792,8 +810,8 @@ BEGIN
 		RAISE EXCEPTION 'Transaction not for posting.';
 	ELSE
 		v_journal_id := nextval('journals_journal_id_seq');
-		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
-		VALUES (rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
+		INSERT INTO journals (journal_id, org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
+		VALUES (v_journal_id, rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
 		
 		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
 		VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
@@ -916,9 +934,11 @@ BEGIN
 	FROM approval_checklists
 	WHERE (approval_id = app_id) AND (manditory = true) AND (done = false);
 
-	SELECT transaction_type_id, get_budgeted(transaction_id, transaction_date, department_id) as budget_var INTO recd
-	FROM transactions
-	WHERE (workflow_table_id = reca.table_id);
+	SELECT orgs.org_id, transactions.transaction_type_id, orgs.enforce_budget,
+		get_budgeted(transactions.transaction_id, transactions.transaction_date, transactions.department_id) as budget_var 
+		INTO recd
+	FROM orgs INNER JOIN transactions ON orgs.org_id = transactions.org_id
+	WHERE (transactions.workflow_table_id = reca.table_id);
 
 	IF ($3 = '1') THEN
 		UPDATE approvals SET approve_status = 'Completed', completion_date = now()
@@ -926,7 +946,7 @@ BEGIN
 		msg := 'Completed';
 	ELSIF ($3 = '2') AND (recc.cl_count <> 0) THEN
 		msg := 'There are manditory checklist that must be checked first.';
-	ELSIF (recd.transaction_type_id = 5) AND (recd.budget_var < 0) THEN
+	ELSIF (recd.transaction_type_id = 5) AND (recd.enforce_budget = true) AND (recd.budget_var < 0) THEN
 		msg := 'You need a budget to approve the expenditure.';
 	ELSIF ($3 = '2') AND (recc.cl_count = 0) THEN
 		UPDATE approvals SET approve_status = 'Approved', action_date = now(), app_entity_id = CAST($2 as int)

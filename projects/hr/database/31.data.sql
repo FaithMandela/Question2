@@ -95,28 +95,28 @@ INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VA
 INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'Housing');
 INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'Insurance');
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 1, 'Sacco Allowance', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 2, 'Bonus', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, in_payroll, Visible, In_Tax) VALUES (1, 3, 'Employer - Pension', false, true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 1, 'Sacco Allowance', true, true, '90005');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 2, 'Bonus', true, true, '90005');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, in_payroll, Visible, In_Tax, account_number) VALUES (1, 3, 'Employer - Pension', false, true, false, '90005');
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 11, 'SACCO', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 12, 'HELB', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 13, 'Rent Payment', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 14, 'Pension deduction', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 15, 'Internal loans', true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 11, 'SACCO', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 12, 'HELB', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 13, 'Rent Payment', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 14, 'Pension deduction', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 15, 'Internal loans', true, false, '40055');
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 21, 'Travel', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 22, 'Communcation', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 23, 'Tools', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 24, 'Payroll Cost', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 25, 'Health Insurance', false, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 26, 'GPA Insurance', false, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 27, 'Accomodation', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 28, 'Avenue Health Care', false, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 29, 'Maternety Cost', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 30, 'Health care claims', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 31, 'Trainining', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 32, 'per diem', true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 21, 'Travel', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 22, 'Communcation', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 23, 'Tools', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 24, 'Payroll Cost', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 25, 'Health Insurance', false, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 26, 'GPA Insurance', false, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 27, 'Accomodation', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 28, 'Avenue Health Care', false, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 29, 'Maternety Cost', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 30, 'Health care claims', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 31, 'Trainining', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 32, 'per diem', true, false, '90070');
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 32, true);
 UPDATE adjustments SET org_id = 0, currency_id = 1;
 

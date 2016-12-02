@@ -100,7 +100,7 @@
 				<CHECKBOX w="150" title="In Tax" default="true" y="70" h="20" x="10">in_tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Order" default="0" y="70" h="20" x="290">adjustment_order</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Default Amount" y="90" h="20" x="10">default_amount</TEXTDECIMAL>
-				<TEXTFIELD w="150" title="Account Number" default="0" y="110" h="20" x="10">account_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(29" y="110" h="20" x="10">account_number</TEXTFIELD>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -123,7 +123,7 @@
 				<TEXTFIELD w="430" title="Deduction Name" y="10" h="20" x="10">adjustment_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Formular" y="30" h="20" x="10">formural</TEXTFIELD>
 				<TEXTFIELD w="150" title="Order" default="0" y="50" h="20" x="10">adjustment_order</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" default="0" y="50" h="20" x="290">account_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(30" y="50" h="20" x="290">account_number</TEXTFIELD>
 				<CHECKBOX w="150" title="Monthly Update" y="70" h="20" x="10">monthly_update</CHECKBOX>
 				<CHECKBOX w="150" title="In Payroll" default="true" y="70" h="20" x="290">in_payroll</CHECKBOX>
 				<CHECKBOX w="150" title="Running Balance" y="90" h="20" x="10">running_balance</CHECKBOX>
@@ -159,7 +159,7 @@
 				<CHECKBOX w="150" title="In Payroll" default="true" y="50" h="20" x="290">in_payroll</CHECKBOX>
 				<CHECKBOX w="150" title="In Tax" default="false" y="70" h="20" x="10">in_tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Order" default="0" y="70" h="20" x="290">adjustment_order</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" default="0" y="90" h="20" x="10">account_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(31" y="90" h="20" x="10">account_number</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Default Amount" y="110" h="20" x="10">default_amount</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
@@ -313,7 +313,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="715" name="Statutory Deductions" key="2" h="500">
-		<GRID name="Deduction Types" keyfield="tax_type_id" table="vw_tax_types" where="(use_key_id = 1)">
+		<GRID name="Deduction Types" keyfield="tax_type_id" table="vw_tax_types" where="(use_function = 1)">
 			<TEXTFIELD w="75" title="ID">tax_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Deduction Name">tax_type_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Deduction Relief">tax_relief</TEXTDECIMAL>
@@ -333,7 +333,7 @@
 				</FORM>
 			</GRID>
 			<FORM name="Deduction Type" keyfield="tax_type_id" table="tax_types">
-				<COMBOBOX w="150" title="Category" lptable="use_keys" noorg="true" where="(use_key_id = 1)" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
+				<COMBOBOX w="150" title="Category" lptable="use_keys" noorg="true" where="(use_function = 1)" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Deduction Type" y="10" h="20" x="290">tax_type_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Formular" default="Get_Employee_Tax(employee_tax_type_id, 2)" y="30" h="20" x="10">formural</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Deduction Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
@@ -345,7 +345,7 @@
 				<TEXTFIELD w="150" title="Order" default="0" y="110" h="20" x="10">Tax_Type_order</TEXTFIELD>
 				<CHECKBOX w="150" title="Tax" y="110" h="20" x="290">In_Tax</CHECKBOX>
 				<TEXTFIELD w="150" title="Registration Number" default="0" y="130" h="20" x="10">tax_type_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="Account Number" default="0" y="130" h="290" x="10">account_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(30" y="130" h="290" x="10">account_number</TEXTFIELD>
 				<TEXTFIELD w="150" title="Employer Account" y="150" h="20" x="10">employer_account</TEXTFIELD>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="190" h="90" x="10">details</TEXTAREA>
@@ -485,7 +485,7 @@
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
 				<FORM name="Statutory Deduction" keyfield="default_tax_type_id" linkfield="entity_id" table="default_tax_types">
-					<COMBOBOX w="430" title="Type Name Type" lptable="tax_types" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Identification" y="30" h="20" x="10">tax_identification</TEXTFIELD>
 					<CHECKBOX w="150" title="Active" default="true" y="30" h="20" x="290">active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Additional" default="0" y="50" h="20" x="10">additional</TEXTDECIMAL>
@@ -760,7 +760,7 @@
 					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 					<FORM name="Statutories" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="employee_tax_types">
-						<COMBOBOX w="430" title="Tax Type" lptable="vw_tax_types" where="(use_key_id = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
+						<COMBOBOX w="430" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
 						<TEXTFIELD w="150" title="Tax Identification" y="30" h="20" x="10">tax_identification</TEXTFIELD>
 						<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Additional" default="0" y="50" h="20" x="290">additional</TEXTDECIMAL>
@@ -912,7 +912,7 @@
 					</FORM>
 				</GRID>
 			</GRID>
-			<GRID name="Tax Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_key_id = 1)">
+			<GRID name="Tax Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_function = 1)">
 				<TEXTFIELD w="75" title="ID">tax_type_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Tax Type">period_tax_type_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Tax Relief">tax_relief</TEXTDECIMAL>
@@ -929,7 +929,7 @@
 					</FORM>
 				</GRID>
 				<FORM name="Tax Type" keyfield="period_tax_type_id" linkfield="period_id" table="period_tax_types">
-					<COMBOBOX w="430" title="Tax Type ID" lptable="vw_tax_types" where="(use_key_id = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Type Name Type" lptable="vw_tax_types" where="(use_function = 1)" y="10" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Tax Type" y="30" h="20" x="10">period_tax_type_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Formural" y="30" h="20" x="290">formural</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Tax Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
@@ -1132,7 +1132,7 @@
 					<CHECKBOX w="75" title="Active">active</CHECKBOX>
 				</GRID>
 			</GRID>
-			<GRID name="Tax Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_key_id = 1)">
+			<GRID name="Tax Types" keyfield="period_tax_type_id" linkfield="period_id" table="vw_period_tax_types" where="(use_function = 1)">
 				<TEXTFIELD w="75" title="ID">tax_type_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Tax Type">period_tax_type_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Tax Relief">tax_relief</TEXTDECIMAL>

@@ -1,20 +1,26 @@
-CREATE TABLE org_events
-(  org_event_id serial NOT NULL,
-  org_id integer,
-  org_event_name character varying(50) NOT NULL,
-  start_date date,
-  end_date date,
-  details text
+CREATE TABLE org_events(
+	org_event_id 		serial NOT NULL,
+	org_id 				integer,
+	org_event_name 		character varying(50) NOT NULL,
+	start_date 			date,
+	start_time 			timestamp,
+	end_date 			date,
+	end_time			timestamp,
+	details 			text
 );
+CREATE INDEX org_events_org_id ON org_events (org_id);
 
 CREATE TABLE event(
-event_id	serial primary key,
-org_id		integer references orgs,
-event_name	varchar(256),
-event_date	date,
-finish_date		date,
-details			text
+	event_id			serial primary key,
+	org_id				integer references orgs,
+	event_name			varchar(256),
+	event_date 			date,
+	end_date 			date,
+	start_time 			timestamp,
+	end_time			timestamp,
+	details				text
 );
+CREATE INDEX event_org_id ON event (org_id);
 
 CREATE VIEW vw_event AS
 	SELECT orgs.org_id, orgs.org_name, event.event_id, event.event_name, event.event_date, event.finish_date, event.details,

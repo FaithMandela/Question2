@@ -310,11 +310,13 @@ CREATE VIEW vw_period_tax_types AS
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister,
 		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, tax_types.tax_type_number,
-		period_tax_types.period_tax_type_name, tax_types.use_key_id,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
+		period_tax_types.period_tax_type_name, 
 		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, period_tax_types.percentage, 
 		period_tax_types.formural, period_tax_types.details
 	FROM period_tax_types INNER JOIN vw_periods ON period_tax_types.period_id = vw_periods.period_id
-		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id;
+		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id
+		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id;
 
 CREATE OR REPLACE FUNCTION getTaxMin(float, int) RETURNS float AS $$
 	SELECT CASE WHEN max(tax_range) is null THEN 0 ELSE max(tax_range) END 
@@ -393,6 +395,12 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_default_account(integer, integer) RETURNS integer AS $$
     SELECT accounts.account_no
+	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
+	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_account_id(integer, integer) RETURNS integer AS $$
+    SELECT accounts.account_id
 	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
 	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
 $$ LANGUAGE SQL;

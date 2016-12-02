@@ -939,15 +939,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION getdbgradeid(integer) RETURNS varchar(2) AS $$
+CREATE OR REPLACE FUNCTION getdbgradeid(integer, integer) RETURNS varchar(2) AS $$
 	SELECT CASE WHEN max(gradeid) is null THEN 'NG' ELSE max(gradeid) END
 	FROM grades 
-	WHERE (minrange <= $1) AND (maxrange >= $1);
+	WHERE (minrange <= $1) AND (maxrange >= $1) AND (org_id = $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION updqcoursegrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
 BEGIN
-	UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer)
+	UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, qgrades.org_id)
 	WHERE (qgrades.qcourseid = CAST($1 as int));
 	
 	UPDATE qcourses SET facultysubmit = true, fsdate = now()

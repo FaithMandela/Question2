@@ -4,7 +4,7 @@ ALTER TABLE entitys ADD	attention		varchar(50);
 
 ALTER TABLE orgs ADD 	cert_number				varchar(50);
 ALTER TABLE orgs ADD	vat_number				varchar(50);
-ALTER TABLE orgs ADD	fixed_budget			boolean default true;
+ALTER TABLE orgs ADD	enforce_budget			boolean default true;
 ALTER TABLE orgs ADD	invoice_footer			text;
 
 CREATE TABLE holidays (
@@ -283,6 +283,9 @@ BEGIN
 		IF (OLD.closed = true) AND (NEW.closed = false) THEN
 			NEW.approve_status := 'Draft';
 		END IF;
+	ELSE
+		IF(NEW.gl_payroll_account is null)THEN NEW.gl_payroll_account := get_default_account(27, NEW.org_id); END IF;
+		IF(NEW.gl_advance_account is null)THEN NEW.gl_advance_account := get_default_account(28, NEW.org_id); END IF;
 	END IF;
 
 	IF (NEW.approve_status = 'Approved') THEN

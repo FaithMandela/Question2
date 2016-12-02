@@ -2559,8 +2559,7 @@
 				<TEXTFIELD w="75" title="#">contribution_id</TEXTFIELD>
 				<TEXTFIELD w="120" title="Entity Name">entity_name</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="receipt Amount">receipt</TEXTDECIMAL>
-				<TEXTFIELD w="75" fnct=" (deposit_year || '  ' || deposit_date)" title="Deposit Date">deposit_date</TEXTFIELD>
-				<TEXTTIMESTAMP w="75" title="Date">entry_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" fnct=" (deposit_year || '   ' || deposit_date)" title="Deposit Date">deposit_date</TEXTFIELD>
 				<TEXTFIELD w="75" title="Balance">active_balance</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Contribution Amount">contribution_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Contribution Paid">contribution_paid</TEXTDECIMAL>
@@ -2569,8 +2568,7 @@
 					<ACTION fnct="contribution_paid">pay_contribs</ACTION>
 				</ACTIONS>
 				<FORM new="false" name="Contributions" keyfield="contribution_id" linkfield="period_id" table="contributions">
-					<USERFIELD>entity_id</USERFIELD>
-					<TEXTDECIMAL w="150" title="Receipt" y="130" h="20" x="290">receipt</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Received Amount" y="130" h="20" x="290">receipt</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Receipt Date" required="true" y="170" h="20" x="10">receipt_date</TEXTDATE>
 					<TEXTDECIMAL w="150" title="Contribution Amount" y="110" h="20" x="10">contribution_amount</TEXTDECIMAL>
 					<TEXTFIELD w="150" title="Transaction Ref" y="150" h="20" x="290">transaction_ref</TEXTFIELD>

@@ -13,13 +13,17 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_transaction_details.quantity, vw_transaction_details.item_description, vw_transaction_details.amount, vw_transaction_details.full_amount, vw_transaction_details.full_tax_amount, vw_transaction_details.full_total_amount
 FROM vw_transaction_details
-WHERE (vw_transaction_details.transaction_id = '$P!{filterid}');]]>
+WHERE (vw_transaction_details.transaction_id = '$P!{filterid}')
+$P!{organd}
+]]>
 	</queryString>
 	<field name="quantity" class="java.lang.Integer"/>
 	<field name="item_description" class="java.lang.String"/>
