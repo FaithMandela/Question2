@@ -691,11 +691,12 @@ CREATE OR REPLACE VIEW vwcrnotelist AS
     period.invoicedate,
     sum(vwsales.amount) AS invoice_amount,
     sum(vwsales.netremits) AS gta_totals
-   FROM vwsales
-     LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid
-     JOIN period ON period.periodid = vwsales.periodid
+    
+   FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
+     LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid     
 
   WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
+  
   GROUP BY vwsales.clientid, vwsales.clientname, vwsales.periodid, crnotelist.crnoteid, period.salesperiod, period.invoicedate
   ORDER BY vwsales.clientid;
 

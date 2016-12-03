@@ -12,6 +12,14 @@ CREATE OR REPLACE FUNCTION getdbgradeid(integer, integer) RETURNS varchar(2) AS 
 	WHERE (minrange <= $1) AND (maxrange >= $1) AND (org_id = $2);
 $$ LANGUAGE SQL;
 
+DROP FUNCTION getgradeid(real);
+
+CREATE OR REPLACE FUNCTION getgradeid(real, int) RETURNS varchar(2) AS $$
+	SELECT max(gradeid)
+	FROM grades 
+	WHERE (minrange <= $1) AND (maxrange >= $1) AND (org_id = $2);
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION updqcoursegrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
 BEGIN
 	UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, qgrades.org_id)

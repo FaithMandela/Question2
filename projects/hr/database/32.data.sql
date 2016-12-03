@@ -252,6 +252,14 @@ INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 55, 420
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 56, 99999);
 INSERT INTO default_accounts (org_id, use_key_id, account_id) VALUES (0, 57, 61000);
 
+INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Services');
+INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Goods');
+INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Utilities');
+
+INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Each');
+INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Man Hours');
+INSERT INTO item_units (org_id, item_unit_name) VALUES (0, '100KG');
+
 
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
 VALUES (0, 0, 1, 0, '33000', 'Cash Account', true);
