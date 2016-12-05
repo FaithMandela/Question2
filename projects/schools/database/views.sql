@@ -1,6 +1,3 @@
-CREATE VIEW vw_subjects AS 
-		SELECT subjects.org_id,subjects.subject_id, subjects.subject_name, subjects.details
-	FROM subjects;
 
 CREATE VIEW vw_staff AS 
 		SELECT entitys.entity_id, entitys.entity_name,
@@ -8,6 +5,14 @@ CREATE VIEW vw_staff AS
 		staff.marital_status, staff.appointment_date, staff.exit_date, staff.picture_file, staff.active, staff.language, staff.interests, staff.narrative
 	FROM staff JOIN entitys ON staff.entity_id = entitys.entity_id;
 
+CREATE VIEW vw_subjects AS 
+	SELECT subjects.org_id,subjects.subject_id, vw_staff.full_name,vw_staff.primary_email,
+		date_part('year', subject_year) as subject_date,
+		 subjects.subject_name, subjects.details
+	FROM subjects
+	join vw_staff on subjects.staff_id = vw_staff.staff_id   ;
+
+	
 CREATE OR REPLACE VIEW vw_stream_classes AS
 		SELECT stream_classes.org_id, 
 		stream_classes.stream_class_id, stream_classes.class_level, stream_classes.stream, stream_classes.narrative, stream_classes.details
@@ -41,15 +46,17 @@ CREATE VIEW vw_students_session AS
 	FROM students_session	
 		JOIN sessions ON students_session.session_id = sessions.session_id
 		JOIN students ON students_session.student_id = students.student_id;
-
 CREATE VIEW vw_exams AS 
-		SELECT sessions.session_id, sessions.session_name, 
-		stream_classes.stream_class_id, stream_classes.stream,
+
+		SELECT sessions.session_id, sessions.session_name,exams.exam_date,
+		 exams.start_time,exams.end_time,
+		stream_classes.stream_class_id, stream_classes.stream,vw_staff.staff_id, vw_staff.full_name,
 		exams.org_id, exams.exam_id, exams.class_level, exams.exam_file, exams.exam_narrative
 	FROM exams
 		JOIN sessions ON exams.session_id = sessions.session_id
+		JOIN vw_staff on vw_staff. staff_id = exams.staff_id
 		JOIN stream_classes ON exams.class_level = stream_classes.stream_class_id
-		JOIN subjects ON exams.subject_id = subjects.subject_id;
+		
 
 
 CREATE VIEW vw_timetable AS 

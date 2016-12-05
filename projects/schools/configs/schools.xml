@@ -5,7 +5,7 @@
 		<MENU name="Control Panel">15</MENU>
 		<MENU name="Subjects">25</MENU>
 		<MENU name="Applicant">30</MENU>
-		<MENU name="Event Calendar">35</MENU>
+		<MENU name="School Events">40</MENU>
 	</MENU>
 	<DESK w="700" name="Control Panel" key="15" h="550">
 		<GRID name="Sessions" keyfield="session_id" linkfield="org_id" table="vw_sessions">
@@ -105,8 +105,12 @@
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<TEXTFIELD w="75" title="Language">language</TEXTFIELD>
 			<FORM name="Staff" keyfield="staff_id" table="staff">
-				<COMBOBOX w="430" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Staff Role" y="30" h="20" x="10">staff_role</TEXTFIELD>
+				<DEFAULT default="0">entity_id</DEFAULT>
+				<COMBOLIST w="150" title="Role" y="10" h="20" x="290">staff_role
+					<DATA>Teacher</DATA>
+					<DATA>Accounts</DATA>
+					<DATA>Other</DATA>
+				</COMBOLIST>
 				<TEXTFIELD w="430" title="Full Name" y="50" h="20" x="10">full_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Surname" y="70" h="20" x="10">surname</TEXTFIELD>
 				<TEXTFIELD w="150" title="First Name" y="70" h="20" x="290">first_name</TEXTFIELD>
@@ -128,6 +132,26 @@
 				<TEXTAREA w="430" title="Interests" y="250" h="70" x="10">interests</TEXTAREA>
 				<TEXTAREA w="430" title="Narrative" y="320" h="70" x="10">narrative</TEXTAREA>
 			</FORM>
+			<GRID name="Exams" keyfield="exam_id" linkfield="staff_id" table="vw_exams">
+				<TEXTFIELD w="75" title="#">exam_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Session Name">session_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Stream Class ID">stream_class_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
+				<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>
+				<TEXTDATE w="75" title="Date">exam_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Start Time">start_time</TEXTFIELD>
+				<TEXTFIELD w="75" title="End Time">end_time</TEXTFIELD>
+				<TEXTFIELD w="75" title="Exam File">exam_file</TEXTFIELD>
+				<FORM name="Exams" keyfield="exam_id" linkfield="staff_id" table="exams">
+					<COMBOBOX w="430" title="Subject ID" lptable="subjects" y="10" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
+					<COMBOBOX w="430" title="Class Level" lptable="stream_classes" lpkey="stream_class_id" y="30" h="20" x="10" lpfield="stream_class_id">class_level</COMBOBOX>
+					<TEXTDATE w="75" title="Date">exam_date</TEXTDATE>
+					<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
+					<SPINTIME w="75" title="End Time">end_time</SPINTIME>
+					<TEXTFIELD w="150" title="Exam File" y="50" h="20" x="10">exam_file</TEXTFIELD>
+					<TEXTAREA w="430" title="Exam Narrative" y="70" h="70" x="10">exam_narrative</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" hide="true" name="Students" key="1" h="550">
@@ -190,11 +214,6 @@
 				</FORM>
 			</GRID>
 		</GRID>
-		<GRID name="Stream Classes" keyfield="stream_class_id" linkfield="stream_class_id" table="vw_stream_classes">
-			<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>
-			<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
-			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-		</GRID>
 		<GRID name="Sessions" keyfield="session_id" table="vw_sessions">
 			<TEXTFIELD w="75" title="Session ID">session_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Session Name">session_name</TEXTFIELD>
@@ -222,11 +241,15 @@
 	</DESK>
 	<DESK w="700" name="Subjects" key="25" h="550">
 		<GRID name="Subjects" keyfield="subject_id" table="vw_subjects">
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Subject ID">subject_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Full Name">full_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Subject Date">subject_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
 			<FORM name="Subjects" keyfield="subject_id" table="subjects">
+				<COMBOBOX w="430" title="Teacher" lptable="staff" y="120" h="20" x="10" lpfield="full_name">staff_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Subject Name" y="10" h="20" x="10">subject_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Subject Year" y="100" h="20" x="10">subject_year</TEXTDATE>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -280,12 +303,14 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Event Calendar" key="35" h="550">
-		<DIARY name="Event Calendar" keyfield="event_id" orderby="event_date" table="vw_event" where="(event_date > current_date-360)">
-			<TEXTFIELD w="75" title="Event Id">event_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Event">event_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Activity Date">event_date</TEXTDATE>
-			<TEXTDATE w="75" title="Finish Date">finish_date</TEXTDATE>
+	<DESK w="700" name="Entity Subscriptions" key="35" h="550">
+		<DIARY name="Leave Diary" keyfield="employee_leave_id" orderby="leave_from" table="vw_employee_leave" where="(leave_from > current_date-360)" user="entity_id">
+			<TEXTFIELD w="75" title="Leave ID">employee_leave_id</TEXTFIELD>
+			<TEXTFIELD w="75" fnct="leave_type_name || ' : ' || COALESCE(narrative, '')" title="Title">leave_disp</TEXTFIELD>
+			<TEXTDATE w="75" title="Activity Date">leave_from</TEXTDATE>
+			<SPINTIME w="75" title="Activity Time">activity_time</SPINTIME>
+			<TEXTDATE w="75" title="Finish Date">leave_to</TEXTDATE>
+			<SPINTIME w="75" title="Finish Time">finish_time</SPINTIME>
 			<TEXTFIELD w="75" fnct="'false'" title="All Day">all_day</TEXTFIELD>
 			<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
 			<DIARY name="Events" keyfield="org_event_id" table="org_events" where="(start_date > current_date-360)">
@@ -299,5 +324,23 @@
 				<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
 			</DIARY>
 		</DIARY>
+	</DESK>
+	<DESK w="700" name="School Events" key="40" h="550">
+		<GRID name="School Events" keyfield="school_event_id" table="school_events">
+			<TEXTFIELD w="75" title="School Event ID">school_event_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="School Event Name">school_event_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<SPINTIME w="75" title="End Time">end_time</SPINTIME>
+			<FORM name="School Events" keyfield="school_event_id" table="school_events">
+				<TEXTFIELD w="150" title="School Event Name" y="10" h="20" x="10">school_event_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Start Date" y="10" h="20" x="290">start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="30" h="20" x="290">end_date</TEXTDATE>
+				<SPINTIME w="150" title="Start Time" y="30" h="20" x="10">start_time</SPINTIME>
+				<SPINTIME w="150" title="End Time" y="50" h="20" x="10">end_time</SPINTIME>
+				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
 	</DESK>
 </APP>

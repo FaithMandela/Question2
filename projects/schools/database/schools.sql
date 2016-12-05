@@ -1,11 +1,5 @@
 ---Project Database File
-CREATE TABLE subjects (
-	subject_id 					serial primary key,
-	org_id						integer references orgs,
-	subject_name				varchar (120),
-	details						text
-);
-CREATE INDEX subjects_org_id ON subjects (org_id);
+
 
 CREATE TABLE staff (
 	staff_id					serial primary key,
@@ -35,6 +29,19 @@ CREATE TABLE staff (
 );
 CREATE INDEX staff_org_id ON staff (org_id);
 CREATE INDEX staff_entity_id ON staff (entity_id);
+
+
+CREATE TABLE subjects (
+	subject_id 					serial primary key,
+	org_id						integer references orgs,
+	staff_id 					integer references staff,
+	subject_name				varchar (120),
+	subject_year				date not null default now(),
+	
+	details						text
+);
+CREATE INDEX subjects_org_id ON subjects (org_id);
+CREATE INDEX subjects_staff_id ON subjects (staff_id);
 
 CREATE TABLE stream_classes (
 	stream_class_id					serial primary key,
@@ -129,7 +136,11 @@ CREATE TABLE exams (
 	subject_id					integer references subjects,
 	class_level					integer references stream_classes,				
 	org_id							integer references orgs,
+	staff_id 					integer references staff,
 	exam_name						varchar(50),
+	exam_date						date,
+	start_time						timestamp,
+	end_time						timestamp,
 	exam_file						varchar(32),
 	exam_narrative					text
 );
@@ -137,6 +148,7 @@ CREATE INDEX exams_org_id on exams(org_id);
 CREATE INDEX exams_session_id on exams(session_id);
 CREATE INDEX exams_subject_id on exams(subject_id);
 CREATE INDEX exams_class_level on exams(class_level);
+CREATE INDEX exams_staff_id on exams(staff_id);
 
 
 CREATE TABLE timetable (
@@ -251,6 +263,19 @@ CREATE INDEX applicant_session_id on applicant(session_id );
 
 
 
+CREATE TABLE school_events(
+	school_event_id 	serial primary key,
+	org_id 				integer,
+	school_event_name 		character varying(50) NOT NULL,
+	start_date 			date,
+	start_time 			time,
+	end_date 			date,
+	end_time			time,
+	details 			text
+);
+CREATE INDEX school_events_org_id ON school_events (org_id);
+
+
 
 
 
@@ -295,5 +320,39 @@ $BODY$
 CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
   FOR EACH ROW  EXECUTE PROCEDURE ins_students();	
 	
+
+
+
+CREATE OR REPLACE FUNCTION ins_staff() RETURNS TRIGGER AS
+$BODY$
+DECLARE
+	rec 			RECORD;
+	v_entity_id		integer;
+DECLARE
+BEGIN
+	IF (TG_OP = 'INSERT') THEN
+			SELECT entity_id INTO v_entity_id
+		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));		
+		
+		IF(v_entity_id is null)THEN
+			NEW.entity_id := nextval('entitys_entity_id_seq');
+			INSERT INTO entitys (entity_id, org_id,  entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
+			VALUES (NEW.entity_id, New.org_id, 0, NEW.full_name, lower(trim(NEW.primary_email)), NEW.primary_email, NEW.staff_role, null) RETURNING entity_id INTO v_entity_id;
+			
+			NEW.entity_id := v_entity_id;
+		ELSE
+			RAISE EXCEPTION 'You already have an account, login and continue';
+		END IF;
+	
+
+		
+	END IF;
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+ 
+CREATE TRIGGER ins_staff BEFORE INSERT OR UPDATE ON staff
+  FOR EACH ROW  EXECUTE PROCEDURE ins_staff();	
 	
 
