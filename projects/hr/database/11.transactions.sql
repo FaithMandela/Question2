@@ -1077,31 +1077,122 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION payroll_payable(integer) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION payroll_payable(integer, integer) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id				integer;
-	v_banking				integer;
+	v_org_name				varchar(50);
+	v_org_client_id			integer;
+	v_account_id			integer;
+	v_entity_type_id		integer;
+	v_bank_account_id		integer;
 	reca					RECORD;
 	msg						varchar(120);
 BEGIN
 
-	SELECT org_id INTO v_org_id
-	FROM periods
-	WHERE period_id = $1;
-
-	SELECT ledger_links.ledger_type_id INTO v_banking
-	FROM ledger_links
-	WHERE (ledger_links.org_id = v_org_id) AND (ledger_links.link_type = 1);
-
+	SELECT orgs.org_id, orgs.org_client_id, orgs.org_name INTO v_org_id, v_org_client_id, v_org_name
+	FROM orgs INNER JOIN periods ON orgs.org_id = periods.org_id
+	WHERE (periods.period_id = $1);
 	
-	SELECT a.org_id, a.period_id, a.end_date, a.gl_payment_account, a.pay_group_id, a.currency_id,
-		sum(a.b_banked) as t_banked
-	INTO reca
-	FROM vw_ems a
-	GROUP BY a.org_id, a.period_id, a.end_date, a.gl_payment_account, a.pay_group_id, a.currency_id;
+	IF(v_org_client_id is null)THEN
+		SELECT account_id INTO v_account_id
+		FROM default_accounts 
+		WHERE (org_id = v_org_id) AND (use_key_id = 52);
 		
+		SELECT max(entity_type_id) INTO v_entity_type_id
+		FROM entity_types
+		WHERE (org_id = v_org_id) AND (use_key_id = 3);
+		
+		IF((v_account_id is not null) AND (v_entity_type_id is not null))THEN
+			v_org_client_id := nextval('entitys_entity_id_seq');
+			
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, account_id, entity_name, user_name, function_role, use_key_id)
+			VALUES (v_org_client_id, v_org_id, v_entity_type_id, v_account_id, v_org_name, lower(trim(v_org_name)), 'supplier', 3);
+		END IF;
+	END IF;
+	
+	SELECT bank_account_id INTO v_bank_account_id
+	FROM bank_accounts
+	WHERE (org_id = v_org_id) AND (is_default = true);
+	
+	IF((v_org_client_id is not null) AND (v_bank_account_id is not null))THEN
+		--- add transactions for banking payments	
+		INSERT INTO transactions (transaction_type_id, transaction_status_id, entered_by, tx_type, 
+			entity_id, bank_account_id, currency_id, org_id, ledger_type_id,
+			exchange_rate, transaction_date, payment_date, transaction_amount, narrative)
+		SELECT 21, 1, $2, -1, 
+			v_org_client_id, v_bank_account_id, a.currency_id, a.org_id, 
+			get_ledger_link(a.org_id, 1, a.pay_group_id, a.gl_payment_account, 'PAYROLL Payments ' || a.pay_group_name),
+			a.exchange_rate, a.end_date, a.end_date, sum(a.b_banked),
+			'PAYROLL Payments ' || a.pay_group_name
+		FROM vw_ems a
+		WHERE (a.period_id = $1)
+		GROUP BY a.org_id, a.period_id, a.end_date, a.gl_payment_account, a.pay_group_id, a.currency_id, 
+			a.exchange_rate, a.pay_group_name;
+
+		--- add transactions for deduction remitance
+		INSERT INTO transactions (transaction_type_id, transaction_status_id, entered_by, tx_type, 
+			entity_id, bank_account_id, currency_id, org_id, ledger_type_id,
+			exchange_rate, transaction_date, payment_date, transaction_amount, narrative)
+		SELECT 21, 1, $2, -1, 
+			v_org_client_id, v_bank_account_id, a.currency_id, a.org_id, 
+			get_ledger_link(a.org_id, 2, a.adjustment_id, a.account_number, 'PAYROLL Deduction ' || a.adjustment_name),
+			a.exchange_rate, a.end_date, a.end_date, sum(a.amount),
+			'PAYROLL Deduction ' || a.adjustment_name
+		FROM vw_employee_adjustments a
+		WHERE (a.period_id = $1)
+		GROUP BY a.currency_id, a.org_id, a.adjustment_id, a.account_number, a.adjustment_name, 
+			a.exchange_rate, a.end_date;
+			
+		--- add transactions for tax remitance
+		INSERT INTO transactions (transaction_type_id, transaction_status_id, entered_by, tx_type, 
+			entity_id, bank_account_id, currency_id, org_id, ledger_type_id,
+			exchange_rate, transaction_date, payment_date, transaction_amount, narrative)
+		SELECT 21, 1, $2, -1, 
+			v_org_client_id, v_bank_account_id, a.currency_id, a.org_id, 
+			get_ledger_link(a.org_id, 3, a.tax_type_id, a.account_number, 'PAYROLL Tax ' || a.tax_type_name),
+			a.exchange_rate, a.end_date, a.end_date, sum(a.amount + a.employer),
+			'PAYROLL Tax ' || a.tax_type_name
+		FROM vw_employee_tax_types a
+		WHERE (a.period_id = $1)
+		GROUP BY a.currency_id, a.org_id, a.tax_type_id, a.account_number, a.tax_type_name, 
+			a.exchange_rate, a.end_date;
+	END IF;
 		
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_ledger_link(integer, integer, integer, varchar(32), varchar(100)) RETURNS integer AS $$
+DECLARE
+	v_ledger_type_id		integer;
+	v_account_no			integer;
+	v_account_id			integer;
+BEGIN
+
+	SELECT ledger_types.ledger_type_id, accounts.account_no INTO v_ledger_type_id, v_account_no
+	FROM ledger_types INNER JOIN ledger_links ON ledger_types.ledger_type_id = ledger_links.ledger_type_id
+		INNER JOIN accounts ON ledger_types.account_id = accounts.account_id
+	WHERE (ledger_links.org_id = $1) AND (ledger_links.link_type = $2) AND (ledger_links.link_id = $3);
+	
+	IF(v_ledger_type_id is null)THEN
+		v_ledger_type_id := nextval('ledger_types_ledger_type_id_seq');
+		SELECT accounts.account_id INTO v_account_id
+		FROM accounts
+		WHERE (accounts.org_id = $1) AND (accounts.account_no::text = $4);
+		
+		INSERT INTO ledger_types (ledger_type_id, account_id, tax_account_id, org_id,
+			ledger_type_name, ledger_posting, expense_ledger)
+		VALUES (v_ledger_type_id, v_account_id, v_account_id, $1,
+			$5, true, true);
+
+		INSERT INTO ledger_links (ledger_type_id, org_id, link_type, link_id)
+		VALUES (v_ledger_type_id, $1, $2, $3);
+	END IF;
+	
+	RETURN v_ledger_type_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
 

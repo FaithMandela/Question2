@@ -192,8 +192,8 @@ BEGIN
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
-		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
-		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id);
+		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id, logo)
+		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id, 'logo.png');
 		
 		INSERT INTO address (address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
 		VALUES (NEW.business_name, NEW.country_id, 'orgs', NEW.org_id, NEW.business_address, NEW.city, NEW.telephone, NEW.website, true);
