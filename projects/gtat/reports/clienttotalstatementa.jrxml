@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="83"/>
+	<property name="ireport.y" value="168"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -124,11 +124,11 @@ a.amount, a.invoiced, (a.payments - a.credit_amount) as credit
 FROM vw_statement a
 WHERE a.invoicedate >= '$P!{filterid}')
 UNION
-(SELECT 'Opening Balance', b.clientid, b.salesperiod, '$P!{filterid}'::date, '-',
+(SELECT 'Opening Balance', b.clientid, '-', '$P!{filterid}'::date, '-',
 sum(b.amount), sum(b.invoiced), sum(b.payments - b.credit_amount)
 FROM vw_statement b
 WHERE b.invoicedate < '$P!{filterid}'
-GROUP BY b.clientid, b.salesperiod)) bb
+GROUP BY b.clientid)) bb
 
  ON aa.clientid = bb.clientid
 
@@ -150,13 +150,16 @@ ORDER BY bb.invoicedate]]>
 	<field name="salesperiod" class="java.lang.String"/>
 	<field name="request_date" class="java.sql.Date"/>
 	<variable name="sum_total" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+		<variableExpression><![CDATA[$F{invoiced}]]></variableExpression>
 	</variable>
 	<variable name="sumtotal" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$V{sumtotal}]]></variableExpression>
+		<variableExpression><![CDATA[$V{sumamount}]]></variableExpression>
 	</variable>
 	<variable name="sumcredit" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{credit}]]></variableExpression>
+	</variable>
+	<variable name="sumamount" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -216,14 +219,14 @@ ORDER BY bb.invoicedate]]>
 				<textFieldExpression><![CDATA[$F{postalcode}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField" x="3" y="219" width="41" height="18" uuid="6f28bcb6-bbc4-4d06-864f-e3f64ada72f1"/>
+				<reportElement key="textField" x="3" y="219" width="64" height="18" uuid="6f28bcb6-bbc4-4d06-864f-e3f64ada72f1"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{town}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField" x="44" y="219" width="123" height="18" uuid="f797d64b-dfbb-4cc5-90cb-1c6f9350884a"/>
+				<reportElement key="textField" x="67" y="219" width="100" height="18" uuid="f797d64b-dfbb-4cc5-90cb-1c6f9350884a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -318,7 +321,9 @@ ORDER BY bb.invoicedate]]>
 				<textFieldExpression><![CDATA[$F{item_name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-14" x="421" y="0" width="52" height="18" uuid="c7e3c0cc-4c6b-4df0-a01f-cd346ad17b1c"/>
+				<reportElement key="textField-14" x="421" y="0" width="52" height="18" uuid="c7e3c0cc-4c6b-4df0-a01f-cd346ad17b1c">
+					<printWhenExpression><![CDATA[$F{credit} > 0]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
@@ -329,7 +334,7 @@ ORDER BY bb.invoicedate]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{sum_total}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{sumamount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="0" y="0" width="70" height="18" uuid="89b0ae66-ca11-454a-b543-7af2c82aff3d"/>
@@ -346,11 +351,13 @@ ORDER BY bb.invoicedate]]>
 				<textFieldExpression><![CDATA[$F{invoicenumber}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-14" x="369" y="0" width="52" height="18" uuid="a52b6cac-408f-4b57-ab33-71eb04e545d8"/>
+				<reportElement key="textField-14" x="369" y="0" width="52" height="18" uuid="a52b6cac-408f-4b57-ab33-71eb04e545d8">
+					<printWhenExpression><![CDATA[$F{invoiced} > 0]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{invoiced}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="268" y="0" width="101" height="18" uuid="9b649663-ea8e-4085-9c30-e3a7dd94b5a2"/>

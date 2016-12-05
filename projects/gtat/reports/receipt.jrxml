@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="182"/>
+	<property name="ireport.y" value="257"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -46,8 +46,8 @@
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_clientpayments.clientid, vwclients.clientname, periodid, enddate, clientpaymentsid,
-       currency, amount, clientpaymentsnumber, payment_type, payment_reference, countryname, address, postalcode, town
+		<![CDATA[SELECT vw_clientpayments.clientid, vwclients.clientname, accounting_date, clientpaymentsid,
+       currency, (round(amount::numeric, 1))::real as amount, clientpaymentsnumber, payment_type, payment_reference, countryname, address, postalcode, town
 
 FROM vw_clientpayments INNER JOIN vwclients ON vw_clientpayments.clientid = vwclients.clientid
 
@@ -55,8 +55,7 @@ WHERE clientpaymentsid = '$P!{clientid}';]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
 	<field name="clientname" class="java.lang.String"/>
-	<field name="periodid" class="java.lang.Integer"/>
-	<field name="enddate" class="java.sql.Date"/>
+	<field name="accounting_date" class="java.sql.Date"/>
 	<field name="clientpaymentsid" class="java.lang.Integer"/>
 	<field name="currency" class="java.lang.String"/>
 	<field name="amount" class="java.lang.Float"/>
@@ -200,7 +199,7 @@ WHERE clientpaymentsid = '$P!{clientid}';]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{enddate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{accounting_date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-13" x="397" y="0" width="64" height="18" uuid="860f55ae-a633-4c15-a0ba-865cffd9403a"/>

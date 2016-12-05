@@ -8,7 +8,6 @@ CREATE TABLE adjustments (
 	currency_id				integer references currency,
 	adjustment_effect_id	integer references adjustment_effects,
 	org_id					integer references orgs,
-	ledger_type_id			integer,
 	adjustment_name			varchar(50) not null,
 	adjustment_type			integer not null,
 	adjustment_order		integer default 0 not null,
@@ -1580,7 +1579,7 @@ BEGIN
 		FROM vw_payroll_ledger aa LEFT JOIN accounts bb ON (aa.gl_payroll_account = bb.account_no::text) AND (aa.org_id = bb.org_id)
 		WHERE (aa.period_id = v_period_id);
 
-		UPDATE Periods SET is_posted = true
+		UPDATE periods SET is_posted = true
 		WHERE (period_id = v_period_id);
 
 		msg := 'Payroll Ledger Processed';

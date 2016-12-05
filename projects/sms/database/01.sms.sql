@@ -206,6 +206,19 @@ CREATE TABLE sms_configs (
 );
 INSERT INTO sms_configs (sms_config_id, last_sent, send_error, error_email, email_time, narrative)
 VALUES (0, current_timestamp, false, false, current_timestamp, null);
+
+
+CREATE TABLE load_units (
+	load_unit_id			serial primary key,
+	org_id					integer references orgs,
+	load_date				date not null,
+	expiry_date				date not null,
+	load_amount				real not null,
+	units					integer,
+	details					text
+);
+CREATE INDEX load_units_org_id ON load_units (org_id);
+
 	
 DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
@@ -339,10 +352,35 @@ CREATE VIEW vw_sms_address AS
 		INNER JOIN address ON sms_address.address_id = address.address_id;
 
 CREATE VIEW vw_receipts AS
-	SELECT orgs.org_id, orgs.org_name, receipts.receipt_id, receipts.mpesa_trx_id, receipts.receipt_date, receipts.receipt_amount, 
-		receipts.details
+	SELECT orgs.org_id, orgs.org_name, receipts.receipt_id, receipts.mpesa_trx_id, receipts.receipt_date, 
+		receipts.receipt_amount, receipts.details
 	FROM receipts INNER JOIN orgs ON receipts.org_id = orgs.org_id;
+	
+CREATE VIEW vw_sms_units AS
+	SELECT orgs.org_id, orgs.org_name, 
+		sms_queue.last_retry::date as sms_day, sum(sms_queue.message_parts) as sms_count
+	FROM orgs INNER JOIN sms_queue ON orgs.org_id = sms_queue.org_id
+	GROUP BY orgs.org_id, orgs.org_name, sms_queue.last_retry::date;
 
+CREATE VIEW vw_load_units AS
+	(SELECT orgs.org_id, orgs.org_name, 
+		sms_queue.last_retry::date as sms_day, sum(sms_queue.message_parts) as sms_count,
+		'0'::integer as sms_units
+	FROM orgs INNER JOIN sms_queue ON orgs.org_id = sms_queue.org_id
+	GROUP BY orgs.org_id, orgs.org_name, sms_queue.last_retry::date)
+	UNION
+	(SELECT orgs.org_id, orgs.org_name, 
+		load_units.load_date, '0'::integer, sum(load_units.units)
+	FROM orgs INNER JOIN load_units ON orgs.org_id = load_units.org_id
+	GROUP BY orgs.org_id, orgs.org_name, load_units.load_date);
+
+CREATE VIEW vw_unit_year AS
+	SELECT to_char(sms_day, 'YYYY') as unit_year
+	FROM vw_load_units
+	GROUP BY to_char(sms_day, 'YYYY')
+	ORDER BY to_char(sms_day, 'YYYY');
+	
+	
 CREATE OR REPLACE FUNCTION ins_sms_trans() RETURNS trigger AS $$
 DECLARE
 	rec RECORD;

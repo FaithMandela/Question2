@@ -27,24 +27,20 @@ CREATE INDEX bank_accounts_currency_id ON bank_accounts (currency_id);
 CREATE TABLE item_category (
 	item_category_id		serial primary key,
 	org_id					integer references orgs,
-	item_category_name		varchar(120) not null unique,
-	details					text  
+	item_category_name		varchar(120) not null,
+	details					text,
+	UNIQUE(org_id, item_category_name)
 );
 CREATE INDEX item_category_org_id ON item_category (org_id);
-INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Services');
-INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Goods');
-INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Utilities');
 
 CREATE TABLE item_units (
 	item_unit_id			serial primary key,
 	org_id					integer references orgs,
-	item_unit_name			varchar(50) not null unique,
-	details					text
+	item_unit_name			varchar(50) not null,
+	details					text,
+	UNIQUE(org_id, item_unit_name)
 );
 CREATE INDEX item_units_org_id ON item_units (org_id);
-INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Each');
-INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Man Hours');
-INSERT INTO item_units (org_id, item_unit_name) VALUES (0, '100KG');
 
 CREATE TABLE items (
 	item_id					serial primary key,
@@ -152,6 +148,16 @@ CREATE TABLE ledger_types (
 CREATE INDEX ledger_types_account_id ON ledger_types (account_id);
 CREATE INDEX ledger_types_tax_account_id ON ledger_types (tax_account_id);
 CREATE INDEX ledger_types_org_id ON ledger_types (org_id);
+
+CREATE TABLE ledger_links (
+	ledger_link_id			serial primary key,
+	ledger_type_id			integer references ledger_types,
+	org_id					integer references orgs,
+	link_type				integer,
+	link_id					integer
+);
+CREATE INDEX ledger_links_ledger_type_id ON ledger_links (ledger_type_id);
+CREATE INDEX ledger_links_org_id ON ledger_links (org_id);
 
 CREATE TABLE transactions (
 	transaction_id 			serial primary key,
@@ -278,10 +284,18 @@ CREATE VIEW vw_quotations AS
 CREATE VIEW vw_ledger_types AS
 	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
 		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, 
+		vw_accounts.is_header, vw_accounts.is_active,
 		
-		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.details
-	FROM ledger_types INNER JOIN vw_accounts ON vw_accounts.account_id = ledger_types.account_id;
+		ta.accounts_class_id as t_accounts_class_id, ta.chat_type_id as t_chat_type_id, 
+		ta.chat_type_name as t_chat_type_name, ta.accounts_class_name as t_accounts_class_name, 
+		ta.account_type_id as t_account_type_id, ta.account_type_name as t_account_type_name,
+		ta.account_id as t_account_id, ta.account_no as t_account_no, ta.account_name as t_account_name, 
+		
+		ledger_types.org_id, ledger_types.ledger_type_id, ledger_types.ledger_type_name, 
+		ledger_types.ledger_posting, ledger_types.income_ledger, ledger_types.expense_ledger, ledger_types.details
+	FROM ledger_types INNER JOIN vw_accounts ON ledger_types.account_id = vw_accounts.account_id
+		INNER JOIN vw_accounts ta ON ledger_types.tax_account_id = ta.account_id;
 
 CREATE VIEW vw_transaction_counters AS
 	SELECT transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
@@ -297,9 +311,11 @@ CREATE VIEW vw_transactions AS
 		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
 		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
 		departments.department_id, departments.department_name,
-		ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id as ledger_account_id, ledger_types.ledger_posting,
+		ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id as ledger_account_id, 
+		ledger_types.tax_account_id, ledger_types.ledger_posting,
 		transaction_status.transaction_status_id, transaction_status.transaction_status_name, transactions.journal_id, 
 		transactions.transaction_id, transactions.org_id, transactions.transaction_date, transactions.transaction_amount,
+		transactions.transaction_tax_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
@@ -572,17 +588,22 @@ CREATE TRIGGER upd_transaction_details BEFORE INSERT OR UPDATE ON transaction_de
 
 CREATE OR REPLACE FUNCTION af_upd_transaction_details() RETURNS trigger AS $$
 DECLARE
-	tamount REAL;
+	v_amount					real;
+	v_tax_amount				real;
 BEGIN
 
 	IF(TG_OP = 'DELETE')THEN
-		SELECT SUM(quantity * (amount + tax_amount)) INTO tamount
+		SELECT SUM(quantity * (amount + tax_amount)), SUM(quantity *  tax_amount) INTO v_amount, v_tax_amount
 		FROM transaction_details WHERE (transaction_id = OLD.transaction_id);
-		UPDATE transactions SET transaction_amount = tamount WHERE (transaction_id = OLD.transaction_id);	
+		
+		UPDATE transactions SET transaction_amount = v_amount, transaction_tax_amount = v_tax_amount
+		WHERE (transaction_id = OLD.transaction_id);	
 	ELSE
-		SELECT SUM(quantity * (amount + tax_amount)) INTO tamount
+		SELECT SUM(quantity * (amount + tax_amount)), SUM(quantity *  tax_amount) INTO v_amount, v_tax_amount
 		FROM transaction_details WHERE (transaction_id = NEW.transaction_id);
-		UPDATE transactions SET transaction_amount = tamount WHERE (transaction_id = NEW.transaction_id);	
+		
+		UPDATE transactions SET transaction_amount = v_amount, transaction_tax_amount = v_tax_amount
+		WHERE (transaction_id = NEW.transaction_id);	
 	END IF;
 
 	RETURN NULL;
@@ -778,9 +799,9 @@ DECLARE
 BEGIN
 	SELECT org_id, department_id, transaction_id, transaction_type_id, transaction_type_name as tx_name, 
 		transaction_status_id, journal_id, gl_bank_account_id, currency_id, exchange_rate,
-		transaction_date, transaction_amount, document_number, credit_amount, debit_amount,
-		entity_account_id, entity_name, approve_status, 
-		ledger_account_id, ledger_posting INTO rec
+		transaction_date, transaction_amount, transaction_tax_amount, document_number, 
+		credit_amount, debit_amount, entity_account_id, entity_name, approve_status, 
+		ledger_account_id, tax_account_id, ledger_posting INTO rec
 	FROM vw_transactions
 	WHERE (transaction_id = CAST($1 as integer));
 
@@ -805,22 +826,36 @@ BEGIN
 		INSERT INTO journals (journal_id, org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
 		VALUES (v_journal_id, rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
 		
-		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-		VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
-
 		IF((rec.transaction_type_id = 7) or (rec.transaction_type_id = 8)) THEN
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, v_journal_id, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
-		ELSIF((rec.transaction_type_id = 21) or (rec.transaction_type_id = 22)) THEN
-			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
-			
-			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-			VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
-			
+			VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
 			VALUES (rec.org_id, v_journal_id, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+		ELSIF((rec.transaction_type_id = 21) or (rec.transaction_type_id = 22)) THEN		
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, v_journal_id, rec.gl_bank_account_id, rec.credit_amount, rec.debit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			
+			IF(rec.transaction_tax_amount = 0)THEN
+				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+				VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+			ELSIF(rec.transaction_type_id = 21)THEN
+				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+				VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount - rec.transaction_tax_amount, rec.tx_name || ' - ' || rec.entity_name);
+				
+				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+				VALUES (rec.org_id, v_journal_id, rec.tax_account_id, rec.debit_amount, rec.transaction_tax_amount, rec.tx_name || ' - ' || rec.entity_name);
+			ELSE
+				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+				VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount - rec.transaction_tax_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+				
+				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+				VALUES (rec.org_id, v_journal_id, rec.tax_account_id, rec.transaction_tax_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);			
+			END IF;
 		ELSE
+			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+			VALUES (rec.org_id, v_journal_id, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
 			SELECT org_id, v_journal_id, trans_account_id, full_debit_amount, full_credit_amount, rec.tx_name || ' - ' || item_name
 			FROM vw_transaction_details
@@ -1026,7 +1061,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_balance(integer, varchar(12)) RETURNS real AS $$
 DECLARE
-	v_bal		real;
+	v_bal					real;
 BEGIN
 
 	SELECT COALESCE(sum(debit_amount - credit_amount), 0) INTO v_bal
@@ -1038,6 +1073,35 @@ BEGIN
 		
 		
 	RETURN v_bal;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION payroll_payable(integer) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	v_banking				integer;
+	reca					RECORD;
+	msg						varchar(120);
+BEGIN
+
+	SELECT org_id INTO v_org_id
+	FROM periods
+	WHERE period_id = $1;
+
+	SELECT ledger_links.ledger_type_id INTO v_banking
+	FROM ledger_links
+	WHERE (ledger_links.org_id = v_org_id) AND (ledger_links.link_type = 1);
+
+	
+	SELECT a.org_id, a.period_id, a.end_date, a.gl_payment_account, a.pay_group_id, a.currency_id,
+		sum(a.b_banked) as t_banked
+	INTO reca
+	FROM vw_ems a
+	GROUP BY a.org_id, a.period_id, a.end_date, a.gl_payment_account, a.pay_group_id, a.currency_id;
+		
+		
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 

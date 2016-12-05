@@ -112,14 +112,14 @@ ORDER BY clientname]]>
 			<staticText>
 				<reportElement key="staticText-14" x="145" y="148" width="59" height="18" uuid="ff118cd6-132b-44ee-acac-0d17b79562c5"/>
 				<textElement>
-					<font fontName="Times New Roman" size="13" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Times New Roman" size="13" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Currency]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="staticText-14" x="203" y="148" width="59" height="18" uuid="8f522da8-5af4-4e18-ade3-5bfbf9d5a3b4"/>
 				<textElement>
-					<font fontName="Times New Roman" size="13" isBold="true" pdfFontName="Helvetica-Bold"/>
+					<font fontName="Times New Roman" size="13" isBold="false" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[USD]]></text>
 			</staticText>
@@ -215,7 +215,7 @@ ORDER BY clientname]]>
 	<pageFooter>
 		<band height="30" splitType="Stretch">
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-2" x="302" y="6" width="139" height="19" uuid="b72ec9a2-197d-4029-8c9f-bf2be5d76d66"/>
+				<reportElement key="textField-2" x="302" y="5" width="139" height="19" uuid="b72ec9a2-197d-4029-8c9f-bf2be5d76d66"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

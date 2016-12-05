@@ -319,6 +319,7 @@ CREATE TABLE workflows (
 	reject_email			text not null,
 	approve_file			varchar(320),
 	reject_file				varchar(320),
+	link_copy				integer,
 	details					text
 );
 CREATE INDEX workflows_source_entity_id ON workflows (source_entity_id);

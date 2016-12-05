@@ -13,6 +13,7 @@ INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VAL
 INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Staff', 'staff', 1);
 INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Client', 'client', 2);
 INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id) VALUES (1, 'Supplier', 'supplier', 3);
+INSERT INTO entity_types (org_id, entity_type_name, entity_role, start_view, use_key_id) VALUES (1, 'Applicant', 'applicant', '10:0', 4);
 
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Basic');
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Manager');
@@ -98,23 +99,21 @@ FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_no
 WHERE (a.org_id = 0) AND (b.org_id = 1);
 
 
+INSERT INTO workflows (link_copy, org_id, source_entity_id, workflow_name, table_name, approve_email, reject_email) 
+SELECT aa.workflow_id, bb.org_id, bb.entity_type_id, aa.workflow_name, aa.table_name, aa.approve_email, aa.reject_email
+FROM workflows aa INNER JOIN entity_types bb ON aa.source_entity_id = bb.use_key_id
+WHERE aa.org_id = 0 AND bb.org_id = 1
+ORDER BY aa.workflow_id;
 
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (20, 1, 7, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (21, 1, 7, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
-INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (22, 1, 7, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflows_workflow_id_seq', 22, true);
-
-
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (20, 1, 20, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (21, 1, 21, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
-VALUES (22, 1, 22, 0, 1, 0, 0, 6, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
-SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 22, true);
+INSERT INTO workflow_phases (org_id, workflow_id, approval_entity_id, approval_level, return_level, 
+	escalation_days, escalation_hours, required_approvals, advice, notice, 
+	phase_narrative, advice_email, notice_email) 
+SELECT bb.org_id, bb.workflow_id, cc.entity_type_id, aa.approval_level, aa.return_level, 
+	aa.escalation_days, aa.escalation_hours, aa.required_approvals, aa.advice, aa.notice, 
+	aa.phase_narrative, aa.advice_email, aa.notice_email
+FROM workflow_phases aa INNER JOIN workflows bb ON aa.workflow_id = bb.link_copy
+	INNER JOIN entity_types cc ON aa.approval_entity_id = cc.use_key_id
+WHERE aa.org_id = 0 AND bb.org_id = 1 AND cc.org_id = 1;
 
 UPDATE transaction_counters SET document_number = '10001';
 

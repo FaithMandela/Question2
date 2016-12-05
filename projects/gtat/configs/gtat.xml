@@ -524,13 +524,12 @@
 			<TEXTFIELD w="75" title="Contact Person">contact_person</TEXTFIELD>
 			<GRID name="Client Payments" keyfield="clientpaymentsid" linkfield="clientid" table="vw_clientpayments">
 				<TEXTFIELD w="75" title="Clientname">clientname</TEXTFIELD>
-				<TEXTDATE w="75" title="Startdate">startdate</TEXTDATE>
-				<TEXTDATE w="75" title="Enddate">enddate</TEXTDATE>
+				<TEXTDATE w="75" title="Accounting Date">accounting_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Payment Reference">payment_reference</TEXTFIELD>
 				<FORM name="Client Payment" keyfield="clientpaymentsid" linkfield="clientid" table="clientpayments">
-					<COMBOBOX w="430" title="Start Date" lptable="period" y="30" h="20" x="10" lpfield="startdate">periodid</COMBOBOX>
+					<TEXTDATE w="150" title="Accounting Date" y="30" h="20" x="10">accounting_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Currency" y="50" h="20" x="10">currency</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Payment Reference" y="70" h="20" x="10">payment_reference</TEXTFIELD>
