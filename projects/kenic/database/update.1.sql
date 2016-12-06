@@ -74,18 +74,14 @@ FROM client LEFT JOIN domain ON client.clid = domain.clid
 LEFT JOIN (SELECT id, client_roid FROM ledger WHERE description <> 'Membership Fee') lt ON client.clid = lt.client_roid
 WHERE (domain.clid is null) AND (lt.client_roid is null));
 
-DELETE FROM client WHERE clid IN
-(SELECT client.clid
-FROM client LEFT JOIN domain ON client.clid = domain.clid
-LEFT JOIN (SELECT id, client_roid FROM ledger WHERE description <> 'Membership Fee') lt ON client.clid = lt.client_roid
-WHERE (domain.clid is null) AND (lt.client_roid is null))
 
 DELETE FROM client WHERE clid IN
 (SELECT client.clid
 FROM client LEFT JOIN domain ON client.clid = domain.clid
 LEFT JOIN contact ON client.clid = contact.clid
+LEFT JOIN receipts ON client.roid = receipts.roid
 LEFT JOIN (SELECT id, client_roid FROM ledger WHERE description <> 'Membership Fee') lt ON client.clid = lt.client_roid
-WHERE (domain.clid is null) AND (contact.clid is null) AND (lt.client_roid is null))
+WHERE (domain.clid is null) AND (contact.clid is null) AND (lt.client_roid is null) AND (receipts.roid is null));
 
 
 

@@ -66,7 +66,7 @@ SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
 
 
 INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
-SELECT 1,  tax_type_id + 4, tax_range, tax_rate
+SELECT 1,  tax_type_id + 6, tax_range, tax_rate
 FROM tax_rates
 WHERE org_id = 0;
 

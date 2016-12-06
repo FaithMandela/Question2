@@ -320,9 +320,9 @@ CREATE VIEW vw_transactions AS
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 22)  
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 21)  
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 21) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 22) 
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN transaction_status ON transactions.transaction_status_id = transaction_status.transaction_status_id
@@ -360,9 +360,9 @@ CREATE VIEW vw_trx AS
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 22)
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 21)
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 21) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 22) 
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id

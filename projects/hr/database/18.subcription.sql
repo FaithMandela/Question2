@@ -228,8 +228,8 @@ BEGIN
 		SELECT NEW.org_id, education_class_name
 		FROM education_class WHERE org_id = 1 ORDER BY education_class_id;
 		
-		INSERT INTO adjustments (org_id, adjustment_type, adjustment_name, visible, in_tax)
-		SELECT NEW.org_id, adjustment_type, adjustment_name, visible, in_tax
+		INSERT INTO adjustments (org_id, currency_id, adjustment_type, adjustment_name, visible, in_tax)
+		SELECT NEW.org_id, v_currency_id, adjustment_type, adjustment_name, visible, in_tax
 		FROM adjustments WHERE org_id = 1;
 		
 		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active
