@@ -841,16 +841,16 @@ BEGIN
 				VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 			ELSIF(rec.transaction_type_id = 21)THEN
 				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-				VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount - rec.transaction_tax_amount, rec.tx_name || ' - ' || rec.entity_name);
-				
-				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-				VALUES (rec.org_id, v_journal_id, rec.tax_account_id, rec.debit_amount, rec.transaction_tax_amount, rec.tx_name || ' - ' || rec.entity_name);
-			ELSE
-				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
 				VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount - rec.transaction_tax_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
 				
 				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-				VALUES (rec.org_id, v_journal_id, rec.tax_account_id, rec.transaction_tax_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);			
+				VALUES (rec.org_id, v_journal_id, rec.tax_account_id, rec.transaction_tax_amount, 0, rec.tx_name || ' - ' || rec.entity_name);
+			ELSE
+				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+				VALUES (rec.org_id, v_journal_id, rec.ledger_account_id, rec.debit_amount, rec.credit_amount - rec.transaction_tax_amount, rec.tx_name || ' - ' || rec.entity_name);
+				
+				INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
+				VALUES (rec.org_id, v_journal_id, rec.tax_account_id, 0, rec.transaction_tax_amount, rec.tx_name || ' - ' || rec.entity_name);			
 			END IF;
 		ELSE
 			INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
@@ -1182,9 +1182,9 @@ BEGIN
 		WHERE (accounts.org_id = $1) AND (accounts.account_no::text = $4);
 		
 		INSERT INTO ledger_types (ledger_type_id, account_id, tax_account_id, org_id,
-			ledger_type_name, ledger_posting, expense_ledger)
+			ledger_type_name, ledger_posting, expense_ledger, income_ledger)
 		VALUES (v_ledger_type_id, v_account_id, v_account_id, $1,
-			$5, true, true);
+			$5, true, true, false);
 
 		INSERT INTO ledger_links (ledger_type_id, org_id, link_type, link_id)
 		VALUES (v_ledger_type_id, $1, $2, $3);

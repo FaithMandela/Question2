@@ -228,16 +228,18 @@ BEGIN
 		SELECT NEW.org_id, education_class_name
 		FROM education_class WHERE org_id = 1 ORDER BY education_class_id;
 		
-		INSERT INTO adjustments (org_id, currency_id, adjustment_type, adjustment_name, visible, in_tax)
-		SELECT NEW.org_id, v_currency_id, adjustment_type, adjustment_name, visible, in_tax
+		INSERT INTO adjustments (org_id, currency_id, adjustment_type, adjustment_name, visible, in_tax, account_number)
+		SELECT NEW.org_id, v_currency_id, adjustment_type, adjustment_name, visible, in_tax, account_number
 		FROM adjustments WHERE org_id = 1;
 		
-		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active
+		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, 
+			tax_type_order, in_tax, linear, percentage, employer, employer_ps, active,
+			account_number, employer_account
 			FROM tax_types WHERE org_id = 1 ORDER BY tax_type_id 
 		LOOP
 			v_tax_type_id := nextval('tax_types_tax_type_id_seq');
-			INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, currency_id)
-			VALUES (NEW.org_id, v_tax_type_id, myrec.use_key_id, myrec.tax_type_name, myrec.formural, myrec.tax_relief, myrec.tax_type_order, myrec.in_tax, myrec.linear, myrec.percentage, myrec.employer, myrec.employer_ps, myrec.active, v_currency_id);
+			INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, currency_id, account_number, employer_account)
+			VALUES (NEW.org_id, v_tax_type_id, myrec.use_key_id, myrec.tax_type_name, myrec.formural, myrec.tax_relief, myrec.tax_type_order, myrec.in_tax, myrec.linear, myrec.percentage, myrec.employer, myrec.employer_ps, myrec.active, v_currency_id, myrec.account_number, myrec.employer_account);
 			
 			INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
 			SELECT NEW.org_id,  v_tax_type_id, tax_range, tax_rate
