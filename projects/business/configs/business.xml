@@ -1985,9 +1985,13 @@
 				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
 				<COMBOBOX w="430" title="Base Currency" lptable="currency" select.detail="currency_symbol" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="350" title="Default Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="50" h="20" x="10" lpfield="sys_country_name">default_country_id</COMBOBOX>
-				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="70" h="20" x="10">logo</TEXTFIELD>
-				<CHECKBOX w="150" title="Enforce Budget" y="90" h="20" x="10">enforce_budget</CHECKBOX>
-				<TEXTAREA w="430" title="Details" placeholder="Details" y="110" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Org Client" lptable="entitys" lpkey="entity_id" y="70" h="20" x="10" lpfield="entity_name">org_client_id</COMBOBOX>
+				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="90" h="20" x="10">logo</TEXTFIELD>
+				<CHECKBOX w="150" title="Enforce Budget" y="110" h="20" x="10">enforce_budget</CHECKBOX>
+				<CHECKBOX w="150" title="Payroll Payable" y="110" h="20" x="290">payroll_payable</CHECKBOX>
+				<TEXTFIELD w="150" title="Cert. Number" y="130" h="20" x="10">cert_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="VAT Number" y="130" h="20" x="290">vat_number</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'orgs'">
 				<TEXTFIELD w="140" title="Country">sys_country_name</TEXTFIELD>
@@ -2779,7 +2783,7 @@
 	<DESK w="700" name="Statement" key="170" h="750">
 		<FILTER w="700" name="Statement" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" orderby="entity_name" lpkey="entity_id" where="(entity_type_id = 2)" y="10" h="20" x="10" lpfield="entity_name">supplierid</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="vw_entitys" orderby="entity_name" lpkey="entity_id" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_name">supplierid</COMBOBOX>
 				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>

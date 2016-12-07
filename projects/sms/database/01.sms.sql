@@ -214,7 +214,8 @@ CREATE TABLE load_units (
 	load_date				date not null,
 	expiry_date				date not null,
 	load_amount				real not null,
-	units					integer,
+	units					integer default 0  not null,
+	sold_units				integer default 0  not null,
 	details					text
 );
 CREATE INDEX load_units_org_id ON load_units (org_id);
@@ -361,22 +362,28 @@ CREATE VIEW vw_sms_units AS
 		sms_queue.last_retry::date as sms_day, sum(sms_queue.message_parts) as sms_count
 	FROM orgs INNER JOIN sms_queue ON orgs.org_id = sms_queue.org_id
 	GROUP BY orgs.org_id, orgs.org_name, sms_queue.last_retry::date;
-
+	
 CREATE VIEW vw_load_units AS
+	SELECT orgs.org_id, orgs.org_name,
+		load_units.load_unit_id, load_units.load_date, load_units.expiry_date, load_units.load_amount,
+		load_units.units, load_units.sold_units, load_units.details
+	FROM orgs INNER JOIN load_units ON orgs.org_id = load_units.org_id;
+
+CREATE VIEW vw_load_usage AS
 	(SELECT orgs.org_id, orgs.org_name, 
 		sms_queue.last_retry::date as sms_day, sum(sms_queue.message_parts) as sms_count,
-		'0'::integer as sms_units
+		'0'::integer as sms_units, '0'::integer as sms_sold
 	FROM orgs INNER JOIN sms_queue ON orgs.org_id = sms_queue.org_id
 	GROUP BY orgs.org_id, orgs.org_name, sms_queue.last_retry::date)
 	UNION
 	(SELECT orgs.org_id, orgs.org_name, 
-		load_units.load_date, '0'::integer, sum(load_units.units)
+		load_units.load_date, '0'::integer, sum(load_units.units), sum(sold_units)
 	FROM orgs INNER JOIN load_units ON orgs.org_id = load_units.org_id
 	GROUP BY orgs.org_id, orgs.org_name, load_units.load_date);
 
 CREATE VIEW vw_unit_year AS
 	SELECT to_char(sms_day, 'YYYY') as unit_year
-	FROM vw_load_units
+	FROM vw_load_usage
 	GROUP BY to_char(sms_day, 'YYYY')
 	ORDER BY to_char(sms_day, 'YYYY');
 	

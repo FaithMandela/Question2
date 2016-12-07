@@ -2,9 +2,11 @@
 
 ALTER TABLE entitys ADD	attention		varchar(50);
 
+ALTER TABLE orgs ADD 	org_client_id			integer references entitys;
+ALTER TABLE orgs ADD 	payroll_payable			boolean default true not null;
 ALTER TABLE orgs ADD 	cert_number				varchar(50);
 ALTER TABLE orgs ADD	vat_number				varchar(50);
-ALTER TABLE orgs ADD	enforce_budget			boolean default true;
+ALTER TABLE orgs ADD	enforce_budget			boolean default true not null;
 ALTER TABLE orgs ADD	invoice_footer			text;
 
 CREATE TABLE holidays (

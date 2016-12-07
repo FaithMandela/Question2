@@ -33,7 +33,6 @@ CREATE TABLE adjustments (
 CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
 CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
-CREATE INDEX adjustments_ledger_type_id ON adjustments(ledger_type_id);
 
 CREATE TABLE claim_types (
 	claim_type_id			serial primary key,
@@ -1547,7 +1546,7 @@ BEGIN
 	v_period_id := $1::int;
 
 	SELECT periods.period_id, periods.is_posted, periods.opened, periods.closed, periods.end_date,
-		orgs.org_id, orgs.currency_id
+		orgs.org_id, orgs.currency_id, orgs.payroll_payable
 		INTO rec
 	FROM periods INNER JOIN orgs ON periods.org_id = orgs.org_id
 	WHERE (periods.period_id = v_period_id);
@@ -1578,6 +1577,10 @@ BEGIN
 		SELECT aa.org_id, v_journal_id, bb.account_id, aa.dr_amt, aa.cr_amt, aa.description
 		FROM vw_payroll_ledger aa LEFT JOIN accounts bb ON (aa.gl_payroll_account = bb.account_no::text) AND (aa.org_id = bb.org_id)
 		WHERE (aa.period_id = v_period_id);
+		
+		IF(rec.payroll_payable = true)THEN
+			msg := payroll_payable(v_period_id, $2::integer);
+		END IF;
 
 		UPDATE periods SET is_posted = true
 		WHERE (period_id = v_period_id);

@@ -44,13 +44,13 @@ FROM education_class
 WHERE org_id = 0
 ORDER BY education_class_id;
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_name, visible, in_tax) VALUES (1, 41, 'Sitting Allowance', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 42, 'Bonus', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 43, 'External Loan', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 44, 'Home Ownership saving plan', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 45, 'Staff contribution', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 46, 'Travel', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 47, 'Communcation', true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_name, visible, in_tax, account_number) VALUES (1, 41, 'Sitting Allowance', true, true, '90005');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 42, 'Bonus', true, true, '90005');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 43, 'External Loan', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 44, 'Home Ownership saving plan', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 45, 'Staff contribution', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 46, 'Travel', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 47, 'Communcation', true, false, '90070');
 UPDATE adjustments SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 50, true);
 
@@ -66,7 +66,7 @@ SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
 
 
 INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
-SELECT 1,  tax_type_id + 4, tax_range, tax_rate
+SELECT 1,  tax_type_id + 6, tax_range, tax_rate
 FROM tax_rates
 WHERE org_id = 0;
 
