@@ -1,5 +1,31 @@
 ---Project Database File
+CREATE TABLE guardians (
+	guardian_id					serial primary key,
+	org_id 						integer references orgs,
+	fathers_name				varchar(320),
+	fathers_tel_no				varchar(50),
+	fathers_email				varchar(240),
 
+	mothers_name				varchar(320),
+	mothers_tel_no				varchar(50),
+	mothers_email				varchar(240),
+
+	table_name 					varchar(24),
+	guardian_name				varchar(50),
+	g_address					varchar(50),
+	g_zipcode					varchar(50),
+	g_town						varchar(50),
+	g_countrycodeid				char(2) not null references sys_countrys,
+	g_telno						varchar(50),
+	g_email						varchar(240),
+	
+	current_contact				text,
+	registrar_details			text,
+	details						text
+); 
+
+CREATE INDEX guardians_org_id ON guardians (org_id);
+CREATE INDEX guardians_g_countrycodeid ON guardians (g_countrycodeid);
 
 CREATE TABLE staff (
 	staff_id					serial primary key,
@@ -67,7 +93,7 @@ CREATE TABLE students (
 	entity_id					integer references entitys,
 	org_id						integer references orgs,
 	stream_class_id 			integer references stream_classes,
-	
+	guardian_id					integer references guardians,
 	student_name				varchar(50) not null,
 	Sex							varchar(1),
 	nationality					varchar(2) not null references sys_countrys,
@@ -79,33 +105,15 @@ CREATE TABLE students (
 	telno						varchar(50),
 	email						varchar(240),
 	
-	fathers_name				varchar(320),
-	fathers_tel_no				varchar(50),
-	fathers_email				varchar(240),
-
-	mothers_name				varchar(320),
-	mothers_tel_no				varchar(50),
-	mothers_email				varchar(240),
-
-	guardian_name				varchar(50),
-	g_address					varchar(50),
-	g_zipcode					varchar(50),
-	g_town						varchar(50),
-	g_countrycodeid				char(2) not null references sys_countrys,
-	g_telno						varchar(50),
-	g_email						varchar(240),
-	
-	current_contact				text,
-	registrar_details			text,
-	details						text
 );
 
 CREATE INDEX students_org_id ON students (org_id);
 CREATE INDEX students_entity_id ON students (entity_id);
 CREATE INDEX students_class_id ON students (stream_class_id);
+CREATE INDEX students_guardian_id on students(guardian_id);
 CREATE INDEX students_nationality ON students (nationality);
 CREATE INDEX students_country_code_id ON students (country_code_id);
-CREATE INDEX students_g_countrycodeid ON students (g_countrycodeid);
+
 
 CREATE TABLE sessions (
 	session_id					serial primary key,
@@ -221,6 +229,7 @@ CREATE TABLE applicant(
 	org_id						integer not null references orgs,
 	stream_class_id				integer not null references stream_classes,
 	session_id					integer not null references sessions,
+	guardian_id					integer not null references guardians,
 	
 	applicant_name				varchar (320),
 	applicant_DOB				date,
@@ -235,28 +244,10 @@ CREATE TABLE applicant(
 	workflow_table_id			integer,
 	action_date					timestamp,
 	
-	fathers_name				varchar(320),
-	fathers_tel_no				varchar(50),
-	fathers_email				varchar(240),
-
-	mothers_name				varchar(320),
-	mothers_tel_no				varchar(50),
-	mothers_email				varchar(240),
-
-	guardian_name				varchar(50),
-	g_address					varchar(50),
-	g_zipcode					varchar(50),
-	g_town						varchar(50),
-	g_countrycodeid				char(2) not null references sys_countrys,
-	g_telno						varchar(50),
-	g_email						varchar(240),
-	
-	current_contact				text,
-	registrar_details			text,
-	details						text
 );
 
 CREATE INDEX applicant_org_id on applicant(org_id);
+CREATE INDEX applicant_guardian_id on applicant(guardian_id);
 CREATE INDEX applicant_student_id on applicant(student_id);
 CREATE INDEX applicant_stream_class_id on applicant(stream_class_id );
 CREATE INDEX applicant_session_id on applicant(session_id );
@@ -274,8 +265,6 @@ CREATE TABLE school_events(
 	details 			text
 );
 CREATE INDEX school_events_org_id ON school_events (org_id);
-
-
 
 
 
