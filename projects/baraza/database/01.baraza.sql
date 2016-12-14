@@ -501,6 +501,13 @@ CREATE VIEW vw_entity_address AS
 		vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
+	
+CREATE VIEW vw_entity_types AS
+	SELECT use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
+		entity_types.entity_type_id, entity_types.org_id, entity_types.entity_type_name, 
+		entity_types.entity_role, entity_types.start_view, entity_types.group_email, 
+		entity_types.description, entity_types.details
+	FROM use_keys INNER JOIN entity_types ON use_keys.use_key_id = entity_types.use_key_id;
 
 CREATE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,

@@ -1,10 +1,11 @@
-<APP name="Property">
+<APP name="Property" org="org_id" password="change_password" material="true">
 	<MENU name="Property">
 		<MENU name="Tenants and Clients">1</MENU>
 		<MENU name="Property">35</MENU>
 		<MENU name="Journals">30</MENU>
 		<MENU name="Receipts">40</MENU>
 		<MENU name="Payments">45</MENU>
+		<MENU name="Transaction Ledger">50</MENU>
 		<MENU name="Administration">
 			<MENU name="Organisation">5</MENU>
 			<MENU name="Departments">10</MENU>
@@ -17,62 +18,13 @@
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Tenants and Clients" key="1" h="500">
-		<GRID name="Tenants" keyfield="entity_id" table="entitys" where="(entity_type_id = 3)">
-			<TEXTFIELD w="75" title="Tenant ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="140" title="Tenant Name">entity_name</TEXTFIELD>
-			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
-			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
-			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
-			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
-				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
-				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
-				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
-				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
-				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
-				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="entitys">table_name</DEFAULT>
-					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
-					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
-					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
-					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
-					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
-					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
-					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
-					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
-					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
-					<TEXTFIELD w="250" title="Website" y="210" h="20" x="10">website</TEXTFIELD>
-					<CHECKBOX w="50" title="Default" y="210" h="20" x="390">is_default</CHECKBOX>
-					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
-				</FORM>
-			</GRID>
-			<FORM name="Tenants" keyfield="entity_id" table="entitys">
-				<DEFAULT default="3">entity_type_id</DEFAULT>
-				<DEFAULT default="supplier">Function_Role</DEFAULT>
-				<DEFAULT default="0">org_id</DEFAULT>
-				<GRIDBOX w="430" title="Account" default="40000" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
-					<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-						<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-						<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-						<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-						<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-					</GRID>
-				</GRIDBOX>
-				<TEXTFIELD w="430" title="Tenant" y="30" h="20" x="10">entity_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
-				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
-				<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
-				<TEXTFIELD w="150" title="First Password" y="90" h="20" x="290">first_password</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(entity_type_id = 2)">
+		<GRID name="Tenants" keyfield="entity_id" table="entitys" where="(use_key_id = 6)">
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Attention">attention</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
 			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
 			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
 			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
@@ -101,32 +53,125 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Clients" keyfield="entity_id" table="entitys">
-				<DEFAULT default="2">entity_type_id</DEFAULT>
-				<DEFAULT default="client">Function_Role</DEFAULT>
-				<DEFAULT default="0">org_id</DEFAULT>
-				<GRIDBOX w="430" title="Account" default="30000" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
-					<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-						<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-						<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-						<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-						<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-					</GRID>
-				</GRIDBOX>
+			<FORM name="Tenant" keyfield="entity_id" table="entitys">
+				<DEFAULT default="client">function_role</DEFAULT>
+				<DEFAULT default="6">use_key_id</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 6)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
-				<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
-				<TEXTFIELD w="150" title="First Password" y="90" h="20" x="290">first_password</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Telephone" y="110" h="20" x="10">primary_telephone</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="130" h="20" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="First Password" y="130" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Users" keyfield="entity_id" table="entitys" where="(entity_type_id = 0)">
+		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(use_key_id = 2)">
+			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Attention">attention</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
+			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="entitys">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<TEXTFIELD w="250" title="Website" y="210" h="20" x="10">website</TEXTFIELD>
+					<CHECKBOX w="50" title="Default" y="210" h="20" x="390">is_default</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Client" keyfield="entity_id" table="entitys">
+				<DEFAULT default="client">function_role</DEFAULT>
+				<DEFAULT default="2">use_key_id</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Telephone" y="110" h="20" x="10">primary_telephone</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="130" h="20" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="First Password" y="130" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Suppliers" keyfield="entity_id" table="entitys" where="(use_key_id = 3)">
+			<TEXTFIELD w="75" title="Supplier ID">entity_id</TEXTFIELD>
+			<TEXTFIELD w="140" title="Supplier Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Attention">attention</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
+			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="entitys">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<TEXTFIELD w="250" title="Website" y="210" h="20" x="10">website</TEXTFIELD>
+					<CHECKBOX w="50" title="Default" y="210" h="20" x="390">is_default</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Supplier" keyfield="entity_id" table="entitys">
+				<DEFAULT default="supplier">Function_Role</DEFAULT>
+				<DEFAULT default="3">use_key_id</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(52" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Supplier" y="30" h="20" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Telephone" y="110" h="20" x="10">primary_telephone</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="130" h="20" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="First Password" y="130" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Users" keyfield="entity_id" table="entitys" where="(use_key_id = 0)">
 			<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
-			<CHECKBOX w="100" title="Super User" format="boolean">super_user</CHECKBOX>
-			<CHECKBOX w="100" title="Entity Leader" format="boolean">entity_leader</CHECKBOX>
 			<TEXTTIMESTAMP w="175" title="Date Enroled" format="timestamp">date_enroled</TEXTTIMESTAMP>
 			<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
 			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
@@ -155,24 +200,21 @@
 				</FORM>
 			</GRID>
 			<FORM name="Users" keyfield="entity_id" table="entitys">
-				<DEFAULT default="0">entity_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Org" lptable="orgs" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<DEFAULT default="0">use_key_id</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 0)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Full Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
-				<CHECKBOX w="50" title="Super User" y="70" h="20" x="10">super_user</CHECKBOX>
-				<CHECKBOX w="50" title="Entity Leader" y="70" h="20" x="190">entity_leader</CHECKBOX>
-				<CHECKBOX w="50" title="No Org" y="70" h="20" x="390">no_org</CHECKBOX>
 				<TEXTFIELD w="430" title="Function Role" default="user" y="90" h="20" x="10">function_role</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="110" h="20" x="10">is_active</CHECKBOX>
 				<TEXTFIELD w="150" title="First Password" y="110" h="20" x="290">first_password</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types">
+		<GRID name="Entity Types" keyfield="entity_type_id" table="vw_entity_types">
 			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
-			<TEXTFIELD w="75" title="Use Key">use_key</TEXTFIELD>
+			<TEXTFIELD w="75" title="Use Key">use_key_id</TEXTFIELD>
 			<GRID name="Entity Subscriptions" keyfield="entity_subscription_id" linkfield="entity_type_id" table="vw_entity_subscriptions">
 				<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
@@ -186,11 +228,13 @@
 				</FORM>
 			</GRID>
 			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types">
-				<TEXTFIELD w="430" title="Entity Type Name" y="10" h="20" x="10">entity_type_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Entity Role" y="30" h="20" x="10">entity_role</TEXTFIELD>
-				<TEXTFIELD w="150" title="Use Key" y="50" h="20" x="10">use_key</TEXTFIELD>
-				<TEXTAREA w="430" title="Description" y="70" h="70" x="10">description</TEXTAREA>
-				<TEXTAREA w="430" title="Details" y="140" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Use Key" lptable="use_keys" noorg="true" where="(use_function=0)" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Entity Type Name" y="30" h="20" x="10">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Entity Role" y="50" h="20" x="10">entity_role</TEXTFIELD>
+				<TEXTFIELD w="150" title="Start View" y="70" h="20" x="290">start_view</TEXTFIELD>
+				<TEXTFIELD w="430" title="Group EMail" y="90" h="20" x="10">group_email</TEXTFIELD>
+				<TEXTAREA w="530" tab="Description" y="1" h="170" x="10">description</TEXTAREA>
+				<TEXTAREA w="530" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
@@ -203,10 +247,49 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Organisation" key="5" h="500">
-		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" noorg="true" user="entity_id">
-			<COMBOBOX w="150" title="Org" lptable="orgs" noorg="true" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
-		</FORM>
-		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true">
+		<FORMVIEW name="Organisation" keyfield="org_id" table="orgs">
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Enforce Budget">enforce_budget</CHECKBOX>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM new="false" name="Organisation" keyfield="org_id" delete="false" table="orgs">
+				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
+				<COMBOBOX w="430" title="Base Currency" lptable="currency" select.detail="currency_symbol" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="350" title="Default Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="50" h="20" x="10" lpfield="sys_country_name">default_country_id</COMBOBOX>
+				<COMBOBOX w="430" title="Org Client" lptable="entitys" lpkey="entity_id" y="70" h="20" x="10" lpfield="entity_name">org_client_id</COMBOBOX>
+				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="90" h="20" x="10">logo</TEXTFIELD>
+				<CHECKBOX w="150" title="Enforce Budget" y="110" h="20" x="10">enforce_budget</CHECKBOX>
+				<CHECKBOX w="150" title="Payroll Payable" y="110" h="20" x="290">payroll_payable</CHECKBOX>
+				<TEXTFIELD w="150" title="Cert. Number" y="130" h="20" x="10">cert_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="VAT Number" y="130" h="20" x="290">vat_number</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'orgs'">
+				<TEXTFIELD w="140" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="80" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="140" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="140" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="120" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="120" title="Email">email</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="orgs">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<CHECKBOX w="150" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+					<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+		</FORMVIEW>
+		<GRID name="All Organisation" keyfield="org_id" table="orgs" noorg="true" superuser="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -231,20 +314,54 @@
 					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
 					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
 					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="150" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
+					<TEXTAREA w="430" tab="Details" y="2" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
-				<TEXTFIELD w="350" title="Organisation" y="10" h="20" x="10">org_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Organisation" placeholder="Organisation Name" y="10" h="20" x="10">org_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Default" y="30" h="20" x="10">is_default</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>
-				<TEXTFIELD w="350" title="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
-				<COMBOBOX w="430" title="Base Currency" lptable="currency" noorg="true" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="true" lpkey="org_id" y="90" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
-				<TEXTFIELD w="50" title="Sufix" y="110" h="20" x="10">org_sufix</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="50" h="20" x="10">logo</TEXTFIELD>
+				<COMBOBOX w="430" title="Base Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="350" title="Default Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="90" h="20" x="10" lpfield="sys_country_name">default_country_id</COMBOBOX>
+				<COMBOBOX w="430" title="Parent Org" lptable="orgs" noorg="true" lpkey="org_id" y="110" h="20" x="10" lpfield="org_name">parent_org_id</COMBOBOX>
+				<TEXTFIELD w="50" title="Sufix" placeholder="Organisation Sufix" y="130" h="20" x="10">org_sufix</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
 			</FORM>
+			<GRID name="Entitys" keyfield="entity_id" linkfield="org_id" table="vw_entitys" noorg="true">
+				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="140" title="Entity Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Role">function_role</TEXTFIELD>
+				<CHECKBOX w="100" title="Super User" format="boolean">super_user</CHECKBOX>
+				<CHECKBOX w="75" title="Active" format="boolean">is_active</CHECKBOX>
+				<TEXTFIELD w="100" title="Type">entity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
+				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
+				<FORM name="Entitys" keyfield="entity_id" linkfield="org_id" table="entitys" noorg="true">
+					<TEXTFIELD w="150" title="Entity Name" y="10" h="20" x="10">entity_name</TEXTFIELD>
+					<TEXTFIELD w="150" title="User Name" y="10" h="20" x="290">user_name</TEXTFIELD>
+					<TEXTFIELD w="430" title="Primary Email" y="30" h="20" x="10">primary_email</TEXTFIELD>
+					<TEXTFIELD w="250" title="Primary Telephone" y="50" h="20" x="10">primary_telephone</TEXTFIELD>
+					<CHECKBOX w="150" title="Entity Leader" y="70" h="20" x="290">entity_leader</CHECKBOX>
+					<TEXTFIELD w="150" title="Function Role" y="90" h="20" x="290">function_role</TEXTFIELD>
+					<CHECKBOX w="150" title="Active" y="110" h="20" x="10">is_active</CHECKBOX>
+					<TEXTFIELD w="150" title="First Password" y="110" h="20" x="290">first_password</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Subscriptions" keyfield="entity_subscription_id" linkfield="entity_id" table="vw_entity_subscriptions" noorg="true">
+					<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Subscription Level Name">subscription_level_name</TEXTFIELD>
+				</GRID>
+				<ACTIONS>
+					<ACTION fnct="change_password">Reset Password</ACTION>
+				</ACTIONS>
+			</GRID>
 		</GRID>
+		<FORM foredit="true" new="false" name="Select Organisation" keyfield="entity_id" delete="false" table="entitys" user="entity_id">
+			<COMBOBOX w="150" title="Org" lptable="vw_org_select" y="10" org.id="parent_org_id" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+		</FORM>
 		<GRID name="Currency" keyfield="currency_id" table="currency">
 			<TEXTFIELD w="75" title="Currency ID">currency_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency Name">currency_name</TEXTFIELD>
@@ -262,6 +379,13 @@
 				<TEXTFIELD w="150" title="Currency Name" y="10" h="20" x="10">currency_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Currency Symbol" y="10" h="20" x="290">currency_symbol</TEXTFIELD>
 			</FORM>
+		</GRID>
+		<GRID name="Counters" keyfield="transaction_counter_id" updatetable="transaction_counters" orderby="transaction_counter_id" table="vw_transaction_counters">
+			<TEXTFIELD w="75" title="Transaction Type">transaction_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Document Prefix">document_prefix</TEXTFIELD>
+			<CHECKBOX w="75" title="For Posting">for_posting</CHECKBOX>
+			<CHECKBOX w="75" title="For Sales">for_sales</CHECKBOX>
+			<EDITFIELD w="75" title="Document Number">document_number</EDITFIELD>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Departments" key="10" h="500">
@@ -293,15 +417,8 @@
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<FORM name="Bank Accounts" keyfield="bank_account_id" table="bank_accounts">
 				<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" y="10" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
-				<GRIDBOX w="430" title="GL Account" default="70005" lptable="vw_accounts" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">account_id
-					<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-						<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-						<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-						<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-						<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-					</GRID>
-				</GRIDBOX>
-				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="GL Account" default="70005" lptable="vw_accounts" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Account Name" y="70" h="20" x="10">bank_account_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Account Number" y="70" h="20" x="290">bank_account_number</TEXTFIELD>
 				<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
@@ -333,12 +450,13 @@
 	</DESK>
 	<DESK w="700" name="Fiscal Years" key="20" h="500">
 		<GRID name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
-			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year</TEXTFIELD>
 			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
 			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
 			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
 			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
 			<ACTIONS>
+				<ACTION fnct="add_periods">Generate Months</ACTION>
 				<ACTION fnct="close_year" approval="1">Close Year</ACTION>
 			</ACTIONS>
 			<GRID name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="vw_periods">
@@ -356,7 +474,7 @@
 				</FORM>
 			</GRID>
 			<FORM name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
-				<TEXTFIELD w="250" title="Fiscal Year" y="10" h="20" x="10">fiscal_year_id</TEXTFIELD>
+				<TEXTFIELD w="250" title="Fiscal Year" y="10" h="20" x="10">fiscal_year</TEXTFIELD>
 				<TEXTDATE w="150" title="Fiscal Year Start" y="30" h="20" x="10">fiscal_year_start</TEXTDATE>
 				<TEXTDATE w="150" title="Fiscal Year End" y="30" h="20" x="290">fiscal_year_end</TEXTDATE>
 				<CHECKBOX w="150" title="Year Opened" y="50" h="20" x="10">year_opened</CHECKBOX>
@@ -366,19 +484,19 @@
 	</DESK>
 	<DESK w="700" name="Chat of Accounts" key="25" h="500">
 		<GRID name="Accounts Class" keyfield="accounts_class_id" table="accounts_class">
-			<TEXTFIELD w="75" title="Accounts Class ID">accounts_class_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Accounts Class No">accounts_class_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Chat Type">chat_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Accounts Class">accounts_class_name</TEXTFIELD>
 			<GRID name="Account Types" keyfield="account_type_id" linkfield="accounts_class_id" table="vw_account_types">
-				<TEXTFIELD w="75" title="Account Type ID">account_type_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Account Type No">account_type_no</TEXTFIELD>
 				<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
 				<GRID name="Accounts" keyfield="account_id" linkfield="account_type_id" table="vw_accounts">
-					<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
 					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 					<CHECKBOX w="75" title="Header">is_header</CHECKBOX>
 					<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 					<FORM name="Accounts" keyfield="account_id" linkfield="account_type_id" table="accounts">
-						<TEXTFIELD w="150" title="Account ID" y="10" h="20" x="10">account_id</TEXTFIELD>
+						<TEXTFIELD w="150" title="Account No" y="10" h="20" x="10">account_no</TEXTFIELD>
 						<TEXTFIELD w="350" title="Account Name" y="30" h="20" x="10">account_name</TEXTFIELD>
 						<CHECKBOX w="150" title="Header" y="50" h="20" x="10">is_header</CHECKBOX>
 						<CHECKBOX w="150" title="Active" y="50" h="20" x="290">is_active</CHECKBOX>
@@ -386,33 +504,29 @@
 					</FORM>
 				</GRID>
 				<FORM name="Account Types" keyfield="account_type_id" linkfield="accounts_class_id" table="account_types">
-					<TEXTFIELD w="150" title="Account Type ID" y="10" h="20" x="10">account_type_id</TEXTFIELD>
+					<TEXTFIELD w="150" title="Account Type No" y="10" h="20" x="10">account_type_no</TEXTFIELD>
 					<TEXTFIELD w="350" title="Account Type" y="30" h="20" x="10">account_type_name</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<FORM name="Accounts Class" keyfield="accounts_class_id" table="accounts_class">
-				<TEXTFIELD w="50" title="Accounts Class ID" y="10" h="20" x="10">accounts_class_id</TEXTFIELD>
+				<TEXTFIELD w="50" title="Accounts Class No" y="10" h="20" x="10">accounts_class_no</TEXTFIELD>
 				<TEXTFIELD w="250" title="Chat Type" y="10" h="20" x="190">chat_type_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Accounts Class" y="30" h="20" x="10">accounts_class_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Default Accounts" keyfield="default_account_id" table="default_accounts">
-			<TEXTFIELD w="75" title="Default Account ID">default_account_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
+		<GRID new="false" name="Default Accounts" keyfield="accounts_class_id" delete="false" orderby="default_account_id" table="vw_default_accounts" where="(use_function = 3)">
+			<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Use Key">use_key_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Chat Type">chat_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Accounts Class">accounts_class_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-			<FORM name="Default Accounts" keyfield="default_account_id" table="default_accounts">
-				<TEXTFIELD w="150" title="Default Account ID" y="10" h="20" x="10">default_account_id</TEXTFIELD>
-				<GRIDBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">account_id
-					<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-						<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-						<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-						<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-						<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-					</GRID>
-				</GRIDBOX>
-				<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+			<FORM new="false" name="Default Accounts" keyfield="default_account_id" delete="false" table="default_accounts">
+				<COMBOBOX w="430" title="Sales Account" lptable="vw_accounts" lpkey="account_id" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -504,7 +618,7 @@
 					<TEXTDECIMAL w="75" title="Electricity">electricity</TEXTDECIMAL>
 					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 					<FORM name="Period Rentals" keyfield="period_rental_id" linkfield="rental_id" table="period_rentals">
-						<COMBOBOX w="430" title="Period" lptable="periods" y="10" h="20" x="10" lpfield="period_id">period_id</COMBOBOX>
+						<COMBOBOX w="430" title="Period" lptable="periods" y="10" h="20" x="10" lpfield="period_disp">period_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Commision" y="30" h="20" x="290">commision</TEXTDECIMAL>
 						<TEXTDECIMAL w="150" title="Commision Pct" y="50" h="20" x="10">commision_pct</TEXTDECIMAL>
@@ -515,7 +629,7 @@
 					</FORM>
 				</GRID>
 				<FORM name="Rentals" keyfield="rental_id" linkfield="property_id" table="rentals">
-					<COMBOBOX w="430" title="Tenant" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Tenant" lptable="vw_entitys" where="(use_key_id = 6)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Start Rent" y="30" h="20" x="10">start_rent</TEXTDATE>
 					<TEXTFIELD w="150" title="Hse No" y="30" h="20" x="290">hse_no</TEXTFIELD>
 					<TEXTFIELD w="150" title="Elec No" y="50" h="20" x="10">elec_no</TEXTFIELD>
@@ -530,20 +644,6 @@
 					<TEXTDECIMAL w="150" title="Deposit Refund" y="130" h="20" x="290">deposit_refund</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Deposit Refund Date" y="150" h="20" x="10">deposit_refund_date</TEXTDATE>
 					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
-				</FORM>
-			</GRID>
-			<GRID name="Utilities" keyfield="utility_id" linkfield="property_id" table="vw_utilities">
-				<TEXTFIELD w="75" title="Utility Type Name">utility_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Utility ID">utility_id</TEXTFIELD>
-				<TEXTDATE w="75" title="Payment Date">payment_date</TEXTDATE>
-				<CHECKBOX w="75" title="Payment Done">payment_done</CHECKBOX>
-				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<FORM name="Utilities" keyfield="utility_id" linkfield="property_id" table="utilities">
-					<COMBOBOX w="430" title="Utility Type" lptable="utility_types" y="10" h="20" x="10" lpfield="utility_type_name">utility_type_id</COMBOBOX>
-					<TEXTDATE w="150" title="Payment Date" y="30" h="20" x="10">payment_date</TEXTDATE>
-					<CHECKBOX w="150" title="Payment Done" y="30" h="20" x="290">payment_done</CHECKBOX>
-					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<FORM name="Property" keyfield="property_id" table="property">
@@ -567,15 +667,6 @@
 			<FORM name="Property Types" keyfield="property_type_id" table="property_types">
 				<TEXTFIELD w="150" title="Property Type Name" y="10" h="20" x="10">property_type_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Commercial Property" y="10" h="20" x="290">commercial_property</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-		<GRID name="Utility Types" keyfield="utility_type_id" table="utility_types">
-			<TEXTFIELD w="75" title="Utility Type ID">utility_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Utility Type Name">utility_type_name</TEXTFIELD>
-			<FORM name="Utility Types" keyfield="utility_type_id" table="utility_types">
-				<TEXTFIELD w="430" title="Utility Type Name" y="10" h="20" x="10">utility_type_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -604,24 +695,303 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Payments" key="45" h="550">
-		<GRID name="Payments" keyfield="payment_id" table="vw_payments">
-			<TEXTFIELD w="75" title="Client ID">client_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Client Name">client_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Branch Name">bank_branch_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Bank Account Number">bank_account_number</TEXTFIELD>
+		<GRID name="Receipts" keyfield="payment_id" orderby="payment_id desc" table="vw_payments" where="(tx_type = 1)">
 			<TEXTFIELD w="75" title="Payment ID">payment_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tenant">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
 			<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
+			<CHECKBOX w="75" title="Cleared">cleared</CHECKBOX>
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-			<FORM name="Payments" keyfield="payment_id" table="payments">
-				<COMBOBOX w="430" title="Client" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+			<FORM name="Receipt" keyfield="payment_id" table="payments">
+				<DEFAULT default="1">tx_type</DEFAULT>
+				<COMBOBOX w="430" title="Tenant" lptable="entitys" where="(use_key_id = 6)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Receipt Number" y="50" h="20" x="10">receipt_number</TEXTFIELD>
-				<TEXTDATE w="150" title="Pay Date" y="50" h="20" x="290">pay_date</TEXTDATE>
-				<TEXTDECIMAL w="150" title="Amount" y="70" h="20" x="10">amount</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Receipt Number" y="90" h="20" x="10">receipt_number</TEXTFIELD>
+				<TEXTDATE w="150" title="Pay Date" y="90" h="20" x="290">pay_date</TEXTDATE>
+				<CHECKBOX w="150" title="Cleared" y="110" h="20" x="10">cleared</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Amount" y="130" h="20" x="10">amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="130" h="20" x="290">exchange_rate</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Remitance" keyfield="payment_id" orderby="payment_id desc" table="vw_payments" where="(tx_type = -1)">
+			<TEXTFIELD w="75" title="Payment ID">payment_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tenant">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+			<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
+			<CHECKBOX w="75" title="Cleared">cleared</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+			<FORM name="Remitance" keyfield="payment_id" table="payments">
+				<DEFAULT default="-1">tx_type</DEFAULT>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="30" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Receipt Number" y="90" h="20" x="10">receipt_number</TEXTFIELD>
+				<TEXTDATE w="150" title="Pay Date" y="90" h="20" x="290">pay_date</TEXTDATE>
+				<CHECKBOX w="150" title="Cleared" y="110" h="20" x="10">cleared</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Amount" y="130" h="20" x="10">amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="130" h="20" x="290">exchange_rate</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Transaction Ledger" key="50" h="550">
+		<GRID name="Expenditure" keyfield="transaction_id" orderby="completed desc, payment_date" table="vw_tx_ledger" where="(tx_type = -1) AND (for_processing = true) AND (completed = false)">
+			<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Date">payment_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Reference Number">reference_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<FORM name="Expenditure" keyfield="transaction_id" table="transactions">
+				<DEFAULT default="Draft">approve_status</DEFAULT>
+				<DEFAULT default="-1">tx_type</DEFAULT>
+				<DEFAULT default="true">for_processing</DEFAULT>
+				<DEFAULT default="21">transaction_type_id</DEFAULT>
+				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(expense_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_key_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
+				<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
+				<TEXTDATE w="150" title="Payment Date" default="now" y="90" h="20" x="290">payment_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">transaction_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Tax Amount" y="110" h="20" x="290">transaction_tax_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Reference Number" y="130" h="20" x="10">reference_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Payment Reference" y="130" h="20" x="290">payment_number</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
+				<CHECKBOX w="150" title="Completed" y="170" h="20" x="10">completed</CHECKBOX>
+				<CHECKBOX w="150" title="Cleared" y="170" h="20" x="290">is_cleared</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="vw_transaction_details">
+				<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Item Name">item_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Tax Amount">tax_amount</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Transaction Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details">
+					<COMBOBOX w="430" title="Item" lptable="items" where="(for_sale=true)" y="10" h="20" x="10" lpfield="item_name">item_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Quantity" default="1" y="30" h="20" x="10">quantity</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="290">amount</TEXTDECIMAL>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
+		</GRID>
+		<GRID name="Income" keyfield="transaction_id" orderby="completed desc, payment_date" table="vw_tx_ledger" where="(tx_type = 1) AND (for_processing = true) AND (completed = false)">
+			<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Date">payment_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Reference Number">reference_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<FORM name="Income" keyfield="transaction_id" table="transactions">
+				<DEFAULT default="Draft">approve_status</DEFAULT>
+				<DEFAULT default="1">tx_type</DEFAULT>
+				<DEFAULT default="22">transaction_type_id</DEFAULT>
+				<DEFAULT default="true">for_processing</DEFAULT>
+				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(income_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_key_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
+				<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
+				<TEXTDATE w="150" title="Payment Date" default="now" y="90" h="20" x="290">payment_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">transaction_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Tax Amount" y="110" h="20" x="290">transaction_tax_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Reference Number" y="130" h="20" x="10">reference_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="Receipt Reference" y="130" h="20" x="290">payment_number</TEXTFIELD>
+				<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
+				<CHECKBOX w="150" title="Completed" y="170" h="20" x="10">completed</CHECKBOX>
+				<CHECKBOX w="150" title="Cleared" y="170" h="20" x="290">is_cleared</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="190" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="vw_transaction_details">
+				<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Item Name">item_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Tax Amount">tax_amount</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Transaction Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details">
+					<COMBOBOX w="430" title="Item" lptable="items" where="(for_sale=true)" y="10" h="20" x="10" lpfield="item_name">item_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Quantity" default="1" y="30" h="20" x="10">quantity</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="290">amount</TEXTDECIMAL>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
+			<JASPER name="Invoice" reportfile="vw_trx.jasper"></JASPER>
+		</GRID>
+		<GRID name="Ledger Summary" keyfield="ledger_period" orderby="ledger_year desc, ledger_period" table="vws_tx_ledger">
+			<TEXTFIELD w="75" title="Ledger ID">ledger_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Year">ledger_year</TEXTFIELD>
+			<TEXTFIELD w="75" title="Month">ledger_month</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Dr Amount">sum_dr_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Cr Amount">sum_cr_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Amount">sum_base_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Completed">sum_base_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Cleared">sum_cleared_balance</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="TBalance">prev_balance_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="TCleared">prev_clear_balance_amount</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION fnct="cpy_trx_ledger" approval="1">Copy Month</ACTION>
+			</ACTIONS>
+			<GRID name="Expenditure" keyfield="transaction_id" orderby="completed desc, payment_date" linkfield="ledger_period" table="vw_tx_ledger" where="(tx_type = -1) ">
+				<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<TEXTDATE w="75" title="Date">payment_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
+				<CHECKBOX w="75" title="For Processing">for_processing</CHECKBOX>
+				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
+				<CHECKBOX w="75" title="Cleared">is_cleared</CHECKBOX>
+				<ACTIONS>
+					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="3">Complete</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="4">Clear</ACTION>
+					<ACTION fnct="post_transaction" approval="1">Post</ACTION>
+				</ACTIONS>
+				<FORM name="Expenditure" keyfield="transaction_id" table="transactions">
+					<DEFAULT default="-1">tx_type</DEFAULT>
+					<DEFAULT default="21">transaction_type_id</DEFAULT>
+					<DEFAULT default="Draft">approve_status</DEFAULT>
+					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(expense_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_key_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+					<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
+					<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
+					<TEXTDATE w="150" title="Payment Date" default="now" y="90" h="20" x="290">payment_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">transaction_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Tax Amount" y="110" h="20" x="290">transaction_tax_amount</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Reference Number" y="130" h="20" x="10">reference_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Payment Reference" y="130" h="20" x="290">payment_number</TEXTFIELD>
+					<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
+					<CHECKBOX w="150" title="Completed" y="170" h="20" x="10">completed</CHECKBOX>
+					<CHECKBOX w="150" title="For Processing" y="170" h="20" x="290">for_processing</CHECKBOX>
+					<CHECKBOX w="150" title="Cleared" y="190" h="20" x="10">is_cleared</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="vw_transaction_details">
+					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Item Name">item_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Tax Amount">tax_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<FORM name="Transaction Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details">
+						<COMBOBOX w="430" title="Item" lptable="items" where="(for_sale=true)" y="10" h="20" x="10" lpfield="item_name">item_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Quantity" default="1" y="30" h="20" x="10">quantity</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="290">amount</TEXTDECIMAL>
+						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
+			</GRID>
+			<GRID name="Income" keyfield="transaction_id" orderby="completed desc, payment_date" linkfield="ledger_period" table="vw_tx_ledger" where="(tx_type = 1)">
+				<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<TEXTDATE w="75" title="Date">payment_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Amount">transaction_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Tax Amount">transaction_tax_amount</TEXTDECIMAL>
+				<CHECKBOX w="75" title="For Processing">for_processing</CHECKBOX>
+				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
+				<CHECKBOX w="75" title="Cleared">is_cleared</CHECKBOX>
+				<ACTIONS>
+					<ACTION fnct="upd_trx_ledger" approval="1">Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="2">Un Process</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="3">Complete</ACTION>
+					<ACTION fnct="upd_trx_ledger" approval="4">Clear</ACTION>
+					<ACTION fnct="post_transaction" approval="1">Post</ACTION>
+				</ACTIONS>
+				<FORM name="Income" keyfield="transaction_id" table="transactions">
+					<DEFAULT default="Draft">approve_status</DEFAULT>
+					<DEFAULT default="1">tx_type</DEFAULT>
+					<DEFAULT default="22">transaction_type_id</DEFAULT>
+					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(income_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_key_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+					<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
+					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
+					<TEXTDATE w="150" title="Transaction Date" default="now" y="90" h="20" x="10">transaction_date</TEXTDATE>
+					<TEXTDATE w="150" title="Payment Date" default="now" y="90" h="20" x="290">payment_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Amount" y="110" h="20" x="10">transaction_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Tax Amount" y="110" h="20" x="290">transaction_tax_amount</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Reference Number" y="130" h="20" x="10">reference_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Receipt Reference" y="130" h="20" x="290">payment_number</TEXTFIELD>
+					<TEXTFIELD w="430" title="Narrative" y="150" h="20" x="10">narrative</TEXTFIELD>
+					<CHECKBOX w="150" title="Completed" y="170" h="20" x="10">completed</CHECKBOX>
+					<CHECKBOX w="150" title="For Processing" y="170" h="20" x="290">for_processing</CHECKBOX>
+					<CHECKBOX w="150" title="Cleared" y="190" h="20" x="10">is_cleared</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="vw_transaction_details">
+					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Item Name">item_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Tax Amount">tax_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<FORM name="Transaction Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details">
+						<COMBOBOX w="430" title="Item" lptable="items" where="(for_sale=true)" y="10" h="20" x="10" lpfield="item_name">item_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Quantity" default="1" y="30" h="20" x="10">quantity</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="290">amount</TEXTDECIMAL>
+						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
+				<JASPER name="Invoice" reportfile="vw_trx.jasper"></JASPER>
+			</GRID>
+			<JASPER name="Report" reportfile="vw_tx_ledger_a.jasper"></JASPER>
+			<JASPER name="Uncleared" reportfile="vw_tx_ledger_b.jasper"></JASPER>
+			<JASPER name="Open" reportfile="vw_tx_ledger_c.jasper"></JASPER>
+			<JASPER name="Tax" reportfile="vw_tx_ledger_d.jasper"></JASPER>
+		</GRID>
+		<GRID name="Ledger Types" keyfield="ledger_type_id" table="vw_ledger_types">
+			<TEXTFIELD w="15" title="ID">ledger_type_id</TEXTFIELD>
+			<TEXTFIELD w="45" title="Account">account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
+			<TEXTFIELD w="45" title="Tax Account">t_account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tax Account Name">t_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Ledger Type Name">ledger_type_name</TEXTFIELD>
+			<CHECKBOX w="35" title="Posting">ledger_posting</CHECKBOX>
+			<CHECKBOX w="35" title="Income">income_ledger</CHECKBOX>
+			<CHECKBOX w="35" title="Expense">expense_ledger</CHECKBOX>
+			<FORM name="Ledger Types" keyfield="ledger_type_id" table="ledger_types">
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Tax Account" lptable="vw_accounts" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">tax_account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Ledger Type Name" y="50" h="20" x="10">ledger_type_name</TEXTFIELD>
+				<CHECKBOX w="150" title="For Posting" y="70" h="20" x="10">ledger_posting</CHECKBOX>
+				<CHECKBOX w="150" title="Income" y="90" h="20" x="10">income_ledger</CHECKBOX>
+				<CHECKBOX w="150" title="Expense" y="90" h="20" x="290">expense_ledger</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

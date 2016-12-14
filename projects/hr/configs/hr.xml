@@ -3180,11 +3180,9 @@
 				</FORM>
 			</GRID>
 			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types" th="210">
-				<DEFAULT default="2">use_function</DEFAULT>
-				<COMBOBOX w="430" title="Use Key" lptable="use_keys" noorg="true" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
+				<COMBOBOX w="430" title="Use Key" lptable="use_keys" noorg="true" where="(use_function=0)" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Entity Type Name" y="30" h="20" x="10">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Entity Role" y="50" h="20" x="10">entity_role</TEXTFIELD>
-				<TEXTFIELD w="150" title="Use Key" y="70" h="20" x="10">use_key</TEXTFIELD>
 				<TEXTFIELD w="150" title="Start View" y="70" h="20" x="290">start_view</TEXTFIELD>
 				<TEXTFIELD w="430" title="Group EMail" y="90" h="20" x="10">group_email</TEXTFIELD>
 				<TEXTAREA w="530" tab="Description" y="2" h="170" x="10">description</TEXTAREA>

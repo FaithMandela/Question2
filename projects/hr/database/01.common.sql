@@ -190,9 +190,11 @@ CREATE VIEW vw_periods AS
 		periods.gl_payroll_account, periods.gl_advance_account, periods.details,
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
-		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
+		to_char(periods.start_date, 'Month') as period_month, to_char(periods.start_date, 'YYYY, Month') as period_disp, 
+		(trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
-		to_char(periods.start_date, 'YYYYMM') as period_code
+		to_char(periods.start_date, 'YYYYMM') as period_code,
+		
 	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
 	ORDER BY periods.start_date;
 

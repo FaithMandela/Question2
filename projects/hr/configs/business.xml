@@ -36,8 +36,8 @@
 			<MENU name="Tax Types">135</MENU>
 			<MENU name="Items">140</MENU>
 			<MENU name="Chart of Accounts">105</MENU>
-			<MENU name="Journals">110</MENU>
 			<MENU name="Transaction Ledger">145</MENU>
+			<MENU name="Journals">110</MENU>
 			<MENU name="Trial Balance">150</MENU>
 			<MENU name="income and Expenditure">155</MENU>
 			<MENU name="Balance Sheet">160</MENU>
@@ -1355,7 +1355,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Clients" keyfield="entity_id" table="entitys">
+			<FORM name="Client" keyfield="entity_id" table="entitys">
 				<DEFAULT default="client">function_role</DEFAULT>
 				<DEFAULT default="2">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
@@ -1370,7 +1370,7 @@
 				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Supplier" keyfield="entity_id" table="entitys" where="(use_key_id = 3)">
+		<GRID name="Suppliers" keyfield="entity_id" table="entitys" where="(use_key_id = 3)">
 			<TEXTFIELD w="75" title="Supplier ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Supplier Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -1451,7 +1451,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Users" keyfield="entity_id" table="entitys">
+			<FORM name="User" keyfield="entity_id" table="entitys">
 				<DEFAULT default="0">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 0)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Full Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
@@ -1462,7 +1462,7 @@
 				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types" where="(use_function=0)">
+		<GRID name="Entity Types" keyfield="entity_type_id" table="vw_entity_types">
 			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
@@ -1480,11 +1480,11 @@
 				</FORM>
 			</GRID>
 			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types">
-				<DEFAULT default="2">use_function</DEFAULT>
-				<COMBOBOX w="430" title="Use Key" lptable="use_keys" noorg="true" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
+				<COMBOBOX w="430" title="Use Key" lptable="use_keys" noorg="true" where="(use_function=0)" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Entity Type Name" y="30" h="20" x="10">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Entity Role" y="50" h="20" x="10">entity_role</TEXTFIELD>
-				<TEXTFIELD w="150" title="Use Key" y="70" h="20" x="10">use_key</TEXTFIELD>
+				<TEXTFIELD w="150" title="Start View" y="70" h="20" x="290">start_view</TEXTFIELD>
+				<TEXTFIELD w="430" title="Group EMail" y="90" h="20" x="10">group_email</TEXTFIELD>
 				<TEXTAREA w="530" tab="Description" y="1" h="170" x="10">description</TEXTAREA>
 				<TEXTAREA w="530" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 			</FORM>
