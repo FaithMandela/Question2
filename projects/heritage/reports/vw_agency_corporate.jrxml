@@ -34,14 +34,17 @@
 	<parameter name="minDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUB_REPORT" class="java.lang.String">
+		<parameterDescription><![CDATA["./"]]></parameterDescription>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_passengers.org_name, vw_passengers.rate_category_name, vw_passengers.rate_plan_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_id_no, vw_passengers.totalamount_covered, vw_passengers.entity_name, vw_passengers.sys_country_name,
+		<![CDATA[SELECT vw_corporate_passengers.org_name, vw_corporate_passengers.corporate_rate_category_name, vw_corporate_passengers.rate_plan_name, vw_corporate_passengers.days_from, vw_corporate_passengers.days_to, vw_corporate_passengers.passenger_name, vw_corporate_passengers.passenger_mobile, vw_corporate_passengers.passenger_email, vw_corporate_passengers.passenger_id_no, vw_corporate_passengers.totalamount_covered, vw_corporate_passengers.entity_name, vw_corporate_passengers.sys_country_name,
 policy_number
-FROM vw_passengers WHERE vw_passengers.org_id = '$P!{org_id}'
+FROM vw_corporate_passengers WHERE vw_corporate_passengers.org_id = '$P!{org_id}'
 AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date;]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
-	<field name="rate_category_name" class="java.lang.String"/>
+	<field name="corporate_rate_category_name" class="java.lang.String"/>
 	<field name="rate_plan_name" class="java.lang.String"/>
 	<field name="days_from" class="java.sql.Date"/>
 	<field name="days_to" class="java.sql.Date"/>
@@ -60,13 +63,13 @@ AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::d
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="62" splitType="Stretch">
+		<band height="76" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="30509c1b-4f4a-4f93-b161-e019d1b3b679"/>
+				<reportElement style="Title" x="65" y="0" width="446" height="62" uuid="30509c1b-4f4a-4f93-b161-e019d1b3b679"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Sales Report]]></text>
+				<text><![CDATA[Corporate Sales Report]]></text>
 			</staticText>
 		</band>
 	</title>

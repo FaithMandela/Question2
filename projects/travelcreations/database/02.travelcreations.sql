@@ -1,20 +1,7 @@
 ---Project Database File
 ALTER TABLE entitys ADD client_code varchar(20);
 ALTER TABLE entitys ADD client_dob date;
-ALTER TABLE orders ADD client_code varchar(20);
 
-ALTER TABLE loyalty_points ADD COLUMN sector_1 character varying(10);
-ALTER TABLE loyalty_points ADD COLUMN sector_2 character varying(10);
-ALTER TABLE loyalty_points ADD COLUMN sector_3 character varying(10);
-ALTER TABLE loyalty_points ADD COLUMN sector_4 character varying(10);
-ALTER TABLE loyalty_points ADD COLUMN sector_5 character varying(10);
-ALTER TABLE loyalty_points ADD COLUMN ticket_number character varying(30);
-ALTER TABLE loyalty_points ADD COLUMN local_inter character varying(2);
-ALTER TABLE loyalty_points ADD COLUMN client_code character varying(50);
-ALTER TABLE loyalty_points ADD COLUMN loyalty_curr character varying(10);
-ALTER TABLE loyalty_points add column invoice_number character varying(50);
-ALTER TABLE loyalty_points add column is_oneway boolean default true not null;
-ALTER TABLE loyalty_points add column refunds real default 0 not null;
 
 CREATE TABLE clients (
 	client_id			    serial primary key,
@@ -37,7 +24,7 @@ CREATE TABLE clients (
 CREATE INDEX clients_org_id ON clients (org_id);
 
 CREATE TABLE loyalty_points (
-	loyalty_loyalty_points_id		serial  primary key,
+	loyalty_points_id		serial  primary key,
 	org_id 					integer references orgs,
 	entity_id				integer references entitys,
 	period_id				integer references periods,
@@ -46,7 +33,16 @@ CREATE TABLE loyalty_points (
 	amount                  real default 0 not null,
 	points					real default 0 not null,
 	points_amount           real default 0 not null,
+	refunds 				real default 0 not null,
+	tours_amount 			real default 0 not null,
 	bonus                   real default 0 not null,
+	sectors 				character varying(100),
+	ticket_number 			character varying(30),
+	local_inter 			character varying(2),
+	client_code 			character varying(50),
+	loyalty_curr 			character varying(10),
+	invoice_number 			character varying(50),
+	is_return 				boolean default true not null,
 	approve_status 			character varying(16) DEFAULT 'Completed',
 	workflow_table_id 		integer
 );
@@ -128,9 +124,11 @@ CREATE TABLE orders (
 	order_id 				serial primary key,
 	org_id 					integer references orgs,
 	entity_id 				integer not null references entitys,
+	client_code 			varchar(20),
 	points 					real default 0 not null,
 	order_amount			real default 0 not null,
 	shipping_cost			real default 0 not null,
+	points_value 			integer,
 	order_date				timestamp not null default current_timestamp,
 	order_status			varchar(50) default 'Processing order',
 	town_name				varchar(50),
@@ -291,7 +289,7 @@ CREATE OR REPLACE VIEW vw_order_details AS
 
 CREATE OR REPLACE VIEW vw_loyalty_points AS
 	SELECT loyalty_points.loyalty_points_id, periods.period_id, periods.start_date as period, to_char(periods.start_date, 'mmyyyy'::text) AS ticket_period,
-		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,
+		vw_entitys.client_code, loyalty_points.segments, loyalty_points.amount, loyalty_points.points,	loyalty_points.points_amount,loyalty_points.tours_amount,
 		loyalty_points.bonus, vw_entitys.org_name, vw_entitys.entity_name, vw_entitys.entity_id,vw_entitys.user_name,
 		loyalty_points.point_date, loyalty_points.ticket_number, loyalty_points.invoice_number, loyalty_points.approve_status, loyalty_points.refunds,
 		periods.end_date, loyalty_points.local_inter, loyalty_points.is_return

@@ -2,6 +2,7 @@
 	<MENU name="Travelport Apps">
 		<MENU name="Service Desk">
 			<MENU role="broker,admin,manager" name="New Insurance" page="bima">0</MENU>
+			<MENU role="individual" name="My Invoice" page="invoice">0</MENU>
 			<MENU role="individual" name="My Insurance">82</MENU>
 			<MENU role="manager,admin,agency,user,broker" name="My Certificate">83</MENU>
 		</MENU>
@@ -16,8 +17,8 @@
 			<MENU role="admin,manager" name="Payments">85</MENU>
 			<MENU role="master" name="Insurance Sales">97</MENU>
 		</MENU>
-		<MENU role="individual,user" name="Profile">
-			<MENU role="individual,user" name="Entitys">16</MENU>
+		<MENU role="individual,user,broker" name="Profile">
+			<MENU role="individual,user,broker" name="Entitys">16</MENU>
 		</MENU>
 		<MENU role="admin,agency,manager" name="Configurations">
 			<MENU role="manager,admin" name="Rates">75</MENU>
@@ -37,6 +38,9 @@
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD w="650" name="Dashboard">
+			<TILE noorg.query="false" role="user,individual" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid = true)" user="entity_id" table="passengers">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
+			</TILE>
 			<TILE noorg.query="true" role="user,agency,broker" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid = true)" table="passengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
@@ -44,6 +48,12 @@
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid = true)" table="vw_allpassengers">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
+			</TILE>
+			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Monthly Sales" where="(extract(month from approved_date) = extract(month from CURRENT_DATE)  AND extract(year from approved_date) = extract(year from CURRENT_DATE) AND is_valid = true)" table="vw_allpassengers">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
+			</TILE>
+			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" icon="fa icon-basket" name="Yearly Sales" where="(extract(year from approved_date) = extract(year from CURRENT_DATE) AND is_valid = true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id), 0)" title="Total Members">total_passengers</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin,manager" name="Total Amount" where="(approved = 'true' AND is_valid = true)" table="vw_allpassengers">

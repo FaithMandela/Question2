@@ -42,13 +42,13 @@ BEGIN
 		SELECT * INTO app FROM clients WHERE client_id = $1::integer;
 		SELECT entity_id INTO rec FROM entitys WHERE (trim(lower(client_code)) = trim(lower(app.client_code)));
 
-		IF(rec IS NULL)THEN
-			RAISE EXCEPTION 'Client Code Does not Exist use an existing client code provided by Travelcreations';
+		IF(rec IS NOT NULL)THEN
+			RAISE EXCEPTION 'Client Code already exist use a different client code provided by Travelcreations';
 		END IF;
 
 		UPDATE clients SET ar_status = ps , approve_status = ps WHERE client_id = $1::integer ;
-		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, function_role, is_active, client_dob)
-		VALUES (app.org_id, 0, app.client_name, trim(lower(app.user_name)), trim(lower(app.client_email)), app.phone_no, 'client', true, app.client_dob) returning entity_id INTO myid;
+		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, function_role, is_active, client_code, client_dob)
+		VALUES (app.org_id, 0, app.client_name, trim(lower(app.user_name)), trim(lower(app.client_email)), app.phone_no, 'client', true, app.client_code, app.client_dob) returning entity_id INTO myid;
 		msg := 'Client account has been activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (2, myid, 'entitys', 3);
@@ -81,17 +81,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION getbalance(integer) RETURNS real AS $$
-DECLARE
-	v_org_id 			integer;
-	v_function_role		text;
-	v_balance			real;
-BEGIN
-	v_balance = 0::real;
-	SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
-	RETURN v_balance;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $$
 DECLARE
@@ -206,7 +195,19 @@ END;
 $BODY$ LANGUAGE plpgsql ;
 
 
-CREATE OR REPLACE FUNCTION getClientbalance( integer)  RETURNS real AS
+CREATE OR REPLACE FUNCTION getPointsBalance(integer) RETURNS real AS $$
+DECLARE
+	v_org_id 			integer;
+	v_function_role		text;
+	v_balance			real;
+BEGIN
+	v_balance = 0::real;
+	SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
+	RETURN v_balance;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION getValueBalance( integer)  RETURNS real AS
 $$
 DECLARE
 	v_org_id 			integer;
