@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -21,6 +23,8 @@
 (CASE WHEN vw_ledger.chat_type_id = 4 THEN vw_ledger.acc_credit - vw_ledger.acc_debit ELSE vw_ledger.acc_debit - vw_ledger.acc_credit END) as ie_value
 FROM vw_ledger
 WHERE (vw_ledger.chat_type_id > 3) AND (vw_ledger.period_id = '$P!{filterid}')
+$P!{organd}
+
 ORDER BY vw_ledger.account_id;]]>
 	</queryString>
 	<field name="period_year" class="java.lang.String"/>

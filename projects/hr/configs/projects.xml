@@ -147,7 +147,7 @@
 			</GRID>
 			<FORM name="Projects" keyfield="project_id" table="projects">
 				<COMBOBOX w="430" title="Project Type" lptable="project_types" y="10" h="20" x="10" lpfield="project_type_name">project_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_function = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_key_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Project Name" y="50" h="20" x="10">project_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Contract Ref" y="70" h="20" x="10">contract_ref</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Monthly Amount" y="90" h="20" x="10">monthly_amount</TEXTDECIMAL>
@@ -236,7 +236,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Client" key="10" h="500">
-		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(use_function = 2)">
+		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(use_key_id = 2)">
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -275,17 +275,10 @@
 				</FORM>
 			</GRID>
 			<FORM name="Clients" keyfield="entity_id" table="entitys">
-				<DEFAULT default="client">Function_Role</DEFAULT>
-				<DEFAULT default="2">use_function</DEFAULT>
-				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
-				<GRIDBOX w="430" title="Account" default="30000" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
-					<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
-						<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-						<TEXTFIELD w="150" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-						<TEXTFIELD w="150" title="Account Type Name">account_type_name</TEXTFIELD>
-						<TEXTFIELD w="250" title="Account Name">account_name</TEXTFIELD>
-					</GRID>
-				</GRIDBOX>
+				<DEFAULT default="client">function_role</DEFAULT>
+				<DEFAULT default="2">use_key_id</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
 				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>

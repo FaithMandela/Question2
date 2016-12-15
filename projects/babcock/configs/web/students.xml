@@ -646,6 +646,7 @@
 				<TEXTFIELD w="120" title="Visa Payment">visapayment</TEXTFIELD>
 				<TEXTFIELD w="120" title="Query Transaction">querypayment</TEXTFIELD>
 				<TEXTFIELD w="120" title="Transaction Status">PHistoryName</TEXTFIELD>
+				<TEXTFIELD w="120" fnct="'If you make a sucesful payment and it does not reflect on portal click on the query link'::text" title="Note">payment_followup</TEXTFIELD>
 				<FORM name="Additional Payments" keyfield="studentpaymentid" delete="false" linkfield="qstudentid" table="studentpayments">
 					<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Purpose" y="30" h="20" x="10">purpose</TEXTFIELD>

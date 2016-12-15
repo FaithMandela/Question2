@@ -304,6 +304,7 @@ Where entity_id = '$P!{entityid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="94" y="1" width="61" height="15" forecolor="#000000" uuid="f892c9f9-f3c1-4a66-8898-0dc22632ed07"/>
+				<box leftPadding="3"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -311,27 +312,31 @@ Where entity_id = '$P!{entityid}']]>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="204" y="1" width="45" height="15" forecolor="#000000" uuid="e2d07b52-d163-41ce-bac1-b06799b232f0"/>
+				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Drawings]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="249" y="1" width="26" height="15" forecolor="#000000" uuid="73cad708-d98f-4c72-a0bd-c3e78990cc39"/>
+				<reportElement style="Column header" x="249" y="1" width="39" height="15" forecolor="#000000" uuid="73cad708-d98f-4c72-a0bd-c3e78990cc39"/>
+				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Loan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="275" y="1" width="56" height="15" forecolor="#000000" uuid="d2c81dd1-156b-419c-81b4-89c2c7c091d1"/>
+				<reportElement style="Column header" x="288" y="1" width="56" height="15" forecolor="#000000" uuid="d2c81dd1-156b-419c-81b4-89c2c7c091d1"/>
+				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Repayments]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="331" y="1" width="42" height="15" forecolor="#000000" uuid="9697ba38-2073-4a16-965b-44affb1372e9"/>
+				<reportElement style="Column header" x="344" y="1" width="42" height="15" forecolor="#000000" uuid="9697ba38-2073-4a16-965b-44affb1372e9"/>
+				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -339,6 +344,7 @@ Where entity_id = '$P!{entityid}']]>
 			</staticText>
 			<staticText>
 				<reportElement x="155" y="1" width="49" height="15" uuid="5811d19a-3f93-4b23-91e7-e6ee143cffba"/>
+				<box leftPadding="5"/>
 				<textElement>
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
@@ -372,21 +378,21 @@ Where entity_id = '$P!{entityid}']]>
 					<textFieldExpression><![CDATA[$F{drawings}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="273" y="0" width="56" height="15" uuid="12728cd3-a156-493d-8bd5-7d077a5a2b11"/>
+					<reportElement style="Detail" x="286" y="0" width="56" height="15" uuid="12728cd3-a156-493d-8bd5-7d077a5a2b11"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{repayments}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="329" y="0" width="42" height="15" uuid="cbba0b39-c452-4401-a770-d10f1ba8c11f"/>
+					<reportElement style="Detail" x="342" y="0" width="42" height="15" uuid="cbba0b39-c452-4401-a770-d10f1ba8c11f"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{penalty}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="Detail" x="247" y="0" width="26" height="15" uuid="2f462e19-22c2-4d00-a4df-6f61e46ea19b"/>
+					<reportElement style="Detail" x="247" y="0" width="39" height="15" uuid="2f462e19-22c2-4d00-a4df-6f61e46ea19b"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -443,7 +449,7 @@ Where entity_id = '$P!{entityid}']]>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="273" y="0" width="56" height="21" uuid="8f7bd4ed-80d1-48f5-bfc2-e0756c1bbd75"/>
+				<reportElement x="286" y="0" width="56" height="21" uuid="8f7bd4ed-80d1-48f5-bfc2-e0756c1bbd75"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -454,7 +460,7 @@ Where entity_id = '$P!{entityid}']]>
 				<textFieldExpression><![CDATA[$V{sumrepayments}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="247" y="0" width="26" height="21" uuid="8bf028ad-6861-4ddc-86ad-1efcd97f890c"/>
+				<reportElement x="247" y="0" width="39" height="21" uuid="8bf028ad-6861-4ddc-86ad-1efcd97f890c"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
@@ -465,7 +471,7 @@ Where entity_id = '$P!{entityid}']]>
 				<textFieldExpression><![CDATA[$V{sumloan}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="329" y="0" width="42" height="21" uuid="94d56ff5-8402-4c89-a1e7-e6e06e1dff06"/>
+				<reportElement x="342" y="0" width="42" height="21" uuid="94d56ff5-8402-4c89-a1e7-e6e06e1dff06"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>

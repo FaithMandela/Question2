@@ -1,14 +1,17 @@
 <APP name="Baraza SMS" org="org_id" dashboard="false" password="change_password">
 	<MENU name="Baraza SMS">
 		<MENU name="SMS">1</MENU>
+		<MENU name="Dashboard" role="admin">3</MENU>
 		<MENU name="Address">5</MENU>
 		<MENU name="Users" role="manager">20</MENU>
 		<MENU name="Organisation" role="admin">10</MENU>
 		<MENU name="Entities" role="admin">15</MENU>
+		<MENU name="Load Units" role="admin">25</MENU>
 		<MENU name="Reports">
 			<MENU name="SMS">105</MENU>
 			<MENU name="SMS Summary">110</MENU>
 			<MENU name="SMS Delivery">115</MENU>
+			<MENU name="Units" role="admin">120</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="SMS" key="1" h="500">
@@ -32,12 +35,7 @@
 				<TEXTFIELD w="75" title="Mobile Number">mobile</TEXTFIELD>
 				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 				<FORM name="SMS Address" keyfield="sms_address_id" linkfield="sms_id" table="sms_address">
-					<GRIDBOX w="430" title="Address" lptable="address" y="10" h="20" x="10" lpfield="address_name">address_id
-						<GRID name="Address" keyfield="address_id" table="vw_address" where="table_name = 'sms'">
-							<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
+					<COMBOBOX w="430" title="Address" lptable="address" y="10" h="20" x="10" lpfield="address_name">address_id</COMBOBOX>
 					<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
@@ -108,6 +106,22 @@
 				<TEXTAREA w="430" title="Details" y="120" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+	</DESK>
+	<DESK w="700" name="Dashboard" access="open" key="3" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Total Sent" role="admin" noorg.query="true" table="vw_load_usage" noorg="true">
+				<TEXTFIELD w="75" fnct="COALESCE(sum(sms_count), 0)" title="SMS Sent">total_sms</TEXTFIELD>
+			</TILE>
+			<TILE name="Total Balance" role="admin" noorg.query="true" table="vw_load_usage" noorg="true">
+				<TEXTFIELD w="75" fnct="COALESCE(sum(sms_units - sms_count), 0)" title="SMS Balance">bal_sms</TEXTFIELD>
+			</TILE>
+			<TILE name="SMS Sent" noorg.query="true" table="vw_load_usage">
+				<TEXTFIELD w="75" fnct="COALESCE(sum(sms_count), 0)" title="SMS Sent">total_sms</TEXTFIELD>
+			</TILE>
+			<TILE name="SMS Balance" noorg.query="true" table="vw_load_usage">
+				<TEXTFIELD w="75" fnct="COALESCE(sum(sms_sold - sms_count), 0)" title="SMS Balance">bal_sms</TEXTFIELD>
+			</TILE>
+		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Address" key="5" h="550">
 		<GRID name="Address" keyfield="address_id" table="vw_address" where="(table_name = 'sms')">
@@ -812,5 +826,41 @@
 	<DESK w="700" name="SMS Delivery" key="115" h="550">
 		<JASPER name="Sent" reportfile="sms_delivery_1.jasper"></JASPER>
 		<JASPER name="Received" reportfile="sms_delivery_count.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Load Units" key="25" h="550">
+		<GRID name="Load Units" keyfield="load_unit_id" table="load_units" where="(units > 0)">
+			<TEXTFIELD w="75" title="Load Unit ID">load_unit_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Load Date">load_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Load Amount">load_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+			<FORM name="Load Units" keyfield="load_unit_id" table="load_units">
+				<TEXTDATE w="150" title="Load Date" y="10" h="20" x="10">load_date</TEXTDATE>
+				<TEXTDATE w="150" title="Expiry Date" y="10" h="20" x="290">expiry_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Load Amount" y="30" h="20" x="10">load_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Units" y="30" h="20" x="290">units</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Sell Units" keyfield="load_unit_id" table="vw_load_units" noorg="true" where="(sold_units > 0)">
+			<TEXTFIELD w="75" title="Load Unit ID">load_unit_id</TEXTFIELD>
+			<TEXTFIELD w="175" title="Organisation">org_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Load Date">load_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Load Amount">load_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Sold Units">sold_units</TEXTFIELD>
+			<FORM name="Sell Units" keyfield="load_unit_id" table="load_units" noorg="true">
+				<COMBOBOX w="430" title="Organisation" lptable="orgs" noorg="true" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<TEXTDATE w="150" title="Sale Date" y="30" h="20" x="10">load_date</TEXTDATE>
+				<TEXTDATE w="150" title="Expiry Date" y="30" h="20" x="290">expiry_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Sale Amount" y="50" h="20" x="10">load_amount</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Sold Units" y="30" h="20" x="290">sold_units</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Units" key="120" h="550">
+		<FILTER w="700" name="Year" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="unit_year" table="vw_unit_year" noorg="true" listfield="unit_year" pos="top"></DRILLDOWN>
+			<JASPER name="Units" reportfile="vw_load_units.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

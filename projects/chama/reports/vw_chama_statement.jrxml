@@ -76,9 +76,11 @@ GROUP BY org_id]]>
 		<defaultValueExpression><![CDATA[" "]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_chama_statement.title, vw_chama_statement.date, vw_chama_statement.contribution,vw_chama_statement.receipts,  vw_chama_statement.drawings, vw_chama_statement.loans, vw_chama_statement.repayments, vw_chama_statement.investments, vw_chama_statement.borrowing, vw_chama_statement.penalty, vw_chama_statement.income, vw_chama_statement.expenditure, vw_chama_statement.org_id
+		<![CDATA[SELECT vw_chama_statement.title, vw_chama_statement.date, vw_chama_statement.contribution,vw_chama_statement.receipts,  vw_chama_statement.drawings, vw_chama_statement.loans, vw_chama_statement.repayments, vw_chama_statement.investments, vw_chama_statement.borrowing, vw_chama_statement.penalty, vw_chama_statement.income, vw_chama_statement.expenditure, vw_chama_statement.org_id, periods.period_id
 FROM vw_chama_statement
-Where vw_chama_statement.title is not null
+JOIN periods ON vw_chama_statement.date = periods.start_date
+Where vw_chama_statement.title is not null AND period_id = '$P!{filterid}'
+
 $P!{organd}
 order by title]]>
 	</queryString>
@@ -95,6 +97,7 @@ order by title]]>
 	<field name="income" class="java.lang.Float"/>
 	<field name="expenditure" class="java.lang.Float"/>
 	<field name="org_id" class="java.lang.Integer"/>
+	<field name="period_id" class="java.lang.Integer"/>
 	<variable name="sumcontribs" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{contribution}]]></variableExpression>
 	</variable>
@@ -140,7 +143,7 @@ order by title]]>
 			<componentElement>
 				<reportElement key="table" style="table" x="2" y="69" width="610" height="42" uuid="92e1e8ba-a783-48ca-9035-e018310cc0c2"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="ds1" uuid="a25b19cc-006d-4a3a-895a-c43c91752ae2">
+					<datasetRun subDataset="ds1" uuid="10c05da0-34f8-4670-ae17-417f771f8420">
 						<datasetParameter name="orgwhere">
 							<datasetParameterExpression><![CDATA[$P{orgwhere}]]></datasetParameterExpression>
 						</datasetParameter>

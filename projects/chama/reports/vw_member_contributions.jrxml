@@ -19,19 +19,19 @@
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entityid" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	<parameter name="entityid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="filterid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date, vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.extra_contrib, vw_contributions.total_contribution, vw_contributions.paid, vw_contributions.entity_id
+		<![CDATA[SELECT vw_contributions.contribution_type_name, vw_contributions.entity_id, vw_contributions.entity_name, vw_contributions.org_id, vw_contributions.period_id, vw_contributions.start_date, vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.loan_contrib, vw_contributions.extra_contrib, vw_contributions.total_contribution, vw_contributions.paid
 FROM vw_contributions
-where entity_id= '$P!{filterid}'
+where entity_id= '$P!{entityid}'
 ORDER BY vw_contributions.contribution_date DESC]]>
 	</queryString>
 	<field name="contribution_type_name" class="java.lang.String"/>
@@ -41,7 +41,7 @@ ORDER BY vw_contributions.contribution_date DESC]]>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
 	<field name="contribution_id" class="java.lang.Integer"/>
-	<field name="contribution_date" class="java.sql.Timestamp"/>
+	<field name="contribution_date" class="java.sql.Date"/>
 	<field name="investment_amount" class="java.lang.Float"/>
 	<field name="merry_go_round_amount" class="java.lang.Float"/>
 	<field name="loan_contrib" class="java.lang.Float"/>

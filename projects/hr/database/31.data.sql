@@ -21,13 +21,13 @@ INSERT INTO education_class (org_id, education_class_id, education_class_name) V
 SELECT pg_catalog.setval('education_class_education_class_id_seq', 9, true);
 
 INSERT INTO pay_scales (org_id, pay_scale_id, pay_scale_name, min_pay, max_pay) VALUES (0, 0, 'Basic', 0, 1000000);
-INSERT INTO pay_groups (org_id, pay_group_id, pay_group_name) VALUES (0, 0, 'Default');
 INSERT INTO locations (org_id, location_id, location_name) VALUES (0, 0, 'Main office');
+INSERT INTO pay_groups (org_id, pay_group_id, pay_group_name, gl_payment_account) VALUES (0, 0, 'Default', '40055');
 
-INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 1, 0, 'Human Resources and Administration');
-INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 2, 0, 'Sales and Marketing');
-INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 3, 0, 'Finance');
-INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 4, 4, 'Procurement');
+INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 1, 0, 'Human Resources and Administration');
+INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 2, 0, 'Sales and Marketing');
+INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 3, 0, 'Finance');
+INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 4, 4, 'Procurement');
 SELECT pg_catalog.setval('departments_department_id_seq', 5, true);
 
 INSERT INTO objective_types (org_id, objective_type_name) VALUES (0, 'General');
@@ -95,38 +95,38 @@ INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VA
 INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'Housing');
 INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'Insurance');
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 1, 'Sacco Allowance', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (1, 2, 'Bonus', true, true);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, in_payroll, Visible, In_Tax) VALUES (1, 3, 'Employer - Pension', false, true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 1, 'Sacco Allowance', true, true, '90005');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 2, 'Bonus', true, true, '90005');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, in_payroll, Visible, In_Tax, account_number) VALUES (1, 3, 'Employer - Pension', false, true, false, '90005');
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 11, 'SACCO', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 12, 'HELB', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 13, 'Rent Payment', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 14, 'Pension deduction', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (2, 15, 'Internal loans', true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 11, 'SACCO', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 12, 'HELB', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 13, 'Rent Payment', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 14, 'Pension deduction', true, false, '40055');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (2, 15, 'Internal loans', true, false, '40055');
 
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 21, 'Travel', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 22, 'Communcation', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 23, 'Tools', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 24, 'Payroll Cost', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 25, 'Health Insurance', false, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 26, 'GPA Insurance', false, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 27, 'Accomodation', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 28, 'Avenue Health Care', false, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 29, 'Maternety Cost', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 30, 'Health care claims', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 31, 'Trainining', true, false);
-INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax) VALUES (3, 32, 'per diem', true, false);
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 21, 'Travel', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 22, 'Communcation', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 23, 'Tools', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 24, 'Payroll Cost', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 25, 'Health Insurance', false, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 26, 'GPA Insurance', false, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 27, 'Accomodation', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 28, 'Avenue Health Care', false, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 29, 'Maternety Cost', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 30, 'Health care claims', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 31, 'Trainining', true, false, '90070');
+INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 32, 'per diem', true, false, '90070');
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 32, true);
 UPDATE adjustments SET org_id = 0, currency_id = 1;
 
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (11, 'Payroll Tax', 1);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (12, 'Payroll Contributions', 1);
 
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (1, 11, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true);
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (2, 12, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true);
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (3, 12, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true);
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active) VALUES (4, 11, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false);
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (1, 11, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, '40045', '40045');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (2, 12, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, '40030', '40030');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (3, 12, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true, '40035', '40035');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (4, 11, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, '40045', '40045');
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 4, true);
 UPDATE tax_types SET org_id = 0;
 
