@@ -43,7 +43,8 @@ CREATE TABLE default_accounts (
 	account_id				integer references accounts,
 	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
-	narrative				varchar(240)
+	narrative				varchar(240),
+	UNIQUE(account_id, use_key_id, org_id)
 );
 CREATE INDEX default_accounts_account_id ON default_accounts (account_id);
 CREATE INDEX default_accounts_use_key_id ON default_accounts (use_key_id);
@@ -197,11 +198,13 @@ CREATE VIEW vw_accounts AS
 	FROM accounts INNER JOIN vw_account_types ON accounts.account_type_id = vw_account_types.account_type_id;
 
 CREATE VIEW vw_default_accounts AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
+	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name,
 		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
 		default_accounts.default_account_id, default_accounts.org_id, default_accounts.narrative
-	FROM vw_accounts INNER JOIN default_accounts ON vw_accounts.account_id = default_accounts.account_id;
+	FROM vw_accounts INNER JOIN default_accounts ON vw_accounts.account_id = default_accounts.account_id
+		INNER JOIN use_keys ON default_accounts.use_key_id = use_keys.use_key_id;
 	
 CREATE VIEW vw_journals AS
 	SELECT vw_periods.fiscal_year_id, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end,
@@ -214,7 +217,7 @@ CREATE VIEW vw_journals AS
 		journals.exchange_rate, journals.details
 	FROM journals INNER JOIN vw_periods ON journals.period_id = vw_periods.period_id
 		INNER JOIN currency ON journals.currency_id = currency.currency_id
-		INNER JOIN departments ON journals.department_id = departments.department_id;
+		LEFT JOIN departments ON journals.department_id = departments.department_id;
 
 CREATE VIEW vw_gls AS
 	SELECT vw_accounts.accounts_class_id, vw_accounts.accounts_class_no, vw_accounts.accounts_class_name,
@@ -307,11 +310,13 @@ CREATE VIEW vw_period_tax_types AS
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister,
 		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, tax_types.tax_type_number,
-		period_tax_types.period_tax_type_name, tax_types.use_key_id,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
+		period_tax_types.period_tax_type_name, 
 		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, period_tax_types.percentage, 
 		period_tax_types.formural, period_tax_types.details
 	FROM period_tax_types INNER JOIN vw_periods ON period_tax_types.period_id = vw_periods.period_id
-		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id;
+		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id
+		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id;
 
 CREATE OR REPLACE FUNCTION getTaxMin(float, int) RETURNS float AS $$
 	SELECT CASE WHEN max(tax_range) is null THEN 0 ELSE max(tax_range) END 
@@ -390,6 +395,12 @@ $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_default_account(integer, integer) RETURNS integer AS $$
     SELECT accounts.account_no
+	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
+	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_account_id(integer, integer) RETURNS integer AS $$
+    SELECT accounts.account_id
 	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
 	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
 $$ LANGUAGE SQL;

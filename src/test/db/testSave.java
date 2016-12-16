@@ -3,6 +3,27 @@ import java.sql.*;
 public class testSave {
 
 	public static void main(String args[]) {
+		try {
+			Connection db = DriverManager.getConnection("jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_BTS;selectMethod=cursor", "sa", "galileo");
+			String update = "UPDATE sms SET is_sent = '1' WHERE (is_sent = '0')";
+			Statement stUpd = db.createStatement();
+			stUpd.execute(update);
+			stUpd.close();
+			db.close();
+						
+			db = DriverManager.getConnection("jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_FCM;selectMethod=cursor", "sa", "galileo");
+			stUpd = db.createStatement();
+			stUpd.execute(update);
+			stUpd.close();
+			db.close();
+			
+		} catch (SQLException ex) {
+			System.out.println("Database connection error : " + ex);
+		}
+	}
+	
+	
+	public void hrUpdate() {
 
 		try {
 			Connection db = DriverManager.getConnection("jdbc:postgresql://localhost/hr", "root", "invent2k");

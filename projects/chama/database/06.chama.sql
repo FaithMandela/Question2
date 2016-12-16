@@ -72,7 +72,7 @@ CREATE TABLE contribution_defaults (
 
 	investment_amount			real default 0 not null,
 	merry_go_round_amount		real default 0 not null,
-	details		text
+	details						text
 );
 
 CREATE INDEX contribution_defaults_contributions_type_id ON contribution_defaults (contribution_type_id);
@@ -103,18 +103,18 @@ CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_org_id ON contributions (org_id);
 
 CREATE TABLE drawings (
-	drawing_id				serial primary key,
-	org_id					integer references orgs,
-	period_id				integer references periods,
-	entity_id				integer references entitys,
-	bank_account_id 		integer references bank_accounts,
+	drawing_id					serial primary key,
+	org_id						integer references orgs,
+	period_id					integer references periods,
+	entity_id					integer references entitys,
+	bank_account_id 			integer references bank_accounts,
 
-	withdrawal_date			date,
-	narrative				varchar(120),
-	ref_number				varchar(24),
-	amount					real,
-	recieved				boolean DEFAULT false,
-	details					text
+	withdrawal_date				date,
+	narrative					varchar(120),
+	ref_number					varchar(24),
+	amount						real,
+	recieved					boolean DEFAULT false,
+	details						text
 );
 
 CREATE INDEX drawings_org_id ON drawings(org_id);
@@ -123,18 +123,18 @@ CREATE INDEX drawings_entity_id ON drawings(entity_id);
 CREATE INDEX drawings_bank_account_id ON drawings(bank_account_id);
 
 CREATE TABLE receipts (
-	receipts_id				serial primary key,
-	org_id					integer references orgs,
-	period_id				integer references periods,
-	entity_id				integer references entitys,
-	bank_account_id 		integer references bank_accounts,
+	receipts_id					serial primary key,
+	org_id						integer references orgs,
+	period_id					integer references periods,
+	entity_id					integer references entitys,
+	bank_account_id 			integer references bank_accounts,
 
-	receipts_date			date,
-	narrative				varchar(120),
-	ref_number				varchar(24),
-	amount					real,
-	remaining_amount		real default 0,
-	details					text
+	receipts_date				date,
+	narrative					varchar(120),
+	ref_number					varchar(24),
+	amount						real,
+	remaining_amount			real default 0,
+	details						text
 );
 
 CREATE INDEX receipts_org_id ON receipts(org_id);
@@ -175,14 +175,14 @@ CREATE INDEX penalty_org_id ON penalty (org_id);
 CREATE INDEX penalty_entity_id ON penalty (entity_id);
 
 CREATE TABLE expenses (
-	expense_id				serial primary key,
-	entity_id				integer references entitys,
-	bank_account_id			integer references bank_accounts,
-	org_id					integer references orgs,
-	currency_id				integer references currency,
-	date_accrued			date,
-	amount					real not null,
-	details					text
+	expense_id					serial primary key,
+	entity_id					integer references entitys,
+	bank_account_id				integer references bank_accounts,
+	org_id						integer references orgs,
+	currency_id					integer references currency,
+	date_accrued				date,
+	amount						real not null,
+	details						text
 );
 
 CREATE INDEX expenses_entity_id ON expenses (entity_id);
@@ -238,11 +238,11 @@ CREATE INDEX transactions_investment_id ON transactions (investment_id);
 
 
 CREATE TABLE member_meeting (
-	member_meeting_id					serial primary key,
+	member_meeting_id			serial primary key,
 	entity_id 					integer references entitys,
 	meeting_id					integer references meetings,
-	org_id                      			integer references orgs,
-	narrative						text
+	org_id                      integer references orgs,
+	narrative					text
 	);
 
 ALTER TABLE periods ADD COLUMN mgr_number integer;

@@ -166,7 +166,11 @@ CREATE TABLE passengers(
 	physical_address 		text,
 	exchange_rate			real ,
 	kesamount				real,
-	pnrno					character varying(50)
+	pnrno					character varying(50),
+	policy_holder_fund		real,
+	stamp_duty				real,
+	training_levy			real
+
 );
 CREATE INDEX passengers_rate_id ON passengers(rate_id);
 CREATE INDEX passengers_corporate_rate_id ON passengers(corporate_rate_id);

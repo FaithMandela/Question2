@@ -2,9 +2,11 @@
 
 ALTER TABLE entitys ADD	attention		varchar(50);
 
+ALTER TABLE orgs ADD 	org_client_id			integer references entitys;
+ALTER TABLE orgs ADD 	payroll_payable			boolean default true not null;
 ALTER TABLE orgs ADD 	cert_number				varchar(50);
 ALTER TABLE orgs ADD	vat_number				varchar(50);
-ALTER TABLE orgs ADD	fixed_budget			boolean default true;
+ALTER TABLE orgs ADD	enforce_budget			boolean default true not null;
 ALTER TABLE orgs ADD	invoice_footer			text;
 
 CREATE TABLE holidays (
@@ -102,8 +104,6 @@ CREATE TABLE periods (
 	gl_payroll_account		varchar(32),
 	gl_advance_account		varchar(32),
 
-	bank_header				text,
-	bank_address			text,
 
     entity_id 				integer references entitys,
 	application_date		timestamp default now(),
@@ -187,13 +187,14 @@ CREATE VIEW vw_periods AS
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
 		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
-		periods.gl_payroll_account, periods.gl_advance_account,
-		periods.bank_header, periods.bank_address, periods.details,
+		periods.gl_payroll_account, periods.gl_advance_account, periods.details,
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
-		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
+		to_char(periods.start_date, 'Month') as period_month, to_char(periods.start_date, 'YYYY, Month') as period_disp, 
+		(trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
-		to_char(periods.start_date, 'YYYYMM') as period_code
+		to_char(periods.start_date, 'YYYYMM') as period_code,
+		
 	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
 	ORDER BY periods.start_date;
 
@@ -286,6 +287,9 @@ BEGIN
 		IF (OLD.closed = true) AND (NEW.closed = false) THEN
 			NEW.approve_status := 'Draft';
 		END IF;
+	ELSE
+		IF(NEW.gl_payroll_account is null)THEN NEW.gl_payroll_account := get_default_account(27, NEW.org_id); END IF;
+		IF(NEW.gl_advance_account is null)THEN NEW.gl_advance_account := get_default_account(28, NEW.org_id); END IF;
 	END IF;
 
 	IF (NEW.approve_status = 'Approved') THEN

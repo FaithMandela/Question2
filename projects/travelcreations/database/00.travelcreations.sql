@@ -46,6 +46,13 @@ CREATE TABLE sys_countrys (
 );
 CREATE INDEX sys_countrys_sys_continent_id ON sys_countrys (sys_continent_id);
 
+CREATE TABLE city_codes (
+	city_code				char(3) primary key,
+	city_name				varchar(100),
+	country					varchar(100),
+	sys_country_id			char(2) references sys_countrys
+);
+
 CREATE TABLE currency (
 	currency_id				serial primary key,
 	currency_name			varchar(50),
@@ -1150,6 +1157,7 @@ INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role)
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 1, 'Staff', 'staff');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 3, 'Supplier', 'supplier');
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 4, 'Administrator', 'admin');
 SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
 
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');

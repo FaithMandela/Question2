@@ -37,7 +37,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
     entitys.entity_id,
     entitys.entity_name,
     periods.start_date,
-   contributions.org_id,
+    contributions.org_id,
     contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
@@ -59,7 +59,7 @@ CREATE OR REPLACE VIEW vw_all_contributions AS
     entitys.entity_id,
     entitys.entity_name,
     periods.start_date,
-   contributions.org_id,
+	contributions.org_id,
     contributions.contribution_id,
     contributions.contribution_date,
     contributions.investment_amount,
@@ -75,7 +75,7 @@ CREATE OR REPLACE VIEW vw_all_contributions AS
      JOIN periods ON contributions.period_id= periods.period_id;
 
 CREATE OR REPLACE VIEW vw_contributions_unpaid AS 
- SELECT contribution_types.contribution_type_id,
+SELECT contribution_types.contribution_type_id,
     contribution_types.contribution_type_name,
     periods.period_id,
     entitys.entity_id,
@@ -99,7 +99,7 @@ CREATE OR REPLACE VIEW vw_contributions_unpaid AS
 
 
 CREATE OR REPLACE VIEW vw_member_contrib AS
-SELECT 	vw_contributions.contribution_type_id, vw_contributions.contribution_type_name,
+	SELECT 	vw_contributions.contribution_type_id, vw_contributions.contribution_type_name,
 		vw_members.entity_id, vw_members.full_name, vw_members.merry_go_round_number,
 		vw_contributions.org_id, vw_contributions.entity_name, vw_contributions.period_id, vw_contributions.start_date,
 		vw_contributions.contribution_id, vw_contributions.contribution_date, vw_contributions.investment_amount, vw_contributions.merry_go_round_amount, vw_contributions.paid, vw_contributions.loan_contrib
@@ -107,8 +107,8 @@ SELECT 	vw_contributions.contribution_type_id, vw_contributions.contribution_typ
 		 JOIN vw_members  ON  vw_contributions.entity_id = vw_members.entity_id;
 		
 CREATE OR REPLACE VIEW vw_member_contributions AS 
-SELECT entity_id, entity_name, org_id, SUM(investment_amount) AS inv, SUM(merry_go_round_amount) as mgr, SUM(loan_contrib) as loan, SUM(total_contribution) as total 
-         FROM vw_contributions
+	SELECT entity_id, entity_name, org_id, SUM(investment_amount) AS inv, SUM(merry_go_round_amount) as mgr, SUM(loan_contrib) as loan, SUM(total_contribution) as total 
+	FROM vw_contributions
 	GROUP BY entity_id, entity_name, org_id;
 
 CREATE OR REPLACE VIEW vw_drawings AS 
@@ -157,16 +157,16 @@ CREATE VIEW vw_investment_types AS
 	INNER JOIN orgs ON investment_types.org_id = orgs.org_id;
 
 CREATE OR REPLACE VIEW vw_investments AS 
- SELECT currency.currency_id, currency.currency_name,
-    investment_types.investment_type_id, investment_types.investment_type_name,
-    bank_accounts.bank_account_id, bank_accounts.bank_account_name,
-    investments.org_id, investments.investment_id, investments.investment_name, investments.date_of_accrual,
-    investments.principal, investments.interest, investments.repayment_period, investments.initial_payment, investments.monthly_payments, investments.investment_status, investments.approve_status, investments.workflow_table_id, investments.action_date, investments.is_active, investments.details,
-	get_total_repayment(investments.principal, investments.interest, investments.repayment_period) as total_repayment,
-	get_interest_amount(investments.principal, investments.interest, investments.repayment_period) as interest_amount,
-	get_total_expenditure(investment_id) as expenditure,
-	get_total_income(investment_id) as income
-FROM investments
+	SELECT currency.currency_id, currency.currency_name,
+		investment_types.investment_type_id, investment_types.investment_type_name,
+		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
+		investments.org_id, investments.investment_id, investments.investment_name, investments.date_of_accrual,
+		investments.principal, investments.interest, investments.repayment_period, investments.initial_payment, investments.monthly_payments, investments.investment_status, investments.approve_status, investments.workflow_table_id, investments.action_date, investments.is_active, investments.details,
+		get_total_repayment(investments.principal, investments.interest, investments.repayment_period) as total_repayment,
+		get_interest_amount(investments.principal, investments.interest, investments.repayment_period) as interest_amount,
+		get_total_expenditure(investment_id) as expenditure,
+		get_total_income(investment_id) as income
+	FROM investments
 	JOIN currency ON investments.currency_id = currency.currency_id
     JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id
     LEFT JOIN bank_accounts ON investments.bank_account_id = bank_accounts.bank_account_id;
@@ -176,7 +176,6 @@ CREATE OR REPLACE VIEW vw_meetings AS
 	SELECT meetings.org_id, meetings.meeting_id, meetings.meeting_date, 
 	meetings.meeting_place, meetings.status, meetings.details
 	FROM meetings;
-
 
 CREATE OR REPLACE VIEW vw_penalty AS
 	SELECT  entitys.entity_id, 
@@ -194,47 +193,46 @@ CREATE VIEW vw_penalty_type AS
 	JOIN orgs ON penalty_type.org_id = orgs.org_id;
 	
 CREATE OR REPLACE VIEW vw_member_statement AS
-SELECT org_id, entity_id, entity_name, start_date, contribution, drawings, receipts, loan, repayments, penalty FROM 
-((SELECT  org_id, entity_id, entity_name, start_date, vw_contributions.investment_amount + vw_contributions.merry_go_round_amount  AS contribution,  0::real AS drawings, 
-0::real AS receipts, 0::real AS loan, 0::real AS repayments, 0::real AS penalty FROM vw_contributions WHERE vw_contributions.paid = true)
-UNION ALL
-(SELECT  org_id, entity_id, entity_name, start_date, 0::real, amount, 0::real,0::real, 0::real, 0::real FROM vw_drawings)
-UNION ALL
-(SELECT  org_id, entity_id, entity_name, start_date, 0::real, 0::real, amount, 0::real,  0::real, 0::real FROM vw_receipts)
-UNION ALL
-(SELECT org_id, entity_id, entity_name, application_date, 0::real,0::real, 0::real, principle, 0::real, 0::real FROM vw_loans)
-UNION ALL
-(SELECT  org_id, entity_id, entity_name, start_date, 0::real, 0::real, 0::real,  0::real, total_repayment, 0::real FROM vw_loan_monthly)
-UNION ALL
-(SELECT org_id, entity_id, entity_name, date_of_accrual, 0::real, 0::real, 0::real, 0::real, 0::real, amount FROM vw_penalty where paid = false
-)) AS a ORDER BY start_date DESC;
+	SELECT org_id, entity_id, entity_name, start_date, contribution, drawings, receipts, loan, repayments, penalty FROM 
+		((SELECT  org_id, entity_id, entity_name, start_date, vw_contributions.investment_amount + vw_contributions.merry_go_round_amount  AS contribution,  0::real AS drawings, 
+		0::real AS receipts, 0::real AS loan, 0::real AS repayments, 0::real AS penalty FROM vw_contributions WHERE vw_contributions.paid = true)
+		UNION ALL
+		(SELECT  org_id, entity_id, entity_name, start_date, 0::real, amount, 0::real,0::real, 0::real, 0::real FROM vw_drawings)
+		UNION ALL
+		(SELECT  org_id, entity_id, entity_name, start_date, 0::real, 0::real, amount, 0::real,  0::real, 0::real FROM vw_receipts)
+		UNION ALL
+		(SELECT org_id, entity_id, entity_name, application_date, 0::real,0::real, 0::real, principle, 0::real, 0::real FROM vw_loans)
+		UNION ALL
+		(SELECT  org_id, entity_id, entity_name, start_date, 0::real, 0::real, 0::real,  0::real, total_repayment, 0::real FROM vw_loan_monthly)
+		UNION ALL
+		(SELECT org_id, entity_id, entity_name, date_of_accrual, 0::real, 0::real, 0::real, 0::real, 0::real, amount FROM vw_penalty where paid = false
+		)) AS a 
+	ORDER BY start_date DESC;
 
 CREATE OR REPLACE VIEW vw_total_statements AS 
- SELECT vw_members.entity_id,
-    vw_members.full_name,
-    vw_members.org_id,
-    get_total_contribs(vw_members.entity_id, vw_members.org_id) AS contributions,
-    get_total_drawings(vw_members.entity_id, vw_members.org_id) AS drawings,
-    get_total_receipts(vw_members.entity_id, vw_members.org_id) AS receipts,
-    get_total_loans(vw_members.entity_id, vw_members.org_id) AS loans,
-    get_total_loan_monthly(vw_members.entity_id, vw_members.org_id) AS repayment,
-    get_total_penalty(vw_members.entity_id, vw_members.org_id) AS penalty
-   FROM vw_members;
-
+	SELECT vw_members.entity_id,
+		vw_members.full_name,
+		vw_members.org_id,
+		get_total_contribs(vw_members.entity_id, vw_members.org_id) AS contributions,
+		get_total_drawings(vw_members.entity_id, vw_members.org_id) AS drawings,
+		get_total_receipts(vw_members.entity_id, vw_members.org_id) AS receipts,
+		get_total_loans(vw_members.entity_id, vw_members.org_id) AS loans,
+		get_total_loan_monthly(vw_members.entity_id, vw_members.org_id) AS repayment,
+		get_total_penalty(vw_members.entity_id, vw_members.org_id) AS penalty
+	FROM vw_members;
 
 CREATE OR REPLACE VIEW vw_member_meeting AS 
- SELECT members.entity_id,
-    members.surname,
-    members.first_name,
-    meetings.meeting_id,
-    meetings.meeting_date,
-    member_meeting.org_id,
-    member_meeting.member_meeting_id,
-    member_meeting.narrative, meetings.meeting_place
-   FROM member_meeting
+	SELECT members.entity_id,
+		members.surname,
+		members.first_name,
+		meetings.meeting_id,
+		meetings.meeting_date,
+		member_meeting.org_id,
+		member_meeting.member_meeting_id,
+		member_meeting.narrative, meetings.meeting_place
+	FROM member_meeting
      JOIN members ON member_meeting.entity_id = members.entity_id
      JOIN meetings ON member_meeting.meeting_id = meetings.meeting_id;
-
 
 DROP VIEW vws_tx_ledger;
 DROP VIEW vw_tx_ledger;
@@ -298,36 +296,31 @@ CREATE VIEW vws_tx_ledger AS
 	GROUP BY org_id, ledger_period, ledger_year, ledger_month;
 	
 CREATE OR REPLACE VIEW vw_chama_statement AS
-SELECT title, date, contribution, drawings, receipts, loans, repayments, investments, borrowing, penalty,income, expenditure, org_id FROM 
-((SELECT 'contributions'::varchar(50) as title, start_date as date, total_contribution  AS contribution, 0::real AS drawings, 0::real AS receipts, 0::real AS loans,
- 0::real AS repayments, 0::real AS investments, 0::real AS borrowing, 0::real AS penalty, 0::real AS income, 0::real AS expenditure, org_id FROM vw_contributions
-WHERE vw_contributions.paid = true)
-UNION ALL
-(SELECT  'Drawings'::varchar(50) as title ,start_date as date, 0::real, amount,  0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_drawings)
-UNION ALL
-(SELECT  'Receipt'::varchar(50) as title ,start_date as date, 0::real,  0::real, amount, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_receipts)
-UNION ALL
-(SELECT 'loans'::varchar(50) as title, loan_date as date, 0::real,  0::real,  0::real, principle, 0::real, 0::real, 0::real,0::real, 0::real, 0::real, vw_loans.org_id
-	FROM vw_loans INNER JOIN periods ON vw_loans.loan_date BETWEEN periods.start_date AND periods.end_date)
-UNION ALL
-(SELECT 'Repayment'::varchar(50) as title, start_date as date,  0::real, 0::real, 0::real,  0::real, total_repayment, 0::real,0::real, 0::real, 0::real, 0::real, org_id
-FROM vw_loan_monthly)
-UNION ALL
-(SELECT 'Investment'::varchar(50) as title, date_of_accrual as date, 0::real, 0::real, 0::real, 0::real,  0::real,  principal, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_investments)
-UNION ALL
-(SELECT 'borrowing'::varchar(50) as title, borrowing_date as date, 0::real, 0::real, 0::real,  0::real, principle, 0::real, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_borrowing)
-UNION ALL
-(SELECT 'Penalty'::varchar(50) as title, date_of_accrual as date , 0::real, 0::real, 0::real, 0::real, 0::real, 0::real,  0::real, amount, 0::real, 0::real, org_id
-FROM vw_penalty
-)
-UNION ALL
-(SELECT 'Income'::varchar(50) as title, transaction_date as date,  0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real,  0::real, dr_amount, 0::real, org_id
-FROM vw_tx_ledger
-WHERE vw_tx_ledger.tx_type = 1)
-UNION ALL
-(SELECT 'Expenditure'::varchar(50) as title, transaction_date as date,  0::real,  0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real,  0::real, cr_amount, org_id
-FROM vw_tx_ledger
-WHERE vw_tx_ledger.tx_type = -1)) AS a
-order by date;
-
-
+	SELECT title, date, contribution, drawings, receipts, loans, repayments, investments, borrowing, penalty,income, expenditure, org_id FROM 
+		((SELECT 'contributions'::varchar(50) as title, start_date as date, total_contribution  AS contribution, 0::real AS drawings, 0::real AS receipts, 0::real AS loans,
+		0::real AS repayments, 0::real AS investments, 0::real AS borrowing, 0::real AS penalty, 0::real AS income, 0::real AS expenditure, org_id FROM vw_contributions
+		WHERE vw_contributions.paid = true)
+		UNION ALL
+		(SELECT  'Drawings'::varchar(50) as title ,start_date as date, 0::real, amount,  0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_drawings)
+		UNION ALL
+		(SELECT  'Receipt'::varchar(50) as title ,start_date as date, 0::real,  0::real, amount, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_receipts)
+		UNION ALL
+		(SELECT 'loans'::varchar(50) as title, loan_date as date, 0::real,  0::real,  0::real, principle, 0::real, 0::real, 0::real,0::real, 0::real, 0::real, vw_loans.org_id
+			FROM vw_loans INNER JOIN periods ON vw_loans.loan_date BETWEEN periods.start_date AND periods.end_date)
+		UNION ALL
+		(SELECT 'Repayment'::varchar(50) as title, start_date as date,  0::real, 0::real, 0::real,  0::real, total_repayment, 0::real,0::real, 0::real, 0::real, 0::real, org_id
+		FROM vw_loan_monthly)
+		UNION ALL
+		(SELECT 'Investment'::varchar(50) as title, date_of_accrual as date, 0::real, 0::real, 0::real, 0::real,  0::real,  principal, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_investments)
+		UNION ALL
+		(SELECT 'borrowing'::varchar(50) as title, borrowing_date as date, 0::real, 0::real, 0::real,  0::real, principle, 0::real, 0::real, 0::real, 0::real, 0::real, org_id FROM vw_borrowing)
+		UNION ALL
+		(SELECT 'Penalty'::varchar(50) as title, date_of_accrual as date , 0::real, 0::real, 0::real, 0::real, 0::real, 0::real,  0::real, amount, 0::real, 0::real, org_id
+		FROM vw_penalty)
+		UNION ALL
+		(SELECT 'Income'::varchar(50) as title, transaction_date as date,  0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real,  0::real, dr_amount, 0::real, org_id
+		FROM vw_tx_ledger WHERE vw_tx_ledger.tx_type = 1)
+		UNION ALL
+		(SELECT 'Expenditure'::varchar(50) as title, transaction_date as date,  0::real,  0::real, 0::real, 0::real, 0::real, 0::real, 0::real, 0::real,  0::real, cr_amount, org_id
+		FROM vw_tx_ledger WHERE vw_tx_ledger.tx_type = -1)) AS a
+	order by date;

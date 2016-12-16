@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="invoice" language="groovy" pageWidth="595" pageHeight="842" columnWidth="523" leftMargin="36" rightMargin="36" topMargin="50" bottomMargin="36" uuid="d38d45e8-3145-4bcd-856b-92309d755928">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="334"/>
+	<property name="ireport.y" value="110"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -12,7 +12,8 @@
 	<queryString>
 		<![CDATA[SELECT vw_corporate_passengers.org_name, vw_corporate_passengers.corporate_rate_category_name, vw_corporate_passengers.rate_plan_name, vw_corporate_passengers.days_from, vw_corporate_passengers.days_to, vw_corporate_passengers.passenger_name, vw_corporate_passengers.passenger_mobile, vw_corporate_passengers.passenger_email, vw_corporate_passengers.passenger_id_no, vw_corporate_passengers.totalamount_covered, vw_corporate_passengers.entity_name, vw_corporate_passengers.sys_country_name,
 vw_corporate_passengers.policy_number,vw_corporate_passengers.countries,vw_corporate_passengers.destown,
-vw_corporate_passengers.pnrno,vw_corporate_passengers.cover_amount,vw_corporate_passengers.approved_date
+vw_corporate_passengers.pnrno,vw_corporate_passengers.cover_amount,
+vw_corporate_passengers.approved_date,policy_holder_fund, stamp_duty, training_levy
 FROM vw_corporate_passengers
 WHERE passenger_id = '$P!{passenger_id}']]>
 	</queryString>
@@ -34,15 +35,19 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 	<field name="pnrno" class="java.lang.String"/>
 	<field name="cover_amount" class="java.lang.Float"/>
 	<field name="approved_date" class="java.sql.Timestamp"/>
-	<variable name="policyholders" class="java.lang.Integer">
-		<initialValueExpression><![CDATA[0.06]]></initialValueExpression>
+	<field name="policy_holder_fund" class="java.lang.Float"/>
+	<field name="stamp_duty" class="java.lang.Float"/>
+	<field name="training_levy" class="java.lang.Float"/>
+	<variable name="policyholders" class="java.lang.Float">
+		<variableExpression><![CDATA[( ($F{approved_date}) < (new SimpleDateFormat("yyyy-mm-dd")).parse("2016-11-01")  ? (0.25/100)*$F{cover_amount} : 0.0 )]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
 	</variable>
 	<variable name="stamp_duty" class="java.lang.Float">
-		<variableExpression><![CDATA[0.5]]></variableExpression>
-		<initialValueExpression><![CDATA[0.5]]></initialValueExpression>
+		<variableExpression><![CDATA[( ($F{approved_date}) > (new SimpleDateFormat("yy-mm-dd")).parse("2016-11-01")  ? 0.5 : 0.39 )]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
 	</variable>
 	<variable name="levy" class="java.lang.Float">
-		<variableExpression><![CDATA[($F{cover_amount}+0.45)/100]]></variableExpression>
+		<variableExpression><![CDATA[( ($F{approved_date}) < (new SimpleDateFormat("yy-mm-dd")).parse("2016-11-01")  ? (0.2/100*$F{cover_amount}) : ((($F{cover_amount}+0.45)/100)+0.5) )]]></variableExpression>
 		<initialValueExpression><![CDATA[]]></initialValueExpression>
 	</variable>
 	<background>
@@ -95,11 +100,11 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 		<band height="10" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="367" splitType="Stretch">
+		<band height="389" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="156" height="20" uuid="7a737dc8-cf76-4f5d-b6df-f273741e533c"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PREMIUM NOTE:]]></text>
 			</staticText>
@@ -120,14 +125,14 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 			<staticText>
 				<reportElement x="309" y="0" width="34" height="20" uuid="59fd89e0-dd7e-4e14-b307-6c70da8f42b7"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Date:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="52" width="40" height="20" uuid="deaa84fd-36d2-4093-853a-57cd45048a34"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Insured:]]></text>
 			</staticText>
@@ -148,35 +153,35 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 			<staticText>
 				<reportElement x="0" y="72" width="58" height="20" uuid="ed497b32-c823-4a11-8f69-21082848e2fb"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tel. Number:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="128" width="200" height="20" uuid="dc0d93fa-3179-4ba7-9764-4e4da24e5e9a"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[YOUR REF : GALILEO]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="148" width="100" height="20" uuid="e4186a27-7f9c-45a7-b8a7-72f045da9cf3"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[POLICY NUMBER]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="278" y="129" width="65" height="20" uuid="5cddb12e-76a3-453b-beae-7304153730a2"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cover From :]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="278" y="149" width="65" height="20" uuid="ab7f7452-9dc6-4313-bdcd-da4d0b8d2547"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cover To:]]></text>
 			</staticText>
@@ -195,16 +200,16 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 				<textFieldExpression><![CDATA[$F{days_to}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="198" width="80" height="30" uuid="82135423-7c87-47ec-8fb5-c80b4f7f0fcc"/>
+				<reportElement x="0" y="198" width="100" height="30" uuid="82135423-7c87-47ec-8fb5-c80b4f7f0fcc"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Country of Travel:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="228" width="245" height="20" uuid="25feaff5-d31e-43e7-bdbe-accb9313bfe1"/>
 				<textElement>
-					<font fontName="Times New Roman"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CLASS OF INSURANCE : TRAVEL INSURANCE]]></text>
 			</staticText>
@@ -223,80 +228,94 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 				<text><![CDATA[Currency :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="287" y="259" width="100" height="20" uuid="b13e442e-1ca1-4218-84b9-0e0db0f01c04"/>
+				<reportElement x="422" y="239" width="100" height="20" uuid="2cfcbcdd-deaf-46d4-aa14-6bb8b27cb390"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[USD]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="100" y="198" width="322" height="30" uuid="5ec0f01b-49ad-488b-b91e-5c4e3a9b86f6"/>
+				<textFieldExpression><![CDATA[$F{countries}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="401" y="341" width="121" height="1" uuid="9b9602c9-539c-4093-8d4e-c4af3f99c295"/>
+			</line>
+			<staticText>
+				<reportElement x="287" y="343" width="100" height="20" uuid="e292b9dd-0f46-4cd2-8a02-a752f13221fd"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Gross Premium:]]></text>
+				<text><![CDATA[Net Premium:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="287" y="279" width="100" height="20" uuid="532b81cf-74e6-4405-9654-9bee98771012"/>
+				<reportElement x="287" y="321" width="100" height="20" uuid="14d0bee7-08f0-4232-950c-1b0ba802c93a"/>
 				<textElement textAlignment="Right">
-					<font fontName="Times New Roman" size="12" isBold="true"/>
+					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Levy:]]></text>
+				<text><![CDATA[Training Levy:]]></text>
 			</staticText>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="422" y="343" width="100" height="20" uuid="c203aabc-68a9-4c4f-a974-e7a8c3168e10"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalamount_covered}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="422" y="279" width="100" height="20" uuid="a6fc1139-4e94-4928-be2f-8f9db15a902e"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{policy_holder_fund}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="422" y="321" width="100" height="20" uuid="38359921-e530-4e69-ace3-5dc402ba6412"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{training_levy}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="287" y="301" width="100" height="20" uuid="62ba1e7a-dc67-487b-8bd5-688b48850d74"/>
+				<reportElement x="278" y="279" width="109" height="20" uuid="181a8737-6718-4984-981b-319a1c551900"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Stamp Duty]]></text>
+				<text><![CDATA[Policy Holder Fund:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="422" y="301" width="100" height="20" uuid="43ff25dd-9e2f-49dd-a28e-c01fa904b98e"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stamp_duty}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="401" y="363" width="121" height="1" uuid="1d1ce5a3-1272-42b4-8d91-1fdb8f836ed6"/>
+			</line>
+			<staticText>
+				<reportElement x="287" y="301" width="100" height="20" uuid="df52847f-f245-4055-bfd5-e01e3f11ba01"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Stamp Duty:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="422" y="259" width="100" height="20" uuid="d11d581b-ebd1-4b13-b676-50841eb1251f"/>
+				<reportElement x="422" y="259" width="100" height="20" uuid="f4b85dbe-34c6-4c89-b228-35fc16537bb6"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cover_amount}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="422" y="301" width="100" height="20" uuid="26e9033b-b8ad-4a47-b791-df9203766ccb"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{stamp_duty}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="422" y="343" width="100" height="20" uuid="061611ec-16ce-418f-993a-9a92501687e7"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{totalamount_covered}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="422" y="281" width="100" height="20" uuid="1e30b679-89c1-45fa-bcd1-8cca64869e94"/>
-				<textElement textAlignment="Right">
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{levy}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="287" y="343" width="100" height="20" uuid="7de9372a-6a51-468c-abfe-aa3db5a990ed"/>
+				<reportElement x="287" y="259" width="100" height="20" uuid="bd7414d2-9616-4c5c-b966-9b32f4669817"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Net Premium]]></text>
+				<text><![CDATA[Gross Premium:]]></text>
 			</staticText>
-			<line>
-				<reportElement x="362" y="341" width="160" height="1" uuid="43e3d090-8aef-4f4e-a5c2-6852413c5bfa"/>
-			</line>
-			<staticText>
-				<reportElement x="422" y="239" width="100" height="20" uuid="2cfcbcdd-deaf-46d4-aa14-6bb8b27cb390"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[USD]]></text>
-			</staticText>
-			<line>
-				<reportElement x="362" y="363" width="160" height="1" uuid="7c3dd050-5fa5-4e49-aa71-836e7a5a10ac"/>
-			</line>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="80" y="198" width="243" height="30" uuid="5ec0f01b-49ad-488b-b91e-5c4e3a9b86f6"/>
-				<textFieldExpression><![CDATA[$F{countries}]]></textFieldExpression>
-			</textField>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="26" splitType="Stretch">
+		<band height="27" splitType="Stretch">
 			<textField>
 				<reportElement x="174" y="2" width="80" height="20" uuid="1d823196-4c10-4cbd-abc9-b0f8f4a996f9"/>
 				<textElement textAlignment="Right">

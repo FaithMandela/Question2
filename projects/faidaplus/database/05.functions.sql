@@ -86,7 +86,7 @@ BEGIN
 		IF(v_points_id is null)THEN
 			SELECT points_id INTO v_points_id
 			FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
-				AND (son = rec.son);
+				AND (pcc is null) AND (son = rec.son);
 		END IF;
 
 		IF(v_points_id is null)THEN
@@ -275,7 +275,7 @@ BEGIN
 		END IF;
 		UPDATE applicants SET status = ps , org_id = rec.org_id, approve_status = ps WHERE applicant_id = $1::integer ;
 		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, son, function_role, is_active, birth_date)
-		VALUES (rec.org_id, 0, trim(upper(app.son)), trim(app.user_name), trim(lower(app.applicant_email)), app.phone_no, trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
+		VALUES (rec.org_id, 0, app.applicant_name, trim(app.user_name), trim(lower(app.applicant_email)), app.phone_no, trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
 		msg := 'Consultant account has been activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (2, myid, 'entitys', 3);
@@ -306,6 +306,7 @@ BEGIN
 	RETURN msg;
 END;
 $BODY$ LANGUAGE plpgsql;
+
 
 
 

@@ -564,12 +564,12 @@ $$ LANGUAGE plpgsql;
 CREATE VIEW vw_employee_month AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
-		vw_periods.quarter, vw_periods.semister, vw_periods.bank_header, vw_periods.bank_address,
-		vw_periods.gl_payroll_account, vw_periods.is_posted,
+		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted,
 		
 		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
 		pay_groups.pay_group_id, pay_groups.pay_group_name, pay_groups.gl_payment_account,
+		pay_groups.bank_header, pay_groups.bank_address,
 		vw_department_roles.department_id, vw_department_roles.department_name,
 		vw_department_roles.department_role_id, vw_department_roles.department_role_name, 
 		entitys.entity_id, entitys.entity_name,
@@ -639,20 +639,21 @@ CREATE VIEW vw_ems AS
 CREATE VIEW vw_employee_month_list AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
-		vw_periods.quarter, vw_periods.semister, vw_periods.bank_header, vw_periods.bank_address,
-		vw_periods.gl_payroll_account, vw_periods.is_posted, 
+		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted, 
 		entitys.entity_id, entitys.entity_name,
+		pay_groups.pay_group_id, pay_groups.pay_group_name, pay_groups.gl_payment_account,
+		pay_groups.bank_header, pay_groups.bank_address,
 		employees.employee_id, employees.surname, employees.first_name, employees.middle_name, employees.date_of_birth, 
 		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
 		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
 		departments.department_id, departments.department_name, departments.department_account, departments.function_code,
 		department_roles.department_role_id, department_roles.department_role_name,
-		employee_month.pay_group_id,
 		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay,
 		employee_month.currency_id, employee_month.exchange_rate
 		
 	FROM employee_month INNER JOIN vw_periods ON employee_month.period_id = vw_periods.period_id
+		INNER JOIN pay_groups ON employee_month.pay_group_id = pay_groups.pay_group_id
 		INNER JOIN entitys ON employee_month.entity_id = entitys.entity_id
 		INNER JOIN employees ON employee_month.entity_id = employees.entity_id
 		INNER JOIN department_roles ON employee_month.department_role_id = department_roles.department_role_id
@@ -1069,24 +1070,6 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_taxes AFTER INSERT ON employees
     FOR EACH ROW EXECUTE PROCEDURE ins_taxes();
-
-CREATE OR REPLACE FUNCTION ins_bf_periods() RETURNS trigger AS $$
-DECLARE
-	rec RECORD;
-BEGIN
-	SELECT bank_header, bank_address INTO rec
-	FROM orgs
-	WHERE (org_id = NEW.org_id);
-
-	NEW.bank_header = rec.bank_header;
-	NEW.bank_address = rec.bank_address;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_bf_periods BEFORE INSERT ON periods
-    FOR EACH ROW EXECUTE PROCEDURE ins_bf_Periods();
     
 
 CREATE OR REPLACE FUNCTION get_formula_adjustment(int, int, real) RETURNS float AS $$
@@ -1552,57 +1535,60 @@ CREATE TRIGGER upd_Employee_Per_Diem BEFORE INSERT OR UPDATE ON Employee_Per_Die
 
 CREATE OR REPLACE FUNCTION process_ledger(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_journal_id			integer;
-	v_account_id			integer;
+	rec						RECORD;
 	v_period_id				integer;
-	v_is_posted				boolean;
-	v_opened				boolean;
-	v_closed				boolean;
+	v_journal_id			integer;
+	v_account_no			varchar(32);
 	ledger_diff				real;
 	msg						varchar(120);
 BEGIN
 
-	SELECT period_id, is_posted, opened, closed INTO v_period_id, v_is_posted, v_opened, v_closed
-	FROM Periods
-	WHERE (period_id = $1::int);
+	v_period_id := $1::int;
+
+	SELECT periods.period_id, periods.is_posted, periods.opened, periods.closed, periods.end_date,
+		orgs.org_id, orgs.currency_id, orgs.payroll_payable
+		INTO rec
+	FROM periods INNER JOIN orgs ON periods.org_id = orgs.org_id
+	WHERE (periods.period_id = v_period_id);
 
 	SELECT abs(sum(dr_amt) - sum(cr_amt)) INTO ledger_diff
 	FROM vw_payroll_ledger
 	WHERE (period_id = v_period_id);
 	
-	SELECT accounts.account_id INTO v_account_id
+	SELECT vw_payroll_ledger.gl_payroll_account INTO v_account_no
 	FROM vw_payroll_ledger LEFT JOIN accounts ON (vw_payroll_ledger.gl_payroll_account = accounts.account_no::text)
 		AND (vw_payroll_ledger.org_id = accounts.org_id)
-	WHERE (vw_payroll_ledger.period_id = v_period_id);
+	WHERE (vw_payroll_ledger.period_id = v_period_id) AND (accounts.account_id is null);
 	
-	IF(v_is_posted = true)THEN
+	IF(rec.is_posted = true)THEN
 		msg := 'The payroll for this period is already posted';
-	ELSIF(ledger_diff < 1) THEN
+	ELSIF(ledger_diff > 1) THEN
 		msg := 'The ledger is not balanced';
-	ELSIF((v_opened = false) OR (v_closed = true)) THEN
+	ELSIF((rec.opened = false) OR (rec.closed = true)) THEN
 		msg := 'Transaction period has to be opened and not closed.';
-	ELSIF(v_account_id is not null) THEN
+	ELSIF(v_account_no is not null) THEN
 		msg := 'Ensure the accounts match the ledger accounts';
 	ELSE
 		v_journal_id := nextval('journals_journal_id_seq');
-		INSERT INTO journals (org_id, department_id, currency_id, period_id, exchange_rate, journal_date, narrative)
-		VALUES (rec.org_id, rec.department_id, rec.currency_id, v_period_id, rec.exchange_rate, rec.transaction_date, rec.tx_name || ' - posting for ' || rec.document_number);
+		INSERT INTO journals (journal_id, org_id, currency_id, period_id, exchange_rate, journal_date, narrative)
+		VALUES (v_journal_id, rec.org_id, rec.currency_id, rec.period_id, 1, rec.end_date, 'Payroll posting for ' || to_char(rec.end_date, 'MMM YYYY'));
 
 		INSERT INTO gls (org_id, journal_id, account_id, debit, credit, gl_narrative)
-		VALUES (rec.org_id, journalid, rec.entity_account_id, rec.debit_amount, rec.credit_amount, rec.tx_name || ' - ' || rec.entity_name);
+		SELECT aa.org_id, v_journal_id, bb.account_id, aa.dr_amt, aa.cr_amt, aa.description
+		FROM vw_payroll_ledger aa LEFT JOIN accounts bb ON (aa.gl_payroll_account = bb.account_no::text) AND (aa.org_id = bb.org_id)
+		WHERE (aa.period_id = v_period_id);
+		
+		IF(rec.payroll_payable = true)THEN
+			msg := payroll_payable(v_period_id, $2::integer);
+		END IF;
 
-		INSERT INTO payroll_ledger (period_id, posting_date, description, payroll_account, dr_amt, cr_amt)
-		SELECT period_id, end_date, description, gl_payroll_account, ROUND(CAST(dr_amt as numeric), 2), ROUND(CAST(cr_amt as numeric), 2)
-		FROM vw_payroll_ledger
-		WHERE (period_id = v_period_id);
-
-		UPDATE Periods SET is_posted = true
+		UPDATE periods SET is_posted = true
 		WHERE (period_id = v_period_id);
 
 		msg := 'Payroll Ledger Processed';
 	END IF;
 
-	return msg;
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1627,7 +1613,7 @@ BEGIN
 
 	msg := 'Period Deleted';
 
-	return msg;
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -1937,7 +1923,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_employee_advances BEFORE INSERT OR UPDATE ON employee_advances
     FOR EACH ROW EXECUTE PROCEDURE ins_employee_advances();
     
-
 CREATE OR REPLACE FUNCTION claims_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_amount			real;

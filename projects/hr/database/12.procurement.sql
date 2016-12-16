@@ -146,7 +146,7 @@ CREATE VIEW vw_budget_lines AS
 		vw_budgets.budget_id, vw_budgets.budget_name, vw_budgets.budget_type, vw_budgets.approve_status, 
 
 		periods.period_id, periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
-		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, periods.bank_header, periods.bank_address, 
+		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
 		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 

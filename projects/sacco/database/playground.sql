@@ -1,22 +1,42 @@
+CREATE OR REPLACE FUNCTION get_balance_new ( entity_id integer)   RETURNS real AS
+  $$
+DECLARE
+     	
+		v_loans 			real;
+		v_contributions 	real;
+		v_receipt 			real;
+		balance 			real;
+BEGIN
+	SELECT CASE WHEN sum(loan_monthly.penalty_paid + loan_monthly.interest_paid + loan_monthly.repayment_paid) IS NULL THEN 0
+		ELSE sum(loan_monthly.penalty_paid + loan_monthly.interest_paid + loan_monthly.repayment_paid) END 
+		INTO v_loans
+		FROM loan_monthly INNER JOIN loans ON loan_monthly.loan_id = loans.loan_id
+		WHERE(loans.entity_id = $1);
+		
+	SELECT CASE WHEN  sum(contribution_paid) IS NULL THEN 0   
+	ELSE sum(contribution_paid) END 
+	 INTO v_contributions
+		FROM contributions
+		WHERE (contributions.entity_id = $1);
+		
+	SELECT CASE WHEN sum (receipt) IS NULL THEN 0
+		ELSE sum (receipt)  END
+		INTO  v_receipt
+			FROM contributions
+			WHERE (contributions.entity_id = $1);
 
-CREATE VIEW vw_loan_monthly AS
-	SELECT 	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
-		vw_loans.loan_type_id, vw_loans.loan_type_name,vw_loans.approve_status,
+	balance = v_receipt - (v_loans + v_contributions) ;
+		IF(balance is null)THEN balance = 0; END IF;
+	
+	RETURN balance;
+	END;
+$$ LANGUAGE plpgsql;
 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
-		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
-		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed, vw_periods.period_year,vw_periods.period_month,
-		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, 
-		loan_monthly.additional_payments, loan_monthly. is_paid, 
-		loan_monthly.repayment_paid, loan_monthly.interest_paid, 
-		loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
-		get_total_interest(vw_loans.loan_id, vw_periods.start_date) as total_interest,
-		get_total_repayment(vw_loans.loan_id, vw_periods.start_date) as total_repayment,
-		
-		(vw_loans.principle + get_total_interest(vw_loans.loan_id, vw_periods.start_date + 1) + get_penalty(vw_loans.loan_id, vw_periods.start_date + 1) - vw_loans.initial_payment - get_total_repayment(vw_loans.loan_id, vw_periods.start_date + 1)) as loan_balance
-	FROM loan_monthly INNER JOIN vw_loans ON loan_monthly.loan_id = vw_loans.loan_id
-		INNER JOIN vw_periods ON loan_monthly.period_id = vw_periods.period_id;
 
-		
-		
-		
+
+CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
+	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid - additional_payments) is null THEN 0 
+		ELSE sum(repayment + interest_paid + penalty_paid - additional_payments) END
+	FROM loan_monthly
+	WHERE (loan_id = $1);
+$$ LANGUAGE SQL;

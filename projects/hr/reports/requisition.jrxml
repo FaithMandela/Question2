@@ -13,6 +13,8 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -33,7 +35,9 @@ vw_trx.order_number, vw_trx.payment_terms, vw_trx.currency_symbol, vw_trx.job,
 vw_trx.details,
 vw_trx_sum.total_amount, vw_trx_sum.total_tax_amount, vw_trx_sum.total_sale_amount
 FROM vw_trx LEFT JOIN vw_trx_sum ON vw_trx.transaction_id = vw_trx_sum.transaction_id
-WHERE (vw_trx.transaction_id = '$P!{filterid}');]]>
+WHERE (vw_trx.transaction_id = '$P!{filterid}')
+$P!{organd}
+]]>
 	</queryString>
 	<field name="org_logo" class="java.lang.String"/>
 	<field name="org_name" class="java.lang.String"/>

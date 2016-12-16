@@ -1,6 +1,3 @@
-ALTER TABLE orgs
-ADD Bank_Header				text,
-ADD Bank_Address			text;
 
 ALTER TABLE address	ADD company_name	varchar(150);
 ALTER TABLE address	ADD position_held	varchar(150);
@@ -49,6 +46,8 @@ CREATE TABLE pay_groups (
 	org_id					integer references orgs,
 	pay_group_name			varchar(50),
 	gl_payment_account		varchar(16),
+	bank_header				text,
+	bank_address			text,
 	Details					text
 );
 CREATE INDEX pay_groups_org_id ON pay_groups(org_id);
