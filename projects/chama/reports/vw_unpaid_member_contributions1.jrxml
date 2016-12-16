@@ -34,7 +34,7 @@
 	<queryString>
 		<![CDATA[SELECT vw_contributions_unpaid.contribution_type_name, vw_contributions_unpaid.entity_id, vw_contributions_unpaid.entity_name, vw_contributions_unpaid.org_id, vw_contributions_unpaid.period_id, vw_contributions_unpaid.start_date,  vw_contributions_unpaid.contribution_id, vw_contributions_unpaid.contribution_date, vw_contributions_unpaid.investment_amount, vw_contributions_unpaid.merry_go_round_amount, vw_contributions_unpaid.loan_contrib, vw_contributions_unpaid.paid, vw_contributions_unpaid.total_contribution
 FROM vw_contributions_unpaid
-Where entity_id = '$P!{entityid}'
+Where entity_id = '$P!{entityid}' AND period_id = '$P!{filterid}'
 order by period_id]]>
 	</queryString>
 	<field name="contribution_type_name" class="java.lang.String"/>
@@ -44,7 +44,7 @@ order by period_id]]>
 	<field name="period_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
 	<field name="contribution_id" class="java.lang.Integer"/>
-	<field name="contribution_date" class="java.sql.Timestamp"/>
+	<field name="contribution_date" class="java.sql.Date"/>
 	<field name="investment_amount" class="java.lang.Float"/>
 	<field name="merry_go_round_amount" class="java.lang.Float"/>
 	<field name="loan_contrib" class="java.lang.Float"/>

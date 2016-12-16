@@ -766,7 +766,7 @@
 	</DESK>
 	<DESK w="700" name="My Account" user="entity_id" key="205" h="550">
 		<JASPER name="Statement" reportfile="vw_member_statement1.jasper"></JASPER>
-		<JASPER name="Summary Contribution Report" reportfile="vw_member_contributions1.jasper"></JASPER>
+		<JASPER name="Summary Contribution Report" reportfile="vw_member_contributions.jasper"></JASPER>
 		<GRID name="Contributions" keyfield="contribution_id" linkfield="entity_id" table="vw_member_contrib" user="entity_id">
 			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Start date">start_date</TEXTFIELD>
@@ -1662,12 +1662,16 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="My Contributions" key="285" h="550">
-		<JASPER name="Reports" reportfile="vw_member_contributions1.jasper"></JASPER>
-		<FILTER w="700" name="Unpaid Contributions" split="150" type="vert" h="550">
-			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
-			</FILTERFORM>
+		<FILTER w="700" location="250" name="My Paid Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Reports" reportfile="vw_member_contributions1.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" location="250" name="My Unpaid Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
 			<JASPER name="Reports" reportfile="vw_unpaid_member_contributions1.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Receipts" reportfile="vw_member_receipts1.jasper"></JASPER>
@@ -2575,7 +2579,36 @@
 		<JASPER name="Reports" reportfile="vw_member_statement1.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Statement" key="345" h="550">
-		<JASPER filtered="true" name="Reports" reportfile="vw_chama_statement.jasper"></JASPER>
+		<FILTER w="700" location="250" name="Paid Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Reports" reportfile="vw_chama_statement1.jasper"></JASPER>
+		</FILTER>
+		<GRID name="Periods" keyfield="period_id" table="vw_periods">
+			<TEXTFIELD w="75" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
+			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
+			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Opened">opened</CHECKBOX>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Per Diem Tax Limit">per_diem_tax_limit</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Posted">is_posted</CHECKBOX>
+			<TEXTFIELD w="75" title="Gl Payroll Account">gl_payroll_account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gl Bank Account">gl_bank_account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gl Advance Account">gl_advance_account</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Month ID">month_id</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Quarter">quarter</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Semister">semister</TEXTDECIMAL>
+			<JASPER name="Reports" reportfile="vw_chama_statement1.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Drawings" key="350" h="550">
 		<GRID name="Drawings" keyfield="drawing_id" linkfield="org_id" table="vw_drawings">
