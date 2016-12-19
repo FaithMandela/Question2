@@ -19,10 +19,10 @@ CREATE TABLE property (
 	plot_no					varchar(50),
 	is_active				boolean not null default true,
 	units					integer,
-	rental_value			float,
-	service_fees			float,
-	commision_value			float,
-	commision_pct			float,
+	rental_value			float default 0 not null,
+	service_fees			float default 0 not null,
+	commision_value			float default 0 not null,
+	commision_pct			float default 0 not null,
 	details					text
 );
 CREATE INDEX property_property_type_id ON property (property_type_id);
@@ -43,7 +43,6 @@ CREATE TABLE rentals (
 	service_fees			float default 0 not null,
 	commision_value			float default 0 not null,
 	commision_pct			float default 0 not null,
-	letting_fee				float,
 	deposit_fee				float,
 	deposit_fee_date		date,
 	deposit_refund			float,
@@ -61,9 +60,9 @@ CREATE TABLE period_rentals (
 	org_id					integer references orgs,
 	rental_amount			float default 0 not null,
 	service_fees			float default 0 not null,
+	repair_amount			float default 0 not null,
 	commision				float default 0 not null,
 	commision_pct			float default 0 not null,
-	repair_amount			float default 0 not null,
 	narrative				varchar(240)
 );
 CREATE INDEX period_rentals_rental_id ON period_rentals (rental_id);
@@ -108,7 +107,7 @@ CREATE VIEW vw_rentals AS
 		entitys.entity_id as tenant_id, entitys.entity_name as tenant_name,
 		rentals.org_id, rentals.rental_id, rentals.start_rent, rentals.hse_no, rentals.elec_no, 
 		rentals.water_no, rentals.is_active, rentals.rental_value, rentals.commision_value, 
-		rentals.commision_pct, rentals.letting_fee, rentals.deposit_fee, rentals.deposit_fee_date, 
+		rentals.commision_pct, rentals.service_fees, rentals.deposit_fee, rentals.deposit_fee_date, 
 		rentals.deposit_refund, rentals.deposit_refund_date, rentals.details
 	FROM vw_property INNER JOIN rentals ON vw_property.property_id = rentals.property_id
 		INNER JOIN entitys ON rentals.entity_id = entitys.entity_id;
@@ -120,7 +119,7 @@ CREATE VIEW vw_period_rentals AS
 		vw_rentals.tenant_id, vw_rentals.tenant_name, 
 		vw_rentals.rental_id, vw_rentals.start_rent, vw_rentals.hse_no, vw_rentals.elec_no, 
 		vw_rentals.water_no, vw_rentals.is_active, vw_rentals.rental_value, 
-		vw_rentals.letting_fee, vw_rentals.deposit_fee, vw_rentals.deposit_fee_date, 
+		vw_rentals.service_fees, vw_rentals.deposit_fee, vw_rentals.deposit_fee_date, 
 		vw_rentals.deposit_refund, vw_rentals.deposit_refund_date,
 
 		vw_periods.fiscal_year_id, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end,
