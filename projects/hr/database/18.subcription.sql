@@ -235,7 +235,8 @@ BEGIN
 		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, 
 			tax_type_order, in_tax, linear, percentage, employer, employer_ps, active,
 			account_number, employer_account
-			FROM tax_types WHERE org_id = 1 ORDER BY tax_type_id 
+			FROM tax_types WHERE org_id = 1 AND sys_country_id = NEW.country_id
+			ORDER BY tax_type_id 
 		LOOP
 			v_tax_type_id := nextval('tax_types_tax_type_id_seq');
 			INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, currency_id, account_number, employer_account)

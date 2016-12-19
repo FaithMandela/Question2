@@ -193,7 +193,7 @@ CREATE VIEW vw_periods AS
 		to_char(periods.start_date, 'Month') as period_month, to_char(periods.start_date, 'YYYY, Month') as period_disp, 
 		(trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
-		to_char(periods.start_date, 'YYYYMM') as period_code,
+		to_char(periods.start_date, 'YYYYMM') as period_code
 		
 	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
 	ORDER BY periods.start_date;

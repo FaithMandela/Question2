@@ -250,7 +250,10 @@ public class BSoapSMS {
 			if(retry > 1) System.out.println("MESSAGE RESENDING RETRY\n");
 			String sendResults = null;
 			
-			if((sendFon != null) && (number.startsWith("25473"))) {
+			boolean airtelNo = false;
+			if(number.startsWith("25473") || number.startsWith("25478") || number.startsWith("25479")) airtelNo = true;
+			
+			if((sendFon != null) && airtelNo) {
 				sendResults = sendOFSMS(number, message, linkId, smsID, orgID, correlator);
 			} else {
 				sendResults = sendSMS(number, message, linkId, smsID, orgID, correlator);
