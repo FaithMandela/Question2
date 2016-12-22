@@ -105,7 +105,7 @@ CREATE TABLE tax_types (
 	active					boolean default true,
 	Details					text,
 	
-	UNIQUE(tax_type_name, org_id)
+	UNIQUE(tax_type_name, org_id, sys_country_id)
 );
 CREATE INDEX tax_types_account_id ON tax_types (account_id);
 CREATE INDEX tax_types_currency_id ON tax_types (currency_id);

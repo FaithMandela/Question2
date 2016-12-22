@@ -69,6 +69,20 @@ CREATE INDEX period_rentals_rental_id ON period_rentals (rental_id);
 CREATE INDEX period_rentals_period_id ON period_rentals (period_id);
 CREATE INDEX period_rentals_org_id ON period_rentals (org_id);
 
+CREATE TABLE log_period_rentals (
+	log_period_rental_id	serial primary key,
+	period_rental_id		integer,
+	rental_id				integer,
+	period_id				integer,
+	org_id					integer,
+	rental_amount			float,
+	service_fees			float,
+	repair_amount			float,
+	commision				float,
+	commision_pct			float,
+	narrative				varchar(240)
+);
+
 CREATE TABLE payments (
 	payment_id				serial primary key,
 	entity_id				integer references entitys,
@@ -90,13 +104,29 @@ CREATE INDEX payments_journal_id ON payments (journal_id);
 CREATE INDEX payments_currency_id ON payments (currency_id);
 CREATE INDEX payments_org_id ON payments (org_id);
 
+CREATE TABLE log_payments (
+	log_payment_id			serial primary key,
+	payment_id				integer,
+	entity_id				integer,
+	bank_account_id			integer,
+	journal_id				integer,
+	currency_id				integer,
+	org_id					integer,
+	receipt_number			varchar(50),
+	pay_date				date,
+	cleared					boolean,
+	tx_type					integer,
+	amount					float,
+	exchange_rate			real,
+	details					text
+);
 
 CREATE VIEW vw_property AS
 	SELECT entitys.entity_id as client_id, entitys.entity_name as client_name, 
 		property_types.property_type_id, property_types.property_type_name,
 		property.org_id, property.property_id, property.property_name, property.estate, 
 		property.plot_no, property.is_active, property.units, property.rental_value, 
-		property.commision_value, property.commision_pct, property.details
+		property.service_fees, property.commision_value, property.commision_pct, property.details
 	FROM property INNER JOIN entitys ON property.entity_id = entitys.entity_id
 		INNER JOIN property_types ON property.property_type_id = property_types.property_type_id;
 
@@ -143,5 +173,25 @@ CREATE VIEW vw_payments AS
 		(payments.tx_type * payments.amount * payments.exchange_rate) as base_amount
 	FROM payments INNER JOIN entitys ON payments.entity_id = entitys.entity_id
 		INNER JOIN currency ON payments.currency_id = currency.currency_id
-		INNER JOIN vw_bank_accounts ON payments.bank_account_id = vw_bank_accounts.bank_account_id
+		INNER JOIN vw_bank_accounts ON payments.bank_account_id = vw_bank_accounts.bank_account_id;
 	
+	
+CREATE OR REPLACE FUNCTION generate_rentals(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id			integer;
+	v_period_id			integer;
+	msg					varchar(120);
+BEGIN
+
+	IF ($3 = '1') THEN
+		INSERT INTO period_rentals (period_id, org_id, rental_id, rental_amount, service_fees, commision, commision_pct)
+		SELECT $1::int, org_id, rental_id, rental_value, service_fees, commision_value, commision_pct
+		FROM rentals WHERE is_active = true;
+		
+		msg := 'Rentals generated';
+	END IF;
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+

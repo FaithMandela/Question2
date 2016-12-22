@@ -69,6 +69,7 @@ CREATE TABLE orgs (
 	is_default				boolean not null default true,
 	is_active				boolean not null default true,
 	logo					varchar(50),
+	org_full_name			varchar(120),
 	pin 					varchar(50),
 	pcc						varchar(12),
 
@@ -483,7 +484,7 @@ CREATE VIEW vw_org_select AS
 
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
-		orgs.pin, orgs.pcc, orgs.details,
+		orgs.org_full_name, orgs.pin, orgs.pcc, orgs.details,
 
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,

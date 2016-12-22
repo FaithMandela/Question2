@@ -192,8 +192,8 @@ BEGIN
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
-		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id, logo)
-		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id, 'logo.png');
+		INSERT INTO orgs(org_id, currency_id, org_name, org_long_name, org_sufix, default_country_id, logo)
+		VALUES(NEW.org_id, 2, NEW.business_name, NEW.business_name, NEW.org_id, NEW.country_id, 'logo.png');
 		
 		INSERT INTO address (address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
 		VALUES (NEW.business_name, NEW.country_id, 'orgs', NEW.org_id, NEW.business_address, NEW.city, NEW.telephone, NEW.website, true);
@@ -235,7 +235,7 @@ BEGIN
 		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, 
 			tax_type_order, in_tax, linear, percentage, employer, employer_ps, active,
 			account_number, employer_account
-			FROM tax_types WHERE org_id = 1 AND sys_country_id = NEW.country_id
+			FROM tax_types WHERE org_id = 1 AND ((sys_country_id is null) OR (sys_country_id = NEW.country_id))
 			ORDER BY tax_type_id 
 		LOOP
 			v_tax_type_id := nextval('tax_types_tax_type_id_seq');

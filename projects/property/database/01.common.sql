@@ -130,7 +130,7 @@ DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
-		orgs.cert_number, orgs.pin, orgs.vat_number, orgs.invoice_footer,
+		orgs.org_full_name, orgs.cert_number, orgs.pin, orgs.vat_number, orgs.invoice_footer,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.address_id, vw_address.table_name,
 		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
@@ -190,9 +190,11 @@ CREATE VIEW vw_periods AS
 		periods.gl_payroll_account, periods.gl_advance_account, periods.details,
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
-		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
+		to_char(periods.start_date, 'Month') as period_month, to_char(periods.start_date, 'YYYY, Month') as period_disp, 
+		(trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
 		to_char(periods.start_date, 'YYYYMM') as period_code
+		
 	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
 	ORDER BY periods.start_date;
 
@@ -306,6 +308,33 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
     FOR EACH ROW EXECUTE PROCEDURE ins_periods();
+    
+    
+CREATE OR REPLACE FUNCTION open_periods(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id			integer;
+	v_period_id			integer;
+	msg					varchar(120);
+BEGIN
+
+	IF ($3 = '1') THEN
+		UPDATE periods SET opened = true WHERE period_id = $1::int;
+		msg := 'Period Opened';
+	ELSIF ($3 = '2') THEN
+		UPDATE periods SET closed = true WHERE period_id = $1::int;
+		msg := 'Period Closed';
+	ELSIF ($3 = '3') THEN
+		UPDATE periods SET activated = true WHERE period_id = $1::int;
+		msg := 'Period Activated';
+	ELSIF ($3 = '4') THEN
+		UPDATE periods SET activated = false WHERE period_id = $1::int;
+		msg := 'Period De-activated';
+	END IF;
+
+	RETURN msg;
+END;
+$$ LANGUAGE plpgsql;
+
 
 ------------Hooks to approval trigger
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON periods
