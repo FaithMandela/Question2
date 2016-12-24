@@ -14,14 +14,12 @@ try{
 		$params = array($params);
 	}
 	$response = $client->__soapCall('getWsData',$params);
+	print_r($response);
 } catch(SoapFault $exception) {
 	echo 'ERROR ::: ' . $exception->getMessage();
 } catch(Exception $ex) {
 	echo 'PHP ERROR ::: ' . $ex->getMessage();
 }
-
-print_r($response);
-
 
 function getStudentRequest($studentId, $studentPass) {	
 		$xml = "<QUERY>\n";

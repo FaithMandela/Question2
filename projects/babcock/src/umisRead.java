@@ -16,7 +16,7 @@ public class umisRead {
 			BWebServiceService bws = new BWebServiceService(wsURL);
 			BWebService port = bws.getBWebServicePort();
 			
-			String resp = port.getWsData(getFoodService("14/2961"), "test123");
+			String resp = port.getWsData(getHallService("15/1353"), "test123");
 			System.out.println("Reading student data: \n" + resp);
 			
 			/*String resp = port.getWsData(getStudentRequest("06/0382"), "test123");
@@ -31,6 +31,27 @@ public class umisRead {
 		} catch (MalformedURLException ex) {
 			System.out.println("URL access error : " + ex);
 		}
+	}
+	
+	private static String getHallService(String studentId) {	
+		String xml = "<QUERY>\n";
+		xml += "<GRID name=\"Hall Service\" keyfield=\"studentid\" table=\"ws_hall_service\" where=\"studentid = '" + studentId + "'\">\n";
+		xml += "	<TEXTFIELD>studentid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>studentname</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>quarterid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>schoolid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>studylevel</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>majorid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>majorname</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>residenceid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>finaceapproval</TEXTFIELD>\n";
+		xml += "</GRID>\n";
+		xml += "</QUERY>\n";
+		
+		System.out.println("XML : " + xml);
+		
+		return xml;
 	}
 	
 	private static String getFoodService(String studentId) {	

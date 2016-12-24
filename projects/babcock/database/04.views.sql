@@ -386,6 +386,23 @@ CREATE VIEW currentresidenceview AS
 	INNER JOIN quarterview ON qresidences.quarterid = quarterview.quarterid)
 	INNER JOIN students ON ((residences.Sex = students.Sex) OR (residences.Sex = 'N')) 
 	WHERE (quarterview.active = true);
+	
+CREATE VIEW vw_qresidence AS
+	SELECT residences.residenceid, residences.residencename, residences.offcampus, residences.Sex, residences.residencedean, 
+		qresidences.qresidenceid, qresidences.quarterid, qresidences.residenceoption, qresidences.charges, qresidences.details,
+		qresidences.org_id,
+		students.studentid, students.studentname,
+		quarters.active,
+		resc.res_capacity, resn.resCount, (resc.res_capacity - resn.resCount) as space_left
+	FROM ((residences INNER JOIN qresidences ON residences.residenceid = qresidences.residenceid)
+	INNER JOIN quarters ON qresidences.quarterid = quarters.quarterid)
+	INNER JOIN students ON ((residences.Sex = students.Sex) OR (residences.Sex = 'N'))
+	LEFT JOIN (SELECT residenceid, sum(residencecapacitys.capacity) as res_capacity FROM residencecapacitys
+			GROUP BY residenceid) as resc
+		ON residences.residenceid = resc.residenceid
+	LEFT JOIN (SELECT qresidenceid, count(qstudentid) as resCount FROM qstudents
+			GROUP BY qresidenceid) as resn
+		ON qresidences.qresidenceid = resn.qresidenceid;
 
 CREATE VIEW qstudentlist AS
 	SELECT students.studentid, students.departmentid, students.studentname, students.Sex, students.Nationality, students.MaritalStatus,
@@ -1464,7 +1481,12 @@ CREATE VIEW ws_food_service AS
 	FROM vwqstudentbalances
 	WHERE (active = true) AND (finaceapproval = true);
 
-
+CREATE VIEW ws_hall_service AS
+	SELECT studentid, studentname, mealtype, studylevel, majorid, majorname, finaceapproval,
+		quarterid, schoolid, schoolname, departmentid, departmentname, residenceid, residencename
+	FROM vwqstudentbalances
+	WHERE (active = true);
+	
 ----------- Creating radius server interface
 CREATE EXTENSION postgres_fdw;
 CREATE SERVER umisdb1 FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '192.168.1.111', dbname 'babcock', port '5432');
