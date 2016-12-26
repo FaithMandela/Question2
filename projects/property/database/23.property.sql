@@ -40,9 +40,9 @@ CREATE TABLE rentals (
 	water_no				varchar(50),
 	is_active				boolean not null default true,
 	rental_value			float not null,
-	service_fees			float default 0 not null,
-	commision_value			float default 0 not null,
-	commision_pct			float default 0 not null,
+	service_fees			float not null,
+	commision_value			float not null,
+	commision_pct			float not null,
 	deposit_fee				float,
 	deposit_fee_date		date,
 	deposit_refund			float,
@@ -57,20 +57,23 @@ CREATE TABLE period_rentals (
 	period_rental_id		serial primary key,
 	rental_id				integer references rentals,
 	period_id				integer references periods,
+	sys_audit_trail_id		integer references sys_audit_trail,
 	org_id					integer references orgs,
-	rental_amount			float default 0 not null,
-	service_fees			float default 0 not null,
+	rental_amount			float not null,
+	service_fees			float not null,
 	repair_amount			float default 0 not null,
-	commision				float default 0 not null,
-	commision_pct			float default 0 not null,
+	commision				float not null,
+	commision_pct			float not null,
 	narrative				varchar(240)
 );
 CREATE INDEX period_rentals_rental_id ON period_rentals (rental_id);
 CREATE INDEX period_rentals_period_id ON period_rentals (period_id);
+CREATE INDEX period_rentals_sys_audit_trail_id ON period_rentals (sys_audit_trail_id);
 CREATE INDEX period_rentals_org_id ON period_rentals (org_id);
 
 CREATE TABLE log_period_rentals (
 	log_period_rental_id	serial primary key,
+	sys_audit_trail_id		integer references sys_audit_trail,
 	period_rental_id		integer,
 	rental_id				integer,
 	period_id				integer,
@@ -82,6 +85,8 @@ CREATE TABLE log_period_rentals (
 	commision_pct			float,
 	narrative				varchar(240)
 );
+CREATE INDEX log_period_rentals_period_rental_id ON log_period_rentals (period_rental_id);
+CREATE INDEX log_period_rentals_sys_audit_trail_id ON log_period_rentals (sys_audit_trail_id);
 
 CREATE TABLE payments (
 	payment_id				serial primary key,
@@ -89,6 +94,7 @@ CREATE TABLE payments (
 	bank_account_id			integer references bank_accounts,
 	journal_id				integer references journals,
 	currency_id				integer references currency,
+	sys_audit_trail_id		integer references sys_audit_trail,
 	org_id					integer references orgs,
 	receipt_number			varchar(50),
 	pay_date				date not null,
@@ -102,10 +108,12 @@ CREATE INDEX payments_entity_id ON payments (entity_id);
 CREATE INDEX payments_bank_account_id ON payments (bank_account_id);
 CREATE INDEX payments_journal_id ON payments (journal_id);
 CREATE INDEX payments_currency_id ON payments (currency_id);
+CREATE INDEX payments_sys_audit_trail_id ON payments (sys_audit_trail_id);
 CREATE INDEX payments_org_id ON payments (org_id);
 
 CREATE TABLE log_payments (
 	log_payment_id			serial primary key,
+	sys_audit_trail_id		integer references sys_audit_trail,
 	payment_id				integer,
 	entity_id				integer,
 	bank_account_id			integer,
@@ -120,6 +128,8 @@ CREATE TABLE log_payments (
 	exchange_rate			real,
 	details					text
 );
+CREATE INDEX log_payments_payment_id ON log_payments (payment_id);
+CREATE INDEX log_payments_sys_audit_trail_id ON log_payments (sys_audit_trail_id);
 
 CREATE VIEW vw_property AS
 	SELECT entitys.entity_id as client_id, entitys.entity_name as client_name, 
@@ -176,7 +186,7 @@ CREATE VIEW vw_payments AS
 		INNER JOIN vw_bank_accounts ON payments.bank_account_id = vw_bank_accounts.bank_account_id;
 	
 	
-CREATE OR REPLACE FUNCTION generate_rentals(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION generate_rentals(varchar(12), varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id			integer;
 	v_period_id			integer;
@@ -184,8 +194,8 @@ DECLARE
 BEGIN
 
 	IF ($3 = '1') THEN
-		INSERT INTO period_rentals (period_id, org_id, rental_id, rental_amount, service_fees, commision, commision_pct)
-		SELECT $1::int, org_id, rental_id, rental_value, service_fees, commision_value, commision_pct
+		INSERT INTO period_rentals (period_id, org_id, rental_id, rental_amount, service_fees, commision, commision_pct, sys_audit_trail_id)
+		SELECT $1::int, org_id, rental_id, rental_value, service_fees, commision_value, commision_pct, $5::int
 		FROM rentals WHERE is_active = true;
 		
 		msg := 'Rentals generated';
@@ -195,3 +205,89 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION ins_rentals() RETURNS trigger AS $$
+DECLARE
+	rec					RECORD;
+BEGIN
+	SELECT rental_value, service_fees, commision_value, commision_pct INTO rec
+	FROM property
+	WHERE property_id = NEW.property_id;
+
+	IF(NEW.rental_value is null)THEN
+		NEW.rental_value := rec.rental_value;
+	END IF;
+	IF(NEW.service_fees is null)THEN
+		NEW.service_fees := rec.service_fees;
+	END IF;
+	IF((NEW.commision_value is null) AND (NEW.commision_pct is null))THEN
+		NEW.commision_value := rec.commision_value;
+		NEW.commision_pct := rec.commision_pct;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_rentals BEFORE INSERT OR UPDATE ON rentals
+    FOR EACH ROW EXECUTE PROCEDURE ins_rentals();
+
+CREATE OR REPLACE FUNCTION ins_period_rentals() RETURNS trigger AS $$
+DECLARE
+	rec					RECORD;
+BEGIN
+	SELECT rental_value, service_fees, commision_value, commision_pct INTO rec
+	FROM rentals
+	WHERE rental_id = NEW.rental_id;
+
+	IF(NEW.rental_amount is null)THEN
+		NEW.rental_amount := rec.rental_value;
+	END IF;
+	IF(NEW.service_fees is null)THEN
+		NEW.service_fees := rec.service_fees;
+	END IF;
+	IF((NEW.commision is null) AND (NEW.commision_pct is null))THEN
+		NEW.commision := rec.commision_value;
+		NEW.commision_pct := rec.commision_pct;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_period_rentals BEFORE INSERT OR UPDATE ON period_rentals
+    FOR EACH ROW EXECUTE PROCEDURE ins_period_rentals();
+    
+CREATE OR REPLACE FUNCTION aud_period_rentals() RETURNS trigger AS $$
+BEGIN
+
+	INSERT INTO log_period_rentals (period_rental_id, rental_id, period_id, 
+		sys_audit_trail_id, org_id, rental_amount, service_fees,
+		repair_amount, commision, commision_pct, narrative)
+	VALUES (OLD.period_rental_id, OLD.rental_id, OLD.period_id, 
+		OLD.sys_audit_trail_id, OLD.org_id, OLD.rental_amount, OLD.service_fees,
+		OLD.repair_amount, OLD.commision, OLD.commision_pct, OLD.narrative);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aud_period_rentals AFTER UPDATE OR DELETE ON period_rentals
+    FOR EACH ROW EXECUTE PROCEDURE aud_period_rentals();
+	
+CREATE OR REPLACE FUNCTION aud_payments() RETURNS trigger AS $$
+BEGIN
+
+	INSERT INTO log_payments (payment_id, entity_id, bank_account_id, journal_id,
+		currency_id, sys_audit_trail_id, org_id, receipt_number, pay_date,
+		cleared, tx_type, amount, exchange_rate, details)
+	VALUES (OLD.payment_id, OLD.entity_id, OLD.bank_account_id, OLD.journal_id,
+		OLD.currency_id, OLD.sys_audit_trail_id, OLD.org_id, OLD.receipt_number, OLD.pay_date,
+		OLD.cleared, OLD.tx_type, OLD.amount, OLD.exchange_rate, OLD.details);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aud_payments AFTER UPDATE OR DELETE ON payments
+    FOR EACH ROW EXECUTE PROCEDURE aud_payments();
+    

@@ -65,11 +65,11 @@ CREATE TABLE orgs (
 	default_country_id		char(2) references sys_countrys,
 	parent_org_id			integer references orgs,
 	org_name				varchar(50) not null unique,
+	org_full_name			varchar(120),
 	org_sufix				varchar(4) not null unique,
 	is_default				boolean not null default true,
 	is_active				boolean not null default true,
 	logo					varchar(50),
-	org_full_name			varchar(120),
 	pin 					varchar(50),
 	pcc						varchar(12),
 
@@ -767,6 +767,12 @@ BEGIN
 		END IF;
 	ELSIF(OLD.first_password <> NEW.first_password) THEN
 		NEW.Entity_password := md5(NEW.first_password);
+	END IF;
+	
+	IF(NEW.user_name is null)THEN
+		SELECT org_sufix || '.' || lower(trim(replace(NEW.entity_name, ' ', ''))) INTO NEW.user_name
+		FROM orgs
+		WHERE org_id = NEW.org_id;
 	END IF;
 
 	RETURN NEW;
