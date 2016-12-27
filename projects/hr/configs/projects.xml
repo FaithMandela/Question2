@@ -302,7 +302,7 @@
 				<COMBOBOX w="150" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Attendance Date" y="10" h="20" x="290">attendance_date</TEXTDATE>
 				<SPINTIME w="150" title="Time In" y="30" h="20" x="10">time_in</SPINTIME>
-				<SPINTIME w="150" title="Time Out" y="30" h="20" x="290">time_out</SPINTIME>
+				<SPINTIME w="150" title="Time Out" type="2" y="30" h="20" x="290">time_out</SPINTIME>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>

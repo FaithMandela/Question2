@@ -133,7 +133,7 @@ CREATE INDEX log_payments_sys_audit_trail_id ON log_payments (sys_audit_trail_id
 
 
 CREATE OR REPLACE FUNCTION get_occupied(integer) RETURNS integer AS $$
-    SELECT COALESCE(count(rental_id), 0)
+    SELECT COALESCE(count(rental_id), 0)::integer
 	FROM rentals
 	WHERE (is_active = true) AND (property_id = $1);
 $$ LANGUAGE SQL;
