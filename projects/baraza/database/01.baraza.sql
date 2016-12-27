@@ -485,6 +485,8 @@ CREATE VIEW vw_org_select AS
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
 		orgs.org_full_name, orgs.pin, orgs.pcc, orgs.details,
+		
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
@@ -492,7 +494,8 @@ CREATE VIEW vw_orgs AS
 		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
-	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+	FROM orgs INNER JOIN currency ON orgs.currency_id = currency.currency_id
+		LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
 CREATE VIEW vw_entity_address AS
 	SELECT vw_address.address_id, vw_address.address_name,

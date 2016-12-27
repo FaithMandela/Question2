@@ -131,12 +131,21 @@ CREATE TABLE log_payments (
 CREATE INDEX log_payments_payment_id ON log_payments (payment_id);
 CREATE INDEX log_payments_sys_audit_trail_id ON log_payments (sys_audit_trail_id);
 
+
+CREATE OR REPLACE FUNCTION get_occupied(integer) RETURNS integer AS $$
+    SELECT COALESCE(count(rental_id), 0)
+	FROM rentals
+	WHERE (is_active = true) AND (property_id = $1);
+$$ LANGUAGE SQL;
+
 CREATE VIEW vw_property AS
 	SELECT entitys.entity_id as client_id, entitys.entity_name as client_name, 
 		property_types.property_type_id, property_types.property_type_name,
 		property.org_id, property.property_id, property.property_name, property.estate, 
 		property.plot_no, property.is_active, property.units, property.rental_value, 
-		property.service_fees, property.commision_value, property.commision_pct, property.details
+		property.service_fees, property.commision_value, property.commision_pct, property.details,
+		get_occupied(property.property_id) as accupied,
+		(property.units - get_occupied(property.property_id)) as vacant
 	FROM property INNER JOIN entitys ON property.entity_id = entitys.entity_id
 		INNER JOIN property_types ON property.property_type_id = property_types.property_type_id;
 
@@ -196,7 +205,8 @@ BEGIN
 	IF ($3 = '1') THEN
 		INSERT INTO period_rentals (period_id, org_id, rental_id, rental_amount, service_fees, commision, commision_pct, sys_audit_trail_id)
 		SELECT $1::int, org_id, rental_id, rental_value, service_fees, commision_value, commision_pct, $5::int
-		FROM rentals WHERE is_active = true;
+		FROM rentals 
+		WHERE is_active = true;
 		
 		msg := 'Rentals generated';
 	END IF;
