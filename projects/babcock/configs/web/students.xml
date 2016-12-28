@@ -399,10 +399,11 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Residence Selection" key="23" h="500">
-		<GRID name="Residence Selection" keyfield="qresidenceid" table="currentresidenceview" user="studentid">
+		<GRID name="Residence Selection" keyfield="qresidenceid" table="vw_qresidence" where="(active = true)" user="studentid">
 			<TEXTFIELD w="50" title="Residence ID">residenceid</TEXTFIELD>
 			<TEXTFIELD w="140" title="Residence Name">residencename</TEXTFIELD>
-			<TEXTFIELD w="75" title="Residence Option">residenceoption</TEXTFIELD>
+			<TEXTFIELD w="75" title="Capacity">res_capacity</TEXTFIELD>
+			<TEXTFIELD w="75" title="Available Space">space_left</TEXTFIELD>
 			<CHECKBOX w="50" title="Off Campus" format="boolean" ischar="true">offcampus</CHECKBOX>
 			<ACTIONS jumpview="24:0">
 				<ACTION fnct="selQResidence">Select</ACTION>

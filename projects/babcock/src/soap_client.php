@@ -3,10 +3,10 @@ header('Content-type: text/plain');
 //header('Content-type: text/xml');
 //header('Content-type: text/html; charset=utf-8');
 
-$params["arg0"] = getStudentRequest("06/0382");
+$params["arg0"] = getHallService("15/1353");
 $params["arg1"] = "test123";
 
-$client = new SoapClient("http://demo.dewcis.com/babcock/webservice?wsdl");
+$client = new SoapClient("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
 
 try{
 	if ($client->_soap_version == 1){
@@ -14,17 +14,16 @@ try{
 		$params = array($params);
 	}
 	$response = $client->__soapCall('getWsData',$params);
+	print_r($response);
 } catch(SoapFault $exception) {
 	echo 'ERROR ::: ' . $exception->getMessage();
 } catch(Exception $ex) {
 	echo 'PHP ERROR ::: ' . $ex->getMessage();
 }
 
-print_r($response);
-
 function getStudentRequest($studentId) {	
 	$xml = "<QUERY>\n";
-	$xml .= "<GRID name=\"student\" keyfield=\"studentid\" table=\"ws_students\" where=\"studentid = '06/0382'\">\n";
+	$xml .= "<GRID name=\"student\" keyfield=\"studentid\" table=\"ws_students\" where=\"studentid = '" . $studentId . "'\">\n";
 	$xml .= "	<TEXTFIELD>studentid</TEXTFIELD>\n";
 	$xml .= "	<TEXTFIELD>firstname</TEXTFIELD>\n";
 	$xml .= "	<TEXTFIELD>othernames</TEXTFIELD>\n";
@@ -35,7 +34,25 @@ function getStudentRequest($studentId) {
 	$xml .= "</GRID>\n";
 	$xml .= "</QUERY>\n";
 	
-	
+	return $xml;
+}
+
+function getHallService($studentId) {	
+	$xml = "<QUERY>\n";
+	$xml .= "<GRID name=\"Hall Service\" keyfield=\"studentid\" table=\"ws_hall_service\" where=\"studentid = '" . $studentId . "'\">\n";
+	$xml .= "	<TEXTFIELD>studentid</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>studentname</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>quarterid</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>schoolid</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>studylevel</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>majorid</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>majorname</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>residenceid</TEXTFIELD>\n";
+	$xml .= "	<TEXTFIELD>finaceapproval</TEXTFIELD>\n";
+	$xml .= "</GRID>\n";
+	$xml .= "</QUERY>\n";
+		
 	return $xml;
 }
 

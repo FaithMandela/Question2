@@ -35,15 +35,15 @@ public class BWebDashboard {
 			String val = rs.readField(ell.getValue());
 			if(val == null) val = "";
 			if(ell.getAttribute("type", "display").equals("display")) {
-				String tileName = el.getAttribute("name", "Name");
+				String tileName = ell.getAttribute("title", "Name");
 				if(el.getAttribute("jumpview") != null) {
 					tileName = "<a href='?view=" + el.getAttribute("jumpview") + "'>";
-					tileName += el.getAttribute("name", "Name") + "</a>";
+					tileName += ell.getAttribute("title", "Name") + "</a>";
 				}
 				
 				body += "		<div class='display'>\n";
 				body += "			<div class='number'>\n";
-				body += "				<h3 class='" + ell.getAttribute("color", "font-green-sharp") + "'>" + val + "</h3>\n";
+				body += "				<h4 class='" + ell.getAttribute("color", "font-green-sharp") + "'>" + val + "</h4>\n";
 				body += "				<small>" + tileName + "</small>\n";
 				body += "			</div>\n";
 				body += "			<div class='icon'>\n";

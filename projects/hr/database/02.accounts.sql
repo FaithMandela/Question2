@@ -86,6 +86,7 @@ CREATE TABLE tax_types (
 	account_id				integer references accounts,
 	currency_id				integer references currency,
 	use_key_id				integer not null references use_keys,
+	sys_country_id			char(2) references sys_countrys,
 	org_id					integer references orgs,
 	tax_type_name			varchar(50) not null,
 	tax_type_number			varchar(50),
@@ -104,11 +105,12 @@ CREATE TABLE tax_types (
 	active					boolean default true,
 	Details					text,
 	
-	UNIQUE(tax_type_name, org_id)
+	UNIQUE(tax_type_name, org_id, sys_country_id)
 );
 CREATE INDEX tax_types_account_id ON tax_types (account_id);
 CREATE INDEX tax_types_currency_id ON tax_types (currency_id);
 CREATE INDEX tax_types_use_key_id ON tax_types (use_key_id);
+CREATE INDEX tax_types_sys_country_id ON tax_types (sys_country_id);
 CREATE INDEX tax_types_org_id ON tax_types (org_id);
 
 CREATE TABLE tax_rates (

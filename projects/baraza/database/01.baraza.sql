@@ -65,6 +65,7 @@ CREATE TABLE orgs (
 	default_country_id		char(2) references sys_countrys,
 	parent_org_id			integer references orgs,
 	org_name				varchar(50) not null unique,
+	org_full_name			varchar(120),
 	org_sufix				varchar(4) not null unique,
 	is_default				boolean not null default true,
 	is_active				boolean not null default true,
@@ -483,7 +484,9 @@ CREATE VIEW vw_org_select AS
 
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
-		orgs.pin, orgs.pcc, orgs.details,
+		orgs.org_full_name, orgs.pin, orgs.pcc, orgs.details,
+		
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
@@ -491,7 +494,8 @@ CREATE VIEW vw_orgs AS
 		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
-	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+	FROM orgs INNER JOIN currency ON orgs.currency_id = currency.currency_id
+		LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
 CREATE VIEW vw_entity_address AS
 	SELECT vw_address.address_id, vw_address.address_name,
@@ -766,6 +770,12 @@ BEGIN
 		END IF;
 	ELSIF(OLD.first_password <> NEW.first_password) THEN
 		NEW.Entity_password := md5(NEW.first_password);
+	END IF;
+	
+	IF(NEW.user_name is null)THEN
+		SELECT org_sufix || '.' || lower(trim(replace(NEW.entity_name, ' ', ''))) INTO NEW.user_name
+		FROM orgs
+		WHERE org_id = NEW.org_id;
 	END IF;
 
 	RETURN NEW;
