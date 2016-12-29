@@ -29,6 +29,14 @@ CREATE INDEX property_property_type_id ON property (property_type_id);
 CREATE INDEX property_entity_id ON property (entity_id);
 CREATE INDEX property_org_id ON property (org_id);
 
+ALTER TABLE transactions
+ADD property_id				integer references property;
+CREATE INDEX transactions_property_id ON transactions (property_id);
+
+ALTER TABLE helpdesk
+ADD property_id				integer references property;
+CREATE INDEX helpdesk_property_id ON helpdesk(property_id);
+
 CREATE TABLE rentals (
 	rental_id				serial primary key,
 	property_id				integer references property,
@@ -168,7 +176,7 @@ CREATE VIEW vw_period_rentals AS
 		vw_rentals.tenant_id, vw_rentals.tenant_name, 
 		vw_rentals.rental_id, vw_rentals.start_rent, vw_rentals.hse_no, vw_rentals.elec_no, 
 		vw_rentals.water_no, vw_rentals.is_active, vw_rentals.rental_value, 
-		vw_rentals.service_fees, vw_rentals.deposit_fee, vw_rentals.deposit_fee_date, 
+		vw_rentals.deposit_fee, vw_rentals.deposit_fee_date, 
 		vw_rentals.deposit_refund, vw_rentals.deposit_refund_date,
 
 		vw_periods.fiscal_year_id, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end,
@@ -176,14 +184,16 @@ CREATE VIEW vw_period_rentals AS
 		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.opened, vw_periods.closed, 
 		vw_periods.month_id, vw_periods.period_year, vw_periods.period_month, vw_periods.quarter, vw_periods.semister,
 
-		period_rentals.org_id, period_rentals.period_rental_id, period_rentals.rental_amount, period_rentals.commision, 
-		period_rentals.commision_pct, period_rentals.repair_amount, period_rentals.narrative
+		period_rentals.org_id, period_rentals.period_rental_id, period_rentals.rental_amount, period_rentals.service_fees,
+		period_rentals.commision, period_rentals.commision_pct, period_rentals.repair_amount, period_rentals.narrative,
+		(period_rentals.rental_amount - period_rentals.commision) as rent_to_remit,
+		(period_rentals.rental_amount + period_rentals.service_fees + period_rentals.repair_amount) as rent_to_pay
 	FROM vw_rentals INNER JOIN period_rentals ON vw_rentals.rental_id = period_rentals.rental_id
 		INNER JOIN vw_periods ON period_rentals.period_id = vw_periods.period_id;
 
 CREATE VIEW vw_payments AS
-		SELECT entitys.entity_id, entitys.entity_name, entitys.account_id as entity_account_id, 
-		currency.currency_id, currency.currency_name,
+	SELECT entitys.entity_id, entitys.entity_name, entitys.account_id as entity_account_id, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		vw_bank_accounts.bank_id, vw_bank_accounts.bank_name, vw_bank_accounts.bank_branch_name, vw_bank_accounts.account_id as gl_bank_account_id, 
 		vw_bank_accounts.bank_account_id, vw_bank_accounts.bank_account_name, vw_bank_accounts.bank_account_number, 
 		payments.journal_id, payments.org_id, 	
@@ -194,6 +204,41 @@ CREATE VIEW vw_payments AS
 		INNER JOIN currency ON payments.currency_id = currency.currency_id
 		INNER JOIN vw_bank_accounts ON payments.bank_account_id = vw_bank_accounts.bank_account_id;
 	
+CREATE VIEW vw_client_statement AS
+	SELECT aa.org_id, aa.client_id, aa.client_name, aa.rent_details,
+		aa.start_date, aa.rent_to_remit, aa.amount_remited,
+		(aa.rent_to_remit - aa.amount_remited) as rent_balance
+	
+	FROM ((SELECT vw_period_rentals.org_id, vw_period_rentals.client_id, vw_period_rentals.client_name,
+		(vw_period_rentals.property_name || ', ' || vw_period_rentals.hse_no) as rent_details,
+		vw_period_rentals.start_date, vw_period_rentals.rent_to_remit, '0'::real as amount_remited
+	FROM vw_period_rentals
+	WHERE vw_period_rentals.rent_to_remit > 0)
+	UNION
+	(SELECT vw_payments.org_id, vw_payments.entity_id, vw_payments.entity_name,
+		'Amount remited', vw_payments.pay_date, '0'::real, vw_payments.amount
+	FROM vw_payments
+	WHERE vw_payments.tx_type = -1)) aa
+	
+	ORDER BY aa.start_date desc;
+	
+CREATE VIEW vw_tenant_statement AS
+	SELECT aa.org_id, aa.tenant_id, aa.tenant_name, aa.rent_details,
+		aa.start_date, aa.rent_to_pay, aa.rent_paid,
+		(aa.rent_to_pay - aa.rent_paid) as rent_balance
+	
+	FROM ((SELECT vw_period_rentals.org_id, vw_period_rentals.tenant_id, vw_period_rentals.tenant_name, 
+		(vw_period_rentals.property_name || ', ' || vw_period_rentals.hse_no) as rent_details,
+		vw_period_rentals.start_date, vw_period_rentals.rent_to_pay, '0'::real as rent_paid
+	FROM vw_period_rentals
+	WHERE vw_period_rentals.rent_to_remit > 0)
+	UNION
+	(SELECT vw_payments.org_id, vw_payments.entity_id, vw_payments.entity_name,
+		'Rent Paid', vw_payments.pay_date, '0'::real, vw_payments.amount
+	FROM vw_payments
+	WHERE (vw_payments.tx_type = 1) AND (vw_payments.cleared = true))) aa
+	
+	ORDER BY aa.start_date desc;
 	
 CREATE OR REPLACE FUNCTION generate_rentals(varchar(12), varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -215,6 +260,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION ins_property() RETURNS trigger AS $$
+BEGIN
+
+	IF((NEW.commision_value = 0) AND (NEW.commision_pct > 0))THEN
+		NEW.commision_value := NEW.rental_value * NEW.commision_pct / 100;
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_property BEFORE INSERT OR UPDATE ON property
+    FOR EACH ROW EXECUTE PROCEDURE ins_property();
+
 CREATE OR REPLACE FUNCTION ins_rentals() RETURNS trigger AS $$
 DECLARE
 	rec					RECORD;
@@ -232,6 +292,13 @@ BEGIN
 	IF((NEW.commision_value is null) AND (NEW.commision_pct is null))THEN
 		NEW.commision_value := rec.commision_value;
 		NEW.commision_pct := rec.commision_pct;
+	END IF;
+	
+	IF(NEW.commision_value is null)THEN NEW.commision_value := 0; END IF;
+	IF(NEW.commision_pct is null)THEN NEW.commision_pct := 0; END IF;
+	
+	IF((NEW.commision_value = 0) AND (NEW.commision_pct > 0))THEN
+		NEW.commision_value := NEW.rental_value * NEW.commision_pct / 100;
 	END IF;
 
 	RETURN NEW;
@@ -258,6 +325,13 @@ BEGIN
 	IF((NEW.commision is null) AND (NEW.commision_pct is null))THEN
 		NEW.commision := rec.commision_value;
 		NEW.commision_pct := rec.commision_pct;
+	END IF;
+	
+	IF(NEW.commision is null)THEN NEW.commision := 0; END IF;
+	IF(NEW.commision_pct is null)THEN NEW.commision_pct := 0; END IF;
+	
+	IF((NEW.commision = 0) AND (NEW.commision_pct > 0))THEN
+		NEW.commision := NEW.rental_amount * NEW.commision_pct / 100;
 	END IF;
 
 	RETURN NEW;

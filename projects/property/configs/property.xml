@@ -11,6 +11,7 @@
 			<MENU name="Banks">15</MENU>
 			<MENU name="Fiscal Years">20</MENU>
 			<MENU name="Chat of Accounts">25</MENU>
+			<MENU name="Items">65</MENU>
 			<MENU name="Emails and News">55</MENU>
 			<MENU name="Workflows">60</MENU>
 		</MENU>
@@ -18,6 +19,17 @@
 			<MENU name="Bank Accounts">105</MENU>
 			<MENU name="Tenants and Clients">110</MENU>
 			<MENU name="Property">115</MENU>
+			<MENU name="Rent">120</MENU>
+			<MENU name="Payments">125</MENU>
+			<MENU name="Statement">130</MENU>
+			<MENU name="Chart of Accounts">135</MENU>
+			<MENU name="Items">140</MENU>
+			<MENU name="Transaction Ledger">145</MENU>
+			<MENU name="Journals">150</MENU>
+			<MENU name="Trial Balance">155</MENU>
+			<MENU name="income and Expenditure">160</MENU>
+			<MENU name="Balance Sheet">165</MENU>
+			<MENU name="Issues">170</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
@@ -763,6 +775,86 @@
 			</FORM>
 		</GRID>
 	</DESK>
+	<DESK w="700" name="Items" key="65" h="500">
+		<GRID name="Items" keyfield="item_id" table="vw_items">
+			<TEXTFIELD w="75" title="Item ID">item_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item Category Name">item_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item Name">item_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Inventory">inventory</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Sales Price">sales_price</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Purchase Price">purchase_price</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<FORM name="Items" keyfield="item_id" table="items">
+				<COMBOBOX w="430" title="Item Category" lptable="item_category" y="10" h="20" x="10" lpfield="item_category_name">item_category_id</COMBOBOX>
+				<COMBOBOX w="430" title="Tax Type" lptable="tax_types" where="(use_key_id = 15)" y="30" h="20" x="10" lpfield="tax_type_name">tax_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Item Unit" default="1" lptable="item_units" y="50" h="20" x="10" lpfield="item_unit_name">item_unit_id</COMBOBOX>
+				<COMBOBOX w="430" title="Sales Account" lptable="vw_accounts" default_org_fnct="get_default_account_id(53" lpkey="account_id" y="70" h="20" x="10" lpfield="account_description">sales_account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Purchase Account" lptable="vw_accounts" default_org_fnct="get_default_account_id(54" lpkey="account_id" y="90" h="20" x="10" lpfield="account_description">purchase_account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Item Name" y="110" h="20" x="10">item_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Inventory" y="130" h="20" x="10">inventory</CHECKBOX>
+				<CHECKBOX w="150" title="For Sale" y="130" h="20" x="290">for_sale</CHECKBOX>
+				<CHECKBOX w="150" title="For Purchase" y="150" h="20" x="10">for_purchase</CHECKBOX>
+				<TEXTDECIMAL w="150" title="Sales Price" y="150" h="20" x="290">sales_price</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Purchase Price" y="170" h="20" x="10">purchase_price</TEXTDECIMAL>
+				<TEXTFIELD w="150" title="Reorder Level" y="170" h="20" x="290">reorder_level</TEXTFIELD>
+				<TEXTFIELD w="150" title="Lead Time" y="190" h="20" x="10">lead_time</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">is_active</CHECKBOX>
+				<TEXTFIELD w="350" title="Bar Code" y="210" h="20" x="10">bar_code</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Quotations" keyfield="quotation_id" linkfield="item_id" table="vw_quotations">
+				<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Item">item_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Active">active</CHECKBOX>
+				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Valid From">valid_from</TEXTDATE>
+				<TEXTDATE w="75" title="Valid To">valid_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Lead Time">lead_time</TEXTFIELD>
+				<FORM name="Quotations" keyfield="quotation_id" linkfield="item_id" table="quotations">
+					<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(entity_type_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<CHECKBOX w="150" title="Active" y="30" h="20" x="10">active</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="290">amount</TEXTDECIMAL>
+					<TEXTDATE w="150" title="Valid From" y="50" h="20" x="10">valid_from</TEXTDATE>
+					<TEXTDATE w="150" title="Valid To" y="50" h="20" x="290">valid_to</TEXTDATE>
+					<TEXTFIELD w="150" title="Lead Time" y="70" h="20" x="10">lead_time</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+		</GRID>
+		<GRID name="Item Category" keyfield="item_category_id" table="item_category">
+			<TEXTFIELD w="75" title="Item Category ID">item_category_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item Category Name">item_category_name</TEXTFIELD>
+			<FORM name="Item Category" keyfield="item_category_id" table="item_category">
+				<TEXTFIELD w="350" title="Item Category" y="10" h="20" x="10">item_category_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Item Units" keyfield="item_unit_id" table="item_units">
+			<TEXTFIELD w="75" title="Item Unit ID">item_unit_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item Unit Name">item_unit_name</TEXTFIELD>
+			<FORM name="Item Units" keyfield="item_unit_id" table="item_units">
+				<TEXTFIELD w="350" title="Item Unit Name" y="10" h="20" x="10">item_unit_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Tax Types" keyfield="tax_type_id" table="vw_tax_types" where="(use_key_id = 15)">
+			<TEXTFIELD w="75" title="Tax Type ID">tax_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tax Type Name">tax_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Tax Rate">tax_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Tax Inclusive">tax_inclusive</CHECKBOX>
+			<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_name</TEXTFIELD>
+			<FORM name="Tax Types" keyfield="tax_type_id" table="tax_types">
+				<DEFAULT default="15">use_key_id</DEFAULT>
+				<TEXTFIELD w="350" title="Tax Type Name" y="10" h="20" x="10">tax_type_name</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Tax Rate" y="30" h="20" x="10">tax_rate</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Tax Inclusive" y="30" h="20" x="290">tax_inclusive</CHECKBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="Tax Account" lptable="vw_accounts" default_org_fnct="get_default_account_id(55" lpkey="account_id" y="70" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
 	<DESK w="700" name="Transaction Ledger" key="50" h="550">
 		<GRID name="Expenditure" keyfield="transaction_id" orderby="completed desc, payment_date" table="vw_tx_ledger" where="(tx_type = -1) AND (for_processing = true) AND (completed = false)">
 			<TEXTFIELD w="75" title="Ledger Type">ledger_type_name</TEXTFIELD>
@@ -779,6 +871,7 @@
 				<DEFAULT default="-1">tx_type</DEFAULT>
 				<DEFAULT default="true">for_processing</DEFAULT>
 				<DEFAULT default="21">transaction_type_id</DEFAULT>
+				<COMBOBOX w="430" title="Property" lptable="property" y="10" h="20" x="10" lpfield="property_name">property_id</COMBOBOX>
 				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(expense_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_key_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
@@ -899,6 +992,7 @@
 					<DEFAULT default="-1">tx_type</DEFAULT>
 					<DEFAULT default="21">transaction_type_id</DEFAULT>
 					<DEFAULT default="Draft">approve_status</DEFAULT>
+					<COMBOBOX w="430" title="Property" lptable="property" y="10" h="20" x="10" lpfield="property_name">property_id</COMBOBOX>
 					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(expense_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
 					<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_key_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
@@ -1015,6 +1109,81 @@
 				<CHECKBOX w="150" title="Income" y="90" h="20" x="10">income_ledger</CHECKBOX>
 				<CHECKBOX w="150" title="Expense" y="90" h="20" x="290">expense_ledger</CHECKBOX>
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Issue Tracking" key="95" h="550">
+		<GRID name="Open Issues" keyfield="helpdesk_id" table="vw_helpdesk" where="(is_solved = false)">
+			<TEXTFIELD w="75" title="Helpdesk ID">helpdesk_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Type">ptype_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Definition">pdefinition_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">plevel_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Client">client_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Recorder">recorder_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Closer Name">closer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Description">description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Reported By">reported_by</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Recoded Time">recoded_time</TEXTTIMESTAMP>
+			<TEXTFIELD w="75" title="Current Status">curr_status</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="close_issue" approval="1">Close Issue</ACTION>
+			</ACTIONS>
+			<FORM name="Helpdesk" keyfield="helpdesk_id" table="helpdesk">
+				<USERFIELD>recorded_by</USERFIELD>
+				<COMBOBOX w="430" title="Property" lptable="property" y="10" h="20" x="10" lpfield="property_name">property_id</COMBOBOX>
+				<COMBOBOX w="430" title="Definition" lptable="pdefinitions" y="10" h="20" x="10" lpfield="pdefinition_name">pdefinition_id</COMBOBOX>
+				<COMBOBOX w="430" title="Level" lptable="plevels" y="30" h="20" x="10" lpfield="plevel_name">plevel_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_key_id = 2)" y="50" h="20" x="10" lpfield="entity_name">client_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Description" y="110" h="20" x="10">description</TEXTFIELD>
+				<TEXTFIELD w="150" title="Reported By" y="130" h="20" x="10">reported_by</TEXTFIELD>
+				<TEXTFIELD w="150" title="Current Action" y="170" h="20" x="10">curr_action</TEXTFIELD>
+				<TEXTFIELD w="150" title="Current Status" y="170" h="20" x="290">curr_status</TEXTFIELD>
+				<TEXTAREA w="430" title="Problem" y="190" h="70" x="10">problem</TEXTAREA>
+				<TEXTAREA w="430" title="Solution" y="260" h="70" x="10">solution</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Closed Issues" keyfield="helpdesk_id" table="vw_helpdesk" where="(is_solved = true)">
+			<TEXTFIELD w="75" title="Helpdesk ID">helpdesk_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Type">ptype_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Definition">pdefinition_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level">plevel_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Client">client_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Recorder">recorder_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Closer Name">closer_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Description">description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Reported By">reported_by</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Recoded Time">recoded_time</TEXTTIMESTAMP>
+			<TEXTTIMESTAMP w="75" title="Solved Time">solved_time</TEXTTIMESTAMP>
+			<FORM new="false" name="Helpdesk" keyfield="helpdesk_id" table="helpdesk">
+				<TEXTFIELD w="150" title="Current Action" y="170" h="20" x="10">curr_action</TEXTFIELD>
+				<TEXTFIELD w="150" title="Current Status" y="170" h="20" x="290">curr_status</TEXTFIELD>
+				<TEXTAREA w="430" title="Problem" y="190" h="70" x="10">problem</TEXTAREA>
+				<TEXTAREA w="430" title="Solution" y="260" h="70" x="10">solution</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Types" keyfield="ptype_id" table="ptypes">
+			<TEXTFIELD w="75" title="Type ID">ptype_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Type Name">ptype_name</TEXTFIELD>
+			<GRID name="Definitions" keyfield="pdefinition_id" linkfield="ptype_id" table="vw_pdefinitions">
+				<TEXTFIELD w="75" title="Definition ID">pdefinition_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Definition Name">pdefinition_name</TEXTFIELD>
+				<FORM name="Definitions" keyfield="pdefinition_id" linkfield="ptype_id" table="pdefinitions">
+					<TEXTFIELD w="150" title="Definition Name" y="10" h="20" x="10">pdefinition_name</TEXTFIELD>
+					<TEXTAREA w="430" title="Description" y="30" h="70" x="10">description</TEXTAREA>
+					<TEXTAREA w="430" title="Solution" y="100" h="70" x="10">solution</TEXTAREA>
+				</FORM>
+			</GRID>
+			<FORM name="Types" keyfield="ptype_id" table="ptypes">
+				<TEXTFIELD w="150" title="Type Name" y="10" h="20" x="10">ptype_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Levels" keyfield="plevel_id" linkfield="org_id" table="plevels">
+			<TEXTFIELD w="75" title="Level ID">plevel_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Level Name">plevel_name</TEXTFIELD>
+			<FORM name="Levels" keyfield="plevel_id" linkfield="org_id" table="plevels">
+				<TEXTFIELD w="150" title="Level Name" y="10" h="20" x="10">plevel_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>
@@ -1164,5 +1333,109 @@
 	<DESK w="700" name="Property" key="115" h="550">
 		<JASPER name="Property" reportfile="vw_property.jasper"></JASPER>
 		<JASPER name="Property Types" reportfile="property_types.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Rent" key="120" h="550">
+		<FILTER w="700" name="Rent" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="month_id" wherefield="Period_Year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Rent" reportfile="vw_period_rentals.jasper"></JASPER>
+		</FILTER>
+		<JASPER name="Rent" reportfile="vw_period_rentals_2.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Payments" key="125" h="550">
+		<FILTER w="700" name="Receipts" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="10" h="20" default_fnct="get_end_year" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Receipts" reportfile="vw_receipts.jasper"></JASPER>
+			<JASPER name="Remitance" reportfile="vw_remitance.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Statement" key="130" h="550">
+		<FILTER w="700" name="Tenant Statement" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Tenant" lptable="entitys" where="(use_key_id = 6)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="30" h="20" default_fnct="get_end_year" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Tenant Statement" reportfile="vw_tenant_statement.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Client Statement" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">minDate</TEXTDATE>
+				<TEXTDATE w="150" title="Ending at" y="30" h="20" default_fnct="get_end_year" x="290">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Client Statement" reportfile="vw_client_statement.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Chart of Accounts" key="135" h="550">
+		<JASPER name="Chart of Accounts" reportfile="vw_accounts.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Items" key="140" h="550">
+		<JASPER name="Items" reportfile="vw_items.jasper"></JASPER>
+		<JASPER name="Item Categories" reportfile="item_category.jasper"></JASPER>
+		<JASPER name="Item Units" reportfile="item_units.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Transaction Ledger" key="145" h="750">
+		<FILTER w="700" name="Transaction Ledger" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Transaction Ledger" reportfile="vw_ledgerb.jasper"></JASPER>
+			<JASPER name="Transaction Ledger" reportfile="vw_ledger.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Journals" key="150" h="750">
+		<FILTER w="700" name="Journals" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Journals" reportfile="vw_gls.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="707" name="Trial Balance" key="155" h="590">
+		<FILTER w="700" name="Trial Balance" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">endrange</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Trial Balance - Summary" reportfile="trial_balancec.jasper"></JASPER>
+			<JASPER name="Trial Balance" reportfile="trial_balanceb.jasper"></JASPER>
+			<JASPER name="Trial Balance - Full" reportfile="trial_balance.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="income and Expenditure" key="160" h="750">
+		<FILTER w="700" name="income and Expenditure" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="income and Expenditure" reportfile="vw_ie.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="707" name="Balance Sheet" key="165" h="590">
+		<FILTER w="700" name="Balance Sheet" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">endrange</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Balance Sheet" reportfile="balance_sheet.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Statement" key="170" h="750">
+		<FILTER w="700" name="Statement" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Supplier" lptable="vw_entitys" orderby="entity_name" lpkey="entity_id" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_name">supplierid</COMBOBOX>
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>
+			<JASPER name="Full Statement" reportfile="statement.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Issues" key="175" h="550">
+		<JASPER name="Open Issues" reportfile="vw_helpdesk.jasper"></JASPER>
+		<JASPER name="Closed Issues" reportfile="vw_helpdesk_c.jasper"></JASPER>
 	</DESK>
 </APP>
