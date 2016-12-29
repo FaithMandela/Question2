@@ -492,7 +492,7 @@
 			</ACTIONS>
 			<JASPER reportfile="certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
-			<JASPER role="finance_manager" reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
+			<JASPER role="finance" reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID noorg="true" role="admin" keyfield="passenger_id" name="Corporate Insurance Sold" where="approved is true AND incountry is false AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
