@@ -1495,6 +1495,11 @@ BEGIN
 				(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 				v_user_name, 'staff',
 				v_first_password, md5(v_first_password));
+				
+			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
+			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys'
+			FROM sys_emails
+			WHERE (use_type = 3) AND (org_id = NEW.org_id);
 		END IF;
 
 		v_use_type := 2;

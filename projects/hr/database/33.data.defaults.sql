@@ -139,6 +139,11 @@ FROM workflow_phases aa INNER JOIN workflows bb ON aa.workflow_id = bb.link_copy
 	INNER JOIN entity_types cc ON aa.approval_entity_id = cc.use_key_id
 WHERE aa.org_id = 0 AND bb.org_id = 1 AND cc.org_id = 1;
 
+INSERT INTO sys_emails (org_id, use_type, sys_email_name, title, details)
+SELECT 1, use_type, sys_email_name, title, details
+FROM sys_emails
+WHERE org_id = 0;
+
 UPDATE transaction_counters SET document_number = '10001';
 
 UPDATE orgs SET employee_limit = 1000, transaction_limit = 1000000;
