@@ -99,15 +99,15 @@ SELECT 1, use_type, sys_email_name, title, details
 FROM sys_emails
 WHERE org_id = 0;
 
-INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
-SELECT 1, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
-FROM accounts_class
+INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
+SELECT 1, account_class_no, chat_type_id, chat_type_name, account_class_name
+FROM account_class
 WHERE org_id = 0;
 
 
-INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
-SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
-FROM accounts_class a INNER JOIN account_types b ON a.accounts_class_no = b.accounts_class_id
+INSERT INTO account_types (org_id, account_class_id, account_type_no, account_type_name)
+SELECT a.org_id, a.account_class_id, b.account_type_no, b.account_type_name
+FROM account_class a INNER JOIN account_types b ON a.account_class_no = b.account_class_id
 WHERE (a.org_id = 1) AND (b.org_id = 0);
 
 

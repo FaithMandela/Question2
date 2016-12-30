@@ -282,13 +282,13 @@ CREATE VIEW vw_quotations AS
 		INNER JOIN items ON quotations.item_id = items.item_id;
 		
 CREATE VIEW vw_ledger_types AS
-	SELECT vw_accounts.account_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
-		vw_accounts.account_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
+	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
+		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
 		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, 
 		vw_accounts.is_header, vw_accounts.is_active,
 		
-		ta.account_class_id as t_account_class_id, ta.chat_type_id as t_chat_type_id, 
-		ta.chat_type_name as t_chat_type_name, ta.account_class_name as t_account_class_name, 
+		ta.accounts_class_id as t_accounts_class_id, ta.chat_type_id as t_chat_type_id, 
+		ta.chat_type_name as t_chat_type_name, ta.accounts_class_name as t_accounts_class_name, 
 		ta.account_type_id as t_account_type_id, ta.account_type_name as t_account_type_name,
 		ta.account_id as t_account_id, ta.account_no as t_account_no, ta.account_name as t_account_name, 
 		

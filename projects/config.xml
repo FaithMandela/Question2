@@ -11,20 +11,21 @@
 	<APP dbpath="jdbc:postgresql://localhost/sms" dbname="sms" path="sms" xmlfile="sms.xml" dbclass="org.postgresql.Driver" dbusername="root" key="sms">SMS</APP>
 	<APP dbpath="jdbc:postgresql://localhost/cases" dbname="cases" path="cases" xmlfile="cases.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="entity">Cases</APP>
 	<APP dbpath="jdbc:postgresql://localhost/tamshi" dbname="tamshi" path="tamshi" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="root">Tamshi</APP>
+	<APP dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="sacco">SACCO</APP>
+	<APP dbpath="jdbc:postgresql://localhost/microstart" dbname="microstart" path="microstart" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Microstart</APP>
 	<APP dbpath="jdbc:postgresql://localhost/gtat" dbname="gtat" path="gtat" xmlfile="gtat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres" key="gtat">GTA</APP>
 	<APP dbpath="jdbc:postgresql://localhost/assets" dbname="assets" path="assets" xmlfile="assets.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="assets">Assets</APP>
 	<APP dbpath="jdbc:postgresql://localhost/property" dbname="property" path="property" xmlfile="property.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="property">Property</APP>
+	<APP dbpath="jdbc:postgresql://localhost/hotel" dbname="hotel" path="hotel" xmlfile="hotel.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="hotel">Hotel</APP>
+	<APP dbpath="jdbc:postgresql://localhost/banking" dbname="banking" path="banking" xmlfile="banking.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="banking">Banking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/booking" dbname="booking" path="booking" xmlfile="booking.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Booking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/agency" dbname="agency" path="agency" xmlfile="agency.xml" dbclass="org.postgresql.Driver" dbusername="root" auth="db">Agency</APP>
-	<APP dbpath="jdbc:postgresql://localhost/sacco" dbname="sacco" path="sacco" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="sacco">SACCO</APP>
-	<APP dbpath="jdbc:postgresql://localhost/microstart" dbname="microstart" path="microstart" xmlfile="sacco.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Microstart</APP>
 	<APP dbpath="jdbc:postgresql://localhost/codepamoja" dbname="codepamoja" path="codepamoja" xmlfile="codepamoja.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">CodePamoja</APP>
 	<APP dbpath="jdbc:postgresql://localhost/galileo" dbname="galileo" path="galileo" xmlfile="galileo.xml" dbclass="org.postgresql.Driver" dbusername="root" key="galileo">Galileo</APP>
 	<APP dbpath="jdbc:postgresql://localhost/faidaplus" dbname="faidaplus" path="faidaplus" xmlfile="faidaplus.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Faida Plus</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelcreations" dbname="travelcreations" path="travelcreations" xmlfile="travelcreations.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Creations</APP>
 	<APP dbpath="jdbc:postgresql://localhost/heritage" dbname="heritage" path="heritage" xmlfile="heritage.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Heritage</APP>
 	<APP dbpath="jdbc:postgresql://localhost/acord" dbname="acord" path="acord" xmlfile="acord.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Acord</APP>
-	<APP dbpath="jdbc:postgresql://localhost/banking" dbname="banking" path="banking" xmlfile="banking.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="banking">Banking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="umis.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">UMIS</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="root" auth="entity">Babcock</APP>
