@@ -1190,6 +1190,13 @@ CREATE OR REPLACE FUNCTION get_end_year(varchar(12)) RETURNS varchar(12) AS $$
 	SELECT '31/12/' || to_char(current_date, 'YYYY'); 
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_currency_rate(integer, integer) RETURNS real AS $$
+	SELECT max(exchange_rate)
+	FROM currency_rates
+	WHERE (org_id = $1) AND (currency_id = $2)
+		AND (exchange_date = (SELECT max(exchange_date) FROM currency_rates WHERE (org_id = $1) AND (currency_id = $2)));
+$$ LANGUAGE SQL;
+
 CREATE FUNCTION get_reporting_list(integer) RETURNS varchar(320) AS $$
 DECLARE
     myrec	RECORD;

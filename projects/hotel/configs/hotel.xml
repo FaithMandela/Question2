@@ -1,6 +1,5 @@
-<APP name="Property" org="org_id" password="change_password" material="true">
-	<MENU name="Property">
-
+<APP name="Hotel" org="org_id" password="change_password" material="true">
+	<MENU name="Hotel">
 		<MENU name="Transaction Ledger">50</MENU>
 		<MENU name="Journals">30</MENU>
 		<MENU name="Administration">
@@ -217,7 +216,6 @@
 			</FORM>
 		</GRID>
 	</DESK>
-
 	<DESK w="700" name="Organisation" key="5" h="500">
 		<FORMVIEW name="Organisation" keyfield="org_id" table="orgs">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
@@ -1154,14 +1152,10 @@
 	<DESK w="700" name="Bank Accounts" key="105" h="550">
 		<JASPER name="Bank Accounts" reportfile="vw_bank_accounts.jasper"></JASPER>
 	</DESK>
-	<DESK w="700" name="Tenants and Clients" key="110" h="550">
+	<DESK w="700" name="Clients and Suppliers" key="110" h="550">
 		<JASPER name="Tenants" reportfile="vw_tenants.jasper"></JASPER>
 		<JASPER name="Clients" reportfile="vw_clients.jasper"></JASPER>
 		<JASPER name="Users" reportfile="vw_entitys.jasper"></JASPER>
-	</DESK>
-	<DESK w="700" name="Property" key="115" h="550">
-		<JASPER name="Property" reportfile="vw_property.jasper"></JASPER>
-		<JASPER name="Property Types" reportfile="property_types.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Rent" key="120" h="550">
 		<FILTER w="700" name="Rent" split="150" type="horl" key="6" h="550">

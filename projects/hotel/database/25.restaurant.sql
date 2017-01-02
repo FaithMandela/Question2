@@ -1,4 +1,4 @@
-
+---- Restaurant tables
 
 CREATE TABLE menu_category (
 	menu_category_id		serial primary key,
@@ -26,8 +26,8 @@ CREATE INDEX menu_menu_category_id ON menu (menu_category_id);
 CREATE INDEX menu_currency_id ON menu (currency_id);
 CREATE INDEX menu_org_id ON menu (org_id);
 
-CREATE TABLE item_ratio (
-	item_ratio_id			serial primary key,
+CREATE TABLE menu_ratio (
+	menu_ratio_id			serial primary key,
 	menu_id					integer references menu,
 	item_id					integer references items,
 	org_id					integer references orgs,
@@ -35,14 +35,14 @@ CREATE TABLE item_ratio (
 	estimate_cost			real,
 	details					text
 );
-CREATE INDEX item_ratio_menu_id ON item_ratio (menu_id);
-CREATE INDEX item_ratio_item_id ON item_ratio (item_id);
-CREATE INDEX item_ratio_org_id ON item_ratio (org_id);
+CREATE INDEX menu_ratio_menu_id ON menu_ratio (menu_id);
+CREATE INDEX menu_ratio_item_id ON menu_ratio (item_id);
+CREATE INDEX menu_ratio_org_id ON menu_ratio (org_id);
 
-CREATE TABLE korders (
-	korder_id				serial primary key,
+CREATE TABLE menu_orders (
+	menu_order_id			serial primary key,
 	entity_id				integer references entitys,
-	stay_id					integer references stay,
+	resident_id				integer references residents,
 	org_id					integer references orgs,
 	order_date				timestamp not null default current_timestamp,
 	table_number			varchar(25),
@@ -50,10 +50,13 @@ CREATE TABLE korders (
 	closed					boolean not null default false,
 	details					text
 );
+CREATE INDEX menu_orders_entity_id ON menu_orders (entity_id);
+CREATE INDEX menu_orders_resident_id ON menu_orders (resident_id);
+CREATE INDEX menu_orders_org_id ON menu_orders (org_id);
 
-CREATE TABLE korder_details (
-	korder_detail_id		serial primary key,
-	korder_id				integer references korders,
+CREATE TABLE menu_kitchen (
+	menu_kitchen_id			serial primary key,
+	menu_order_id			integer references menu_orders,
 	menu_id					integer references menu,
 	currency_id				integer references currency,
 	org_id					integer references orgs,
@@ -68,25 +71,37 @@ CREATE TABLE korder_details (
 	closed					boolean not null default false,
 	details					text
 );
+CREATE INDEX menu_kitchen_menu_order_id ON menu_kitchen (menu_order_id);
+CREATE INDEX menu_kitchen_menu_id ON menu_kitchen (menu_id);
+CREATE INDEX menu_kitchen_currency_id ON menu_kitchen (currency_id);
+CREATE INDEX menu_kitchen_org_id ON menu_kitchen (org_id);
 
-
-CREATE OR REPLACE FUNCTION ins_korder_details() RETURNS TRIGGER AS $$
+CREATE VIEW vw_menu AS
+	SELECT menu_category.menu_category_id, menu_category.menu_category_name, 
+		currency.currency_id, currency.currency_name,
+		menu.org_id, menu.menu_id, menu.menu_name, menu.menu_price, menu.menu_cost, 
+		menu.tax1, menu.tax2, menu.tax3, menu.exchange_rate, menu.details
+	FROM menu INNER JOIN menu_category ON menu.menu_category_id = menu_category.menu_category_id
+		INNER JOIN currency ON menu.currency_id = currency.currency_id;
+	
+	
+CREATE OR REPLACE FUNCTION ins_menu_kitchen() RETURNS TRIGGER AS $$
 DECLARE
 	myrec RECORD;
 BEGIN
-	SELECT INTO myrec menuprice, menucost, 	tax1, tax2, tax3
-	FROM menu WHERE menuid = NEW.menuid;
+	SELECT menu_price, menu_cost, tax1, tax2, tax3 INTO myrec
+	FROM menu WHERE menuid = NEW.menu_id;
 
-	NEW.itemprice = myrec.menuprice;
-	NEW.itemcost = myrec.menucost;
+	NEW.item_price = myrec.menu_price;
+	NEW.item_cost = myrec.menu_cost;
 	NEW.tax1 = myrec.tax1;
 	NEW.tax2 = myrec.tax2;
 	NEW.tax3 = myrec.tax3;
-	NEW.exchangerate = getcurrencyrate(NEW.currencyid);
+	NEW.exchange_rate = get_currency_rate(NEW.org_id, NEW.currencyid);
 
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_korder_details BEFORE INSERT ON korder_details
-    FOR EACH ROW EXECUTE PROCEDURE ins_korder_details();
+CREATE TRIGGER ins_menu_kitchen BEFORE INSERT ON menu_kitchen
+    FOR EACH ROW EXECUTE PROCEDURE ins_menu_kitchen();

@@ -1,3 +1,4 @@
+---- Hotel tables
 
 CREATE TABLE service_types (
 	service_type_id			serial primary key,
@@ -28,16 +29,16 @@ CREATE TABLE rooms (
 CREATE INDEX rooms_room_type_id ON rooms (room_type_id);
 CREATE INDEX rooms_org_id ON rooms (org_id);
 
-CREATE TABLE block_rooms (
-	block_room_id			serial primary key,
+CREATE TABLE room_block (
+	room_block_id			serial primary key,
 	room_id					integer references rooms,
 	org_id					integer references orgs,
 	date_from				date not null,
 	date_to					date not null,
 	narrative				varchar(240)
 );
-CREATE INDEX block_rooms_room_id ON block_rooms (room_id);
-CREATE INDEX block_rooms_org_id ON block_rooms (org_id);
+CREATE INDEX room_block_room_id ON room_block (room_id);
+CREATE INDEX room_block_org_id ON room_block (org_id);
 
 CREATE TABLE room_rates (
 	room_rate_id			serial primary key,
@@ -103,7 +104,7 @@ CREATE TABLE residents (
 	resident_id		 		serial primary key,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
-	residentName			varchar(120) not null,
+	resident_name			varchar(120) not null,
 	email					varchar(120),
 	identification			varchar(120),
 	date_of_birth			date,
@@ -114,9 +115,9 @@ CREATE INDEX residents_org_id ON residents (org_id);
 
 CREATE TABLE stay (
 	stay_id					serial primary key,
-	room_id					integer references rooms,
 	booking_id				integer references bookings,
 	resident_id				integer references residents,
+	room_id					integer references rooms,
 	org_id					integer references orgs,
 	arrival_date			date not null,
 	arrival_time			time,
@@ -131,8 +132,69 @@ CREATE INDEX stay_booking_id ON stay (booking_id);
 CREATE INDEX stay_resident_id ON stay (resident_id);
 CREATE INDEX stay_org_id ON stay (org_id);
 
+CREATE TABLE receipts (
+	receipt_id				serial primary key,
+	booking_id				integer references bookings,
+	bank_account_id			integer references bank_accounts,
+	journal_id				integer references journals,
+	currency_id				integer references currency,
+	sys_audit_trail_id		integer references sys_audit_trail,
+	org_id					integer references orgs,
+	receipt_number			varchar(50),
+	pay_date				date not null,
+	cleared					boolean default false not null,
+	tx_type					integer default 1 not null,
+	amount					float not null,
+	exchange_rate			real default 1 not null,
+	details					text
+);
+CREATE INDEX receipts_booking_id ON receipts (booking_id);
+CREATE INDEX receipts_bank_account_id ON receipts (bank_account_id);
+CREATE INDEX receipts_journal_id ON receipts (journal_id);
+CREATE INDEX receipts_currency_id ON receipts (currency_id);
+CREATE INDEX receipts_sys_audit_trail_id ON receipts (sys_audit_trail_id);
+CREATE INDEX receipts_org_id ON receipts (org_id);
 
 
+CREATE VIEW vw_rooms AS
+	SELECT room_types.room_type_id, room_types.room_type_name, 
+		rooms.org_id, rooms.room_id, rooms.room_number, rooms.is_active, rooms.operation_date, 
+		rooms.details
+	FROM rooms INNER JOIN room_types ON rooms.room_type_id = room_types.room_type_id;
+	
+CREATE VIEW vw_room_rates AS
+	SELECT room_types.room_type_id, room_types.room_type_name,
+		service_types.service_type_id, service_types.service_type_name,
+		currency.currency_id, currency.currency_name,  
+		room_rates.org_id, room_rates.room_rate_id, room_rates.current_rate, room_rates.date_start, 
+		room_rates.date_end, room_rates.is_active, room_rates.tax1, room_rates.tax2, room_rates.tax3, 
+		room_rates.exchange_rate, room_rates.details
+	FROM room_rates INNER JOIN room_types ON room_rates.room_type_id = room_types.room_type_id
+		INNER JOIN service_types ON room_rates.service_type_id = service_types.service_type_id
+		INNER JOIN currency ON room_rates.currency_id = currency.currency_id;
+
+CREATE VIEW vw_bookings AS
+	SELECT vw_room_rates.room_type_id, vw_room_rates.room_type_name,
+		vw_room_rates.service_type_id, vw_room_rates.service_type_name,
+		vw_room_rates.room_rate_id, vw_room_rates.current_rate, vw_room_rates.date_start, vw_room_rates.date_end,
+		entitys.entity_id, entitys.entity_name,
+		currency.currency_id, currency.currency_name,
+		reserve_modes.reserve_mode_id, reserve_modes.reserve_mode_name,
+		bookings.org_id, bookings.booking_id, bookings.booking_date, bookings.arrival_date, bookings.arrival_time, 
+		bookings.departure_date, bookings.departure_time, bookings.units, bookings.confirmed, bookings.closed, 
+		bookings.book_rate, bookings.commision, bookings.discount, bookings.tax1, bookings.tax2, bookings.tax3, 
+		bookings.exchange_rate, bookings.payment_method, bookings.details
+	FROM bookings INNER JOIN vw_room_rates ON bookings.room_rate_id = vw_room_rates.room_rate_id
+		INNER JOIN entitys ON bookings.entity_id = entitys.entity_id
+		INNER JOIN currency ON bookings.currency_id = currency.currency_id
+		INNER JOIN reserve_modes ON bookings.reserve_mode_id = reserve_modes.reserve_mode_id;
+		
+CREATE VIEW vw_residents AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+		residents.org_id, residents.resident_id, residents.residentname, residents.email, 
+		residents.identification, residents.date_of_birth, residents.details
+	FROM residents INNER JOIN entitys ON residents.entity_id = entitys.entity_id;
+	
 CREATE OR REPLACE FUNCTION ins_bookings() RETURNS TRIGGER AS $$
 DECLARE
 	myrec RECORD;
