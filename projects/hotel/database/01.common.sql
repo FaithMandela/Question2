@@ -1,6 +1,7 @@
 
 
 ALTER TABLE entitys ADD	attention		varchar(50);
+ALTER TABLE entitys ADD credit_limit real default 0;
 
 ALTER TABLE orgs ADD 	org_client_id			integer references entitys;
 ALTER TABLE orgs ADD 	payroll_payable			boolean default true not null;
@@ -165,7 +166,8 @@ CREATE VIEW vw_entitys AS
 		
 		entitys.entity_id, entitys.use_key_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
-		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone
+		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone,
+		entitys.credit_limit
 
 	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
