@@ -634,11 +634,11 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Chat of Accounts" key="25" h="500">
-		<GRID name="Accounts Class" keyfield="accounts_class_id" table="accounts_class">
-			<TEXTFIELD w="75" title="Accounts Class No">accounts_class_no</TEXTFIELD>
+		<GRID name="Account Class" keyfield="account_class_id" table="account_class">
+			<TEXTFIELD w="75" title="Account Class No">account_class_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Chat Type">chat_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accounts Class">accounts_class_name</TEXTFIELD>
-			<GRID name="Account Types" keyfield="account_type_id" linkfield="accounts_class_id" table="vw_account_types">
+			<TEXTFIELD w="75" title="Accounts Class">account_class_name</TEXTFIELD>
+			<GRID name="Account Types" keyfield="account_type_id" linkfield="account_class_id" table="vw_account_types">
 				<TEXTFIELD w="75" title="Account Type No">account_type_no</TEXTFIELD>
 				<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
 				<GRID name="Accounts" keyfield="account_id" linkfield="account_type_id" table="vw_accounts">
@@ -654,24 +654,24 @@
 						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 					</FORM>
 				</GRID>
-				<FORM name="Account Types" keyfield="account_type_id" linkfield="accounts_class_id" table="account_types">
+				<FORM name="Account Types" keyfield="account_type_id" linkfield="account_class_id" table="account_types">
 					<TEXTFIELD w="150" title="Account Type No" y="10" h="20" x="10">account_type_no</TEXTFIELD>
 					<TEXTFIELD w="350" title="Account Type" y="30" h="20" x="10">account_type_name</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Accounts Class" keyfield="accounts_class_id" table="accounts_class">
-				<TEXTFIELD w="50" title="Accounts Class No" y="10" h="20" x="10">accounts_class_no</TEXTFIELD>
+			<FORM name="Account Class" keyfield="account_class_id" table="account_class">
+				<TEXTFIELD w="50" title="Accounts Class No" y="10" h="20" x="10">account_class_no</TEXTFIELD>
 				<TEXTFIELD w="250" title="Chat Type" y="10" h="20" x="190">chat_type_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Accounts Class" y="30" h="20" x="10">accounts_class_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Accounts Class" y="30" h="20" x="10">account_class_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID new="false" name="Default Accounts" keyfield="accounts_class_id" delete="false" orderby="default_account_id" table="vw_default_accounts" where="(use_function = 3)">
+		<GRID new="false" name="Default Accounts" keyfield="default_account_id" delete="false" orderby="default_account_id" table="vw_default_accounts" where="(use_function = 3)">
 			<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Use Key">use_key_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Chat Type">chat_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accounts Class">accounts_class_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Class">account_class_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
@@ -1425,9 +1425,9 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Statement" key="170" h="750">
-		<FILTER w="700" name="Statement" split="150" type="vert" h="550">
+		<FILTER w="700" name="Supplier Statement" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<COMBOBOX w="430" title="Supplier" lptable="vw_entitys" orderby="entity_name" lpkey="entity_id" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_name">supplierid</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="vw_entitys" orderby="entity_name" lpkey="entity_id" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>

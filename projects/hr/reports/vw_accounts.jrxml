@@ -13,22 +13,26 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_accounts.chat_type_name, vw_accounts.accounts_class_no, vw_accounts.accounts_class_name, vw_accounts.account_type_no, vw_accounts.account_type_name, vw_accounts.account_no, vw_accounts.account_name
+		<![CDATA[SELECT vw_accounts.chat_type_name, vw_accounts.account_class_no, vw_accounts.account_class_name, vw_accounts.account_type_no, vw_accounts.account_type_name, vw_accounts.account_no, vw_accounts.account_name
 
 FROM vw_accounts
 $P!{orgwhere}
 
-ORDER BY vw_accounts.accounts_class_no, vw_accounts.account_type_no, vw_accounts.account_no]]>
+ORDER BY vw_accounts.account_class_no, vw_accounts.account_type_no, vw_accounts.account_no]]>
 	</queryString>
 	<field name="chat_type_name" class="java.lang.String"/>
-	<field name="accounts_class_no" class="java.lang.Integer"/>
-	<field name="accounts_class_name" class="java.lang.String"/>
+	<field name="account_class_no" class="java.lang.Integer"/>
+	<field name="account_class_name" class="java.lang.String"/>
 	<field name="account_type_no" class="java.lang.Integer"/>
 	<field name="account_type_name" class="java.lang.String"/>
 	<field name="account_no" class="java.lang.Integer"/>
@@ -51,7 +55,7 @@ ORDER BY vw_accounts.accounts_class_no, vw_accounts.account_type_no, vw_accounts
 		</groupFooter>
 	</group>
 	<group name="account_class_id">
-		<groupExpression><![CDATA[$F{accounts_class_no}]]></groupExpression>
+		<groupExpression><![CDATA[$F{account_class_no}]]></groupExpression>
 		<groupHeader>
 			<band height="17">
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
@@ -59,14 +63,14 @@ ORDER BY vw_accounts.accounts_class_no, vw_accounts.account_type_no, vw_accounts
 					<textElement>
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{accounts_class_no}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{account_class_no}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" x="76" y="0" width="333" height="15" uuid="eb2d86e9-3dc8-4a9d-abaf-ba347539628d"/>
 					<textElement>
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{accounts_class_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{account_class_name}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>

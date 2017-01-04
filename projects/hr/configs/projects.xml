@@ -16,6 +16,7 @@
 			<MENU name="Attendance">115</MENU>
 		</MENU>
 		<MENU name="HR" xml="hr.xml">0</MENU>
+		<MENU name="Business" role="finance" xml="business.xml">0</MENU>
 	</MENU>
 	<CONFIGS name="Full system configurations">
 		<AUDIT name="Full Table Audits">
