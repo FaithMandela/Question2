@@ -192,8 +192,8 @@ BEGIN
 	ELSIF(NEW.approve_status = 'Approved')THEN
 
 		NEW.org_id := nextval('orgs_org_id_seq');
-		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id, logo)
-		VALUES(NEW.org_id, 2, NEW.business_name, NEW.org_id, NEW.country_id, 'logo.png');
+		INSERT INTO orgs(org_id, currency_id, org_name, org_long_name, org_sufix, default_country_id, logo)
+		VALUES(NEW.org_id, 2, NEW.business_name, NEW.business_name, NEW.org_id, NEW.country_id, 'logo.png');
 		
 		INSERT INTO address (address_name, sys_country_id, table_name, table_id, premises, town, phone_number, website, is_default) 
 		VALUES (NEW.business_name, NEW.country_id, 'orgs', NEW.org_id, NEW.business_address, NEW.city, NEW.telephone, NEW.website, true);
@@ -235,7 +235,8 @@ BEGIN
 		FOR myrec IN SELECT tax_type_id, use_key_id, tax_type_name, formural, tax_relief, 
 			tax_type_order, in_tax, linear, percentage, employer, employer_ps, active,
 			account_number, employer_account
-			FROM tax_types WHERE org_id = 1 ORDER BY tax_type_id 
+			FROM tax_types WHERE org_id = 1 AND ((sys_country_id is null) OR (sys_country_id = NEW.country_id))
+			ORDER BY tax_type_id 
 		LOOP
 			v_tax_type_id := nextval('tax_types_tax_type_id_seq');
 			INSERT INTO tax_types (org_id, tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, currency_id, account_number, employer_account)
@@ -322,6 +323,11 @@ BEGIN
 			INNER JOIN entity_types cc ON aa.approval_entity_id = cc.entity_type_id
 			INNER JOIN entity_types dd ON cc.use_key_id = dd.use_key_id
 		WHERE aa.org_id = 1 AND bb.org_id = NEW.org_id AND dd.org_id = NEW.org_id;
+		
+		INSERT INTO sys_emails (org_id, use_type, sys_email_name, title, details)
+		SELECT NEW.org_id, use_type, sys_email_name, title, details
+		FROM sys_emails
+		WHERE org_id = 1;
 
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES (5, NEW.org_id, NEW.entity_id, 'subscription');

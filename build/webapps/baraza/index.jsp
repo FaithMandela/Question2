@@ -424,6 +424,7 @@
 <script src="./assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript" ></script>
 <script src="./assets/global/plugins/ckeditor/ckeditor.js" type="text/javascript" ></script>
@@ -499,18 +500,29 @@
             format: 'hh:mm a',
             trigger: 'manual'
         });
-        
-        $('#filtervalue').keypress(function(event){
-            var keycode = (event.keyCode ? event.keyCode : event.which);
-            if(keycode == '13'){
-                $('#btSearch').click();
-            }
-        });
 
         $('.clockface-toggle').click(function (e) {
             e.stopPropagation();
             var target = $(this).attr('data-target');
             $('#' + target ).clockface('toggle');
+        });
+
+        $('.timepicker-no-seconds').timepicker({
+            autoclose: true,
+            minuteStep: 5
+        });
+
+        // handle input group button click
+        $('.timepicker').parent('.input-group').on('click', '.input-group-btn', function(e){
+            e.preventDefault();
+            $(this).parent('.input-group').find('.timepicker').timepicker('showWidget');
+        });
+
+        $('#filtervalue').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                $('#btSearch').click();
+            }
         });
 
 		$('.select2me').select2({

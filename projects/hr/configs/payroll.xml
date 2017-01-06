@@ -41,6 +41,7 @@
 			<MENU name="Payroll Ledger">115</MENU>
 		</MENU>
 		<MENU name="HR" role="admin,payroll,reports" xml="hr.xml">0</MENU>
+		<MENU name="Business" role="finance" xml="business.xml">0</MENU>
 	</MENU>
 	<CONFIGS name="Full system configurations">
 		<AUDIT name="Full Table Audits">
@@ -339,7 +340,7 @@
 				<TEXTDECIMAL w="150" title="Deduction Relief" y="50" h="20" x="10">tax_relief</TEXTDECIMAL>
 				<CHECKBOX w="150" title="Linear" y="50" h="20" x="290">linear</CHECKBOX>
 				<CHECKBOX w="150" title="Percentage" y="70" h="20" x="10">percentage</CHECKBOX>
-				<CHECKBOX w="150" title="Active" y="70" h="20" x="290">active</CHECKBOX>
+				<CHECKBOX w="150" title="Active" default="true" y="70" h="20" x="290">active</CHECKBOX>
 				<TEXTDECIMAL w="150" title="Employer" y="90" h="20" x="10">employer</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Employer %" y="90" h="20" x="290">employer_ps</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Order" default="0" y="110" h="20" x="10">Tax_Type_order</TEXTFIELD>
@@ -502,7 +503,7 @@
 					<COMBOBOX w="430" title="Allowance" lptable="adjustments" where="(adjustment_type = 1)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="30" h="20" x="290">final_date</TEXTDATE>
-					<CHECKBOX w="150" title="Active" y="50" h="20" x="10">active</CHECKBOX>
+					<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Balance" y="50" h="20" x="290">balance</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
@@ -517,7 +518,7 @@
 					<COMBOBOX w="430" title="Deduction" lptable="adjustments" where="(adjustment_type = 2)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="30" h="20" x="290">final_date</TEXTDATE>
-					<CHECKBOX w="150" title="Active" y="50" h="20" x="10">active</CHECKBOX>
+					<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Balance" y="50" h="20" x="290">balance</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
@@ -532,7 +533,7 @@
 					<COMBOBOX w="430" title="Expense" lptable="adjustments" where="(adjustment_type = 3)" y="10" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="30" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="30" h="20" x="290">final_date</TEXTDATE>
-					<CHECKBOX w="150" title="Active" y="50" h="20" x="10">active</CHECKBOX>
+					<CHECKBOX w="150" title="Active" default="true" y="50" h="20" x="10">active</CHECKBOX>
 					<TEXTFIELD w="430" title="Narrative" y="70" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
 			</GRID>
@@ -549,7 +550,7 @@
 					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Final Date" y="70" h="20" x="10">final_date</TEXTDATE>
-					<CHECKBOX w="150" title="Active" y="70" h="20" x="290">active</CHECKBOX>
+					<CHECKBOX w="150" title="Active" default="true" y="70" h="20" x="290">active</CHECKBOX>
 					<TEXTFIELD w="430" title="Bank Account" y="90" h="20" x="10">bank_account</TEXTFIELD>
 					<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
 				</FORM>
@@ -571,7 +572,7 @@
 					<TEXTFIELD w="150" title="Pension Number" y="30" h="20" x="290">pension_number</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
 					<CHECKBOX w="150" title="Use Formular" y="50" h="20" x="290">use_formura</CHECKBOX>
-					<CHECKBOX w="150" title="Active" y="70" h="20" x="10">active</CHECKBOX>
+					<CHECKBOX w="150" title="Active" default="true" y="70" h="20" x="10">active</CHECKBOX>
 					<COMBOBOX w="430" title="Contribution" lptable="adjustments" tab="Employer" lpkey="adjustment_id" where="(adjustment_type = 1)" y="2" h="20" x="10" lpfield="adjustment_name">contribution_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Employer %" tab="Employer" y="22" h="20" x="10">employer_ps</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Employer Amount" tab="Employer" y="22" h="20" x="290">employer_amount</TEXTDECIMAL>

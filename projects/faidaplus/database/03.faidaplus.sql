@@ -136,6 +136,7 @@ CREATE INDEX order_details_id  ON orders(order_id);
 CREATE TABLE applicants (
 	applicant_id			serial primary key,
 	org_id 					integer references orgs,
+	applicant_name  		varchar(50),
 	applicant_email			varchar(50) not null,
 	user_name  				varchar(120) not null;
 	phone_no    			character varying(50)

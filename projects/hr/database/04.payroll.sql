@@ -518,14 +518,21 @@ DECLARE
 BEGIN
 
 	IF ($2 = 1) THEN
-		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 23) 
-			+ getAdjustment(Employee_Month_ID, 4, 32)) INTO adjustment
+		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32) 
+			+ getAdjustment(Employee_Month_ID, 4, 23)) 
+		INTO adjustment
 		FROM Employee_Month
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($2 = 2) THEN
-		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 23)
-			- getAdjustment(Employee_Month_ID, 4, 32) 
-			- getAdjustment(Employee_Month_ID, 4, 12) - getAdjustment(Employee_Month_ID, 4, 24)) INTO adjustment
+		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32)
+			- getAdjustment(Employee_Month_ID, 4, 23) 
+			- getAdjustment(Employee_Month_ID, 4, 12) - getAdjustment(Employee_Month_ID, 4, 24)) 
+		INTO adjustment
+		FROM Employee_Month
+		WHERE (Employee_Month_ID = $1);
+	ELSIF ($2 = 3) THEN
+		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32)) 
+		INTO adjustment
 		FROM Employee_Month
 		WHERE (Employee_Month_ID = $1);
 	ELSE
@@ -1312,13 +1319,17 @@ BEGIN
 		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
 
 	ELSIF ($2 = 3) THEN
+		v_income := getAdjustment(v_employee_month_id, 3) / v_exchange_rate;
+		v_tax := getTax(v_income, v_period_tax_type_id);
+	
+	ELSIF ($2 = 4) THEN
 		v_income := getAdjustment(v_employee_month_id, 2) / v_exchange_rate;
 		v_tax_relief := getAdjustment(v_employee_month_id, 1) / 100;
 		if(v_tax_relief < 16666.67) then v_tax_relief := 16666.67; end if;
 		v_tax_relief := v_tax_relief + getAdjustment(v_employee_month_id, 1) / 5;
 		v_income := v_income - v_tax_relief;
 		v_tax := getTax(v_income, v_period_tax_type_id) - getAdjustment(v_employee_month_id, 4, 25) / v_exchange_rate;
-
+	
 	ELSE
 		v_tax := 0;
 	END IF;

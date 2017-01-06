@@ -80,7 +80,7 @@ AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::d
 				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="121" y="0" width="120" height="15" uuid="f9f64a3f-1163-44ba-915c-aff330a0650a"/>
+				<reportElement style="Detail" x="121" y="0" width="391" height="15" uuid="f9f64a3f-1163-44ba-915c-aff330a0650a"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -139,14 +139,14 @@ AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::d
 				<text><![CDATA[Passenger Email]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="719" y="0" width="83" height="15" forecolor="#000000" uuid="4b177212-bd7d-4b43-826c-3d4ebde374a2"/>
+				<reportElement style="Column header" x="729" y="0" width="73" height="15" forecolor="#000000" uuid="4b177212-bd7d-4b43-826c-3d4ebde374a2"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="627" y="0" width="92" height="15" forecolor="#000000" uuid="1fc760db-e667-48d5-b822-10a0afd0d698"/>
+				<reportElement style="Column header" x="631" y="0" width="92" height="15" forecolor="#000000" uuid="1fc760db-e667-48d5-b822-10a0afd0d698"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
@@ -201,14 +201,14 @@ AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::d
 					<textFieldExpression><![CDATA[$F{passenger_email}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement style="Detail" x="719" y="0" width="83" height="15" isPrintWhenDetailOverflows="true" uuid="83ed11ab-66d8-41a5-8be6-b6b1e17bed4f"/>
+					<reportElement style="Detail" x="729" y="0" width="73" height="15" isPrintWhenDetailOverflows="true" uuid="83ed11ab-66d8-41a5-8be6-b6b1e17bed4f"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{totalamount_covered}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="627" y="0" width="92" height="15" uuid="212dcf05-3691-4554-8f2f-274b6ed515a1"/>
+					<reportElement style="Detail" x="631" y="0" width="92" height="15" uuid="212dcf05-3691-4554-8f2f-274b6ed515a1"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>

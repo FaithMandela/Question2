@@ -54,15 +54,12 @@ INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visibl
 UPDATE adjustments SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 50, true);
 
-
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (7, 11, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, '40045', '40045');
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (8, 12, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, '40030', '40030');
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (9, 12, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true, '40035', '40035');
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (10, 11, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, '40045', '40045');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account, sys_country_id) VALUES (7, 11, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, '40045', '40045', 'KE');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account, sys_country_id) VALUES (8, 12, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, '40030', '40030', 'KE');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account, sys_country_id) VALUES (9, 12, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true, '40035', '40035', 'KE');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account, sys_country_id) VALUES (10, 11, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, '40045', '40045', 'KE');
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (11, 15, 'Exempt', 0, '42000');
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, tax_rate, account_id) VALUES (12, 15, 'VAT', 16, '42000');
-UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
-SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
 
 
 INSERT INTO tax_rates (org_id, tax_type_id, tax_range, tax_rate)
@@ -70,20 +67,47 @@ SELECT 1,  tax_type_id + 6, tax_range, tax_rate
 FROM tax_rates
 WHERE org_id = 0;
 
+--- Uganda Payroll tax
+INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (14, 11, NULL, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 1, false, 0, false, true, true, 0, 0, NULL, true, 'UG');
+INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (15, 12, NULL, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, true, true, 0, 200, NULL, true, 'UG');
+INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (16, 12, NULL, 'Local Service Tax', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, false, false, 0, 0, NULL, true, 'UG');
+UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
+SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 13, true);
+
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 235000, 0, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 335000, 10, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 410000, 20, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 100000000, 10, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 10000000, 30, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (15, 0, 100000000, 5, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 100000, 0, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 200000, 5000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 300000, 10000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 400000, 20000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 500000, 30000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 600000, 40000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 700000, 60000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 800000, 70000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 900000, 80000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 1000000, 90000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 1000000000, 100000, NULL);
+
+
+
 INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
 SELECT 1, use_type, sys_email_name, title, details
 FROM sys_emails
 WHERE org_id = 0;
 
-INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
-SELECT 1, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
-FROM accounts_class
+INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
+SELECT 1, account_class_no, chat_type_id, chat_type_name, account_class_name
+FROM account_class
 WHERE org_id = 0;
 
 
-INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
-SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
-FROM accounts_class a INNER JOIN account_types b ON a.accounts_class_no = b.accounts_class_id
+INSERT INTO account_types (org_id, account_class_id, account_type_no, account_type_name)
+SELECT a.org_id, a.account_class_id, b.account_type_no, b.account_type_name
+FROM account_class a INNER JOIN account_types b ON a.account_class_no = b.account_class_id
 WHERE (a.org_id = 1) AND (b.org_id = 0);
 
 
@@ -114,6 +138,11 @@ SELECT bb.org_id, bb.workflow_id, cc.entity_type_id, aa.approval_level, aa.retur
 FROM workflow_phases aa INNER JOIN workflows bb ON aa.workflow_id = bb.link_copy
 	INNER JOIN entity_types cc ON aa.approval_entity_id = cc.use_key_id
 WHERE aa.org_id = 0 AND bb.org_id = 1 AND cc.org_id = 1;
+
+INSERT INTO sys_emails (org_id, use_type, sys_email_name, title, details)
+SELECT 1, use_type, sys_email_name, title, details
+FROM sys_emails
+WHERE org_id = 0;
 
 UPDATE transaction_counters SET document_number = '10001';
 

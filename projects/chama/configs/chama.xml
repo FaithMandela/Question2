@@ -2581,8 +2581,37 @@
 			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
 				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
 			</DRILLDOWN>
+<<<<<<< HEAD
+			<JASPER name="Reports" reportfile="vw_chama_statement1.jasper"></JASPER>
+		</FILTER>
+		<GRID name="Periods" keyfield="period_id" table="vw_periods">
+			<TEXTFIELD w="75" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
+			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
+			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Opened">opened</CHECKBOX>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Per Diem Tax Limit">per_diem_tax_limit</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Posted">is_posted</CHECKBOX>
+			<TEXTFIELD w="75" title="Gl Payroll Account">gl_payroll_account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gl Bank Account">gl_bank_account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gl Advance Account">gl_advance_account</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Month ID">month_id</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Quarter">quarter</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Semister">semister</TEXTDECIMAL>
+			<JASPER name="Reports" reportfile="vw_chama_statement1.jasper"></JASPER>
+		</GRID>
+=======
 			<JASPER name="Reports" org.table="vw_chama_statement" reportfile="vw_chama_statement.jasper"></JASPER>
 		</FILTER>
+>>>>>>> 70d1e1368c6769d8dec9b7741d68eda7de1bbec1
 	</DESK>
 	<DESK w="700" name="Drawings" key="350" h="550">
 		<GRID name="Drawings" keyfield="drawing_id" linkfield="org_id" table="vw_drawings">

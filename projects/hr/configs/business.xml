@@ -36,8 +36,8 @@
 			<MENU name="Tax Types">135</MENU>
 			<MENU name="Items">140</MENU>
 			<MENU name="Chart of Accounts">105</MENU>
-			<MENU name="Journals">110</MENU>
 			<MENU name="Transaction Ledger">145</MENU>
+			<MENU name="Journals">110</MENU>
 			<MENU name="Trial Balance">150</MENU>
 			<MENU name="income and Expenditure">155</MENU>
 			<MENU name="Balance Sheet">160</MENU>
@@ -1162,11 +1162,11 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Chat of Accounts" key="5" h="500">
-		<GRID name="Accounts Class" keyfield="accounts_class_id" table="accounts_class">
-			<TEXTFIELD w="75" title="Accounts Class No">accounts_class_no</TEXTFIELD>
+		<GRID name="Account Class" keyfield="account_class_id" table="account_class">
+			<TEXTFIELD w="75" title="Account Class No">account_class_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Chat Type">chat_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accounts Class">accounts_class_name</TEXTFIELD>
-			<GRID name="Account Types" keyfield="account_type_id" linkfield="accounts_class_id" table="vw_account_types">
+			<TEXTFIELD w="75" title="Accounts Class">account_class_name</TEXTFIELD>
+			<GRID name="Account Types" keyfield="account_type_id" linkfield="account_class_id" table="vw_account_types">
 				<TEXTFIELD w="75" title="Account Type No">account_type_no</TEXTFIELD>
 				<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
 				<GRID name="Accounts" keyfield="account_id" linkfield="account_type_id" table="vw_accounts">
@@ -1182,24 +1182,24 @@
 						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 					</FORM>
 				</GRID>
-				<FORM name="Account Types" keyfield="account_type_id" linkfield="accounts_class_id" table="account_types">
+				<FORM name="Account Types" keyfield="account_type_id" linkfield="account_class_id" table="account_types">
 					<TEXTFIELD w="150" title="Account Type No" y="10" h="20" x="10">account_type_no</TEXTFIELD>
 					<TEXTFIELD w="350" title="Account Type" y="30" h="20" x="10">account_type_name</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Accounts Class" keyfield="accounts_class_id" table="accounts_class">
-				<TEXTFIELD w="50" title="Accounts Class No" y="10" h="20" x="10">accounts_class_no</TEXTFIELD>
+			<FORM name="Account Class" keyfield="account_class_id" table="account_class">
+				<TEXTFIELD w="50" title="Accounts Class No" y="10" h="20" x="10">account_class_no</TEXTFIELD>
 				<TEXTFIELD w="250" title="Chat Type" y="10" h="20" x="190">chat_type_name</TEXTFIELD>
-				<TEXTFIELD w="430" title="Accounts Class" y="30" h="20" x="10">accounts_class_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Accounts Class" y="30" h="20" x="10">account_class_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID new="false" name="Default Accounts" keyfield="accounts_class_id" delete="false" orderby="default_account_id" table="vw_default_accounts" where="(use_function = 3)">
+		<GRID new="false" name="Default Accounts" keyfield="default_account_id" delete="false" orderby="default_account_id" table="vw_default_accounts" where="(use_function = 3)">
 			<TEXTFIELD w="75" title="Account No">account_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Use Key">use_key_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Chat Type">chat_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accounts Class">accounts_class_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account Class">account_class_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Type">account_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
@@ -1224,15 +1224,23 @@
 				<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 				<TEXTDATE w="75" title="Period Start">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="Period End">end_date</TEXTDATE>
-				<CHECKBOX w="75" title="Period Opened">opened</CHECKBOX>
-				<CHECKBOX w="75" title="Period Closed">closed</CHECKBOX>
+				<CHECKBOX w="75" title="Opened">opened</CHECKBOX>
+				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+				<CHECKBOX w="75" title="Active">activated</CHECKBOX>
 				<FORM name="Periods" keyfield="period_id" linkfield="fiscal_year_id" table="periods">
 					<TEXTDATE w="150" title="Period Start" y="10" h="20" x="10">start_date</TEXTDATE>
 					<TEXTDATE w="150" title="Period End" y="10" h="20" x="290">end_date</TEXTDATE>
 					<CHECKBOX w="150" title="Period Opened" y="30" h="20" x="10">opened</CHECKBOX>
 					<CHECKBOX w="150" title="Period Closed" y="30" h="20" x="290">closed</CHECKBOX>
-					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="150" title="Activated" y="50" h="20" x="10">activated</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
+				<ACTIONS>
+					<ACTION fnct="open_periods" approval="1">Open Period</ACTION>
+					<ACTION fnct="open_periods" approval="2">Close Period</ACTION>
+					<ACTION fnct="open_periods" approval="3">Activate Period</ACTION>
+					<ACTION fnct="open_periods" approval="4">De-activate Period</ACTION>
+				</ACTIONS>
 			</GRID>
 			<FORM name="Fiscal Years" keyfield="fiscal_year_id" table="fiscal_years">
 				<TEXTFIELD w="250" title="Fiscal Year" y="10" h="20" x="10">fiscal_year</TEXTFIELD>
@@ -1355,7 +1363,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Clients" keyfield="entity_id" table="entitys">
+			<FORM name="Client" keyfield="entity_id" table="entitys">
 				<DEFAULT default="client">function_role</DEFAULT>
 				<DEFAULT default="2">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
@@ -1370,7 +1378,7 @@
 				<TEXTAREA w="430" title="Details" y="110" h="150" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Supplier" keyfield="entity_id" table="entitys" where="(use_key_id = 3)">
+		<GRID name="Suppliers" keyfield="entity_id" table="entitys" where="(use_key_id = 3)">
 			<TEXTFIELD w="75" title="Supplier ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Supplier Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -1451,7 +1459,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Users" keyfield="entity_id" table="entitys">
+			<FORM name="User" keyfield="entity_id" table="entitys">
 				<DEFAULT default="0">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 0)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Full Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
@@ -1462,7 +1470,7 @@
 				<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID name="Entity Types" keyfield="entity_type_id" table="entity_types" where="(use_function=0)">
+		<GRID name="Entity Types" keyfield="entity_type_id" table="vw_entity_types">
 			<TEXTFIELD w="75" title="Entity Type ID">entity_type_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Type Name">entity_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Entity Role">entity_role</TEXTFIELD>
@@ -1480,11 +1488,11 @@
 				</FORM>
 			</GRID>
 			<FORM name="Entity Types" keyfield="entity_type_id" table="entity_types">
-				<DEFAULT default="2">use_function</DEFAULT>
-				<COMBOBOX w="430" title="Use Key" lptable="use_keys" noorg="true" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
+				<COMBOBOX w="430" title="Use Key" lptable="use_keys" noorg="true" where="(use_function=0)" y="10" h="20" x="10" lpfield="use_key_name">use_key_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Entity Type Name" y="30" h="20" x="10">entity_type_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Entity Role" y="50" h="20" x="10">entity_role</TEXTFIELD>
-				<TEXTFIELD w="150" title="Use Key" y="70" h="20" x="10">use_key</TEXTFIELD>
+				<TEXTFIELD w="150" title="Start View" y="70" h="20" x="290">start_view</TEXTFIELD>
+				<TEXTFIELD w="430" title="Group EMail" y="90" h="20" x="10">group_email</TEXTFIELD>
 				<TEXTAREA w="530" tab="Description" y="1" h="170" x="10">description</TEXTAREA>
 				<TEXTAREA w="530" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 			</FORM>
@@ -1980,6 +1988,7 @@
 		<FORMVIEW name="Organisation" keyfield="org_id" table="orgs">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="Full Name">org_full_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Enforce Budget">enforce_budget</CHECKBOX>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<FORM new="false" name="Organisation" keyfield="org_id" delete="false" table="orgs">
@@ -1988,11 +1997,12 @@
 				<COMBOBOX w="350" title="Default Country" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="50" h="20" x="10" lpfield="sys_country_name">default_country_id</COMBOBOX>
 				<COMBOBOX w="430" title="Org Client" lptable="entitys" lpkey="entity_id" y="70" h="20" x="10" lpfield="entity_name">org_client_id</COMBOBOX>
 				<TEXTFIELD w="350" title="Logo" placeholder="Logo" y="90" h="20" x="10">logo</TEXTFIELD>
-				<CHECKBOX w="150" title="Enforce Budget" y="110" h="20" x="10">enforce_budget</CHECKBOX>
-				<CHECKBOX w="150" title="Payroll Payable" y="110" h="20" x="290">payroll_payable</CHECKBOX>
-				<TEXTFIELD w="150" title="Cert. Number" y="130" h="20" x="10">cert_number</TEXTFIELD>
-				<TEXTFIELD w="150" title="VAT Number" y="130" h="20" x="290">vat_number</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" placeholder="Details" y="150" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="350" title="Full Name" placeholder="Logo" y="110" h="20" x="10">org_full_name</TEXTFIELD>
+				<CHECKBOX w="150" title="Enforce Budget" y="130" h="20" x="10">enforce_budget</CHECKBOX>
+				<CHECKBOX w="150" title="Payroll Payable" y="130" h="20" x="290">payroll_payable</CHECKBOX>
+				<TEXTFIELD w="150" title="Cert. Number" y="150" h="20" x="10">cert_number</TEXTFIELD>
+				<TEXTFIELD w="150" title="VAT Number" y="150" h="20" x="290">vat_number</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" placeholder="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Address" keyfield="address_id" linkfield="table_id" table="vw_address" where="table_name = 'orgs'">
 				<TEXTFIELD w="140" title="Country">sys_country_name</TEXTFIELD>
@@ -2756,8 +2766,8 @@
 	<DESK w="707" name="Trial Balance" key="150" h="590">
 		<FILTER w="700" name="Trial Balance" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">startrange</TEXTDATE>
-				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">endrange</TEXTDATE>
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" title="Ending At" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Trial Balance - Summary" reportfile="trial_balancec.jasper"></JASPER>
 			<JASPER name="Trial Balance" reportfile="trial_balanceb.jasper"></JASPER>
@@ -2775,16 +2785,24 @@
 	<DESK w="707" name="Balance Sheet" key="160" h="590">
 		<FILTER w="700" name="Balance Sheet" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">startrange</TEXTDATE>
-				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">endrange</TEXTDATE>
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+				<TEXTDATE w="150" title="Ending At" y="10" h="20" default_fnct="get_end_year" x="290">endrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Balance Sheet" reportfile="balance_sheet.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Statement" key="170" h="750">
-		<FILTER w="700" name="Statement" split="150" type="vert" h="550">
+		<FILTER w="700" name="Client Statement" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<COMBOBOX w="430" title="Supplier" lptable="vw_entitys" orderby="entity_name" lpkey="entity_id" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_name">supplierid</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="vw_entitys" orderby="entity_name" lpkey="entity_id" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>
+			<JASPER name="Full Statement" reportfile="statement.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" name="Supplier Statement" split="150" type="vert" h="550">
+			<FILTERFORM name="Date Range">
+				<COMBOBOX w="430" title="Supplier" lptable="vw_entitys" orderby="entity_name" lpkey="entity_id" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">startrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>

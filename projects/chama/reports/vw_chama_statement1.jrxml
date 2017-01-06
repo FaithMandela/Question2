@@ -34,7 +34,11 @@
 		</box>
 	</style>
 	<subDataset name="ds1" uuid="b6d36d44-4a51-4807-a12e-c5d12153f976">
+<<<<<<< HEAD
+		<queryString language="SQL">
+=======
 		<queryString>
+>>>>>>> 70d1e1368c6769d8dec9b7741d68eda7de1bbec1
 			<![CDATA[SELECT org_id, SUM(contribution) AS contribution, SUM(drawings) AS drawings, SUM(receipts) AS receipts,
 	SUM(loans) AS loans, SUM(repayments) AS repayments, SUM(investments) AS investments,
 	SUM(borrowing) AS borrowing, SUM(penalty) AS penalty, SUM(income) AS income, SUM(expenditure) AS expenditure
@@ -74,12 +78,18 @@ GROUP BY org_id]]>
 		<![CDATA[SELECT vw_chama_statement.title, vw_chama_statement.date, vw_chama_statement.contribution, vw_chama_statement.drawings, vw_chama_statement.receipts, vw_chama_statement.loans, vw_chama_statement.repayments, vw_chama_statement.investments, vw_chama_statement.borrowing, vw_chama_statement.penalty, vw_chama_statement.income, vw_chama_statement.expenditure, vw_chama_statement.org_id, periods.period_id
 FROM vw_chama_statement
 JOIN periods ON vw_chama_statement.date = periods.start_date
+<<<<<<< HEAD
+Where vw_chama_statement.title is not null AND period_id = '$P!{filterid}'
+
+$P!{organd}
+=======
 
 
 Where vw_chama_statement.title is not null AND period_id = '$P!{filterid}'
 $P!{organd}
 
 
+>>>>>>> 70d1e1368c6769d8dec9b7741d68eda7de1bbec1
 order by title]]>
 	</queryString>
 	<field name="title" class="java.lang.String"/>

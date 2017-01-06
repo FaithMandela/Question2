@@ -1942,6 +1942,8 @@ INSERT INTO city_codes VALUES ('HWN', 'Hwange Nat Park', 'Zimbabwe', 'ZW');
 INSERT INTO city_codes VALUES ('MVZ', 'Masvingo', 'Zimbabwe', 'ZW');
 INSERT INTO city_codes VALUES ('SAY', 'Salisbury', 'Zimbabwe', 'ZW');
 INSERT INTO city_codes VALUES ('VFA', 'Victoria Falls', 'Zimbabwe', 'ZW');
+INSERT INTO city_codes VALUES ('NSI', 'Yaoundé','Cameroon', 'BM');
+
 
 INSERT INTO rate_category (rate_category_id, rate_category_name, group_rates) VALUES (1, 'Standard Rates', false);
 INSERT INTO rate_category (rate_category_id, rate_category_name, group_rates) VALUES (2, 'Annual Multi Trip', false);

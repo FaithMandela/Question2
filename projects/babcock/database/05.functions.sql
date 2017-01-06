@@ -988,8 +988,11 @@ BEGIN
 	WHERE (qresidenceid = myres);
 	
 	UPDATE qstudents SET qresidenceid = null, financeclosed = false
-	WHERE (finaceapproval = false) AND (age(residence_time) > '1 day'::interval) AND (offcampus = false)
-		AND (qresidenceid is not null) AND (quarterid = myrec.quarterid);
+	FROM vwqstudentbalances 
+	WHERE (qstudents.finaceapproval = false) AND (age(qstudents.residence_time) > '1 day'::interval) AND (qstudents.offcampus = false)
+		AND (qstudents.qresidenceid is not null) AND (qstudents.quarterid = myrec.quarterid)
+		AND (qstudents.qstudentid = vwqstudentbalances.qstudentid) AND (vwqstudentbalances.finalbalance < 10000)
+		AND (vwqstudentbalances.finaceapproval = false) AND (vwqstudentbalances.quarterid = myrec.quarterid);
 	
 	SELECT count(qstudentid) INTO resCount
 	FROM qstudents

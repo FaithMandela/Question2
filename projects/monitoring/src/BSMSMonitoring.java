@@ -83,10 +83,21 @@ public class BSMSMonitoring {
 				}
 			}
 			
+			sql = "SELECT COALESCE(sum(sms_units - sms_count), 0) as sms_bal ";
+			sql += "FROM vw_load_usage;";
+			Statement st3 = smsDB.createStatement();
+			ResultSet rs3 = st3.executeQuery(sql);
+			if(rs3.next()) {
+				int smsBal = rs3.getInt("sms_bal");
+				if(smsBal < 3000) smsError = "The SMS credit is about to run out please to up";
+			}
+			
 			rs1.close();
 			st1.close();
 			rs2.close();
 			st2.close();
+			rs3.close();
+			st3.close();
 		} catch(SQLException ex){
 			System.out.println("Error: " + ex);
 		}
