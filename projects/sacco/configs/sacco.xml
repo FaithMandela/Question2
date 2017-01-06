@@ -43,6 +43,7 @@
 			<MENU name="Transaction Ledger" role="admin, manager">220</MENU>
 		</MENU>
 		<MENU page="billing.jsp" name="Billing" role="subscription,admin,staff,finance">2</MENU>
+		<MENU name="Finance" role="admin,staff,finance" xml="business.xml">1</MENU>
 	</MENU>
 	<DESK w="700" name="Dashboard" key="1" h="500">
 		<DASHBOARD w="650" name="Dashboard">

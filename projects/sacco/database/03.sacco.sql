@@ -41,8 +41,7 @@ CREATE TABLE contributions (
 	payment_type_id         integer references payment_types,
 	contribution_type_id 	integer references contribution_types,
 	org_id					integer references orgs, 
-	additional_funds_id		 integer references additional_funds,
-	
+
 	entity_name 			varchar(120),
 	contribution_amount		real default 0 not null,
 	contribution_paid		real default 0 not null,
@@ -60,7 +59,7 @@ CREATE TABLE contributions (
 	narrative				varchar(255)
 );
 
-CREATE INDEX contributions_additional_funds ON contributions (additional_funds_id);
+
 CREATE INDEX contributions_entity_id ON contributions (entity_id);
 CREATE INDEX contributions_period_id ON contributions (period_id);
 CREATE INDEX contributions_payment_type_id ON contributions (payment_type_id);
@@ -85,45 +84,8 @@ CREATE INDEX additional_funds_contribution_id on additional_funds(contribution_i
 CREATE INDEX additional_funds_payment_type_id on additional_funds(payment_type_id);
 
 
- 
+--- 
 
-
-
-
-CREATE TABLE collateral_types (
-  collateral_type_id 		serial primary key,
-  org_id					integer references orgs,
-  collateral_type_name		varchar(120),
-  details 					text
-);
-CREATE INDEX collateral_types_org_id ON collateral_types (org_id);
-
-CREATE TABLE collateral (
-	collateral_id			serial primary key,
-	loan_id					integer references loans,
-	collateral_type_id		integer references collateral_types,
-	org_id					integer references orgs,
-	reference_number		varchar(50),
-	collateral_amount		real,
-	narrative 				text	
-);
-CREATE INDEX collateral_loan_id ON collateral (loan_id);
-CREATE INDEX collateral_collateral_type on collateral (collateral_type_id);
-CREATE INDEX collateral_org_id ON collateral (org_id);
-
-CREATE TABLE gurrantors (
-	gurrantor_id			serial primary key,
-	entity_id				integer references entitys,
-	loan_id					integer references loans,
-	org_id					integer references orgs,
-	is_accepted				boolean default false,
-	is_approved				boolean default false,
-	amount					real not null default 0,
-	details					text
-);
-CREATE INDEX gurrantors_entity_id ON gurrantors (entity_id);
-CREATE INDEX gurrantors_loan_id ON gurrantors (loan_id);
-CREATE INDEX gurrantors_org_id ON gurrantors (org_id);
 
 CREATE TABLE investment_types (
 	investment_type_id 			serial primary key,
@@ -243,8 +205,8 @@ CREATE TABLE members (
   	 county						varchar (120) not null default 'Nairobi',
   	 residential_address 		varchar (120),
   	 
-  	 expired 					boolean default 'false'
-  	 contribution				real not null default 0;
+  	 expired 					boolean default 'false',
+  	 contribution				real not null default 0
   	);
   	
 	 

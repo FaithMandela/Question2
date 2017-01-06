@@ -18,8 +18,16 @@ INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Ba
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Manager');
 INSERT INTO subscription_levels (org_id, subscription_level_name) VALUES (1, 'Consumer');
 
+INSERT INTO tax_types (use_key, org_id, tax_type_name, tax_rate) VALUES (0, 1, 'Exempt', 0);
+INSERT INTO tax_types (use_key, org_id, tax_type_name, tax_rate) VALUES (0, 1, 'VAT', 16);
+UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
+SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 12, true);
 
---- Copy over data
+
+INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
+SELECT 1, use_type, sys_email_name, title, details
+FROM sys_emails
+WHERE org_id = 0;
 
 INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
 SELECT 1, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
@@ -37,5 +45,4 @@ INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
 SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
 FROM account_types a INNER JOIN accounts b ON a.account_type_no = b.account_type_id
 WHERE (a.org_id = 1) AND (b.org_id = 0);
-
 

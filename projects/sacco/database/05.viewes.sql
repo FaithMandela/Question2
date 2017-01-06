@@ -44,22 +44,22 @@ CREATE VIEW vw_period_month AS
 
 
 
-CREATE OR REPLACE VIEW vw_sacco_investments AS 
- SELECT currency.currency_id, currency.currency_name,
-    investment_types.investment_type_id, investment_types.investment_type_name,
-    bank_accounts.bank_account_id, bank_accounts.bank_account_name,
-    sacco_investments.org_id, sacco_investments.sacco_investment_id, sacco_investments.investment_name, sacco_investments.date_of_accrual,
-    sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period, sacco_investments.initial_payment, sacco_investments.monthly_payments, sacco_investments.investment_status, 
-    sacco_investments.approve_status, sacco_investments.workflow_table_id, sacco_investments.action_date, sacco_investments.is_active, sacco_investments.details,
-	get_total_repayment(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as total_repayment,
-	get_interest_amount(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as interest_amount
-FROM sacco_investments
-	JOIN currency ON sacco_investments.currency_id = currency.currency_id
-    JOIN investment_types ON sacco_investments.investment_type_id = investment_types.investment_type_id
-    LEFT JOIN bank_accounts ON sacco_investments.bank_account_id = bank_accounts.bank_account_id;
+--CREATE OR REPLACE VIEW vw_sacco_investments AS 
+ --SELECT currency.currency_id, currency.currency_name,
+   -- investment_types.investment_type_id, investment_types.investment_type_name,
+    --bank_accounts.bank_account_id, bank_accounts.bank_account_name,
+   -- sacco_investments.org_id, sacco_investments.sacco_investment_id, sacco_investments.investment_name, sacco_investments.date_of_accrual,
+    --sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period, sacco_investments.initial_payment, sacco_investments.monthly_payments, sacco_investments.investment_status, 
+    --sacco_investments.approve_status, sacco_investments.workflow_table_id, sacco_investments.action_date, sacco_investments.is_active, sacco_investments.details,
+	--get_total_repayment(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as total_repayment,
+	--get_interest_amount(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as interest_amount
+--FROM sacco_investments
+--	JOIN currency ON sacco_investments.currency_id = currency.currency_id
+  --  JOIN investment_types ON sacco_investments.investment_type_id = investment_types.investment_type_id
+    --LEFT JOIN bank_accounts ON sacco_investments.bank_account_id = bank_accounts.bank_account_id;
 
     
-drop funcion change_password ( character varying, character varying,character varying);
+drop function change_password ( character varying, character varying,character varying);
 
 CREATE OR REPLACE FUNCTION change_password(v_entityID integer, v_old_pass varchar(32), v_pass varchar(32)) RETURNS varchar(120) AS $$
 DECLARE
@@ -86,18 +86,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
-
-
-
-
-
-
-
-
-
-
-alter table contributions add additional_payments real not null default 0;
 alter table loan_monthly add additional_payments real not null default 0;
 
 
@@ -109,28 +97,34 @@ CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
 $$ LANGUAGE SQL;
 
 
-
-CREATE OR REPLACE FUNCTION compute_contributions(v_period_id varchar(12), v_org_id varchar(12), v_approval varchar(12)) RETURNS varchar(120) AS $$
+--- here done
+CREATE OR REPLACE FUNCTION compute_contributions(
+    v_period_id character varying,
+    v_org_id character varying,
+    v_approval character varying)
+  RETURNS character varying AS
+$BODY$
 DECLARE
     msg                 varchar(120);
 BEGIN
 	msg := 'Contributions generated';
-    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id =  v_org_id::integer ;
+    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id =  v_org_id::integer AND is_paid = false ;
     DELETE FROM contributions WHERE period_id = v_period_id::integer;
     
     INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
-            entity_name, deposit_amount,  entry_date,
-             transaction_ref, additional_payments,is_paid)
+             contribution_amount,  entry_date,
+             transaction_ref, is_paid)
              
-    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0, first_name, contribution,
-            now()::date, 'Auto generated', 0, 'False'
+    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0,  contribution,
+            now()::date, 'Auto generated','False'
         FROM members;
 
     RETURN msg;
 END;
-$$ LANGUAGE plpgsql; 
+$BODY$
+  LANGUAGE plpgsql;
 
-
+  
 CREATE OR REPLACE FUNCTION loan_approved(
     character varying,
     character varying,
@@ -190,38 +184,6 @@ END;
 $BODY$
   LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION compute_contributions(
-    v_period_id character varying,
-    v_org_id character varying,
-    v_approval character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-    msg                 varchar(120);
-BEGIN
-    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id = v_org_id::integer;
-    
-    
-    DELETE FROM contributions WHERE period_id = v_period_id::integer;
-
-    
-    INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
-            entity_name, deposit_amount, loan_repayment, entry_date,
-             transaction_ref, additional_payments,is_paid)
-		
-             
-    SELECT v_period_id::integer, org_id::integer,entity_id, 0,0, first_name, contribution, 'False', 
-            now()::date, 'Auto generated', 0, 'False'
-        FROM members;
-msg = ' Its done';
-    
-    RETURN msg;
-END;
-$BODY$
-  LANGUAGE plpgsql;
-
-
-  
   CREATE OR REPLACE FUNCTION contribution_paid (varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg 				varchar(120);
@@ -305,86 +267,6 @@ CREATE OR REPLACE VIEW vw_gurrantors AS
 
 
 
-CREATE OR REPLACE VIEW vw_contributions AS 
- SELECT 
- contributions.contribution_id,
-   contributions.org_id,
-    contributions.entity_id,
-    contributions.period_id,
-    contributions.payment_type_id,
-    contributions.receipt,
-contributions.receipt_date,
-	 contributions.balance,
-    contributions.entry_date,
-    contributions.transaction_ref,
-    contributions.contribution_amount,
-    contributions.contribution_paid ,
-    
-    contributions.deposit_amount,
-    contributions.deposit_date as deposit_dates,
-	
-    contributions.is_paid,
-    entitys.entity_name,
-    entitys.is_active AS member_is_active,
-    contribution_types.contribution_type_id,
-    contribution_types.contribution_type_name,
-    payment_types.payment_type_name,
-    payment_types.payment_narrative,
-    (get_balance_interest_penalty (contributions.entity_id) + get_shares (contributions.entity_id) )as active_balance, 
-	get_shares (contributions.entity_id,  contributions.period_id) as shares,
-    to_char(periods.start_date::timestamp with time zone, 'YYYY'::text) AS deposit_year,
-    to_char(periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
-   FROM contributions
-     JOIN entitys ON contributions.entity_id = entitys.entity_id
-     JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
-     JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
-     JOIN periods ON contributions.period_id = periods.period_id;
-  
-
-
-
-   CREATE OR REPLACE VIEW vw_contributions_month AS 
-SELECT vw_periods.period_id,
-    vw_periods.start_date,
-    vw_periods.end_date,
-    vw_periods.overtime_rate,
-    vw_periods.activated,
-    vw_periods.closed,
-    vw_periods.month_id,
-    vw_periods.period_year,
-    vw_periods.period_month,
-    vw_periods.quarter,
-    vw_periods.semister,
-    vw_periods.bank_header,
-    vw_periods.bank_address,
-    vw_periods.is_posted,
-    contributions.contribution_id,
-    contributions.org_id,
-    contributions.balance,
-    contributions.entity_id,
-    contributions.payment_type_id,
-     contributions.contribution_amount,
-      contributions.contribution_paid ,
-    contributions.deposit_amount,
-	contributions.entry_date,
-	contributions.transaction_ref,
-      contributions.is_paid,
-    	get_shares(contributions.entity_id) AS shares,
-	members.contribution AS intial_contribution,
-    members.first_name,
-    members.expired,
-    contribution_types.contribution_type_id,
-    contribution_types.contribution_type_name,
-    payment_types.payment_type_name,
-    payment_types.payment_narrative,
-    to_char(vw_periods.start_date::timestamp with time zone, 'YYYY'::text) AS year,
-    to_char(vw_periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
-   FROM contributions
-     JOIN members ON contributions.entity_id = members.entity_id
-     JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
-     JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
-     JOIN vw_periods ON contributions.period_id = vw_periods.period_id;
-   
 
 DROP VIEW vw_entitys;
 
@@ -409,7 +291,7 @@ SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, v
 		entitys.function_role, entitys.attention, entitys.primary_email,
 		
 		entity_types.entity_type_id, entity_types.entity_type_name, 
-		entity_types.entity_role, entity_types.use_key
+		entity_types.entity_role
 	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
 		JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
@@ -461,7 +343,7 @@ CREATE VIEW vw_entitys AS
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
 		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
 		entity_types.entity_type_id, entity_types.entity_type_name,
-		entity_types.entity_role, entity_types.use_key
+		entity_types.entity_role
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
@@ -472,7 +354,7 @@ CREATE OR REPLACE VIEW vw_entitys_types AS
 		entitys.function_role, entitys.attention, entitys.primary_email, entitys.org_id,entitys.primary_telephone,
 		  entitys.new_password,entitys.exit_amount,
 		entity_types.entity_type_id, entity_types.entity_type_name, 
-		entity_types.entity_role, entity_types.use_key
+		entity_types.entity_role
 	FROM entitys
 		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
 		
@@ -527,13 +409,6 @@ CREATE OR REPLACE VIEW vw_recruiting_entity AS
      JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;  
 
      
-CREATE OR REPLACE VIEW vw_additional_funds AS 
-	SELECT contributions.contribution_amount,contributions.contribution_paid,contributions.contribution_id, additional_funds.payment_type_id, additional_funds.org_id, additional_funds.additional_amount, additional_funds.deposit_date, additional_funds.entry_date, additional_funds.transaction_ref,additional_funds.additional_funds_id,
-			additional_funds.narrative, vw_contributions.deposit_year, vw_contributions.deposit_date, payment_types.payment_type_name
-	FROM additional_funds
-	JOIN vw_contributions ON vw_contributions.contribution_id = additional_funds. contribution_id
-	JOIN payment_types ON payment_types.payment_type_id = additional_funds.payment_type_id-- here
-
  
 CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
 BEGIN
@@ -582,59 +457,7 @@ $$ LANGUAGE plpgsql;
 
 
 
-CREATE OR REPLACE FUNCTION ins_contributions()
-  RETURNS trigger AS
-$BODY$
-DECLARE
-v_period        integer;
-v_loan          record;
-v_count         integer;
-v_contrib_amount    real;
-v_deposit_amount    real;
-msg                 varchar(120);
-
-BEGIN
-   IF (TG_OP = 'UPDATE' and New.is_paid = 'True') THEN  
-    v_contrib_amount := NEW.deposit_amount;
-   
-    v_count := 0;
-  SELECT period_id, start_date, end_date INTO v_period from periods where opened = true and activated = true;
-     v_period := NEW.period_id ; 
-    
   
-        FOR v_loan IN Select * from vw_loans where  approve_status = 'Approved' AND loan_balance > 0 AND  entity_id = NEW.entity_id
-        LOOP 
-            SELECT count(loan_month_id) INTO v_count FROM loan_monthly WHERE loan_id = v_loan.loan_id AND period_id = v_period;
-            IF( v_count = 0) THEN
-                IF(v_contrib_amount >= v_loan.monthly_repayment) THEN
-                    
-                    INSERT INTO loan_monthly(loan_id, period_id, org_id,repayment, interest_amount, interest_paid, penalty,                                     penalty_paid, details, additional_payments,is_paid)
-                    VALUES (v_loan.loan_id, v_period, NEW.org_id, v_loan.monthly_repayment, 
-                        (v_loan.loan_balance * v_loan.interest / 1200), 
-                        (v_loan.loan_balance * v_loan.interest / 1200), 0, 0, 'Loan Repayment', 0,'True');
-
-                    NEW.loan_repayment = True;
-                    v_contrib_amount := (v_contrib_amount - v_loan.monthly_repayment);
-                END IF;
-            END IF;
-
-        END LOOP;
-    END IF;
-    NEW.contribution_amount := v_contrib_amount;
-   RETURN NEW;
-END;
-$BODY$
-  LANGUAGE plpgsql;
-
-  
-  CREATE TRIGGER ins_contributions  BEFORE INSERT OR UPDATE  ON contributions
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_contributions();
-  
-  
-CREATE TRIGGER ins_investment BEFORE INSERT OR UPDATE ON investments
-	FOR EACH ROW EXECUTE PROCEDURE ins_investment();
-
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
@@ -753,8 +576,8 @@ BEGIN
     
     SELECT * INTO rec_loan FROM vw_loans WHERE loan_id = NEW.loan_id; --LOAN TO BE GURRANTEED
     
-    SELECT COALESCE(SUM(contribution_amount + additional_payments), 0) INTO v_shares FROM contributions where entity_id = rec_loan.entity_id; -- LOANEE SHARES
-    SELECT COALESCE(SUM(contribution_amount + additional_payments), 0) INTO v_grnt_shares FROM contributions where entity_id = NEW.entity_id; -- GRNT SHARES
+    SELECT COALESCE(SUM(contribution_paid + additional_payments), 0) INTO v_shares FROM contributions where entity_id = rec_loan.entity_id; -- LOANEE SHARES
+    SELECT COALESCE(SUM(contribution_paid + additional_payments), 0) INTO v_grnt_shares FROM contributions where entity_id = NEW.entity_id; -- GRNT SHARES
 
     SELECT COALESCE(SUM(loan_balance), 0) INTO v_tot_loan_balance FROM vw_loans WHERE entity_id = rec_loan.entity_id AND approve_status = 'Approved' AND loan_balance > 0; --LOANEE ACTIVE LOAN SUM
     SELECT COALESCE(SUM(loan_balance), 0) INTO v_tot_loan_balance_grnt FROM vw_loans WHERE entity_id = NEW.entity_id AND approve_status = 'Approved' AND loan_balance > 0; --GRNT ACTIVE LOAN SUM
@@ -804,6 +627,8 @@ $$ LANGUAGE plpgsql;
   
 CREATE TRIGGER ins_gurrantors BEFORE INSERT OR UPDATE ON gurrantors
   FOR EACH ROW  EXECUTE PROCEDURE ins_gurrantors(); 
+
+
   
   
     
@@ -900,34 +725,6 @@ BEGIN
 	
 	UPDATE investments SET approve_status = 'Approved'
 	WHERE (investment_id = CAST($1 as int));
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-
-  
-  CREATE OR REPLACE FUNCTION bill_processed(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	msg 				varchar(120);
-BEGIN
-	msg := 'Processed';
-	
-	UPDATE billing SET processed = 'True'
-	WHERE (bill_id = CAST($1 as int));
-
-	return msg;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION bill_paid(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-	msg 				varchar(120);
-BEGIN
-	msg := 'PAYMENTS RECEIVED';
-	
-	UPDATE billing SET paid = 'True'
-	WHERE (bill_id = CAST($1 as int));
 
 	return msg;
 END;

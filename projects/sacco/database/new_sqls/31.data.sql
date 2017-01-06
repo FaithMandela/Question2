@@ -1,3 +1,35 @@
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Aerospace');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Agriculture');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Automotive');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Business and Consultancy Services');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Reseller');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Services and Consultancy');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Manufacturer');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Software Development');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Investments');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Education');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Electronics');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Finance, Banking, Insurance');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - National or Federal');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - State, Country or Local');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Healthcare');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Hotel and Leisure');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Legal');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Manufacturing');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Media, Marketing, Entertainment, Publishing, PR');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Real Estate');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Retail, Wholesale');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Telecoms');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Transportation and Distribution');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Travel and Tours');
+INSERT INTO industry (org_id, industry_name) VALUES (0, 'Other');
+
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 1, 0, 'Human Resources and Administration');
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 2, 0, 'Sales and Marketing');
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 3, 0, 'Finance');
+INSERT INTO departments (org_id, Department_id, LN_Department_id, Department_name) VALUES (0, 4, 4, 'Procurement');
+SELECT pg_catalog.setval('departments_department_id_seq', 5, true);
+
 INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (10, 1, 'ASSETS', 'FIXED ASSETS');
 INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (20, 1, 'ASSETS', 'INTANGIBLE ASSETS');
 INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (30, 1, 'ASSETS', 'CURRENT ASSETS');
@@ -209,15 +241,43 @@ SELECT pg_catalog.setval('accounts_account_id_seq', 99999, true);
 
 INSERT INTO default_accounts (use_key, account_id, narrative) VALUES (1, 99999, 'SURPLUS/DEFICIT ACCOUNT');
 INSERT INTO default_accounts (use_key, account_id, narrative) VALUES (2, 61000, 'RETAINED EARNINGS ACCOUNT');
+INSERT INTO default_accounts (use_key, account_id, narrative) VALUES (3, 30000, 'TRADE DEBTORS ACCOUNT');
 UPDATE default_accounts set org_id = 0;
 
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
 VALUES (0, 0, 1, 0, '33000', 'Cash Account', true);
 
+UPDATE tax_types SET account_id = 90000;
 INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'Exempt', 0, '42005');
 INSERT INTO tax_types (org_id, tax_type_name, tax_rate, account_id) VALUES (0, 'VAT', 16, '42005');
-
 UPDATE tax_types SET currency_id = 1;
-UPDATE tax_types SET account_id = 90000;
+
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (1, 0, 0, 'Budget', 'budgets', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (2, 0, 0, 'Requisition', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (3, 0, 3, 'Transactions', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details)
+VALUES (4, 0, 2, 'Transactions', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (5, 0, 5, 'subscriptions', 'subscriptions', NULL, NULL, 'subscription approved', 'subscription rejected', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflows_workflow_id_seq', 8, true);
+
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (1, 0, 1, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (2, 0, 2, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (3, 0, 3, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details)
+VALUES (4, 0, 4, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (5, 0, 5, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 5, true);
+
+
+INSERT INTO stores (store_id, org_id, store_name) VALUES (0, 0, 'Main Store');
+
 
 
