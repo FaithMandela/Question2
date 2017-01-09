@@ -832,8 +832,10 @@ public class BWebBody extends BQuery {
 			
 			if(el.getAttribute("type", "1").equals("1")) {
 				response.append("	<input type='text' class='form-control clockface'");
-			} else {
+			} else if(el.getAttribute("type", "2").equals("1")) {
 				response.append("	<input type='text' class='form-control timepicker timepicker-no-seconds'");
+			} else {
+				response.append("	<input type='text' class='form-control timepicker timepicker-24'");
 			}
 			response.append(" readonly='' name='" + el.getValue() + "' id='" + el.getValue() + "'");
 
