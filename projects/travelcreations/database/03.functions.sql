@@ -80,7 +80,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION ins_orders()
+  RETURNS trigger AS
+$BODY$
+DECLARE
+	v_order integer;
+BEGIN
 
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, narrative)
+	VALUES (4, NEW.order_id , 'vw_orders', 3, '<p>Your order has been received and is being processed. Once ready an email notification will be sent to you.</p><p>Order details :-</p>'||get_order_details(NEW.order_id)||'<p>Total amount</p>');
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+  CREATE TRIGGER ins_orders
+   AFTER INSERT
+   ON orders
+   FOR EACH ROW
+   EXECUTE PROCEDURE ins_orders();
 
 CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $$
 DECLARE
@@ -90,7 +108,8 @@ BEGIN
 
 	IF ($3::integer = 1) THEN
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
-		details :='Your Order is ready for collection';
+		details :='This has been processed and is ready for collection';
+
 	END IF;
 
 	IF ($3::integer = 2) THEN
