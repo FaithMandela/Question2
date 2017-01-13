@@ -1,59 +1,61 @@
-CREATE TABLE accounts_class (
-	accounts_class_id		serial primary key,
-	accounts_class_no		integer not null,
+CREATE TABLE account_class (
+	account_class_id		serial primary key,
+	account_class_no		integer not null,
 	org_id					integer references orgs,
 	chat_type_id			integer not null,
 	chat_type_name			varchar(50) not null,
-	accounts_class_name		varchar(120) not null,
+	account_class_name		varchar(120) not null,
 	details					text,
-	UNIQUE(accounts_class_no, org_id),
-	UNIQUE(accounts_class_name, org_id)
+	UNIQUE(account_class_no, org_id),
+	UNIQUE(account_class_name, org_id)
 );
-CREATE INDEX accounts_class_org_id ON accounts_class (org_id);
-CREATE INDEX accounts_class_chat_type_id ON accounts_class (chat_type_id);
+CREATE INDEX account_class_org_id ON account_class (org_id);
+CREATE INDEX account_class_chat_type_id ON account_class (chat_type_id);
 
 CREATE TABLE account_types (
 	account_type_id			serial primary key,
 	account_type_no			integer not null,
+	account_class_id		integer references account_class,
 	org_id					integer references orgs,
-	accounts_class_id		integer references accounts_class,
 	account_type_name		varchar(120) not null,
 	details					text,
 	UNIQUE(account_type_no, org_id)
 );
+CREATE INDEX account_types_account_class_id ON account_types (account_class_id);
 CREATE INDEX account_types_org_id ON account_types (org_id);
-CREATE INDEX account_types_accounts_class_id ON account_types (accounts_class_id);
 
 CREATE TABLE accounts (
 	account_id				serial primary key,
 	account_no				integer not null,
-	org_id					integer references orgs,
 	account_type_id			integer references account_types,
+	org_id					integer references orgs,
 	account_name			varchar(120) not null,
 	is_header				boolean default false not null,
 	is_active				boolean default true not null,
 	details					text,
 	UNIQUE(account_no, org_id)
 );
-CREATE INDEX accounts_org_id ON accounts (org_id);
 CREATE INDEX accounts_account_type_id ON accounts (account_type_id);
+CREATE INDEX accounts_org_id ON accounts (org_id);
 
 CREATE TABLE default_accounts (
 	default_account_id		serial primary key,
-	org_id					integer references orgs,
 	account_id				integer references accounts,
-	use_key					integer not null,
-	narrative				varchar(240)
+	use_key_id				integer not null references use_keys,
+	org_id					integer references orgs,
+	narrative				varchar(240),
+	UNIQUE(account_id, use_key_id, org_id)
 );
-CREATE INDEX default_accounts_org_id ON default_accounts (org_id);
 CREATE INDEX default_accounts_account_id ON default_accounts (account_id);
+CREATE INDEX default_accounts_use_key_id ON default_accounts (use_key_id);
+CREATE INDEX default_accounts_org_id ON default_accounts (org_id);
 
 CREATE TABLE journals (
 	journal_id				serial primary key,
-	org_id					integer references orgs,
 	period_id				integer not null references periods,
 	currency_id				integer references currency,
 	department_id			integer	references departments,
+	org_id					integer references orgs,
 	exchange_rate			real default 1 not null,
 	journal_date			date not null,
 	posted					boolean not null default false,
@@ -61,27 +63,30 @@ CREATE TABLE journals (
 	narrative				varchar(240),
 	details					text
 );
-CREATE INDEX journals_org_id ON journals (org_id);
 CREATE INDEX journals_period_id ON journals (period_id);
 CREATE INDEX journals_currency_id ON journals (currency_id);
+CREATE INDEX journals_department_id ON journals (department_id);
+CREATE INDEX journals_org_id ON journals (org_id);
 
 CREATE TABLE gls (
 	gl_id					serial primary key,
-	org_id					integer references orgs,
 	journal_id				integer not null references journals,
 	account_id				integer not null references accounts,
+	org_id					integer references orgs,
 	debit					real not null default 0,
 	credit					real not null default 0,
 	gl_narrative			varchar(240)
 );
-CREATE INDEX gls_org_id ON gls (org_id);
 CREATE INDEX gls_journal_id ON gls (journal_id);
 CREATE INDEX gls_account_id ON gls (account_id);
+CREATE INDEX gls_org_id ON gls (org_id);
 
 CREATE TABLE tax_types (
 	tax_type_id				serial primary key,
 	account_id				integer references accounts,
 	currency_id				integer references currency,
+	use_key_id				integer not null references use_keys,
+	sys_country_id			char(2) references sys_countrys,
 	org_id					integer references orgs,
 	tax_type_name			varchar(50) not null,
 	tax_type_number			varchar(50),
@@ -98,14 +103,14 @@ CREATE TABLE tax_types (
 	account_number			varchar(32),
 	employer_account		varchar(32),
 	active					boolean default true,
-	use_key					integer default 0 not null,
-	use_type				integer default 0 not null,
 	Details					text,
 	
-	UNIQUE(tax_type_name, org_id)
+	UNIQUE(tax_type_name, org_id, sys_country_id)
 );
 CREATE INDEX tax_types_account_id ON tax_types (account_id);
 CREATE INDEX tax_types_currency_id ON tax_types (currency_id);
+CREATE INDEX tax_types_use_key_id ON tax_types (use_key_id);
+CREATE INDEX tax_types_sys_country_id ON tax_types (sys_country_id);
 CREATE INDEX tax_types_org_id ON tax_types (org_id);
 
 CREATE TABLE tax_rates (
@@ -178,43 +183,52 @@ ALTER TABLE entitys ADD	account_id		integer references accounts;
 CREATE INDEX entitys_account_id ON entitys (account_id);
 
 CREATE VIEW vw_account_types AS
-	SELECT accounts_class.accounts_class_id, accounts_class.accounts_class_no,
-		accounts_class.accounts_class_name, accounts_class.chat_type_id, accounts_class.chat_type_name, 
+	SELECT account_class.account_class_id, account_class.account_class_no,
+		account_class.account_class_name, account_class.chat_type_id, account_class.chat_type_name, 
 		account_types.account_type_id, account_types.account_type_no, 
 		account_types.org_id, account_types.account_type_name, account_types.details
-	FROM account_types INNER JOIN accounts_class ON account_types.accounts_class_id = accounts_class.accounts_class_id;
+	FROM account_types INNER JOIN account_class ON account_types.account_class_id = account_class.account_class_id;
 
 CREATE VIEW vw_accounts AS
 	SELECT vw_account_types.chat_type_id, vw_account_types.chat_type_name, 
-		vw_account_types.accounts_class_id, vw_account_types.accounts_class_no, vw_account_types.accounts_class_name,
+		vw_account_types.account_class_id, vw_account_types.account_class_no, vw_account_types.account_class_name,
 		vw_account_types.account_type_id, vw_account_types.account_type_no, vw_account_types.account_type_name,
 		accounts.account_id, accounts.account_no, accounts.org_id, accounts.account_name, accounts.is_header, 
 		accounts.is_active, accounts.details,
-		(accounts.account_no || ' : ' || vw_account_types.accounts_class_name || ' : ' || vw_account_types.account_type_name
+		(accounts.account_no || ' : ' || vw_account_types.account_class_name || ' : ' || vw_account_types.account_type_name
 		|| ' : ' || accounts.account_name) as account_description
 	FROM accounts INNER JOIN vw_account_types ON accounts.account_type_id = vw_account_types.account_type_id;
 
 CREATE VIEW vw_default_accounts AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
-		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+	SELECT vw_accounts.account_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name,
+		vw_accounts.account_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
+		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
 		default_accounts.default_account_id, default_accounts.org_id, default_accounts.narrative
-	FROM vw_accounts INNER JOIN default_accounts ON vw_accounts.account_id = default_accounts.account_id;
+	FROM vw_accounts INNER JOIN default_accounts ON vw_accounts.account_id = default_accounts.account_id
+		INNER JOIN use_keys ON default_accounts.use_key_id = use_keys.use_key_id;
 	
-CREATE OR REPLACE VIEW vw_journals AS 
- SELECT vw_periods.period_id, vw_periods.start_date,vw_periods.end_date, vw_periods.opened, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month, vw_periods.quarter, vw_periods.semister,
-    currency.currency_id, currency.currency_name, currency.currency_symbol,
-    departments.department_id, departments.department_name,
-    journals.journal_id, journals.org_id, journals.journal_date, journals.posted, journals.year_closing, journals.narrative, journals.exchange_rate, journals.details
-   FROM journals
-     JOIN vw_periods ON journals.period_id = vw_periods.period_id
-     JOIN currency ON journals.currency_id = currency.currency_id
-     JOIN departments ON journals.department_id = departments.department_id;
-     
+CREATE VIEW vw_journals AS
+	SELECT vw_periods.fiscal_year_id, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end,
+		vw_periods.year_opened, vw_periods.year_closed,
+		vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.opened, vw_periods.closed, 
+		vw_periods.month_id, vw_periods.period_year, vw_periods.period_month, vw_periods.quarter, vw_periods.semister,
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		departments.department_id, departments.department_name,
+		journals.journal_id, journals.org_id, journals.journal_date, journals.posted, journals.year_closing, journals.narrative, 
+		journals.exchange_rate, journals.details
+	FROM journals INNER JOIN vw_periods ON journals.period_id = vw_periods.period_id
+		INNER JOIN currency ON journals.currency_id = currency.currency_id
+		LEFT JOIN departments ON journals.department_id = departments.department_id;
+
 CREATE VIEW vw_gls AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
-		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
-		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
+	SELECT vw_accounts.account_class_id, vw_accounts.account_class_no, vw_accounts.account_class_name,
+		vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
+		vw_accounts.account_type_id, vw_accounts.account_type_no, vw_accounts.account_type_name,
+		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, 
+		vw_accounts.is_header, vw_accounts.is_active,
+		vw_journals.fiscal_year_id, vw_journals.fiscal_year_start, vw_journals.fiscal_year_end,
+		vw_journals.year_opened, vw_journals.year_closed,
 		vw_journals.period_id, vw_journals.start_date, vw_journals.end_date, vw_journals.opened, vw_journals.closed, 
 		vw_journals.month_id, vw_journals.period_year, vw_journals.period_month, vw_journals.quarter, vw_journals.semister,
 		vw_journals.currency_id, vw_journals.currency_name, vw_journals.currency_symbol, vw_journals.exchange_rate,
@@ -225,29 +239,35 @@ CREATE VIEW vw_gls AS
 		INNER JOIN vw_journals ON gls.journal_id = vw_journals.journal_id;
 
 CREATE VIEW vw_sm_gls AS
-	SELECT vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.chat_type_id, vw_gls.chat_type_name, 
-		vw_gls.accounts_class_name, vw_gls.account_type_id, vw_gls.account_type_name, 
-		vw_gls.account_id, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
-		 vw_gls.period_id, vw_gls.start_date, 
+	SELECT vw_gls.org_id, vw_gls.account_class_id, vw_gls.account_class_no, vw_gls.account_class_name,
+		vw_gls.chat_type_id, vw_gls.chat_type_name, 
+		vw_gls.account_type_id, vw_gls.account_type_no, vw_gls.account_type_name, 
+		vw_gls.account_id, vw_gls.account_no, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
+		vw_gls.fiscal_year_id, vw_gls.fiscal_year_start, vw_gls.fiscal_year_end, 
+		vw_gls.year_opened, vw_gls.year_closed, vw_gls.period_id, vw_gls.start_date, 
 		vw_gls.end_date, vw_gls.opened, vw_gls.closed, vw_gls.month_id, 
 		vw_gls.period_year, vw_gls.period_month, vw_gls.quarter, vw_gls.semister, 
 		sum(vw_gls.debit) as acc_debit, sum(vw_gls.credit) as acc_credit,
 		sum(vw_gls.base_debit) as acc_base_debit, sum(vw_gls.base_credit) as acc_base_credit
 	FROM vw_gls
 	WHERE (vw_gls.posted = true)
-	GROUP BY vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.chat_type_id, vw_gls.chat_type_name, 
-		vw_gls.accounts_class_name, vw_gls.account_type_id, vw_gls.account_type_name, 
-		vw_gls.account_id, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
-		 vw_gls.period_id, vw_gls.start_date,
+	GROUP BY vw_gls.org_id, vw_gls.account_class_id, vw_gls.account_class_no, vw_gls.account_class_name,
+		vw_gls.chat_type_id, vw_gls.chat_type_name, 
+		vw_gls.account_type_id, vw_gls.account_type_no, vw_gls.account_type_name, 
+		vw_gls.account_id, vw_gls.account_no, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
+		vw_gls.fiscal_year_id, vw_gls.fiscal_year_start, vw_gls.fiscal_year_end, 
+		vw_gls.year_opened, vw_gls.year_closed, vw_gls.period_id, vw_gls.start_date,
 		vw_gls.end_date, vw_gls.opened, vw_gls.closed, vw_gls.month_id, 
 		vw_gls.period_year, vw_gls.period_month, vw_gls.quarter, vw_gls.semister
 	ORDER BY vw_gls.account_id;
 
 CREATE VIEW vw_ledger AS
-	SELECT vw_sm_gls.org_id, vw_sm_gls.accounts_class_id, vw_sm_gls.chat_type_id, vw_sm_gls.chat_type_name, 
-		vw_sm_gls.accounts_class_name, vw_sm_gls.account_type_id, vw_sm_gls.account_type_name, 
-		vw_sm_gls.account_id, vw_sm_gls.account_name, vw_sm_gls.is_header, vw_sm_gls.is_active, 
-		vw_sm_gls.period_id, vw_sm_gls.start_date,
+	SELECT vw_sm_gls.org_id, vw_sm_gls.account_class_id, vw_sm_gls.account_class_no, vw_sm_gls.account_class_name,
+		vw_sm_gls.chat_type_id, vw_sm_gls.chat_type_name, 
+		vw_sm_gls.account_type_id, vw_sm_gls.account_type_no, vw_sm_gls.account_type_name, 
+		vw_sm_gls.account_id, vw_sm_gls.account_no, vw_sm_gls.account_name, vw_sm_gls.is_header, vw_sm_gls.is_active, 
+		vw_sm_gls.fiscal_year_id, vw_sm_gls.fiscal_year_start, vw_sm_gls.fiscal_year_end, 
+		vw_sm_gls.year_opened, vw_sm_gls.year_closed, vw_sm_gls.period_id, vw_sm_gls.start_date,
 		vw_sm_gls.end_date, vw_sm_gls.opened, vw_sm_gls.closed, vw_sm_gls.month_id, 
 		vw_sm_gls.period_year, vw_sm_gls.period_month, vw_sm_gls.quarter, vw_sm_gls.semister, 
 		vw_sm_gls.acc_debit, vw_sm_gls.acc_credit, (vw_sm_gls.acc_debit - vw_sm_gls.acc_credit) as acc_balance,
@@ -259,23 +279,27 @@ CREATE VIEW vw_ledger AS
 	FROM vw_sm_gls;
 
 CREATE VIEW vw_budget_ledger AS
-	SELECT journals.org_id, periods.fiscal_year_id, journals.department_id, gls.account_id,
+	SELECT journals.org_id, periods.fiscal_year_id, journals.department_id, 
+		accounts.account_id, accounts.account_no, accounts.account_type_id, accounts.account_name,
 		sum(journals.exchange_rate * gls.debit) as bl_debit, sum(journals.exchange_rate * gls.credit) as bl_credit,
 		sum(journals.exchange_rate * (gls.debit - gls.credit)) as bl_diff
 	FROM journals INNER JOIN gls ON journals.journal_id = gls.journal_id
+		INNER JOIN accounts ON gls.account_id = accounts.account_id
 		INNER JOIN periods ON journals.period_id = periods.period_id
 	WHERE (journals.posted = true)
-	GROUP BY journals.org_id, periods.fiscal_year_id, journals.department_id, gls.account_id;
+	GROUP BY journals.org_id, periods.fiscal_year_id, journals.department_id, 
+		accounts.account_id, accounts.account_no, accounts.account_type_id, accounts.account_name;
 		
 CREATE VIEW vw_tax_types AS
 	SELECT vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
 		tax_types.org_id, tax_types.tax_type_id, tax_types.tax_type_name, tax_types.formural, tax_types.tax_relief, 
 		tax_types.tax_type_order, tax_types.in_tax, tax_types.tax_rate, tax_types.tax_inclusive, tax_types.linear, 
 		tax_types.percentage, tax_types.employer, tax_types.employer_ps, tax_types.account_number, 
-		tax_types.employer_account, tax_types.active, 
-		tax_types.tax_type_number, tax_types.use_key, tax_types.details
+		tax_types.employer_account, tax_types.active, tax_types.tax_type_number, tax_types.details
 	FROM tax_types INNER JOIN currency ON tax_types.currency_id = currency.currency_id
+		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id
 		LEFT JOIN vw_accounts ON tax_types.account_id = vw_accounts.account_id;
 
 CREATE VIEW vw_tax_rates AS
@@ -288,11 +312,13 @@ CREATE VIEW vw_period_tax_types AS
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister,
 		tax_types.tax_type_id, tax_types.tax_type_name, period_tax_types.period_tax_type_id, tax_types.tax_type_number,
-		period_tax_types.period_tax_type_name, tax_types.use_key,
+		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
+		period_tax_types.period_tax_type_name, 
 		period_tax_types.org_id, period_tax_types.Pay_Date, period_tax_types.tax_relief, period_tax_types.linear, period_tax_types.percentage, 
 		period_tax_types.formural, period_tax_types.details
 	FROM period_tax_types INNER JOIN vw_periods ON period_tax_types.period_id = vw_periods.period_id
-		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id;
+		INNER JOIN tax_types ON period_tax_types.tax_type_id = tax_types.tax_type_id
+		INNER JOIN use_keys ON tax_types.use_key_id = use_keys.use_key_id;
 
 CREATE OR REPLACE FUNCTION getTaxMin(float, int) RETURNS float AS $$
 	SELECT CASE WHEN max(tax_range) is null THEN 0 ELSE max(tax_range) END 
@@ -367,6 +393,18 @@ CREATE OR REPLACE FUNCTION curr_base_returns(date, date) RETURNS real AS $$
 	FROM vw_gls
 	WHERE (chat_type_id > 3) AND (posted = true) AND (year_closing = false)
 		AND (journal_date >= $1) AND (journal_date <= $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_account(integer, integer) RETURNS integer AS $$
+    SELECT accounts.account_no
+	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
+	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_default_account_id(integer, integer) RETURNS integer AS $$
+    SELECT accounts.account_id
+	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
+	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION process_journal(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
@@ -486,3 +524,5 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+

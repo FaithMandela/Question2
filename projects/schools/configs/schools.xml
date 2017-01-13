@@ -107,8 +107,8 @@
 			<FORM name="Staff" keyfield="staff_id" table="staff">
 				<DEFAULT default="0">entity_id</DEFAULT>
 				<COMBOLIST w="150" title="Role" y="10" h="20" x="290">staff_role
-					<DATA>Teacher</DATA>
-					<DATA>Accounts</DATA>
+					<DATA>Teaching</DATA>
+					<DATA>Non teaching</DATA>
 					<DATA>Other</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="430" title="Full Name" y="50" h="20" x="10">full_name</TEXTFIELD>
@@ -166,7 +166,7 @@
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Students" keyfield="student_id" linkfield="stream_class_id" table="students">
-				<TEXTFIELD w="20" title="ID">student_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Entity ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Student Name">student_name</TEXTFIELD>
 				<CHECKBOX w="75" title="Sex">sex</CHECKBOX>
 				<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
@@ -178,40 +178,62 @@
 				<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
 				<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Fathers Name">fathers_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Fathers Tel No">fathers_tel_no</TEXTFIELD>
 				<TEXTFIELD w="75" title="Mothers Name">mothers_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Mothers Tel No">mothers_tel_no</TEXTFIELD>
+				<TEXTFIELD w="75" title="G Telno">g_telno</TEXTFIELD>
+				<TEXTFIELD w="75" title="G Email">g_email</TEXTFIELD>
 				<FORM cols="2" tw="570" name="Students" keyfield="student_id" table="students" th="180">
 					<TEXTFIELD w="150" title="Student Name" placeholder="required" y="30" h="20" x="10" span="true">student_name</TEXTFIELD>
+					<COMBOBOX w="430" title="Guardian ID" lptable="guardians" y="70" h="20" x="10" lpfield="guardian_name">guardian_id</COMBOBOX>
 					<COMBOLIST w="150" title="Gender" y="50" ischar="true" h="20" x="290">sex
 						<DATA>M</DATA>
 						<DATA>F</DATA>
 					</COMBOLIST>
 					<DEFAULT default="KE">nationality</DEFAULT>
-					<TEXTDATE w="150" title="Birth Date" placeholder="00-00-2000" required="true" y="70" h="20" x="10" span="true">birth_date</TEXTDATE>
-					<TEXTFIELD w="150" title="Address" y="70" h="20" x="290">address</TEXTFIELD>
-					<TEXTFIELD w="150" title="Zipcode" y="90" h="20" x="10" span="true">zipcode</TEXTFIELD>
-					<TEXTFIELD w="150" title="Town" y="90" h="20" x="290">town</TEXTFIELD>
 					<DEFAULT default="KE">country_code_id</DEFAULT>
-					<TEXTFIELD w="150" title="Telno" y="130" h="20" x="290" span="true">telno</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email" y="150" h="20" x="10">email</TEXTFIELD>
-					<TEXTFIELD w="430" title="Fathers Name" placeholder="required" y="170" h="20" x="290" span="true">fathers_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Fathers Tel No" placeholder="required" y="190" h="20" x="10">fathers_tel_no</TEXTFIELD>
-					<TEXTFIELD w="430" title="Fathers Email" y="210" h="20" x="290" span="true">fathers_email</TEXTFIELD>
-					<TEXTFIELD w="430" title="Mothers Name" placeholder="required" y="230" h="20" x="10">mothers_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Mothers Tel No" placeholder="required" y="250" h="20" x="290" span="true">mothers_tel_no</TEXTFIELD>
-					<TEXTFIELD w="430" title="Mothers Email" y="270" h="20" x="10">mothers_email</TEXTFIELD>
-					<TEXTFIELD w="150" title="Guardian Name" y="290" h="20" x="290" span="true">guardian_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Guardian Address" y="290" h="20" x="10">g_address</TEXTFIELD>
-					<TEXTFIELD w="150" title="Guardian Zipcode" y="310" h="20" x="290" span="true">g_zipcode</TEXTFIELD>
-					<TEXTFIELD w="150" title="Guardian Town" y="310" h="20" x="290">g_town</TEXTFIELD>
-					<DEFAULT default="KE">g_countrycodeid</DEFAULT>
-					<TEXTFIELD w="150" title="Guardian Telno" y="350" h="20" x="10">g_telno</TEXTFIELD>
-					<TEXTFIELD w="430" title="Guardian Email" y="370" h="20" x="10">g_email</TEXTFIELD>
-					<TEXTAREA w="430" title="Registrar Details" y="460" h="70" x="290" span="true">registrar_details</TEXTAREA>
-					<TEXTAREA w="430" title="Details" y="530" h="70" x="10">details</TEXTAREA>
-					<TEXTAREA w="430" title="Current Contact" y="390" h="70" x="10">current_contact</TEXTAREA>
+					<TEXTDATE w="150" title="Birth Date" required="true" y="90" h="20" x="10">birth_date</TEXTDATE>
+					<TEXTFIELD w="150" title="Address" y="90" h="20" x="290">address</TEXTFIELD>
+					<TEXTFIELD w="150" title="Zipcode" y="110" h="20" x="10">zipcode</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="110" h="20" x="290">town</TEXTFIELD>
+					<TEXTFIELD w="150" title="Telno" y="150" h="20" x="10">telno</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="170" h="20" x="10">email</TEXTFIELD>
 				</FORM>
+				<GRID name="Guardians" keyfield="guardian_id" linkfield="guardian_id" table="students">
+					<TEXTFIELD w="75" title="Guardian ID">guardian_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Fathers Name">fathers_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Fathers Tel No">fathers_tel_no</TEXTFIELD>
+					<TEXTFIELD w="75" title="Fathers Email">fathers_email</TEXTFIELD>
+					<TEXTFIELD w="75" title="Mothers Name">mothers_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Mothers Tel No">mothers_tel_no</TEXTFIELD>
+					<TEXTFIELD w="75" title="Mothers Email">mothers_email</TEXTFIELD>
+					<TEXTFIELD w="75" title="Table Name">table_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Guardian Name">guardian_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="G Address">g_address</TEXTFIELD>
+					<TEXTFIELD w="75" title="G Zipcode">g_zipcode</TEXTFIELD>
+					<TEXTFIELD w="75" title="G Town">g_town</TEXTFIELD>
+					<TEXTFIELD w="75" title="G Countrycodeid">g_countrycodeid</TEXTFIELD>
+					<TEXTFIELD w="75" title="G Telno">g_telno</TEXTFIELD>
+					<TEXTFIELD w="75" title="G Email">g_email</TEXTFIELD>
+					<FORM name="Guardians" keyfield="guardian_id" linkfield="guardian_id" table="guardians">
+						<DEFAULT default="students">table_name</DEFAULT>
+						<TEXTFIELD w="430" title="Fathers Name" y="10" h="20" x="10">fathers_name</TEXTFIELD>
+						<TEXTFIELD w="150" title="Fathers Tel No" y="30" h="20" x="10">fathers_tel_no</TEXTFIELD>
+						<TEXTFIELD w="430" title="Fathers Email" y="50" h="20" x="10">fathers_email</TEXTFIELD>
+						<TEXTFIELD w="430" title="Mothers Name" y="70" h="20" x="10">mothers_name</TEXTFIELD>
+						<TEXTFIELD w="150" title="Mothers Tel No" y="90" h="20" x="10">mothers_tel_no</TEXTFIELD>
+						<TEXTFIELD w="430" title="Mothers Email" y="110" h="20" x="10">mothers_email</TEXTFIELD>
+						<TEXTFIELD w="150" title="Guardian Name" y="130" h="20" x="290">guardian_name</TEXTFIELD>
+						<TEXTFIELD w="150" title="G Address" y="150" h="20" x="10">g_address</TEXTFIELD>
+						<TEXTFIELD w="150" title="G Zipcode" y="150" h="20" x="290">g_zipcode</TEXTFIELD>
+						<TEXTFIELD w="150" title="G Town" y="170" h="20" x="10">g_town</TEXTFIELD>
+						<COMBOBOX w="430" title="G Countrycodeid" lptable="sys_countrys" lpkey="sys_country_id" y="190" h="20" x="10" lpfield="sys_country_name">g_countrycodeid</COMBOBOX>
+						<TEXTFIELD w="150" title="G Telno" y="210" h="20" x="10">g_telno</TEXTFIELD>
+						<TEXTFIELD w="430" title="G Email" y="230" h="20" x="10">g_email</TEXTFIELD>
+						<TEXTAREA w="430" title="Current Contact" y="250" h="70" x="10">current_contact</TEXTAREA>
+						<TEXTAREA w="430" title="Registrar Details" y="320" h="70" x="10">registrar_details</TEXTAREA>
+						<TEXTAREA w="430" title="Details" y="390" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
 			</GRID>
 		</GRID>
 		<GRID name="Sessions" keyfield="session_id" table="vw_sessions">
@@ -254,55 +276,6 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Applicant" key="30" h="550">
-		<GRID name="Applicant" keyfield="student_id" table="vw_applicant">
-			<TEXTFIELD w="75" title="Student ID">student_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Applicant Dob">applicant_dob</TEXTDATE>
-			<TEXTFIELD w="75" title="Applicants Address">applicants_address</TEXTFIELD>
-			<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
-			<TEXTFIELD w="75" title="Country Code ID">country_code_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
-			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
-			<FORM tw="570" name="Applicant" keyfield="student_id" table="applicant" th="200">
-				<DEFAULT default="0">student_id</DEFAULT>
-				<COMBOBOX w="430" title="Stream Class ID" lptable="stream_classes" y="30" h="20" x="10" lpfield="stream_class_id">stream_class_id</COMBOBOX>
-				<COMBOBOX w="430" title="Session ID" lptable="sessions" y="50" h="20" x="10" lpfield="session_name">session_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Applicant Name" placeholder="**required" required="true" y="70" h="20" x="10" span="true">applicant_name</TEXTFIELD>
-				<TEXTDATE w="150" title="DOB" required="true" y="90" h="20" x="190">applicant_dob</TEXTDATE>
-				<TEXTFIELD w="430" title="Address" y="110" h="20" x="10">applicants_address</TEXTFIELD>
-				<COMBOLIST w="150" title="Gender" y="50" ischar="true" h="20" x="290">gender
-					<DATA>Male</DATA>
-					<DATA>Female</DATA>
-				</COMBOLIST>
-				<COMBOBOX w="430" title="Country" lptable="sys_countrys" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">country_code_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Telno" y="170" h="20" x="190">telno</TEXTFIELD>
-				<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
-				<COMBOLIST w="150" title="Status" y="130" h="20" x="190">approve_status
-					<DATA>Draft</DATA>
-					<DATA>Rejected</DATA>
-					<DATA>Approved</DATA>
-				</COMBOLIST>
-				<TEXTFIELD w="150" title="Workflow Table ID" y="210" h="20" x="290">workflow_table_id</TEXTFIELD>
-				<TEXTFIELD w="430" title="Fathers Name" y="250" h="20" x="10">fathers_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Fathers Tel No" y="270" h="20" x="10">fathers_tel_no</TEXTFIELD>
-				<TEXTFIELD w="430" title="Fathers Email" y="290" h="20" x="10">fathers_email</TEXTFIELD>
-				<TEXTFIELD w="430" title="Mothers Name" required="true" y="310" h="20" x="10">mothers_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Mothers Tel No" required="true" y="330" h="20" x="10">mothers_tel_no</TEXTFIELD>
-				<TEXTFIELD w="430" title="Mothers Email" y="350" h="20" x="10">mothers_email</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Name" y="370" h="20" x="10">guardian_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Address" y="370" h="20" x="290">g_address</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Zipcode" y="390" h="20" x="10">g_zipcode</TEXTFIELD>
-				<TEXTFIELD w="150" title="Guardian Town" y="390" h="20" x="290">g_town</TEXTFIELD>
-				<COMBOBOX w="430" title="Guardian Countrycodeid" lptable="sys_countrys" lpkey="sys_country_id" y="410" h="20" x="10" lpfield="sys_country_name">g_countrycodeid</COMBOBOX>
-				<TEXTFIELD w="150" title="Guardian Telno" y="430" h="20" x="10">g_telno</TEXTFIELD>
-				<TEXTFIELD w="430" title="Guardian Email" y="450" h="20" x="10">g_email</TEXTFIELD>
-				<TEXTAREA w="430" title="Current Contact" y="470" h="70" x="10">current_contact</TEXTAREA>
-				<TEXTAREA w="430" title="Registrar Details" y="540" h="70" x="10">registrar_details</TEXTAREA>
-				<TEXTAREA w="430" title="Details" y="610" h="70" x="10">details</TEXTAREA>
-			</FORM>
-		</GRID>
-	</DESK>
 	<DESK w="700" name="Entity Subscriptions" key="35" h="550">
 		<DIARY name="Leave Diary" keyfield="employee_leave_id" orderby="leave_from" table="vw_employee_leave" where="(leave_from > current_date-360)" user="entity_id">
 			<TEXTFIELD w="75" title="Leave ID">employee_leave_id</TEXTFIELD>
@@ -340,6 +313,69 @@
 				<SPINTIME w="150" title="Start Time" y="30" h="20" x="10">start_time</SPINTIME>
 				<SPINTIME w="150" title="End Time" y="50" h="20" x="10">end_time</SPINTIME>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" name="Applicant" key="30" h="550">
+		<GRID name="Applicant" keyfield="student_id" table="applicant">
+			<TEXTFIELD w="75" title="Student ID">student_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Stream Class ID">stream_class_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Session ID">session_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Applicant Name">applicant_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Applicant Dob">applicant_dob</TEXTDATE>
+			<TEXTFIELD w="75" title="Applicants Address">applicants_address</TEXTFIELD>
+			<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
+			<TEXTFIELD w="75" title="Telno">telno</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
+			<FORM name="Applicant" keyfield="student_id" table="applicant">
+				<COMBOBOX w="430" title="Student ID" lptable="students" y="10" h="20" x="10" lpfield="student_name">student_id</COMBOBOX>
+				<COMBOBOX w="430" title="Stream Class ID" lptable="stream_classes" y="30" h="20" x="10" lpfield="stream_class_id">stream_class_id</COMBOBOX>
+				<COMBOBOX w="430" title="Session ID" lptable="sessions" y="50" h="20" x="10" lpfield="session_name">session_id</COMBOBOX>
+				<COMBOBOX w="430" title="Guardian ID" lptable="guardians" y="70" h="20" x="10" lpfield="guardian_name">guardian_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Applicant Name" y="90" h="20" x="10">applicant_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Applicant Dob" y="110" h="20" x="10">applicant_dob</TEXTDATE>
+				<TEXTFIELD w="430" title="Applicants Address" y="130" h="20" x="10">applicants_address</TEXTFIELD>
+				<CHECKBOX w="150" title="Gender" y="150" h="20" x="10">gender</CHECKBOX>
+				<COMBOBOX w="430" title="Country Code ID" lptable="sys_countrys" lpkey="sys_country_id" y="170" h="20" x="10" lpfield="sys_country_name">country_code_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Telno" y="190" h="20" x="10">telno</TEXTFIELD>
+				<TEXTFIELD w="430" title="Email" y="210" h="20" x="10">email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Approve Status" y="230" h="20" x="10">approve_status</TEXTFIELD>
+				<TEXTFIELD w="150" title="Workflow Table ID" y="230" h="20" x="290">workflow_table_id</TEXTFIELD>
+				<TEXTTIMESTAMP w="150" title="Action Date" y="250" h="20" x="10">action_date</TEXTTIMESTAMP>
+			</FORM>
+		</GRID>
+		<GRID tw="570" name="Guardians" keyfield="guardian_id" linkfield="gurdian_id" table="guardians" th="180">
+			<TEXTFIELD w="75" title="Fathers Name">fathers_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fathers Tel No">fathers_tel_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mothers Name">mothers_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mothers Tel No">mothers_tel_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Guardian Name">guardian_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Address">g_address</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Zipcode">g_zipcode</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Town">g_town</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Countrycodeid">g_countrycodeid</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Telno">g_telno</TEXTFIELD>
+			<TEXTFIELD w="75" title="G Email">g_email</TEXTFIELD>
+			<FORM cols="2" tw="570" name="Guardians" keyfield="guardian_id" linkfield="guardian_id" table="guardians" th="180">
+				<DEFAULT default="applicant">table_name</DEFAULT>
+				<TEXTFIELD w="150" title="Fathers Name" lw="130" y="10" h="20" x="10">fathers_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Fathers Tel No" lw="90" y="210" h="20" x="10" span="true">fathers_tel_no</TEXTFIELD>
+				<TEXTFIELD w="150" title="Fathers Email" y="50" h="20" x="10">fathers_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Mothers Name" lw="70" y="210" h="20" x="10" span="true">mothers_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Mothers Tel No" y="90" h="20" x="10">mothers_tel_no</TEXTFIELD>
+				<TEXTFIELD w="150" title="Mothers Email" y="210" h="20" x="10" span="true">mothers_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Guardian Name" tab="Guardian" y="10" h="20" x="10">guardian_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="G Address" tab="Guardian" y="150" h="20" x="10" span="true">g_address</TEXTFIELD>
+				<TEXTFIELD w="150" title="G Zipcode" tab="Guardian" y="150" h="20" x="290">g_zipcode</TEXTFIELD>
+				<TEXTFIELD w="150" title="G Town" tab="Guardian" y="170" h="20" x="10" span="true">g_town</TEXTFIELD>
+				<COMBOBOX w="70" title="G Countrycodeid" lptable="sys_countrys" tab="Guardian" lpkey="sys_country_id" y="190" h="20" x="290" lpfield="sys_country_name">g_countrycodeid</COMBOBOX>
+				<TEXTFIELD w="150" title="G Telno" tab="Guardian" y="150" h="20" x="10" span="true">g_telno</TEXTFIELD>
+				<TEXTFIELD w="150" title="G Email" tab="Guardian" y="230" h="20" x="290">g_email</TEXTFIELD>
+				<TEXTAREA w="150" title="Current Contact" tab="Contact" y="250" h="70" x="10">current_contact</TEXTAREA>
+				<TEXTAREA w="150" title="Registrar Details" tab="Registrar" y="320" h="70" x="10" span="true">registrar_details</TEXTAREA>
+				<TEXTAREA w="550" tab="Details" y="1" h="150" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

@@ -707,6 +707,12 @@ CREATE INDEX studentpayments_org_id ON studentpayments (org_id);
 
 CREATE SEQUENCE studentpayment_seq START 1;
 
+CREATE TABLE studentpayment_logs (
+	studentpayment_log_id	serial primary key,
+	studentpaymentid	integer,
+	created				timestamp not null default now()
+);
+
 CREATE TABLE paymentracks (
 	paymentrackid		serial primary key,
 	studentpaymentid	integer,

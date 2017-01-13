@@ -3,13 +3,13 @@ ALTER TABLE members DROP contribution cascade;
 
 alter table members ADD contribution real not null default 0;
 
-alter table contributions add receipt real default 0 ;
+--alter table contributions add receipt real default 0 ;
 alter table contributions add receipt_date date;
 
-alter table contributions add  contribution_paid real not null default 0;
+--alter table contributions add  contribution_paid real not null default 0;
 
 alter table contributions add repayment_paid real default 0 not null;
-alter table loan_monthly add repayment_paid real default 0 not null;
+--alter table loan_monthly add repayment_paid real default 0 not null;
 
 ALTER TABLE contributions ALTER COLUMN contribution_amount SET DEFAULT 0;
 
@@ -103,26 +103,6 @@ BEGIN
 	END;
 $$ LANGUAGE plpgsql;
 
-  
-CREATE OR REPLACE FUNCTION compute_contributions(v_period_id varchar(12), v_org_id varchar(12), v_approval varchar(12)) RETURNS varchar(120) AS $$
-DECLARE
-    msg                 varchar(120);
-BEGIN
-	msg := 'Contributions generated';
-    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id =  v_org_id::integer AND is_paid = false ;
-    DELETE FROM contributions WHERE period_id = v_period_id::integer;
-    
-    INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
-             contribution_amount,  entry_date,
-             transaction_ref, is_paid)
-             
-    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0,  contribution,
-            now()::date, 'Auto generated','False'
-        FROM members;
-
-    RETURN msg;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
 	SELECT CASE WHEN sum(repayment_paid + interest_paid + penalty_paid) is null THEN 0 
@@ -131,15 +111,9 @@ CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
 	WHERE (loan_id = $1);
 $$ LANGUAGE SQL;
 
-DROP VIEW vw_contributions cascade;
+--DROP VIEW vw_contributions cascade;
 
 
-   
-CREATE OR REPLACE FUNCTION get_total_repayment(integer, integer) RETURNS real AS $$
-	SELECT sum(interest_paid + penalty_paid + repayment_paid)
-	FROM loan_monthly
-	WHERE (loan_id = $1) and (loan_month_id <= $2);
-$$ LANGUAGE SQL;
 
 
 CREATE OR REPLACE FUNCTION get_loan_balance (integer, integer) RETURNS double precision AS $$
@@ -148,11 +122,11 @@ CREATE OR REPLACE FUNCTION get_loan_balance (integer, integer) RETURNS double pr
 	WHERE (loan_id = $1) and (months <= $2);
 $$ LANGUAGE SQL;
 
-ALTER TABLE contributions ADD COLUMN additional_funds integer references additional_funds ;
+ALTER TABLE contributions ADD COLUMN additional_funds_id integer references additional_funds ;
 
 CREATE INDEX contributions_additional_funds ON contributions (additional_funds_id);
    
- DROP TRIGGER ins_contributions on contributions;
+-- DROP TRIGGER ins_contributions on contributions;
  
 CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $$
 DECLARE
@@ -285,7 +259,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
     contributions.transaction_ref,
     contributions.contribution_amount,
     contributions.contribution_paid,
-    contributions.deposit_amount,
+  
     contributions.deposit_date AS deposit_dates,
     contributions.is_paid,
     entitys.entity_name,
@@ -329,7 +303,7 @@ SELECT vw_periods.period_id,
     contributions.payment_type_id,
      contributions.contribution_amount,
       contributions.contribution_paid ,
-    contributions.deposit_amount,
+  
 	contributions.entry_date,
 	contributions.transaction_ref,
       contributions.is_paid,
@@ -351,8 +325,23 @@ SELECT vw_periods.period_id,
    
 	
 	
+CREATE OR REPLACE VIEW vw_additional_funds AS 
+ SELECT vw_contributions.contribution_amount,
+    vw_contributions.contribution_paid,
+    vw_contributions.contribution_id,
+    additional_funds.payment_type_id,
+    additional_funds.org_id,
+    additional_funds.additional_amount,
+    additional_funds.deposit_date AS paid_date,
+    additional_funds.entry_date,
+    additional_funds.transaction_ref,
+    additional_funds.additional_funds_id,
+    additional_funds.narrative,
+    vw_contributions.deposit_year,
+    vw_contributions.deposit_date,
+    payment_types.payment_type_name
+   FROM additional_funds
+     JOIN vw_contributions ON vw_contributions.contribution_id = additional_funds.contribution_id
+     JOIN payment_types ON payment_types.payment_type_id = additional_funds.payment_type_id;
 
-	
- -
-	
 	

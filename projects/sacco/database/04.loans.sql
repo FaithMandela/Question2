@@ -57,6 +57,46 @@ CREATE INDEX loan_monthly_loan_id ON loan_monthly (loan_id);
 CREATE INDEX loan_monthly_period_id ON loan_monthly (period_id);
 CREATE INDEX loan_monthly_org_id ON loan_monthly (org_id);
 
+
+
+
+
+CREATE TABLE collateral_types (
+  collateral_type_id 		serial primary key,
+  org_id					integer references orgs,
+  collateral_type_name		varchar(120),
+  details 					text
+);
+CREATE INDEX collateral_types_org_id ON collateral_types (org_id);
+
+CREATE TABLE collateral (
+	collateral_id			serial primary key,
+	loan_id					integer references loans,
+	collateral_type_id		integer references collateral_types,
+	org_id					integer references orgs,
+	reference_number		varchar(50),
+	collateral_amount		real,
+	narrative 				text	
+);
+CREATE INDEX collateral_loan_id ON collateral (loan_id);
+CREATE INDEX collateral_collateral_type on collateral (collateral_type_id);
+CREATE INDEX collateral_org_id ON collateral (org_id);
+
+CREATE TABLE gurrantors (
+	gurrantor_id			serial primary key,
+	entity_id				integer references entitys,
+	loan_id					integer references loans,
+	org_id					integer references orgs,
+	is_accepted				boolean default false,
+	is_approved				boolean default false,
+	amount					real not null default 0,
+	details					text
+);
+CREATE INDEX gurrantors_entity_id ON gurrantors (entity_id);
+CREATE INDEX gurrantors_loan_id ON gurrantors (loan_id);
+CREATE INDEX gurrantors_org_id ON gurrantors (org_id);
+
+--here
 CREATE OR REPLACE FUNCTION get_repayment(real, real, integer) RETURNS real AS $$
 DECLARE
 	repayment real;
@@ -176,7 +216,7 @@ CREATE VIEW vw_loan_monthly AS
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed, vw_periods.period_year,vw_periods.period_month,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, 
-		loan_monthly.additional_payments, loan_monthly. is_paid, 
+		 loan_monthly. is_paid, 
 		loan_monthly.repayment_paid, loan_monthly.interest_paid, 
 		loan_monthly.penalty, loan_monthly.penalty_paid, loan_monthly.details,
 		get_total_interest(vw_loans.loan_id, vw_periods.start_date) as total_interest,
@@ -193,18 +233,18 @@ CREATE VIEW vw_loan_payments AS
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_loans.application_date, vw_loans.approve_status, vw_loans.initial_payment, 
 		vw_loans.org_id, vw_loans.action_date,vw_loans.calc_repayment_period,vw_loans.repayment_amount ,
-		generate_series(1, repayment_period) as months,
-		get_loan_period(principle, interest, generate_series(1, repayment_period), repayment_amount) as loan_balance, 
+		generate_series(1, vw_loans.repayment_period) as months,
+		get_loan_period(vw_loans.principle, vw_loans.interest, generate_series(1, vw_loans.repayment_period), vw_loans.repayment_amount) as loan_balance, 
 		
-		(get_loan_period(principle, interest, generate_series(1, repayment_period) - 1, repayment_amount) * (interest/1200)) as loan_intrest 
+		(get_loan_period(vw_loans.principle, vw_loans.interest, generate_series(1, vw_loans.repayment_period) - 1, vw_loans.repayment_amount) * (vw_loans.interest/1200)) as loan_intrest 
 	FROM vw_loans
-	JOIN vw_loan_monthly on vw_loans.loan_id = vw_loan_monthly.loan_id where vw_loan_monthly.is_paid = 'true' ;;
+	JOIN vw_loan_monthly on vw_loans.loan_id = vw_loan_monthly.loan_id where vw_loan_monthly.is_paid = 'true' ;
 
 CREATE VIEW vw_period_loans AS
 	SELECT vw_loan_monthly.org_id, vw_loan_monthly.period_id, vw_loan_monthly.is_paid,
 		sum(vw_loan_monthly.interest_amount) as sum_interest_amount, sum(vw_loan_monthly.repayment_paid) as sum_repayment, 
 		sum(vw_loan_monthly.penalty) as sum_penalty, sum(vw_loan_monthly.penalty_paid) as sum_penalty_paid, 
-		sum( vw_loan_monthly.additional_payments) as sum_additional_payments,
+		--sum( vw_loan_monthly.additional_payments) as sum_additional_payments,
 		sum(vw_loan_monthly.interest_paid) as sum_interest_paid, sum(vw_loan_monthly.loan_balance) as sum_loan_balance
 	FROM vw_loan_monthly
 	GROUP BY vw_loan_monthly.org_id, vw_loan_monthly.period_id,  vw_loan_monthly.is_paid;

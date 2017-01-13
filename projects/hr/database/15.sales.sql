@@ -1,8 +1,8 @@
 
 CREATE TABLE leads (
 	lead_id					serial primary key,
-	industry_id				integer references industry,
-	entity_id				integer references entitys,
+	industry_id				integer not null references industry,
+	entity_id				integer not null references entitys,
 	org_id					integer references orgs,
 
 	business_id				integer,

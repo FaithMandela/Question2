@@ -16,6 +16,7 @@
 			<MENU name="Attendance">115</MENU>
 		</MENU>
 		<MENU name="HR" xml="hr.xml">0</MENU>
+		<MENU name="Business" role="finance" xml="business.xml">0</MENU>
 	</MENU>
 	<CONFIGS name="Full system configurations">
 		<AUDIT name="Full Table Audits">
@@ -301,7 +302,7 @@
 			<FORM name="Attendance" keyfield="attendance_id" table="attendance">
 				<COMBOBOX w="150" title="Entity ID" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<TEXTDATE w="150" title="Attendance Date" y="10" h="20" x="290">attendance_date</TEXTDATE>
-				<SPINTIME w="150" title="Time In" y="30" h="20" x="10">time_in</SPINTIME>
+				<SPINTIME w="150" title="Time In" type="2" y="30" h="20" x="10">time_in</SPINTIME>
 				<SPINTIME w="150" title="Time Out" type="2" y="30" h="20" x="290">time_out</SPINTIME>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
@@ -411,6 +412,7 @@
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<ACTIONS>
 				<ACTION fnct="farm_payroll" approval="1" role="payroll">Generate Payroll</ACTION>
+				<ACTION fnct="farm_payroll" approval="2" role="payroll">Generate Advances</ACTION>
 			</ACTIONS>
 			<GRID name="Day Works" keyfield="day_work_id" linkfield="period_id" table="vw_day_works">
 				<TEXTFIELD w="35" title="ID">day_work_id</TEXTFIELD>

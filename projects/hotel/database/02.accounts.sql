@@ -1,27 +1,27 @@
-CREATE TABLE accounts_class (
-	accounts_class_id		serial primary key,
-	accounts_class_no		integer not null,
+CREATE TABLE account_class (
+	account_class_id		serial primary key,
+	account_class_no		integer not null,
 	org_id					integer references orgs,
 	chat_type_id			integer not null,
 	chat_type_name			varchar(50) not null,
-	accounts_class_name		varchar(120) not null,
+	account_class_name		varchar(120) not null,
 	details					text,
-	UNIQUE(accounts_class_no, org_id),
-	UNIQUE(accounts_class_name, org_id)
+	UNIQUE(account_class_no, org_id),
+	UNIQUE(account_class_name, org_id)
 );
-CREATE INDEX accounts_class_org_id ON accounts_class (org_id);
-CREATE INDEX accounts_class_chat_type_id ON accounts_class (chat_type_id);
+CREATE INDEX account_class_org_id ON account_class (org_id);
+CREATE INDEX account_class_chat_type_id ON account_class (chat_type_id);
 
 CREATE TABLE account_types (
 	account_type_id			serial primary key,
 	account_type_no			integer not null,
-	accounts_class_id		integer references accounts_class,
+	account_class_id		integer references account_class,
 	org_id					integer references orgs,
 	account_type_name		varchar(120) not null,
 	details					text,
 	UNIQUE(account_type_no, org_id)
 );
-CREATE INDEX account_types_accounts_class_id ON account_types (accounts_class_id);
+CREATE INDEX account_types_account_class_id ON account_types (account_class_id);
 CREATE INDEX account_types_org_id ON account_types (org_id);
 
 CREATE TABLE accounts (
@@ -183,25 +183,25 @@ ALTER TABLE entitys ADD	account_id		integer references accounts;
 CREATE INDEX entitys_account_id ON entitys (account_id);
 
 CREATE VIEW vw_account_types AS
-	SELECT accounts_class.accounts_class_id, accounts_class.accounts_class_no,
-		accounts_class.accounts_class_name, accounts_class.chat_type_id, accounts_class.chat_type_name, 
+	SELECT account_class.account_class_id, account_class.account_class_no,
+		account_class.account_class_name, account_class.chat_type_id, account_class.chat_type_name, 
 		account_types.account_type_id, account_types.account_type_no, 
 		account_types.org_id, account_types.account_type_name, account_types.details
-	FROM account_types INNER JOIN accounts_class ON account_types.accounts_class_id = accounts_class.accounts_class_id;
+	FROM account_types INNER JOIN account_class ON account_types.account_class_id = account_class.account_class_id;
 
 CREATE VIEW vw_accounts AS
 	SELECT vw_account_types.chat_type_id, vw_account_types.chat_type_name, 
-		vw_account_types.accounts_class_id, vw_account_types.accounts_class_no, vw_account_types.accounts_class_name,
+		vw_account_types.account_class_id, vw_account_types.account_class_no, vw_account_types.account_class_name,
 		vw_account_types.account_type_id, vw_account_types.account_type_no, vw_account_types.account_type_name,
 		accounts.account_id, accounts.account_no, accounts.org_id, accounts.account_name, accounts.is_header, 
 		accounts.is_active, accounts.details,
-		(accounts.account_no || ' : ' || vw_account_types.accounts_class_name || ' : ' || vw_account_types.account_type_name
+		(accounts.account_no || ' : ' || vw_account_types.account_class_name || ' : ' || vw_account_types.account_type_name
 		|| ' : ' || accounts.account_name) as account_description
 	FROM accounts INNER JOIN vw_account_types ON accounts.account_type_id = vw_account_types.account_type_id;
 
 CREATE VIEW vw_default_accounts AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name,
-		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
+	SELECT vw_accounts.account_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name,
+		vw_accounts.account_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
 		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
 		use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
 		default_accounts.default_account_id, default_accounts.org_id, default_accounts.narrative
@@ -222,7 +222,7 @@ CREATE VIEW vw_journals AS
 		LEFT JOIN departments ON journals.department_id = departments.department_id;
 
 CREATE VIEW vw_gls AS
-	SELECT vw_accounts.accounts_class_id, vw_accounts.accounts_class_no, vw_accounts.accounts_class_name,
+	SELECT vw_accounts.account_class_id, vw_accounts.account_class_no, vw_accounts.account_class_name,
 		vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
 		vw_accounts.account_type_id, vw_accounts.account_type_no, vw_accounts.account_type_name,
 		vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name, 
@@ -239,7 +239,7 @@ CREATE VIEW vw_gls AS
 		INNER JOIN vw_journals ON gls.journal_id = vw_journals.journal_id;
 
 CREATE VIEW vw_sm_gls AS
-	SELECT vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.accounts_class_no, vw_gls.accounts_class_name,
+	SELECT vw_gls.org_id, vw_gls.account_class_id, vw_gls.account_class_no, vw_gls.account_class_name,
 		vw_gls.chat_type_id, vw_gls.chat_type_name, 
 		vw_gls.account_type_id, vw_gls.account_type_no, vw_gls.account_type_name, 
 		vw_gls.account_id, vw_gls.account_no, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
@@ -251,7 +251,7 @@ CREATE VIEW vw_sm_gls AS
 		sum(vw_gls.base_debit) as acc_base_debit, sum(vw_gls.base_credit) as acc_base_credit
 	FROM vw_gls
 	WHERE (vw_gls.posted = true)
-	GROUP BY vw_gls.org_id, vw_gls.accounts_class_id, vw_gls.accounts_class_no, vw_gls.accounts_class_name,
+	GROUP BY vw_gls.org_id, vw_gls.account_class_id, vw_gls.account_class_no, vw_gls.account_class_name,
 		vw_gls.chat_type_id, vw_gls.chat_type_name, 
 		vw_gls.account_type_id, vw_gls.account_type_no, vw_gls.account_type_name, 
 		vw_gls.account_id, vw_gls.account_no, vw_gls.account_name, vw_gls.is_header, vw_gls.is_active, 
@@ -262,7 +262,7 @@ CREATE VIEW vw_sm_gls AS
 	ORDER BY vw_gls.account_id;
 
 CREATE VIEW vw_ledger AS
-	SELECT vw_sm_gls.org_id, vw_sm_gls.accounts_class_id, vw_sm_gls.accounts_class_no, vw_sm_gls.accounts_class_name,
+	SELECT vw_sm_gls.org_id, vw_sm_gls.account_class_id, vw_sm_gls.account_class_no, vw_sm_gls.account_class_name,
 		vw_sm_gls.chat_type_id, vw_sm_gls.chat_type_name, 
 		vw_sm_gls.account_type_id, vw_sm_gls.account_type_no, vw_sm_gls.account_type_name, 
 		vw_sm_gls.account_id, vw_sm_gls.account_no, vw_sm_gls.account_name, vw_sm_gls.is_header, vw_sm_gls.is_active, 

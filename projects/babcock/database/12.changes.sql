@@ -1,3 +1,9 @@
+CREATE TABLE studentpayment_logs (
+	studentpayment_log_id	serial primary key,
+	studentpaymentid	integer,
+	created				timestamp not null default now()
+);
+
 
 CREATE VIEW vw_qresidence AS
 	SELECT residences.residenceid, residences.residencename, residences.offcampus, residences.Sex, residences.residencedean, 

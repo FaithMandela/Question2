@@ -1498,7 +1498,8 @@ System.out.println("repository : " + repository);
 		try {
 			Date psdate = new Date();
 			SimpleDateFormat dateParse = new SimpleDateFormat();
-			if(myTime.indexOf(':')>0) dateParse.applyPattern("hh:mm a");
+			if(el.getAttribute("type", "1").equals("2")) dateParse.applyPattern("HH:mm");
+			else if(myTime.indexOf(':')>0) dateParse.applyPattern("hh:mm a");
 
 			psdate = dateParse.parse(myTime);
 			dateParse.applyPattern("HH:mm:ss");
