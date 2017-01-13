@@ -45,8 +45,8 @@
 			<MENU name="Sales Pipeline">175</MENU>
 			<MENU name="Issues">180</MENU>
 		</MENU>
-		<MENU name="Payroll" role="admin,payroll,hr,reports" xml="payroll.xml">0</MENU>
-		<MENU name="Projects" role="staff,admin,payroll,hr" xml="projects.xml">0</MENU>
+		<MENU name="Sacco" role="admin,Subscription,hr,reports" xml="sacco.xml">0</MENU>
+		
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
@@ -63,12 +63,7 @@
 				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 			</TILELIST>
-			<TILELIST name="Follow Up" keyfield="follow_up_id" table="vw_follow_up" where="done = false" user="entity_id">
-				<TEXTFIELD w="75" title="Item Name">item_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Business Name">business_name</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Lead Value">lead_value</TEXTDECIMAL>
-				<TEXTDATE w="75" title="Follow Date">follow_date</TEXTDATE>
-			</TILELIST>
+			
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" name="Sales Pipeline" key="15" h="550">
