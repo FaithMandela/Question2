@@ -1,54 +1,54 @@
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (10, 1, 'ASSETS', 'FIXED ASSETS');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (20, 1, 'ASSETS', 'INTANGIBLE ASSETS');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (30, 1, 'ASSETS', 'CURRENT ASSETS');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (40, 2, 'LIABILITIES', 'CURRENT LIABILITIES');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (50, 2, 'LIABILITIES', 'LONG TERM LIABILITIES');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (60, 3, 'EQUITY', 'EQUITY AND RESERVES');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (70, 4, 'REVENUE', 'REVENUE AND OTHER INCOME');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (80, 5, 'COST OF REVENUE', 'COST OF REVENUE');
-INSERT INTO accounts_class (accounts_class_no, chat_type_id, chat_type_name, accounts_class_name) VALUES (90, 6, 'EXPENSES', 'EXPENSES');
-UPDATE accounts_class SET org_id = 0, accounts_class_id = accounts_class_no;
-SELECT pg_catalog.setval('accounts_class_accounts_class_id_seq', 99, true);
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (10, 1, 'ASSETS', 'FIXED ASSETS');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (20, 1, 'ASSETS', 'INTANGIBLE ASSETS');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (30, 1, 'ASSETS', 'CURRENT ASSETS');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (40, 2, 'LIABILITIES', 'CURRENT LIABILITIES');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (50, 2, 'LIABILITIES', 'LONG TERM LIABILITIES');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (60, 3, 'EQUITY', 'EQUITY AND RESERVES');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (70, 4, 'REVENUE', 'REVENUE AND OTHER INCOME');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (80, 5, 'COST OF REVENUE', 'COST OF REVENUE');
+INSERT INTO account_class (account_class_no, chat_type_id, chat_type_name, account_class_name) VALUES (90, 6, 'EXPENSES', 'EXPENSES');
+UPDATE account_class SET org_id = 0, account_class_id = account_class_no;
+SELECT pg_catalog.setval('account_class_account_class_id_seq', 99, true);
 
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('100', '10', 'COST');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('110', '10', 'ACCUMULATED DEPRECIATION');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('200', '20', 'COST');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('210', '20', 'ACCUMULATED AMORTISATION');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('300', '30', 'DEBTORS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('310', '30', 'INVESTMENTS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('320', '30', 'CURRENT BANK ACCOUNTS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('330', '30', 'CASH ON HAND');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('340', '30', 'PRE-PAYMMENTS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('400', '40', 'CREDITORS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('410', '40', 'ADVANCED BILLING');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('420', '40', 'TAX');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('430', '40', 'WITHHOLDING TAX');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('500', '50', 'LOANS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('600', '60', 'CAPITAL GRANTS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('610', '60', 'ACCUMULATED SURPLUS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('700', '70', 'SALES REVENUE');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('710', '70', 'OTHER INCOME');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('800', '80', 'COST OF REVENUE');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('900', '90', 'STAFF COSTS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('905', '90', 'COMMUNICATIONS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('910', '90', 'DIRECTORS ALLOWANCES');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('915', '90', 'TRANSPORT');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('920', '90', 'TRAVEL');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('925', '90', 'POSTAL and COURIER');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('930', '90', 'ICT PROJECT');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('935', '90', 'STATIONERY');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('940', '90', 'SUBSCRIPTION FEES');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('945', '90', 'REPAIRS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('950', '90', 'PROFESSIONAL FEES');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('955', '90', 'OFFICE EXPENSES');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('960', '90', 'MARKETING EXPENSES');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('965', '90', 'STRATEGIC PLANNING');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('970', '90', 'DEPRECIATION');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('975', '90', 'CORPORATE SOCIAL INVESTMENT');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('980', '90', 'FINANCE COSTS');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('985', '90', 'TAXES');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('990', '90', 'INSURANCE');
-INSERT INTO account_types (account_type_no, accounts_class_id, account_type_name) VALUES ('995', '90', 'OTHER EXPENSES');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('100', '10', 'COST');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('110', '10', 'ACCUMULATED DEPRECIATION');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('200', '20', 'COST');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('210', '20', 'ACCUMULATED AMORTISATION');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('300', '30', 'DEBTORS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('310', '30', 'INVESTMENTS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('320', '30', 'CURRENT BANK ACCOUNTS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('330', '30', 'CASH ON HAND');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('340', '30', 'PRE-PAYMMENTS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('400', '40', 'CREDITORS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('410', '40', 'ADVANCED BILLING');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('420', '40', 'TAX');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('430', '40', 'WITHHOLDING TAX');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('500', '50', 'LOANS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('600', '60', 'CAPITAL GRANTS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('610', '60', 'ACCUMULATED SURPLUS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('700', '70', 'SALES REVENUE');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('710', '70', 'OTHER INCOME');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('800', '80', 'COST OF REVENUE');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('900', '90', 'STAFF COSTS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('905', '90', 'COMMUNICATIONS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('910', '90', 'DIRECTORS ALLOWANCES');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('915', '90', 'TRANSPORT');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('920', '90', 'TRAVEL');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('925', '90', 'POSTAL and COURIER');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('930', '90', 'ICT PROJECT');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('935', '90', 'STATIONERY');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('940', '90', 'SUBSCRIPTION FEES');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('945', '90', 'REPAIRS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('950', '90', 'PROFESSIONAL FEES');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('955', '90', 'OFFICE EXPENSES');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('960', '90', 'MARKETING EXPENSES');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('965', '90', 'STRATEGIC PLANNING');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('970', '90', 'DEPRECIATION');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('975', '90', 'CORPORATE SOCIAL INVESTMENT');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('980', '90', 'FINANCE COSTS');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('985', '90', 'TAXES');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('990', '90', 'INSURANCE');
+INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('995', '90', 'OTHER EXPENSES');
 UPDATE account_types SET org_id = 0, account_type_id = account_type_no;
 SELECT pg_catalog.setval('account_types_account_type_id_seq', 999, true);
 
@@ -274,7 +274,23 @@ VALUES (3, 0, 3, 'Purchase Transactions', 'transactions', NULL, NULL, 'Request a
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details)
 VALUES (4, 0, 2, 'Sales Transactions', 'transactions', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
 INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
-VALUES (5, 0, 5, 'subscriptions', 'subscriptions', NULL, NULL, 'subscription approved', 'subscription rejected', NULL, NULL, NULL);
+VALUES (5, 0, 1, 'Leave', 'employee_leave', NULL, NULL, 'Leave approved', 'Leave rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (6, 0, 5, 'subscriptions', 'subscriptions', NULL, NULL, 'subscription approved', 'subscription rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (7, 0, 1, 'Claims', 'claims', NULL, NULL, 'Claims approved', 'Claims rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (8, 0, 1, 'Loan', 'loans', NULL, NULL, 'Loan approved', 'Loan rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (9, 0, 1, 'Advances', 'employee_advances', NULL, NULL, 'Advance approved', 'Advance rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (10, 0, 4, 'Hire', 'applications', NULL, NULL, 'Hire approved', 'Hire rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (11, 0, 1, 'Contract', 'applications', NULL, NULL, 'Contract approved', 'Contract rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (12, 0, 1, 'Employee Objectives', 'employee_objectives', NULL, NULL, 'Objectives approved', 'Objectives rejected', NULL, NULL, NULL);
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (13, 0, 1, 'Review Objectives', 'job_reviews', NULL, NULL, 'Review approved', 'Review rejected', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflows_workflow_id_seq', 13, true);
 
 
@@ -288,6 +304,22 @@ INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_en
 VALUES (4, 0, 4, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
 VALUES (5, 0, 5, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (6, 0, 6, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (7, 0, 7, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (8, 0, 8, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (9, 0, 8, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (10, 0, 10, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (11, 0, 11, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (12, 0, 12, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (13, 0, 13, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 13, true);
 
 
