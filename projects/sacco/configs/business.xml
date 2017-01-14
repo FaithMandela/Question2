@@ -50,15 +50,7 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE name="Leads" role="staff" noorg.query="true" table="lead_items" where="(lead_level > 0)">
-				<TEXTFIELD w="75" fnct="COALESCE(count(lead_item_id), 0)" title="Total Leads">total_leads</TEXTFIELD>
-			</TILE>
-			<TILE name="My Leads" role="staff" noorg.query="true" table="lead_items" where="(lead_level > 0)" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(lead_item_id), 0)" title="Total Leads">total_leads</TEXTFIELD>
-			</TILE>
-			<TILE name="Follow Up" role="staff" noorg.query="true" table="follow_up" where="(done = true)" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(follow_up_id), 0)" title="Follow Up">followup_tasks</TEXTFIELD>
-			</TILE>
+			
 			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
 				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
