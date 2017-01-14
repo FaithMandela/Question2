@@ -44,13 +44,27 @@
 		table="sys_emails, sys_emailed, vw_orders, vw_entitys"
 		where="(vw_orders.order_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
 			AND (vw_entitys.entity_id = vw_orders.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)
-			AND (sys_emails.use_type = 3)">
+			AND (sys_emailed.email_type = 3)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
 		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
 		<BODYFIELD reference="{{orderNo}}" basetable="vw_orders">order_id</BODYFIELD>
+		<BODYFIELD reference="{{amount}}" basetable="vw_orders">grand_total</BODYFIELD>
+		
 		<PARAM basetable="vw_orders">order_id</PARAM>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
+	</REPORT>
+
+	<REPORT name="Points Generated" keyfield="sys_emailed_id" action="Emailed" actioncount="1" infile="true"
+		table="sys_emails, sys_emailed, vw_entitys"
+		where="(vw_entitys.entity_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
+			 AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)
+			AND (sys_emailed.email_type = 4)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
+		<BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
+		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 

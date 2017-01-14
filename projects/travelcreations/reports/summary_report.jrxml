@@ -10,16 +10,16 @@
 		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT SUM(a.dr) as totalKES, a.client_code,SUM(a.cr) as order_total_amount, SUM(a.segments) as segments, a.entity_name as entity_name,a.org_name, a.entity_id, SUM(a.dr - a.cr) AS balance,a.user_name,a.client_code
+		<![CDATA[SELECT SUM(a.dr) as totalKES, a.client_code,SUM(a.cr) as order_total_amount, SUM(a.segments) as segments, a.entity_name as entity_name,a.org_name, a.entity_id, SUM(a.dr - a.cr) AS balance,a.user_name,a.client_code,sum(a.total_points-a.redeem_points) as points
 
 FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,0::real AS cr, vw_loyalty_points.entity_name,vw_loyalty_points.segments,vw_loyalty_points.client_code as code,
 vw_loyalty_points.org_name, vw_loyalty_points.entity_id,vw_loyalty_points.client_code,vw_loyalty_points.user_name,
-vw_loyalty_points.period as order_date
+vw_loyalty_points.period as order_date, vw_loyalty_points.points as total_points,0::real as redeem_points
 FROM vw_loyalty_points)
 UNION
 (SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
 vw_orders.entity_name,0::real as segments,vw_orders.client_code,vw_orders.org_name,vw_orders.entity_id,vw_orders.client_code,vw_orders.entity_name,
-vw_orders.order_date
+vw_orders.order_date,0::real as total_points, vw_orders.points as redeem_points
 FROM vw_orders)) a
 GROUP BY a.org_name, a.entity_id, a.entity_name,a.client_code,a.user_name,a.client_code
 ORDER BY a.entity_name ASC;]]>
@@ -33,6 +33,7 @@ ORDER BY a.entity_name ASC;]]>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="balance" class="java.lang.Float"/>
 	<field name="user_name" class="java.lang.String"/>
+	<field name="points" class="java.lang.Float"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -61,7 +62,7 @@ ORDER BY a.entity_name ASC;]]>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="306" y="0" width="92" height="20" isPrintWhenDetailOverflows="true" uuid="9ce2af8d-3e8a-4d76-8171-89f718d22573"/>
+				<reportElement x="278" y="0" width="92" height="20" isPrintWhenDetailOverflows="true" uuid="9ce2af8d-3e8a-4d76-8171-89f718d22573"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -69,7 +70,7 @@ ORDER BY a.entity_name ASC;]]>
 				<text><![CDATA[Points Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="398" y="0" width="92" height="20" isPrintWhenDetailOverflows="true" uuid="26dceb1c-826d-457a-9272-0280adef39d9"/>
+				<reportElement x="370" y="0" width="92" height="20" isPrintWhenDetailOverflows="true" uuid="26dceb1c-826d-457a-9272-0280adef39d9"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -77,25 +78,25 @@ ORDER BY a.entity_name ASC;]]>
 				<text><![CDATA[Total redeemed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="490" y="0" width="65" height="20" isPrintWhenDetailOverflows="true" uuid="e5e2395d-53f2-4fa5-9ab0-4e6f53d6361f"/>
+				<reportElement x="462" y="0" width="93" height="20" isPrintWhenDetailOverflows="true" uuid="e5e2395d-53f2-4fa5-9ab0-4e6f53d6361f"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
-				<text><![CDATA[Balance]]></text>
+				<text><![CDATA[Total Balance]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="21" width="555" height="1" uuid="85e9567d-c9ae-4e00-be38-cb0b63c46522"/>
 			</line>
 			<staticText>
-				<reportElement x="139" y="0" width="94" height="20" uuid="47713316-e033-43b5-a8bb-85e4563d52b2"/>
-				<textElement>
+				<reportElement x="212" y="1" width="66" height="20" uuid="47713316-e033-43b5-a8bb-85e4563d52b2"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Username]]></text>
+				<text><![CDATA[Total Points]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="233" y="0" width="73" height="20" uuid="673ac57f-6538-43f6-9668-e856eff2a9f0"/>
+				<reportElement x="139" y="0" width="73" height="20" uuid="673ac57f-6538-43f6-9668-e856eff2a9f0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -122,7 +123,7 @@ ORDER BY a.entity_name ASC;]]>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="398" y="0" width="92" height="15" uuid="810d3296-bf3c-4398-9d12-5113ebeda9ea"/>
+				<reportElement x="370" y="0" width="92" height="15" uuid="810d3296-bf3c-4398-9d12-5113ebeda9ea"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -130,7 +131,7 @@ ORDER BY a.entity_name ASC;]]>
 				<textFieldExpression><![CDATA[$F{order_total_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="306" y="0" width="92" height="15" uuid="f24fda22-1eec-4150-96f3-3811f5552ed6"/>
+				<reportElement x="278" y="0" width="92" height="15" uuid="f24fda22-1eec-4150-96f3-3811f5552ed6"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -138,7 +139,7 @@ ORDER BY a.entity_name ASC;]]>
 				<textFieldExpression><![CDATA[$F{totalkes}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="490" y="0" width="65" height="15" uuid="a3e94d8f-4a82-4f78-b35b-312a398556ca"/>
+				<reportElement x="462" y="0" width="93" height="15" uuid="a3e94d8f-4a82-4f78-b35b-312a398556ca"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -146,14 +147,14 @@ ORDER BY a.entity_name ASC;]]>
 				<textFieldExpression><![CDATA[$F{balance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="139" y="0" width="94" height="15" isPrintWhenDetailOverflows="true" uuid="1577dc74-9244-4b7c-ad41-01f72824a52b"/>
-				<textElement>
+				<reportElement x="212" y="0" width="66" height="15" isPrintWhenDetailOverflows="true" uuid="1577dc74-9244-4b7c-ad41-01f72824a52b"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{points}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="233" y="0" width="73" height="15" isPrintWhenDetailOverflows="true" uuid="553d5bbe-15e5-41a0-9313-bfff8250a0ad"/>
+				<reportElement x="139" y="0" width="73" height="15" isPrintWhenDetailOverflows="true" uuid="553d5bbe-15e5-41a0-9313-bfff8250a0ad"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
