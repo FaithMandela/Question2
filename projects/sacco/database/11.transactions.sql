@@ -6,24 +6,6 @@ CREATE TABLE stores (
 );
 CREATE INDEX stores_org_id ON stores (org_id);
 
-CREATE TABLE bank_accounts (
-	bank_account_id			serial primary key,
-	org_id					integer references orgs,
-	bank_branch_id			integer references bank_branch,
-	account_id				integer references accounts,
-	currency_id				integer references currency,
-	bank_account_name		varchar(120),
-	bank_account_number		varchar(50),
-    narrative				varchar(240),
-	is_default				boolean default false not null,
-	is_active				boolean default true not null,
-    details					text
-);
-CREATE INDEX bank_accounts_org_id ON bank_accounts (org_id);
-CREATE INDEX bank_accounts_bank_branch_id ON bank_accounts (bank_branch_id);
-CREATE INDEX bank_accounts_account_id ON bank_accounts (account_id);
-CREATE INDEX bank_accounts_currency_id ON bank_accounts (currency_id);
-
 CREATE TABLE item_category (
 	item_category_id		serial primary key,
 	org_id					integer references orgs,
@@ -32,7 +14,7 @@ CREATE TABLE item_category (
 	UNIQUE(org_id, item_category_name)
 );
 CREATE INDEX item_category_org_id ON item_category (org_id);
-
+--here 
 CREATE TABLE item_units (
 	item_unit_id			serial primary key,
 	org_id					integer references orgs,
@@ -110,7 +92,7 @@ INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_s
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (17, 'Work Use', true, false);
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (21, 'Direct Expenditure', true, true);
 INSERT INTO transaction_types (transaction_type_id, transaction_type_name, for_sales, for_posting) VALUES (22, 'Direct Income', false, true);
-
+--here 1
 CREATE TABLE transaction_counters (
 	transaction_counter_id	serial primary key,
 	transaction_type_id		integer references transaction_types,
@@ -226,6 +208,7 @@ CREATE TABLE transaction_details (
 	purpose					varchar(320),
 	details					text
 );
+--here 3
 CREATE INDEX transaction_details_transaction_id ON transaction_details (transaction_id);
 CREATE INDEX transaction_details_account_id ON transaction_details (account_id);
 CREATE INDEX transaction_details_item_id ON transaction_details (item_id);
@@ -248,17 +231,7 @@ CREATE INDEX transaction_links_transaction_to ON transaction_links (transaction_
 CREATE INDEX transaction_links_transaction_detail_id ON transaction_links (transaction_detail_id);
 CREATE INDEX transaction_links_transaction_detail_to ON transaction_links (transaction_detail_to);
 
-
-CREATE VIEW vw_bank_accounts AS
-	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
-		vw_accounts.account_type_id, vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_name,
-		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		bank_accounts.bank_account_id, bank_accounts.org_id, bank_accounts.bank_account_name, bank_accounts.bank_account_number, 
-		bank_accounts.narrative, bank_accounts.is_active, bank_accounts.details
-	FROM bank_accounts INNER JOIN vw_bank_branch ON bank_accounts.bank_branch_id = vw_bank_branch.bank_branch_id
-		INNER JOIN vw_accounts ON bank_accounts.account_id = vw_accounts.account_id
-		INNER JOIN currency ON bank_accounts.currency_id = currency.currency_id;
-
+--here 3.1
 CREATE VIEW vw_items AS
 	SELECT sales_account.account_id as sales_account_id, sales_account.account_name as sales_account_name, 
 		purchase_account.account_id as purchase_account_id, purchase_account.account_name as purchase_account_name, 
@@ -331,25 +304,25 @@ CREATE VIEW vw_transactions AS
 		LEFT JOIN vw_bank_accounts ON vw_bank_accounts.bank_account_id = transactions.bank_account_id
 		LEFT JOIN departments ON transactions.department_id = departments.department_id
 		LEFT JOIN ledger_types ON transactions.ledger_type_id = ledger_types.ledger_type_id;
-
+--here 4
 CREATE VIEW vw_trx AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
-		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
-		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name, 
-		vw_orgs.org_address_id, vw_orgs.org_table_name,
-		vw_orgs.org_post_office_box, vw_orgs.org_postal_code, 
-		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town, 
-		vw_orgs.org_phone_number, vw_orgs.org_extension, 
-		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
+		vw_orgs.logo as org_logo, --vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
+		--vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
+		--vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name, 
+		--vw_orgs.org_address_id, vw_orgs.org_table_name,
+		--vw_orgs.org_post_office_box, vw_orgs.org_postal_code, 
+		--vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town, 
+		--vw_orgs.org_phone_number, vw_orgs.org_extension, 
+		--vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
 		
 		vw_entitys.address_id, vw_entitys.address_name,
 		vw_entitys.sys_country_id, vw_entitys.sys_country_name, vw_entitys.table_name, vw_entitys.is_default,
 		vw_entitys.post_office_box, vw_entitys.postal_code, vw_entitys.premises, vw_entitys.street, vw_entitys.town, 
 		vw_entitys.phone_number, vw_entitys.extension, vw_entitys.mobile, vw_entitys.fax, vw_entitys.email, vw_entitys.website,
-		vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.User_name, vw_entitys.Super_User, vw_entitys.attention, 
+		vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.User_name, vw_entitys.Super_User, --vw_entitys.attention, 
 		vw_entitys.Date_Enroled, vw_entitys.is_Active, vw_entitys.entity_type_id, vw_entitys.entity_type_name,
-		vw_entitys.entity_role, vw_entitys.use_key_id,
+		vw_entitys.entity_role, --vw_entitys.use_key_id,
 		transaction_types.transaction_type_id, transaction_types.transaction_type_name, 
 		transaction_types.document_prefix, transaction_types.for_sales, transaction_types.for_posting,
 		transaction_status.transaction_status_id, transaction_status.transaction_status_name, 
@@ -410,7 +383,7 @@ CREATE VIEW vw_transaction_details AS
 		LEFT JOIN vw_items ON transaction_details.item_id = vw_items.item_id
 		LEFT JOIN accounts ON transaction_details.account_id = accounts.account_id
 		LEFT JOIN stores ON transaction_details.store_id = stores.store_id;
-		
+--here 5		
 CREATE VIEW vw_tx_ledger AS
 	SELECT ledger_types.ledger_type_id, ledger_types.ledger_type_name, ledger_types.account_id, ledger_types.ledger_posting,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,

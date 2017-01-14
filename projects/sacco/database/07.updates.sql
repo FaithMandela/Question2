@@ -115,7 +115,7 @@ $$ LANGUAGE SQL;
 
 
 
-
+--here 1
 CREATE OR REPLACE FUNCTION get_loan_balance (integer, integer) RETURNS double precision AS $$
 	SELECT sum(monthly_repayment + loan_intrest)
 	FROM vw_loan_payments 
@@ -237,7 +237,7 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-  
+  --here 2
 CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE  ON contributions FOR EACH ROW
 EXECUTE PROCEDURE ins_contributions();
 
@@ -294,9 +294,9 @@ SELECT vw_periods.period_id,
     vw_periods.period_month,
     vw_periods.quarter,
     vw_periods.semister,
-    vw_periods.bank_header,
-    vw_periods.bank_address,
-    vw_periods.is_posted,
+    --vw_periods.bank_header,
+    --vw_periods.bank_address,
+    --vw_periods.is_posted,
     contributions.contribution_id,
     contributions.org_id,
      contributions.entity_id,
