@@ -1,3 +1,31 @@
+
+
+
+CREATE OR REPLACE FUNCTION getgradeid(real, int) RETURNS varchar(2) AS $$
+	SELECT max(aa.gradeid)
+	FROM ((SELECT gradeid, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeid, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE VIEW vwqcourses AS
+	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
+		courseview.degreelevelid, courseview.degreelevelname, courseview.coursetypeid, courseview.coursetypename,
+		courseview.courseid, courseview.credithours, courseview.maxcredit, courseview.iscurrent,
+		courseview.nogpa, courseview.yeartaken, instructors.instructorid, instructors.instructorname,
+		qcourses.quarterid, qcourses.qcourseid, qcourses.classoption, qcourses.maxclass,
+		qcourses.labcourse, qcourses.extracharge, qcourses.approved, qcourses.attendance, qcourses.oldcourseid,
+		qcourses.fullattendance, qcourses.coursetitle, qcourses.lecturesubmit, qcourses.lsdate,
+		qcourses.departmentsubmit, qcourses.dsdate, qcourses.facultysubmit, qcourses.fsdate, 
+		qcourses.org_id
+	FROM (courseview INNER JOIN qcourses ON courseview.courseid = qcourses.courseid)
+		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid;
+
+
 CREATE TABLE studentpayment_logs (
 	studentpayment_log_id	serial primary key,
 	studentpaymentid	integer,

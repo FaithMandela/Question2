@@ -140,9 +140,10 @@
 				<CHECKBOX w="75" title="Retrived">is_retrived</CHECKBOX>
 				<TEXTDATE w="75" title="Date Retrived">date_retrived</TEXTDATE>
 				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+				<TEXTFIELD w="75" title="Request ID">client_request_id</TEXTFIELD>
 			</GRID>
 			<GRID name="Client Requests" keyfield="client_request_id" linkfield="client_id" table="vw_client_requests" params="client_id">
-				<TEXTFIELD w="75" title="Client Request ID">client_request_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Request ID">client_request_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="OTRS Ref">otrs_ref</TEXTFIELD>
 				<TEXTFIELD w="75" title="CRM Ref">crm_ref</TEXTFIELD>
 				<TEXTFIELD w="75" title="D. Note No">dnote_no</TEXTFIELD>
@@ -255,6 +256,7 @@
 				<TEXTFIELD w="75" title="Connection Type">connection_type</TEXTFIELD>
 				<TEXTFIELD w="75" title="IP Allocation">ip_allocation</TEXTFIELD>
 				<TEXTFIELD w="75" title="VLAN ID">vlan_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Request ID">client_request_id</TEXTFIELD>
 				<JASPER name="Sign off" reportfile="network_migration_signoff.jasper"></JASPER>
 				<JASPER name="Migration Flow" reportfile="network_migration_flow.jasper"></JASPER>
 			</GRID>
@@ -1758,6 +1760,7 @@
 				<TEXTDATE w="150" title="Ending At" default="now" y="10" h="20" x="290">endrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Client Asset Requests" reportfile="vw_client_assets.jasper"></JASPER>
+			<JASPER name="Client Link Requests" reportfile="vw_client_links.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Asset Summary" key="225" h="550">

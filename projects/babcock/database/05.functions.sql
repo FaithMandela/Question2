@@ -1127,9 +1127,14 @@ CREATE OR REPLACE FUNCTION addacademicyear(varchar(12), int) RETURNS varchar(12)
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getgradeid(real, int) RETURNS varchar(2) AS $$
-	SELECT max(gradeid)
-	FROM grades 
-	WHERE (minrange <= $1) AND (maxrange >= $1) AND (org_id = $2);
+	SELECT max(aa.gradeid)
+	FROM ((SELECT gradeid, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeid, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
 $$ LANGUAGE SQL;
 
 -- update the course title from course titles

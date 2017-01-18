@@ -16,10 +16,33 @@ public class umisRead {
 			BWebServiceService bws = new BWebServiceService(wsURL);
 			BWebService port = bws.getBWebServicePort();
 			
-			String resp = port.getWsData(getHallService("15/1353"), "test123");
+			
+			String resp = port.getWsData(getGrades(), "test123");
+			//System.out.println("Reading grade data: \n" + resp);
+			
+			resp = port.getWsData(getMajors(), "test123");
+			//System.out.println("Reading mjors data: \n" + resp);
+			
+			resp = port.getWsData(getSchools(), "test123");
+			//System.out.println("Reading school data: \n" + resp);
+			
+			resp = port.getWsData(getDepartments(), "test123");
+			//System.out.println("Reading department data: \n" + resp);
+			
+			resp = port.getWsData(getResidences(), "test123");
+			//System.out.println("Reading residences data: \n" + resp);
+			
+			resp = port.getWsData(getSemesters(), "test123");
+			//System.out.println("Reading residences data: \n" + resp);
+			
+			resp = port.getWsData(getStudentSemester("2016/2017.2P"), "test123");
+			//System.out.println("Reading residences data: \n" + resp);
+			
+			
+			/*resp = port.getWsData(getHallService("15/1353"), "test123");
 			System.out.println("Reading student data: \n" + resp);
 			
-			/*String resp = port.getWsData(getStudentRequest("06/0382"), "test123");
+			resp = port.getWsData(getStudentRequest("06/0382"), "test123");
 			System.out.println("Reading student data: \n" + resp);
 						
 			resp = port.getWsData(getTimeTableRequest("06/0382"), "test123");
@@ -32,6 +55,107 @@ public class umisRead {
 			System.out.println("URL access error : " + ex);
 		}
 	}
+	
+	private static String getGrades() {
+		String xml = "<QUERY>\n";
+		xml += "	<GRID name=\"Grades\" keyfield=\"gradeid\" table=\"grades\">\n";
+		xml += "		<TEXTFIELD>minrange</TEXTFIELD>\n";
+		xml += "		<TEXTFIELD>maxrange</TEXTFIELD>\n";
+		xml += "		<TEXTFIELD>gradeweight</TEXTFIELD>\n";
+		xml += "	</GRID>\n";
+		xml += "</QUERY>\n";
+				
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}
+	
+	private static String getMajors() {
+		String xml = "<QUERY>\n";
+		xml += "	<GRID name=\"Majors\" keyfield=\"majorid\" table=\"majors\">\n";
+		xml += "		<TEXTFIELD>departmentid</TEXTFIELD>\n";
+		xml += "		<TEXTFIELD>majorname</TEXTFIELD>\n";
+		xml += "	</GRID>\n";
+		xml += "</QUERY>\n";
+				
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}
+	
+	private static String getSchools() {
+		String xml = "<QUERY>\n";
+		xml += "	<GRID name=\"Schools\" keyfield=\"schoolid\" table=\"schools\">\n";
+		xml += "		<TEXTFIELD>schoolname</TEXTFIELD>\n";
+		xml += "	</GRID>\n";
+		xml += "</QUERY>\n";
+				
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}
+
+	private static String getDepartments() {
+		String xml = "<QUERY>\n";
+		xml += "	<GRID name=\"Departments\" keyfield=\"departmentid\" table=\"departments\">\n";
+		xml += "		<TEXTFIELD>schoolid</TEXTFIELD>\n";
+		xml += "		<TEXTFIELD>departmentname</TEXTFIELD>\n";
+		xml += "	</GRID>\n";
+		xml += "</QUERY>\n";
+				
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}
+	
+	private static String getResidences() {
+		String xml = "<QUERY>\n";
+		xml += "	<GRID name=\"Residences\" keyfield=\"residenceid\" table=\"residences\">\n";
+		xml += "		<TEXTFIELD>residencename</TEXTFIELD>\n";
+		xml += "	</GRID>\n";
+		xml += "</QUERY>\n";
+				
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}
+	
+	private static String getSemesters() {
+		String xml = "<QUERY>\n";
+		xml += "	<GRID name=\"Semesters\" keyfield=\"quarterid\" table=\"quarters\">\n";
+		xml += "		<TEXTFIELD>qstart</TEXTFIELD>\n";
+		xml += "		<TEXTFIELD>active</TEXTFIELD>\n";
+		xml += "		<TEXTFIELD>publishgrades</TEXTFIELD>\n";
+		xml += "	</GRID>\n";
+		xml += "</QUERY>\n";
+				
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}	
+	
+	private static String getStudentSemester(String quarterId) {	
+		String xml = "<QUERY>\n";
+		xml += "<GRID name=\"Semester Student List\" keyfield=\"qstudentid\" table=\"ws_qstudents\" where=\"quarterid = '" + quarterId + "'\">\n";
+		xml += "	<TEXTFIELD>quarterid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>studentid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>studentname</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>quarterid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>schoolid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>departmentid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>studylevel</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>majorid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>majorname</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>residenceid</TEXTFIELD>\n";
+		xml += "	<TEXTFIELD>finaceapproval</TEXTFIELD>\n";
+		xml += "</GRID>\n";
+		xml += "</QUERY>\n";
+		
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}
+
 	
 	private static String getHallService(String studentId) {	
 		String xml = "<QUERY>\n";
@@ -84,6 +208,8 @@ public class umisRead {
 		xml += "</GRID>\n";
 		xml += "</QUERY>\n";
 		
+		System.out.println("XML : " + xml);
+		
 		return xml;
 	}
 	
@@ -125,6 +251,8 @@ public class umisRead {
 		xml += "		<TEXTFIELD>cummgpa</TEXTFIELD>\n";
 		xml += "	</GRID>\n";
 		xml += "</QUERY>\n";
+		
+		System.out.println("XML : " + xml);
 		
 		return xml;
 	}

@@ -12,7 +12,7 @@ INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, mode
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-04-22', 1223, 0, 1, 48, 139, '');
 
 --- UPS 
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-08-17', 115, 0, 1, 56, 138, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2017-01-16', 115, 0, 1, 59, 144, '');
 
 --- Epson Printer
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-09-28', 287, 0, 1, 4, 138, '');

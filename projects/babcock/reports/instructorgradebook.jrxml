@@ -336,7 +336,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 								<bottomPen lineWidth="0.25"/>
 								<rightPen lineWidth="0.25"/>
 							</box>
-							<textField>
+							<textField isBlankWhenNull="true">
 								<reportElement style="Crosstab Data Text" x="0" y="0" width="39" height="20" uuid="5343ad59-20ee-4347-bf7a-4f572061a8d9"/>
 								<textElement>
 									<font fontName="Times New Roman" size="8"/>
@@ -362,7 +362,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 								<bottomPen lineWidth="0.25"/>
 								<rightPen lineWidth="0.25"/>
 							</box>
-							<textField>
+							<textField isBlankWhenNull="true">
 								<reportElement style="Crosstab Data Text" x="0" y="0" width="38" height="20" uuid="36dfe51f-e0e3-4345-b91c-fa34b34b7b86"/>
 								<textElement>
 									<font fontName="Times New Roman" size="8"/>
@@ -388,7 +388,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 								<bottomPen lineWidth="0.25"/>
 								<rightPen lineWidth="0.25"/>
 							</box>
-							<textField>
+							<textField isBlankWhenNull="true">
 								<reportElement style="Crosstab Data Text" x="0" y="0" width="37" height="20" uuid="2f960f82-0f97-45a5-9f9a-5b90967ff74d"/>
 								<box>
 									<pen lineWidth="0.0"/>
@@ -421,7 +421,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 								<bottomPen lineWidth="0.25"/>
 								<rightPen lineWidth="0.25"/>
 							</box>
-							<textField>
+							<textField isBlankWhenNull="true">
 								<reportElement style="Crosstab Data Text" x="0" y="0" width="37" height="20" uuid="256d366c-26ff-4fab-9ec7-71a910d5f533"/>
 								<textElement>
 									<font fontName="Times New Roman" size="8"/>
