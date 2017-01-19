@@ -1186,7 +1186,7 @@
 	<DESK w="700" name="Members" key="240" h="550">
 		<GRID name="Active Members" keyfield="entity_id" orderby="entity_id ASC" table="members" tab.count="count(member_id)" where="(active = 't')">
 			<TEXTFIELD w="25" title="ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="100" title="Name">surname</TEXTFIELD>
+			<TEXTFIELD w="100" title="Name">full_name</TEXTFIELD>
 			<TEXTDATE w="50" title="Date Of Birth">date_of_birth</TEXTDATE>
 			<TEXTFIELD w="40" title="Gender">gender</TEXTFIELD>
 			<TEXTFIELD w="75" title="Phone">phone</TEXTFIELD>
@@ -1721,14 +1721,9 @@
 			<JASPER name="Loan Repayment By member" reportfile="loanmonthlyviewb.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Transaction Ledger" key="145" h="750">
-		<FILTER w="700" name="Transaction Ledger" split="150" type="horl" key="6" h="550">
-			<DRILLDOWN name="Year" keyfield="fiscal_year_id" table="fiscal_years" listfield="fiscal_year" pos="top">
-				<DRILLDOWN name="Month" keyfield="Period_ID" orderby="start_date" wherefield="fiscal_year_id" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
-			</DRILLDOWN>
-			<JASPER name="Transaction Ledger" reportfile="vw_ledgerb.jasper"></JASPER>
-			<JASPER name="Transaction Ledger" reportfile="vw_ledger.jasper"></JASPER>
-		</FILTER>
+	<DESK w="700" name="Transaction Ledger" key="145" h="550">
+		<JASPER name="Transaction Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
+		<JASPER name="Transaction Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="My account" key="290" h="550">
 		<GRID name="Loans" keyfield="loan_id" orderby="loan_date" linkfield="entity_id" table="vw_loans" tab.count="count(loan_id)" where="(approve_status = 'Approved' )" user="entity_id">
@@ -2643,6 +2638,7 @@
 				</FORM>
 			</GRID>
 			<FORM name="Entitys" keyfield="entity_id" linkfield="org_id" table="entitys">
+				<DEFAULT default="0">use_key_id</DEFAULT>
 				<COMBOBOX w="430" title="Entity Type" lptable="entity_types" y="30" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Entity Name" y="50" h="20" x="10">entity_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="User Name" y="50" h="20" x="290">user_name</TEXTFIELD>
@@ -2772,8 +2768,8 @@
 				<DEFAULT default="-1">tx_type</DEFAULT>
 				<DEFAULT default="true">for_processing</DEFAULT>
 				<DEFAULT default="21">transaction_type_id</DEFAULT>
-				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 3 )" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(expense_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_key_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
@@ -2821,8 +2817,8 @@
 				<DEFAULT default="1">tx_type</DEFAULT>
 				<DEFAULT default="22">transaction_type_id</DEFAULT>
 				<DEFAULT default="true">for_processing</DEFAULT>
-				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(entity_type_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(income_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_key_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 				<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
@@ -2892,8 +2888,8 @@
 					<DEFAULT default="-1">tx_type</DEFAULT>
 					<DEFAULT default="21">transaction_type_id</DEFAULT>
 					<DEFAULT default="Draft">approve_status</DEFAULT>
-					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_function = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(expense_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Supplier" lptable="entitys" lpkey="entity_id" where="(use_key_id = 3)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 					<COMBOBOX w="430" title="Department" lptable="departments" where="(cost_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
@@ -2949,8 +2945,8 @@
 					<DEFAULT default="Draft">approve_status</DEFAULT>
 					<DEFAULT default="1">tx_type</DEFAULT>
 					<DEFAULT default="22">transaction_type_id</DEFAULT>
-					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_function = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Ledger Type" lptable="ledger_types" where="(income_ledger = true)" y="10" h="20" x="10" lpfield="ledger_type_name">ledger_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Client" lptable="entitys" lpkey="entity_id" where="(use_key_id = 2)" y="30" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
 					<COMBOBOX w="430" title="Department" lptable="departments" where="(revenue_center = true)" y="50" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 					<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
@@ -2991,18 +2987,23 @@
 			<JASPER name="Tax" reportfile="vw_tx_ledger_d.jasper"></JASPER>
 		</GRID>
 		<GRID name="Ledger Types" keyfield="ledger_type_id" table="vw_ledger_types">
-			<TEXTFIELD w="75" title="Ledger Type ID">ledger_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Ledger Type Name">ledger_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
+			<TEXTFIELD w="15" title="ID">ledger_type_id</TEXTFIELD>
+			<TEXTFIELD w="45" title="Account">account_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Chat Type Name">chat_type_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
+			<TEXTFIELD w="45" title="Tax Account">t_account_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tax Account Name">t_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Ledger Type Name">ledger_type_name</TEXTFIELD>
+			<CHECKBOX w="35" title="Posting">ledger_posting</CHECKBOX>
+			<CHECKBOX w="35" title="Income">income_ledger</CHECKBOX>
+			<CHECKBOX w="35" title="Expense">expense_ledger</CHECKBOX>
 			<FORM name="Ledger Types" keyfield="ledger_type_id" table="ledger_types">
-				<COMBOBOX w="430" title="Account" lptable="vw_accounts" cmb_fnct="account_id || ' - ' || accounts_class_name || ' - ' || account_name" y="10" h="20" x="10" lpfield="account_title">account_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Ledger Type" y="30" h="20" x="10">ledger_type_name</TEXTFIELD>
-				<CHECKBOX w="150" title="For Posting" y="50" h="20" x="10">ledger_posting</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<COMBOBOX w="430" title="Tax Account" lptable="vw_accounts" lpkey="account_id" y="30" h="20" x="10" lpfield="account_description">tax_account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Ledger Type Name" y="50" h="20" x="10">ledger_type_name</TEXTFIELD>
+				<CHECKBOX w="150" title="For Posting" y="70" h="20" x="10">ledger_posting</CHECKBOX>
+				<CHECKBOX w="150" title="Income" y="90" h="20" x="10">income_ledger</CHECKBOX>
+				<CHECKBOX w="150" title="Expense" y="90" h="20" x="290">expense_ledger</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

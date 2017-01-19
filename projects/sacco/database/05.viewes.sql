@@ -1,6 +1,8 @@
 
 drop function change_password ( character varying, character varying,character varying);
 
+
+
 CREATE OR REPLACE FUNCTION change_password(v_entityID integer, v_old_pass varchar(32), v_pass varchar(32)) RETURNS varchar(120) AS $$
 DECLARE
     old_password    varchar(64);
@@ -56,7 +58,7 @@ BEGIN
              contribution_amount,  entry_date,
              transaction_ref, is_paid)
              
-    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0,  contribution,
+    SELECT v_period_id::integer, org_id::integer ,entity_id, 1,1,  contribution,
             now()::date, 'Auto generated','False'
         FROM members;
 
@@ -80,6 +82,9 @@ BEGIN
 	
 	UPDATE loans SET approve_status = 'Approved'
 	WHERE (loan_id = CAST($1 as int));
+	
+	
+	
 
 	return msg;
 END;
@@ -437,10 +442,10 @@ BEGIN
   
   IF (TG_OP = 'UPDATE' AND NEW.approve_status = 'Approved') THEN
          
-             INSERT INTO members(entity_id,org_id, surname, first_name, middle_name,phone, 
+             INSERT INTO members(entity_id,org_id,full_name, surname, first_name, middle_name,phone, 
             gender,marital_status,primary_email,objective, details)  
          
-    VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
+    VALUES (New.entity_id,New.org_id,(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')), New.Surname,NEW.First_name,NEW.Middle_name,
     New.applicant_phone,New.gender,New.marital_status,New.applicant_email,NEW.objective, NEW.details)
     RETURNING entity_id INTO v_entity_id;
     NEW.entity_id := v_entity_id;
@@ -479,18 +484,21 @@ BEGIN
 	NEW.entity_id := nextval('entitys_entity_id_seq');
 	NEW.member_id := nextval('members_member_id_seq');
 
-	INSERT INTO entitys (entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount)
-	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution) RETURNING entity_id INTO v_entity_id;
+	INSERT INTO entitys (entity_id, entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount,use_key_id)
+	VALUES (New.entity_id, (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution, 0) RETURNING entity_id INTO v_entity_id;
 
 	NEW.entity_id := v_entity_id;
-
-
-	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')) where entity_id = v_entity_id ;
-END IF;
+	
+	NEW.full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
+	
+	END IF;
+	
 	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+
  
  
 

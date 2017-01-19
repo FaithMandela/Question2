@@ -21,6 +21,7 @@ CREATE TABLE loans (
 	initial_payment				real default 0 not null,
 	reducing_balance			boolean default true not null,
 	repayment_period			integer not null check (repayment_period > 0),
+	journal_id				integer references journals,
 	
 	application_date			timestamp default now(),
 	approve_status				varchar(16) default 'Draft' not null,
@@ -30,6 +31,7 @@ CREATE TABLE loans (
 	is_closed				boolean default false,
 	details					text
 );
+CREATE INDEX loans_journal_id ON loans (journal_id);
 CREATE INDEX loans_loan_type_id ON loans (loan_type_id);
 CREATE INDEX loans_entity_id ON loans (entity_id);
 CREATE INDEX loans_org_id ON loans (org_id);
@@ -191,23 +193,24 @@ CREATE VIEW vw_loan_types AS
 	FROM loan_types 
 		INNER JOIN currency ON loan_types.org_id = currency.org_id;
 
-CREATE VIEW vw_loans AS
+CREATE OR REPLACE VIEW vw_loans AS 
 	SELECT
 		vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
 		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
-		entitys.entity_id, entitys.entity_name, members.member_id,
-		loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
+		loans.entity_id, loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
 		loans.repayment_period, loans.initial_payment, loans.loan_date, 
 		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, 
-		loans.details,
+		loans.details, entitys.entity_name ,
 		get_repayment(loans.principle, loans.interest, loans.repayment_period) as repayment_amount, 
 		loans.initial_payment + get_total_repayment(loans.loan_id) as total_repayment, get_total_interest(loans.loan_id) as total_interest,
 		(loans.principle + get_total_interest(loans.loan_id) - loans.initial_payment - get_total_repayment(loans.loan_id)) as loan_balance,
 		get_payment_period(loans.principle, loans.monthly_repayment, loans.interest) as calc_repayment_period
-	FROM loans INNER JOIN entitys ON loans.entity_id = entitys.entity_id
-		INNER JOIN members ON loans.entity_id = members.entity_id
+	FROM loans
+		INNER JOIN entitys ON loans.entity_id = entitys.entity_id
 		INNER JOIN vw_loan_types ON loans.loan_type_id = vw_loan_types.loan_type_id;
-
+		
+		
+		
 CREATE VIEW vw_loan_monthly AS
 	SELECT 	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
 		vw_loans.loan_type_id, vw_loans.loan_type_name,vw_loans.approve_status,
@@ -301,10 +304,18 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 DECLARE
 	v_default_interest	real;
 	v_reducing_balance	boolean;
+	periodid         	integer;
+	journalid			integer;
+	currencyid  		integer;	
+	entityname     		varchar(120);
+	loanid				integer;
+	vpenalty 			real;
+	vinterest			real;
 BEGIN
 
 	SELECT default_interest, reducing_balance INTO v_default_interest, v_reducing_balance
@@ -344,6 +355,46 @@ BEGIN
 	IF(NEW.monthly_repayment > NEW.principle)THEN
 		RAISE EXCEPTION 'Repayment should be less than the principal amount';
 	END IF;
+	
+	If ( New. approve_status = 'Approved' ) THEN 
+		
+		periodid := get_open_period(New.loan_date);
+		IF(periodid is null) THEN
+		RAISE EXCEPTION 'Create active period.';
+		ELSE
+		select currency_id into currencyid from currency where org_id = NEW.org_id;
+		Select entity_name into entityname from entitys where entity_id = NEW.entity_id;
+		
+			INSERT INTO journals (period_id, journal_date, org_id, department_id, currency_id, narrative, year_closing)
+			VALUES (periodid, New.application_date::date,New.org_id, 1, currencyid, entityname || ' Loan', false) returning journal_id into journalid ;
+			
+			INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+			VALUES (journalid, 40000, NEW.principle, 0, entityname || ' Loan principal', NEW.org_id) ;
+			
+			INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+			VALUES ( journalid, 33000,0, NEW.principle,  entityname || ' Loan principal', NEW.org_id);
+			
+			NEW.journal_id = journalid;
+			New.loan_id = loanid;
+			
+			SELECT penalty , interest_amount into vpenalty , vinterest from vw_loan_monthly where loan_id = loanid;
+			
+			INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+			VALUES (journalid, 40000, vpenalty, 0, entityname || ' Loan Penalty', NEW.org_id) ;
+			
+			INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+			VALUES ( journalid, 33000,0, vpenalty,  entityname || ' Loan Penalty', NEW.org_id);
+			
+			INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+			VALUES (journalid, 40000, vinterest, 0, entityname || ' Loan interest', NEW.org_id) ;
+			
+			INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+			VALUES ( journalid, 33000,0, vinterest,  entityname || ' Loan interest', NEW.org_id);
+			
+		END IF;
+		 
+		
+	END IF;	
 	
 	RETURN NEW;
 END;

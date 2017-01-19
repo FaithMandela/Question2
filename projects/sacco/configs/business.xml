@@ -1247,7 +1247,7 @@
 				</ACTIONS>
 				<GRID name="Gls" keyfield="gl_id" linkfield="journal_id" table="vw_gls">
 					<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Accounts Class Name">account_class_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Debit">debit</TEXTDECIMAL>

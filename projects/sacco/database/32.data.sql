@@ -49,8 +49,14 @@ INSERT INTO account_types (account_type_no, account_class_id, account_type_name)
 INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('985', '90', 'TAXES');
 INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('990', '90', 'INSURANCE');
 INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('995', '90', 'OTHER EXPENSES');
+
 UPDATE account_types SET org_id = 0, account_type_id = account_type_no;
 SELECT pg_catalog.setval('account_types_account_type_id_seq', 999, true);
+
+
+
+
+
 
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('10000',100,'COMPUTERS and EQUIPMENT');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('10005',100,'FURNITURE');
@@ -202,6 +208,7 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99505'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99510',995,'COST OF GOODS SOLD (COGS)');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99515',995,'PURCHASE PRICE VARIANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99999',995,'SURPLUS/DEFICIT');
+
 UPDATE accounts set org_id = 0, account_id = account_no;
 SELECT pg_catalog.setval('accounts_account_id_seq', 99999, true);
 

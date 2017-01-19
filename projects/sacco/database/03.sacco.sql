@@ -1,5 +1,9 @@
 
 ---Project Database File
+DELETE FROM currency where currency_id != 1;
+INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 1, 1, 'Administration'); 
+INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
+VALUES (3, 0, 0, 0, 'admin', 'admin', 'admin@admin.com', true, false, false, 'baraza','admin');
 
 CREATE TABLE payment_types (
 	payment_type_id			serial primary key,
