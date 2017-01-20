@@ -305,7 +305,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
+
+CREATE OR REPLACE FUNCTION ins_loans()
+  RETURNS trigger AS
+$BODY$
 DECLARE
 	v_default_interest	real;
 	v_reducing_balance	boolean;
@@ -369,27 +372,13 @@ BEGIN
 			VALUES (periodid, New.application_date::date,New.org_id, 1, currencyid, entityname || ' Loan', false) returning journal_id into journalid ;
 			
 			INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
-			VALUES (journalid, 40000, NEW.principle, 0, entityname || ' Loan principal', NEW.org_id) ;
+			VALUES (journalid, 30000, NEW.principle, 0, entityname || ' Loan principal', NEW.org_id) ;
 			
 			INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
 			VALUES ( journalid, 33000,0, NEW.principle,  entityname || ' Loan principal', NEW.org_id);
 			
 			NEW.journal_id = journalid;
-			New.loan_id = loanid;
 			
-			SELECT penalty , interest_amount into vpenalty , vinterest from vw_loan_monthly where loan_id = loanid;
-			
-			INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
-			VALUES (journalid, 40000, vpenalty, 0, entityname || ' Loan Penalty', NEW.org_id) ;
-			
-			INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
-			VALUES ( journalid, 33000,0, vpenalty,  entityname || ' Loan Penalty', NEW.org_id);
-			
-			INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
-			VALUES (journalid, 40000, vinterest, 0, entityname || ' Loan interest', NEW.org_id) ;
-			
-			INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
-			VALUES ( journalid, 33000,0, vinterest,  entityname || ' Loan interest', NEW.org_id);
 			
 		END IF;
 		 
@@ -398,10 +387,13 @@ BEGIN
 	
 	RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$BODY$
+  LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE ins_loans();
+    
+       
 
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
@@ -432,6 +424,86 @@ BEGIN
 	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
- 
 
- 
+
+    CREATE OR REPLACE FUNCTION ins_loan_monthly() RETURNS trigger AS $BODY$
+DECLARE
+	vdate					date;
+	entityname				varchar(120);
+	journalid				integer;
+	currencyid				integer;
+	vpenalty 				real;
+	periodid         		integer;
+	vinterest				real;
+	vpenaltypaid 			real;
+	vinterestpaid			real;
+	vrepaymentpaid          real;
+	vtotalinterest          real;
+BEGIN
+
+			
+    			SELECT penalty , interest_amount, start_date, vw_loan_monthly.entity_name,period_id, 
+    			vw_loans.currency_id, vw_loans.total_interest INTO vpenalty , vinterest,vdate, entityname, 
+    			currencyid, vtotalinterest FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id 
+    			WHERE( vw_loan_monthly.loan_id = New.loan_id);
+    			
+    			
+    			INSERT INTO journals (period_id, journal_date, org_id, department_id, currency_id, narrative, year_closing)
+				VALUES (periodid, vdate ,New.org_id, 1, currencyid, entityname || ' Repayments', false) returning journal_id 
+				into journalid ;
+    			
+					INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+					VALUES (journalid, 71030, vtotalinterest, 0, entityname || ' Loan interest owing', NEW.org_id) ;
+					
+					INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+					VALUES ( journalid, 30000,0, vtotalinterest,  entityname || ' Loan interest owing', NEW.org_id);
+   
+				IF (vpenalty > 0 ) THEN  
+					INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+ 					VALUES (journalid, 71030, vpenalty, 0, entityname || ' Loan Penalty owing', NEW.org_id) ;
+				
+ 					INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+ 					VALUES ( journalid, 30000,0, vpenalty,  entityname || ' Loan Penalty owing', NEW.org_id);
+ 					END IF;
+					
+			IF(NEW.is_paid = true) THEN
+			
+				SELECT penalty , interest_paid, start_date, vw_loan_monthly.entity_name, period_id, vw_loans.currency_id, 
+				vw_loan_monthly.repayment_paid INTO vpenaltypaid , vinterestpaid, vdate, 
+				entityname, periodid, currencyid,vrepaymentpaid 
+				FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id
+				 WHERE  (vw_loan_monthly.loan_id = New.loan_id);
+					 
+					INSERT INTO journals (period_id, journal_date, org_id, department_id, currency_id, narrative, year_closing)
+					VALUES (periodid, vdate ,New.org_id, 1, currencyid, entityname || ' Repayment ', false) 
+					returning journal_id into journalid ;
+			
+						IF (vpenaltypaidd > 0 ) THEN  
+							INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+							VALUES (journalid, 71030, 0,vpenaltypaid , entityname || ' Loan Penalty Paid', NEW.org_id) ;
+						
+							INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+							VALUES ( journalid, 30000,vpenaltypaid , 0,  entityname || ' Loan Penalty Paid', NEW.org_id);
+						END IF;
+				
+						INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+						VALUES (journalid, 71030, 0,vinterestpaid , entityname || ' Loan Interest Paid', NEW.org_id) ;
+				
+						INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+						VALUES ( journalid, 30000,vinterestpaid , 0,  entityname || ' Loan Interest Paid', NEW.org_id);
+						
+						INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+						VALUES (journalid, 71030, 0,vrepaymentpaid , entityname || ' Loan Repayment Paid', NEW.org_id) ;
+				
+						INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+						VALUES ( journalid, 30000,vrepaymentpaid , 0,  entityname || ' Loan Repayment Paid', NEW.org_id);
+			END IF;
+	
+    
+	RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_loan_monthly AFTER INSERT OR UPDATE ON loan_monthly
+    FOR EACH ROW EXECUTE PROCEDURE ins_loan_monthly();

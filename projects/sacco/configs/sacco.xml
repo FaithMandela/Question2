@@ -2511,7 +2511,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Periods" key="335" h="550">
-		<GRID name="Periods" keyfield="period_id" orderby="start_date DESC" table="vw_periods">
+		<GRID name="Periods" keyfield="period_id" orderby="start_date ASC" table="vw_periods">
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
@@ -2522,7 +2522,7 @@
 				<ACTION fnct="compute_loans">Process Loans</ACTION>
 				<ACTION fnct="compute_contributions">Generate contribs</ACTION>
 			</ACTIONS>
-			<FORM name="Periods" keyfield="period_id" linkfield="period_id" table="periods">
+			<FORM name="Periods" keyfield="period_id" delete="false" linkfield="period_id" table="periods">
 				<USERFIELD>entity_id</USERFIELD>
 				<TEXTDATE w="150" title="Start Date" required="true" y="10" h="20" x="10">start_date</TEXTDATE>
 				<TEXTDATE w="150" title="End Date" required="true" y="10" h="20" x="290">end_date</TEXTDATE>

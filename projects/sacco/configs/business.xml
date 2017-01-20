@@ -1252,7 +1252,7 @@
 					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Debit">debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Credit">credit</TEXTDECIMAL>
-					<FORM name="Gls" keyfield="gl_id" linkfield="journal_id" table="gls">
+					<FORM name="Gls" keyfield="gl_id" linkfield="journal_id" table="gls" new="false" delete ="false" edit="false">
 						<GRIDBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
 							<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
 								<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
@@ -1266,7 +1266,7 @@
 						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">gl_narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
-				<FORM name="Journals" keyfield="journal_id" linkfield="period_id" table="journals">
+				<FORM name="Journals" keyfield="journal_id" linkfield="period_id" table="journals" delete="false">
 					<COMBOBOX w="430" title="Department" lptable="departments" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDATE w="150" title="Date" default="today" y="50" h="20" x="10">journal_date</TEXTDATE>
