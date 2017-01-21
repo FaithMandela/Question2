@@ -143,3 +143,39 @@ CREATE OR REPLACE FUNCTION get_house_rent(integer) RETURNS double precision AS $
 $$ LANGUAGE SQL;
 
 
+CREATE OR REPLACE FUNCTION getAdjustment(int, int) RETURNS float AS $$
+DECLARE
+	adjustment float;
+BEGIN
+
+	IF ($2 = 1) THEN
+		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32) 
+			+ getAdjustment(Employee_Month_ID, 4, 23)) 
+		INTO adjustment
+		FROM Employee_Month
+		WHERE (Employee_Month_ID = $1);
+	ELSIF ($2 = 2) THEN
+		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32)
+			+ getAdjustment(Employee_Month_ID, 4, 23) 
+			- getAdjustment(Employee_Month_ID, 4, 12) - getAdjustment(Employee_Month_ID, 4, 24)) 
+		INTO adjustment
+		FROM Employee_Month
+		WHERE (Employee_Month_ID = $1);
+	ELSIF ($2 = 3) THEN
+		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32)) 
+		INTO adjustment
+		FROM Employee_Month
+		WHERE (Employee_Month_ID = $1);
+	ELSE
+		adjustment := 0;
+	END IF;
+
+	IF(adjustment is null) THEN
+		adjustment := 0;
+	END IF;
+
+	RETURN adjustment;
+END;
+$$ LANGUAGE plpgsql;
+
+

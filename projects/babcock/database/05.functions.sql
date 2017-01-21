@@ -1137,6 +1137,17 @@ CREATE OR REPLACE FUNCTION getgradeid(real, int) RETURNS varchar(2) AS $$
 	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_grade_weight(real, int) RETURNS real AS $$
+	SELECT max(aa.gradeweight)::real
+	FROM ((SELECT gradeweight, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeweight, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
+$$ LANGUAGE SQL;
+
 -- update the course title from course titles
 CREATE OR REPLACE FUNCTION getcoursetitle(varchar(12)) RETURNS varchar(50) AS $$
 	SELECT MAX(coursetitle) FROM courses WHERE (courseid = $1);

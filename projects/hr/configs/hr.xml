@@ -645,7 +645,7 @@
 				<TEXTDECIMAL w="75" title="Net Pay">net_pay</TEXTDECIMAL>
 				<JASPER name="Payroll" linkfield="filterid" reportfile="payslipb.jasper"></JASPER>
 			</GRID>
-			<JASPER name="P9A" org.table="orgs" linkfield="periodyear" user="employeeid" reportfile="P9Aa.jasper"></JASPER>
+			<JASPER name="P9A" org.table="orgs" user="employeeid" reportfile="P9Aa.jasper"></JASPER>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="News Admin" key="19" h="500">
