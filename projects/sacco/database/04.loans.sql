@@ -443,7 +443,7 @@ BEGIN
 
 			
     			SELECT penalty , interest_amount, start_date, vw_loan_monthly.entity_name,period_id, 
-    			vw_loans.currency_id, vw_loans.total_interest INTO vpenalty , vinterest,vdate, entityname, 
+    			vw_loans.currency_id, vw_loans.total_interest INTO vpenalty , vinterest,vdate, entityname, periodid,
     			currencyid, vtotalinterest FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id 
     			WHERE( vw_loan_monthly.loan_id = New.loan_id);
     			
@@ -478,7 +478,7 @@ BEGIN
 					VALUES (periodid, vdate ,New.org_id, 1, currencyid, entityname || ' Repayment ', false) 
 					returning journal_id into journalid ;
 			
-						IF (vpenaltypaidd > 0 ) THEN  
+						IF (vpenaltypaid > 0 ) THEN  
 							INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
 							VALUES (journalid, 71030, 0,vpenaltypaid , entityname || ' Loan Penalty Paid', NEW.org_id) ;
 						
