@@ -1,5 +1,23 @@
 
 
+CREATE OR REPLACE FUNCTION get_grade_weight(real, int) RETURNS real AS $$
+	SELECT max(aa.gradeweight)::real
+	FROM ((SELECT gradeweight, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeweight, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_curr_score(int) RETURNS float AS $$
+	SELECT (CASE sum(qgrades.credit) WHEN 0 THEN 0 
+	ELSE (sum(get_grade_weight(round(finalmarks)::integer, qgrades.org_id) * qgrades.credit) / sum(qgrades.credit)) END)
+	FROM qgrades 
+	WHERE (qgrades.qstudentid = $1) AND (qgrades.dropped = false) 
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getgradeid(real, int) RETURNS varchar(2) AS $$
 	SELECT max(aa.gradeid)

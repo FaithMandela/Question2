@@ -2,8 +2,8 @@
 
 import java.net.URL;
 import java.net.MalformedURLException;
-import org.baraza.web.BWebServiceService;
-import org.baraza.web.BWebService;
+import babcock.ws.DataWebService;
+import babcock.ws.DataWebServiceService;
 
 public class umisRead {
 
@@ -13,30 +13,30 @@ public class umisRead {
 	
 			URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
 		
-			BWebServiceService bws = new BWebServiceService(wsURL);
-			BWebService port = bws.getBWebServicePort();
+			DataWebServiceService bws = new DataWebServiceService(wsURL);
+			DataWebService port = bws.getDataWebServicePort();
 			
 			
-			String resp = port.getWsData(getGrades(), "test123");
+			String resp = port.getWsData(getGrades(), "babcockWB12345");
 			//System.out.println("Reading grade data: \n" + resp);
 			
-			resp = port.getWsData(getMajors(), "test123");
+			resp = port.getWsData(getMajors(), "babcockWB12345");
 			//System.out.println("Reading mjors data: \n" + resp);
 			
-			resp = port.getWsData(getSchools(), "test123");
+			resp = port.getWsData(getSchools(), "babcockWB12345");
 			//System.out.println("Reading school data: \n" + resp);
 			
-			resp = port.getWsData(getDepartments(), "test123");
+			resp = port.getWsData(getDepartments(), "babcockWB12345");
 			//System.out.println("Reading department data: \n" + resp);
 			
-			resp = port.getWsData(getResidences(), "test123");
+			resp = port.getWsData(getResidences(), "babcockWB12345");
 			//System.out.println("Reading residences data: \n" + resp);
 			
-			resp = port.getWsData(getSemesters(), "test123");
+			resp = port.getWsData(getSemesters(), "babcockWB12345");
 			//System.out.println("Reading residences data: \n" + resp);
 			
-			resp = port.getWsData(getStudentSemester("2016/2017.2P"), "test123");
-			//System.out.println("Reading residences data: \n" + resp);
+			resp = port.getWsData(getStudentSemester("2016/2017.1"), "babcockWB12345");
+			System.out.println("Reading residences data: \n" + resp);
 			
 			
 			/*resp = port.getWsData(getHallService("15/1353"), "test123");

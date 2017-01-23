@@ -525,7 +525,7 @@ BEGIN
 		WHERE (Employee_Month_ID = $1);
 	ELSIF ($2 = 2) THEN
 		SELECT (Basic_Pay + getAdjustment(Employee_Month_ID, 4, 31) + getAdjustment(Employee_Month_ID, 4, 32)
-			- getAdjustment(Employee_Month_ID, 4, 23) 
+			+ getAdjustment(Employee_Month_ID, 4, 23) 
 			- getAdjustment(Employee_Month_ID, 4, 12) - getAdjustment(Employee_Month_ID, 4, 24)) 
 		INTO adjustment
 		FROM Employee_Month

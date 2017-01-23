@@ -528,6 +528,7 @@
 					<TEXTFIELD w="75" title="Model">model_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Asset Status">asset_status_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Tag">tag_number</TEXTFIELD>
 					<TEXTFIELD w="75" title="Asset Description">asset_description</TEXTFIELD>
 					<FORM name="Assets" keyfield="asset_id" linkfield="model_id" table="assets">
 						<COMBOBOX w="430" title="Asset Status" lptable="asset_status" y="10" h="20" x="10" lpfield="asset_status_name">asset_status_id</COMBOBOX>
@@ -562,6 +563,7 @@
 			<TEXTFIELD w="75" title="Manufacturer">manufacturer_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Model">model_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Asset Status">asset_status_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tag">tag_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Supplier">entity_name</TEXTFIELD>
 			<FORM name="Assets" keyfield="asset_id" table="assets">
 				<COMBOBOX w="430" title="Model" lptable="models" y="10" h="20" x="10" lpfield="model_name">model_id</COMBOBOX>
