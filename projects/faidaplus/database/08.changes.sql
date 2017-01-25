@@ -1,121 +1,82 @@
-CREATE OR REPLACE FUNCTION generate_points(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $$
 DECLARE
-	rec						RECORD;
-	v_period				varchar(7);
-	period					date;
-	v_start_date			date;
-	v_increment				integer;
-	v_period_id				integer;
-	v_org_id				integer;
-	v_entity_id				integer;
-	v_points				real;
-	v_points_id				integer;
-	v_root_points			integer;
-	v_amount				real;
-	msg 					varchar(120);
+	msg 		varchar(20);
+	details 	text;
+	or_details 	text;
+	v_org_id                integer;
+	v_entity_id            integer;
+	v_sms_number		varchar(25);
+	v_order_no			integer;
+	v_batch_no			integer;
 BEGIN
+SELECT entity_id, phone_no,batch_no,order_id INTO v_entity_id, v_sms_number,v_batch_no,v_order_no
+FROM orders WHERE (order_id = $1::integer);
+	IF ($3::integer = 1) THEN
 
-	v_period_id = $1::integer;
-	SELECT start_date, end_date, to_char(start_date, 'mmyyyy') INTO v_start_date, period, v_period
-	FROM periods WHERE period_id = v_period_id AND closed = false;
-	IF(v_period IS NULL)THEN RAISE EXCEPTION 'Period is closed'; END IF;
-
-	IF(v_start_date < '2016-06-01'::date)THEN
-		v_increment := 0;
-	ELSE
-		v_increment := 2;
-	END IF;
-
-	v_root_points := 0;
-	DELETE FROM points WHERE period_id = v_period_id AND entity_id = 0;
-
-	FOR rec IN SELECT pcc, son, bookpcc, ticketperiod, totalsegs, substring(bookpcc from 1 for 6) as svcb_son
-		FROM t_sonsegs WHERE (ticketperiod = v_period) AND (totalsegs > 0)
-	LOOP
-
-		IF(1<= rec.totalsegs::integer AND rec.totalsegs::integer <=250 ) THEN
-			v_amount := 12 + v_increment;
-			v_points := rec.totalsegs * v_amount;
-		END IF;
-
-		IF(251<= rec.totalsegs::integer AND rec.totalsegs::integer <=500) THEN
-			v_amount := 16 + v_increment;
-			v_points := rec.totalsegs * v_amount;
-		END IF;
-
-		IF(rec.totalsegs::integer >=501 ) THEN
-			v_amount := 20 + v_increment;
-			v_points := rec.totalsegs * v_amount;
-		END IF;
-
-		SELECT orgs.org_id, entitys.entity_id INTO v_org_id, v_entity_id
-		FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
-		WHERE (entitys.is_active = true) AND (orgs.pcc = rec.pcc) AND (entitys.son = rec.son);
-
-		IF(v_entity_id is null)THEN
-			SELECT entity_id INTO v_entity_id
-			FROM change_pccs
-			WHERE (approve_status = 'Approved') AND (pcc = rec.pcc) AND (son = rec.son);
-			SELECT org_id INTO v_org_id
-			FROM entitys
-			WHERE (entitys.is_active = true) AND (entity_id = v_entity_id);
-
-		END IF;
-
-		IF(v_entity_id is null)THEN
-			SELECT entity_id INTO v_entity_id
-			FROM entitys
-			WHERE (is_active = true) AND (svcb_son = rec.svcb_son);
-			SELECT org_id INTO v_org_id
-			FROM entitys
-			WHERE (entitys.is_active = true) AND (entity_id = v_entity_id);
-			IF(v_org_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
-		END IF;
-
-		IF(v_entity_id is null)THEN v_entity_id := 0; v_org_id := 0; END IF;
-
-		--- Compute rooot points
-		IF(v_entity_id <> 0)THEN
-			v_root_points := v_root_points + rec.totalsegs;
-		END IF;
-
-		SELECT points_id INTO v_points_id
-		FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
-			AND (pcc = rec.pcc) AND (son = rec.son);
-
-		IF(v_points_id is null)THEN
-			SELECT points_id INTO v_points_id
-			FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
-				AND (pcc is null) AND (son = rec.son);
-		END IF;
-
-		IF(v_points_id is null)THEN
-			INSERT INTO points (point_date, period_id, org_id, entity_id, pcc, son, segments, amount, points)
-			VALUES (period, v_period_id, v_org_id, v_entity_id, rec.pcc, rec.son, rec.totalsegs, v_amount, v_points);
+		IF(v_sms_number = '') THEN
+			SELECT org_id, entity_id, primary_telephone INTO v_org_id, v_entity_id, v_sms_number
+			FROM entitys WHERE (entity_id = v_entity_id);
 		ELSE
-			UPDATE points SET segments = rec.totalsegs, amount = v_amount, points = v_points
-			WHERE points_id = v_points_id;
+			SELECT org_id INTO v_org_id
+			FROM entitys WHERE (entity_id = v_entity_id);
 		END IF;
-	END LOOP;
-
-	IF(v_start_date >= '2016-06-01'::date)THEN
-		SELECT points_id INTO v_points_id
-		FROM points WHERE (period_id = v_period_id) AND (entity_id = 0) AND (pcc is null) AND (son is null);
-
-		IF(v_points_id is null )THEN
-			INSERT INTO points (point_date, period_id, org_id, entity_id, amount, points)
-			VALUES (period, v_period_id, 0, 0, 2, v_root_points * 2);
-		ELSE
-			UPDATE points SET amount = 2, points = v_root_points * 2
-			WHERE points_id = v_points_id;
-		END IF;
+		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
+		or_details :='Order '||v_batch_no||'-'||v_order_no||' is ready for collection';
+		INSERT INTO sms (folder_id, entity_id, org_id, sms_number, message)
+	    VALUES (0,v_entity_id, v_org_id, v_sms_number, or_details);
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative,mail_body)
+		VALUES ($1::integer,4 ,'vw_orders', 3, 0,or_details,get_order_details(v_order_no));
 	END IF;
 
-	IF(rec IS NULL)THEN
-		RAISE EXCEPTION 'There are no segments for this month';
-	ELSE
-		msg := 'Points computed';
+	IF ($3::integer = 2) THEN
+		UPDATE orders SET order_status = 'Collected' WHERE order_id = $1::integer;
+		or_details :=  'Order '||v_batch_no||'-'||v_order_no||' has been collected';
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative,mail_body)
+		VALUES ($1::integer,9 ,'vw_orders', 3, 0,or_details,get_order_details(v_order_no));
 	END IF;
-	RETURN msg;
+
+	IF ($3::integer = 3) THEN
+		UPDATE orders SET order_status = 'Closed' WHERE order_id = $1::integer;
+	END IF;
+
+	RETURN 'Successfully Updated';
 END;
 $$ LANGUAGE plpgsql;
+
+DROP TRIGGER ins_orders ON orders ;
+
+CREATE TRIGGER ins_orders AFTER INSERT ON order_details
+FOR EACH ROW EXECUTE PROCEDURE ins_orders();
+
+CREATE OR REPLACE FUNCTION ins_orders() RETURNS trigger AS $BODY$
+DECLARE
+	v_order integer;
+BEGIN
+
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+	VALUES (5, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'Order '||NEW.order_id||' has been submitted');
+	RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION upd_orders_batch(varchar(20),varchar(20),varchar(20),varchar(20)) RETURNS varchar(120) AS $BODY$
+DECLARE
+	v_batch  	integer;
+	msg 		varchar(50);
+BEGIN
+	IF ($3::integer = 1) THEN
+		v_batch := (SELECT last_value FROM batch_id_seq) ;
+		UPDATE orders SET batch_no = v_batch,batch_date = now() WHERE order_id = $1::integer;
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+		VALUES (8, $1::integer , 'vw_orders', 3, get_order_details($1::integer), 'Order '||v_batch||'-'||$1::integer||' is being processed');
+		msg := 'Orders Batched Successfully';
+	END IF;
+
+	IF($3::integer = 2)THEN
+		v_batch :=nextval('batch_id_seq');
+		msg := 'Batch Closed';
+	END IF;
+
+	RETURN msg;
+END;
+$BODY$ LANGUAGE plpgsql;
