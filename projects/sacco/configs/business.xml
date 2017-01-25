@@ -50,15 +50,7 @@
 	</MENU>
 	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
 		<DASHBOARD w="700" name="Dashboard">
-			<TILE name="Leads" role="staff" noorg.query="true" table="lead_items" where="(lead_level > 0)">
-				<TEXTFIELD w="75" fnct="COALESCE(count(lead_item_id), 0)" title="Total Leads">total_leads</TEXTFIELD>
-			</TILE>
-			<TILE name="My Leads" role="staff" noorg.query="true" table="lead_items" where="(lead_level > 0)" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(lead_item_id), 0)" title="Total Leads">total_leads</TEXTFIELD>
-			</TILE>
-			<TILE name="Follow Up" role="staff" noorg.query="true" table="follow_up" where="(done = true)" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(follow_up_id), 0)" title="Follow Up">followup_tasks</TEXTFIELD>
-			</TILE>
+			
 			<TILELIST name="News" keyfield="sys_news_id" role="staff" table="sys_news" where="(publish = true)">
 				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
@@ -1255,12 +1247,12 @@
 				</ACTIONS>
 				<GRID name="Gls" keyfield="gl_id" linkfield="journal_id" table="vw_gls">
 					<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Accounts Class Name">accounts_class_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Accounts Class Name">account_class_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Account Type Name">account_type_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Account Name">account_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Debit">debit</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Credit">credit</TEXTDECIMAL>
-					<FORM name="Gls" keyfield="gl_id" linkfield="journal_id" table="gls">
+					<FORM name="Gls" keyfield="gl_id" linkfield="journal_id" table="gls" new="false" delete ="false" edit="false">
 						<GRIDBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" y="10" h="20" x="10" lpfield="account_description">account_id
 							<GRID name="Account" keyfield="account_id" table="vw_accounts" where="(is_header = false) and (is_active = true)">
 								<TEXTFIELD w="75" title="Account ID">account_id</TEXTFIELD>
@@ -1274,7 +1266,7 @@
 						<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">gl_narrative</TEXTFIELD>
 					</FORM>
 				</GRID>
-				<FORM name="Journals" keyfield="journal_id" linkfield="period_id" table="journals">
+				<FORM name="Journals" keyfield="journal_id" linkfield="period_id" table="journals" delete="false">
 					<COMBOBOX w="430" title="Department" lptable="departments" y="10" h="20" x="10" lpfield="department_name">department_id</COMBOBOX>
 					<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDATE w="150" title="Date" default="today" y="50" h="20" x="10">journal_date</TEXTDATE>

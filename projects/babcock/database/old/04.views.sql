@@ -527,18 +527,6 @@ CREATE VIEW qcourseview AS
 		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid)
 		INNER JOIN quarters ON qcourses.quarterid = quarters.quarterid);
 
-CREATE VIEW vwqcourses AS
-	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
-		courseview.degreelevelid, courseview.degreelevelname, courseview.coursetypeid, courseview.coursetypename,
-		courseview.courseid, courseview.credithours, courseview.maxcredit, courseview.iscurrent,
-		courseview.nogpa, courseview.yeartaken, instructors.instructorid, instructors.instructorname,
-		qcourses.quarterid, qcourses.qcourseid, qcourses.classoption, qcourses.maxclass,
-		qcourses.labcourse, qcourses.extracharge, qcourses.approved, qcourses.attendance, qcourses.oldcourseid,
-		qcourses.fullattendance, qcourses.coursetitle, qcourses.lecturesubmit, qcourses.lsdate,
-		qcourses.departmentsubmit, qcourses.dsdate, qcourses.facultysubmit, qcourses.fsdate
-	FROM (courseview INNER JOIN qcourses ON courseview.courseid = qcourses.courseid)
-		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid;
-
 CREATE VIEW qschoolcourseview AS
 	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
 		courseview.degreelevelid, courseview.degreelevelname, courseview.coursetypeid, courseview.coursetypename,

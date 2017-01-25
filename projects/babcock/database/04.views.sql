@@ -563,6 +563,19 @@ CREATE VIEW qcourseview AS
 	FROM (((courseview INNER JOIN qcourses ON courseview.courseid = qcourses.courseid)
 		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid)
 		INNER JOIN quarters ON qcourses.quarterid = quarters.quarterid);
+		
+CREATE VIEW vwqcourses AS
+	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
+		courseview.degreelevelid, courseview.degreelevelname, courseview.coursetypeid, courseview.coursetypename,
+		courseview.courseid, courseview.credithours, courseview.maxcredit, courseview.iscurrent,
+		courseview.nogpa, courseview.yeartaken, instructors.instructorid, instructors.instructorname,
+		qcourses.quarterid, qcourses.qcourseid, qcourses.classoption, qcourses.maxclass,
+		qcourses.labcourse, qcourses.extracharge, qcourses.approved, qcourses.attendance, qcourses.oldcourseid,
+		qcourses.fullattendance, qcourses.coursetitle, qcourses.lecturesubmit, qcourses.lsdate,
+		qcourses.departmentsubmit, qcourses.dsdate, qcourses.facultysubmit, qcourses.fsdate, 
+		qcourses.org_id
+	FROM (courseview INNER JOIN qcourses ON courseview.courseid = qcourses.courseid)
+		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid;
 
 CREATE VIEW qschoolcourseview AS
 	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
@@ -1486,6 +1499,12 @@ CREATE VIEW ws_hall_service AS
 		quarterid, schoolid, schoolname, departmentid, departmentname, residenceid, residencename
 	FROM vwqstudentbalances
 	WHERE (active = true);
+	
+CREATE VIEW ws_qstudents AS
+	SELECT studentid, studentname, mealtype, studylevel, majorid, majorname, 
+		quarterid, schoolid, schoolname, departmentid, departmentname, residenceid, residencename,
+		qstudentid, finaceapproval, approved
+	FROM vwqstudentbalances;
 	
 ----------- Creating radius server interface
 CREATE EXTENSION postgres_fdw;

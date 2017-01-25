@@ -147,6 +147,7 @@
 			<MENU name="Admision Marks Summary">441</MENU>
 			<MENU name="Study Year by Semester">771</MENU>
 			<MENU name="Study Year by Year">772</MENU>
+			<MENU name="Degree progression">786</MENU>
 		</MENU>
 		<MENU name="Administration" role="records">
 			<MENU name="Registration Statistics">569</MENU>
@@ -2293,8 +2294,8 @@
 	<DESK w="700" name="Grade Changes" type="vert" key="458" h="595">
 		<FILTER name="Filter" split="210">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting" y="10" h="20" x="10">startdate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending" y="10" h="20" x="290">enddate</TEXTDATE>
+				<COMBOBOX w="150" title="Starting" lptable="quarters" orderby="quarterid" noorg="true" lpkey="quarterid" y="10" h="20" x="10" lpfield="quarterid">startdate</COMBOBOX>
+				<COMBOBOX w="150" title="Ending" lptable="quarters" orderby="quarterid desc" noorg="true" lpkey="quarterid" y="10" h="20" x="290" lpfield="quarterid">enddate</COMBOBOX>
 			</FILTERFORM>
 			<JASPER filtered="true" name="Grade Changes" reportfile="gradechanges.jasper"></JASPER>
 		</FILTER>
@@ -2311,8 +2312,8 @@
 	<DESK w="700" name="Deans Load Range" type="vert" key="345" h="500">
 		<FILTER name="Filter" key="14">
 			<FILTERFORM name="Filter">
-				<TEXTFIELD w="100" title="Semester From" y="10" h="20" x="10">datefrom</TEXTFIELD>
-				<TEXTFIELD w="100" title="Semester To" y="10" h="20" x="290">dateto</TEXTFIELD>
+				<COMBOBOX w="150" title="Starting" lptable="quarters" orderby="quarterid" noorg="true" lpkey="quarterid" y="10" h="20" x="10" lpfield="quarterid">datefrom</COMBOBOX>
+				<COMBOBOX w="150" title="Ending" lptable="quarters" orderby="quarterid desc" noorg="true" lpkey="quarterid" y="10" h="20" x="290" lpfield="quarterid">dateto</COMBOBOX>
 			</FILTERFORM>
 			<JASPER name="Hours Load Range" reportfile="deanslist3.jasper"></JASPER>
 		</FILTER>
@@ -2384,8 +2385,8 @@
 	<DESK w="700" name="Course Addition" key="776" h="550">
 		<FILTER w="700" name="Course Addition" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="10" h="20" x="10">startrange</TEXTDATE>
-				<TEXTDATE w="150" title="Ending At" y="10" h="20" x="290">endrange</TEXTDATE>
+				<COMBOBOX w="150" title="Starting" lptable="quarters" orderby="quarterid" noorg="true" lpkey="quarterid" y="10" h="20" x="10" lpfield="quarterid">startrange</COMBOBOX>
+				<COMBOBOX w="150" title="Ending" lptable="quarters" orderby="quarterid desc" noorg="true" lpkey="quarterid" y="10" h="20" x="290" lpfield="quarterid">endrange</COMBOBOX>
 			</FILTERFORM>
 			<JASPER name="Course Addition" reportfile="course_addition.jasper"></JASPER>
 		</FILTER>
@@ -2506,6 +2507,26 @@
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" noorg="true" listfield="quarter"></DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER name="Registered Students" reportfile="qstudentview_em.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="800" name="Degree Progression" key="786" h="595">
+		<FILTER location="150" name="Degree Progression" type="vert">
+			<FILTERFORM name="Filter">
+				<COMBOBOX w="150" title="Starting" lptable="quarters" orderby="quarterid" noorg="true" lpkey="quarterid" y="10" h="20" x="10" lpfield="quarterid">starting</COMBOBOX>
+				<COMBOBOX w="150" title="Ending" lptable="quarters" orderby="quarterid desc" noorg="true" lpkey="quarterid" y="10" h="20" x="290" lpfield="quarterid">ending</COMBOBOX>
+				<COMBOBOX w="150" title="As At" lptable="quarters" orderby="quarterid desc" noorg="true" lpkey="quarterid" y="30" h="20" x="10" lpfield="quarterid">filterid</COMBOBOX>
+			</FILTERFORM>
+			<JASPER name="Degree Progression" reportfile="degree_progression.jasper"></JASPER>
+		</FILTER>
+		<FILTER location="150" name="Degree Progression List" type="vert">
+			<FILTERFORM name="Filter">
+				<COMBOBOX w="150" title="Starting" lptable="quarters" orderby="quarterid" noorg="true" lpkey="quarterid" y="10" h="20" x="10" lpfield="quarterid">starting</COMBOBOX>
+				<COMBOBOX w="150" title="Ending" lptable="quarters" orderby="quarterid desc" noorg="true" lpkey="quarterid" y="10" h="20" x="290" lpfield="quarterid">ending</COMBOBOX>
+				<COMBOBOX w="150" title="As At" lptable="quarters" orderby="quarterid desc" noorg="true" lpkey="quarterid" y="30" h="20" x="10" lpfield="quarterid">filterid</COMBOBOX>
+				<TEXTFIELD w="150" title="Hours From" defaultvalue="1" y="50" h="20" x="10">hoursfrom</TEXTFIELD>
+				<TEXTFIELD w="150" title="Hours To" defaultvalue="42" y="50" h="20" x="290">hoursto</TEXTFIELD>
+			</FILTERFORM>
+			<JASPER name="Degree Progression List" reportfile="degree_progression_l.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 </APP>

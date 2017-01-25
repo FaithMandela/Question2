@@ -88,14 +88,15 @@ System.out.println(xmldata);
 	String getData(String xmldata) {
 		BXML xml = new BXML(xmldata, true);
 		BElement root = xml.getRoot();
-		String result = "<transaction>\n";
-		String mysql = "";
+		StringBuffer mydata = new StringBuffer();
+		mydata.append("<transaction>\n");
 
 		BDB db = new BDB("java:/comp/env/jdbc/database");
 
 		for(BElement el : root.getElements()) {
 			if(allowedTables.contains(el.getAttribute("table"))) {
 				BQuery query =  new BQuery(db, el, null, null, false);
+				String result = "";
 
 				int ColNum = query.getColumnCount();
 				int i = 1;
@@ -112,16 +113,18 @@ System.out.println(xmldata);
 					result += "\t\t</record>\n";
 				}
 				result += "\t</transfer>\n";
+				mydata.append(result);
+				
 				query.close();
 			}
 		}
 
-		result += "</transaction>";
-		log.fine(result);
+		mydata.append("</transaction>");
+		log.fine(mydata.toString());
 
 		db.close();
 
-		return result;
+		return mydata.toString();
 	}
 
 	String getTransfer(BDB db , BElement el) {

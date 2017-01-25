@@ -366,7 +366,7 @@
 			<TEXTDECIMAL w="75" title="Tax Rate 1">tax_rate1</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Tax Rate 2">tax_rate2</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Tax Rate 3">tax_rate3</TEXTDECIMAL>
-			<GRID name="Room Rates" keyfield="room_rate_id" linkfield="room_type_id" table="vw_room_rates">
+			<GRID name="Room Rates" keyfield="room_rate_id" linkfield="service_type_id" table="vw_room_rates">
 				<TEXTFIELD w="75" title="ID">room_rate_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Room Type Name">room_type_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Date Start">date_start</TEXTDATE>
@@ -375,11 +375,11 @@
 				<TEXTDECIMAL w="75" title="Current Rate">current_rate</TEXTDECIMAL>
 				<TEXTFIELD w="45" title="Currency">currency_symbol</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-				<FORM name="Room Rates" keyfield="room_rate_id" linkfield="room_type_id" table="room_rates">
+				<FORM name="Room Rates" keyfield="room_rate_id" linkfield="service_type_id" table="room_rates">
 					<COMBOBOX w="430" title="Room Type" lptable="room_types" y="10" h="20" x="10" lpfield="room_type_name">room_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Current Rate" y="50" h="20" x="10">current_rate</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="290" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="50" h="290" x="10">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Date Start" y="70" h="20" x="10">date_start</TEXTDATE>
 					<TEXTDATE w="150" title="Date End" y="70" h="20" x="290">date_end</TEXTDATE>
 					<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
@@ -432,9 +432,9 @@
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 				<FORM name="Room Rates" keyfield="room_rate_id" linkfield="room_type_id" table="room_rates">
 					<COMBOBOX w="430" title="Service Type" lptable="service_types" y="10" h="20" x="10" lpfield="service_type_name">service_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Current Rate" y="50" h="20" x="10">current_rate</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="20" x="290">exchange_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="50" h="20" x="290">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" title="Date Start" y="70" h="20" x="10">date_start</TEXTDATE>
 					<TEXTDATE w="150" title="Date End" y="70" h="20" x="290">date_end</TEXTDATE>
 					<CHECKBOX w="150" title="Active" y="90" h="20" x="10">is_active</CHECKBOX>
@@ -487,9 +487,9 @@
 			<FORM name="Room Rates" keyfield="room_rate_id" table="room_rates">
 				<COMBOBOX w="430" title="Room Type" lptable="room_types" y="10" h="20" x="10" lpfield="room_type_name">room_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Service Type" lptable="service_types" y="30" h="20" x="10" lpfield="service_type_name">service_type_id</COMBOBOX>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Current Rate" y="70" h="20" x="10">current_rate</TEXTDECIMAL>
-				<TEXTDECIMAL w="150" title="Exchange Rate" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="70" h="20" x="290">exchange_rate</TEXTDECIMAL>
 				<TEXTDATE w="150" title="Date Start" y="90" h="20" x="10">date_start</TEXTDATE>
 				<TEXTDATE w="150" title="Date End" y="90" h="20" x="290">date_end</TEXTDATE>
 				<CHECKBOX w="150" title="Active" y="110" h="20" x="10">is_active</CHECKBOX>
@@ -503,6 +503,98 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Bookings" key="40" h="550">
+		<GRID name="New Booking" keyfield="room_rate_id" table="vw_room_rates">
+			<TEXTFIELD w="75" title="Room Rate ID">room_rate_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Room Type">room_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Service Type">service_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Tax Rate 1">tax_rate1</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Tax Rate 2">tax_rate2</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Tax Rate 3">tax_rate3</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Currency Name">currency_symbol</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Current Rate">current_rate</TEXTDECIMAL>
+			<TEXTDATE w="75" title="Date Start">date_start</TEXTDATE>
+			<TEXTDATE w="75" title="Date End">date_end</TEXTDATE>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+			<GRID name="Bookings" keyfield="booking_id" linkfield="room_rate_id" table="vw_bookings">
+				<TEXTFIELD w="75" title="Booking ID">booking_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Room Type">room_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Service Type">service_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="Reserve Mode">reserve_mode_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Booking Date">booking_date</TEXTDATE>
+				<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
+				<SPINTIME w="75" title="Arrival Time">arrival_time</SPINTIME>
+				<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
+				<SPINTIME w="75" title="Departure Time">departure_time</SPINTIME>
+				<TEXTFIELD w="75" title="Units">units</TEXTFIELD>
+				<CHECKBOX w="75" title="Confirmed">confirmed</CHECKBOX>
+				<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+				<TEXTDECIMAL w="75" title="Book Rate">book_rate</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Payment Method">payment_method</TEXTFIELD>
+				<FORM name="Bookings" keyfield="booking_id" linkfield="room_rate_id" table="bookings">
+					<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Reserve Mode" lptable="reserve_modes" y="50" h="20" x="10" lpfield="reserve_mode_name">reserve_mode_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDATE w="150" title="Booking Date" y="90" h="20" x="10">booking_date</TEXTDATE>
+					<TEXTDATE w="150" title="Arrival Date" y="90" h="20" x="290">arrival_date</TEXTDATE>
+					<SPINTIME w="150" title="Arrival Time" y="110" h="20" x="10">arrival_time</SPINTIME>
+					<TEXTDATE w="150" title="Departure Date" y="110" h="20" x="290">departure_date</TEXTDATE>
+					<SPINTIME w="150" title="Departure Time" y="130" h="20" x="10">departure_time</SPINTIME>
+					<TEXTFIELD w="150" title="Units" y="130" h="20" x="290">units</TEXTFIELD>
+					<CHECKBOX w="150" title="Confirmed" y="150" h="20" x="10">confirmed</CHECKBOX>
+					<CHECKBOX w="150" title="Closed" y="150" h="20" x="290">closed</CHECKBOX>
+					<TEXTDECIMAL w="150" title="Book Rate" y="170" h="20" x="10">book_rate</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Commision" y="170" h="20" x="290">commision</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Discount" y="190" h="20" x="10">discount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Tax1" y="190" h="20" x="290">tax1</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Tax2" y="210" h="20" x="10">tax2</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Tax3" y="210" h="20" x="290">tax3</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="230" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTFIELD w="150" title="Payment Method" y="230" h="20" x="290">payment_method</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="250" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Stay" keyfield="stay_id" linkfield="booking_id" table="vw_stay">
+					<TEXTFIELD w="75" title="Resident Name">resident_name</TEXTFIELD>
+					<TEXTDATE w="75" title="Arrival Date">arrival_date</TEXTDATE>
+					<SPINTIME w="75" title="Arrival Time">arrival_time</SPINTIME>
+					<TEXTDATE w="75" title="Departure Date">departure_date</TEXTDATE>
+					<SPINTIME w="75" title="Departure Time">departure_time</SPINTIME>
+					<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
+					<CHECKBOX w="75" title="Room Cleared">room_cleared</CHECKBOX>
+					<FORM name="Stay" keyfield="stay_id" linkfield="booking_id" table="stay">
+						<COMBOBOX w="430" title="Resident" lptable="residents" y="10" h="20" x="10" lpfield="resident_name">resident_id</COMBOBOX>
+						<COMBOBOX w="430" title="Room" lptable="rooms" y="30" h="20" x="10" lpfield="room_id">room_id</COMBOBOX>
+						<TEXTDATE w="150" title="Arrival Date" y="50" h="20" x="10">arrival_date</TEXTDATE>
+						<SPINTIME w="150" title="Arrival Time" y="50" h="20" x="290">arrival_time</SPINTIME>
+						<TEXTDATE w="150" title="Departure Date" y="70" h="20" x="10">departure_date</TEXTDATE>
+						<SPINTIME w="150" title="Departure Time" y="70" h="20" x="290">departure_time</SPINTIME>
+						<CHECKBOX w="150" title="Completed" y="90" h="20" x="10">completed</CHECKBOX>
+						<CHECKBOX w="150" title="Room Cleared" y="90" h="20" x="290">room_cleared</CHECKBOX>
+						<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Receipts" keyfield="receipt_id" linkfield="booking_id" table="vw_receipts">
+					<TEXTFIELD w="75" title="Receipt ID">receipt_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+					<TEXTDATE w="75" title="Pay Date">pay_date</TEXTDATE>
+					<CHECKBOX w="75" title="Cleared">cleared</CHECKBOX>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+					<FORM name="Receipts" keyfield="receipt_id" linkfield="booking_id" table="receipts">
+						<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="10" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
+						<COMBOBOX w="430" title="Currency" lptable="currency" y="50" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Receipt Number" y="90" h="20" x="10">receipt_number</TEXTFIELD>
+						<TEXTDATE w="150" title="Pay Date" y="90" h="20" x="290">pay_date</TEXTDATE>
+						<CHECKBOX w="150" title="Cleared" y="110" h="20" x="10">cleared</CHECKBOX>
+						<TEXTDECIMAL w="150" title="Amount" y="130" h="20" x="10">amount</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Exchange Rate" y="130" h="20" x="290">exchange_rate</TEXTDECIMAL>
+						<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
+		</GRID>
 		<GRID name="Bookings" keyfield="booking_id" table="vw_bookings">
 			<TEXTFIELD w="75" title="Booking ID">booking_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Client">entity_name</TEXTFIELD>
@@ -522,7 +614,6 @@
 			<TEXTFIELD w="75" title="Payment Method">payment_method</TEXTFIELD>
 			<FORM name="Bookings" keyfield="booking_id" table="bookings">
 				<COMBOBOX w="430" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
-				<COMBOBOX w="430" title="Room Rate" lptable="room_rates" y="30" h="20" x="10" lpfield="room_rate_id">room_rate_id</COMBOBOX>
 				<COMBOBOX w="430" title="Reserve Mode" lptable="reserve_modes" y="50" h="20" x="10" lpfield="reserve_mode_name">reserve_mode_id</COMBOBOX>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="70" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDATE w="150" title="Booking Date" y="90" h="20" x="10">booking_date</TEXTDATE>
@@ -605,6 +696,50 @@
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<FORM name="Client" keyfield="entity_id" table="entitys">
+				<DEFAULT default="client">function_role</DEFAULT>
+				<DEFAULT default="2">use_key_id</DEFAULT>
+				<COMBOBOX w="430" title="Type" lptable="entity_types" where="(use_key_id = 2)" y="10" h="20" x="10" lpfield="entity_type_name">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Account" lptable="vw_accounts" webgrid="90" default_org_fnct="get_default_account_id(51" y="10" h="20" x="10" lpfield="account_description">account_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Client Name" y="30" h="20" x="10">entity_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="User Name" y="50" h="20" x="10">user_name</TEXTFIELD>
+				<TEXTFIELD w="350" title="Attention" y="70" h="20" x="10">attention</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" y="90" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Telephone" y="110" h="20" x="10">primary_telephone</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Commision %" y="130" h="20" x="10">client_commision</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Discount %" y="130" h="20" x="290">client_discount</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Credit Limit" y="150" h="20" x="10">credit_limit</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Active" default="true" y="170" h="20" x="10">is_active</CHECKBOX>
+				<TEXTFIELD w="150" title="First Password" y="170" h="20" x="290">first_password</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="190" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID wheresql="table_name = 'entitys'" name="Address" keyfield="address_id" linkfield="table_id" table="vw_address">
+				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="140" title="Default">is_default</TEXTFIELD>
+				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
+					<DEFAULT default="entitys">table_name</DEFAULT>
+					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
+					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
+					<TEXTFIELD w="150" title="Town" y="50" h="20" x="10">town</TEXTFIELD>
+					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
+					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
+					<TEXTFIELD w="430" title="Phone Number" y="110" h="20" x="10">phone_number</TEXTFIELD>
+					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
+					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
+					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
+					<TEXTFIELD w="430" title="Email" y="190" h="20" x="10">email</TEXTFIELD>
+					<TEXTFIELD w="250" title="Website" y="210" h="20" x="10">website</TEXTFIELD>
+					<CHECKBOX w="50" title="Default" y="210" h="20" x="390">is_default</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<NODE></NODE>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Departments" key="10" h="500">

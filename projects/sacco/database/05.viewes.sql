@@ -1,65 +1,7 @@
 
-drop view vw_periods cascade;
-
-CREATE VIEW vw_periods AS
-	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start, fiscal_years.fiscal_year_end,
-		fiscal_years.year_opened, fiscal_years.year_closed,
-
-		periods.period_id, periods.org_id, 
-		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
-		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
-		periods.gl_payroll_account, periods.gl_bank_account, periods.gl_advance_account,
-		periods.bank_header, periods.bank_address, periods.details,
-
-		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
-		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
-		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
-		to_char(periods.start_date, 'YYYYMM') as period_code
-	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
-	ORDER BY periods.start_date;
-
-CREATE VIEW vw_period_year AS
-	SELECT org_id, period_year
-	FROM vw_periods
-	GROUP BY org_id, period_year
-	ORDER BY period_year;
-
-CREATE VIEW vw_period_quarter AS
-	SELECT org_id, quarter
-	FROM vw_periods
-	GROUP BY org_id, quarter
-	ORDER BY quarter;
-
-CREATE VIEW vw_period_semister AS
-	SELECT org_id, semister
-	FROM vw_periods
-	GROUP BY org_id, semister
-	ORDER BY semister;
-
-CREATE VIEW vw_period_month AS
-	SELECT org_id, month_id, period_year, period_month
-	FROM vw_periods
-	GROUP BY org_id, month_id, period_year, period_month
-	ORDER BY month_id, period_year, period_month;
-
-
-
---CREATE OR REPLACE VIEW vw_sacco_investments AS 
- --SELECT currency.currency_id, currency.currency_name,
-   -- investment_types.investment_type_id, investment_types.investment_type_name,
-    --bank_accounts.bank_account_id, bank_accounts.bank_account_name,
-   -- sacco_investments.org_id, sacco_investments.sacco_investment_id, sacco_investments.investment_name, sacco_investments.date_of_accrual,
-    --sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period, sacco_investments.initial_payment, sacco_investments.monthly_payments, sacco_investments.investment_status, 
-    --sacco_investments.approve_status, sacco_investments.workflow_table_id, sacco_investments.action_date, sacco_investments.is_active, sacco_investments.details,
-	--get_total_repayment(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as total_repayment,
-	--get_interest_amount(sacco_investments.principal, sacco_investments.interest, sacco_investments.repayment_period) as interest_amount
---FROM sacco_investments
---	JOIN currency ON sacco_investments.currency_id = currency.currency_id
-  --  JOIN investment_types ON sacco_investments.investment_type_id = investment_types.investment_type_id
-    --LEFT JOIN bank_accounts ON sacco_investments.bank_account_id = bank_accounts.bank_account_id;
-
-    
 drop function change_password ( character varying, character varying,character varying);
+
+
 
 CREATE OR REPLACE FUNCTION change_password(v_entityID integer, v_old_pass varchar(32), v_pass varchar(32)) RETURNS varchar(120) AS $$
 DECLARE
@@ -89,6 +31,7 @@ $$ LANGUAGE plpgsql;
 alter table loan_monthly add additional_payments real not null default 0;
 
 
+
 CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
 	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid - additional_payments) is null THEN 0 
 		ELSE sum(repayment + interest_paid + penalty_paid - additional_payments) END
@@ -115,7 +58,7 @@ BEGIN
              contribution_amount,  entry_date,
              transaction_ref, is_paid)
              
-    SELECT v_period_id::integer, org_id::integer ,entity_id, 0,0,  contribution,
+    SELECT v_period_id::integer, org_id::integer ,entity_id, 1,1,  contribution,
             now()::date, 'Auto generated','False'
         FROM members;
 
@@ -123,6 +66,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql;
+
 
   
 CREATE OR REPLACE FUNCTION loan_approved(
@@ -138,6 +82,9 @@ BEGIN
 	
 	UPDATE loans SET approve_status = 'Approved'
 	WHERE (loan_id = CAST($1 as int));
+	
+	
+	
 
 	return msg;
 END;
@@ -224,10 +171,6 @@ $$ LANGUAGE plpgsql;
 
 
 
-
-
-
-
 --views
 
 CREATE OR REPLACE VIEW vw_gurrantors AS 
@@ -274,12 +217,12 @@ CREATE OR REPLACE VIEW vw_entitys AS
 SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
 		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
 		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		vw_orgs.sys_country_id as org_sys_country_id, vw_orgs.sys_country_name as org_sys_country_name, 
-		vw_orgs.address_id as org_address_id, vw_orgs.table_name as org_table_name,
-		vw_orgs.post_office_box as org_post_office_box, vw_orgs.postal_code as org_postal_code, 
-		vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
-		vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
-		vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
+		--vw_orgs.sys_country_id as org_sys_country_id, vw_orgs.sys_country_name as org_sys_country_name, 
+		--vw_orgs.address_id as org_address_id, vw_orgs.table_name as org_table_name,
+		--vw_orgs.post_office_box as org_post_office_box, vw_orgs.postal_code as org_postal_code, 
+		--vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
+		--vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
+		--vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
 		
 		addr.address_id, addr.address_name,
 		addr.sys_country_id, addr.sys_country_name, addr.table_name, addr.is_default,
@@ -296,9 +239,6 @@ SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, v
 		JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
 --here
-
-
-
 DROP VIEW vw_orgs  CASCADE;
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
@@ -455,6 +395,14 @@ $$ LANGUAGE plpgsql;
 ------------Hooks to approval trigger
 
 
+    
+
+
+
+
+
+
+
 
 
   
@@ -494,10 +442,10 @@ BEGIN
   
   IF (TG_OP = 'UPDATE' AND NEW.approve_status = 'Approved') THEN
          
-             INSERT INTO members(entity_id,org_id, surname, first_name, middle_name,phone, 
+             INSERT INTO members(entity_id,org_id,full_name, surname, first_name, middle_name,phone, 
             gender,marital_status,primary_email,objective, details)  
          
-    VALUES (New.entity_id,New.org_id,New.Surname,NEW.First_name,NEW.Middle_name,
+    VALUES (New.entity_id,New.org_id,(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')), New.Surname,NEW.First_name,NEW.Middle_name,
     New.applicant_phone,New.gender,New.marital_status,New.applicant_email,NEW.objective, NEW.details)
     RETURNING entity_id INTO v_entity_id;
     NEW.entity_id := v_entity_id;
@@ -513,7 +461,7 @@ $BODY$
 
 CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
   FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
- 
+  
 
  CREATE OR REPLACE FUNCTION ins_members()
   RETURNS trigger AS
@@ -536,18 +484,21 @@ BEGIN
 	NEW.entity_id := nextval('entitys_entity_id_seq');
 	NEW.member_id := nextval('members_member_id_seq');
 
-	INSERT INTO entitys (entity_id,entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount)
-	VALUES (New.entity_id,New.surname,New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution) RETURNING entity_id INTO v_entity_id;
+	INSERT INTO entitys (entity_id, entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount,use_key_id)
+	VALUES (New.entity_id, (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution, 0) RETURNING entity_id INTO v_entity_id;
 
 	NEW.entity_id := v_entity_id;
-
-
-	update members set full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')) where entity_id = v_entity_id ;
-END IF;
+	
+	NEW.full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
+	
+	END IF;
+	
 	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql;
+
+
  
  
 
@@ -785,3 +736,14 @@ $$ LANGUAGE plpgsql;
 
  
  
+
+
+
+
+
+
+
+
+
+
+

@@ -633,7 +633,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Chat of Accounts" key="25" h="500">
+	<DESK w="700" name="Chat of Accounts" key="5" h="500">
 		<GRID name="Account Class" keyfield="account_class_id" table="account_class">
 			<TEXTFIELD w="75" title="Account Class No">account_class_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Chat Type">chat_type_name</TEXTFIELD>

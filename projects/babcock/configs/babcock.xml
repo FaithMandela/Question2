@@ -1313,7 +1313,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="800" name="Class List" type="horl" key="154" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview" key="1">
+		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="qcourseview" key="2">
@@ -1327,7 +1327,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Detailed Class List" type="horl" key="254" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview" key="1">
+		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="qcourseview" key="2">
@@ -1342,7 +1342,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Approved Grade Report" type="horl" key="255" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview" key="1">
+		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vwqcourses" where="(facultysubmit = true)" key="2">
@@ -1356,7 +1356,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Instructor's Submited Score " type="horl" key="355" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview" key="1">
+		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="qcourseview" where="(lecturesubmit = true)" key="2">
@@ -1371,7 +1371,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Instructor's Not Submited Score " type="horl" key="365" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview" key="1">
+		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="qcourseview" where="(lecturesubmit = false)" key="2">
@@ -1385,7 +1385,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Students GPA" type="horl" key="157" h="500">
-		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" key="1">
+		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview">
 			<TEXTFIELD w="15" title="Matric Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
@@ -1394,7 +1394,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Partial transcript" type="horl" key="219" h="500">
-		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" key="1">
+		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview">
 			<TEXTFIELD w="15" title="Matric Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
@@ -1405,7 +1405,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Partial transcript2" type="horl" key="319" h="500">
-		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview" key="1">
+		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview">
 			<TEXTFIELD w="15" title="Matric Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
@@ -1518,11 +1518,11 @@
 		</GRID>
 	</DESK>
 	<DESK w="800" name="Semester Un Official" type="vert" key="362" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview" filterkey="9" key="1">
+		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID name="Student List" keyfield="studentdegreeid" updatetable="qstudents" orderby="departmentname" linkfield="quarterid" table="qstudentmajorview" key="4">
+			<GRID name="Student List" keyfield="studentdegreeid" updatetable="qstudents" orderby="departmentname" linkfield="quarterid" table="qstudentmajorview">
 				<TEXTFIELD w="25" title="Matric Num">studentid</TEXTFIELD>
 				<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 				<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
@@ -1858,7 +1858,7 @@
 			<JASPER filtered="true" name="Grade Students" reportfile="gsummarya.jasper"></JASPER>
 		</FILTER>
 	</DESK>
-	<DESK w="700" name="Dept .Grade Summary" type="horl" key="555" h="500">
+	<DESK w="700" name="Dept.Grade Summary" type="horl" key="555" h="500">
 		<FILTER location="250" name="Dept .Grade Summary" type="horl">
 			<DRILLDOWN name="Year" keyfield="quarteryear" orderby="quarteryear desc" table="yearview" noorg="true" listfield="quarteryear">
 				<DRILLDOWN name="Semesters" keyfield="quarterid" wherefield="quarteryear" table="quarterview" listfield="Quarter" pos="top"></DRILLDOWN>
@@ -1868,7 +1868,7 @@
 					<DRILLDOWN name="Majors" keyfield="majorid" wherefield="departmentid" table="majors" listfield="majorname" filtername="majorid" pos="top"></DRILLDOWN>
 				</DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Level" keyfield="studylevel" table="vwlevel" listfield="studylevel" filtername="studylevel"></DRILLDOWN>
+			<DRILLDOWN name="Level" keyfield="studylevel" table="vwlevel" noorg="true" listfield="studylevel" filtername="studylevel"></DRILLDOWN>
 			<JASPER filtered="true" name="Dept .Grade summary " reportfile="instructorgradebook.jasper"></JASPER>
 		</FILTER>
 	</DESK>
@@ -1897,7 +1897,7 @@
 					<DRILLDOWN name="Programme" keyfield="majorid" wherefield="departmentid" table="majors" listfield="majorname" filtername="majorid" pos="top"></DRILLDOWN>
 				</DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Level" keyfield="studylevel" table="vwlevel" listfield="studylevel" filtername="studylevel"></DRILLDOWN>
+			<DRILLDOWN name="Level" keyfield="studylevel" table="vwlevel" noorg="true" listfield="studylevel" filtername="studylevel"></DRILLDOWN>
 			<JASPER filtered="true" name="Outstanding Courses Summary" reportfile="vwchecklist.jasper"></JASPER>
 		</FILTER>
 	</DESK>
@@ -1911,7 +1911,7 @@
 					<DRILLDOWN name="Programme" keyfield="majorid" wherefield="departmentid" table="majors" listfield="majorname" filtername="majorid" pos="top"></DRILLDOWN>
 				</DRILLDOWN>
 			</DRILLDOWN>
-			<DRILLDOWN name="Level" keyfield="studylevel" table="vwlevel" listfield="studylevel" filtername="studylevel"></DRILLDOWN>
+			<DRILLDOWN name="Level" keyfield="studylevel" table="vwlevel" noorg="true" listfield="studylevel" filtername="studylevel"></DRILLDOWN>
 			<JASPER filtered="true" name="GPA Ranking" reportfile="vwqstudentmajors.jasper"></JASPER>
 		</FILTER>
 	</DESK>

@@ -14,37 +14,8 @@ alter table contributions add repayment_paid real default 0 not null;
 ALTER TABLE contributions ALTER COLUMN contribution_amount SET DEFAULT 0;
 
 
-DROP FUNCTION compute_contributions(character varying, character varying, character varying);
-CREATE OR REPLACE FUNCTION compute_contributions(
-    v_period_id character varying,
-    v_org_id character varying,
-    v_approval character varying)
-  RETURNS character varying AS
-$BODY$
-DECLARE
-    msg                 varchar(120);
-BEGIN
-    DELETE FROM loan_monthly WHERE period_id = v_period_id::integer AND org_id = v_org_id::integer;
-    
-    
-    DELETE FROM contributions WHERE period_id = v_period_id::integer;
+--DROP FUNCTION compute_contributions(character varying, character varying, character varying);
 
-    
-    INSERT INTO contributions(period_id, org_id, entity_id,  payment_type_id, contribution_type_id, 
-            entity_name, receipt,  entry_date,
-             transaction_ref, deposit_amount,is_paid)
-		
-             
-    SELECT v_period_id::integer, org_id::integer,entity_id, 0,0, first_name, contribution,  
-            now()::date, 'Auto generated', 0, 'False'
-        FROM members;
-msg = ' Its done';
-    
-    RETURN msg;
-END;
-$BODY$
-   LANGUAGE plpgsql;
-   
    
 CREATE OR REPLACE FUNCTION get_balance_new ( entity_id integer)   RETURNS real AS
   $$
@@ -115,7 +86,7 @@ $$ LANGUAGE SQL;
 
 
 
-
+--here 1
 CREATE OR REPLACE FUNCTION get_loan_balance (integer, integer) RETURNS double precision AS $$
 	SELECT sum(monthly_repayment + loan_intrest)
 	FROM vw_loan_payments 
@@ -127,7 +98,8 @@ ALTER TABLE contributions ADD COLUMN additional_funds_id integer references addi
 CREATE INDEX contributions_additional_funds ON contributions (additional_funds_id);
    
 -- DROP TRIGGER ins_contributions on contributions;
- 
+
+
 CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $$
 DECLARE
 	v_amount				real;
@@ -138,12 +110,26 @@ DECLARE
 	v_intrest				real;
 	v_repayment				real;
 	v_contribution			real;
+	currencyid				integer;
+	entityname      		varchar(120);
+	journalid				integer;
 BEGIN
 	IF((NEW.is_paid = true) AND (NEW.receipt > 0))THEN
 	IF (New.receipt_date IS NULL) THEN New.receipt_date = now()::date; END IF;
+			-- post to journals and gls
+		SELECT entitys.entity_name, currency.currency_id INTO entityname,currencyid FROM entitys 
+		INNER JOIN  currency ON currency.org_id = entitys.org_id where entity_id = NEW.entity_id; 
 		
-		NEW.deposit_amount= NEW.receipt;
-		-- get 
+    			INSERT INTO journals (period_id, journal_date, org_id, department_id, currency_id, narrative, year_closing)
+				VALUES (New.period_id, NEw.receipt_date ,New.org_id, 1, currencyid, entityname || ' Contributions ', false) returning journal_id 
+				into journalid ;
+    			
+					INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+					VALUES (journalid, 34005, New.receipt, 0, entityname || ' contribution Amount', NEW.org_id) ;
+					
+					INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+					VALUES ( journalid, 40000,0, NEw.receipt,  entityname || 'contribution Amount ', NEW.org_id);
+   
 	
 			--- Compute the full previous balance
 		SELECT sum(loan_monthly.penalty_paid + loan_monthly.interest_paid + loan_monthly.repayment_paid)
@@ -215,13 +201,13 @@ BEGIN
 			AND (periods.end_date <= NEW.entry_date);
 		IF(v_contribution is null)THEN v_contribution = 0; END IF;
 		
-		Raise notice 'this contribution ni hii %', v_contribution;
-		Raise notice ' contribution ni hii %', NEW.contribution_amount;
+		--Raise notice 'this contribution ni hii %', v_contribution;
+		--Raise notice ' contribution ni hii %', NEW.contribution_amount;
 		
 		v_contribution := v_contribution + NEW.contribution_amount;
 		
-		Raise notice ' contribution ni hii %', v_contribution;
-		Raise notice ' Amount ni hii %', v_amount;
+		--Raise notice ' contribution ni hii %', v_contribution;
+		--Raise notice ' Amount ni hii %', v_amount;
 		
 		IF(v_contribution > 0)THEN
 			IF(v_contribution <= v_amount)THEN
@@ -237,7 +223,7 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-  
+
 CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE  ON contributions FOR EACH ROW
 EXECUTE PROCEDURE ins_contributions();
 
@@ -294,9 +280,9 @@ SELECT vw_periods.period_id,
     vw_periods.period_month,
     vw_periods.quarter,
     vw_periods.semister,
-    vw_periods.bank_header,
-    vw_periods.bank_address,
-    vw_periods.is_posted,
+    --vw_periods.bank_header,
+    --vw_periods.bank_address,
+    --vw_periods.is_posted,
     contributions.contribution_id,
     contributions.org_id,
      contributions.entity_id,
