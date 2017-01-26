@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ESCALATION title="GTA Mail" processdelay="2" 
-	host="mail.travelport-kenya.com" mailuser="crm" mailpassword="Invent2k"
-	mailfrom="crm@travelport-kenya.com"
+	host="mail.travelport-kenya.com" mailuser="gta.finance" mailpassword="Ms@firiKE2017"
+	mailfrom="gta.finance@travelport-kenya.com"
 	inbox="INBOX" sentbox="Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/gtat/reports/">
 
@@ -33,7 +33,7 @@
 		<REPORT fnct="'creditnote_e.jasper'::varchar">crnote_file</REPORT>
 	</REPORT>
 
-<REPORT name="Statement" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
+	<REPORT name="Statement" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
 			table="sys_emails, sys_emailed, clients, vw_statement"
 			where="((clients.clientid = vw_statement.clientid) AND (vwcrnotelist.crnoteid = sys_emailed.table_id) AND (sys_emailed.emailed = false)  AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND (sys_emailed.email_type = 2))">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>

@@ -19,7 +19,8 @@ getgradeid(instructormarks, org_id) as instructorgrade
 
 FROM studentgradeview
 
-WHERE (approved=true) AND (qcourseid='$P!{filterid}')
+WHERE (approved = true) AND (qcourseid = '$P!{filterid}')
+
 ORDER BY  studentname;]]>
 	</queryString>
 	<field name="crs_departmentid" class="java.lang.String"/>

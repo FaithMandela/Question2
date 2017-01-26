@@ -2,8 +2,8 @@
 
 import java.net.URL;
 import java.net.MalformedURLException;
-import org.baraza.web.BWebServiceService;
-import org.baraza.web.BWebService;
+import babcock.ws.DataWebService;
+import babcock.ws.DataWebServiceService;
 
 public class umisAdd {
 
@@ -11,20 +11,35 @@ public class umisAdd {
 	
 		try {
 	
-			URL wsURL = new URL("http://demo.dewcis.com/babcock/webservice?wsdl");
+			URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
 		
-			BWebServiceService bws = new BWebServiceService(wsURL);
-			BWebService port = bws.getBWebServicePort();
+			DataWebServiceService bws = new DataWebServiceService(wsURL);
+			DataWebService port = bws.getDataWebServicePort();
 			
 			// Writting data
-			String resp = port.addWsData(addStudent(), "test123");
-			System.out.println("Add student data: \n" + resp);
+			String resp = port.addWsData(addGrade(), "babcockWB12345");
+			System.out.println("Add Citizenship Grade : \n" + resp);
 			
 		} catch (MalformedURLException ex) {
 			System.out.println("URL access error : " + ex);
 		}
 
-	}	
+	}
+	
+	private static String addGrade() {
+		String xml = "<TRANSFERS>\n";
+		xml += "	<TRANSFER name=\"Citizenship Grade\" keyfield=\"import_grade_id\" table=\"import_grades\">\n";
+		xml += "		<course_id>GEDS001</course_id>\n";
+		xml += "		<session_id>2016/2017.1</session_id>\n";
+		xml += "		<student_id>12/1234</student_id>\n";
+		xml += "		<score>87</score>\n";
+		xml += "	</TRANSFER>\n";
+		xml += "</TRANSFERS>\n";
+		
+		System.out.println("XML : " + xml);
+		
+		return xml;
+	}
 
 	private static String addStudent() {
 		String xml = "<TRANSFERS>\n";

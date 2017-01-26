@@ -15,6 +15,8 @@ ALTER TABLE students ADD seechaplain boolean default false not null;
 CREATE INDEX students_sys_audit_trail_id  ON students (sys_audit_trail_id);
 
 
+
+
 UPDATE students SET onprobation = false;
 
 DROP VIEW vw_students;

@@ -1056,3 +1056,12 @@ CREATE INDEX qposting_logs_sys_audit_trail_id ON qposting_logs (sys_audit_trail_
 
 ALTER TABLE entitys ADD mail_user	varchar(50);
 
+
+CREATE TABLE import_grades (
+	import_grade_id				serial primary key,
+	course_id					varchar(12),
+	session_id					varchar(12),
+	student_id					varchar(12),
+	score						real
+);
+

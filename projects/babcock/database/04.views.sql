@@ -573,9 +573,11 @@ CREATE VIEW vwqcourses AS
 		qcourses.labcourse, qcourses.extracharge, qcourses.approved, qcourses.attendance, qcourses.oldcourseid,
 		qcourses.fullattendance, qcourses.coursetitle, qcourses.lecturesubmit, qcourses.lsdate,
 		qcourses.departmentsubmit, qcourses.dsdate, qcourses.facultysubmit, qcourses.fsdate, 
-		qcourses.org_id
+		qcourses.org_id, aa.enrolment
 	FROM (courseview INNER JOIN qcourses ON courseview.courseid = qcourses.courseid)
-		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid;
+		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid
+		LEFT JOIN (SELECT count(qgradeid) enrolment, qcourseid FROM qgrades GROUP BY qcourseid) aa
+			ON qcourses.qcourseid = aa.qcourseid;
 
 CREATE VIEW qschoolcourseview AS
 	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
