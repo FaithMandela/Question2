@@ -2294,3 +2294,32 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION aft_import_grades() RETURNS trigger AS $$
+DECLARE
+	v_qgradeid				integer;
+	v_allow_ws				boolean;
+BEGIN
+
+	SELECT allow_ws INTO v_allow_ws
+	FROM courses 
+	WHERE courseid = NEW.course_id;
+	
+	IF(v_allow_ws = true)THEN
+		SELECT qgradeid INTO v_qgradeid
+		FROM studentgradeview
+		WHERE (courseid = NEW.course_id) AND (quarterid = NEW.session_id)
+			AND (studentid = NEW.student_id);
+			
+		UPDATE qgrades SET instructormarks = NEW.score WHERE qgradeid = v_qgradeid;
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_import_grades AFTER INSERT OR UPDATE ON import_grades
+  FOR EACH ROW EXECUTE PROCEDURE aft_import_grades();
+  
+  
+  

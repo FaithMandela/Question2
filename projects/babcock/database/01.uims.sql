@@ -178,6 +178,7 @@ CREATE TABLE courses (
 	iscurrent			boolean not null default true,
 	nogpa				boolean not null default false,
 	norepeats			boolean not null default false,
+	allow_ws			boolean not null default false,
 	yeartaken			integer not null default 1,
 	details				text
 );
@@ -1062,6 +1063,7 @@ CREATE TABLE import_grades (
 	course_id					varchar(12),
 	session_id					varchar(12),
 	student_id					varchar(12),
-	score						real
+	score						real,
+	created						timestamp default current_timestamp
 );
 

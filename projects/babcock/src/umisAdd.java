@@ -29,6 +29,7 @@ public class umisAdd {
 	private static String addGrade() {
 		String xml = "<TRANSFERS>\n";
 		xml += "	<TRANSFER name=\"Citizenship Grade\" keyfield=\"import_grade_id\" table=\"import_grades\">\n";
+		xml += "		<import_grade_id>101</import_grade_id>\n";
 		xml += "		<course_id>GEDS001</course_id>\n";
 		xml += "		<session_id>2016/2017.1</session_id>\n";
 		xml += "		<student_id>12/1234</student_id>\n";

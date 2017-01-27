@@ -1,5 +1,46 @@
 
 
+ALTER TABLE courses ADD allow_ws			boolean not null default false;
+UPDATE courses SET allow_ws = true WHERE courseid = 'GEDS001';
+
+DROP TABLE import_grades;
+CREATE TABLE import_grades (
+	import_grade_id				serial primary key,
+	course_id					varchar(12),
+	session_id					varchar(12),
+	student_id					varchar(12),
+	score						real,
+	created						timestamp default current_timestamp
+);
+	
+
+CREATE OR REPLACE FUNCTION aft_import_grades() RETURNS trigger AS $$
+DECLARE
+	v_qgradeid				integer;
+	v_allow_ws				boolean;
+BEGIN
+
+	SELECT allow_ws INTO v_allow_ws
+	FROM courses 
+	WHERE courseid = NEW.course_id;
+	
+	IF(v_allow_ws = true)THEN
+		SELECT qgradeid INTO v_qgradeid
+		FROM studentgradeview
+		WHERE (courseid = NEW.course_id) AND (quarterid = NEW.session_id)
+			AND (studentid = NEW.student_id);
+			
+		UPDATE qgrades SET instructormarks = NEW.score WHERE qgradeid = v_qgradeid;
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_import_grades AFTER INSERT OR UPDATE ON import_grades
+  FOR EACH ROW EXECUTE PROCEDURE aft_import_grades();
+
+
 CREATE OR REPLACE FUNCTION get_grade_weight(real, int) RETURNS real AS $$
 	SELECT max(aa.gradeweight)::real
 	FROM ((SELECT gradeweight, minrange, maxrange, org_id
