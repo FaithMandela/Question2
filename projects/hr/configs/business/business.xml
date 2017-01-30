@@ -46,7 +46,6 @@
 			<MENU name="Sales Pipeline">175</MENU>
 			<MENU name="Issues">180</MENU>
 		</MENU>
-		<MENU name="HR" xml="hr.xml">0</MENU>
 		<MENU name="Payroll" role="admin,payroll,hr,reports" xml="payroll.xml">0</MENU>
 		<MENU name="Projects" role="staff,admin,payroll,hr" xml="projects.xml">0</MENU>
 	</MENU>

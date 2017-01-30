@@ -1,10 +1,10 @@
 CREATE TABLE budgets (
 	budget_id				serial primary key,
-	org_id					integer references orgs,
 	fiscal_year_id			integer references fiscal_years,
 	department_id			integer	references departments,
 	link_budget_id			integer references budgets,
 	entity_id				integer references entitys,
+	org_id					integer references orgs,
 	budget_type				integer default 1 not null,
 	budget_name				varchar(50),
 	application_date		timestamp default now(),
@@ -13,19 +13,19 @@ CREATE TABLE budgets (
 	action_date				timestamp,
 	details					text
 );
-CREATE INDEX budgets_org_id ON budgets (org_id);
 CREATE INDEX budgets_fiscal_year_id ON budgets (fiscal_year_id);
 CREATE INDEX budgets_department_id ON budgets (department_id);
 CREATE INDEX budgets_link_budget_id ON budgets (link_budget_id);
+CREATE INDEX budgets_org_id ON budgets (org_id);
 
 CREATE TABLE budget_lines (
     budget_line_id 			serial primary key,
-	org_id					integer references orgs,
     budget_id	 			integer references budgets,
 	period_id				integer references periods,
 	account_id				integer references accounts,
 	item_id					integer references items,
 	transaction_id 			integer references transactions,
+	org_id					integer references orgs,
 	spend_type				integer default 0 not null,
 	quantity				integer default 1 not null,
     amount 					real default 0 not null,
@@ -34,48 +34,26 @@ CREATE TABLE budget_lines (
     narrative				varchar(240),
 	details					text
 );
-CREATE INDEX budget_lines_org_id ON budget_lines (org_id);
 CREATE INDEX budget_lines_budget_id ON budget_lines (budget_id);
 CREATE INDEX budget_lines_period_id ON budget_lines (period_id);
 CREATE INDEX budget_lines_account_id ON budget_lines (account_id);
 CREATE INDEX budget_lines_item_id ON budget_lines (item_id);
 CREATE INDEX budget_lines_transaction_id ON budget_lines (transaction_id);
-
-CREATE TABLE stocks (
-	stock_id				serial primary key,
-	org_id					integer references orgs,
-	store_id				integer references stores,
-	stock_name				varchar(50),
-	stock_take_date			date,
-	details					text
-);
-CREATE INDEX stocks_org_id ON stocks (org_id);
-CREATE INDEX stocks_store_id ON stocks (store_id);
-
-CREATE TABLE stock_lines (
-	stock_line_id			serial primary key,
-	org_id					integer references orgs,
-	stock_id				integer references stocks,
-	item_id					integer references items,
-	quantity				integer,
-	narrative				varchar(240)
-);
-CREATE INDEX stock_lines_org_id ON stock_lines (org_id);
-CREATE INDEX stock_lines_stock_id ON stock_lines (stock_id);
-CREATE INDEX stock_lines_item_id ON stock_lines (item_id);
+CREATE INDEX budget_lines_org_id ON budget_lines (org_id);
 
 CREATE TABLE tender_types (
 	tender_type_id			serial primary key,
 	org_id					integer references orgs,
-	tender_type_name		varchar(50) unique,
-	details					text
+	tender_type_name		varchar(50),
+	details					text,
+	UNIQUE(org_id, tender_type_name)
 );
 CREATE INDEX tender_types_org_id ON tender_types (org_id);
 
 CREATE TABLE tenders (
 	tender_id				serial primary key,
-	org_id					integer references orgs,
 	tender_type_id			integer references tender_types,
+	org_id					integer references orgs,
 	tender_name				varchar(320),
 	tender_number			varchar(64),
 	tender_date				date not null,
@@ -83,14 +61,14 @@ CREATE TABLE tenders (
 	is_completed			boolean default false not null,
 	details					text
 );
-CREATE INDEX tenders_org_id ON tenders (org_id);
 CREATE INDEX tenders_tender_type_id ON tenders (tender_type_id);
+CREATE INDEX tenders_org_id ON tenders (org_id);
 
 CREATE TABLE bidders (
 	bidder_id				serial primary key,
-	org_id					integer references orgs,
 	tender_id				integer references tenders,
     entity_id 				integer references entitys,
+    org_id					integer references orgs,
 	bidder_name				varchar(120),
 	tender_amount			real,
 	bind_bond				varchar(120),
@@ -101,27 +79,27 @@ CREATE TABLE bidders (
 	award_reference			varchar(32),
 	details					text
 );
-CREATE INDEX bidders_org_id ON bidders (org_id);
 CREATE INDEX bidders_tender_id ON bidders (tender_id);
 CREATE INDEX bidders_entity_id ON bidders (entity_id);
-
+CREATE INDEX bidders_org_id ON bidders (org_id);
+	
 CREATE TABLE tender_items (
 	tender_item_id			serial primary key,
-	org_id					integer references orgs,
 	bidder_id				integer references bidders,
+	org_id					integer references orgs,
 	tender_item_name		varchar(320) not null,
 	quantity				integer,
 	item_amount				real,
 	item_tax				real,
 	details					text
 );
-CREATE INDEX tender_items_org_id ON tender_items (org_id);
 CREATE INDEX tender_items_bidder_id ON tender_items (bidder_id);
+CREATE INDEX tender_items_org_id ON tender_items (org_id);
 
 CREATE TABLE contracts (
 	contract_id				serial primary key,
-	org_id					integer references orgs,
 	bidder_id				integer references bidders,
+	org_id					integer references orgs,
 	contract_name			varchar(320) not null,
 	contract_date			date,
 	contract_end			date,
@@ -129,8 +107,8 @@ CREATE TABLE contracts (
 	contract_tax			real,
 	details					text
 );
-CREATE INDEX contracts_org_id ON contracts (org_id);
 CREATE INDEX contracts_bidder_id ON contracts (bidder_id);
+CREATE INDEX contracts_org_id ON contracts (org_id);
 
 CREATE VIEW vw_budgets AS
 	SELECT departments.department_id, departments.department_name, fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start,
@@ -249,17 +227,7 @@ CREATE VIEW vw_budget_pdc AS
 		(vw_budget_ads.department_id = vw_budget_ledger.department_id) AND (vw_budget_ads.account_id = vw_budget_ledger.account_id)
 		AND (vw_budget_ads.fiscal_year_id = vw_budget_ledger.fiscal_year_id);
 
-CREATE VIEW vw_stocks AS
-	SELECT stores.store_id, stores.store_name,
-		stocks.stock_id, stocks.org_id, stocks.stock_name, stocks.stock_take_date, stocks.details
-	FROM stocks INNER JOIN stores ON stocks.store_id = stores.store_id;
 
-CREATE VIEW vw_stock_lines AS
-	SELECT vw_stocks.stock_id, vw_stocks.stock_name, vw_stocks.stock_take_date, 
-		vw_stocks.store_id, vw_stocks.store_name, items.item_id, items.item_name, 
-		stock_lines.stock_line_id, stock_lines.org_id, stock_lines.quantity, stock_lines.narrative
-	FROM stock_lines INNER JOIN vw_stocks ON stock_lines.stock_id = vw_stocks.stock_id
-		INNER JOIN items ON stock_lines.item_id = items.item_id;
 
 CREATE OR REPLACE FUNCTION upd_budget_lines() RETURNS trigger AS $$
 DECLARE

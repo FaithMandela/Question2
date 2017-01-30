@@ -22,6 +22,9 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="currency_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -43,6 +46,7 @@ FROM vw_trx
 
 WHERE (vw_trx.approve_status = 'Approved')
 	AND (vw_trx.for_posting = true)
+	AND (vw_trx.currency_id = '$P!{currency_id}')
 	AND (vw_trx.entity_id = '$P!{entity_id}')
 $P!{organd}
 

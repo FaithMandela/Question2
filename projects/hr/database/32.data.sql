@@ -260,6 +260,8 @@ INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Each');
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Man Hours');
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, '100KG');
 
+INSERT INTO stores (org_id, store_name) VALUES (0, 'Main Store');
+
 
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
 VALUES (0, 0, 1, 0, '33000', 'Cash Account', true);
