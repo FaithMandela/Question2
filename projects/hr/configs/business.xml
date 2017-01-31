@@ -7,6 +7,7 @@
 			<MENU name="Transaction Ledger">32</MENU>
 			<MENU name="Budget">55</MENU>
 			<MENU name="Requisitions">60</MENU>
+			<MENU name="Tenders">57</MENU>
 			<MENU name="Assets">70</MENU>
 			<MENU name="Fiscal Years">10</MENU>
 			<MENU name="Journals">35</MENU>
@@ -36,6 +37,7 @@
 			<MENU name="Tax Types">135</MENU>
 			<MENU name="Items">140</MENU>
 			<MENU name="Stock">185</MENU>
+			<MENU name="Tenders">190</MENU>
 			<MENU name="Chart of Accounts">105</MENU>
 			<MENU name="Transaction Ledger">145</MENU>
 			<MENU name="Journals">110</MENU>
@@ -2463,6 +2465,88 @@
 			<JASPER name="Item Use Report" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
 	</DESK>
+	<DESK w="700" name="Tenders" key="57" h="550">
+		<GRID name="Tenders" keyfield="tender_id" orderby="tender_date desc" table="vw_tenders">
+			<TEXTFIELD w="75" title="Tender ID">tender_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tender Type">tender_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tender Name">tender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tender Number">tender_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDATE w="75" title="Tender Date">tender_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">tender_end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Completed">is_completed</CHECKBOX>
+			<GRID name="Bidders" keyfield="bidder_id" linkfield="tender_id" table="vw_bidders">
+				<TEXTFIELD w="75" title="Supplier ID">entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Supplier Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Tender Amount">tender_amount</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Bind Bond">bind_bond</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Bind Bond Amount">bind_bond_amount</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Return Date">return_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Points">points</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Awarded">is_awarded</CHECKBOX>
+				<TEXTFIELD w="75" title="Award Reference">award_reference</TEXTFIELD>
+				<FORM name="Bidders" keyfield="bidder_id" linkfield="tender_id" table="bidders">
+					<COMBOBOX w="430" title="Supplier" lptable="entitys" where="(use_key_id = 3)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Tender Amount" y="30" h="20" x="10">tender_amount</TEXTDECIMAL>
+					<TEXTDATE w="150" title="Return Date" y="30" h="20" x="290">return_date</TEXTDATE>
+					<TEXTFIELD w="430" title="Bind Bond" y="50" h="20" x="10">bind_bond</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Bind Bond Amount" y="70" h="20" x="10">bind_bond_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Points" y="90" h="20" x="10">points</TEXTDECIMAL>
+					<CHECKBOX w="150" title="Awarded" y="90" h="20" x="290">is_awarded</CHECKBOX>
+					<TEXTFIELD w="150" title="Award Reference" y="110" h="20" x="10">award_reference</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+				</FORM>
+				<GRID name="Tender Items" keyfield="tender_item_id" linkfield="bidder_id" table="vw_tender_items">
+					<TEXTFIELD w="75" title="Tender Item ID">tender_item_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Tender Item Name">tender_item_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Item Amount">item_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Item Tax">item_tax</TEXTDECIMAL>
+					<FORM name="Tender Items" keyfield="tender_item_id" linkfield="bidder_id" table="tender_items">
+						<TEXTFIELD w="430" title="Tender Item Name" y="10" h="20" x="10">tender_item_name</TEXTFIELD>
+						<TEXTFIELD w="150" title="Quantity" y="30" h="20" x="10">quantity</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Item Amount" y="30" h="20" x="290">item_amount</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Item Tax" y="50" h="20" x="10">item_tax</TEXTDECIMAL>
+						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Contracts" keyfield="contract_id" linkfield="bidder_id" table="vw_contracts">
+					<TEXTFIELD w="75" title="Contract ID">contract_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Contract Name">contract_name</TEXTFIELD>
+					<TEXTDATE w="75" title="Contract Date">contract_date</TEXTDATE>
+					<TEXTDATE w="75" title="Contract End">contract_end</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Contract Amount">contract_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Contract Tax">contract_tax</TEXTDECIMAL>
+					<FORM name="Contracts" keyfield="contract_id" linkfield="bidder_id" table="contracts">
+						<TEXTFIELD w="430" title="Contract Name" y="10" h="20" x="10">contract_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
+						<TEXTDATE w="150" title="Contract End" y="30" h="20" x="290">contract_end</TEXTDATE>
+						<TEXTDECIMAL w="150" title="Contract Amount" y="50" h="20" x="10">contract_amount</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Contract Tax" y="50" h="20" x="290">contract_tax</TEXTDECIMAL>
+						<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+			</GRID>
+			<FORM name="Tenders" keyfield="tender_id" table="tenders">
+				<COMBOBOX w="430" title="Tender Type" lptable="tender_types" y="10" h="20" x="10" lpfield="tender_type_name">tender_type_id</COMBOBOX>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Tender Name" y="50" h="20" x="10">tender_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Tender Number" y="70" h="20" x="10">tender_number</TEXTFIELD>
+				<TEXTDATE w="150" title="Tender Date" y="70" h="20" x="290">tender_date</TEXTDATE>
+				<TEXTDATE w="150" title="Tender End Date" y="90" h="20" x="10">tender_end_date</TEXTDATE>
+				<CHECKBOX w="150" title="Completed" y="90" h="20" x="290">is_completed</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Tender Types" keyfield="tender_type_id" table="tender_types">
+			<TEXTFIELD w="75" title="Tender Type ID">tender_type_id</TEXTFIELD>
+			<TEXTFIELD w="275" title="Tender Type Name">tender_type_name</TEXTFIELD>
+			<FORM name="Tender Types" keyfield="tender_type_id" table="tender_types">
+				<TEXTFIELD w="150" title="Tender Type" y="10" h="20" x="10">tender_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
 	<DESK w="700" name="Assets" key="70" h="500">
 		<GRID name="Assets" keyfield="asset_id" table="vw_assets">
 			<TEXTFIELD w="75" title="Asset Type">asset_type_name</TEXTFIELD>
@@ -2815,6 +2899,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Statement" key="170" h="750">
+		<JASPER name="Client Balances" reportfile="vw_client_balances.jasper"></JASPER>
 		<FILTER w="700" name="Client Statement" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="10" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
@@ -2824,6 +2909,7 @@
 			<JASPER name="Statement" reportfile="statement_a.jasper"></JASPER>
 			<JASPER name="Full Statement" reportfile="statement.jasper"></JASPER>
 		</FILTER>
+		<JASPER name="Supplier Balances" reportfile="vw_supplier_balances.jasper"></JASPER>
 		<FILTER w="700" name="Supplier Statement" split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<COMBOBOX w="430" title="Currency" lptable="currency" noorg="true" y="10" h="20" default_fnct="default_currency" x="10" lpfield="currency_name">currency_id</COMBOBOX>
@@ -2862,5 +2948,20 @@
 			</FILTERFORM>
 			<JASPER name="Store Movement" reportfile="vw_store_movement.jasper"></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" name="Tenders" key="190" h="550">
+		<JASPER name="Tenders" reportfile="vw_tenders.jasper"></JASPER>
+		<GRID name="Bidders" keyfield="tender_id" orderby="tender_date desc" table="vw_tenders">
+			<TEXTFIELD w="75" title="Tender ID">tender_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tender Type">tender_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tender Name">tender_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tender Number">tender_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTDATE w="75" title="Tender Date">tender_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">tender_end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Completed">is_completed</CHECKBOX>
+			<JASPER name="Bidders" reportfile="vw_bidders.jasper"></JASPER>
+		</GRID>
+		<JASPER name="Tender Types" reportfile="tender_types.jasper"></JASPER>
 	</DESK>
 </APP>

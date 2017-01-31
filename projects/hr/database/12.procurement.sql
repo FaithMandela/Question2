@@ -44,7 +44,7 @@ CREATE INDEX budget_lines_org_id ON budget_lines (org_id);
 CREATE TABLE tender_types (
 	tender_type_id			serial primary key,
 	org_id					integer references orgs,
-	tender_type_name		varchar(50),
+	tender_type_name		varchar(50) not null,
 	details					text,
 	UNIQUE(org_id, tender_type_name)
 );
@@ -53,8 +53,9 @@ CREATE INDEX tender_types_org_id ON tender_types (org_id);
 CREATE TABLE tenders (
 	tender_id				serial primary key,
 	tender_type_id			integer references tender_types,
+	currency_id				integer references currency,
 	org_id					integer references orgs,
-	tender_name				varchar(320),
+	tender_name				varchar(320) not null,
 	tender_number			varchar(64),
 	tender_date				date not null,
 	tender_end_date			date,
@@ -69,7 +70,6 @@ CREATE TABLE bidders (
 	tender_id				integer references tenders,
     entity_id 				integer references entitys,
     org_id					integer references orgs,
-	bidder_name				varchar(120),
 	tender_amount			real,
 	bind_bond				varchar(120),
 	bind_bond_amount		real,
@@ -77,7 +77,8 @@ CREATE TABLE bidders (
 	points					real,
 	is_awarded				boolean not null,
 	award_reference			varchar(32),
-	details					text
+	details					text,
+	UNIQUE(tender_id, entity_id)
 );
 CREATE INDEX bidders_tender_id ON bidders (tender_id);
 CREATE INDEX bidders_entity_id ON bidders (entity_id);
@@ -227,7 +228,52 @@ CREATE VIEW vw_budget_pdc AS
 		(vw_budget_ads.department_id = vw_budget_ledger.department_id) AND (vw_budget_ads.account_id = vw_budget_ledger.account_id)
 		AND (vw_budget_ads.fiscal_year_id = vw_budget_ledger.fiscal_year_id);
 
+CREATE VIEW vw_tenders AS
+	SELECT tender_types.tender_type_id, tender_types.tender_type_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		tenders.org_id, tenders.tender_id, tenders.tender_name, tenders.tender_number, 
+		tenders.tender_date, tenders.tender_end_date, tenders.is_completed, tenders.details
+	FROM tenders INNER JOIN tender_types ON tenders.tender_type_id = tender_types.tender_type_id
+		INNER JOIN currency ON tenders.currency_id = currency.currency_id;
 
+CREATE VIEW vw_bidders AS
+	SELECT vw_tenders.tender_type_id, vw_tenders.tender_type_name, 
+		vw_tenders.tender_id, vw_tenders.tender_name, vw_tenders.tender_number, 
+		vw_tenders.tender_date, vw_tenders.tender_end_date, vw_tenders.is_completed,
+		entitys.entity_id, entitys.entity_name,
+		
+		bidders.org_id, bidders.bidder_id, bidders.tender_amount, 
+		bidders.bind_bond, bidders.bind_bond_amount, bidders.return_date, bidders.points, 
+		bidders.is_awarded, bidders.award_reference, bidders.details
+	FROM bidders INNER JOIN vw_tenders ON bidders.tender_id = vw_tenders.tender_id
+		INNER JOIN entitys ON bidders.entity_id = entitys.entity_id;
+
+CREATE VIEW vw_tender_items AS
+	SELECT vw_bidders.tender_type_id, vw_bidders.tender_type_name, 
+		vw_bidders.tender_id, vw_bidders.tender_name, vw_bidders.tender_number, 
+		vw_bidders.tender_date, vw_bidders.tender_end_date, vw_bidders.is_completed,
+		vw_bidders.entity_id, vw_bidders.entity_name,
+		
+		vw_bidders.bidder_id, vw_bidders.tender_amount, vw_bidders.bind_bond, vw_bidders.bind_bond_amount, 
+		vw_bidders.return_date, vw_bidders.points, vw_bidders.is_awarded, vw_bidders.award_reference,
+		
+		tender_items.org_id, tender_items.tender_item_id, tender_items.tender_item_name, tender_items.quantity, 
+		tender_items.item_amount, tender_items.item_tax, tender_items.details
+	FROM tender_items INNER JOIN vw_bidders ON tender_items.bidder_id = vw_bidders.bidder_id;
+
+CREATE VIEW vw_contracts AS
+	SELECT vw_bidders.tender_type_id, vw_bidders.tender_type_name, 
+		vw_bidders.tender_id, vw_bidders.tender_name, vw_bidders.tender_number, 
+		vw_bidders.tender_date, vw_bidders.tender_end_date, vw_bidders.is_completed,
+		vw_bidders.entity_id, vw_bidders.entity_name,
+		
+		vw_bidders.bidder_id, vw_bidders.tender_amount, vw_bidders.bind_bond, 
+		vw_bidders.bind_bond_amount, vw_bidders.return_date, vw_bidders.points, 
+		vw_bidders.is_awarded, vw_bidders.award_reference,
+		
+		contracts.org_id, contracts.contract_id, contracts.contract_name, contracts.contract_date, 
+		contracts.contract_end, contracts.contract_amount, contracts.contract_tax, contracts.details
+	FROM contracts INNER JOIN vw_bidders ON contracts.bidder_id = vw_bidders.bidder_id;
 
 CREATE OR REPLACE FUNCTION upd_budget_lines() RETURNS trigger AS $$
 DECLARE

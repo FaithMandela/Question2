@@ -418,15 +418,15 @@ CREATE VIEW vw_trx AS
 		transaction_status.transaction_status_id, transaction_status.transaction_status_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		departments.department_id, departments.department_name,
-		transactions.journal_id, transactions.bank_account_id,
+		transactions.journal_id, transactions.bank_account_id, transactions.ledger_type_id,
 		transactions.transaction_id, transactions.transaction_date, transactions.transaction_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 21)
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10)
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 22) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9)
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
@@ -723,6 +723,11 @@ BEGIN
 			NEW.payment_date := NEW.transaction_date;
 		END IF;
 	ELSE
+	
+		--- Ensure the direct expediture items are not added
+		IF (OLD.ledger_type_id is null) AND (NEW.ledger_type_id is not null) THEN
+			NEW.ledger_type_id := null;
+		END IF;
 			
 		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
 		ELSIF ((OLD.approve_status != 'Completed') AND (NEW.approve_status = 'Completed')) THEN

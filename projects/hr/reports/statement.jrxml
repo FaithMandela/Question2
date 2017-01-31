@@ -46,6 +46,7 @@ FROM vw_trx
 
 WHERE (vw_trx.approve_status = 'Approved')
 	AND (vw_trx.for_posting = true)
+	AND (vw_trx.ledger_type_id is null)
 	AND (vw_trx.currency_id = '$P!{currency_id}')
 	AND (vw_trx.entity_id = '$P!{entity_id}')
 $P!{organd}
