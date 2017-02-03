@@ -2,7 +2,8 @@ CREATE TABLE stores (
 	store_id				serial primary key,
 	org_id					integer references orgs,
 	store_name				varchar(120),
-	details					text
+	details					text,
+	UNIQUE(org_id, store_name)
 );
 CREATE INDEX stores_org_id ON stores (org_id);
 
@@ -55,12 +56,14 @@ CREATE TABLE items (
 	inventory				boolean default false not null,
 	for_sale				boolean default true not null,
 	for_purchase			boolean default true not null,
+	for_stock				boolean default true not null,
 	sales_price				real,
 	purchase_price			real,
 	reorder_level			integer,
 	lead_time				integer,
 	is_active				boolean default true not null,
-	details					text
+	details					text,
+	UNIQUE(org_id, item_name)
 );
 CREATE INDEX items_org_id ON items (org_id);
 CREATE INDEX items_item_category_id ON items (item_category_id);
@@ -84,6 +87,44 @@ CREATE TABLE quotations (
 CREATE INDEX quotations_org_id ON quotations (org_id);
 CREATE INDEX quotations_item_id ON quotations (item_id);
 CREATE INDEX quotations_entity_id ON quotations (entity_id);
+
+CREATE TABLE stocks (
+	stock_id				serial primary key,
+	org_id					integer references orgs,
+	store_id				integer references stores,
+	stock_name				varchar(50),
+	stock_take_date			date,
+	details					text
+);
+CREATE INDEX stocks_store_id ON stocks (store_id);
+CREATE INDEX stocks_org_id ON stocks (org_id);
+
+CREATE TABLE stock_lines (
+	stock_line_id			serial primary key,
+	org_id					integer references orgs,
+	stock_id				integer references stocks,
+	item_id					integer references items,
+	quantity				integer,
+	narrative				varchar(240)
+);
+CREATE INDEX stock_lines_stock_id ON stock_lines (stock_id);
+CREATE INDEX stock_lines_item_id ON stock_lines (item_id);
+CREATE INDEX stock_lines_org_id ON stock_lines (org_id);
+
+CREATE TABLE store_movement (
+	store_movement_id		serial primary key,
+	store_id				integer references stores,
+	store_to_id				integer references stores,
+	item_id					integer references items,
+	org_id					integer references orgs,
+	movement_date			date not null,
+	quantity				integer not null,
+	narrative				varchar(240)
+);
+CREATE INDEX store_movement_store_id ON store_movement (store_id);
+CREATE INDEX store_movement_store_to_id ON store_movement (store_to_id);
+CREATE INDEX store_movement_item_id ON store_movement (item_id);
+CREATE INDEX store_movement_org_id ON store_movement (org_id);
 
 CREATE TABLE transaction_types (
 	transaction_type_id		integer primary key,
@@ -265,8 +306,9 @@ CREATE VIEW vw_items AS
 		item_category.item_category_id, item_category.item_category_name, item_units.item_unit_id, item_units.item_unit_name, 
 		tax_types.tax_type_id, tax_types.tax_type_name,
 		tax_types.account_id as tax_account_id, tax_types.tax_rate, tax_types.tax_inclusive,
-		items.item_id, items.org_id, items.item_name, items.inventory, items.bar_code,
-		items.for_sale, items.for_purchase, items.sales_price, items.purchase_price, items.reorder_level, items.lead_time, 
+		items.item_id, items.org_id, items.item_name, items.bar_code,
+		items.for_sale, items.for_purchase, items.for_stock, items.inventory,
+		items.sales_price, items.purchase_price, items.reorder_level, items.lead_time, 
 		items.is_active, items.details
 	FROM items INNER JOIN accounts as sales_account ON items.sales_account_id = sales_account.account_id
 		INNER JOIN accounts as purchase_account ON items.purchase_account_id = purchase_account.account_id
@@ -281,6 +323,27 @@ CREATE VIEW vw_quotations AS
 	FROM quotations	INNER JOIN entitys ON quotations.entity_id = entitys.entity_id
 		INNER JOIN items ON quotations.item_id = items.item_id;
 		
+CREATE VIEW vw_stocks AS
+	SELECT stores.store_id, stores.store_name,
+		stocks.stock_id, stocks.org_id, stocks.stock_name, stocks.stock_take_date, stocks.details
+	FROM stocks INNER JOIN stores ON stocks.store_id = stores.store_id;
+
+CREATE VIEW vw_stock_lines AS
+	SELECT vw_stocks.stock_id, vw_stocks.stock_name, vw_stocks.stock_take_date, 
+		vw_stocks.store_id, vw_stocks.store_name, items.item_id, items.item_name, 
+		stock_lines.stock_line_id, stock_lines.org_id, stock_lines.quantity, stock_lines.narrative
+	FROM stock_lines INNER JOIN vw_stocks ON stock_lines.stock_id = vw_stocks.stock_id
+		INNER JOIN items ON stock_lines.item_id = items.item_id;
+		
+CREATE VIEW vw_store_movement AS
+	SELECT items.item_id, items.item_name, stores.store_id, stores.store_name, 
+		store_to.store_id as store_to_id, stores.store_name as store_to_name, 
+		store_movement.org_id, store_movement.store_movement_id, 
+		store_movement.movement_date, store_movement.quantity, store_movement.narrative
+	FROM store_movement INNER JOIN items ON store_movement.item_id = items.item_id
+		INNER JOIN stores ON store_movement.store_id = stores.store_id
+		INNER JOIN stores store_to ON store_movement.store_to_id = store_to.store_id;
+	
 CREATE VIEW vw_ledger_types AS
 	SELECT vw_accounts.account_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
 		vw_accounts.account_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
@@ -355,15 +418,15 @@ CREATE VIEW vw_trx AS
 		transaction_status.transaction_status_id, transaction_status.transaction_status_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		departments.department_id, departments.department_name,
-		transactions.journal_id, transactions.bank_account_id,
+		transactions.journal_id, transactions.bank_account_id, transactions.ledger_type_id,
 		transactions.transaction_id, transactions.transaction_date, transactions.transaction_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
 		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
-		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 21)
+		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10)
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
-		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9) or (transactions.transaction_type_id = 22) 
+		(CASE WHEN (transactions.transaction_type_id = 5) or (transactions.transaction_type_id = 7) or (transactions.transaction_type_id = 9)
 			THEN transactions.transaction_amount ELSE 0 END) as credit_amount
 	FROM transactions INNER JOIN transaction_types ON transactions.transaction_type_id = transaction_types.transaction_type_id
 		INNER JOIN vw_orgs ON transactions.org_id = vw_orgs.org_id
@@ -384,12 +447,15 @@ CREATE VIEW vw_transaction_details AS
 	SELECT vw_transactions.department_id, vw_transactions.department_name, vw_transactions.transaction_type_id, 
 		vw_transactions.transaction_type_name, vw_transactions.document_prefix, vw_transactions.transaction_id, 
 		vw_transactions.transaction_date, vw_transactions.entity_id, vw_transactions.entity_name,
-		vw_transactions.approve_status, vw_transactions.workflow_table_id,
+		vw_transactions.document_number, vw_transactions.approve_status, vw_transactions.workflow_table_id,
 		vw_transactions.currency_name, vw_transactions.exchange_rate,
-		accounts.account_id, accounts.account_name, vw_items.item_id, vw_items.item_name,
+		accounts.account_id, accounts.account_name, stores.store_id, stores.store_name, 
+		
+		vw_items.item_id, vw_items.item_name,
 		vw_items.tax_type_id, vw_items.tax_account_id, vw_items.tax_type_name, vw_items.tax_rate, vw_items.tax_inclusive,
 		vw_items.sales_account_id, vw_items.purchase_account_id,
-		stores.store_id, stores.store_name, 
+		vw_items.for_sale, vw_items.for_purchase, vw_items.for_stock, vw_items.inventory,
+		
 		transaction_details.transaction_detail_id, transaction_details.org_id, transaction_details.quantity, 
 		transaction_details.amount, transaction_details.tax_amount, transaction_details.narrative, transaction_details.details,
 		COALESCE(transaction_details.narrative, vw_items.item_name) as item_description,
@@ -482,6 +548,24 @@ CREATE VIEW vws_tx_ledger AS
 	FROM vw_tx_ledger
 	GROUP BY org_id, ledger_period, ledger_year, ledger_month;
 
+CREATE VIEW vw_stock_movement AS
+	SELECT org_id, department_id, department_name, transaction_type_id, transaction_type_name, 
+		document_prefix, document_number, transaction_id, transaction_date, 
+		entity_id, entity_name, approve_status,  store_id, store_name, 
+		item_id, item_name, 
+		(CASE WHEN transaction_type_id = 11 THEN quantity ELSE 0 END) as q_sold,
+		(CASE WHEN transaction_type_id = 12 THEN quantity ELSE 0 END) as q_purchased,
+		(CASE WHEN transaction_type_id = 17 THEN quantity ELSE 0 END) as q_used
+
+	FROM vw_transaction_details
+
+	WHERE (transaction_type_id IN (11, 17, 12)) AND (for_stock = true) AND (approve_status <> 'Draft');
+
+CREATE OR REPLACE FUNCTION get_opening_stock(integer, date) RETURNS integer AS $$
+	SELECT COALESCE(sum(q_purchased - q_sold - q_used)::integer, 0)
+	FROM vw_stock_movement
+	WHERE (item_id = $1) AND (transaction_date < $2);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION upd_trx_ledger(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -639,6 +723,11 @@ BEGIN
 			NEW.payment_date := NEW.transaction_date;
 		END IF;
 	ELSE
+	
+		--- Ensure the direct expediture items are not added
+		IF (OLD.ledger_type_id is null) AND (NEW.ledger_type_id is not null) THEN
+			NEW.ledger_type_id := null;
+		END IF;
 			
 		IF (OLD.journal_id is null) AND (NEW.journal_id is not null) THEN
 		ELSIF ((OLD.approve_status != 'Completed') AND (NEW.approve_status = 'Completed')) THEN
@@ -1059,24 +1148,24 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION get_balance(integer, varchar(12)) RETURNS real AS $$
-DECLARE
-	v_bal					real;
-BEGIN
-
-	SELECT COALESCE(sum(debit_amount - credit_amount), 0) INTO v_bal
+	SELECT COALESCE(sum(exchange_rate * (debit_amount - credit_amount)), 0)
 	FROM vw_trx
 	WHERE (vw_trx.approve_status = 'Approved')
 		AND (vw_trx.for_posting = true)
 		AND (vw_trx.entity_id = $1)
 		AND (vw_trx.transaction_date < $2::date);
-		
-		
-	RETURN v_bal;
-END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_balance(integer, integer, varchar(12)) RETURNS real AS $$
+	SELECT COALESCE(sum(debit_amount - credit_amount), 0)
+	FROM vw_trx
+	WHERE (vw_trx.approve_status = 'Approved')
+		AND (vw_trx.for_posting = true)
+		AND (vw_trx.entity_id = $1)
+		AND (vw_trx.currency_id = $2)
+		AND (vw_trx.transaction_date < $3::date);
+$$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION payroll_payable(integer, integer) RETURNS varchar(120) AS $$
 DECLARE

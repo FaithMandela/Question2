@@ -80,6 +80,7 @@ CREATE TABLE clients (
 	clientid				serial primary key,
 	country_id				char(2) references countrys,
 	clientname				varchar(50) unique,
+	mst_cus_id				varchar(10),
 	address					varchar(120),
 	postalcode				varchar(12),
 	Town					varchar(120),
@@ -223,21 +224,10 @@ CREATE INDEX crnotelist_PeriodID ON crnotelist (PeriodID);
 CREATE INDEX crnotelist_clientid ON crnotelist (clientid);
 
 CREATE OR REPLACE VIEW vwclients AS 
- SELECT countrys.countryid,
-    countrys.countryname,
-    clients.clientid,
-    clients.clientname,
-    clients.address,
-    clients.postalcode,
-    clients.town,
-    clients.telno,
-    clients.contact_person,
-    clients.email,
-    clients.isactive,
-    clients.ispicked,
-    clients.details
-   FROM clients
-     JOIN countrys ON clients.countryid = countrys.countryid;
+	SELECT countrys.countryid, countrys.countryname, clients.clientid, clients.clientname, clients.address,
+		clients.postalcode, clients.town, clients.telno, clients.contact_person, clients.email, clients.isactive,
+		clients.ispicked, clients.mst_cus_id, clients.details
+	FROM clients JOIN countrys ON clients.countryid = countrys.countryid;
 
 CREATE VIEW vwclientbranches AS
 	SELECT clients.clientid, clients.clientname, clients.address, clients.postalcode, clients.Town, clients.telno, clients.email,
@@ -756,6 +746,7 @@ DECLARE
 	myrec RECORD;
 BEGIN 
 	DELETE FROM tmpclientpayments WHERE tmpclientpayments.Accounting_Date = 'Accounting Date';
+	
 	INSERT INTO clientpayments(clientid, accounting_date, currency, amount, payment_reference)
 	SELECT clients.clientid,('1899-12-30'::date + Accounting_Date::int) as accounting_date, currency, Credit::real, Line_Description
 	FROM tmpclientpayments 

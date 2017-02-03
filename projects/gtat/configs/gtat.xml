@@ -35,6 +35,7 @@
 	</MENU>
 	<DESK w="700" name="Clients" type="vert" key="1" h="500">
 		<GRID name="Active Clients" keyfield="clientid" orderby="clientname" table="vwclients" where="(IsActive = true)">
+			<TEXTFIELD w="40" title="MST CUS ID">mst_cus_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">clientname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Town">Town</TEXTFIELD>
 			<TEXTFIELD w="40" title="Country">countryname</TEXTFIELD>
@@ -51,7 +52,8 @@
 				<TEXTFIELD w="150" title="Email" y="70" h="20" x="10">email</TEXTFIELD>
 				<TEXTFIELD w="430" title="Contact Person" y="260" h="20" x="10">contact_person</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="70" h="20" x="290">IsActive</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="MST CUS ID" y="90" h="20" x="10">mst_cus_id</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Branches" keyfield="clientbranchid" linkfield="clientid" table="clientbranches">
 				<TEXTFIELD w="175" title="Branch Name">branchname</TEXTFIELD>
@@ -64,6 +66,7 @@
 			</GRID>
 		</GRID>
 		<GRID name="Clients" keyfield="clientid" orderby="clientname" table="vwclients">
+			<TEXTFIELD w="40" title="MST CUS ID">mst_cus_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">clientname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Town">Town</TEXTFIELD>
 			<TEXTFIELD w="40" title="Country">countryname</TEXTFIELD>
@@ -78,7 +81,8 @@
 				<TEXTFIELD w="150" title="Tel No." y="50" h="20" x="290">telno</TEXTFIELD>
 				<TEXTFIELD w="150" title="Email" y="70" h="20" x="10">email</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="70" h="20" x="290">IsActive</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="MST CUS ID" y="90" h="20" x="10">mst_cus_id</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Branches" keyfield="clientbranchid" orderby="clientname" table="vwclientbranches">

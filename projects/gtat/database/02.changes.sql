@@ -330,3 +330,8 @@ CREATE OR REPLACE VIEW vw_receipt AS
 -- 	WHERE ((totalprice > 0) OR (to_char(StartDate, 'MMYYYY') = to_char(servicedate, 'MMYYYY'))))
 --   UNION ALL 
 --  (SELECT clientid, clientname, periodid, enddate, amount FROM vw_clientpayments)) as a ORDER BY startdate DESC;
+
+DELETE FROM tmpclientpayments;
+DELETE FROM clientpayments;
+
+
