@@ -5,7 +5,8 @@
 		<MENU name="Control Panel">15</MENU>
 		<MENU name="Subjects">25</MENU>
 		<MENU name="Applicant">30</MENU>
-		<MENU name="Event Calendar">35</MENU>
+		<MENU name="School Events">40</MENU>
+		<MENU name="Guardians">45</MENU>
 	</MENU>
 	<DESK w="700" name="Sessions" h="500">
 		<GRID name="Sessions" keyfield="session_id" linkfield="org_id" table="vw_sessions">

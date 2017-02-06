@@ -1184,9 +1184,9 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Members" key="240" h="550">
-		<GRID name="Active Members" keyfield="entity_id" orderby="entity_id ASC" table="members" tab.count="count(member_id)" where="(active = 't')">
+		<GRID name="Active Members" keyfield="entity_id" orderby="entity_id ASC" table="members" tab.count="count(member_id)" where="(active = 'true')">
 			<TEXTFIELD w="25" title="ID">entity_id</TEXTFIELD>
-			<TEXTFIELD w="100" title="Name">full_name</TEXTFIELD>
+			<TEXTFIELD w="180" title="Name">full_name</TEXTFIELD>
 			<TEXTDATE w="50" title="Date Of Birth">date_of_birth</TEXTDATE>
 			<TEXTFIELD w="40" title="Gender">gender</TEXTFIELD>
 			<TEXTFIELD w="75" title="Phone">phone</TEXTFIELD>
@@ -1343,7 +1343,7 @@
 				<TEXTFIELD w="430" title="Residential Address" y="50" h="20" x="250">residential_address</TEXTFIELD>
 			</FORM>
 		</GRID>
-		<GRID name="Archived Members" keyfield="entity_id" orderby="entity_id DESC" table="members" tab.count="count(member_id)" where="(active = 'f')">
+		<GRID name="Archived Members" keyfield="entity_id" orderby="entity_id DESC" table="members" tab.count="count(member_id)" where="(active = 'false')">
 			<TEXTFIELD w="25" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="100" title="Name">surname</TEXTFIELD>
 			<TEXTDATE w="50" title="Date Of Birth">date_of_birth</TEXTDATE>
@@ -2511,7 +2511,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Periods" key="335" h="550">
-		<GRID name="Periods" keyfield="period_id" orderby="start_date ASC" table="vw_periods">
+		<GRID name="Periods" keyfield="period_id" orderby="start_date DESC" table="vw_periods">
 			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>

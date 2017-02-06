@@ -492,6 +492,11 @@ BEGIN
 	NEW.full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
 	
 	END IF;
+		IF (TG_OP = 'UPDATE') THEN
+			IF (NEW.full_name is null) then
+			NEW.full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
+			END IF;
+	END IF;
 	
 	RETURN NEW;
 END;

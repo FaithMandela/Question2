@@ -55,7 +55,6 @@ ORDER BY start_date;]]>
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="loan_month_id" class="java.lang.Integer"/>
 	<field name="interest_amount" class="java.lang.Float"/>
-	<field name="additional_payments" class="java.lang.Float"/>
 	<field name="is_paid" class="java.lang.Boolean"/>
 	<field name="repayment_paid" class="java.lang.Float"/>
 	<field name="interest_paid" class="java.lang.Float"/>

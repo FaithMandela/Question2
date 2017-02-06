@@ -38,7 +38,6 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 	<field name="transaction_ref" class="java.lang.String"/>
 	<field name="contribution_amount" class="java.lang.Float"/>
 	<field name="contribution_paid" class="java.lang.Float"/>
-	<field name="deposit_amount" class="java.lang.Float"/>
 	<field name="deposit_dates" class="java.sql.Date"/>
 	<field name="is_paid" class="java.lang.Boolean"/>
 	<field name="entity_name" class="java.lang.String"/>
