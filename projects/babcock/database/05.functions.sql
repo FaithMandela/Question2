@@ -940,9 +940,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION getdbgradeid(integer, integer) RETURNS varchar(2) AS $$
-	SELECT CASE WHEN max(gradeid) is null THEN 'NG' ELSE max(gradeid) END
-	FROM grades 
-	WHERE (minrange <= $1) AND (maxrange >= $1) AND (org_id = $2);
+	SELECT CASE WHEN max(aa.gradeid) is null THEN 'NG' ELSE max(aa.gradeid) END
+	FROM ((SELECT gradeid, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeid, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION updqcoursegrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$

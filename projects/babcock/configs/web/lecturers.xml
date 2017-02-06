@@ -444,7 +444,8 @@
 				<TEXTFIELD w="70" title="GPA Hours">credit</TEXTFIELD>
 				<TEXTFIELD w="70" title="Grade">gradeid</TEXTFIELD>
 				<TEXTFIELD w="70" title="Marks">instructormarks</TEXTFIELD>
-				<EDITFIELD w="70" title="Marks" editkey="qgradeid" editvalue="qgrades">departmentmarks</EDITFIELD>
+				<TEXTFIELD w="70" title="Department">departmentmarks</TEXTFIELD>
+				<TEXTFIELD w="70" title="Final Mark">finalmarks</TEXTFIELD>
 			</GRID>
 		</GRID>
 	</DESK>
@@ -508,8 +509,9 @@
 				<ACTION fnct="updatemajorapproval">Approve</ACTION>
 			</ACTIONS>
 			<JASPER name="Unofficial Transcript" reportfile="studentquarterviewa.jasper"></JASPER>
-			<JASPER name="Check List"  reportfile="studentdegreeviewe.jasper"></JASPER>
-			<JASPER name="Selections"  reportfile="qstudentviewcc.jasper"></JASPER>		</GRID>
+			<JASPER name="Check List" reportfile="studentdegreeviewe.jasper"></JASPER>
+			<JASPER name="Selections" reportfile="qstudentviewcc.jasper"></JASPER>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Department Opening Request" key="44" h="500">
 		<GRID user_field="departmentid" name="Grade Opening Request" keyfield="gradeopeningid" user_fnct="get_department" table="vwgradeopening" noorg="true" where="(hodapproval = false) and (hodreject = false)">

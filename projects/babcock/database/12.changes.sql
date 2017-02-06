@@ -1,4 +1,38 @@
 
+CREATE OR REPLACE FUNCTION updqcoursefaculty(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+BEGIN
+	UPDATE qgrades SET finalmarks = departmentmarks
+	WHERE (qgrades.qcourseid = CAST($1 as int));
+	
+	UPDATE qcourses SET departmentsubmit = true, dsdate = now()
+	WHERE (qcourseid = CAST($1 as int));
+	
+	RETURN 'Marks Submitted to the Faculty Correctly';
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION getdbgradeid(integer, integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(aa.gradeid) is null THEN 'NG' ELSE max(aa.gradeid) END
+	FROM ((SELECT gradeid, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeid, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION updqcoursegrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
+BEGIN
+	UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, qgrades.org_id)
+	WHERE (qgrades.qcourseid = CAST($1 as int));
+	
+	UPDATE qcourses SET facultysubmit = true, fsdate = now()
+	WHERE (qcourseid = CAST($1 as int));
+	
+	RETURN 'Final Grade Submitted to Registry Correctly';
+END;
+$$ LANGUAGE plpgsql;
 
 ALTER TABLE courses ADD allow_ws			boolean not null default false;
 UPDATE courses SET allow_ws = true WHERE courseid = 'GEDS001';
