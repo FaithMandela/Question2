@@ -19,7 +19,7 @@ CREATE TABLE Clients (
 	ClientGroupID		integer references ClientGroups,
 	ClientName			varchar(120),
 	Address				varchar(50),
-	ZipCode				varchar(16),,
+	ZipCode				varchar(16),
 	Premises			varchar(120),
 	Street				varchar(120),
 	Division			varchar(50),
@@ -190,7 +190,7 @@ CREATE TABLE Forwarded (
 );
 CREATE INDEX Forwarded_ProblemLogID ON Forwarded (ProblemLogID);
 CREATE INDEX Forwarded_entity_id ON Forwarded (entity_id);
-CREATE INDEX Forwarded_SenderID ON Forwarded (SenderID);
+CREATE INDEX Forwarded_sender_id ON Forwarded (sender_id);
 
 CREATE INDEX Forwarded_IsSolved ON Forwarded (IsSolved);
 CREATE INDEX Forwarded_IsDrop ON Forwarded (IsDrop);

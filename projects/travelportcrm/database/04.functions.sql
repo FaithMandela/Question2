@@ -1,20 +1,106 @@
+-------------------------------------- Users
+CREATE OR REPLACE FUNCTION getUserGroupID() RETURNS integer AS $$
+	SELECT UserGroupID FROM users WHERE (username = current_user);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getUserEmail(int) RETURNS varchar(120) AS $$
+	SELECT email FROM users WHERE (userid = $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getUserFullName(integer) RETURNS varchar AS $$
+	SELECT FullName FROM users WHERE (userid = $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getGroupID() RETURNS integer AS $$
+DECLARE
+    userrec RECORD;
+	groupid integer;
+BEGIN
+	groupid := -1;
+	SELECT INTO userrec groupleader, usergroupid FROM users WHERE (username=current_user);
+	IF userrec.groupleader = true THEN
+		groupid := userrec.usergroupid;
+	END IF;
+
+	return groupid;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION changePass(varchar(12), varchar(12)) RETURNS varchar(50) AS $$
+DECLARE
+    userrec RECORD;
+	username varchar(50);
+BEGIN
+	username := '';
+	SELECT INTO userrec * FROM Users WHERE (UserID=getUserID());
+
+	IF userrec.userpass = md5($1) THEN
+		UPDATE Users SET userpass = md5($2) WHERE (UserID=getUserID());
+		username := current_user;
+	END IF;
+
+	return username;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION changePass(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+    userrec RECORD;
+	passchange varchar(50);
+BEGIN
+	passchange := 'Password Error';
+	SELECT INTO userrec * FROM Users WHERE (UserID = $1);
+
+	IF userrec.userpass = md5($2) THEN
+		UPDATE Users SET userpass = md5($3) WHERE (UserID = $1);
+		passchange := 'Password Changed';
+	END IF;
+
+	return passchange;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW UserView AS
+	SELECT UserGroups.UserGroupid, UserGroups.UserGroupName, Users.UserID, Users.SuperUser,
+		Users.RoleName, Users.username, Users.FullName, Users.Extension, Users.TelNo,
+		Users.EMail, Users.AccountManager, Users.GroupLeader, Users.IsActive, Users.GroupUser
+	FROM UserGroups INNER JOIN Users ON UserGroups.UserGroupid = Users.UserGroupid
+	ORDER BY UserGroups.UserGroupName, Users.UserName;
+
+---------------------------------------------------- Clients
+
+CREATE OR REPLACE FUNCTION getAccountManager(integer) RETURNS integer AS $$
+	SELECT userid FROM Clients WHERE (clientid = $1);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION getMainPcc(int) RETURNS varchar(12) AS $$
+	SELECT max(pcc) FROM pccs WHERE (ClientID = $1) AND (gds = 'G') ;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE VIEW tomcatusers AS 
+	(SELECT username, userpass, rolename FROM users)
+	UNION
+	(SELECT getMainPcc(clientid), Clientpass, 'agency' FROM clients)
+	UNION
+	(SELECT (getMainPcc(clients.clientid) || Consultants.SON), Consultants.agentpass, 'agent'
+	FROM Clients INNER JOIN Consultants ON Clients.ClientID = Consultants.ClientID);
 
 CREATE OR REPLACE VIEW ClientGroupView AS
-	SELECT ClientAffiliates.ClientAffiliateName, ClientGroups.ClientGroupID, ClientGroups.ClientAffiliateID, 
-		ClientGroups.ClientGroupName
+	SELECT ClientAffiliates.ClientAffiliateName, ClientGroups.ClientGroupID, ClientGroups.ClientAffiliateID, ClientGroups.ClientGroupName
 	FROM ClientAffiliates INNER JOIN ClientGroups ON ClientAffiliates.ClientAffiliateID = ClientGroups.ClientAffiliateID;
 
 CREATE OR REPLACE VIEW ClientView AS
-	SELECT ClientGroupView.ClientAffiliateID, ClientGroupView.ClientAffiliateName, 
-		ClientGroupView.ClientGroupID, ClientGroupView.ClientGroupName,
- 		entitys.UserID, entitys.FullName, 
+	SELECT ClientGroupView.ClientAffiliateID, ClientGroupView.ClientAffiliateName, ClientGroupView.ClientGroupID, ClientGroupView.ClientGroupName,
+ 		Users.UserID, Users.FullName, ClientSystems.ClientSystemID, ClientSystems.ClientSystemName, ClientLinks.ClientLinkID, ClientLinks.ClientLinkName,
 		Clients.ClientID, Clients.ClientName, Clients.Address, Clients.ZipCode, Clients.Premises, Clients.Street, Clients.Division,
 		Clients.Town, Clients.Country, Clients.TelNo, Clients.FaxNo, Clients.Email, Clients.website, Clients.IATANo, Clients.IsIATA,
 		Clients.clienttarget, Clients.consultanttarget, Clients.budget, Clients.DateEnroled, Clients.Connected, Clients.IsActive,
 		Clients.contractdate, Clients.contractend, Clients.DateClosed, 
 		getMainPcc(Clients.ClientID) as PCC, substring(Clients.clientname, '.') as aid
-	FROM ClientGroupView INNER JOIN Clients ON ClientGroupView.ClientGroupID = Clients.ClientGroupID
-		INNER JOIN entitys ON Clients.UserID = entitys.UserID;
+	FROM ((((ClientGroupView INNER JOIN Clients ON ClientGroupView.ClientGroupID = Clients.ClientGroupID)
+		INNER JOIN Users ON Clients.UserID = Users.UserID)
+		INNER JOIN ClientSystems ON Clients.ClientSystemID = ClientSystems.ClientSystemID)
+		INNER JOIN ClientLinks ON Clients.ClientLinkID = ClientLinks.ClientLinkID);
 
 CREATE OR REPLACE VIEW ClientAList AS
 	SELECT aid
