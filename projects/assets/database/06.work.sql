@@ -289,3 +289,14 @@ AND (vw_client_assets.asset_type_id IN (1,2,3,4,5,6,7,8,9,14))
 
 ORDER BY vw_client_assets.client_name, vw_client_assets.asset_type_name, vw_client_assets.date_issued;
 
+
+--------------- Links
+
+SELECT entity_name, pcc, client_name, division, town, 
+	date_issued, link_capacity, connection_type, link_number, vlan_id, use_type, ip_allocation
+FROM vw_client_links
+WHERE (is_issued = true) AND (is_retrived = false)
+ORDER BY entity_name, client_name;
+
+
+
