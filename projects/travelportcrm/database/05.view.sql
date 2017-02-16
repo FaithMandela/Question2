@@ -11,11 +11,11 @@ CREATE VIEW ClientView AS
 		Clients.ClientID, Clients.ClientName, Clients.Address, Clients.ZipCode, Clients.Premises, Clients.Street, Clients.Division,
 		Clients.Town, Clients.Country, Clients.TelNo, Clients.FaxNo, Clients.email, Clients.website, Clients.IATANo, Clients.IsIATA,
 		Clients.clienttarget, Clients.consultanttarget, Clients.budget, Clients.DateEnroled, Clients.Connected, Clients.IsActive,
-		Clients.contractdate, Clients.contractend, Clients.DateClosed, 
+		Clients.contractdate, Clients.contractend, Clients.DateClosed, clients.mst_cus_id,
 		aa.pcc, substring(Clients.clientname, '.') as aid
 	FROM ClientGroupView INNER JOIN Clients ON ClientGroupView.ClientGroupID = Clients.ClientGroupID
 		INNER JOIN entitys ON Clients.entity_id = entitys.entity_id
-		INNER JOIN (SELECT ClientID, max(pcc) as pcc FROM pccs GROUP BY ClientID) aa
+		LEFT JOIN (SELECT ClientID, max(pcc) as pcc FROM pccs GROUP BY ClientID) aa
 			ON Clients.ClientID = aa.ClientID;
 
 CREATE VIEW ClientAList AS
@@ -31,7 +31,10 @@ CREATE VIEW ClientTownView AS
 	ORDER BY town;
 
 CREATE VIEW pccview AS
-	SELECT clients.clientid, clients.clientname, pccs.pcc, pccs.gds, pccs.pccdate
+	SELECT clients.clientid, clients.clientname, Clients.Address, Clients.ZipCode, Clients.Premises, 
+		Clients.Street, Clients.Division, Clients.Town, Clients.Country, Clients.TelNo, 
+		Clients.FaxNo, Clients.email, Clients.website, Clients.IATANo, Clients.IsIATA,
+		pccs.pcc, pccs.gds, pccs.pccdate
 	FROM pccs INNER JOIN clients ON pccs.clientid = clients.clientid;
 
 CREATE VIEW ConsultantView AS
@@ -51,6 +54,7 @@ CREATE VIEW PTypeView AS
 CREATE VIEW PDefinitionview AS
 	SELECT PClassifications.PClassificationID, PClassifications.PClassificationName, PTypes.PTypeID, PTypes.PTypeName,
 		PDefinitions.PDefinitionID, PDefinitions.PDefinitionName, PDefinitions.Description, PDefinitions.Solution
+		(PClassifications.PClassificationName || ' : ' || PTypes.PTypeName || ' : ' || PDefinitions.PDefinitionName) as disp
 	FROM (PClassifications INNER JOIN PTypes ON PClassifications.PClassificationID = PTypes.PClassificationID)
 		INNER JOIN PDefinitions ON PTypes.PTypeID = PDefinitions.PTypeID
 	ORDER BY PClassifications.PClassificationName, PTypes.PTypeName;

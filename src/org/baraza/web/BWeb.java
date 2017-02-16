@@ -1965,7 +1965,12 @@ log.severe("BASE : " + mysql);
 				if(!el.getValue().equals("")) jsColNames.add(el.getAttribute("title", ""));
 				jsColEl.add("name", mydn);
 				jsColEl.add("width", Integer.valueOf(el.getAttribute("w", "50")));
-				if(el.getName().equals("EDITFIELD")) jsColEl.add("editable", true);
+				if(el.getName().equals("EDITFIELD")) {
+					jsColEl.add("editable", true);
+					
+					if(el.getAttribute("edittype") != null) jsColEl.add("edittype", el.getAttribute("edittype"));
+					if(el.getAttribute("editoptions") != null) jsColEl.add("editoptions", el.getAttribute("editoptions"));
+				}
 				jsColModel.add(jsColEl);
 			}
 			

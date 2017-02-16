@@ -165,6 +165,33 @@ CREATE FUNCTION getCountERF(integer) RETURNS bigint AS $$
 	WHERE ProblemLogID = $1;
 $$ LANGUAGE SQL;
 
+CREATE FUNCTION ins_ProblemLog() RETURNS trigger AS $$
+BEGIN
+	
+	NEW.entity_id := NEW.updated_by;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_ProblemLog BEFORE INSERT ON ProblemLog
+    FOR EACH ROW EXECUTE PROCEDURE ins_ProblemLog();
+
+CREATE FUNCTION upd_ProblemLog() RETURNS trigger AS $$
+BEGIN
+	-- Check that forward is closed
+	IF (OLD.IsSolved=false) and (NEW.IsSolved = True) THEN
+		NEW.SolvedTime := now();
+		NEW.Closed_By := NEW.updated_by;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER upd_ProblemLog BEFORE UPDATE ON ProblemLog
+    FOR EACH ROW EXECUTE PROCEDURE upd_ProblemLog();
+
 CREATE FUNCTION insForward() RETURNS TRIGGER AS $$
 DECLARE
     myrecord RECORD;
@@ -200,20 +227,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER updForward AFTER UPDATE ON Forwarded
     FOR EACH ROW EXECUTE PROCEDURE updForward();
 
-CREATE FUNCTION updProblemLog() RETURNS trigger AS $$
-BEGIN
-	-- Check that forward is closed
-	IF (OLD.IsSolved=false) and (NEW.IsSolved = True) THEN
-		UPDATE ProblemLog SET SolvedTime = now() WHERE ProblemLogID=NEW.ProblemLogID;
-		UPDATE ProblemLog SET ClosedBy = getUserID() WHERE ProblemLogID=NEW.ProblemLogID;
-	END IF;
 
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER updProblemLog AFTER UPDATE ON ProblemLog
-    FOR EACH ROW EXECUTE PROCEDURE updProblemLog();
 
 CREATE FUNCTION updEscalation(integer) RETURNS timestamp AS $$
     UPDATE Forwarded SET LastEscalation = now() WHERE ForwardID = $1;

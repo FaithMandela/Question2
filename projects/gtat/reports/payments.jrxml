@@ -50,9 +50,14 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT clientid, clientname, accounting_date, clientpaymentsid,
-       currency, amount, clientpaymentsnumber, payment_reference
-  FROM vw_clientpayments
-WHERE vw_clientpayments.accounting_date <= '$P!{filterid}' AND vw_clientpayments.accounting_date >= '$P!{filter2id}'
+	currency, amount, clientpaymentsnumber, payment_reference,
+	'$P!{filterid}'::date as from_date,
+	'$P!{filter2id}'::date as to_date
+
+FROM vw_clientpayments
+WHERE vw_clientpayments.accounting_date <= '$P!{filterid}' 
+	AND vw_clientpayments.accounting_date >= '$P!{filter2id}'
+
 ORDER BY accounting_date ASC]]>
 	</queryString>
 	<field name="clientid" class="java.lang.Integer"/>
@@ -63,6 +68,8 @@ ORDER BY accounting_date ASC]]>
 	<field name="amount" class="java.lang.Float"/>
 	<field name="clientpaymentsnumber" class="java.lang.String"/>
 	<field name="payment_reference" class="java.lang.String"/>
+	<field name="from_date" class="java.sql.Date"/>
+	<field name="to_date" class="java.sql.Date"/>
 	<variable name="sumamount" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
 	</variable>
@@ -70,18 +77,32 @@ ORDER BY accounting_date ASC]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="172" splitType="Stretch">
+		<band height="145" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-13" x="156" y="122" width="233" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
+				<reportElement key="staticText-13" x="138" y="86" width="233" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="18" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[CLIENT PAYMENTS]]></text>
 			</staticText>
-			<image scaleImage="FillFrame">
-				<reportElement key="image-1" x="1" y="1" width="534" height="100" uuid="34197c32-1fff-4498-b7c2-989ab69cdf4c"/>
+			<image scaleImage="RetainShape">
+				<reportElement key="image-1" x="47" y="0" width="440" height="73" uuid="34197c32-1fff-4498-b7c2-989ab69cdf4c"/>
 				<imageExpression><![CDATA[$P{reportpath} + "gklogo.jpg"]]></imageExpression>
 			</image>
+			<textField>
+				<reportElement x="88" y="116" width="100" height="20" uuid="e1c37f9f-18b0-4edb-aed4-e15d2f672ad0"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{from_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="265" y="116" width="100" height="20" uuid="12f8c4e6-e9b2-4f1a-a2d6-e677a10ff410"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{to_date}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -163,7 +184,7 @@ ORDER BY accounting_date ASC]]>
 			<textField pattern="#,##0.00;-#,##0.00">
 				<reportElement x="354" y="0" width="103" height="18" uuid="7e144055-2adb-4411-b3f4-393896631763"/>
 				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="false"/>
+					<font fontName="Times New Roman" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{clientpaymentsnumber}]]></textFieldExpression>
 			</textField>

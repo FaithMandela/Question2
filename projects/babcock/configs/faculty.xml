@@ -29,6 +29,7 @@
 			<MENU name="Dept. Grade Summary">555</MENU>
 			<MENU name="GPA Ranking">769</MENU>
 			<MENU name="Semester Un Official">362</MENU>
+			<MENU name="Partial transcript">219</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="695" name="Accepted" type="vert" key="507" h="585">
@@ -324,17 +325,26 @@
 		</FILTER>
 	</DESK>
 	<DESK w="800" name="Semester Un Official" type="vert" key="362" h="500">
-		<GRID name="Semesters" keyfield="quarterid" table="quarterview" filterkey="9" key="1">
+		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID name="Student List" keyfield="studentdegreeid" updatetable="qstudents" orderby="departmentname" linkfield="quarterid" table="qstudentmajorview" key="4">
+			<GRID name="Student List" keyfield="studentdegreeid" orderby="departmentname" linkfield="quarterid" table="qstudentmajorview">
 				<TEXTFIELD w="25" title="Matric Num">studentid</TEXTFIELD>
 				<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 				<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
 				<TEXTFIELD w="20" title="Department">departmentname</TEXTFIELD>
-				<JASPER filtered="true" name="Unofficial Record" printcopies="1" reportfile="studentquarterview.jasper" key="5"></JASPER>
+				<JASPER filtered="true" name="Quarter Unofficial Record" printcopies="1" reportfile="studentquarterviewq.jasper"></JASPER>
+				<JASPER filtered="true" name="Course Unofficial Record" printcopies="1" reportfile="studentquarterview.jasper"></JASPER>
 			</GRID>
+		</GRID>
+	</DESK>
+	<DESK w="800" name="Partial transcript" type="horl" key="219" h="500">
+		<GRID name="Students" keyfield="studentdegreeid" table="studentdegreeview">
+			<TEXTFIELD w="15" title="Matric Num">studentid</TEXTFIELD>
+			<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
+			<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
+			<JASPER filtered="true" name="Partial Transcript" reportfile="unoficialtranscript.jasper"></JASPER>
 		</GRID>
 	</DESK>
 </APP>
