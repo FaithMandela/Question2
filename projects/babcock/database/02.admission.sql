@@ -128,6 +128,10 @@ CREATE TABLE registrations (
 	socialproblems			text,
 	admission_level			integer default 100 not null,
 	
+	jamb_reg_no				varchar(50),
+	jamb_exam_no			varchar(50),
+	jamb_score				varchar(50),
+	
 	acceptance_fees			real,
 	af_date					timestamp,
 	af_amount				real,
