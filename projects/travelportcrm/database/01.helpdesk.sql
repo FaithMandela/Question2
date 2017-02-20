@@ -264,6 +264,7 @@ CREATE TABLE Transport (
 	TransportDate			date not null,
 	Booktime				time not null,
 	ReturnTime				time not null,
+	Returned				time,
 	HoursSpent				integer,
 	Location				varchar(50),
 	SelfDriven				boolean default false not null,

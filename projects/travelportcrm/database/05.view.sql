@@ -39,9 +39,11 @@ CREATE VIEW pccview AS
 
 CREATE VIEW ConsultantView AS
 	SELECT Clients.ClientID, Clients.ClientName, Consultants.ConsultantID, Consultants.salutation, Consultants.firstname, Consultants.othernames,
-		(COALESCE(Consultants.salutation || ', ', '')  || COALESCE(Consultants.firstname, '') || COALESCE(', ' || Consultants.othernames, '')) as consultantname,
 		Consultants.JobDefination, Consultants.TelNo, Consultants.cellphone, Consultants.email,
-		Consultants.birthdate, Consultants.SON
+		Consultants.birthdate, Consultants.SON,
+		(COALESCE(Consultants.salutation || ', ', '')  || COALESCE(Consultants.firstname, '') || COALESCE(', ' || Consultants.othernames, '')) as consultantname,
+		(ClientName || ': ' || COALESCE(Consultants.salutation || ', ', '')  || COALESCE(Consultants.firstname, '') || COALESCE(', ' || Consultants.othernames, '')) as consultant_disp
+
 	FROM Clients INNER JOIN Consultants ON Clients.ClientID = Consultants.ClientID;
 
 ---------------------------------------------------- helpdesk
@@ -92,8 +94,8 @@ CREATE VIEW ProblemLogView AS
 		LEFT JOIN entitys cl ON problemLog.closed_by = cl.entity_id;
 
 CREATE VIEW ForwardedView AS
-	SELECT entitys.entity_type_id, entitys.entity_id, entitys.user_name, entitys.entity_name, entitys.primary_email, Forwarded.ForwardID, 
-		Forwarded.Sender_ID, cl.entity_name as SenderName, Forwarded.ProblemLogID,
+	SELECT entitys.entity_type_id, entitys.entity_id, entitys.user_name, entitys.entity_name, entitys.primary_email, 
+		Forwarded.ForwardID, Forwarded.Sender_ID, cl.entity_name as SenderName, Forwarded.ProblemLogID,
 		Forwarded.ReferenceNo, Forwarded.StageOrder, Forwarded.IsDependent, Forwarded.isDelayedAction,
 		Forwarded.Description, Forwarded.ForwardTime, Forwarded.SolvedTime, Forwarded.IsSolved, Forwarded.IsDrop,
 		Forwarded.TimeInterval,	Forwarded.LastEscalation, Forwarded.tobedone, Forwarded.whatisdone,
@@ -169,10 +171,10 @@ CREATE VIEW TransportView AS
 	SELECT Cars.CarName, entitys.entity_name, Transport.TransportID, Transport.CarID, Transport.entity_id, Transport.TransportDate, 
 		Transport.booktime,	Transport.Location, Transport.IsDone, Transport.IsApproved,
 		Transport.ReturnTime, Transport.HoursSpent, Transport.keysreturned, Transport.taxi,
-		Transport.personalcar, Transport.SelfDriven, Transport.IsDrop,
+		Transport.personalcar, Transport.SelfDriven, Transport.IsDrop, Transport.Returned,
 		(ReturnTime - Booktime) as TimeGone
 	FROM Transport LEFT JOIN Cars on Cars.CarID = Transport.CarID
-		INNER JOIN entitys ON Transport.entity_id = entitys.entity_id;;
+		INNER JOIN entitys ON Transport.entity_id = entitys.entity_id;
 		
 CREATE VIEW CarServiceView AS
 	SELECT Cars.CarID, Cars.CarName, Cars.NextService, CarServices.CarServiceID, CarServices.ServiceDate,
@@ -228,6 +230,7 @@ CREATE VIEW ClientAssetView AS
 		ClientAssets.ClientAssetID, ClientAssets.AssetID, ClientAssets.IsIssued, 
 		ClientAssets.dateIssued, ClientAssets.IsRetrived, ClientAssets.dateRetrived, ClientAssets.Narrative,
 		ClientAssets.crmrefno, ClientAssets.dnoteno, ClientAssets.rcrmrefno, ClientAssets.rdnoteno, ClientAssets.units,
+		(assetsubtypename || ', ' || assetsn) as asset_disp,
 		(AssetsView.Clientcost * ClientAssets.units) as assetcost, (AssetsView.segments * ClientAssets.units) as assetsegments
 	FROM (AssetsView INNER JOIN ClientAssets ON AssetsView.AssetID = ClientAssets.AssetID)
 	INNER JOIN (Clients INNER JOIN ClientGroups ON Clients.ClientGroupid = ClientGroups.ClientGroupid)

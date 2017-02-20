@@ -328,6 +328,7 @@ CREATE TABLE incentive_targets (
 	incentive_target_id		serial primary key,
 	incentive_type_id		integer references incentive_types,
 	market_share			integer,
+	target_segments			integer,
 	incentive_rate			real
 );
 CREATE INDEX incentive_targets_incentive_type_id ON incentive_targets (incentive_type_id);

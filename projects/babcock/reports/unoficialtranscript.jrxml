@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="371"/>
+	<property name="ireport.y" value="422"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -80,42 +80,21 @@ WHERE (studentdegreeid=$P!{filterid});]]>
 				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="108" width="772" height="72" forecolor="#D2D2D2" uuid="f5709543-62c9-42e9-ad57-f5445e5a6447"/>
+				<reportElement x="4" y="180" width="772" height="72" forecolor="#EBEBEB" uuid="77307193-47a3-415e-8db9-f15d237aba08"/>
 				<textElement rotation="None">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>
 				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="180" width="772" height="72" forecolor="#D2D2D2" uuid="77307193-47a3-415e-8db9-f15d237aba08"/>
+				<reportElement x="4" y="468" width="772" height="72" forecolor="#EBEBEB" uuid="44bd27c1-02f6-4192-8b7b-e7a4f7a485a9"/>
 				<textElement rotation="None">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>
 				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="252" width="772" height="72" forecolor="#E1E1E1" uuid="59d26338-e95e-41e4-840b-81655825bfe2"/>
-				<textElement rotation="None">
-					<font fontName="Times New Roman" size="24"/>
-				</textElement>
-				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="396" width="772" height="72" forecolor="#E1E1E1" uuid="4e54fb45-b9b5-41e7-9a29-8147f89d39c2"/>
-				<textElement rotation="None">
-					<font fontName="Times New Roman" size="24"/>
-				</textElement>
-				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="468" width="772" height="72" forecolor="#E1E1E1" uuid="44bd27c1-02f6-4192-8b7b-e7a4f7a485a9"/>
-				<textElement rotation="None">
-					<font fontName="Times New Roman" size="24"/>
-				</textElement>
-				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="324" width="772" height="72" forecolor="#E1E1E1" uuid="1524a6d4-ccce-4fa8-86bd-18a5a90cbc45"/>
+				<reportElement x="4" y="324" width="772" height="72" forecolor="#EBEBEB" uuid="1524a6d4-ccce-4fa8-86bd-18a5a90cbc45"/>
 				<textElement rotation="None">
 					<font fontName="Times New Roman" size="24"/>
 				</textElement>

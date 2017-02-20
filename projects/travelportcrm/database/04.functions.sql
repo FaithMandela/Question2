@@ -165,7 +165,7 @@ CREATE FUNCTION getCountERF(integer) RETURNS bigint AS $$
 	WHERE ProblemLogID = $1;
 $$ LANGUAGE SQL;
 
-CREATE FUNCTION ins_ProblemLog() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_ProblemLog() RETURNS trigger AS $$
 BEGIN
 	
 	NEW.entity_id := NEW.updated_by;
@@ -177,7 +177,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_ProblemLog BEFORE INSERT ON ProblemLog
     FOR EACH ROW EXECUTE PROCEDURE ins_ProblemLog();
 
-CREATE FUNCTION upd_ProblemLog() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION upd_ProblemLog() RETURNS trigger AS $$
 BEGIN
 	-- Check that forward is closed
 	IF (OLD.IsSolved=false) and (NEW.IsSolved = True) THEN
@@ -192,42 +192,47 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_ProblemLog BEFORE UPDATE ON ProblemLog
     FOR EACH ROW EXECUTE PROCEDURE upd_ProblemLog();
 
-CREATE FUNCTION insForward() RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION aft_ProblemLog() RETURNS TRIGGER AS $$
 DECLARE
     myrecord RECORD;
 BEGIN
-	FOR myrecord IN SELECT * FROM Stages WHERE Stages.PDefinitionID = NEW.PDefinitionID LOOP
-		INSERT INTO Forwarded (ProblemLogID, UserID, Description, StageOrder, isDependent, isDelayedAction, TimeInterval, SystemForward, IsForApproval)
-		VALUES(NEW.ProblemLogID, myrecord.UserID, myrecord.task, myrecord.StageOrder, myrecord.isDependent,
-			myrecord.isDelayedAction, myrecord.TimeInterval, true, myrecord.IsForApproval); 
-	END LOOP;
-
-	IF (NEW.PLevelID is null) THEN
-		UPDATE ProblemLog SET PLevelID = 2 WHERE ProblemLogid = NEW.ProblemLogid;
-	END IF;
 	
+	INSERT INTO Forwarded (ProblemLogID, entity_id, Description, StageOrder, isDependent, isDelayedAction, TimeInterval, SystemForward, IsForApproval)
+	SELECT NEW.ProblemLogID, entity_id, task, StageOrder, isDependent,
+			isDelayedAction, TimeInterval, true, IsForApproval
+	FROM Stages 
+	WHERE Stages.PDefinitionID = NEW.PDefinitionID;
+	
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_ProblemLog AFTER INSERT ON ProblemLog
+    FOR EACH ROW EXECUTE PROCEDURE aft_ProblemLog();
+
+CREATE OR REPLACE FUNCTION ins_Forward() RETURNS trigger AS $$
+BEGIN
+	NEW.sender_id := NEW.updated_by;
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER insForward AFTER INSERT ON ProblemLog
-    FOR EACH ROW EXECUTE PROCEDURE insForward();
-
-CREATE FUNCTION updForward() RETURNS trigger AS $$
+CREATE TRIGGER ins_Forward BEFORE INSERT ON Forwarded
+    FOR EACH ROW EXECUTE PROCEDURE ins_Forward();
+    
+CREATE OR REPLACE FUNCTION upd_Forward() RETURNS trigger AS $$
 BEGIN
 	-- Check that forward is closed
 	IF (OLD.IsSolved=false) and (NEW.IsSolved = True) THEN
-		UPDATE Forwarded SET SolvedTime = now() WHERE ForwardID=NEW.ForwardID;
+		NEW.SolvedTime = now();
 	END IF;
 
 	RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER updForward AFTER UPDATE ON Forwarded
-    FOR EACH ROW EXECUTE PROCEDURE updForward();
-
-
+CREATE TRIGGER upd_Forward BEFORE UPDATE ON Forwarded
+    FOR EACH ROW EXECUTE PROCEDURE upd_Forward();
 
 CREATE FUNCTION updEscalation(integer) RETURNS timestamp AS $$
     UPDATE Forwarded SET LastEscalation = now() WHERE ForwardID = $1;
