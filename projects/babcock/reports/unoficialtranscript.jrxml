@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transcript" columnCount="2" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="388" leftMargin="30" rightMargin="36" topMargin="20" bottomMargin="20" uuid="0c290659-3001-45d8-8460-1d0d994a1078">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="unoficialtranscript" columnCount="2" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="388" leftMargin="30" rightMargin="36" topMargin="20" bottomMargin="20" uuid="0c290659-3001-45d8-8460-1d0d994a1078">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="422"/>
+	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -71,36 +71,7 @@ WHERE (studentdegreeid=$P!{filterid});]]>
 		</groupFooter>
 	</group>
 	<background>
-		<band height="542" splitType="Stretch">
-			<staticText>
-				<reportElement x="4" y="36" width="772" height="72" forecolor="#D2D2D2" uuid="05572c99-983c-4bfc-9a8e-3d931ee06892"/>
-				<textElement rotation="None">
-					<font fontName="Times New Roman" size="24"/>
-				</textElement>
-				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="180" width="772" height="72" forecolor="#EBEBEB" uuid="77307193-47a3-415e-8db9-f15d237aba08"/>
-				<textElement rotation="None">
-					<font fontName="Times New Roman" size="24"/>
-				</textElement>
-				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="468" width="772" height="72" forecolor="#EBEBEB" uuid="44bd27c1-02f6-4192-8b7b-e7a4f7a485a9"/>
-				<textElement rotation="None">
-					<font fontName="Times New Roman" size="24"/>
-				</textElement>
-				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="4" y="324" width="772" height="72" forecolor="#EBEBEB" uuid="1524a6d4-ccce-4fa8-86bd-18a5a90cbc45"/>
-				<textElement rotation="None">
-					<font fontName="Times New Roman" size="24"/>
-				</textElement>
-				<text><![CDATA[UN OFFICIAL TRANSCRIPT FOR ADVISORY PURPOSES ONLY]]></text>
-			</staticText>
-		</band>
+		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band splitType="Stretch"/>

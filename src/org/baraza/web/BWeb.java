@@ -1969,7 +1969,11 @@ log.severe("BASE : " + mysql);
 					jsColEl.add("editable", true);
 					
 					if(el.getAttribute("edittype") != null) jsColEl.add("edittype", el.getAttribute("edittype"));
-					if(el.getAttribute("editoptions") != null) jsColEl.add("editoptions", el.getAttribute("editoptions"));
+					if(el.getAttribute("editoptions") != null) {
+						JsonObjectBuilder jsColElVal = Json.createObjectBuilder();
+						jsColElVal.add("value", el.getAttribute("editoptions"));
+						jsColEl.add("editoptions", jsColElVal);
+					}
 				}
 				jsColModel.add(jsColEl);
 			}

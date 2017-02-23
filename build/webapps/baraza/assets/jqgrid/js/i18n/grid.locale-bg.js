@@ -1,3 +1,4 @@
+;(function($){
 /**
  * jqGrid Bulgarian Translation 
  * Tony Tomov tony@trirand.com
@@ -6,48 +7,22 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
 **/
-/*global jQuery, define */
-(function( factory ) {
-	"use strict";
-	if ( typeof define === "function" && define.amd ) {
-		// AMD. Register as an anonymous module.
-		define([
-			"jquery",
-			"../grid.base"
-		], factory );
-	} else {
-		// Browser globals
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 $.jgrid = $.jgrid || {};
-if(!$.jgrid.hasOwnProperty("regional")) {
-	$.jgrid.regional = [];
-}
-$.jgrid.regional["bg"] = {
+$.extend($.jgrid,{
 	defaults : {
 		recordtext: "{0} - {1} от {2}",
 		emptyrecords: "Няма запис(и)",
 		loadtext: "Зареждам...",
-		savetext: "Записвам...",
-		pgtext : "Стр. {0} от {1}",
-		pgfirst : "Първа Стр.",
-		pglast : "Последна Стр.",
-		pgnext : "Следваща Стр.",
-		pgprev : "Предишна Стр.",
-		pgrecs : "Брой записи на Стр.",
-		showhide: "Свиване/Разтягане на таблицата"
-
+		pgtext : "Стр. {0} от {1}"
 	},
 	search : {
 		caption: "Търсене...",
 		Find: "Намери",
 		Reset: "Изчисти",
-		odata: [{ oper:'eq', text:"равно"},{ oper:'ne', text:"различно"},{ oper:'lt', text:"по-малко"},{ oper:'le', text:"по-малко или="},{ oper:'gt', text:"по-голямо"},{ oper:'ge', text:"по-голямо или ="},{ oper:'bw', text:"започва с"},{ oper:'bn', text:"не започва с"},{ oper:'in', text:"се намира в"},{ oper:'ni', text:"не се намира в"},{ oper:'ew', text:"завършва с"},{ oper:'en', text:"не завършава с"},{ oper:'cn', text:"съдържа"},{ oper:'nc', text:"не съдържа"},{ oper:'nu', text:'е NULL'},{ oper:'nn', text:'не е NULL'}],
+		odata : ['равно', 'различно', 'по-малко', 'по-малко или=','по-голямо','по-голямо или =', 'започва с','не започва с','се намира в','не се намира в','завършва с','не завършава с','съдържа', 'не съдържа' ],
 	    groupOps: [	{ op: "AND", text: "&nbsp;И " },	{ op: "OR",  text: "ИЛИ" }	],
-		operandTitle : "Натисни за избор на операнд.",
-		resetTitle : "Изчисти стойността"
+		matchText: " включи",
+		rulesText: " клауза"
 	},
 	edit : {
 		addCaption: "Нов Запис",
@@ -98,12 +73,7 @@ $.jgrid.regional["bg"] = {
 		alertcap: "Предупреждение",
 		alerttext: "Моля, изберете запис",
 		viewtext: "",
-		viewtitle: "Преглед избран запис",
-		savetext: "",
-		savetitle: "Съхрани запис",
-		canceltext: "",
-		canceltitle : "Отказ редакция"
-
+		viewtitle: "Преглед избран запис"
 	},
 	col : {
 		caption: "Избери колони",
@@ -138,7 +108,6 @@ $.jgrid.regional["bg"] = {
 			},
 			srcformat: 'Y-m-d',
 			newformat: 'd/m/Y',
-			parseRe : /[#%\\\/:_;.,\t\s-]/,
 			masks : {
 				ISO8601Long:"Y-m-d H:i:s",
 				ISO8601Short:"Y-m-d",
@@ -152,8 +121,7 @@ $.jgrid.regional["bg"] = {
 				UniversalSortableDateTime: "Y-m-d H:i:sO",
 				YearMonth: "F, Y"
 			},
-			reformatAfterEdit : false,
-			userLocalTime : false
+			reformatAfterEdit : false
 		},
 		baseLinkUrl: '',
 		showAction: '',
@@ -161,5 +129,5 @@ $.jgrid.regional["bg"] = {
 		checkbox : {disabled:true},
 		idName : 'id'
 	}
-};
-}));
+});
+})(jQuery);

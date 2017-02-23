@@ -344,7 +344,7 @@
 			<TEXTFIELD w="15" title="Matric Num">studentid</TEXTFIELD>
 			<TEXTFIELD w="35" title="Student Name">studentname</TEXTFIELD>
 			<TEXTFIELD w="35" title="Degree">degreename</TEXTFIELD>
-			<JASPER filtered="true" name="Partial Transcript" reportfile="unoficialtranscript.jasper"></JASPER>
+			<JASPER filtered="true" name="Partial Transcript" reportfile="unoficialtranscriptf.jasper"></JASPER>
 		</GRID>
 	</DESK>
 </APP>
