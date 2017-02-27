@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="membermonthlyview" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="39cf6b3e-dccb-443c-b7e2-a5d54337573e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="membermonthlyview" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="39cf6b3e-dccb-443c-b7e2-a5d54337573e">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.0"/>
@@ -22,10 +22,11 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,vw_contributions.org_id,
-vw_contributions.payment_type_id,vw_contributions.deposit_date,vw_contributions.deposit_amount,
+vw_contributions.payment_type_id,vw_contributions.deposit_date,
 vw_contributions.receipt,vw_contributions.receipt_date, vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_paid,
-vw_contributions.entity_name,
-vw_contributions.active_balance, vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
+vw_contributions.full_name,
+vw_contributions.active_balance, vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,
+vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
 WHERE (vw_contributions.entity_id = '$P!{entityid}')
 $P!{organd}
@@ -37,13 +38,12 @@ $P!{organd}
 	<field name="org_id" class="java.lang.Integer"/>
 	<field name="payment_type_id" class="java.lang.Integer"/>
 	<field name="deposit_date" class="java.lang.String"/>
-	<field name="deposit_amount" class="java.lang.Float"/>
 	<field name="receipt" class="java.lang.Float"/>
 	<field name="receipt_date" class="java.sql.Date"/>
 	<field name="entry_date" class="java.sql.Timestamp"/>
 	<field name="transaction_ref" class="java.lang.String"/>
 	<field name="contribution_paid" class="java.lang.Float"/>
-	<field name="entity_name" class="java.lang.String"/>
+	<field name="full_name" class="java.lang.String"/>
 	<field name="active_balance" class="java.lang.Float"/>
 	<field name="contribution_type_id" class="java.lang.Integer"/>
 	<field name="contribution_type_name" class="java.lang.String"/>
@@ -123,7 +123,7 @@ $P!{organd}
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -231,7 +231,7 @@ $P!{organd}
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deposit_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{receipt_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField" x="225" y="1" width="61" height="14" uuid="0220f96b-3c8c-4b02-97d0-a4a4474eb446"/>
@@ -283,7 +283,7 @@ $P!{organd}
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deposit_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{receipt_date}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField" x="473" y="1" width="56" height="14" uuid="9ba7d518-3674-459e-acd0-23dfe2bd66ed"/>

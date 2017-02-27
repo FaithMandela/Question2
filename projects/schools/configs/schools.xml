@@ -6,24 +6,24 @@
 		<MENU name="Subjects">25</MENU>
 		<MENU name="Applicant">30</MENU>
 		<MENU name="School Events">40</MENU>
-		<MENU name="Entitys">20</MENU>
+		<MENU name="Entitys">21</MENU>
 	</MENU>
 	<DESK w="700" name="Control Panel" key="15" h="550">
 		<GRID name="Sessions" keyfield="session_id" linkfield="org_id" table="vw_sessions">
-			<TEXTFIELD w="75" title="Session ID">session_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Session Name">session_name</TEXTFIELD>
-			<TEXTDATE w="75" title="Session Start Date">session_start_date</TEXTDATE>
-			<TEXTDATE w="75" title="Session End Date">session_end_date</TEXTDATE>
+			<TEXTFIELD w="75" title="#">session_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">session_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">session_start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">session_end_date</TEXTDATE>
 			<FORM name="Sessions" keyfield="session_id" linkfield="org_id" table="sessions">
-				<TEXTFIELD w="150" title="Session Name" y="10" h="20" x="10">session_name</TEXTFIELD>
-				<TEXTDATE w="150" title="Session Start Date" y="10" h="20" x="290">session_start_date</TEXTDATE>
-				<TEXTDATE w="150" title="Session End Date" y="30" h="20" x="10">session_end_date</TEXTDATE>
+				<TEXTFIELD w="150" title="Name" y="10" h="20" x="10">session_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Start Date" y="10" h="20" x="290">session_start_date</TEXTDATE>
+				<TEXTDATE w="150" title="End Date" y="30" h="20" x="10">session_end_date</TEXTDATE>
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Timetable" keyfield="timetable_id" linkfield="session_id" table="vw_timetable">
-				<TEXTFIELD w="75" title="Session ID">session_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="#">session_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Session Name">session_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Staff ID">staff_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Staff NO">staff_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 				<TEXTFIELD w="75" title="Stream Class ID">stream_class_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
@@ -38,8 +38,8 @@
 				<SPINTIME w="75" title="Start Time">start_time</SPINTIME>
 				<SPINTIME w="75" title="End Time">end_time</SPINTIME>
 				<FORM name="Timetable" keyfield="timetable_id" linkfield="session_id" table="timetable">
-					<COMBOBOX w="430" title="Subject ID" lptable="subjects" y="10" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
-					<COMBOBOX w="430" title="Staff ID" lptable="staff" y="30" h="20" x="10" lpfield="full_name">staff_id</COMBOBOX>
+					<COMBOBOX w="430" title="Subject" lptable="subjects" y="10" h="20" x="10" lpfield="subject_name">subject_id</COMBOBOX>
+					<COMBOBOX w="430" title="Staff" lptable="staff" y="30" h="20" x="10" lpfield="full_name">staff_id</COMBOBOX>
 					<CHECKBOX w="150" title="Monday" y="50" h="20" x="10">monday</CHECKBOX>
 					<CHECKBOX w="150" title="Tuesday" y="50" h="20" x="290">tuesday</CHECKBOX>
 					<CHECKBOX w="150" title="Wednesday" y="70" h="20" x="10">wednesday</CHECKBOX>
@@ -70,7 +70,7 @@
 			</GRID>
 		</GRID>
 		<GRID name="Stream Classes" keyfield="stream_class_id" table="vw_stream_classes">
-			<TEXTFIELD w="75" title="Stream Class ID">stream_class_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Stream Class ">stream_class_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Class Level">class_level</TEXTFIELD>
 			<TEXTFIELD w="75" title="Stream">stream</TEXTFIELD>
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
@@ -119,17 +119,16 @@
 				<TEXTFIELD w="150" title="Middle Name" y="90" h="20" x="10">middle_name</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Birth" y="90" h="20" x="290">date_of_birth</TEXTDATE>
 				<COMBOLIST w="150" title="Gender" y="50" ischar="true" h="20" x="10" span="true">gender
-					<DATA>M</DATA>
-					<DATA>F</DATA>
+					<DATA key="M">Male</DATA>
+					<DATA key="M">Female</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="430" title="Phone" y="130" h="20" x="10">phone</TEXTFIELD>
-				<TEXTFIELD w="430" title="Primary Email" y="150" h="20" x="10">primary_email</TEXTFIELD>
+				<TEXTFIELD w="430" title="Primary Email" required="true" y="150" h="20" x="10">primary_email</TEXTFIELD>
 				<TEXTFIELD w="150" title="Place Of Birth" y="170" h="20" x="10">place_of_birth</TEXTFIELD>
 				<COMBOLIST w="150" title="Marital Status" y="50" ischar="true" h="20" x="10" span="true">marital_status
-					<DATA>S</DATA>
-					<DATA>M</DATA>
+					<DATA key="S">Single</DATA>
+					<DATA key="M">Married</DATA>
 				</COMBOLIST>
-				<TEXTTIMESTAMP w="150" title="Appointment Date" y="190" h="20" x="10">appointment_date</TEXTTIMESTAMP>
 				<TEXTDATE w="150" title="Exit Date" y="190" h="20" x="290">exit_date</TEXTDATE>
 				<TEXTFIELD w="150" title="Picture File" y="210" h="20" x="10">picture_file</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" y="210" h="20" x="290">active</CHECKBOX>
@@ -266,10 +265,10 @@
 			<TEXTFIELD w="75" title="Subject ID">subject_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Full Name">full_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
-			<TEXTFIELD w="75" title="Subject Date">subject_date</TEXTFIELD>
-			<TEXTFIELD w="75" title="Subject Name">subject_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">subject_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Name">subject_name</TEXTFIELD>
 			<FORM name="Subjects" keyfield="subject_id" table="subjects">
-				<COMBOBOX w="430" title="Teacher" lptable="staff" y="120" h="20" x="10" lpfield="full_name">staff_id</COMBOBOX>
+				<COMBOBOX w="430" title="Instructor" lptable="staff" y="120" h="20" x="10" lpfield="full_name">staff_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Subject Name" y="10" h="20" x="10">subject_name</TEXTFIELD>
 				<TEXTDATE w="150" title="Subject Year" y="100" h="20" x="10">subject_year</TEXTDATE>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
@@ -378,7 +377,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Entitys" key="20" h="500">
+	<DESK w="700" name="Entitys" key="21" h="500">
 		<GRID name="Clients" keyfield="entity_id" table="entitys" where="(use_key_id = 2)">
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>

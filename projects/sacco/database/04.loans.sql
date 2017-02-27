@@ -215,7 +215,7 @@ CREATE VIEW vw_loan_monthly AS
 	SELECT 	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
 		vw_loans.loan_type_id, vw_loans.loan_type_name,vw_loans.approve_status,
 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
+		vw_loans.entity_id,  members.expired, vw_loans.loan_date,vw_loans.entity_name,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed, vw_periods.period_year,vw_periods.period_month,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, 
@@ -227,7 +227,10 @@ CREATE VIEW vw_loan_monthly AS
 		
 		(vw_loans.principle + get_total_interest(vw_loans.loan_id, vw_periods.start_date + 1) + get_penalty(vw_loans.loan_id, vw_periods.start_date + 1) - vw_loans.initial_payment - get_total_repayment(vw_loans.loan_id, vw_periods.start_date + 1)) as loan_balance
 	FROM loan_monthly INNER JOIN vw_loans ON loan_monthly.loan_id = vw_loans.loan_id
+		INNER JOIN members ON vw_loans.entity_id = members.entity_id
 		INNER JOIN vw_periods ON loan_monthly.period_id = vw_periods.period_id;
+		
+		
 
 CREATE VIEW vw_loan_payments AS
 	SELECT	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
@@ -442,7 +445,7 @@ DECLARE
 BEGIN
 
 			
-    			SELECT penalty , interest_amount, start_date, vw_loan_monthly.entity_name,period_id, vw_loans.entity_id,
+    			SELECT penalty , interest_amount, start_date, vw_loans.entity_name,period_id, vw_loans.entity_id,
     			vw_loans.currency_id, vw_loans.total_interest INTO vpenalty , vinterest,vdate, entityname, periodid,entityid,
     			currencyid, vtotalinterest FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id 
     			WHERE( vw_loan_monthly.loan_id = New.loan_id);
@@ -484,7 +487,7 @@ BEGIN
 					
 			IF(NEW.is_paid = true) THEN
 			
-				SELECT penalty , interest_paid, start_date, vw_loan_monthly.entity_name, period_id, vw_loans.currency_id, 
+				SELECT penalty , interest_paid, start_date, vw_loans.entity_name, period_id, vw_loans.currency_id, 
 				vw_loan_monthly.repayment_paid INTO vpenaltypaid , vinterestpaid, vdate, 
 				entityname, periodid, currencyid,vrepaymentpaid 
 				FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id

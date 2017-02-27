@@ -248,8 +248,8 @@ CREATE OR REPLACE VIEW vw_contributions AS
   
     contributions.deposit_date AS deposit_dates,
     contributions.is_paid,
-    entitys.entity_name,
-    entitys.is_active AS member_is_active,
+   members.full_name ,
+    members.expired, 
     contribution_types.contribution_type_id,
     contribution_types.contribution_type_name,
     payment_types.payment_type_name,
@@ -258,10 +258,10 @@ CREATE OR REPLACE VIEW vw_contributions AS
     to_char(periods.start_date::timestamp with time zone, 'YYYY'::text) AS deposit_year,
     to_char(periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
    FROM contributions
-     JOIN entitys ON contributions.entity_id = entitys.entity_id
+     JOIN members ON contributions.entity_id = members.entity_id
      JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
      JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
-     JOIN periods ON contributions.period_id = periods.period_id;
+     JOIN periods ON contributions.period_id = periods.period_id where expired = 'false';
 
 
   
@@ -331,3 +331,24 @@ CREATE OR REPLACE VIEW vw_additional_funds AS
      JOIN payment_types ON payment_types.payment_type_id = additional_funds.payment_type_id;
 
 	
+
+-- 	CREATE OR REPLACE FUNCTION ins_password() RETURNS trigger AS $$
+-- DECLARE
+-- 	v_entity_id		integer;
+-- BEGIN
+-- 
+-- 	SELECT entity_id INTO v_entity_id
+-- 	FROM entitys
+-- 	WHERE (trim(lower(user_name)) = trim(lower(NEW.user_name)))
+-- 		AND entity_id <> NEW.entity_id;
+-- 		
+-- 	IF(v_entity_id is not null)THEN
+-- 		RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
+-- 	END IF;
+-- 
+-- 	NEW.first_password := 'baraza';
+-- 	NEW.entity_password := md5('baraza');
+-- 
+-- 	RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
