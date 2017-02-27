@@ -2,10 +2,10 @@
 ALTER TABLE entitys ADD	bio_code		varchar(50);
 
 CREATE TABLE project_types (
-    project_type_id			serial primary key,
+	project_type_id			serial primary key,
 	org_id					integer references orgs,
-    project_type_name		varchar(50) not null unique,
-    details					text
+	project_type_name		varchar(50) not null unique,
+	details					text
 );
 CREATE INDEX project_types_org_id ON project_types(org_id);
 
@@ -25,33 +25,33 @@ CREATE INDEX define_phases_entity_type_id ON define_phases (entity_type_id);
 CREATE INDEX define_phases_org_id ON define_phases(org_id);
 
 CREATE TABLE define_tasks (
-    define_task_id			serial primary key,
-    define_phase_id			integer references define_phases,
+	define_task_id			serial primary key,
+	define_phase_id			integer references define_phases,
 	org_id					integer references orgs,
-    define_task_name		varchar(240) not null,
-    narrative				varchar(120),
-    details					text
+	define_task_name		varchar(240) not null,
+	narrative				varchar(120),
+	details					text
 );
 CREATE INDEX define_tasks_define_phase_id ON define_tasks (define_phase_id);
 CREATE INDEX define_tasks_org_id ON define_tasks(org_id);
 
 CREATE TABLE projects (
-    project_id				serial primary key,
-    project_type_id			integer references project_types,
+	project_id				serial primary key,
+	project_type_id			integer references project_types,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
-    project_name			varchar(240) not null,
-    signed					boolean not null default false,
+	project_name			varchar(240) not null,
+	signed					boolean not null default false,
 	contract_ref			varchar(120),
-    monthly_amount 			real,
-    full_amount 			real,
+	monthly_amount 			real,
+	full_amount 			real,
 	project_cost			real,
-    narrative				varchar(120),
+	narrative				varchar(120),
 	project_account			varchar(32),
-    start_date				date not null,
-    ending_date				date,
-    details					text,
-    UNIQUE(entity_id, project_name)
+	start_date				date not null,
+	ending_date				date,
+	details					text,
+	UNIQUE(entity_id, project_name)
 );
 CREATE INDEX projects_project_type_id ON projects (project_type_id);
 CREATE INDEX projects_entity_id ON projects (entity_id);
@@ -105,17 +105,17 @@ CREATE INDEX phases_project_id ON phases (project_id);
 CREATE INDEX phases_org_id ON phases(org_id);
 
 CREATE TABLE tasks (
-    task_id					serial primary key,
-    phase_id				integer references phases,
+	task_id					serial primary key,
+	phase_id				integer references phases,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
-    task_name				varchar(320) not null,
+	task_name				varchar(320) not null,
 	start_date				date not null,
-    dead_line				date,
+	dead_line				date,
 	end_date				date,
 	hours_taken				integer default 7 not null,
 	completed				boolean not null default false,
-    details					text
+	details					text
 );
 CREATE INDEX tasks_phase_id ON tasks (phase_id);
 CREATE INDEX tasks_entity_id ON tasks (entity_id);

@@ -232,6 +232,8 @@ public class BSoapSMS {
 		boolean isSent = false;
 		
 		if(message == null) return isSent;
+		if(smsOrgs.get(orgID)[1] == null) return isSent;
+		if(smsOrgs.get(orgID)[2] == null) return isSent;
 		
 		int smsLen = message.length();
 		Integer messageParts = new Integer(1);

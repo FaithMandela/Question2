@@ -19,11 +19,10 @@ CREATE INDEX assets_sys_country_id ON assets (sys_country_id);
 
 CREATE TABLE vouchers (
 	voucher_id				serial primary key,
-	entity_id				integer references entitys,
 	asset_id				integer references assets,
 	currency_id				integer references currency,
 	org_id					integer references orgs,
-	
+
 	pac1					varchar(50),
 	pac2					varchar(50),
 	pac3					varchar(50),
@@ -32,23 +31,22 @@ CREATE TABLE vouchers (
 	pac6					varchar(50),
 	pac7					varchar(50),
 	pac8					varchar(50),
-	
-	voucher_no				integer,
+
 	voucher_link			integer,
 	confirmationref			varchar(50),
 	confirmation			varchar(50),
-	
+
 	adults					integer default 1 not null,
 	children				integer default 1 not null,
 	infants					integer default 1 not null,
-	book_date				date,
+	booking_date			varchar(20),,
 	attention				varchar(100),
 	trans_type				varchar(20),
 	infant_sage				varchar(50),
 	children_age			varchar(50),
-	tour_to					varchar(100),	
-	room_type				varchar(200),	
-	
+	tour_to					varchar(100),
+	room_type				varchar(200),
+
 	ameal_plan				varchar(20),
 	aextra_night			varchar(20),
 	ano_of_night			integer,
@@ -58,18 +56,19 @@ CREATE TABLE vouchers (
 	ababy_cot				varchar(20),
 	asingle					varchar(20),
 	adouble					varchar(20),
-	
+	pax                     integer,
+
 	charge_tour				varchar(30),
 	charge_client			varchar(30),
 	extra_tour				varchar(30),
 	extra_client			varchar(30),
 	residents				varchar(20),
 
-	date_in					date,
-	date_out				date,
-	
-	instructions			text,
-	details					text
+	date_in					varchar(20),,
+	date_out				varchar(20),
+	booked_by               varchar(50),
+
+	instructions			text
 );
 CREATE INDEX vouchers_entity_id ON vouchers (entity_id);
 CREATE INDEX vouchers_asset_id ON vouchers (asset_id);

@@ -34,7 +34,7 @@ public class umisRegistration {
 		}
 	}	
 
-	private void addStudent(BWebService port) {
+	private void addStudent(DataWebService port) {
 		try {
 			String stSql = "SELECT registrationid, existingid, surname, firstname, othernames, ";
 			stSql += "upper(substr('sex', 1, 1)) as nsex, upper(substr('maritalstatus', 1, 1)) as nmaritalstatus, ";

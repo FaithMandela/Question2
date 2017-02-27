@@ -532,11 +532,13 @@
 				<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Payment Reference">payment_reference</TEXTFIELD>
+				<TEXTFIELD w="75" title="Payment Allocation">payment_type</TEXTFIELD>
 				<FORM name="Client Payment" keyfield="clientpaymentsid" linkfield="clientid" table="clientpayments">
 					<TEXTDATE w="150" title="Accounting Date" y="30" h="20" x="10">accounting_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Currency" y="50" h="20" x="10">currency</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Payment Reference" y="70" h="20" x="10">payment_reference</TEXTFIELD>
+					<TEXTFIELD w="430" title="Payment Allocation" y="90" h="20" x="10">payment_type</TEXTFIELD>
 				</FORM>
 				<JASPER name="Receipt" linkfield="clientid" reportfile="receipt.jasper"></JASPER>
 			</GRID>
@@ -583,8 +585,8 @@
 	<DESK w="700" name="Client Payments" type="horl" key="148" h="500">
 		<FILTER location="250" name="Client Payments" type="horl">
 			<FILTERFORM name="GTA Summary Statements">
-				<TEXTDATE w="150" title="Starting From" y="30" h="20" x="10">filter2id</TEXTDATE>
-				<TEXTDATE w="150" title="Up to" y="30" h="20" x="10">filterid</TEXTDATE>
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" x="10">filterid</TEXTDATE>
+				<TEXTDATE w="150" title="Up to" y="30" h="20" x="10">filter2id</TEXTDATE>
 			</FILTERFORM>
 			<JASPER filtered="true" name="Client Payments" reportfile="payments.jasper"></JASPER>
 		</FILTER>

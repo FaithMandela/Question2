@@ -762,14 +762,14 @@
 	<DESK w="700" name="Projects" key="1" h="550">
 		<GRID name="Projects" keyfield="project_id" table="projects">
 			<TEXTFIELD w="75" title="Project ID">project_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Project Title">project_title</TEXTFIELD>
+			<TEXTFIELD w="75" title="Project Title">project_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Project Start Date">project_start_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Project Duration">project_duration</TEXTFIELD>
 			<TEXTFIELD w="75" title="Project Reference">project_reference</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Budget">total_budget</TEXTDECIMAL>
 			<FORM name="Projects" keyfield="project_id" table="projects">
 				<TEXTFIELD w="150" title="Project ID" y="10" h="20" x="10">project_id</TEXTFIELD>
-				<TEXTFIELD w="150" title="Project Title" y="10" h="20" x="290">project_title</TEXTFIELD>
+				<TEXTFIELD w="150" title="Project Title" y="10" h="20" x="290">project_name</TEXTFIELD>
 				<TEXTDATE w="150" title="Project Start Date" y="30" h="20" x="10">project_start_date</TEXTDATE>
 				<TEXTFIELD w="150" title="Project Duration" y="30" h="20" x="290">project_duration</TEXTFIELD>
 				<TEXTFIELD w="150" title="Project Reference" y="50" h="20" x="10">project_reference</TEXTFIELD>
@@ -1008,7 +1008,7 @@
 		</GRID>
 		<GRID name="Budget Type" keyfield="budget_type_id" table="budget_type">
 			<TEXTFIELD w="75" title="Budget Type ID">budget_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Budget Type Name">budget_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Budget Type Name" edittype="select" editoptions="FE:FedEx;IN:InTime;TN:TNT;AR:ARAMEX">budget_type_name</TEXTFIELD>
 			<FORM name="Budget Type" keyfield="budget_type_id" table="budget_type">
 				<TEXTFIELD w="150" title="Budget Type Name" y="10" h="20" x="10">budget_type_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Narrative" y="30" h="70" x="10">narrative</TEXTAREA>

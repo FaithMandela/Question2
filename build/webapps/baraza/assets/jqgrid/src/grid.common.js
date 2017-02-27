@@ -1,22 +1,15 @@
 /*jshint eqeqeq:false */
-/*global jQuery, define */
-(function( factory ) {
-	"use strict";
-	if ( typeof define === "function" && define.amd ) {
-		// AMD. Register as an anonymous module.
-		define([
-			"jquery",
-			"./grid.base",
-			"./jqModal",
-			"./jqDnR"
-		], factory );
-	} else {
-		// Browser globals
-		factory( jQuery );
-	}
-}(function( $ ) {
+/*global jQuery */
+(function($){
+/*
+ * jqGrid common function
+ * Tony Tomov tony@trirand.com
+ * http://trirand.com/blog/ 
+ * Dual licensed under the MIT and GPL licenses:
+ * http://www.opensource.org/licenses/mit-license.php
+ * http://www.gnu.org/licenses/gpl-2.0.html
+*/
 "use strict";
-//module begin
 $.extend($.jgrid,{
 // Modal functions
 	showModal : function(h) {
@@ -27,33 +20,10 @@ $.extend($.jgrid,{
 		if(h.o) {h.o.remove();}
 	},
 	hideModal : function (selector,o) {
-		o = $.extend({jqm : true, gb :'', removemodal: false, formprop: false, form : ''}, o || {});
-		var thisgrid = o.gb && typeof o.gb === "string" && o.gb.substr(0,6) === "#gbox_" ? $("#" + o.gb.substr(6))[0] : false;
+		o = $.extend({jqm : true, gb :''}, o || {});
 		if(o.onClose) {
-			var oncret = thisgrid ? o.onClose.call(thisgrid, selector) : o.onClose(selector);
+			var oncret = o.gb && typeof o.gb === "string" && o.gb.substr(0,6) === "#gbox_" ? o.onClose.call($("#" + o.gb.substr(6))[0], selector) : o.onClose(selector);
 			if (typeof oncret === 'boolean'  && !oncret ) { return; }
-		}
-		if( o.formprop && thisgrid  && o.form) {
-			var fh = $(selector)[0].style.height;
-			if(fh.indexOf("px") > -1 ) {
-				fh = parseFloat(fh);
-			}
-			var frmgr, frmdata;
-			if(o.form==='edit'){
-				frmgr = '#' +$.jgrid.jqID("FrmGrid_"+ o.gb.substr(6));
-				frmdata = "formProp";
-			} else if( o.form === 'view') {
-				frmgr = '#' +$.jgrid.jqID("ViewGrid_"+ o.gb.substr(6));
-				frmdata = "viewProp";
-			}
-			$(thisgrid).data(frmdata, {
-				top:parseFloat($(selector).css("top")),
-				left : parseFloat($(selector).css("left")),
-				width : $(selector).width(),
-				height : fh,
-				dataheight : $(frmgr).height(),
-				datawidth: $(frmgr).width()
-			});
 		}
 		if ($.fn.jqm && o.jqm === true) {
 			$(selector).attr("aria-hidden","true").jqmHide();
@@ -62,9 +32,6 @@ $.extend($.jgrid,{
 				try {$(".jqgrid-overlay:first",o.gb).hide();} catch (e){}
 			}
 			$(selector).hide().attr("aria-hidden","true");
-		}
-		if( o.removemodal ) {
-			$(selector).remove();
 		}
 	},
 //Helper functions
@@ -83,14 +50,14 @@ $.extend($.jgrid,{
 		p = $.extend(true, {}, $.jgrid.jqModal || {}, p);
 		var mw  = document.createElement('div'), rtlsup, self = this;
 		css = $.extend({}, css || {});
-		rtlsup = $(p.gbox).attr("dir") === "rtl" ? true : false;
+		rtlsup = $(p.gbox).attr("dir") == "rtl" ? true : false;
 		mw.className= "ui-widget ui-widget-content ui-corner-all ui-jqdialog";
 		mw.id = aIDs.themodal;
 		var mh = document.createElement('div');
 		mh.className = "ui-jqdialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix";
 		mh.id = aIDs.modalhead;
 		$(mh).append("<span class='ui-jqdialog-title'>"+p.caption+"</span>");
-		var ahr= $("<a class='ui-jqdialog-titlebar-close ui-corner-all'></a>")
+		var ahr= $("<a href='javascript:void(0)' class='ui-jqdialog-titlebar-close ui-corner-all'></a>")
 		.hover(function(){ahr.addClass('ui-state-hover');},
 			function(){ahr.removeClass('ui-state-hover');})
 		.append("<span class='ui-icon ui-icon-closethick'></span>");
@@ -132,7 +99,7 @@ $.extend($.jgrid,{
 		$("a.ui-jqdialog-titlebar-close",mh).click(function(){
 			var oncm = $("#"+$.jgrid.jqID(aIDs.themodal)).data("onClose") || p.onClose;
 			var gboxclose = $("#"+$.jgrid.jqID(aIDs.themodal)).data("gbox") || p.gbox;
-			self.hideModal("#"+$.jgrid.jqID(aIDs.themodal),{gb:gboxclose,jqm:p.jqModal,onClose:oncm, removemodal: p.removemodal || false, formprop : !p.recreateForm || false, form: p.form || ''});
+			self.hideModal("#"+$.jgrid.jqID(aIDs.themodal),{gb:gboxclose,jqm:p.jqModal,onClose:oncm});
 			return false;
 		});
 		if (p.width === 0 || !p.width) {p.width = 300;}
@@ -183,9 +150,9 @@ $.extend($.jgrid,{
 		}
 		if(p.closeOnEscape === true){
 			$(mw).keydown( function( e ) {
-				if( e.which === 27 ) {
+				if( e.which == 27 ) {
 					var cone = $("#"+$.jgrid.jqID(aIDs.themodal)).data("onClose") || p.onClose;
-					self.hideModal("#"+$.jgrid.jqID(aIDs.themodal),{gb:p.gbox,jqm:p.jqModal,onClose: cone, removemodal: p.removemodal || false, formprop : !p.recreateForm || false, form: p.form || ''});
+					self.hideModal("#"+$.jgrid.jqID(aIDs.themodal),{gb:p.gbox,jqm:p.jqModal,onClose: cone});
 				}
 			});
 		}
@@ -241,19 +208,19 @@ $.extend($.jgrid,{
 		if(mopt.buttons.length > 0) {
 			for(i=0;i<mopt.buttons.length;i++) {
 				if(mopt.buttons[i].id === undefined) { mopt.buttons[i].id = "info_button_"+i; }
-				buttstr += "<a id='"+mopt.buttons[i].id+"' class='fm-button ui-state-default ui-corner-all'>"+mopt.buttons[i].text+"</a>";
+				buttstr += "<a href='javascript:void(0)' id='"+mopt.buttons[i].id+"' class='fm-button ui-state-default ui-corner-all'>"+mopt.buttons[i].text+"</a>";
 			}
 		}
 		var dh = isNaN(mopt.dataheight) ? mopt.dataheight : mopt.dataheight+"px",
 		cn = "text-align:"+mopt.align+";";
 		var cnt = "<div id='info_id'>";
 		cnt += "<div id='infocnt' style='margin:0px;padding-bottom:1em;width:100%;overflow:auto;position:relative;height:"+dh+";"+cn+"'>"+content+"</div>";
-		cnt += c_b ? "<div class='ui-widget-content ui-helper-clearfix' style='text-align:"+mopt.buttonalign+";padding-bottom:0.8em;padding-top:0.5em;background-image: none;border-width: 1px 0 0 0;'><a id='closedialog' class='fm-button ui-state-default ui-corner-all'>"+c_b+"</a>"+buttstr+"</div>" :
+		cnt += c_b ? "<div class='ui-widget-content ui-helper-clearfix' style='text-align:"+mopt.buttonalign+";padding-bottom:0.8em;padding-top:0.5em;background-image: none;border-width: 1px 0 0 0;'><a href='javascript:void(0)' id='closedialog' class='fm-button ui-state-default ui-corner-all'>"+c_b+"</a>"+buttstr+"</div>" :
 			buttstr !== ""  ? "<div class='ui-widget-content ui-helper-clearfix' style='text-align:"+mopt.buttonalign+";padding-bottom:0.8em;padding-top:0.5em;background-image: none;border-width: 1px 0 0 0;'>"+buttstr+"</div>" : "";
 		cnt += "</div>";
 
 		try {
-			if($("#info_dialog").attr("aria-hidden") === "false") {
+			if($("#info_dialog").attr("aria-hidden") == "false") {
 				$.jgrid.hideModal("#info_dialog",{jqm:jm});
 			}
 			$("#info_dialog").remove();
@@ -274,11 +241,7 @@ $.extend($.jgrid,{
 			});
 		}
 		$("#closedialog", "#info_id").click(function(){
-			self.hideModal("#info_dialog",{
-				jqm:jm,
-				onClose: $("#info_dialog").data("onClose") || mopt.onClose,
-				gb: $("#info_dialog").data("gbox") || mopt.gbox
-			});
+			self.hideModal("#info_dialog",{jqm:jm});
 			return false;
 		});
 		$(".fm-button","#info_dialog").hover(
@@ -297,10 +260,9 @@ $.extend($.jgrid,{
 		if($.isFunction(mopt.afterOpen) ) { mopt.afterOpen(); }
 		try{ $("#info_dialog").focus();} catch (m){}
 	},
-	bindEv: function  (el, opt) {
-		var $t = this;
+	bindEv: function  (el, opt, $t) {
 		if($.isFunction(opt.dataInit)) {
-			opt.dataInit.call($t,el,opt);
+			opt.dataInit.call($t,el);
 		}
 		if(opt.dataEvents) {
 			$.each(opt.dataEvents, function() {
@@ -316,7 +278,7 @@ $.extend($.jgrid,{
 	createEl : function(eltype,options,vl,autowidth, ajaxso) {
 		var elem = "", $t = this;
 		function setAttributes(elm, atr, exl ) {
-			var exclude = ['dataInit','dataEvents','dataUrl', 'buildSelect','sopt', 'searchhidden', 'defaultValue', 'attr', 'custom_element', 'custom_value', 'oper'];
+			var exclude = ['dataInit','dataEvents','dataUrl', 'buildSelect','sopt', 'searchhidden', 'defaultValue', 'attr', 'custom_element', 'custom_value'];
 			if(exl !== undefined && $.isArray(exl)) {
 				$.merge(exclude, exl);
 			}
@@ -337,7 +299,7 @@ $.extend($.jgrid,{
 					if(!options.cols) { $(elem).css({width:"98%"});}
 				} else if (!options.cols) { options.cols = 20; }
 				if(!options.rows) { options.rows = 2; }
-				if(vl==='&nbsp;' || vl==='&#160;' || (vl.length===1 && vl.charCodeAt(0)===160)) {vl="";}
+				if(vl=='&nbsp;' || vl=='&#160;' || (vl.length==1 && vl.charCodeAt(0)==160)) {vl="";}
 				elem.value = vl;
 				setAttributes(elem, options);
 				$(elem).attr({"role":"textbox","multiline":"true"});
@@ -346,8 +308,8 @@ $.extend($.jgrid,{
 				elem = document.createElement("input");
 				elem.type = "checkbox";
 				if( !options.value ) {
-					var vl1 = (vl+"").toLowerCase();
-					if(vl1.search(/(false|f|0|no|n|off|undefined)/i)<0 && vl1!=="") {
+					var vl1 = vl.toLowerCase();
+					if(vl1.search(/(false|0|no|off|undefined)/i)<0 && vl1!=="") {
 						elem.checked=true;
 						elem.defaultChecked=true;
 						elem.value = vl;
@@ -376,34 +338,34 @@ $.extend($.jgrid,{
 					elem.multiple="multiple";
 					$(elem).attr("aria-multiselectable","true");
 				} else { msl = false; }
-				if(options.dataUrl != null) {
-					var rowid = null, postData = options.postData || ajaxso.postData;
-					try {
-						rowid = options.rowId;
-					} catch(e) {}
+				if(options.dataUrl !== undefined) {
+					var rowid = options.name ? String(options.id).substring(0, String(options.id).length - String(options.name).length - 1) : String(options.id),
+						postData = options.postData || ajaxso.postData;
 
 					if ($t.p && $t.p.idPrefix) {
 						rowid = $.jgrid.stripPref($t.p.idPrefix, rowid);
+					} else {
+						postData = undefined; // don't use postData for searching from jqFilter. One can implement the feature in the future if required.
 					}
 					$.ajax($.extend({
-						url: $.isFunction(options.dataUrl) ? options.dataUrl.call($t, rowid, vl, String(options.name)) : options.dataUrl,
+						url: options.dataUrl,
 						type : "GET",
 						dataType: "html",
 						data: $.isFunction(postData) ? postData.call($t, rowid, vl, String(options.name)) : postData,
 						context: {elem:elem, options:options, vl:vl},
 						success: function(data){
-							var ovm = [], elem = this.elem, vl = this.vl,
+							var a,	ovm = [], elem = this.elem, vl = this.vl,
 							options = $.extend({},this.options),
-							msl = options.multiple===true,
-							cU = options.cacheUrlData === true,
-							oV ='', txt, vl,
-							a = $.isFunction(options.buildSelect) ? options.buildSelect.call($t,data) : data;
-							if(typeof a === 'string') {
-								a = $( $.trim( a ) ).html();
+							msl = options.multiple===true;
+							if($.isFunction(options.buildSelect)) {
+								var b = options.buildSelect.call($t,data);
+								a = $(b).html();
+							} else {
+								a = $(data).html();
 							}
 							if(a) {
 								$(elem).append(a);
-								setAttributes(elem, options, postData ? ['postData'] : undefined );
+								setAttributes(elem, options);
 								if(options.size === undefined) { options.size =  msl ? 3 : 1;}
 								if(msl) {
 									ovm = vl.split(",");
@@ -414,38 +376,14 @@ $.extend($.jgrid,{
 								//$(elem).attr(options);
 								setTimeout(function(){
 									$("option",elem).each(function(i){
-										txt = $(this).text();
-										vl = $(this).val() || txt;
-										if(cU) {
-											oV += (i!== 0 ? ";": "")+ vl+":"+txt; 
-										}
 										//if(i===0) { this.selected = ""; }
 										// fix IE8/IE7 problem with selecting of the first item on multiple=true
 										if (i === 0 && elem.multiple) { this.selected = false; }
 										$(this).attr("role","option");
-										if($.inArray($.trim(txt),ovm) > -1 || $.inArray($.trim(vl),ovm) > -1 ) {
+										if($.inArray($.trim($(this).text()),ovm) > -1 || $.inArray($.trim($(this).val()),ovm) > -1 ) {
 											this.selected= "selected";
 										}
 									});
-									if(cU) {
-										if(options.oper === 'edit') {
-											$($t).jqGrid('setColProp',options.name,{ editoptions: {buildSelect: null, dataUrl : null, value : oV} });
-										} else if(options.oper === 'search') {
-											$($t).jqGrid('setColProp',options.name,{ searchoptions: {dataUrl : null, value : oV} });
-										} else if(options.oper ==='filter') {
-											if($("#fbox_"+$t.p.id)[0].p) {
-												var cols = $("#fbox_"+$t.p.id)[0].p.columns, nm;
-												$.each(cols,function(i) {
-													nm  =  this.index || this.name;
-													if(options.name === nm) {
-														this.searchoptions.dataUrl = null;
-														this.searchoptions.value = oV;
-														return false;
-													}
-												});
-											}
-										}
-									}
 								},0);
 							}
 						}
@@ -474,22 +412,8 @@ $.extend($.jgrid,{
 							ov.setAttribute("role","option");
 							ov.value = sv[0]; ov.innerHTML = sv[1];
 							elem.appendChild(ov);
-							if (!msl &&  ($.trim(sv[0]) === $.trim(vl) || $.trim(sv[1]) === $.trim(vl))) { ov.selected ="selected"; }
+							if (!msl &&  ($.trim(sv[0]) == $.trim(vl) || $.trim(sv[1]) == $.trim(vl))) { ov.selected ="selected"; }
 							if (msl && ($.inArray($.trim(sv[1]), ovm)>-1 || $.inArray($.trim(sv[0]), ovm)>-1)) {ov.selected ="selected";}
-						}
-					} else if (Object.prototype.toString.call(options.value) === "[object Array]") {
-						var oSv = options.value;
-						// array of arrays [[Key, Value], [Key, Value], ...]
-						for (var i=0; i<oSv.length; i++) {
-							if(oSv[i].length === 2) {
-								var key = oSv[i][0], value = oSv[i][1];
-								ov = document.createElement("option");
-								ov.setAttribute("role","option");
-								ov.value = key; ov.innerHTML = value;
-								elem.appendChild(ov);
-								if (!msl &&  ( $.trim(key) === $.trim(vl) || $.trim(value) === $.trim(vl)) ) { ov.selected ="selected"; }
-								if (msl && ($.inArray($.trim(value),ovm)>-1 || $.inArray($.trim(key),ovm)>-1)) { ov.selected ="selected"; }
-							}
 						}
 					} else if (typeof options.value === 'object') {
 						var oSv = options.value, key;
@@ -499,7 +423,7 @@ $.extend($.jgrid,{
 								ov.setAttribute("role","option");
 								ov.value = key; ov.innerHTML = oSv[key];
 								elem.appendChild(ov);
-								if (!msl &&  ( $.trim(key) === $.trim(vl) || $.trim(oSv[key]) === $.trim(vl)) ) { ov.selected ="selected"; }
+								if (!msl &&  ( $.trim(key) == $.trim(vl) || $.trim(oSv[key]) == $.trim(vl)) ) { ov.selected ="selected"; }
 								if (msl && ($.inArray($.trim(oSv[key]),ovm)>-1 || $.inArray($.trim(key),ovm)>-1)) { ov.selected ="selected"; }
 							}
 						}
@@ -511,13 +435,13 @@ $.extend($.jgrid,{
 			case "password" :
 			case "button" :
 				var role;
-				if(eltype==="button") { role = "button"; }
+				if(eltype=="button") { role = "button"; }
 				else { role = "textbox"; }
 				elem = document.createElement("input");
 				elem.type = eltype;
 				elem.value = vl;
 				setAttributes(elem, options);
-				if(eltype !== "button"){
+				if(eltype != "button"){
 					if(autowidth) {
 						if(!options.size) { $(elem).css({width:"98%"}); }
 					} else if (!options.size) { options.size = 20; }
@@ -545,12 +469,9 @@ $.extend($.jgrid,{
 						throw "e1";
 					}
 				} catch (e) {
-					var errors = $.jgrid.getRegional($t, 'errors'),
-						edit =$.jgrid.getRegional($t, 'edit');
-
-					if (e==="e1") { $.jgrid.info_dialog(errors.errcap,"function 'custom_element' "+edit.msg.nodefined, edit.bClose);}
-					if (e==="e2") { $.jgrid.info_dialog(errors.errcap,"function 'custom_element' "+edit.msg.novalue,edit.bClose);}
-					else { $.jgrid.info_dialog(errors.errcap,typeof e==="string"?e:e.message,edit.bClose); }
+					if (e=="e1") { $.jgrid.info_dialog($.jgrid.errors.errcap,"function 'custom_element' "+$.jgrid.edit.msg.nodefined, $.jgrid.edit.bClose);}
+					if (e=="e2") { $.jgrid.info_dialog($.jgrid.errors.errcap,"function 'custom_element' "+$.jgrid.edit.msg.novalue,$.jgrid.edit.bClose);}
+					else { $.jgrid.info_dialog($.jgrid.errors.errcap,typeof e==="string"?e:e.message,$.jgrid.edit.bClose); }
 				}
 			break;
 		}
@@ -563,45 +484,55 @@ $.extend($.jgrid,{
 		// EXCEPT for centurial years which are not also divisible by 400.
 			return (((year % 4 === 0) && ( year % 100 !== 0 || (year % 400 === 0))) ? 29 : 28 );
 		},
-		tsp = {}, sep;
+		daysArray = function(n) {
+			var i;
+			for (i = 1; i <= n; i++) {
+				this[i] = 31;
+				if (i==4 || i==6 || i==9 || i==11) {this[i] = 30;}
+				if (i==2) {this[i] = 29;}
+			}
+			return this;
+		};
+
+		var tsp = {}, sep;
 		format = format.toLowerCase();
 		//we search for /,-,. for the date separator
-		if(format.indexOf("/") !== -1) {
+		if(format.indexOf("/") != -1) {
 			sep = "/";
-		} else if(format.indexOf("-") !== -1) {
+		} else if(format.indexOf("-") != -1) {
 			sep = "-";
-		} else if(format.indexOf(".") !== -1) {
+		} else if(format.indexOf(".") != -1) {
 			sep = ".";
 		} else {
 			sep = "/";
 		}
 		format = format.split(sep);
 		date = date.split(sep);
-		if (date.length !== 3) { return false; }
+		if (date.length != 3) { return false; }
 		var j=-1,yln, dln=-1, mln=-1, i;
 		for(i=0;i<format.length;i++){
 			var dv =  isNaN(date[i]) ? 0 : parseInt(date[i],10);
 			tsp[format[i]] = dv;
 			yln = format[i];
-			if(yln.indexOf("y") !== -1) { j=i; }
-			if(yln.indexOf("m") !== -1) { mln=i; }
-			if(yln.indexOf("d") !== -1) { dln=i; }
+			if(yln.indexOf("y") != -1) { j=i; }
+			if(yln.indexOf("m") != -1) { mln=i; }
+			if(yln.indexOf("d") != -1) { dln=i; }
 		}
-		if (format[j] === "y" || format[j] === "yyyy") {
+		if (format[j] == "y" || format[j] == "yyyy") {
 			yln=4;
-		} else if(format[j] ==="yy"){
+		} else if(format[j] =="yy"){
 			yln = 2;
 		} else {
 			yln = -1;
 		}
-		var daysInMonth = [0,31,29,31,30,31,30,31,31,30,31,30,31],
+		var daysInMonth = daysArray(12),
 		strDate;
 		if (j === -1) {
 			return false;
 		}
 			strDate = tsp[format[j]].toString();
-			if(yln === 2 && strDate.length === 1) {yln = 1;}
-			if (strDate.length !== yln || (tsp[format[j]]===0 && date[j]!=="00")){
+			if(yln == 2 && strDate.length == 1) {yln = 1;}
+			if (strDate.length != yln || (tsp[format[j]]===0 && date[j]!="00")){
 				return false;
 			}
 		if(mln === -1) {
@@ -615,7 +546,7 @@ $.extend($.jgrid,{
 			return false;
 		}
 			strDate = tsp[format[dln]].toString();
-			if (strDate.length<1 || tsp[format[dln]]<1 || tsp[format[dln]]>31 || (tsp[format[mln]]===2 && tsp[format[dln]]>daysInFebruary(tsp[format[j]])) || tsp[format[dln]] > daysInMonth[tsp[format[mln]]]){
+			if (strDate.length<1 || tsp[format[dln]]<1 || tsp[format[dln]]>31 || (tsp[format[mln]]==2 && tsp[format[dln]]>daysInFebruary(tsp[format[j]])) || tsp[format[dln]] > daysInMonth[tsp[format[mln]]]){
 				return false;
 			}
 		return true;
@@ -629,7 +560,7 @@ $.extend($.jgrid,{
 	},
 	checkTime : function(time){
 	// checks only hh:ss (and optional am/pm)
-		var re = /^(\d{1,2}):(\d{2})([apAP][Mm])?$/,regs;
+		var re = /^(\d{1,2}):(\d{2})([ap]m)?$/,regs;
 		if(!$.jgrid.isEmpty(time))
 		{
 			regs = time.match(re);
@@ -648,95 +579,89 @@ $.extend($.jgrid,{
 		}
 		return true;
 	},
-	checkValues : function(val, valref, customobject, nam) {
-		var edtrul,i, nm, dft, len, g = this, cm = g.p.colModel,
-		msg = $.jgrid.getRegional(this, 'edit.msg'), fmtdate;
+	checkValues : function(val, valref,g, customobject, nam) {
+		var edtrul,i, nm, dft, len;
 		if(customobject === undefined) {
 			if(typeof valref==='string'){
-				for( i =0, len=cm.length;i<len; i++){
-					if(cm[i].name===valref) {
-						edtrul = cm[i].editrules;
+				for( i =0, len=g.p.colModel.length;i<len; i++){
+					if(g.p.colModel[i].name==valref) {
+						edtrul = g.p.colModel[i].editrules;
 						valref = i;
-						if(cm[i].formoptions != null) { nm = cm[i].formoptions.label; }
+						try { nm = g.p.colModel[i].formoptions.label; } catch (e) {}
 						break;
 					}
 				}
 			} else if(valref >=0) {
-				edtrul = cm[valref].editrules;
+				edtrul = g.p.colModel[valref].editrules;
 			}
 		} else {
 			edtrul = customobject;
 			nm = nam===undefined ? "_" : nam;
 		}
 		if(edtrul) {
-			if(!nm) { nm = g.p.colNames != null ? g.p.colNames[valref] : cm[valref].label; }
+			if(!nm) { nm = g.p.colNames[valref]; }
 			if(edtrul.required === true) {
-				if( $.jgrid.isEmpty(val) )  { return [false,nm+": "+msg.required,""]; }
+				if( $.jgrid.isEmpty(val) )  { return [false,nm+": "+$.jgrid.edit.msg.required,""]; }
 			}
 			// force required
 			var rqfield = edtrul.required === false ? false : true;
 			if(edtrul.number === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
-					if(isNaN(val)) { return [false,nm+": "+msg.number,""]; }
+					if(isNaN(val)) { return [false,nm+": "+$.jgrid.edit.msg.number,""]; }
 				}
 			}
 			if(edtrul.minValue !== undefined && !isNaN(edtrul.minValue)) {
-				if (parseFloat(val) < parseFloat(edtrul.minValue) ) { return [false,nm+": "+msg.minValue+" "+edtrul.minValue,""];}
+				if (parseFloat(val) < parseFloat(edtrul.minValue) ) { return [false,nm+": "+$.jgrid.edit.msg.minValue+" "+edtrul.minValue,""];}
 			}
 			if(edtrul.maxValue !== undefined && !isNaN(edtrul.maxValue)) {
-				if (parseFloat(val) > parseFloat(edtrul.maxValue) ) { return [false,nm+": "+msg.maxValue+" "+edtrul.maxValue,""];}
+				if (parseFloat(val) > parseFloat(edtrul.maxValue) ) { return [false,nm+": "+$.jgrid.edit.msg.maxValue+" "+edtrul.maxValue,""];}
 			}
 			var filter;
 			if(edtrul.email === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
 				// taken from $ Validate plugin
 					filter = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i;
-					if(!filter.test(val)) {return [false,nm+": "+msg.email,""];}
+					if(!filter.test(val)) {return [false,nm+": "+$.jgrid.edit.msg.email,""];}
 				}
 			}
 			if(edtrul.integer === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
-					if(isNaN(val)) { return [false,nm+": "+msg.integer,""]; }
-					if ((val % 1 !== 0) || (val.indexOf('.') !== -1)) { return [false,nm+": "+msg.integer,""];}
+					if(isNaN(val)) { return [false,nm+": "+$.jgrid.edit.msg.integer,""]; }
+					if ((val % 1 !== 0) || (val.indexOf('.') != -1)) { return [false,nm+": "+$.jgrid.edit.msg.integer,""];}
 				}
 			}
 			if(edtrul.date === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
-					if(cm[valref].formatoptions && cm[valref].formatoptions.newformat) {
-						dft = cm[valref].formatoptions.newformat;
-						fmtdate = $.jgrid.getRegional(g, 'formatter.date.masks');
-						if(fmtdate && fmtdate.hasOwnProperty(dft) ) {
-							dft = fmtdate[dft];
-						}
+					if(g.p.colModel[valref].formatoptions && g.p.colModel[valref].formatoptions.newformat) {
+						dft = g.p.colModel[valref].formatoptions.newformat;
 					} else {
-						dft = cm[valref].datefmt || "Y-m-d";
+						dft = g.p.colModel[valref].datefmt || "Y-m-d";
 					}
-					if(!$.jgrid.checkDate (dft, val)) { return [false,nm+": "+msg.date+" - "+dft,""]; }
+					if(!$.jgrid.checkDate (dft, val)) { return [false,nm+": "+$.jgrid.edit.msg.date+" - "+dft,""]; }
 				}
 			}
 			if(edtrul.time === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
-					if(!$.jgrid.checkTime (val)) { return [false,nm+": "+msg.date+" - hh:mm (am/pm)",""]; }
+					if(!$.jgrid.checkTime (val)) { return [false,nm+": "+$.jgrid.edit.msg.date+" - hh:mm (am/pm)",""]; }
 				}
 			}
 			if(edtrul.url === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
 					filter = /^(((https?)|(ftp)):\/\/([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)/i;
-					if(!filter.test(val)) {return [false,nm+": "+msg.url,""];}
+					if(!filter.test(val)) {return [false,nm+": "+$.jgrid.edit.msg.url,""];}
 				}
 			}
 			if(edtrul.custom === true) {
 				if( !(rqfield === false && $.jgrid.isEmpty(val)) ) {
 					if($.isFunction(edtrul.custom_func)) {
-						var ret = edtrul.custom_func.call(g,val,nm,valref);
-						return $.isArray(ret) ? ret : [false,msg.customarray,""];
+						var ret = edtrul.custom_func.call(g,val,nm);
+						return $.isArray(ret) ? ret : [false,$.jgrid.edit.msg.customarray,""];
 					}
-					return [false,msg.customfcheck,""];
+					return [false,$.jgrid.edit.msg.customfcheck,""];
 				}
 			}
 		}
 		return [true,"",""];
 	}
 });
-//module end
-}));
+})(jQuery);

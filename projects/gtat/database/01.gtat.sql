@@ -782,7 +782,7 @@ CREATE OR REPLACE VIEW vw_statement AS
 		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, salesperiod, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
 		FROM vwcrnotelist)
 		UNION ALL 
-		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, payment_type, accounting_date, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
+		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, payment_reference, accounting_date, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
 		FROM vw_clientpayments)) as a 
 ORDER BY invoicedate ASC;
 

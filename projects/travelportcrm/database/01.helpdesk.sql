@@ -19,11 +19,11 @@ CREATE TABLE Clients (
 	ClientGroupID		integer references ClientGroups,
 	ClientName			varchar(120),
 	Address				varchar(50),
-	ZipCode				varchar(16),,
+	ZipCode				varchar(16),
 	Premises			varchar(120),
 	Street				varchar(120),
 	Division			varchar(50),
-	Town				varchar(50),
+	Town				varchar(50) not null,
 	Country				varchar(50),
 	TelNo				varchar(320),
 	FaxNo				varchar(50),
@@ -31,6 +31,7 @@ CREATE TABLE Clients (
 	website            	varchar(120),
 	IATANo				varchar(50),
 	IsIATA				boolean default false not null,
+	mst_cus_id			varchar(10),
 	clienttarget		integer,
 	consultanttarget	integer,
 	budget			    integer,
@@ -149,6 +150,7 @@ CREATE TABLE ProblemLog (
 	ClientID				integer references Clients,
 	PLevelID				integer references PLevels,
 	entity_id				integer references entitys,
+	updated_by				integer references entitys,
 	closed_by				integer references entitys,
 	Description				varchar(120) not null,
 	ReportedBy				varchar(50) not null,
@@ -164,6 +166,7 @@ CREATE INDEX ProblemLog_PDefinitionID ON ProblemLog (PDefinitionID);
 CREATE INDEX ProblemLog_ClientID ON ProblemLog (ClientID);
 CREATE INDEX ProblemLog_PLevelID ON ProblemLog (PLevelID);
 CREATE INDEX ProblemLog_entity_id ON ProblemLog (entity_id);
+CREATE INDEX ProblemLog_updated_by ON ProblemLog (updated_by);
 CREATE INDEX ProblemLog_closed_by ON ProblemLog (closed_by);
 CREATE INDEX ProblemLog_IsSolved ON ProblemLog (IsSolved);
 
@@ -171,6 +174,7 @@ CREATE TABLE Forwarded (
 	ForwardID 				serial primary key,
 	ProblemLogID			integer  not null references ProblemLog,
 	entity_id				integer references entitys,
+	updated_by				integer references entitys,
 	sender_id				integer references entitys,
 	ReferenceNo				varchar(50),
 	Description				varchar(240),
@@ -190,7 +194,8 @@ CREATE TABLE Forwarded (
 );
 CREATE INDEX Forwarded_ProblemLogID ON Forwarded (ProblemLogID);
 CREATE INDEX Forwarded_entity_id ON Forwarded (entity_id);
-CREATE INDEX Forwarded_SenderID ON Forwarded (SenderID);
+CREATE INDEX Forwarded_updated_by ON Forwarded (updated_by);
+CREATE INDEX Forwarded_sender_id ON Forwarded (sender_id);
 
 CREATE INDEX Forwarded_IsSolved ON Forwarded (IsSolved);
 CREATE INDEX Forwarded_IsDrop ON Forwarded (IsDrop);
@@ -258,8 +263,8 @@ CREATE TABLE Transport (
 	entity_id				integer references entitys,
 	TransportDate			date not null,
 	Booktime				time not null,
-	TimeGone				integer not null,
-	ReturnTime				time,
+	ReturnTime				time not null,
+	Returned				time,
 	HoursSpent				integer,
 	Location				varchar(50),
 	SelfDriven				boolean default false not null,
