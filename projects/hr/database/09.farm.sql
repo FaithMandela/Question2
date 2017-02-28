@@ -76,7 +76,34 @@ CREATE INDEX works_day_work_id ON works (day_work_id);
 CREATE INDEX works_entity_id ON works (entity_id);
 CREATE INDEX works_work_rate_id ON works (work_rate_id);
 CREATE INDEX works_org_id ON works (org_id);
+
+CREATE TABLE work_groups (
+	work_group_id			serial primary key,
+	day_work_id				integer references day_works not null,
+	work_rate_id			integer references work_rates not null,
+	org_id					integer references orgs,
 	
+	work_weight				real default 0  not null,
+	work_pay				integer default 0 not null,
+	overtime				real default 0  not null,
+	special_time			real default 0  not null,
+	work_amount				real default 0 not null,
+	narrative				varchar(320)
+);
+CREATE INDEX work_groups_day_work_id ON work_groups (day_work_id);
+CREATE INDEX work_groups_work_rate_id ON work_groups (work_rate_id);
+CREATE INDEX work_groups_org_id ON work_groups (org_id);
+
+CREATE TABLE work_members (
+	work_member_id			serial primary key,
+	work_group_id			integer references work_groups not null,
+	entity_id				integer references entitys not null,
+	org_id					integer references orgs,
+	narrative				varchar(320)
+);
+CREATE INDEX work_members_work_group_id ON work_members (work_group_id);
+CREATE INDEX work_members_entity_id ON work_members (entity_id);
+CREATE INDEX work_members_org_id ON work_members (org_id);
 
 	
 CREATE VIEW vw_day_works AS

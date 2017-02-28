@@ -41,9 +41,21 @@ CREATE VIEW vw_tasks AS
 		entitys.entity_id, entitys.entity_name, 
 		
 		tasks.org_id, tasks.task_id, tasks.task_name, tasks.task_start_date, tasks.task_dead_line, 
-		tasks.task_end_date, tasks.task_completed, tasks.hours_taken, tasks.details
+		tasks.task_end_date, tasks.task_done, tasks.hours_taken, tasks.details
 	FROM tasks INNER JOIN entitys ON tasks.entity_id = entitys.entity_id
 		INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id;
+		
+CREATE VIEW vw_activities AS
+	SELECT vw_phases.project_type_id, vw_phases.project_type_name, 
+		vw_phases.project_id, vw_phases.project_name, vw_phases.signed, 
+		vw_phases.project_start_date, vw_phases.project_ending_date, vw_phases.project_duration, 
+		vw_phases.project_reference, vw_phases.total_budget,
+		vw_phases.phase_id, vw_phases.phase_name, vw_phases.phase_start_date, vw_phases.phase_end_date, 
+		vw_phases.phase_completed,  vw_phases.phase_cost, 
+
+		activities.org_id, activities.activity_id, activities.activity, activities.activity_start_date, 
+		activities.activity_close_date, activities.activity_done, activities.details
+	FROM activities INNER JOIN vw_phases ON activities.phase_id = vw_phases.phase_id;
 	
 CREATE VIEW vw_donors AS
 	SELECT donor_groups.donor_group_id, donor_groups.donor_group_name, 
@@ -116,12 +128,6 @@ CREATE VIEW vw_proposals AS
 	FROM proposals INNER JOIN projects ON proposals.project_id = projects.project_id
 		INNER JOIN donors ON proposals.donor_id = donors.donor_id
 		INNER JOIN proposal_status ON proposals.proposal_status_id = proposal_status.proposal_status_id;
-
-CREATE VIEW vw_activities AS
-	SELECT projects.project_id, projects.project_name, 
-		activities.org_id, activities.activity_id, activities.activity, activities.activity_start_date, 
-		activities.activity_close_date, activities.details
-	FROM activities INNER JOIN projects ON activities.project_id = projects.project_id;
 	
 CREATE VIEW vw_grants AS
 	SELECT vw_contracts.project_id, vw_contracts.project_name,

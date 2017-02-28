@@ -27,12 +27,6 @@ ORDER BY invoicedate ASC;
 
 
 
-
-
-
-
-
-
 -----------------------------
 CREATE TABLE sys_menu_msg (
 	sys_menu_msg_id			serial primary key,

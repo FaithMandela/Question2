@@ -4,7 +4,7 @@
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="164"/>
+	<property name="ireport.y" value="294"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -75,8 +75,8 @@ WHERE clientpaymentsid = '$P!{clientid}';]]>
 	<title>
 		<band height="292" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-13" x="154" y="101" width="233" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
-				<textElement>
+				<reportElement key="staticText-13" x="218" y="101" width="98" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
+				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="18" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[RECEIPT]]></text>
@@ -145,35 +145,35 @@ WHERE clientpaymentsid = '$P!{clientid}';]]>
 	<columnHeader>
 		<band height="33" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-1" mode="Opaque" x="234" y="0" width="164" height="32" backcolor="#0F9EE7" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
+				<reportElement key="staticText-1" mode="Opaque" x="234" y="0" width="164" height="32" backcolor="#67C5F4" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Payment Allocation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-8" mode="Opaque" x="2" y="0" width="68" height="32" backcolor="#0F9EE7" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
+				<reportElement key="staticText-8" mode="Opaque" x="2" y="0" width="68" height="32" backcolor="#67C5F4" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-10" mode="Opaque" x="462" y="0" width="68" height="32" backcolor="#0F9EE7" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
-				<textElement>
+				<reportElement key="staticText-10" mode="Opaque" x="462" y="0" width="68" height="32" backcolor="#67C5F4" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-28" mode="Opaque" x="398" y="0" width="64" height="32" backcolor="#0F9EE7" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
+				<reportElement key="staticText-28" mode="Opaque" x="398" y="0" width="64" height="32" backcolor="#67C5F4" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Currency]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-1" mode="Opaque" x="70" y="0" width="164" height="32" backcolor="#0F9EE7" uuid="4fb7e49f-fd1d-4b8d-b52c-a3498156ca7f"/>
+				<reportElement key="staticText-1" mode="Opaque" x="70" y="0" width="164" height="32" backcolor="#67C5F4" uuid="4fb7e49f-fd1d-4b8d-b52c-a3498156ca7f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -184,9 +184,9 @@ WHERE clientpaymentsid = '$P!{clientid}';]]>
 	<detail>
 		<band height="18" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField" x="233" y="0" width="164" height="18" uuid="0b7bb81e-aa98-46b7-ad75-51a21164d333"/>
-				<box leftPadding="12"/>
-				<textElement textAlignment="Justified">
+				<reportElement key="textField" x="234" y="0" width="164" height="18" uuid="0b7bb81e-aa98-46b7-ad75-51a21164d333"/>
+				<box leftPadding="0"/>
+				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payment_type}]]></textFieldExpression>
@@ -199,23 +199,23 @@ WHERE clientpaymentsid = '$P!{clientid}';]]>
 				<textFieldExpression><![CDATA[$F{accounting_date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-13" x="397" y="0" width="64" height="18" uuid="860f55ae-a633-4c15-a0ba-865cffd9403a"/>
+				<reportElement key="textField-13" x="398" y="0" width="64" height="18" uuid="860f55ae-a633-4c15-a0ba-865cffd9403a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-7" x="461" y="0" width="68" height="18" uuid="89b0ae66-ca11-454a-b543-7af2c82aff3d"/>
+				<reportElement key="textField-7" x="462" y="0" width="68" height="18" uuid="89b0ae66-ca11-454a-b543-7af2c82aff3d"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement key="textField" x="69" y="0" width="164" height="18" uuid="95b7b7a6-ca82-4dd0-9229-daad2cfe7557"/>
-				<box leftPadding="12"/>
-				<textElement textAlignment="Justified">
+				<reportElement key="textField" x="70" y="0" width="164" height="18" uuid="95b7b7a6-ca82-4dd0-9229-daad2cfe7557"/>
+				<box leftPadding="0"/>
+				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payment_reference}]]></textFieldExpression>
@@ -241,7 +241,7 @@ WHERE clientpaymentsid = '$P!{clientid}';]]>
 				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
-				<reportElement key="textField-3" x="441" y="5" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="5c527946-05f7-4fb9-90ad-620bfc384d88"/>
+				<reportElement key="textField-3" x="445" y="5" width="36" height="19" forecolor="#000000" backcolor="#FFFFFF" uuid="5c527946-05f7-4fb9-90ad-620bfc384d88"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

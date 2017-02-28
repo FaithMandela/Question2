@@ -126,12 +126,25 @@ CREATE TABLE tasks (
 	task_dead_line			date,
 	task_end_date			date,
 	hours_taken				integer default 7 not null,
-	task_completed			boolean not null default false,
+	task_done				boolean not null default false,
 	details					text
 );
 CREATE INDEX tasks_phase_id ON tasks (phase_id);
 CREATE INDEX tasks_entity_id ON tasks (entity_id);
 CREATE INDEX tasks_org_id ON tasks (org_id);
+
+CREATE TABLE activities (
+	activity_id				serial primary key,
+	phase_id				integer references phases,
+	org_id					integer references orgs,
+	activity				varchar(50) not null,
+	activity_start_date		date,
+	activity_close_date		date,
+	activity_done			boolean not null default false,
+	details                	text
+);
+CREATE INDEX activities_phase_id ON activities (phase_id);
+CREATE INDEX activities_org_id ON activities (org_id);
 
 CREATE TABLE project_locations (
 	project_location_id		serial primary key,
@@ -227,18 +240,6 @@ CREATE INDEX proposals_project_id ON proposals (project_id);
 CREATE INDEX proposals_donor_id ON proposals (donor_id);
 CREATE INDEX proposals_proposal_status_id ON proposals (proposal_status_id);
 CREATE INDEX proposals_org_id ON proposals (org_id);
-
-CREATE TABLE activities (
-	activity_id				serial primary key,
-	project_id				varchar(12) references projects,
-	org_id					integer references orgs,
-	activity				varchar(50) not null,
-	activity_start_date		date,
-	activity_close_date		date,
-	details                	text
-);
-CREATE INDEX activities_project_id ON activities (project_id);
-CREATE INDEX activities_org_id ON activities (org_id);
 
 CREATE TABLE grants (
 	grant_id				serial primary key,

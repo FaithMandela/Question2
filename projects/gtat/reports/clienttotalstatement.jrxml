@@ -81,7 +81,7 @@ ORDER BY clientname]]>
 	<title>
 		<band height="154" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-13" x="145" y="87" width="264" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
+				<reportElement key="staticText-13" x="135" y="87" width="264" height="22" uuid="14fc504d-8022-4532-804d-066eb3a9308a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="18" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
@@ -133,36 +133,44 @@ ORDER BY clientname]]>
 	<columnHeader>
 		<band height="18" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-1" mode="Opaque" x="0" y="0" width="195" height="18" backcolor="#0F9EE7" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
+				<reportElement key="staticText-1" mode="Opaque" x="0" y="0" width="195" height="18" backcolor="#67C5F4" uuid="69916406-56ee-4674-b6d5-71cbc6b217d5"/>
+				<box leftPadding="2">
+					<leftPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Client Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-8" mode="Opaque" x="195" y="0" width="68" height="18" backcolor="#0F9EE7" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
-				<textElement>
+				<reportElement key="staticText-8" mode="Opaque" x="195" y="0" width="68" height="18" backcolor="#67C5F4" uuid="c8db46de-210d-4cf9-b50e-8831b8c28a81"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Invoiced]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-9" mode="Opaque" x="263" y="0" width="68" height="18" backcolor="#0F9EE7" uuid="2afd4c9c-0b32-4e6e-beaf-4433f41954ab"/>
-				<textElement>
+				<reportElement key="staticText-9" mode="Opaque" x="263" y="0" width="68" height="18" backcolor="#67C5F4" uuid="2afd4c9c-0b32-4e6e-beaf-4433f41954ab"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Credited]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-10" mode="Opaque" x="399" y="0" width="68" height="18" backcolor="#0F9EE7" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
-				<textElement>
+				<reportElement key="staticText-10" mode="Opaque" x="399" y="0" width="68" height="18" backcolor="#67C5F4" uuid="324dd752-1823-4684-bbe9-f07addefaeb4"/>
+				<box rightPadding="2">
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-28" mode="Opaque" x="331" y="0" width="68" height="18" backcolor="#0F9EE7" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
-				<textElement>
+				<reportElement key="staticText-28" mode="Opaque" x="331" y="0" width="68" height="18" backcolor="#67C5F4" uuid="1563714e-5883-467d-927d-6308a094e21a"/>
+				<box rightPadding="2"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
 				<text><![CDATA[Payments]]></text>
@@ -173,7 +181,7 @@ ORDER BY clientname]]>
 		<band height="18" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="0" y="0" width="195" height="18" uuid="0b7bb81e-aa98-46b7-ad75-51a21164d333"/>
-				<box>
+				<box leftPadding="2">
 					<leftPen lineWidth="0.5"/>
 				</box>
 				<textElement>
@@ -190,6 +198,7 @@ ORDER BY clientname]]>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-13" x="331" y="0" width="68" height="18" uuid="860f55ae-a633-4c15-a0ba-865cffd9403a"/>
+				<box rightPadding="2"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
@@ -197,7 +206,7 @@ ORDER BY clientname]]>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField-7" x="399" y="0" width="68" height="18" uuid="89b0ae66-ca11-454a-b543-7af2c82aff3d"/>
-				<box>
+				<box rightPadding="2">
 					<leftPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
@@ -266,7 +275,7 @@ ORDER BY clientname]]>
 			</line>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField-10" x="399" y="0" width="68" height="18" uuid="3b19def7-cc32-417e-b9f6-b10842913aa2"/>
-				<box>
+				<box rightPadding="2">
 					<leftPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
@@ -291,6 +300,7 @@ ORDER BY clientname]]>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
 				<reportElement key="textField-10" x="331" y="0" width="68" height="18" uuid="f42c55fa-fe10-49aa-aecd-996edbb18a8e"/>
+				<box rightPadding="2"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true" pdfFontName="Helvetica-Bold"/>
 				</textElement>
