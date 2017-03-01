@@ -95,7 +95,7 @@ CREATE TABLE periods (
 
     entity_id 				integer references entitys,
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'Completed' not null,
+	approve_status			varchar(16) default 'Approved' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 

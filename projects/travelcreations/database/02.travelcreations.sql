@@ -1,6 +1,7 @@
 ---Project Database File
 ALTER TABLE entitys ADD client_code varchar(20);
 ALTER TABLE entitys ADD client_dob date;
+ALTER TABLE sys_emailed ADD mail_body text;
 
 
 CREATE TABLE clients (

@@ -41,8 +41,8 @@
 			<TILE noorg="true" noorg.query="true" role="admin" w="60" h="25" name="New Orders" where="(lower(order_status) = lower('Processing Order'))" table="orders">
 				<TEXTFIELD w="75" fnct="COALESCE(count(order_id), 0)" title="New Orders">orders</TEXTFIELD>
 			</TILE>
-			<TILE noorg="true" noorg.query="true" role="client" w="60" h="25" name="Loyalty Points" user="entity_id" table="loyalty_points">
-				<TEXTFIELD w="75" fnct="to_char(COALESCE(sum(points_amount),0), '999,999,999,990D00')" title="Points">points</TEXTFIELD>
+			<TILE noorg="true" noorg.query="true" role="client" w="60" h="25" name="Loyalty Points" user="entity_id" table="vw_client_statement">
+				<TEXTFIELD w="75" fnct="to_char(COALESCE(sum(balance),0), '999,999,999,990D00')" title="Points">points</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin" w="60" h="25" name="Loyalty Points" table="loyalty_points">
 				<TEXTFIELD w="75" fnct="to_char(COALESCE(sum(points_amount),0), '999,999,999,990D00')" title="Points">points</TEXTFIELD>
@@ -953,5 +953,8 @@
 	</DESK>
 	<DESK w="700" h="550" name="Summary Report" key="92">
 		<JASPER reportfile="summary_report.jasper" name="Summary Report"></JASPER>
+	</DESK>
+	<DESK w="700" h="550" name="Collection Document" key="41">
+		<JASPER reportfile="print_batch_doc.jasper" name="Collection Document"></JASPER>
 	</DESK>
 </APP>

@@ -1,3 +1,22 @@
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (8, NULL, 'Order on processing ', NULL, 'Order on processing ', '<p><span style="color:#0075B0">Dear {{name}},</span></p>
+
+<p><span style="color:#0075B0">Your order of </span>{{mailbody}}<span style="color:#0075B0"> is being processed, once ready for collection an email notification will be sent to you. </span></p>
+
+<p>Regards,</p>
+
+<p>Faidaplus Team</p>
+', 3);
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (9, NULL, 'Order Collected', NULL, 'Order Collected', '<p><span style="color:#0075B0">Dear {{name}},</span></p>
+
+<p><span style="color:#0075B0">Thank you for collecting the order in the subject line. Happy selling!</span></p>
+
+<p>&nbsp;</p>
+
+<p>Regards,</p>
+
+<p>Faidaplus Team</p>
+', 3);
+
 CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(12),varchar(12))	RETURNS varchar(120) AS $$
 DECLARE
 	msg 		varchar(20);

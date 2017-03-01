@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.1000000000000003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="341"/>
+	<property name="ireport.y" value="598"/>
 	<parameter name="filterid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[$P{passenger_id}]]></defaultValueExpression>
 	</parameter>
@@ -56,7 +56,7 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 	<field name="section_b" class="java.lang.String"/>
 	<field name="countries" class="java.lang.String"/>
 	<variable name="benefits" class="java.lang.String">
-		<variableExpression><![CDATA["The cover includes emergency medical and evacuation benefits of up to US\$ "+ $F{section_a} +" and US\$ "+ $F{section_b}+" respectively and is inclusive of 24 hours emergency medical assistance anywhere in the world including   <style isBold=\"true\">" +$F{countries} + ". </style>" ]]></variableExpression>
+		<variableExpression><![CDATA["The cover includes emergency medical and evacuation benefits of up to US\$ "+ $F{section_a} +" and US\$ "+ $F{section_b}+" respectively and is inclusive of 24 hours emergency medical assistance anywhere in the world including   <style isBold=\"true\">" +$F{countries} + ". </style>"]]></variableExpression>
 	</variable>
 	<variable name="datefrom" class="java.lang.String">
 		<variableExpression><![CDATA[$F{approved_date}+"<sup>TH</sup>"]]></variableExpression>
@@ -264,8 +264,7 @@ SALES & DISTRIBUTION DEPARTMENT]]></text>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<text><![CDATA[Directors: PN Gethi (Chairman), ML du Toit**, G Kioi (Managing), JM Kyungu (Executive), GR May*,
-CW Mwangi, S Sejpal*, SC Wenman** (* British, ** South Africa)]]></text>
+				<text><![CDATA[Directors: PN Gethi (Chairman), ML du Toit**, G Kioi (Managing),  GR May*,CW Mwangi, S Sejpal*, SC Wenman** (* British, ** South Africa)]]></text>
 			</staticText>
 		</band>
 	</pageFooter>

@@ -592,8 +592,20 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Sales Report" key="40">
-		<JASPER reportfile="vw_passengers.jasper" name="Individual Sales Report"></JASPER>
-		<JASPER reportfile="vw_corporates.jasper" name="Corporate Sales Report"></JASPER>
+		<FILTER role="admin,director" split="150" w="700" h="550" name="Individual Sales Report" type="vert" key="order_date">
+			<FILTERFORM name="Individual Sales Report ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_passengers.jasper" name="Individual Sales Report"></JASPER>
+		</FILTER>
+		<FILTER role="admin,director" split="150" w="700" h="550" name="Corporate Sales Report" type="vert" key="order_date">
+			<FILTERFORM name="Corporate Sales Report ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_corporates.jasper" name="Corporate Sales Report"></JASPER>
+		</FILTER>
 		<FILTER role="admin,director" split="150" w="700" h="550" name="Agency Insurance Sales Report" type="vert" key="order_date">
 			<FILTERFORM name="Agency Insurance Sales Report ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>

@@ -87,8 +87,8 @@ DECLARE
 	v_order integer;
 BEGIN
 
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, narrative)
-	VALUES (4, NEW.order_id , 'vw_orders', 3, '<p>Your order has been received and is being processed. Once ready an email notification will be sent to you.</p><p>Order details :-</p>'||get_order_details(NEW.order_id)||'<p>Total amount</p>');
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type,mail_body, narrative)
+	VALUES (10, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'Order '||NEW.order_id||' has been submitted');
 	RETURN NEW;
 END;
 $BODY$
@@ -104,25 +104,33 @@ CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(1
 DECLARE
 	msg 		varchar(20);
 	details 	text;
+	v_org_id                integer;
+	v_entity_id            integer;
+	v_sms_number		varchar(25);
+	v_order_no			integer;
+	v_batch_no			integer;
 BEGIN
-
+SELECT entity_id, phone_no,batch_no,order_id INTO v_entity_id, v_sms_number,v_batch_no,v_order_no
+FROM orders WHERE (order_id = $1::integer);
 	IF ($3::integer = 1) THEN
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
-		details :='This has been processed and is ready for collection';
-
+		details :='Order '||v_batch_no||'-'||v_order_no||' is ready for collection';
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
+		VALUES ($1::integer,4 ,'orders', 3, 0,details);
 	END IF;
 
 	IF ($3::integer = 2) THEN
 		UPDATE orders SET order_status = 'Collected' WHERE order_id = $1::integer;
-		details := 'Your Order has been collected';
+		details := 'Order '||v_batch_no||'-'||v_order_no||' has been collected';
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
+		VALUES ($1::integer,9 ,'orders', 3, 0,details);
 	END IF;
 
 	IF ($3::integer = 3) THEN
 		UPDATE orders SET order_status = 'Closed' WHERE order_id = $1::integer;
 	END IF;
 
-	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-	VALUES ($1::integer,4 ,'orders', 3, 0,details);
+
 	RETURN 'Successfully Updated';
 END;
 $$ LANGUAGE plpgsql;
@@ -190,6 +198,8 @@ BEGIN
 	IF ($3::integer = 1) THEN
 		v_batch := (SELECT last_value FROM batch_id_seq) ;
 		UPDATE orders SET batch_no = v_batch,batch_date = now() WHERE order_id = $1::integer;
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+		VALUES (8, $1::integer , 'vw_orders', 3, get_order_details($1::integer), 'Order '||v_batch||'-'||$1::integer||' is being processed.');
 		msg := 'Orders Batched Successfully';
 	END IF;
 
