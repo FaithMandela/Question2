@@ -74,25 +74,25 @@ INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formu
 UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 13, true);
 
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 235000, 0, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 335000, 10, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 410000, 20, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 100000000, 10, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 0, 10000000, 30, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (15, 0, 100000000, 5, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 100000, 0, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 200000, 5000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 300000, 10000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 400000, 20000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 500000, 30000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 600000, 40000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 700000, 60000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 800000, 70000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 900000, 80000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 1000000, 90000, NULL);
-INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 0, 1000000000, 100000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 235000, 0, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 335000, 10, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 410000, 20, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 100000000, 10, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 10000000, 30, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (15, 1, 100000000, 5, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 100000, 0, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 200000, 5000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 300000, 10000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 400000, 20000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 500000, 30000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 600000, 40000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 700000, 60000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 800000, 70000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 900000, 80000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 1000000, 90000, NULL);
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (16, 1, 1000000000, 100000, NULL);
 
-
+INSERT INTO stores (org_id, store_name) VALUES (1, 'Main Store');
 
 INSERT INTO sys_emails (org_id, use_type,  sys_email_name, title, details) 
 SELECT 1, use_type, sys_email_name, title, details

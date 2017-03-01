@@ -17,16 +17,17 @@ CREATE OR REPLACE VIEW vw_stream_classes AS
 		SELECT stream_classes.org_id, 
 		stream_classes.stream_class_id, stream_classes.class_level, stream_classes.stream, stream_classes.narrative, stream_classes.details
 	FROM stream_classes;
+	
 CREATE OR REPLACE VIEW vw_students AS 
 		SELECT entitys.entity_id, entitys.entity_name,
 		stream_classes.stream_class_id, stream_classes.stream,
 		students.org_id, students.student_id, students.student_name,
 		 students.sex, students.nationality, students.birth_date, students.address, students.zipcode,
-		 students.town, students.country_code_id, students.telno, students.email, guardians.fathers_name, guardians.fathers_tel_no, guardians.fathers_email, guardians.mothers_name, guardians.mothers_tel_no, guardians.mothers_email, guardians.guardian_name, guardians.g_address, guardians.g_zipcode, guardians.g_town, guardians.g_countrycodeid, guardians.g_telno, guardians.g_email, guardians.current_contact, guardians.registrar_details, guardians.details
+		 students.town, students.country_code_id, students.telno, students.email, guardians.fathers_name, guardians.fathers_tel_no, guardians.fathers_email, guardians.mothers_name, guardians.mothers_tel_no, guardians.mothers_email, guardians.guardian_name, guardians.g_address, guardians.g_zipcode, guardians.g_town, guardians.sys_country_id, guardians.g_telno, guardians.g_email, guardians.current_contact, guardians.registrar_details, guardians.details
 	FROM students	
 		JOIN stream_classes ON students.stream_class_id = stream_classes.stream_class_id
 		JOIN entitys ON students.entity_id = entitys.entity_id
-		JOIN guardians ON students.guardian_id = guardians.guardian_id;
+		JOIN guardians ON students.student_id = guardians.student_id;
 		
 CREATE VIEW vw_grades AS 
 		SELECT grades.org_id, grades.grade_id, grades.grade_range, grades.details
@@ -44,7 +45,8 @@ CREATE VIEW vw_students_session AS
 	FROM students_session	
 		JOIN sessions ON students_session.session_id = sessions.session_id
 		JOIN students ON students_session.student_id = students.student_id;
-CREATE VIEW vw_exams AS 
+
+		CREATE VIEW vw_exams AS 
 
 		SELECT sessions.session_id, sessions.session_name,exams.exam_date,
 		 exams.start_time,exams.end_time,
@@ -53,7 +55,7 @@ CREATE VIEW vw_exams AS
 	FROM exams
 		JOIN sessions ON exams.session_id = sessions.session_id
 		JOIN vw_staff on vw_staff. staff_id = exams.staff_id
-		JOIN stream_classes ON exams.class_level = stream_classes.stream_class_id
+		JOIN stream_classes ON exams.class_level = stream_classes.stream_class_id;
 		
 
 
@@ -95,19 +97,13 @@ CREATE VIEW vw_students_fees AS
 
 
 CREATE VIEW vw_applicant AS
-	SELECT orgs.org_id, orgs.org_name, sessions.session_id, sessions.session_name, 
-	stream_classes.stream_class_id, stream_classes.stream,
+	SELECT orgs.org_id, orgs.org_name, 
 	 students.student_id, students.student_name, applicant.applicant_name, applicant.applicant_dob, 
 	 applicant.applicants_address, applicant.gender, applicant.country_code_id, applicant.telno,
-	 applicant.email, applicant.approve_status, applicant.workflow_table_id, applicant.action_date, 
+	 applicant.email, applicant.workflow_table_id, applicant.action_date
 	 
-	guardians.fathers_name, guardians.fathers_tel_no, guardians.fathers_email, guardians.mothers_name,
-	guardians.mothers_tel_no, guardians.mothers_email, guardians.guardian_name, guardians.g_address,
-	 guardians.g_zipcode, guardians.g_town, guardians.g_countrycodeid, guardians.g_telno, guardians.g_email,
-	  guardians.current_contact, guardians.registrar_details, guardians.details
 	FROM applicant
 	INNER JOIN orgs ON applicant.org_id = orgs.org_id
-	INNER JOIN sessions ON applicant.session_id = sessions.session_id
-	INNER JOIN stream_classes ON applicant.stream_class_id = stream_classes.stream_class_id
 	INNER JOIN students ON applicant.student_id = students.student_id
-	INNER JOIN guardians ON applicant.guardian_id = guardians.guardian_id;
+	 WHERE  applicant.approve_status = 'Approved';
+	

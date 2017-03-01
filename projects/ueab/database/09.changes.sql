@@ -1,4 +1,12 @@
 
+
+CREATE FUNCTION getcoremajor(varchar(12)) RETURNS varchar(75) AS $$
+	SELECT max(majors.majorname)
+	FROM studentmajors INNER JOIN majors ON studentmajors.majorid = majors.majorid
+		INNER JOIN studentdegrees ON studentmajors.studentdegreeid = studentdegrees.studentdegreeid
+	WHERE (studentdegrees.studentid = $1) AND (studentmajors.primarymajor = true);
+$$ LANGUAGE sql;
+
 SELECT cc.schoolid, cc.schoolname, cc.departmentid, cc.departmentname, cc.majorid, cc.majorname,
 	sum(m1) as sm1, sum(f1) as sf1, sum(m2) as sm2, sum(f2) as sf2, sum(m3) as sm3, sum(f3) as sf3,
 	sum(m4) as sm4, sum(f4) as sf4, sum(m5) as sm5, sum(f5) as sf5

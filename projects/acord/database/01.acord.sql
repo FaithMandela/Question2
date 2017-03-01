@@ -1,4 +1,36 @@
+CREATE TABLE project_types (
+    project_type_id			serial primary key,
+	org_id					integer references orgs,
+    project_type_name		varchar(50) not null unique,
+    details					text
+);
+CREATE INDEX project_types_org_id ON project_types(org_id);
 
+CREATE TABLE define_phases (
+	define_phase_id			serial primary key,
+	project_type_id			integer references project_types,
+	entity_type_id			integer references entity_types,
+	org_id					integer references orgs,
+	define_phase_name		varchar(240),
+	define_phase_time		real default 0 not null,
+	define_phase_cost		real default 0 not null,
+	phase_order				integer default 0 not null,
+	details					text
+);
+CREATE INDEX define_phases_project_type_id ON define_phases (project_type_id);
+CREATE INDEX define_phases_entity_type_id ON define_phases (entity_type_id);
+CREATE INDEX define_phases_org_id ON define_phases(org_id);
+
+CREATE TABLE define_tasks (
+    define_task_id			serial primary key,
+    define_phase_id			integer references define_phases,
+	org_id					integer references orgs,
+    define_task_name		varchar(240) not null,
+    narrative				varchar(120),
+    details					text
+);
+CREATE INDEX define_tasks_define_phase_id ON define_tasks (define_phase_id);
+CREATE INDEX define_tasks_org_id ON define_tasks(org_id);
 
 CREATE TABLE donor_groups (
 	donor_group_id			serial primary key,
@@ -51,9 +83,12 @@ CREATE INDEX targets_org_id ON targets (org_id);
 
 CREATE TABLE projects (
 	project_id				varchar(12) primary key,
+	project_type_id			integer references project_types,
 	org_id					integer references orgs,
-	project_title			varchar(50) not null,
+	project_name			varchar(240) not null,
+	signed					boolean not null default false,
 	project_start_date		date,
+	project_ending_date		date,
 	project_duration		integer,
 	project_reference		varchar(50),
 	total_budget			real,
@@ -64,7 +99,52 @@ CREATE TABLE projects (
 	main_activities			text,
 	notes					text
 );
+CREATE INDEX projects_project_type_id ON projects (project_type_id);
 CREATE INDEX projects_org_id ON projects (org_id);
+
+CREATE TABLE phases (
+	phase_id				serial primary key,
+	project_id				varchar(12) references projects,
+	org_id					integer references orgs,
+	phase_name				varchar(240),
+	phase_start_date		date not null,
+	phase_end_date			date,
+	completed				boolean not null default false,
+	phase_cost				real default 0 not null,
+	details					text
+);
+CREATE INDEX phases_project_id ON phases (project_id);
+CREATE INDEX phases_org_id ON phases(org_id);
+
+CREATE TABLE tasks (
+	task_id					serial primary key,
+	phase_id				integer references phases,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	task_name				varchar(320) not null,
+	task_start_date			date not null,
+	task_dead_line			date,
+	task_end_date			date,
+	hours_taken				integer default 7 not null,
+	task_done				boolean not null default false,
+	details					text
+);
+CREATE INDEX tasks_phase_id ON tasks (phase_id);
+CREATE INDEX tasks_entity_id ON tasks (entity_id);
+CREATE INDEX tasks_org_id ON tasks (org_id);
+
+CREATE TABLE activities (
+	activity_id				serial primary key,
+	phase_id				integer references phases,
+	org_id					integer references orgs,
+	activity				varchar(50) not null,
+	activity_start_date		date,
+	activity_close_date		date,
+	activity_done			boolean not null default false,
+	details                	text
+);
+CREATE INDEX activities_phase_id ON activities (phase_id);
+CREATE INDEX activities_org_id ON activities (org_id);
 
 CREATE TABLE project_locations (
 	project_location_id		serial primary key,
@@ -161,18 +241,6 @@ CREATE INDEX proposals_donor_id ON proposals (donor_id);
 CREATE INDEX proposals_proposal_status_id ON proposals (proposal_status_id);
 CREATE INDEX proposals_org_id ON proposals (org_id);
 
-CREATE TABLE activities (
-	activity_id				serial primary key,
-	project_id				varchar(12) references projects,
-	org_id					integer references orgs,
-	activity				varchar(50) not null,
-	activity_start_date		date,
-	activity_close_date		date,
-	details                	text
-);
-CREATE INDEX activities_project_id ON activities (project_id);
-CREATE INDEX activities_org_id ON activities (org_id);
-
 CREATE TABLE grants (
 	grant_id				serial primary key,
 	contract_id				varchar(12) references contracts,
@@ -212,13 +280,13 @@ CREATE INDEX budget_org_id ON budget (org_id);
 
 CREATE TABLE expenditure (
 	expenditure_id     	    serial primary key,
-   	project_id    		   	varchar(12) references projects,
-   	currency_id				integer references currency,
+	project_id    		   	varchar(12) references projects,
+	currency_id				integer references currency,
 	org_id					integer references orgs,
-   	amount             		real not null,
-   	exchange_rate			real default 1 not null,
+	amount             		real not null,
+	exchange_rate			real default 1 not null,
 	pr_date					date,
-   	details            		text
+	details            		text
 );
 CREATE INDEX expenditure_project_id ON expenditure (project_id);
 CREATE INDEX expenditure_currency_id ON expenditure (currency_id);
@@ -226,79 +294,76 @@ CREATE INDEX expenditure_org_id ON expenditure (org_id);
 
 
 ----- Theory of change
-
 CREATE TABLE problems (
-    problem_id              serial primary key,    
-   	project_id    		   	varchar(12) references projects,
+	problem_id              serial primary key,    
+	project_id    		   	varchar(12) references projects,
 	org_id					integer references orgs,
-    narrative               varchar(320),
-	
+	narrative               varchar(320),
+
 	details            		text
 );
 CREATE INDEX problems_project_id ON problems (project_id);
 CREATE INDEX problems_org_id ON problems (org_id);
 
 CREATE TABLE interventions (
-    intervention_id         serial primary key,
-    problem_id    		   	integer references problems,
-    org_id					integer references orgs,
-    narrative               varchar(320),
+	intervention_id         serial primary key,
+	problem_id    		   	integer references problems,
+	org_id					integer references orgs,
+	narrative               varchar(320),
 
-    details            		text
-    
+	details            		text    
 );
 CREATE INDEX interventions_problem_id ON interventions (problem_id);
 CREATE INDEX interventions_org_id ON interventions (org_id);
 
-
 CREATE TABLE outputs (
-    output_id               serial primary key,
-    intervention_id         integer references interventions,
-    org_id					integer references orgs,
-    narrative               varchar(320),
-    details            		text
+	output_id               serial primary key,
+	intervention_id         integer references interventions,
+	org_id					integer references orgs,
+	narrative               varchar(320),
+	details            		text
 );
 CREATE INDEX outputs_intervention_id ON outputs (intervention_id);
 CREATE INDEX outputs_org_id ON outputs (org_id);
 
-CREATE TABLE final_outcomes(
-    final_outcome_id        serial primary key,
-    goal_id                 integer references goals,
-    org_id					integer references orgs,
-    narrative               varchar(320),
-    details            		text
+CREATE TABLE final_outcomes (
+	final_outcome_id        serial primary key,
+	goal_id                 integer references goals,
+	org_id					integer references orgs,
+	narrative               varchar(320),
+	details            		text
 );
 CREATE INDEX final_outcomes_goal_id ON final_outcomes (goal_id);
 CREATE INDEX final_outcomes_org_id ON final_outcomes (org_id);
 
 
-CREATE TABLE intermediate_outcome(
-    intermediate_outcome    serial primary key,
-    final_outcome_id        integer references final_outcomes,
-    output_id               integer references outputs,
-    org_id					integer references orgs,
-    narrative               varchar(320),
-    details            		text
-    );
+CREATE TABLE intermediate_outcome (
+	intermediate_outcome    serial primary key,
+	final_outcome_id        integer references final_outcomes,
+	output_id               integer references outputs,
+	org_id					integer references orgs,
+	narrative               varchar(320),
+	details            		text
+);
 CREATE INDEX intermediate_outcome_final_outcome_id ON intermediate_outcome (final_outcome_id);
 CREATE INDEX intermediate_outcome_org_id ON intermediate_outcome (org_id);
 CREATE INDEX intermediate_outcome_output_id ON intermediate_outcome (output_id);
 
- CREATE TABLE indicators(
-    indicator_id                serial primary key,
-    project_id                  varchar references projects,
-    org_id                      integer references orgs,
-    
-    key_indictors               varchar(120),
-    baseline_values             varchar(320),
-    data_source                 varchar(320),
-    data_collection_method      varchar(320),
-    frequency_of_collection    varchar(320),
-    impact                      varchar(320),
-    leassons_learnt             varchar(320),
-    action_acquired             varchar(320),
-    quality_of_action           varchar(320),
-    details                     text
+CREATE TABLE indicators (
+	indicator_id				serial primary key,
+	project_id					varchar references projects,
+	org_id						integer references orgs,
+
+	key_indictors				varchar(120),
+	baseline_values				varchar(320),
+	data_source					varchar(320),
+	data_collection_method		varchar(320),
+	frequency_of_collection		varchar(320),
+	impact						varchar(320),
+	leassons_learnt				varchar(320),
+	action_acquired				varchar(320),
+	quality_of_action			varchar(320),
+	details						text
  );
 CREATE INDEX indicators_project_id ON indicators (project_id);
 CREATE INDEX indicators_org_id ON indicators (org_id);

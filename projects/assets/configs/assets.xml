@@ -1762,7 +1762,7 @@
 				<TEXTDATE w="150" title="Ending At" default="now" y="10" h="20" x="290">endrange</TEXTDATE>
 			</FILTERFORM>
 			<JASPER name="Client Asset Requests" reportfile="vw_client_assets.jasper"></JASPER>
-			<JASPER name="Client Link Requests" reportfile="vw_client_links.jasper"></JASPER>
+			<JASPER name="Client Link Requests" reportfile="vw_client_links_r.jasper"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Asset Summary" key="225" h="550">

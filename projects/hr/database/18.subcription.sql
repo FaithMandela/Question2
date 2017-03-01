@@ -296,6 +296,8 @@ BEGIN
 
 		INSERT INTO item_units (org_id, item_unit_name) VALUES (NEW.org_id, 'Each');
 		
+		INSERT INTO stores (org_id, store_name) VALUES (NEW.org_id, 'Main Store');
+		
 		SELECT entity_type_id INTO v_entity_type_id
 		FROM entity_types 
 		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);

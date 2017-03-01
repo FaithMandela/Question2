@@ -208,6 +208,7 @@
 			<TEXTFIELD w="40" title="Sex">sex</TEXTFIELD>
 			<TEXTFIELD w="150" title="ID">existingid</TEXTFIELD>
 			<TEXTFIELD w="150" title="Pass">firstpass</TEXTFIELD>
+			<TEXTFIELD w="150" fnct="getcoremajor(existingid)" title="Major">coremajor</TEXTFIELD>
 			<FORM tw="570" name="General Information" keyfield="registrationid" table="registrations" noorg="true" th="150">
 				<TEXTFIELD w="150" title="First Name" y="10" h="20" x="10">firstname</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="10" h="20" x="290">middlename</TEXTFIELD>

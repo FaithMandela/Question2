@@ -21,8 +21,8 @@ qstudentmajorview.studylevel, qstudentmajorview.studentid, qstudentmajorview.stu
 qgradeview.courseid, qgradeview.coursetitle, qgradeview.finalmarks, qgradeview.credit,
 (substring(qgradeview.courseid from 1 for 4) || '  ' || trim(substring(qgradeview.courseid from 5 for 4)) || ' (' || trim(to_char(qgradeview.credit, '9')) || ')') as dispcourseid,
 to_char(getcurrcredit(qstudentmajorview.qstudentid), '999') as currcredit,
-to_char(get_curr_score(qstudentmajorview.qstudentid),'999D00') as gpa,
-to_char(getcummgpa(qstudentmajorview.studentdegreeid,qstudentmajorview.quarterid), '9999D00') as cummgpa,
+to_char(getcurrgpa(qstudentmajorview.qstudentid),'999D00') as gpa,
+to_char(getcummgpa(qstudentmajorview.studentdegreeid, qstudentmajorview.quarterid), '9999D00') as cummgpa,
 (getgradeid(qgradeview.finalmarks, qstudentmajorview.org_id) || ',' || to_char(qgradeview.finalmarks, '99')) as instructorgrade
 
 FROM qstudentmajorview INNER JOIN (qgradeview INNER JOIN qcourses ON qgradeview.qcourseid = qcourses.qcourseid) ON qstudentmajorview.qstudentid = qgradeview.qstudentid

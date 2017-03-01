@@ -148,13 +148,13 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_qtimetable BEFORE INSERT OR UPDATE ON qtimetable
-  FOR EACH ROW EXECUTE PROCEDURE ins_qtimetable();
+	FOR EACH ROW EXECUTE PROCEDURE ins_qtimetable();
 
 CREATE TRIGGER ins_qtimetable BEFORE INSERT OR UPDATE ON qexamtimetable
-  FOR EACH ROW EXECUTE PROCEDURE ins_qtimetable();
+	FOR EACH ROW EXECUTE PROCEDURE ins_qtimetable();
 
 CREATE OR REPLACE FUNCTION getstudentdegreeid(varchar(12)) RETURNS integer AS $$
-    SELECT max(studentdegreeid) FROM studentdegrees WHERE (studentid=$1) AND (completed=false);
+	SELECT max(studentdegreeid) FROM studentdegrees WHERE (studentid=$1) AND (completed=false);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getstudentdegreeid(varchar(12), varchar(12)) RETURNS integer AS $$
@@ -164,9 +164,16 @@ CREATE OR REPLACE FUNCTION getstudentdegreeid(varchar(12), varchar(12)) RETURNS 
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION getcoremajor(integer) RETURNS varchar(75) AS $$
-    SELECT max(majors.majorname)
-    FROM studentmajors INNER JOIN majors ON studentmajors.majorid = majors.majorid
-    WHERE (studentmajors.studentdegreeid = $1) AND (studentmajors.primarymajor = true);
+	SELECT max(majors.majorname)
+	FROM studentmajors INNER JOIN majors ON studentmajors.majorid = majors.majorid
+	WHERE (studentmajors.studentdegreeid = $1) AND (studentmajors.primarymajor = true);
+$$ LANGUAGE sql;
+
+CREATE FUNCTION getcoremajor(varchar(12)) RETURNS varchar(75) AS $$
+	SELECT max(majors.majorname)
+	FROM studentmajors INNER JOIN majors ON studentmajors.majorid = majors.majorid
+		INNER JOIN studentdegrees ON studentmajors.studentdegreeid = studentdegrees.studentdegreeid
+	WHERE (studentdegrees.studentid = $1) AND (studentmajors.primarymajor = true);
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION getqstudentid(varchar(12)) RETURNS int AS $$

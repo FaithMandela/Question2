@@ -58,6 +58,7 @@ INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id,
 INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, details) VALUES (2, 0, 1, 2, 1, 70010, 80000, 'Baraza HCMS', NULL, false, true, false, 0, 0, NULL, NULL, true, NULL);
 INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, details) VALUES (3, 0, 1, 2, 1, 70010, 80000, 'Systems Support', NULL, false, true, false, 0, 0, NULL, NULL, false, NULL);
 INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, details) VALUES (4, 0, 3, 2, 1, 70005, 95500, 'Office Rent', NULL, false, false, true, 0, 0, NULL, NULL, true, NULL);
-SELECT pg_catalog.setval('items_item_id_seq', 4, true);
+INSERT INTO items (item_id, org_id, item_category_id, tax_type_id, item_unit_id, sales_account_id, purchase_account_id, item_name, bar_code, inventory, for_sale, for_purchase, sales_price, purchase_price, reorder_level, lead_time, is_active, for_stock) VALUES (5, 0, 2, 2, 1, 70005, 95500, 'Laptops', NULL, false, false, true, 0, 0, NULL, NULL, true, true);
+SELECT pg_catalog.setval('items_item_id_seq', 5, true);
 
 

@@ -1,4 +1,33 @@
 
+
+-----------------  Changes
+
+UPDATE clientpayments SET payment_type = trim(split_part(payment_reference, ':', 2)); 
+UPDATE clientpayments SET payment_reference = trim(split_part(payment_reference, ':', 1)); 
+
+
+CREATE OR REPLACE VIEW vw_statement AS
+	SELECT item_name, clientid, clientname, salesperiod, invoicedate, invoicenumber, invoiced, credit_amount, payments, amount
+	FROM 
+		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, salesperiod, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real as amount
+		FROM vwinvoicelist)
+		UNION ALL 
+		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, salesperiod, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
+		FROM vwcrnotelist)
+		UNION ALL 
+		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, payment_reference, accounting_date, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
+		FROM vw_clientpayments)) as a 
+ORDER BY invoicedate ASC;
+
+
+
+
+
+
+
+
+
+-----------------------------
 CREATE TABLE sys_menu_msg (
 	sys_menu_msg_id			serial primary key,
 	menu_id					varchar(16) not null,
@@ -330,3 +359,8 @@ CREATE OR REPLACE VIEW vw_receipt AS
 -- 	WHERE ((totalprice > 0) OR (to_char(StartDate, 'MMYYYY') = to_char(servicedate, 'MMYYYY'))))
 --   UNION ALL 
 --  (SELECT clientid, clientname, periodid, enddate, amount FROM vw_clientpayments)) as a ORDER BY startdate DESC;
+
+DELETE FROM tmpclientpayments;
+DELETE FROM clientpayments;
+
+

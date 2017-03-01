@@ -2,8 +2,8 @@
 
 import java.net.URL;
 import java.net.MalformedURLException;
-import org.baraza.web.BWebServiceService;
-import org.baraza.web.BWebService;
+import babcock.ws.DataWebService;
+import babcock.ws.DataWebServiceService;
 
 public class umisLms {
 
@@ -11,10 +11,10 @@ public class umisLms {
 	
 		try {
 	
-			URL wsURL = new URL("http://demo.dewcis.com/babcock/webservice?wsdl");
+			URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
 		
-			BWebServiceService bws = new BWebServiceService(wsURL);
-			BWebService port = bws.getBWebServicePort();
+			DataWebServiceService bws = new DataWebServiceService(wsURL);
+			DataWebService port = bws.getDataWebServicePort();
 			
 			String resp = port.getWsData(getStudentRequest("06/0382", "9b16759a62899465ab21e2e79d2ef75c"), "test123");
 			System.out.println("Reading student data: \n" + resp);

@@ -1,3 +1,4 @@
+;(function($){
 /**
  * jqGrid Galician Translation
  * Translated by Jorge Barreiro <yortx.barry@gmail.com>
@@ -5,47 +6,22 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
 **/
-/*global jQuery, define */
-(function( factory ) {
-	"use strict";
-	if ( typeof define === "function" && define.amd ) {
-		// AMD. Register as an anonymous module.
-		define([
-			"jquery",
-			"../grid.base"
-		], factory );
-	} else {
-		// Browser globals
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 $.jgrid = $.jgrid || {};
-if(!$.jgrid.hasOwnProperty("regional")) {
-	$.jgrid.regional = [];
-}
-$.jgrid.regional["gl"] = {
+$.extend($.jgrid,{
 	defaults : {
 		recordtext: "Amosando {0} - {1} de {2}",
 	    emptyrecords: "Sen rexistros que amosar",
 		loadtext: "Cargando...",
-		pgtext : "Páxina {0} de {1}",
-		savetext: "Saving...",
-		pgfirst : "First Page",
-		pglast : "Last Page",
-		pgnext : "Next Page",
-		pgprev : "Previous Page",
-		pgrecs : "Records per Page",
-		showhide: "Toggle Expand Collapse Grid"
+		pgtext : "Páxina {0} de {1}"
 	},
 	search : {
 	    caption: "Búsqueda...",
 	    Find: "Buscar",
 	    Reset: "Limpar",
-	    odata: [{ oper:'eq', text:"igual "},{ oper:'ne', text:"diferente a"},{ oper:'lt', text:"menor que"},{ oper:'le', text:"menor ou igual que"},{ oper:'gt', text:"maior que"},{ oper:'ge', text:"maior ou igual a"},{ oper:'bw', text:"empece por"},{ oper:'bn', text:"non empece por"},{ oper:'in', text:"está en"},{ oper:'ni', text:"non está en"},{ oper:'ew', text:"termina por"},{ oper:'en', text:"non termina por"},{ oper:'cn', text:"contén"},{ oper:'nc', text:"non contén"},{ oper:'nu', text:'is null'},{ oper:'nn', text:'is not null'}],
+	    odata : ['igual ', 'diferente a', 'menor que', 'menor ou igual que','maior que','maior ou igual a', 'empece por','non empece por','está en','non está en','termina por','non termina por','contén','non contén'],
 	    groupOps: [	{ op: "AND", text: "todo" },	{ op: "OR",  text: "calquera" }	],
-		operandTitle : "Click to select search operation.",
-		resetTitle : "Reset Search Value"
+		matchText: " match",
+		rulesText: " regras"
 	},
 	edit : {
 	    addCaption: "Engadir rexistro",
@@ -96,11 +72,7 @@ $.jgrid.regional["gl"] = {
 	    alertcap: "Aviso",
 	    alerttext: "Seleccione unha fila",
 		viewtext: "",
-		viewtitle: "Ver fila seleccionada",
-		savetext: "",
-		savetitle: "Save row",
-		canceltext: "",
-		canceltitle : "Cancel row editing"
+		viewtitle: "Ver fila seleccionada"
 	},
 	col : {
 	    caption: "Mostrar/ocultar columnas",
@@ -130,7 +102,6 @@ $.jgrid.regional["gl"] = {
 			S: function (j) {return j < 11 || j > 13 ? ['st', 'nd', 'rd', 'th'][Math.min((j - 1) % 10, 3)] : 'th'},
 			srcformat: 'Y-m-d',
 			newformat: 'd-m-Y',
-			parseRe : /[#%\\\/:_;.,\t\s-]/,
 			masks : {
 	            ISO8601Long:"Y-m-d H:i:s",
 	            ISO8601Short:"Y-m-d",
@@ -144,8 +115,7 @@ $.jgrid.regional["gl"] = {
 	            UniversalSortableDateTime: "Y-m-d H:i:sO",
 	            YearMonth: "F, Y"
 	        },
-	        reformatAfterEdit : false,
-			userLocalTime : false
+	        reformatAfterEdit : false
 		},
 		baseLinkUrl: '',
 		showAction: '',
@@ -153,5 +123,5 @@ $.jgrid.regional["gl"] = {
 	    checkbox : {disabled:true},
 		idName : 'id'
 	}
-};
-}));
+});
+})(jQuery);

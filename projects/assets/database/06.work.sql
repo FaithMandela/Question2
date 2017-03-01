@@ -1,6 +1,6 @@
 -- This is how you import
 --- Laptop
-INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-07-21', 1232, 0, 1, 39, 144, '');
+INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2017-01-26', 1232, 0, 1, 39, 144, '');
 
 --- CPU
 INSERT INTO assets (purchase_date, purchase_value, org_id, asset_status_id, model_id, entity_id, asset_serial) VALUES ('2016-10-04', 1223, 0, 1, 49, 144, '');
@@ -274,5 +274,29 @@ LEFT JOIN vw_client_assets b ON a.asset_id = b.asset_id
 
 GROUP BY a.asset_type_id, a.asset_type_name, a.model, a.purchase_date, a.asset_serial
 ORDER BY a.asset_type_id, a.purchase_date, a.model
+
+
+-------------- assets grouped reports
+
+SELECT vw_client_assets.pcc, vw_client_assets.client_name, vw_client_assets.asset_type_name, 
+vw_client_assets.manufacturer_name, vw_client_assets.model_name,
+vw_client_assets.asset_serial, vw_client_assets.tag_number, 
+to_char(vw_client_assets.date_issued, 'dd/MM/YYYY') as issue_date
+FROM vw_client_assets
+
+WHERE (vw_client_assets.is_issued = true) AND (vw_client_assets.retrived is null)
+AND (vw_client_assets.asset_type_id IN (1,2,3,4,5,6,7,8,9,14))
+
+ORDER BY vw_client_assets.client_name, vw_client_assets.asset_type_name, vw_client_assets.date_issued;
+
+
+--------------- Links
+
+SELECT entity_name, pcc, client_name, division, town, 
+	date_issued, link_capacity, connection_type, link_number, vlan_id, use_type, ip_allocation
+FROM vw_client_links
+WHERE (is_issued = true) AND (is_retrived = false)
+ORDER BY entity_name, client_name;
+
 
 

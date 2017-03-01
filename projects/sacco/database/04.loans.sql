@@ -215,7 +215,7 @@ CREATE VIEW vw_loan_monthly AS
 	SELECT 	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
 		vw_loans.loan_type_id, vw_loans.loan_type_name,vw_loans.approve_status,
 
-		vw_loans.entity_id, vw_loans.entity_name, vw_loans.loan_date,
+		vw_loans.entity_id,  members.expired, vw_loans.loan_date,vw_loans.entity_name,
 		vw_loans.loan_id, vw_loans.principle, vw_loans.interest, vw_loans.monthly_repayment, vw_loans.reducing_balance, 
 		vw_loans.repayment_period, vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.activated, vw_periods.closed, vw_periods.period_year,vw_periods.period_month,
 		loan_monthly.org_id, loan_monthly.loan_month_id, loan_monthly.interest_amount, 
@@ -227,7 +227,10 @@ CREATE VIEW vw_loan_monthly AS
 		
 		(vw_loans.principle + get_total_interest(vw_loans.loan_id, vw_periods.start_date + 1) + get_penalty(vw_loans.loan_id, vw_periods.start_date + 1) - vw_loans.initial_payment - get_total_repayment(vw_loans.loan_id, vw_periods.start_date + 1)) as loan_balance
 	FROM loan_monthly INNER JOIN vw_loans ON loan_monthly.loan_id = vw_loans.loan_id
+		INNER JOIN members ON vw_loans.entity_id = members.entity_id
 		INNER JOIN vw_periods ON loan_monthly.period_id = vw_periods.period_id;
+		
+		
 
 CREATE VIEW vw_loan_payments AS
 	SELECT	vw_loans.currency_id, vw_loans.currency_name, vw_loans.currency_symbol,
@@ -361,9 +364,8 @@ BEGIN
 	
 	If ( New. approve_status = 'Approved' ) THEN 
 		
-		periodid := get_open_period(New.loan_date);
 		IF(periodid is null) THEN
-		RAISE EXCEPTION 'Create active period.';
+		periodid := get_open_period(New.loan_date);
 		ELSE
 		select currency_id into currencyid from currency where org_id = NEW.org_id;
 		Select entity_name into entityname from entitys where entity_id = NEW.entity_id;
@@ -434,6 +436,7 @@ DECLARE
 	currencyid				integer;
 	vpenalty 				real;
 	periodid         		integer;
+	entityid				integer;
 	vinterest				real;
 	vpenaltypaid 			real;
 	vinterestpaid			real;
@@ -442,8 +445,8 @@ DECLARE
 BEGIN
 
 			
-    			SELECT penalty , interest_amount, start_date, vw_loan_monthly.entity_name,period_id, 
-    			vw_loans.currency_id, vw_loans.total_interest INTO vpenalty , vinterest,vdate, entityname, periodid,
+    			SELECT penalty , interest_amount, start_date, vw_loans.entity_name,period_id, vw_loans.entity_id,
+    			vw_loans.currency_id, vw_loans.total_interest INTO vpenalty , vinterest,vdate, entityname, periodid,entityid,
     			currencyid, vtotalinterest FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id 
     			WHERE( vw_loan_monthly.loan_id = New.loan_id);
     			
@@ -457,6 +460,15 @@ BEGIN
 					
 					INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
 					VALUES ( journalid, 30000,0, vtotalinterest,  entityname || ' Loan interest owing', NEW.org_id);
+					
+						INSERT INTO transactions( tx_type, transaction_type_id, for_processing, entity_id,
+										bank_account_id, department_id, currency_id, exchange_rate, transaction_date, 
+										payment_date, transaction_amount,transaction_tax_amount, reference_number, payment_number,
+										narrative, completed, is_cleared, org_id, journal_id)
+										VALUES ( 1,22,'true',entityid,0,1,currencyid,1,now()::date, vdate,vtotalinterest,1,1,1,
+										entityname || ' Loan interest','TRUE','FALSE', NEW.org_id , journalid);
+	
+   
    
 				IF (vpenalty > 0 ) THEN  
 					INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
@@ -465,10 +477,17 @@ BEGIN
  					INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
  					VALUES ( journalid, 30000,0, vpenalty,  entityname || ' Loan Penalty owing', NEW.org_id);
  					END IF;
+ 					
+ 					INSERT INTO transactions( tx_type, transaction_type_id, for_processing, entity_id,
+										bank_account_id, department_id, currency_id, exchange_rate, transaction_date, 
+										payment_date, transaction_amount,transaction_tax_amount, reference_number, payment_number,
+										narrative, completed, is_cleared, org_id, journal_id)
+										VALUES ( 1,22,'true',entityid,0,1,currencyid,1,now()::date, vdate,vpenalty,1,1,1,
+										entityname || ' Loan Peanlty','FALSE','FALSE', NEW.org_id , journalid);
 					
 			IF(NEW.is_paid = true) THEN
 			
-				SELECT penalty , interest_paid, start_date, vw_loan_monthly.entity_name, period_id, vw_loans.currency_id, 
+				SELECT penalty , interest_paid, start_date, vw_loans.entity_name, period_id, vw_loans.currency_id, 
 				vw_loan_monthly.repayment_paid INTO vpenaltypaid , vinterestpaid, vdate, 
 				entityname, periodid, currencyid,vrepaymentpaid 
 				FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id

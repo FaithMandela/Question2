@@ -95,8 +95,8 @@
 				<MENU name="Major Level Summary">679</MENU>
 			</MENU>
 			<MENU name="Exams Records" role="records,admin,par">
-				<MENU name="Instructor's submitted Score">355</MENU>
-				<MENU name="Instructor's Scores Not Submitted">365</MENU>
+				<MENU name="Submitted Score">355</MENU>
+				<MENU name="Scores Not Submitted">365</MENU>
 				<MENU name="Approved Grade Report">255</MENU>
 				<MENU name="Semester Un Official">362</MENU>
 				<MENU name="Students Semester GPA Adrress">203</MENU>
@@ -1355,32 +1355,83 @@
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="800" name="Instructor's Submited Score " type="horl" key="355" h="500">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
+	<DESK w="800" name="Submited Score " type="horl" key="355" h="500">
+		<GRID name="Instructors Score" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
-			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="qcourseview" where="(lecturesubmit = true)" key="2">
+			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vwqcourses" where="(lecturesubmit = true)">
 				<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Course">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="40" title="Instructor">instructorname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Class">classoption</TEXTFIELD>
 				<TEXTFIELD w="40" title="Department">departmentname</TEXTFIELD>
-				<JASPER filtered="true" name="Instructor's Score Report" printcopies="1" reportfile="qgradeviewinsturctor.jasper" key="4"></JASPER>
-				<JASPER filtered="true" name="Score Submision Report" printcopies="1" reportfile="qgradeviewinsturctora.jasper" key="5"></JASPER>
+				<JASPER filtered="true" name="Instructor's Score Report" printcopies="1" reportfile="qgradeviewinsturctor.jasper"></JASPER>
+				<JASPER filtered="true" name="Score Submision Report" printcopies="1" reportfile="qgradeviewinsturctora.jasper"></JASPER>
+			</GRID>
+		</GRID>
+		<GRID name="Department Score" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
+			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vwqcourses" where="(departmentsubmit = true)">
+				<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Course">coursetitle</TEXTFIELD>
+				<TEXTFIELD w="40" title="Instructor">instructorname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Class">classoption</TEXTFIELD>
+				<TEXTFIELD w="40" title="Department">departmentname</TEXTFIELD>
+				<JASPER filtered="true" name="Score Submision Report" printcopies="1" reportfile="qgradeviewinsturctora.jasper"></JASPER>
+			</GRID>
+		</GRID>
+		<GRID name="Faculty Score" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
+			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vwqcourses" where="(facultysubmit = true)">
+				<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Course">coursetitle</TEXTFIELD>
+				<TEXTFIELD w="40" title="Instructor">instructorname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Class">classoption</TEXTFIELD>
+				<TEXTFIELD w="40" title="Department">departmentname</TEXTFIELD>
+				<JASPER filtered="true" name="Score Submision Report" printcopies="1" reportfile="qgradeviewinsturctora.jasper"></JASPER>
 			</GRID>
 		</GRID>
 	</DESK>
-	<DESK w="800" name="Instructor's Not Submited Score " type="horl" key="365" h="500">
-		<GRID name="Semesters" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
+	<DESK w="800" name="Not Submited Score " type="horl" key="365" h="500">
+		<GRID name="Instructors" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
 			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
-			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="qcourseview" where="(lecturesubmit = false)" key="2">
+			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vwqcourses" where="(lecturesubmit = false)">
 				<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
 				<TEXTFIELD w="40" title="Course">coursetitle</TEXTFIELD>
 				<TEXTFIELD w="40" title="Instructor">instructorname</TEXTFIELD>
 				<TEXTFIELD w="40" title="Class">classoption</TEXTFIELD>
 				<TEXTFIELD w="40" title="Department">departmentname</TEXTFIELD>
-				<JASPER filtered="true" name="Instructor's Score Report" printcopies="1" reportfile="qgradeviewinsturctor.jasper" key="4"></JASPER>
+				<TEXTFIELD w="40" title="Enrolment">enrolment</TEXTFIELD>
+				<JASPER filtered="true" name="Instructor's Score Report" printcopies="1" reportfile="qgradeviewinsturctor.jasper"></JASPER>
+			</GRID>
+		</GRID>
+		<GRID name="Department" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
+			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vwqcourses" where="(departmentsubmit = false)">
+				<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Course">coursetitle</TEXTFIELD>
+				<TEXTFIELD w="40" title="Instructor">instructorname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Class">classoption</TEXTFIELD>
+				<TEXTFIELD w="40" title="Department">departmentname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Enrolment">enrolment</TEXTFIELD>
+				<JASPER filtered="true" name="Instructor's Score Report" printcopies="1" reportfile="qgradeviewinsturctor.jasper"></JASPER>
+			</GRID>
+		</GRID>
+		<GRID name="Faculty" keyfield="quarterid" orderby="quarterid desc" table="quarterview">
+			<TEXTFIELD w="240" title="Semester ID">quarterid</TEXTFIELD>
+			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
+			<GRID name="Q Courses" keyfield="qcourseid" orderby="departmentname" linkfield="quarterid" table="vwqcourses" where="(facultysubmit = false)">
+				<TEXTFIELD w="40" title="Code">courseid</TEXTFIELD>
+				<TEXTFIELD w="40" title="Course">coursetitle</TEXTFIELD>
+				<TEXTFIELD w="40" title="Instructor">instructorname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Class">classoption</TEXTFIELD>
+				<TEXTFIELD w="40" title="Department">departmentname</TEXTFIELD>
+				<TEXTFIELD w="40" title="Enrolment">enrolment</TEXTFIELD>
+				<JASPER filtered="true" name="Instructor's Score Report" printcopies="1" reportfile="qgradeviewinsturctor.jasper"></JASPER>
 			</GRID>
 		</GRID>
 	</DESK>

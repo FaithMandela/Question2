@@ -85,7 +85,7 @@ public class BReportMaker {
 			myReport += "				<reportElement style=\"Column header\" x=\"" + Integer.toString(x) + "\"";
 			myReport += " y=\"0\" width=\"" + Integer.toString(w) + "\" height=\"15\" forecolor=\"#000000\"/>\n";
 			myReport += "				<textElement>\n";
-			myReport += "					<font fontName=\"Times New Roman\"/>\n";
+			myReport += "					<font size=\"10\" fontName=\"Times New Roman\"/>\n";
 			myReport += "				</textElement>\n";
 			myReport += "				<text><![CDATA[" + query.initCap(query.getFieldName(i)) + "]]></text>\n";
 			myReport += "			</staticText>\n";
@@ -104,7 +104,7 @@ public class BReportMaker {
 			myReport += "					<reportElement style=\"Detail\" x=\"" + Integer.toString(x) + "\" y=\"0\"";
 			myReport += " width=\"" + Integer.toString(w) + "\" height=\"15\"/>\n";
 			myReport += "					<textElement>\n";
-			myReport += "						<font fontName=\"Times New Roman\"/>\n";
+			myReport += "						<font size=\"10\" fontName=\"Times New Roman\"/>\n";
 			myReport += "					</textElement>\n";
 			myReport += "					<textFieldExpression class=\"";
  			myReport +=  query.getColumnClass(i).toString().replace("class ", "").replace("java.sql.Date", "java.util.Date") + "\">";

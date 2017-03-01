@@ -178,6 +178,7 @@ CREATE TABLE courses (
 	iscurrent			boolean not null default true,
 	nogpa				boolean not null default false,
 	norepeats			boolean not null default false,
+	allow_ws			boolean not null default false,
 	yeartaken			integer not null default 1,
 	details				text
 );
@@ -1055,4 +1056,14 @@ CREATE INDEX qposting_logs_qstudentid ON qposting_logs (qstudentid);
 CREATE INDEX qposting_logs_sys_audit_trail_id ON qposting_logs (sys_audit_trail_id);
 
 ALTER TABLE entitys ADD mail_user	varchar(50);
+
+
+CREATE TABLE import_grades (
+	import_grade_id				serial primary key,
+	course_id					varchar(12),
+	session_id					varchar(12),
+	student_id					varchar(12),
+	score						real,
+	created						timestamp default current_timestamp
+);
 

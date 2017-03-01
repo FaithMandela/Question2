@@ -1,5 +1,7 @@
 
 
+UPDATE default_adjustments SET amount = WHERE adjustment_id = 1 AND entity_id = (SELECT entity_id FROM employees WHERE employee_id = '');
+
 ALTER TABLE loan_monthly ADD extra_payment			real default 0 not null;
 
 CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$

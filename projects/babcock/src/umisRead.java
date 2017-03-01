@@ -18,24 +18,24 @@ public class umisRead {
 			
 			
 			String resp = port.getWsData(getGrades(), "babcockWB12345");
-			//System.out.println("Reading grade data: \n" + resp);
+			System.out.println("Reading grade data: \n" + resp);
 			
 			resp = port.getWsData(getMajors(), "babcockWB12345");
-			//System.out.println("Reading mjors data: \n" + resp);
+			System.out.println("Reading mjors data: \n" + resp);
 			
 			resp = port.getWsData(getSchools(), "babcockWB12345");
-			//System.out.println("Reading school data: \n" + resp);
+			System.out.println("Reading school data: \n" + resp);
 			
 			resp = port.getWsData(getDepartments(), "babcockWB12345");
-			//System.out.println("Reading department data: \n" + resp);
+			System.out.println("Reading department data: \n" + resp);
 			
 			resp = port.getWsData(getResidences(), "babcockWB12345");
-			//System.out.println("Reading residences data: \n" + resp);
+			System.out.println("Reading residences data: \n" + resp);
 			
 			resp = port.getWsData(getSemesters(), "babcockWB12345");
-			//System.out.println("Reading residences data: \n" + resp);
+			System.out.println("Reading residences data: \n" + resp);
 			
-			resp = port.getWsData(getStudentSemester("2016/2017.1"), "babcockWB12345");
+			resp = port.getWsData(getStudentSemester("2016/2017.1", "ACCT"), "babcockWB12345");
 			System.out.println("Reading residences data: \n" + resp);
 			
 			
@@ -134,9 +134,10 @@ public class umisRead {
 		return xml;
 	}	
 	
-	private static String getStudentSemester(String quarterId) {	
+	private static String getStudentSemester(String quarterId, String majorId) {
 		String xml = "<QUERY>\n";
-		xml += "<GRID name=\"Semester Student List\" keyfield=\"qstudentid\" table=\"ws_qstudents\" where=\"quarterid = '" + quarterId + "'\">\n";
+		xml += "<GRID name=\"Semester Student List\" keyfield=\"qstudentid\" table=\"ws_qstudents\" ";
+		xml += "where=\"quarterid = '" + quarterId + "' AND majorid = '" +  majorId + "'\">\n";
 		xml += "	<TEXTFIELD>quarterid</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>studentid</TEXTFIELD>\n";
 		xml += "	<TEXTFIELD>studentname</TEXTFIELD>\n";

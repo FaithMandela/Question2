@@ -26,9 +26,9 @@
 	<queryString>
 		<![CDATA[SELECT vw_contributions.contribution_id,vw_contributions.entity_id,vw_contributions.period_id,vw_contributions.org_id,
 vw_contributions.payment_type_id,vw_contributions.active_balance,vw_contributions.contribution_paid, vw_contributions.receipt_date,vw_contributions.receipt,vw_contributions.entry_date,vw_contributions.transaction_ref,vw_contributions.contribution_amount,
-vw_contributions.entity_name,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
+vw_contributions.full_name,vw_contributions.contribution_type_id,vw_contributions.contribution_type_name,vw_contributions.payment_type_name,vw_contributions.payment_narrative
 FROM vw_contributions
-where member_is_active = 'true' and is_paid = 'true' and entity_id = '$P!{entity_id}']]>
+where is_paid = 'true' and entity_id = '$P!{entity_id}']]>
 	</queryString>
 	<field name="contribution_id" class="java.lang.Integer"/>
 	<field name="entity_id" class="java.lang.Integer"/>
@@ -42,7 +42,7 @@ where member_is_active = 'true' and is_paid = 'true' and entity_id = '$P!{entity
 	<field name="entry_date" class="java.sql.Timestamp"/>
 	<field name="transaction_ref" class="java.lang.String"/>
 	<field name="contribution_amount" class="java.lang.Float"/>
-	<field name="entity_name" class="java.lang.String"/>
+	<field name="full_name" class="java.lang.String"/>
 	<field name="contribution_type_id" class="java.lang.Integer"/>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="payment_type_name" class="java.lang.String"/>
@@ -95,7 +95,7 @@ where member_is_active = 'true' and is_paid = 'true' and entity_id = '$P!{entity
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

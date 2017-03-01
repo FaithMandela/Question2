@@ -28,6 +28,9 @@
 	<parameter name="startrange" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="currency_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_trx.org_logo, vw_trx.org_name, vw_trx.org_pin, vw_trx.org_vat_number, vw_trx.org_invoice_footer, vw_trx.org_premises, vw_trx.org_street, vw_trx.org_post_office_box, vw_trx.org_postal_code, vw_trx.org_town, vw_trx.org_sys_country_name, vw_trx.org_phone_number, vw_trx.org_email, vw_trx.org_website, vw_trx.entity_id, vw_trx.entity_name,
 ('DC-' || lpad(CAST(vw_trx.entity_id as varchar), 5, '0')) as entity_number,
@@ -42,13 +45,15 @@ vw_trx.order_number, vw_trx.payment_terms, vw_trx.currency_symbol, vw_trx.job,
 vw_trx.narrative, vw_trx.transaction_date, vw_trx.transaction_amount, vw_trx.debit_amount, vw_trx.credit_amount,
 (upper(vw_trx.transaction_type_name) || ' : ' || COALESCE(narrative, '')) as narrative_disp,
 '$P!{startrange}'::date as starting_from,
-get_balance(vw_trx.entity_id, '$P!{startrange}') as c_balance
+get_balance(vw_trx.entity_id, vw_trx.currency_id, '$P!{startrange}') as c_balance
 
 FROM vw_trx
 
 WHERE (vw_trx.approve_status = 'Approved')
 	AND (vw_trx.for_posting = true)
+	AND (vw_trx.ledger_type_id is null)
 	AND (vw_trx.entity_id = '$P!{entity_id}')
+	AND (vw_trx.currency_id = '$P!{currency_id}')
 	AND (vw_trx.transaction_date >= '$P!{startrange}'::date)
 $P!{organd}
 

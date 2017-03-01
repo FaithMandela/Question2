@@ -341,8 +341,8 @@ BEGIN
 		RAISE EXCEPTION 'No Degree Indicated contact Registrars Office';
 	ELSIF (getcoremajor(mydegreeid) IS NULL) THEN
 		RAISE EXCEPTION 'No Major Indicated contact Registrars Office';
-	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
-		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
+---	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
+---		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
 	ELSIF (myrec.qstudentid IS NULL) THEN
 		INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, currbalance, charges, financenarrative, paymenttype, org_id)
 		VALUES ($1, mydegreeid, mystudylevel, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);
@@ -940,9 +940,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION getdbgradeid(integer, integer) RETURNS varchar(2) AS $$
-	SELECT CASE WHEN max(gradeid) is null THEN 'NG' ELSE max(gradeid) END
-	FROM grades 
-	WHERE (minrange <= $1) AND (maxrange >= $1) AND (org_id = $2);
+	SELECT CASE WHEN max(aa.gradeid) is null THEN 'NG' ELSE max(aa.gradeid) END
+	FROM ((SELECT gradeid, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeid, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION updqcoursegrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
@@ -2294,3 +2299,32 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION aft_import_grades() RETURNS trigger AS $$
+DECLARE
+	v_qgradeid				integer;
+	v_allow_ws				boolean;
+BEGIN
+
+	SELECT allow_ws INTO v_allow_ws
+	FROM courses 
+	WHERE courseid = NEW.course_id;
+	
+	IF(v_allow_ws = true)THEN
+		SELECT qgradeid INTO v_qgradeid
+		FROM studentgradeview
+		WHERE (courseid = NEW.course_id) AND (quarterid = NEW.session_id)
+			AND (studentid = NEW.student_id);
+			
+		UPDATE qgrades SET instructormarks = NEW.score WHERE qgradeid = v_qgradeid;
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_import_grades AFTER INSERT OR UPDATE ON import_grades
+  FOR EACH ROW EXECUTE PROCEDURE aft_import_grades();
+  
+  
+  
