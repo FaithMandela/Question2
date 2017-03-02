@@ -64,10 +64,10 @@ CREATE TABLE works (
 	work_rate_id			integer references work_rates not null,
 	org_id					integer references orgs,
 	
-	work_weight				real default 0  not null,
+	work_weight				real default 0 not null,
 	work_pay				integer default 0 not null,
 	overtime				real default 0  not null,
-	special_time			real default 0  not null,
+	special_time			real default 0 not null,
 	work_amount				real default 0 not null,
 	narrative				varchar(320),
 	UNIQUE(day_work_id, entity_id)
@@ -83,10 +83,11 @@ CREATE TABLE work_groups (
 	work_rate_id			integer references work_rates not null,
 	org_id					integer references orgs,
 	
-	work_weight				real default 0  not null,
+	group_number			integer default 0 not null,
+	work_weight				real default 0 not null,
 	work_pay				integer default 0 not null,
-	overtime				real default 0  not null,
-	special_time			real default 0  not null,
+	overtime				real default 0 not null,
+	special_time			real default 0 not null,
 	work_amount				real default 0 not null,
 	narrative				varchar(320)
 );
@@ -121,15 +122,12 @@ CREATE VIEW vw_day_works AS
 		INNER JOIN farm_fields ON day_works.farm_field_id = farm_fields.farm_field_id
 		INNER JOIN vw_periods ON day_works.period_id = vw_periods.period_id;
 		
-		
 CREATE VIEW vw_works AS
 	SELECT vw_day_works.supervisor_id, vw_day_works.supervisor_name, 
 		vw_day_works.farm_field_id, vw_day_works.farm_field_name, 
-		
 		vw_day_works.period_id, vw_day_works.start_date, vw_day_works.end_date, 
 		vw_day_works.activated, vw_day_works.closed, vw_day_works.month_id, vw_day_works.period_year, 
-		vw_day_works.period_month, vw_day_works.quarter, vw_day_works.semister,
-		
+		vw_day_works.period_month, vw_day_works.quarter, vw_day_works.semister,		
 		vw_day_works.day_work_id, vw_day_works.batch_ref, vw_day_works.work_date, 
 		vw_day_works.work_start, vw_day_works.work_end, vw_day_works.farm_weight, vw_day_works.factory_weight,
 		
@@ -139,10 +137,44 @@ CREATE VIEW vw_works AS
 
 		works.org_id, works.work_id, works.work_weight, works.work_pay, works.overtime, works.special_time,
 		works.work_amount, works.narrative
-	
 	FROM works INNER JOIN vw_day_works ON works.day_work_id = vw_day_works.day_work_id
 		INNER JOIN entitys ON works.entity_id = entitys.entity_id
 		INNER JOIN work_rates ON works.work_rate_id = work_rates.work_rate_id;
+		
+		
+CREATE VIEW vw_work_groups AS
+	SELECT vw_day_works.supervisor_id, vw_day_works.supervisor_name, 
+		vw_day_works.farm_field_id, vw_day_works.farm_field_name, 
+		vw_day_works.period_id, vw_day_works.start_date, vw_day_works.end_date, 
+		vw_day_works.activated, vw_day_works.closed, vw_day_works.month_id, vw_day_works.period_year, 
+		vw_day_works.period_month, vw_day_works.quarter, vw_day_works.semister,		
+		vw_day_works.day_work_id, vw_day_works.batch_ref, vw_day_works.work_date, 
+		vw_day_works.work_start, vw_day_works.work_end, vw_day_works.farm_weight, vw_day_works.factory_weight,
+		
+		work_rates.work_rate_id, work_rates.work_rate_name, work_rates.work_rate_code,
+		
+		work_groups.org_id, work_groups.work_group_id, work_groups.work_weight, work_groups.work_pay, 
+		work_groups.overtime, work_groups.special_time, work_groups.work_amount, 
+		work_groups.group_number, work_groups.narrative
+	FROM work_groups INNER JOIN vw_day_works ON work_groups.day_work_id = vw_day_works.day_work_id
+		INNER JOIN work_rates ON work_groups.work_rate_id = work_rates.work_rate_id;
+	
+CREATE VIEW vw_work_members AS
+	SELECT vw_work_groups.supervisor_id, vw_work_groups.supervisor_name, 
+		vw_work_groups.farm_field_id, vw_work_groups.farm_field_name, 
+		vw_work_groups.period_id, vw_work_groups.start_date, vw_work_groups.end_date, 
+		vw_work_groups.activated, vw_work_groups.closed, vw_work_groups.month_id, vw_work_groups.period_year, 
+		vw_work_groups.period_month, vw_work_groups.quarter, vw_work_groups.semister,		
+		vw_work_groups.day_work_id, vw_work_groups.batch_ref, vw_work_groups.work_date, 
+		vw_work_groups.work_start, vw_work_groups.work_end, vw_work_groups.farm_weight, vw_work_groups.factory_weight,
+		vw_work_groups.work_rate_id, vw_work_groups.work_rate_name, vw_work_groups.work_rate_code,
+		vw_work_groups.work_group_id, vw_work_groups.work_weight, vw_work_groups.work_pay, 
+		vw_work_groups.overtime, vw_work_groups.special_time, vw_work_groups.work_amount, vw_work_groups.group_number,
+		
+		entitys.entity_id, entitys.entity_name, 
+		work_members.org_id, work_members.work_member_id, work_members.narrative
+	FROM work_members INNER JOIN vw_work_groups ON work_members.work_group_id = vw_work_groups.work_group_id
+		INNER JOIN entitys ON work_members.entity_id = entitys.entity_id;
 	
 	
 CREATE OR REPLACE FUNCTION ins_works() RETURNS trigger AS $$
@@ -206,4 +238,27 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER upd_work_rates AFTER UPDATE ON work_rates
     FOR EACH ROW EXECUTE PROCEDURE upd_work_rates();
     
+
+CREATE OR REPLACE FUNCTION aft_work_groups() RETURNS trigger AS $$
+DECLARE
+	v_work_group_id			integer;
+BEGIN
+
+	SELECT max(work_group_id) INTO v_work_group_id
+	FROM work_groups
+	WHERE (work_group_id <> NEW.work_group_id) AND (group_number = NEW.group_number)
+		AND (org_id = NEW.org_id);
 	
+	INSERT INTO work_members (work_group_id, entity_id, org_id)
+	SELECT NEW.work_group_id, entity_id, org_id
+	FROM work_members
+	WHERE (work_group_id = v_work_group_id);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_work_groups AFTER INSERT ON work_groups
+    FOR EACH ROW EXECUTE PROCEDURE aft_work_groups();
+    
+    
