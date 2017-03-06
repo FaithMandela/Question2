@@ -415,7 +415,7 @@ $P!{organd};]]>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_employee_adjustments_d1.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement positionType="Float" x="8" y="124" width="527" height="18" uuid="de246c76-3ad3-488d-a0bf-4ef036085266"/>
+				<reportElement positionType="Float" x="8" y="123" width="527" height="18" uuid="de246c76-3ad3-488d-a0bf-4ef036085266"/>
 				<subreportParameter name="filterid"/>
 				<subreportParameter name="employee_month_id">
 					<subreportParameterExpression><![CDATA[$F{employee_month_id}]]></subreportParameterExpression>
