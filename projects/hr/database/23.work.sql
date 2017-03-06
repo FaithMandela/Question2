@@ -25,3 +25,15 @@ UPDATE tax_rates SET tax_range = 32247.5 WHERE tax_rate_id = 3;
 UPDATE tax_rates SET tax_range = 42781.08 WHERE tax_rate_id = 4;
 
 UPDATE tax_types SET tax_relief = 1280 WHERE tax_type_id = 1;
+
+
+----------- Update tax on a larger scale using work join
+INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate)
+SELECT aa.tax_type_id, aa.org_id, bb.tax_range, bb.tax_rate
+FROM (SELECT tax_type_id, tax_type_name, org_id FROM tax_types WHERE org_id <> 0) aa INNER JOIN
+(SELECT tax_types.tax_type_name, tax_rates.tax_type_id, tax_rates.tax_range, tax_rates.tax_rate
+FROM tax_types INNER JOIN tax_rates ON tax_types.tax_type_id = tax_rates.tax_type_id
+WHERE tax_types.org_id = 0) bb
+ON aa.tax_type_name = bb.tax_type_name
+ORDER BY aa.tax_type_id, bb.tax_range
+

@@ -141,7 +141,6 @@ CREATE VIEW vw_works AS
 		INNER JOIN entitys ON works.entity_id = entitys.entity_id
 		INNER JOIN work_rates ON works.work_rate_id = work_rates.work_rate_id;
 		
-		
 CREATE VIEW vw_work_groups AS
 	SELECT vw_day_works.supervisor_id, vw_day_works.supervisor_name, 
 		vw_day_works.farm_field_id, vw_day_works.farm_field_name, 
@@ -155,9 +154,13 @@ CREATE VIEW vw_work_groups AS
 		
 		work_groups.org_id, work_groups.work_group_id, work_groups.work_weight, work_groups.work_pay, 
 		work_groups.overtime, work_groups.special_time, work_groups.work_amount, 
-		work_groups.group_number, work_groups.narrative
+		work_groups.group_number, work_groups.narrative,
+		wm.worker_count, 
+		(CASE WHEN wm.worker_count = 0 THEN 0 ELSE (work_groups.work_amount / wm.worker_count) END) as worker_amount
 	FROM work_groups INNER JOIN vw_day_works ON work_groups.day_work_id = vw_day_works.day_work_id
-		INNER JOIN work_rates ON work_groups.work_rate_id = work_rates.work_rate_id;
+		INNER JOIN work_rates ON work_groups.work_rate_id = work_rates.work_rate_id
+		LEFT JOIN (SELECT work_group_id, count(work_member_id) as worker_count
+			FROM work_members GROUP BY work_group_id) wm ON work_groups.work_group_id = wm.work_group_id;
 	
 CREATE VIEW vw_work_members AS
 	SELECT vw_work_groups.supervisor_id, vw_work_groups.supervisor_name, 
@@ -169,7 +172,8 @@ CREATE VIEW vw_work_members AS
 		vw_work_groups.work_start, vw_work_groups.work_end, vw_work_groups.farm_weight, vw_work_groups.factory_weight,
 		vw_work_groups.work_rate_id, vw_work_groups.work_rate_name, vw_work_groups.work_rate_code,
 		vw_work_groups.work_group_id, vw_work_groups.work_weight, vw_work_groups.work_pay, 
-		vw_work_groups.overtime, vw_work_groups.special_time, vw_work_groups.work_amount, vw_work_groups.group_number,
+		vw_work_groups.overtime, vw_work_groups.special_time, vw_work_groups.work_amount, 
+		vw_work_groups.group_number, vw_work_groups.worker_count, vw_work_groups.worker_amount,
 		
 		entitys.entity_id, entitys.entity_name, 
 		work_members.org_id, work_members.work_member_id, work_members.narrative
@@ -195,8 +199,29 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_works BEFORE INSERT ON works
+CREATE TRIGGER ins_works BEFORE INSERT OR UPDATE ON works
     FOR EACH ROW EXECUTE PROCEDURE ins_works();
+    
+CREATE OR REPLACE FUNCTION ins_work_groups() RETURNS trigger AS $$
+BEGIN
+
+	IF(NEW.work_weight = 0) AND (NEW.work_pay = 0)THEN
+		NEW.work_pay = 1;
+	END IF;
+	
+	SELECT (work_rates.weight_rate * NEW.work_weight + work_rates.work_rate * NEW.work_pay +
+		work_rates.overtime_rate * NEW.overtime + work_rates.special_rate * NEW.special_time) INTO NEW.work_amount
+	
+	FROM work_rates 
+	WHERE work_rate_id = NEW.work_rate_id;
+	
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_work_groups BEFORE INSERT OR UPDATE ON work_groups
+    FOR EACH ROW EXECUTE PROCEDURE ins_work_groups();
     
 CREATE OR REPLACE FUNCTION farm_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -211,6 +236,18 @@ BEGIN
 		LOOP
 		
 			UPDATE employee_month SET basic_pay = rec.sum_amount
+			WHERE (entity_id = rec.entity_id) 
+				AND (period_id = $1::int);
+				
+		END LOOP;
+		
+		FOR rec IN SELECT vw_work_members.entity_id, sum(vw_work_members.work_amount) as sum_amount
+			FROM vw_work_members
+			WHERE (vw_work_members.period_id = $1::int) 
+			GROUP BY vw_work_members.entity_id
+		LOOP
+		
+			UPDATE employee_month SET basic_pay = basic_pay + rec.sum_amount
 			WHERE (entity_id = rec.entity_id) 
 				AND (period_id = $1::int);
 				
