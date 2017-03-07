@@ -29,7 +29,10 @@
 		<defaultValueExpression><![CDATA["/root/baraza/projects/hr/reports/"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_day_works.supervisor_name, vw_day_works.farm_field_name, vw_day_works.period_year, vw_day_works.period_month, vw_day_works.batch_ref, vw_day_works.work_date, vw_day_works.work_start, vw_day_works.work_end, vw_day_works.farm_weight, vw_day_works.factory_weight, vw_day_works.details
+		<![CDATA[SELECT vw_day_works.supervisor_name, vw_day_works.farm_field_name, vw_day_works.period_year,
+ vw_day_works.period_month, vw_day_works.batch_ref, vw_day_works.work_date, vw_day_works.work_start,
+ vw_day_works.work_end, vw_day_works.farm_weight, vw_day_works.factory_weight, vw_day_works.details,
+ vw_day_works.day_work_id
 
 FROM vw_day_works
 
@@ -46,6 +49,7 @@ WHERE (day_work_id = $P!{filterid})]]>
 	<field name="farm_weight" class="java.lang.Float"/>
 	<field name="factory_weight" class="java.lang.Float"/>
 	<field name="details" class="java.lang.String"/>
+	<field name="day_work_id" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -213,14 +217,22 @@ WHERE (day_work_id = $P!{filterid})]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="23" splitType="Stretch">
+		<band height="50" splitType="Stretch">
 			<subreport>
 				<reportElement x="0" y="0" width="555" height="22" uuid="fd9b6f05-4b9f-4aa6-889d-41cd45a1590d"/>
-				<subreportParameter name="filterid">
-					<subreportParameterExpression><![CDATA[$P{filterid}]]></subreportParameterExpression>
+				<subreportParameter name="daysworkid">
+					<subreportParameterExpression><![CDATA[$F{day_work_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_works.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="1" y="25" width="555" height="22" uuid="cc82de14-000e-42f7-ac02-02e1736cbb2e"/>
+				<subreportParameter name="daysworkid">
+					<subreportParameterExpression><![CDATA[$F{day_work_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_work_members.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>

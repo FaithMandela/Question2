@@ -4,6 +4,7 @@ CREATE TABLE work_rates (
 	org_id					integer references orgs,
 	work_rate_name			varchar(50),
 	work_rate_code			varchar(50),
+	group_rate				boolean default false not null,
 	work_rate				real default 0 not null,
 	weight_rate				real default 0 not null,
 	overtime_rate			real default 0 not null,
@@ -140,7 +141,7 @@ CREATE VIEW vw_works AS
 	FROM works INNER JOIN vw_day_works ON works.day_work_id = vw_day_works.day_work_id
 		INNER JOIN entitys ON works.entity_id = entitys.entity_id
 		INNER JOIN work_rates ON works.work_rate_id = work_rates.work_rate_id;
-		
+
 CREATE VIEW vw_work_groups AS
 	SELECT vw_day_works.supervisor_id, vw_day_works.supervisor_name, 
 		vw_day_works.farm_field_id, vw_day_works.farm_field_name, 
@@ -156,6 +157,7 @@ CREATE VIEW vw_work_groups AS
 		work_groups.overtime, work_groups.special_time, work_groups.work_amount, 
 		work_groups.group_number, work_groups.narrative,
 		wm.worker_count, 
+		(CASE WHEN wm.worker_count = 0 THEN 0 ELSE (work_groups.work_weight / wm.worker_count) END) as worker_weight,
 		(CASE WHEN wm.worker_count = 0 THEN 0 ELSE (work_groups.work_amount / wm.worker_count) END) as worker_amount
 	FROM work_groups INNER JOIN vw_day_works ON work_groups.day_work_id = vw_day_works.day_work_id
 		INNER JOIN work_rates ON work_groups.work_rate_id = work_rates.work_rate_id
@@ -173,9 +175,10 @@ CREATE VIEW vw_work_members AS
 		vw_work_groups.work_rate_id, vw_work_groups.work_rate_name, vw_work_groups.work_rate_code,
 		vw_work_groups.work_group_id, vw_work_groups.work_weight, vw_work_groups.work_pay, 
 		vw_work_groups.overtime, vw_work_groups.special_time, vw_work_groups.work_amount, 
-		vw_work_groups.group_number, vw_work_groups.worker_count, vw_work_groups.worker_amount,
+		vw_work_groups.group_number, vw_work_groups.worker_count, 
+		vw_work_groups.worker_weight, vw_work_groups.worker_amount,
 		
-		entitys.entity_id, entitys.entity_name, 
+		entitys.entity_id as worker_id, entitys.entity_name as worker_name, 
 		work_members.org_id, work_members.work_member_id, work_members.narrative
 	FROM work_members INNER JOIN vw_work_groups ON work_members.work_group_id = vw_work_groups.work_group_id
 		INNER JOIN entitys ON work_members.entity_id = entitys.entity_id;
