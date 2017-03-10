@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="son_statements" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b4590c5f-f591-4895-b50d-1fdaec5d54a1">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pcc_statements" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b4590c5f-f591-4895-b50d-1fdaec5d54a1">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -15,23 +15,26 @@
 	<parameter name="id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
+	<parameter name="org_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT a.dr, a.cr, a.order_date::date AS order_date, a.son, a.pcc,
 		a.org_name, a.entity_id, a.dr+ a.bonus- a.cr AS balance, a.details,a.entity_name,
-a.curr_balance,batch_no,a.bonus
+a.curr_balance  ,batch_no,a.bonus
 	FROM ((SELECT COALESCE(vw_son_points.points, 0::real)  AS dr,
 		0::real AS cr, vw_son_points.period AS order_date, vw_son_points.org_son as son,
 		vw_son_points.org_pcc as pcc, vw_son_points.org_name, vw_son_points.entity_id,
-		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name, getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,null::int as batch_no, COALESCE(vw_son_points.bonus, 0::real) as bonus
+		('Earnings @ Ksh '||amount||' per segment for '|| segments||' segments sold in '|| ticket_period)as details,vw_son_points.entity_name, getPccbalance('$P!{org_id}','$P!{minDate}') as curr_balance,null::int as batch_no, COALESCE(vw_son_points.bonus, 0::real) as bonus,org_id
 	FROM vw_son_points)
 	UNION ALL
 	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
 		vw_orders.order_date::date AS order_date, vw_orders.son, vw_orders.pcc, vw_orders.org_name,
 		vw_orders.entity_id,
 		get_order_details(vw_orders.order_id) AS details,vw_orders.entity_name,
-getSonbalance('$P!{id}','$P!{minDate}') as curr_balance,vw_orders.batch_no, 0::real as bonus
+getPccbalance('$P!{org_id}','$P!{minDate}') as curr_balance,vw_orders.batch_no, 0::real as bonus,org_id
 	FROM vw_orders)) a
-	WHERE entity_id = '$P!{id}'
+	WHERE org_id = '$P!{org_id}'
 AND order_date >= '$P!{minDate}'
 AND order_date <= '$P!{maxDate}'
 	ORDER BY a.order_date ASC;]]>
@@ -49,7 +52,7 @@ AND order_date <= '$P!{maxDate}'
 	<field name="curr_balance" class="java.lang.Float"/>
 	<field name="batch_no" class="java.lang.Integer"/>
 	<field name="bonus" class="java.lang.Float"/>
-	<variable name="v_balance" class="java.lang.Float">
+	<variable name="v_balance" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{curr_balance}]]></variableExpression>
 	</variable>
 	<variable name="total_dr" class="java.lang.Float" calculation="Sum">
@@ -77,7 +80,7 @@ AND order_date <= '$P!{maxDate}'
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24" isBold="true"/>
 				</textElement>
-				<text><![CDATA[CONSULTANT STATEMENT]]></text>
+				<text><![CDATA[AGENCY STATEMENT]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -119,7 +122,7 @@ AND order_date <= '$P!{maxDate}'
 				<text><![CDATA[Balance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="665" y="0" width="67" height="20" uuid="c99f9f2f-f47c-43aa-a079-ee1485266734"/>
+				<reportElement x="666" y="0" width="66" height="20" uuid="c99f9f2f-f47c-43aa-a079-ee1485266734"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -165,7 +168,7 @@ AND order_date <= '$P!{maxDate}'
 				<text><![CDATA[Batch No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="620" y="0" width="45" height="20" uuid="05896a5a-1b02-4b14-a84c-de959a503361"/>
+				<reportElement x="624" y="0" width="41" height="20" uuid="05896a5a-1b02-4b14-a84c-de959a503361"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 				</textElement>
@@ -174,7 +177,7 @@ AND order_date <= '$P!{maxDate}'
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="21" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="MMM-yyyy" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="65" height="20" isPrintWhenDetailOverflows="true" uuid="c5cf82b7-340e-4e77-a08f-f2b968e0d0af"/>
 				<textElement>
@@ -200,7 +203,7 @@ AND order_date <= '$P!{maxDate}'
 				<textFieldExpression><![CDATA[$F{dr}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="665" y="0" width="67" height="20" isPrintWhenDetailOverflows="true" uuid="c691b140-9a33-46c1-bdcf-fc648d831a6f"/>
+				<reportElement x="666" y="0" width="66" height="20" isPrintWhenDetailOverflows="true" uuid="c691b140-9a33-46c1-bdcf-fc648d831a6f"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -251,7 +254,7 @@ AND order_date <= '$P!{maxDate}'
 				<textFieldExpression><![CDATA[$F{batch_no}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="620" y="0" width="45" height="20" isPrintWhenDetailOverflows="true" uuid="5e2293c3-4802-45eb-88be-4ac4dd135647"/>
+				<reportElement x="624" y="0" width="41" height="20" isPrintWhenDetailOverflows="true" uuid="5e2293c3-4802-45eb-88be-4ac4dd135647"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
@@ -268,14 +271,14 @@ AND order_date <= '$P!{maxDate}'
 	<summary>
 		<band height="30" splitType="Stretch">
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="737" y="5" width="65" height="15" isPrintWhenDetailOverflows="true" uuid="109a6c29-cffe-49f1-aaa3-731b0c7c51ce"/>
+				<reportElement x="744" y="5" width="58" height="15" isPrintWhenDetailOverflows="true" uuid="109a6c29-cffe-49f1-aaa3-731b0c7c51ce"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_balance}+$V{dr_cr_balance}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="667" y="5" width="70" height="15" isPrintWhenDetailOverflows="true" uuid="81fcdace-7c81-4e2a-943f-895230e29c99"/>
+				<reportElement x="672" y="5" width="65" height="15" isPrintWhenDetailOverflows="true" uuid="81fcdace-7c81-4e2a-943f-895230e29c99"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -299,7 +302,7 @@ AND order_date <= '$P!{maxDate}'
 				<reportElement x="281" y="2" width="521" height="1" uuid="e92068a2-8a30-4991-bb00-3cce2c502994"/>
 			</line>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="620" y="5" width="47" height="15" isPrintWhenDetailOverflows="true" uuid="d0c42054-c3a9-45f3-863f-efbb14a4262e"/>
+				<reportElement x="623" y="5" width="44" height="15" isPrintWhenDetailOverflows="true" uuid="d0c42054-c3a9-45f3-863f-efbb14a4262e"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>

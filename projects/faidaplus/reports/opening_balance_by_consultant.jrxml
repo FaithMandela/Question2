@@ -13,7 +13,7 @@
 		<![CDATA[SELECT a.org_name, a.entity_id, a.entity_name, sum(segments)as segments,a.pcc,a.son,
     sum(a.dr) points, sum(a.cr)as amount, sum(a.amount)as rates, sum(balance) as balance
 FROM vw_opening_balance a
-WHERE  a.order_date <= '$P!{maxDate}'
+WHERE  a.order_date <= '$P!{maxDate}' AND is_active is true
 GROUP BY a.org_name, a.entity_id, a.pcc,a.son,a.entity_name
 ORDER BY a.entity_name;]]>
 	</queryString>
