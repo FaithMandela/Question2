@@ -436,7 +436,7 @@
 					<TEXTDECIMAL w="75" title="Work Amount">work_amount</TEXTDECIMAL>
 					<FORM name="Works" keyfield="work_id" linkfield="day_work_id" table="works">
 						<COMBOBOX w="430" title="Worker" lptable="vw_employees" y="10" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
-						<COMBOBOX w="430" title="Work" lptable="work_rates" y="30" h="20" x="10" lpfield="work_rate_name">work_rate_id</COMBOBOX>
+						<COMBOBOX w="430" title="Work" lptable="work_rates" where="(group_rate = false)" y="30" h="20" x="10" lpfield="work_rate_name">work_rate_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Work Weight" y="50" h="20" x="10">work_weight</TEXTDECIMAL>
 						<TEXTFIELD w="150" title="Work Pay" y="50" h="20" x="290">work_pay</TEXTFIELD>
 						<TEXTDECIMAL w="150" title="Overtime" y="70" h="20" x="10">overtime</TEXTDECIMAL>
@@ -444,6 +444,36 @@
 						<TEXTDECIMAL w="150" title="Work Amount" y="90" h="20" x="10">work_amount</TEXTDECIMAL>
 						<TEXTFIELD w="430" title="Narrative" y="110" h="20" x="10">narrative</TEXTFIELD>
 					</FORM>
+				</GRID>
+				<GRID name="Work Groups" keyfield="work_group_id" linkfield="day_work_id" table="vw_work_groups">
+					<TEXTFIELD w="75" title="Work Group ID">work_group_id</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Work Weight">work_weight</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Work Pay">work_pay</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Overtime">overtime</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Special Time">special_time</TEXTDECIMAL>
+					<TEXTDECIMAL w="75" title="Work Amount">work_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Group Number">group_number</TEXTFIELD>
+					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+					<FORM name="Work Groups" keyfield="work_group_id" linkfield="day_work_id" table="work_groups">
+						<COMBOBOX w="430" title="Work" lptable="work_rates" where="(group_rate = true)" y="10" h="20" x="10" lpfield="work_rate_name">work_rate_id</COMBOBOX>
+						<TEXTFIELD w="150" title="Group Number" y="30" h="20" x="10">group_number</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Work Weight" y="30" h="20" x="290">work_weight</TEXTDECIMAL>
+						<TEXTFIELD w="150" title="Work Pay" y="50" h="20" x="10">work_pay</TEXTFIELD>
+						<TEXTDECIMAL w="150" title="Overtime" y="50" h="20" x="290">overtime</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Special Time" y="70" h="20" x="10">special_time</TEXTDECIMAL>
+						<TEXTDECIMAL w="150" title="Work Amount" y="70" h="20" x="290">work_amount</TEXTDECIMAL>
+						<TEXTFIELD w="430" title="Narrative" y="90" h="20" x="10">narrative</TEXTFIELD>
+					</FORM>
+					<GRID name="Work Members" keyfield="work_member_id" linkfield="work_group_id" table="vw_work_members">
+						<TEXTFIELD w="75" title="Group Number">group_number</TEXTFIELD>
+						<TEXTFIELD w="75" title="Worker ID">worker_id</TEXTFIELD>
+						<TEXTFIELD w="75" title="Worker">worker_name</TEXTFIELD>
+						<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+						<FORM name="Work Members" keyfield="work_member_id" linkfield="work_group_id" table="work_members">
+							<COMBOBOX w="430" title="Worker" lptable="vw_employees" y="10" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
+							<TEXTFIELD w="430" title="Narrative" y="30" h="20" x="10">narrative</TEXTFIELD>
+						</FORM>
+					</GRID>
 				</GRID>
 				<FORM name="Day Works" keyfield="day_work_id" linkfield="period_id" table="day_works">
 					<COMBOBOX w="430" title="Supervisor" lptable="vw_employees" y="10" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
@@ -474,7 +504,8 @@
 				<TEXTDECIMAL w="150" title="Work Rate" y="30" h="20" x="290">work_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Overtime Rate" y="50" h="20" x="10">overtime_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Special Rate" y="50" h="20" x="290">special_rate</TEXTDECIMAL>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Group Rate" y="70" h="20" x="10">group_rate</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Farm Fields" keyfield="farm_field_id" table="farm_fields">

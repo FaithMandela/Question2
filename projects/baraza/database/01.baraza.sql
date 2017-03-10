@@ -675,6 +675,11 @@ CREATE VIEW tomcat_users AS
 		INNER JOIN entity_types ON Entity_subscriptions.entity_type_id = entity_types.entity_type_id
 	WHERE entitys.is_active = true;
 
+CREATE OR REPLACE FUNCTION get_org_logo(integer) RETURNS varchar(50) AS $$
+	SELECT orgs.logo
+	FROM orgs WHERE (orgs.org_id = $1);
+$$ LANGUAGE SQL;
+	
 CREATE OR REPLACE FUNCTION default_currency(varchar(16)) RETURNS integer AS $$
 	SELECT orgs.currency_id
 	FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id

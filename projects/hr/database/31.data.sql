@@ -123,39 +123,39 @@ UPDATE adjustments SET org_id = 0, currency_id = 1;
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (11, 'Payroll Tax', 1);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (12, 'Payroll Contributions', 1);
 
-INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (1, 11, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1162, 1, false, true, true, 0, 0, true, '40045', '40045');
+INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (1, 11, 'PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 1280, 1, false, true, true, 0, 0, true, '40045', '40045');
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (2, 12, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, true, true, true, 0, 0, true, '40030', '40030');
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (3, 12, 'NHIF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, false, false, 0, 0, true, '40035', '40035');
 INSERT INTO tax_types (tax_type_id, use_key_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, linear, percentage, employer, employer_ps, active, account_number, employer_account) VALUES (4, 11, 'FULL PAYE', 'Get_Employee_Tax(employee_tax_type_id, 2)', 0, 0, false, false, false, 0, 0, false, '40045', '40045');
 SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 4, true);
 UPDATE tax_types SET org_id = 0;
 
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 10164, 10);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 19740, 15);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 29316, 20);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 38892, 25);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 11180.33, 10);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 21713.91, 15);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 32247.5, 20);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 42781.08, 25);
 INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (1, 10000000, 30);
 
 INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (2, 4000, 5);
 INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (2, 10000000, 0);
 
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 999, 0);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 1499, 30);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 1999, 40);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 2999, 60);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 3999, 80);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 4999, 100);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 5999, 120);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 6999, 140);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 7999, 160);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 8999, 180);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 9999, 200);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 10999, 220);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 11999, 240);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 12999, 260);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 13999, 280);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 14999, 300);
-INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 1000000, 320);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 5999, 150);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 7999, 300);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 11999, 400);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 14999, 500);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 19999, 600);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 24999, 750);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 29999, 850);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 34999, 900);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 39999, 950);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 44999, 1000);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 49999, 1100);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 59999, 1200);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 69999, 1300);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 79999, 1400);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 89000, 1500);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 99000, 1600);
+INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (3, 10000000, 1700);
 
 INSERT INTO tax_rates (tax_type_id, tax_range, tax_rate) VALUES (4, 10000000, 30);
 

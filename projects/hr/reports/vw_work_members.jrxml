@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_works" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="dee01fa0-7309-4292-8fb6-e72a289c9792">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_work_members" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="dee01fa0-7309-4292-8fb6-e72a289c9792">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -20,13 +20,14 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_works.worker_id, vw_works.worker_name, vw_works.work_rate_code, vw_works.work_rate_name,
- vw_works.work_weight, vw_works.work_pay, vw_works.overtime, vw_works.special_time,
- vw_works.work_amount
+		<![CDATA[SELECT vw_work_members.worker_id, vw_work_members.worker_name, vw_work_members.work_rate_code,
+ vw_work_members.work_rate_name, vw_work_members.work_weight, vw_work_members.work_pay,
+ vw_work_members.overtime, vw_work_members.special_time, vw_work_members.work_amount,
+ vw_work_members.worker_weight, vw_work_members.worker_amount
 
-FROM vw_works
+FROM vw_work_members
 
-WHERE vw_works.day_work_id = $P{daysworkid}]]>
+WHERE vw_work_members.day_work_id = $P{daysworkid}]]>
 	</queryString>
 	<field name="worker_id" class="java.lang.Integer"/>
 	<field name="worker_name" class="java.lang.String"/>
@@ -37,14 +38,13 @@ WHERE vw_works.day_work_id = $P{daysworkid}]]>
 	<field name="overtime" class="java.lang.Float"/>
 	<field name="special_time" class="java.lang.Float"/>
 	<field name="work_amount" class="java.lang.Float"/>
-	<variable name="work_weight_1" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{work_weight}]]></variableExpression>
+	<field name="worker_weight" class="java.lang.Double"/>
+	<field name="worker_amount" class="java.lang.Double"/>
+	<variable name="worker_weight_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{worker_weight}]]></variableExpression>
 	</variable>
-	<variable name="work_pay_1" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[$F{work_pay}]]></variableExpression>
-	</variable>
-	<variable name="work_amount_1" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{work_amount}]]></variableExpression>
+	<variable name="worker_amount_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{worker_amount}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -157,7 +157,7 @@ WHERE vw_works.day_work_id = $P{daysworkid}]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{work_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{worker_weight}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement style="Detail" x="322" y="0" width="36" height="15" uuid="7ed7ffa8-f433-48ba-97ad-2e76ad430288"/>
@@ -185,44 +185,33 @@ WHERE vw_works.day_work_id = $P{daysworkid}]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{work_amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{worker_amount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="20">
+		<band height="21">
 			<textField pattern="#,##0.0">
-				<reportElement x="282" y="0" width="40" height="20" uuid="9734fef2-5ef2-4063-87fc-0aa10e1b5af2"/>
+				<reportElement x="282" y="0" width="40" height="20" uuid="34a67c62-9562-4de7-b8c1-515d99869c0d"/>
 				<box>
 					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5" lineStyle="Double"/>
+					<bottomPen lineWidth="0.75" lineStyle="Double"/>
 				</box>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{work_weight_1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="322" y="0" width="36" height="20" uuid="d208902b-02f4-4fcb-a55a-c8e4c103d6a2"/>
-				<box>
-					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5" lineStyle="Double"/>
-				</box>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{work_pay_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{worker_weight_1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.0">
-				<reportElement x="474" y="0" width="71" height="20" uuid="43032eec-0d5e-40b6-8a53-645a84b47d6e"/>
+				<reportElement x="474" y="0" width="71" height="20" uuid="f1d16dfa-bfbf-4680-afa9-c691a4ccb427"/>
 				<box>
 					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5" lineStyle="Double"/>
+					<bottomPen lineWidth="0.75" lineStyle="Double"/>
 				</box>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{work_amount_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{worker_amount_1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
