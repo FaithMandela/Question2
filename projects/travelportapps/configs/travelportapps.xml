@@ -1138,7 +1138,7 @@
 		<GRID keyfield="passenger_id" name=" Insurance Sold" where="(approved = true AND is_valid = true)" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
-			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
@@ -1159,9 +1159,10 @@
 	</DESK>
 	<DESK w="700" h="550" name="Insurance" key="80">
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name=" All Insurance Sold" orderby="passenger_id,passenger_age DESC" where="(approved = true AND is_valid = true)" tab.count="count(passenger_id)" table="vw_allpassengers">
-			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -1170,6 +1171,7 @@
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date of Birth">passenger_dob</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passport No.">passport_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="PIN Number">pin_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
@@ -1181,10 +1183,38 @@
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
 		</GRID>
+		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="function_role='broker' AND is_valid is true AND approved = true" tab.count="count(passenger_id)" table="vw_allpassengers">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+		</GRID>
+		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="function_role !='broker' AND is_valid is true AND approved = true" tab.count="count(passenger_id)" table="vw_allpassengers">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+		</GRID>
 		<GRID noorg="true" keyfield="passenger_id" name="Insurance Canceled" where="is_valid is false" tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date To">days_to</TEXTFIELD>
@@ -1210,7 +1240,7 @@
 			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passport No.">passport_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
-			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 		</GRID>
@@ -1225,7 +1255,7 @@
 			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passport No.">passport_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
-			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 			<JASPER reportfile="/travelinsurance/certificate.jasper" name="Certificate"></JASPER>
@@ -1305,7 +1335,7 @@
 			</FILTERFORM>
 			<JASPER filtered="true" reportfile="travelinsurance/agencysales.jasper" name="Agency Sales "></JASPER>
 		</FILTER>
-		<FILTER noorg="true" role="manager" split="150" w="700" h="550" name="All Insurance Sales" type="vert">
+		<FILTER noorg="true" role="admin,manager" split="150" w="700" h="550" name="All Insurance Sales" type="vert">
 			<FILTERFORM name="All Agency Sales">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
@@ -1319,6 +1349,13 @@
 				<COMBOBOX w="150" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" org.id="parent_org_id" title="Agency Sales">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="travelinsurance/salesperagency.jasper" name="Sales Per Agency "></JASPER>
+		</FILTER>
+		<FILTER role="admin,manager" split="150" w="700" h="550" name="Individual Sales Report" type="vert">
+			<FILTERFORM name="Individual Sales Report">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travelinsurance/vw_passengers_Individual.jasper" name="Individual sales report"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Payment Report" key="92">
@@ -1391,7 +1428,7 @@
 		<GRID role="admin,manager,agency,user" keyfield="passenger_id" name=" Certificates" orderby="passenger_id,passenger_age DESC" where="(approved = true) AND is_valid is true" user="entity_id" table="vw_allpassengers">
 			<TEXTFIELD w="90" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Booking By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Type Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -1412,30 +1449,32 @@
 		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="function_role='broker' AND is_valid is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 		</GRID>
 		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="function_role !='broker' AND is_valid is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
-			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Insurance Sales report" key="102">
@@ -1452,6 +1491,13 @@
 				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
 			</FILTERFORM>
 			<JASPER reportfile="travelinsurance/vw_passengers_consultant.jasper" name="Consultant sales report"></JASPER>
+		</FILTER>
+		<FILTER role="master" split="150" w="700" h="550" name="Individual Sales Report" type="vert">
+			<FILTERFORM name="Individual Sales Report">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travelinsurance/vw_passengers_Individual.jasper" name="Individual sales report"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Exchange Rate" key="201">
