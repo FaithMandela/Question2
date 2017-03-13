@@ -28,6 +28,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/acord" dbname="acord" path="acord" xmlfile="acord.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="acord">Acord</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="umis.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">UMIS</APP>
+	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="web/students.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">UMIS Students</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Babcock</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Babcock Finance</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="admission.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Babcock Admissions</APP>

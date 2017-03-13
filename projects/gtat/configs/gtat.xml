@@ -539,6 +539,7 @@
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Payment Reference" y="70" h="20" x="10">payment_reference</TEXTFIELD>
 					<TEXTFIELD w="430" title="Payment Allocation" y="90" h="20" x="10">payment_type</TEXTFIELD>
+					<TEXTFIELD w="430" title="Our Reference" y="110" h="20" x="10">journal_name</TEXTFIELD>
 				</FORM>
 				<JASPER name="Receipt" linkfield="clientid" reportfile="receipt.jasper"></JASPER>
 			</GRID>
@@ -571,8 +572,10 @@
 		<FILTER location="250" name="Clients Statements" type="horl">
 			<FILTERFORM name="Clients Statements">
 				<COMBOBOX w="430" title="Client" lptable="clients" y="10" h="20" x="10" lpfield="clientname">clientid</COMBOBOX>
-				<TEXTDATE w="150" title="Up to" y="30" h="20" default_fnct="get_start_year" x="10">filterid</TEXTDATE>
+				<TEXTDATE w="150" title="From" y="30" h="20" default_fnct="get_start_year" x="10">date_from</TEXTDATE>
+				<TEXTDATE w="150" title="Up to" default="now" y="30" h="20" x="290">date_to</TEXTDATE>
 			</FILTERFORM>
+			<JASPER name="6M Clients Statements" linkfield="clientid" reportfile="clienttotalstatementb.jasper"></JASPER>
 			<JASPER name="Clients Statements" linkfield="clientid" reportfile="clienttotalstatementa.jasper"></JASPER>
 		</FILTER>
 		<FILTER location="250" name="GTA Summary Statements" type="horl">
@@ -585,8 +588,8 @@
 	<DESK w="700" name="Client Payments" type="horl" key="148" h="500">
 		<FILTER location="250" name="Client Payments" type="horl">
 			<FILTERFORM name="GTA Summary Statements">
-				<TEXTDATE w="150" title="Starting From" y="30" h="20" x="10">filterid</TEXTDATE>
-				<TEXTDATE w="150" title="Up to" y="30" h="20" x="10">filter2id</TEXTDATE>
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">filterid</TEXTDATE>
+				<TEXTDATE w="150" title="Up to" default="now" y="30" h="20" x="10">filter2id</TEXTDATE>
 			</FILTERFORM>
 			<JASPER filtered="true" name="Client Payments" reportfile="payments.jasper"></JASPER>
 		</FILTER>

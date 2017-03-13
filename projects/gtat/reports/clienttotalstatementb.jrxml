@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientstotalstatementa" pageWidth="595" pageHeight="841" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="fd18361e-2547-463b-8110-b8bb90a94726">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientstotalstatementb" pageWidth="595" pageHeight="841" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="fd18361e-2547-463b-8110-b8bb90a94726">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
 	<property name="ireport.zoom" value="1.5"/>
@@ -120,7 +120,7 @@ GROUP BY clientid, clientname]]>
 		<![CDATA[SELECT aa.clientid, aa.clientname, aa.countryname, aa.address, aa.postalcode, aa.town,
  bb.item_name, bb.invoicedate, bb.invoicenumber, bb.amount, bb.invoiced,
  bb.credit, bb.salesperiod,
- '$P!{date_from}'::date as from_date,
+ ('$P!{date_to}'::date - '6 months'::interval) as from_date,
  '$P!{date_to}'::date as to_date
 
 FROM vwclients aa
@@ -128,12 +128,13 @@ INNER JOIN
 ((SELECT a.item_name, a.clientid, a.salesperiod, a.invoicedate, a.invoicenumber,
 a.amount, a.invoiced, (a.payments - a.credit_amount) as credit
 FROM vw_statement a
-WHERE (a.invoicedate >= '$P!{date_from}') AND (a.invoicedate <= '$P!{date_to}'))
+WHERE (a.invoicedate >= ('$P!{date_to}'::date - '6 months'::interval))
+AND (a.invoicedate <= '$P!{date_to}'))
 UNION
 (SELECT 'Opening Balance', b.clientid, '-', '$P!{date_from}'::date, '-',
 sum(b.amount), sum(b.invoiced), sum(b.payments - b.credit_amount)
 FROM vw_statement b
-WHERE b.invoicedate < '$P!{date_from}'
+WHERE b.invoicedate < ('$P!{date_to}'::date - '6 months'::interval)
 GROUP BY b.clientid)) bb
 
  ON aa.clientid = bb.clientid
@@ -154,7 +155,7 @@ ORDER BY bb.invoicedate]]>
 	<field name="invoiced" class="java.lang.Float"/>
 	<field name="credit" class="java.lang.Float"/>
 	<field name="salesperiod" class="java.lang.String"/>
-	<field name="from_date" class="java.sql.Date"/>
+	<field name="from_date" class="java.sql.Timestamp"/>
 	<field name="to_date" class="java.sql.Date"/>
 	<variable name="sum_total" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{invoiced}]]></variableExpression>

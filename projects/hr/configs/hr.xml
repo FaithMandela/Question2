@@ -4060,7 +4060,7 @@
 			<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
 			<JASPER name="Invoice" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
-		<GRID name="Ledger Summary" keyfield="ledger_period" orderby="ledger_year desc, ledger_period" table="vws_tx_ledger">
+		<GRID name="Ledger" keyfield="ledger_period" orderby="ledger_year desc, ledger_period" table="vws_tx_ledger">
 			<TEXTFIELD w="75" title="Ledger ID">ledger_period</TEXTFIELD>
 			<TEXTFIELD w="75" title="Year">ledger_year</TEXTFIELD>
 			<TEXTFIELD w="75" title="Month">ledger_month</TEXTFIELD>
@@ -4214,10 +4214,17 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<JASPER name="Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Transaction Ledger" key="195" h="550">
-		<JASPER name="Transaction Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
-		<JASPER name="Transaction Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
+		<JASPER name="Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
+		<FILTER w="700" name="Ledger" split="150" type="horl" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year" pos="top"></DRILLDOWN>
+			<JASPER name="Uncleared Ledger" reportfile="vw_tx_ledgera.jasper"></JASPER>
+			<JASPER name="Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
+			<JASPER name="Expenditure Ledger" reportfile="vw_tx_ledgerb.jasper"></JASPER>
+			<JASPER name="Income Ledger" reportfile="vw_tx_ledgerb.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Loan Application" key="205" h="500">
 		<GRID name="Draft Application" keyfield="loan_id" table="vw_loans" where="(approve_status = 'Draft')" user="entity_id">
