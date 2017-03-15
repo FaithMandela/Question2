@@ -119,14 +119,14 @@
 		</java>
     </target>
 
-    <target name="deploy.hr">
+	<target name="deploy.hr">
 		<copy file="${build}/baraza.jar" tofile="${tomcat}/hr/WEB-INF/lib/baraza.jar" overwrite="true"/>
 		<copy file="${build}/baraza.app.jar" tofile="${tomcat}/hr/app/baraza.jar" overwrite="true"/>
 	</target>
 
-    <target name="deploy.ueab">
-		<copy file="${build}/baraza.jar" tofile="${tomcat}/ueab/WEB-INF/lib/baraza.jar" overwrite="true"/>
-		<copy file="${build}/baraza.app.jar" tofile="${tomcat}/ueab/app/baraza.jar" overwrite="true"/>
+	<target name="deploy.umis">
+		<copy file="${build}/baraza.jar" tofile="${tomcat}/umis/WEB-INF/lib/baraza.jar" overwrite="true"/>
+		<copy file="${build}/baraza.app.jar" tofile="${tomcat}/umis/app/baraza.jar" overwrite="true"/>
 	</target>
 
 </project>

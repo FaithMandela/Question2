@@ -1010,6 +1010,14 @@
 			</FILTERFORM>
 			<JASPER reportfile="son_statements.jasper" name="Consultant Statement"></JASPER>
 		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Agency Statement " type="vert" key="order_date">
+			<FILTERFORM name="Agency Statement ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc" x="10" fnct="pcc || org_name" y="10" lptable="orgs" title="PCC/Name" lpkey="org_id">org_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER reportfile="pcc_statements.jasper" name="Agency Statement"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Print Batch" key="125">
 		<FILTER split="150" w="700" h="550" name="Print Batch " type="vert" key="batch_no">
