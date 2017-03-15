@@ -8,10 +8,9 @@ VALUES (2, 0, 0, 0, 'admin', 'admin', 'admin@admin.com', true, false, false, 'ba
 
 INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
 VALUES (3, 0, 0, 0, 'member', 'member', 'member@member.com', true, false, false, 'baraza','member');
+-- IMangeere to cater for subscription error
 
---INSERT INTO members( entity_id, member_id, org_id, person_title,  surname, first_name, middle_name, 
-  --          gender, primary_email, active, expired, contribution)
-    --VALUES (0,0,0, 'mr', 'Member','member', 'member', 'm', 'member@member.com','true','false',0)
+INSERT INTO sys_emails(sys_email_id, org_id, use_type,title)  VALUES (4, 0, 1, 'Subscription');
 
 
 SELECT pg_catalog.setval('entitys_entity_id_seq', 3, true);
