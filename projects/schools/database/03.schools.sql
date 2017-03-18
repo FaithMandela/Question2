@@ -156,8 +156,8 @@ CREATE TABLE exams (
 	staff_id 					integer references staff,
 	exam_name						varchar(50),
 	exam_date						date,
-	start_time						timestamp,
-	end_time						timestamp,
+	start_time						time without time zone NOT NULL,
+	end_time						time without time zone NOT NULL,
 	exam_file						varchar(32),
 	exam_narrative					text
 );
@@ -308,8 +308,6 @@ CREATE TRIGGER ins_students BEFORE INSERT OR UPDATE ON students
   FOR EACH ROW  EXECUTE PROCEDURE ins_students();	
 	
 
-
-
 CREATE OR REPLACE FUNCTION ins_staff() RETURNS TRIGGER AS
 $BODY$
 DECLARE
@@ -318,26 +316,22 @@ DECLARE
 DECLARE
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
-			SELECT entity_id INTO v_entity_id
-		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));		
-			
-			NEW.full_name = (NEW.surname || ' ' || NEW.first_name || ' ' || COALESCE(NEW.middle_name, ''));
-		IF(v_entity_id is null)THEN
-			NEW.entity_id := nextval('entitys_entity_id_seq');
 
-			INSERT INTO entitys (entity_id, org_id,  entity_type_id, entity_name, User_name, primary_email,  function_role, first_password, use_key_id)
-			VALUES (NEW.entity_id, New.org_id, 0, NEW.full_name, lower(trim(NEW.primary_email)), NEW.primary_email, NEW.staff_role, null,0) RETURNING entity_id INTO v_entity_id;
-			
-			NEW.entity_id := v_entity_id;
-			
-		
-		ELSE
-			RAISE EXCEPTION 'You already have an account, login and continue';
-		END IF;
-	
-
-		
+			IF(v_entity_id is null)THEN
+				NEW.entity_id := nextval('entitys_entity_id_seq');
+				IF(NEW.staff_id is null) THEN NEW.staff_id := NEW.entity_id;
+				END IF;		
+				NEW.full_name = (NEW.surname || ' ' || NEW.first_name || ' ' || COALESCE(NEW.middle_name, ''));
+				INSERT INTO entitys (entity_id, org_id,  entity_type_id, entity_name, User_name, primary_email,  function_role, first_password, use_key_id)
+				VALUES (NEW.entity_id, New.org_id, 0, NEW.full_name, lower(trim(NEW.primary_email)), NEW.primary_email, NEW.staff_role, null,0);
+			ELSE
+				RAISE EXCEPTION 'You already have an account, login and continue';
+			END IF;
 	END IF;
+	IF (TG_OP = 'UPDATE')	THEN 
+		INSERT INTO employees_details(staff_id, org_id,entity_id ,designation, surname,first_name, middle_name, date_of_birth,  gender, phone)
+				VALUES (NEW.staff_id, NEW.org_id,NEW.entity_id, NEW.staff_role, NEW.surname,NEW.first_name, NEW.middle_name, NEW.date_of_birth, NEW.gender, NEW.phone) ;
+	END IF;				
 	RETURN NEW;
 END;
 $BODY$
@@ -345,6 +339,9 @@ $BODY$
  
 CREATE TRIGGER ins_staff BEFORE INSERT OR UPDATE ON staff
   FOR EACH ROW  EXECUTE PROCEDURE ins_staff();	
+
+  
+
 	
 	
 
