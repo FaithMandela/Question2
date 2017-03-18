@@ -1,5 +1,5 @@
-<APP name="UEAB" org="org_id" password="change_password">
-	<MENU name="UEAB MIS" role="deans">
+<APP name="UMIS" org="org_id" password="change_password">
+	<MENU name="UMIS MIS" role="deans">
 		<MENU name="Students">
 			<MENU name="Students">1</MENU>
 			<MENU name="Sabath Classes">2</MENU>

@@ -1,4 +1,4 @@
-<APP auth.name="studentid" name="UEAB" auth.id="studentid" org="org_id" password="change_password" auth.table="students">
+<APP auth.name="studentid" name="UMIS" auth.id="studentid" org="org_id" password="change_password" auth.table="students">
 	<MENU title="Students">
 		<MENU name="Student">
 			<MENU name="Student Details">1</MENU>
@@ -284,7 +284,7 @@
 			<TEXTFIELD w="75" title="Trimester">quarterid</TEXTFIELD>
 			<TEXTFIELD w="75" title="Starting">qstart</TEXTFIELD>
 			<TEXTFIELD w="75" title="Ending">qend</TEXTFIELD>
-			<ACTION fnct="insQStudent" title="Register" action="Registrer for the Trimester" jumpview="49:0">quarterid</ACTION>
+			<ACTION fnct="insQStudent" title="Register" action="Registrer for the Trimester" jumpview="23:0">quarterid</ACTION>
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Residence Selection" key="23" h="500">
@@ -332,28 +332,24 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Special Selection" key="25" h="500">
-		<GRID name="Department" keyfield="departmentid" orderby="departmentname" table="departmentview" noorg="true">
-			<TEXTFIELD w="200" title="Department">departmentname</TEXTFIELD>
-			<TEXTFIELD w="200" title="School">schoolname</TEXTFIELD>
-			<GRID user_field="degreelevelid" name="Special Selection" keyfield="qcourseid" orderby="yeartaken, courseid" linkfield="departmentid" user_fnct="get_degreelevelid" table="currqcourseview">
-				<TEXTFIELD w="40" title="Year Taken">yeartaken</TEXTFIELD>
+		<GRID name="Special Selection" keyfield="qcourseid" orderby="yeartaken, courseid" linkfield="departmentid" table="currqcourseview">
+			<TEXTFIELD w="40" title="Year Taken">yeartaken</TEXTFIELD>
+			<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
+			<TEXTFIELD w="160" title="Course Title">coursetitle</TEXTFIELD>
+			<TEXTFIELD w="120" title="Instuctor">instructorname</TEXTFIELD>
+			<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
+			<TEXTFIELD w="50" title="Credit Hours">credithours</TEXTFIELD>
+			<CHECKBOX w="40" title="No. GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
+			<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="qcourseid" linkfield="qcourseid" table="qcourseview">
 				<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
-				<TEXTFIELD w="160" title="Course Title">coursetitle</TEXTFIELD>
-				<TEXTFIELD w="120" title="Instuctor">instructorname</TEXTFIELD>
-				<TEXTFIELD w="50" title="Option">classoption</TEXTFIELD>
-				<TEXTFIELD w="50" title="Credit Hours">credithours</TEXTFIELD>
-				<CHECKBOX w="40" title="No. GPA" format="boolean" ischar="true">nogpa</CHECKBOX>
-				<FORMVIEW w="570" name="Courses Details" lw="100" keyfield="qcourseid" linkfield="qcourseid" table="qcourseview">
-					<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
-					<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
-					<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
-					<TEXTFIELD w="70" title="Year Taken">yeartaken</TEXTFIELD>
-					<TEXTFIELD w="70" title="Details">details</TEXTFIELD>
-				</FORMVIEW>
-				<ACTIONS>
-					<ACTION fnct="insQSpecialCourse">Select</ACTION>
-				</ACTIONS>
-			</GRID>
+				<TEXTFIELD w="70" title="Course Title">coursetitle</TEXTFIELD>
+				<TEXTFIELD w="70" title="Hours">credithours</TEXTFIELD>
+				<TEXTFIELD w="70" title="Year Taken">yeartaken</TEXTFIELD>
+				<TEXTFIELD w="70" title="Details">details</TEXTFIELD>
+			</FORMVIEW>
+			<ACTIONS>
+				<ACTION fnct="insQSpecialCourse">Select</ACTION>
+			</ACTIONS>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Check Listing" key="26" h="500">

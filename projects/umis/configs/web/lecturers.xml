@@ -1,4 +1,4 @@
-<APP auth.name="instructorid" name="UEAB" auth.id="instructorid" org="org_id" password="change_password" auth.table="instructors">
+<APP auth.name="instructorid" name="UMIS" auth.id="instructorid" org="org_id" password="change_password" auth.table="instructors">
 	<MENU title="Lectures">
 		<MENU name="Information">
 			<MENU name="School">1</MENU>
