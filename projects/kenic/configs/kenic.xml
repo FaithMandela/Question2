@@ -51,7 +51,9 @@
 					<CHECKBOX w="30" title="Cash Receipt" y="70" h="20" x="10">Cash</CHECKBOX>
 					<CHECKBOX w="30" title="VAT Withheld" y="70" h="20" x="180">vatwithheld</CHECKBOX>
 					<TEXTFIELD w="100" title="VAT Cert. No." y="70" h="20" x="340">vatcertno</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="30" title="MPesa" y="90" h="20" x="10">mpesa</CHECKBOX>
+					<CHECKBOX w="30" title="IPay" y="90" h="20" x="180">ipay</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Renewal Refunds" keyfield="id" updatetable="ledger" orderby="created desc" linkfield="client_roid" table="vwledger" where="(age(created) &lt; '1 month') and (trans_type = 'Renewal') and (renewal_refund = false)">

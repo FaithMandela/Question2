@@ -1,4 +1,4 @@
-<APP name="UEAB"  org="org_id" password="change_password">
+<APP name="UMIS"  org="org_id" password="change_password">
 	<MENU name="Information">
 		<MENU name="General Information">
 			<MENU name="Company Profile">1</MENU>

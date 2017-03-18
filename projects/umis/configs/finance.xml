@@ -1,5 +1,5 @@
-<APP name="UEAB" org="org_id" password="change_password">
-	<MENU name="UEAB Finance" role="finance">
+<APP name="UMIS" org="org_id" password="change_password">
+	<MENU name="UMIS Finance" role="finance">
 		<MENU name="Students" role="finance">
 			<MENU name="Students">11</MENU>
 			<MENU name="Students Requests">21</MENU>
@@ -12,8 +12,6 @@
 			<MENU name="Trimester Students Report">16</MENU>
 			<MENU name="Trimester Students Open">17</MENU>
 			<MENU name="Trimester Exam Clearance">18</MENU>
-			<MENU name="Bank Imports">20</MENU>
-			<MENU name="Student Bank">22</MENU>
 			<MENU name="Reports">
 				<MENU name="Registration Statistics">169</MENU>
 				<MENU name="Degree Levels Report">104</MENU>
@@ -207,15 +205,16 @@
 			<TEXTFIELD w="240" title="Trimester ID">quarterid</TEXTFIELD>
 			<TEXTFIELD w="240" title="Start">qstart</TEXTFIELD>
 			<TEXTFIELD w="240" title="End">qend</TEXTFIELD>
-			<GRID limit="100" auditid="sys_audit_trail_id" name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="qstudentdegreeview">
-				<TEXTFIELD w="10" title="Student ID">studentid</TEXTFIELD>
+			<GRID limit="100" auditid="sys_audit_trail_id" name="Q. Students" keyfield="qstudentid" updatetable="qstudents" linkfield="quarterid" table="studentquarterview">
+				<TEXTFIELD w="90" title="Student ID">studentid</TEXTFIELD>
 				<TEXTFIELD w="140" title="Student">studentname</TEXTFIELD>
-				<TEXTFIELD w="20" title="Sex">sex</TEXTFIELD>
-				<TEXTFIELD w="20" title="Marital Status">MaritalStatus</TEXTFIELD>
-				<TEXTFIELD w="20" title="Residence Name">residencename</TEXTFIELD>
-				<CHECKBOX w="50" title="Fees Refund">feerefund</CHECKBOX>
-				<CHECKBOX w="70" title="Residence Refund">residencerefund</CHECKBOX>
-				<CHECKBOX w="20" title="Finance Approve">finaceapproval</CHECKBOX>
+				<TEXTFIELD w="50" title="Sex">sex</TEXTFIELD>
+				<TEXTFIELD w="50" title="Marital Status">MaritalStatus</TEXTFIELD>
+				<TEXTFIELD w="50" title="Residence Name">residencename</TEXTFIELD>
+				<CHECKBOX w="50" title="Finance Approve">finaceapproval</CHECKBOX>
+				<TEXTFIELD w="40" title="Total Charges">totalfees</TEXTFIELD>
+				<TEXTFIELD w="40" title="Account Credit">currbalance</TEXTFIELD>
+				<TEXTFIELD w="40" title="Balance">finalbalance</TEXTFIELD>
 				<ACTIONS>
 					<ACTION fnct="approve_finance" phase="1">Approve Finance</ACTION>
 					<ACTION fnct="approve_finance" phase="2">Open Finance</ACTION>
@@ -252,6 +251,24 @@
 					<TEXTDATE w="150" title="Instalment Date" y="30" h="20" x="290">seconddate</TEXTDATE>
 					<TEXTAREA w="430" title="Narrative" y="50" h="220" x="10">financenarrative</TEXTAREA>
 				</FORM>
+				<GRID name="Student Payments" keyfield="student_payment_id" linkfield="qstudentid" table="student_payments">
+					<TEXTFIELD w="75" title="Student Payment ID">student_payment_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="Customer Reference">customerreference</TEXTFIELD>
+					<TEXTDATE w="75" title="Transaction Date">transactiondate</TEXTDATE>
+					<TEXTDATE w="75" title="Value Date">valuedate</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Transaction Amount">transactionamount</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Transaction Detail">transactiondetail</TEXTFIELD>
+					<TEXTFIELD w="75" title="Transaction Type">transactiontype</TEXTFIELD>
+					<FORM name="Student Payments" keyfield="student_payment_id" linkfield="qstudentid" table="student_payments">
+						<TEXTFIELD w="150" title="Customer Reference" y="10" h="20" x="290">customerreference</TEXTFIELD>
+						<TEXTDATE w="150" title="Transaction Date" y="30" h="20" x="10">transactiondate</TEXTDATE>
+						<TEXTDATE w="150" title="Value Date" y="30" h="20" x="290">valuedate</TEXTDATE>
+						<TEXTDECIMAL w="150" title="Transaction Amount" y="50" h="20" x="10">transactionamount</TEXTDECIMAL>
+						<TEXTFIELD w="150" title="Dr Cr Flag" y="50" h="20" x="290">drcrflag</TEXTFIELD>
+						<TEXTFIELD w="430" title="Transaction Detail" y="70" h="20" x="10">transactiondetail</TEXTFIELD>
+						<TEXTFIELD w="150" title="Transaction Type" y="90" h="20" x="10">transactiontype</TEXTFIELD>
+					</FORM>
+				</GRID>
 			</GRID>
 		</GRID>
 	</DESK>
@@ -389,89 +406,6 @@
 				</GRID>
 			</GRID>
 		</GRID>
-	</DESK>
-	<DESK w="585" name="Bank Imports" type="vert" key="20" h="500">
-		<IMPORT name="Bank Imports" keyfield="bankfileid" autofield="bankfileid" filetype="text" table="bankfile" procedure="updBanking">
-			<TEXTFIELD w="40" title="Companyname">companyname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Bankcode">bankcode</TEXTFIELD>
-			<TEXTFIELD w="40" title="Accountnumber">accountnumber</TEXTFIELD>
-			<TEXTFIELD w="40" title="Currencycode">currencycode</TEXTFIELD>
-			<TEXTFIELD w="40" title="Accounttype">accounttype</TEXTFIELD>
-			<TEXTFIELD w="40" title="Openingledgerbalance">openingledgerbalance</TEXTFIELD>
-			<TEXTFIELD w="40" title="Closingledgerbalance">closingledgerbalance</TEXTFIELD>
-			<TEXTFIELD w="40" title="Openingavailablebalance">openingavailablebalance</TEXTFIELD>
-			<TEXTFIELD w="40" title="Closingavailablebalance">closingavailablebalance</TEXTFIELD>
-			<TEXTFIELD w="40" title="Accountname">accountname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Branchcode">branchcode</TEXTFIELD>
-			<TEXTFIELD w="40" title="Openingbalanceason">openingbalanceason</TEXTFIELD>
-			<TEXTFIELD w="40" title="Closingbalanceason">closingbalanceason</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transactiondate">transactiondate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Valuedate">valuedate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transactionamount">transactionamount</TEXTFIELD>
-			<TEXTFIELD w="40" title="Drcrflag">drcrflag</TEXTFIELD>
-			<TEXTFIELD w="40" title="Chequenumber">chequenumber</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transactionreference">transactionreference</TEXTFIELD>
-			<TEXTFIELD w="40" title="Customerreference">customerreference</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transactiondetail">transactiondetail</TEXTFIELD>
-			<TEXTFIELD w="40" title="Processingbranch">processingbranch</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transactiontype">transactiontype</TEXTFIELD>
-		</IMPORT>
-		<IMPORT name="Bank Day File" keyfield="bankdayfileid" autofield="bankdayfileid" filetype="text" table="bankdayfile" procedure="updBanking">
-			<TEXTFIELD w="40" title="Transaction Date">transactiondate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Company Name">companyname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Accountnumber">accountnumber</TEXTFIELD>
-			<TEXTFIELD w="40" title="Currencycode">currencycode</TEXTFIELD>
-			<TEXTFIELD w="40" title="Account Type">accounttype</TEXTFIELD>
-			<TEXTFIELD w="40" title="Value Date">valuedate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Drcr">drcr</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transactionamount">transactionamount</TEXTFIELD>
-			<TEXTFIELD w="40" title="Ownerreference">ownerreference</TEXTFIELD>
-			<TEXTFIELD w="40" title="Institutionreference">institutionreference</TEXTFIELD>
-			<TEXTFIELD w="40" title="Supplementarydetails">supplementarydetails</TEXTFIELD>
-			<TEXTFIELD w="40" title="Informationaccountowner">informationaccountowner</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transaction Description">transactiondescription</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transaction Type">transactiontype</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transactionpost Time">transactionposttime</TEXTFIELD>
-		</IMPORT>
-	</DESK>
-	<DESK w="585" name="Students Bank" type="vert" key="22" h="500">
-		<GRID name="Bank Suspence" keyfield="banksuspenceid" updatetable="banksuspence" orderby="studentid desc" table="banksuspenceview" noorg="true" where="(Picked = false)">
-			<TEXTFIELD w="40" title="Value Date">valuedate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Transaction Amount">transactionamount</TEXTFIELD>
-			<TEXTFIELD w="10" title="Dr/Cr">drcrflag</TEXTFIELD>
-			<TEXTFIELD w="40" title="Reference">customerreference</TEXTFIELD>
-			<TEXTFIELD w="240" title="Transaction Detail" edit="true">transactiondetail</TEXTFIELD>
-			<TEXTFIELD w="50" title="Student ID">studentid</TEXTFIELD>
-			<TEXTFIELD w="40" title="Duplicate">Duplicate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Approve" edit="true">Approve</TEXTFIELD>
-			<ACTION statement="updStudentBank" keyfield="banksuspenceid"></ACTION>
-		</GRID>
-		<GRID name="New Student Bank" keyfield="studentbankid" updatetable="studentbank" table="studentbankview" noorg="true" where="(Picked = false) and (Suspence = false)">
-			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
-			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Account Number">accountnumber</TEXTFIELD>
-			<TEXTFIELD w="40" title="Customer Reference">customerreference</TEXTFIELD>
-			<TEXTFIELD w="40" title="Value Date">valuedate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Amount">transactionamount</TEXTFIELD>
-			<TEXTFIELD w="40" title="Dr/Cr">drcrflag</TEXTFIELD>
-			<TEXTFIELD w="40" title="Detail">transactiondetail</TEXTFIELD>
-			<TEXTFIELD w="40" title="Picked">picked</TEXTFIELD>
-			<TEXTFIELD w="40" title="Suspence" edit="true">Suspence</TEXTFIELD>
-			<ACTION statement="updBankPicked" keyfield="studentbankid"></ACTION>
-		</GRID>
-		<GRID name="Student Bank" keyfield="studentbankid" updatetable="studentbank" table="studentbankview" noorg="true">
-			<TEXTFIELD w="40" title="Student ID">studentid</TEXTFIELD>
-			<TEXTFIELD w="40" title="Student Name">studentname</TEXTFIELD>
-			<TEXTFIELD w="40" title="Account Number">accountnumber</TEXTFIELD>
-			<TEXTFIELD w="40" title="Customer Reference">customerreference</TEXTFIELD>
-			<TEXTFIELD w="40" title="Value Date">valuedate</TEXTFIELD>
-			<TEXTFIELD w="40" title="Amount">transactionamount</TEXTFIELD>
-			<TEXTFIELD w="40" title="Dr/Cr">drcrflag</TEXTFIELD>
-			<TEXTFIELD w="40" title="Detail">transactiondetail</TEXTFIELD>
-			<TEXTFIELD w="40" title="Picked">picked</TEXTFIELD>
-			<TEXTFIELD w="40" title="Suspence" edit="true">Suspence</TEXTFIELD>
-		</GRID>
-		<JASPER name="Report" reportfile="studentbankview.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Degree Levels Report" type="horl" key="104" h="500">
 		<JASPER filtered="false" name="Degree Levels" reportfile="degreelevels.jasper"></JASPER>

@@ -17,7 +17,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/assets" dbname="assets" path="assets" xmlfile="assets.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="assets">Assets</APP>
 	<APP dbpath="jdbc:postgresql://localhost/property" dbname="property" path="property" xmlfile="property.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="property">Property</APP>
 	<APP dbpath="jdbc:postgresql://localhost/hotel" dbname="hotel" path="hotel" xmlfile="hotel.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="hotel">Hotel</APP>
-	<APP dbpath="jdbc:postgresql://localhost/banking" dbname="banking" path="banking" xmlfile="banking.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="banking">Banking</APP>
+	<APP dbpath="jdbc:postgresql://localhost/banking" dbname="banking" path="banking" xmlfile="banking.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="banking">Banking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/booking" dbname="booking" path="booking" xmlfile="booking.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Booking</APP>
 	<APP dbpath="jdbc:postgresql://localhost/agency" dbname="agency" path="agency" xmlfile="agency.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="db">Agency</APP>
 	<APP dbpath="jdbc:postgresql://localhost/codepamoja" dbname="codepamoja" path="codepamoja" xmlfile="codepamoja.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres">CodePamoja</APP>
@@ -28,6 +28,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/acord" dbname="acord" path="acord" xmlfile="acord.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="acord">Acord</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="umis.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">UMIS</APP>
+	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="finance.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">UMIS Finance</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="web/students.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">UMIS Students</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="babcock.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Babcock</APP>
 	<APP dbpath="jdbc:postgresql://umisdb/babcock" dbname="babcock" path="babcock" xmlfile="finance.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">Babcock Finance</APP>
@@ -75,7 +76,6 @@
 	<APP dbpath="jdbc:postgresql://localhost/yu" dbname="yu" path="yu" xmlfile="yu.xml" dbclass="org.postgresql.Driver" dbusername="postgres">YU</APP>
 	<APP dbpath="jdbc:postgresql://localhost/telcom" dbname="tamshi" path="tamshidomain" xmlfile="tamshi.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Tamshi Domain</APP>
 	<APP dbpath="jdbc:postgresql://localhost/schools" dbname="schools" path="schools" xmlfile="schools.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="school">Schools</APP>
-	<APP dbpath="jdbc:postgresql://localhost/barazapesa" dbname="barazapesa" path="barazapesa" xmlfile="barazapesa.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="barazapesa">Baraza Pesa</APP>
 	<APP dbpassword="baraza2012" dbpath="jdbc:postgresql://localhost/baraza" dbname="baraza" path="baraza" xmlfile="baraza.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="baraza" auth="entity">Baraza</APP>
 	<SERVER dbpassword="invent2k" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="tomcat.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Tomcat Server</SERVER>
 	<SERVER dbpassword="invent" dbpath="jdbc:postgresql://localhost/hr" dbname="hr" path="hr" xmlfile="mail.xml" disable="false" dbclass="org.postgresql.Driver" dbusername="postgres">HR Mailing Server</SERVER>
