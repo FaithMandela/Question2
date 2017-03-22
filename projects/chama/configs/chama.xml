@@ -1,12 +1,11 @@
 <APP name="Chama" org="org_id" password="change_password">
 	<MENU name="Chama">
 		<MENU name="Service Desk">
-			<MENU name="My account">205</MENU>
+			<MENU name="My Account">205</MENU>
 			<MENU name="Loans">360</MENU>
 			<MENU name="Investments">110</MENU>
 			<MENU name="Borrowing">90</MENU>
 			<MENU name="Banks">200</MENU>
-			<MENU name="Drawings">350</MENU>
 		</MENU>
 		<MENU name="Operations" role="admin">
 			<MENU name="Locations">315</MENU>
@@ -61,11 +60,8 @@
 			<TILE name="My Total Contributions" noorg.query="true" table="Contributions" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="My Contributions">total_contribs</TEXTFIELD>
 			</TILE>
-			<TILE name="My Total Overpayments" noorg.query="true" table="Receipts" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(remaining_amount),'999,999,999,990D00'))" title="My Overpayments">total_overpayments</TEXTFIELD>
-			</TILE>
-			<TILE name="My Unpaid Contributions" noorg.query="true" table="Contributions" where="(paid= 'false')" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(investment_amount),'999,999,999,990D00'))" title="Total Deposits">total_ucontribs</TEXTFIELD>
+			<TILE name="My Unpaid Contributions" noorg.query="true" table="vw_contributions_unpaid" user="entity_id">
+				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(vw_contributions_unpaid.total_contribution),'999,999,999,990D00'))" title="Total unpaid">total_unpaidcontribs</TEXTFIELD>
 			</TILE>
 			<TILE name="Total Investments" noorg.query="true" table="investments">
 				<TEXTFIELD w="75" fnct="COALESCE(to_char(sum(principal), '999,999,999,990D00'))" title="Total Invested">Total_invested</TEXTFIELD>
@@ -557,6 +553,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Borrowing" key="90" h="550">
+		<JASPER name="Borrowing Summary" reportfile="vw_borrowing.jasper"></JASPER>
 		<GRID name="Borrowing" keyfield="borrowing_id" table="vw_borrowing">
 			<TEXTFIELD w="75" title="Borrowing Type Name">borrowing_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
@@ -576,7 +573,6 @@
 			<GRID name="Borrowing Repayment" keyfield="borrowing_repayment_id" linkfield="borrowing_id" table="vw_borrowing_mrepayment">
 				<TEXTFIELD w="75" title="Currency Symbol">currency_symbol</TEXTFIELD>
 				<TEXTFIELD w="75" title="Borrowing Type Name">borrowing_type_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Borrowing ID">borrowing_id</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Principle">principle</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Monthly Repayment">monthly_repayment</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Repayment Period">repayment_period</TEXTFIELD>
@@ -765,8 +761,9 @@
 			<TEXTFIELD w="75" title="Account">account_name</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="My account" key="205" h="550">
-		<JASPER name="Summary Contribution Report" reportfile="vw_member_contributions1.jasper"></JASPER>
+	<DESK w="700" name="My Account" user="entity_id" key="205" h="550">
+		<JASPER name="Statement" reportfile="vw_member_statement1.jasper"></JASPER>
+		<JASPER name="Summary Contribution Report" reportfile="vw_member_contributions.jasper"></JASPER>
 		<GRID name="Contributions" keyfield="contribution_id" linkfield="entity_id" table="vw_member_contrib" user="entity_id">
 			<TEXTFIELD w="75" title="Contribution Type Name">contribution_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Start date">start_date</TEXTFIELD>
@@ -795,7 +792,7 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Paid">paid</CHECKBOX>
 		</GRID>
-		<GRID name="Receipts" keyfield="receipts_id" linkfield="entity_id" table="vw_receipts">
+		<GRID name="Receipts" keyfield="receipts_id" table="vw_receipts" user="entity_id">
 			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="Receipts Date">receipts_date</TEXTDATE>
@@ -804,7 +801,14 @@
 			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Remaining Amount">remaining_amount</TEXTDECIMAL>
 		</GRID>
-		<FORMVIEW new="false" name="My Details" keyfield="entity_id" table="members">
+		<GRID name="Drawings" keyfield="drawing_id" table="vw_drawings" user="entity_id">
+			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+			<TEXTDATE w="75" title="Withdrawal Date">withdrawal_date</TEXTDATE>
+		</GRID>
+		<FORMVIEW new="false" name="My Details" keyfield="entity_id" table="members" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
@@ -918,6 +922,7 @@
 				<TEXTDECIMAL w="75" title="Merry Go Round Amount">merry_go_round_amount</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Loan Contrib" y="240" h="20" x="290">loan_contrib</TEXTDECIMAL>
 				<CHECKBOX w="50" title="Paid">paid</CHECKBOX>
+				<CHECKBOX w="75" title="Extra Contrib">extra_contrib</CHECKBOX>
 				<TEXTDECIMAL w="50" title="Merry Go Round Number">merry_go_round_number</TEXTDECIMAL>
 				<ACTIONS>
 					<ACTION fnct="generate_paid" role="admin">Pay</ACTION>
@@ -1655,12 +1660,16 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="My Contributions" key="285" h="550">
-		<JASPER name="Reports" reportfile="vw_member_contributions1.jasper"></JASPER>
-		<FILTER w="700" name="Unpaid Contributions" split="150" type="vert" h="550">
-			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" y="50" h="20" x="10">minDate</TEXTDATE>
-				<TEXTDATE w="150" title="Ending at" y="50" h="20" x="290">maxDate</TEXTDATE>
-			</FILTERFORM>
+		<FILTER w="700" location="250" name="My Paid Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Reports" reportfile="vw_member_contributions1.jasper"></JASPER>
+		</FILTER>
+		<FILTER w="700" location="250" name="My Unpaid Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
 			<JASPER name="Reports" reportfile="vw_unpaid_member_contributions1.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Receipts" reportfile="vw_member_receipts1.jasper"></JASPER>
@@ -2524,6 +2533,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Investments" key="110" h="550">
+		<JASPER name="Summary Investment Reports" reportfile="vw_investments.jasper"></JASPER>
 		<GRID name="Investments" keyfield="investment_id" table="vw_investments">
 			<TEXTFIELD w="75" title="Investment Type Name">investment_type_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Bank Account Name">bank_account_name</TEXTFIELD>
@@ -2562,13 +2572,46 @@
 				<CHECKBOX w="75" title="Posted">posted</CHECKBOX>
 			</GRID>
 		</GRID>
-		<JASPER name="Summary Investment Reports" reportfile="vw_investments.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="My Statement" key="340" h="550">
 		<JASPER name="Reports" reportfile="vw_member_statement1.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Statement" key="345" h="550">
-		<JASPER filtered="true" name="Reports" reportfile="vw_chama_statement.jasper"></JASPER>
+		<FILTER w="700" location="250" name="Paid Contributions" split="150" type="vert" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="period_month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+<<<<<<< HEAD
+			<JASPER name="Reports" reportfile="vw_chama_statement1.jasper"></JASPER>
+		</FILTER>
+		<GRID name="Periods" keyfield="period_id" table="vw_periods">
+			<TEXTFIELD w="75" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
+			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+			<CHECKBOX w="75" title="Year Opened">year_opened</CHECKBOX>
+			<CHECKBOX w="75" title="Year Closed">year_closed</CHECKBOX>
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<CHECKBOX w="75" title="Opened">opened</CHECKBOX>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<CHECKBOX w="75" title="Closed">closed</CHECKBOX>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Per Diem Tax Limit">per_diem_tax_limit</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Posted">is_posted</CHECKBOX>
+			<TEXTFIELD w="75" title="Gl Payroll Account">gl_payroll_account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gl Bank Account">gl_bank_account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Gl Advance Account">gl_advance_account</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Month ID">month_id</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Quarter">quarter</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Semister">semister</TEXTDECIMAL>
+			<JASPER name="Reports" reportfile="vw_chama_statement1.jasper"></JASPER>
+		</GRID>
+=======
+			<JASPER name="Reports" org.table="vw_chama_statement" reportfile="vw_chama_statement.jasper"></JASPER>
+		</FILTER>
+>>>>>>> 70d1e1368c6769d8dec9b7741d68eda7de1bbec1
 	</DESK>
 	<DESK w="700" name="Drawings" key="350" h="550">
 		<GRID name="Drawings" keyfield="drawing_id" linkfield="org_id" table="vw_drawings">

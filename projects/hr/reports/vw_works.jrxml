@@ -16,19 +16,36 @@
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
-		<![CDATA[SELECT vw_works.worker_id, vw_works.worker_name, vw_works.work_rate_code, vw_works.work_rate_name, vw_works.work_weight, vw_works.work_pay, vw_works.overtime, vw_works.special_time, vw_works.work_amount
-FROM vw_works]]>
+	<parameter name="daysworkid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT vw_works.worker_id, vw_works.worker_name, vw_works.work_rate_code, vw_works.work_rate_name,
+ vw_works.work_weight, vw_works.work_pay, vw_works.overtime, vw_works.special_time,
+ vw_works.work_amount
+
+FROM vw_works
+
+WHERE vw_works.day_work_id = $P{daysworkid}]]>
 	</queryString>
 	<field name="worker_id" class="java.lang.Integer"/>
 	<field name="worker_name" class="java.lang.String"/>
 	<field name="work_rate_code" class="java.lang.String"/>
 	<field name="work_rate_name" class="java.lang.String"/>
-	<field name="work_weight" class="java.lang.Double"/>
+	<field name="work_weight" class="java.lang.Float"/>
 	<field name="work_pay" class="java.lang.Integer"/>
-	<field name="overtime" class="java.lang.Double"/>
-	<field name="special_time" class="java.lang.Double"/>
-	<field name="work_amount" class="java.lang.Double"/>
+	<field name="overtime" class="java.lang.Float"/>
+	<field name="special_time" class="java.lang.Float"/>
+	<field name="work_amount" class="java.lang.Float"/>
+	<variable name="work_weight_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{work_weight}]]></variableExpression>
+	</variable>
+	<variable name="work_pay_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{work_pay}]]></variableExpression>
+	</variable>
+	<variable name="work_amount_1" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{work_amount}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -48,56 +65,56 @@ FROM vw_works]]>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="26" y="0" width="104" height="15" forecolor="#000000" uuid="70d9daa5-4b3d-4e5b-8857-7dd2de04ef9e"/>
+				<reportElement style="Column header" x="26" y="0" width="135" height="15" forecolor="#000000" uuid="70d9daa5-4b3d-4e5b-8857-7dd2de04ef9e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Worker]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="130" y="0" width="45" height="15" forecolor="#000000" uuid="7847f7b8-1a4b-4e57-9df1-8cfa57af8d76"/>
+				<reportElement style="Column header" x="161" y="0" width="45" height="15" forecolor="#000000" uuid="7847f7b8-1a4b-4e57-9df1-8cfa57af8d76"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[WR Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="175" y="0" width="76" height="15" forecolor="#000000" uuid="ac940544-08eb-48ea-a73a-8c84bbf9cff0"/>
+				<reportElement style="Column header" x="206" y="0" width="76" height="15" forecolor="#000000" uuid="ac940544-08eb-48ea-a73a-8c84bbf9cff0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Work]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="251" y="0" width="40" height="15" forecolor="#000000" uuid="b36ef2f9-160d-4154-bf88-c2647ab89558"/>
+				<reportElement style="Column header" x="282" y="0" width="40" height="15" forecolor="#000000" uuid="b36ef2f9-160d-4154-bf88-c2647ab89558"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Weight]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="291" y="0" width="36" height="15" forecolor="#000000" uuid="e4434864-9ce1-4089-bbe5-c3b7393a5a74"/>
+				<reportElement style="Column header" x="322" y="0" width="36" height="15" forecolor="#000000" uuid="e4434864-9ce1-4089-bbe5-c3b7393a5a74"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Pay]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="327" y="0" width="58" height="15" forecolor="#000000" uuid="66e21084-fe96-435a-8deb-96615a79e515"/>
+				<reportElement style="Column header" x="358" y="0" width="58" height="15" forecolor="#000000" uuid="66e21084-fe96-435a-8deb-96615a79e515"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Overtime]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="385" y="0" width="58" height="15" forecolor="#000000" uuid="3911afac-c874-438b-9cf5-e8bb5e76b92b"/>
+				<reportElement style="Column header" x="416" y="0" width="58" height="15" forecolor="#000000" uuid="3911afac-c874-438b-9cf5-e8bb5e76b92b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Special Time]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="443" y="0" width="71" height="15" forecolor="#000000" uuid="8446cb5b-5c08-4483-8d16-645c26c3f0e3"/>
+				<reportElement style="Column header" x="474" y="0" width="71" height="15" forecolor="#000000" uuid="8446cb5b-5c08-4483-8d16-645c26c3f0e3"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -115,56 +132,56 @@ FROM vw_works]]>
 				<textFieldExpression><![CDATA[$F{worker_id}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="26" y="0" width="104" height="15" uuid="fac4f68c-ef3b-4f2c-977d-f585cd46019f"/>
+				<reportElement style="Detail" x="26" y="0" width="135" height="15" uuid="fac4f68c-ef3b-4f2c-977d-f585cd46019f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{worker_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="130" y="0" width="45" height="15" uuid="a50b20c3-0e83-4cf2-8991-474bd23003ab"/>
+				<reportElement style="Detail" x="161" y="0" width="45" height="15" uuid="a50b20c3-0e83-4cf2-8991-474bd23003ab"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{work_rate_code}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="175" y="0" width="76" height="15" uuid="8dbe8ede-395d-4612-aad2-268714418551"/>
+				<reportElement style="Detail" x="206" y="0" width="76" height="15" uuid="8dbe8ede-395d-4612-aad2-268714418551"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{work_rate_name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="251" y="0" width="40" height="15" uuid="630ea696-ee17-403c-b8e9-216a00058e40"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0.0" isBlankWhenNull="true">
+				<reportElement style="Detail" x="282" y="0" width="40" height="15" uuid="630ea696-ee17-403c-b8e9-216a00058e40"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{work_weight}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="291" y="0" width="36" height="15" uuid="7ed7ffa8-f433-48ba-97ad-2e76ad430288"/>
+				<reportElement style="Detail" x="322" y="0" width="36" height="15" uuid="7ed7ffa8-f433-48ba-97ad-2e76ad430288"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{work_pay}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="327" y="0" width="58" height="15" uuid="554fee77-dc5d-4735-a725-55b53f53c03a"/>
+				<reportElement style="Detail" x="358" y="0" width="58" height="15" uuid="554fee77-dc5d-4735-a725-55b53f53c03a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{overtime}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="385" y="0" width="58" height="15" uuid="95f33354-a075-4566-84d5-10aa75477a1e"/>
+				<reportElement style="Detail" x="416" y="0" width="58" height="15" uuid="95f33354-a075-4566-84d5-10aa75477a1e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{special_time}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="443" y="0" width="71" height="15" uuid="6c1546f0-0206-4fb2-a70c-b8d5cd48dc97"/>
+			<textField isStretchWithOverflow="true" pattern="#,##0.0" isBlankWhenNull="true">
+				<reportElement style="Detail" x="474" y="0" width="71" height="15" uuid="6c1546f0-0206-4fb2-a70c-b8d5cd48dc97"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -172,4 +189,41 @@ FROM vw_works]]>
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="20">
+			<textField pattern="#,##0.0">
+				<reportElement x="282" y="0" width="40" height="20" uuid="9734fef2-5ef2-4063-87fc-0aa10e1b5af2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Double"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{work_weight_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="322" y="0" width="36" height="20" uuid="d208902b-02f4-4fcb-a55a-c8e4c103d6a2"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Double"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{work_pay_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.0">
+				<reportElement x="474" y="0" width="71" height="20" uuid="43032eec-0d5e-40b6-8a53-645a84b47d6e"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Double"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{work_amount_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>

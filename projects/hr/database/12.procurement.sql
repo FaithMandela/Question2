@@ -1,10 +1,10 @@
 CREATE TABLE budgets (
 	budget_id				serial primary key,
-	org_id					integer references orgs,
 	fiscal_year_id			integer references fiscal_years,
 	department_id			integer	references departments,
 	link_budget_id			integer references budgets,
 	entity_id				integer references entitys,
+	org_id					integer references orgs,
 	budget_type				integer default 1 not null,
 	budget_name				varchar(50),
 	application_date		timestamp default now(),
@@ -13,19 +13,19 @@ CREATE TABLE budgets (
 	action_date				timestamp,
 	details					text
 );
-CREATE INDEX budgets_org_id ON budgets (org_id);
 CREATE INDEX budgets_fiscal_year_id ON budgets (fiscal_year_id);
 CREATE INDEX budgets_department_id ON budgets (department_id);
 CREATE INDEX budgets_link_budget_id ON budgets (link_budget_id);
+CREATE INDEX budgets_org_id ON budgets (org_id);
 
 CREATE TABLE budget_lines (
     budget_line_id 			serial primary key,
-	org_id					integer references orgs,
     budget_id	 			integer references budgets,
 	period_id				integer references periods,
 	account_id				integer references accounts,
 	item_id					integer references items,
 	transaction_id 			integer references transactions,
+	org_id					integer references orgs,
 	spend_type				integer default 0 not null,
 	quantity				integer default 1 not null,
     amount 					real default 0 not null,
@@ -34,64 +34,42 @@ CREATE TABLE budget_lines (
     narrative				varchar(240),
 	details					text
 );
-CREATE INDEX budget_lines_org_id ON budget_lines (org_id);
 CREATE INDEX budget_lines_budget_id ON budget_lines (budget_id);
 CREATE INDEX budget_lines_period_id ON budget_lines (period_id);
 CREATE INDEX budget_lines_account_id ON budget_lines (account_id);
 CREATE INDEX budget_lines_item_id ON budget_lines (item_id);
 CREATE INDEX budget_lines_transaction_id ON budget_lines (transaction_id);
-
-CREATE TABLE stocks (
-	stock_id				serial primary key,
-	org_id					integer references orgs,
-	store_id				integer references stores,
-	stock_name				varchar(50),
-	stock_take_date			date,
-	details					text
-);
-CREATE INDEX stocks_org_id ON stocks (org_id);
-CREATE INDEX stocks_store_id ON stocks (store_id);
-
-CREATE TABLE stock_lines (
-	stock_line_id			serial primary key,
-	org_id					integer references orgs,
-	stock_id				integer references stocks,
-	item_id					integer references items,
-	quantity				integer,
-	narrative				varchar(240)
-);
-CREATE INDEX stock_lines_org_id ON stock_lines (org_id);
-CREATE INDEX stock_lines_stock_id ON stock_lines (stock_id);
-CREATE INDEX stock_lines_item_id ON stock_lines (item_id);
+CREATE INDEX budget_lines_org_id ON budget_lines (org_id);
 
 CREATE TABLE tender_types (
 	tender_type_id			serial primary key,
 	org_id					integer references orgs,
-	tender_type_name		varchar(50) unique,
-	details					text
+	tender_type_name		varchar(50) not null,
+	details					text,
+	UNIQUE(org_id, tender_type_name)
 );
 CREATE INDEX tender_types_org_id ON tender_types (org_id);
 
 CREATE TABLE tenders (
 	tender_id				serial primary key,
-	org_id					integer references orgs,
 	tender_type_id			integer references tender_types,
-	tender_name				varchar(320),
+	currency_id				integer references currency,
+	org_id					integer references orgs,
+	tender_name				varchar(320) not null,
 	tender_number			varchar(64),
 	tender_date				date not null,
 	tender_end_date			date,
 	is_completed			boolean default false not null,
 	details					text
 );
-CREATE INDEX tenders_org_id ON tenders (org_id);
 CREATE INDEX tenders_tender_type_id ON tenders (tender_type_id);
+CREATE INDEX tenders_org_id ON tenders (org_id);
 
 CREATE TABLE bidders (
 	bidder_id				serial primary key,
-	org_id					integer references orgs,
 	tender_id				integer references tenders,
     entity_id 				integer references entitys,
-	bidder_name				varchar(120),
+    org_id					integer references orgs,
 	tender_amount			real,
 	bind_bond				varchar(120),
 	bind_bond_amount		real,
@@ -99,29 +77,30 @@ CREATE TABLE bidders (
 	points					real,
 	is_awarded				boolean not null,
 	award_reference			varchar(32),
-	details					text
+	details					text,
+	UNIQUE(tender_id, entity_id)
 );
-CREATE INDEX bidders_org_id ON bidders (org_id);
 CREATE INDEX bidders_tender_id ON bidders (tender_id);
 CREATE INDEX bidders_entity_id ON bidders (entity_id);
-
+CREATE INDEX bidders_org_id ON bidders (org_id);
+	
 CREATE TABLE tender_items (
 	tender_item_id			serial primary key,
-	org_id					integer references orgs,
 	bidder_id				integer references bidders,
+	org_id					integer references orgs,
 	tender_item_name		varchar(320) not null,
 	quantity				integer,
 	item_amount				real,
 	item_tax				real,
 	details					text
 );
-CREATE INDEX tender_items_org_id ON tender_items (org_id);
 CREATE INDEX tender_items_bidder_id ON tender_items (bidder_id);
+CREATE INDEX tender_items_org_id ON tender_items (org_id);
 
 CREATE TABLE contracts (
 	contract_id				serial primary key,
-	org_id					integer references orgs,
 	bidder_id				integer references bidders,
+	org_id					integer references orgs,
 	contract_name			varchar(320) not null,
 	contract_date			date,
 	contract_end			date,
@@ -129,8 +108,8 @@ CREATE TABLE contracts (
 	contract_tax			real,
 	details					text
 );
-CREATE INDEX contracts_org_id ON contracts (org_id);
 CREATE INDEX contracts_bidder_id ON contracts (bidder_id);
+CREATE INDEX contracts_org_id ON contracts (org_id);
 
 CREATE VIEW vw_budgets AS
 	SELECT departments.department_id, departments.department_name, fiscal_years.fiscal_year_id, fiscal_years.fiscal_year_start,
@@ -146,14 +125,14 @@ CREATE VIEW vw_budget_lines AS
 		vw_budgets.budget_id, vw_budgets.budget_name, vw_budgets.budget_type, vw_budgets.approve_status, 
 
 		periods.period_id, periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
-		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, periods.bank_header, periods.bank_address, 
+		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
 
 		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
 		to_char(periods.start_date, 'Month') as period_month, (trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
 
-		vw_accounts.accounts_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
-		vw_accounts.accounts_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
+		vw_accounts.account_class_id, vw_accounts.chat_type_id, vw_accounts.chat_type_name, 
+		vw_accounts.account_class_name, vw_accounts.account_type_id, vw_accounts.account_type_name,
 		vw_accounts.account_id, vw_accounts.account_name, vw_accounts.is_header, vw_accounts.is_active,
 		vw_items.item_id, vw_items.item_name, vw_items.tax_type_id, vw_items.tax_account_id, vw_items.tax_type_name, 
 		vw_items.tax_rate, vw_items.tax_inclusive, vw_items.sales_account_id, vw_items.purchase_account_id,
@@ -174,8 +153,8 @@ CREATE VIEW vw_budget_pds AS
 		vw_budget_lines.period_id, vw_budget_lines.start_date, vw_budget_lines.end_date, vw_budget_lines.opened, 
 		vw_budget_lines.closed, vw_budget_lines.month_id, vw_budget_lines.period_year, vw_budget_lines.period_month, 
 		vw_budget_lines.quarter, vw_budget_lines.semister, vw_budget_lines.budget_type,
-		vw_budget_lines.accounts_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
-		vw_budget_lines.accounts_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
+		vw_budget_lines.account_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
+		vw_budget_lines.account_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
 		vw_budget_lines.account_id, vw_budget_lines.account_name, vw_budget_lines.is_header, vw_budget_lines.is_active,
 		vw_budget_lines.item_id, vw_budget_lines.item_name, vw_budget_lines.tax_type_id, vw_budget_lines.tax_account_id, 
 		vw_budget_lines.tax_type_name, vw_budget_lines.tax_rate, vw_budget_lines.tax_inclusive, vw_budget_lines.sales_account_id, 
@@ -193,8 +172,8 @@ CREATE VIEW vw_budget_pds AS
 		vw_budget_lines.period_id, vw_budget_lines.start_date, vw_budget_lines.end_date, vw_budget_lines.opened, 
 		vw_budget_lines.closed, vw_budget_lines.month_id, vw_budget_lines.period_year, vw_budget_lines.period_month, 
 		vw_budget_lines.quarter, vw_budget_lines.semister, vw_budget_lines.budget_type,
-		vw_budget_lines.accounts_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
-		vw_budget_lines.accounts_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
+		vw_budget_lines.account_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
+		vw_budget_lines.account_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
 		vw_budget_lines.account_id, vw_budget_lines.account_name, vw_budget_lines.is_header, vw_budget_lines.is_active,
 		vw_budget_lines.item_id, vw_budget_lines.item_name, vw_budget_lines.tax_type_id, vw_budget_lines.tax_account_id, 
 		vw_budget_lines.tax_type_name, vw_budget_lines.tax_rate, vw_budget_lines.tax_inclusive, vw_budget_lines.sales_account_id, 
@@ -206,8 +185,8 @@ CREATE VIEW vw_budget_ads AS
 	SELECT vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id,  vw_budget_lines.fiscal_year,
 		vw_budget_lines.fiscal_year_start, vw_budget_lines.fiscal_year_end, vw_budget_lines.year_opened, vw_budget_lines.year_closed,
 		vw_budget_lines.budget_type,
-		vw_budget_lines.accounts_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
-		vw_budget_lines.accounts_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
+		vw_budget_lines.account_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
+		vw_budget_lines.account_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
 		vw_budget_lines.account_id, vw_budget_lines.account_name, vw_budget_lines.is_header, vw_budget_lines.is_active,
 		vw_budget_lines.item_id, vw_budget_lines.item_name, vw_budget_lines.tax_type_id, vw_budget_lines.tax_account_id, 
 		vw_budget_lines.org_id, vw_budget_lines.spend_type, vw_budget_lines.spend_type_name,  
@@ -221,8 +200,8 @@ CREATE VIEW vw_budget_ads AS
 	GROUP BY vw_budget_lines.department_id, vw_budget_lines.department_name, vw_budget_lines.fiscal_year_id,  vw_budget_lines.fiscal_year,
 		vw_budget_lines.fiscal_year_start, vw_budget_lines.fiscal_year_end, vw_budget_lines.year_opened, vw_budget_lines.year_closed,
 		vw_budget_lines.budget_type,
-		vw_budget_lines.accounts_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
-		vw_budget_lines.accounts_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
+		vw_budget_lines.account_class_id, vw_budget_lines.chat_type_id, vw_budget_lines.chat_type_name, 
+		vw_budget_lines.account_class_name, vw_budget_lines.account_type_id, vw_budget_lines.account_type_name,
 		vw_budget_lines.account_id, vw_budget_lines.account_name, vw_budget_lines.is_header, vw_budget_lines.is_active,
 		vw_budget_lines.item_id, vw_budget_lines.item_name, vw_budget_lines.tax_type_id, vw_budget_lines.tax_account_id, 
 		vw_budget_lines.org_id, vw_budget_lines.spend_type, vw_budget_lines.spend_type_name,
@@ -232,8 +211,8 @@ CREATE VIEW vw_budget_pdc AS
 	SELECT vw_budget_ads.department_id, vw_budget_ads.department_name, vw_budget_ads.fiscal_year_id,  vw_budget_ads.fiscal_year,
 		vw_budget_ads.fiscal_year_start, vw_budget_ads.fiscal_year_end, vw_budget_ads.year_opened, vw_budget_ads.year_closed,
 		vw_budget_ads.budget_type,
-		vw_budget_ads.accounts_class_id, vw_budget_ads.chat_type_id, vw_budget_ads.chat_type_name, 
-		vw_budget_ads.accounts_class_name, vw_budget_ads.account_type_id, vw_budget_ads.account_type_name,
+		vw_budget_ads.account_class_id, vw_budget_ads.chat_type_id, vw_budget_ads.chat_type_name, 
+		vw_budget_ads.account_class_name, vw_budget_ads.account_type_id, vw_budget_ads.account_type_name,
 		vw_budget_ads.account_id, vw_budget_ads.account_name, vw_budget_ads.is_header, vw_budget_ads.is_active,
 		vw_budget_ads.item_id, vw_budget_ads.item_name, vw_budget_ads.tax_type_id, vw_budget_ads.tax_account_id, 
 		vw_budget_ads.org_id, vw_budget_ads.spend_type, 
@@ -249,17 +228,52 @@ CREATE VIEW vw_budget_pdc AS
 		(vw_budget_ads.department_id = vw_budget_ledger.department_id) AND (vw_budget_ads.account_id = vw_budget_ledger.account_id)
 		AND (vw_budget_ads.fiscal_year_id = vw_budget_ledger.fiscal_year_id);
 
-CREATE VIEW vw_stocks AS
-	SELECT stores.store_id, stores.store_name,
-		stocks.stock_id, stocks.org_id, stocks.stock_name, stocks.stock_take_date, stocks.details
-	FROM stocks INNER JOIN stores ON stocks.store_id = stores.store_id;
+CREATE VIEW vw_tenders AS
+	SELECT tender_types.tender_type_id, tender_types.tender_type_name, 
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		tenders.org_id, tenders.tender_id, tenders.tender_name, tenders.tender_number, 
+		tenders.tender_date, tenders.tender_end_date, tenders.is_completed, tenders.details
+	FROM tenders INNER JOIN tender_types ON tenders.tender_type_id = tender_types.tender_type_id
+		INNER JOIN currency ON tenders.currency_id = currency.currency_id;
 
-CREATE VIEW vw_stock_lines AS
-	SELECT vw_stocks.stock_id, vw_stocks.stock_name, vw_stocks.stock_take_date, 
-		vw_stocks.store_id, vw_stocks.store_name, items.item_id, items.item_name, 
-		stock_lines.stock_line_id, stock_lines.org_id, stock_lines.quantity, stock_lines.narrative
-	FROM stock_lines INNER JOIN vw_stocks ON stock_lines.stock_id = vw_stocks.stock_id
-		INNER JOIN items ON stock_lines.item_id = items.item_id;
+CREATE VIEW vw_bidders AS
+	SELECT vw_tenders.tender_type_id, vw_tenders.tender_type_name, 
+		vw_tenders.tender_id, vw_tenders.tender_name, vw_tenders.tender_number, 
+		vw_tenders.tender_date, vw_tenders.tender_end_date, vw_tenders.is_completed,
+		entitys.entity_id, entitys.entity_name,
+		
+		bidders.org_id, bidders.bidder_id, bidders.tender_amount, 
+		bidders.bind_bond, bidders.bind_bond_amount, bidders.return_date, bidders.points, 
+		bidders.is_awarded, bidders.award_reference, bidders.details
+	FROM bidders INNER JOIN vw_tenders ON bidders.tender_id = vw_tenders.tender_id
+		INNER JOIN entitys ON bidders.entity_id = entitys.entity_id;
+
+CREATE VIEW vw_tender_items AS
+	SELECT vw_bidders.tender_type_id, vw_bidders.tender_type_name, 
+		vw_bidders.tender_id, vw_bidders.tender_name, vw_bidders.tender_number, 
+		vw_bidders.tender_date, vw_bidders.tender_end_date, vw_bidders.is_completed,
+		vw_bidders.entity_id, vw_bidders.entity_name,
+		
+		vw_bidders.bidder_id, vw_bidders.tender_amount, vw_bidders.bind_bond, vw_bidders.bind_bond_amount, 
+		vw_bidders.return_date, vw_bidders.points, vw_bidders.is_awarded, vw_bidders.award_reference,
+		
+		tender_items.org_id, tender_items.tender_item_id, tender_items.tender_item_name, tender_items.quantity, 
+		tender_items.item_amount, tender_items.item_tax, tender_items.details
+	FROM tender_items INNER JOIN vw_bidders ON tender_items.bidder_id = vw_bidders.bidder_id;
+
+CREATE VIEW vw_contracts AS
+	SELECT vw_bidders.tender_type_id, vw_bidders.tender_type_name, 
+		vw_bidders.tender_id, vw_bidders.tender_name, vw_bidders.tender_number, 
+		vw_bidders.tender_date, vw_bidders.tender_end_date, vw_bidders.is_completed,
+		vw_bidders.entity_id, vw_bidders.entity_name,
+		
+		vw_bidders.bidder_id, vw_bidders.tender_amount, vw_bidders.bind_bond, 
+		vw_bidders.bind_bond_amount, vw_bidders.return_date, vw_bidders.points, 
+		vw_bidders.is_awarded, vw_bidders.award_reference,
+		
+		contracts.org_id, contracts.contract_id, contracts.contract_name, contracts.contract_date, 
+		contracts.contract_end, contracts.contract_amount, contracts.contract_tax, contracts.details
+	FROM contracts INNER JOIN vw_bidders ON contracts.bidder_id = vw_bidders.bidder_id;
 
 CREATE OR REPLACE FUNCTION upd_budget_lines() RETURNS trigger AS $$
 DECLARE

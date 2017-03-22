@@ -24,9 +24,9 @@
 		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT org_id , entity_id, entity_name, date, deposit, loans, repayments, investments FROM
+		<![CDATA[SELECT org_id , entity_id, entity_name, date, contribution_amount, loans, repayments, investments FROM
 
-((select org_id , entity_id, entity_name, entry_date AS date, deposit_amount AS deposit, 0::real AS loans, 0::real AS repayments, 0::real AS investments from vw_contributions where vw_contributions.is_paid = 'true' )
+((select org_id , entity_id, entity_name, entry_date AS date, contribution_amount , 0::real AS loans, 0::real AS repayments, 0::real AS investments from vw_contributions where vw_contributions.is_paid = 'true' )
 UNION
 (select org_id,  entity_id, entity_name, loan_date, 0::real, principle, 0::real, 0::real from vw_loans where vw_loans.approve_status = 'Approved' )
 UNION
@@ -41,7 +41,7 @@ ORDER BY date DESC]]>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="date" class="java.sql.Timestamp"/>
-	<field name="deposit" class="java.lang.Float"/>
+	<field name="contribution_amount" class="java.lang.Float"/>
 	<field name="loans" class="java.lang.Float"/>
 	<field name="repayments" class="java.lang.Float"/>
 	<field name="investments" class="java.lang.Float"/>
@@ -49,7 +49,7 @@ ORDER BY date DESC]]>
 		<variableExpression><![CDATA[$F{repayments}]]></variableExpression>
 	</variable>
 	<variable name="sumcontribs" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{deposit}]]></variableExpression>
+		<variableExpression><![CDATA[$F{contribution_amount}]]></variableExpression>
 	</variable>
 	<variable name="suminvestment" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{investments}]]></variableExpression>
@@ -253,7 +253,7 @@ ORDER BY date DESC]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{deposit}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{contribution_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField" x="540" y="0" width="75" height="14" uuid="a14de148-c044-40c0-b107-a2af0532084a"/>

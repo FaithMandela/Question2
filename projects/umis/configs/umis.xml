@@ -1,5 +1,5 @@
-<APP name="UEAB" org="org_id" password="change_password">
-	<MENU name="UEAB IMIS" role="records">
+<APP name="UMIS" org="org_id" password="change_password">
+	<MENU name="UMIS IMIS" role="records">
 		<MENU name="Control Panel" role="records,bulleting,cpanel">
 			<MENU name="Grades" role="records,cpanel">1</MENU>
 			<MENU name="Entrance Marks" role="records,cpanel">2</MENU>
@@ -465,7 +465,7 @@
 				<TEXTFIELD w="75" title="Grade">gradeid</TEXTFIELD>
 				<TEXTFIELD w="75" title="Level">optionlevel</TEXTFIELD>
 				<FORM name="Prerequisites" keyfield="prerequisiteid" linkfield="courseid" table="prerequisites" noorg="true">
-					<GRIDBOX w="430" title="Course" lptable="courses" lw="90" noorg="true" lpkey="courseid" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">precourseid
+					<GRIDBOX w="430" title="Course" lptable="courses" lw="90" cmb_fnct="courseid || ', ' || coursetitle" noorg="true" lpkey="courseid" y="10" h="20" x="10" lpfield="course_disp">precourseid
 						<GRID name="Courses" keyfield="courseid" table="courseview" noorg="true">
 							<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
 							<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
@@ -497,7 +497,7 @@
 					<TEXTFIELD w="80" title="Content Type">contenttypename</TEXTFIELD>
 					<TEXTFIELD w="80" title="Content Level">content_level</TEXTFIELD>
 					<FORM name="Major Contents" keyfield="majorcontentid" inputparams="majorid=majorid" linkfield="bulletingid" table="majorcontents" noorg="true">
-						<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
+						<GRIDBOX w="430" title="Course" lptable="courseview" cmb_fnct="courseid || ', ' || coursetitle" noorg="true" y="10" h="20" x="10" lpfield="course_disp">courseid
 							<GRID name="Courses" keyfield="courseid" gridfilter="true" table="courseview" noorg="true">
 								<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
 								<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
@@ -582,7 +582,7 @@
 			<TEXTFIELD w="40" title="School">schoolname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Denomination">denominationname</TEXTFIELD>
 			<TEXTFIELD w="40" title="Nationality">Nationality</TEXTFIELD>
-			<FORM auditid="sys_audit_trail_id" name="Students" keyfield="studentid" table="students">
+			<FORM auditid="sys_audit_trail_id" name="Students" keyfield="studentid" table="students" noorg="true">
 				<TEXTFIELD w="150" title="Student ID" y="10" h="20" x="10">studentid</TEXTFIELD>
 				<COMBOBOX w="150" title="School Name" lptable="schools" noorg="true" y="10" h="20" x="290" lpfield="schoolname">schoolid</COMBOBOX>
 				<COMBOBOX w="430" title="Denomination" lptable="denominations" noorg="true" y="30" h="20" x="10" lpfield="denominationname">denominationid</COMBOBOX>
@@ -674,7 +674,7 @@
 					<TEXTFIELD w="140" title="Credit Hours">credithours</TEXTFIELD>
 					<TEXTFIELD w="40" title="Narrative">narrative</TEXTFIELD>
 					<FORM name="Transfered Credits" keyfield="transferedcreditid" linkfield="studentdegreeid" table="transferedcredits" noorg="true">
-						<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
+						<GRIDBOX w="430" title="Course" lptable="courseview" cmb_fnct="courseid || ', ' || coursetitle" noorg="true" y="10" h="20" x="10" lpfield="course_disp">courseid
 							<GRID name="Courses" keyfield="courseid" gridfilter="true" table="courseview" noorg="true" key="2" pos="top">
 								<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
 								<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
@@ -1010,14 +1010,14 @@
 					</GRID>
 				</GRID>
 				<FORM name="Q Course" keyfield="qcourseid" linkfield="quarterid" table="qcourses">
-					<GRIDBOX w="430" title="Course" lptable="courseview" noorg="true" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">courseid
+					<GRIDBOX w="430" title="Course" lptable="courseview" cmb_fnct="courseid || ', ' || coursetitle" noorg="true" y="10" h="20" x="10" lpfield="course_disp">courseid
 						<GRID limit="100" name="Courses" keyfield="courseid" table="courseview" noorg="true">
 							<TEXTFIELD w="10" title="Course ID">courseid</TEXTFIELD>
 							<TEXTFIELD w="40" title="Course Title">coursetitle</TEXTFIELD>
 						</GRID>
 					</GRIDBOX>
-					<COMBOBOX w="430" title="Instructor" lptable="instructors" y="30" h="20" x="10" lpfield="instructorname">instructorid</COMBOBOX>
-					<COMBOBOX w="430" title="Locations" lptable="levellocations" y="50" h="20" x="10" lpfield="levellocationname">levellocationid</COMBOBOX>
+					<COMBOBOX w="430" title="Instructor" lptable="instructors" noorg="true" y="30" h="20" x="10" lpfield="instructorname">instructorid</COMBOBOX>
+					<COMBOBOX w="430" title="Locations" lptable="levellocations" noorg="true" y="50" h="20" x="10" lpfield="levellocationname">levellocationid</COMBOBOX>
 					<COMBOLIST w="250" title="Class Option" y="70" h="20" editable="true" x="10">classoption
 						<DATA>Main</DATA>
 						<DATA>Group A</DATA>
@@ -1026,13 +1026,6 @@
 						<DATA>Group D</DATA>
 						<DATA>Group E</DATA>
 						<DATA>Group F</DATA>
-						<DATA>EAU</DATA>
-						<DATA>Kamagambo</DATA>
-						<DATA>Nairobi</DATA>
-						<DATA>Inter Session</DATA>
-						<DATA>Eldoret</DATA>
-						<DATA>KenduBay</DATA>
-						<DATA>Kisumu</DATA>
 					</COMBOLIST>
 					<TEXTFIELD w="150" title="Max. Class" y="90" h="20" x="10">maxclass</TEXTFIELD>
 					<TEXTFIELD w="150" title="Full Attendance" y="90" h="20" x="290">fullattendance</TEXTFIELD>
@@ -1139,7 +1132,7 @@
 					<TEXTFIELD w="10" title="Grade">gradeid</TEXTFIELD>
 					<TEXTFIELD w="5" title="Dropped">dropped</TEXTFIELD>
 					<FORM lookupfield="quarterid" name="Q. Grades" keyfield="qgradeid" audit="sys_audit_trail_id" linkfield="qstudentid" table="qgrades">
-						<GRIDBOX w="430" title="Course" lptable="qcourseview" lookupfield="quarterid" lw="90" y="10" h="20" x="10" lpfield="courseid || ', ' || coursetitle">qcourseid
+						<GRIDBOX w="430" title="Course" lptable="qcourseview" lookupfield="quarterid" lw="90" cmb_fnct="courseid || ', ' || coursetitle" y="10" h="20" x="10" lpfield="course_disp">qcourseid
 							<GRID limit="100" name="Q Courses" keyfield="qcourseid" linkfnct="getstudentquarter" linkfield="quarterid" table="qcourseview">
 								<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 								<TEXTFIELD w="100" title="Course">coursetitle</TEXTFIELD>

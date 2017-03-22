@@ -1,5 +1,5 @@
-<APP name="UEAB" org="org_id" password="change_password">
-	<MENU name="UEAB Exams" role="examination">
+<APP name="UMIS" org="org_id" password="change_password">
+	<MENU name="UMIS Exams" role="examination">
 		<MENU name="Control Panel">
 			<MENU name="Reports">
 				<MENU name="Grades List">101</MENU>

@@ -7,8 +7,8 @@ SELECT ticketid, ticketdate, ticketpcc, bookpcc, bpcc, son, pcc, line1,
        tckin, tlftd, tunvl, tprtd, tsusp, 
        (topen + tused + tarpt + tckin + tlftd + tprtd + tunvl) as activesegs
 FROM tickets
-WHERE bpcc = '36Q9' 
-AND to_char(ticketdate, 'MMYYYY') = '032016'
+WHERE bpcc = 'B30' 
+AND ticketdate >= '2016-01-01'::date
 ORDER BY ticketdate;
 
 --- Ticket summary
@@ -30,6 +30,7 @@ SELECT tickets.ticketid, ticketdate, ticketpcc, bookpcc, bpcc, son, pcc, line1,
 
 FROM tickets INNER JOIN tes ON tickets.ticketid = tes.ticketid
 WHERE tickets.bpcc = '3L3N' 
+AND ticketdate >= '2016-01-01'::date
 ORDER BY tickets.ticketdate;
 
 

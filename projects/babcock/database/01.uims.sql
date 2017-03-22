@@ -64,6 +64,7 @@ CREATE INDEX departments_org_id ON departments (org_id);
 
 CREATE TABLE grades (
 	gradeid				varchar(2) primary key,
+	org_id				integer references orgs,
 	gradeweight			float default 0 not null,
 	minrange			integer,
 	maxrange			integer,
@@ -71,6 +72,7 @@ CREATE TABLE grades (
 	narrative			varchar(240),
 	details				text
 );
+CREATE INDEX grades_org_id ON grades (org_id);
 
 CREATE TABLE degreelevels (
 	degreelevelid		varchar(12) primary key,
@@ -176,6 +178,7 @@ CREATE TABLE courses (
 	iscurrent			boolean not null default true,
 	nogpa				boolean not null default false,
 	norepeats			boolean not null default false,
+	allow_ws			boolean not null default false,
 	yeartaken			integer not null default 1,
 	details				text
 );
@@ -691,9 +694,11 @@ CREATE TABLE studentpayments (
 	approvedtime		timestamp,
 	Picked				boolean default false not null,
 	Pickeddate			timestamp,
+	first_attempt		timestamp,
 	ns_amount			real,
 	payment_code		varchar(50),
 	terminalid			varchar(12),
+	mechant_code		varchar(16),
 	narrative			varchar(240),
 	purpose				varchar(240)
 );	
@@ -702,6 +707,12 @@ CREATE INDEX studentpayments_phistoryid ON studentpayments (phistoryid);
 CREATE INDEX studentpayments_org_id ON studentpayments (org_id);
 
 CREATE SEQUENCE studentpayment_seq START 1;
+
+CREATE TABLE studentpayment_logs (
+	studentpayment_log_id	serial primary key,
+	studentpaymentid	integer,
+	created				timestamp not null default now()
+);
 
 CREATE TABLE paymentracks (
 	paymentrackid		serial primary key,
@@ -1045,4 +1056,14 @@ CREATE INDEX qposting_logs_qstudentid ON qposting_logs (qstudentid);
 CREATE INDEX qposting_logs_sys_audit_trail_id ON qposting_logs (sys_audit_trail_id);
 
 ALTER TABLE entitys ADD mail_user	varchar(50);
+
+
+CREATE TABLE import_grades (
+	import_grade_id				serial primary key,
+	course_id					varchar(12),
+	session_id					varchar(12),
+	student_id					varchar(12),
+	score						real,
+	created						timestamp default current_timestamp
+);
 

@@ -33,6 +33,7 @@ vw_employee_month.currency_symbol,
 true as is_inpayoll, false as not_inpayroll
 
 FROM vw_employee_month
+
 WHERE (employee_month_id = '$P!{filterid}')
 AND (entity_id = '$P!{entityid}')
 $P!{organd};]]>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transcripta" printOrder="Horizontal" pageWidth="595" pageHeight="450" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transcripta" printOrder="Horizontal" pageWidth="595" pageHeight="450" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="38472344-4e10-4231-a32f-f5ebd1f3f915">
 	<property name="ireport.scriptlethandling" value="0"/>
 	<property name="ireport.encoding" value="UTF-8"/>
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<import value="net.sf.jasperreports.engine.*"/>
@@ -122,222 +122,236 @@ ORDER BY studentid, quarterid;]]>
 		<band splitType="Prevent"/>
 	</columnHeader>
 	<detail>
-		<band height="150" splitType="Stretch">
+		<band height="166" splitType="Stretch">
 			<staticText>
-				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="198" y="124" width="56" height="6" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="197" y="145" width="56" height="7" forecolor="#000000" backcolor="#FFFFFF" uuid="6f29fa05-0439-466b-8c27-e56d0242e631"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="5" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Semester Value:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-8" positionType="Float" mode="Transparent" x="336" y="123" width="17" height="7" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-8" positionType="Float" mode="Transparent" x="335" y="145" width="17" height="7" forecolor="#000000" backcolor="#FFFFFF" uuid="5fe0a5fe-749f-421b-9d94-b49d7db458c5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="5" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[ GPA ]]></text>
 			</staticText>
 			<textField pattern="###0.000" isBlankWhenNull="true">
-				<reportElement key="textField-8" positionType="Float" mode="Transparent" x="251" y="123" width="20" height="7" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="textField-8" positionType="Float" mode="Transparent" x="250" y="145" width="20" height="7" forecolor="#000000" backcolor="#FFFFFF" uuid="fa2bb731-41a0-434f-8d0d-569127800f31"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="6" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{credit}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{credit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.000;-###0.000" isBlankWhenNull="true">
-				<reportElement key="textField-9" positionType="Float" mode="Transparent" x="352" y="123" width="19" height="7" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="textField-9" positionType="Float" mode="Transparent" x="351" y="145" width="19" height="7" forecolor="#000000" backcolor="#FFFFFF" uuid="8a828732-cff1-468d-9355-74a21c35492b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="6" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{gpa}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gpa}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-18" mode="Transparent" x="76" y="0" width="79" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="textField-18" mode="Transparent" x="76" y="0" width="79" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="4b29431f-08b1-4f89-b3fb-c63a0662defd"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{qname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{qname}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-21" mode="Transparent" x="34" y="0" width="42" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-21" mode="Transparent" x="34" y="0" width="42" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="c3fe0fba-dfad-4093-9ff9-d43b089b1abc"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Semester :]]></text>
 			</staticText>
 			<subreport>
-				<reportElement x="53" y="14" width="330" height="99"/>
+				<reportElement x="53" y="14" width="330" height="131" uuid="5a7b31a1-7378-461b-b024-feaf22a09210"/>
 				<subreportParameter name="qstudentid">
 					<subreportParameterExpression><![CDATA[$F{qstudentid}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression class="java.lang.String"><![CDATA[$P{reportpath} + "qgradeviewtrans.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{reportpath} + "qgradeviewtrans.jasper"]]></subreportExpression>
 			</subreport>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="352" y="129" width="19" height="7"/>
+				<reportElement positionType="Float" x="351" y="152" width="19" height="9" uuid="046db760-44d9-44e5-b09e-ecb06949d610"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cummgpa}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cummgpa}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="336" y="129" width="17" height="7"/>
+				<reportElement positionType="Float" x="335" y="152" width="17" height="9" uuid="f41a9a88-68d9-4751-9629-3ad052eb506c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[C-GPA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-21" mode="Transparent" x="231" y="2" width="35" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-21" mode="Transparent" x="231" y="2" width="35" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="e571d9fe-6140-4018-a70a-97122a8649eb"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
 					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Session :]]></text>
 			</staticText>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-18" mode="Transparent" x="264" y="2" width="50" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="textField-18" mode="Transparent" x="264" y="2" width="50" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="9994c352-0a9e-4992-b5b4-a048442fb1df"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
 					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{quarteryear}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quarteryear}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement key="textField-18" mode="Transparent" x="177" y="2" width="55" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="textField-18" mode="Transparent" x="177" y="2" width="55" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="fa717fef-d1f0-4bf6-9469-5685f966bbb0"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
 					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{studylevel}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{studylevel}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-21" mode="Transparent" x="155" y="2" width="22" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-21" mode="Transparent" x="155" y="2" width="22" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="f9515abb-68a3-4034-8712-cd3ca130b1f9"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None">
 					<font fontName="Times New Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Level]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="198" y="129" width="56" height="8" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="197" y="152" width="56" height="9" forecolor="#000000" backcolor="#FFFFFF" uuid="7a504c00-48e7-45fc-b5a9-9f396b4d29bd"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="5" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Cummulative value:]]></text>
 			</staticText>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement key="textField-8" positionType="Float" mode="Transparent" x="251" y="128" width="20" height="9" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="textField-8" positionType="Float" mode="Transparent" x="250" y="152" width="20" height="9" forecolor="#000000" backcolor="#FFFFFF" uuid="5de2c008-e0cb-48cf-9ab0-85959c423460"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="6" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{cummcredit}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cummcredit}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="313" y="124" width="14" height="7"/>
+				<reportElement x="312" y="145" width="14" height="7" uuid="be5685c7-4da5-4c92-8230-2557effffc06"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{currcp}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{currcp}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="313" y="130" width="14" height="7"/>
+				<reportElement x="312" y="152" width="14" height="9" uuid="3bddde16-8362-4f2b-98da-a754c0fe0af3"/>
 				<textElement verticalAlignment="Bottom">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Double"><![CDATA[$F{cummcurrp}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cummcurrp}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="276" y="124" width="38" height="7" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="275" y="145" width="38" height="7" forecolor="#000000" backcolor="#FFFFFF" uuid="2b04fa83-3395-4403-893a-c462dd96b776"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="5" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Sem P:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="276" y="130" width="38" height="7" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement key="staticText-7" positionType="Float" mode="Transparent" x="275" y="152" width="38" height="9" forecolor="#000000" backcolor="#FFFFFF" uuid="56d91c46-7d54-44f8-8922-9bdde9751d27"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 					<font fontName="Times New Roman" size="5" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Cumm P:]]></text>
 			</staticText>

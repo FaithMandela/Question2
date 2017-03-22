@@ -1,3 +1,4 @@
+;(function($){
 /**
  * jqGrid Thai Translation
  * Kittituch Manakul m.kittituch@Gmail.com
@@ -6,47 +7,22 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
 **/
-/*global jQuery, define */
-(function( factory ) {
-	"use strict";
-	if ( typeof define === "function" && define.amd ) {
-		// AMD. Register as an anonymous module.
-		define([
-			"jquery",
-			"../grid.base"
-		], factory );
-	} else {
-		// Browser globals
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 $.jgrid = $.jgrid || {};
-if(!$.jgrid.hasOwnProperty("regional")) {
-	$.jgrid.regional = [];
-}
-$.jgrid.regional["th"] = {
+$.extend($.jgrid,{
 	defaults : {
 		recordtext: "แสดง {0} - {1} จาก {2}",
 		emptyrecords: "ไม่พบข้อมูล",
 		loadtext: "กำลังร้องขอข้อมูล...",
-		pgtext : "หน้า {0} จาก {1}",
-		savetext: "Saving...",
-		pgfirst : "First Page",
-		pglast : "Last Page",
-		pgnext : "Next Page",
-		pgprev : "Previous Page",
-		pgrecs : "Records per Page",
-		showhide: "Toggle Expand Collapse Grid"
+		pgtext : "หน้า {0} จาก {1}"
 	},
 	search : {
 		caption: "กำลังค้นหา...",
 		Find: "ค้นหา",
 		Reset: "คืนค่ากลับ",
-		odata: [{ oper:'eq', text:"เท่ากับ"},{ oper:'ne', text:"ไม่เท่ากับ"},{ oper:'lt', text:"น้อยกว่า"},{ oper:'le', text:"ไม่มากกว่า"},{ oper:'gt', text:"มากกกว่า"},{ oper:'ge', text:"ไม่น้อยกว่า"},{ oper:'bw', text:"ขึ้นต้นด้วย"},{ oper:'bn', text:"ไม่ขึ้นต้นด้วย"},{ oper:'in', text:"มีคำใดคำหนึ่งใน"},{ oper:'ni', text:"ไม่มีคำใดคำหนึ่งใน"},{ oper:'ew', text:"ลงท้ายด้วย"},{ oper:'en', text:"ไม่ลงท้ายด้วย"},{ oper:'cn', text:"มีคำว่า"},{ oper:'nc', text:"ไม่มีคำว่า"},{ oper:'nu', text:'is null'},{ oper:'nn', text:'is not null'}],
+		odata : ['เท่ากับ', 'ไม่เท่ากับ', 'น้อยกว่า', 'ไม่มากกว่า','มากกกว่า','ไม่น้อยกว่า', 'ขึ้นต้นด้วย','ไม่ขึ้นต้นด้วย','มีคำใดคำหนึ่งใน','ไม่มีคำใดคำหนึ่งใน','ลงท้ายด้วย','ไม่ลงท้ายด้วย','มีคำว่า','ไม่มีคำว่า'],
 		groupOps: [	{ op: "และ", text: "ทั้งหมด" },	{ op: "หรือ",  text: "ใดๆ" }	],
-		operandTitle : "Click to select search operation.",
-		resetTitle : "Reset Search Value"
+		matchText: " ตรงกันกับ",
+		rulesText: " ตามกฏ"
 	},
 	edit : {
 		addCaption: "เพิ่มข้อมูล",
@@ -98,11 +74,7 @@ $.jgrid.regional["th"] = {
 		alertcap: "คำเตือน",
 		alerttext: "กรุณาเลือกข้อมูล",
 		viewtext: "",
-		viewtitle: "ดูรายละเอียดข้อมูล",
-		savetext: "",
-		savetitle: "Save row",
-		canceltext: "",
-		canceltitle : "Cancel row editing"
+		viewtitle: "ดูรายละเอียดข้อมูล"
 	},
 	col : {
 		caption: "กรุณาเลือกคอลัมน์",
@@ -132,7 +104,6 @@ $.jgrid.regional["th"] = {
 			S: function (j) {return ''},
 			srcformat: 'Y-m-d',
 			newformat: 'd/m/Y',
-			parseRe : /[#%\\\/:_;.,\t\s-]/,
 			masks : {
 				ISO8601Long:"Y-m-d H:i:s",
 				ISO8601Short:"Y-m-d",
@@ -146,8 +117,7 @@ $.jgrid.regional["th"] = {
 				UniversalSortableDateTime: "Y-m-d H:i:sO",
 				YearMonth: "F, Y"
 			},
-			reformatAfterEdit : false,
-			userLocalTime : false
+			reformatAfterEdit : false
 		},
 		baseLinkUrl: '',
 		showAction: '',
@@ -155,5 +125,5 @@ $.jgrid.regional["th"] = {
 		checkbox : {disabled:true},
 		idName : 'id'
 	}
-};
-}));
+});
+})(jQuery);

@@ -1,3 +1,4 @@
+;(function($){
 /**
  * jqGrid Vietnamese Translation
  * Lê Đình Dũng dungtdc@gmail.com
@@ -6,47 +7,22 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
 **/
-/*global jQuery, define */
-(function( factory ) {
-	"use strict";
-	if ( typeof define === "function" && define.amd ) {
-		// AMD. Register as an anonymous module.
-		define([
-			"jquery",
-			"../grid.base"
-		], factory );
-	} else {
-		// Browser globals
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 $.jgrid = $.jgrid || {};
-if(!$.jgrid.hasOwnProperty("regional")) {
-	$.jgrid.regional = [];
-}
-$.jgrid.regional["vi"] = {
+$.extend($.jgrid,{
 	defaults : {
 		recordtext: "View {0} - {1} of {2}",
 		emptyrecords: "Không có dữ liệu",
 		loadtext: "Đang nạp dữ liệu...",
-		pgtext : "Trang {0} trong tổng số {1}",
-		savetext: "Saving...",
-		pgfirst : "First Page",
-		pglast : "Last Page",
-		pgnext : "Next Page",
-		pgprev : "Previous Page",
-		pgrecs : "Records per Page",
-		showhide: "Toggle Expand Collapse Grid"
+		pgtext : "Trang {0} trong tổng số {1}"
 	},
 	search : {
 		caption: "Tìm kiếm...",
 		Find: "Tìm",
 		Reset: "Khởi tạo lại",
-		odata: [{ oper:'eq', text:"bằng"},{ oper:'ne', text:"không bằng"},{ oper:'lt', text:"bé hơn"},{ oper:'le', text:"bé hơn hoặc bằng"},{ oper:'gt', text:"lớn hơn"},{ oper:'ge', text:"lớn hơn hoặc bằng"},{ oper:'bw', text:"bắt đầu với"},{ oper:'bn', text:"không bắt đầu với"},{ oper:'in', text:"trong"},{ oper:'ni', text:"không nằm trong"},{ oper:'ew', text:"kết thúc với"},{ oper:'en', text:"không kết thúc với"},{ oper:'cn', text:"chứa"},{ oper:'nc', text:"không chứa"},{ oper:'nu', text:'is null'},{ oper:'nn', text:'is not null'}],
+		odata : ['bằng', 'không bằng', 'bé hơn', 'bé hơn hoặc bằng','lớn hơn','lớn hơn hoặc bằng', 'bắt đầu với','không bắt đầu với','trong','không nằm trong','kết thúc với','không kết thúc với','chứa','không chứa'],
 		groupOps: [	{ op: "VÀ", text: "tất cả" },	{ op: "HOẶC",  text: "bất kỳ" }	],
-		operandTitle : "Click to select search operation.",
-		resetTitle : "Reset Search Value"
+		matchText: " đúng",
+		rulesText: " quy tắc"
 	},
 	edit : {
 		addCaption: "Thêm bản ghi",
@@ -98,11 +74,7 @@ $.jgrid.regional["vi"] = {
 		alertcap: "Cảnh báo",
 		alerttext: "Hãy chọn một dòng",
 		viewtext: "",
-		viewtitle: "Xem dòng đã chọn",
-		savetext: "",
-		savetitle: "Save row",
-		canceltext: "",
-		canceltitle : "Cancel row editing"
+		viewtitle: "Xem dòng đã chọn"
 	},
 	col : {
 		caption: "Chọn cột",
@@ -132,7 +104,6 @@ $.jgrid.regional["vi"] = {
 			S: function (j) {return j < 11 || j > 13 ? ['st', 'nd', 'rd', 'th'][Math.min((j - 1) % 10, 3)] : 'th';},
 			srcformat: 'Y-m-d',
 			newformat: 'n/j/Y',
-			parseRe : /[#%\\\/:_;.,\t\s-]/,
 			masks : {
 				// see http://php.net/manual/en/function.date.php for PHP format used in jqGrid
 				// and see http://docs.jquery.com/UI/Datepicker/formatDate
@@ -186,8 +157,7 @@ $.jgrid.regional["vi"] = {
 				//    F - A full textual representation of a month
 				YearMonth: "F, Y" // in jQuery UI Datepicker: "MMMM, yyyy"
 			},
-			reformatAfterEdit : false,
-			userLocalTime : false
+			reformatAfterEdit : false
 		},
 		baseLinkUrl: '',
 		showAction: '',
@@ -195,5 +165,5 @@ $.jgrid.regional["vi"] = {
 		checkbox : {disabled:true},
 		idName : 'id'
 	}
-};
-}));
+});
+})(jQuery);

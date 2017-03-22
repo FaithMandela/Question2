@@ -24,7 +24,7 @@
 	</context-param>
 	<context-param>
 		<param-name>repository_url</param-name>
-		<param-value>http://localhost:9090/repository/webdav/pictures/</param-value>
+		<param-value>http://localhost:8080/repository/webdav/pictures/</param-value>
 	</context-param>
 	<context-param>
 		<param-name>rep_username</param-name>
@@ -143,15 +143,6 @@
 	<servlet-mapping>
 		<servlet-name>BarazaAJAX</servlet-name>
 		<url-pattern>/ajaxupdate</url-pattern>
-	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>RegisterLicense</servlet-name>
-		<servlet-class>org.baraza.com.BLicenseRegister</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>RegisterLicense</servlet-name>
-		<url-pattern>/registerlicense</url-pattern>
 	</servlet-mapping>
 
 	<security-constraint>

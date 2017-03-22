@@ -59,8 +59,13 @@ BEGIN
     --raise exception '%',v_credit_limit;
     UPDATE orgs SET credit_limit = v_credit_limit WHERE org_id = NEW.org_id;
 
-	INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
-	VALUES(2, NEW.org_id, NEW.passenger_id, 'passengers','Policy Number:'||NEW.policy_number||'\n\nPassanger Name:'||NEW.passenger_name);
+    IF(NEW.customer_code IS null) THEN
+    	INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
+    	VALUES(2, NEW.org_id, NEW.passenger_id, 'passengers','Policy Number:'||NEW.policy_number||'\n\nPassanger Name:'||NEW.passenger_name);
+    ELSE
+        INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name, narrative)
+    	VALUES(3, NEW.org_id, NEW.passenger_id, 'passengers','Policy Number:'||NEW.policy_number||'\n\nPassanger Name:'||NEW.passenger_name);
+    END IF;
 
 RETURN NEW;
 END;
@@ -102,3 +107,30 @@ $$ LANGUAGE plpgsql;
 
 CREATE SEQUENCE policy_no_seq  INCREMENT 1  MINVALUE 1  MAXVALUE 9223372036854775807  START 1  CACHE 1;
 CREATE SEQUENCE policy_no_incountry_seq  INCREMENT 1  MINVALUE 1  MAXVALUE 9223372036854775807  START 1  CACHE 1;
+
+CREATE OR REPLACE FUNCTION ins_sys_reset() RETURNS trigger AS $$
+DECLARE
+	v_entity_id			integer;
+	v_org_id			integer;
+	v_password			varchar(32);
+BEGIN
+	SELECT entity_id, org_id INTO v_entity_id, v_org_id
+	FROM entitys
+	WHERE (lower(trim(primary_email)) = lower(trim(NEW.request_email)));
+
+	IF(v_entity_id is not null) THEN
+		v_password := upper(substring(md5(random()::text) from 3 for 9));
+
+		UPDATE entitys SET first_password = v_password, entity_password = md5(v_password)
+		WHERE entity_id = v_entity_id;
+
+		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
+		VALUES(v_org_id, 4, v_entity_id, 'entitys');
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_sys_reset AFTER INSERT ON sys_reset
+    FOR EACH ROW EXECUTE PROCEDURE ins_sys_reset();

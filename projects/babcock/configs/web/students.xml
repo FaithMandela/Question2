@@ -399,10 +399,11 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Residence Selection" key="23" h="500">
-		<GRID name="Residence Selection" keyfield="qresidenceid" table="currentresidenceview" user="studentid">
+		<GRID name="Residence Selection" keyfield="qresidenceid" table="vw_qresidence" where="(active = true)" user="studentid">
 			<TEXTFIELD w="50" title="Residence ID">residenceid</TEXTFIELD>
 			<TEXTFIELD w="140" title="Residence Name">residencename</TEXTFIELD>
-			<TEXTFIELD w="75" title="Residence Option">residenceoption</TEXTFIELD>
+			<TEXTFIELD w="75" title="Capacity">res_capacity</TEXTFIELD>
+			<TEXTFIELD w="75" title="Available Space">space_left</TEXTFIELD>
 			<CHECKBOX w="50" title="Off Campus" format="boolean" ischar="true">offcampus</CHECKBOX>
 			<ACTIONS jumpview="24:0">
 				<ACTION fnct="selQResidence">Select</ACTION>
@@ -646,6 +647,7 @@
 				<TEXTFIELD w="120" title="Visa Payment">visapayment</TEXTFIELD>
 				<TEXTFIELD w="120" title="Query Transaction">querypayment</TEXTFIELD>
 				<TEXTFIELD w="120" title="Transaction Status">PHistoryName</TEXTFIELD>
+				<TEXTFIELD w="120" fnct="'If you make a sucesful payment and it does not reflect on portal click on the query link'::text" title="Note">payment_followup</TEXTFIELD>
 				<FORM name="Additional Payments" keyfield="studentpaymentid" delete="false" linkfield="qstudentid" table="studentpayments">
 					<TEXTDECIMAL w="150" title="Amount" y="10" h="20" x="10">amount</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Purpose" y="30" h="20" x="10">purpose</TEXTFIELD>

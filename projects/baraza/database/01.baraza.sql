@@ -53,12 +53,19 @@ CREATE TABLE currency (
 	currency_symbol			varchar(3)
 );
 
+CREATE TABLE use_keys (
+	use_key_id				integer primary key,
+	use_key_name			varchar(32) not null,
+	use_function			integer
+);
+
 CREATE TABLE orgs (
 	org_id					serial primary key,
 	currency_id				integer references currency,
 	default_country_id		char(2) references sys_countrys,
 	parent_org_id			integer references orgs,
 	org_name				varchar(50) not null unique,
+	org_full_name			varchar(120),
 	org_sufix				varchar(4) not null unique,
 	is_default				boolean not null default true,
 	is_active				boolean not null default true,
@@ -164,21 +171,23 @@ CREATE INDEX address_table_id ON address (table_id);
 
 CREATE TABLE entity_types (
 	entity_type_id			serial primary key,
+	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
 	entity_type_name		varchar(50) not null,
 	entity_role				varchar(240),
-	use_key					integer default 0 not null,
 	start_view				varchar(120),
 	group_email				varchar(120),
 	description				text,
 	details					text,
 	UNIQUE(org_id, entity_type_name)
 );
+CREATE INDEX entity_types_use_key_id ON entity_types (use_key_id);
 CREATE INDEX entity_types_org_id ON entity_types (org_id);
 
 CREATE TABLE entitys (
 	entity_id				serial primary key,
 	entity_type_id			integer not null references entity_types,
+	use_key_id				integer not null references use_keys,
 	org_id					integer not null references orgs,
 	entity_name				varchar(120) not null,
 	user_name				varchar(120) not null unique,
@@ -187,7 +196,6 @@ CREATE TABLE entitys (
 	super_user				boolean default false not null,
 	entity_leader			boolean default false not null,
 	no_org					boolean default false not null,
-	use_function			integer,
 	function_role			varchar(240),
 	date_enroled			timestamp default now(),
 	is_active				boolean default true,
@@ -199,8 +207,9 @@ CREATE TABLE entitys (
 	details					text
 );
 CREATE INDEX entitys_entity_type_id ON entitys (entity_type_id);
-CREATE INDEX entitys_org_id ON entitys (org_id);
+CREATE INDEX entitys_use_key_id ON entitys (use_key_id);
 CREATE INDEX entitys_user_name ON entitys (user_name);
+CREATE INDEX entitys_org_id ON entitys (org_id);
 
 CREATE TABLE subscription_levels (
 	subscription_level_id	serial primary key,
@@ -311,6 +320,7 @@ CREATE TABLE workflows (
 	reject_email			text not null,
 	approve_file			varchar(320),
 	reject_file				varchar(320),
+	link_copy				integer,
 	details					text
 );
 CREATE INDEX workflows_source_entity_id ON workflows (source_entity_id);
@@ -474,7 +484,9 @@ CREATE VIEW vw_org_select AS
 
 CREATE VIEW vw_orgs AS
 	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
-		orgs.pin, orgs.pcc, orgs.details,
+		orgs.org_full_name, orgs.pin, orgs.pcc, orgs.details,
+		
+		currency.currency_id, currency.currency_name, currency.currency_symbol,
 
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
 		vw_org_address.org_address_id, vw_org_address.org_table_name,
@@ -482,7 +494,8 @@ CREATE VIEW vw_orgs AS
 		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
-	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
+	FROM orgs INNER JOIN currency ON orgs.currency_id = currency.currency_id
+		LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
 CREATE VIEW vw_entity_address AS
 	SELECT vw_address.address_id, vw_address.address_name,
@@ -492,6 +505,13 @@ CREATE VIEW vw_entity_address AS
 		vw_address.fax, vw_address.email, vw_address.website
 	FROM vw_address
 	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
+	
+CREATE VIEW vw_entity_types AS
+	SELECT use_keys.use_key_id, use_keys.use_key_name, use_keys.use_function,
+		entity_types.entity_type_id, entity_types.org_id, entity_types.entity_type_name, 
+		entity_types.entity_role, entity_types.start_view, entity_types.group_email, 
+		entity_types.description, entity_types.details
+	FROM use_keys INNER JOIN entity_types ON use_keys.use_key_id = entity_types.use_key_id;
 
 CREATE VIEW vw_entitys AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
@@ -511,12 +531,11 @@ CREATE VIEW vw_entitys AS
 		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile,
 		vw_entity_address.fax, vw_entity_address.email, vw_entity_address.website,
 		
-		entity_types.entity_type_id, entity_types.entity_type_name,
-		entity_types.entity_role, entity_types.use_key,
+		entity_types.entity_type_id, entity_types.entity_type_name, entity_types.entity_role, 
 
 		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
 		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
-		entitys.function_role, entitys.use_function, entitys.primary_email, entitys.primary_telephone
+		entitys.function_role, entitys.use_key_id, entitys.primary_email, entitys.primary_telephone
 		
 	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
@@ -656,6 +675,11 @@ CREATE VIEW tomcat_users AS
 		INNER JOIN entity_types ON Entity_subscriptions.entity_type_id = entity_types.entity_type_id
 	WHERE entitys.is_active = true;
 
+CREATE OR REPLACE FUNCTION get_org_logo(integer) RETURNS varchar(50) AS $$
+	SELECT orgs.logo
+	FROM orgs WHERE (orgs.org_id = $1);
+$$ LANGUAGE SQL;
+	
 CREATE OR REPLACE FUNCTION default_currency(varchar(16)) RETURNS integer AS $$
 	SELECT orgs.currency_id
 	FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
@@ -751,6 +775,12 @@ BEGIN
 		END IF;
 	ELSIF(OLD.first_password <> NEW.first_password) THEN
 		NEW.Entity_password := md5(NEW.first_password);
+	END IF;
+	
+	IF(NEW.user_name is null)THEN
+		SELECT org_sufix || '.' || lower(trim(replace(NEW.entity_name, ' ', ''))) INTO NEW.user_name
+		FROM orgs
+		WHERE org_id = NEW.org_id;
 	END IF;
 
 	RETURN NEW;
@@ -1161,6 +1191,16 @@ CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
 	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_end_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT '31/12/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_currency_rate(integer, integer) RETURNS real AS $$
+	SELECT max(exchange_rate)
+	FROM currency_rates
+	WHERE (org_id = $1) AND (currency_id = $2)
+		AND (exchange_date = (SELECT max(exchange_date) FROM currency_rates WHERE (org_id = $1) AND (currency_id = $2)));
+$$ LANGUAGE SQL;
 
 CREATE FUNCTION get_reporting_list(integer) RETURNS varchar(320) AS $$
 DECLARE
@@ -1196,12 +1236,19 @@ SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 INSERT INTO currency_rates (currency_rate_id, org_id, currency_id, exchange_rate)
 VALUES (0, 0, 1, 1);
 
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 0, 'Users', 'user', 0);
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 1, 'Staff', 'staff', 1);
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 2, 'Client', 'client', 2);
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 3, 'Supplier', 'supplier', 3);
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, start_view, use_key) VALUES (0, 4, 'Applicant', 'applicant', '10:0', 4);
-INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key) VALUES (0, 5, 'Subscription', 'subscription', 5);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (0, 'Users', 0);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (1, 'Staff', 0);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (2, 'Client', 0);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (3, 'Supplier', 0);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (4, 'Applicant', 0);
+INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (5, 'Subscription', 0);
+
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key_id) VALUES (0, 0, 'Users', 'user', 0);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key_id) VALUES (0, 1, 'Staff', 'staff', 1);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key_id) VALUES (0, 2, 'Client', 'client', 2);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key_id) VALUES (0, 3, 'Supplier', 'supplier', 3);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, start_view, use_key_id) VALUES (0, 4, 'Applicant', 'applicant', '10:0', 4);
+INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role, use_key_id) VALUES (0, 5, 'Subscription', 'subscription', 5);
 SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 5, true);
 
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
@@ -1209,10 +1256,10 @@ INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_lev
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 2, 'Consumer');
 SELECT pg_catalog.setval('subscription_levels_subscription_level_id_seq', 3, true);
 
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false, 'baraza');
+INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
+VALUES (0, 0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');
+INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
+VALUES (1, 0, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false, 'baraza');
 SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
 
 

@@ -134,7 +134,6 @@
 
 	<link href="./assets/global/plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" type="text/css"/>
 
-
     <!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
     <link href="./assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css" rel="stylesheet">
 
@@ -163,10 +162,6 @@
     <link href="./assets/jqgrid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" media="screen" />
 
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
-
-        <style type="text/css">
-
-        </style>
 
 </head>
 <!-- END HEAD -->
@@ -429,6 +424,7 @@
 <script src="./assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js" type="text/javascript"></script>
+<script src="./assets/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript" ></script>
 <script src="./assets/global/plugins/ckeditor/ckeditor.js" type="text/javascript" ></script>
@@ -504,18 +500,36 @@
             format: 'hh:mm a',
             trigger: 'manual'
         });
-        
-        $('#filtervalue').keypress(function(event){
-            var keycode = (event.keyCode ? event.keyCode : event.which);
-            if(keycode == '13'){
-                $('#btSearch').click();
-            }
-        });
 
         $('.clockface-toggle').click(function (e) {
             e.stopPropagation();
             var target = $(this).attr('data-target');
             $('#' + target ).clockface('toggle');
+        });
+
+        $('.timepicker-no-seconds').timepicker({
+            autoclose: true,
+            minuteStep: 5
+        });
+
+        $('.timepicker-24').timepicker({
+            autoclose: true,
+            minuteStep: 5,
+            showSeconds: false,
+            showMeridian: false
+        });
+
+        // handle input group button click
+        $('.timepicker').parent('.input-group').on('click', '.input-group-btn', function(e){
+            e.preventDefault();
+            $(this).parent('.input-group').find('.timepicker').timepicker('showWidget');
+        });
+
+        $('#filtervalue').keypress(function(event){
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                $('#btSearch').click();
+            }
         });
 
 		$('.select2me').select2({
@@ -595,8 +609,8 @@
 	  	if(id && id!==lastsel2){
 			//console.info('id : ' + id + '\nlastsel2 : ' + lastsel2);
 
-			var data = jQuery("#jqlist").jqGrid('getRowData',id);
-			//console.info(data);
+			var data = jQuery("#jqlist").jqGrid('getRowData', id);
+			console.info(data);
 
 			//jQuery('#jqlist').restoreRow(lastsel2);
 
@@ -612,11 +626,12 @@
 				"mtype" : "POST"
 			}
 
-			jQuery("#jqlist").jqGrid('editRow',id,  editparameters);
+			jQuery("#jqlist").jqGrid('editRow', id, editparameters);
 
 			lastsel2=id;
 	  	}
 	};
+
 <% } %>
 
     //console.log(jqcf);
@@ -644,6 +659,9 @@
 
 	resizeJqGridWidth('jqlist', 'portletBody', $('.portlet-body').width());
 
+    $('.reload').click(function(){
+        $('#jqlist').trigger('reloadGrid');
+    });
 
     $('#btSearch').click(function(){
         var filtername = $("#filtername").val();
@@ -657,9 +675,9 @@
         });
     });
 
-    $('.reload').click(function(){
-        $('#jqlist').trigger('reloadGrid');
-    });
+	$('#btProcess').click(function(){
+console.log("TODO Bulk Save grid");
+	});
 
 	$('#btnAction').click(function(){
 	    var operation = $("#operation").val();

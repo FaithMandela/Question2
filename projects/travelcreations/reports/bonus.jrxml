@@ -62,15 +62,7 @@
 	<columnHeader>
 		<band height="31" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="100" height="20" uuid="09b3fff6-fa2b-4c34-8092-e9f12df38d1b"/>
-				<textElement>
-					<font fontName="Times New Roman" size="12" isBold="true"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
-				</textElement>
-				<text><![CDATA[Username]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="100" y="0" width="146" height="20" uuid="fdcd625c-3631-4aa8-9026-57ee510b020d"/>
+				<reportElement x="0" y="0" width="246" height="20" uuid="fdcd625c-3631-4aa8-9026-57ee510b020d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -116,20 +108,12 @@
 				</graphicElement>
 			</rectangle>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="100" y="1" width="146" height="15" isPrintWhenDetailOverflows="true" uuid="31dd067d-ea71-42dd-a1aa-562cd0a09671"/>
+				<reportElement x="0" y="1" width="246" height="15" isPrintWhenDetailOverflows="true" uuid="31dd067d-ea71-42dd-a1aa-562cd0a09671"/>
 				<textElement>
 					<font fontName="Times New Roman"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="1" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="e682be17-bc63-4529-a129-07428f972575"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-					<paragraph leftIndent="4" rightIndent="4"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{user_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="337" y="0" width="99" height="15" isPrintWhenDetailOverflows="true" uuid="5feef1a7-fd2e-4691-a56e-b63e461c21d5"/>
@@ -165,21 +149,21 @@
 	<summary>
 		<band height="42" splitType="Stretch">
 			<textField>
-				<reportElement x="677" y="9" width="123" height="20" uuid="2713bd11-94d7-4def-8a66-25d5a460118f"/>
+				<reportElement x="431" y="9" width="123" height="20" uuid="2713bd11-94d7-4def-8a66-25d5a460118f"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_bonus}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="509" y="9" width="146" height="20" uuid="b36b26c0-d233-4a51-bebc-5942bc89ee90"/>
+				<reportElement x="263" y="9" width="146" height="20" uuid="b36b26c0-d233-4a51-bebc-5942bc89ee90"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL BONUS]]></text>
 			</staticText>
 			<line>
-				<reportElement x="388" y="4" width="412" height="1" uuid="c284665a-49cf-46d4-bf87-e17f04943b9d"/>
+				<reportElement x="142" y="4" width="412" height="1" uuid="c284665a-49cf-46d4-bf87-e17f04943b9d"/>
 			</line>
 		</band>
 	</summary>

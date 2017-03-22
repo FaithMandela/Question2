@@ -65,6 +65,14 @@ CREATE OR REPLACE FUNCTION getcummgpa(int, varchar(12)) RETURNS float AS $$
 		AND (qstudents.approved = true);
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_curr_score(int) RETURNS float AS $$
+	SELECT (CASE sum(qgrades.credit) WHEN 0 THEN 0 
+	ELSE (sum(get_grade_weight(round(finalmarks)::integer, qgrades.org_id) * qgrades.credit) / sum(qgrades.credit)) END)
+	FROM qgrades 
+	WHERE (qgrades.qstudentid = $1) AND (qgrades.dropped = false) 
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
+
 CREATE VIEW qstudentsummary AS
 	SELECT qsd.studentid, qsd.studentname, qsd.quarterid, qsd.approved, qsd.studentdegreeid, qsd.qstudentid,
 		qsd.sex, qsd.Nationality, qsd.MaritalStatus, qsd.studylevel, qsd.org_id,

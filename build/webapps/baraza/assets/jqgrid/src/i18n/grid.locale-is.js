@@ -1,3 +1,4 @@
+;(function($){
 /**
  * jqGrid Icelandic Translation
  * jtm@hi.is Univercity of Iceland
@@ -5,47 +6,22 @@
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl.html
 **/
-/*global jQuery, define */
-(function( factory ) {
-	"use strict";
-	if ( typeof define === "function" && define.amd ) {
-		// AMD. Register as an anonymous module.
-		define([
-			"jquery",
-			"../grid.base"
-		], factory );
-	} else {
-		// Browser globals
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 $.jgrid = $.jgrid || {};
-if(!$.jgrid.hasOwnProperty("regional")) {
-	$.jgrid.regional = [];
-}
-$.jgrid.regional["is"] = {
+$.extend($.jgrid,{
 	defaults : {
 		recordtext: "Skoða {0} - {1} af {2}",
 	    emptyrecords: "Engar færslur",
 		loadtext: "Hleður...",
-		pgtext : "Síða {0} af {1}",
-		savetext: "Saving...",
-		pgfirst : "First Page",
-		pglast : "Last Page",
-		pgnext : "Next Page",
-		pgprev : "Previous Page",
-		pgrecs : "Records per Page",
-		showhide: "Toggle Expand Collapse Grid"
+		pgtext : "Síða {0} af {1}"
 	},
 	search : {
 	    caption: "Leita...",
 	    Find: "Leita",
 	    Reset: "Endursetja",
-	    odata: [{ oper:'eq', text:"sama og"},{ oper:'ne', text:"ekki sama og"},{ oper:'lt', text:"minna en"},{ oper:'le', text:"minna eða jafnt og"},{ oper:'gt', text:"stærra en"},{ oper:'ge', text:"stærra eða jafnt og"},{ oper:'bw', text:"byrjar á"},{ oper:'bn', text:"byrjar ekki á"},{ oper:'in', text:"er í"},{ oper:'ni', text:"er ekki í"},{ oper:'ew', text:"endar á"},{ oper:'en', text:"endar ekki á"},{ oper:'cn', text:"inniheldur"},{ oper:'nc', text:"inniheldur ekki"},{ oper:'nu', text:'is null'},{ oper:'nn', text:'is not null'}],
+	    odata : ['sama og', 'ekki sama og', 'minna en', 'minna eða jafnt og','stærra en','stærra eða jafnt og', 'byrjar á','byrjar ekki á','er í','er ekki í','endar á','endar ekki á','inniheldur','inniheldur ekki'],
 	    groupOps: [	{ op: "AND", text: "allt" },	{ op: "OR",  text: "eða" }	],
-		operandTitle : "Click to select search operation.",
-		resetTitle : "Reset Search Value"
+		matchText: " passar",
+		rulesText: " reglur"
 	},
 	edit : {
 	    addCaption: "Bæta við færslu",
@@ -96,11 +72,7 @@ $.jgrid.regional["is"] = {
 	    alertcap: "Viðvörun",
 	    alerttext: "Vinsamlega veldu færslu",
 		viewtext: "",
-		viewtitle: "Skoða valda færslu",
-		savetext: "",
-		savetitle: "Save row",
-		canceltext: "",
-		canceltitle : "Cancel row editing"
+		viewtitle: "Skoða valda færslu"
 	},
 	col : {
 	    caption: "Sýna / fela dálka",
@@ -130,7 +102,6 @@ $.jgrid.regional["is"] = {
 			S: function (j) {return j < 11 || j > 13 ? ['st', 'nd', 'rd', 'th'][Math.min((j - 1) % 10, 3)] : 'th'},
 			srcformat: 'Y-m-d',
 			newformat: 'd/m/Y',
-			parseRe : /[#%\\\/:_;.,\t\s-]/,
 			masks : {
 	            ISO8601Long:"Y-m-d H:i:s",
 	            ISO8601Short:"Y-m-d",
@@ -144,8 +115,7 @@ $.jgrid.regional["is"] = {
 	            UniversalSortableDateTime: "Y-m-d H:i:sO",
 	            YearMonth: "F, Y"
 	        },
-	        reformatAfterEdit : false,
-			userLocalTime : false
+	        reformatAfterEdit : false
 		},
 		baseLinkUrl: '',
 		showAction: '',
@@ -153,5 +123,5 @@ $.jgrid.regional["is"] = {
 	    checkbox : {disabled:true},
 		idName : 'id'
 	}
-};
-}));
+});
+})(jQuery);

@@ -30,10 +30,12 @@
 			<MENU name="GK GTA Revenue">124</MENU>
 			<MENU name="Invoice Listing">128</MENU>
 			<MENU name="Statements">143</MENU>
+			<MENU name="Client Payments">148</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" name="Clients" type="vert" key="1" h="500">
 		<GRID name="Active Clients" keyfield="clientid" orderby="clientname" table="vwclients" where="(IsActive = true)">
+			<TEXTFIELD w="40" title="MST CUS ID">mst_cus_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">clientname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Town">Town</TEXTFIELD>
 			<TEXTFIELD w="40" title="Country">countryname</TEXTFIELD>
@@ -50,7 +52,8 @@
 				<TEXTFIELD w="150" title="Email" y="70" h="20" x="10">email</TEXTFIELD>
 				<TEXTFIELD w="430" title="Contact Person" y="260" h="20" x="10">contact_person</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="70" h="20" x="290">IsActive</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="MST CUS ID" y="90" h="20" x="10">mst_cus_id</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Branches" keyfield="clientbranchid" linkfield="clientid" table="clientbranches">
 				<TEXTFIELD w="175" title="Branch Name">branchname</TEXTFIELD>
@@ -63,6 +66,7 @@
 			</GRID>
 		</GRID>
 		<GRID name="Clients" keyfield="clientid" orderby="clientname" table="vwclients">
+			<TEXTFIELD w="40" title="MST CUS ID">mst_cus_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">clientname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Town">Town</TEXTFIELD>
 			<TEXTFIELD w="40" title="Country">countryname</TEXTFIELD>
@@ -77,7 +81,8 @@
 				<TEXTFIELD w="150" title="Tel No." y="50" h="20" x="290">telno</TEXTFIELD>
 				<TEXTFIELD w="150" title="Email" y="70" h="20" x="10">email</TEXTFIELD>
 				<CHECKBOX w="50" title="Active" y="70" h="20" x="290">IsActive</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+				<TEXTFIELD w="150" title="MST CUS ID" y="90" h="20" x="10">mst_cus_id</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Branches" keyfield="clientbranchid" orderby="clientname" table="vwclientbranches">
@@ -513,7 +518,7 @@
 			<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Clientpayments" key="138" h="550">
+	<DESK w="700" name="Client Payments" key="138" h="550">
 		<GRID name="Active Clients" keyfield="clientid" orderby="clientname" table="vwclients" where="(IsActive = true)">
 			<TEXTFIELD w="140" title="Client Name">clientname</TEXTFIELD>
 			<TEXTFIELD w="80" title="Town">Town</TEXTFIELD>
@@ -521,35 +526,72 @@
 			<TEXTFIELD w="40" title="Tel No.">telno</TEXTFIELD>
 			<TEXTFIELD w="40" title="Email">email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Contact Person">contact_person</TEXTFIELD>
-			<GRID name="Clientpayments" keyfield="clientpaymentsid" linkfield="clientid" table="vw_clientpayments">
+			<GRID name="Client Payments" keyfield="clientpaymentsid" linkfield="clientid" table="vw_clientpayments">
 				<TEXTFIELD w="75" title="Clientname">clientname</TEXTFIELD>
-				<TEXTDATE w="75" title="Startdate">startdate</TEXTDATE>
-				<TEXTDATE w="75" title="Enddate">enddate</TEXTDATE>
+				<TEXTDATE w="75" title="Accounting Date">accounting_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Payment Reference">payment_reference</TEXTFIELD>
-				<FORM name="Clientpayments" keyfield="clientpaymentsid" linkfield="clientid" table="clientpayments">
-					<COMBOBOX w="430" title="Start Date" lptable="period" y="30" h="20" x="10" lpfield="startdate">periodid</COMBOBOX>
+				<TEXTFIELD w="75" title="Payment Allocation">payment_type</TEXTFIELD>
+				<FORM name="Client Payment" keyfield="clientpaymentsid" linkfield="clientid" table="clientpayments">
+					<TEXTDATE w="150" title="Accounting Date" y="30" h="20" x="10">accounting_date</TEXTDATE>
 					<TEXTFIELD w="150" title="Currency" y="50" h="20" x="10">currency</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="290">amount</TEXTDECIMAL>
 					<TEXTFIELD w="430" title="Payment Reference" y="70" h="20" x="10">payment_reference</TEXTFIELD>
+					<TEXTFIELD w="430" title="Payment Allocation" y="90" h="20" x="10">payment_type</TEXTFIELD>
+					<TEXTFIELD w="430" title="Our Reference" y="110" h="20" x="10">journal_name</TEXTFIELD>
 				</FORM>
+				<JASPER name="Receipt" linkfield="clientid" reportfile="receipt.jasper"></JASPER>
 			</GRID>
 		</GRID>
 		<GRID process="inspayments" name="Import Client Payments" keyfield="clientpaymentsid" worksheet="0" import="excel" table="tmpclientpayments">
-			<TEXTFIELD w="75" title="Clientid">clientid</TEXTFIELD>
-			<TEXTFIELD w="75" title="Clientname">clientname</TEXTFIELD>
-			<TEXTFIELD w="75" title="Accountdate">accountdate</TEXTFIELD>
+			<TEXTFIELD w="75" title="Category">category</TEXTFIELD>
 			<TEXTFIELD w="75" title="Currency">currency</TEXTFIELD>
-			<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
-			<TEXTFIELD w="75" title="Payment Reference">payment_reference</TEXTFIELD>
+			<TEXTFIELD w="75" title="Accounting Date">accounting_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Company">company</TEXTFIELD>
+			<TEXTFIELD w="75" title="Location">location</TEXTFIELD>
+			<TEXTFIELD w="75" title="Cost Center">cost_center</TEXTFIELD>
+			<TEXTFIELD w="75" title="Account">account</TEXTFIELD>
+			<TEXTFIELD w="75" title="Bud">bud</TEXTFIELD>
+			<TEXTFIELD w="75" title="Intercompany">intercompany</TEXTFIELD>
+			<TEXTFIELD w="75" title="Debit">debit</TEXTFIELD>
+			<TEXTFIELD w="75" title="Credit">credit</TEXTFIELD>
+			<TEXTFIELD w="75" title="Conversion Type">conversion_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="Conversiondate">conversiondate</TEXTFIELD>
+			<TEXTFIELD w="75" title="Conversion Rate">conversion_rate</TEXTFIELD>
+			<TEXTFIELD w="75" title="Journal Name">journal_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Journal Description">journal_description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Reverse Journal">reverse_journal</TEXTFIELD>
+			<TEXTFIELD w="75" title="Reversal Period">reversal_period</TEXTFIELD>
+			<TEXTFIELD w="75" title="Line Description">line_description</TEXTFIELD>
+			<TEXTFIELD w="75" title="Messages">messages</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mst Cus ID">mst_cus_id</TEXTFIELD>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Statements" type="horl" key="143" h="500">
 		<FILTER location="250" name="Clients Statements" type="horl">
-			<DRILLDOWN name="Clients" keyfield="clientid" table="clients" listfield="clientname" filter="clientid"></DRILLDOWN>
+			<FILTERFORM name="Clients Statements">
+				<COMBOBOX w="430" title="Client" lptable="clients" y="10" h="20" x="10" lpfield="clientname">clientid</COMBOBOX>
+				<TEXTDATE w="150" title="From" y="30" h="20" default_fnct="get_start_year" x="10">date_from</TEXTDATE>
+				<TEXTDATE w="150" title="Up to" default="now" y="30" h="20" x="290">date_to</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="6M Clients Statements" linkfield="clientid" reportfile="clienttotalstatementb.jasper"></JASPER>
 			<JASPER name="Clients Statements" linkfield="clientid" reportfile="clienttotalstatementa.jasper"></JASPER>
 		</FILTER>
-		<JASPER name="Clients Total Statements" printcopies="1" linkfield="clientid" reportfile="clienttotalstatement.jasper"></JASPER>
+		<FILTER location="250" name="GTA Summary Statements" type="horl">
+			<FILTERFORM name="GTA Summary Statements">
+				<TEXTDATE w="150" title="Up to" y="30" h="20" default_fnct="get_start_year" x="10">filterid</TEXTDATE>
+			</FILTERFORM>
+			<JASPER name="GTA Summary Statements" reportfile="clienttotalstatement.jasper"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" name="Client Payments" type="horl" key="148" h="500">
+		<FILTER location="250" name="Client Payments" type="horl">
+			<FILTERFORM name="GTA Summary Statements">
+				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">filterid</TEXTDATE>
+				<TEXTDATE w="150" title="Up to" default="now" y="30" h="20" x="10">filter2id</TEXTDATE>
+			</FILTERFORM>
+			<JASPER filtered="true" name="Client Payments" reportfile="payments.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

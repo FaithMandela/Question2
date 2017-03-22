@@ -1,6 +1,3 @@
-ALTER TABLE orgs
-ADD Bank_Header				text,
-ADD Bank_Address			text;
 
 ALTER TABLE address	ADD company_name	varchar(150);
 ALTER TABLE address	ADD position_held	varchar(150);
@@ -48,6 +45,9 @@ CREATE TABLE pay_groups (
 	pay_group_id			serial primary key,
 	org_id					integer references orgs,
 	pay_group_name			varchar(50),
+	gl_payment_account		varchar(16),
+	bank_header				text,
+	bank_address			text,
 	Details					text
 );
 CREATE INDEX pay_groups_org_id ON pay_groups(org_id);
@@ -1425,11 +1425,11 @@ BEGIN
 				
 				SELECT entity_type_id INTO v_entity_type_id
 				FROM entity_types 
-				WHERE (org_id = v_org_id) AND (use_key = 4);
+				WHERE (org_id = v_org_id) AND (use_key_id = 4);
 
 				NEW.entity_id := nextval('entitys_entity_id_seq');
 
-				INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+				INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id,
 					entity_name, User_name, 
 					primary_email, primary_telephone, function_role)
 				VALUES (NEW.entity_id, v_org_id, v_entity_type_id, 4, 
@@ -1478,7 +1478,7 @@ BEGIN
 			
 			SELECT entity_type_id INTO v_entity_type_id
 			FROM entity_types 
-			WHERE (org_id = NEW.org_id) AND (use_key = 1);
+			WHERE (org_id = NEW.org_id) AND (use_key_id = 1);
 
 			v_first_password := first_password();
 			v_user_name := lower(v_org_sufix || '.' || NEW.First_name || '.' || NEW.Surname);
@@ -1488,13 +1488,18 @@ BEGIN
 			WHERE (org_id = NEW.org_id) AND (user_name = v_user_name);
 			IF(v_user_count > 0) THEN v_user_name := v_user_name || v_user_count::varchar; END IF;
 
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, use_function,
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id,
 				entity_name, user_name, function_role, 
 				first_password, entity_password)
 			VALUES (NEW.entity_id, NEW.org_id, v_entity_type_id, 1, 
 				(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),
 				v_user_name, 'staff',
 				v_first_password, md5(v_first_password));
+				
+			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
+			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys'
+			FROM sys_emails
+			WHERE (use_type = 3) AND (org_id = NEW.org_id);
 		END IF;
 
 		v_use_type := 2;

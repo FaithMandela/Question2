@@ -86,7 +86,7 @@ BEGIN
 		IF(v_points_id is null)THEN
 			SELECT points_id INTO v_points_id
 			FROM points WHERE (period_id = v_period_id) AND (entity_id = v_entity_id)
-				AND (son = rec.son);
+				AND (pcc is null) AND (son = rec.son);
 		END IF;
 
 		IF(v_points_id is null)THEN
@@ -192,10 +192,10 @@ DECLARE
 	v_order_no			integer;
 	v_batch_no			integer;
 BEGIN
-
+	SELECT entity_id, phone_no,batch_no,order_id INTO v_entity_id, v_sms_number,v_batch_no,v_order_no
+	FROM orders WHERE (order_id = $1::integer);
 	IF ($3::integer = 1) THEN
-		SELECT entity_id, phone_no,batch_no,order_id INTO v_entity_id, v_sms_number,v_batch_no,v_order_no
-		FROM orders WHERE (order_id = $1::integer);
+
 		IF(v_sms_number = '') THEN
 			SELECT org_id, entity_id, primary_telephone INTO v_org_id, v_entity_id, v_sms_number
 			FROM entitys WHERE (entity_id = v_entity_id);
@@ -204,22 +204,24 @@ BEGIN
 			FROM entitys WHERE (entity_id = v_entity_id);
 		END IF;
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
-		or_details :='Order# '||v_batch_no||'-'||v_order_no||' is ready for collection Login to Faidaplus, go to orders click on collection document, print & complete details & present it on order collection.';
+		or_details :='Order '||v_batch_no||'-'||v_order_no||' is ready for collection';
 		INSERT INTO sms (folder_id, entity_id, org_id, sms_number, message)
 	    VALUES (0,v_entity_id, v_org_id, v_sms_number, or_details);
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
+		VALUES ($1::integer,4 ,'vw_orders', 3, 0,or_details);
 	END IF;
 
 	IF ($3::integer = 2) THEN
 		UPDATE orders SET order_status = 'Collected' WHERE order_id = $1::integer;
-		details := 'Your Order has been collected';
+		or_details :=  'Order '||v_batch_no||'-'||v_order_no||' has been collected';
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
+		VALUES ($1::integer,9 ,'vw_orders', 3, 0,or_details);
 	END IF;
 
 	IF ($3::integer = 3) THEN
 		UPDATE orders SET order_status = 'Closed' WHERE order_id = $1::integer;
 	END IF;
 
-	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-	VALUES ($1::integer,4 ,'orders', 3, 0,details);
 	RETURN 'Successfully Updated';
 END;
 $$ LANGUAGE plpgsql;
@@ -275,7 +277,7 @@ BEGIN
 		END IF;
 		UPDATE applicants SET status = ps , org_id = rec.org_id, approve_status = ps WHERE applicant_id = $1::integer ;
 		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, son, function_role, is_active, birth_date)
-		VALUES (rec.org_id, 0, trim(upper(app.son)), trim(app.user_name), trim(lower(app.applicant_email)), app.phone_no, trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
+		VALUES (rec.org_id, 0, app.applicant_name, trim(app.user_name), trim(lower(app.applicant_email)), app.phone_no, trim(upper(app.son)), 'consultant', true, app.consultant_dob) returning entity_id INTO myid;
 		msg := 'Consultant account has been activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
 		VALUES (2, myid, 'entitys', 3);
@@ -306,6 +308,7 @@ BEGIN
 	RETURN msg;
 END;
 $BODY$ LANGUAGE plpgsql;
+
 
 
 
@@ -378,6 +381,8 @@ BEGIN
 	IF ($3::integer = 1) THEN
 		v_batch := (SELECT last_value FROM batch_id_seq) ;
 		UPDATE orders SET batch_no = v_batch,batch_date = now() WHERE order_id = $1::integer;
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+		VALUES (8, $1::integer , 'vw_orders', 3, get_order_details($1::integer), 'Order '||v_batch||'-'||$1::integer||' is being processed.');
 		msg := 'Orders Batched Successfully';
 	END IF;
 
@@ -420,7 +425,7 @@ DECLARE
 BEGIN
 
 	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
-	VALUES (5, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'We have received your order and its under process');
+	VALUES (5, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'Order '||NEW.order_id||' has been submitted');
 	RETURN NEW;
 END;
 $BODY$ LANGUAGE plpgsql;
@@ -440,8 +445,11 @@ $BODY$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_order_details AFTER INSERT ON order_details
 FOR EACH ROW EXECUTE PROCEDURE ins_order_details();
-CREATE TRIGGER ins_orders AFTER INSERT ON orders
+
+CREATE TRIGGER ins_orders AFTER INSERT ON order_details
 FOR EACH ROW EXECUTE PROCEDURE ins_orders();
+-- CREATE TRIGGER ins_orders AFTER INSERT ON orders
+-- FOR EACH ROW EXECUTE PROCEDURE ins_orders();
 
 
 CREATE OR REPLACE FUNCTION ins_orgs() RETURNS trigger AS $$
@@ -589,6 +597,26 @@ BEGIN
 END;
 $$
   LANGUAGE plpgsql;
+
+
+  CREATE OR REPLACE FUNCTION getPccbalance(integer,character(20))
+    RETURNS real AS
+  $$
+  DECLARE
+  	v_org_id 			integer;
+  	v_function_role		text;
+  	v_balance			real;
+  BEGIN
+  	v_balance = 0::real;
+  	
+	SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
+	FROM vw_pcc_statement
+	WHERE org_id = $1 AND order_date < $2::date;
+  	RETURN v_balance;
+  END;
+  $$
+    LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION emailed_dob(integer,character varying)RETURNS character varying AS $$
 DECLARE

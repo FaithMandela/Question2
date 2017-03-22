@@ -39,7 +39,6 @@ WHERE (vw_tx_ledger.ledger_period = '$P!{filterid}')
 AND (vw_tx_ledger.completed = true) AND (vw_tx_ledger.is_cleared = false)
 $P!{organd}
 
-
 ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 	vw_tx_ledger.completed desc, vw_tx_ledger.payment_date]]>
 	</queryString>

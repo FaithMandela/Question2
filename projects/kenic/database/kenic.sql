@@ -343,6 +343,8 @@ CREATE TABLE receipts (
 	drawername			varchar(120),
 	cash				boolean default false not null,
 	vatwithheld			boolean default false not null,
+	mpesa				boolean default false not null,
+	ipay				boolean default false not null,
 	vatcertno			varchar(50),
 	inwords				varchar(240),
 	details				text
@@ -366,6 +368,14 @@ BEGIN
 		mystr := 'VAT Certificate';
 	ELSIF (NEW.mpesa_trx_id is not null) THEN
 		mystr := 'MPESA Transfer';
+	ELSIF (NEW.mpesa = true) THEN
+		mystr := 'MPESA Transfer';
+		NEW.bankcode := 'MPESA';
+		NEW.drawername := 'MPESA';
+	ELSIF (NEW.ipay = true) THEN
+		mystr := 'IPAY';
+		NEW.bankcode := 'IPay';
+		NEW.drawername := 'IPay';
 	END IF;
 
 	INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
@@ -958,8 +968,8 @@ BEGIN
 		FROM receipts WHERE (bankcode = 'MPESA') AND (chequenumber = NEW.mpesa_code);
 
 		IF(trxcodes = 0) THEN
-			INSERT INTO receipts (roid, mpesa_trx_id, amount, bankcode, chequedate, chequenumber, drawername, inwords, details)
-			VALUES (clientid, NEW.mpesa_trx_id, NEW.mpesa_amt, 'MPESA', NEW.mpesa_trx_date, NEW.mpesa_code, 'MPESA', NEW.in_words, NEW.mpesa_text);
+			INSERT INTO receipts (roid, mpesa_trx_id, amount, bankcode, chequedate, chequenumber, drawername, inwords, details, mpesa)
+			VALUES (clientid, NEW.mpesa_trx_id, NEW.mpesa_amt, 'MPESA', NEW.mpesa_trx_date, NEW.mpesa_code, 'MPESA', NEW.in_words, NEW.mpesa_text, true);
 		END IF;
 	ELSE
 		UPDATE mpesa_trxs SET account_error = true WHERE (mpesa_trx_id = NEW.mpesa_trx_id);

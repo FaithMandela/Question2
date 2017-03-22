@@ -1,3 +1,4 @@
+;(function($){
 /**
  * jqGrid Hungarian Translation
  * Őrszigety Ádám udx6bs@freemail.hu
@@ -7,47 +8,22 @@
  * http://www.gnu.org/licenses/gpl.html
 **/
 
-/*global jQuery, define */
-(function( factory ) {
-	"use strict";
-	if ( typeof define === "function" && define.amd ) {
-		// AMD. Register as an anonymous module.
-		define([
-			"jquery",
-			"../grid.base"
-		], factory );
-	} else {
-		// Browser globals
-		factory( jQuery );
-	}
-}(function( $ ) {
-
 $.jgrid = $.jgrid || {};
-if(!$.jgrid.hasOwnProperty("regional")) {
-	$.jgrid.regional = [];
-}
-$.jgrid.regional["hu"] = {
+$.extend($.jgrid,{
 	defaults : {
 		recordtext: "Oldal {0} - {1} / {2}",
 		emptyrecords: "Nincs találat",
 		loadtext: "Betöltés...",
-		pgtext : "Oldal {0} / {1}",
-		savetext: "Saving...",
-		pgfirst : "First Page",
-		pglast : "Last Page",
-		pgnext : "Next Page",
-		pgprev : "Previous Page",
-		pgrecs : "Records per Page",
-		showhide: "Toggle Expand Collapse Grid"
+		pgtext : "Oldal {0} / {1}"
 	},
 	search : {
 		caption: "Keresés...",
 		Find: "Keres",
 		Reset: "Alapértelmezett",
-		odata: [{ oper:'eq', text:"egyenlő"},{ oper:'ne', text:"nem egyenlő"},{ oper:'lt', text:"kevesebb"},{ oper:'le', text:"kevesebb vagy egyenlő"},{ oper:'gt', text:"nagyobb"},{ oper:'ge', text:"nagyobb vagy egyenlő"},{ oper:'bw', text:"ezzel kezdődik"},{ oper:'bn', text:"nem ezzel kezdődik"},{ oper:'in', text:"tartalmaz"},{ oper:'ni', text:"nem tartalmaz"},{ oper:'ew', text:"végződik"},{ oper:'en', text:"nem végződik"},{ oper:'cn', text:"tartalmaz"},{ oper:'nc', text:"nem tartalmaz"},{ oper:'nu', text:'is null'},{ oper:'nn', text:'is not null'}],
+		odata : ['egyenlő', 'nem egyenlő', 'kevesebb', 'kevesebb vagy egyenlő','nagyobb','nagyobb vagy egyenlő', 'ezzel kezdődik','nem ezzel kezdődik','tartalmaz','nem tartalmaz','végződik','nem végződik','tartalmaz','nem tartalmaz'],
 		groupOps: [	{ op: "AND", text: "all" },	{ op: "OR",  text: "any" }	],
-		operandTitle : "Click to select search operation.",
-		resetTitle : "Reset Search Value"
+		matchText: " match",
+		rulesText: " rules"
 	},
 	edit : {
 		addCaption: "Új tétel",
@@ -99,11 +75,7 @@ $.jgrid.regional["hu"] = {
 		alertcap: "Figyelmeztetés",
 		alerttext: "Kérem válasszon tételt.",
 		viewtext: "",
-		viewtitle: "Tétel megtekintése",
-		savetext: "",
-		savetitle: "Save row",
-		canceltext: "",
-		canceltitle : "Cancel row editing"
+		viewtitle: "Tétel megtekintése"
 	},
 	col : {
 		caption: "Oszlopok kiválasztása",
@@ -133,7 +105,6 @@ $.jgrid.regional["hu"] = {
 			S: function (j) {return '.-ik';},
 			srcformat: 'Y-m-d',
 			newformat: 'Y/m/d',
-			parseRe : /[#%\\\/:_;.,\t\s-]/,
 			masks : {
 				ISO8601Long:"Y-m-d H:i:s",
 				ISO8601Short:"Y-m-d",
@@ -147,8 +118,7 @@ $.jgrid.regional["hu"] = {
 				UniversalSortableDateTime: "Y-m-d H:i:sO",
 				YearMonth: "Y, F"
 			},
-			reformatAfterEdit : false,
-			userLocalTime : false
+			reformatAfterEdit : false
 		},
 		baseLinkUrl: '',
 		showAction: '',
@@ -156,5 +126,5 @@ $.jgrid.regional["hu"] = {
 		checkbox : {disabled:true},
 		idName : 'id'
 	}
-};
-}));
+});
+})(jQuery);

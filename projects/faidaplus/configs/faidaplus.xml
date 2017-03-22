@@ -296,6 +296,7 @@
 					<DATA key="consultant">Consultant</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="150" h="20" x="10" y="50" title="Consultants Name">entity_name</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="50" title="SON">son</TEXTFIELD>
 				<TEXTFIELD w="430" h="20" x="10" y="70" title="Primary Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="250" h="20" x="10" y="90" title="Primary Telephone">primary_telephone</TEXTFIELD>
 				<TEXTDATE w="70" h="70" x="10" y="170" title="Date of Birth">birth_date</TEXTDATE>
@@ -641,7 +642,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Agency" key="111">
-		<GRID noorg="true" role="admin,staff,finance_manager,director" keyfield="org_id" name="Agency" where="org_id !=0" tab.count="count(org_id)" key="2" table="vw_orgs">
+		<GRID noorg="true" role="admin,staff,finance_manager,director" keyfield="org_id" name="Agency" where="org_id !=0" tab.count="count(org_id)" linkfield="org_id" key="2" table="vw_orgs">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
@@ -703,7 +704,7 @@
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				<TEXTAREA w="75" title=" Remarks/Comments">details</TEXTAREA>
-				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="org_id" user="entity_id" key="2" table="bonus">
+				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="bonus_id" key="2" table="bonus">
 					<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
@@ -1008,6 +1009,14 @@
 				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc_son_name" x="10" y="10" lptable="vw_entitys" title="PCC/SON" lpkey="entity_id">id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="son_statements.jasper" name="Consultant Statement"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Agency Statement " type="vert" key="order_date">
+			<FILTERFORM name="Agency Statement ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+				<COMBOBOX noorg="true" w="30" h="20" lpfield="pcc" x="10" fnct="pcc || org_name" y="10" lptable="orgs" title="PCC/Name" lpkey="org_id">org_id</COMBOBOX>
+			</FILTERFORM>
+			<JASPER reportfile="pcc_statements.jasper" name="Agency Statement"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="700" h="550" name="Print Batch" key="125">

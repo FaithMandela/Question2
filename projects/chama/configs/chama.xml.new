@@ -45,6 +45,7 @@
 			<MENU name="Borrowing" role="manager,admin">null</MENU>
 			<MENU name="Loans" role="manager,admin">null</MENU>
 			<MENU name="Penalty" role="manager,admin">null</MENU>
+			<MENU name="Member Statements">null</MENU>
 			<MENU name="My Statement">null</MENU>
 			<MENU name="My Contributions">null</MENU>
 			<MENU name="My Loans">null</MENU>

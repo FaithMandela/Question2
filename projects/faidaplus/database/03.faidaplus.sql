@@ -136,6 +136,7 @@ CREATE INDEX order_details_id  ON orders(order_id);
 CREATE TABLE applicants (
 	applicant_id			serial primary key,
 	org_id 					integer references orgs,
+	applicant_name  		varchar(50),
 	applicant_email			varchar(50) not null,
 	user_name  				varchar(120) not null;
 	phone_no    			character varying(50)
@@ -242,8 +243,8 @@ SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
 		entitys.salutation, entitys.son,entitys.birth_date,entitys.last_login,
 		entity_types.entity_type_id, entity_types.entity_type_name,
-		entity_types.entity_role, entity_types.use_key,vw_orgs.pcc||'-'||entitys.son as pcc_son,vw_orgs.pcc||'-'||entitys.son||'-'||entity_name as pcc_son_name
-		entitys.dob_email, entitys.svcb_son
+		entity_types.entity_role, entity_types.use_key,vw_orgs.pcc||'-'||entitys.son as pcc_son,vw_orgs.pcc||'-'||entitys.son||'-'||entity_name as pcc_son_name,
+		entitys.dob_email, entitys.svcb_son, entitys.can_redeem
 		FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;

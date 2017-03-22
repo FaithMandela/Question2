@@ -1,4 +1,62 @@
+CREATE VIEW vw_define_phases AS
+	SELECT entity_types.entity_type_id, entity_types.entity_type_name, project_types.project_type_id,
+		project_types.project_type_name, define_phases.define_phase_id, define_phases.define_phase_name,
+		define_phases.org_id, define_phases.define_phase_time, define_phases.define_phase_cost, define_phases.phase_order, 
+		define_phases.details
+	FROM define_phases INNER JOIN entity_types ON define_phases.entity_type_id = entity_types.entity_type_id
+		INNER JOIN project_types ON define_phases.project_type_id = project_types.project_type_id;
 
+CREATE VIEW vw_define_tasks AS
+	SELECT vw_define_phases.entity_type_id, vw_define_phases.entity_type_name, vw_define_phases.project_type_id,
+    	vw_define_phases.project_type_name, vw_define_phases.define_phase_id, vw_define_phases.define_phase_name,
+		vw_define_phases.define_phase_time, vw_define_phases.define_phase_cost,
+		define_tasks.org_id, define_tasks.define_task_id, define_tasks.define_task_name, define_tasks.narrative, define_tasks.details
+	FROM define_tasks INNER JOIN vw_define_phases ON define_tasks.define_phase_id = vw_define_phases.define_phase_id;
+
+CREATE VIEW vw_projects AS
+	SELECT project_types.project_type_id, project_types.project_type_name, 
+		projects.org_id, projects.project_id, projects.project_name, projects.signed, 
+		projects.project_start_date, projects.project_ending_date, projects.project_duration, 
+		projects.project_reference, projects.total_budget, projects.objectives, projects.target_groups, 
+		projects.final_beneficiaries, projects.estimated_results, projects.main_activities, projects.notes
+	FROM projects INNER JOIN project_types ON projects.project_type_id = project_types.project_type_id;
+	
+CREATE VIEW vw_phases AS
+	SELECT vw_projects.project_type_id, vw_projects.project_type_name, 
+		vw_projects.project_id, vw_projects.project_name, vw_projects.signed, 
+		vw_projects.project_start_date, vw_projects.project_ending_date, vw_projects.project_duration, 
+		vw_projects.project_reference, vw_projects.total_budget,
+		
+		phases.org_id, phases.phase_id, phases.phase_name, phases.phase_start_date, phases.phase_end_date, 
+		phases.completed as phase_completed, phases.phase_cost, phases.details
+	FROM phases INNER JOIN vw_projects ON phases.project_id = vw_projects.project_id;
+
+CREATE VIEW vw_tasks AS
+	SELECT vw_phases.project_type_id, vw_phases.project_type_name, 
+		vw_phases.project_id, vw_phases.project_name, vw_phases.signed, 
+		vw_phases.project_start_date, vw_phases.project_ending_date, vw_phases.project_duration, 
+		vw_phases.project_reference, vw_phases.total_budget,
+		vw_phases.phase_id, vw_phases.phase_name, vw_phases.phase_start_date, vw_phases.phase_end_date, 
+		vw_phases.phase_completed,  vw_phases.phase_cost, 
+		entitys.entity_id, entitys.entity_name, 
+		
+		tasks.org_id, tasks.task_id, tasks.task_name, tasks.task_start_date, tasks.task_dead_line, 
+		tasks.task_end_date, tasks.task_done, tasks.hours_taken, tasks.details
+	FROM tasks INNER JOIN entitys ON tasks.entity_id = entitys.entity_id
+		INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id;
+		
+CREATE VIEW vw_activities AS
+	SELECT vw_phases.project_type_id, vw_phases.project_type_name, 
+		vw_phases.project_id, vw_phases.project_name, vw_phases.signed, 
+		vw_phases.project_start_date, vw_phases.project_ending_date, vw_phases.project_duration, 
+		vw_phases.project_reference, vw_phases.total_budget,
+		vw_phases.phase_id, vw_phases.phase_name, vw_phases.phase_start_date, vw_phases.phase_end_date, 
+		vw_phases.phase_completed,  vw_phases.phase_cost, 
+
+		activities.org_id, activities.activity_id, activities.activity, activities.activity_start_date, 
+		activities.activity_close_date, activities.activity_done, activities.details
+	FROM activities INNER JOIN vw_phases ON activities.phase_id = vw_phases.phase_id;
+	
 CREATE VIEW vw_donors AS
 	SELECT donor_groups.donor_group_id, donor_groups.donor_group_name, 
 		sys_countrys.sys_country_id, sys_countrys.sys_country_name, 
@@ -15,7 +73,7 @@ CREATE VIEW vw_targets AS
 	FROM targets INNER JOIN goals ON targets.goal_id = goals.goal_id;
 	
 CREATE VIEW vw_project_locations AS
-	SELECT projects.project_id, projects.project_title, 
+	SELECT projects.project_id, projects.project_name, 
 		sys_countrys.sys_country_id, sys_countrys.sys_country_name, 
 		project_locations.org_id, project_locations.project_location_id, project_locations.region_covered, 
 		project_locations.details
@@ -24,7 +82,7 @@ CREATE VIEW vw_project_locations AS
 		
 CREATE VIEW vw_project_goals AS
 	SELECT goals.goal_id, goals.goal_name, 
-		projects.project_id, projects.project_title, 
+		projects.project_id, projects.project_name, 
 		project_goals.org_id, project_goals.project_goal_id, project_goals.goal_ps, project_goals.details
 	FROM project_goals INNER JOIN goals ON project_goals.goal_id = goals.goal_id
 		INNER JOIN projects ON project_goals.project_id = projects.project_id;
@@ -38,7 +96,7 @@ CREATE VIEW vw_goal_targets AS
 		
 CREATE VIEW vw_project_targets AS
 	SELECT vw_project_goals.goal_id, vw_project_goals.goal_name, 
-		vw_project_goals.project_id, vw_project_goals.project_title,
+		vw_project_goals.project_id, vw_project_goals.project_name,
 		vw_project_goals.project_goal_id, vw_project_goals.goal_ps,
 		targets.target_id, targets.target_name, 
 		
@@ -48,7 +106,7 @@ CREATE VIEW vw_project_targets AS
 		INNER JOIN targets ON project_targets.target_id = targets.target_id;
 		
 CREATE VIEW vw_contracts AS
-	SELECT projects.project_id, projects.project_title,
+	SELECT projects.project_id, projects.project_name,
 		donors.donor_id, donors.donor_name,
 		currency.currency_id, currency.currency_name, 
 		contracts.org_id, contracts.contract_id, contracts.application_ref, contracts.core_fund, 
@@ -61,7 +119,7 @@ CREATE VIEW vw_contracts AS
 		INNER JOIN currency ON contracts.currency_id = currency.currency_id;
 		
 CREATE VIEW vw_proposals AS
-	SELECT projects.project_id, projects.project_title,
+	SELECT projects.project_id, projects.project_name,
 		donors.donor_id, donors.donor_name,
 		proposal_status.proposal_status_id, proposal_status.proposal_status_name, 
 		proposals.org_id, proposals.proposal_id, proposals.start_date, proposals.description, 
@@ -70,15 +128,9 @@ CREATE VIEW vw_proposals AS
 	FROM proposals INNER JOIN projects ON proposals.project_id = projects.project_id
 		INNER JOIN donors ON proposals.donor_id = donors.donor_id
 		INNER JOIN proposal_status ON proposals.proposal_status_id = proposal_status.proposal_status_id;
-
-CREATE VIEW vw_activities AS
-	SELECT projects.project_id, projects.project_title, 
-		activities.org_id, activities.activity_id, activities.activity, activities.activity_start_date, 
-		activities.activity_close_date, activities.details
-	FROM activities INNER JOIN projects ON activities.project_id = projects.project_id;
 	
 CREATE VIEW vw_grants AS
-	SELECT vw_contracts.project_id, vw_contracts.project_title,
+	SELECT vw_contracts.project_id, vw_contracts.project_name,
 		vw_contracts.donor_id, vw_contracts.donor_name,
 		vw_contracts.currency_id, vw_contracts.currency_name, 
 		vw_contracts.contract_id, vw_contracts.application_ref, vw_contracts.core_fund, 
@@ -90,7 +142,7 @@ CREATE VIEW vw_grants AS
 	FROM grants INNER JOIN vw_contracts ON grants.contract_id = vw_contracts.contract_id;
 
 CREATE VIEW vw_budget AS
-	SELECT projects.project_id, projects.project_title,
+	SELECT projects.project_id, projects.project_name,
 		budget_type.budget_type_id, budget_type.budget_type_name, 
 		currency.currency_id, currency.currency_name, 
 		budget.org_id, budget.budget_id, budget.global_amount, budget.field_amount, budget.exchange_rate,
@@ -102,7 +154,7 @@ CREATE VIEW vw_budget AS
 		INNER JOIN currency ON budget.currency_id = currency.currency_id;
 		
 CREATE VIEW vw_expenditure AS
-	SELECT projects.project_id, projects.project_title,
+	SELECT projects.project_id, projects.project_name,
 		currency.currency_id, currency.currency_name, 
 		expenditure.org_id, expenditure.expenditure_id, 
 		expenditure.amount, expenditure.exchange_rate, expenditure.pr_date, expenditure.details,
@@ -112,36 +164,28 @@ CREATE VIEW vw_expenditure AS
 		
 ---TOC
 CREATE VIEW vw_problems AS
-	SELECT projects.project_id, projects.project_title, 
+	SELECT projects.project_id, projects.project_name, 
 		problems.org_id, problems.problem_id, problems.narrative, problems.details
 	FROM problems INNER JOIN projects ON problems.project_id = projects.project_id;
 
-
-
 CREATE VIEW vw_interventions AS
-	SELECT vw_problems .project_id, vw_problems.project_title,
+	SELECT vw_problems .project_id, vw_problems.project_name,
 		vw_problems.problem_id, vw_problems.narrative as problem_narrative, vw_problems.details as problem_details, 
 		interventions.org_id, interventions.intervention_id, interventions.narrative, interventions.details
 	FROM interventions INNER JOIN vw_problems ON interventions.problem_id = vw_problems.problem_id;
 
-
-
 CREATE VIEW vw_outputs AS
-	SELECT vw_interventions .project_id, vw_interventions.project_title,
+	SELECT vw_interventions .project_id, vw_interventions.project_name,
 		vw_interventions.problem_id, vw_interventions.problem_narrative, vw_interventions.problem_details, 
 		vw_interventions.org_id, vw_interventions.intervention_id, vw_interventions.narrative as interventions_narrative, vw_interventions.details as interventions_details,
 		outputs.output_id, outputs.narrative, outputs.details
 	FROM outputs INNER JOIN vw_interventions ON outputs.intervention_id = vw_interventions.intervention_id;
-
-
 
 CREATE VIEW vw_final_outcomes AS
 	SELECT goals.goal_id, goals.goal_name, 
 	final_outcomes.org_id,final_outcomes.final_outcome_id, final_outcomes.narrative, final_outcomes.details
 	FROM final_outcomes
 	INNER JOIN goals ON final_outcomes.goal_id = goals.goal_id;
-
-
 
 CREATE VIEW vw_intermediate_outcome AS
 		SELECT vw_final_outcomes.goal_id, vw_final_outcomes.goal_name,vw_final_outcomes.org_id, vw_final_outcomes.final_outcome_id,
@@ -150,12 +194,11 @@ CREATE VIEW vw_intermediate_outcome AS
 		,intermediate_outcome.intermediate_outcome, intermediate_outcome.narrative, intermediate_outcome.details
 	FROM intermediate_outcome
 	INNER JOIN vw_final_outcomes ON intermediate_outcome.final_outcome_id = vw_final_outcomes.final_outcome_id;
-		
 
 CREATE VIEW vw_indicators AS
-	SELECT projects.project_id, projects.project_title, 
+	SELECT projects.project_id, projects.project_name, 
 		indicators.org_id, indicators.indicator_id, indicators.key_indictors, indicators.baseline_values, 
-		indicators.date_source, indicators.data_collection_method, indicators.frequency_of_collection, 
+		indicators.data_source, indicators.data_collection_method, indicators.frequency_of_collection, 
 		indicators.impact, indicators.leassons_learnt, indicators.action_acquired, indicators.quality_of_action, 
 		indicators.details
 	FROM indicators	INNER JOIN projects ON indicators.project_id = projects.project_id;

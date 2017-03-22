@@ -75,51 +75,51 @@ order by period_id]]>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<columnHeader>
-		<band height="27" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="11" y="12" width="120" height="15" forecolor="#000000" uuid="85cd3c94-4806-48fe-a27d-50414339daa9"/>
+				<reportElement style="Column header" x="11" y="1" width="120" height="15" forecolor="#000000" uuid="85cd3c94-4806-48fe-a27d-50414339daa9"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Type Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="131" y="12" width="120" height="15" forecolor="#000000" uuid="99d23f22-731f-4992-bc12-ab2d77f06e96"/>
+				<reportElement style="Column header" x="131" y="1" width="183" height="15" forecolor="#000000" uuid="99d23f22-731f-4992-bc12-ab2d77f06e96"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="251" y="12" width="120" height="15" forecolor="#000000" uuid="c618daa8-07b5-47f9-b8d4-7d73fb077913"/>
+				<reportElement style="Column header" x="314" y="1" width="56" height="15" forecolor="#000000" uuid="c618daa8-07b5-47f9-b8d4-7d73fb077913"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="371" y="12" width="120" height="15" forecolor="#000000" uuid="c792946e-4b54-4b79-84cc-46b5d6a9f599"/>
+				<reportElement style="Column header" x="371" y="1" width="120" height="15" forecolor="#000000" uuid="c792946e-4b54-4b79-84cc-46b5d6a9f599"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Investment Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="491" y="12" width="72" height="15" forecolor="#000000" uuid="8ce6a5f4-9b1b-487f-900f-0dcaa7210c48"/>
+				<reportElement style="Column header" x="491" y="1" width="72" height="15" forecolor="#000000" uuid="8ce6a5f4-9b1b-487f-900f-0dcaa7210c48"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[MGR Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="635" y="12" width="91" height="15" forecolor="#000000" uuid="affa0a63-a01b-407b-955a-0b6e1763717b"/>
+				<reportElement style="Column header" x="635" y="1" width="91" height="15" forecolor="#000000" uuid="affa0a63-a01b-407b-955a-0b6e1763717b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<text><![CDATA[Total Contribution]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="563" y="12" width="72" height="15" forecolor="#000000" uuid="b7780c0e-7a4e-45ff-9adc-dfc98e298fbe"/>
+				<reportElement style="Column header" x="563" y="1" width="72" height="15" forecolor="#000000" uuid="b7780c0e-7a4e-45ff-9adc-dfc98e298fbe"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -139,14 +139,14 @@ order by period_id]]>
 					<textFieldExpression><![CDATA[$F{contribution_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="131" y="0" width="120" height="15" uuid="2c7e5e0c-0d53-4879-9ae8-b5c50db06f54"/>
+					<reportElement style="Detail" x="131" y="0" width="183" height="15" uuid="2c7e5e0c-0d53-4879-9ae8-b5c50db06f54"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-					<reportElement style="Detail" x="251" y="0" width="120" height="15" uuid="f559d316-9bc2-4745-b89a-cc0c4ebcbc5a"/>
+					<reportElement style="Detail" x="314" y="0" width="56" height="15" uuid="f559d316-9bc2-4745-b89a-cc0c4ebcbc5a"/>
 					<textElement>
 						<font fontName="Times New Roman" size="10"/>
 					</textElement>
@@ -173,12 +173,6 @@ order by period_id]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{total_contribution}]]></textFieldExpression>
 				</textField>
-				<line>
-					<reportElement positionType="FixRelativeToBottom" x="1" y="0" width="801" height="1" uuid="1dcc837b-006b-49a1-a649-3ea53188aae0"/>
-					<graphicElement>
-						<pen lineWidth="0.5" lineColor="#999999"/>
-					</graphicElement>
-				</line>
 				<textField pattern="#,##0" isBlankWhenNull="true">
 					<reportElement x="563" y="0" width="72" height="15" uuid="6426a798-e81e-4570-abde-62ce8325c440"/>
 					<textElement textAlignment="Right">
@@ -232,7 +226,7 @@ order by period_id]]>
 			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="370" y="0" width="120" height="20" uuid="4f087979-6299-4685-9d1e-bc0a5b10e9d0"/>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
 				<textElement textAlignment="Right">
@@ -243,7 +237,7 @@ order by period_id]]>
 			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="490" y="0" width="72" height="20" uuid="b3960e69-7302-40a0-b2a9-2b1983d3d1d5"/>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
 				<textElement textAlignment="Right">
@@ -254,7 +248,7 @@ order by period_id]]>
 			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="634" y="0" width="91" height="20" uuid="d635edaa-2e52-40ac-8b5c-9f243c35af90"/>
 				<box>
-					<topPen lineWidth="0.0"/>
+					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
 				<textElement textAlignment="Right">
@@ -265,7 +259,7 @@ order by period_id]]>
 			<textField pattern="#,##0" isBlankWhenNull="true">
 				<reportElement x="562" y="0" width="72" height="20" uuid="c5ca9f56-8fb8-4b8c-b6a0-ff3392aad43d"/>
 				<box>
-					<topPen lineWidth="0.5" lineStyle="Double"/>
+					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="1.0" lineStyle="Double"/>
 				</box>
 				<textElement textAlignment="Right">

@@ -22,12 +22,12 @@
 		where="(vw_orders.order_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
 			AND (vw_entitys.entity_id = vw_orders.entity_id) AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)
 			AND (sys_emails.use_type = 3)">
-		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<SUBJECT title="subject">sys_emailed.narrative</SUBJECT>
 		<ADDRESS title="address">vw_entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="vw_entitys">entity_name</BODYFIELD>
 		<BODYFIELD reference="{{narrative}}" basetable="sys_emailed">narrative</BODYFIELD>
 		<BODYFIELD reference="{{orderNo}}" basetable="vw_orders">order_id</BODYFIELD>
-		<BODYFIELD reference="{{mailbody}}" fnct="get_order_details(vw_orders.order_id)">mailbody</BODYFIELD>
+		<BODYFIELD reference="{{mailbody}}" basetable="sys_emailed">mail_body</BODYFIELD>
 		<BODYFIELD reference="{{amount}}" basetable="vw_orders">grand_total</BODYFIELD>
 		<PARAM basetable="vw_orders">order_id</PARAM>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>

@@ -422,8 +422,14 @@ public class BWebBody extends BQuery {
 		String defaultvalue = el.getAttribute("default", "");
 		String default_fnct = el.getAttribute("default_fnct");
 		String default_org_fnct = el.getAttribute("default_org_fnct");
-		if(default_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
-		if(default_org_fnct != null) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
+		if(default_fnct != null) {
+			if(default_fnct.indexOf("(") > 1) db.executeFunction("SELECT " + default_fnct + ", '" + db.getUserID() + "')");
+			else defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
+		}
+		if(default_org_fnct != null) {
+			if(default_org_fnct.indexOf("(") > 1) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + ", " + userOrg + ")");
+			else defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
+		}
 
 		if(formCols > 1) response.append("<div class='col-md-6'>\n");
 		response.append("	<div class='form-group'>\n");
@@ -822,12 +828,19 @@ public class BWebBody extends BQuery {
 			}
 			response.append(" size='50'/>\n");
 		} else if(el.getName().equals("SPINTIME")) {
-			response.append("<div class='input-group input-medium'>\n");
-			response.append("	<input type='text' class='form-control clockface' readonly='' id='" + el.getValue() + "'  name='" + el.getValue() + "' ");
+			response.append("<div class='input-group input-medium '>\n"); 
+			
+			if(el.getAttribute("type", "1").equals("1")) {
+				response.append("	<input type='text' class='form-control clockface'");
+			} else if(el.getAttribute("type", "2").equals("1")) {
+				response.append("	<input type='text' class='form-control timepicker timepicker-no-seconds'");
+			} else {
+				response.append("	<input type='text' class='form-control timepicker timepicker-24'");
+			}
+			response.append(" readonly='' name='" + el.getValue() + "' id='" + el.getValue() + "'");
 
-			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
-			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
+			if(el.getAttribute("enabled", "true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("required", "false").equals("true")) response.append(" required = 'true'");
 			if(eof) {
 				SimpleDateFormat dateformatter = new SimpleDateFormat("hh:mm a");
 				if(getString(el.getValue())!=null) {
@@ -843,7 +856,12 @@ public class BWebBody extends BQuery {
 			response.append("/>\n");
 			
 			response.append("	<span class='input-group-btn'>\n");
-			response.append("		<button class='btn default clockface-toggle' data-target='" + el.getValue() + "' type='button'><i class='fa fa-clock-o'></i></button>\n");
+			if(el.getAttribute("type", "1").equals("1")) {
+				response.append("		<button class='btn default clockface-toggle' data-target='" + el.getValue() + "' type='button'>");
+			} else {
+				response.append("		<button class='btn default' type='button'>");
+			}
+			response.append("<i class='fa fa-clock-o'></i></button>\n");
 			response.append("	</span>\n");
 			response.append("</div>\n");
 		} else if(el.getName().equals("PICTURE")) {

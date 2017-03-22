@@ -28,6 +28,10 @@ public class BSMSMonitoring {
 			String smsError = remoteChecks(bunsonDB);
 			if(smsError != null) addEMail(monDB, "Bunsons SMS : " + smsError);
 			else System.out.println("Bunsons SMS okay");
+			
+			String emailError = monitorEmails(bunsonDB);
+			if(emailError != null) addEMail(monDB, "Bunsons Email : " + emailError);
+			else System.out.println("Bunsons Email okay");
 		}
 		
 		Connection faidaplusDB = getConnection("jdbc:postgresql://192.168.0.9:5432/faidaplus", "sms_user", "Invent2k");
@@ -56,7 +60,7 @@ public class BSMSMonitoring {
 	
 	public String execute(Connection smsDB) {
 		String smsError = null;
-		try{
+		try {
 			String sql = "SELECT sms_id, folder_id, sms_origin, sms_number, sms_time ";
 			sql += "FROM sms ";
 			sql += "WHERE sms_id = ";
@@ -83,14 +87,58 @@ public class BSMSMonitoring {
 				}
 			}
 			
+			sql = "SELECT COALESCE(sum(sms_units - sms_count), 0) as sms_bal ";
+			sql += "FROM vw_load_usage;";
+			Statement st3 = smsDB.createStatement();
+			ResultSet rs3 = st3.executeQuery(sql);
+			if(rs3.next()) {
+				int smsBal = rs3.getInt("sms_bal");
+				if(smsBal < 3000) smsError = "The SMS credit is about to run out please to up";
+			}
+			
 			rs1.close();
 			st1.close();
 			rs2.close();
 			st2.close();
-		} catch(SQLException ex){
+			rs3.close();
+			st3.close();
+		} catch(SQLException ex) {
 			System.out.println("Error: " + ex);
 		}
 		
+		return smsError;
+	}
+	
+	
+	public String monitorEmails(Connection smsDB) {
+		String smsError = null;
+		
+		try {
+			String sql = "SELECT min(sys_emailed.created) as last_sent ";
+			sql += "FROM sys_emails, sys_emailed, transfers ";
+			sql += "WHERE (transfers.transfer_id = sys_emailed.table_id) AND (transfers.email_ready = true) ";
+			sql += "AND (sys_emailed.emailed = false) ";
+			sql += "AND (sys_emails.sys_email_id = sys_emailed.sys_email_id); ";
+			Statement st1 = smsDB.createStatement();
+			ResultSet rs1 = st1.executeQuery(sql);
+			
+			if(rs1.next()) {
+				if(rs1.getString("last_sent") != null) {
+					Timestamp emailTime = rs1.getTimestamp("last_sent");
+					Date currentTime = new Date();
+					Long difference = (currentTime.getTime() - emailTime.getTime()) / (1000 * 60);
+
+					System.out.println("Email Error : " + difference);
+					if(difference > 70) smsError = "Travel Email have not been sent for : " + difference.toString();
+				}
+			}
+				
+			rs1.close();
+			st1.close();
+		} catch(SQLException ex) {
+			System.out.println("Error: " + ex);
+		}
+	
 		return smsError;
 	}
 	

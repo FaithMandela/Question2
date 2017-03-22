@@ -550,8 +550,7 @@ class BField implements MouseListener {
 		String myvs = getText();
 		if(myvs.length()>0) {
 			Double d = Double.valueOf(myvs);
-			BAmountInWords aiw = new BAmountInWords(d.intValue());
-			myvs = aiw.getAmountInWords();
+			myvs = BAmountInWords.convert(d.intValue());
 		}
 
 		return myvs;

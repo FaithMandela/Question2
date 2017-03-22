@@ -12,13 +12,6 @@ ALTER TABLE orgs ADD member_limit integer default 5 not null;
 ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
 
 
-CREATE TABLE industry (
-	industry_id				serial primary key,
-	org_id					integer references orgs,
-	industry_name			varchar(50) not null,
-	details					text
-);
-CREATE INDEX industry_org_id ON industry(org_id);
 
 CREATE TABLE subscriptions (
 	subscription_id			serial primary key,
@@ -200,8 +193,8 @@ BEGIN
 		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password)
-			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'admin', null);
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password,use_key_id)
+			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'admin', null,0);
 		
 	
 			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
@@ -258,6 +251,8 @@ BEGIN
 		SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
 		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
+		
+		INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (NEW.org_id, 1, 1, 'Administration'); 
 
 	
 	END IF;

@@ -56,6 +56,7 @@ public class BWebForms {
 	String entryFormId = null;
 	String formid = "0";
 	String fhead, ffoot, ftitle;
+	boolean saveStatus = false;
 
 	BDB db = null;
 	String access_text = null;
@@ -101,6 +102,8 @@ public class BWebForms {
 			formid = formRS.get("form_id");
 			entityId = formRS.get("entity_id");
 			approveStatus = formRS.get("approve_status");
+			
+			if((entryFormId != null) && "Draft".equals(approveStatus)) saveStatus = true;
 		}
 		
 		getFormType();
@@ -749,6 +752,7 @@ System.out.println("Start saving the form " + entryFormId);
 	
 	public String getTitle() { return ftitle; }
 	public String getEntryFormId() { return entryFormId; }
+	public boolean canSave() { return saveStatus; }
 	
 	public void close() {
 		if(db != null) db.close();

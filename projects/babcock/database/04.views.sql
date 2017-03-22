@@ -386,6 +386,23 @@ CREATE VIEW currentresidenceview AS
 	INNER JOIN quarterview ON qresidences.quarterid = quarterview.quarterid)
 	INNER JOIN students ON ((residences.Sex = students.Sex) OR (residences.Sex = 'N')) 
 	WHERE (quarterview.active = true);
+	
+CREATE VIEW vw_qresidence AS
+	SELECT residences.residenceid, residences.residencename, residences.offcampus, residences.Sex, residences.residencedean, 
+		qresidences.qresidenceid, qresidences.quarterid, qresidences.residenceoption, qresidences.charges, qresidences.details,
+		qresidences.org_id,
+		students.studentid, students.studentname,
+		quarters.active,
+		resc.res_capacity, resn.resCount, (resc.res_capacity - resn.resCount) as space_left
+	FROM ((residences INNER JOIN qresidences ON residences.residenceid = qresidences.residenceid)
+	INNER JOIN quarters ON qresidences.quarterid = quarters.quarterid)
+	INNER JOIN students ON ((residences.Sex = students.Sex) OR (residences.Sex = 'N'))
+	LEFT JOIN (SELECT residenceid, sum(residencecapacitys.capacity) as res_capacity FROM residencecapacitys
+			GROUP BY residenceid) as resc
+		ON residences.residenceid = resc.residenceid
+	LEFT JOIN (SELECT qresidenceid, count(qstudentid) as resCount FROM qstudents
+			GROUP BY qresidenceid) as resn
+		ON qresidences.qresidenceid = resn.qresidenceid;
 
 CREATE VIEW qstudentlist AS
 	SELECT students.studentid, students.departmentid, students.studentname, students.Sex, students.Nationality, students.MaritalStatus,
@@ -546,6 +563,21 @@ CREATE VIEW qcourseview AS
 	FROM (((courseview INNER JOIN qcourses ON courseview.courseid = qcourses.courseid)
 		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid)
 		INNER JOIN quarters ON qcourses.quarterid = quarters.quarterid);
+		
+CREATE VIEW vwqcourses AS
+	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
+		courseview.degreelevelid, courseview.degreelevelname, courseview.coursetypeid, courseview.coursetypename,
+		courseview.courseid, courseview.credithours, courseview.maxcredit, courseview.iscurrent,
+		courseview.nogpa, courseview.yeartaken, instructors.instructorid, instructors.instructorname,
+		qcourses.quarterid, qcourses.qcourseid, qcourses.classoption, qcourses.maxclass,
+		qcourses.labcourse, qcourses.extracharge, qcourses.approved, qcourses.attendance, qcourses.oldcourseid,
+		qcourses.fullattendance, qcourses.coursetitle, qcourses.lecturesubmit, qcourses.lsdate,
+		qcourses.departmentsubmit, qcourses.dsdate, qcourses.facultysubmit, qcourses.fsdate, 
+		qcourses.org_id, aa.enrolment
+	FROM (courseview INNER JOIN qcourses ON courseview.courseid = qcourses.courseid)
+		INNER JOIN instructors ON qcourses.instructorid = instructors.instructorid
+		LEFT JOIN (SELECT count(qgradeid) enrolment, qcourseid FROM qgrades GROUP BY qcourseid) aa
+			ON qcourses.qcourseid = aa.qcourseid;
 
 CREATE VIEW qschoolcourseview AS
 	SELECT courseview.schoolid, courseview.schoolname, courseview.departmentid, courseview.departmentname,
@@ -1464,7 +1496,18 @@ CREATE VIEW ws_food_service AS
 	FROM vwqstudentbalances
 	WHERE (active = true) AND (finaceapproval = true);
 
-
+CREATE VIEW ws_hall_service AS
+	SELECT studentid, studentname, mealtype, studylevel, majorid, majorname, finaceapproval,
+		quarterid, schoolid, schoolname, departmentid, departmentname, residenceid, residencename
+	FROM vwqstudentbalances
+	WHERE (active = true);
+	
+CREATE VIEW ws_qstudents AS
+	SELECT studentid, studentname, mealtype, studylevel, majorid, majorname, 
+		quarterid, schoolid, schoolname, departmentid, departmentname, residenceid, residencename,
+		qstudentid, finaceapproval, approved
+	FROM vwqstudentbalances;
+	
 ----------- Creating radius server interface
 CREATE EXTENSION postgres_fdw;
 CREATE SERVER umisdb1 FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '192.168.1.111', dbname 'babcock', port '5432');

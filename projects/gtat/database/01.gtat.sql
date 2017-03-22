@@ -80,6 +80,7 @@ CREATE TABLE clients (
 	clientid				serial primary key,
 	country_id				char(2) references countrys,
 	clientname				varchar(50) unique,
+	mst_cus_id				varchar(10),
 	address					varchar(120),
 	postalcode				varchar(12),
 	Town					varchar(120),
@@ -223,21 +224,10 @@ CREATE INDEX crnotelist_PeriodID ON crnotelist (PeriodID);
 CREATE INDEX crnotelist_clientid ON crnotelist (clientid);
 
 CREATE OR REPLACE VIEW vwclients AS 
- SELECT countrys.countryid,
-    countrys.countryname,
-    clients.clientid,
-    clients.clientname,
-    clients.address,
-    clients.postalcode,
-    clients.town,
-    clients.telno,
-    clients.contact_person,
-    clients.email,
-    clients.isactive,
-    clients.ispicked,
-    clients.details
-   FROM clients
-     JOIN countrys ON clients.countryid = countrys.countryid;
+	SELECT countrys.countryid, countrys.countryname, clients.clientid, clients.clientname, clients.address,
+		clients.postalcode, clients.town, clients.telno, clients.contact_person, clients.email, clients.isactive,
+		clients.ispicked, clients.mst_cus_id, clients.details
+	FROM clients JOIN countrys ON clients.countryid = countrys.countryid;
 
 CREATE VIEW vwclientbranches AS
 	SELECT clients.clientid, clients.clientname, clients.address, clients.postalcode, clients.Town, clients.telno, clients.email,
@@ -507,13 +497,13 @@ CREATE TRIGGER updPeriod AFTER UPDATE ON Period
     FOR EACH ROW EXECUTE PROCEDURE updPeriod();
     
 CREATE OR REPLACE FUNCTION ins_period() RETURNS trigger AS $$
-BEGIN
-	IF(NEW.salesperiod is not null)THEN
-		NEW.accountperiod := NEW.salesperiod;
-		NEW.kqaccountperiod := NEW.salesperiod;
-	END IF;
+	BEGIN
+		IF(NEW.salesperiod is not null)THEN
+			NEW.accountperiod := NEW.salesperiod;
+			NEW.kqaccountperiod := NEW.salesperiod;
+		END IF;
 
-	RETURN NEW;
+		RETURN NEW;
 END
 $$ LANGUAGE plpgsql;
 
@@ -655,6 +645,159 @@ INSERT INTO clientbranches (clientbranchid, clientid, branchname, details) VALUE
 INSERT INTO clientbranches (clientbranchid, clientid, branchname, details) VALUES (18, 1, 'ACHARYA TRAVEL- RAHIMTULLA', NULL);
 
 SELECT pg_catalog.setval('clientbranches_clientbranchid_seq', 18, true);
+
+
+DROP VIEW vwinvoicelist CASCADE;
+
+CREATE OR REPLACE VIEW vwinvoicelist AS 
+ SELECT vwsales.clientid,
+    vwsales.clientname,
+    vwsales.town,
+    vwsales.countryid,
+    vwsales.countryname,
+    vwsales.periodid,
+    vwsales.invoiceid,
+    vwsales.invoicenumber,
+    vwsales.issued,
+    period.salesperiod,
+    period.invoicedate,
+    sum(vwsales.amount) AS invoice_amount,
+    sum(vwsales.netremits) AS gta_totals
+   FROM vwsales
+     JOIN period ON period.periodid = vwsales.periodid
+  WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
+  GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.invoicenumber, vwsales.issued
+  ORDER BY vwsales.clientid;
+
+DROP VIEW vwcrnotelist;
+
+CREATE OR REPLACE VIEW vwcrnotelist AS 
+ SELECT vwsales.clientid,
+    vwsales.clientname,
+    vwsales.periodid,
+    crnotelist.crnoteid,
+    ('TP/GTA/CR/' || crnotelist.crnoteid) as creditnotenumber,
+    period.salesperiod,
+    period.invoicedate,
+    sum(vwsales.amount) AS invoice_amount,
+    sum(vwsales.netremits) AS gta_totals
+    
+   FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
+     LEFT JOIN crnotelist ON vwsales.periodid = crnotelist.periodid AND vwsales.clientid = crnotelist.clientid     
+
+  WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice < 0::double precision AND to_char(vwsales.startdate::timestamp with time zone, 'MMYYYY'::text) <> to_char(vwsales.servicedate::timestamp with time zone, 'MMYYYY'::text)
+  
+  GROUP BY vwsales.clientid, vwsales.clientname, vwsales.periodid, crnotelist.crnoteid, period.salesperiod, period.invoicedate
+  ORDER BY vwsales.clientid;
+
+CREATE OR REPLACE FUNCTION get_start_year(varchar(12)) RETURNS varchar(12) AS $$
+	SELECT '01/01/' || to_char(current_date, 'YYYY'); 
+$$ LANGUAGE SQL;
+
+ALTER TABLE clients ADD COLUMN mst_cus_id varchar(10);
+
+DROP TABLE tmpclientpayments;
+CREATE TABLE tmpclientpayments (
+	clientpaymentsid		serial primary key,
+	category				varchar(250),
+	currency				varchar(16),
+	accounting_date			varchar(16),
+	company					varchar(250),
+	location				varchar(250),
+	cost_center				varchar(250),
+	account					varchar(250),
+	bud						varchar(250),
+	intercompany			varchar(250),
+	debit					varchar(250),
+	credit					varchar(250),
+	conversion_type			varchar(16),
+	conversiondate			varchar(16),
+	conversion_rate			varchar(250),
+	journal_name			varchar(250),
+	journal_description		varchar(250),
+	reverse_journal			varchar(250),
+	reversal_period			varchar(250),
+	line_description		varchar(250),
+	messages				varchar(250),
+	mst_cus_id				varchar(10)
+);
+
+
+DROP TABLE clientpayments CASCADE;
+CREATE TABLE clientpayments (
+	clientpaymentsid		serial primary key,
+	clientid 				integer references clients,
+	accounting_date			date,
+	currency				varchar(50),
+	amount					real,
+	payment_type			varchar(250),
+	payment_reference		varchar(250),
+	journal_name			varchar(250),
+	created					timestamp default current_timestamp not null
+);
+CREATE INDEX clientpayments_clientid ON clientpayments (clientid);
+
+
+CREATE OR REPLACE FUNCTION inspayments(
+    character varying,
+    character varying,
+    character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+	myrec RECORD;
+BEGIN 
+	DELETE FROM tmpclientpayments WHERE tmpclientpayments.Accounting_Date = 'Accounting Date';
+	
+	INSERT INTO clientpayments(clientid, accounting_date, currency, amount, journal_name,
+		payment_reference, payment_type)
+	SELECT clients.clientid, ('1899-12-30'::date + Accounting_Date::int), currency, credit::real, 
+		trim(journal_name), trim(split_part(line_description, ':', 1)), trim(split_part(line_description, ':', 2))
+		
+	FROM tmpclientpayments 
+	INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id;
+
+	DELETE FROM tmpclientpayments WHERE mst_cus_id  IN
+	(SELECT DISTINCT mst_cus_id FROM clients); 
+
+	RETURN 'Done';
+END
+$BODY$
+  LANGUAGE plpgsql;
+
+CREATE OR REPLACE VIEW vw_clientpayments AS 
+ SELECT clients.clientid,
+    clients.clientname,
+    clientpayments.clientpaymentsid,
+    clientpayments.currency,
+    clientpayments.amount,
+	clientpayments.accounting_date,
+    'TP/GTA/PAY/'::text || clientpayments.clientpaymentsid AS clientpaymentsnumber,
+    clientpayments.payment_reference,
+    clientpayments.payment_type,
+    clientpayments.journal_name
+   FROM clientpayments
+     JOIN clients ON clientpayments.clientid = clients.clientid;
+
+CREATE OR REPLACE VIEW vw_statement AS
+	SELECT item_name, clientid, clientname, salesperiod, invoicedate, invoicenumber, invoiced, credit_amount, payments, amount
+	FROM 
+		((SELECT 'Invoice'::varchar(32) as item_name, clientid, clientname, salesperiod, invoicedate, invoicenumber, invoice_amount as invoiced , '0'::real as credit_amount, '0'::real as payments, invoice_amount::real as amount
+		FROM vwinvoicelist)
+		UNION ALL 
+		(SELECT 'Credit Note'::varchar(32) as item_name, clientid, clientname, salesperiod, invoicedate, creditnotenumber, '0'::real, invoice_amount, '0'::real, invoice_amount::real as amount
+		FROM vwcrnotelist)
+		UNION ALL 
+		(SELECT 'Payments'::varchar(32) as item_name, clientid, clientname, payment_reference, accounting_date, clientpaymentsnumber, '0'::real, '0'::real, amount, (-1 * amount)::real as amount
+		FROM vw_clientpayments)) as a 
+ORDER BY invoicedate ASC;
+
+CREATE OR REPLACE VIEW vw_receipt AS
+	SELECT vw_clientpayments.clientid, vwclients.clientname, accounting_date, clientpaymentsid, 
+       currency, amount, clientpaymentsnumber, payment_reference, countryname, address, postalcode, town
+	FROM vw_clientpayments 
+	JOIN vwclients ON vw_clientpayments.clientid = vwclients.clientid;
+
 
 
 

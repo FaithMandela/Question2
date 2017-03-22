@@ -11,8 +11,8 @@
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="entityid" class="java.lang.String">
-		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	<parameter name="entityid" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
@@ -24,29 +24,47 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT vw_loan_monthly.entity_id, vw_loan_monthly.entity_name, vw_loan_monthly.loan_type_name, vw_loan_monthly.loan_id,
-vw_loan_monthly.loan_date, vw_loan_monthly.principle, vw_loan_monthly.interest, vw_loan_monthly.monthly_repayment,
-vw_loan_monthly.repayment_period, vw_loan_monthly.loan_balance,
-vw_loan_monthly.start_date, vw_loan_monthly.interest_amount, vw_loan_monthly.interest_paid, vw_loan_monthly.repayment
+		<![CDATA[SELECT *
 FROM vw_loan_monthly
 WHERE (vw_loan_monthly.entity_id = '$P!{entityid}')
-$P!{organd}
+
 ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 	</queryString>
+	<field name="currency_id" class="java.lang.Integer"/>
+	<field name="currency_name" class="java.lang.String"/>
+	<field name="currency_symbol" class="java.lang.String"/>
+	<field name="loan_type_id" class="java.lang.Integer"/>
+	<field name="loan_type_name" class="java.lang.String"/>
+	<field name="approve_status" class="java.lang.String"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
-	<field name="loan_type_name" class="java.lang.String"/>
-	<field name="loan_id" class="java.lang.Integer"/>
 	<field name="loan_date" class="java.sql.Date"/>
+	<field name="loan_id" class="java.lang.Integer"/>
 	<field name="principle" class="java.lang.Float"/>
 	<field name="interest" class="java.lang.Float"/>
 	<field name="monthly_repayment" class="java.lang.Float"/>
+	<field name="reducing_balance" class="java.lang.Boolean"/>
 	<field name="repayment_period" class="java.lang.Integer"/>
-	<field name="loan_balance" class="java.lang.Float"/>
+	<field name="period_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
+	<field name="end_date" class="java.sql.Date"/>
+	<field name="activated" class="java.lang.Boolean"/>
+	<field name="closed" class="java.lang.Boolean"/>
+	<field name="period_year" class="java.lang.String"/>
+	<field name="period_month" class="java.lang.String"/>
+	<field name="org_id" class="java.lang.Integer"/>
+	<field name="loan_month_id" class="java.lang.Integer"/>
 	<field name="interest_amount" class="java.lang.Float"/>
+	<field name="additional_payments" class="java.lang.Float"/>
+	<field name="is_paid" class="java.lang.Boolean"/>
+	<field name="repayment_paid" class="java.lang.Float"/>
 	<field name="interest_paid" class="java.lang.Float"/>
-	<field name="repayment" class="java.lang.Float"/>
+	<field name="penalty" class="java.lang.Float"/>
+	<field name="penalty_paid" class="java.lang.Float"/>
+	<field name="details" class="java.lang.String"/>
+	<field name="total_interest" class="java.lang.Float"/>
+	<field name="total_repayment" class="java.lang.Float"/>
+	<field name="loan_balance" class="java.lang.Float"/>
 	<variable name="suminterestamount" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{interest_amount}]]></variableExpression>
 	</variable>
@@ -54,7 +72,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 		<variableExpression><![CDATA[$F{interest_paid}]]></variableExpression>
 	</variable>
 	<variable name="sumrepayment" class="java.lang.Float" calculation="Sum">
-		<variableExpression><![CDATA[$F{repayment}]]></variableExpression>
+		<variableExpression><![CDATA[$F{repayment_paid}]]></variableExpression>
 	</variable>
 	<group name="loanid">
 		<groupExpression><![CDATA[$F{loan_id}]]></groupExpression>
@@ -528,7 +546,7 @@ ORDER BY vw_loan_monthly.loan_id , vw_loan_monthly.start_date;]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{repayment}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{repayment_paid}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="MMMMM" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="76" y="0" width="89" height="14" uuid="c50efd92-c20f-4c45-a8a5-f4435bf29ded"/>

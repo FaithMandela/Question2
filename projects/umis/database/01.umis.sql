@@ -856,103 +856,25 @@ CREATE TABLE qcoursemarks (
 CREATE INDEX qcoursemarks_qgradeid ON qcoursemarks (qgradeid);
 CREATE INDEX qcoursemarks_qcourseitemid ON qcoursemarks (qcourseitemid);
 
---- Table to buffer sun system imports
-CREATE TABLE sunimports (
-	sunimportid			serial primary key,
-	accountnumber		varchar(125),
-	studentname			varchar(250),
-	balance				real,
-	Downloaddate		date not null default current_date,
-	IsUploaded			boolean not null default false
+--- Posting for all credit to student payments
+CREATE TABLE student_payments (
+	student_payment_id	serial primary key,
+	qstudentid			integer not null references qstudents,
+	org_id				integer references orgs,
+	entrydate			timestamp not null default now(), 
+	CustomerReference	varchar(25) not null unique,
+	TransactionDate		date not null,
+	ValueDate			date,
+	TransactionAmount	real not null, 
+	DRCRFlag			varchar(5), 
+	TransactionDetail	varchar(240), 
+	TransactionType		int,
+	Suspence			boolean default false not null,
+	Picked				boolean default false not null,
+	Pickeddate			timestamp
 );
-
---- bufer table for standard chartared bank file
-CREATE TABLE bankfile (
-	bankfileid					serial primary key,
-	CompanyName					varchar(120),
-	BankCode					varchar(120),
-	AccountNumber				varchar(120),
-	CurrencyCode				varchar(120),
-	AccountType					varchar(120),
-	OpeningLedgerBalance		varchar(120),
-	ClosingLedgerBalance		varchar(120),
-	OpeningAvailableBalance		varchar(120),
-	ClosingAvailableBalance		varchar(120),
-	AccountName					varchar(120),
-	BranchCode					varchar(120),
-	OpeningBalanceAsOn			varchar(120),
-	ClosingBalanceAsOn			varchar(120),
-	TransactionDate				varchar(120),
-	ValueDate					varchar(120),
-	TransactionAmount			varchar(120),
-	DRCRFlag					varchar(120),
-	ChequeNumber				varchar(120),
-	TransactionReference		varchar(120),
-	CustomerReference			varchar(120),
-	TransactionDetail			varchar(240),
-	ProcessingBranch			varchar(120),
-	TransactionType				varchar(120),
-	Downloaddate				date not null default current_date,
-	IsUploaded					boolean not null default false
-);
-
---- bufer table for standard chartared bank file
-CREATE TABLE bankdayfile (
-	bankdayfileid				serial primary key,
-	TransactionDate				varchar(120),		
-	CompanyName					varchar(120),		
-	AccountNumber				varchar(120),		
-	CurrencyCode				varchar(120),		
-	AccountType					varchar(120),		
-	ValueDate					varchar(120),		
-	DRCR						varchar(120),		
-	TransactionAmount			varchar(120),		
-	OwnerReference				varchar(120),		
-	InstitutionReference		varchar(120),		
-	SupplementaryDetails		varchar(120),		
-	InformationAccountOwner		varchar(120),		
-	TransactionDescription		varchar(120),		
-	TransactionType				varchar(120),		
-	TransactionPostTime			varchar(120),
-	Downloaddate				date not null default current_date,
-	IsUploaded					boolean not null default false
-);
-
---- Analsys table for bank file information
-CREATE TABLE banksuspence (
-	banksuspenceid			serial primary key,
-	entrydate				timestamp not null default now(), 
-	CustomerReference		varchar(25),
-	Picked					boolean not null default false,
-	Duplicate				boolean not null default false,				
-	Approve					boolean not null default false,
-	TransactionDate			date,
-	ValueDate				date,
-	TransactionAmount		real, 
-	DRCRFlag				varchar(5), 
-	BankTransactionDetail	varchar(240), 
-	TransactionDetail		varchar(240),
-	TransactionType			int,
-	Narrative				varchar(120)				
-);
-
---- Posting for all credit to student from the bank file
-CREATE TABLE studentbank (
-	studentbankid			serial primary key,
-	studentid				varchar(12) not null references students,
-	entrydate				timestamp not null default now(), 
-	CustomerReference		varchar(25) not null unique,
-	TransactionDate			date,
-	ValueDate				date,
-	TransactionAmount		real, 
-	DRCRFlag				varchar(5), 
-	TransactionDetail		varchar(240), 
-	TransactionType			int,
-	Suspence				boolean default false not null,
-	Picked					boolean default false not null,
-	Pickeddate				timestamp
-);
-CREATE INDEX studentbank_studentid ON studentbank (studentid);
+CREATE INDEX student_payments_qstudentid ON student_payments (qstudentid);
+CREATE INDEX student_payments_org_id ON student_payments (org_id);
 
 CREATE TABLE qposting_logs (
 	qposting_log_id 	serial primary key,

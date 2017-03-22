@@ -8,8 +8,8 @@ import java.sql.SQLException;
 
 import java.net.URL;
 import java.net.MalformedURLException;
-import org.baraza.web.BWebServiceService;
-import org.baraza.web.BWebService;
+import babcock.ws.DataWebService;
+import babcock.ws.DataWebServiceService;
 
 public class umisRegistration {
 
@@ -23,8 +23,8 @@ public class umisRegistration {
 			URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
 			//URL wsURL = new URL("http://localhost:8080/babcock/webservice?wsdl");
 		
-			BWebServiceService bws = new BWebServiceService(wsURL);
-			BWebService port = bws.getBWebServicePort();
+			DataWebServiceService bws = new DataWebServiceService(wsURL);
+			DataWebService port = bws.getDataWebServicePort();
 			
 			// Add the students
 			addStudent(port);
@@ -34,7 +34,7 @@ public class umisRegistration {
 		}
 	}	
 
-	private void addStudent(BWebService port) {
+	private void addStudent(DataWebService port) {
 		try {
 			String stSql = "SELECT registrationid, existingid, surname, firstname, othernames, ";
 			stSql += "upper(substr('sex', 1, 1)) as nsex, upper(substr('maritalstatus', 1, 1)) as nmaritalstatus, ";

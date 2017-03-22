@@ -341,8 +341,8 @@ BEGIN
 		RAISE EXCEPTION 'No Degree Indicated contact Registrars Office';
 	ELSIF (getcoremajor(mydegreeid) IS NULL) THEN
 		RAISE EXCEPTION 'No Major Indicated contact Registrars Office';
-	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
-		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
+---	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
+---		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
 	ELSIF (myrec.qstudentid IS NULL) THEN
 		INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, currbalance, charges, financenarrative, paymenttype, org_id)
 		VALUES ($1, mydegreeid, mystudylevel, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);
@@ -939,15 +939,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION getdbgradeid(integer) RETURNS varchar(2) AS $$
-	SELECT CASE WHEN max(gradeid) is null THEN 'NG' ELSE max(gradeid) END
-	FROM grades 
-	WHERE (minrange <= $1) AND (maxrange >= $1);
+CREATE OR REPLACE FUNCTION getdbgradeid(integer, integer) RETURNS varchar(2) AS $$
+	SELECT CASE WHEN max(aa.gradeid) is null THEN 'NG' ELSE max(aa.gradeid) END
+	FROM ((SELECT gradeid, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeid, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION updqcoursegrade(varchar(12), varchar(12), varchar(12)) RETURNS varchar(240) AS $$
 BEGIN
-	UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer)
+	UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, qgrades.org_id)
 	WHERE (qgrades.qcourseid = CAST($1 as int));
 	
 	UPDATE qcourses SET facultysubmit = true, fsdate = now()
@@ -988,8 +993,11 @@ BEGIN
 	WHERE (qresidenceid = myres);
 	
 	UPDATE qstudents SET qresidenceid = null, financeclosed = false
-	WHERE (finaceapproval = false) AND (age(residence_time) > '1 day'::interval) AND (offcampus = false)
-		AND (qresidenceid is not null) AND (quarterid = myrec.quarterid);
+	FROM vwqstudentbalances 
+	WHERE (qstudents.finaceapproval = false) AND (age(qstudents.residence_time) > '1 day'::interval) AND (qstudents.offcampus = false)
+		AND (qstudents.qresidenceid is not null) AND (qstudents.quarterid = myrec.quarterid)
+		AND (qstudents.qstudentid = vwqstudentbalances.qstudentid) AND (vwqstudentbalances.finalbalance < 10000)
+		AND (vwqstudentbalances.finaceapproval = false) AND (vwqstudentbalances.quarterid = myrec.quarterid);
 	
 	SELECT count(qstudentid) INTO resCount
 	FROM qstudents
@@ -1123,10 +1131,26 @@ CREATE OR REPLACE FUNCTION addacademicyear(varchar(12), int) RETURNS varchar(12)
 	SELECT cast(substring($1 from 1 for 4) as int) + $2 || '/' || cast(substring($1 from 1 for 4) as int) + $2 + 1 || '.3';
 $$ LANGUAGE SQL;
 
-CREATE OR REPLACE FUNCTION getgradeid(real) RETURNS varchar(2) AS $$
-	SELECT max(gradeid)
-	FROM grades 
-	WHERE (minrange <= $1) AND (maxrange >= $1);
+CREATE OR REPLACE FUNCTION getgradeid(real, int) RETURNS varchar(2) AS $$
+	SELECT max(aa.gradeid)
+	FROM ((SELECT gradeid, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeid, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_grade_weight(real, int) RETURNS real AS $$
+	SELECT max(aa.gradeweight)::real
+	FROM ((SELECT gradeweight, minrange, maxrange, org_id
+		FROM grades)
+		UNION
+		(SELECT gradeweight, minrange, maxrange, 2
+		FROM grades
+		WHERE org_id = 0)) aa
+	WHERE (aa.minrange <= $1) AND (aa.maxrange >= $1) AND (aa.org_id = $2);
 $$ LANGUAGE SQL;
 
 -- update the course title from course titles
@@ -2275,3 +2299,32 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION aft_import_grades() RETURNS trigger AS $$
+DECLARE
+	v_qgradeid				integer;
+	v_allow_ws				boolean;
+BEGIN
+
+	SELECT allow_ws INTO v_allow_ws
+	FROM courses 
+	WHERE courseid = NEW.course_id;
+	
+	IF(v_allow_ws = true)THEN
+		SELECT qgradeid INTO v_qgradeid
+		FROM studentgradeview
+		WHERE (courseid = NEW.course_id) AND (quarterid = NEW.session_id)
+			AND (studentid = NEW.student_id);
+			
+		UPDATE qgrades SET instructormarks = NEW.score WHERE qgradeid = v_qgradeid;
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_import_grades AFTER INSERT OR UPDATE ON import_grades
+  FOR EACH ROW EXECUTE PROCEDURE aft_import_grades();
+  
+  
+  

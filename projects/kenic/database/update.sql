@@ -423,3 +423,74 @@ FOR EACH ROW EXECUTE PROCEDURE updprice();
 CREATE TRIGGER tg_audit_ledger AFTER INSERT OR UPDATE OR DELETE ON ledger
 FOR EACH ROW EXECUTE PROCEDURE tg_audit_ledger();
 
+------------ New Updates on Receipts
+
+
+ALTER TABLE receipts 
+ADD	mpesa				boolean default false not null,
+ADD	ipay				boolean default false not null;
+
+
+CREATE OR REPLACE FUNCTION insreceipts() RETURNS trigger AS $$
+DECLARE
+	lid int;
+	mystr varchar(32);
+BEGIN
+	lid := nextval('ledger_id_seq');
+
+	mystr := 'Cheque Receipt';
+	IF(NEW.cash = true) THEN
+		mystr := 'Cash Receipt';
+	ELSIF(NEW.vatwithheld = true) THEN
+		mystr := 'VAT Certificate';
+	ELSIF (NEW.mpesa_trx_id is not null) THEN
+		mystr := 'MPESA Transfer';
+	ELSIF (NEW.mpesa = true) THEN
+		mystr := 'MPESA Transfer';
+		NEW.bankcode := 'MPESA';
+		NEW.drawername := 'MPESA';
+	ELSIF (NEW.ipay = true) THEN
+		mystr := 'IPAY';
+		NEW.bankcode := 'IPay';
+		NEW.drawername := 'IPay';
+	END IF;
+
+	INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
+
+	INSERT INTO ledger (id, client_roid, description, currency, amount, total, tax_content, tax_inclusive, trans_type, tld, processor_account_history_id, documentnumber)
+	VALUES (lid, NEW.roid, mystr, 'KES', ((-1) * NEW.amount), ((-1) * NEW.amount), 0, true, 'Payment', 'ke', '2', NEW.receiptid);
+
+	NEW.ledgerid := lid;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION ins_mpesa_trxs() RETURNS trigger AS $$
+DECLARE
+	clientid varchar(16);
+	trxcodes bigint;
+BEGIN
+	clientid :=  null;
+	SELECT clid INTO clientid
+	FROM client WHERE clid = trim(upper(NEW.mpesa_acc));
+
+	IF((clientid is not null) AND (NEW.mpesa_amt is not null)) THEN
+		SELECT count(receiptid) INTO trxcodes
+		FROM receipts WHERE (bankcode = 'MPESA') AND (chequenumber = NEW.mpesa_code);
+
+		IF(trxcodes = 0) THEN
+			INSERT INTO receipts (roid, mpesa_trx_id, amount, bankcode, chequedate, chequenumber, drawername, inwords, details, mpesa)
+			VALUES (clientid, NEW.mpesa_trx_id, NEW.mpesa_amt, 'MPESA', NEW.mpesa_trx_date, NEW.mpesa_code, 'MPESA', NEW.in_words, NEW.mpesa_text, true);
+		END IF;
+	ELSE
+		UPDATE mpesa_trxs SET account_error = true WHERE (mpesa_trx_id = NEW.mpesa_trx_id);
+	END IF;
+
+
+	RETURN null;
+END;
+$$ LANGUAGE plpgsql;
+
+	
+	
