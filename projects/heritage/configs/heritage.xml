@@ -17,6 +17,8 @@
 		</MENU>
 		<MENU role="manager,admin,finance,director" name="Reports">
 			<MENU role="admin,director" name="Sales Report">40</MENU>
+			<MENU role="admin" name="Transaction invoice">206</MENU>
+			<MENU name="Travel schedule">211</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
@@ -717,5 +719,23 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
 		</GRID>
+	</DESK>
+	<DESK w="700" h="550" name="Transaction Invoice" key="206">
+		<FILTER role="admin" split="150" w="700" h="550" name="Transaction Invoice" type="vert" key="order_date">
+			<FILTERFORM name="Transaction Invoice ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_trans_invoice.jasper" name="Transaction Invoice"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" h="550" name="Travel Schedule" key="211">
+		<FILTER role="admin" split="150" w="700" h="550" name="Travel Schedule" type="vert" key="order_date">
+			<FILTERFORM name="Travel Schedule ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travel_schedule.jasper" name="Travel Schedule"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

@@ -204,11 +204,12 @@ BEGIN
 			FROM entitys WHERE (entity_id = v_entity_id);
 		END IF;
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
-		or_details :='Order '||v_batch_no||'-'||v_order_no||' is ready for collection';
+		or_details :='Order #'||v_batch_no||'-'||v_order_no||' is ready for collection. Login to Faidaplus, go to orders click on collection document, print & complete details & present on order collection.';
+		details :=' #'||v_batch_no||'-'||v_order_no;
 		INSERT INTO sms (folder_id, entity_id, org_id, sms_number, message)
 	    VALUES (0,v_entity_id, v_org_id, v_sms_number, or_details);
-		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-		VALUES ($1::integer,4 ,'vw_orders', 3, 0,or_details);
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative,mail_body)
+		VALUES ($1::integer,4 ,'vw_orders', 3, 0,or_details,details);
 	END IF;
 
 	IF ($3::integer = 2) THEN
@@ -608,7 +609,7 @@ $$
   	v_balance			real;
   BEGIN
   	v_balance = 0::real;
-  	
+
 	SELECT COALESCE(sum(dr+bonus - cr), 0) INTO v_balance
 	FROM vw_pcc_statement
 	WHERE org_id = $1 AND order_date < $2::date;
