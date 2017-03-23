@@ -1198,19 +1198,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;	
 
-CREATE VIEW banksuspenceview AS
-	SELECT banksuspenceid, TransactionDate, ValueDate, TransactionAmount, DRCRFlag, CustomerReference, TransactionDetail, 
-		TransactionType, Picked, Duplicate, Narrative, Approve, getbankstudentid(TransactionDetail) as studentid
-	FROM banksuspence
-	WHERE (Picked = false);
-
-CREATE VIEW studentbankview AS
-	SELECT students.studentid, students.studentname, students.accountnumber, studentbank.studentbankid, studentbank.entrydate,
-		studentbank.CustomerReference, studentbank.TransactionDate, studentbank.ValueDate, studentbank.TransactionAmount,
-		studentbank.DRCRFlag, studentbank.TransactionDetail, studentbank.TransactionType, studentbank.Suspence, 
-		studentbank.Picked, studentbank.Pickeddate
-	FROM students INNER JOIN studentbank ON students.studentid = studentbank.studentid;
-
 CREATE VIEW gradecountview AS
 	SELECT qstudents.studentdegreeid,  qcourses.courseid, count(qcourses.qcourseid) as coursecount
 	FROM (qgrades INNER JOIN (qcourses INNER JOIN courses ON qcourses.courseid = courses.courseid) ON qgrades.qcourseid = qcourses.qcourseid)

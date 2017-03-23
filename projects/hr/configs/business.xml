@@ -1009,7 +1009,7 @@
 			<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
 			<JASPER name="Invoice" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
-		<GRID name="Ledger Summary" keyfield="ledger_period" orderby="ledger_year desc, ledger_period" table="vws_tx_ledger">
+		<GRID name="Ledger" keyfield="ledger_period" orderby="ledger_year desc, ledger_period" table="vws_tx_ledger">
 			<TEXTFIELD w="75" title="Ledger ID">ledger_period</TEXTFIELD>
 			<TEXTFIELD w="75" title="Year">ledger_year</TEXTFIELD>
 			<TEXTFIELD w="75" title="Month">ledger_month</TEXTFIELD>
@@ -1163,6 +1163,7 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<JASPER name="Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Chat of Accounts" key="5" h="500">
 		<GRID name="Account Class" keyfield="account_class_id" table="account_class">

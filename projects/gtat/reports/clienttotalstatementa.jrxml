@@ -99,9 +99,6 @@ GROUP BY clientid, clientname]]>
 		</group>
 	</subDataset>
 	<parameter name="filterid" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="periodid" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="reportpath" class="java.lang.String" isForPrompting="false">
@@ -113,22 +110,30 @@ GROUP BY clientid, clientname]]>
 	<parameter name="clientid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="date_from" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="date_to" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT aa.clientid, aa.clientname, aa.countryname, aa.address, aa.postalcode, aa.town,
-	bb.item_name, bb.invoicedate, bb.invoicenumber, bb.amount, bb.invoiced, bb.credit, bb.salesperiod,
-	'$P!{filterid}'::date as request_date
+ bb.item_name, bb.invoicedate, bb.invoicenumber, bb.amount, bb.invoiced,
+ bb.credit, bb.salesperiod,
+ '$P!{date_from}'::date as from_date,
+ '$P!{date_to}'::date as to_date
 
 FROM vwclients aa
 INNER JOIN
 ((SELECT a.item_name, a.clientid, a.salesperiod, a.invoicedate, a.invoicenumber,
 a.amount, a.invoiced, (a.payments - a.credit_amount) as credit
 FROM vw_statement a
-WHERE a.invoicedate >= '$P!{filterid}')
+WHERE (a.invoicedate >= '$P!{date_from}') AND (a.invoicedate <= '$P!{date_to}'))
 UNION
-(SELECT 'Opening Balance', b.clientid, '-', '$P!{filterid}'::date, '-',
+(SELECT 'Opening Balance', b.clientid, '-', '$P!{date_from}'::date, '-',
 sum(b.amount), sum(b.invoiced), sum(b.payments - b.credit_amount)
 FROM vw_statement b
-WHERE b.invoicedate < '$P!{filterid}'
+WHERE b.invoicedate < '$P!{date_from}'
 GROUP BY b.clientid)) bb
 
  ON aa.clientid = bb.clientid
@@ -149,7 +154,8 @@ ORDER BY bb.invoicedate]]>
 	<field name="invoiced" class="java.lang.Float"/>
 	<field name="credit" class="java.lang.Float"/>
 	<field name="salesperiod" class="java.lang.String"/>
-	<field name="request_date" class="java.sql.Date"/>
+	<field name="from_date" class="java.sql.Date"/>
+	<field name="to_date" class="java.sql.Date"/>
 	<variable name="sum_total" class="java.lang.Float" calculation="Sum">
 		<variableExpression><![CDATA[$F{invoiced}]]></variableExpression>
 	</variable>
@@ -176,14 +182,14 @@ ORDER BY bb.invoicedate]]>
 				<imageExpression><![CDATA[$P{reportpath} + "gklogo.jpg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="166" y="115" width="46" height="20" uuid="2274799c-aef6-4da0-974e-be6cb482ebfc"/>
+				<reportElement x="166" y="117" width="46" height="20" uuid="2274799c-aef6-4da0-974e-be6cb482ebfc"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14"/>
 				</textElement>
 				<text><![CDATA[As at]]></text>
 			</staticText>
 			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="false">
-				<reportElement key="textField-1" x="213" y="116" width="164" height="19" uuid="f21fe740-8d94-4747-8f50-ce305262d519"/>
+				<reportElement key="textField-1" x="213" y="118" width="164" height="19" uuid="f21fe740-8d94-4747-8f50-ce305262d519"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -193,7 +199,7 @@ ORDER BY bb.invoicedate]]>
 				<textElement>
 					<font fontName="Times New Roman" size="14"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{request_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{to_date}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="3" y="163" width="265" height="18" uuid="faa872e2-dc86-4c29-a940-d935b61af54c"/>
@@ -231,11 +237,31 @@ ORDER BY bb.invoicedate]]>
 				<textFieldExpression><![CDATA[$F{countryname}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="166" y="135" width="211" height="20" uuid="1c326889-a426-4072-8bda-eae3127ce7be"/>
+				<reportElement x="166" y="137" width="211" height="20" uuid="1c326889-a426-4072-8bda-eae3127ce7be"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14"/>
 				</textElement>
 				<text><![CDATA[Currency : USD]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="false">
+				<reportElement key="textField-1" x="213" y="101" width="164" height="19" uuid="1b559219-9fde-4a9b-ae61-5055210c0617"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{from_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="166" y="100" width="46" height="20" uuid="a41f7e83-2c58-4bb3-ba6a-c9f18a64b65c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[From]]></text>
 			</staticText>
 		</band>
 	</title>

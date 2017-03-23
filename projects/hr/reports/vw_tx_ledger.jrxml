@@ -35,7 +35,8 @@
 
 FROM vw_tx_ledger
 
-$P!{orgwhere}
+WHERE (vw_tx_ledger.ledger_year = '$P!{filterid}')
+$P!{organd}
 
 ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 	vw_tx_ledger.completed desc, vw_tx_ledger.payment_date]]>
@@ -164,6 +165,13 @@ ORDER BY vw_tx_ledger.ledger_year desc, vw_tx_ledger.ledger_period,
 					</textElement>
 					<textFieldExpression><![CDATA[$V{base_amount_1}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement style="Column header" x="479" y="0" width="51" height="15" forecolor="#000000" uuid="9f7c23d6-e60a-4155-8df3-062cccb73f37"/>
+					<textElement>
+						<font fontName="Times New Roman" size="10"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
 			</band>
 		</groupFooter>
 	</group>
