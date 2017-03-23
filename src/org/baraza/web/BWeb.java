@@ -67,7 +67,7 @@ public class BWeb {
 	boolean selectAll = false;
 	boolean isLicense = true;
 	boolean isExpired = false;
-	String[] deskTypes = {"CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
+	String[] deskTypes = {"ACCORDION", "CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
 	String userID = null;
@@ -855,6 +855,22 @@ public class BWeb {
 			if(selectAll) webbody.setSelectAll();
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
 			webbody.close();
+		} else if(view.getName().equals("ACCORDION")) {
+			body += "\t<div class='panel-group accordion' id='accordion1'>\n";
+			Integer ac = new Integer("1");
+			for(BElement vw : view.getElements()) {
+				body += "\t\t<div class='panel panel-default'>\n"
+				+ "\t\t\t<div class='panel-heading'>\n"
+				+ "\t\t\t\t<h4 class='panel-title'>\n"
+				+ "\t\t\t\t\t<a class='accordion-toggle' data-toggle='collapse' data-parent='#accordion1' "
+				+ "href='#collapse_" + ac.toString() + "'>" + vw.getAttribute("name") + "</a>\n"
+				+ "\t\t\t\t</h4>\n"
+				+ "\t\t\t</div>\n"
+				+ "\t\t<div id='collapse_" + ac.toString() + "' class='panel-collapse in'>\n"
+				+ "\t<div class='panel-body'>\n"
+				+ "\t</div>\n";
+			}
+			body += "\t</div>\n";
 		} else if(view.getName().equals("CROSSTAB")) {
 			BCrossTab crossTab = new BCrossTab(db, view, wheresql, sortby);
 			body += crossTab.getGrid(viewKeys, viewData, true, viewKey, false);
