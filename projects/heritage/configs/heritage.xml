@@ -35,11 +35,14 @@
 			<TILE noorg="true" noorg.query="true" role="admin,director" name="Total Amount" where="approved is true" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
-			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Individual Insurance Sales" orderby="(org_name)" where="(approved = 'true')" groupby="org_name" table="vw_passengers">
+			<TILE noorg="true" noorg.query="true" role="admin,director" name="Total Sales" where="approved is true" table="vw_allpassengers">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total sales">Total_sales</TEXTFIELD>
+			</TILE>
+			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Individual Insurance Sales" orderby="(org_name)" where="(approved is true)" groupby="org_name" table="vw_passengers">
 				<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric, 2)" title="Total Amount">totalamount_covered</TEXTFIELD>
 			</TILELIST>
-			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Corporate Insurance Sales" orderby="(org_name)" where="(approved = 'true')" groupby="org_name" table="vw_corporate_passengers">
+			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Corporate Insurance Sales" orderby="(org_name)" where="(approved is true)" groupby="org_name" table="vw_corporate_passengers">
 				<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric, 2)" title="Total Amount">totalamount_covered</TEXTFIELD>
 			</TILELIST>
@@ -600,6 +603,13 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Sales Report" key="40">
+		<FILTER role="master" split="150" w="700" h="550" name="All Insurance Sales Report" type="vert" key="order_date">
+			<FILTERFORM name="All Insurance  Sales Report ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_allpassengers.jasper" name="All Insurance Sales Report"></JASPER>
+		</FILTER>
 		<FILTER role="admin,director" split="150" w="700" h="550" name="Individual Sales Report" type="vert" key="order_date">
 			<FILTERFORM name="Individual Sales Report ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_passengers" language="groovy" pageWidth="1072" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1042" leftMargin="10" rightMargin="20" topMargin="10" bottomMargin="20" uuid="79072d11-7a3f-4561-8dd3-ea9838f9861c">
-	<property name="ireport.zoom" value="3.0"/>
-	<property name="ireport.x" value="2166"/>
-	<property name="ireport.y" value="692"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -41,7 +41,7 @@
 		<![CDATA[SELECT vw_passengers.org_name, vw_passengers.rate_category_name, vw_passengers.rate_plan_name, vw_passengers.days_from, vw_passengers.days_to, vw_passengers.passenger_name, vw_passengers.passenger_mobile, vw_passengers.passenger_email, vw_passengers.passenger_id_no, vw_passengers.totalamount_covered, vw_passengers.entity_name, vw_passengers.sys_country_name,
 policy_number,passenger_dob,countries,passport_num,training_levy,stamp_duty,
 policy_holder_fund,pin_no,cover_amount,destown
-FROM vw_passengers WHERE vw_passengers.org_id = '$P!{org_id}'
+FROM vw_passengers WHERE vw_passengers.org_id = '$P!{org_id}' AND approved is true
 AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date
 order by passenger_id DESC;]]>
 	</queryString>
@@ -88,7 +88,7 @@ order by passenger_id DESC;]]>
 	<title>
 		<band height="117" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="223" y="0" width="817" height="116" uuid="30509c1b-4f4a-4f93-b161-e019d1b3b679"/>
+				<reportElement style="Title" x="223" y="0" width="819" height="116" uuid="30509c1b-4f4a-4f93-b161-e019d1b3b679"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="36" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -253,7 +253,7 @@ order by passenger_id DESC;]]>
 				<text><![CDATA[Net Premium]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="978" y="0" width="62" height="29" uuid="231b2d1f-546c-4dab-8744-051938b8aa45"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="978" y="0" width="64" height="29" uuid="231b2d1f-546c-4dab-8744-051938b8aa45"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 				</textElement>
@@ -264,7 +264,7 @@ order by passenger_id DESC;]]>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<frame>
-				<reportElement style="Row" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="1041" height="15" uuid="c3ffb300-b37a-4003-9d91-0d6a72299a57"/>
+				<reportElement style="Row" positionType="Float" stretchType="RelativeToTallestObject" mode="Opaque" x="0" y="0" width="1042" height="15" uuid="c3ffb300-b37a-4003-9d91-0d6a72299a57"/>
 				<box leftPadding="0" rightPadding="0"/>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement style="Detail" positionType="Float" stretchType="RelativeToTallestObject" x="1" y="0" width="88" height="15" isPrintWhenDetailOverflows="true" uuid="f9f64a3f-1163-44ba-915c-aff330a0650a"/>
@@ -411,7 +411,7 @@ order by passenger_id DESC;]]>
 					<textFieldExpression><![CDATA[$F{cover_amount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="978" y="0" width="62" height="15" isPrintWhenDetailOverflows="true" uuid="2f5709cd-ea8e-4056-a574-6a13559e4692"/>
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="978" y="0" width="64" height="15" isPrintWhenDetailOverflows="true" uuid="2f5709cd-ea8e-4056-a574-6a13559e4692"/>
 					<textElement>
 						<font fontName="Times New Roman" size="11"/>
 					</textElement>
@@ -433,9 +433,9 @@ order by passenger_id DESC;]]>
 	<pageFooter>
 		<band height="25" splitType="Stretch">
 			<frame>
-				<reportElement mode="Opaque" x="0" y="1" width="1041" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="89f14963-09bb-442b-9453-a4dff16cd1dc"/>
+				<reportElement mode="Opaque" x="0" y="1" width="1042" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="89f14963-09bb-442b-9453-a4dff16cd1dc"/>
 				<textField evaluationTime="Report">
-					<reportElement style="Column header" x="979" y="1" width="61" height="20" forecolor="#736343" uuid="d6fc78dd-8974-4dae-b4a5-bae192aba689"/>
+					<reportElement style="Column header" x="979" y="1" width="63" height="20" forecolor="#736343" uuid="d6fc78dd-8974-4dae-b4a5-bae192aba689"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>

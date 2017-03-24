@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_passengers" language="groovy" pageWidth="1048" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1018" leftMargin="20" rightMargin="10" topMargin="20" bottomMargin="20" uuid="79072d11-7a3f-4561-8dd3-ea9838f9861c">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="10"/>
+	<property name="ireport.y" value="9"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -39,7 +39,8 @@
 policy_number,destown,passenger_dob,countries,passport_num,training_levy,stamp_duty,
 policy_holder_fund,pin_no,cover_amount
 FROM vw_corporate_passengers
-WHERE approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date order by passenger_id DESC;]]>
+WHERE approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date
+ AND approved is true order by passenger_id DESC;]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="corporate_rate_category_name" class="java.lang.String"/>

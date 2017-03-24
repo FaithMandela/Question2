@@ -41,7 +41,7 @@
 		<![CDATA[SELECT vw_corporate_passengers.org_name, vw_corporate_passengers.corporate_rate_category_name, vw_corporate_passengers.rate_plan_name, vw_corporate_passengers.days_from, vw_corporate_passengers.days_to, vw_corporate_passengers.passenger_name, vw_corporate_passengers.passenger_mobile, vw_corporate_passengers.passenger_email, vw_corporate_passengers.passenger_id_no, vw_corporate_passengers.totalamount_covered, vw_corporate_passengers.entity_name, vw_corporate_passengers.sys_country_name,
 policy_number,passenger_dob,countries,passport_num,training_levy,stamp_duty,
 policy_holder_fund,pin_no,cover_amount,destown
-FROM vw_corporate_passengers WHERE vw_corporate_passengers.org_id = '$P!{org_id}'
+FROM vw_corporate_passengers WHERE vw_corporate_passengers.org_id = '$P!{org_id}' AND approved is true
 AND approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date
  order by passenger_id DESC;]]>
 	</queryString>

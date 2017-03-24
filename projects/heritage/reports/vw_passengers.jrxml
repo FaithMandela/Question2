@@ -40,6 +40,7 @@ policy_number,destown,passenger_dob,countries,passport_num,training_levy,stamp_d
 policy_holder_fund,pin_no,cover_amount
 FROM vw_passengers
 WHERE approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date
+ AND approved is true
 order by passenger_id DESC;]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
