@@ -161,6 +161,10 @@
 	<link href="./assets/global/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="./assets/jqgrid/css/ui.jqgrid.css" rel="stylesheet" type="text/css" media="screen" />
 
+	<!-- jsgrid css -->
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="./assets/jsgrid/jsgrid-theme.min.css" />
+
     <link href="./assets/admin/layout4/css/custom.css" rel="stylesheet" type="text/css"/>
 
 </head>
@@ -480,10 +484,13 @@
 <script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
 
+<!-- jsgrid for sub form editing-->
+<script type="text/javascript" src="./assets/jsgrid/jsgrid.min.js"></script>
+
 <!-- calendar-->
 <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
-<script src="./assets/global/plugins/moment.min.js"></script>
-<script src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
+<script type="text/javascript" src="./assets/global/plugins/moment.min.js"></script>
+<script type="text/javascript" src="./assets/global/plugins/fullcalendar/fullcalendar.min.js"></script>
 
 <script>
     jQuery(document).ready(function() {
@@ -532,12 +539,51 @@
             }
         });
 
-		$('.select2me').select2({
-            placeholder: "Select an option",
-            allowClear: true
-        });
+
 
     });
+</script>
+
+<script>
+
+    var myDateField = function(config) {
+        jsGrid.Field.call(this, config);
+    };
+
+    myDateField.prototype = new jsGrid.Field({
+     
+        css: "date-field",            	// redefine general property 'css'
+        align: "left",              	// redefine general property 'align'
+     
+        sorter: function(date1, date2) {
+            return new Date(date1) - new Date(date2);
+        },
+     
+        itemTemplate: function(value) {
+            return new Date(value).toDateString();
+        },
+     
+        insertTemplate: function(value) {
+            return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
+        },
+     
+        editTemplate: function(value) {
+            return this._editPicker = $("<input>").datepicker().datepicker("setDate", new Date(value));
+        },
+     
+        insertValue: function() {
+            return this._insertPicker.datepicker("getDate").toISOString();
+        },
+     
+        editValue: function() {
+            return this._editPicker.datepicker("getDate").toISOString();
+        }
+    });
+     
+    jsGrid.fields.date = myDateField;
+
+	<%= web.getAccordionJs() %>
+
 </script>
 
 <script>

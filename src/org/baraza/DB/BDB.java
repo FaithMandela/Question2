@@ -666,9 +666,22 @@ public class BDB {
 		return es;
 	}
     
-    
-    
-    
+	public String getSqlOrgWhere(String noorg) {
+		String whereSql = null;
+		String userOrg = getUserOrg();
+		if((noorg == null) && (orgID != null) && (userOrg != null)) {
+			whereSql = "(" + orgID + " = " + userOrg + ")";
+		}
+		return whereSql;
+	}
+	
+	public String getSqlUserWhere(String userAttr) {
+		String whereSql = null;
+		if(userAttr != null) {
+			whereSql = "(" +userAttr + " = '" + getUserID() + "')";
+		}
+		return whereSql;
+	}
 
 	public Connection getDB() { return db; }
 	public DatabaseMetaData getDBMetaData() { return dbmd; }

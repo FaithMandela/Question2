@@ -76,6 +76,7 @@ public class BWeb {
 	String mainPage = "index.jsp";
 	String comboField = null;
 	String saveMsg = "";
+	String accordionJs = "";
 	String pictureURL = "";
 	String pictureField = "";
 
@@ -856,21 +857,9 @@ public class BWeb {
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
 			webbody.close();
 		} else if(view.getName().equals("ACCORDION")) {
-			body += "\t<div class='panel-group accordion' id='accordion1'>\n";
-			Integer ac = new Integer("1");
-			for(BElement vw : view.getElements()) {
-				body += "\t\t<div class='panel panel-default'>\n"
-				+ "\t\t\t<div class='panel-heading'>\n"
-				+ "\t\t\t\t<h4 class='panel-title'>\n"
-				+ "\t\t\t\t\t<a class='accordion-toggle' data-toggle='collapse' data-parent='#accordion1' "
-				+ "href='#collapse_" + ac.toString() + "'>" + vw.getAttribute("name") + "</a>\n"
-				+ "\t\t\t\t</h4>\n"
-				+ "\t\t\t</div>\n"
-				+ "\t\t<div id='collapse_" + ac.toString() + "' class='panel-collapse in'>\n"
-				+ "\t<div class='panel-body'>\n"
-				+ "\t</div>\n";
-			}
-			body += "\t</div>\n";
+			BAccordion accordion = new BAccordion(db, view);
+			body += accordion.getAccordion(request, wheresql, formLinkData);
+			accordionJs = accordion.getAccordionJs();
 		} else if(view.getName().equals("CROSSTAB")) {
 			BCrossTab crossTab = new BCrossTab(db, view, wheresql, sortby);
 			body += crossTab.getGrid(viewKeys, viewData, true, viewKey, false);
@@ -2187,6 +2176,7 @@ log.severe("BASE : " + mysql);
 		return isLicense;
 	}
 	
+	public String getAccordionJs() { return accordionJs; }
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }
 	public String getPictureURL() { return pictureURL; }
