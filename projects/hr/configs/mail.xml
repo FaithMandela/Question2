@@ -82,6 +82,7 @@
 			AND (sys_emails.use_type = 8)">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">vw_entity_employees.primary_email</ADDRESS>
+		<BODYFIELD reference="{{name}}" basetable="vw_entity_employees">entity_name</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 	

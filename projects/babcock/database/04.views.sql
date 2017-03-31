@@ -1503,7 +1503,7 @@ CREATE VIEW ws_hall_service AS
 	WHERE (active = true);
 	
 CREATE VIEW ws_qstudents AS
-	SELECT studentid, studentname, mealtype, studylevel, majorid, majorname, 
+	SELECT studentid, studentname, sex, mealtype, studylevel, majorid, majorname, 
 		quarterid, schoolid, schoolname, departmentid, departmentname, residenceid, residencename,
 		qstudentid, finaceapproval, approved
 	FROM vwqstudentbalances;

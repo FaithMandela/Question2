@@ -395,8 +395,8 @@
 	</DESK>
 	<DESK w="700" name="Applicant Details" key="10" h="500">
 		<ACCORDION new="false" name="Applicant" keyfield="entity_id" table="vw_applicants" user="entity_id">
-			<FORM new="false" tw="570" name="Details" keyfield="entity_id" table="applicants" user="entity_id" th="200">
-				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
+			<FORM new="false" cols="2" tw="570" name="Details" keyfield="entity_id" table="applicants" user="entity_id" th="100" collapse="in">
+				<COMBOLIST w="50" y="10" h="20" x="10" span="true">person_title
 					<DATA>Miss</DATA>
 					<DATA>Mr</DATA>
 					<DATA>Mrs</DATA>
@@ -404,13 +404,13 @@
 					<DATA>Prof</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="100" title="Surname" required="true" y="10" h="20" x="190">surname</TEXTFIELD>
-				<TEXTFIELD w="100" title="First Name" required="true" y="10" h="20" x="490">first_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="First Name" required="true" y="10" h="20" x="490" span="true">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="30" h="20" x="10">middle_name</TEXTFIELD>
-				<TEXTFIELD w="150" title="Phone" required="true" y="30" h="20" x="290">applicant_phone</TEXTFIELD>
+				<TEXTFIELD w="150" title="Phone" required="true" y="30" h="20" x="290" span="true">applicant_phone</TEXTFIELD>
 				<TEXTFIELD w="430" title="Email" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
-				<TEXTDATE w="150" title="Date Of Birth (DD/MM/YYYY)" required="true" y="70" h="20" x="10">date_of_birth</TEXTDATE>
+				<TEXTDATE w="150" title="Date Of Birth (DD/MM/YYYY)" required="true" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
-				<COMBOLIST w="150" title="Gender" y="90" h="20" x="10">gender
+				<COMBOLIST w="150" title="Gender" y="90" h="20" x="10" span="true">gender
 					<DATA key="M">Male</DATA>
 					<DATA key="F">Female</DATA>
 				</COMBOLIST>
@@ -418,104 +418,51 @@
 					<DATA key="M">Married</DATA>
 					<DATA key="S">Single</DATA>
 				</COMBOLIST>
-				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10">identity_card</TEXTFIELD>
+				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10" span="true">identity_card</TEXTFIELD>
 				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="170" h="20" x="10">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Current Salary" required="true" y="170" h="20" x="10" span="true">previous_salary</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
-				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10">interests</TEXTAREA>
-				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>
-				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10">field_of_study</TEXTAREA>
-				<TEXTAREA w="550" tab="Details" y="2" h="120" x="10">details</TEXTAREA>
+				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10" rows="5">interests</TEXTAREA>
+				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10" rows="5">objective</TEXTAREA>
+				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10" rows="5">field_of_study</TEXTAREA>
+				<TEXTAREA w="550" tab="Details" y="2" h="120" x="10" rows="5">details</TEXTAREA>
 			</FORM>
 			<GRID name="Address" keyfield="address_id" table="vw_address" where="table_name = 'applicant'" user="table_id">
-				<TEXTFIELD w="100" title="Country Name">sys_country_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Country">sys_country_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Postal Code">postal_code</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
 				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<CHECKBOX w="140" title="Default">is_default</CHECKBOX>
-				<FORM name="Address" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="applicant">table_name</DEFAULT>
-					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="10" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Post Office Box" y="30" h="20" x="10">post_office_box</TEXTFIELD>
-					<TEXTFIELD w="150" title="Postal Code" y="30" h="20" x="290">postal_code</TEXTFIELD>
-					<TEXTFIELD w="150" title="Town" required="true" y="50" h="20" x="10">town</TEXTFIELD>
-					<TEXTFIELD w="430" title="Premises" y="70" h="20" x="10">premises</TEXTFIELD>
-					<TEXTFIELD w="430" title="Street" y="90" h="20" x="10">street</TEXTFIELD>
-					<TEXTFIELD w="430" title="Phone Number" required="true" y="110" h="20" x="10">phone_number</TEXTFIELD>
-					<TEXTFIELD w="150" title="Extension" y="130" h="20" x="10">extension</TEXTFIELD>
-					<TEXTFIELD w="430" title="Mobile" y="150" h="20" x="10">mobile</TEXTFIELD>
-					<TEXTFIELD w="430" title="Fax" y="170" h="20" x="10">fax</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email" required="true" y="190" h="20" x="10">email</TEXTFIELD>
-					<CHECKBOX w="30" title="Default" y="210" h="20" x="10">is_default</CHECKBOX>
-					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
-				</FORM>
+				<CHECKBOX w="50" title="Default">is_default</CHECKBOX>
 			</GRID>
 			<GRID name="Education" keyfield="education_id" orderby="date_from desc" table="vw_education" user="entity_id">
-				<TEXTFIELD w="75" title="Education Class Name">education_class_name</TEXTFIELD>
-				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
-				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
-				<TEXTFIELD w="75" title="Name of Institution">name_of_school</TEXTFIELD>
-				<TEXTFIELD w="75" title="Certification">examination_taken</TEXTFIELD>
-				<TEXTFIELD w="75" title="Grades Obtained">grades_obtained</TEXTFIELD>
-				<FORM name="Education" keyfield="education_id" linkfield="entity_id" table="education">
-					<COMBOBOX w="430" title="Education Class" lptable="education_class" orderby="education_class_id" y="10" h="20" x="10" lpfield="education_class_name">education_class_id</COMBOBOX>
-					<TEXTDATE w="150" title="Date From" required="true" y="30" h="20" x="10">date_from</TEXTDATE>
-					<TEXTDATE w="150" title="Date To" y="30" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Name of Institution" required="true" y="50" h="20" x="10">name_of_school</TEXTFIELD>
-					<TEXTFIELD w="430" title="Certification or Degree" placeholder="Certification or Degree: e.g. Msc Computer Science" y="70" h="20" x="10">examination_taken</TEXTFIELD>
-					<TEXTFIELD w="150" title="Grades Obtained" placeholder="Grades Obtained: e.g. Upper second-class honours" y="90" h="20" x="10">grades_obtained</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
-				</FORM>
+				<COMBOBOX w="120" title="Education Level" lptable="education_class" orderby="education_class_id" lpfield="education_class_name">education_class_id</COMBOBOX>
+				<TEXTDATE w="75" title="Date From" pattern="yyyy-MM-dd">date_from</TEXTDATE>
+				<TEXTDATE w="75" title="Date To" pattern="yyyy-MM-dd">date_to</TEXTDATE>
+				<TEXTFIELD w="125" title="Name of Institution">name_of_school</TEXTFIELD>
+				<TEXTFIELD w="125" title="Certification">examination_taken</TEXTFIELD>
+				<TEXTFIELD w="125" title="Grades Obtained">grades_obtained</TEXTFIELD>
 			</GRID>
 			<GRID name="Employment" keyfield="employment_id" orderby="date_from desc" table="vw_employment" user="entity_id">
 				<TEXTDATE w="75" title="Date From">date_from</TEXTDATE>
 				<TEXTDATE w="75" title="Date To">date_to</TEXTDATE>
 				<TEXTFIELD w="75" title="Employers Name">employers_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Position Held">position_held</TEXTFIELD>
-				<FORM name="Employment" keyfield="employment_id" linkfield="entity_id" table="employment">
-					<TEXTDATE w="150" title="Date From" required="true" y="10" h="20" x="10">date_from</TEXTDATE>
-					<TEXTDATE w="150" title="Date To" y="10" h="20" x="290">date_to</TEXTDATE>
-					<TEXTFIELD w="430" title="Employers Name" required="true" y="30" h="20" x="10">employers_name</TEXTFIELD>
-					<TEXTFIELD w="430" title="Position Held" required="true" y="50" h="20" x="10">position_held</TEXTFIELD>
-					<TEXTAREA w="430" title="Responsibilities" y="70" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<GRID name="Seminars" keyfield="cv_seminar_id" table="vw_cv_seminars" user="entity_id">
 				<TEXTFIELD w="75" title="Seminar Name">cv_seminar_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Seminar Date">cv_seminar_date</TEXTDATE>
-				<FORM name="Cv Seminars" keyfield="cv_seminar_id" linkfield="entity_id" table="cv_seminars">
-					<TEXTFIELD w="430" title="Seminar Name" required="true" y="10" h="20" x="10">cv_seminar_name</TEXTFIELD>
-					<TEXTDATE w="150" title="Seminar Date" required="true" y="30" h="20" x="10">cv_seminar_date</TEXTDATE>
-					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<GRID name="Projects" keyfield="cv_projectid" table="vw_cv_projects" user="entity_id">
 				<TEXTFIELD w="75" title="Project Name">cv_project_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Project Date">cv_project_date</TEXTDATE>
-				<FORM name="Projects" keyfield="cv_projectid" linkfield="entity_id" table="cv_projects">
-					<TEXTFIELD w="430" title="Project Name" required="true" y="10" h="20" x="10">cv_project_name</TEXTFIELD>
-					<TEXTDATE w="150" title="Project Date" required="true" y="30" h="20" x="10">cv_project_date</TEXTDATE>
-					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<GRID name="Skills" keyfield="skill_id" table="vw_skills" user="entity_id">
 				<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
-				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
-					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-					<TEXTFIELD w="150" title="State Skill" y="30" h="20" x="10">state_skill</TEXTFIELD>
-					<COMBOLIST w="150" title="Skill Level" y="50" h="20" x="10">skill_level
-						<DATA key="1">Basic</DATA>
-						<DATA key="2">Intermediate</DATA>
-						<DATA key="3">Advanced</DATA>
-					</COMBOLIST>
-					<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" table="vw_referees" user="table_id">
 				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
@@ -525,31 +472,7 @@
 				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="referees">table_name</DEFAULT>
-					<TEXTFIELD w="430" title="Name" data-max="120" required="true" y="10" h="20" x="10">address_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Company Name" data-max="150" required="true" y="30" h="20" x="10">company_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
-					<TEXTFIELD w="150" title="Post Office Box" y="50" h="20" x="10">post_office_box</TEXTFIELD>
-					<TEXTFIELD w="150" title="Postal Code" y="50" h="20" x="290">postal_code</TEXTFIELD>
-					<TEXTFIELD w="150" title="Town" required="true" y="70" h="20" x="10">town</TEXTFIELD>
-					<TEXTFIELD w="430" title="Premises" y="90" h="20" x="10">premises</TEXTFIELD>
-					<TEXTFIELD w="430" title="Street" y="110" h="20" x="10">street</TEXTFIELD>
-					<COMBOBOX w="430" title="Country" default="KE" lptable="sys_countrys" noorg="true" y="130" h="20" x="10" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-					<TEXTFIELD w="250" title="Phone Number" required="true" y="150" h="20" x="10">phone_number</TEXTFIELD>
-					<TEXTFIELD w="50" title="Extension" y="150" h="20" x="390">extension</TEXTFIELD>
-					<TEXTFIELD w="430" title="Mobile" y="170" h="20" x="10">mobile</TEXTFIELD>
-					<TEXTFIELD w="430" title="Fax" y="190" h="20" x="10">fax</TEXTFIELD>
-					<TEXTFIELD w="430" title="Email" required="true" y="210" h="20" x="10">email</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
-				</FORM>
 			</GRID>
-			<FILES username="repository" repository="/repository/webdav/files/" name="Upload  Documents" keyfield="sys_file_id" table="sys_files" user="table_id" password="baraza">
-				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
-				<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
-				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
-				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
-			</FILES>
 		</ACCORDION>
 		<FORMVIEW new="false" name="Applicant" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
@@ -587,7 +510,7 @@
 				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10">identity_card</TEXTFIELD>
 				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="170" h="20" x="10">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Current Salary" required="true" y="170" h="20" x="10">previous_salary</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10">interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>

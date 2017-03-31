@@ -448,6 +448,7 @@ public class BWebForms {
 		tableList += "];";
 		
 		myhtml += "\n\n" + tableList;
+		rs.close();
 		
 		return myhtml;
 	}
@@ -567,6 +568,7 @@ public class BWebForms {
 		}
 		myhtml.append("$('#sub_table" + fieldId + "').jsGrid(" + tableDef + "\n);\n"); 
 		
+		rs.close();
 		return myhtml.toString();
 	}
 		
@@ -582,11 +584,12 @@ System.out.println("Start saving the form " + jsonData);
 			rs.recEdit();
 			rs.updateRecField("answer", jsonData);
 			rs.recSave();
-			rs.close();
 			resp = "{\"success\": 1, \"message\": \"Form data updated\"}";
 		} else {
 			resp = "{\"success\": 0, \"message\": \"Unable to update form data\"}";
 		}
+		
+		rs.close();
 		
 		return resp;
 	}
@@ -608,12 +611,12 @@ System.out.println("Start saving the form " + entryFormId);
 			
 			resp = submitValidate(rs.getString("form_id"), entryFormId, jsonData);
 			
-			rs.close();
-			
 			resp = "{\"success\": 1, \"message\": \"" + resp + "\"}";
 		} else {
 			resp = "{\"success\": 0, \"message\": \"" + resp + "\"}";
 		}
+		
+		rs.close();
 		
 		return resp;
 	}
@@ -696,6 +699,8 @@ System.out.println("Start saving the form " + entryFormId);
 			}
 			mysql +=   values + ")";
 			dbErr = db.executeQuery(mysql);
+			
+			rs.close();
 
 			System.out.println("\n\nBASE 1020 : " + mysql);
 		}

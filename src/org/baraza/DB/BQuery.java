@@ -1643,6 +1643,7 @@ public class BQuery {
 			if(el.getName().equals("CHECKBOX")) format = "boolean";
 			if(el.getName().equals("TEXTDECIMAL")) format = "double";
 		}
+		
 		try {
 			if(rs.getString(el.getValue()) == null) {
 				response = "";
@@ -1658,15 +1659,18 @@ public class BQuery {
 				if(rs.getBoolean(el.getValue())) response = "*";
 				else response = "&nbsp;";
 			} else if(format.equals("date")) {
-				SimpleDateFormat dateformatter = new SimpleDateFormat("dd-MMM-yyyy");
+				if(pattern == null) pattern = "dd-MMM-yyyy";
+				SimpleDateFormat dateformatter = new SimpleDateFormat(pattern);
 				String mydate = dateformatter.format(rs.getDate(el.getValue()));				
 				response = mydate;
 			} else if(format.equals("time")) {
-				SimpleDateFormat dateformatter = new SimpleDateFormat("HH:mm");
+				if(pattern == null) pattern = "HH:mm";
+				SimpleDateFormat dateformatter = new SimpleDateFormat(pattern);
 				String mydate = dateformatter.format(rs.getTime(el.getValue()));				
 				response = mydate;
 			} else if(format.equals("timestamp")) {
-				SimpleDateFormat dateformatter = new SimpleDateFormat("MMM dd, yyyy hh:mm a");
+				if(pattern == null) pattern = "MMM dd, yyyy hh:mm a";
+				SimpleDateFormat dateformatter = new SimpleDateFormat(pattern);
 				String mydate = dateformatter.format(rs.getTimestamp(el.getValue()));				
 				response = mydate;
 			} else if(format.equals("double")) {

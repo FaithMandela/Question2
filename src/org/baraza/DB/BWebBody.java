@@ -430,11 +430,19 @@ public class BWebBody extends BQuery {
 			if(default_org_fnct.indexOf("(") > 1) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + ", " + userOrg + ")");
 			else defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
 		}
+		
+		if(el.getAttribute("tab") != null) formCols = 0;
 
 		if(formCols > 1) response.append("<div class='col-md-6'>\n");
+		
 		response.append("	<div class='form-group'>\n");
-		response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
-		response.append("			<div class='col-md-9'>\n");
+		
+		if(el.getAttribute("tab") == null) {
+			response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
+		} else if(el.getAttribute("title") != null) {
+			response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
+		}
+		response.append("		<div class='col-md-9'>\n");
 		
 		if(el.getName().equals("HTML")) {
 			response.append(el.getAttribute("html",""));
