@@ -28,10 +28,11 @@
 			<MENU role="manager,admin" name="Exchange Rates">201</MENU>
 			<MENU role="admin" name="Travelport Apps" superuser="true">76</MENU>
 		</MENU>
-		<MENU role="admin,manager" name="Reports">
+		<MENU role="admin,manager,agency,broker,user" name="Reports">
 			<MENU role="admin,manager" name="Rates">90</MENU>
 			<MENU name="Sales Report">
-				<MENU role="admin,manager" name="Sales Report">91</MENU>
+				<MENU role="user,agency,manager,broker" name="My Sales">203</MENU>
+				<MENU role="admin,manager,agency" name="Sales Report">91</MENU>
 				<MENU role="master" name="All Sales">102</MENU>
 			</MENU>
 		</MENU>
@@ -41,10 +42,13 @@
 			<TILE noorg.query="false" role="user,individual" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" user="entity_id" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="user,agency,broker" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
+			<TILE noorg.query="true" role="agency,broker" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="user,agency" name="Total Amount" where="(approved is true AND is_valid is true)" table="vw_allpassengers">
+			<TILE noorg.query="true" role="user" name="Total Amount" where="(approved is true AND is_valid is true)" user="entity_id" table="vw_allpassengers">
+				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
+			</TILE>
+			<TILE noorg.query="true" role="agency" name="Total Amount" where="(approved is true AND is_valid is true)" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin,manager" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE AND is_valid is true AND approved is true)" table="vw_allpassengers">
@@ -1186,7 +1190,7 @@
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="function_role='broker' AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="portal_id = 2 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1200,7 +1204,7 @@
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="function_role !='broker' AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="portal_id = 1 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1247,7 +1251,7 @@
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
 		</GRID>
-		<GRID role="admin,manager,individual" keyfield="passenger_id" name="Insurance" orderby="passenger_id,passenger_age DESC" where="(approved is true) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
+		<GRID role="admin,manager,individual,user" keyfield="passenger_id" name="Insurance" orderby="passenger_id,passenger_age DESC" where="(approved is true) AND (is_valid is true)" tab.count="count(passenger_id)" user="entity_id" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
 			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
@@ -1352,6 +1356,20 @@
 				<COMBOBOX w="150" h="20" lpfield="org_name" x="10" y="10" lptable="orgs" org.id="parent_org_id" title="Agency Sales">org_id</COMBOBOX>
 			</FILTERFORM>
 			<JASPER reportfile="travelinsurance/salesperagency.jasper" name="Sales Per Agency "></JASPER>
+		</FILTER>
+		<FILTER role="admin,manager" split="150" w="700" h="550" name="Bima Sales Report" type="vert">
+			<FILTERFORM name="Bima Sales Report">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travelinsurance/vw_passengers_bima.jasper" name="Bima sales report"></JASPER>
+		</FILTER>
+		<FILTER role="admin,manager" split="150" w="700" h="550" name="Consultant Sales Report" type="vert">
+			<FILTERFORM name="Consultant Sales Report">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travelinsurance/vw_passengers_consultant.jasper" name="Consultant sales report"></JASPER>
 		</FILTER>
 		<FILTER role="admin,manager" split="150" w="700" h="550" name="Individual Sales Report" type="vert">
 			<FILTERFORM name="Individual Sales Report">
@@ -1509,6 +1527,8 @@
 			</FILTERFORM>
 			<JASPER reportfile="travelinsurance/vw_passengers_Individual.jasper" name="Individual sales report"></JASPER>
 		</FILTER>
+		<JASPER role="master" reportfile="travelinsurance/vw_summary.jasper" name="Summary Report"></JASPER>
+		<JASPER role="master" reportfile="travelinsurance/vw_summary_period.jasper" name="Monthly Summary Report"></JASPER>
 	</DESK>
 	<DESK w="700" h="550" name="Exchange Rate" key="201">
 		<GRID noorg="true" keyfield="currency_id" name="Currency" table="currency">
@@ -1525,5 +1545,14 @@
 				</FORM>
 			</GRID>
 		</GRID>
+	</DESK>
+	<DESK w="700" h="550" name="My Insurance Sales report" key="203">
+		<FILTER role="user,agency,broker,manager" split="150" w="700" h="550" name="My Insurance Sales" type="vert">
+			<FILTERFORM name="All Agency Sales">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER noorg.query="true" reportfile="travelinsurance/mysales.jasper" name="All Agency Sales "></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

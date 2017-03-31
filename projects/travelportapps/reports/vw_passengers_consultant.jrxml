@@ -31,11 +31,14 @@
 	<parameter name="minDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_allpassengers.org_name, vw_allpassengers.rate_category_name, vw_allpassengers.rate_plan_name, vw_allpassengers.passenger_name, vw_allpassengers.passenger_mobile, vw_allpassengers.passenger_email, vw_allpassengers.totalamount_covered, vw_allpassengers.policy_number, vw_allpassengers.entity_name, vw_allpassengers.approved_date::date
 FROM vw_allpassengers
 WHERE approved_date::date >= '$P!{minDate}' AND  approved_date::date <= '$P!{maxDate}'
-AND function_role !='broker' AND function_role !='individual' AND is_valid is true AND approved is true ORDER BY passenger_id DESC;]]>
+AND portal_id =1 AND function_role !='individual' AND is_valid is true AND approved is true ORDER BY passenger_id DESC;]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="rate_category_name" class="java.lang.String"/>
@@ -54,41 +57,45 @@ AND function_role !='broker' AND function_role !='individual' AND is_valid is tr
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="62" splitType="Stretch">
+		<band height="125" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="100" y="0" width="370" height="62" uuid="a37cce88-e192-4c50-8e87-f0728523cdf9"/>
+				<reportElement style="Title" x="196" y="0" width="351" height="125" uuid="a37cce88-e192-4c50-8e87-f0728523cdf9"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Garamond-Normal" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Consultant Report]]></text>
+				<text><![CDATA[Consultant Insurance Report]]></text>
 			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="196" height="125" uuid="65120623-0503-400a-98d7-46dedd092c53"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "ICEA-LION-Travel-Insurance-Logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
 		<band height="40">
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="151" height="20" uuid="bc7da8c4-6908-447a-a9de-bc9fbaf808cc"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="0" width="150" height="20" uuid="bc7da8c4-6908-447a-a9de-bc9fbaf808cc"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="14"/>
 				</textElement>
 				<text><![CDATA[Date From]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="20" width="151" height="20" uuid="48298702-0cbc-4dfe-a78d-2954aec4c2e2"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="20" width="150" height="20" uuid="48298702-0cbc-4dfe-a78d-2954aec4c2e2"/>
 				<textElement>
 					<font fontName="Garamond-Normal" size="14"/>
 				</textElement>
 				<text><![CDATA[Date To]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="151" y="0" width="130" height="20" isPrintWhenDetailOverflows="true" uuid="ff9ddd64-f13c-448e-ab14-b44b417613fb"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="150" y="0" width="131" height="20" isPrintWhenDetailOverflows="true" uuid="ff9ddd64-f13c-448e-ab14-b44b417613fb"/>
 				<textElement>
 					<font fontName="Garamond-Normal" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{minDate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="151" y="20" width="130" height="20" isPrintWhenDetailOverflows="true" uuid="e8259b09-e6b1-4eed-99f9-f3e95de184d0"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="150" y="20" width="131" height="20" isPrintWhenDetailOverflows="true" uuid="e8259b09-e6b1-4eed-99f9-f3e95de184d0"/>
 				<textElement>
 					<font fontName="Garamond-Normal" isBold="true"/>
 				</textElement>
@@ -269,7 +276,7 @@ AND function_role !='broker' AND function_role !='individual' AND is_valid is tr
 					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 				</textField>
 				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
-					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="9a11357e-40b4-4cec-b7d5-dbd957eb0291"/>
+					<reportElement style="Column header" x="0" y="1" width="150" height="20" forecolor="#736343" uuid="9a11357e-40b4-4cec-b7d5-dbd957eb0291"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Times New Roman" size="10" isBold="false"/>
 					</textElement>

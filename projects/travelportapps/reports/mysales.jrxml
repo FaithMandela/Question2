@@ -12,12 +12,16 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_allpassengers.passenger_id,vw_allpassengers.org_id as org_id, vw_allpassengers.org_name, vw_allpassengers.rate_type_id, vw_allpassengers.rate_plan_name, vw_allpassengers.rate_id, vw_allpassengers.days_from, vw_allpassengers.days_to, vw_allpassengers.standard_rate,vw_allpassengers.policy_number, vw_allpassengers.north_america_rate,(vw_allpassengers.approved_date::Date)as approved_date, vw_allpassengers.entity_id,vw_allpassengers.entity_name, vw_allpassengers.passenger_id, vw_allpassengers.passenger_name, vw_allpassengers.passenger_mobile, vw_allpassengers.passenger_email, vw_allpassengers.passenger_age,vw_allpassengers.destown, vw_allpassengers.days_covered, vw_allpassengers.nok_name, vw_allpassengers.nok_mobile, vw_allpassengers.passport_number, vw_allpassengers.cover_amount,vw_allpassengers.totalAmount_covered, vw_allpassengers.is_north_america, vw_allpassengers.details,vw_allpassengers.pin_no,vw_allpassengers.sys_country_name,get_benefit_section_a(rate_type_id)
-    FROM vw_allpassengers
-    WHERE cast(approved_date as Date) >= '$P!{minDate} '
- AND cast(approved_date as Date) <= '$P!{maxDate} ' AND is_valid is true AND approved is true
-    ORDER BY vw_allpassengers.passenger_id DESC]]>
+FROM vw_allpassengers
+WHERE cast(approved_date as Date) >= '$P!{minDate} '
+AND cast(approved_date as Date) <= '$P!{maxDate} ' AND is_valid is true AND approved is true
+AND entity_id = '$P!{entity_id}'
+ORDER BY vw_allpassengers.passenger_id DESC]]>
 	</queryString>
 	<field name="passenger_id" class="java.lang.Integer"/>
 	<field name="org_id" class="java.lang.Integer"/>

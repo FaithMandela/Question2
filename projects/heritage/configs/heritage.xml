@@ -640,6 +640,8 @@
 			</FILTERFORM>
 			<JASPER reportfile="vw_agency_corporate.jasper" name="Agency Corporate Sales"></JASPER>
 		</FILTER>
+		<JASPER role="master" reportfile="vw_summary.jasper" name="Summary Report"></JASPER>
+		<JASPER role="master" reportfile="vw_summary_period.jasper" name="Monthly Summary Report"></JASPER>
 	</DESK>
 	<DESK w="700" h="550" name="Agency Insurance Sold" key="36">
 		<GRID role="manager,finance" keyfield="passenger_id" name="Individual Insurance Sold" orderby="passenger_id DESC" where="approved is true AND incountry is false AND customer_code is  null " tab.count="count(passenger_id)" table="vw_passengers">

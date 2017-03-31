@@ -31,11 +31,14 @@
 	<parameter name="minDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-01"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_allpassengers.org_name, vw_allpassengers.rate_category_name, vw_allpassengers.rate_plan_name, vw_allpassengers.passenger_name, vw_allpassengers.passenger_mobile, vw_allpassengers.passenger_email, vw_allpassengers.totalamount_covered, vw_allpassengers.policy_number, vw_allpassengers.entity_name, vw_allpassengers.approved_date::date
 FROM vw_allpassengers
 WHERE approved_date::date >= '$P!{minDate}' AND  approved_date::date <= '$P!{maxDate}'
-AND function_role ='broker' AND is_valid is true AND approved is true ORDER BY passenger_id DESC;]]>
+AND portal_id =2 AND is_valid is true AND approved is true ORDER BY passenger_id DESC;]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="rate_category_name" class="java.lang.String"/>
@@ -54,14 +57,18 @@ AND function_role ='broker' AND is_valid is true AND approved is true ORDER BY p
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="63" splitType="Stretch">
+		<band height="125" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="404" height="62" uuid="a37cce88-e192-4c50-8e87-f0728523cdf9"/>
+				<reportElement style="Title" x="197" y="0" width="350" height="125" uuid="a37cce88-e192-4c50-8e87-f0728523cdf9"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Garamond-Normal" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Broker Report]]></text>
+				<text><![CDATA[Broker Insurance Report]]></text>
 			</staticText>
+			<image>
+				<reportElement x="1" y="0" width="196" height="125" uuid="e377269e-0725-4c42-9322-c7cde9819508"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "ICEA-LION-Travel-Insurance-Logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

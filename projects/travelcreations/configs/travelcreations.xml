@@ -216,6 +216,7 @@
 			<TEXTDECIMAL w="75" title="Points Earned">points</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Refunds">refunds</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Bonus">bonus</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Tours">tours_amount</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<TEXTDATE w="75" title="Point Date">point_date</TEXTDATE>
 		</GRID>
@@ -244,6 +245,7 @@
 					<TEXTFIELD w="40" title="Username">user_name</TEXTFIELD>
 					<TEXTFIELD w="40" title="Client code">client_code</TEXTFIELD>
 					<TEXTFIELD w="40" title="Total Points">points</TEXTFIELD>
+					<TEXTFIELD w="40" title="Tours ">tours_amount</TEXTFIELD>
 					<TEXTFIELD w="40" title="Refunds">refunds</TEXTFIELD>
 					<TEXTDECIMAL w="40" title="Bonus">bonus</TEXTDECIMAL>
 				</GRID>
@@ -459,9 +461,9 @@
 			<TEXTFIELD w="75" title="Entity Subscription ID">entity_subscription_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<FORM keyfield="entity_subscription_id" name="Entity Subscriptions" table="entity_subscriptions">
-				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Entity Type ID">entity_type_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="30" lptable="entitys" title="Entity ID">entity_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="subscription_level_name" x="10" y="50" lptable="subscription_levels" title="Subscription Level ID">subscription_level_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" title="Entity Type ID">entity_type_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="entity_name" x="10" y="30" lptable="entitys" title="Entity ID">entity_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="subscription_level_name" x="10" y="50" lptable="subscription_levels" title="Subscription Level ID">subscription_level_id</COMBOBOX>
 				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>

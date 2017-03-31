@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sales" language="groovy" pageWidth="1012" pageHeight="555" orientation="Landscape" columnWidth="970" leftMargin="21" rightMargin="21" topMargin="36" bottomMargin="0" uuid="b340a841-8561-4aa4-bb4d-8a4675f5f246">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="22"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="maxDate" class="java.lang.String">
 		<defaultValueExpression><![CDATA["2016-01-30"]]></defaultValueExpression>
@@ -51,13 +51,22 @@ WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as D
 	<field name="pin_no" class="java.lang.String"/>
 	<field name="sys_country_name" class="java.lang.String"/>
 	<field name="get_benefit_section_a" class="java.lang.String"/>
+	<variable name="total_sum" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalamount_covered}]]></variableExpression>
+	</variable>
+	<variable name="premium" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{cover_amount}]]></variableExpression>
+	</variable>
+	<variable name="duty" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[($F{cover_amount}+0.45)/100+0.5]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="125" splitType="Stretch">
 			<staticText>
-				<reportElement x="196" y="0" width="588" height="53" uuid="d2310959-a4e7-4bec-8e2f-ad8333feb10c"/>
+				<reportElement x="196" y="0" width="561" height="125" uuid="d2310959-a4e7-4bec-8e2f-ad8333feb10c"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="24" isBold="true"/>
 				</textElement>
@@ -120,7 +129,7 @@ WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as D
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="283" y="0" width="79" height="35" isPrintWhenDetailOverflows="true" uuid="b7df0661-f2c4-4ed6-9791-7d0ad5ddee81"/>
+				<reportElement x="281" y="0" width="81" height="35" isPrintWhenDetailOverflows="true" uuid="b7df0661-f2c4-4ed6-9791-7d0ad5ddee81"/>
 				<box>
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -246,7 +255,7 @@ WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as D
 				<text><![CDATA[S.I]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="710" y="0" width="46" height="35" uuid="d6bc0738-6737-444b-8d87-d6bd17ca1a8e"/>
+				<reportElement x="707" y="0" width="49" height="35" uuid="d6bc0738-6737-444b-8d87-d6bd17ca1a8e"/>
 				<textElement rotation="None">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph spacingBefore="1"/>
@@ -378,7 +387,7 @@ WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as D
 				<textFieldExpression><![CDATA[$F{get_benefit_section_a}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="710" y="0" width="46" height="25" isPrintWhenDetailOverflows="true" uuid="b44f1ecb-7fcb-42c4-a8c8-77fb30e2a959"/>
+				<reportElement x="707" y="0" width="49" height="25" isPrintWhenDetailOverflows="true" uuid="b44f1ecb-7fcb-42c4-a8c8-77fb30e2a959"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -392,7 +401,7 @@ WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as D
 				<textFieldExpression><![CDATA[$F{days_to}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="283" y="0" width="79" height="25" isPrintWhenDetailOverflows="true" uuid="15c3b9ee-abed-4dcb-9f63-f0d8fc5696cb"/>
+				<reportElement x="281" y="0" width="81" height="25" isPrintWhenDetailOverflows="true" uuid="15c3b9ee-abed-4dcb-9f63-f0d8fc5696cb"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -403,10 +412,36 @@ WHERE cast(approved_date as Date) >= '$P!{minDate} ' AND cast(approved_date as D
 	<columnFooter>
 		<band height="3" splitType="Stretch"/>
 	</columnFooter>
-	<pageFooter>
-		<band height="15" splitType="Stretch"/>
-	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="20" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="910" y="0" width="60" height="20" isPrintWhenDetailOverflows="true" uuid="0150050e-88e9-4e9e-9d76-d700eaef0dff"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_sum}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="862" y="0" width="48" height="20" isPrintWhenDetailOverflows="true" uuid="1223030d-28a8-43cd-924e-811ceb9f5785"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{duty}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00" isBlankWhenNull="true">
+				<reportElement x="804" y="0" width="58" height="20" isPrintWhenDetailOverflows="true" uuid="f26d693e-e55c-4a02-8142-2eaee38f13f8"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="11" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{premium}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="655" y="0" width="102" height="20" uuid="a31f6f49-afdf-4d54-8a85-83488c00305a"/>
+				<textElement textAlignment="Right">
+					<font fontName="Garamond-Normal" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ TOTAL :]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>
