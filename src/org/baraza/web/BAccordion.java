@@ -98,7 +98,7 @@ System.out.println("BASE 2010 : " + whereSql);
 		jshd.add("sorting", false);
 		jshd.add("paging", false);
 		
-		jshd.add("data", "#db_table#");
+		jshd.add("data", "~~db_" + fieldId + "_table~~");
 		
 		
 		Map<String, String> jsTables = new HashMap<String, String>();
@@ -123,14 +123,20 @@ System.out.println("BASE 2010 : " + whereSql);
 				jsColEl.add("type", "checkbox");
 			} else if(fld_type.equals("COMBOBOX")) {
 				jsColEl.add("type", "select");
-				jsColEl.add("items", "db_" + el.getAttribute("lptable") + "_table");
-				jsColEl.add("valueField", "Id");
-				jsColEl.add("textField", "Name");
+				jsColEl.add("items", "~~db_" + el.getAttribute("lptable") + "_table~~");
+				jsColEl.add("valueField", "id");
+				jsColEl.add("textField", "name");
 				
-				String sql = "SELECT " + el.getAttribute("lpkey", el.getValue()) + " as Id, "
-				+ el.getAttribute("lpfield") + " as Name FROM "
-				+ el.getAttribute("lptable") + " ORDER BY "
-				+ el.getAttribute("orderby", el.getAttribute("lpfield"));
+				String whereOrgSql = db.getSqlOrgWhere(el.getAttribute("noorg"));
+				String whereUserSql = db.getSqlUserWhere(el.getAttribute("user"));
+				if(whereOrgSql != null && whereUserSql != null) whereOrgSql = " WHERE " + whereOrgSql + " AND " + whereUserSql;
+				else if(whereOrgSql != null) whereOrgSql = " WHERE " + whereOrgSql;
+				else whereOrgSql = "";
+				
+				String sql = "SELECT " + el.getAttribute("lpkey", el.getValue()) + " as Id, " + el.getAttribute("lpfield") + " as Name "
+				+ "FROM " + el.getAttribute("lptable") 
+				+ whereOrgSql
+				+ " ORDER BY " + el.getAttribute("orderby", el.getAttribute("lpfield"));
 				BQuery rsc = new BQuery(db, sql);
 				myhtml.append("var db_" + el.getAttribute("lptable") + "_table = " + rsc.getJSON() + ";\n\n");
 				rsc.close();
@@ -145,7 +151,7 @@ System.out.println("BASE 2010 : " + whereSql);
 		jshd.add("fields", jsColModel);
 		
 		JsonObject jsObj = jshd.build();
-		String tableDef = jsObj.toString().replaceAll("\"#db_table#\"", "db_" + fieldId + "_table");	
+		String tableDef = jsObj.toString().replaceAll("\"~~", "").replaceAll("~~\"", "");
 		for(String jsTable : jsTables.keySet()) {
 			tableDef = tableDef.replace("\"#" + jsTable + "#\"", jsTable);
 			myhtml.append(jsTable + "=" + jsTables.get(jsTable) + ";\n");
