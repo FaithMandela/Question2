@@ -36,7 +36,8 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_allpassengers.policy_number, vw_allpassengers.passenger_name,
-(vw_allpassengers.cover_amount+vw_allpassengers.training_levy) AS amount_with_levies, (vw_allpassengers.cover_amount*0.1) AS for_bunson, (0.1*vw_allpassengers.cover_amount) AS commission, (vw_allpassengers.cover_amount*0.05) AS incentive, (vw_allpassengers.cover_amount*0.1*0.05) AS safari, vw_allpassengers.totalamount_covered, vw_allpassengers.cover_amount, vw_allpassengers.training_levy, vw_allpassengers.policy_holder_fund, vw_allpassengers.stamp_duty, vw_allpassengers.totalamount_covered, vw_allpassengers.entity_name
+(vw_allpassengers.totalamount_covered::real) AS amount_with_levies, (vw_allpassengers.cover_amount*0.1) AS for_bunson, (0.1*vw_allpassengers.cover_amount) AS commission, (vw_allpassengers.cover_amount*0.05) AS incentive, (vw_allpassengers.cover_amount*0.1*0.05) AS safari, vw_allpassengers.totalamount_covered, vw_allpassengers.cover_amount, (vw_allpassengers.totalamount_covered::real-vw_allpassengers.cover_amount::real) as training_levy, vw_allpassengers.policy_holder_fund, 0.1*vw_allpassengers.cover_amount*0.1 as withholding,
+(vw_allpassengers.totalamount_covered::real-((vw_allpassengers.totalamount_covered::real-vw_allpassengers.cover_amount::real) +vw_allpassengers.cover_amount*0.1)) as net_amount, vw_allpassengers.entity_name
 FROM vw_allpassengers
 WHERE approved_date <= '$P!{maxDate}'::date AND approved_date >= '$P!{minDate}'::date
  AND approved is true
@@ -53,7 +54,8 @@ order by passenger_id DESC]]>
 	<field name="cover_amount" class="java.lang.Float"/>
 	<field name="training_levy" class="java.lang.Float"/>
 	<field name="policy_holder_fund" class="java.lang.Float"/>
-	<field name="stamp_duty" class="java.lang.Float"/>
+	<field name="withholding" class="java.lang.Double"/>
+	<field name="net_amount" class="java.lang.Double"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<variable name="gross_amount_with_levies" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{amount_with_levies}]]></variableExpression>
@@ -80,7 +82,7 @@ order by passenger_id DESC]]>
 		<variableExpression><![CDATA[$F{safari}]]></variableExpression>
 	</variable>
 	<variable name="net_with_levies" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{totalamount_covered}]]></variableExpression>
+		<variableExpression><![CDATA[$F{net_amount}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -244,7 +246,7 @@ order by passenger_id DESC]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{stamp_duty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{withholding}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" stretchType="RelativeToTallestObject" x="850" y="0" width="90" height="15" isPrintWhenDetailOverflows="true" uuid="83e0b416-8779-4167-8775-0b36c5f91dc6"/>
@@ -252,7 +254,7 @@ order by passenger_id DESC]]>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="11"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{totalamount_covered}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{net_amount}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement style="Detail" positionType="Float" stretchType="RelativeToTallestObject" x="940" y="0" width="90" height="15" isPrintWhenDetailOverflows="true" uuid="508bf0f5-2596-4193-b30d-293d3a3c7a48"/>
