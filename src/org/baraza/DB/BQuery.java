@@ -11,8 +11,8 @@ package org.baraza.DB;
 import java.util.logging.Logger;
 import java.math.BigDecimal;
 import java.lang.StringBuffer;
-import java.text.SimpleDateFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonArrayBuilder;
 
 import org.baraza.xml.BElement;
+import org.baraza.utils.BDateFormat;
 import org.baraza.utils.BCipher;
 import org.baraza.utils.Bio;
 import org.baraza.utils.BLogHandle;
@@ -961,7 +962,92 @@ public class BQuery {
 
 		return errMsg;
 	}
+	
+	public String updateFields(Map<String, String[]> reqParams, List<String> viewData, String remoteAddr, String linkData) {
+		String saveMsg = "";
+		
+		for(BElement el : view.getElements()) {
+			String[] dataValues = reqParams.get(el.getValue());
+			String dataValue = null;
+			if((dataValues != null) && (dataValues.length > 0)) dataValue = dataValues[0];
 
+			//System.out.println("BASE 1040 : " + el.getValue() + " : " + dataValue);
+			if(dataValue != null) {
+				if(dataValue.trim().equals("")) dataValue = null;
+			}
+
+			if(el.getAttribute("enabled","true").equals("false")) {
+			} else if(el.getName().equals("CHECKBOX")) {
+				if(el.getAttribute("ischar") == null) {
+					if(dataValue==null) saveMsg += updateField(el.getValue(), "false");
+					else saveMsg += updateField(el.getValue(), "true");
+				} else {
+					if(dataValue==null) saveMsg += updateField(el.getValue(), "0");
+					else saveMsg += updateField(el.getValue(), "1");
+				}
+			} else if(el.getName().equals("USERFIELD")) {
+				saveMsg += updateField(el.getValue(), db.getUserID());
+			} else if(el.getName().equals("USERNAME")) {
+				saveMsg += updateField(el.getValue(), db.getUserName());
+			} else if(el.getName().equals("REMOTEIP")) {
+				saveMsg += updateField(el.getValue(), remoteAddr);
+			} else if(el.getName().equals("DEFAULT")) {
+				saveMsg += updateField(el.getValue(), el.getAttribute("default"));
+			} else if(el.getName().equals("FUNCTION")) {
+				if(el.getAttribute("when", "").equals("new")) {
+					if(linkData.equals("{new}"))
+						saveMsg += updateField(el.getValue(), db.executeFunction(el.getAttribute("function")));
+				} else {
+					saveMsg += updateField(el.getValue(), db.executeFunction(el.getAttribute("function")));
+				}
+			} else if(el.getName().equals("LEVELKEY")) {
+				int vds = viewData.size();
+				int lvl = Integer.valueOf(el.getAttribute("level", "0")).intValue();
+				String levelKeyData = viewData.get(vds - lvl);
+				updateField(el.getValue(), levelKeyData);
+			} else if(dataValue == null) {
+				updateField(el.getValue(), null);
+			} else if(el.getName().equals("COMBOBOX")) {
+				updateField(el.getValue(),  dataValue);
+			} else if(el.getName().equals("COMBOLIST")) {
+				saveMsg += updateField(el.getValue(), dataValue);
+			} else if(el.getName().equals("PICTURE")) {
+				saveMsg += updateField(el.getValue(), dataValue);
+			} else if(el.getName().equals("MULTISELECT")) {
+				String msv = null;
+				if(dataValues.length > 0) {
+					for(String msvs : dataValues) {
+						if(msv == null) msv = msvs;
+						else msv += "," + msvs;
+					}
+				}
+				saveMsg += updateField(el.getValue(), msv);
+			} else if(el.getName().equals("TEXTDECIMAL")) {
+				dataValue = dataValue.replace(",", "");
+				saveMsg += updateField(el.getValue(), dataValue);
+			} else if(el.getName().equals("TEXTDATE")) {
+				String dbdate = BDateFormat.parseDate(dataValue, el.getAttribute("dbformat"), db.getDBType());
+				if(dbdate != null) saveMsg += updateField(el.getValue(), dbdate);
+				else saveMsg += "Date format error for : " + el.getValue() + "<br>\n";
+			} else if(el.getName().equals("TEXTTIMESTAMP")) {
+				String dbdate = BDateFormat.parseTimeStamp(dataValue);
+				if(dbdate != null) saveMsg += updateField(el.getValue(), dbdate);
+				else saveMsg += "Date format error for : " + el.getValue() + "<br>\n";
+			} else if(el.getName().equals("SPINTIME")) {
+				String dbdate = BDateFormat.parseTime(dataValue, el.getAttribute("type", "1"));
+				if(dbdate != null) saveMsg += updateField(el.getValue(), dbdate);
+				else saveMsg += "Time format error for : " + el.getValue() + "<br>\n";
+			} else if(dataValue != null) {
+				saveMsg += updateField(el.getValue(), dataValue);
+			}
+		}
+
+		if(!"".equals(saveMsg)) saveMsg += "<br>";
+		saveMsg += recSave();
+		
+		return saveMsg;
+	}
+	
 	public String getErrMessage(String err) {
 		String errCheck =  err;
 		if(err == null) errCheck = Integer.toString(errCode);
@@ -1188,6 +1274,7 @@ public class BQuery {
 						if(!el.getValue().equals(""))
 							myjo.add(el.getValue(), formatData(el));
 					}
+					myjo.add("keyfield", getKeyField());
 				}
 				
 				myja.add(myjo);
@@ -1199,8 +1286,28 @@ public class BQuery {
 		JsonArray jsTb = myja.build();
 		
 		return jsTb.toString();
-	}	
+	}
 
+	public String getRowJSON() {
+		JsonObjectBuilder myjo = Json.createObjectBuilder();
+		
+		try {
+			if(view == null) {
+				for(int column = 0; column < titles.size(); column++)
+					myjo.add(titles.get(column), rs.getString(column + 1));
+			} else {
+				for(BElement el : view.getElements()) {
+					if(!el.getValue().equals(""))
+						myjo.add(el.getValue(), formatData(el));
+				}
+				myjo.add("keyfield", getKeyField());
+			}
+ 		} catch (SQLException ex) {
+			log.severe("Field read data error : " + ex);
+		}
+		
+		return myjo.build().toString();
+	}
 
 	public String getFooter() {
 		StringBuffer mystr = new StringBuffer();
@@ -1688,7 +1795,7 @@ public class BQuery {
 
 		return response;
 	}
-
+	
 	public void savecvs(String filename) {
 		int i, j;
 		String mystr = "";

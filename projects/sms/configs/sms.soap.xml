@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<SOAPSMS sppassword="Eti*q#15"
+<SOAPSMS sppassword="Pru*q#17"
 	endpoint="http://172.31.183.242:8080/kannel/smsnotice" 
 	smsreceiver="http://172.31.183.242:8080/kannel/smslisten" 
 	duration="30000">
