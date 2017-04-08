@@ -434,7 +434,6 @@
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
 				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<CHECKBOX w="50" title="Default">is_default</CHECKBOX>
 				<DEFAULT default="applicant">table_name</DEFAULT>
 				<USERFIELD>table_id</USERFIELD>
 			</GRID>
@@ -483,6 +482,23 @@
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
 				<DEFAULT default="referees">table_name</DEFAULT>
 				<USERFIELD>table_id</USERFIELD>
+			</GRID>
+			<GRID new="false" name="Positions Applied" keyfield="application_id" edit="false" orderby="opening_date" table="vw_applications" user="entity_id">
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
+				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
+			</GRID>
+			<GRID new="false" name="Available Positions" keyfield="intake_id" edit="false" table="vw_intake" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
+				<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
+				<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
+				<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
+				<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
 			</GRID>
 		</ACCORDION>
 		<FORMVIEW new="false" name="Applicant" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">

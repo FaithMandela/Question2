@@ -555,7 +555,7 @@
         css: "date-field",            // redefine general property 'css'
         align: "center",              // redefine general property 'align'
      
-        myCustomProperty: "foo",      // custom property
+        myCustomProperty: "datecp",      // custom property
      
         sorter: function(date1, date2) {
             return new Date(date1) - new Date(date2);
@@ -567,13 +567,15 @@
             return dt;
         },
      
-        insertTemplate: function(value) {
+        insertTemplate: function(value) {			
             return this._insertPicker = $("<input>").datepicker({ defaultDate: new Date() });
         },
 
 		editTemplate: function (value) {
-console.log(value);
-			return this._editPicker = $("<input>").datepicker({date: new Date(value)});
+			this._editPicker = $("<input>").datepicker({ defaultDate: new Date(value)});
+			this._editPicker.datepicker("setDate", new Date(value));
+
+			return this._editPicker;
         },
 
         insertValue: function() {

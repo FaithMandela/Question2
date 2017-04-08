@@ -92,8 +92,8 @@ System.out.println("BASE 2010 : " + whereSql);
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		jshd.add("width", "100%");		// tableSize
 		jshd.add("height", "200px");
-		jshd.add("inserting", true);
-		jshd.add("editing", true);
+		if(vw.getAttribute("new", "true").equals("true")) jshd.add("inserting", true);
+		if(vw.getAttribute("edit", "true").equals("true")) jshd.add("editing", true);
 		jshd.add("filtering", false);
 		jshd.add("sorting", false);
 		jshd.add("paging", false);
@@ -121,11 +121,13 @@ System.out.println("BASE 2010 : " + whereSql);
 			jsColEl.add("title", fld_title);
 			jsColEl.add("name", fld_name);
 			jsColEl.add("width", Integer.valueOf(fld_size));
+			if(el.getAttribute("required") != null) jsColEl.add("required", true);
 			if(fld_type.equals("TEXTFIELD")) {
 				jsColEl.add("type", "text");
 				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("TEXTDATE")) {
 				jsColEl.add("type", "date");
+				jsColEl.add("myCustomProperty", "datecp");
 				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("TEXTAREA")) {
 				jsColEl.add("type", "textarea");
@@ -159,16 +161,22 @@ System.out.println("BASE 2010 : " + whereSql);
 				jsColModel.add(jsColEl);
 			}
 		}
-		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
-		jsColEl.add("width", 50);
-		jsColEl.add("type", "control");
-		jsColModel.add(jsColEl);
+		
 		JsonObjectBuilder jsColElKf = Json.createObjectBuilder();
 		jsColElKf.add("name", "keyfield");
 		jsColElKf.add("width", 0);
 		jsColElKf.add("visible", false);
-		jsColElKf.add("type", "control");
+		jsColElKf.add("type", "text");
 		jsColModel.add(jsColElKf);
+		
+		if(vw.getAttribute("edit", "true").equals("true")) {
+			JsonObjectBuilder jsColEl = Json.createObjectBuilder();
+			jsColEl.add("width", 50);
+			jsColEl.add("type", "control");
+			jsColModel.add(jsColEl);
+		}
+		
+		// Add the the fields on the JSON structure
 		jshd.add("fields", jsColModel);
 		
 		JsonObject jsObj = jshd.build();
