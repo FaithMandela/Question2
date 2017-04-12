@@ -189,7 +189,7 @@ System.out.println("BASE 2010 : " + whereSql);
 		
 		rs.close();
 		
-System.out.println("BASE 2050 : " + myhtml.toString());
+//System.out.println("BASE 2050 : " + myhtml.toString());
 
 		return myhtml.toString();
 	}

@@ -1909,6 +1909,11 @@ BEGIN
 
 		UPDATE students SET org_id = v_org_id WHERE (studentid = NEW.studentid);
 		UPDATE entitys SET org_id = v_org_id WHERE (user_name = NEW.studentid);
+		
+		UPDATE qstudents SET org_id = v_org_id, sublevelid = NEW.sublevelid 
+		FROM quarters
+		WHERE (qstudents.quarterid = quarters.quarterid) AND (studentdegreeid = NEW.studentdegreeid)
+			AND (quarters.active = true);
 	END IF;
 
 	RETURN NULL;

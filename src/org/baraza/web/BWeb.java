@@ -1356,6 +1356,26 @@ System.out.println("repository : " + repository);
 				saveMsg += tmsg + "\n</div>\n";
 			}
 			qForm.close();
+		} else if(view.getName().equals("ACCORDION")) {
+			BElement accdView = view.getElement(0);
+System.out.println("Reached ACCORDION " + vds + " : " + formlink);
+System.out.println(accdView);
+
+			BQuery qAccd = new BQuery(db, accdView, formlink, null);
+			
+			if(vds < 2) {
+				qAccd.recAdd();
+			} else if(linkData.equals("{new}")) {
+				qAccd.recAdd();
+				if(accdView.getAttribute("linkfield") != null) 
+					qAccd.updateField(accdView.getAttribute("linkfield"), viewData.get(vds - 2));
+			} else {
+				if(qAccd.moveFirst()) qAccd.recEdit();
+System.out.println("Kanyau");
+			}
+			
+			saveMsg = qAccd.updateFields(reqParams, viewData, request.getRemoteAddr(), linkData);
+			qAccd.close();
 		}
 	}
 
