@@ -486,21 +486,27 @@
 			<GRID new="false" name="Positions Applied" keyfield="application_id" edit="false" orderby="opening_date" table="vw_applications" user="entity_id">
 				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
-				<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
+				<TEXTDATE w="75" title="Closing Date" pattern="yyyy-MM-dd">closing_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
-				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
+				<TEXTDATE w="75" title="Application Date" pattern="yyyy-MM-dd">application_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
 			</GRID>
 			<GRID new="false" name="Available Positions" keyfield="intake_id" edit="false" table="vw_intake" where="(closing_date > current_date)">
 				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
-				<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
-				<TEXTDATE w="75" title="Closing Date">closing_date</TEXTDATE>
+				<TEXTDATE w="75" title="Opening Date" pattern="yyyy-MM-dd">opening_date</TEXTDATE>
+				<TEXTDATE w="75" title="Closing Date" pattern="yyyy-MM-dd">closing_date</TEXTDATE>
 				<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
 				<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
-				<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
+				<TEXTFIELD w="75" title="Apply">apply</TEXTFIELD>
 			</GRID>
 		</ACCORDION>
+		<FILES username="repository" repository="/repository/webdav/files/" name="Upload  Documents" keyfield="sys_file_id" table="sys_files" user="table_id" password="baraza">
+			<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+			<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
+			<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
+			<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+		</FILES>
 		<FORMVIEW new="false" name="Applicant" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
@@ -671,7 +677,7 @@
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Vacancies" key="14" h="550">
-		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorg="true" where="(closing_date > current_date)">
+		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" where="(closing_date > current_date)">
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
@@ -680,6 +686,7 @@
 			<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
 			<FORMVIEW tw="570" name="Role Details" keyfield="intake_id" linkfield="intake_id" table="vw_intake">
+				<ACTION fnct="Ins_applications" title="Apply" action="Apply For Post" jumpview="10:0">intake_id</ACTION>
 				<TEXTFIELD w="410" title="Unit" lw="140" y="30" h="20" x="10">department_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Designation" y="30" h="20" x="10">department_role_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Reporting To" y="10" h="20" x="10">parent_role_name</TEXTFIELD>
@@ -712,7 +719,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date > current_date)">
+		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" where="(closing_date > current_date)">
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>

@@ -3,14 +3,14 @@ import java.sql.*;
 public class clearBFSMS {
 
 	public static void main(String args[]) {
-		clearSMS("jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_BTS;selectMethod=cursor");
-		clearSMS("jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_FCM;selectMethod=cursor");
+		clearSMS("jdbc:sqlserver://bfeeds.dewcis.com:1433;databaseName=GIDS_BTS;selectMethod=cursor");
+		clearSMS("jdbc:sqlserver://bfeeds.dewcis.com:1433;databaseName=GIDS_FCM;selectMethod=cursor");
 	}
 
 	public static void clearSMS(String DBPath) {
 
 		try {
-			Connection db = DriverManager.getConnection(DBPath, "sa", "bookingfeeds");
+			Connection db = DriverManager.getConnection(DBPath, "sa", "Tr@velp0rt2017");
 
 			// SMS Clear
 			String mysql = "UPDATE sms SET is_sent = '1' WHERE is_sent = '0';";

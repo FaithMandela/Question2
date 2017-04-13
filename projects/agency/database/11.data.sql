@@ -1,6 +1,6 @@
-INSERT INTO entity_types (entity_type_id, entity_type_name, entity_role) VALUES (4, 'Corporate Clients', 'corporate');
-INSERT INTO entity_types (entity_type_id, entity_type_name, entity_role) VALUES (5, 'Leisure Clients', 'leisure');
-INSERT INTO entity_types (entity_type_id, entity_type_name, entity_role) VALUES (6, 'Asset Vendors', 'vendors');
+INSERT INTO entity_types (entity_type_name, entity_role, use_key_id, org_id) VALUES ('Corporate Clients', 'corporate', 0, 0);
+INSERT INTO entity_types (entity_type_name, entity_role, use_key_id, org_id) VALUES ('Leisure Clients', 'leisure', 0, 0);
+INSERT INTO entity_types (entity_type_name, entity_role, use_key_id, org_id) VALUES ('Asset Vendors', 'vendors', 0, 0);
 
 
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details)

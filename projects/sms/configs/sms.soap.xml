@@ -4,14 +4,14 @@
 	smsreceiver="http://172.31.183.242:8080/kannel/smslisten" 
 	duration="30000">
 
-	<COMM orgid="8" dbpassword="bookingfeeds" dbpath="jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_BTS;selectMethod=cursor" 
+	<COMM orgid="8" dbpassword="Tr@velp0rt2017" dbpath="jdbc:sqlserver://bfeeds.dewcis.com:1433;databaseName=GIDS_BTS;selectMethod=cursor" 
 		dbclass="com.mysql.jdbc.Driver" dbusername="sa">
 		<PROCESS sql="SELECT sms_id, PhoneNbr, message FROM vw_sms" where="(is_sent = '0')" 
 			update="UPDATE sms SET is_sent = '1' WHERE sms_id = "
 			error="UPDATE sms SET is_sent = '2' WHERE sms_id = "></PROCESS>
 	</COMM>
 
-	<COMM orgid="21" dbpassword="bookingfeeds" dbpath="jdbc:sqlserver://192.168.0.14:1433;databaseName=GIDS_FCM;selectMethod=cursor" 
+	<COMM orgid="21" dbpassword="Tr@velp0rt2017" dbpath="jdbc:sqlserver://bfeeds.dewcis.com:1433;databaseName=GIDS_FCM;selectMethod=cursor" 
 		dbclass="com.mysql.jdbc.Driver" dbusername="sa">
 		<PROCESS sql="SELECT sms_id, PhoneNbr, message FROM vw_sms" where="(is_sent = '0')" 
 			update="UPDATE sms SET is_sent = '1' WHERE sms_id = "

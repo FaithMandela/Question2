@@ -55,6 +55,7 @@ public class BAccordion {
 			+ "\t\t\t<div id='collapse_" + ac.toString() + "' class='panel-collapse " 
 			+ vw.getAttribute("collapse", "collapse") + "'>\n"
 			+ "\t\t\t\t<div class='panel-body'>\n";
+			
 			if(vw.getName().equals("FORM")) {
 				BWebBody webbody = new BWebBody(db, vw, whereSql, null);
 				body += webbody.getForm(false, formLinkData, request);

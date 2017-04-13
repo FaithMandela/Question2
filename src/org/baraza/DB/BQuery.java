@@ -110,6 +110,7 @@ public class BQuery {
 		updateTable = view.getAttribute("updatetable");
 		auditID = view.getAttribute("auditid");
 		String linkField = view.getAttribute("linkfield");
+		String userField = view.getAttribute("user");
 		String hint = view.getAttribute("hint");
 		String reportTitle = view.getAttribute("reporttitle");
 		String paramStr = view.getAttribute("params");
@@ -149,6 +150,7 @@ public class BQuery {
 		}
 
 		colNames = addField(colNames, linkField);
+		colNames = addField(colNames, userField);
 		colNames = addField(colNames, hint);
 		colNames = addField(colNames, reportTitle);
 		for(BElement el : view.getElements()) colNames = addField(colNames, el.getAttribute("editkey"));

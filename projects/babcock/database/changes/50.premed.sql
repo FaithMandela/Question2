@@ -1,4 +1,7 @@
 
+
+SELECT sublevelid, sublevelname, org_id FROM sublevels ORDER BY sublevelid;
+
 SELECT qstudentid, studentdegreeid, studentid, org_id FROM qstudentview WHERE sublevelid = 'UGPM' AND quarterid = '2016/2017.2'
 ORDER BY studentdegreeid;
 
