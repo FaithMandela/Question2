@@ -94,8 +94,8 @@
 			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
 			</TILE>
-			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" groupby="entity_id" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="count(task_id)" title="Pending Tasks" default="0">pending_tasks</TEXTFIELD>
 			</TILE>
 			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(intake_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
@@ -507,7 +507,7 @@
 			<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 			<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 		</FILES>
-		<FORMVIEW new="false" name="Applicant" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
+		<FORMVIEW new="false" name="Applicant CV" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
@@ -517,6 +517,7 @@
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
+			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 			<FORM new="false" tw="570" name="Details" keyfield="entity_id" table="applicants" user="entity_id" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
@@ -673,7 +674,6 @@
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
 			<JASPER name="BIO" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
-			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Vacancies" key="14" h="550">
