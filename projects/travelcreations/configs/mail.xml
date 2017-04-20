@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ESCALATION title="Travelcreations Mail" processdelay="2"
-	host="mail.openbaraza.org" mailuser="hcm.openbaraza" mailpassword="hcm_invent" mailfrom="info@openbaraza.org"
+	host="mail.travelcreations.co.ke" mailuser="loyaltyprogram@travelcreations.co.ke" mailpassword="mar2@@9" mailfrom="loyaltyprogram@travelcreations.co.ke"
 	inbox="INBOX" sentbox="Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/travelcreations/reports/">
 

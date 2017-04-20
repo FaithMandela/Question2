@@ -199,6 +199,7 @@ CREATE TABLE entitys (
 	new_password			varchar(64),
 	start_url				varchar(64),
 	is_picked				boolean default false not null,
+	client_code 			varchar(20),
 	details					text,
 	UNIQUE(org_id, user_name)
 );
@@ -426,7 +427,12 @@ CREATE INDEX workflow_logs_org_id ON workflow_logs (org_id);
 
 CREATE SEQUENCE workflow_table_id_seq;
 
-CREATE SEQUENCE picture_id_seq;
+CREATE SEQUENCE picture_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 300
+  CACHE 1;
 
 CREATE VIEW vw_sys_emailed AS
 	SELECT sys_emails.sys_email_id, sys_emails.org_id, sys_emails.sys_email_name, sys_emails.title, sys_emails.details,
@@ -1159,7 +1165,7 @@ INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role)
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 2, 'Client', 'client');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 3, 'Supplier', 'supplier');
 INSERT INTO entity_types (org_id, entity_type_id, entity_type_name, entity_role) VALUES (0, 4, 'Administrator', 'admin');
-SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 3, true);
+SELECT pg_catalog.setval('entity_types_entity_type_id_seq', 4, true);
 
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 0, 'Basic');
 INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_level_name) VALUES (0, 1, 'Manager');
@@ -1167,6 +1173,21 @@ INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_lev
 
 INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
 VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');
-INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (1, 1, 0, 'admin', 'administrator', 'admin@localhost', true, false, false, 'baraza');
-SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email,  super_user, entity_leader, no_org,
+	 function_role, first_password, client_code)
+ VALUES (1, 0, 1, 'CSR', 'csr', NULL,  false, false, false, 'user', 'baraza', 'CSR');
+ INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email,  super_user, entity_leader, no_org , function_role, first_password,  client_code)
+  VALUES (2, 4, 1, 'Aisha Yahya', 'aisha', 'bd@travelcreations.co.ke',  false, false, false, 'admin', 'baraza', NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email,  super_user, entity_leader, no_org, function_role,
+	  first_password, client_code)
+ VALUES (3, 4, 1, 'Zainab Yahya', 'zainab', 'ceo@travelcreations.co.ke',  false, false, false, 'admin', 'baraza', NULL);
+INSERT INTO entitys (entity_id, entity_type_id, org_id, entity_name, user_name, primary_email,  super_user, entity_leader, no_org, function_role,
+	first_password,  client_code)
+ VALUES (4, 4, 1, 'Nancy Wangui', 'nancy', NULL,  false, false, false, 'admin',  'baraza',  NULL);
+
+
+--
+-- Name: entitys_entity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('entitys_entity_id_seq', 4, true);

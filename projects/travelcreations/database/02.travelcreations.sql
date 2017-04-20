@@ -1,5 +1,5 @@
 ---Project Database File
-ALTER TABLE entitys ADD client_code varchar(20);
+
 ALTER TABLE entitys ADD client_dob date;
 ALTER TABLE entitys ADD COLUMN workflow_table_id integer;
 ALTER TABLE entitys ADD COLUMN approve_status character varying(16);

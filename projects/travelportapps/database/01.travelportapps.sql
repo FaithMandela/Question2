@@ -1726,7 +1726,7 @@ CREATE FUNCTION getCreditLimit(integer) RETURNS double precision AS $$
 		current_limit 	double precision;
 		BEGIN
 			credit_limit := COALESCE((SELECT orgs.credit_limit FROM orgs WHERE orgs.org_id = $1 GROUP BY orgs.credit_limit),0);
-			cover_amount:= COALESCE((SELECT SUM(passengers.totalamount_covered)AS cover_amount FROM passengers WHERE org_id = $1
+			cover_amount:= COALESCE((SELECT SUM(vw_allpassengers.totalamount_covered)AS cover_amount FROM vw_allpassengers WHERE org_id = $1
 				GROUP BY org_id),0);
 
 			paid_amount :=COALESCE((SELECT SUM(payment_amount)as payment_amount FROM payments WHERE org_id = $1 GROUP BY org_id),0);

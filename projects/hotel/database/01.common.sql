@@ -71,7 +71,7 @@ CREATE TABLE departments (
 );
 CREATE INDEX departments_ln_department_id ON departments (ln_department_id);
 CREATE INDEX departments_org_id ON departments (org_id);
-INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 0, 0, 'Board of Directors'); 
+INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 0, 0, 'Board of Directors');
 
 CREATE TABLE fiscal_years (
 	fiscal_year_id			serial primary key,
@@ -82,7 +82,7 @@ CREATE TABLE fiscal_years (
 	year_opened				boolean default true not null,
 	year_closed				boolean default false not null,
 	details					text,
-	
+
 	UNIQUE(fiscal_year, org_id)
 );
 CREATE INDEX fiscal_years_org_id ON fiscal_years (org_id);
@@ -120,21 +120,21 @@ CREATE INDEX periods_org_id ON periods (org_id);
 
 --- Views
 CREATE VIEW vw_curr_orgs AS
-	SELECT currency.currency_id as base_currency_id, currency.currency_name as base_currency_name, 
+	SELECT currency.currency_id as base_currency_id, currency.currency_name as base_currency_name,
 		currency.currency_symbol as base_currency_symbol,
-		orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
+		orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		orgs.cert_number, orgs.pin, orgs.vat_number, orgs.invoice_footer,
 		orgs.details
 	FROM orgs INNER JOIN currency ON orgs.currency_id = currency.currency_id;
 
 DROP VIEW vw_entitys;
 DROP VIEW vw_orgs;
-	
+
 CREATE VIEW vw_orgs AS
-	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, 
+	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo,
 		orgs.org_full_name, orgs.pin, orgs.pcc, orgs.details,
 		orgs.cert_number, orgs.vat_number, orgs.invoice_footer,
-		
+
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 
 		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
@@ -144,28 +144,29 @@ CREATE VIEW vw_orgs AS
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
 	FROM orgs INNER JOIN currency ON orgs.currency_id = currency.currency_id
+	LEFT JOIN city_codes ON orgs.city_code = city_codes.city_code
 		LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
 
 CREATE VIEW vw_entitys AS
-	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
-		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
+	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active,
+		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin,
 		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name, 
+		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
 		vw_orgs.org_address_id, vw_orgs.org_table_name,
-		vw_orgs.org_post_office_box, vw_orgs.org_postal_code, 
-		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town, 
-		vw_orgs.org_phone_number, vw_orgs.org_extension, 
+		vw_orgs.org_post_office_box, vw_orgs.org_postal_code,
+		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town,
+		vw_orgs.org_phone_number, vw_orgs.org_extension,
 		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
-		
+
 		addr.address_id, addr.address_name,
 		addr.sys_country_id, addr.sys_country_name, addr.table_name, addr.is_default,
-		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
+		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town,
 		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
-		
-		entity_types.entity_type_id, entity_types.entity_type_name, entity_types.entity_role, 
-		
-		entitys.entity_id, entitys.use_key_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
-		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
+
+		entity_types.entity_type_id, entity_types.entity_type_name, entity_types.entity_role,
+
+		entitys.entity_id, entitys.use_key_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
+		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
 		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone,
 		entitys.credit_limit
 
@@ -176,33 +177,33 @@ CREATE VIEW vw_entitys AS
 CREATE VIEW vw_bank_branch AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_code, sys_countrys.sys_country_name,
 		banks.bank_id, banks.bank_name, banks.bank_code, banks.swift_code,  banks.sort_code,
-		bank_branch.bank_branch_id, bank_branch.org_id, bank_branch.bank_branch_name, 
+		bank_branch.bank_branch_id, bank_branch.org_id, bank_branch.bank_branch_name,
 		bank_branch.bank_branch_code, bank_branch.narrative
 	FROM bank_branch INNER JOIN banks ON bank_branch.bank_id = banks.bank_id
 		LEFT JOIN sys_countrys ON banks.sys_country_id = sys_countrys.sys_country_id;
-		
+
 CREATE VIEW vw_departments AS
-	SELECT departments.ln_department_id, p_departments.department_name as ln_department_name, 
-		departments.department_id, departments.org_id, departments.department_name, departments.active, 
+	SELECT departments.ln_department_id, p_departments.department_name as ln_department_name,
+		departments.department_id, departments.org_id, departments.department_name, departments.active,
 		departments.function_code, departments.petty_cash, departments.cost_center, departments.revenue_center,
 		departments.description, departments.duties, departments.reports, departments.details
 	FROM departments LEFT JOIN departments as p_departments ON departments.ln_department_id = p_departments.department_id;
 
 CREATE VIEW vw_periods AS
-	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year, fiscal_years.fiscal_year_start, 
+	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year, fiscal_years.fiscal_year_start,
 		fiscal_years.fiscal_year_end, fiscal_years.year_opened, fiscal_years.year_closed,
 
-		periods.period_id, periods.org_id, 
-		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 
-		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted, 
+		periods.period_id, periods.org_id,
+		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed,
+		periods.overtime_rate, periods.per_diem_tax_limit, periods.is_posted,
 		periods.gl_payroll_account, periods.gl_advance_account, periods.details,
 
-		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year, 
-		to_char(periods.start_date, 'Month') as period_month, to_char(periods.start_date, 'YYYY, Month') as period_disp, 
-		(trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter, 
+		date_part('month', periods.start_date) as month_id, to_char(periods.start_date, 'YYYY') as period_year,
+		to_char(periods.start_date, 'Month') as period_month, to_char(periods.start_date, 'YYYY, Month') as period_disp,
+		(trunc((date_part('month', periods.start_date)-1)/3)+1) as quarter,
 		(trunc((date_part('month', periods.start_date)-1)/6)+1) as semister,
 		to_char(periods.start_date, 'YYYYMM') as period_code
-		
+
 	FROM periods LEFT JOIN fiscal_years ON periods.fiscal_year_id = fiscal_years.fiscal_year_id
 	ORDER BY periods.start_date;
 
@@ -229,7 +230,7 @@ CREATE VIEW vw_period_month AS
 	FROM vw_periods
 	GROUP BY org_id, month_id, period_year, period_month
 	ORDER BY month_id, period_year, period_month;
-	
+
 CREATE OR REPLACE FUNCTION add_periods(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id			integer;
@@ -240,15 +241,15 @@ BEGIN
 	SELECT org_id INTO v_org_id
 	FROM fiscal_years
 	WHERE (fiscal_year_id = $1::int);
-	
+
 	UPDATE periods SET fiscal_year_id = fiscal_years.fiscal_year_id
 	FROM fiscal_years WHERE (fiscal_years.fiscal_year_id = $1::int)
 		AND (fiscal_years.fiscal_year_start <= start_date) AND (fiscal_years.fiscal_year_end >= end_date);
-	
+
 	SELECT period_id INTO v_period_id
 	FROM periods
 	WHERE (fiscal_year_id = $1::int) AND (org_id = v_org_id);
-	
+
 	IF(v_period_id is null)THEN
 		INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
 		SELECT $1::int, v_org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
@@ -267,7 +268,7 @@ CREATE OR REPLACE FUNCTION close_periods(varchar(12), varchar(12), varchar(12)) 
 DECLARE
 	msg 					varchar(120);
 BEGIN
-	
+
 	IF(v_period_id is null)THEN
 		INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
 		SELECT $1::int, v_org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
@@ -290,8 +291,8 @@ BEGIN
 	SELECT year_closed INTO year_close
 	FROM fiscal_years
 	WHERE (fiscal_year_id = NEW.fiscal_year_id);
-	
-	IF(TG_OP = 'UPDATE')THEN    
+
+	IF(TG_OP = 'UPDATE')THEN
 		IF (OLD.closed = true) AND (NEW.closed = false) THEN
 			NEW.approve_status := 'Draft';
 		END IF;
@@ -316,8 +317,8 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_periods BEFORE INSERT OR UPDATE ON periods
     FOR EACH ROW EXECUTE PROCEDURE ins_periods();
-    
-    
+
+
 CREATE OR REPLACE FUNCTION open_periods(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_org_id			integer;
@@ -347,5 +348,3 @@ $$ LANGUAGE plpgsql;
 ------------Hooks to approval trigger
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON periods
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
-
-

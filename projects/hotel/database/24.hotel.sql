@@ -22,6 +22,7 @@ CREATE TABLE room_types (
 	org_id					integer references orgs,
 	room_type_name			varchar(50) not null,
 	units					integer default 10 not null,
+	image 					character varying(50),
 	details					text,
 	UNIQUE(org_id, room_type_name)
 );
@@ -160,91 +161,93 @@ CREATE INDEX receipts_currency_id ON receipts (currency_id);
 CREATE INDEX receipts_sys_audit_trail_id ON receipts (sys_audit_trail_id);
 CREATE INDEX receipts_org_id ON receipts (org_id);
 
-CREATE VIEW vw_clients AS
-	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
-		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
+CREATE OR REPLACE VIEW vw_clients AS
+	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active,
+		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin,
 		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name, 
+		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
 		vw_orgs.org_address_id, vw_orgs.org_table_name,
-		vw_orgs.org_post_office_box, vw_orgs.org_postal_code, 
-		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town, 
-		vw_orgs.org_phone_number, vw_orgs.org_extension, 
+		vw_orgs.org_post_office_box, vw_orgs.org_postal_code,
+		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town,
+		vw_orgs.org_phone_number, vw_orgs.org_extension,
 		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
-		
+
 		addr.address_id, addr.address_name,
 		addr.sys_country_id, addr.sys_country_name, addr.table_name, addr.is_default,
-		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
+		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town,
 		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
-		
-		entity_types.entity_type_id, entity_types.entity_type_name, entity_types.entity_role, 
-		
-		entitys.entity_id, entitys.use_key_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
-		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
+
+		entity_types.entity_type_id, entity_types.entity_type_name, entity_types.entity_role,
+
+		entitys.entity_id, entitys.use_key_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
+		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
 		entitys.function_role, entitys.attention, entitys.primary_email, entitys.primary_telephone,
 		entitys.credit_limit, entitys.client_commision, entitys.client_discount
 
 	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
-		
-CREATE VIEW vw_rooms AS
-	SELECT room_types.room_type_id, room_types.room_type_name, 
-		rooms.org_id, rooms.room_id, rooms.room_number, rooms.is_active, rooms.operation_date, 
+
+CREATE OR REPLACE VIEW vw_rooms AS
+	SELECT room_types.room_type_id, room_types.room_type_name,
+		rooms.org_id, rooms.room_id, rooms.room_number, rooms.is_active, rooms.operation_date,
 		rooms.details
 	FROM rooms INNER JOIN room_types ON rooms.room_type_id = room_types.room_type_id;
-	
-CREATE VIEW vw_room_rates AS
+
+CREATE OR REPLACE VIEW vw_room_rates AS
 	SELECT room_types.room_type_id, room_types.room_type_name,
 		service_types.service_type_id, service_types.service_type_name,
-		service_types.tax_rate1, service_types.tax_rate2, service_types.tax_rate3, 
+		service_types.tax_rate1, service_types.tax_rate2, service_types.tax_rate3,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		room_rates.org_id, room_rates.room_rate_id, room_rates.current_rate, room_rates.date_start, 
+		room_rates.org_id, room_rates.room_rate_id, room_rates.current_rate, room_rates.date_start,
 		room_rates.date_end, room_rates.is_active, room_rates.exchange_rate, room_rates.details,
-		(room_types.room_type_name || ', ' || service_types.service_type_name || ', ' || room_rates.date_start) as disp
+		(room_types.room_type_name || ', ' || service_types.service_type_name || ', ' || room_rates.date_start) as disp,
+		room_types.image,orgs.city_code,orgs.star
 	FROM room_rates INNER JOIN room_types ON room_rates.room_type_id = room_types.room_type_id
 		INNER JOIN service_types ON room_rates.service_type_id = service_types.service_type_id
+		INNER JOIN orgs ON room_rates.org_id = orgs.org_id
 		INNER JOIN currency ON room_rates.currency_id = currency.currency_id;
 
-CREATE VIEW vw_bookings AS
+CREATE OR REPLACE VIEW vw_bookings AS
 	SELECT vw_room_rates.room_type_id, vw_room_rates.room_type_name,
 		vw_room_rates.service_type_id, vw_room_rates.service_type_name,
 		vw_room_rates.room_rate_id, vw_room_rates.current_rate, vw_room_rates.date_start, vw_room_rates.date_end,
 		entitys.entity_id, entitys.entity_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		reserve_modes.reserve_mode_id, reserve_modes.reserve_mode_name,
-		bookings.org_id, bookings.booking_id, bookings.booking_date, bookings.arrival_date, bookings.arrival_time, 
-		bookings.departure_date, bookings.departure_time, bookings.units, bookings.confirmed, bookings.closed, 
-		bookings.book_rate, bookings.commision, bookings.discount, bookings.tax1, bookings.tax2, bookings.tax3, 
+		bookings.org_id, bookings.booking_id, bookings.booking_date, bookings.arrival_date, bookings.arrival_time,
+		bookings.departure_date, bookings.departure_time, bookings.units, bookings.confirmed, bookings.closed,
+		bookings.book_rate, bookings.commision, bookings.discount, bookings.tax1, bookings.tax2, bookings.tax3,
 		bookings.exchange_rate, bookings.payment_method, bookings.details
 	FROM bookings INNER JOIN vw_room_rates ON bookings.room_rate_id = vw_room_rates.room_rate_id
 		INNER JOIN entitys ON bookings.entity_id = entitys.entity_id
 		INNER JOIN currency ON bookings.currency_id = currency.currency_id
 		INNER JOIN reserve_modes ON bookings.reserve_mode_id = reserve_modes.reserve_mode_id;
-		
-CREATE VIEW vw_residents AS
-	SELECT entitys.entity_id, entitys.entity_name, 
-		residents.org_id, residents.resident_id, residents.resident_name, residents.email, 
+
+CREATE OR REPLACE VIEW vw_residents AS
+	SELECT entitys.entity_id, entitys.entity_name,
+		residents.org_id, residents.resident_id, residents.resident_name, residents.email,
 		residents.identification, residents.date_of_birth, residents.details
 	FROM residents INNER JOIN entitys ON residents.entity_id = entitys.entity_id;
-	
-CREATE VIEW vw_stay AS
+
+CREATE OR REPLACE VIEW vw_stay AS
 	SELECT vw_bookings.service_type_id,vw_bookings.service_type_name,
 		vw_bookings.room_rate_id, vw_bookings.current_rate, vw_bookings.date_start, vw_bookings.date_end,
 		vw_bookings.entity_id, vw_bookings.entity_name,
 		vw_bookings.currency_id, vw_bookings.currency_name,
 		vw_bookings.reserve_mode_id, vw_bookings.reserve_mode_name,
 		vw_bookings.booking_id, vw_bookings.booking_date,
-		residents.resident_id, residents.resident_name, 
+		residents.resident_id, residents.resident_name,
 		room_types.room_type_id, room_types.room_type_name,
 		rooms.room_id, rooms.room_number,
-		stay.org_id, stay.stay_id, stay.arrival_date, stay.arrival_time, stay.departure_date, 
+		stay.org_id, stay.stay_id, stay.arrival_date, stay.arrival_time, stay.departure_date,
 		stay.departure_time, stay.completed, stay.room_cleared, stay.details
 	FROM stay INNER JOIN vw_bookings ON stay.booking_id = vw_bookings.booking_id
 	INNER JOIN residents ON stay.resident_id = residents.resident_id
 	INNER JOIN rooms ON stay.room_id = rooms.room_id
 	INNER JOIN room_types ON rooms.room_type_id = room_types.room_type_id;
 
-CREATE VIEW vw_receipts AS
+CREATE OR REPLACE VIEW vw_receipts AS
 	SELECT vw_bookings.service_type_id,vw_bookings.service_type_name,
 		vw_bookings.room_rate_id, vw_bookings.current_rate, vw_bookings.date_start, vw_bookings.date_end,
 		vw_bookings.entity_id, vw_bookings.entity_name,
@@ -252,13 +255,13 @@ CREATE VIEW vw_receipts AS
 		vw_bookings.booking_id, vw_bookings.booking_date,
 		bank_accounts.bank_account_id, bank_accounts.bank_account_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		receipts.org_id, receipts.journal_id, receipts.sys_audit_trail_id, 
-		receipts.receipt_id, receipts.receipt_number, receipts.pay_date, receipts.cleared, 
+		receipts.org_id, receipts.journal_id, receipts.sys_audit_trail_id,
+		receipts.receipt_id, receipts.receipt_number, receipts.pay_date, receipts.cleared,
 		receipts.tx_type, receipts.amount, receipts.exchange_rate, receipts.details
 	FROM receipts INNER JOIN vw_bookings ON receipts.booking_id = vw_bookings.booking_id
 		INNER JOIN bank_accounts ON receipts.bank_account_id = bank_accounts.bank_account_id
 		INNER JOIN currency ON receipts.currency_id = currency.currency_id;
-	
+
 CREATE OR REPLACE FUNCTION ins_bookings() RETURNS TRIGGER AS $$
 DECLARE
 	myrec RECORD;
@@ -266,7 +269,7 @@ DECLARE
 BEGIN
 	SELECT max(current_rate) as mcurrrenrate, max(tax1) as mtax1, max(tax2) as mtax2, max(tax3) as mtax3 INTO raterec
 	FROM roomrates
-	WHERE (room_type_id = NEW.room_type_id) AND (service_type_id = NEW.service_type_id) 
+	WHERE (room_type_id = NEW.room_type_id) AND (service_type_id = NEW.service_type_id)
 		AND (start_date <= NEW.arrival_date) AND (end_date >= NEW.arrival_date) AND (drop_rate = false);
 
 	SELECT commision, discount INTO myrec
@@ -292,9 +295,9 @@ CREATE OR REPLACE FUNCTION ins_stay() RETURNS TRIGGER AS $$
 DECLARE
 	myrec RECORD;
 BEGIN
-	SELECT arrival_date, arrival_time, departure_date, departure_time INTO myrec 
+	SELECT arrival_date, arrival_time, departure_date, departure_time INTO myrec
 	FROM Bookings WHERE Bookingid = NEW.Bookingid;
-	
+
 	NEW.arrival_date = myrec.arrival_date;
 	NEW.arrival_time = myrec.arrival_time;
 	NEW.departure_date = myrec.departure_date;
@@ -306,5 +309,3 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_stay BEFORE INSERT ON stay
     FOR EACH ROW EXECUTE PROCEDURE ins_stay();
-
-

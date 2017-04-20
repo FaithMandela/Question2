@@ -234,6 +234,8 @@
 				<CHECKBOX w="150" h="20" x="290" y="110" title="Payroll Payable">payroll_payable</CHECKBOX>
 				<TEXTFIELD w="150" h="20" x="10" y="130" title="Cert. Number">cert_number</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="130" title="VAT Number">vat_number</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Star">star</TEXTFIELD>
+				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Location" title="Location">location</TEXTAREA>
 				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Details" title="Details">details</TEXTAREA>
 			</FORM>
 			<GRID keyfield="address_id" name="Address" where="table_name = 'orgs'" linkfield="table_id" table="vw_address">
@@ -298,7 +300,11 @@
 				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="70" lptable="currency" title="Base Currency">currency_id</COMBOBOX>
 				<COMBOBOX noorg="true" w="350" h="20" lpfield="sys_country_name" x="10" y="90" lptable="sys_countrys" title="Default Country" lpkey="sys_country_id">default_country_id</COMBOBOX>
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="org_name" x="10" y="110" lptable="orgs" title="Parent Org" lpkey="org_id">parent_org_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="city_name" x="10" y="110" lptable="city_codes" title="Town" lpkey="city_code">city_code</COMBOBOX>
 				<TEXTFIELD w="50" h="20" x="10" y="130" placeholder="Organisation Sufix" title="Sufix">org_sufix</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Star">star</TEXTFIELD>
+				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Location" title="Location">location</TEXTAREA>
+				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Details" title="Details">details</TEXTAREA>
 			</FORM>
 			<GRID noorg="true" keyfield="entity_id" name="Entitys" linkfield="org_id" table="vw_entitys">
@@ -312,6 +318,8 @@
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
 				<TEXTFIELD w="75" title="Telephone">primary_telephone</TEXTFIELD>
 				<FORM noorg="true" keyfield="entity_id" name="Entitys" linkfield="org_id" table="entitys">
+					<DEFAULT default="0">entity_type_id</DEFAULT>
+					<DEFAULT default="0">use_key_id</DEFAULT>
 					<TEXTFIELD w="150" h="20" x="10" y="10" title="Entity Name">entity_name</TEXTFIELD>
 					<TEXTFIELD w="150" h="20" x="290" y="10" title="User Name">user_name</TEXTFIELD>
 					<TEXTFIELD w="430" h="20" x="10" y="30" title="Primary Email">primary_email</TEXTFIELD>
@@ -379,7 +387,7 @@
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 				<FORM keyfield="room_rate_id" name="Room Rates" linkfield="service_type_id" table="room_rates">
 					<COMBOBOX w="430" h="20" lpfield="room_type_name" x="10" y="10" lptable="room_types" title="Room Type">room_type_id</COMBOBOX>
-					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="30" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
+					<COMBOBOX noorg="true" w="430" h="20" lpfield="currency_name" x="10" y="30" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" h="20" x="10" y="50" title="Current Rate">current_rate</TEXTDECIMAL>
 					<TEXTDECIMAL default="1" w="150" h="290" x="10" y="50" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" h="20" x="10" y="70" title="Date Start">date_start</TEXTDATE>
@@ -434,18 +442,18 @@
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 				<FORM keyfield="room_rate_id" name="Room Rates" linkfield="room_type_id" table="room_rates">
 					<COMBOBOX w="430" h="20" lpfield="service_type_name" x="10" y="10" lptable="service_types" title="Service Type">service_type_id</COMBOBOX>
-					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="30" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
+					<COMBOBOX noorg="true" w="430" h="20" lpfield="currency_name" x="10" y="30" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" h="20" x="10" y="50" title="Current Rate">current_rate</TEXTDECIMAL>
 					<TEXTDECIMAL default="1" w="150" h="20" x="290" y="50" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" h="20" x="10" y="70" title="Date Start">date_start</TEXTDATE>
 					<TEXTDATE w="150" h="20" x="290" y="70" title="Date End">date_end</TEXTDATE>
-					<CHECKBOX w="150" h="20" x="10" y="90" title="Active">is_active</CHECKBOX>
 					<TEXTAREA w="430" h="70" x="10" y="110" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<FORM keyfield="room_type_id" name="Room Types" table="room_types">
 				<TEXTFIELD w="150" h="20" x="10" y="10" title="Room Type Name">room_type_name</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="10" title="Units">units</TEXTFIELD>
+				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA w="430" h="70" x="10" y="30" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -470,6 +478,7 @@
 				<TEXTFIELD w="150" h="20" x="10" y="30" title="Room Number">room_number</TEXTFIELD>
 				<CHECKBOX w="150" h="20" x="290" y="30" title="Active">is_active</CHECKBOX>
 				<TEXTDATE w="150" h="20" x="10" y="50" title="Operation Date">operation_date</TEXTDATE>
+				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>

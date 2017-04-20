@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="letterToEmbassy" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="net.sf.jasperreports.engine.JRDefaultScriptlet" whenResourceMissingType="Empty" uuid="01ac051a-bdf8-47ed-a470-8666b23c63a7">
 	<property name="ireport.zoom" value="1.1000000000000003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="598"/>
+	<property name="ireport.y" value="342"/>
 	<parameter name="filterid" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[$P{passenger_id}]]></defaultValueExpression>
 	</parameter>
@@ -14,31 +14,32 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
+regexp_replace(
  to_char(vw_passengers.days_from,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_from) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (02,2,22)) then '"<sup>ND</sup>"'
-ELSE  '<sup>TH</sup>' end ||' MONTH YYYY') || '  TO  ' ||(to_char(vw_passengers.days_to,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
+ELSE  '<sup>TH</sup>' end ||' MONTH YYYY'),'\s+', ' ','g') || ' TO ' ||(regexp_replace(to_char(vw_passengers.days_to,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (02,2,22)) then '"<sup>ND</sup>"'
-ELSE  '<sup>TH</sup>' end || ' MONTH YYYY') ||'.') as p1,
-vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,to_char(vw_passengers.approved_date::date,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.approved_date) IN (01,1,21,31)) then '<sup>ST</sup>'
+ELSE  '<sup>TH</sup>' end || ' MONTH YYYY'),'\s+', ' ','g') ||'.') as p1,
+vw_passengers.passenger_id,vw_passengers.passenger_name,vw_passengers.rate_type_id as rate_type_id,regexp_replace(to_char(vw_passengers.approved_date::date,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.approved_date) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.approved_date::date) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.approved_date) IN (02,2,22)) then '"<sup>ND</sup>"'
-ELSE  '<sup>TH</sup>' end ||'  MONTH YYYY') as approved_date,vw_passengers.passenger_id_no,vw_passengers.destown ||',' as destown,'EMBASSY OF '|| vw_passengers.destown as embassy,vw_passengers.policy_number,vw_passengers.passport_num,
-(to_char(vw_passengers.days_from,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_from) IN (01,1,21,31)) then '<sup>ST</sup>'
+ELSE  '<sup>TH</sup>' end ||'  MONTH YYYY'),'\s+', ' ','g') as approved_date,vw_passengers.passenger_id_no,vw_passengers.destown ||',' as destown,'EMBASSY OF '|| vw_passengers.destown as embassy,vw_passengers.policy_number,vw_passengers.passport_num,
+(regexp_replace(to_char(vw_passengers.days_from,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_from) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_from) IN (02,2,22)) then '"<sup>ND</sup>"'
-ELSE  '<sup>TH</sup>' end ||' MONTH YYYY'))as days_from,
-(to_char(vw_passengers.days_to,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
+ELSE  '<sup>TH</sup>' end ||' MONTH YYYY'),'\s+', ' ','g'))as days_from,
+(regexp_replace(to_char(vw_passengers.days_to,'DD'|| case when (EXTRACT(DAY FROM vw_passengers.days_to) IN (01,1,21,31)) then '<sup>ST</sup>'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (03,3,23)) then '"<sup>RD</sup>"'
 when (EXTRACT(DAY FROM vw_passengers.days_to) IN (02,2,22)) then '"<sup>ND</sup>"'
-ELSE  '<sup>TH</sup> ' end || ' MONTH YYYY') ||'.')as days_to,
+ELSE  '<sup>TH</sup> ' end || ' MONTH YYYY'),'\s+', ' ','g') ||'.')as days_to,
 get_benefit_section_a(rate_type_id) as section_a,
 get_benefit_section_b(rate_type_id) as section_b,
 upper(vw_passengers.countries) as countries
 
 FROM vw_passengers
-WHERE passenger_id = '$P!{passenger_id}']]>
+WHERE passenger_id  = '$P!{passenger_id}']]>
 	</queryString>
 	<field name="p1" class="java.lang.String"/>
 	<field name="passenger_id" class="java.lang.Integer"/>
@@ -65,55 +66,55 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="140" splitType="Stretch">
+		<band height="121" splitType="Stretch">
 			<image>
-				<reportElement x="1" y="0" width="245" height="140" uuid="083b1a43-d937-46ef-99c9-a10553844715"/>
+				<reportElement x="1" y="0" width="228" height="119" uuid="083b1a43-d937-46ef-99c9-a10553844715"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "Heritage-Logo.jpeg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="301" y="45" width="254" height="15" uuid="eff57e9a-6bf7-48b7-bcef-317444a91404"/>
+				<reportElement x="366" y="59" width="189" height="15" uuid="eff57e9a-6bf7-48b7-bcef-317444a91404"/>
 				<textElement>
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[(t)+254 20 278 3000 (f)+254 20 2727800]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="0" width="254" height="15" uuid="5d346615-1913-4c79-9a2b-96927ce47e18"/>
+				<reportElement x="366" y="14" width="189" height="15" uuid="5d346615-1913-4c79-9a2b-96927ce47e18"/>
 				<textElement>
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[The Heritage Insurance Company Kenya LImited]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="30" width="254" height="15" uuid="253ea891-b27d-4f67-b717-10b5f638f157"/>
+				<reportElement x="366" y="44" width="189" height="15" uuid="253ea891-b27d-4f67-b717-10b5f638f157"/>
 				<textElement>
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[P.O Box 30390-00100, Nairobi, Kenya]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="75" width="254" height="15" uuid="d147022f-6a04-4dbc-a82c-2ca5c760daf5"/>
+				<reportElement x="366" y="89" width="189" height="15" uuid="d147022f-6a04-4dbc-a82c-2ca5c760daf5"/>
 				<textElement>
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[(e)info@heritage.co.ke]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="90" width="254" height="15" uuid="d70f0b00-ccaf-4568-adcb-7f0fe7a6c756"/>
+				<reportElement x="366" y="104" width="189" height="15" uuid="d70f0b00-ccaf-4568-adcb-7f0fe7a6c756"/>
 				<textElement>
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[(w)www.heritageinsurance.co.ke]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="15" width="254" height="15" uuid="69b704c7-cdf4-43e7-a4d9-775c4e32ef43"/>
+				<reportElement x="366" y="29" width="189" height="15" uuid="69b704c7-cdf4-43e7-a4d9-775c4e32ef43"/>
 				<textElement>
 					<font fontName="Arial" size="8"/>
 				</textElement>
 				<text><![CDATA[Liberty House, Mamlaka Road]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="60" width="254" height="15" uuid="e94121ce-cc01-4afa-bbb1-f71032f2ee69"/>
+				<reportElement x="366" y="74" width="189" height="15" uuid="e94121ce-cc01-4afa-bbb1-f71032f2ee69"/>
 				<textElement>
 					<font fontName="Arial" size="8"/>
 				</textElement>
@@ -134,42 +135,42 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 				<text><![CDATA[NAIROBI.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="98" width="126" height="20" uuid="1c6eb971-a772-422c-a24e-cad1c93dd090"/>
+				<reportElement x="0" y="98" width="198" height="20" uuid="1c6eb971-a772-422c-a24e-cad1c93dd090"/>
 				<textElement>
 					<font fontName="Arial" size="11"/>
 				</textElement>
 				<text><![CDATA[Dear Sir/Madam,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="102" y="134" width="380" height="20" uuid="287aaefb-0cd4-4376-9489-3ad75d78a690"/>
+				<reportElement x="82" y="134" width="380" height="20" uuid="287aaefb-0cd4-4376-9489-3ad75d78a690"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[OVERSEAS TRAVEL INSURANCE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="102" y="154" width="97" height="20" uuid="501283b1-0159-4764-976b-0cda7f37996d"/>
+				<reportElement x="82" y="154" width="97" height="20" uuid="501283b1-0159-4764-976b-0cda7f37996d"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[POLICY NUMBER:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="102" y="174" width="56" height="20" uuid="2e3a6bcb-c812-4e9e-8e3e-0609b441a975"/>
+				<reportElement x="82" y="174" width="56" height="20" uuid="2e3a6bcb-c812-4e9e-8e3e-0609b441a975"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[INSURED:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="199" y="154" width="283" height="20" uuid="00c2565f-f68d-441b-991a-af9a19e9649e"/>
+				<reportElement x="179" y="154" width="283" height="20" uuid="00c2565f-f68d-441b-991a-af9a19e9649e"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{policy_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="158" y="174" width="324" height="20" uuid="4413232b-798d-4950-b766-c41c183bc7a0"/>
+				<reportElement x="138" y="174" width="324" height="20" uuid="4413232b-798d-4950-b766-c41c183bc7a0"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
@@ -184,7 +185,7 @@ WHERE passenger_id = '$P!{passenger_id}']]>
 SALES & DISTRIBUTION DEPARTMENT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="3" y="134" width="27" height="20" uuid="04a37615-9faa-4030-b500-2fadc4c93212"/>
+				<reportElement x="0" y="134" width="29" height="20" uuid="04a37615-9faa-4030-b500-2fadc4c93212"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>
@@ -209,32 +210,32 @@ SALES & DISTRIBUTION DEPARTMENT]]></text>
 				<text><![CDATA[.]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="264" width="555" height="58" isPrintWhenDetailOverflows="true" uuid="e5038bf7-5e09-40ba-87f7-a074e2fc4e4b"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="262" width="555" height="69" isPrintWhenDetailOverflows="true" uuid="e5038bf7-5e09-40ba-87f7-a074e2fc4e4b"/>
 				<textElement markup="styled">
 					<font fontName="Times New Roman" size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{benefits}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="7" y="412" width="218" height="132" uuid="3aabf701-7e0e-419f-afe7-a8706c9d38dd"/>
+				<reportElement x="0" y="412" width="218" height="132" uuid="3aabf701-7e0e-419f-afe7-a8706c9d38dd"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "sign.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="1" y="387" width="290" height="24" uuid="6ec8729c-cdf1-4fb5-a2ba-e55d9fd91f12"/>
+				<reportElement x="0" y="387" width="290" height="24" uuid="6ec8729c-cdf1-4fb5-a2ba-e55d9fd91f12"/>
 				<textElement>
 					<font fontName="Times New Roman" size="14"/>
 				</textElement>
 				<text><![CDATA[Yours faithfully,]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="213" width="555" height="37" uuid="1d53bbd5-e670-4c8d-a388-f8c020d138a6"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="213" width="555" height="37" isPrintWhenDetailOverflows="true" uuid="1d53bbd5-e670-4c8d-a388-f8c020d138a6"/>
 				<textElement verticalAlignment="Bottom" markup="styled">
 					<font fontName="Times New Roman" size="14" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["This is to confirm we have issued overseas travel insurance to the above named person who is scheduled to travel from  <style isBold=\"true\">" +$F{p1}+ " </style>"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["This is to confirm we have issued overseas travel insurance to the above named person who is scheduled to travel from  <style isBold=\"true\">" +$F{p1}.trim()+ " </style>"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="27" width="198" height="20" uuid="4d000d9c-d867-4828-b358-e96a34c636cc"/>
+				<reportElement x="0" y="27" width="199" height="20" uuid="4d000d9c-d867-4828-b358-e96a34c636cc"/>
 				<textElement>
 					<font fontName="Arial" size="11" isBold="true"/>
 				</textElement>
@@ -248,24 +249,21 @@ SALES & DISTRIBUTION DEPARTMENT]]></text>
 				<textFieldExpression><![CDATA[$F{embassy}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="331" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="43517f17-88aa-41b5-90b8-84d4837a9d8e"/>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="0" y="331" width="555" height="20" isPrintWhenDetailOverflows="true" uuid="43517f17-88aa-41b5-90b8-84d4837a9d8e"/>
 				<textElement verticalAlignment="Bottom" markup="styled">
 					<font fontName="Times New Roman" size="14" isBold="false"/>
 					<paragraph spacingAfter="4"/>
 				</textElement>
-				<textFieldExpression><![CDATA["The policy is valid from <style isBold=\"true\">" +$F{days_from} + "  TO  "+$F{days_to} + "</style>"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["The policy is valid from <style isBold=\"true\">" +$F{days_from} + " TO "+$F{days_to} + "</style>"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="28" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="555" height="24" uuid="138da563-908e-4586-8937-c21e1d960dde"/>
-				<textElement>
-					<font fontName="Times New Roman"/>
-				</textElement>
-				<text><![CDATA[Directors: PN Gethi (Chairman), ML du Toit**, G Kioi (Managing),  GR May*,CW Mwangi, S Sejpal*, SC Wenman** (* British, ** South Africa)]]></text>
-			</staticText>
+		<band height="33" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="554" height="33" uuid="011c926d-1862-4633-91b2-cf9f7011ef23"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "heritage_footer.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</pageFooter>
 	<summary>
