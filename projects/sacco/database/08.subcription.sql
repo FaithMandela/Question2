@@ -1,7 +1,6 @@
 
 
-CREATE TABLE locations
-(
+CREATE TABLE locations (
 	location_id			serial primary key,
 	org_id 				integer references orgs,
 	location_name 			character varying(50),
@@ -10,7 +9,6 @@ CREATE TABLE locations
 
 ALTER TABLE orgs ADD member_limit integer default 5 not null;
 ALTER TABLE orgs ADD transaction_limit integer default 100 not null;
-
 
 
 CREATE TABLE subscriptions (
@@ -171,13 +169,7 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON subscriptions
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON productions
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-
-
-    
-    --here
- CREATE OR REPLACE FUNCTION ins_subscriptions()
-  RETURNS trigger AS
-$BODY$
+CREATE OR REPLACE FUNCTION ins_subscriptions() RETURNS trigger AS $$
 DECLARE
 	v_entity_id		integer;
 	v_org_id		integer;
@@ -193,49 +185,39 @@ BEGIN
 		FROM entitys WHERE lower(trim(user_name)) = lower(trim(NEW.primary_email));
 		IF(v_entity_id is null)THEN
 			NEW.entity_id := nextval('entitys_entity_id_seq');
-			INSERT INTO entitys (entity_id, org_id, entity_type_id, entity_name, User_name, primary_email,  function_role, first_password,use_key_id)
-			VALUES (NEW.entity_id, 0, 1, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'admin', null,0);
+			INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, entity_name, User_name, primary_email,  function_role, first_password)
+			VALUES (NEW.entity_id, 0, 5, 5, NEW.primary_contact, lower(trim(NEW.primary_email)), lower(trim(NEW.primary_email)), 'admin', null);
 		
-	
 			INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
-		VALUES ( 4, 0, NEW.entity_id, 'subscription');
-		
-
-			ELSE
+			VALUES (4, 0, NEW.entity_id, 'subscription');
+			
+			NEW.approve_status := 'Completed';
+		ELSE
 			RAISE EXCEPTION 'You already have an account, login and request for services';
 		END IF ;
 		
 	ELSIF(NEW.approve_status = 'Approved')THEN
-
 		NEW.org_id := nextval('orgs_org_id_seq');
-		
 		
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
 		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
 		
 		UPDATE entitys SET org_id = NEW.org_id, function_role='admin'
 		WHERE entity_id = NEW.entity_id;
-
 		
 		v_bank_id := nextval('banks_bank_id_seq');
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		
 		INSERT INTO currency(currency_name, currency_symbol, org_id) VALUES ('Kenya Shillings', 'kes', NEW.org_id);
-    
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES ( 5, NEW.org_id, NEW.entity_id, 'subscription');
 		
 		v_bank_id := nextval('banks_bank_id_seq');
-
 		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);
-		
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
-
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
-
-		
 		
 		INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
 		SELECT NEW.org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
@@ -252,23 +234,14 @@ BEGIN
 		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 		
-		INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (NEW.org_id, 1, 1, 'Administration'); 
-
-	
+		INSERT INTO departments (org_id, department_name) 
+		VALUES (NEW.org_id, 'Administration'); 
 	END IF;
-	
 		
 	RETURN NEW;
 END;
-$BODY$
-  LANGUAGE plpgsql;
-  
-  
+$$ LANGUAGE plpgsql;
 
-
- 
-
-    
 CREATE TRIGGER ins_subscriptions BEFORE INSERT OR UPDATE ON subscriptions
     FOR EACH ROW EXECUTE PROCEDURE ins_subscriptions();
  

@@ -537,13 +537,24 @@ public class BWeb {
 			boolean hasForm = false;
 			for(BElement el : view.getElements()) {
 				String elName = el.getName();
-				if(Arrays.binarySearch(deskTypes, elName)>=0) j++;
+				if(Arrays.binarySearch(deskTypes, elName) >= 0) j++;
 				if(elName.equals("FORM") && el.getAttribute("new", "true").equals("true")) {
 					if(!hasForm) fv = j;
 					hasForm = true;
 				}
+System.out.println("BASE 4010 : " + elName);
+				if(elName.equals("ACCORDION") && el.getAttribute("new", "true").equals("true")) {
+System.out.println("BASE 4020 : " + el.toString());
+					for(BElement ell : el.getElements()) {
+System.out.println("BASE 4030 : " + ell.getName());
+						if(ell.getName().equals("FORM") && ell.getAttribute("new", "true").equals("true")) {
+							if(!hasForm) fv = j;
+							hasForm = true;
+						}
+					}
+				}
 			}
-			
+System.out.println("BASE 4040 : hasForm : " + hasForm);
 			String did = "";
 			if(dataItem != null) did = "&data=" + dataItem;
 			

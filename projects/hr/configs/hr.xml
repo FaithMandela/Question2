@@ -467,7 +467,7 @@
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
 			<GRID name="Skills" keyfield="skill_id" table="skills" user="entity_id">
-				<COMBOBOX w="240" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+				<COMBOBOX w="240" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<TEXTAREA w="250" title="Details">details</TEXTAREA>
 				<USERFIELD>entity_id</USERFIELD>
