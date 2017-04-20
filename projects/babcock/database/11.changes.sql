@@ -114,6 +114,8 @@ BEGIN
 		RAISE EXCEPTION 'No Major Indicated contact Registrars Office';
 	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
 		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
+	ELSIF ((myrec.sublevelid = 'MEDI') AND (myquarter.q_length <> 12)) THEN
+		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
 	ELSIF (myrec.qstudentid IS NULL) THEN
 		INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, currbalance, charges, financenarrative, paymenttype, org_id)
 		VALUES ($1, mydegreeid, mystudylevel, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);

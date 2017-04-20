@@ -43,7 +43,7 @@ public class BAccordion {
 		String body = "\t<div class='panel-group accordion' id='accordion1'>\n";
 		
 		accordionJs = "";
-		Integer ac = new Integer("1");
+		Integer ac = new Integer("0");
 		for(BElement vw : view.getElements()) {
 			body += "\t\t<div class='panel panel-default'>\n"
 			+ "\t\t\t<div class='panel-heading'>\n"
@@ -55,6 +55,7 @@ public class BAccordion {
 			+ "\t\t\t<div id='collapse_" + ac.toString() + "' class='panel-collapse " 
 			+ vw.getAttribute("collapse", "collapse") + "'>\n"
 			+ "\t\t\t\t<div class='panel-body'>\n";
+			
 			if(vw.getName().equals("FORM")) {
 				BWebBody webbody = new BWebBody(db, vw, whereSql, null);
 				body += webbody.getForm(false, formLinkData, request);
@@ -92,14 +93,22 @@ System.out.println("BASE 2010 : " + whereSql);
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		jshd.add("width", "100%");		// tableSize
 		jshd.add("height", "200px");
-		jshd.add("inserting", true);
-		jshd.add("editing", true);
+		if(vw.getAttribute("new", "true").equals("true")) jshd.add("inserting", true);
+		if(vw.getAttribute("edit", "true").equals("true")) jshd.add("editing", true);
 		jshd.add("filtering", false);
 		jshd.add("sorting", false);
 		jshd.add("paging", false);
 		
 		jshd.add("data", "~~db_" + fieldId + "_table~~");
 		
+		JsonObjectBuilder jscnt = Json.createObjectBuilder();
+		jscnt.add("insertItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsinsert&viewno=" 
+			+ fieldId + "', data: item}); }~~");
+		jscnt.add("updateItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsupdate&viewno=" 
+			+ fieldId + "', data: item}); }~~");
+		jscnt.add("deleteItem", "~~function(item) { return $.ajax({type:'GET', url:'ajax?fnct=jsdelete&viewno=" 
+			+ fieldId + "', data: item}); }~~");
+		jshd.add("controller", jscnt);
 		
 		Map<String, String> jsTables = new HashMap<String, String>();
 		JsonArrayBuilder jsColModel = Json.createArrayBuilder();
@@ -113,19 +122,26 @@ System.out.println("BASE 2010 : " + whereSql);
 			jsColEl.add("title", fld_title);
 			jsColEl.add("name", fld_name);
 			jsColEl.add("width", Integer.valueOf(fld_size));
+			if(el.getAttribute("required") != null) jsColEl.add("required", true);
 			if(fld_type.equals("TEXTFIELD")) {
 				jsColEl.add("type", "text");
+				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("TEXTDATE")) {
 				jsColEl.add("type", "date");
+				jsColEl.add("myCustomProperty", "datecp");
+				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("TEXTAREA")) {
 				jsColEl.add("type", "textarea");
+				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("CHECKBOX")) {
 				jsColEl.add("type", "checkbox");
+				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("COMBOBOX")) {
 				jsColEl.add("type", "select");
 				jsColEl.add("items", "~~db_" + el.getAttribute("lptable") + "_table~~");
 				jsColEl.add("valueField", "id");
 				jsColEl.add("textField", "name");
+				jsColEl.add("align", "left");
 				
 				String whereOrgSql = db.getSqlOrgWhere(el.getAttribute("noorg"));
 				String whereUserSql = db.getSqlUserWhere(el.getAttribute("user"));
@@ -133,21 +149,35 @@ System.out.println("BASE 2010 : " + whereSql);
 				else if(whereOrgSql != null) whereOrgSql = " WHERE " + whereOrgSql;
 				else whereOrgSql = "";
 				
-				String sql = "SELECT " + el.getAttribute("lpkey", el.getValue()) + " as Id, " + el.getAttribute("lpfield") + " as Name "
-				+ "FROM " + el.getAttribute("lptable") 
+				String sql = "SELECT " + el.getAttribute("lpkey", el.getValue()) + " as Id, ";
+				if(el.getAttribute("cmb_fnct") == null) sql += el.getAttribute("lpfield") + " as Name ";
+				else sql += el.getAttribute("cmb_fnct") + " as Name ";
+				sql += "FROM " + el.getAttribute("lptable") 
 				+ whereOrgSql
 				+ " ORDER BY " + el.getAttribute("orderby", el.getAttribute("lpfield"));
 				BQuery rsc = new BQuery(db, sql);
 				myhtml.append("var db_" + el.getAttribute("lptable") + "_table = " + rsc.getJSON() + ";\n\n");
 				rsc.close();
+				
+				jsColModel.add(jsColEl);
 			}
-			
+		}
+		
+		JsonObjectBuilder jsColElKf = Json.createObjectBuilder();
+		jsColElKf.add("name", "keyfield");
+		jsColElKf.add("width", 0);
+		jsColElKf.add("visible", false);
+		jsColElKf.add("type", "text");
+		jsColModel.add(jsColElKf);
+		
+		if(vw.getAttribute("edit", "true").equals("true")) {
+			JsonObjectBuilder jsColEl = Json.createObjectBuilder();
+			jsColEl.add("width", 50);
+			jsColEl.add("type", "control");
 			jsColModel.add(jsColEl);
 		}
-		JsonObjectBuilder jsColEl = Json.createObjectBuilder();
-		jsColEl.add("width", 75);
-		jsColEl.add("type", "control");
-		jsColModel.add(jsColEl);
+		
+		// Add the the fields on the JSON structure
 		jshd.add("fields", jsColModel);
 		
 		JsonObject jsObj = jshd.build();
@@ -160,7 +190,7 @@ System.out.println("BASE 2010 : " + whereSql);
 		
 		rs.close();
 		
-System.out.println("BASE 2050 : " + myhtml.toString());
+//System.out.println("BASE 2050 : " + myhtml.toString());
 
 		return myhtml.toString();
 	}

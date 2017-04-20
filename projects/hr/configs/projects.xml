@@ -33,7 +33,7 @@
 			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
 			</TILE>
-			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" groupby="entity_id" table="tasks" where="(completed = true)" user="entity_id">
 				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
 			</TILE>
 			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
