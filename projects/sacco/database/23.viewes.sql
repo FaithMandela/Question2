@@ -1,36 +1,163 @@
+--views
 
-drop function change_password ( character varying, character varying,character varying);
-
-
-
-CREATE OR REPLACE FUNCTION change_password(v_entityID integer, v_old_pass varchar(32), v_pass varchar(32)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION get_balance_new(entity_id integer) RETURNS real AS $$
 DECLARE
-    old_password    varchar(64);
-    passchange      varchar(120);
-    entityID        integer;
+		v_loans 			real;
+		v_contributions 	real;
+		v_receipt 			real;
+		balance 			real;
 BEGIN
-    passchange := 'Password Error';
-    entityID := CAST($1 AS INT);
-    SELECT Entity_password INTO old_password FROM entitys WHERE (entity_id = entityID);
-
-    IF ($2 = '0') THEN
-        passchange := first_password();
-        UPDATE entitys SET first_password = passchange, Entity_password = md5(passchange) WHERE (entity_id = entityID);
-        passchange := 'Password Changed';
-    ELSIF (old_password = md5($2)) THEN
-        UPDATE entitys SET Entity_password = md5($3) WHERE (entity_id = entityID);
-        passchange := 'Password Changed';
-    ELSE
-        passchange := null;
-    END IF;
-
-    return passchange;
+	SELECT CASE WHEN sum(loan_monthly.penalty_paid + loan_monthly.interest_paid + loan_monthly.repayment_paid) IS NULL THEN 0
+		ELSE sum(loan_monthly.penalty_paid + loan_monthly.interest_paid + loan_monthly.repayment_paid) END 
+		INTO v_loans
+	FROM loan_monthly INNER JOIN loans ON loan_monthly.loan_id = loans.loan_id
+	WHERE(loans.entity_id = $1);
+		
+	SELECT CASE WHEN  sum(contribution_paid ) IS NULL THEN 0   
+	ELSE sum(contribution_paid) END
+		INTO v_contributions
+	FROM contributions
+	WHERE (contributions.entity_id = $1);
+		
+	SELECT CASE WHEN sum (receipt) IS NULL THEN 0 ELSE sum (receipt)  END
+		INTO  v_receipt
+	FROM contributions
+	WHERE (contributions.entity_id = $1);
+	
+	balance = v_receipt - (v_loans + v_contributions) ;
+	IF(balance is null)THEN balance = 0; END IF;
+	
+	RETURN balance;
 END;
 $$ LANGUAGE plpgsql;
 
-alter table loan_monthly add additional_payments real not null default 0;
+CREATE OR REPLACE VIEW vw_gurrantors AS 
+	SELECT vw_loans.principle, vw_loans.currency_symbol, vw_loans.entity_id, vw_loans.interest,
+		vw_loans.monthly_repayment, vw_loans.loan_date, vw_loans.initial_payment, vw_loans.loan_id,
+		vw_loans.repayment_amount, vw_loans.total_interest, vw_loans.loan_balance, vw_loans.calc_repayment_period,
+		vw_loans.reducing_balance, vw_loans.repayment_period, vw_loans.application_date, vw_loans.approve_status,
+		vw_loans.org_id, vw_loans.action_date, vw_loans.details, vw_loans.total_repayment,
+		entitys.entity_name, 
+		loan_types.loan_type_id, loan_types.loan_type_name, 
+		gurrantors.gurrantor_id, gurrantors.is_accepted, gurrantors.amount, gurrantors_entity.entity_name AS gurrantor_entity_name,
+		gurrantors_entity.entity_id AS gurrantor_entity_id
+	FROM gurrantors INNER JOIN vw_loans ON vw_loans.loan_id = gurrantors.loan_id
+		INNER JOIN entitys ON vw_loans.entity_id = entitys.entity_id
+		INNER JOIN loan_types ON vw_loans.loan_type_id = loan_types.loan_type_id
+		INNER JOIN entitys gurrantors_entity ON gurrantors_entity.entity_id = gurrantors.entity_id;
+
+CREATE OR REPLACE VIEW vw_recruiting_entity AS
+	SELECT members.entity_id,members.surname,recruiting_agent_entity.entity_name AS recruiting_agent_entity_name,
+		recruiting_agent.entity_id AS recruiting_agent_entity_id, recruiting_agent.recruiting_agent_id, 
+		recruiting_agent.org_id
+	FROM members JOIN recruiting_agent on members.recruiting_agent_id = recruiting_agent.recruiting_agent_id
+		LEFT JOIN entitys recruiting_agent_entity ON recruiting_agent_entity.entity_id = recruiting_agent.entity_id;
+		
+CREATE OR REPLACE VIEW vw_investments AS 
+	SELECT entitys.entity_id, entitys.entity_name,
+		investment_types.investment_type_name,
+		investments.org_id, investments.investment_id, investments.investment_type_id,
+		investments.maturity_date, investments.invest_amount, investments.yearly_dividend,
+		investments.withdrawal_date, investments.withdrwal_amount, investments.period_years,
+		investments.default_interest, investments.return_on_investment, investments.application_date,
+		investments.approve_status, investments.workflow_table_id, investments.action_date,
+		investments.details
+
+	FROM investments INNER JOIN entitys ON entitys.entity_id = investments.entity_id
+		INNER JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;  
+		
+
+CREATE OR REPLACE VIEW vw_contributions AS 
+	SELECT contributions.contribution_id,
+		contributions.org_id,
+		contributions.entity_id,
+		contributions.period_id,
+		contributions.payment_type_id,
+		contributions.receipt,
+		contributions.receipt_date,
+
+			contributions.entry_date,
+		contributions.transaction_ref,
+		contributions.contribution_amount,
+		contributions.contribution_paid,
+
+		contributions.deposit_date AS deposit_dates,
+		contributions.is_paid,
+		members.full_name ,
+		members.expired, 
+		contribution_types.contribution_type_id,
+		contribution_types.contribution_type_name,
+		payment_types.payment_type_name,
+		payment_types.payment_narrative,
+		get_balance_new (contributions.entity_id) AS active_balance,
+		to_char(periods.start_date::timestamp with time zone, 'YYYY'::text) AS deposit_year,
+		to_char(periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
+	FROM contributions
+		JOIN members ON contributions.entity_id = members.entity_id
+		JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
+		JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
+		JOIN periods ON contributions.period_id = periods.period_id where expired = 'false';
+
+CREATE OR REPLACE VIEW vw_contributions_month AS 
+	SELECT vw_periods.period_id,
+		vw_periods.start_date,
+		vw_periods.end_date,
+		vw_periods.overtime_rate,
+		vw_periods.activated,
+		vw_periods.closed,
+		vw_periods.month_id,
+		vw_periods.period_year,
+		vw_periods.period_month,
+		vw_periods.quarter,
+		vw_periods.semister,
+		--vw_periods.bank_header,
+		--vw_periods.bank_address,
+		--vw_periods.is_posted,
+		contributions.contribution_id,
+		contributions.org_id,
+		contributions.entity_id,
+		contributions.payment_type_id,
+		contributions.contribution_amount,
+		contributions.contribution_paid ,
+
+		contributions.entry_date,
+		contributions.transaction_ref,
+		contributions.is_paid,
+		get_balance_new(contributions.entity_id) AS active_balance,
+		members.contribution AS intial_contribution,
+		members.first_name,
+		members.expired,
+		contribution_types.contribution_type_id,
+		contribution_types.contribution_type_name,
+		payment_types.payment_type_name,
+		payment_types.payment_narrative,
+		to_char(vw_periods.start_date::timestamp with time zone, 'YYYY'::text) AS year,
+		to_char(vw_periods.start_date::timestamp with time zone, 'Month'::text) AS deposit_date
+	FROM contributions
+		JOIN members ON contributions.entity_id = members.entity_id
+		JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
+		JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
+		JOIN vw_periods ON contributions.period_id = vw_periods.period_id;
 
 
+CREATE OR REPLACE VIEW vw_additional_funds AS 
+	SELECT vw_contributions.contribution_amount,
+		vw_contributions.contribution_paid,
+		vw_contributions.contribution_id,
+		additional_funds.payment_type_id,
+		additional_funds.org_id,
+		additional_funds.additional_amount,
+		additional_funds.deposit_date AS paid_date,
+		additional_funds.entry_date,
+		additional_funds.transaction_ref,
+		additional_funds.additional_funds_id,
+		additional_funds.narrative,
+		vw_contributions.deposit_year,
+		vw_contributions.deposit_date,
+		payment_types.payment_type_name
+	FROM additional_funds
+		JOIN vw_contributions ON vw_contributions.contribution_id = additional_funds.contribution_id
+		JOIN payment_types ON payment_types.payment_type_id = additional_funds.payment_type_id;
 
 CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
 	SELECT CASE WHEN sum(repayment + interest_paid + penalty_paid - additional_payments) is null THEN 0 
@@ -168,186 +295,6 @@ end if;
 RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-
-
---views
-
-CREATE OR REPLACE VIEW vw_gurrantors AS 
- SELECT vw_loans.principle,
- vw_loans.currency_symbol,
-    vw_loans.entity_id,
-    vw_loans.interest,
-    vw_loans.monthly_repayment,
-    vw_loans.loan_date,
-    vw_loans.initial_payment,
-    vw_loans.loan_id,
-    vw_loans.repayment_amount,
-    vw_loans.total_interest,
-    vw_loans.loan_balance,
-    vw_loans.calc_repayment_period,
-    vw_loans.reducing_balance,
-    vw_loans.repayment_period,
-    vw_loans.application_date,
-    vw_loans.approve_status,
-    vw_loans.org_id,
-    vw_loans.action_date,
-    vw_loans.details,
-    vw_loans.total_repayment,
-    entitys.entity_name,
-    loan_types.loan_type_id,
-    loan_types.loan_type_name,
-    gurrantors.gurrantor_id,
-    gurrantors.is_accepted,
-    gurrantors.amount,
-    gurrantors_entity.entity_name AS gurrantor_entity_name,
-    gurrantors_entity.entity_id AS gurrantor_entity_id
-   FROM gurrantors
-     JOIN vw_loans ON vw_loans.loan_id = gurrantors.loan_id
-     JOIN entitys ON vw_loans.entity_id = entitys.entity_id
-     JOIN loan_types ON vw_loans.loan_type_id = loan_types.loan_type_id
-     JOIN entitys gurrantors_entity ON gurrantors_entity.entity_id = gurrantors.entity_id;
-
-
-
-
-DROP VIEW vw_entitys;
-
-CREATE OR REPLACE VIEW vw_entitys AS 
-SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active, 
-		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin, 
-		vw_orgs.vat_number as org_vat_number, vw_orgs.invoice_footer as org_invoice_footer,
-		--vw_orgs.sys_country_id as org_sys_country_id, vw_orgs.sys_country_name as org_sys_country_name, 
-		--vw_orgs.address_id as org_address_id, vw_orgs.table_name as org_table_name,
-		--vw_orgs.post_office_box as org_post_office_box, vw_orgs.postal_code as org_postal_code, 
-		--vw_orgs.premises as org_premises, vw_orgs.street as org_street, vw_orgs.town as org_town, 
-		--vw_orgs.phone_number as org_phone_number, vw_orgs.extension as org_extension, 
-		--vw_orgs.mobile as org_mobile, vw_orgs.fax as org_fax, vw_orgs.email as org_email, vw_orgs.website as org_website,
-		
-		addr.address_id, addr.address_name,
-		addr.sys_country_id, addr.sys_country_name, addr.table_name, addr.is_default,
-		addr.post_office_box, addr.postal_code, addr.premises, addr.street, addr.town, 
-		addr.phone_number, addr.extension, addr.mobile, addr.fax, addr.email, addr.website,
-		
-		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
-		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
-		entitys.function_role, entitys.attention, entitys.primary_email,
-		
-		entity_types.entity_type_id, entity_types.entity_type_name, 
-		entity_types.entity_role
-	FROM (entitys LEFT JOIN vw_address_entitys as addr ON entitys.entity_id = addr.table_id)
-		JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
---here
-DROP VIEW vw_orgs  CASCADE;
-CREATE VIEW vw_orgs AS
-	SELECT orgs.org_id, orgs.org_name, orgs.is_default, orgs.is_active, orgs.logo, orgs.details,
-
-		vw_org_address.org_sys_country_id, vw_org_address.org_sys_country_name,
-		vw_org_address.org_address_id, vw_org_address.org_table_name,
-		vw_org_address.org_post_office_box, vw_org_address.org_postal_code,
-		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
-		vw_org_address.org_phone_number, vw_org_address.org_extension,
-		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website
-	FROM orgs LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
-
-DROP VIEW vw_entity_address cascade;
-CREATE VIEW vw_entity_address AS
-	SELECT vw_address.address_id, vw_address.address_name,
-		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.table_id, vw_address.table_name,
-		vw_address.is_default, vw_address.post_office_box, vw_address.postal_code, vw_address.premises,
-		vw_address.street, vw_address.town, vw_address.phone_number, vw_address.extension, vw_address.mobile,
-		vw_address.fax, vw_address.email, vw_address.website
-	FROM vw_address
-	WHERE (vw_address.table_name = 'entitys') AND (vw_address.is_default = true);
-
-CREATE VIEW vw_entitys AS
-	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default,
-		vw_orgs.is_active as org_is_active, vw_orgs.logo as org_logo,
-
-		vw_orgs.org_sys_country_id, vw_orgs.org_sys_country_name,
-		vw_orgs.org_address_id, vw_orgs.org_table_name,
-		vw_orgs.org_post_office_box, vw_orgs.org_postal_code,
-		vw_orgs.org_premises, vw_orgs.org_street, vw_orgs.org_town,
-		vw_orgs.org_phone_number, vw_orgs.org_extension,
-		vw_orgs.org_mobile, vw_orgs.org_fax, vw_orgs.org_email, vw_orgs.org_website,
-
-		vw_entity_address.address_id, vw_entity_address.address_name,
-		vw_entity_address.sys_country_id, vw_entity_address.sys_country_name, vw_entity_address.table_name,
-		vw_entity_address.is_default, vw_entity_address.post_office_box, vw_entity_address.postal_code,
-		vw_entity_address.premises, vw_entity_address.street, vw_entity_address.town,
-		vw_entity_address.phone_number, vw_entity_address.extension, vw_entity_address.mobile,
-		vw_entity_address.fax, vw_entity_address.email, vw_entity_address.website,
-
-		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader,
-		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password,
-		entitys.function_role, entitys.primary_email, entitys.primary_telephone,
-		entity_types.entity_type_id, entity_types.entity_type_name,
-		entity_types.entity_role
-	FROM (entitys LEFT JOIN vw_entity_address ON entitys.entity_id = vw_entity_address.table_id)
-		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
-		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
-	
-CREATE OR REPLACE VIEW vw_entitys_types AS 
-	SELECT	entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
-		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
-		entitys.function_role, entitys.attention, entitys.primary_email, entitys.org_id,entitys.primary_telephone,
-		  entitys.new_password,entitys.exit_amount,
-		entity_types.entity_type_id, entity_types.entity_type_name, 
-		entity_types.entity_role
-	FROM entitys
-		JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id ;
-		
-		
-ALTER TABLE bank_accounts add currency_id integer REFERENCES currency;
-ALTER TABLE bank_accounts add account_id integer references accounts;
-
-CREATE OR REPLACE VIEW vw_bank_accounts AS 
-	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name,vw_bank_branch.bank_branch_id,
-		vw_bank_branch.bank_branch_name,vw_accounts.account_type_id, vw_accounts.account_type_name,vw_accounts.account_id,vw_accounts.account_name,
-		currency.currency_id,currency.currency_name,currency.currency_symbol,
-		bank_accounts.bank_account_id,bank_accounts.org_id, bank_accounts.bank_account_name,bank_accounts.bank_account_number,
-		bank_accounts.narrative,bank_accounts.is_active,bank_accounts.details
-   FROM bank_accounts
-		FULL JOIN vw_bank_branch ON bank_accounts.bank_branch_id = vw_bank_branch.bank_branch_id
-		FULL JOIN vw_accounts ON bank_accounts.bank_account_id = vw_accounts.account_id
-		FULL JOIN currency ON bank_accounts.currency_id = currency.currency_id;
-
-
-CREATE OR REPLACE VIEW vw_recruiting_entity AS
-		SELECT members.entity_id,members.surname,recruiting_agent_entity.entity_name AS recruiting_agent_entity_name,
-			recruiting_agent.entity_id AS recruiting_agent_entity_id, recruiting_agent.recruiting_agent_id, 
-			recruiting_agent.org_id
-	FROM  members
-	JOIN recruiting_agent on members.recruiting_agent_id = recruiting_agent.recruiting_agent_id
-	left JOIN entitys recruiting_agent_entity ON recruiting_agent_entity.entity_id = recruiting_agent.entity_id;
-		
-
-
- CREATE OR REPLACE VIEW vw_investments AS 
- SELECT entitys.entity_id,
-    entitys.entity_name,
-    entitys.org_id,
-    investments.investment_id,
-    investments.investment_type_id,
-    investments.maturity_date,
-    investments.invest_amount,
-    investments.yearly_dividend,
-    investments.withdrawal_date,
-    investments.withdrwal_amount,
-    investments.period_years,
-    investments.default_interest,
-    investments.return_on_investment,
-    investments.application_date,
-    investments.approve_status,
-    investments.workflow_table_id,
-    investments.action_date,
-    investments.details,
-    investment_types.investment_type_name
-   FROM investments
-     JOIN entitys ON entitys.entity_id = investments.entity_id
-     JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;  
-
      
  
 CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
@@ -393,18 +340,6 @@ $$ LANGUAGE plpgsql;
 
 
 ------------Hooks to approval trigger
-
-
-    
-
-
-
-
-
-
-
-
-
   
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON investments
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
@@ -742,6 +677,172 @@ $$ LANGUAGE plpgsql;
 
  
  
+CREATE OR REPLACE FUNCTION get_balances(entity_id integer) RETURNS real AS $$
+DECLARE
+	v_loans 			real;
+	v_contributions 	real;
+	v_receipt 			real;
+	balance 			real;
+BEGIN
+
+	SELECT sum(contribution_paid), sum (receipt) INTO v_contributions, v_receipt
+		FROM contributions
+		WHERE (contributions.entity_id = $1);
+	
+	balance = v_receipt - v_contributions;
+		IF(balance is null)THEN balance = 0; END IF;
+	
+	RETURN balance;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_total_repayment(integer) RETURNS real AS $$
+	SELECT CASE WHEN sum(repayment_paid + interest_paid + penalty_paid) is null THEN 0 
+		ELSE sum(repayment_paid + interest_paid + penalty_paid) END
+	FROM loan_monthly
+	WHERE (loan_id = $1);
+$$ LANGUAGE SQL;
+
+
+CREATE OR REPLACE FUNCTION get_loan_balance(integer, integer) RETURNS double precision AS $$
+	SELECT sum(monthly_repayment + loan_intrest)
+	FROM vw_loan_payments 
+	WHERE (loan_id = $1) and (months <= $2);
+$$ LANGUAGE SQL;
+
+
+
+CREATE OR REPLACE FUNCTION ins_contributions() RETURNS trigger AS $$
+DECLARE
+	v_amount				real;
+	reca					RECORD;
+	v_loans					real;
+	v_contributions			real;
+	v_penalty				real;
+	v_intrest				real;
+	v_repayment				real;
+	v_contribution			real;
+	currencyid				integer;
+	entityname      		varchar(120);
+	journalid				integer;
+BEGIN
+	IF((NEW.is_paid = true) AND (NEW.receipt > 0))THEN
+	IF (New.receipt_date IS NULL) THEN New.receipt_date = now()::date; END IF;
+			-- post to journals and gls
+		SELECT entitys.entity_name, currency.currency_id INTO entityname,currencyid FROM entitys 
+		INNER JOIN  currency ON currency.org_id = entitys.org_id where entity_id = NEW.entity_id; 
+		
+		INSERT INTO journals (period_id, journal_date, org_id, department_id, currency_id, narrative, year_closing)
+		VALUES (New.period_id, NEw.receipt_date ,New.org_id, 1, currencyid, entityname || ' Contributions ', false) returning journal_id 
+		into journalid ;
+		
+		INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
+		VALUES (journalid, 34005, New.receipt, 0, entityname || ' contribution Amount', NEW.org_id) ;
+		
+		INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
+		VALUES ( journalid, 40000,0, NEw.receipt,  entityname || 'contribution Amount ', NEW.org_id);
+
+
+			--- Compute the full previous balance
+		SELECT sum(loan_monthly.penalty_paid + loan_monthly.interest_paid + loan_monthly.repayment_paid)
+			INTO v_loans
+		FROM loan_monthly INNER JOIN loans ON loan_monthly.loan_id = loans.loan_id
+			INNER JOIN periods ON loan_monthly.period_id = periods.period_id
+		WHERE (loans.entity_id = NEW.entity_id) AND (periods.end_date <= NEW.entry_date);
+		IF(v_loans is null)THEN v_loans = 0; END IF;
+		--Get new  amount on previous contributions 
+		
+		SELECT sum(contributions.receipt - contributions.contribution_paid+ additional_funds.additional_amount) INTO v_contributions
+		FROM contributions INNER JOIN periods ON contributions.period_id = periods.period_id INNER JOIN  additional_funds ON additional_funds.contribution_id = contributions.contribution_id
+		WHERE (contributions.contribution_id <> NEW.contribution_id) AND (contributions.entity_id = NEW.entity_id)
+			AND (periods.end_date <= NEW.entry_date);
+		IF(v_contributions is null)THEN v_contributions = 0; END IF;
+		
+		v_amount := NEW.receipt + v_contributions - v_loans;
+		
+	
+		FOR reca IN SELECT loan_monthly.loan_id, sum(loan_monthly.penalty - loan_monthly.penalty_paid) as s_penalty, 
+				sum(loan_monthly.interest_amount - loan_monthly.interest_paid) as s_intrest, 
+				sum(loan_monthly.repayment - loan_monthly.repayment_paid) as s_repayment
+			FROM loan_monthly INNER JOIN loans ON loan_monthly.loan_id = loans.loan_id
+			WHERE (loans.entity_id = NEW.entity_id)
+			GROUP BY loan_monthly.loan_id
+		LOOP
+			v_penalty := reca.s_penalty;
+ 			v_intrest := reca.s_intrest;
+			v_repayment := reca.s_repayment;
+		
+			IF(v_penalty > 0)THEN
+				IF(v_penalty <= v_amount)THEN
+					v_amount := v_amount - v_penalty;
+					
+				ELSE
+					v_penalty := v_amount;
+					v_amount := 0;
+				END IF;
+			END IF;
+
+			IF(v_intrest > 0)THEN
+				IF(v_intrest <= v_amount)THEN
+					v_amount := v_amount - v_intrest;
+				ELSE
+					v_intrest := v_amount;
+					v_amount := 0;
+				END IF;
+			END IF;
+
+			IF(v_repayment > 0)THEN
+				IF(v_repayment <= v_amount)THEN
+					v_amount := v_amount - v_repayment;
+				ELSE
+					v_repayment := v_amount;
+					v_amount := 0;
+				END IF;
+			END IF;
+			IF (v_intrest is null) THEN v_intrest = 0; END IF;
+			UPDATE loan_monthly SET penalty_paid = v_penalty, interest_paid = v_intrest, repayment_paid = v_repayment, is_paid = true
+			WHERE loan_id = reca.loan_id AND period_id = NEW.period_id;
+		END LOOP;
+		
+		-- get sum before doing the insert not to affect current insert 
+
+		
+		SELECT sum(contribution_amount - contribution_paid +  additional_funds.additional_amount) INTO v_contribution
+		FROM contributions INNER JOIN periods ON contributions.period_id = periods.period_id  INNER JOIN  additional_funds on additional_funds.contribution_id = contributions.contribution_id
+		WHERE (contributions.contribution_id <> NEW.contribution_id) AND (contributions.entity_id = NEW.entity_id)
+			AND (periods.end_date <= NEW.entry_date);
+		IF(v_contribution is null)THEN v_contribution = 0; END IF;
+		
+		--Raise notice 'this contribution ni hii %', v_contribution;
+		--Raise notice ' contribution ni hii %', NEW.contribution_amount;
+		
+		v_contribution := v_contribution + NEW.contribution_amount;
+		
+		--Raise notice ' contribution ni hii %', v_contribution;
+		--Raise notice ' Amount ni hii %', v_amount;
+		
+		IF(v_contribution > 0)THEN
+			IF(v_contribution <= v_amount)THEN
+				NEW.contribution_paid := v_contribution;
+			ELSE
+				IF(v_amount is null)THEN v_amount = 0; END IF;
+				NEW.contribution_paid := v_amount;
+			END IF;
+		END IF;
+		
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE  ON contributions FOR EACH ROW
+EXECUTE PROCEDURE ins_contributions();
+
+
+
+	
 
 
 

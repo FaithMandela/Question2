@@ -37,31 +37,29 @@ CREATE INDEX loans_entity_id ON loans (entity_id);
 CREATE INDEX loans_org_id ON loans (org_id);
 
 CREATE TABLE loan_monthly (
-	loan_month_id 				serial primary key,
-	loan_id						integer references loans,
-	period_id					integer references periods,
-	org_id						integer references orgs,
+	loan_month_id 			serial primary key,
+	loan_id					integer references loans,
+	period_id				integer references periods,
+	org_id					integer references orgs,
 
-	penalty						real default 0 not null,
-	penalty_paid				real default 0 not null,
+	penalty					real default 0 not null,
+	penalty_paid			real default 0 not null,
 	
-	interest_amount				real default 0 not null,
-	interest_paid				real default 0 not null,
+	interest_amount			real default 0 not null,
+	interest_paid			real default 0 not null,
 	
-	repayment					real default 0 not null,
-	repayment_paid				real default 0 not null,
+	repayment				real default 0 not null,
+	repayment_paid			real default 0 not null,
+	
+	additional_payments		real default 0 not null,
 
-	is_paid      				boolean default false,
+	is_paid      			boolean default false,
 	details					text,
 	UNIQUE (loan_id, period_id)
 );
 CREATE INDEX loan_monthly_loan_id ON loan_monthly (loan_id);
 CREATE INDEX loan_monthly_period_id ON loan_monthly (period_id);
 CREATE INDEX loan_monthly_org_id ON loan_monthly (org_id);
-
-
-
-
 
 CREATE TABLE collateral_types (
   collateral_type_id 		serial primary key,

@@ -219,20 +219,26 @@ BEGIN
 		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		
-		INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
-		SELECT NEW.org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
-		FROM accounts_class
+		INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
+		SELECT NEW.org_id, account_class_no, chat_type_id, chat_type_name, account_class_name
+		FROM account_class
 		WHERE org_id = 1;
 		
-		INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
-		SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
-		FROM accounts_class a INNER JOIN vw_account_types b ON a.accounts_class_no = b.accounts_class_no
+		INSERT INTO account_types (org_id, account_class_id, account_type_no, account_type_name)
+		SELECT a.org_id, a.account_class_id, b.account_type_no, b.account_type_name
+		FROM account_class a INNER JOIN vw_account_types b ON a.account_class_no = b.account_class_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 		
 		INSERT INTO accounts (org_id, account_type_id, account_no, account_name)
 		SELECT a.org_id, a.account_type_id, b.account_no, b.account_name
 		FROM account_types a INNER JOIN vw_accounts b ON a.account_type_no = b.account_type_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
+		
+		INSERT INTO default_accounts (org_id, use_key_id, account_id)
+		SELECT c.org_id, a.use_key_id, c.account_id
+		FROM default_accounts a INNER JOIN accounts b ON a.account_id = b.account_id
+			INNER JOIN accounts c ON b.account_no = c.account_no
+		WHERE (a.org_id = 1) AND (c.org_id = NEW.org_id);
 		
 		INSERT INTO departments (org_id, department_name) 
 		VALUES (NEW.org_id, 'Administration'); 

@@ -1,16 +1,5 @@
 
 ---Project Database File
-DELETE FROM currency where currency_id != 1;
-INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 1, 1, 'Administration'); 
-
-INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
-VALUES (2, 0, 0, 0, 'admin', 'admin', 'admin@admin.com', true, false, false, 'baraza','admin');
-
-INSERT INTO entitys (entity_id, org_id, entity_type_id, use_key_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password,function_role)
-VALUES (3, 0, 0, 0, 'member', 'member', 'member@member.com', true, false, false, 'baraza','member');
--- IMangeere to cater for subscription error
-
-SELECT pg_catalog.setval('entitys_entity_id_seq', 3, true);
 
 CREATE TABLE payment_types (
 	payment_type_id			serial primary key,
@@ -19,20 +8,6 @@ CREATE TABLE payment_types (
 	payment_narrative 		text
 );
 CREATE INDEX payment_types_org_id ON payment_types (org_id);
-
-CREATE TABLE bank_accounts (
-	bank_account_id			serial primary key,
-	org_id					integer references orgs,
-	bank_branch_id			integer references bank_branch,
-	bank_account_name		varchar(120),
-	bank_account_number		varchar(50),
-    narrative				varchar(240),
-	is_default				boolean default false not null,
-	is_active				boolean default true not null,
-    details					text
-);
-CREATE INDEX bank_accounts_org_id ON bank_accounts (org_id);
-CREATE INDEX bank_accounts_bank_branch_id ON bank_accounts (bank_branch_id);
 
 CREATE TABLE contribution_types (
 	contribution_type_id	serial primary key,
@@ -62,6 +37,8 @@ CREATE TABLE contributions (
 	
 	deposit_date			date,
 	receipt					real default 0 not null,
+	receipt_date			date,
+	repayment_paid			real default 0 not null,
 	
 	entry_date              timestamp default CURRENT_TIMESTAMP,
 	additional_payments 	real not null default 0,
@@ -180,47 +157,45 @@ CREATE INDEX recruiting_agent_org_id ON recruiting_agent (org_id);
 
 
 CREATE TABLE members (
-	entity_id 			integer NOT NUll references entitys,
+	entity_id 					integer NOT NUll references entitys,
 	member_id					serial primary key,
 	address_id					integer references address,
-  	bank_id                 	integer references banks,
- 	org_id 						integer references orgs,
+	bank_id                 	integer references banks,
+	org_id 						integer references orgs,
 	recruiting_agent_id 		integer references recruiting_agent,
 
 	person_title				character varying(7),
-	
+
 	full_name					varchar (120),
 	surname 					character varying(50) NOT NULL,
 	first_name		 			character varying(50) NOT NULL,
-  	middle_name 				character varying(50),
-  	date_of_birth 				date,
-  	gender 						character varying(1),
- 	phone						character varying(120),
-  	primary_email				character varying(120),
-  	
-  	place_of_birth				character varying(50),
-  	marital_status 				character varying(2),
-  	appointment_date 			timestamp default now(),
- 
-  	exit_date 					date,
+	middle_name 				character varying(50),
+	date_of_birth 				date,
+	gender 						character varying(1),
+	phone						character varying(120),
+	primary_email				character varying(120),
+
+	place_of_birth				character varying(50),
+	marital_status 				character varying(2),
+	appointment_date 			timestamp default now(),
+
+	exit_date 					date,
 	picture_file 				character varying(32),
-  	active 						boolean NOT NULL DEFAULT true,
-  	language 					character varying(320),
+	active 						boolean NOT NULL DEFAULT true,
+	language 					character varying(320),
 	interests 					text,
-  	objective 					text,
-  	details 					text,
-  	division 					varchar (120),
+	objective 					text,
+	details 					text,
+	division 					varchar (120),
 	location 					varchar (120),
-	 sub_location				varchar (120),
-  	 district					varchar (120),
-  	 county						varchar (120) not null default 'Nairobi',
-  	 residential_address 		varchar (120),
-  	 
-  	 expired 					boolean default 'false',
-  	 contribution				real not null default 0
-  	);
-  	
-	 
+	sub_location				varchar (120),
+	district					varchar (120),
+	county						varchar (120) not null default 'Nairobi',
+	residential_address 		varchar (120),
+
+	expired 					boolean default false,
+	contribution				real default 0 not null
+);	 
 CREATE INDEX members_org_id ON members (org_id);
 CREATE INDEX members_bank_id ON members (bank_id);
 CREATE INDEX members_address_id ON members (address_id);
@@ -235,7 +210,8 @@ CREATE TABLE kin_types (
 	details					text
 );
 CREATE INDEX kin_types_org_id ON kin_types(org_id);
---here
+
+
 CREATE TABLE kins (
 	kin_id					serial primary key,
 	entity_id				integer references entitys,

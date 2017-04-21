@@ -159,7 +159,7 @@ CREATE TABLE address (
 	fax						varchar(150),
 	email					varchar(120),
 	website					varchar(120),
-	is_default				boolean,
+	is_default				boolean default false not null,
 	first_password			varchar(32),
 	details					text
 );
