@@ -96,7 +96,9 @@ CREATE OR REPLACE VIEW vw_contributions AS
 		JOIN members ON contributions.entity_id = members.entity_id
 		JOIN contribution_types ON contributions.contribution_type_id = contribution_types.contribution_type_id
 		JOIN payment_types ON payment_types.payment_type_id = contributions.payment_type_id
-		JOIN periods ON contributions.period_id = periods.period_id where expired = 'false';
+		LEFT JOIN periods ON contributions.period_id = periods.period_id 
+		
+	WHERE expired = 'false';
 
 CREATE OR REPLACE VIEW vw_contributions_month AS 
 	SELECT vw_periods.period_id,
