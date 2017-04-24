@@ -314,8 +314,8 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION new="false" name="Applicant">
-				<FORM cols="2" name="Sales Quotation" keyfield="transaction_id" jumpview="2:0:0" table="transactions">
+			<ACCORDION name="Sales Quotation">
+				<FORM cols="2" name="Sales Quotation" keyfield="transaction_id" jumpview="2:0:0" table="transactions" collapse="in">
 					<DEFAULT default="14">transaction_type_id</DEFAULT>
 					<COMBOBOX w="320" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Transaction Date" default="now" y="70" h="20" x="10">transaction_date</TEXTDATE>
@@ -326,9 +326,10 @@
 					<TEXTFIELD w="150" title="Payment Terms" default="Immediate" y="90" h="20" x="290" span="true">payment_terms</TEXTFIELD>
 					<TEXTFIELD w="430" title="Job" y="110" h="20" x="10">job</TEXTFIELD>
 					<TEXTFIELD w="430" title="Narrative" y="130" h="20" x="10">narrative</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
+					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" span="true" rows="5">details</TEXTAREA>
+					<TEXTAREA w="320" title="Notes" y="150" h="70" x="10" rows="5">notes</TEXTAREA>
 				</FORM>
-				<GRID name="Quotation Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="vw_transaction_details">
+				<GRID name="Quotation Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="vw_transaction_details" collapse="in">
 					<COMBOBOX w="220" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
 					<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
