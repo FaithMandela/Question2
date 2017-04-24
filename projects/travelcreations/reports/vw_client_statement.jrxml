@@ -36,24 +36,24 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT a.dr, a.cr, a.order_date::date AS order_date, a.client_code, a.refunds,
-		a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details,a.entity_name,
+a.org_name, a.entity_id, a.dr - a.cr AS balance, a.details,a.entity_name,
 a.curr_balance,batch_no
-	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
-		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,vw_loyalty_points.refunds,
-		 vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
-		('Earnings @ Ksh '||amount||' per point for '|| points||' Earned in '|| ticket_period)as details,vw_loyalty_points.entity_name,getClientBalance(vw_loyalty_points.entity_id,'$P!{minDate}') as curr_balance,null::int as batch_no
-	FROM vw_loyalty_points)
-	UNION ALL
-	(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
-		vw_orders.order_date::date AS order_date, vw_orders.client_code,
+FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
+0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,vw_loyalty_points.refunds,
+vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
+('Earnings @ Ksh '||amount||' per point for '|| points||' Earned in '|| ticket_period)as details,vw_loyalty_points.entity_name,getClientBalance(vw_loyalty_points.entity_id,'$P!{minDate}') as curr_balance,null::int as batch_no
+FROM vw_loyalty_points)
+UNION ALL
+(SELECT 0::real AS dr, vw_orders.grand_total::real AS cr,
+vw_orders.order_date::date AS order_date, vw_orders.client_code,
 0::int as refunds, vw_orders.org_name,
-		vw_orders.entity_id,
-		get_order_details(vw_orders.order_id) AS details,vw_orders.entity_name,
-getClientBalance(vw_orders.entity_id,'$P!{minDate}') as curr_balance,vw_orders.batch_no
-	FROM vw_orders)) a
-	WHERE order_date >= '$P!{minDate}'
+vw_orders.entity_id,
+get_order_details(vw_orders.order_id) AS details,vw_orders.entity_name,
+getclientbalance(vw_orders.entity_id,'$P!{minDate}') as curr_balance,vw_orders.batch_no
+FROM vw_orders)) a
+WHERE order_date >= '$P!{minDate}'
 AND order_date <= '$P!{maxDate}'
-	ORDER BY a.order_date ASC;]]>
+ORDER BY a.order_date ASC;]]>
 	</queryString>
 	<field name="dr" class="java.lang.Float"/>
 	<field name="cr" class="java.lang.Float"/>
@@ -67,6 +67,9 @@ AND order_date <= '$P!{maxDate}'
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="curr_balance" class="java.lang.Float"/>
 	<field name="batch_no" class="java.lang.Integer"/>
+	<variable name="balance" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{balance}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -189,12 +192,12 @@ AND order_date <= '$P!{maxDate}'
 					</textElement>
 					<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
 				</textField>
-				<textField>
-					<reportElement x="729" y="0" width="73" height="15" uuid="ef0da6f1-2e7d-4e8a-95fa-336eb8b43c01"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="729" y="0" width="73" height="15" isPrintWhenDetailOverflows="true" uuid="ef0da6f1-2e7d-4e8a-95fa-336eb8b43c01"/>
 					<textElement textAlignment="Right">
 						<font fontName="Times New Roman" size="12" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{curr_balance}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{balance}]]></textFieldExpression>
 				</textField>
 			</frame>
 		</band>

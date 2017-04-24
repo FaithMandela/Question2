@@ -48,6 +48,7 @@ import org.baraza.DB.BWebBody;
 import org.baraza.DB.BUser;
 import org.baraza.DB.BCrossTab;
 import org.baraza.reports.BWebReport;
+import org.baraza.utils.BDateFormat;
 import org.baraza.utils.BWebdav;
 import org.baraza.xml.BXML;
 import org.baraza.xml.BElement;
@@ -67,7 +68,7 @@ public class BWeb {
 	boolean selectAll = false;
 	boolean isLicense = true;
 	boolean isExpired = false;
-	String[] deskTypes = {"CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
+	String[] deskTypes = {"ACCORDION", "CROSSTAB", "DASHBOARD", "DIARY",  "FILES", "FILTER", "FORM", "FORMVIEW", "GRID", "JASPER"};	// The search data  has to be ordered alphabetically
 	String viewKey = null;
 	String dataItem = null;
 	String userID = null;
@@ -76,6 +77,7 @@ public class BWeb {
 	String mainPage = "index.jsp";
 	String comboField = null;
 	String saveMsg = "";
+	String accordionJs = "";
 	String pictureURL = "";
 	String pictureField = "";
 
@@ -528,8 +530,6 @@ public class BWeb {
 			if(view.getAttribute("display", "grid").equals("grid")) showButtons = true;
 			if(view.getAttribute("buttons", "noshow").equals("show")) showButtons = true;
 		}
-	
-		
 
 		if(showButtons) {
 			int j = -1;
@@ -537,13 +537,24 @@ public class BWeb {
 			boolean hasForm = false;
 			for(BElement el : view.getElements()) {
 				String elName = el.getName();
-				if(Arrays.binarySearch(deskTypes, elName)>=0) j++;
+				if(Arrays.binarySearch(deskTypes, elName) >= 0) j++;
 				if(elName.equals("FORM") && el.getAttribute("new", "true").equals("true")) {
 					if(!hasForm) fv = j;
 					hasForm = true;
 				}
+System.out.println("BASE 4010 : " + elName);
+				if(elName.equals("ACCORDION") && el.getAttribute("new", "true").equals("true")) {
+System.out.println("BASE 4020 : " + el.toString());
+					for(BElement ell : el.getElements()) {
+System.out.println("BASE 4030 : " + ell.getName());
+						if(ell.getName().equals("FORM") && ell.getAttribute("new", "true").equals("true")) {
+							if(!hasForm) fv = j;
+							hasForm = true;
+						}
+					}
+				}
 			}
-			
+System.out.println("BASE 4040 : hasForm : " + hasForm);
 			String did = "";
 			if(dataItem != null) did = "&data=" + dataItem;
 			
@@ -594,6 +605,10 @@ public class BWeb {
 			if(dataItem != null) did = "&data=" + dataItem;
 			
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
+		}
+		
+		if(view.getName().equals("ACCORDION")) {
+			buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; Save </button>\n";
 		}
 		
 		if(isForm()) {
@@ -855,6 +870,10 @@ public class BWeb {
 			if(selectAll) webbody.setSelectAll();
 			body += webbody.getGrid(viewKeys, viewData, true, viewKey, false);
 			webbody.close();
+		} else if(view.getName().equals("ACCORDION")) {
+			BAccordion accordion = new BAccordion(db, view);
+			body += accordion.getAccordion(request, wheresql, formLinkData);
+			accordionJs = accordion.getAccordionJs();
 		} else if(view.getName().equals("CROSSTAB")) {
 			BCrossTab crossTab = new BCrossTab(db, view, wheresql, sortby);
 			body += crossTab.getGrid(viewKeys, viewData, true, viewKey, false);
@@ -1002,9 +1021,11 @@ public class BWeb {
 		} else if(el.getName().equals("TEXTDECIMAL")) {
 			dbvalue = myvalue.replace(",", "");
 		} else if(el.getName().equals("TEXTDATE")) {
-			dbvalue = parseDate(myvalue, el);
+			dbvalue = BDateFormat.parseDate(myvalue, el.getAttribute("dbformat"), db.getDBType());
 		} else if(el.getName().equals("TEXTTIMESTAMP")) {
-			dbvalue = parseTimeStamp(myvalue, el);
+			dbvalue = BDateFormat.parseTimeStamp(myvalue);
+		} else if(el.getName().equals("SPINTIME")) {
+			dbvalue = BDateFormat.parseTime(myvalue, el.getAttribute("type", "1"));
 		} else {
 			dbvalue = myvalue;
 		}
@@ -1228,18 +1249,27 @@ System.out.println("repository : " + repository);
 	}
 	
 	public void updateForm(HttpServletRequest request) {
-		Map<String, String> reqParams = new HashMap<String, String>();
-		
+		Map<String, String[]> reqParams = new HashMap<String, String[]>();
 		Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
 			String elName = (String)e.nextElement();
-			reqParams.put(elName, request.getParameter(elName));
+			reqParams.put(elName, request.getParameterValues(elName));
 		}
 		
-		updateForm(request, reqParams);
+		updateFormData(request, reqParams);
+	}
+	
+	public void updateForm(HttpServletRequest request, Map<String, String> reqParams) {
+		Map<String, String[]> newParams = new HashMap<String, String[]>();
+		for(String paramName : reqParams.keySet()) {
+			String[] pArray = new String[1];
+			pArray[0] = reqParams.get(paramName);
+			newParams.put(paramName, pArray);
+		}
+		updateFormData(request, newParams);
 	}
 
-	public void updateForm(HttpServletRequest request, Map<String, String> reqParams) {
+	public void updateFormData(HttpServletRequest request, Map<String, String[]> reqParams) {
 		String linkData = null;
 		String formlink = null;
 		int vds = viewKeys.size();
@@ -1279,80 +1309,7 @@ System.out.println("repository : " + repository);
 				}
 			}
 
-			for(BElement el : view.getElements()) {
-				String dataValue = reqParams.get(el.getValue());
-				//System.out.println("BASE 1040 : " + el.getValue() + " : " + dataValue);
-				if(dataValue != null) {
-					if(dataValue.trim().equals("")) dataValue = null;
-				}
-
-				if(el.getAttribute("enabled","true").equals("false")) {
-				} else if(el.getName().equals("CHECKBOX")) {
-					if(el.getAttribute("ischar") == null) {
-						if(dataValue==null) saveMsg += qForm.updateField(el.getValue(), "false");
-						else saveMsg += qForm.updateField(el.getValue(), "true");
-					} else {
-						if(dataValue==null) saveMsg += qForm.updateField(el.getValue(), "0");
-						else saveMsg += qForm.updateField(el.getValue(), "1");
-					}
-				} else if(el.getName().equals("USERFIELD")) {
-					saveMsg += qForm.updateField(el.getValue(), db.getUserID());
-				} else if(el.getName().equals("USERNAME")) {
-					saveMsg += qForm.updateField(el.getValue(), db.getUserName());
-				} else if(el.getName().equals("REMOTEIP")) {
-					saveMsg += qForm.updateField(el.getValue(), request.getRemoteAddr());
-				} else if(el.getName().equals("DEFAULT")) {
-					saveMsg += qForm.updateField(el.getValue(), el.getAttribute("default"));
-				} else if(el.getName().equals("FUNCTION")) {
-					if(el.getAttribute("when", "").equals("new")) {
-						if(linkData.equals("{new}"))
-							saveMsg += qForm.updateField(el.getValue(), db.executeFunction(el.getAttribute("function")));
-					} else {
-						saveMsg += qForm.updateField(el.getValue(), db.executeFunction(el.getAttribute("function")));
-					}
-				} else if(el.getName().equals("LEVELKEY")) {
-					int lvl = Integer.valueOf(el.getAttribute("level", "0")).intValue();
-					String levelKeyData = viewData.get(vds - lvl);
-					qForm.updateField(el.getValue(),  levelKeyData);
-				} else if(dataValue == null) {
-					qForm.updateField(el.getValue(), null);
-				} else if(el.getName().equals("COMBOBOX")) {
-					qForm.updateField(el.getValue(),  dataValue);
-				} else if(el.getName().equals("COMBOLIST")) {
-					saveMsg += qForm.updateField(el.getValue(), dataValue);
-				} else if(el.getName().equals("PICTURE")) {
-					saveMsg += qForm.updateField(el.getValue(), dataValue);
-				} else if(el.getName().equals("MULTISELECT")) {
-					String msv = null;
-					if(request.getParameterValues(el.getValue()) != null) {
-						for(String msvs : request.getParameterValues(el.getValue())) {
-							if(msv == null) msv = msvs;
-							else msv += "," + msvs;
-						}
-					}
-					saveMsg += qForm.updateField(el.getValue(), msv);
-				} else if(el.getName().equals("TEXTDECIMAL")) {
-					dataValue = dataValue.replace(",", "");
-					saveMsg += qForm.updateField(el.getValue(), dataValue);
-				} else if(el.getName().equals("TEXTDATE")) {
-					String dbdate = parseDate(dataValue, el);
-					if(dbdate != null) saveMsg += qForm.updateField(el.getValue(), dbdate);
-					else saveMsg += "Date format error for : " + el.getValue() + "<br>\n";
-				} else if(el.getName().equals("TEXTTIMESTAMP")) {
-					String dbdate = parseTimeStamp(dataValue, el);
-					if(dbdate != null) saveMsg += qForm.updateField(el.getValue(), dbdate);
-					else saveMsg += "Date format error for : " + el.getValue() + "<br>\n";
-				} else if(el.getName().equals("SPINTIME")) {
-					String dbdate = parseTime(dataValue, el);
-					if(dbdate != null) saveMsg += qForm.updateField(el.getValue(), dbdate);
-					else saveMsg += "Time format error for : " + el.getValue() + "<br>\n";
-				} else if(dataValue != null) {
-			   		saveMsg += qForm.updateField(el.getValue(), dataValue);
-				}
-			}
-
-			if(!"".equals(saveMsg)) saveMsg += "<br>";
-			saveMsg += qForm.recSave();
+			saveMsg = qForm.updateFields(reqParams, viewData, request.getRemoteAddr(), linkData);
 			
 			if("".equals(saveMsg)) {
 				String jumpView = view.getAttribute("jumpview");
@@ -1410,6 +1367,26 @@ System.out.println("repository : " + repository);
 				saveMsg += tmsg + "\n</div>\n";
 			}
 			qForm.close();
+		} else if(view.getName().equals("ACCORDION")) {
+			BElement accdView = view.getElement(0);
+System.out.println("Reached ACCORDION " + vds + " : " + formlink);
+
+			BQuery qAccd = new BQuery(db, accdView, formlink, null);
+			
+			if(vds < 2) {
+				qAccd.recAdd();
+			} else if(linkData == null) {
+				if(qAccd.moveFirst()) qAccd.recEdit();
+			} else if(linkData.equals("{new}")) {
+				qAccd.recAdd();
+				if(accdView.getAttribute("linkfield") != null) 
+					qAccd.updateField(accdView.getAttribute("linkfield"), viewData.get(vds - 2));
+			} else {
+				if(qAccd.moveFirst()) qAccd.recEdit();
+			}
+			
+			saveMsg = qAccd.updateFields(reqParams, viewData, request.getRemoteAddr(), linkData);
+			qAccd.close();
 		}
 	}
 
@@ -1448,67 +1425,6 @@ System.out.println("repository : " + repository);
 		}
 	}
 
-	private String parseDate(String mydate, BElement el) {
-		String dbdate = null;
-
-		try {
-			Date psdate = new Date();
-			SimpleDateFormat dateParse = new SimpleDateFormat();
-			if(mydate.indexOf('/')>0) dateParse.applyPattern("dd/MM/yyyy");
-			else if(mydate.indexOf('-')>0) dateParse.applyPattern("dd-MM-yyyy");
-			else if(mydate.indexOf('.')>0) dateParse.applyPattern("dd.MM.yyyy");
-			else if(mydate.indexOf(' ')>0) dateParse.applyPattern("MMM dd, yyyy");
-
-			psdate = dateParse.parse(mydate);
-			if(el.getAttribute("dbformat") != null) dateParse.applyPattern(el.getAttribute("dbformat"));
-			else {
-				if(db.getDBType() == 1) dateParse.applyPattern("yyyy-MM-dd");
-				else dateParse.applyPattern("yyyy-MM-dd HH:mm:ss");
-			}
-
-			dbdate = dateParse.format(psdate);
-		} catch(ParseException ex) { 
-			log.severe("Date format error : " + ex); 
-		}
-
-		return dbdate;
-	}
-
-	private String parseTimeStamp(String mydate, BElement el) {
-		String dbdate = null;
-		try {
-			Date psdate = new Date();
-			SimpleDateFormat dateParse = new SimpleDateFormat();
-			if(mydate.indexOf('/')>0) dateParse.applyPattern("dd/MM/yyyy hh:mm a");
-			else if(mydate.indexOf('-')>0) dateParse.applyPattern("dd-MM-yyyy hh:mm a");
-			else if(mydate.indexOf('.')>0) dateParse.applyPattern("dd.MM.yyyy hh:mm a");
-			else if(mydate.indexOf(' ')>0) dateParse.applyPattern("MMM dd, yyyy hh:mm a");
-
-			psdate = dateParse.parse(mydate);
-			dateParse.applyPattern("yyyy-MM-dd HH:mm:ss");
-			dbdate = dateParse.format(psdate);
-		} catch(ParseException ex) {
-			log.severe("Date format error : " + ex); 
-		}
-		return dbdate;
-	}
-
-	private String parseTime(String myTime, BElement el) {
-		String dbdate = null;
-		try {
-			Date psdate = new Date();
-			SimpleDateFormat dateParse = new SimpleDateFormat();
-			if(el.getAttribute("type", "1").equals("2")) dateParse.applyPattern("HH:mm");
-			else if(myTime.indexOf(':')>0) dateParse.applyPattern("hh:mm a");
-
-			psdate = dateParse.parse(myTime);
-			dateParse.applyPattern("HH:mm:ss");
-			dbdate = dateParse.format(psdate);
-		} catch(ParseException ex) {
-			log.severe("Date format error : " + ex); 
-		}
-		return dbdate;
-	}
 
 	public String getFieldTitles() {
 		String fieldTitles = null;
@@ -2171,6 +2087,7 @@ log.severe("BASE : " + mysql);
 		return isLicense;
 	}
 	
+	public String getAccordionJs() { return accordionJs; }
 	public boolean isGrid() { if(view.getName().equals("GRID")) return true; return false; }
 	public String getPictureField() { return pictureField; }
 	public String getPictureURL() { return pictureURL; }
@@ -2186,6 +2103,7 @@ log.severe("BASE : " + mysql);
 	public BElement getRoot() { return root; }
 	public BElement getView() { return view; }
 	public String getViewKey() { return viewKey; }
+	public List<String> getViewData() { return viewData; }
 	public String getDataItem() { return dataItem; }
 
 	public void close() {

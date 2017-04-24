@@ -72,7 +72,7 @@ INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formu
 INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (15, 12, NULL, 'NSSF', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, true, true, 0, 200, NULL, true, 'UG');
 INSERT INTO tax_types (tax_type_id, use_key_id, account_id, tax_type_name, formural, tax_relief, tax_type_order, in_tax, tax_rate, tax_inclusive, linear, percentage, employer, employer_ps, account_number, active, sys_country_id) VALUES (16, 12, NULL, 'Local Service Tax', 'Get_Employee_Tax(employee_tax_type_id, 1)', 0, 0, false, 0, false, false, false, 0, 0, NULL, true, 'UG');
 UPDATE tax_types SET org_id = 1, currency_id = 5 WHERE org_id is null;
-SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 13, true);
+SELECT pg_catalog.setval('tax_types_tax_type_id_seq', 16, true);
 
 INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 235000, 0, NULL);
 INSERT INTO tax_rates (tax_type_id, org_id, tax_range, tax_rate, narrative) VALUES (14, 1, 335000, 10, NULL);

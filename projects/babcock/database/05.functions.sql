@@ -341,8 +341,10 @@ BEGIN
 		RAISE EXCEPTION 'No Degree Indicated contact Registrars Office';
 	ELSIF (getcoremajor(mydegreeid) IS NULL) THEN
 		RAISE EXCEPTION 'No Major Indicated contact Registrars Office';
----	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
----		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
+	ELSIF ((myrec.sublevelid = 'UGPM') AND (myquarter.q_length <> 12)) THEN
+		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
+	ELSIF ((myrec.sublevelid = 'MEDI') AND (myquarter.q_length <> 12)) THEN
+		RAISE EXCEPTION 'Select the session with either 1M, 2M or 3M';
 	ELSIF (myrec.qstudentid IS NULL) THEN
 		INSERT INTO qstudents(quarterid, studentdegreeid, studylevel, currbalance, charges, financenarrative, paymenttype, org_id)
 		VALUES ($1, mydegreeid, mystudylevel, mycurrbalance, mylatefees, mynarrative, 1, mystud.org_id);
@@ -991,13 +993,6 @@ BEGIN
 	SELECT sum(residencecapacitys.capacity) INTO resCapacity
 	FROM residencecapacitys INNER JOIN qresidences ON residencecapacitys.residenceid = qresidences.residenceid
 	WHERE (qresidenceid = myres);
-	
-	UPDATE qstudents SET qresidenceid = null, financeclosed = false
-	FROM vwqstudentbalances 
-	WHERE (qstudents.finaceapproval = false) AND (age(qstudents.residence_time) > '1 day'::interval) AND (qstudents.offcampus = false)
-		AND (qstudents.qresidenceid is not null) AND (qstudents.quarterid = myrec.quarterid)
-		AND (qstudents.qstudentid = vwqstudentbalances.qstudentid) AND (vwqstudentbalances.finalbalance < 10000)
-		AND (vwqstudentbalances.finaceapproval = false) AND (vwqstudentbalances.quarterid = myrec.quarterid);
 	
 	SELECT count(qstudentid) INTO resCount
 	FROM qstudents
@@ -1914,6 +1909,11 @@ BEGIN
 
 		UPDATE students SET org_id = v_org_id WHERE (studentid = NEW.studentid);
 		UPDATE entitys SET org_id = v_org_id WHERE (user_name = NEW.studentid);
+		
+		UPDATE qstudents SET org_id = v_org_id, sublevelid = NEW.sublevelid 
+		FROM quarters
+		WHERE (qstudents.quarterid = quarters.quarterid) AND (studentdegreeid = NEW.studentdegreeid)
+			AND (quarters.active = true);
 	END IF;
 
 	RETURN NULL;

@@ -209,7 +209,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Regards,</p>
 
-<p>Faidaplus Team</p>
+<p>Travel Creations Team</p>
 ', 3);
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (9, NULL, 'Order Collected', NULL, 'Order Collected', '<p><span style="color:#0075B0">Dear {{name}},</span></p>
 
@@ -219,7 +219,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Regards,</p>
 
-<p>Faidaplus Team</p>
+<p>Travel Creations Team</p>
 ', 3);
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (4, 0, 'Order awaiting collection', NULL, 'Order awaiting collection', '<p>Dear {{name}},</p>
 
@@ -227,7 +227,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Regards,</p>
 
-<p>Faidaplus Team</p>
+<p>Travel Creations Team</p>
 ', 3);
 INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (10, 0, 'Order submitted', NULL, 'Order submitted', '<p>Dear {{name}}</p>
 
@@ -239,7 +239,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Regards,</p>
 
-<p>Faidaplus Team</p>
+<p>Travel Creations Team</p>
 ', 3);
 
 

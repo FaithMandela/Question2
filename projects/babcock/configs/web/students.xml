@@ -453,7 +453,7 @@
 			<TEXTFIELD w="200" title="Department">departmentname</TEXTFIELD>
 			<TEXTFIELD w="200" title="School">schoolname</TEXTFIELD>
 			<TEXTFIELD w="75" title="Course List" subreport="25">departmentid</TEXTFIELD>
-			<GRID user_field="quarterid" name="Special Selection" keyfield="qcourseid" orderby="yeartaken, courseid" linkfield="departmentid" user_fnct="get_student_quarter" table="currqcourseview">
+			<GRID user_field="quarterid" name="Special Selection" keyfield="qcourseid" orderby="yeartaken, courseid" linkfield="departmentid" user_fnct="get_student_quarter" table="currqcourseview" noorg="true">
 				<TEXTFIELD w="40" title="Year Taken">yeartaken</TEXTFIELD>
 				<TEXTFIELD w="40" title="Course ID">courseid</TEXTFIELD>
 				<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
@@ -492,7 +492,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Selected Course List" key="27" h="500">
-		<GRID name="Selected Course List" keyfield="qgradeid" table="qselectedgradeview" user="studentid" reporttitle="quarterid">
+		<GRID name="Selected Course List" keyfield="qgradeid" table="qselectedgradeview" noorg="true" user="studentid" reporttitle="quarterid">
 			<TEXTFIELD w="50" title="Year Taken">yeartaken</TEXTFIELD>
 			<TEXTFIELD w="50" title="Course ID">courseid</TEXTFIELD>
 			<TEXTFIELD w="200" title="Course Title">coursetitle</TEXTFIELD>
@@ -506,7 +506,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Selected Timetable" key="28" h="500">
-		<GRID name="Selected Timetable" table="studenttimetableview" user="studentid">
+		<GRID name="Selected Timetable" table="studenttimetableview" noorg="true" user="studentid">
 			<TEXTFIELD w="40" title="Start" format="time">starttime</TEXTFIELD>
 			<TEXTFIELD w="40" title="End" format="time">endtime</TEXTFIELD>
 			<TEXTFIELD w="40" title="Mo" format="boolcolor">cmonday</TEXTFIELD>

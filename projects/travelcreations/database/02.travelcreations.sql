@@ -1,8 +1,11 @@
 ---Project Database File
 ALTER TABLE entitys ADD client_code varchar(20);
 ALTER TABLE entitys ADD client_dob date;
-ALTER TABLE sys_emailed ADD mail_body text;
-
+ALTER TABLE entitys ADD COLUMN workflow_table_id integer;
+ALTER TABLE entitys ADD COLUMN approve_status character varying(16);
+ALTER TABLE entitys ALTER COLUMN approve_status SET DEFAULT 'Completed'::character varying;
+ALTER TABLE entitys ADD COLUMN action_date timestamp without time zone;
+ALTER TABLE entitys ADD CONSTRAINT primary_email UNIQUE (primary_email);
 
 CREATE TABLE clients (
 	client_id			    serial primary key,
@@ -137,6 +140,9 @@ CREATE TABLE orders (
 	physical_address 		text,
 	batch_no				integer,
 	batch_date				date,
+	workflow_table_id       integer,
+	approve_status 			character varying(16) DEFAULT 'Draft',
+	action_date 			timestamp without time zone,
 	details 				text
 );
 CREATE INDEX order_entity_id  ON orders(entity_id);
@@ -166,6 +172,43 @@ CREATE TABLE sambaza (
 );
 CREATE INDEX sambaza_entity_id  ON sambaza(entity_id);
 CREATE INDEX sambaza_org_id  ON sambaza(org_id);
+
+CREATE TABLE donation (
+	donation_id 			serial primary key,
+	org_id 					integer references orgs,
+	entity_id 				integer not null references entitys,
+	donated_by				integer not null references entitys,
+	donation_amount			real default 0 not null,
+	donation_status			varchar(50) default 'Completed',
+	donation_date			timestamp not null default current_timestamp,
+	details 				text
+);
+CREATE INDEX donation_entity_id  ON donation(entity_id);
+CREATE INDEX donation_org_id  ON donation(org_id);
+CREATE INDEX donation_donated_by  ON donation(donated_by);
+
+CREATE OR REPLACE FUNCTION ins_donate() RETURNS trigger AS $$
+DECLARE
+	rec 			RECORD;
+	v_entity_id		integer;
+	v_org_id		integer;
+BEGIN
+	IF (TG_OP = 'INSERT') THEN
+		SELECT org_id INTO v_org_id FROM entitys WHERE entity_id = NEW.donated_by;
+		SELECT entity_id INTO v_entity_id FROM entitys WHERE client_code = 'CSR';
+		IF(v_entity_id is null)THEN
+			RAISE EXCEPTION 'The CSR does not exists';
+		END IF;
+		NEW.org_id :=v_org_id;
+		NEW.entity_id :=v_entity_id;
+	END IF;
+	RETURN NEW;
+END;
+$$
+  LANGUAGE plpgsql ;
+CREATE TRIGGER ins_donate  BEFORE INSERT  ON donation
+  FOR EACH ROW
+  EXECUTE PROCEDURE ins_donate();
 
 CREATE OR REPLACE FUNCTION ins_sambaza() RETURNS trigger AS $$
 DECLARE
@@ -267,7 +310,7 @@ CREATE OR REPLACE VIEW vw_orders AS
         orders.shipping_cost, orders.details, (orders.order_amount + orders.shipping_cost) as grand_total,
         orders.town_name, vw_entitys.org_premises, vw_entitys.org_street, vw_entitys.entity_name, vw_entitys.client_code,
         vw_entitys.entity_id, vw_entitys.org_name, vw_entitys.primary_email, vw_entitys.primary_telephone,
-		vw_entitys.function_role, vw_entitys.entity_role, vw_entitys.org_id, orders.physical_address, orders.phone_no
+		vw_entitys.function_role, vw_entitys.entity_role, vw_entitys.org_id, orders.physical_address, orders.phone_no,orders.approve_status
     FROM orders JOIN vw_entitys ON orders.entity_id = vw_entitys.entity_id;
 
 CREATE OR REPLACE VIEW vw_products AS
@@ -295,8 +338,7 @@ CREATE OR REPLACE VIEW vw_loyalty_points AS
 		loyalty_points.point_date, loyalty_points.ticket_number, loyalty_points.invoice_number, loyalty_points.approve_status, loyalty_points.refunds,
 		periods.end_date, loyalty_points.local_inter, loyalty_points.is_return
 	FROM loyalty_points JOIN vw_entitys ON loyalty_points.entity_id = vw_entitys.entity_id
-	INNER JOIN periods ON loyalty_points.period_id = periods.period_id
-	WHERE periods.approve_status = 'Approved';
+	INNER JOIN periods ON loyalty_points.period_id = periods.period_id;
 
 CREATE OR REPLACE VIEW vw_sambaza AS
  SELECT sambaza.sambaza_id, sambaza.sambaza_in, sambaza.sambaza_out, sambaza.details,
@@ -306,23 +348,58 @@ CREATE OR REPLACE VIEW vw_sambaza AS
    FROM sambaza
      JOIN vw_entitys ON sambaza.entity_id = vw_entitys.entity_id;
 
+CREATE OR REPLACE VIEW vw_donation AS
+SELECT donation.donation_id, donation.donation_amount, donation.details,
+donation.donation_date, donation.donation_status, vw_entitys.entity_name, vw_entitys.client_code, donation.entity_id,
+vw_entitys.org_name, vw_entitys.primary_email, vw_entitys.primary_telephone, vw_entitys.function_role,
+vw_entitys.entity_role, vw_entitys.org_id,donation.donated_by
+FROM donation
+JOIN vw_entitys ON donation.donated_by = vw_entitys.entity_id;
+
 
 CREATE OR REPLACE VIEW vw_client_statement AS
 SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
-	 (a.dr + a.sambaza_in - a.cr - a.sambaza_out - a.refunds) AS balance, a.sambaza_in, a.sambaza_out, a.details, a.refunds, a.entity_name
+	 (a.dr +a.tours_amount- a.cr - a.donated_amount - a.refunds) AS balance, a.donated_amount, a.details, a.refunds, a.entity_name,
+	 a.tours_amount
 	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
 		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
 		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
-		0::real as sambaza_in, 0::real as sambaza_out, COALESCE(vw_loyalty_points.refunds, 0::real) AS refunds, ''::text as details, vw_loyalty_points.entity_name
+		0::real as donated_amount, COALESCE(vw_loyalty_points.refunds, 0::real) AS refunds, ''::text as details, vw_loyalty_points.entity_name,
+		vw_loyalty_points.tours_amount
 	FROM vw_loyalty_points)
 	UNION ALL
 	(SELECT 0::real AS dr, vw_orders.points::real AS cr, vw_orders.order_date,
 	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
-	0::real as sambaza_in, 0::real as sambaza_out,  0::real AS refunds, ''::text as details, vw_orders.entity_name
+	0::real as donated_amount, 0::real AS refunds, ''::text as details, vw_orders.entity_name,
+	0::real AS tours_amount
 	FROM vw_orders)
 	UNION ALL
-	(SELECT 0::real as dr, 0::real as cr, vw_sambaza.sambaza_date,
-	vw_sambaza.client_code, vw_sambaza.org_name, vw_sambaza.entity_id, COALESCE(vw_sambaza.sambaza_in,0::real) as sambaza_in,
-	COALESCE(vw_sambaza.sambaza_out,0::real) as sambaza_out,  0::real AS refunds, vw_sambaza.details, vw_sambaza.entity_name
-	 FROM vw_sambaza)) a
+	(SELECT 0::real as dr, 0::real as cr, vw_donation.donation_date,
+	vw_donation.client_code, vw_donation.org_name, vw_donation.donated_by as entity_id, COALESCE(vw_donation.donation_amount,0::real) as donated_amount,
+	0::real AS refunds, vw_donation.details, vw_donation.entity_name,0::real AS tours_amount
+	 FROM vw_donation)) a
+	ORDER BY a.order_date;
+
+
+CREATE OR REPLACE VIEW vw_csr_statement AS
+SELECT a.dr, a.cr, a.order_date::date, a.client_code, a.org_name, a.entity_id,
+	 (a.dr+a.tours_amount - a.cr + a.donated_amount - a.refunds) AS balance, a.donated_amount, a.details, a.refunds, a.entity_name
+	FROM ((SELECT COALESCE(vw_loyalty_points.points, 0::real) + COALESCE(vw_loyalty_points.bonus, 0::real) AS dr,
+		0::real AS cr, vw_loyalty_points.period AS order_date, vw_loyalty_points.client_code,
+		vw_loyalty_points.org_name, vw_loyalty_points.entity_id,
+		0::real as donated_amount, COALESCE(vw_loyalty_points.refunds, 0::real) AS refunds, ''::text as details, vw_loyalty_points.entity_name,
+		vw_loyalty_points.tours_amount
+	FROM vw_loyalty_points)
+	UNION ALL
+	(SELECT 0::real AS dr, vw_orders.points::real AS cr, vw_orders.order_date,
+	vw_orders.client_code, vw_orders.org_name, vw_orders.entity_id,
+	0::real as donated_amount, 0::real AS refunds, ''::text as details, vw_orders.entity_name,
+	0::real AS tours_amount
+	FROM vw_orders)
+	UNION ALL
+	(SELECT 0::real as dr, 0::real as cr, vw_donation.donation_date,
+	vw_donation.client_code, vw_donation.org_name, vw_donation.entity_id, COALESCE(vw_donation.donation_amount,0::real) as donated_amount,
+	0::real AS refunds, vw_donation.details, vw_donation.entity_name,
+	0::real AS tours_amount
+	 FROM vw_donation)) a
 	ORDER BY a.order_date;

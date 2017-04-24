@@ -2070,3 +2070,8 @@ INSERT INTO rates (rate_id, rate_type_id, days_from, days_to, standard_rate, nor
 INSERT INTO rates (rate_id, rate_type_id, days_from, days_to, standard_rate, north_america_rate) VALUES (34, 4, 93, 180, 247, NULL);
 
 SELECT pg_catalog.setval('rates_rate_id_seq', 34, true);
+
+INSERT INTO portal(portal_id, portal_name, descriptions)
+    VALUES (1, 'Agency Portal', 'Consultant Portal'),
+	(2, 'Bima Mtandao Portal', 'Bima Mtandao Portal'),
+	(3, 'Self Insured Portal', 'Self Insured Portal');
