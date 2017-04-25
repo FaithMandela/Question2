@@ -39,8 +39,10 @@ public class BAccordion {
 		this.view = view;
 	} 
 
-	public String getAccordion(HttpServletRequest request, String whereSql, String formLinkData) {
+	public String getAccordion(HttpServletRequest request, String linkData, String formLinkData) {
 		String body = "\t<div class='panel-group accordion' id='accordion1'>\n";
+		
+System.out.println("BASE 2010 : " + linkData);
 		
 		accordionJs = "";
 		Integer ac = new Integer("0");
@@ -56,11 +58,20 @@ public class BAccordion {
 			+ vw.getAttribute("collapse", "collapse") + "'>\n"
 			+ "\t\t\t\t<div class='panel-body'>\n";
 			
+			String whereSql = "";
 			if(vw.getName().equals("FORM")) {
+				if(linkData != null) {
+					if("{new}".equals(linkData)) whereSql = vw.getAttribute("keyfield") + " = null";
+					else whereSql = vw.getAttribute("keyfield") + " = '" + linkData + "'";
+				}
+				
 				BWebBody webbody = new BWebBody(db, vw, whereSql, null);
 				body += webbody.getForm(false, formLinkData, request);
 				webbody.close();
-			} else if(vw.getName().equals("GRID")) {
+			} else if(vw.getName().equals("GRID") && !"{new}".equals(linkData)) {
+				if(linkData != null && vw.getAttribute("linkfield") != null) 
+					whereSql = vw.getAttribute("linkfield") + " = '" + linkData + "'";
+				
 				body += "<div class='row'>"
 				+ "	<div class='col-md-12 column'>"
 				+ "		<div id='sub_table" + ac.toString() + "'></div>"
@@ -85,14 +96,14 @@ public class BAccordion {
 		String fieldId = ac.toString();
 		BQuery rs = new BQuery(db, vw, whereSql, null);
 		
-System.out.println("BASE 2010 : " + whereSql);
+System.out.println("BASE 3010 : " + whereSql);
 		
 		// JSON data set
 		myhtml.append("var db_" + fieldId + "_table = " + rs.getJSON() + ";\n\n");
 		
 		JsonObjectBuilder jshd = Json.createObjectBuilder();
 		jshd.add("width", "100%");		// tableSize
-		jshd.add("height", "200px");
+		jshd.add("height", vw.getAttribute("th", "200") + "px");
 		if(vw.getAttribute("new", "true").equals("true")) jshd.add("inserting", true);
 		if(vw.getAttribute("edit", "true").equals("true")) jshd.add("editing", true);
 		jshd.add("filtering", false);
@@ -123,7 +134,20 @@ System.out.println("BASE 2010 : " + whereSql);
 			jsColEl.add("name", fld_name);
 			jsColEl.add("width", Integer.valueOf(fld_size));
 			if(el.getAttribute("required") != null) jsColEl.add("required", true);
+			
+			if(el.getAttribute("default") != null) {
+				String defaultStr = "~~function() {var input = this.__proto__.insertTemplate.call(this); "
+				+ "input.val('" + el.getAttribute("default") + "'); return input; }~~";
+				jsColEl.add("insertTemplate", defaultStr);
+			}
+			
 			if(fld_type.equals("TEXTFIELD")) {
+				jsColEl.add("type", "text");
+				jsColModel.add(jsColEl);
+			} else if(fld_type.equals("TEXTNUMBER")) {
+				jsColEl.add("type", "number");
+				jsColModel.add(jsColEl);
+			} else if(fld_type.equals("TEXTDECIMAL")) {
 				jsColEl.add("type", "text");
 				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("TEXTDATE")) {
@@ -135,6 +159,11 @@ System.out.println("BASE 2010 : " + whereSql);
 				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("CHECKBOX")) {
 				jsColEl.add("type", "checkbox");
+				jsColModel.add(jsColEl);
+			} else if(fld_type.equals("FUNCTION")) {
+				jsColEl.add("type", "text");
+				jsColEl.add("inserting", false);
+				jsColEl.add("editing", false);
 				jsColModel.add(jsColEl);
 			} else if(fld_type.equals("COMBOBOX")) {
 				jsColEl.add("type", "select");

@@ -424,10 +424,15 @@ System.out.println("BASE 2020 : " + bals);
 			if(elName.equals("keyfield")) keyField = request.getParameter(elName);
 		}
 		
+		String linkData = null;
+		int vds = web.getViewData().size();
+		if(vds > 2) linkData = web.getViewData().get(vds - 1);
+		
 		if("jsinsert".equals(fnct)) {
 			BQuery rs = new BQuery(db, SubView, null, null, false);
 			rs.recAdd();
-			rs.updateFields(reqParams, web.getViewData(), request.getRemoteAddr(), "{new}");
+			if(linkData != null && SubView.getAttribute("linkfield") != null) rs.updateField(SubView.getAttribute("linkfield"), linkData); 
+			rs.updateFields(reqParams, web.getViewData(), request.getRemoteAddr(), linkData);
 			resp = rs.getRowJSON();
 			rs.close();
 		} else if("jsupdate".equals(fnct)) {
@@ -436,6 +441,8 @@ System.out.println("BASE 2020 : " + bals);
 			rs.moveFirst();
 			rs.recEdit();
 			rs.updateFields(reqParams, web.getViewData(), request.getRemoteAddr(), "");
+			rs.refresh();
+			rs.moveFirst();
 			resp = rs.getRowJSON();
 			rs.close();
 		} else if("jsdelete".equals(fnct)) {

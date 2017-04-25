@@ -326,15 +326,16 @@
 					<TEXTFIELD w="150" title="Payment Terms" default="Immediate" y="90" h="20" x="290" span="true">payment_terms</TEXTFIELD>
 					<TEXTFIELD w="430" title="Job" y="110" h="20" x="10">job</TEXTFIELD>
 					<TEXTFIELD w="430" title="Narrative" y="130" h="20" x="10">narrative</TEXTFIELD>
-					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" span="true" rows="5">details</TEXTAREA>
-					<TEXTAREA w="320" title="Notes" y="150" h="70" x="10" rows="5">notes</TEXTAREA>
+					<TEXTAREA w="320" title="Notes" y="150" h="70" x="10" span="true" rows="5">notes</TEXTAREA>
+					<TEXTAREA w="320" title="Details" y="150" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
-				<GRID name="Quotation Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="vw_transaction_details" collapse="in">
-					<COMBOBOX w="220" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
-					<TEXTFIELD w="75" title="Quantity">quantity</TEXTFIELD>
-					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-					<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
-					<TEXTAREA w="220" title="Details">details</TEXTAREA>
+				<GRID name="Quotation Details" keyfield="transaction_detail_id" linkfield="transaction_id" table="transaction_details" th="300" collapse="in">
+					<COMBOBOX w="175" title="Item" lptable="items" where="(for_sale=true)" lpfield="item_name">item_id</COMBOBOX>
+					<TEXTNUMBER w="50" title="Quantity" default="1" required="true">quantity</TEXTNUMBER>
+					<TEXTDECIMAL w="50" title="Amount" required="true">amount</TEXTDECIMAL>
+					<FUNCTION w="50" fnct="(quantity * amount)" title="Total" format="double">total_amount</FUNCTION>
+					<FUNCTION w="50" fnct="(quantity * tax_amount)" title="Tax" format="double">total_tax_amount</FUNCTION>
+					<TEXTAREA w="175" title="Narrative">narrative</TEXTAREA>
 				</GRID>
 			</ACCORDION>
 			<JASPER name="Sales Quotation" reportfile="vw_trx.jasper"></JASPER>
