@@ -192,8 +192,7 @@ CREATE VIEW vw_loan_types AS
 		INNER JOIN currency ON loan_types.org_id = currency.org_id;
 
 CREATE OR REPLACE VIEW vw_loans AS 
-	SELECT
-		vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
+	SELECT vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
 		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
 		loans.entity_id, loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
 		loans.repayment_period, loans.initial_payment, loans.loan_date, 

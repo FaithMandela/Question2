@@ -65,7 +65,16 @@ CREATE OR REPLACE VIEW vw_investments AS
 
 	FROM investments INNER JOIN entitys ON entitys.entity_id = investments.entity_id
 		INNER JOIN investment_types ON investments.investment_type_id = investment_types.investment_type_id;  
-		
+
+CREATE VIEW vw_applicants AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+		applicants.org_id, applicants.applicant_id, applicants.person_title, applicants.surname, 
+		applicants.first_name, applicants.middle_name, applicants.applicant_email, applicants.applicant_phone, 
+		applicants.date_of_birth, applicants.gender, applicants.nationality, applicants.marital_status, 
+		applicants.picture_file, applicants.identity_card, applicants.language, applicants.approve_status, 
+		applicants.workflow_table_id, applicants.action_date, applicants.salary, applicants.how_you_heard, 
+		applicants.created, applicants.interests, applicants.objective, applicants.details
+	FROM applicants INNER JOIN entitys ON applicants.entity_id = entitys.entity_id;
 
 CREATE OR REPLACE VIEW vw_contributions AS 
 	SELECT contributions.contribution_id,
@@ -76,7 +85,7 @@ CREATE OR REPLACE VIEW vw_contributions AS
 		contributions.receipt,
 		contributions.receipt_date,
 
-			contributions.entry_date,
+		contributions.entry_date,
 		contributions.transaction_ref,
 		contributions.contribution_amount,
 		contributions.contribution_paid,
@@ -361,95 +370,81 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION ins_applicants()
-  RETURNS trigger AS
-$BODY$
+CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
 DECLARE
-    rec             RECORD;
-    v_entity_id     integer;
-    v_exist         integer;
+	rec					RECORD;
+	v_entity_id			integer;
+	v_exist				integer;
 BEGIN
 
-  IF (TG_OP = 'INSERT') then 
-        Select count(applicant_email) INTO v_exist from applicants where applicant_email = NEW.applicant_email;
-        IF(v_exist != 0) THEN
-            Raise exception 'email exists';
-        END IF;
-  END IF;
-  
-  IF (TG_OP = 'UPDATE' AND NEW.approve_status = 'Approved') THEN
-         
-             INSERT INTO members(entity_id,org_id,full_name, surname, first_name, middle_name,phone, 
-            gender,marital_status,primary_email,objective, details)  
-         
-    VALUES (New.entity_id,New.org_id,(NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')), New.Surname,NEW.First_name,NEW.Middle_name,
-    New.applicant_phone,New.gender,New.marital_status,New.applicant_email,NEW.objective, NEW.details)
-    RETURNING entity_id INTO v_entity_id;
-    NEW.entity_id := v_entity_id;
-    
-        INSERT INTO sys_emailed (sys_email_id, table_id,org_id, table_name)
-        VALUES (1,NEW.entity_id,NEW.org_id, 'applicant');
-        
-  END IF;  
-  RETURN NEW;
-END;
-$BODY$
-  LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
-  FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
-  
-
- CREATE OR REPLACE FUNCTION ins_members()
-  RETURNS trigger AS
-$BODY$
-DECLARE
-	rec 			RECORD;
-	v_entity_id		integer;
-BEGIN
-	IF (TG_OP = 'INSERT') THEN
-	
-	IF (New.primary_email is null)THEN
-		RAISE EXCEPTION 'You have to enter an Email';
-	ELSIF(NEW.first_name is null) AND (NEW.surname is null)THEN
-		RAISE EXCEPTION 'You have need to enter Sur name and full Name';
-	ELSEIF(new.contribution is null) then
-	RAISE EXCEPTION 'You have need to enter contribution amount';
-	ELSE
-	Raise NOTICE 'Thank you';
+	IF (TG_OP = 'INSERT') then 
+		SELECT count(applicant_email) INTO v_exist 
+		FROM applicants WHERE applicant_email = NEW.applicant_email;
+		IF(v_exist != 0) THEN
+			Raise exception 'email exists';
+		END IF;
 	END IF;
-	NEW.entity_id := nextval('entitys_entity_id_seq');
-	NEW.member_id := nextval('members_member_id_seq');
 
-	INSERT INTO entitys (entity_id, entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount,use_key_id)
-	VALUES (New.entity_id, (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution, 0) RETURNING entity_id INTO v_entity_id;
+	IF (TG_OP = 'UPDATE' AND NEW.approve_status = 'Approved') THEN
+		INSERT INTO members(entity_id, org_id, full_name, surname, first_name, middle_name, phone, 
+			gender, marital_status, primary_email, objective, details)  
+		VALUES (NEW.entity_id, NEW.org_id, (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')), New.Surname, NEW.First_name, NEW.Middle_name,
+			NEW.applicant_phone, NEW.gender, NEW.marital_status, NEW.applicant_email, NEW.objective, NEW.details)
+		RETURNING entity_id INTO v_entity_id;
+		NEW.entity_id := v_entity_id;
 
-	NEW.entity_id := v_entity_id;
-	
-	
-	
-	END IF;
-		IF (TG_OP = 'UPDATE') THEN
-			IF (NEW.full_name is null) then
-			NEW.full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
-			END IF;
-			
+		INSERT INTO sys_emailed (sys_email_id, table_id,org_id, table_name)
+		VALUES (1,NEW.entity_id,NEW.org_id, 'applicant');
 	END IF;
 	
 	RETURN NEW;
 END;
-$BODY$
-  LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
+CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
+	FOR EACH ROW  EXECUTE PROCEDURE ins_applicants();
+  
 
- 
- 
+CREATE OR REPLACE FUNCTION ins_members() RETURNS trigger AS $$
+DECLARE
+	rec 			RECORD;
+	v_entity_id		integer;
+BEGIN
+
+	IF (TG_OP = 'INSERT') THEN
+		IF (New.primary_email is null)THEN
+			RAISE EXCEPTION 'You have to enter an Email';
+		ELSIF(NEW.first_name is null) AND (NEW.surname is null)THEN
+			RAISE EXCEPTION 'You have need to enter Sur name and full Name';
+		ELSIF(new.contribution is null) then
+			RAISE EXCEPTION 'You have need to enter contribution amount';
+		ELSE
+			Raise NOTICE 'Thank you';
+		END IF;
+		NEW.entity_id := nextval('entitys_entity_id_seq');
+		NEW.member_id := nextval('members_member_id_seq');
+
+		INSERT INTO entitys (entity_id, entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount,use_key_id)
+		VALUES (New.entity_id, (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution, 0) 
+		RETURNING entity_id INTO v_entity_id;
+
+		NEW.entity_id := v_entity_id;
+	END IF;
+	
+	NEW.full_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''));
+	IF (TG_OP = 'UPDATE') THEN
+		UPDATE entitys SET entity_name = NEW.full_name WHERE entity_id = NEW.entity_id;
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_members BEFORE INSERT OR UPDATE ON members
-  FOR EACH ROW  EXECUTE PROCEDURE ins_members(); 
+FOR EACH ROW  EXECUTE PROCEDURE ins_members(); 
   
   
-  CREATE OR REPLACE FUNCTION ins_gurrantors() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION ins_gurrantors() RETURNS trigger AS $$
 DECLARE
     rec_loan            record;
     v_shares            real;

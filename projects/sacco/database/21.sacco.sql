@@ -137,7 +137,7 @@ CREATE TABLE applicants	(
 );		
 CREATE INDEX applicants_org_id ON applicants (org_id);
 CREATE INDEX applicants_entity_id ON applicants (entity_id);
- 
+
 CREATE TABLE recruiting_agent(
 	recruiting_agent_id  	serial primary key,
 	entity_id				integer references entitys,
