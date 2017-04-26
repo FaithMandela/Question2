@@ -871,7 +871,7 @@ System.out.println("BASE : 2020 " + linkData);
 			webbody.close();
 		} else if(view.getName().equals("ACCORDION")) {
 			BAccordion accordion = new BAccordion(db, view);
-			body += accordion.getAccordion(request, linkData, formLinkData);
+			body += accordion.getAccordion(request, linkData, formLinkData, viewData);
 			accordionJs = accordion.getAccordionJs();
 		} else if(view.getName().equals("CROSSTAB")) {
 			BCrossTab crossTab = new BCrossTab(db, view, wheresql, sortby);

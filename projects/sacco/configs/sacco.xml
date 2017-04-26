@@ -1003,7 +1003,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Applicant" key="23" h="650">
-		<FORMVIEW name="Applicant" keyfield="applicant_id" orderby="entity_id" table="vw_applicants" tab.count="count(applicant_id)" user="entity_id">
+		<FORMVIEW name="Applicant" keyfield="applicant_id" orderby="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
@@ -2511,12 +2511,10 @@
 			<TEXTDECIMAL w="75" title="Monthly Payments">monthly_payments</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Investment Status">investment_status</TEXTFIELD>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Total Repayment">total_repayment</TEXTDECIMAL>
-			<TEXTDECIMAL w="75" title="Interest Amount">interest_amount</TEXTDECIMAL>
 			<ACTIONS>
 				<ACTION fnct="investment_aplication" role="admin">Apply Investment</ACTION>
 			</ACTIONS>
-			<FORM name="Sacco Investments" keyfield="sacco_investment_id" linkfield="sacco_investment_id" table="sacco_investments">
+			<FORM name="Sacco Investments" keyfield="sacco_investment_id" table="sacco_investments">
 				<COMBOBOX w="430" title="Type" lptable="investment_types" y="10" h="20" x="10" lpfield="investment_type_name">investment_type_id</COMBOBOX>
 				<COMBOBOX w="430" title="Curency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<COMBOBOX w="430" title="Bank Account" lptable="bank_accounts" y="50" h="20" x="10" lpfield="bank_account_name">bank_account_id</COMBOBOX>
@@ -2604,9 +2602,15 @@
 				<JASPER name="Invoice" reportfile="vw_trx.jasper"></JASPER>
 			</GRID>
 		</GRID>
-		<GRID name="Investment Types" keyfield="investment_type_id" linkfield="org_id" table="investment_types">
+		<GRID name="Investment Types" keyfield="investment_type_id" table="investment_types">
 			<TEXTFIELD w="75" title="ID">investment_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Name">investment_type_name</TEXTFIELD>
+			<TEXTFIELD w="175" title="Name">investment_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="50" title="Interest">interest_type</TEXTDECIMAL>
+			<FORM name="Investment Types" keyfield="investment_type_id" table="investment_types">
+				<TEXTFIELD w="430" title="Investment Type" y="10" h="20" x="10">investment_type_name</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Interest" y="30" h="20" x="10">interest_type</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Loans" key="330" h="550">

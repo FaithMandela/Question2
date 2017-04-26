@@ -39,10 +39,11 @@ public class BAccordion {
 		this.view = view;
 	} 
 
-	public String getAccordion(HttpServletRequest request, String linkData, String formLinkData) {
+	public String getAccordion(HttpServletRequest request, String linkData, String formLinkData, List<String> viewData) {
 		String body = "\t<div class='panel-group accordion' id='accordion1'>\n";
-		
+		int vds = viewData.size();
 System.out.println("BASE 2010 : " + linkData);
+System.out.println("BASE 2020 : " + vds);
 		
 		accordionJs = "";
 		Integer ac = new Integer("0");
@@ -58,9 +59,9 @@ System.out.println("BASE 2010 : " + linkData);
 			+ vw.getAttribute("collapse", "collapse") + "'>\n"
 			+ "\t\t\t\t<div class='panel-body'>\n";
 			
-			String whereSql = "";
+			String whereSql = null;
 			if(vw.getName().equals("FORM")) {
-				if(linkData != null) {
+				if((linkData != null) && (vds > 2)) {
 					if("{new}".equals(linkData)) whereSql = vw.getAttribute("keyfield") + " = null";
 					else whereSql = vw.getAttribute("keyfield") + " = '" + linkData + "'";
 				}

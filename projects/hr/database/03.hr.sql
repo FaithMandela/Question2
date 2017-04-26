@@ -302,22 +302,32 @@ CREATE TABLE skill_types (
 CREATE INDEX skill_types_skill_category_id ON skill_types (skill_category_id);
 CREATE INDEX skill_types_org_id ON skill_types(org_id);
 
+CREATE TABLE skill_levels (
+	skill_level_id			serial primary key,
+	org_id					integer references orgs,
+	skill_level_name		varchar(50),
+	details					text
+);
+CREATE INDEX skill_levels_org_id ON skill_levels(org_id);
+
 CREATE TABLE skills (
 	skill_id				serial primary key,
 	entity_id				integer references entitys,
-	skill_type_id			integer references skill_types,
+	skill_type_id			integer not null references skill_types,
+	skill_level_id			integer not null references skill_levels,
 	org_id					integer references orgs,
 	state_skill				varchar(50),
-	skill_level				integer default 1 not null,
 	aquired					boolean default false not null,
 	training_date			date,
 	trained					boolean default false not null,
 	training_institution	varchar(240),
 	training_cost			real,
-	details					text
+	details					text,
+	UNIQUE(entity_id, skill_type_id)
 );
 CREATE INDEX skills_entity_id ON skills (entity_id);
 CREATE INDEX skills_skill_type_id ON skills (skill_type_id);
+CREATE INDEX skills_skill_level_id ON skills (skill_level_id);
 CREATE INDEX skills_org_id ON skills(org_id);
 
 CREATE TABLE identification_types (
@@ -339,7 +349,8 @@ CREATE TABLE identifications (
 	starting_from			date,
 	expiring_at				date,
 	place_of_issue			varchar(50),
-	details					text
+	details					text,
+	UNIQUE(entity_id, identification_type_id, nationality)
 );
 CREATE INDEX identifications_entity_id ON identifications(entity_id);
 CREATE INDEX identifications_identification_type_id ON identifications(identification_type_id);
@@ -1011,18 +1022,18 @@ CREATE VIEW vw_skill_types AS
 CREATE VIEW vw_skills AS
 	SELECT vw_skill_types.skill_category_id, vw_skill_types.skill_category_name, vw_skill_types.skill_type_id, 
 		vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced, 
-		entitys.entity_id, entitys.entity_name, skills.skill_id, skills.skill_level, skills.aquired, skills.training_date, 
-		skills.org_id, skills.trained, skills.training_institution, skills.training_cost, skills.details,
+		entitys.entity_id, entitys.entity_name, 
+		skill_levels.skill_level_id, skill_levels.skill_level_name,
+		skills.skill_id, skills.aquired, skills.training_date, 
+		skills.org_id, skills.trained, skills.training_institution, skills.training_cost, 
+		skills.details,
 		
 		(CASE WHEN vw_skill_types.skill_type_id = 0 THEN skills.state_skill
-			ELSE vw_skill_types.skill_type_name END) as skill_type_name,
+			ELSE vw_skill_types.skill_type_name END) as skill_type_name
 		
-		(CASE WHEN skill_level = 1 THEN 'Basic' WHEN skill_level = 2 THEN 'Intermediate' 
-			WHEN skill_level = 3 THEN 'Advanced' ELSE 'None' END) as skill_level_name,
-		(CASE WHEN skill_level = 1 THEN vw_skill_types.Basic WHEN skill_level = 2 THEN vw_skill_types.Intermediate 
-			WHEN skill_level = 3 THEN vw_skill_types.Advanced ELSE 'None' END) as skill_level_details
 	FROM skills INNER JOIN entitys ON skills.entity_id = entitys.entity_id
-		INNER JOIN vw_skill_types ON skills.skill_type_id = vw_skill_types.skill_type_id;
+		INNER JOIN vw_skill_types ON skills.skill_type_id = vw_skill_types.skill_type_id
+		INNER JOIN skill_levels ON skills.skill_level_id = skill_levels.skill_level_id;
 
 CREATE VIEW vw_identifications AS
 	SELECT entitys.entity_id, entitys.entity_name, identification_types.identification_type_id, identification_types.identification_type_name, 

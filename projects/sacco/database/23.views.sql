@@ -74,8 +74,22 @@ CREATE VIEW vw_applicants AS
 		applicants.picture_file, applicants.identity_card, applicants.language, applicants.approve_status, 
 		applicants.workflow_table_id, applicants.action_date, applicants.salary, applicants.how_you_heard, 
 		applicants.created, applicants.interests, applicants.objective, applicants.details
-	FROM applicants INNER JOIN entitys ON applicants.entity_id = entitys.entity_id;
+	FROM applicants LEFT JOIN entitys ON applicants.entity_id = entitys.entity_id;
 
+CREATE VIEW vw_sacco_investments AS
+	SELECT bank_accounts.bank_account_id, bank_accounts.bank_account_name, 
+		currency.currency_id, currency.currency_name, 
+		investment_types.investment_type_id, investment_types.investment_type_name, 
+		sacco_investments.org_id, sacco_investments.sacco_investment_id, sacco_investments.investment_name, 
+		sacco_investments.investment_status, sacco_investments.date_of_accrual, sacco_investments.principal, 
+		sacco_investments.interest, sacco_investments.repayment_period, sacco_investments.initial_payment, 
+		sacco_investments.monthly_payments, 
+		sacco_investments.approve_status, sacco_investments.workflow_table_id, sacco_investments.action_date, 
+		sacco_investments.is_active, sacco_investments.details
+	FROM sacco_investments INNER JOIN bank_accounts ON sacco_investments.bank_account_id = bank_accounts.bank_account_id
+		INNER JOIN currency ON sacco_investments.currency_id = currency.currency_id
+		INNER JOIN investment_types ON sacco_investments.investment_type_id = investment_types.investment_type_id;
+	
 CREATE OR REPLACE VIEW vw_contributions AS 
 	SELECT contributions.contribution_id,
 		contributions.org_id,
@@ -394,7 +408,7 @@ BEGIN
 		NEW.entity_id := v_entity_id;
 
 		INSERT INTO sys_emailed (sys_email_id, table_id,org_id, table_name)
-		VALUES (1,NEW.entity_id,NEW.org_id, 'applicant');
+		VALUES (1, NEW.entity_id, NEW.org_id, 'applicant');
 	END IF;
 	
 	RETURN NEW;

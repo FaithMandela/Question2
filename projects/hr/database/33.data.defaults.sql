@@ -32,7 +32,6 @@ SELECT 1, contract_status_name
 FROM contract_status
 WHERE org_id = 0;
 
-
 INSERT INTO kin_types (org_id, kin_type_name)
 SELECT 1, kin_type_name
 FROM kin_types
@@ -43,6 +42,12 @@ SELECT 1, education_class_name
 FROM education_class
 WHERE org_id = 0
 ORDER BY education_class_id;
+
+INSERT INTO skill_levels (org_id, skill_level_name)
+SELECT 1, skill_level_name
+FROM skill_levels
+WHERE org_id = 0
+ORDER BY skill_level_id;
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_name, visible, in_tax, account_number) VALUES (1, 41, 'Sitting Allowance', true, true, '90005');
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 42, 'Bonus', true, true, '90005');
