@@ -223,6 +223,10 @@ BEGIN
 		INSERT INTO kin_types (org_id, kin_type_name)
 		SELECT NEW.org_id, kin_type_name
 		FROM kin_types WHERE org_id = 1;
+		
+		INSERT INTO skill_levels (org_id, skill_level_name)
+		SELECT 1, skill_level_name
+		FROM skill_levels WHERE org_id = 0 ORDER BY skill_level_id;
 
 		INSERT INTO education_class (org_id, education_class_name)
 		SELECT NEW.org_id, education_class_name

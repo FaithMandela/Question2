@@ -542,11 +542,9 @@ public class BWeb {
 					if(!hasForm) fv = j;
 					hasForm = true;
 				}
-System.out.println("BASE 4010 : " + elName);
+
 				if(elName.equals("ACCORDION") && el.getAttribute("new", "true").equals("true")) {
-System.out.println("BASE 4020 : " + el.toString());
 					for(BElement ell : el.getElements()) {
-System.out.println("BASE 4030 : " + ell.getName());
 						if(ell.getName().equals("FORM") && ell.getAttribute("new", "true").equals("true")) {
 							if(!hasForm) fv = j;
 							hasForm = true;
@@ -554,7 +552,7 @@ System.out.println("BASE 4030 : " + ell.getName());
 					}
 				}
 			}
-System.out.println("BASE 4040 : hasForm : " + hasForm);
+
 			String did = "";
 			if(dataItem != null) did = "&data=" + dataItem;
 			
@@ -819,10 +817,11 @@ System.out.println("BASE 4040 : hasForm : " + hasForm);
 		String formLinkData = "";
 
 		int vds = viewKeys.size();
+System.out.println("BASE : 2010 " + vds);
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
-			
+System.out.println("BASE : 2020 " + linkData);
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
@@ -872,7 +871,7 @@ System.out.println("BASE 4040 : hasForm : " + hasForm);
 			webbody.close();
 		} else if(view.getName().equals("ACCORDION")) {
 			BAccordion accordion = new BAccordion(db, view);
-			body += accordion.getAccordion(request, wheresql, formLinkData);
+			body += accordion.getAccordion(request, linkData, formLinkData, viewData);
 			accordionJs = accordion.getAccordionJs();
 		} else if(view.getName().equals("CROSSTAB")) {
 			BCrossTab crossTab = new BCrossTab(db, view, wheresql, sortby);
@@ -1255,7 +1254,6 @@ System.out.println("repository : " + repository);
 			String elName = (String)e.nextElement();
 			reqParams.put(elName, request.getParameterValues(elName));
 		}
-		
 		updateFormData(request, reqParams);
 	}
 	
@@ -1386,6 +1384,12 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 			}
 			
 			saveMsg = qAccd.updateFields(reqParams, viewData, request.getRemoteAddr(), linkData);
+			
+			// Set the jump point
+			dataItem = qAccd.getKeyField();
+			viewData.set(vds - 1, dataItem);
+			webSession.setAttribute("loaddata", dataItem);
+			
 			qAccd.close();
 		}
 	}

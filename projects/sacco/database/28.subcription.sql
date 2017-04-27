@@ -202,6 +202,10 @@ BEGIN
 		INSERT INTO orgs(org_id, currency_id, org_name, org_sufix, default_country_id)
 		VALUES(NEW.org_id, 1, NEW.business_name, NEW.org_id, NEW.country_id);
 		
+		INSERT INTO entity_types (org_id, entity_type_name, entity_role, use_key_id)
+		SELECT NEW.org_id, entity_type_name, entity_role, use_key_id
+		FROM entity_types WHERE org_id = 1;
+		
 		UPDATE entitys SET org_id = NEW.org_id, function_role='admin'
 		WHERE entity_id = NEW.entity_id;
 		
@@ -210,15 +214,11 @@ BEGIN
 		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
 		
 		INSERT INTO currency(currency_name, currency_symbol, org_id) VALUES ('Kenya Shillings', 'kes', NEW.org_id);
+		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name)
 		VALUES ( 5, NEW.org_id, NEW.entity_id, 'subscription');
-		
-		v_bank_id := nextval('banks_bank_id_seq');
-		INSERT INTO currency_rates (org_id, currency_id, exchange_rate) VALUES (NEW.org_id, v_currency_id, 1);
-		INSERT INTO banks (org_id, bank_id, bank_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
-		INSERT INTO bank_branch (org_id, bank_id, bank_branch_name) VALUES (NEW.org_id, v_bank_id, 'Cash');
-		
+
 		INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
 		SELECT NEW.org_id, account_class_no, chat_type_id, chat_type_name, account_class_name
 		FROM account_class

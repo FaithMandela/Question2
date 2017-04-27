@@ -582,7 +582,7 @@ public class BWebBody extends BQuery {
 			while (cmbrs.moveNext()) {
 				response.append("<option");
 				if(eof) {
-					if(getString(el.getValue())!=null) {
+					if(getString(el.getValue()) != null) {
 						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
 							response.append(" selected='selected'");
 					}
