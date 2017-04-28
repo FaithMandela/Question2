@@ -94,7 +94,14 @@
 			<TILE noorg.query="true" role="staff" name="Number of Staff" where="(active = true)" table="employees">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
 			</TILE>
+<<<<<<< HEAD
 			<TILE noorg.query="true" role="staff,applicant" name="Available Jobs" where="(closing_date > current_date)" table="vw_intake">
+=======
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" groupby="entity_id" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="count(task_id)" title="Pending Tasks" default="0">pending_tasks</TEXTFIELD>
+			</TILE>
+			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				<TEXTFIELD w="75" fnct="COALESCE(count(intake_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
 			</TILE>
 			<TILE noorg.query="true" role="applicant" name="Available Internships" where="(closing_date > current_date)" table="vw_internships">
@@ -276,6 +283,7 @@
 				<CHECKBOX w="75" title="Trained">trained</CHECKBOX>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
+<<<<<<< HEAD
 				<FORM keyfield="skill_id" name="Skills" linkfield="entity_id" table="skills">
 					<COMBOBOX cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" w="430" h="20" lpfield="skill_type_name" x="10" y="10" lptable="vw_skill_types" title="Skill Type">skill_type_id</COMBOBOX>
 					<TEXTFIELD w="150" h="20" x="10" y="30" title="State Skill">state_skill</TEXTFIELD>
@@ -290,6 +298,18 @@
 					<TEXTFIELD w="430" h="20" x="10" y="90" title="Training Institution">training_institution</TEXTFIELD>
 					<TEXTDECIMAL w="150" h="20" x="10" y="110" title="Training Cost">training_cost</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="130" title="Details">details</TEXTAREA>
+=======
+				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Skill Level ID" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+					<TEXTFIELD w="150" title="State Skill" y="50" h="20" x="10">state_skill</TEXTFIELD>
+					<CHECKBOX w="150" title="Aquired" y="50" h="20" x="290">aquired</CHECKBOX>
+					<TEXTDATE w="150" title="Training Date" y="70" h="20" x="10">training_date</TEXTDATE>
+					<CHECKBOX w="150" title="Trained" y="70" h="20" x="290">trained</CHECKBOX>
+					<TEXTFIELD w="430" title="Training Institution" y="90" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Training Cost" y="110" h="20" x="10">training_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				</FORM>
 			</GRID>
 			<GRID keyfield="address_id" name="Referees" linkfield="table_id" table="vw_referees">
@@ -463,9 +483,16 @@
 				<TEXTAREA w="250" title="Details">details</TEXTAREA>
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
+<<<<<<< HEAD
 			<GRID keyfield="skill_id" name="Skills" user="entity_id" table="skills">
 				<COMBOBOX cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" w="240" lpfield="skill_type_name" lptable="vw_skill_types" title="Skill Type">skill_type_id</COMBOBOX>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
+=======
+			<GRID name="Skills" keyfield="skill_id" table="skills" user="entity_id">
+				<COMBOBOX w="240" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+				<COMBOBOX w="120" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+				<TEXTFIELD w="100" title="Skill">state_skill</TEXTFIELD>
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				<TEXTAREA w="250" title="Details">details</TEXTAREA>
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
@@ -504,7 +531,11 @@
 			<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 			<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 		</FILES>
+<<<<<<< HEAD
 		<FORMVIEW new="false" keyfield="entity_id" name="Applicant" user="entity_id" table="vw_applicants" gohint="Follow this link to update your details">
+=======
+		<FORMVIEW new="false" name="Applicant CV" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
@@ -514,8 +545,14 @@
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
+<<<<<<< HEAD
 			<FORM new="false" tw="570" th="200" keyfield="entity_id" name="Details" user="entity_id" table="applicants">
 				<COMBOLIST w="50" h="20" x="10" y="10" title="Title">person_title
+=======
+			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
+			<FORM new="false" tw="570" name="Details" keyfield="entity_id" table="applicants" user="entity_id" th="200">
+				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 					<DATA>Miss</DATA>
 					<DATA>Mr</DATA>
 					<DATA>Mrs</DATA>
@@ -624,6 +661,7 @@
 				<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
+<<<<<<< HEAD
 				<FORM keyfield="skill_id" name="Skills" linkfield="entity_id" table="skills">
 					<COMBOBOX cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" w="430" h="20" lpfield="skill_type_name" x="10" y="10" lptable="vw_skill_types" title="Skill Type">skill_type_id</COMBOBOX>
 					<TEXTFIELD w="150" h="20" x="10" y="30" title="State Skill">state_skill</TEXTFIELD>
@@ -634,6 +672,14 @@
 					</COMBOLIST>
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Training Institution">training_institution</TEXTFIELD>
 					<TEXTAREA w="430" h="70" x="10" y="110" title="Details">details</TEXTAREA>
+=======
+				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Skill Level ID" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+					<TEXTFIELD w="150" title="State Skill" y="50" h="20" x="10">state_skill</TEXTFIELD>
+					<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				</FORM>
 			</GRID>
 			<GRID keyfield="address_id" name="Referees" linkfield="table_id" user="table_id" table="vw_referees">
@@ -669,8 +715,12 @@
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
+<<<<<<< HEAD
 			<JASPER reportfile="cv_applicant.jasper" org.table="vw_applicants" name="BIO"></JASPER>
 			<JASPER reportfile="cv_applicant_2.jasper" org.table="vw_applicants" name="CV"></JASPER>
+=======
+			<JASPER name="BIO" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" h="550" name="Vacancies" key="14">
@@ -1272,6 +1322,7 @@
 				<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
+<<<<<<< HEAD
 				<FORM keyfield="skill_id" name="Skills" linkfield="entity_id" table="skills">
 					<COMBOBOX cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" w="430" h="20" lpfield="skill_type_name" x="10" y="10" lptable="vw_skill_types" title="Skill Type">skill_type_id</COMBOBOX>
 					<COMBOLIST w="150" h="20" x="10" y="30" title="Skill Level">skill_level
@@ -1281,6 +1332,13 @@
 					</COMBOLIST>
 					<TEXTFIELD w="430" h="20" x="10" y="50" title="Training Institution">training_institution</TEXTFIELD>
 					<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
+=======
+				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Skill Level ID" lptable="skill_levels" y="50" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+					<TEXTFIELD w="430" title="Training Institution" y="50" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				</FORM>
 			</GRID>
 			<GRID keyfield="address_id" name="Referees" linkfield="table_id" table="vw_referees">
@@ -1508,6 +1566,7 @@
 				<CHECKBOX w="75" title="Trained">trained</CHECKBOX>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
+<<<<<<< HEAD
 				<FORM keyfield="skill_id" name="Skills" linkfield="entity_id" table="skills">
 					<COMBOBOX cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" w="430" h="20" lpfield="skill_type_name" x="10" y="10" lptable="vw_skill_types" title="Skill Type">skill_type_id</COMBOBOX>
 					<COMBOLIST w="150" h="20" x="10" y="30" title="Skill Level">skill_level
@@ -1521,6 +1580,17 @@
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Training Institution">training_institution</TEXTFIELD>
 					<TEXTDECIMAL w="150" h="20" x="10" y="90" title="Training Cost">training_cost</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="110" title="Details">details</TEXTAREA>
+=======
+				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Skill Level" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+					<CHECKBOX w="150" title="Aquired" y="30" h="20" x="290">aquired</CHECKBOX>
+					<TEXTDATE w="150" title="Training Date" y="50" h="20" x="10">training_date</TEXTDATE>
+					<CHECKBOX w="150" title="Trained" y="50" h="20" x="290">trained</CHECKBOX>
+					<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Training Cost" y="90" h="20" x="10">training_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				</FORM>
 			</GRID>
 			<GRID keyfield="address_id" name="Referees" linkfield="table_id" table="vw_referees">
@@ -1803,7 +1873,11 @@
 					<TEXTAREA w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
 				</FORM>
 			</GRID>
+<<<<<<< HEAD
 			<GRID keyfield="skill_id" name="Skills" linkfield="entity_id" delete="false" table="vw_skills">
+=======
+			<GRID name="Skills" keyfield="skill_id" linkfield="entity_id" table="vw_skills">
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
 				<CHECKBOX w="75" title="Aquired">aquired</CHECKBOX>
@@ -1811,6 +1885,7 @@
 				<CHECKBOX w="75" title="Trained">trained</CHECKBOX>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
+<<<<<<< HEAD
 				<FORM new="false" edit="false" keyfield="skill_id" name="Skills" linkfield="entity_id" delete="false" table="skills">
 					<GRIDBOX w="430" h="20" lpfield="skill_type_name" x="10" y="10" lptable="skill_types" title="Skill Type" webgrid="8">skill_type_id
 						<GRID keyfield="skill_type_id" name="Skill Types" orderby="skill_category_id" table="vw_skill_types">
@@ -1832,6 +1907,17 @@
 					<TEXTFIELD w="430" h="20" x="10" y="70" title="Training Institution">training_institution</TEXTFIELD>
 					<TEXTDECIMAL w="150" h="20" x="10" y="90" title="Training Cost">training_cost</TEXTDECIMAL>
 					<TEXTAREA w="430" h="70" x="10" y="110" title="Details">details</TEXTAREA>
+=======
+				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Skill Level" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+					<CHECKBOX w="150" title="Aquired" y="30" h="20" x="290">aquired</CHECKBOX>
+					<TEXTDATE w="150" title="Training Date" y="50" h="20" x="10">training_date</TEXTDATE>
+					<CHECKBOX w="150" title="Trained" y="50" h="20" x="290">trained</CHECKBOX>
+					<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
+					<TEXTDECIMAL w="150" title="Training Cost" y="90" h="20" x="10">training_cost</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+>>>>>>> f659f7b34ef7ce666c29e4ebe7ebf63fad962dd3
 				</FORM>
 			</GRID>
 			<GRID keyfield="address_id" name="Referees" linkfield="table_id" table="vw_referees">

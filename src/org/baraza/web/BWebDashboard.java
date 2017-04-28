@@ -27,13 +27,17 @@ public class BWebDashboard {
 		String body = "";
 		
 		BQuery rs = new BQuery(db, el, null, null, false);
-		rs.moveFirst();
+		boolean neof = rs.moveFirst();
 				
 		body += "<div class='col-lg-3 col-md-3 col-sm-6 col-xs-12'>\n";
 		body += "	<div class='dashboard-stat2'>\n";
 		for(BElement ell : el.getElements()) {
-			String val = rs.readField(ell.getValue());
-			if(val == null) val = "";
+			String val = null;
+			if(neof) val = rs.readField(ell.getValue());
+			if(val == null) {
+				if(ell.getAttribute("default") == null) val = "";
+				else val = ell.getAttribute("default");
+			}
 			if(ell.getAttribute("type", "display").equals("display")) {
 				String tileName = ell.getAttribute("title", "Name");
 				if(el.getAttribute("jumpview") != null) {

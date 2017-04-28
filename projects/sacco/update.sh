@@ -3,9 +3,11 @@
 cp -f ../hr/database/01.common.sql ./database/
 cp -f ../hr/database/02.accounts.sql ./database/
 cp -f ../hr/database/11.transactions.sql ./database/
+cp -f ../hr/database/15.sales.sql ./database/
 cp -f ../hr/database/14.pettycash.sql ./database/
 cp -f ../hr/database/16.helpdesk.sql ./database/
 cp -f ../hr/database/32.data.sql ./database/
+
 
 cp -f ../hr/reports/vw_accounts.jasper ./reports/
 cp -f ../hr/reports/vw_items.jasper ./reports/

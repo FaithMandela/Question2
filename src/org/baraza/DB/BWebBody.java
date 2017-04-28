@@ -422,13 +422,15 @@ public class BWebBody extends BQuery {
 		String defaultvalue = el.getAttribute("default", "");
 		String default_fnct = el.getAttribute("default_fnct");
 		String default_org_fnct = el.getAttribute("default_org_fnct");
+		String default_user = el.getAttribute("default_user");
 		if(default_fnct != null) {
 			if(default_fnct.indexOf("(") > 1) db.executeFunction("SELECT " + default_fnct + ", '" + db.getUserID() + "')");
 			else defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
-		}
-		if(default_org_fnct != null) {
+		} else if(default_org_fnct != null) {
 			if(default_org_fnct.indexOf("(") > 1) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + ", " + userOrg + ")");
 			else defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
+		} else if(default_user != null) {
+			defaultvalue = db.getUserID();
 		}
 		
 		if(el.getAttribute("tab") != null) formCols = 0;
@@ -580,7 +582,7 @@ public class BWebBody extends BQuery {
 			while (cmbrs.moveNext()) {
 				response.append("<option");
 				if(eof) {
-					if(getString(el.getValue())!=null) {
+					if(getString(el.getValue()) != null) {
 						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
 							response.append(" selected='selected'");
 					}

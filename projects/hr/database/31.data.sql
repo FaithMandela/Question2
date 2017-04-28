@@ -236,6 +236,9 @@ INSERT INTO contract_status (contract_status_name) VALUES ('Terminated');
 INSERT INTO contract_status (contract_status_name) VALUES ('Transferred');
 UPDATE contract_status SET org_id = 0;
 
+INSERT INTO skill_levels (org_id, skill_level_name) VALUES (0, 'Basic');
+INSERT INTO skill_levels (org_id, skill_level_name) VALUES (0, 'Intermediate');
+INSERT INTO skill_levels (org_id, skill_level_name) VALUES (0, 'Advanced');
 
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Aerospace');
 INSERT INTO industry (org_id, industry_name) VALUES (0, 'Agriculture');

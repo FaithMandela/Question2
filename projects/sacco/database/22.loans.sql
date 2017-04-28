@@ -1,6 +1,6 @@
 CREATE TABLE loan_types (
 	loan_type_id			serial primary key,
-	org_id				integer references orgs,
+	org_id					integer references orgs,
 	loan_type_name			varchar(50) not null,
 	default_interest		real,
 	reducing_balance		boolean default true not null,
@@ -10,22 +10,22 @@ CREATE INDEX loan_types_org_id ON loan_types (org_id);
 
 CREATE TABLE loans (
 	loan_id 				serial primary key,
-	loan_type_id				integer not null references loan_types,
+	loan_type_id			integer not null references loan_types,
 	entity_id				integer not null references entitys,
 	entity_name 			varchar(120),
 	org_id					integer references orgs,
 	principle				real not null,
 	interest				real not null,
-	monthly_repayment			real not null,
+	monthly_repayment		real not null,
 	loan_date				date,
-	initial_payment				real default 0 not null,
-	reducing_balance			boolean default true not null,
-	repayment_period			integer not null check (repayment_period > 0),
+	initial_payment			real default 0 not null,
+	reducing_balance		boolean default true not null,
+	repayment_period		integer not null check (repayment_period > 0),
 	journal_id				integer references journals,
 	
-	application_date			timestamp default now(),
-	approve_status				varchar(16) default 'Draft' not null,
-	workflow_table_id			integer,
+	application_date		timestamp default now(),
+	approve_status			varchar(16) default 'Draft' not null,
+	workflow_table_id		integer,
 	action_date				timestamp,
 	
 	is_closed				boolean default false,
@@ -37,31 +37,29 @@ CREATE INDEX loans_entity_id ON loans (entity_id);
 CREATE INDEX loans_org_id ON loans (org_id);
 
 CREATE TABLE loan_monthly (
-	loan_month_id 				serial primary key,
-	loan_id						integer references loans,
-	period_id					integer references periods,
-	org_id						integer references orgs,
+	loan_month_id 			serial primary key,
+	loan_id					integer references loans,
+	period_id				integer references periods,
+	org_id					integer references orgs,
 
-	penalty						real default 0 not null,
-	penalty_paid				real default 0 not null,
+	penalty					real default 0 not null,
+	penalty_paid			real default 0 not null,
 	
-	interest_amount				real default 0 not null,
-	interest_paid				real default 0 not null,
+	interest_amount			real default 0 not null,
+	interest_paid			real default 0 not null,
 	
-	repayment					real default 0 not null,
-	repayment_paid				real default 0 not null,
+	repayment				real default 0 not null,
+	repayment_paid			real default 0 not null,
+	
+	additional_payments		real default 0 not null,
 
-	is_paid      				boolean default false,
+	is_paid      			boolean default false,
 	details					text,
 	UNIQUE (loan_id, period_id)
 );
 CREATE INDEX loan_monthly_loan_id ON loan_monthly (loan_id);
 CREATE INDEX loan_monthly_period_id ON loan_monthly (period_id);
 CREATE INDEX loan_monthly_org_id ON loan_monthly (org_id);
-
-
-
-
 
 CREATE TABLE collateral_types (
   collateral_type_id 		serial primary key,
@@ -194,8 +192,7 @@ CREATE VIEW vw_loan_types AS
 		INNER JOIN currency ON loan_types.org_id = currency.org_id;
 
 CREATE OR REPLACE VIEW vw_loans AS 
-	SELECT
-		vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
+	SELECT vw_loan_types.currency_id, vw_loan_types.currency_name, vw_loan_types.currency_symbol,
 		vw_loan_types.loan_type_id, vw_loan_types.loan_type_name, 
 		loans.entity_id, loans.org_id, loans.loan_id, loans.principle, loans.interest, loans.monthly_repayment, loans.reducing_balance, 
 		loans.repayment_period, loans.initial_payment, loans.loan_date, 
@@ -395,17 +392,12 @@ $BODY$
 CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE ins_loans();
     
-       
-
 
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans
     FOR EACH ROW EXECUTE PROCEDURE upd_action();
 
-    
-    
-     CREATE OR REPLACE FUNCTION compute_loans(v_period_id varchar(12), v_org_id varchar(12), v_approval varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION compute_loans(v_period_id varchar(12), v_org_id varchar(12), v_approval varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-
 	msg					varchar(120);
 BEGIN
 	
@@ -428,7 +420,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
-    CREATE OR REPLACE FUNCTION ins_loan_monthly() RETURNS trigger AS $BODY$
+CREATE OR REPLACE FUNCTION ins_loan_monthly() RETURNS trigger AS $BODY$
 DECLARE
 	vdate					date;
 	entityname				varchar(120);
@@ -443,82 +435,13 @@ DECLARE
 	vrepaymentpaid          real;
 	vtotalinterest          real;
 BEGIN
-
 			
-    			SELECT penalty , interest_amount, start_date, vw_loans.entity_name,period_id, vw_loans.entity_id,
-    			vw_loans.currency_id, vw_loans.total_interest INTO vpenalty , vinterest,vdate, entityname, periodid,entityid,
-    			currencyid, vtotalinterest FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id 
-    			WHERE( vw_loan_monthly.loan_id = New.loan_id);
-    			
-    			
-    			INSERT INTO journals (period_id, journal_date, org_id, department_id, currency_id, narrative, year_closing)
-				VALUES (periodid, vdate ,New.org_id, 1, currencyid, entityname || ' Repayments', false) returning journal_id 
-				into journalid ;
-    			
-					INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
-					VALUES (journalid, 71030, vtotalinterest, 0, entityname || ' Loan interest owing', NEW.org_id) ;
-					
-					INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
-					VALUES ( journalid, 30000,0, vtotalinterest,  entityname || ' Loan interest owing', NEW.org_id);
-					
-						INSERT INTO transactions( tx_type, transaction_type_id, for_processing, entity_id,
-										bank_account_id, department_id, currency_id, exchange_rate, transaction_date, 
-										payment_date, transaction_amount,transaction_tax_amount, reference_number, payment_number,
-										narrative, completed, is_cleared, org_id, journal_id)
-										VALUES ( 1,22,'true',entityid,0,1,currencyid,1,now()::date, vdate,vtotalinterest,1,1,1,
-										entityname || ' Loan interest','TRUE','FALSE', NEW.org_id , journalid);
-	
-   
-   
-				IF (vpenalty > 0 ) THEN  
-					INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
- 					VALUES (journalid, 71030, vpenalty, 0, entityname || ' Loan Penalty owing', NEW.org_id) ;
-				
- 					INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
- 					VALUES ( journalid, 30000,0, vpenalty,  entityname || ' Loan Penalty owing', NEW.org_id);
- 					END IF;
- 					
- 					INSERT INTO transactions( tx_type, transaction_type_id, for_processing, entity_id,
-										bank_account_id, department_id, currency_id, exchange_rate, transaction_date, 
-										payment_date, transaction_amount,transaction_tax_amount, reference_number, payment_number,
-										narrative, completed, is_cleared, org_id, journal_id)
-										VALUES ( 1,22,'true',entityid,0,1,currencyid,1,now()::date, vdate,vpenalty,1,1,1,
-										entityname || ' Loan Peanlty','FALSE','FALSE', NEW.org_id , journalid);
-					
-			IF(NEW.is_paid = true) THEN
-			
-				SELECT penalty , interest_paid, start_date, vw_loans.entity_name, period_id, vw_loans.currency_id, 
-				vw_loan_monthly.repayment_paid INTO vpenaltypaid , vinterestpaid, vdate, 
-				entityname, periodid, currencyid,vrepaymentpaid 
-				FROM vw_loan_monthly INNER JOIN vw_loans on vw_loans.loan_id = vw_loan_monthly.loan_id
-				 WHERE  (vw_loan_monthly.loan_id = New.loan_id);
-					 
-					INSERT INTO journals (period_id, journal_date, org_id, department_id, currency_id, narrative, year_closing)
-					VALUES (periodid, vdate ,New.org_id, 1, currencyid, entityname || ' Repayment ', false) 
-					returning journal_id into journalid ;
-			
-						IF (vpenaltypaid > 0 ) THEN  
-							INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
-							VALUES (journalid, 71030, 0,vpenaltypaid , entityname || ' Loan Penalty Paid', NEW.org_id) ;
-						
-							INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
-							VALUES ( journalid, 30000,vpenaltypaid , 0,  entityname || ' Loan Penalty Paid', NEW.org_id);
-						END IF;
-				
-						INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
-						VALUES (journalid, 71030, 0,vinterestpaid , entityname || ' Loan Interest Paid', NEW.org_id) ;
-				
-						INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
-						VALUES ( journalid, 30000,vinterestpaid , 0,  entityname || ' Loan Interest Paid', NEW.org_id);
-						
-						INSERT INTO gls ( journal_id, account_id, debit,credit, gl_narrative,  org_id)
-						VALUES (journalid, 71030, 0,vrepaymentpaid , entityname || ' Loan Repayment Paid', NEW.org_id) ;
-				
-						INSERT INTO  gls (journal_id, account_id, debit, credit, gl_narrative, org_id)
-						VALUES ( journalid, 30000,vrepaymentpaid , 0,  entityname || ' Loan Repayment Paid', NEW.org_id);
-			END IF;
-	
-    
+	SELECT penalty , interest_amount, start_date, vw_loans.entity_name,period_id, vw_loans.entity_id,
+		vw_loans.currency_id, vw_loans.total_interest 
+	INTO vpenalty , vinterest,vdate, entityname, periodid,entityid, currencyid, vtotalinterest 
+	FROM vw_loan_monthly INNER JOIN vw_loans ON vw_loans.loan_id = vw_loan_monthly.loan_id 
+	WHERE( vw_loan_monthly.loan_id = New.loan_id);
+	    
 	RETURN NEW;
 END;
 $BODY$
