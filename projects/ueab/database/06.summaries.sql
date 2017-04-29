@@ -65,6 +65,32 @@ CREATE OR REPLACE FUNCTION getcummgpa(int, varchar(12)) RETURNS float AS $$
 		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
 $$ LANGUAGE SQL;
 
+CREATE FUNCTION getcummgpa(int, int) RETURNS float AS $$
+	SELECT (CASE sum(qgrades.credit) WHEN 0 THEN 0 ELSE (sum(grades.gradeweight * qgrades.credit)/sum(qgrades.credit)) END)
+	FROM qgrades INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid
+		INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
+		INNER JOIN grades ON qgrades.gradeid = grades.gradeid
+		INNER JOIN qcourses ON qgrades.qcourseid = qcourses.qcourseid
+		INNER JOIN majorcontents ON (qcourses.courseid = majorcontents.courseid) AND (studentdegrees.bulletingid = majorcontents.bulletingid)
+	WHERE (qstudents.studentdegreeid = $1) AND (qstudents.approved = true)
+		AND (majorcontents.contenttypeid = $2)
+		AND (qgrades.dropped = false) AND (grades.gpacount = true) 
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
+
+CREATE FUNCTION getcoregpa(int) RETURNS float AS $$
+	SELECT (CASE sum(qgrades.credit) WHEN 0 THEN 0 ELSE (sum(grades.gradeweight * qgrades.credit)/sum(qgrades.credit)) END)
+	FROM qgrades INNER JOIN qstudents ON qgrades.qstudentid = qstudents.qstudentid
+		INNER JOIN studentdegrees ON qstudents.studentdegreeid = studentdegrees.studentdegreeid
+		INNER JOIN grades ON qgrades.gradeid = grades.gradeid
+		INNER JOIN qcourses ON qgrades.qcourseid = qcourses.qcourseid
+		INNER JOIN majorcontents ON (qcourses.courseid = majorcontents.courseid) AND (studentdegrees.bulletingid = majorcontents.bulletingid)
+	WHERE (qstudents.studentdegreeid = $1) AND (qstudents.approved = true)
+		AND (majorcontents.contenttypeid IN (1, 2, 8))
+		AND (qgrades.dropped = false) AND (grades.gpacount = true) 
+		AND (qgrades.repeated = false) AND (qgrades.gradeid <> 'W') AND (qgrades.gradeid <> 'AW');
+$$ LANGUAGE SQL;
+
 CREATE VIEW qstudentsummary AS
 	SELECT org_id, studentid, studentname, quarterid, approved, studentdegreeid, qstudentid,
 		sex, Nationality, MaritalStatus,
