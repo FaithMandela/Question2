@@ -1678,7 +1678,8 @@ BEGIN
 	
 	SELECT count(address_id) INTO v_address
 	FROM vw_address
-	WHERE (table_name = 'applicant') AND (is_default = true) AND (table_id  = v_entity_id);
+	WHERE ((table_name = 'applicant') OR (table_name = 'employees'))
+		AND (is_default = true) AND (table_id  = v_entity_id);
 	IF(v_address is null) THEN v_address = 0; END IF;
 	
 	SELECT count(education_id) INTO c_education_id
@@ -1723,7 +1724,7 @@ BEGIN
 		WHERE (use_type = 10) AND (org_id = reca.org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 10);
+		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 1);
 		
 		msg := 'Added Job application';
 	END IF;
@@ -1754,7 +1755,7 @@ BEGIN
 		WHERE (use_type = 11) AND (org_id = v_org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, v_org_id, v_intern_id, 'interns', 11);
+		VALUES (v_sys_email_id, v_org_id, v_intern_id, 'interns', 1);
 		
 		msg := 'Added internship application';
 	ELSE

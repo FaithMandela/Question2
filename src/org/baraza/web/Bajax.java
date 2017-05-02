@@ -277,9 +277,12 @@ public class Bajax extends HttpServlet {
 	
 	public String importProcess(String sqlProcess) {
 		String resp = "";
-						
-		String mysql = "SELECT " + sqlProcess + "('0', '" + db.getUserID() + "', '')";
-		String myoutput = web.executeFunction(mysql);
+		
+		String myoutput = null;
+		if(sqlProcess != null) {
+			String mysql = "SELECT " + sqlProcess + "('0', '" + db.getUserID() + "', '')";
+			myoutput = web.executeFunction(mysql);
+		}
 		
 		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
 		else resp = "{\"success\": 1, \"message\": \"Processing Successfull\"}";
