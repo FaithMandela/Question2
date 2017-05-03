@@ -494,6 +494,12 @@
             autoclose: true
         });
 
+		var date = new Date();
+		$('.date-picker2').datepicker({
+            autoclose: true,
+			startDate:date
+        });
+
 		UITree.init();
 
 		$('.clockface').clockface({
@@ -722,13 +728,13 @@ console.log("TODO Bulk Save grid");
 	});
 
     <% } %>
-                
+
     $('.detailed-select').change(function(){
         var $this = $(this);
         var name = $this.attr('name');
         $this.attr('id', name);
         var detail = $('#' + name).find(":selected").attr('data-detail');
-        
+
         if( $('#help_' + name).length == 0){
             $this.parent().append('<div style="color:#4486D8;" id="help_' + name + '" class="help-block has-info">' + detail + '</div>');
         }else{
@@ -838,11 +844,11 @@ $(function () {
         console.log(data);
         console.log(data.result);
         console.log(data.result.message);
-        
+
         $('#progress').removeClass('active').removeClass('progress-striped');
 		$('#jqlist').setGridParam({datatype:'json', page:1}).trigger('reloadGrid');
 		var fileDone = $('<button>').text(data.result.message);
-        $(data.context.children()[0]).append(fileDone).click(function(){ 
+        $(data.context.children()[0]).append(fileDone).click(function(){
 			$.post("ajax?fnct=importprocess", {ids: "0"}, function(adata) {
 
 				if(adata.error == false){
