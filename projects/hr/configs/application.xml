@@ -15,7 +15,7 @@
 			<TEXTFIELD w="100" required="true" title="First Name *" y="10" h="20" x="490" span="true">first_name</TEXTFIELD>
 			<TEXTFIELD w="150" title="Middle Name" y="30" h="20" x="10">middle_name</TEXTFIELD>
 			<TEXTFIELD w="150" required="true" title="Phone *" h="20" y="30" x="290" span="true">applicant_phone</TEXTFIELD>
-			<TEXTFIELD w="430" required="true" title="Email *" y="50" h="20" x="10">applicant_email</TEXTFIELD>
+			<TEXTFIELD w="430" required="true" title="Email *" y="50" h="20" x="10" id="applicant_email">applicant_email</TEXTFIELD>
 			<TEXTDATE w="150" required="true" title="Date Of Birth *" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 			<COMBOBOX w="150" required="true" title="Nationality *" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
 			<COMBOLIST w="150" required="true" title="Gender *" y="90" h="20" x="10" span="true">gender

@@ -318,7 +318,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FILES username="repository" repository="/repository/webdav/files/" name="Upload Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" noorg="true" password="baraza">
+			<FILES username="repository" repository="/repository/webdav/files/" name="Upload Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza">
 				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 				<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>

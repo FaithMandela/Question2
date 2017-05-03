@@ -97,12 +97,12 @@
 	</REPORT>
 
 	<REPORT name="Contract Email" keyfield="application_id" action="emailed_contract" actioncount="12" 
-		table="vw_applications, sys_emails"
-		 where="(sys_emails.use_type = 12) AND (vw_applications.notice_period > vw_applications.days_end_contract)
-			AND (vw_applications.notice_email = false)">
-		<SUBJECT title="subject">sys_emailed.narrative</SUBJECT>
+		table="vw_contracting, sys_emails"
+		 where="(sys_emails.use_type = 12) AND (vw_contracting.notice_period > vw_contracting.days_end_contract)
+			AND (vw_contracting.notice_email = false)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">sys_emails.default_email</ADDRESS>
-		<BODYFIELD reference="{{entity_name}}" basetable="vw_applications">entity_name</BODYFIELD>
+		<BODYFIELD reference="{{entity_name}}" basetable="vw_contracting">entity_name</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
