@@ -40,8 +40,8 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 	<field name="contribution_paid" class="java.lang.Float"/>
 	<field name="deposit_dates" class="java.sql.Date"/>
 	<field name="is_paid" class="java.lang.Boolean"/>
-	<field name="entity_name" class="java.lang.String"/>
-	<field name="member_is_active" class="java.lang.Boolean"/>
+	<field name="full_name" class="java.lang.String"/>
+	<field name="expired" class="java.lang.Boolean"/>
 	<field name="contribution_type_id" class="java.lang.Integer"/>
 	<field name="contribution_type_name" class="java.lang.String"/>
 	<field name="payment_type_name" class="java.lang.String"/>
@@ -231,7 +231,7 @@ ORDER BY vw_contributions.receipt_date asc;]]>
 				<textElement>
 					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Helvetica"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{full_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement key="textField" x="240" y="1" width="87" height="14" uuid="d08a8690-b11b-400e-8a36-1e903d388435"/>

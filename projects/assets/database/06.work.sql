@@ -281,7 +281,9 @@ ORDER BY a.asset_type_id, a.purchase_date, a.model
 SELECT vw_client_assets.pcc, vw_client_assets.client_name, vw_client_assets.asset_type_name, 
 vw_client_assets.manufacturer_name, vw_client_assets.model_name,
 vw_client_assets.asset_serial, vw_client_assets.tag_number, 
-to_char(vw_client_assets.date_issued, 'dd/MM/YYYY') as issue_date
+to_char(vw_client_assets.date_issued, 'dd/MM/YYYY') as issue_date,
+to_char(vw_client_assets.purchase_date, 'dd/MM/YYYY') as purchase_date
+
 FROM vw_client_assets
 
 WHERE (vw_client_assets.is_issued = true) AND (vw_client_assets.retrived is null)

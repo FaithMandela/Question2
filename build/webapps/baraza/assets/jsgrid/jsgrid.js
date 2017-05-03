@@ -1,5 +1,5 @@
 /*
- * jsGrid v1.4.0 (http://js-grid.com)
+ * jsGrid v1.5.3 (http://js-grid.com)
  * (c) 2016 Artem Tabalin
  * Licensed under MIT (https://github.com/tabalinas/jsgrid/blob/master/LICENSE)
  */
@@ -30,6 +30,22 @@
             return value.apply(context, $.makeArray(arguments).slice(2));
         }
         return value;
+    };
+
+    var normalizePromise = function(promise) {
+        var d = $.Deferred();
+
+        if(promise && promise.then) {
+            promise.then(function() {
+                d.resolve.apply(d, arguments);
+            }, function() {
+                d.reject.apply(d, arguments);
+            });
+        } else {
+            d.resolve(promise);
+        }
+
+        return d.promise();
     };
 
     var defaultController = {
@@ -80,6 +96,7 @@
         heading: true,
         headerRowRenderer: null,
         headerRowClass: "jsgrid-header-row",
+        headerCellClass: "jsgrid-header-cell",
 
         filtering: false,
         filterRowRenderer: null,
@@ -100,6 +117,7 @@
         selectedRowClass: "jsgrid-selected-row",
         oddRowClass: "jsgrid-row",
         evenRowClass: "jsgrid-alt-row",
+        cellClass: "jsgrid-cell",
 
         sorting: false,
         sortableClass: "jsgrid-header-sortable",
@@ -146,8 +164,10 @@
             window.alert([this.invalidMessage].concat(messages).join("\n"));
         },
 
+        onInit: $.noop,
         onRefreshing: $.noop,
         onRefreshed: $.noop,
+        onPageChanged: $.noop,
         onItemDeleting: $.noop,
         onItemDeleted: $.noop,
         onItemInserting: $.noop,
@@ -176,6 +196,7 @@
             this._initFields();
             this._attachWindowLoadResize();
             this._attachWindowResizeCallback();
+            this._callEventHandler(this.onInit)
         },
 
         loadStrategy: function() {
@@ -190,6 +211,18 @@
 
         _initController: function() {
             this._controller = $.extend({}, defaultController, getOrApply(this.controller, this));
+        },
+
+        renderTemplate: function(source, context, config) {
+            args = [];
+            for(var key in config) {
+                args.push(config[key]);
+            }
+
+            args.unshift(source, context);
+
+            source = getOrApply.apply(null, args);
+            return (source === undefined || source === null) ? "" : source;
         },
 
         loadIndicator: function(config) {
@@ -271,7 +304,6 @@
                 case "rowRenderer":
                 case "rowClick":
                 case "rowDoubleClick":
-                case "noDataText":
                 case "noDataRowClass":
                 case "noDataContent":
                 case "selecting":
@@ -433,13 +465,13 @@
 
         _createHeaderRow: function() {
             if($.isFunction(this.headerRowRenderer))
-                return $(this.headerRowRenderer());
+                return $(this.renderTemplate(this.headerRowRenderer, this));
 
             var $result = $("<tr>").addClass(this.headerRowClass);
 
             this._eachField(function(field, index) {
-                var $th = this._prepareCell("<th>", field, "headercss")
-                    .append(field.headerTemplate ? field.headerTemplate() : "")
+                var $th = this._prepareCell("<th>", field, "headercss", this.headerCellClass)
+                    .append(this.renderTemplate(field.headerTemplate, field))
                     .appendTo($result);
 
                 if(this.sorting && field.sorting) {
@@ -453,21 +485,22 @@
             return $result;
         },
 
-        _prepareCell: function(cell, field, cssprop) {
+        _prepareCell: function(cell, field, cssprop, cellClass) {
             return $(cell).css("width", field.width)
+                .addClass(cellClass || this.cellClass)
                 .addClass((cssprop && field[cssprop]) || field.css)
                 .addClass(field.align ? ("jsgrid-align-" + field.align) : "");
         },
 
         _createFilterRow: function() {
             if($.isFunction(this.filterRowRenderer))
-                return $(this.filterRowRenderer());
+                return $(this.renderTemplate(this.filterRowRenderer, this));
 
             var $result = $("<tr>").addClass(this.filterRowClass);
 
             this._eachField(function(field) {
                 this._prepareCell("<td>", field, "filtercss")
-                    .append(field.filterTemplate ? field.filterTemplate() : "")
+                    .append(this.renderTemplate(field.filterTemplate, field))
                     .appendTo($result);
             });
 
@@ -476,13 +509,13 @@
 
         _createInsertRow: function() {
             if($.isFunction(this.insertRowRenderer))
-                return $(this.insertRowRenderer());
+                return $(this.renderTemplate(this.insertRowRenderer, this));
 
             var $result = $("<tr>").addClass(this.insertRowClass);
 
             this._eachField(function(field) {
                 this._prepareCell("<td>", field, "insertcss")
-                    .append(field.insertTemplate ? field.insertTemplate() : "")
+                    .append(this.renderTemplate(field.insertTemplate, field))
                     .appendTo($result);
             });
 
@@ -500,7 +533,7 @@
         reset: function() {
             this._resetSorting();
             this._resetPager();
-            this.refresh();
+            return this._loadStrategy.reset();
         },
 
         _resetPager: function() {
@@ -560,28 +593,21 @@
         },
 
         _createNoDataRow: function() {
-            var noDataContent = getOrApply(this.noDataContent, this);
-
             var amountOfFields = 0;
             this._eachField(function() {
                 amountOfFields++;
             });
 
             return $("<tr>").addClass(this.noDataRowClass)
-                .append($("<td>").attr("colspan", amountOfFields).append(noDataContent));
-        },
-
-        _createNoDataContent: function() {
-            return $.isFunction(this.noDataRenderer)
-                ? this.noDataRenderer()
-                : this.noDataText;
+                .append($("<td>").addClass(this.cellClass).attr("colspan", amountOfFields)
+                    .append(this.renderTemplate(this.noDataContent, this)));
         },
 
         _createRow: function(item, itemIndex) {
             var $result;
 
             if($.isFunction(this.rowRenderer)) {
-                $result = $(this.rowRenderer(item, itemIndex));
+                $result = this.renderTemplate(this.rowRenderer, this, { item: item, itemIndex: itemIndex });
             } else {
                 $result = $("<tr>");
                 this._renderCells($result, item);
@@ -640,10 +666,11 @@
             var $result;
             var fieldValue = this._getItemFieldValue(item, field);
 
+            var args = { value: fieldValue, item : item };
             if($.isFunction(field.cellRenderer)) {
-                $result = $(field.cellRenderer(fieldValue, item));
+                $result = this.renderTemplate(field.cellRenderer, field, args);
             } else {
-                $result = $("<td>").append(field.itemTemplate ? field.itemTemplate(fieldValue, item) : fieldValue);
+                $result = $("<td>").append(this.renderTemplate(field.itemTemplate || fieldValue, field, args));
             }
 
             return this._prepareCell($result, field);
@@ -665,7 +692,7 @@
             var current = item;
             var prop = props[0];
 
-            while(current && props.length > 1) {
+            while(current && props.length) {
                 item = current;
                 prop = props.shift();
                 current = item[prop];
@@ -726,10 +753,14 @@
         },
 
         _setSortingCss: function() {
-            var fieldIndex = $.inArray(this._sortField, $.grep(this.fields, function(f) { return f.visible; }));
+            var fieldIndex = this._visibleFieldIndex(this._sortField);
 
             this._headerRow.find("th").eq(fieldIndex)
                 .addClass(this._sortOrder === SORT_ORDER_ASC ? this.sortAscClass : this.sortDescClass);
+        },
+
+        _visibleFieldIndex: function(field) {
+            return $.inArray(field, $.grep(this.fields, function(f) { return f.visible; }));
         },
 
         _sortData: function() {
@@ -876,20 +907,23 @@
         },
 
         _refreshWidth: function() {
-            var $headerGrid = this._headerGrid,
-                $bodyGrid = this._bodyGrid,
-                width = this.width;
+            var width = (this.width === "auto") ? this._getAutoWidth() : this.width;
 
-            if(width === "auto") {
-                $headerGrid.width("auto");
-                width = $headerGrid.outerWidth();
-            }
+            this._container.width(width);
+        },
+
+        _getAutoWidth: function() {
+            var $headerGrid = this._headerGrid,
+                $header = this._header;
+
+            $headerGrid.width("auto");
+
+            var contentWidth = $headerGrid.outerWidth();
+            var borderWidth = $header.outerWidth() - $header.innerWidth();
 
             $headerGrid.width("");
-            $bodyGrid.width("");
-            this._container.width(width);
-            width = $headerGrid.outerWidth();
-            $bodyGrid.width(width);
+
+            return contentWidth + borderWidth;
         },
 
         _scrollBarWidth: (function() {
@@ -972,6 +1006,10 @@
             if(pageIndex > firstDisplayingPage + pageButtonCount - 1) {
                 this._firstDisplayingPage = pageIndex - pageButtonCount + 1;
             }
+
+            this._callEventHandler(this.onPageChanged, {
+                pageIndex: pageIndex
+            });
         },
 
         _controllerCall: function(method, param, isCanceled, doneCallback) {
@@ -985,7 +1023,7 @@
                 throw Error("controller has no method '" + method + "'");
             }
 
-            return $.when(controller[method](param))
+            return normalizePromise(controller[method](param))
                 .done($.proxy(doneCallback, this))
                 .fail($.proxy(this._errorHandler, this))
                 .always($.proxy(this._hideLoading, this));
@@ -1122,16 +1160,20 @@
                 row: $row
             };
 
-            this._eachField(function(field, index) {
-                if(!field.validate)
+            this._eachField(function(field) {
+                if(!field.validate ||
+                   ($row === this._insertRow && !field.inserting) ||
+                   ($row === this._getEditRow() && !field.editing))
                     return;
 
+                var fieldValue = this._getItemFieldValue(item, field);
+
                 var errors = this._validation.validate($.extend({
-                    value: item[field.name],
+                    value: fieldValue,
                     rules: field.validate
                 }, args));
 
-                this._setCellValidity($row.children().eq(index), errors);
+                this._setCellValidity($row.children().eq(this._visibleFieldIndex(field)), errors);
 
                 if(!errors.length)
                     return;
@@ -1212,7 +1254,7 @@
 
         _createEditRow: function(item) {
             if($.isFunction(this.editRowRenderer)) {
-                return $(this.editRowRenderer(item, this._itemIndex(item)));
+                return $(this.renderTemplate(this.editRowRenderer, this, { item: item, itemIndex: this._itemIndex(item) }));
             }
 
             var $result = $("<tr>").addClass(this.editRowClass);
@@ -1221,7 +1263,7 @@
                 var fieldValue = this._getItemFieldValue(item, field);
 
                 this._prepareCell("<td>", field, "editcss")
-                    .append(field.editTemplate ? field.editTemplate(fieldValue, item) : "")
+                    .append(this.renderTemplate(field.editTemplate || "", field, { value: fieldValue, item: item }))
                     .appendTo($result);
             });
 
@@ -1250,19 +1292,19 @@
         _updateRow: function($updatingRow, editedItem) {
             var updatingItem = $updatingRow.data(JSGRID_ROW_DATA_KEY),
                 updatingItemIndex = this._itemIndex(updatingItem),
-                previousItem = $.extend(true, {}, updatingItem);
-
-            $.extend(true, updatingItem, editedItem);
+                updatedItem = $.extend(true, {}, updatingItem, editedItem);
 
             var args = this._callEventHandler(this.onItemUpdating, {
                 row: $updatingRow,
-                item: updatingItem,
+                item: updatedItem,
                 itemIndex: updatingItemIndex,
-                previousItem: previousItem
+                previousItem: updatingItem
             });
 
-            return this._controllerCall("updateItem", updatingItem, args.cancel, function(updatedItem) {
-                updatedItem = updatedItem || updatingItem;
+            return this._controllerCall("updateItem", updatedItem, args.cancel, function(loadedUpdatedItem) {
+                var previousItem = $.extend(true, {}, updatingItem);
+                updatedItem = loadedUpdatedItem || $.extend(true, updatingItem, editedItem);
+
                 var $updatedRow = this._finishUpdate($updatingRow, updatedItem, updatingItemIndex);
 
                 this._callEventHandler(this.onItemUpdated, {
@@ -1311,7 +1353,7 @@
         },
 
         _getEditRow: function() {
-            return this._editingRow.data(JSGRID_EDIT_ROW_DATA_KEY);
+            return this._editingRow && this._editingRow.data(JSGRID_EDIT_ROW_DATA_KEY);
         },
 
         deleteItem: function(item) {
@@ -1424,7 +1466,8 @@
         fields: fields,
         setDefaults: setDefaults,
         locales: locales,
-        locale: locale
+        locale: locale,
+        version: '1.5.3'
     };
 
 }(window, jQuery));
@@ -1552,6 +1595,11 @@
             return $.Deferred().resolve().promise();
         },
 
+        reset: function() {
+            this._grid.refresh();
+            return $.Deferred().resolve().promise();
+        },
+
         finishLoad: function(loadedData) {
             this._grid.option("data", loadedData);
         },
@@ -1576,6 +1624,7 @@
     }
 
     PageLoadingStrategy.prototype = {
+
         firstDisplayIndex: function() {
             return 0;
         },
@@ -1598,6 +1647,10 @@
                 pageIndex: grid.option("pageIndex"),
                 pageSize: grid.option("pageSize")
             };
+        },
+
+        reset: function() {
+            return this._grid.loadData();
         },
 
         sort: function() {
@@ -1659,6 +1712,142 @@
     };
 
     jsGrid.sortStrategies = sortStrategies;
+
+}(jsGrid, jQuery));
+
+(function(jsGrid, $, undefined) {
+
+    function Validation(config) {
+        this._init(config);
+    }
+
+    Validation.prototype = {
+
+        _init: function(config) {
+            $.extend(true, this, config);
+        },
+
+        validate: function(args) {
+            var errors = [];
+
+            $.each(this._normalizeRules(args.rules), function(_, rule) {
+                if(rule.validator(args.value, args.item, rule.param))
+                    return;
+
+                var errorMessage = $.isFunction(rule.message) ? rule.message(args.value, args.item) : rule.message;
+                errors.push(errorMessage);
+            });
+
+            return errors;
+        },
+
+        _normalizeRules: function(rules) {
+            if(!$.isArray(rules))
+                rules = [rules];
+
+            return $.map(rules, $.proxy(function(rule) {
+                return this._normalizeRule(rule);
+            }, this));
+        },
+
+        _normalizeRule: function(rule) {
+            if(typeof rule === "string")
+                rule = { validator: rule };
+
+            if($.isFunction(rule))
+                rule = { validator: rule };
+
+            if($.isPlainObject(rule))
+                rule = $.extend({}, rule);
+            else
+                throw Error("wrong validation config specified");
+
+            if($.isFunction(rule.validator))
+                return rule;
+
+            return this._applyNamedValidator(rule, rule.validator);
+        },
+
+        _applyNamedValidator: function(rule, validatorName) {
+            delete rule.validator;
+
+            var validator = validators[validatorName];
+            if(!validator)
+                throw Error("unknown validator \"" + validatorName + "\"");
+
+            if($.isFunction(validator)) {
+                validator = { validator: validator };
+            }
+
+            return $.extend({}, validator, rule);
+        }
+    };
+
+    jsGrid.Validation = Validation;
+
+
+    var validators = {
+        required: {
+            message: "Field is required",
+            validator: function(value) {
+                return value !== undefined && value !== null && value !== "";
+            }
+        },
+
+        rangeLength: {
+            message: "Field value length is out of the defined range",
+            validator: function(value, _, param) {
+                return value.length >= param[0] && value.length <= param[1];
+            }
+        },
+
+        minLength: {
+            message: "Field value is too short",
+            validator: function(value, _, param) {
+                return value.length >= param;
+            }
+        },
+
+        maxLength: {
+            message: "Field value is too long",
+            validator: function(value, _, param) {
+                return value.length <= param;
+            }
+        },
+
+        pattern: {
+            message: "Field value is not matching the defined pattern",
+            validator: function(value, _, param) {
+                if(typeof param === "string") {
+                    param = new RegExp("^(?:" + param + ")$");
+                }
+                return param.test(value);
+            }
+        },
+
+        range: {
+            message: "Field value is out of the defined range",
+            validator: function(value, _, param) {
+                return value >= param[0] && value <= param[1];
+            }
+        },
+
+        min: {
+            message: "Field value is too small",
+            validator: function(value, _, param) {
+                return value >= param;
+            }
+        },
+
+        max: {
+            message: "Field value is too large",
+            validator: function(value, _, param) {
+                return value <= param;
+            }
+        }
+    };
+
+    jsGrid.validators = validators;
 
 }(jsGrid, jQuery));
 
@@ -1776,7 +1965,7 @@
 
         editTemplate: function(value) {
             if(!this.editing)
-                return this.itemTemplate(value);
+                return this.itemTemplate.apply(this, arguments);
 
             var $result = this.editControl = this._createTextBox();
             $result.val(value);
@@ -1820,15 +2009,21 @@
 		readOnly: false,
 
         filterValue: function() {
-            return parseInt(this.filterControl.val() || 0, 10);
+            return this.filterControl.val()
+                ? parseInt(this.filterControl.val() || 0, 10)
+                : undefined;
         },
 
         insertValue: function() {
-            return parseInt(this.insertControl.val() || 0, 10);
+            return this.insertControl.val()
+                ? parseInt(this.insertControl.val() || 0, 10)
+                : undefined;
         },
 
         editValue: function() {
-            return parseInt(this.editControl.val() || 0, 10);
+            return this.editControl.val()
+                ? parseInt(this.editControl.val() || 0, 10)
+                : undefined;
         },
 
         _createTextBox: function() {
@@ -1860,7 +2055,7 @@
 
         editTemplate: function(value) {
             if(!this.editing)
-                return this.itemTemplate(value);
+                return this.itemTemplate.apply(this, arguments);
 
             var $result = this.editControl = this._createTextArea();
             $result.val(value);
@@ -1879,6 +2074,8 @@
 (function(jsGrid, $, undefined) {
 
     var NumberField = jsGrid.NumberField;
+    var numberValueType = "number";
+    var stringValueType = "string";
 
     function SelectField(config) {
         this.items = [];
@@ -1887,7 +2084,8 @@
         this.textField = "";
 
         if(config.valueField && config.items.length) {
-            this.valueType = typeof config.items[0][config.valueField];
+            var firstItemValue = config.items[0][config.valueField];
+            this.valueType = (typeof firstItemValue) === numberValueType ? numberValueType : stringValueType;
         }
 
         this.sorter = this.valueType;
@@ -1898,7 +2096,7 @@
     SelectField.prototype = new NumberField({
 
         align: "center",
-        valueType: "number",
+        valueType: numberValueType,
 
         itemTemplate: function(value) {
             var items = this.items,
@@ -1945,7 +2143,7 @@
 
         editTemplate: function(value) {
             if(!this.editing)
-                return this.itemTemplate(value);
+                return this.itemTemplate.apply(this, arguments);
 
             var $result = this.editControl = this._createSelect();
             (value !== undefined) && $result.val(value);
@@ -1954,17 +2152,17 @@
 
         filterValue: function() {
             var val = this.filterControl.val();
-            return this.valueType === "number" ? parseInt(val || 0, 10) : val;
+            return this.valueType === numberValueType ? parseInt(val || 0, 10) : val;
         },
 
         insertValue: function() {
             var val = this.insertControl.val();
-            return this.valueType === "number" ? parseInt(val || 0, 10) : val;
+            return this.valueType === numberValueType ? parseInt(val || 0, 10) : val;
         },
 
         editValue: function() {
             var val = this.editControl.val();
-            return this.valueType === "number" ? parseInt(val || 0, 10) : val;
+            return this.valueType === numberValueType ? parseInt(val || 0, 10) : val;
         },
 
         _createSelect: function() {
@@ -2063,7 +2261,7 @@
 
         editTemplate: function(value) {
             if(!this.editing)
-                return this.itemTemplate(value);
+                return this.itemTemplate.apply(this, arguments);
 
             var $result = this.editControl = this._createCheckbox();
             $result.prop("checked", value);

@@ -89,9 +89,9 @@
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="34" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="61" height="20" uuid="31c7bb49-0c2f-447a-b801-266564c93dd4"/>
+				<reportElement x="0" y="0" width="61" height="29" uuid="31c7bb49-0c2f-447a-b801-266564c93dd4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -107,7 +107,7 @@
 				<text><![CDATA[Order Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="114" y="0" width="132" height="20" uuid="ace5c60a-50ac-4d2d-97c1-23e2d9b31a3b"/>
+				<reportElement x="114" y="0" width="132" height="29" uuid="ace5c60a-50ac-4d2d-97c1-23e2d9b31a3b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -123,7 +123,7 @@
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="32" width="802" height="1" uuid="4da1bebb-6e5c-44c0-bfd7-2cbc6f171224"/>
+				<reportElement x="0" y="29" width="802" height="1" uuid="4da1bebb-6e5c-44c0-bfd7-2cbc6f171224"/>
 			</line>
 			<staticText>
 				<reportElement x="246" y="0" width="69" height="29" isPrintWhenDetailOverflows="true" uuid="75117650-bf2b-4e1c-96a7-e3196bd28e3c"/>
@@ -141,7 +141,7 @@
 				<text><![CDATA[Agency Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="494" y="0" width="71" height="30" uuid="60f87c67-9596-4c81-8539-900edb10f71d"/>
+				<reportElement x="494" y="0" width="71" height="29" uuid="60f87c67-9596-4c81-8539-900edb10f71d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -157,7 +157,7 @@
 				<text><![CDATA[Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="617" y="0" width="64" height="30" uuid="086c3b69-6d91-4256-ad20-3a3eabaef87d"/>
+				<reportElement x="617" y="0" width="64" height="29" uuid="086c3b69-6d91-4256-ad20-3a3eabaef87d"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="12" isBold="true"/>
 					<paragraph leftIndent="4" rightIndent="4"/>
@@ -300,7 +300,7 @@
 				<textFieldExpression><![CDATA[$V{grand_total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="581" y="7" width="100" height="20" uuid="625ee883-3080-42ba-a60b-ed00160e2479"/>
+				<reportElement x="565" y="7" width="116" height="20" uuid="625ee883-3080-42ba-a60b-ed00160e2479"/>
 				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="14" isBold="true"/>
 				</textElement>

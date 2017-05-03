@@ -49,14 +49,8 @@ INSERT INTO account_types (account_type_no, account_class_id, account_type_name)
 INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('985', '90', 'TAXES');
 INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('990', '90', 'INSURANCE');
 INSERT INTO account_types (account_type_no, account_class_id, account_type_name) VALUES ('995', '90', 'OTHER EXPENSES');
-
 UPDATE account_types SET org_id = 0, account_type_id = account_type_no;
 SELECT pg_catalog.setval('account_types_account_type_id_seq', 999, true);
-
-
-
-
-
 
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('10000',100,'COMPUTERS and EQUIPMENT');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('10005',100,'FURNITURE');
@@ -208,7 +202,6 @@ INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99505'
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99510',995,'COST OF GOODS SOLD (COGS)');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99515',995,'PURCHASE PRICE VARIANCE');
 INSERT INTO accounts (account_no, account_type_id, account_name) VALUES ('99999',995,'SURPLUS/DEFICIT');
-
 UPDATE accounts set org_id = 0, account_id = account_no;
 SELECT pg_catalog.setval('accounts_account_id_seq', 99999, true);
 
@@ -266,6 +259,8 @@ INSERT INTO item_category (org_id, item_category_name) VALUES (0, 'Utilities');
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Each');
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, 'Man Hours');
 INSERT INTO item_units (org_id, item_unit_name) VALUES (0, '100KG');
+
+INSERT INTO stores (org_id, store_name) VALUES (0, 'Main Store');
 
 
 INSERT INTO bank_accounts (bank_account_id, org_id, currency_id, bank_branch_id, account_id, bank_account_name, is_default) 
@@ -329,31 +324,7 @@ INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_en
 VALUES (13, 0, 13, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
 SELECT pg_catalog.setval('workflow_phases_workflow_phase_id_seq', 13, true);
 
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Aerospace');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Agriculture');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Automotive');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Business and Consultancy Services');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Reseller');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Services and Consultancy');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Manufacturer');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'ICT - Software Development');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Investments');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Education');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Electronics');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Finance, Banking, Insurance');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - National or Federal');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Government - State, Country or Local');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Healthcare');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Hotel and Leisure');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Legal');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Manufacturing');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Media, Marketing, Entertainment, Publishing, PR');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Real Estate');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Retail, Wholesale');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Telecoms');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Transportation and Distribution');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Travel and Tours');
-INSERT INTO industry (org_id, industry_name) VALUES (0, 'Other');
+
 
 
 

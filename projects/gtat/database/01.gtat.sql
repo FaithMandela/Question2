@@ -699,27 +699,27 @@ ALTER TABLE clients ADD COLUMN mst_cus_id varchar(10);
 DROP TABLE tmpclientpayments;
 CREATE TABLE tmpclientpayments (
 	clientpaymentsid		serial primary key,
-	Category				varchar(250),
-	Currency				varchar(16),
-	Accounting_Date			varchar(16),
-	Company					varchar(250),
-	Location				varchar(250),
-	Cost_Center				varchar(250),
-	Account					varchar(250),
-	BUD						varchar(250),
-	Intercompany			varchar(250),
-	Debit					varchar(250),
-	Credit					varchar(250),
-	Conversion_Type			varchar(16),
-	ConversionDate			varchar(16),
-	Conversion_Rate			varchar(250),
-	Journal_Name			varchar(250),
-	Journal_Description		varchar(250),
-	Reverse_Journal			varchar(250),
-	Reversal_Period			varchar(250),
-	Line_Description		varchar(250),
-	Messages				varchar(250),
-	MST_CUS_ID				varchar(10)
+	category				varchar(250),
+	currency				varchar(16),
+	accounting_date			varchar(16),
+	company					varchar(250),
+	location				varchar(250),
+	cost_center				varchar(250),
+	account					varchar(250),
+	bud						varchar(250),
+	intercompany			varchar(250),
+	debit					varchar(250),
+	credit					varchar(250),
+	conversion_type			varchar(16),
+	conversiondate			varchar(16),
+	conversion_rate			varchar(250),
+	journal_name			varchar(250),
+	journal_description		varchar(250),
+	reverse_journal			varchar(250),
+	reversal_period			varchar(250),
+	line_description		varchar(250),
+	messages				varchar(250),
+	mst_cus_id				varchar(10)
 );
 
 
@@ -731,7 +731,9 @@ CREATE TABLE clientpayments (
 	currency				varchar(50),
 	amount					real,
 	payment_type			varchar(250),
-	payment_reference		varchar(250)
+	payment_reference		varchar(250),
+	journal_name			varchar(250),
+	created					timestamp default current_timestamp not null
 );
 CREATE INDEX clientpayments_clientid ON clientpayments (clientid);
 
@@ -747,8 +749,11 @@ DECLARE
 BEGIN 
 	DELETE FROM tmpclientpayments WHERE tmpclientpayments.Accounting_Date = 'Accounting Date';
 	
-	INSERT INTO clientpayments(clientid, accounting_date, currency, amount, payment_reference)
-	SELECT clients.clientid,('1899-12-30'::date + Accounting_Date::int) as accounting_date, currency, Credit::real, Line_Description
+	INSERT INTO clientpayments(clientid, accounting_date, currency, amount, journal_name,
+		payment_reference, payment_type)
+	SELECT clients.clientid, ('1899-12-30'::date + Accounting_Date::int), currency, credit::real, 
+		trim(journal_name), trim(split_part(line_description, ':', 1)), trim(split_part(line_description, ':', 2))
+		
 	FROM tmpclientpayments 
 	INNER JOIN clients ON tmpclientpayments.mst_cus_id = clients.mst_cus_id;
 
@@ -769,7 +774,8 @@ CREATE OR REPLACE VIEW vw_clientpayments AS
 	clientpayments.accounting_date,
     'TP/GTA/PAY/'::text || clientpayments.clientpaymentsid AS clientpaymentsnumber,
     clientpayments.payment_reference,
-    clientpayments.payment_type
+    clientpayments.payment_type,
+    clientpayments.journal_name
    FROM clientpayments
      JOIN clients ON clientpayments.clientid = clients.clientid;
 

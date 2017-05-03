@@ -4,6 +4,7 @@ DECLARE
 	rec 			RECORD;
 	v_entity_id		integer;
 BEGIN
+
 	IF (TG_OP = 'INSERT') THEN
 		SELECT entity_id INTO v_entity_id
 		FROM entitys
@@ -18,13 +19,20 @@ BEGIN
 			RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 		END IF;
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
-		VALUES (1, NEW.client_id, 'clients', 3);
+		VALUES (1, NEW.entity_id, 'entitys', 3);
+
 	END IF;
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_client BEFORE INSERT OR UPDATE ON clients
+CREATE TRIGGER upd_action
+  BEFORE INSERT OR UPDATE
+  ON entitys
+  FOR EACH ROW
+  EXECUTE PROCEDURE upd_action();
+
+CREATE TRIGGER ins_client BEFORE INSERT OR UPDATE ON entitys
 FOR EACH ROW  EXECUTE PROCEDURE ins_client();
 
 CREATE OR REPLACE FUNCTION upd_clients(varchar(12), varchar(12), varchar(12),varchar(12)) RETURNS varchar(120) AS $$
@@ -39,27 +47,26 @@ BEGIN
 
 	IF ($3::integer = 1) THEN
 		ps := 'Approved';
-		SELECT * INTO app FROM clients WHERE client_id = $1::integer;
-		SELECT entity_id INTO rec FROM entitys WHERE (trim(lower(client_code)) = trim(lower(app.client_code)));
+		--SELECT * INTO app FROM clients WHERE client_id = $1::integer;
+		--SELECT entity_id INTO rec FROM entitys WHERE (trim(lower(client_code)) = trim(lower(app.client_code)));
 
-		IF(rec IS NOT NULL)THEN
-			RAISE EXCEPTION 'Client Code already exist use a different client code provided by Travelcreations';
-		END IF;
+		--IF(rec IS NOT NULL)THEN
+		--	RAISE EXCEPTION 'Client Code already exist use a different client code provided by Travelcreations';
+		--END IF;
 
-		UPDATE clients SET ar_status = ps , approve_status = ps WHERE client_id = $1::integer ;
-		INSERT INTO entitys (org_id, entity_type_id, entity_name, user_name, primary_email, primary_telephone, function_role, is_active, client_code, client_dob)
-		VALUES (app.org_id, 0, app.client_name, trim(lower(app.user_name)), trim(lower(app.client_email)), app.phone_no, 'client', true, app.client_code, app.client_dob) returning entity_id INTO myid;
+		UPDATE entitys SET  approve_status = ps, is_active = true WHERE entity_id = $1::integer ;
+
 		msg := 'Client account has been activated';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
-		VALUES (2, myid, 'entitys', 3);
+		VALUES (2, $1::integer, 'entitys', 3);
 	END IF;
 
 	IF ($3::integer = 2) THEN
 		ps := 'Rejected';
-		UPDATE clients SET ar_status = ps , approve_status = ps WHERE client_id = $1::integer ;
+		UPDATE entitys SET  approve_status = ps WHERE entity_id = $1::integer ;
 		msg := 'Clients Rejected';
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
-		VALUES (3, $1::integer , 'clients', 3);
+		VALUES (3, $1::integer , 'entitys', 3);
 	END IF;
 
 	IF ($3::integer = 3) THEN
@@ -80,6 +87,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+
 CREATE OR REPLACE FUNCTION ins_orders()
   RETURNS trigger AS
 $BODY$
@@ -87,8 +96,8 @@ DECLARE
 	v_order integer;
 BEGIN
 
-	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, narrative)
-	VALUES (4, NEW.order_id , 'vw_orders', 3, '<p>Your order has been received and is being processed. Once ready an email notification will be sent to you.</p><p>Order details :-</p>'||get_order_details(NEW.order_id)||'<p>Total amount</p>');
+	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type,mail_body, narrative)
+	VALUES (10, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'Order '||NEW.order_id||' has been submitted');
 	RETURN NEW;
 END;
 $BODY$
@@ -104,25 +113,33 @@ CREATE OR REPLACE FUNCTION upd_orders_status(varchar(12), varchar(12), varchar(1
 DECLARE
 	msg 		varchar(20);
 	details 	text;
+	v_org_id                integer;
+	v_entity_id            integer;
+	v_sms_number		varchar(25);
+	v_order_no			integer;
+	v_batch_no			integer;
 BEGIN
-
+SELECT entity_id, phone_no,batch_no,order_id INTO v_entity_id, v_sms_number,v_batch_no,v_order_no
+FROM orders WHERE (order_id = $1::integer);
 	IF ($3::integer = 1) THEN
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
-		details :='This has been processed and is ready for collection';
-
+		details :='Order '||v_batch_no||'-'||v_order_no||' is ready for collection';
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
+		VALUES ($1::integer,4 ,'orders', 3, 0,details);
 	END IF;
 
 	IF ($3::integer = 2) THEN
 		UPDATE orders SET order_status = 'Collected' WHERE order_id = $1::integer;
-		details := 'Your Order has been collected';
+		details := 'Order '||v_batch_no||'-'||v_order_no||' has been collected';
+		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
+		VALUES ($1::integer,9 ,'orders', 3, 0,details);
 	END IF;
 
 	IF ($3::integer = 3) THEN
 		UPDATE orders SET order_status = 'Closed' WHERE order_id = $1::integer;
 	END IF;
 
-	INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-	VALUES ($1::integer,4 ,'orders', 3, 0,details);
+
 	RETURN 'Successfully Updated';
 END;
 $$ LANGUAGE plpgsql;
@@ -189,7 +206,9 @@ DECLARE
 BEGIN
 	IF ($3::integer = 1) THEN
 		v_batch := (SELECT last_value FROM batch_id_seq) ;
-		UPDATE orders SET batch_no = v_batch,batch_date = now() WHERE order_id = $1::integer;
+		UPDATE orders SET batch_no = v_batch,batch_date = now(), approve_status = 'Completed' WHERE order_id = $1::integer;
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
+		VALUES (8, $1::integer , 'vw_orders', 3, get_order_details($1::integer), 'Order '||v_batch||'-'||$1::integer||' is being processed.');
 		msg := 'Orders Batched Successfully';
 	END IF;
 
@@ -202,6 +221,10 @@ BEGIN
 END;
 $BODY$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION getBatch_no() RETURNS bigint AS $BODY$
+	SELECT last_value FROM batch_id_seq;
+$BODY$ LANGUAGE sql;
+
 
 CREATE OR REPLACE FUNCTION close_batch_seq()  RETURNS integer AS $BODY$
 DECLARE
@@ -213,20 +236,50 @@ END;
 
 $BODY$ LANGUAGE plpgsql ;
 
+CREATE OR REPLACE FUNCTION getclientbalance(integer,character(20))
+  RETURNS real AS
+$$
+DECLARE
+	v_org_id 			integer;
+	v_function_role		text;
+	v_client_code		text;
+	v_balance			real;
+BEGIN
+	v_balance = 0::real;
+	SELECT org_id,function_role,client_code INTO v_org_id, v_function_role,v_client_code FROM vw_entitys WHERE entity_id = $1;
+	IF(v_client_code = 'CSR')THEN
+		SELECT COALESCE(sum(balance), 0) INTO v_balance
+		FROM vw_crs_statement
+		WHERE org_id = v_org_id AND order_date < $2::date;
+	ELSE
+		SELECT COALESCE(sum(balance), 0) INTO v_balance
+		FROM vw_client_statement
+		WHERE entity_id = $1 AND order_date < $2::date;
+	END IF;
 
-CREATE OR REPLACE FUNCTION getPointsBalance(integer) RETURNS real AS $$
+	RETURN v_balance;
+END;
+$$
+  LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION getPointsBalance(integer,varchar(20)) RETURNS real AS $$
 DECLARE
 	v_org_id 			integer;
 	v_function_role		text;
 	v_balance			real;
 BEGIN
 	v_balance = 0::real;
-	SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
+	IF($2::text = 'CSR') THEN
+		SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_csr_statement WHERE entity_id = $1;
+		ELSE
+		SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
+	END IF;
 	RETURN v_balance;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION getValueBalance( integer)  RETURNS real AS
+CREATE OR REPLACE FUNCTION getValueBalance(integer,varchar(20))  RETURNS real AS
 $$
 DECLARE
 	v_org_id 			integer;
@@ -238,9 +291,11 @@ BEGIN
 	SELECT function_role INTO  v_function_role FROM vw_entitys WHERE entity_id = $1;
 	SELECT point_value INTO  v_value FROM points_value;
 
-	SELECT COALESCE(sum(balance), 0) INTO v_balance
-	FROM vw_client_statement
-	WHERE entity_id = $1 ;
+	IF($2::text = 'CSR') THEN
+		SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_csr_statement WHERE entity_id = $1;
+		ELSE
+		SELECT COALESCE(sum(balance), 0) INTO v_balance	FROM vw_client_statement WHERE entity_id = $1;
+	END IF;
 	v_balance := v_balance*v_value;
 	RETURN v_balance;
 END;
@@ -310,3 +365,9 @@ $BODY$
   END;
   $BODY$
     LANGUAGE plpgsql;
+
+	CREATE TRIGGER upd_action
+  BEFORE INSERT OR UPDATE
+  ON orders
+  FOR EACH ROW
+  EXECUTE PROCEDURE upd_action();

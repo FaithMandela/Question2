@@ -1,5 +1,5 @@
-<APP name="UEAB" org="org_id" password="change_password">
-	<MENU name="UEAB Admisions" role="admisions">
+<APP name="UMIS" org="org_id" password="change_password">
+	<MENU name="UMIS Admisions" role="admisions">
 		<MENU name="Entries">
 			<MENU name="Applications">3</MENU>
 			<MENU name="Admited Students">1</MENU>

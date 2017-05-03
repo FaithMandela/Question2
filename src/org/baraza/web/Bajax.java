@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 import java.io.PrintWriter;
 import java.io.OutputStream;
 import java.io.InputStream;
@@ -115,8 +117,16 @@ public class Bajax extends HttpServlet {
 		} else if("renew_product".equals(fnct)) {
 			resp = renewProduct();
 			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("jsinsert".equals(fnct)) {
+			resp = jsGrid(fnct, request);
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("jsupdate".equals(fnct)) {
+			resp = jsGrid(fnct, request);
+			response.setContentType("application/json;charset=\"utf-8\"");
+		} else if("jsdelete".equals(fnct)) {
+			resp = jsGrid(fnct, request);
+			response.setContentType("application/json;charset=\"utf-8\"");
 		}
-		
 		
 		web.close();			// close DB commections
 		out.println(resp);
@@ -267,9 +277,12 @@ public class Bajax extends HttpServlet {
 	
 	public String importProcess(String sqlProcess) {
 		String resp = "";
-						
-		String mysql = "SELECT " + sqlProcess + "('0', '" + db.getUserID() + "', '')";
-		String myoutput = web.executeFunction(mysql);
+		
+		String myoutput = null;
+		if(sqlProcess != null) {
+			String mysql = "SELECT " + sqlProcess + "('0', '" + db.getUserID() + "', '')";
+			myoutput = web.executeFunction(mysql);
+		}
 		
 		if(myoutput == null) resp = "{\"success\": 0, \"message\": \"Processing has issues\"}";
 		else resp = "{\"success\": 1, \"message\": \"Processing Successfull\"}";
@@ -393,5 +406,57 @@ System.out.println("BASE 2020 : " + bals);
 		
 		return resp;
 	}
-
+	
+	public String jsGrid(String fnct, HttpServletRequest request) {
+		String resp = "";
+		
+		BElement view = web.getView();
+		if(request.getParameter("viewno") == null) return resp;
+		Integer viewNo = new Integer(request.getParameter("viewno"));
+		BElement SubView = view.getElement(viewNo);
+		
+		System.out.println("viewno = " + viewNo);
+		System.out.println(SubView);
+		
+		Map<String, String[]> reqParams = new HashMap<String, String[]>();
+		Enumeration e = request.getParameterNames();
+		String keyField = null;
+        while (e.hasMoreElements()) {
+			String elName = (String)e.nextElement();
+			reqParams.put(elName, request.getParameterValues(elName));
+			if(elName.equals("keyfield")) keyField = request.getParameter(elName);
+		}
+		
+		String linkData = null;
+		int vds = web.getViewData().size();
+		if(vds > 2) linkData = web.getViewData().get(vds - 1);
+		
+		if("jsinsert".equals(fnct)) {
+			BQuery rs = new BQuery(db, SubView, null, null, false);
+			rs.recAdd();
+			if(linkData != null && SubView.getAttribute("linkfield") != null) rs.updateField(SubView.getAttribute("linkfield"), linkData); 
+			rs.updateFields(reqParams, web.getViewData(), request.getRemoteAddr(), linkData);
+			resp = rs.getRowJSON();
+			rs.close();
+		} else if("jsupdate".equals(fnct)) {
+			String whereSql = SubView.getAttribute("keyfield") + " = '" + keyField + "'";
+			BQuery rs = new BQuery(db, SubView, whereSql, null, false);
+			rs.moveFirst();
+			rs.recEdit();
+			rs.updateFields(reqParams, web.getViewData(), request.getRemoteAddr(), "");
+			rs.refresh();
+			rs.moveFirst();
+			resp = rs.getRowJSON();
+			rs.close();
+		} else if("jsdelete".equals(fnct)) {
+			String whereSql = SubView.getAttribute("keyfield") + " = '" + keyField + "'";
+			BQuery rs = new BQuery(db, SubView, whereSql, null, false);
+			rs.moveFirst();
+			rs.recDelete();
+			rs.close();
+			resp = "{}";
+		}
+		
+		return resp;
+	}
 }

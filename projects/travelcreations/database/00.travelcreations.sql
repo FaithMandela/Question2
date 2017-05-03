@@ -1147,6 +1147,7 @@ INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (2, 'U
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (3, 'British Pound', 'BPD');
 INSERT INTO currency (currency_id, currency_name, currency_symbol) VALUES (4, 'Euro', 'ERO');
 INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (0, 'default', 'dc', 1, 'logo.png');
+INSERT INTO orgs (org_id, org_name, org_sufix, currency_id, logo) VALUES (1, 'Travelcreations', 'TCL', 1, 'logo.png');
 UPDATE currency SET org_id = 0;
 SELECT pg_catalog.setval('currency_currency_id_seq', 4, true);
 
@@ -1167,5 +1168,5 @@ INSERT INTO subscription_levels (org_id, subscription_level_id, subscription_lev
 INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
 VALUES (0, 0, 0, 'root', 'root', 'root@localhost', true, true, false, 'baraza');
 INSERT INTO entitys (entity_id, org_id, entity_type_id, user_name, entity_name, primary_email, entity_leader, super_user, no_org, first_password)
-VALUES (1, 0, 0, 'repository', 'repository', 'repository@localhost', true, false, false, 'baraza');
+VALUES (1, 1, 0, 'admin', 'administrator', 'admin@localhost', true, false, false, 'baraza');
 SELECT pg_catalog.setval('entitys_entity_id_seq', 1, true);

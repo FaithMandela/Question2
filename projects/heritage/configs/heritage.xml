@@ -17,14 +17,16 @@
 		</MENU>
 		<MENU role="manager,admin,finance,director" name="Reports">
 			<MENU role="admin,director" name="Sales Report">40</MENU>
+			<MENU role="admin" name="Transaction invoice">206</MENU>
+			<MENU name="Travel schedule">211</MENU>
 		</MENU>
 	</MENU>
 	<DESK w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD w="650" name="Dashboard">
-			<TILE noorg.query="true" role="consultant,user,manager,finance" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE)" table="passengers">
+			<TILE noorg.query="true" role="consultant,user,manager,finance" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE) AND approved is true" table="passengers">
 				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total Sales">total_passengers</TEXTFIELD>
 			</TILE>
-			<TILE noorg.query="true" role="consultant,user,manager,finance" name="Total Amount" where="approved is true" table="vw_passengers">
+			<TILE noorg.query="true" role="consultant,user,manager,finance" name="Total Amount" where="approved is true" user="entity_id" table="vw_passengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
 			<TILE noorg="true" noorg.query="true" role="admin" w="60" h="25" name="Today Sales" where="(DATE(approved_date)=CURRENT_DATE) AND approved is true" table="vw_allpassengers">
@@ -33,11 +35,14 @@
 			<TILE noorg="true" noorg.query="true" role="admin,director" name="Total Amount" where="approved is true" table="vw_allpassengers">
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric,2)" title="Total Amount">Total_covered</TEXTFIELD>
 			</TILE>
-			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Individual Insurance Sales" orderby="(org_name)" where="(approved = 'true')" groupby="org_name" table="vw_passengers">
+			<TILE noorg="true" noorg.query="true" role="admin,director" name="Total Sales" where="approved is true" table="vw_allpassengers">
+				<TEXTFIELD w="75" fnct="COALESCE(count(passenger_id),0)" title="Total sales">Total_sales</TEXTFIELD>
+			</TILE>
+			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Individual Insurance Sales" orderby="(org_name)" where="(approved is true)" groupby="org_name" table="vw_passengers">
 				<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric, 2)" title="Total Amount">totalamount_covered</TEXTFIELD>
 			</TILELIST>
-			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Corporate Insurance Sales" orderby="(org_name)" where="(approved = 'true')" groupby="org_name" table="vw_corporate_passengers">
+			<TILELIST noorg="true" noorg.query="true" role="admin,director" name="Corporate Insurance Sales" orderby="(org_name)" where="(approved is true)" groupby="org_name" table="vw_corporate_passengers">
 				<TEXTFIELD w="75" title="Organisation">org_name</TEXTFIELD>
 				<TEXTFIELD w="75" fnct="ROUND(sum(totalamount_covered)::numeric, 2)" title="Total Amount">totalamount_covered</TEXTFIELD>
 			</TILELIST>
@@ -474,9 +479,10 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Insurance Sold" key="35">
-		<GRID noorg="true" role="admin" keyfield="passenger_id" name="Individual Insurance Sold" where="approved is true AND incountry is false AND customer_code is  null " tab.count="count(passenger_id)" table="vw_passengers">
+		<GRID noorg="true" role="admin" keyfield="passenger_id" name="Individual Insurance Sold" orderby="passenger_id DESC" where="approved is true AND incountry is false AND customer_code is  null " tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
@@ -487,6 +493,7 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
@@ -494,9 +501,10 @@
 			<JASPER reportfile="letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance" reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
-		<GRID noorg="true" role="admin" keyfield="passenger_id" name="Corporate Insurance Sold" where="approved is true AND incountry is false AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
+		<GRID noorg="true" role="admin" keyfield="passenger_id" name="Corporate Insurance Sold" orderby="passenger_id DESC" where="approved is true AND incountry is false AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">corporate_rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
@@ -507,6 +515,7 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
@@ -514,9 +523,10 @@
 			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="cop_invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
-		<GRID noorg="true" role="admin" keyfield="passenger_id" name="In Country Insurance Sold" where="approved is true AND customer_code is  null AND incountry is true " tab.count="count(passenger_id)" table="vw_passengers">
+		<GRID noorg="true" role="admin" keyfield="passenger_id" name="In Country Insurance Sold" orderby="passenger_id DESC" where="approved is true AND customer_code is  null AND incountry is true " tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
@@ -527,6 +537,7 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
@@ -592,8 +603,27 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Sales Report" key="40">
-		<JASPER reportfile="vw_passengers.jasper" name="Individual Sales Report"></JASPER>
-		<JASPER reportfile="vw_corporates.jasper" name="Corporate Sales Report"></JASPER>
+		<FILTER role="master" split="150" w="700" h="550" name="All Insurance Sales Report" type="vert" key="order_date">
+			<FILTERFORM name="All Insurance  Sales Report ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_allpassengers.jasper" name="All Insurance Sales Report"></JASPER>
+		</FILTER>
+		<FILTER role="admin,director" split="150" w="700" h="550" name="Individual Sales Report" type="vert" key="order_date">
+			<FILTERFORM name="Individual Sales Report ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_passengers.jasper" name="Individual Sales Report"></JASPER>
+		</FILTER>
+		<FILTER role="admin,director" split="150" w="700" h="550" name="Corporate Sales Report" type="vert" key="order_date">
+			<FILTERFORM name="Corporate Sales Report ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_corporates.jasper" name="Corporate Sales Report"></JASPER>
+		</FILTER>
 		<FILTER role="admin,director" split="150" w="700" h="550" name="Agency Insurance Sales Report" type="vert" key="order_date">
 			<FILTERFORM name="Agency Insurance Sales Report ">
 				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
@@ -610,11 +640,14 @@
 			</FILTERFORM>
 			<JASPER reportfile="vw_agency_corporate.jasper" name="Agency Corporate Sales"></JASPER>
 		</FILTER>
+		<JASPER role="master" reportfile="vw_summary.jasper" name="Summary Report"></JASPER>
+		<JASPER role="master" reportfile="vw_summary_period.jasper" name="Monthly Summary Report"></JASPER>
 	</DESK>
 	<DESK w="700" h="550" name="Agency Insurance Sold" key="36">
-		<GRID role="manager,finance" keyfield="passenger_id" name="Individual Insurance Sold" where="approved is true AND incountry is false AND customer_code is  null " tab.count="count(passenger_id)" table="vw_passengers">
+		<GRID role="manager,finance" keyfield="passenger_id" name="Individual Insurance Sold" orderby="passenger_id DESC" where="approved is true AND incountry is false AND customer_code is  null " tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
@@ -625,13 +658,15 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
 			<JASPER reportfile="certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance" reportfile="invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
-		<GRID role="manager,finance" keyfield="passenger_id" name="Corporate Insurance Sold" where="approved is true AND incountry is false AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
+		<GRID role="manager,finance" keyfield="passenger_id" name="Corporate Insurance Sold" orderby="passenger_id DESC" where="approved is true AND incountry is false AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">corporate_rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
@@ -642,13 +677,15 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER reportfile="corporate_letterToEmbassy.jasper" name="Letter To Embassy" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance" reportfile="cop_invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
-		<GRID role="manager,finance" keyfield="passenger_id" name="In Country Insurance Sold" where="approved is true AND customer_code is  null AND incountry is true " tab.count="count(passenger_id)" table="vw_passengers">
+		<GRID role="manager,finance" keyfield="passenger_id" name="In Country Insurance Sold" orderby="passenger_id DESC" where="approved is true AND customer_code is  null AND incountry is true " tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
@@ -659,11 +696,13 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
 			<JASPER reportfile="certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 		</GRID>
 		<GRID role="manager,finance" keyfield="passenger_id" name="In Country Corporate Insurance" where="approved is true AND incountry is true AND customer_code is not null" tab.count="count(passenger_id)" table="vw_corporate_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Consultant Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Category Name">corporate_rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date From">days_from</TEXTFIELD>
@@ -674,6 +713,7 @@
 			<TEXTFIELD w="75" title="Passport Number">passport_num</TEXTFIELD>
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Created On">approved_date</TEXTFIELD>
 			<JASPER reportfile="corporate_certificate.jasper" name="Emergency Card" linkfield="passenger_id"></JASPER>
 			<JASPER role="finance" reportfile="cop_invoice.jasper" name="Invoice" linkfield="passenger_id"></JASPER>
 		</GRID>
@@ -691,5 +731,23 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Totalamount Covered">totalamount_covered</TEXTDECIMAL>
 		</GRID>
+	</DESK>
+	<DESK w="700" h="550" name="Transaction Invoice" key="206">
+		<FILTER role="admin" split="150" w="700" h="550" name="Transaction Invoice" type="vert" key="order_date">
+			<FILTERFORM name="Transaction Invoice ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="vw_trans_invoice.jasper" name="Transaction Invoice"></JASPER>
+		</FILTER>
+	</DESK>
+	<DESK w="700" h="550" name="Travel Schedule" key="211">
+		<FILTER role="admin" split="150" w="700" h="550" name="Travel Schedule" type="vert" key="order_date">
+			<FILTERFORM name="Travel Schedule ">
+				<TEXTDATE w="150" h="10" x="10" y="50" title="Starting From" key="mindate">minDate</TEXTDATE>
+				<TEXTDATE w="150" h="20" x="290" y="50" title="Ending at" key="maxdate">maxDate</TEXTDATE>
+			</FILTERFORM>
+			<JASPER reportfile="travel_schedule.jasper" name="Travel Schedule"></JASPER>
+		</FILTER>
 	</DESK>
 </APP>

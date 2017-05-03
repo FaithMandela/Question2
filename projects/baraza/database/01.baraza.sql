@@ -159,7 +159,7 @@ CREATE TABLE address (
 	fax						varchar(150),
 	email					varchar(120),
 	website					varchar(120),
-	is_default				boolean,
+	is_default				boolean default false not null,
 	first_password			varchar(32),
 	details					text
 );
@@ -675,6 +675,11 @@ CREATE VIEW tomcat_users AS
 		INNER JOIN entity_types ON Entity_subscriptions.entity_type_id = entity_types.entity_type_id
 	WHERE entitys.is_active = true;
 
+CREATE OR REPLACE FUNCTION get_org_logo(integer) RETURNS varchar(50) AS $$
+	SELECT orgs.logo
+	FROM orgs WHERE (orgs.org_id = $1);
+$$ LANGUAGE SQL;
+	
 CREATE OR REPLACE FUNCTION default_currency(varchar(16)) RETURNS integer AS $$
 	SELECT orgs.currency_id
 	FROM orgs INNER JOIN entitys ON orgs.org_id = entitys.org_id
@@ -688,6 +693,10 @@ BEGIN
 	SELECT address_id INTO v_address_id
 	FROM address WHERE (is_default = true)
 		AND (table_name = NEW.table_name) AND (table_id = NEW.table_id) AND (address_id <> NEW.address_id);
+
+	IF(NEW.is_default is null)THEN
+		NEW.is_default := false;
+	END IF;
 
 	IF(NEW.is_default = true) AND (v_address_id is not null) THEN
 		RAISE EXCEPTION 'Only one default Address allowed.';

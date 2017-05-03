@@ -56,6 +56,7 @@ public class BWebForms {
 	String entryFormId = null;
 	String formid = "0";
 	String fhead, ffoot, ftitle;
+	boolean saveStatus = false;
 
 	BDB db = null;
 	String access_text = null;
@@ -101,6 +102,8 @@ public class BWebForms {
 			formid = formRS.get("form_id");
 			entityId = formRS.get("entity_id");
 			approveStatus = formRS.get("approve_status");
+			
+			if((entryFormId != null) && "Draft".equals(approveStatus)) saveStatus = true;
 		}
 		
 		getFormType();
@@ -445,6 +448,7 @@ public class BWebForms {
 		tableList += "];";
 		
 		myhtml += "\n\n" + tableList;
+		rs.close();
 		
 		return myhtml;
 	}
@@ -564,6 +568,7 @@ public class BWebForms {
 		}
 		myhtml.append("$('#sub_table" + fieldId + "').jsGrid(" + tableDef + "\n);\n"); 
 		
+		rs.close();
 		return myhtml.toString();
 	}
 		
@@ -579,11 +584,12 @@ System.out.println("Start saving the form " + jsonData);
 			rs.recEdit();
 			rs.updateRecField("answer", jsonData);
 			rs.recSave();
-			rs.close();
 			resp = "{\"success\": 1, \"message\": \"Form data updated\"}";
 		} else {
 			resp = "{\"success\": 0, \"message\": \"Unable to update form data\"}";
 		}
+		
+		rs.close();
 		
 		return resp;
 	}
@@ -605,12 +611,12 @@ System.out.println("Start saving the form " + entryFormId);
 			
 			resp = submitValidate(rs.getString("form_id"), entryFormId, jsonData);
 			
-			rs.close();
-			
 			resp = "{\"success\": 1, \"message\": \"" + resp + "\"}";
 		} else {
 			resp = "{\"success\": 0, \"message\": \"" + resp + "\"}";
 		}
+		
+		rs.close();
 		
 		return resp;
 	}
@@ -693,6 +699,8 @@ System.out.println("Start saving the form " + entryFormId);
 			}
 			mysql +=   values + ")";
 			dbErr = db.executeQuery(mysql);
+			
+			rs.close();
 
 			System.out.println("\n\nBASE 1020 : " + mysql);
 		}
@@ -749,6 +757,7 @@ System.out.println("Start saving the form " + entryFormId);
 	
 	public String getTitle() { return ftitle; }
 	public String getEntryFormId() { return entryFormId; }
+	public boolean canSave() { return saveStatus; }
 	
 	public void close() {
 		if(db != null) db.close();

@@ -94,8 +94,8 @@
 			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
 			</TILE>
-			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" groupby="entity_id" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="count(task_id)" title="Pending Tasks" default="0">pending_tasks</TEXTFIELD>
 			</TILE>
 			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(intake_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
@@ -281,12 +281,8 @@
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
 					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-					<TEXTFIELD w="150" title="State Skill" y="30" h="20" x="10">state_skill</TEXTFIELD>
-					<COMBOLIST w="150" title="Skill Level" y="50" h="20" x="10">skill_level
-						<DATA key="1">Basic</DATA>
-						<DATA key="2">Intermediate</DATA>
-						<DATA key="3">Advanced</DATA>
-					</COMBOLIST>
+					<COMBOBOX w="430" title="Skill Level ID" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+					<TEXTFIELD w="150" title="State Skill" y="50" h="20" x="10">state_skill</TEXTFIELD>
 					<CHECKBOX w="150" title="Aquired" y="50" h="20" x="290">aquired</CHECKBOX>
 					<TEXTDATE w="150" title="Training Date" y="70" h="20" x="10">training_date</TEXTDATE>
 					<CHECKBOX w="150" title="Trained" y="70" h="20" x="290">trained</CHECKBOX>
@@ -322,7 +318,7 @@
 					<TEXTAREA w="430" title="Details" y="230" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FILES username="repository" repository="/repository/webdav/files/" name="Upload Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" noorg="true" password="baraza">
+			<FILES username="repository" repository="/repository/webdav/files/" name="Upload Documents" keyfield="sys_file_id" linkfield="table_id" table="sys_files" password="baraza">
 				<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
 				<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
 				<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
@@ -394,7 +390,121 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Applicant Details" key="10" h="500">
-		<FORMVIEW new="false" name="Applicant" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
+		<ACCORDION new="false" name="Applicant" keyfield="entity_id" table="vw_applicants" user="entity_id">
+			<FORM new="false" cols="2" tw="570" name="Details" keyfield="entity_id" table="applicants" user="entity_id" th="100" collapse="in">
+				<COMBOLIST w="50" y="10" h="20" x="10" span="true">person_title
+					<DATA>Miss</DATA>
+					<DATA>Mr</DATA>
+					<DATA>Mrs</DATA>
+					<DATA>Dr</DATA>
+					<DATA>Prof</DATA>
+				</COMBOLIST>
+				<TEXTFIELD w="100" title="Surname" required="true" y="10" h="20" x="190">surname</TEXTFIELD>
+				<TEXTFIELD w="100" title="First Name" required="true" y="10" h="20" x="490" span="true">first_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Middle Name" y="30" h="20" x="10">middle_name</TEXTFIELD>
+				<TEXTFIELD w="150" title="Phone" required="true" y="30" h="20" x="290" span="true">applicant_phone</TEXTFIELD>
+				<TEXTFIELD w="430" title="Email" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
+				<TEXTDATE w="150" title="Date Of Birth (DD/MM/YYYY)" required="true" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
+				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
+				<COMBOLIST w="150" title="Gender" y="90" h="20" x="10" span="true">gender
+					<DATA key="M">Male</DATA>
+					<DATA key="F">Female</DATA>
+				</COMBOLIST>
+				<COMBOLIST w="150" title="Marital Status" y="90" h="20" x="290">marital_status
+					<DATA key="M">Married</DATA>
+					<DATA key="S">Single</DATA>
+				</COMBOLIST>
+				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10" span="true">identity_card</TEXTFIELD>
+				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
+				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Current Salary" required="true" y="170" h="20" x="10" span="true">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
+				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10" rows="5">interests</TEXTAREA>
+				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10" rows="5">objective</TEXTAREA>
+				<TEXTAREA w="550" tab="Field of Study" y="2" h="120" x="10" rows="5">field_of_study</TEXTAREA>
+				<TEXTAREA w="550" tab="Details" y="2" h="120" x="10" rows="5">details</TEXTAREA>
+			</FORM>
+			<GRID name="Address" keyfield="address_id" table="address" where="table_name = 'applicant'" user="table_id">
+				<COMBOBOX w="240" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+				<TEXTFIELD w="75" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<DEFAULT default="applicant">table_name</DEFAULT>
+				<USERFIELD>table_id</USERFIELD>
+			</GRID>
+			<GRID name="Education" keyfield="education_id" orderby="date_from desc" table="education" user="entity_id">
+				<COMBOBOX w="120" title="Education Level" lptable="education_class" orderby="education_class_id" lpfield="education_class_name">education_class_id</COMBOBOX>
+				<TEXTDATE w="75" title="Date From" pattern="yyyy-MM-dd">date_from</TEXTDATE>
+				<TEXTDATE w="75" title="Date To" pattern="yyyy-MM-dd">date_to</TEXTDATE>
+				<TEXTFIELD w="125" title="Name of Institution">name_of_school</TEXTFIELD>
+				<TEXTFIELD w="125" title="Certification">examination_taken</TEXTFIELD>
+				<TEXTFIELD w="125" title="Grades Obtained">grades_obtained</TEXTFIELD>
+				<USERFIELD>entity_id</USERFIELD>
+			</GRID>
+			<GRID name="Employment" keyfield="employment_id" orderby="date_from desc" table="employment" user="entity_id">
+				<TEXTDATE w="75" title="Date From" pattern="yyyy-MM-dd">date_from</TEXTDATE>
+				<TEXTDATE w="75" title="Date To" pattern="yyyy-MM-dd">date_to</TEXTDATE>
+				<TEXTFIELD w="75" title="Employers Name">employers_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Position Held">position_held</TEXTFIELD>
+				<TEXTAREA w="250" title="Details">details</TEXTAREA>
+				<USERFIELD>entity_id</USERFIELD>
+			</GRID>
+			<GRID name="Seminars" keyfield="cv_seminar_id" table="cv_seminars" user="entity_id">
+				<TEXTDATE w="75" title="Seminar Date" pattern="yyyy-MM-dd">cv_seminar_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Seminar Name">cv_seminar_name</TEXTFIELD>
+				<TEXTAREA w="250" title="Details">details</TEXTAREA>
+				<USERFIELD>entity_id</USERFIELD>
+			</GRID>
+			<GRID name="Projects" keyfield="cv_projectid" table="cv_projects" user="entity_id">
+				<TEXTDATE w="75" title="Project Date" pattern="yyyy-MM-dd">cv_project_date</TEXTDATE>
+				<TEXTFIELD w="125" title="Project Name">cv_project_name</TEXTFIELD>
+				<TEXTAREA w="250" title="Details">details</TEXTAREA>
+				<USERFIELD>entity_id</USERFIELD>
+			</GRID>
+			<GRID name="Skills" keyfield="skill_id" table="skills" user="entity_id">
+				<COMBOBOX w="240" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+				<COMBOBOX w="120" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+				<TEXTFIELD w="100" title="Skill">state_skill</TEXTFIELD>
+				<TEXTAREA w="250" title="Details">details</TEXTAREA>
+				<USERFIELD>entity_id</USERFIELD>
+			</GRID>
+			<GRID name="Referees" keyfield="address_id" table="address" where="table_name = 'referees'" user="table_id">
+				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
+				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
+				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<COMBOBOX w="150" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<DEFAULT default="referees">table_name</DEFAULT>
+				<USERFIELD>table_id</USERFIELD>
+			</GRID>
+			<GRID new="false" name="Positions Applied" keyfield="application_id" edit="false" orderby="opening_date" table="vw_applications" user="entity_id">
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Closing Date" pattern="yyyy-MM-dd">closing_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
+				<TEXTDATE w="75" title="Application Date" pattern="yyyy-MM-dd">application_date</TEXTDATE>
+				<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
+			</GRID>
+			<GRID new="false" name="Available Positions" keyfield="intake_id" edit="false" table="vw_intake" where="(closing_date > current_date)">
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Opening Date" pattern="yyyy-MM-dd">opening_date</TEXTDATE>
+				<TEXTDATE w="75" title="Closing Date" pattern="yyyy-MM-dd">closing_date</TEXTDATE>
+				<TEXTFIELD w="50" title="Positions">positions</TEXTFIELD>
+				<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Apply">apply</TEXTFIELD>
+			</GRID>
+		</ACCORDION>
+		<FILES username="repository" repository="/repository/webdav/files/" name="Upload  Documents" keyfield="sys_file_id" table="sys_files" user="table_id" password="baraza">
+			<TEXTFIELD w="75" title="File ID">sys_file_id</TEXTFIELD>
+			<TEXTFIELD w="50" title="Size">file_size</TEXTFIELD>
+			<TEXTFIELD w="150" title="Type">file_type</TEXTFIELD>
+			<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
+		</FILES>
+		<FORMVIEW new="false" name="Applicant CV" gohint="Follow this link to update your details" keyfield="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
@@ -404,6 +514,7 @@
 			<TEXTFIELD w="75" title="Nationality">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Identity Card">identity_card</TEXTFIELD>
+			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 			<FORM new="false" tw="570" name="Details" keyfield="entity_id" table="applicants" user="entity_id" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
@@ -430,7 +541,7 @@
 				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10">identity_card</TEXTFIELD>
 				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTDECIMAL w="150" title="Previous Salary" required="true" y="170" h="20" x="10">previous_salary</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Current Salary" required="true" y="170" h="20" x="10">previous_salary</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10">interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="2" h="120" x="10">objective</TEXTAREA>
@@ -516,12 +627,8 @@
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
 					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-					<TEXTFIELD w="150" title="State Skill" y="30" h="20" x="10">state_skill</TEXTFIELD>
-					<COMBOLIST w="150" title="Skill Level" y="50" h="20" x="10">skill_level
-						<DATA key="1">Basic</DATA>
-						<DATA key="2">Intermediate</DATA>
-						<DATA key="3">Advanced</DATA>
-					</COMBOLIST>
+					<COMBOBOX w="430" title="Skill Level ID" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+					<TEXTFIELD w="150" title="State Skill" y="50" h="20" x="10">state_skill</TEXTFIELD>
 					<TEXTFIELD w="430" title="Training Institution" y="70" h="20" x="10">training_institution</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -560,11 +667,10 @@
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
 			<JASPER name="BIO" org.table="vw_applicants" reportfile="cv_applicant.jasper"></JASPER>
-			<JASPER name="CV" org.table="vw_applicants" reportfile="cv_applicant_2.jasper"></JASPER>
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Vacancies" key="14" h="550">
-		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorg="true" where="(closing_date > current_date)">
+		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" where="(closing_date > current_date)">
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
@@ -573,6 +679,7 @@
 			<TEXTFIELD w="75" title="Location">location_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Details">details</TEXTFIELD>
 			<FORMVIEW tw="570" name="Role Details" keyfield="intake_id" linkfield="intake_id" table="vw_intake">
+				<ACTION fnct="Ins_applications" title="Apply" action="Apply For Post" jumpview="10:0">intake_id</ACTION>
 				<TEXTFIELD w="410" title="Unit" lw="140" y="30" h="20" x="10">department_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Designation" y="30" h="20" x="10">department_role_name</TEXTFIELD>
 				<TEXTFIELD w="430" title="Reporting To" y="10" h="20" x="10">parent_role_name</TEXTFIELD>
@@ -605,7 +712,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date > current_date)">
+		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" where="(closing_date > current_date)">
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
@@ -1163,11 +1270,7 @@
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
 					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
-						<DATA key="1">Basic</DATA>
-						<DATA key="2">Intermediate</DATA>
-						<DATA key="3">Advanced</DATA>
-					</COMBOLIST>
+					<COMBOBOX w="430" title="Skill Level ID" lptable="skill_levels" y="50" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
 					<TEXTFIELD w="430" title="Training Institution" y="50" h="20" x="10">training_institution</TEXTFIELD>
 					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
@@ -1399,11 +1502,7 @@
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
 				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
 					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
-						<DATA key="1">Basic</DATA>
-						<DATA key="2">Intermediate</DATA>
-						<DATA key="3">Advanced</DATA>
-					</COMBOLIST>
+					<COMBOBOX w="430" title="Skill Level" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
 					<CHECKBOX w="150" title="Aquired" y="30" h="20" x="290">aquired</CHECKBOX>
 					<TEXTDATE w="150" title="Training Date" y="50" h="20" x="10">training_date</TEXTDATE>
 					<CHECKBOX w="150" title="Trained" y="50" h="20" x="290">trained</CHECKBOX>
@@ -1692,7 +1791,7 @@
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<GRID name="Skills" keyfield="skill_id" delete="false" linkfield="entity_id" table="vw_skills">
+			<GRID name="Skills" keyfield="skill_id" linkfield="entity_id" table="vw_skills">
 				<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Skill Level">skill_level_name</TEXTFIELD>
 				<CHECKBOX w="75" title="Aquired">aquired</CHECKBOX>
@@ -1700,21 +1799,9 @@
 				<CHECKBOX w="75" title="Trained">trained</CHECKBOX>
 				<TEXTFIELD w="75" title="Training Institution">training_institution</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Training Cost">training_cost</TEXTDECIMAL>
-				<FORM new="false" name="Skills" keyfield="skill_id" edit="false" delete="false" linkfield="entity_id" table="skills">
-					<GRIDBOX w="430" title="Skill Type" lptable="skill_types" webgrid="8" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id
-						<GRID name="Skill Types" keyfield="skill_type_id" orderby="skill_category_id" table="vw_skill_types">
-							<TEXTFIELD w="75" title="Skill Category">skill_category_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Skill Type Name">skill_type_name</TEXTFIELD>
-							<TEXTFIELD w="75" title="Basic">basic</TEXTFIELD>
-							<TEXTFIELD w="75" title="Intermediate">intermediate</TEXTFIELD>
-							<TEXTFIELD w="75" title="Advanced">advanced</TEXTFIELD>
-						</GRID>
-					</GRIDBOX>
-					<COMBOLIST w="150" title="Skill Level" y="30" h="20" x="10">skill_level
-						<DATA key="1">Basic</DATA>
-						<DATA key="2">Intermediate</DATA>
-						<DATA key="3">Advanced</DATA>
-					</COMBOLIST>
+				<FORM name="Skills" keyfield="skill_id" linkfield="entity_id" table="skills">
+					<COMBOBOX w="430" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" y="10" h="20" x="10" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Skill Level" lptable="skill_levels" y="30" h="20" x="10" lpfield="skill_level_name">skill_level_id</COMBOBOX>
 					<CHECKBOX w="150" title="Aquired" y="30" h="20" x="290">aquired</CHECKBOX>
 					<TEXTDATE w="150" title="Training Date" y="50" h="20" x="10">training_date</TEXTDATE>
 					<CHECKBOX w="150" title="Trained" y="50" h="20" x="290">trained</CHECKBOX>
@@ -4060,7 +4147,7 @@
 			<JASPER name="Receipts" reportfile="vw_trxr.jasper"></JASPER>
 			<JASPER name="Invoice" reportfile="vw_trx.jasper"></JASPER>
 		</GRID>
-		<GRID name="Ledger Summary" keyfield="ledger_period" orderby="ledger_year desc, ledger_period" table="vws_tx_ledger">
+		<GRID name="Ledger" keyfield="ledger_period" orderby="ledger_year desc, ledger_period" table="vws_tx_ledger">
 			<TEXTFIELD w="75" title="Ledger ID">ledger_period</TEXTFIELD>
 			<TEXTFIELD w="75" title="Year">ledger_year</TEXTFIELD>
 			<TEXTFIELD w="75" title="Month">ledger_month</TEXTFIELD>
@@ -4214,10 +4301,17 @@
 				<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<JASPER name="Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Transaction Ledger" key="195" h="550">
-		<JASPER name="Transaction Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
-		<JASPER name="Transaction Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
+		<JASPER name="Ledger Summary" reportfile="vws_tx_ledger.jasper"></JASPER>
+		<FILTER w="700" name="Ledger" split="150" type="horl" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_period_year" listfield="period_year" pos="top"></DRILLDOWN>
+			<JASPER name="Uncleared Ledger" reportfile="vw_tx_ledgera.jasper"></JASPER>
+			<JASPER name="Ledger" reportfile="vw_tx_ledger.jasper"></JASPER>
+			<JASPER name="Expenditure Ledger" reportfile="vw_tx_ledgerb.jasper"></JASPER>
+			<JASPER name="Income Ledger" reportfile="vw_tx_ledgerb.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Loan Application" key="205" h="500">
 		<GRID name="Draft Application" keyfield="loan_id" table="vw_loans" where="(approve_status = 'Draft')" user="entity_id">

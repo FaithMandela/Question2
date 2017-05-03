@@ -422,20 +422,36 @@ public class BWebBody extends BQuery {
 		String defaultvalue = el.getAttribute("default", "");
 		String default_fnct = el.getAttribute("default_fnct");
 		String default_org_fnct = el.getAttribute("default_org_fnct");
+		String default_user = el.getAttribute("default_user");
 		if(default_fnct != null) {
 			if(default_fnct.indexOf("(") > 1) db.executeFunction("SELECT " + default_fnct + ", '" + db.getUserID() + "')");
 			else defaultvalue = db.executeFunction("SELECT " + default_fnct + "('" + db.getUserID() + "')");
-		}
-		if(default_org_fnct != null) {
+		} else if(default_org_fnct != null) {
 			if(default_org_fnct.indexOf("(") > 1) defaultvalue = db.executeFunction("SELECT " + default_org_fnct + ", " + userOrg + ")");
 			else defaultvalue = db.executeFunction("SELECT " + default_org_fnct + "(" + userOrg + ")");
+		} else if(default_user != null) {
+			defaultvalue = db.getUserID();
 		}
 
+		if(el.getAttribute("tab") != null) formCols = 0;
+
 		if(formCols > 1) response.append("<div class='col-md-6'>\n");
+
 		response.append("	<div class='form-group'>\n");
+<<<<<<< HEAD
 		response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
 		response.append("			<div class='col-md-9'>\n");
 
+=======
+
+		if(el.getAttribute("tab") == null) {
+			response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
+		} else if(el.getAttribute("title") != null) {
+			response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
+		}
+		response.append("		<div class='col-md-9'>\n");
+
+>>>>>>> ba5154dcbc81bd3d18f519b80675b80ae7a1eee5
 		if(el.getName().equals("HTML")) {
 			response.append(el.getAttribute("html",""));
 		} else if(el.getName().equals("TEXTFIELD")) {
@@ -572,7 +588,7 @@ public class BWebBody extends BQuery {
 			while (cmbrs.moveNext()) {
 				response.append("<option");
 				if(eof) {
-					if(getString(el.getValue())!=null) {
+					if(getString(el.getValue()) != null) {
 						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
 							response.append(" selected='selected'");
 					}

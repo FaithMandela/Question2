@@ -6,7 +6,7 @@ CREATE VIEW vw_staff AS
 	FROM staff JOIN entitys ON staff.entity_id = entitys.entity_id;
 
 CREATE VIEW vw_subjects AS 
-	SELECT subjects.org_id,subjects.subject_id, vw_staff.full_name,vw_staff.primary_email,
+	SELECT subjects.org_id,subjects.subject_id, vw_staff.full_name,vw_staff.primary_email,vw_staff.staff_id, 
 		date_part('year', subject_year) as subject_date,
 		 subjects.subject_name, subjects.details
 	FROM subjects
@@ -46,12 +46,11 @@ CREATE VIEW vw_students_session AS
 		JOIN sessions ON students_session.session_id = sessions.session_id
 		JOIN students ON students_session.student_id = students.student_id;
 
-		CREATE VIEW vw_exams AS 
-
+CREATE VIEW vw_exams AS 
 		SELECT sessions.session_id, sessions.session_name,exams.exam_date,
 		 exams.start_time,exams.end_time,
 		stream_classes.stream_class_id, stream_classes.stream,vw_staff.staff_id, vw_staff.full_name,
-		exams.org_id, exams.exam_id, exams.class_level, exams.exam_file, exams.exam_narrative
+		exams.org_id, exams.exam_id, exams.class_level, exams.subject_id, exams.exam_file, exams.exam_narrative
 	FROM exams
 		JOIN sessions ON exams.session_id = sessions.session_id
 		JOIN vw_staff on vw_staff. staff_id = exams.staff_id
@@ -107,3 +106,14 @@ CREATE VIEW vw_applicant AS
 	INNER JOIN students ON applicant.student_id = students.student_id
 	 WHERE  applicant.approve_status = 'Approved';
 	
+
+CREATE VIEW vw_employee_details AS
+SELECT employees_details.employees_details_id, employees_details.staff_id, employees_details.location_id, employees_details.entity_id,
+	employees_details.bank_branch_id, employees_details.currency_id, employees_details.org_id,
+	employees_details.person_title, employees_details.date_of_birth, employees_details.dob_email, 
+	employees_details.designation,employees_details.gender, employees_details.phone, employees_details.nationality, employees_details.nation_of_birth,employees_details.place_of_birth, employees_details.marital_status, employees_details.appointment_date,employees_details.current_appointment, employees_details.contract, employees_details.contract_period,employees_details.employment_terms, locations.location_name, bank_branch.bank_branch_name, bank_branch.bank_branch_code,
+	sys_countrys.sys_country_name, sys_countrys.sys_currency_name, currency.currency_name, currency.currency_symbol
+FROM bank_branch INNER JOIN employees_details ON bank_branch.bank_branch_id = employees_details.bank_branch_id
+  INNER JOIN currency ON currency.currency_id = employees_details.currency_id
+  INNER JOIN locations ON locations.location_id = employees_details.location_id
+  INNER JOIN sys_countrys ON sys_countrys.sys_country_id = employees_details.nation_of_birth

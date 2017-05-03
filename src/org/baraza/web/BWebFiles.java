@@ -46,7 +46,10 @@ public class BWebFiles extends HttpServlet {
 	BElement view = null;
 	BDB db = null;
 	BQuery query = null;
-	String fileTable, linkField, linkValue;
+	String fileTable = null;
+	String linkField = null;
+	String linkValue = null;
+	String userField = null;
 	String folder = null;
 	long maxfs = 0;
 
@@ -101,6 +104,7 @@ public class BWebFiles extends HttpServlet {
 		maxfs = (Long.valueOf(view.getAttribute("maxfilesize", "16777216"))).longValue(); 
 		fileTable = view.getAttribute("filetable");
 		linkField = view.getAttribute("linkfield");
+		userField = view.getAttribute("user");
 		linkValue = web.getDataItem();
 
 		if(view.getName().equals("FILES")) {
@@ -229,10 +233,12 @@ System.out.println("BASE IMPORT 1420 : " + resp);
 System.out.println("BASE 1410 : " + fileName);
 						String orgID = db.getOrgID();
 						String userOrg = db.getUserOrg();
-System.out.println("BASE 1420 : " + orgID + " : " + userOrg);
+						String userID = db.getUserID();
+System.out.println("BASE 1420 : " + orgID + " : " + userOrg + " : " + userID);
 						query.recAdd();
 						query.updateField("file_name", fileName);
 						if(linkField != null) query.updateField(linkField, linkValue);
+						if(userField != null) query.updateField(userField, userID);
 						if(fileTable != null) query.updateField("table_name", fileTable);
 						if(contentType != null) query.updateField("file_type", contentType);
 						if(orgID != null) query.updateField(orgID, userOrg);

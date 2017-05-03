@@ -240,6 +240,7 @@ CREATE TABLE transactions (
 	action_date				timestamp,
 	
     narrative				varchar(120),
+	notes					text,
     details					text
 );
 CREATE INDEX transactions_entity_id ON transactions (entity_id);
@@ -381,7 +382,7 @@ CREATE VIEW vw_transactions AS
 		transactions.transaction_tax_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
-		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
+		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details, transactions.notes,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
 		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10) or (transactions.transaction_type_id = 21)  
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,
@@ -422,7 +423,7 @@ CREATE VIEW vw_trx AS
 		transactions.transaction_id, transactions.transaction_date, transactions.transaction_amount,
 		transactions.application_date, transactions.approve_status, transactions.workflow_table_id, transactions.action_date, 
 		transactions.narrative, transactions.document_number, transactions.payment_number, transactions.order_number,
-		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details,
+		transactions.exchange_rate, transactions.payment_terms, transactions.job, transactions.details, transactions.notes,
 		(CASE WHEN transactions.journal_id is null THEN 'Not Posted' ELSE 'Posted' END) as posted,
 		(CASE WHEN (transactions.transaction_type_id = 2) or (transactions.transaction_type_id = 8) or (transactions.transaction_type_id = 10)
 			THEN transactions.transaction_amount ELSE 0 END) as debit_amount,

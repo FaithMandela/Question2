@@ -32,10 +32,15 @@
 vw_employee_adjustments.In_payroll,
 base_amount, currency_symbol,
 tax_relief_amount
+
 FROM vw_employee_adjustments
+
 WHERE (employee_month_id = $P{employee_month_id}) AND (Visible = true)
-AND (vw_employee_adjustments.In_payroll = '$P!{is_inpayroll}'::boolean)
+AND (vw_employee_adjustments.in_payroll = '$P!{is_inpayroll}'::boolean)
+AND (vw_employee_adjustments.adjustment_type = 1)
+
 $P!{organd}
+
 ORDER BY vw_employee_adjustments.adjustment_type;]]>
 	</queryString>
 	<field name="adjustment_name" class="java.lang.String"/>

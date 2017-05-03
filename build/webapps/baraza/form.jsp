@@ -149,10 +149,10 @@
 						<span class="caption-subject bold uppercase"> <%= formTitle %></span>
 					</div>
 					<div class="actions">
-					  <% if(form.getEntryFormId() != null) { %>
-						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormValues();">
+					  <% if(form.canSave()) { %>
+						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormValues();" id="formvalues">
 						<i class="fa fa-pencil"></i> Save </a>
-						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormSumbit();">
+						<a href="javascript:;" class="btn btn-circle btn-default" onclick="getFormSumbit();" id="formsumbit">
 						<i class="fa fa-plus"></i> Submit </a>
 						<a href="javascript:;" class="btn btn-circle btn-default btn-icon-only fullscreen"></a>
 					  <% } %>
@@ -368,6 +368,7 @@ console.log(data);
     }
 
 	function getFormSumbit() {
+		var repost = true;
         var str = '';
 		var jsonForm = {};
         var elem = document.getElementById('barazaForm').elements;
@@ -390,6 +391,9 @@ console.log(data);
 console.log("Success: ");
 console.log(data);
 				$("#resp_msg").html(data.message);
+
+				$("#formsumbit").addClass("disabled");
+				$("#formvalues").addClass("disabled");
 			},
 			failure: function(errMsg) {
 console.log("Error: ");

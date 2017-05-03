@@ -92,7 +92,8 @@ CREATE TABLE ledger (
 	months_posted	integer default 0,
 	trans_type		varchar(32),
 	refund_for_id	integer,
-	documentnumber	integer
+	documentnumber	integer,
+	ChequeNo		varchar(50)
 );
 
 alter table ledger modify trans_type VARCHAR(50); 
@@ -524,3 +525,46 @@ UPDATE ledger SET ispicked = false WHERE created::date > '2015-12-31'::date;
 
 
 SELECT * FROM ledger WHERE created::date > '2015-12-31'::date;
+
+
+
+
+
+
+----------------- Update for direct posting of MPESA
+CREATE TABLE ledger_t1 (
+	id				integer primary key, 
+	client_roid		varchar(16), 
+	description		varchar(240), 
+	currency		varchar(3),
+	tax				real, 
+	total			real, 
+	created			date, 
+	exdate			date,
+	previous_expiry_date	date,
+	months_posted	integer default 0,
+	trans_type		varchar(32),
+	refund_for_id	integer,
+	documentnumber	integer,
+	ChequeNo		varchar(50)
+);
+
+INSERT INTO ledger_t1 (id, client_roid, description, currency, tax, total, created, exdate, previous_expiry_date,
+trans_type, refund_for_id, documentnumber, ChequeNo)
+SELECT ledger.id - 423000, ledger.client_roid, ledger.description, ledger.currency, ledger.tax, 
+ledger.total, ledger.created, ledger.exdate, ledger.previous_expiry_date, ledger.trans_type, 
+ledger.refund_for_id, CONCAT('100', ledger.documentnumber), ledger.ChequeNo
+FROM ledger INNER JOIN debtor_trans ON ledger.documentnumber = debtor_trans.trans_no
+WHERE debtor_trans.type = 12 AND ledger.ChequeNo <> debtor_trans.reference
+AND ledger.created >= '2017-01-01'
+ORDER BY ledger.id;
+
+
+INSERT INTO ledger (id, client_roid, description, currency, tax, total, created, exdate, previous_expiry_date,
+trans_type, refund_for_id, documentnumber, ChequeNo)
+SELECT id, client_roid, description, currency, tax, total, created, exdate, previous_expiry_date,
+trans_type, refund_for_id, documentnumber, ChequeNo
+FROM ledger_t1
+ORDER BY id;
+
+

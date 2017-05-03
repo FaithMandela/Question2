@@ -314,15 +314,9 @@ BEGIN
 	SELECT qstudentid INTO qqrec
 	FROM qstudents WHERE (studentdegreeid = srec.studentdegreeid) AND (quarterid = $1); 
 
-	IF (srec.offcampus = false) THEN
-		resid := 'OC';
-	ELSE
-		resid := srec.residenceid;
-	END IF;
-
-	SELECT qresidenceid INTO qresid
+	SELECT max(qresidenceid) INTO qresid
 	FROM qresidences
-	WHERE (quarterid = qrec.quarterid) AND (residenceid = resid);
+	WHERE (quarterid = qrec.quarterid);
 
 	v_minimal_fees := -1 * qrec.minimal_fees;
 	IF (srec.fullbursary = true) THEN
@@ -350,16 +344,6 @@ BEGIN
 			mystr := '<br/>' ||srec.registrar_details;
 		END IF;
 		RAISE EXCEPTION 'Cannot Proceed, See Registars office. % ', mystr;
-	ELSIF (qresid IS NULL) THEN
-		RAISE EXCEPTION 'See the Dean of Students to allocate you a residence';
-	ELSIF (srec.balance_date is null) THEN
-		RAISE EXCEPTION 'Access your finace statement so that the system picks your current balance';
-	ELSIF (srec.balance_date <> current_date) THEN
-		RAISE EXCEPTION 'Access your finace statement so that the system picks your current balance';
-	ELSIF (srec.curr_balance is null) THEN
-		RAISE EXCEPTION 'You need to pay a minimum fee of % to register for the semster', qrec.minimal_fees;
-	ELSIF (srec.curr_balance > v_minimal_fees) THEN
-		RAISE EXCEPTION 'You need to pay a minimum fee of % to register for the semster', qrec.minimal_fees;
 	ELSE
 		sclassid := null;
 		IF(qrec.levellocationid = 1)THEN
@@ -804,10 +788,8 @@ BEGIN
 	END IF;
 
 	v_last_reg := false;
-	IF(myqrec.last_reg_date <= current_date) THEN
+	IF(myqrec.late_fee_date <= current_date) THEN
 		IF(myqrec.approve_late_fee = false)THEN
-			v_last_reg := true;
-		ELSIF(myqrec.late_fee_date <> current_date)THEN
 			v_last_reg := true;
 		END IF;
 	END IF;
@@ -841,8 +823,6 @@ BEGIN
 		RAISE EXCEPTION 'You have to select your residence first';
 	ELSIF (myrec.offcampus = false) AND (myqrec.roomnumber is null) THEN
 		RAISE EXCEPTION 'You have to select your residence room first';
-	ELSIF (mysabathclass = true) THEN
-		RAISE EXCEPTION 'You have to select your sabbath class first';
 	ELSIF (myrepeatapprove IS NOT NULL) THEN
 		RAISE EXCEPTION 'You need repeat approval for % from the registrar', myrepeatapprove;
 	ELSIF (ttb.coursetitle IS NOT NULL) THEN
@@ -858,10 +838,6 @@ BEGIN
 	ELSIF (myrec.offcampus = false) and (myrec.residenceoffcampus = true) THEN
 		RAISE EXCEPTION 'You have no clearence to be off campus';
 	ELSIF (studentrec.fullbursary = true) THEN
-		UPDATE qstudents SET finalised = true, finaceapproval = true WHERE qstudentid = myrec.qstudentid;
-		UPDATE qstudents SET firstclosetime = now() WHERE (firstclosetime is null) AND (qstudentid = myrec.qstudentid); 
-		mystr := 'Quarter Closed based on bursary status';
-	ELSIF (studentrec.sublevelid = 'EAUP') THEN
 		UPDATE qstudents SET finalised = true, finaceapproval = true WHERE qstudentid = myrec.qstudentid;
 		UPDATE qstudents SET firstclosetime = now() WHERE (firstclosetime is null) AND (qstudentid = myrec.qstudentid); 
 		mystr := 'Quarter Closed based on bursary status';
@@ -1040,8 +1016,9 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION aft_instructors() RETURNS trigger AS $$
 DECLARE
-	v_role		varchar(240);
-	v_no_org	boolean;
+	v_entity_type_id		integer;
+	v_role					varchar(240);
+	v_no_org				boolean;
 BEGIN
 
 	v_role := 'lecturer';
@@ -1063,8 +1040,10 @@ BEGIN
 	END IF;
 
 	IF(TG_OP = 'INSERT')THEN
-		INSERT INTO entitys (org_id, entity_type_id, user_name, entity_name, Entity_Leader, Super_User, no_org, primary_email, function_role)
-		VALUES (NEW.org_id, 11, NEW.instructorid, NEW.instructorname, false, false, false, NEW.email, v_role);
+		SELECT entity_type_id INTO v_entity_type_id FROM entity_types WHERE org_id = NEW.org_id;
+		
+		INSERT INTO entitys (org_id, entity_type_id, user_name, entity_name, Entity_Leader, Super_User, no_org, primary_email, function_role, use_key_id)
+		VALUES (NEW.org_id, v_entity_type_id, NEW.instructorid, NEW.instructorname, false, false, false, NEW.email, v_role, 9);
 	ELSE
 		UPDATE entitys SET function_role = v_role, no_org = v_no_org WHERE user_name = NEW.instructorid;
 	END IF;
@@ -1469,3 +1448,25 @@ CREATE OR REPLACE FUNCTION getSchoolID(varchar(12)) RETURNS varchar(12) AS $$
 	SELECT schoolid FROM departments WHERE (departmentid = $1);
 $$ LANGUAGE SQL;
 
+-- insert qcoursemarks after adding qcourseitems
+CREATE OR REPLACE FUNCTION aft_student_payments() RETURNS trigger AS $$
+DECLARE
+	v_curr_bal			real;
+BEGIN
+
+	SELECT sum(TransactionAmount) INTO v_curr_bal
+	FROM student_payments
+	WHERE qstudentid = NEW.qstudentid;
+	v_curr_bal := v_curr_bal * -1;
+
+	UPDATE qstudents SET balance_time = now(), currbalance = v_curr_bal WHERE qstudentid = NEW.qstudentid;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_student_payments AFTER INSERT OR UPDATE ON student_payments
+    FOR EACH ROW EXECUTE PROCEDURE aft_student_payments();
+
+    
+    

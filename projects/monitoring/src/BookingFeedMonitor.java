@@ -48,9 +48,9 @@ public class BookingFeedMonitor {
 				Class.forName("org.postgresql.Driver");
 				conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/agency","postgres","");
 			} else if(type.equals("mssql")) {
-				String myUrl = "jdbc:sqlserver://192.168.0.14:1433;databaseName=" + dbName + ";selectMethod=cursor;user=sa;password=galileo";
+				String myUrl = "jdbc:sqlserver://bfeeds.dewcis.com:1433;databaseName=" + dbName + ";selectMethod=cursor";
 				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-				conn = DriverManager.getConnection(myUrl, "sa", "galileo");
+				conn = DriverManager.getConnection(myUrl, "sa", "Tr@velp0rt2017");
 			}
 		}catch (ClassNotFoundException e) {
 			System.err.println("Error Getting Connection : CNF > " + e.getMessage());

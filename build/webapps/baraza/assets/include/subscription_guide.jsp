@@ -19,7 +19,7 @@
                         <li>Fill in all the required fields, correctly. Ensure you provide a valid email address.All fields with * are mandatory</li>
                         <li>Click on Apply. This sends login credentials to the email provided.</li>
                         <li>Check your email for the login credentials</li>
-                        <li>Click <a href="http://hcm.openbaraza.org/hcm/index.jsp?xml=hr.xml"> HERE </a> to login and complete your profile</li>
+                        <li>Click <a href="index.jsp?xml=hr.xml"> HERE </a> to login and complete your profile</li>
                     </ol>
                 </div>
             </div>

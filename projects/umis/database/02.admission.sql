@@ -21,9 +21,9 @@ DROP VIEW vw_entitys;
 CREATE VIEW vw_entitys AS
 	SELECT orgs.org_id, orgs.org_name, 
 		entity_types.entity_type_id, entity_types.entity_type_name, 
-		entity_types.entity_role, entity_types.group_email, entity_types.use_key,
-		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.Super_User, entitys.Entity_Leader, 
-		entitys.Date_Enroled, entitys.Is_Active, entitys.entity_password, entitys.first_password, 
+		entity_types.entity_role, entity_types.group_email, entity_types.use_key_id,
+		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.super_user, entitys.entity_leader, 
+		entitys.date_enroled, entitys.is_active, entitys.entity_password, entitys.first_password, 
 		entitys.primary_email, entitys.function_role, 
 		entitys.selection_id, entitys.admision_payment, entitys.admision_paid,
 		entitys.details

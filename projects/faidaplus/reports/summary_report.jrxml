@@ -14,14 +14,14 @@
 
 FROM ((SELECT COALESCE(vw_son_points.points, 0::real) + COALESCE(vw_son_points.bonus, 0::real) AS dr,0::real AS cr, vw_son_points.entity_name,vw_son_points.segments,vw_son_points.org_son as son,
 vw_son_points.org_name, vw_son_points.entity_id,vw_son_points.org_pcc as pcc,vw_son_points.user_name,
-vw_son_points.period as order_date
+vw_son_points.period as order_date,vw_son_points.is_active
 FROM vw_son_points)
 UNION
 (SELECT 0::real AS float4, vw_orders.grand_total::real AS order_total_amount,
 vw_orders.entity_name,0::real as segments,vw_orders.son,vw_orders.org_name,vw_orders.entity_id,vw_orders.pcc,vw_orders.user_name,
-vw_orders.order_date
+vw_orders.order_date,vw_orders.is_active
 FROM vw_orders)) a
-WHERE a.order_date >= '$P!{minDate}' AND a.order_date <= '$P!{maxDate}'
+WHERE a.order_date >= '$P!{minDate}' AND a.order_date <= '$P!{maxDate}' AND is_active is true
 GROUP BY a.org_name, a.entity_id, a.entity_name,a.pcc,a.user_name,a.son
 ORDER BY a.entity_name ASC;]]>
 	</queryString>

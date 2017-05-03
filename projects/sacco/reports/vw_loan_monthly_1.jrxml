@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_loan_monthly_1" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c88c4285-bfa0-4fc9-b381-a14288953f08">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="146"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
@@ -35,45 +35,21 @@
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT *
+		<![CDATA[SELECT entity_name, loan_date, principle,start_date, penalty,penalty_paid, interest_amount, interest_paid, repayment_paid, monthly_repayment, loan_balance
 FROM vw_loan_monthly
-WHERE period_id=  '$P!{filterid} '
+WHERE period_id=  '$P!{filterid} ' AND expired ='false'
  $P!{organd}]]>
 	</queryString>
-	<field name="currency_id" class="java.lang.Integer"/>
-	<field name="currency_name" class="java.lang.String"/>
-	<field name="currency_symbol" class="java.lang.String"/>
-	<field name="loan_type_id" class="java.lang.Integer"/>
-	<field name="loan_type_name" class="java.lang.String"/>
-	<field name="approve_status" class="java.lang.String"/>
-	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="loan_date" class="java.sql.Date"/>
-	<field name="loan_id" class="java.lang.Integer"/>
 	<field name="principle" class="java.lang.Float"/>
-	<field name="interest" class="java.lang.Float"/>
-	<field name="monthly_repayment" class="java.lang.Float"/>
-	<field name="reducing_balance" class="java.lang.Boolean"/>
-	<field name="repayment_period" class="java.lang.Integer"/>
-	<field name="period_id" class="java.lang.Integer"/>
 	<field name="start_date" class="java.sql.Date"/>
-	<field name="end_date" class="java.sql.Date"/>
-	<field name="activated" class="java.lang.Boolean"/>
-	<field name="closed" class="java.lang.Boolean"/>
-	<field name="period_year" class="java.lang.String"/>
-	<field name="period_month" class="java.lang.String"/>
-	<field name="org_id" class="java.lang.Integer"/>
-	<field name="loan_month_id" class="java.lang.Integer"/>
-	<field name="interest_amount" class="java.lang.Float"/>
-	<field name="additional_payments" class="java.lang.Float"/>
-	<field name="is_paid" class="java.lang.Boolean"/>
-	<field name="repayment_paid" class="java.lang.Float"/>
-	<field name="interest_paid" class="java.lang.Float"/>
 	<field name="penalty" class="java.lang.Float"/>
 	<field name="penalty_paid" class="java.lang.Float"/>
-	<field name="details" class="java.lang.String"/>
-	<field name="total_interest" class="java.lang.Float"/>
-	<field name="total_repayment" class="java.lang.Float"/>
+	<field name="interest_amount" class="java.lang.Float"/>
+	<field name="interest_paid" class="java.lang.Float"/>
+	<field name="repayment_paid" class="java.lang.Float"/>
+	<field name="monthly_repayment" class="java.lang.Float"/>
 	<field name="loan_balance" class="java.lang.Float"/>
 	<background>
 		<band splitType="Stretch"/>
