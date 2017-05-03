@@ -39,8 +39,12 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_objectives.objective_type_id, vw_objectives.objective_type_name, vw_objectives.objective_id, vw_objectives.date_set, vw_objectives.objective_ps, vw_objectives.objective_name,vw_objectives. objective_completed,
 job_reviews.job_review_id, job_reviews.review_date
@@ -210,7 +214,7 @@ ORDER BY vw_objectives.objective_id ASC;]]>
 		<band height="8" splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="47" splitType="Stretch">
+		<band height="28" splitType="Stretch">
 			<subreport>
 				<reportElement x="25" y="0" width="530" height="20" uuid="5fd6f10b-dc82-4761-ad5a-239f31295293"/>
 				<subreportParameter name="SUBREPORT_DIR">
@@ -225,7 +229,4 @@ ORDER BY vw_objectives.objective_id ASC;]]>
 			</subreport>
 		</band>
 	</detail>
-	<pageFooter>
-		<band height="50"/>
-	</pageFooter>
 </jasperReport>
