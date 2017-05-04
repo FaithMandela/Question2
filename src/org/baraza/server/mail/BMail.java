@@ -72,6 +72,9 @@ public class BMail {
     		// Get a Properties object
     		Properties props = System.getProperties();
 			props.setProperty("mail.smtp.host", host);
+			props.setProperty("mail.smtp.connectiontimeout", "15000");
+			props.setProperty("mail.smtp.timeout", "15000");
+			props.setProperty("mail.smtp.writetimeout", "15000");
 			if (ntlm.equals("true")) {
 				props.setProperty("mail.imap.auth.plain.disable", "true");
 				props.setProperty("mail.imap.auth.ntlm.disable", "true");
@@ -101,8 +104,9 @@ public class BMail {
 				props.setProperty("mail.store.protocol", "imaps");
 				props.setProperty("mail.imap.host", host);
 				props.setProperty("mail.imap.port", "993");
-				props.setProperty("mail.imap.connectiontimeout", "30000");
-				props.setProperty("mail.imap.timeout", "30000");
+				props.setProperty("mail.imap.connectiontimeout", "15000");
+				props.setProperty("mail.imap.timeout", "15000");
+				props.setProperty("mail.imap.writetimeout", "15000");
 				MailSSLSocketFactory socketFactory= new MailSSLSocketFactory();
 				socketFactory.setTrustAllHosts(true);
 				props.put("mail.imaps.ssl.socketFactory", socketFactory);
@@ -115,8 +119,9 @@ public class BMail {
 				props.setProperty("mail.store.protocol", "imap");
 				props.setProperty("mail.imap.host", host);
 				props.setProperty("mail.imap.port", "143");
-				props.setProperty("mail.imap.connectiontimeout", "30000");
-				props.setProperty("mail.imap.timeout", "30000");
+				props.setProperty("mail.imap.connectiontimeout", "15000");
+				props.setProperty("mail.imap.timeout", "15000");
+				props.setProperty("mail.imap.writetimeout", "15000");
 				System.clearProperty("mail.imap.auth.plain.disable");
 				System.clearProperty("mail.imap.starttls.enable");
 				System.clearProperty("ssl.SocketFactory.provider");

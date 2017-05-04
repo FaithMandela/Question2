@@ -107,7 +107,6 @@ CREATE INDEX investments_period_id ON investments (period_id);
 CREATE INDEX investments_org_id ON investments (org_id);
 
 CREATE TABLE applicants	(
-	applicant_id			serial primary key,
 	entity_id				integer references entitys,
 	org_id 					integer references orgs,
 	person_title			varchar(7),
@@ -134,27 +133,15 @@ CREATE TABLE applicants	(
 	interests				text,
 	objective 				text,
 	details 				text
-);		
-CREATE INDEX applicants_org_id ON applicants (org_id);
-CREATE INDEX applicants_entity_id ON applicants (entity_id);
-
-CREATE TABLE recruiting_agent(
-	recruiting_agent_id  	serial primary key,
-	entity_id				integer references entitys,
-	org_id					integer references orgs,
-	entity_name				varchar(120),
-	details					text
 );
-CREATE INDEX recruiting_agent_entity_id ON recruiting_agent (entity_id);
-CREATE INDEX recruiting_agent_org_id ON recruiting_agent (org_id);
+CREATE INDEX applicants_entity_id ON applicants (entity_id);
+CREATE INDEX applicants_org_id ON applicants (org_id);
 
 CREATE TABLE members (
-	entity_id 				integer NOT NUll references entitys,
-	member_id				serial primary key,
-	address_id				integer references address,
-	bank_id                 integer references banks,
+	entity_id 				integer references entitys primary key,
+	bank_branch_id			integer references bank_branch,
+	recruiter_id 			integer references entitys,
 	org_id 					integer references orgs,
-	recruiting_agent_id 	integer references recruiting_agent,
 
 	person_title			varchar(7),
 
@@ -166,12 +153,15 @@ CREATE TABLE members (
 	gender 					varchar(1),
 	phone					varchar(120),
 	primary_email			varchar(120),
+	account_number			varchar(50),
 
 	place_of_birth			varchar(50),
 	marital_status 			varchar(2),
 	appointment_date 		timestamp default now(),
 
 	exit_date 				date,
+	exit_amount				real default 0 null,
+	
 	picture_file 			varchar(32),
 	active 					boolean not null default true,
 	language 				varchar(320),
@@ -188,10 +178,9 @@ CREATE TABLE members (
 	expired 				boolean default false,
 	contribution			real default 0 not null
 );	 
+CREATE INDEX members_bank_branch_id ON members (bank_branch_id);
+CREATE INDEX members_recruiter_id ON members (recruiter_id); 
 CREATE INDEX members_org_id ON members (org_id);
-CREATE INDEX members_bank_id ON members (bank_id);
-CREATE INDEX members_address_id ON members (address_id);
-CREATE INDEX members_recruiting_agent_id ON members (recruiting_agent_id); 
  
 ALTER TABLE entitys ADD exit_amount REAL default 0;
 

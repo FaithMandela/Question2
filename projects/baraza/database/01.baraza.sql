@@ -211,6 +211,27 @@ CREATE INDEX entitys_use_key_id ON entitys (use_key_id);
 CREATE INDEX entitys_user_name ON entitys (user_name);
 CREATE INDEX entitys_org_id ON entitys (org_id);
 
+CREATE TABLE entity_fields (
+	entity_field_id			serial primary key,
+	org_id					integer not null references orgs,
+	use_type				integer default 1 not null,
+	is_active				boolean default true,
+	entity_field_name		varchar(240),
+	entity_field_source		varchar(320)
+);
+CREATE INDEX entity_fields_org_id ON entity_fields (org_id);
+
+CREATE TABLE entity_values (
+	entity_value_id			serial primary key,
+	entity_id				integer references entitys,
+	entity_field_id			integer references entity_fields,
+	org_id					integer references orgs,
+	entity_value			varchar(240)
+);
+CREATE INDEX entity_values_entity_id ON entity_values (entity_id);
+CREATE INDEX entity_values_entity_field_id ON entity_values (entity_field_id);
+CREATE INDEX entity_values_org_id ON entity_values (org_id);
+
 CREATE TABLE subscription_levels (
 	subscription_level_id	serial primary key,
 	org_id					integer references orgs,
@@ -541,6 +562,13 @@ CREATE VIEW vw_entitys AS
 		INNER JOIN vw_orgs ON entitys.org_id = vw_orgs.org_id
 		INNER JOIN entity_types ON entitys.entity_type_id = entity_types.entity_type_id;
 
+CREATE VIEW vw_entity_values AS
+	SELECT entitys.entity_id, entitys.entity_name,
+		entity_fields.entity_field_id, entity_fields.entity_field_name,
+		entity_values.org_id, entity_values.entity_value_id, entity_values.entity_value
+	FROM entity_values INNER JOIN entitys ON entity_values.entity_id = entitys.entity_id
+		INNER JOIN entity_fields ON entity_values.entity_field_id = entity_fields.entity_field_id;
+
 CREATE VIEW vw_entity_subscriptions AS
 	SELECT entity_types.entity_type_id, entity_types.entity_type_name, entitys.entity_id, entitys.entity_name,
 		subscription_levels.subscription_level_id, subscription_levels.subscription_level_name,
@@ -800,6 +828,11 @@ BEGIN
 		INSERT INTO Entity_subscriptions (org_id, entity_type_id, entity_id, subscription_level_id)
 		VALUES (NEW.org_id, NEW.entity_type_id, NEW.entity_id, 0);
 	END IF;
+
+	INSERT INTO entity_values (org_id, entity_id, entity_field_id)
+	SELECT NEW.org_id, NEW.entity_id, entity_field_id
+	FROM entity_fields
+	WHERE (org_id = NEW.org_id) AND (is_active = true);
 
 	RETURN NULL;
 END;

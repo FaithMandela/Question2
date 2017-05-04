@@ -45,14 +45,24 @@ CREATE OR REPLACE VIEW vw_gurrantors AS
 		INNER JOIN entitys ON vw_loans.entity_id = entitys.entity_id
 		INNER JOIN loan_types ON vw_loans.loan_type_id = loan_types.loan_type_id
 		INNER JOIN entitys gurrantors_entity ON gurrantors_entity.entity_id = gurrantors.entity_id;
+	
+CREATE VIEW vw_members AS
+	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
+		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code, 
+		entitys.entity_id, entitys.entity_name, 
+		members.recruiter_id, recruiter.entity_name as recruiter_name, 
+		members.org_id, members.person_title, members.full_name, 
+		members.surname, members.first_name, members.middle_name, members.date_of_birth, 
+		members.gender, members.phone, members.primary_email, members.account_number, 
+		members.place_of_birth, members.marital_status, members.appointment_date, 
+		members.exit_date, members.exit_amount, members.picture_file, members.active, 
+		members.language, members.interests, members.objective, members.details, 
+		members.division, members.location, members.sub_location, members.district, members.county, 
+		members.residential_address, members.expired, members.contribution
+	FROM members INNER JOIN entitys ON members.entity_id = entitys.entity_id
+		LEFT JOIN vw_bank_branch ON members.bank_branch_id = vw_bank_branch.bank_branch_id
+		LEFT JOIN entitys recruiter ON members.recruiter_id = recruiter.entity_id;
 
-CREATE OR REPLACE VIEW vw_recruiting_entity AS
-	SELECT members.entity_id,members.surname,recruiting_agent_entity.entity_name AS recruiting_agent_entity_name,
-		recruiting_agent.entity_id AS recruiting_agent_entity_id, recruiting_agent.recruiting_agent_id, 
-		recruiting_agent.org_id
-	FROM members JOIN recruiting_agent on members.recruiting_agent_id = recruiting_agent.recruiting_agent_id
-		LEFT JOIN entitys recruiting_agent_entity ON recruiting_agent_entity.entity_id = recruiting_agent.entity_id;
-		
 CREATE OR REPLACE VIEW vw_investments AS 
 	SELECT entitys.entity_id, entitys.entity_name,
 		investment_types.investment_type_name,
@@ -68,7 +78,7 @@ CREATE OR REPLACE VIEW vw_investments AS
 
 CREATE VIEW vw_applicants AS
 	SELECT entitys.entity_id, entitys.entity_name, 
-		applicants.org_id, applicants.applicant_id, applicants.person_title, applicants.surname, 
+		applicants.org_id, applicants.person_title, applicants.surname, 
 		applicants.first_name, applicants.middle_name, applicants.applicant_email, applicants.applicant_phone, 
 		applicants.date_of_birth, applicants.gender, applicants.nationality, applicants.marital_status, 
 		applicants.picture_file, applicants.identity_card, applicants.language, applicants.approve_status, 
@@ -193,12 +203,7 @@ $$ LANGUAGE SQL;
 
 
 --- here done
-CREATE OR REPLACE FUNCTION compute_contributions(
-    v_period_id character varying,
-    v_org_id character varying,
-    v_approval character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION compute_contributions(v_period_id varchar, v_org_id varchar, v_approval varchar) RETURNS varchar AS $$
 DECLARE
     msg                 varchar(120);
 BEGIN
@@ -216,17 +221,9 @@ BEGIN
 
     RETURN msg;
 END;
-$BODY$
-  LANGUAGE plpgsql;
-
-
+$$ LANGUAGE plpgsql;
   
-CREATE OR REPLACE FUNCTION loan_approved(
-    character varying,
-    character varying,
-    character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION loan_approved(varchar, varchar, varchar) RETURNS varchar AS $$
 DECLARE
 	msg 				varchar(120);
 BEGIN
@@ -234,21 +231,12 @@ BEGIN
 	
 	UPDATE loans SET approve_status = 'Approved'
 	WHERE (loan_id = CAST($1 as int));
-	
-	
-	
 
 	return msg;
 END;
-$BODY$
-  LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
-  CREATE OR REPLACE FUNCTION loan_rejected(
-    character varying,
-    character varying,
-    character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION loan_rejected(varchar, varchar, varchar) RETURNS varchar AS $$
 DECLARE
 	msg 				varchar(120);
 BEGIN
@@ -259,17 +247,9 @@ BEGIN
 
 	return msg;
 END;
-$BODY$
-  LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
-
-
-  CREATE OR REPLACE FUNCTION loan_paid(
-    character varying,
-    character varying,
-    character varying)
-  RETURNS character varying AS
-$BODY$
+CREATE OR REPLACE FUNCTION loan_paid(varchar, varchar, varchar) RETURNS varchar AS $$
 DECLARE
 	msg 				varchar(120);
 BEGIN
@@ -280,20 +260,17 @@ BEGIN
 
 	return msg;
 END;
-$BODY$
-  LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
-  CREATE OR REPLACE FUNCTION contribution_paid (varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+CREATE OR REPLACE FUNCTION contribution_paid (varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg 				varchar(120);
-
 BEGIN
 	msg := 'Contribution paid';
 	
 	UPDATE contributions  SET is_paid = 'True'
 	WHERE (contribution_id = CAST($1 as int));
-
-
+	
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
@@ -305,36 +282,23 @@ DECLARE
 	
 BEGIN
 
-	IF (NEW.beneficiary_ps > 100 and New.beneficiary = 'True')THEN
+	IF (NEW.beneficiary_ps > 100 AND New.beneficiary = 'True')THEN
 		raise exception 'Percentage total has to be 100';
-end if;
+	END IF;
 	
-	select  beneficiary_ps, entity_id from kins into beneficiary_ps_total, v_entity_id where kin_id = NEW.kin_id and  New.beneficiary = 'True';
+	SELECT  beneficiary_ps, entity_id INTO beneficiary_ps_total, v_entity_id
+	FROM kins WHERE kin_id = NEW.kin_id AND  New.beneficiary = 'True';
 	
 	
-	if (beneficiary_ps_total > 100 ) then
-	
-	New. beneficiary_ps := 0;
-	end if;
+	IF (beneficiary_ps_total > 100 ) THEN
+		New. beneficiary_ps := 0;
+	END IF;
 
 RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
      
  
-CREATE OR REPLACE FUNCTION ins_fiscal_years() RETURNS trigger AS $$
-BEGIN
-	INSERT INTO periods (fiscal_year_id, org_id, start_date, end_date)
-	SELECT NEW.fiscal_year_id, NEW.org_id, period_start, CAST(period_start + CAST('1 month' as interval) as date) - 1
-	FROM (SELECT CAST(generate_series(fiscal_year_start, fiscal_year_end, '1 month') as date) as period_start
-		FROM fiscal_years WHERE fiscal_year_id = NEW.fiscal_year_id) as a;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-
-
 CREATE OR REPLACE FUNCTION ins_periods() RETURNS trigger AS $$
 DECLARE
 	year_close 		BOOLEAN;
@@ -436,7 +400,6 @@ BEGIN
 			Raise NOTICE 'Thank you';
 		END IF;
 		NEW.entity_id := nextval('entitys_entity_id_seq');
-		NEW.member_id := nextval('members_member_id_seq');
 
 		INSERT INTO entitys (entity_id, entity_name,org_id,entity_type_id,user_name,primary_email,primary_telephone,function_role,details,exit_amount,use_key_id)
 		VALUES (New.entity_id, (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, '')),New.org_id::INTEGER,0,NEW.primary_email,NEW.primary_email,NEW.phone,'member',NEW.details,new.contribution, 0) 
@@ -460,16 +423,16 @@ FOR EACH ROW  EXECUTE PROCEDURE ins_members();
   
 CREATE OR REPLACE FUNCTION ins_gurrantors() RETURNS trigger AS $$
 DECLARE
-    rec_loan            record;
-    v_shares            real;
-    v_grnt_shares           real;
-    v_active_loans          integer;
-    v_active_loans_grnt     integer;
-    v_tot_loan_balance      real;
-    v_tot_loan_balance_grnt     real;
-    v_amount_already_grntd      real;
-    can_gurrantee           boolean;
-    msg                         varchar(120);
+	rec_loan					RECORD;
+	v_shares					real;
+	v_grnt_shares				real;
+	v_active_loans				integer;
+	v_active_loans_grnt			integer;
+	v_tot_loan_balance			real;
+	v_tot_loan_balance_grnt		real;
+	v_amount_already_grntd		real;
+	can_gurrantee				boolean;
+	msg							varchar(120);
 BEGIN
     msg := 'Loan gurranteed';
     can_gurrantee  := true;
@@ -641,7 +604,7 @@ BEGIN
 	msg := 'Applicant Approved';
 	
 	UPDATE applicants SET approve_status = 'Approved'
-	WHERE (applicant_id = CAST($1 as int));
+	WHERE (entity_id = CAST($1 as int));
 
 	return msg;
 END;
@@ -655,7 +618,7 @@ BEGIN
 	msg := 'Applicant Rejected';
 	
 	UPDATE applicants SET approve_status = 'Rejected'
-	WHERE (applicant_id = CAST($1 as int));
+	WHERE (entity_id = CAST($1 as int));
 
 	return msg;
 END;
@@ -850,18 +813,4 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_contributions BEFORE INSERT OR UPDATE  ON contributions FOR EACH ROW
 EXECUTE PROCEDURE ins_contributions();
-
-
-
-	
-
-
-
-
-
-
-
-
-
-
 

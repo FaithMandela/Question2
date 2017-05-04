@@ -32,7 +32,7 @@
 		</MENU>
 		<MENU name="Reports" role="admin, staff, manager,member">
 			<MENU name="Statement of accounts" role="staff,admin,manager">320</MENU>
-			<MENU name="New Members" role="manager,admin">215</MENU>
+			<MENU name="Members" role="manager,admin">215</MENU>
 			<MENU name="Loans" role="staff, manager,admin">265</MENU>
 			<MENU name="My summary" role="member">345</MENU>
 			<MENU name="Loan" role="member">245</MENU>
@@ -983,13 +983,14 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="New Members" key="215" h="550">
+	<DESK w="700" name="Members" key="215" h="550">
+		<JASPER name="Active Member" reportfile="members.jasper"></JASPER>
 		<FILTER w="700" name="New " split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
 				<TEXTDATE w="150" title="Starting From" placeholder="12-12-2015" y="10" h="20" x="10">from_date</TEXTDATE>
 				<TEXTDATE w="150" title="Ending" placeholder="12-12-2015" y="10" h="20" x="10">to_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="Reports" params="from_date,to_date" reportfile="new_entitys1.jasper"></JASPER>
+			<JASPER name="Reports" reportfile="new_entitys1.jasper"></JASPER>
 		</FILTER>
 		<JASPER name="Member" reportfile="members.jasper"></JASPER>
 	</DESK>
@@ -1003,7 +1004,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Applicant" key="23" h="650">
-		<FORMVIEW name="Applicant" keyfield="applicant_id" orderby="entity_id" table="vw_applicants" user="entity_id">
+		<FORMVIEW name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants" user="entity_id">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
@@ -1016,7 +1017,7 @@
 			<TEXTFIELD w="75" title="Applicant Email">applicant_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Applicant Phone">applicant_phone</TEXTFIELD>
 			<JASPER name="CV" reportfile="cv_applicant.jasper"></JASPER>
-			<FORM new="false" tw="570" name="Details" keyfield="applicant_id" table="applicants" th="200">
+			<FORM new="false" tw="570" name="Details" keyfield="entity_id" table="applicants" th="200">
 				<COMBOLIST w="50" title="Title" y="10" h="20" x="10">person_title
 					<DATA>Miss</DATA>
 					<DATA>Mr</DATA>
@@ -1073,7 +1074,7 @@
 		</FORMVIEW>
 	</DESK>
 	<DESK w="700" name="Applicant Details" role="applicant" key="24" h="650">
-		<GRID name="Applicants" keyfield="applicant_id" orderby="entity_id" table="vw_applicants" tab.count="count(applicant_id)" where="(approve_status = 'Draft')" org="org_id">
+		<GRID name="Applicants" keyfield="entity_id" orderby="entity_id" table="vw_applicants" tab.count="count(entity_id)" where="(approve_status = 'Draft')" org="org_id">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Middle Name">middle_name</TEXTFIELD>
@@ -1353,7 +1354,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Members" key="240" h="550">
-		<GRID name="Active Members" keyfield="entity_id" orderby="entity_id ASC" table="members" tab.count="count(member_id)" where="(active = 'true')">
+		<GRID name="Active Members" keyfield="entity_id" orderby="entity_id ASC" table="members" tab.count="count(entity_id)" where="(active = 'true')">
 			<TEXTFIELD w="25" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="180" title="Name">full_name</TEXTFIELD>
 			<TEXTDATE w="50" title="Date Of Birth">date_of_birth</TEXTDATE>
@@ -1528,7 +1529,7 @@
 					</FORM>
 				</GRID>
 			</GRID>
-			<FORM cols="2" tw="570" name="Members" keyfield="entity_id" linkfield="member_id" table="members" th="120">
+			<FORM cols="2" tw="570" name="Members" keyfield="entity_id" linkfield="entity_id" table="members" th="120">
 				<TEXTFIELD w="150" title="Surname" required="true" y="50" h="20" x="10" span="true">surname</TEXTFIELD>
 				<TEXTFIELD w="150" title="First Name" lw="130" required="true" y="50" h="20" x="250">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="50" h="20" x="10" span="true">middle_name</TEXTFIELD>
@@ -1553,7 +1554,7 @@
 				<TEXTFIELD w="430" title="Residential Address" y="50" h="20" x="250">residential_address</TEXTFIELD>
 			</FORM>
 		</GRID>
-		<GRID name="Archived Members" keyfield="entity_id" orderby="entity_id DESC" table="members" tab.count="count(member_id)" where="(active = 'false')">
+		<GRID name="Archived Members" keyfield="entity_id" orderby="entity_id DESC" table="members" tab.count="count(entity_id)" where="(active = 'false')">
 			<TEXTFIELD w="25" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="100" title="Name">surname</TEXTFIELD>
 			<TEXTDATE w="50" title="Date Of Birth">date_of_birth</TEXTDATE>
@@ -1761,7 +1762,7 @@
 					<ACTION fnct="change_password" approval="0">Reset Password</ACTION>
 				</ACTIONS>
 			</GRID>
-			<GRID name="Members" keyfield="entity_id" linkfield="org_id" table="members" tab.count="count(member_id)" noorg="true">
+			<GRID name="Members" keyfield="entity_id" linkfield="org_id" table="members" tab.count="count(entity_id)" noorg="true">
 				<TEXTFIELD w="75" title="ID">entity_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Name">surname</TEXTFIELD>
 				<TEXTDATE w="75" title="Date Of Birth">date_of_birth</TEXTDATE>
@@ -1772,7 +1773,7 @@
 				<TEXTTIMESTAMP w="100" title="Appointment Date">appointment_date</TEXTTIMESTAMP>
 				<TEXTDATE w="75" title="Exit Date">exit_date</TEXTDATE>
 				<CHECKBOX w="75" title="Active">active</CHECKBOX>
-				<FORM cols="2" tw="570" name="Members" keyfield="entity_id" linkfield="member_id" table="members" noorg="true" th="120">
+				<FORM cols="2" tw="570" name="Members" keyfield="entity_id" linkfield="entity_id" table="members" noorg="true" th="120">
 					<COMBOBOX w="430" title="Org" lptable="orgs" linkfield="org_id" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Surname" placeholder="* required field" y="50" h="20" x="10" span="true">surname</TEXTFIELD>
 					<TEXTFIELD w="150" title="First Name" placeholder="* required field" lw="130" y="50" h="20" x="250">first_name</TEXTFIELD>
@@ -2153,7 +2154,7 @@
 			<TEXTFIELD w="75" title="Phone">phone</TEXTFIELD>
 			<TEXTFIELD w="75" title="Primary Email">primary_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Marital Status">marital_status</TEXTFIELD>
-			<FORM new="false" cols="2" tw="570" name="My Details" keyfield="entity_id" linkfield="member_id" table="members" user="entity_id" th="120">
+			<FORM new="false" cols="2" tw="570" name="My Details" keyfield="entity_id" linkfield="entity_id" table="members" user="entity_id" th="120">
 				<TEXTFIELD w="150" title="Surname" placeholder="* required field" y="50" h="20" x="10" span="true">surname</TEXTFIELD>
 				<TEXTFIELD w="150" title="First Name" placeholder="* required field" lw="130" y="50" h="20" x="250">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="50" h="20" x="10" span="true">middle_name</TEXTFIELD>
@@ -2432,7 +2433,7 @@
 			<TEXTDATE w="75" title="Exit Date">exit_date</TEXTDATE>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<TEXTFIELD w="75" title="Language">language</TEXTFIELD>
-			<FORM name="Members" keyfield="entity_id" linkfield="member_id" table="members">
+			<FORM name="Members" keyfield="entity_id" linkfield="entity_id" table="members">
 				<TEXTFIELD w="150" title="Surname" y="110" h="20" x="10">surname</TEXTFIELD>
 				<TEXTFIELD w="150" title="First Name" y="110" h="20" x="290">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="130" h="20" x="10">middle_name</TEXTFIELD>

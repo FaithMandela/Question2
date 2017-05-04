@@ -87,7 +87,7 @@ public class BWebBody extends BQuery {
 					if (el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) {
 						if(groupTable == null) groupTable = " group: {field: '" + el.getValue() + "'";
 						else groupTable += ", field: '" + el.getValue() + "' ";
-					}
+					} 
 
 					if(colWidths == null) colWidths = ",\ncolumns: [ ";
 					else colWidths += ", \n";
@@ -110,13 +110,13 @@ public class BWebBody extends BQuery {
 			}
 
 			if(view.getName().equals("FILES")) {
-				if((view.getAttribute("edit", "true").equals("true"))) {
+				if((view.getAttribute("edit", "true").equals("true"))) { 
 					myhtml.append("\n<th data-field='DELETE'>Delete</th>");
 					colWidths += ", \n{ field: 'DELETE', width: '75px', sortable: false, filterable: false }";
-				}
+				}	
 
 				// View addition
-				myhtml.append("\n<th data-field='VIEW'>View</th>");
+				myhtml.append("\n<th data-field='VIEW'>View</th>");					
 				colWidths += ", \n{ field: 'VIEW', width: '75px', sortable: false, filterable: false }";
 			}
 
@@ -215,7 +215,7 @@ public class BWebBody extends BQuery {
 							myhtml.append("\n<td>");
 							myhtml.append("<a href='?view=" + viewKey + ":" + getSelectKey() + "&data=" + rs.getString(keyField) + "' ");
 
-							if(el.getAttribute("hint") != null) myhtml.append(" title='" + el.getAttribute("hint") +  "'");
+							if(el.getAttribute("hint") != null) myhtml.append(" title='" + el.getAttribute("hint") +  "'"); 
 
 							myhtml.append(">" + cellData + "</a>");
 						} else if(el.getName().equals("BROWSER")) {
@@ -225,11 +225,11 @@ public class BWebBody extends BQuery {
 							myhtml.append("?action=" +  el.getAttribute("action"));
 							myhtml.append("&actionvalue=" + cellData);
 
-							if(el.getAttribute("disabled") != null) myhtml.append("&disabled=yes");
-							if(el.getAttribute("blankpage") != null) myhtml.append("&blankpage=yes' target='_blank'");
+							if(el.getAttribute("disabled") != null) myhtml.append("&disabled=yes"); 
+							if(el.getAttribute("blankpage") != null) myhtml.append("&blankpage=yes' target='_blank'"); 
 							else myhtml.append("'");
 
-							if(el.getAttribute("hint") != null) myhtml.append(" title='" + getString(el.getAttribute("hint")) +  "'");
+							if(el.getAttribute("hint") != null) myhtml.append(" title='" + getString(el.getAttribute("hint")) +  "'"); 
 							myhtml.append("><img src='assets/images/form.png'></a>");
 							myhtml.append("</td>");
 
@@ -262,19 +262,19 @@ public class BWebBody extends BQuery {
 
 				if(hasSubs && (keyField != null)) {
 					if(view.getName().equals("FORMVIEW")) {
-						if(view.getAttribute("gohint") != null) myhtml.append("\n<td>" + view.getAttribute("gohint") +  "</td>");
+						if(view.getAttribute("gohint") != null) myhtml.append("\n<td>" + view.getAttribute("gohint") +  "</td>"); 
 						else myhtml.append("\n<td>GO</td>");
 					}
-
+					
 					myhtml.append("\n<td>");
 					String sk = getSelectKey();
 					if(sk != null) {
 						myhtml.append("<a href='?view=" + viewKey + ":" + sk + "&data=" + rs.getString(keyField));
 						if(hasFilter) myhtml.append("&gridfilter=true");
 						myhtml.append("'");
-
-						if(view.getAttribute("gohint") != null) myhtml.append(" title='" + view.getAttribute("gohint") +  "'");
-
+						
+						if(view.getAttribute("gohint") != null) myhtml.append(" title='" + view.getAttribute("gohint") +  "'"); 
+						
 						myhtml.append("><img src='assets/images/go.png'></a>");
 					}
 					myhtml.append("</td>");
@@ -307,9 +307,9 @@ public class BWebBody extends BQuery {
 		String htmlBody = "";
 		if(view.getName().equals("FILTERGRID"))
 			htmlBody += "\n<input type='hidden' name='" + filterName + "' id='" + filterName + "' value='0'/>";
-
+	
 		htmlBody += myhtml.toString();
-
+		
 		return htmlBody;
 	}
 
@@ -347,12 +347,12 @@ public class BWebBody extends BQuery {
 		String formname = view.getAttribute("name");
 		String canedit = view.getAttribute("canedit");
 		String currentTab = "";
-
+	
 		if((!isNew) && (rs != null)) {
 			beforeFirst();
 			eof = moveNext();
 		}
-
+		
 		String tab = "";
 		boolean hasTabs = false;
 		tabs.append("<div class='row'>\n");
@@ -360,7 +360,7 @@ public class BWebBody extends BQuery {
 		tabs.append("		<div class='tabbable portlet-tabs'>\n");
 		tabs.append("			<ul class='nav nav-tabs'>\n");
 		for(BElement el : view.getElements()) {
-			if(el.getAttribute("tab") != null) {
+			if(el.getAttribute("tab") != null) {				
 				if(!tab.equals(el.getAttribute("tab"))) {
 					tab = el.getAttribute("tab");
 					if(!hasTabs) tabs.append("<li class='active'>");
@@ -378,7 +378,7 @@ public class BWebBody extends BQuery {
 
 		int i = 0;
 		response.append("<div class='form-body'>\n");
-
+		
 		boolean noSpan = true;
 		boolean tabNotDone = true;
 		Integer formCols = new Integer(view.getAttribute("cols", "1"));
@@ -389,36 +389,36 @@ public class BWebBody extends BQuery {
 				if(tabNotDone && hasTabs) response.append(tabs);
 				if(!tab.equals(el.getAttribute("tab"))) {
 					tab = el.getAttribute("tab");
-					if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab.replace(" ", "") + "'>\n");
+					if(tabNotDone) response.append("<div class='tab-pane active' id='" + tab.replace(" ", "") + "'>\n"); 
 					else response.append("<div class='tab-pane' id='" + tab.replace(" ", "") + "'>\n");
 				}
-                if(tabNotDone && hasTabs) tabNotDone = false;
+                if(tabNotDone && hasTabs) tabNotDone = false; 
 			} else if(!tabNotDone) {
 				response.append("</div>\n</div>\n");
 				tabNotDone = true;
 			}
-
+			
 			// Get the elements and determine creation of rows
 			if(noSpan) response.append("	<div class='row'>\n");
 			response.append(getField(el, formLinkData, eof, formCols));
 			if(el.getAttribute("span") == null) { response.append("	</div>\n"); noSpan = true; }
 			else noSpan = false;
 		}
-
+		
 		// Close and open span and tabs
 		if(!noSpan) response.append("</div>\n");
 		if(!tabNotDone && tab.equals("")) response.append("</div>\n");
 		if(!tabNotDone) response.append("</div>\n");
 
 		response.append("</div>\n");
-
+		
 		return response.toString();
     }
-
-
+    
+    
     public String getField(BElement el, String formLinkData, boolean eof, Integer formCols) {
 		StringBuilder response = new StringBuilder();
-
+		
 		String defaultvalue = el.getAttribute("default", "");
 		String default_fnct = el.getAttribute("default_fnct");
 		String default_org_fnct = el.getAttribute("default_org_fnct");
@@ -432,36 +432,30 @@ public class BWebBody extends BQuery {
 		} else if(default_user != null) {
 			defaultvalue = db.getUserID();
 		}
-
+		
 		if(el.getAttribute("tab") != null) formCols = 0;
 
 		if(formCols > 1) response.append("<div class='col-md-6'>\n");
-
+		
 		response.append("	<div class='form-group'>\n");
-<<<<<<< HEAD
-		response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
-		response.append("			<div class='col-md-9'>\n");
-
-=======
-
+		
 		if(el.getAttribute("tab") == null) {
 			response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
 		} else if(el.getAttribute("title") != null) {
 			response.append("		<label class='control-label col-md-3'>" + el.getAttribute("title", "") + "</label>\n");
 		}
 		response.append("		<div class='col-md-9'>\n");
-
->>>>>>> ba5154dcbc81bd3d18f519b80675b80ae7a1eee5
+		
 		if(el.getName().equals("HTML")) {
 			response.append(el.getAttribute("html",""));
 		} else if(el.getName().equals("TEXTFIELD")) {
 			response.append("<input name='" + el.getValue() + "'");
 
-
+			
 			if(el.getAttribute("type") == null) response.append(" type='text'");
 			else response.append(" type='" + el.getAttribute("type") + "'");
 
-			if(el.getAttribute("class") == null) response.append(" class='form-control'");
+			if(el.getAttribute("class") == null) response.append(" class='form-control'");			
 			else response.append(" class='" + el.getAttribute("class") + "'");
 			if(el.getAttribute("w") != null) response.append(" size='" + el.getAttribute("w") + "'");
 			else response.append(" size='50'");
@@ -481,7 +475,7 @@ public class BWebBody extends BQuery {
 			if(el.getAttribute("data-timeformat") != null) response.append(" data-timeformat='" + el.getAttribute("data-timeformat") + "'");
 			if(el.getAttribute("data-errortext") != null) response.append(" data-errortext='" + el.getAttribute("data-errortext") + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
-
+			
 			//whitelabel end
 
 			//custom javascript when needed
@@ -511,7 +505,7 @@ public class BWebBody extends BQuery {
 			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
 			String taCols = el.getAttribute("cols", "50");
 			String taRows = el.getAttribute("rows", "10");
 			response.append(" cols='" + taCols + "' rows='" + taRows + "'>");
@@ -550,12 +544,12 @@ public class BWebBody extends BQuery {
 			if(lpkey.equals(lpfield)) mysql = "SELECT " + lpfield + " FROM " + lptable;
 			else if (cmb_fnct == null) mysql = "SELECT " + lpkey + ", " + lpfield + " FROM " + lptable;
 			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield + " FROM " + lptable;
-
+			
 			String cmbWhereSql = el.getAttribute("where");
 			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
 				if(cmbWhereSql == null) cmbWhereSql = "(";
 				else cmbWhereSql += " AND (";
-
+				
 				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
 				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
 			}
@@ -623,12 +617,12 @@ public class BWebBody extends BQuery {
 			else mysql = "SELECT " + lpkey + ", (" + cmb_fnct + ") as " + lpfield;
 			if(selectDetail != null) mysql += ", " + selectDetail;
 			mysql += " FROM " + lptable;
-
+			
 			String cmbWhereSql = el.getAttribute("where");
 			if((el.getAttribute("noorg") == null) && (orgID != null) && (userOrg != null)) {
 				if(cmbWhereSql == null) cmbWhereSql = "(";
 				else cmbWhereSql += " AND (";
-
+				
 				if(el.getAttribute("org.id") == null) cmbWhereSql += orgID + "=" + userOrg + ")";
 				else cmbWhereSql += el.getAttribute("org.id") + "=" + userOrg + ")";
 			}
@@ -751,7 +745,7 @@ public class BWebBody extends BQuery {
 			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
 			response.append(">");
-
+			
 			String myval = null;
 			String mykey = "";
 			if(eof) myval = getString(el.getValue());
@@ -760,10 +754,10 @@ public class BWebBody extends BQuery {
 			for(BElement ell : el.getElements()) {
 				if(ell.getAttribute("key") == null) mykey = ell.getValue();
 				else mykey = ell.getAttribute("key");
-				response.append("<option");
+				response.append("<option"); 
 				if(ell.getAttribute("key") != null) response.append(" value='" + mykey + "'");
 				if(mykey.equals(myval)) response.append(" selected='selected'");
-				response.append(">" +  ell.getValue() + "</option>");
+				response.append(">" +  ell.getValue() + "</option>");	
 			}
 			response.append("</select>\n");
 		} else if(el.getName().equals("CHECKBOX")) {
@@ -776,70 +770,43 @@ public class BWebBody extends BQuery {
 			} else if(el.getAttribute("default", "").equals("true")) {
 				response.append(" checked");
 			}
-
+		
 			response.append("/>\n");
 		} else if(el.getName().equals("FILE")) {
 				response.append("<input class='form-control' type='file' name='" + el.getValue() + "' size='50'/></td>\n");
 		} else if(el.getName().equals("TEXTDATE")) {
-			if(el.getAttribute("type", "2").equals("1")) {
+			if(el.getAttribute("type", "1").equals("2")) {
 				response.append("<div class='input-group input-medium date date-picker2' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>\n");
-				response.append("<input class='form-control' name='" + el.getValue() + "'");
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
-				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
-				if(eof) {
-					SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy");
-					if(getString(el.getValue())!=null) {
-						String mydate = dateformatter.format(getDate(el.getValue()));
-						response.append(" value='" + mydate + "'");
-					}
-				} else if(el.getAttribute("default", "").equals("now")) {
-					SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
-					response.append(" value='" + dateParse.format(new Date()) + "'");
-				}  else if(el.getAttribute("default", "").equals("today")) {
-					SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
-					response.append(" value='" + dateParse.format(new Date()) + "'");
-				} else if(!defaultvalue.equals("")) {
-					response.append(" value='" + defaultvalue + "'");
-				}
-				response.append(" size='50'/>");
-
-				response.append("<span class='input-group-btn'>");
-				response.append("<button class='btn default' type='button'><i class='fa fa-calendar'></i></button>");
-				response.append("</span>\n");
-				response.append("</div>\n");
-			}
-
-			else{
+			} else {
 				response.append("<div class='input-group input-medium date date-picker' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>\n");
-				response.append("<input class='form-control' name='" + el.getValue() + "'");
-				if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
-				if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-				if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
-				if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
-				if(eof) {
-					SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy");
-					if(getString(el.getValue())!=null) {
-						String mydate = dateformatter.format(getDate(el.getValue()));
-						response.append(" value='" + mydate + "'");
-					}
-				} else if(el.getAttribute("default", "").equals("now")) {
-					SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
-					response.append(" value='" + dateParse.format(new Date()) + "'");
-				}  else if(el.getAttribute("default", "").equals("today")) {
-					SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
-					response.append(" value='" + dateParse.format(new Date()) + "'");
-				} else if(!defaultvalue.equals("")) {
-					response.append(" value='" + defaultvalue + "'");
-				}
-				response.append(" size='50'/>");
-
-				response.append("<span class='input-group-btn'>");
-				response.append("<button class='btn default' type='button'><i class='fa fa-calendar'></i></button>");
-				response.append("</span>\n");
-				response.append("</div>\n");
 			}
+
+			response.append("<input class='form-control' name='" + el.getValue() + "'");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
+			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
+			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
+			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
+			if(eof) {
+				SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy");
+				if(getString(el.getValue())!=null) {
+					String mydate = dateformatter.format(getDate(el.getValue()));				
+					response.append(" value='" + mydate + "'");
+				}
+			} else if(el.getAttribute("default", "").equals("now")) {
+				SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
+				response.append(" value='" + dateParse.format(new Date()) + "'");
+			}  else if(el.getAttribute("default", "").equals("today")) {
+				SimpleDateFormat dateParse = new SimpleDateFormat("dd/MM/yyyy");
+				response.append(" value='" + dateParse.format(new Date()) + "'");
+			} else if(!defaultvalue.equals("")) {
+				response.append(" value='" + defaultvalue + "'");
+			}
+			response.append(" size='50'/>");
+			
+			response.append("<span class='input-group-btn'>");
+			response.append("<button class='btn default' type='button'><i class='fa fa-calendar'></i></button>");
+			response.append("</span>\n");
+			response.append("</div>\n");
 		} else if(el.getName().equals("TEXTDECIMAL")) {
 			response.append("<input class='form-control mask_currency' type='text' name='" + el.getValue() + "'");
 
@@ -847,14 +814,14 @@ public class BWebBody extends BQuery {
 			if(el.getAttribute("placeholder") != null) response.append(" placeholder='" + el.getAttribute("placeholder") + "'");
 			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 
-			if(el.getAttribute("js_function") != null) {
+			if(el.getAttribute("js_function") != null) {			
 				String tgt = el.getAttribute("target","");
-				response.append ( " onblur=\"custom_javascript(this,\'" + el.getAttribute("js_function") + "\',\'" + tgt +"\')\" ");
+				response.append ( " onblur=\"custom_javascript(this,\'" + el.getAttribute("js_function") + "\',\'" + tgt +"\')\" ");					
 			}
 
 			if(el.getAttribute("ajaxfunction") != null){
-				String ajx_fxn = el.getAttribute("ajaxfunction");
-				response.append ( " onBlur=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");
+				String ajx_fxn = el.getAttribute("ajaxfunction");															
+				response.append ( " onBlur=\"javascript:callServer('" + ajx_fxn + "',this.value,'" + el.getValue() + "','" + el.getAttribute("from") + "')\"");					
 			}
 
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
@@ -864,19 +831,19 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("TEXTTIMESTAMP")) {
 			response.append("<input class='form-control' type='text' name='" + el.getValue() + "'");
 			if(el.getAttribute("enabled","true").equals("false")) response.append(" disabled='true'");
-			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");
+			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	
 			if(el.getAttribute("id") != null) response.append(" id='" + el.getAttribute("id") + "'");
 			if(eof) {
 				SimpleDateFormat dateformatter = new SimpleDateFormat("dd/MM/yyyy hh:mm a");
 				if(getString(el.getValue()) != null) {
-					String mydate = dateformatter.format(getDate(el.getValue()));
+					String mydate = dateformatter.format(getDate(el.getValue()));				
 					response.append(" value=\"" + mydate + "\"");
 				}
 			}
 			response.append(" size='50'/>\n");
 		} else if(el.getName().equals("SPINTIME")) {
-			response.append("<div class='input-group input-medium '>\n");
-
+			response.append("<div class='input-group input-medium '>\n"); 
+			
 			if(el.getAttribute("type", "1").equals("1")) {
 				response.append("	<input type='text' class='form-control clockface'");
 			} else if(el.getAttribute("type", "2").equals("1")) {
@@ -891,7 +858,7 @@ public class BWebBody extends BQuery {
 			if(eof) {
 				SimpleDateFormat dateformatter = new SimpleDateFormat("hh:mm a");
 				if(getString(el.getValue())!=null) {
-					String mydate = dateformatter.format(getTime(el.getValue()));
+					String mydate = dateformatter.format(getTime(el.getValue()));				
 					response.append(" value='" + mydate + "'");
 				}
 			} else if(el.getAttribute("default", "").equals("now")) {
@@ -901,7 +868,7 @@ public class BWebBody extends BQuery {
 				response.append(" value='" + el.getAttribute("default")  + "'");
 			}
 			response.append("/>\n");
-
+			
 			response.append("	<span class='input-group-btn'>\n");
 			if(el.getAttribute("type", "1").equals("1")) {
 				response.append("		<button class='btn default clockface-toggle' data-target='" + el.getValue() + "' type='button'>");
@@ -934,11 +901,11 @@ public class BWebBody extends BQuery {
 			response.append("</div>");
 		} else if(el.getName().equals("USERFIELD") || el.getName().equals("DEFAULT") || el.getName().equals("FUNCTION")) {
 		}
-
+		
 		response.append("		</div>\n");
 		response.append("	</div>\n");
 		if(formCols > 1) response.append("</div>\n");
-
+		
 		return response.toString();
 	}
 
@@ -947,3 +914,4 @@ public class BWebBody extends BQuery {
 	}
 
 }
+

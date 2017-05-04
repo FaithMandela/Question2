@@ -290,6 +290,33 @@ CREATE INDEX transaction_links_transaction_to ON transaction_links (transaction_
 CREATE INDEX transaction_links_transaction_detail_id ON transaction_links (transaction_detail_id);
 CREATE INDEX transaction_links_transaction_detail_to ON transaction_links (transaction_detail_to);
 
+CREATE TABLE sp_types (
+	sp_type_id				serial primary key,
+	org_id					integer references orgs,
+	sp_type_name			varchar(120),
+	details					text
+);
+CREATE INDEX sp_types_org_id ON sp_types (org_id);
+
+CREATE TABLE sp_items (
+	sp_item_id				serial primary key,
+	sp_type_id				integer references sp_types,
+	org_id					integer references orgs,
+	sp_item_name			varchar(120),
+	picture					varchar(120),
+	description				text,
+
+	purchase_date			date,
+	purchase_price			real default 0 not null,
+	sale_date				date,
+	sale_price				real default 0 not null,
+	sold					boolean default false not null,
+	
+	details					text
+);
+CREATE INDEX sp_items_sp_type_id ON sp_items (sp_type_id);
+CREATE INDEX sp_items_org_id ON sp_items (org_id);
+
 
 CREATE VIEW vw_bank_accounts AS
 	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, vw_bank_branch.bank_branch_name, 
@@ -561,6 +588,18 @@ CREATE VIEW vw_stock_movement AS
 	FROM vw_transaction_details
 
 	WHERE (transaction_type_id IN (11, 17, 12)) AND (for_stock = true) AND (approve_status <> 'Draft');
+
+CREATE VIEW vw_sp_items AS
+	SELECT orgs.org_id, orgs.org_name, 
+		sp_types.sp_type_id, sp_types.sp_type_name, 
+		sp_items.sp_item_id, sp_items.sp_item_name, sp_items.picture, 
+		sp_items.description, sp_items.purchase_date, sp_items.purchase_price, 
+		sp_items.sale_date, sp_items.sale_price, sp_items.sold, sp_items.details,
+
+		(sp_items.sale_price - sp_items.purchase_price) as gross_margin
+	FROM sp_items INNER JOIN sp_types ON sp_items.sp_type_id = sp_types.sp_type_id
+		INNER JOIN orgs ON sp_items.org_id = orgs.org_id;
+	
 
 CREATE OR REPLACE FUNCTION get_opening_stock(integer, date) RETURNS integer AS $$
 	SELECT COALESCE(sum(q_purchased - q_sold - q_used)::integer, 0)

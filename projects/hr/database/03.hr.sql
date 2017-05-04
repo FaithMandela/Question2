@@ -1422,9 +1422,9 @@ DECLARE
 	v_org_id				integer;
 	v_entity_id				integer;
 	v_entity_type_id		integer;
+	v_sys_email_id			integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
-		
 		IF(NEW.entity_id IS NULL) THEN
 			SELECT entity_id INTO v_entity_id
 			FROM entitys
@@ -1453,9 +1453,12 @@ BEGIN
 				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 			END IF;
 		END IF;
+		
+		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
+		WHERE (use_type = 1) AND (org_id = NEW.org_id);
 
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (1, NEW.entity_id, 'applicant');
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (v_sys_email_id, NEW.entity_id, 'applicant', 1);
 	ELSIF (TG_OP = 'UPDATE') THEN
 		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
 		WHERE entity_id = NEW.entity_id;
@@ -1470,12 +1473,12 @@ CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
 
 CREATE OR REPLACE FUNCTION ins_employees() RETURNS trigger AS $$
 DECLARE
-	v_entity_type_id	integer;
-	v_use_type			integer;
-	v_org_sufix 		varchar(4);
-	v_first_password	varchar(12);
-	v_user_count		integer;
-	v_user_name			varchar(120);
+	v_entity_type_id		integer;
+	v_use_type				integer;
+	v_org_sufix 			varchar(4);
+	v_first_password		varchar(12);
+	v_user_count			integer;
+	v_user_name				varchar(120);
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		IF(NEW.entity_id IS NULL) THEN
@@ -1510,8 +1513,8 @@ BEGIN
 				v_user_name, 'staff',
 				v_first_password, md5(v_first_password));
 				
-			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
-			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys'
+			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
+			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys', 1
 			FROM sys_emails
 			WHERE (use_type = 3) AND (org_id = NEW.org_id);
 		END IF;

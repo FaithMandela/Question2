@@ -172,6 +172,14 @@
 					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<GRID name="Entity Values" keyfield="entity_value_id" updatetable="entity_values" linkfield="entity_id" table="vw_entity_values">
+				<TEXTFIELD w="175" title="Field">entity_field_name</TEXTFIELD>
+				<EDITFIELD w="175" title="Value">entity_value</EDITFIELD>
+				<FORM name="Entity Values" keyfield="entity_value_id" linkfield="entity_id" table="entity_values">
+					<COMBOBOX w="430" title="Entity Field" lptable="entity_fields" y="10" h="20" x="10" lpfield="entity_field_name">entity_field_id</COMBOBOX>
+					<TEXTFIELD w="430" title="Entity Value" y="30" h="20" x="10">entity_value</TEXTFIELD>
+				</FORM>
+			</GRID>
 			<ACTIONS>
 				<ACTION fnct="change_password">Reset Password</ACTION>
 			</ACTIONS>
@@ -209,6 +217,19 @@
 			<FORM name="Subscription Levels" keyfield="subscription_level_id" table="subscription_levels">
 				<TEXTFIELD w="430" title="Level" y="10" h="20" x="10">subscription_level_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Entity Fields" keyfield="entity_field_id" table="entity_fields">
+			<TEXTFIELD w="75" title="Entity Field ID">entity_field_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Use Type">use_type</TEXTFIELD>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="175" title="Entity Field Name">entity_field_name</TEXTFIELD>
+			<TEXTFIELD w="175" title="Entity Field Source">entity_field_source</TEXTFIELD>
+			<FORM name="Entity Fields" keyfield="entity_field_id" table="entity_fields">
+				<TEXTFIELD w="430" title="Entity Field Name" y="10" h="20" x="10">entity_field_name</TEXTFIELD>
+				<TEXTFIELD w="430" title="Entity Field Source" y="30" h="20" x="10">entity_field_source</TEXTFIELD>
+				<TEXTFIELD w="150" title="Use Type" y="50" h="20" x="10">use_type</TEXTFIELD>
+				<CHECKBOX w="150" title="Active" y="50" h="20" x="290">is_active</CHECKBOX>
 			</FORM>
 		</GRID>
 	</DESK>
