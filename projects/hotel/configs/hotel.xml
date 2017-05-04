@@ -303,6 +303,8 @@
 				<COMBOBOX noorg="true" w="430" h="20" lpfield="city_name" x="10" y="110" lptable="city_codes" title="Town" lpkey="city_code">city_code</COMBOBOX>
 				<TEXTFIELD w="50" h="20" x="10" y="130" placeholder="Organisation Sufix" title="Sufix">org_sufix</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="130" title="Star">star</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Latitude">latitude</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Longitude">longitude</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Location" title="Location">location</TEXTAREA>
 				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Details" title="Details">details</TEXTAREA>
@@ -439,11 +441,13 @@
 				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 				<TEXTFIELD w="45" title="Currency">currency_symbol</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Current Rate">current_rate</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="Max Occupancy">max_occupancy</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 				<FORM keyfield="room_rate_id" name="Room Rates" linkfield="room_type_id" table="room_rates">
 					<COMBOBOX w="430" h="20" lpfield="service_type_name" x="10" y="10" lptable="service_types" title="Service Type">service_type_id</COMBOBOX>
 					<COMBOBOX noorg="true" w="430" h="20" lpfield="currency_name" x="10" y="30" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDECIMAL w="150" h="20" x="10" y="50" title="Current Rate">current_rate</TEXTDECIMAL>
+					<TEXTFIELD w="150" h="20" x="10" y="30" title="Max Occupancy">max_occupancy</TEXTFIELD>
 					<TEXTDECIMAL default="1" w="150" h="20" x="290" y="50" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 					<TEXTDATE w="150" h="20" x="10" y="70" title="Date Start">date_start</TEXTDATE>
 					<TEXTDATE w="150" h="20" x="290" y="70" title="Date End">date_end</TEXTDATE>
@@ -490,6 +494,7 @@
 			<TEXTDECIMAL w="75" title="Tax Rate 2">tax_rate2</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Tax Rate 3">tax_rate3</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Currency Name">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Max Occupancy">max_occupancy</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Current Rate">current_rate</TEXTDECIMAL>
 			<TEXTDATE w="75" title="Date Start">date_start</TEXTDATE>
 			<TEXTDATE w="75" title="Date End">date_end</TEXTDATE>
@@ -500,6 +505,7 @@
 				<COMBOBOX w="430" h="20" lpfield="service_type_name" x="10" y="30" lptable="service_types" title="Service Type">service_type_id</COMBOBOX>
 				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="50" lptable="currency" default_org_fnct="get_default_currency" title="Currency">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" h="20" x="10" y="70" title="Current Rate">current_rate</TEXTDECIMAL>
+				<TEXTFIELD w="150" h="20" x="10" y="30" title="Max Occupancy">max_occupancy</TEXTFIELD>
 				<TEXTDECIMAL default="1" w="150" h="20" x="290" y="70" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
 				<TEXTDATE w="150" h="20" x="10" y="90" title="Date Start">date_start</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="90" title="Date End">date_end</TEXTDATE>
@@ -511,6 +517,17 @@
 			<TEXTFIELD w="75" title="Reserve Mode ID">reserve_mode_id</TEXTFIELD>
 			<TEXTFIELD w="175" title="Reserve Mode">reserve_mode_name</TEXTFIELD>
 			<TEXTFIELD w="175" title="Narrative">narrative</TEXTFIELD>
+		</GRID>
+		<GRID keyfield="room_image_id" name="Room Images" table="room_images">
+			<TEXTFIELD w="75" title="Room Image ID">room_image_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Room Type ID">room_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Images">images</TEXTFIELD>
+			<FORM keyfield="room_image_id" name="Room Images" table="room_images">
+				<COMBOBOX w="430" h="20" lpfield="room_type_name" x="10" y="10" lptable="room_types" title="Room Type ID">room_type_id</COMBOBOX>
+				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">images</PICTURE>
+				<TEXTAREA w="430" h="70" x="10" y="50" title="Details">details</TEXTAREA>
+			</FORM>
 		</GRID>
 	</DESK>
 	<DESK w="700" h="550" name="Bookings" key="40">

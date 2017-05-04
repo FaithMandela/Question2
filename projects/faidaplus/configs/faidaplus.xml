@@ -170,6 +170,7 @@
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_orders_batch">Batch</ACTION>
+				<ACTION approval="4" fnct="upd_orders_status">Cancel Order</ACTION>
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name="Batched Orders" orderby="batch_no DESC" where="(lower(order_status) = lower('Processing Order') AND batch_no is not null )" tab.count="count(order_id)" table="vw_orders">
@@ -182,6 +183,7 @@
 			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
 			<ACTIONS>
 				<ACTION approval="1" fnct="upd_orders_status">Awaiting Collection/Shipped</ACTION>
+				<ACTION approval="4" fnct="upd_orders_status">Cancel Order</ACTION>
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name=" Orders Awaiting Collection" orderby="order_date DESC" where="(order_status = 'Awaiting Collection')" tab.count="count(order_id)" table="vw_orders">
@@ -207,6 +209,8 @@
 			</GRID>
 			<ACTIONS>
 				<ACTION approval="2" fnct="upd_orders_status">Collected/Delivered</ACTION>
+				<ACTION approval="4" fnct="upd_orders_status">Cancel Order</ACTION>
+				<ACTION approval="5" fnct="upd_orders_status">Uncollected and expired</ACTION>
 			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name="Orders Collected" orderby="order_date DESC" where="order_status = 'Collected'" tab.count="count(order_id)" table="vw_orders">
@@ -225,6 +229,31 @@
 				<TEXTFIELD w="275" title="Unit Price">product_uprice</TEXTFIELD>
 				<TEXTFIELD w="275" title="Sub Total">total_amount</TEXTFIELD>
 			</GRID>
+		</GRID>
+		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name=" Uncollected and expired" orderby="order_date DESC" where="(order_status = 'Uncollected')" tab.count="count(order_id)" table="vw_orders">
+			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
+			<TEXTFIELD w="275" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Order Date">order_date</TEXTFIELD>
+			<TEXTFIELD w="275" title="Total Amount">order_total_amount</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered Status">order_status</TEXTFIELD>
+			<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="275" title="PCCs">pcc</TEXTFIELD>
+			<TEXTFIELD w="275" title="Ordered By">entity_name</TEXTFIELD>
+			<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_details_id" name="Uncollected Items" where="(batch_no is not null)" linkfield="order_id" table="vw_order_details">
+				<TEXTFIELD w="275" title="Product ID">order_details_id</TEXTFIELD>
+				<TEXTFIELD w="275" title="Bached No.">batch_no</TEXTFIELD>
+				<TEXTFIELD w="275" title="Supplier Name">supplier_name</TEXTFIELD>
+				<TEXTFIELD w="200" title="Product Category Name">product_category_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Item Name">product_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Quantity">product_quantity</TEXTFIELD>
+				<TEXTFIELD w="125" title="Unit Price">product_uprice</TEXTFIELD>
+				<TEXTFIELD w="125" title="Sub Total">total_amount</TEXTFIELD>
+				<TEXTFIELD w="200" fnct="to_char(order_date,'dd/mm/yyyy HH12:MI:SS')" title="Ordered Date">order_date</TEXTFIELD>
+				<TEXTFIELD w="275" title="Agency Name">org_name</TEXTFIELD>
+				<TEXTFIELD w="275" title="Consultant Name">entity_name</TEXTFIELD>
+			</GRID>
+			<ACTIONS>
+				<ACTION approval="2" fnct="upd_orders_status">Collected/Delivered</ACTION>
+			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,staff,finance_manager" keyfield="order_id" name="All Orders" orderby="order_date DESC" tab.count="count(order_id)" table="vw_orders">
 			<TEXTFIELD w="75" title="ID">order_id</TEXTFIELD>
