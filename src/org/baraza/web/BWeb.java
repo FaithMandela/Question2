@@ -537,13 +537,22 @@ public class BWeb {
 			boolean hasForm = false;
 			for(BElement el : view.getElements()) {
 				String elName = el.getName();
-				if(Arrays.binarySearch(deskTypes, elName)>=0) j++;
+				if(Arrays.binarySearch(deskTypes, elName) >= 0) j++;
 				if(elName.equals("FORM") && el.getAttribute("new", "true").equals("true")) {
 					if(!hasForm) fv = j;
 					hasForm = true;
 				}
+
+				if(elName.equals("ACCORDION") && el.getAttribute("new", "true").equals("true")) {
+					for(BElement ell : el.getElements()) {
+						if(ell.getName().equals("FORM") && ell.getAttribute("new", "true").equals("true")) {
+							if(!hasForm) fv = j;
+							hasForm = true;
+						}
+					}
+				}
 			}
-			
+
 			String did = "";
 			if(dataItem != null) did = "&data=" + dataItem;
 			
@@ -808,10 +817,11 @@ public class BWeb {
 		String formLinkData = "";
 
 		int vds = viewKeys.size();
+System.out.println("BASE : 2010 " + vds);
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
-			
+System.out.println("BASE : 2020 " + linkData);
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");
@@ -861,7 +871,7 @@ public class BWeb {
 			webbody.close();
 		} else if(view.getName().equals("ACCORDION")) {
 			BAccordion accordion = new BAccordion(db, view);
-			body += accordion.getAccordion(request, wheresql, formLinkData);
+			body += accordion.getAccordion(request, linkData, formLinkData, viewData);
 			accordionJs = accordion.getAccordionJs();
 		} else if(view.getName().equals("CROSSTAB")) {
 			BCrossTab crossTab = new BCrossTab(db, view, wheresql, sortby);
@@ -1244,7 +1254,6 @@ System.out.println("repository : " + repository);
 			String elName = (String)e.nextElement();
 			reqParams.put(elName, request.getParameterValues(elName));
 		}
-		
 		updateFormData(request, reqParams);
 	}
 	
@@ -1375,6 +1384,12 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 			}
 			
 			saveMsg = qAccd.updateFields(reqParams, viewData, request.getRemoteAddr(), linkData);
+			
+			// Set the jump point
+			dataItem = qAccd.getKeyField();
+			viewData.set(vds - 1, dataItem);
+			webSession.setAttribute("loaddata", dataItem);
+			
 			qAccd.close();
 		}
 	}

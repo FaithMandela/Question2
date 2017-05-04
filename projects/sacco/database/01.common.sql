@@ -73,7 +73,6 @@ CREATE INDEX departments_ln_department_id ON departments (ln_department_id);
 CREATE INDEX departments_org_id ON departments (org_id);
 INSERT INTO departments (org_id, department_id, ln_department_id, department_name) VALUES (0, 0, 0, 'Board of Directors'); 
 
-
 CREATE TABLE fiscal_years (
 	fiscal_year_id			serial primary key,
 	fiscal_year				varchar(9) not null,

@@ -582,7 +582,7 @@ public class BWebBody extends BQuery {
 			while (cmbrs.moveNext()) {
 				response.append("<option");
 				if(eof) {
-					if(getString(el.getValue())!=null) {
+					if(getString(el.getValue()) != null) {
 						if(getString(el.getValue()).equals(cmbrs.getString(lpkey)))
 							response.append(" selected='selected'");
 					}
@@ -775,7 +775,11 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("FILE")) {
 				response.append("<input class='form-control' type='file' name='" + el.getValue() + "' size='50'/></td>\n");
 		} else if(el.getName().equals("TEXTDATE")) {
-			response.append("<div class='input-group input-medium date date-picker' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>\n");
+			if(el.getAttribute("type", "1").equals("2")) {
+				response.append("<div class='input-group input-medium date date-picker2' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>\n");
+			} else {
+				response.append("<div class='input-group input-medium date date-picker' data-date-format='dd-mm-yyyy' data-date-viewmode='years'>\n");
+			}
 
 			response.append("<input class='form-control' name='" + el.getValue() + "'");
 			if(el.getAttribute("required","false").equals("true")) response.append(" required = 'true' ");	

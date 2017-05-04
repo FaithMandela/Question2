@@ -302,22 +302,32 @@ CREATE TABLE skill_types (
 CREATE INDEX skill_types_skill_category_id ON skill_types (skill_category_id);
 CREATE INDEX skill_types_org_id ON skill_types(org_id);
 
+CREATE TABLE skill_levels (
+	skill_level_id			serial primary key,
+	org_id					integer references orgs,
+	skill_level_name		varchar(50),
+	details					text
+);
+CREATE INDEX skill_levels_org_id ON skill_levels(org_id);
+
 CREATE TABLE skills (
 	skill_id				serial primary key,
 	entity_id				integer references entitys,
-	skill_type_id			integer references skill_types,
+	skill_type_id			integer not null references skill_types,
+	skill_level_id			integer not null references skill_levels,
 	org_id					integer references orgs,
 	state_skill				varchar(50),
-	skill_level				integer default 1 not null,
 	aquired					boolean default false not null,
 	training_date			date,
 	trained					boolean default false not null,
 	training_institution	varchar(240),
 	training_cost			real,
-	details					text
+	details					text,
+	UNIQUE(entity_id, skill_type_id)
 );
 CREATE INDEX skills_entity_id ON skills (entity_id);
 CREATE INDEX skills_skill_type_id ON skills (skill_type_id);
+CREATE INDEX skills_skill_level_id ON skills (skill_level_id);
 CREATE INDEX skills_org_id ON skills(org_id);
 
 CREATE TABLE identification_types (
@@ -339,7 +349,8 @@ CREATE TABLE identifications (
 	starting_from			date,
 	expiring_at				date,
 	place_of_issue			varchar(50),
-	details					text
+	details					text,
+	UNIQUE(entity_id, identification_type_id, nationality)
 );
 CREATE INDEX identifications_entity_id ON identifications(entity_id);
 CREATE INDEX identifications_identification_type_id ON identifications(identification_type_id);
@@ -1011,18 +1022,18 @@ CREATE VIEW vw_skill_types AS
 CREATE VIEW vw_skills AS
 	SELECT vw_skill_types.skill_category_id, vw_skill_types.skill_category_name, vw_skill_types.skill_type_id, 
 		vw_skill_types.basic, vw_skill_types.intermediate, vw_skill_types.advanced, 
-		entitys.entity_id, entitys.entity_name, skills.skill_id, skills.skill_level, skills.aquired, skills.training_date, 
-		skills.org_id, skills.trained, skills.training_institution, skills.training_cost, skills.details,
+		entitys.entity_id, entitys.entity_name, 
+		skill_levels.skill_level_id, skill_levels.skill_level_name,
+		skills.skill_id, skills.aquired, skills.training_date, 
+		skills.org_id, skills.trained, skills.training_institution, skills.training_cost, 
+		skills.details,
 		
 		(CASE WHEN vw_skill_types.skill_type_id = 0 THEN skills.state_skill
-			ELSE vw_skill_types.skill_type_name END) as skill_type_name,
+			ELSE vw_skill_types.skill_type_name END) as skill_type_name
 		
-		(CASE WHEN skill_level = 1 THEN 'Basic' WHEN skill_level = 2 THEN 'Intermediate' 
-			WHEN skill_level = 3 THEN 'Advanced' ELSE 'None' END) as skill_level_name,
-		(CASE WHEN skill_level = 1 THEN vw_skill_types.Basic WHEN skill_level = 2 THEN vw_skill_types.Intermediate 
-			WHEN skill_level = 3 THEN vw_skill_types.Advanced ELSE 'None' END) as skill_level_details
 	FROM skills INNER JOIN entitys ON skills.entity_id = entitys.entity_id
-		INNER JOIN vw_skill_types ON skills.skill_type_id = vw_skill_types.skill_type_id;
+		INNER JOIN vw_skill_types ON skills.skill_type_id = vw_skill_types.skill_type_id
+		INNER JOIN skill_levels ON skills.skill_level_id = skill_levels.skill_level_id;
 
 CREATE VIEW vw_identifications AS
 	SELECT entitys.entity_id, entitys.entity_name, identification_types.identification_type_id, identification_types.identification_type_name, 
@@ -1411,9 +1422,9 @@ DECLARE
 	v_org_id				integer;
 	v_entity_id				integer;
 	v_entity_type_id		integer;
+	v_sys_email_id			integer;
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
-		
 		IF(NEW.entity_id IS NULL) THEN
 			SELECT entity_id INTO v_entity_id
 			FROM entitys
@@ -1442,9 +1453,12 @@ BEGIN
 				RAISE EXCEPTION 'The username exists use a different one or reset password for the current one';
 			END IF;
 		END IF;
+		
+		SELECT sys_email_id INTO v_sys_email_id FROM sys_emails
+		WHERE (use_type = 1) AND (org_id = NEW.org_id);
 
-		INSERT INTO sys_emailed (sys_email_id, table_id, table_name)
-		VALUES (1, NEW.entity_id, 'applicant');
+		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type)
+		VALUES (v_sys_email_id, NEW.entity_id, 'applicant', 1);
 	ELSIF (TG_OP = 'UPDATE') THEN
 		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
 		WHERE entity_id = NEW.entity_id;
@@ -1459,12 +1473,12 @@ CREATE TRIGGER ins_applicants BEFORE INSERT OR UPDATE ON applicants
 
 CREATE OR REPLACE FUNCTION ins_employees() RETURNS trigger AS $$
 DECLARE
-	v_entity_type_id	integer;
-	v_use_type			integer;
-	v_org_sufix 		varchar(4);
-	v_first_password	varchar(12);
-	v_user_count		integer;
-	v_user_name			varchar(120);
+	v_entity_type_id		integer;
+	v_use_type				integer;
+	v_org_sufix 			varchar(4);
+	v_first_password		varchar(12);
+	v_user_count			integer;
+	v_user_name				varchar(120);
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		IF(NEW.entity_id IS NULL) THEN
@@ -1499,8 +1513,8 @@ BEGIN
 				v_user_name, 'staff',
 				v_first_password, md5(v_first_password));
 				
-			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
-			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys'
+			INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
+			SELECT org_id, sys_email_id, NEW.entity_id, 'entitys', 1
 			FROM sys_emails
 			WHERE (use_type = 3) AND (org_id = NEW.org_id);
 		END IF;
@@ -1667,7 +1681,8 @@ BEGIN
 	
 	SELECT count(address_id) INTO v_address
 	FROM vw_address
-	WHERE (table_name = 'applicant') AND (is_default = true) AND (table_id  = v_entity_id);
+	WHERE ((table_name = 'applicant') OR (table_name = 'employees'))
+		AND (is_default = true) AND (table_id  = v_entity_id);
 	IF(v_address is null) THEN v_address = 0; END IF;
 	
 	SELECT count(education_id) INTO c_education_id
@@ -1712,7 +1727,7 @@ BEGIN
 		WHERE (use_type = 10) AND (org_id = reca.org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 10);
+		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 1);
 		
 		msg := 'Added Job application';
 	END IF;
@@ -1743,7 +1758,7 @@ BEGIN
 		WHERE (use_type = 11) AND (org_id = v_org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, v_org_id, v_intern_id, 'interns', 11);
+		VALUES (v_sys_email_id, v_org_id, v_intern_id, 'interns', 1);
 		
 		msg := 'Added internship application';
 	ELSE

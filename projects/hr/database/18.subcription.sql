@@ -223,6 +223,10 @@ BEGIN
 		INSERT INTO kin_types (org_id, kin_type_name)
 		SELECT NEW.org_id, kin_type_name
 		FROM kin_types WHERE org_id = 1;
+		
+		INSERT INTO skill_levels (org_id, skill_level_name)
+		SELECT 1, skill_level_name
+		FROM skill_levels WHERE org_id = 0 ORDER BY skill_level_id;
 
 		INSERT INTO education_class (org_id, education_class_name)
 		SELECT NEW.org_id, education_class_name
@@ -270,14 +274,14 @@ BEGIN
 		FROM sys_emails
 		WHERE org_id = 1;
 		
-		INSERT INTO accounts_class (org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name)
-		SELECT NEW.org_id, accounts_class_no, chat_type_id, chat_type_name, accounts_class_name
-		FROM accounts_class
+		INSERT INTO account_class (org_id, account_class_no, chat_type_id, chat_type_name, account_class_name)
+		SELECT NEW.org_id, account_class_no, chat_type_id, chat_type_name, account_class_name
+		FROM account_class
 		WHERE org_id = 1;
 		
-		INSERT INTO account_types (org_id, accounts_class_id, account_type_no, account_type_name)
-		SELECT a.org_id, a.accounts_class_id, b.account_type_no, b.account_type_name
-		FROM accounts_class a INNER JOIN vw_account_types b ON a.accounts_class_no = b.accounts_class_no
+		INSERT INTO account_types (org_id, account_class_id, account_type_no, account_type_name)
+		SELECT a.org_id, a.account_class_id, b.account_type_no, b.account_type_name
+		FROM account_class a INNER JOIN vw_account_types b ON a.account_class_no = b.account_class_no
 		WHERE (a.org_id = NEW.org_id) AND (b.org_id = 1);
 		
 		INSERT INTO accounts (org_id, account_type_id, account_no, account_name)

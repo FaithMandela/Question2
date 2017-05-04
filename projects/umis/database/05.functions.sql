@@ -1016,8 +1016,9 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION aft_instructors() RETURNS trigger AS $$
 DECLARE
-	v_role		varchar(240);
-	v_no_org	boolean;
+	v_entity_type_id		integer;
+	v_role					varchar(240);
+	v_no_org				boolean;
 BEGIN
 
 	v_role := 'lecturer';
@@ -1039,8 +1040,10 @@ BEGIN
 	END IF;
 
 	IF(TG_OP = 'INSERT')THEN
-		INSERT INTO entitys (org_id, entity_type_id, user_name, entity_name, Entity_Leader, Super_User, no_org, primary_email, function_role)
-		VALUES (NEW.org_id, 11, NEW.instructorid, NEW.instructorname, false, false, false, NEW.email, v_role);
+		SELECT entity_type_id INTO v_entity_type_id FROM entity_types WHERE org_id = NEW.org_id;
+		
+		INSERT INTO entitys (org_id, entity_type_id, user_name, entity_name, Entity_Leader, Super_User, no_org, primary_email, function_role, use_key_id)
+		VALUES (NEW.org_id, v_entity_type_id, NEW.instructorid, NEW.instructorname, false, false, false, NEW.email, v_role, 9);
 	ELSE
 		UPDATE entitys SET function_role = v_role, no_org = v_no_org WHERE user_name = NEW.instructorid;
 	END IF;
