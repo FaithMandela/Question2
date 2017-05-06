@@ -128,6 +128,7 @@
 			<TEXTFIELD w="150" title="Tel No">telno</TEXTFIELD>
 			<TEXTFIELD w="50" title="PCC">pcc</TEXTFIELD>
 			<TEXTFIELD w="75" title="Account Manager">account_manager_name</TEXTFIELD>
+			<JASPER name="Client Assets" reportfile="client_assets_list.jasper"></JASPER>
 			<GRID name="Client Assets" keyfield="client_asset_id" linkfield="client_id" table="vw_client_assets">
 				<TEXTFIELD w="75" title="Asset Type Name">asset_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Manufacturer Name">manufacturer_name</TEXTFIELD>
