@@ -211,14 +211,7 @@
 			<!-- END SIDEBAR MENU -->
 		</div>
 	</div>
-    
-    
-    
-    
-    
-    
-    
-    
+
 	<div class="page-content-wrapper">
 		<div class="page-content">
 
@@ -230,6 +223,8 @@
 					<div class="tabbable tabbable-tabdrop"><%= web.getTabs() %></div>
 					<% if(opResult != null) out.println("<div style='color:#FF0000'>" + opResult + "</div>"); %>
 					<%= web.getSaveMsg() %>
+
+					<div id='validationMessage'></div>
 
 					<div class="portlet box green-seagreen">
 						<div class="portlet-title">
@@ -344,13 +339,13 @@
 <script src="./assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript" ></script>
 
 <script src="./assets/global/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" type="text/javascript"></script>
-<script src="./assets/global/plugins/select2/select2.min.js" type="text/javascript"></script>
 
 <!-- IMPORTANT! fullcalendar depends on jquery-ui.min.js for drag & drop support -->
 <script src="./assets/global/plugins/morris/morris.min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/morris/raphael-min.js" type="text/javascript"></script>
 <script src="./assets/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
 <!-- END PAGE LEVEL PLUGINS -->
+
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <script src="./assets/global/scripts/metronic.js" type="text/javascript"></script>
 <script src="./assets/admin/layout4/scripts/layout.js" type="text/javascript"></script>
@@ -361,100 +356,94 @@
 <script src="./assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js" type="text/javascript" ></script>
 
 <!-- END PAGE LEVEL SCRIPTS -->
-
 <script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
 
-	<script>
-		jQuery(document).ready(function() {    
-            
-		   Metronic.init(); // init metronic core componets
-		   Layout.init(); // init layout
-		   //Demo.init(); // init demo features 
-		   //Index.init(); // init index page
-		   //Tasks.initDashboardWidget(); // init tash dashboard widget  
-		   //ComponentsPickers.init();
-            
-            $('.date-picker').datepicker();
-            
-            //alert($(".mask_currency").length);
-            
-            $('.multi-select').multiSelect();
-            
-            /*$(".mask_currency").each(function(i, obj){
-                var mask = $(this).attr('data-mask');
-                $(this).inputmask(mask, {
-                    numericInput: true
-                });
-            });*/
+<script type="text/javascript" src="./assets/js/email_validation.js"></script>
 
-            $('.select2me').select2({
-                placeholder: "Select an option",
-                allowClear: true
-            });
-		});
-	</script>
-
-	<script>
-	<% if(web.isGrid()) { %>
-		var jqcf = <%= web.getJSONHeader() %>;
-
-        jqcf.rowNum = 20;
-        jqcf.height = 300;
-		jqcf.autoencode = false;
+<script>
+	jQuery(document).ready(function() {    
         
-        <% if(actionOp != null) {	%>
-		  jqcf.multiselect = true;
-	    <% } %>
+		Metronic.init(); // init metronic core componets
+		Layout.init(); // init layout
 
-		jQuery("#jqlist").jqGrid(jqcf);
-		jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false,add:false,del:false});
+		$('.date-picker').datepicker();
 
-        $('#btSearch').click(function(){
-            var filtername = $("#filtername").val();
-			var filtertype = $("#filtertype").val();
-			var filtervalue = $("#filtervalue").val();
-			var filterand = $("#filterand").is(':checked');
-			var filteror = $("#filteror").is(':checked');
+		$('.multi-select').multiSelect();
 
-			console.log(filterand);
-			$.post("ajax?fnct=filter", {filtername: filtername, filtertype: filtertype, filtervalue: filtervalue, filterand: filterand, filteror: filteror}, function(data){
-				$('#jqlist').trigger('reloadGrid');
-            });
-		});
-        
-		$("#jqlist").dblclick(function(){
-			var rowId =$("#jqlist").jqGrid('getGridParam','selrow');  
-			var rowData = jQuery("#jqlist").getRowData(rowId);
-			var colData = rowData['CL'];
+	});
+</script>
 
-			location.replace(colData);
-		});                                 
-        
-        $('#btnAction').click(function(){
-            var operation = $("#operation").val();
+<script>
 
-            var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
-            for (i = 0, n = selIds.length; i < n; i++) {
-                var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
-                var begin = coldata.lastIndexOf("=");
-                var end = coldata.length;
-                var id = coldata.substring(begin + 1, end);
-                cellValues.push(id);
-            }
-            if(cellValues.join(",") == ""){
-                alert('No row Selected');
-            } else {
-                //alert(cellValues.join(",")); 
-                //cellValues.join(",") returns 1,2,3,4
-                $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
-					$('#jqlist').trigger('reloadGrid');
-                }, "JSON");
+	//Calls validation functions on submit
+	$("#baraza").submit(function(event) {
+		var statusMessage = $("#validationMessage");
+		var applicantEmail = $("#applicant_email");
 
-            }            
+		var formValid = validate(applicantEmail, statusMessage, applicantEmail.val());
+		if(!formValid) event.preventDefault();
+	});
+
+<% if(web.isGrid()) { %>
+	var jqcf = <%= web.getJSONHeader() %>;
+
+    jqcf.rowNum = 20;
+    jqcf.height = 300;
+	jqcf.autoencode = false;
+    
+    <% if(actionOp != null) {	%>
+	  jqcf.multiselect = true;
+    <% } %>
+
+	jQuery("#jqlist").jqGrid(jqcf);
+	jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false,add:false,del:false});
+
+    $('#btSearch').click(function(){
+        var filtername = $("#filtername").val();
+		var filtertype = $("#filtertype").val();
+		var filtervalue = $("#filtervalue").val();
+		var filterand = $("#filterand").is(':checked');
+		var filteror = $("#filteror").is(':checked');
+
+		console.log(filterand);
+		$.post("ajax?fnct=filter", {filtername: filtername, filtertype: filtertype, filtervalue: filtervalue, filterand: filterand, filteror: filteror}, function(data){
+			$('#jqlist').trigger('reloadGrid');
         });
-	<% } %>
-	</script>
+	});
+    
+	$("#jqlist").dblclick(function(){
+		var rowId =$("#jqlist").jqGrid('getGridParam','selrow');  
+		var rowData = jQuery("#jqlist").getRowData(rowId);
+		var colData = rowData['CL'];
+
+		location.replace(colData);
+	});                                 
+    
+    $('#btnAction').click(function(){
+        var operation = $("#operation").val();
+
+        var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
+        for (i = 0, n = selIds.length; i < n; i++) {
+            var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
+            var begin = coldata.lastIndexOf("=");
+            var end = coldata.length;
+            var id = coldata.substring(begin + 1, end);
+            cellValues.push(id);
+        }
+        if(cellValues.join(",") == ""){
+            alert('No row Selected');
+        } else {
+            //alert(cellValues.join(",")); 
+            //cellValues.join(",") returns 1,2,3,4
+            $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
+				$('#jqlist').trigger('reloadGrid');
+            }, "JSON");
+
+        }            
+    });
+<% } %>
+</script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->
