@@ -13,6 +13,7 @@
 			<MENU name="Journals">35</MENU>
 			<MENU name="Entitys">20</MENU>
 			<MENU name="Stock Movement">80</MENU>
+			<MENU name="Simple Sales">24</MENU>
 			<MENU name="Petty Cash">90</MENU>
 			<MENU name="Petty Cash Request">92</MENU>
 			<MENU name="Issue Tracking">95</MENU>
@@ -2960,5 +2961,57 @@
 			<JASPER name="Bidders" reportfile="vw_bidders.jasper"></JASPER>
 		</GRID>
 		<JASPER name="Tender Types" reportfile="tender_types.jasper"></JASPER>
+	</DESK>
+	<DESK w="700" name="Simple Sales" key="24" h="550">
+		<GRID name="To Sell" keyfield="ss_item_id" orderby="ss_item_id desc" table="vw_ss_items" where="(sold = false)">
+			<TEXTFIELD w="75" title="SS Item ID">ss_item_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Type">ss_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item">ss_item_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Purchase Date">purchase_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Purchase Price">purchase_price</TEXTDECIMAL>
+			<FORM name="Simple Sales" keyfield="ss_item_id" table="ss_items">
+				<COMBOBOX w="430" title="SS Type" lptable="ss_types" y="10" h="20" x="10" lpfield="ss_type_name">ss_type_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Item" y="30" h="20" x="10">ss_item_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Purchase Date" y="50" h="20" x="10">purchase_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Purchase Price" y="50" h="20" x="290">purchase_price</TEXTDECIMAL>
+				<TEXTDATE w="150" title="Sale Date" y="70" h="20" x="10">sale_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Sale Price" y="70" h="20" x="290">sale_price</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Sold" y="90" h="20" x="10">sold</CHECKBOX>
+				<TEXTAREA w="430" tab="Description" y="1" h="70" x="10">description</TEXTAREA>
+				<PICTURE w="430" tab="Picture" access="ob" y="1" h="20" x="10">picture</PICTURE>
+				<TEXTAREA w="430" tab="Details" y="1" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="Sales" keyfield="ss_item_id" orderby="ss_item_id desc" table="vw_ss_items" where="(sold = true)">
+			<TEXTFIELD w="75" title="SS Item ID">ss_item_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Type">ss_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Item">ss_item_name</TEXTFIELD>
+			<TEXTDATE w="75" title="Purchase Date">purchase_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Purchase Price">purchase_price</TEXTDECIMAL>
+			<TEXTDATE w="75" title="Sale Date">sale_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Sale Price">sale_price</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Gross Margin">gross_margin</TEXTDECIMAL>
+			<FORM name="Simple Sales" keyfield="ss_item_id" table="ss_items">
+				<COMBOBOX w="430" title="SS Type" lptable="ss_types" y="10" h="20" x="10" lpfield="ss_type_name">ss_type_id</COMBOBOX>
+				<TEXTFIELD w="430" title="Item" y="30" h="20" x="10">ss_item_name</TEXTFIELD>
+				<TEXTDATE w="150" title="Purchase Date" y="50" h="20" x="10">purchase_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Purchase Price" y="50" h="20" x="290">purchase_price</TEXTDECIMAL>
+				<TEXTDATE w="150" title="Sale Date" y="70" h="20" x="10">sale_date</TEXTDATE>
+				<TEXTDECIMAL w="150" title="Sale Price" y="70" h="20" x="290">sale_price</TEXTDECIMAL>
+				<CHECKBOX w="150" title="Sold" y="90" h="20" x="10">sold</CHECKBOX>
+				<TEXTAREA w="430" tab="Description" y="1" h="70" x="10">description</TEXTAREA>
+				<PICTURE w="430" tab="Picture" access="ob" y="1" h="20" x="10">picture</PICTURE>
+				<TEXTAREA w="430" tab="Details" y="1" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<GRID name="SS Types" keyfield="ss_type_id" table="ss_types">
+			<TEXTFIELD w="75" title="SS Type ID">ss_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="SS Type Name">ss_type_name</TEXTFIELD>
+			<FORM name="SS Types" keyfield="ss_type_id" table="ss_types">
+				<TEXTFIELD w="430" title="SS Type Name" y="10" h="20" x="10">ss_type_name</TEXTFIELD>
+				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+			</FORM>
+		</GRID>
+		<JASPER name="Items" reportfile="vw_ss_items.jasper"></JASPER>
 	</DESK>
 </APP>

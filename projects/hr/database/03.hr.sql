@@ -1727,7 +1727,7 @@ BEGIN
 		WHERE (use_type = 10) AND (org_id = reca.org_id);
 		
 		INSERT INTO sys_emailed (sys_email_id, org_id, table_id, table_name, email_type)
-		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 1);
+		VALUES (v_sys_email_id, reca.org_id, v_application_id, 'applications', 10);
 		
 		msg := 'Added Job application';
 	END IF;

@@ -49,7 +49,7 @@ CREATE OR REPLACE VIEW vw_gurrantors AS
 CREATE VIEW vw_members AS
 	SELECT vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code, 
-		entitys.entity_id, entitys.entity_name, 
+		entitys.entity_id, entitys.entity_name, entitys.user_name, entitys.date_enroled,
 		members.recruiter_id, recruiter.entity_name as recruiter_name, 
 		members.org_id, members.person_title, members.full_name, 
 		members.surname, members.first_name, members.middle_name, members.date_of_birth, 

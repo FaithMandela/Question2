@@ -17,8 +17,8 @@
 			<TEXTFIELD w="430" title="Website" h="20" y="150" x="10">website</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Name of Primary Contact*" h="20" y="170" x="10" span="true">primary_contact</TEXTFIELD>
 			<TEXTFIELD w="430" required="true" title="Job Title *" h="20" y="190" x="10">job_title</TEXTFIELD>
-			<TEXTFIELD w="430" required="true" title="Primary Contact Email *" h="20" y="210" x="10" span="true">primary_email</TEXTFIELD>
-			<TEXTFIELD w="430" required="true" title="Confirm Email *" h="20" y="210" x="10">confirm_email</TEXTFIELD>
+			<TEXTFIELD w="430" required="true" id="primary_email" title="Primary Contact Email *" h="20" y="210" x="10" span="true" >primary_email</TEXTFIELD>
+			<TEXTFIELD w="430" required="true" id="confirm_email" title="Confirm Email *" h="20" y="210" x="10">confirm_email</TEXTFIELD>
 			<TEXTAREA w="430" title="Details" h="70" y="290" x="10">details</TEXTAREA>
 			<FORMVIEW name="Subscription" keyfield="subscription_id" linkfield="subscription_id" table="vw_subscriptions">
 				<TEXTFIELD w="430" fnct="'Thanks you for your application, check your email for login details'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
@@ -38,14 +38,5 @@
 		</FORM>
 	</DESK>
 
-
-	<DESK w="700" name="Reset Passwords" key="2" h="500">
-		<FORM name="Reset Passwords" keyfield="sys_reset_id" table="sys_reset" edit="false" delete="false" audit="false" fornew="true" noorg="true" save.button="Reset Password">
-			<TEXTFIELD w="430" title="Request Email" h="20" y="30" x="10">request_email</TEXTFIELD>
-			<FORMVIEW name="Sys Reset" keyfield="sys_reset_id" table="sys_reset" linkfield="sys_reset_id" noorg="true">
-				<TEXTFIELD w="430" fnct="'Your email has been sent to your email.'::text" title="Submit" y="110" h="20" x="10">disp</TEXTFIELD>
-			</FORMVIEW>		
-		</FORM>
-	</DESK>
 
 </APP>

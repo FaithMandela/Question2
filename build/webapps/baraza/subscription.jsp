@@ -220,6 +220,8 @@
 
 					<div class="portlet box purple">
 						<div class="portlet-title">
+							<div id='validationMessage'></div>
+
 							<div class="caption">
 								<i class="fa fa-cogs"></i><%= web.getViewName() %>
 							</div>
@@ -352,96 +354,88 @@
 <script type="text/javascript" src="./assets/jqgrid/js/i18n/grid.locale-en.js"></script>
 <script type="text/javascript" src="./assets/jqgrid/js/jquery.jqGrid.min.js"></script>
 
-	<script>
-		jQuery(document).ready(function() {    
-            
-		   Metronic.init(); // init metronic core componets
-		   Layout.init(); // init layout
-		   //Demo.init(); // init demo features 
-		   //Index.init(); // init index page
-		   //Tasks.initDashboardWidget(); // init tash dashboard widget  
-		   //ComponentsPickers.init();
-            
-            $('.date-picker').datepicker();
-            
-            //alert($(".mask_currency").length);
-            
-            $('.multi-select').multiSelect();
-            
-            /*$(".mask_currency").each(function(i, obj){
-                var mask = $(this).attr('data-mask');
-                $(this).inputmask(mask, {
-                    numericInput: true
-                });
-            });*/
+<script type="text/javascript" src="./assets/js/email_validation.js"></script>
 
-            $('.select2me').select2({
-                placeholder: "Select an option",
-                allowClear: true
-            });
-		});
-	</script>
+<script>
+	jQuery(document).ready(function() {    
+		Metronic.init(); // init metronic core componets
+		Layout.init(); // init layout
 
-	<script>
-	<% if(web.isGrid()) { %>
-		var jqcf = <%= web.getJSONHeader() %>;
+		$('.date-picker').datepicker();
 
-        jqcf.rowNum = 20;
-        jqcf.height = 300;
-		jqcf.autoencode = false;
-        
-        <% if(actionOp != null) {	%>
-		  jqcf.multiselect = true;
-	    <% } %>
+		$('.multi-select').multiSelect();
+	});
 
-		jQuery("#jqlist").jqGrid(jqcf);
-		jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false,add:false,del:false});
+	//Calls validation functions on submit
+	$("#baraza").submit(function(event) {
+		var statusMessage = $("#validationMessage");
+		var primaryEmail = $("#primary_email");
+		var confirmEmail = $("#confirm_email");
 
-        $('#btSearch').click(function(){
-            var filtername = $("#filtername").val();
-			var filtertype = $("#filtertype").val();
-			var filtervalue = $("#filtervalue").val();
-			var filterand = $("#filterand").is(':checked');
-			var filteror = $("#filteror").is(':checked');
+		var formValid = validate(primaryEmail, statusMessage, primaryEmail.val());
+		if(formValid) formValid = emailMatch(primaryEmail.val(), confirmEmail.val(), statusMessage, confirmEmail);
+		if(!formValid) event.preventDefault();
+	});
 
-			console.log(filterand);
-			$.post("ajax?fnct=filter", {filtername: filtername, filtertype: filtertype, filtervalue: filtervalue, filterand: filterand, filteror: filteror}, function(data){
-				$('#jqlist').trigger('reloadGrid');
-            });
-		});
-        
-		$("#jqlist").dblclick(function(){
-			var rowId =$("#jqlist").jqGrid('getGridParam','selrow');  
-			var rowData = jQuery("#jqlist").getRowData(rowId);
-			var colData = rowData['CL'];
+<% if(web.isGrid()) { %>
+	var jqcf = <%= web.getJSONHeader() %>;
 
-			location.replace(colData);
-		});                                 
-        
-        $('#btnAction').click(function(){
-            var operation = $("#operation").val();
+    jqcf.rowNum = 20;
+    jqcf.height = 300;
+	jqcf.autoencode = false;
+    
+    <% if(actionOp != null) {	%>
+	  jqcf.multiselect = true;
+    <% } %>
 
-            var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
-            for (i = 0, n = selIds.length; i < n; i++) {
-                var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
-                var begin = coldata.lastIndexOf("=");
-                var end = coldata.length;
-                var id = coldata.substring(begin + 1, end);
-                cellValues.push(id);
-            }
-            if(cellValues.join(",") == ""){
-                alert('No row Selected');
-            } else {
-                //alert(cellValues.join(",")); 
-                //cellValues.join(",") returns 1,2,3,4
-                $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
-					$('#jqlist').trigger('reloadGrid');
-                }, "JSON");
+	jQuery("#jqlist").jqGrid(jqcf);
+	jQuery("#jqlist").jqGrid("navGrid", "#jqpager", {edit:false,add:false,del:false});
 
-            }            
+    $('#btSearch').click(function(){
+        var filtername = $("#filtername").val();
+		var filtertype = $("#filtertype").val();
+		var filtervalue = $("#filtervalue").val();
+		var filterand = $("#filterand").is(':checked');
+		var filteror = $("#filteror").is(':checked');
+
+		console.log(filterand);
+		$.post("ajax?fnct=filter", {filtername: filtername, filtertype: filtertype, filtervalue: filtervalue, filterand: filterand, filteror: filteror}, function(data){
+			$('#jqlist').trigger('reloadGrid');
         });
-	<% } %>
-	</script>
+	});
+    
+	$("#jqlist").dblclick(function(){
+		var rowId =$("#jqlist").jqGrid('getGridParam','selrow');  
+		var rowData = jQuery("#jqlist").getRowData(rowId);
+		var colData = rowData['CL'];
+
+		location.replace(colData);
+	});                                 
+    
+    $('#btnAction').click(function(){
+        var operation = $("#operation").val();
+
+        var $grid = $("#jqlist"), selIds = $grid.jqGrid("getGridParam", "selarrrow"), i, n, cellValues = [];
+        for (i = 0, n = selIds.length; i < n; i++) {
+            var coldata = $grid.jqGrid("getCell", selIds[i], "CL");
+            var begin = coldata.lastIndexOf("=");
+            var end = coldata.length;
+            var id = coldata.substring(begin + 1, end);
+            cellValues.push(id);
+        }
+        if(cellValues.join(",") == ""){
+            alert('No row Selected');
+        } else {
+            //alert(cellValues.join(",")); 
+            //cellValues.join(",") returns 1,2,3,4
+            $.post("ajax?fnct=operation&id=" + operation, {ids: cellValues.join(",")}, function(data) {
+				$('#jqlist').trigger('reloadGrid');
+            }, "JSON");
+
+        }            
+    });
+<% } %>
+</script>
 <!-- END JAVASCRIPTS -->
 </body>
 <!-- END BODY -->

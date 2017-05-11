@@ -987,12 +987,12 @@
 		<JASPER name="Active Member" reportfile="members.jasper"></JASPER>
 		<FILTER w="700" name="New " split="150" type="vert" h="550">
 			<FILTERFORM name="Date Range">
-				<TEXTDATE w="150" title="Starting From" placeholder="12-12-2015" y="10" h="20" x="10">from_date</TEXTDATE>
-				<TEXTDATE w="150" title="Ending" placeholder="12-12-2015" y="10" h="20" x="10">to_date</TEXTDATE>
+				<TEXTDATE w="150" title="Starting From" y="10" h="20" default_fnct="get_start_year" x="10">from_date</TEXTDATE>
+				<TEXTDATE w="150" title="Ending" y="10" h="20" default_fnct="get_end_year" x="290">to_date</TEXTDATE>
 			</FILTERFORM>
-			<JASPER name="Reports" reportfile="new_entitys1.jasper"></JASPER>
+			<JASPER name="Reports" reportfile="members_new.jasper"></JASPER>
 		</FILTER>
-		<JASPER name="Member" reportfile="members.jasper"></JASPER>
+		<JASPER name="All Member" reportfile="members_all.jasper"></JASPER>
 	</DESK>
 	<DESK w="700" name="Transaction Ledger" key="220" h="750">
 		<FILTER w="700" name="Transaction Ledger" split="150" type="horl" key="6" h="550">
