@@ -1192,7 +1192,7 @@
 				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
 			</ACTIONS>
 		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="portal_id = 2 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Broker Sales" orderby="passenger_id DESC " where="portal_id = 2 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1206,7 +1206,7 @@
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="portal_id = 1 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="portal_id = 1 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
@@ -1220,7 +1220,21 @@
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
 		</GRID>
-		<GRID noorg="true" keyfield="passenger_id" name="Insurance Canceled" where="is_valid is false" tab.count="count(passenger_id)" table="vw_passengers">
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Direct Sales" orderby="passenger_id DESC " where="portal_id = 3 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+		</GRID>
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Insurance Canceled" where="is_valid is false" tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Agency Name">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
@@ -1492,6 +1506,20 @@
 			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+		</GRID>
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Direct Sales" orderby="passenger_id DESC " where="portal_id = 3 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
+			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Category Name">rate_category_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
