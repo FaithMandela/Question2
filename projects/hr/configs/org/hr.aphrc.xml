@@ -492,7 +492,7 @@
 				<TEXTDATE w="75" title="Application Date" pattern="yyyy-MM-dd">application_date</TEXTDATE>
 				<TEXTFIELD w="75" title="Application Status">approve_status</TEXTFIELD>
 			</GRID>
-			<GRID new="false" name="Available Positions" keyfield="intake_id" edit="false" table="vw_intake" where="(closing_date > current_date)">
+			<GRID new="false" name="Available Positions" keyfield="intake_id" edit="false" table="vw_intake" where="(closing_date >= current_date)">
 				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Opening Date" pattern="yyyy-MM-dd">opening_date</TEXTDATE>
@@ -510,7 +510,7 @@
 		</FILES>
 	</DESK>
 	<DESK w="700" name="Vacancies" key="14" h="550">
-		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorg="true" where="(closing_date > current_date)">
+		<GRID name="Available Positions" keyfield="intake_id" table="vw_intake" noorg="true" where="(closing_date >= current_date)">
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Role">department_role_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
@@ -552,7 +552,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Internships" key="15" h="550">
-		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date > current_date)">
+		<GRID name="Internships Posts" keyfield="internship_id" table="vw_internships" noorg="true" where="(closing_date >= current_date)">
 			<TEXTFIELD w="75" title="Organization">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>

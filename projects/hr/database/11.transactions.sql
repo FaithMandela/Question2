@@ -290,23 +290,23 @@ CREATE INDEX transaction_links_transaction_to ON transaction_links (transaction_
 CREATE INDEX transaction_links_transaction_detail_id ON transaction_links (transaction_detail_id);
 CREATE INDEX transaction_links_transaction_detail_to ON transaction_links (transaction_detail_to);
 
-CREATE TABLE sp_types (
-	sp_type_id				serial primary key,
+CREATE TABLE ss_types (
+	ss_type_id				serial primary key,
 	org_id					integer references orgs,
-	sp_type_name			varchar(120),
+	ss_type_name			varchar(120),
 	details					text
 );
-CREATE INDEX sp_types_org_id ON sp_types (org_id);
+CREATE INDEX ss_types_org_id ON ss_types (org_id);
 
-CREATE TABLE sp_items (
-	sp_item_id				serial primary key,
-	sp_type_id				integer references sp_types,
+CREATE TABLE ss_items (
+	ss_item_id				serial primary key,
+	ss_type_id				integer references ss_types,
 	org_id					integer references orgs,
-	sp_item_name			varchar(120),
+	ss_item_name			varchar(120),
 	picture					varchar(120),
 	description				text,
 
-	purchase_date			date,
+	purchase_date			date not null,
 	purchase_price			real default 0 not null,
 	sale_date				date,
 	sale_price				real default 0 not null,
@@ -314,8 +314,8 @@ CREATE TABLE sp_items (
 	
 	details					text
 );
-CREATE INDEX sp_items_sp_type_id ON sp_items (sp_type_id);
-CREATE INDEX sp_items_org_id ON sp_items (org_id);
+CREATE INDEX ss_items_ss_type_id ON ss_items (ss_type_id);
+CREATE INDEX ss_items_org_id ON ss_items (org_id);
 
 
 CREATE VIEW vw_bank_accounts AS
@@ -589,16 +589,16 @@ CREATE VIEW vw_stock_movement AS
 
 	WHERE (transaction_type_id IN (11, 17, 12)) AND (for_stock = true) AND (approve_status <> 'Draft');
 
-CREATE VIEW vw_sp_items AS
+CREATE VIEW vw_ss_items AS
 	SELECT orgs.org_id, orgs.org_name, 
-		sp_types.sp_type_id, sp_types.sp_type_name, 
-		sp_items.sp_item_id, sp_items.sp_item_name, sp_items.picture, 
-		sp_items.description, sp_items.purchase_date, sp_items.purchase_price, 
-		sp_items.sale_date, sp_items.sale_price, sp_items.sold, sp_items.details,
+		ss_types.ss_type_id, ss_types.ss_type_name, 
+		ss_items.ss_item_id, ss_items.ss_item_name, ss_items.picture, 
+		ss_items.description, ss_items.purchase_date, ss_items.purchase_price, 
+		ss_items.sale_date, ss_items.sale_price, ss_items.sold, ss_items.details,
 
-		(sp_items.sale_price - sp_items.purchase_price) as gross_margin
-	FROM sp_items INNER JOIN sp_types ON sp_items.sp_type_id = sp_types.sp_type_id
-		INNER JOIN orgs ON sp_items.org_id = orgs.org_id;
+		(ss_items.sale_price - ss_items.purchase_price) as gross_margin
+	FROM ss_items INNER JOIN ss_types ON ss_items.ss_type_id = ss_types.ss_type_id
+		INNER JOIN orgs ON ss_items.org_id = orgs.org_id;
 	
 
 CREATE OR REPLACE FUNCTION get_opening_stock(integer, date) RETURNS integer AS $$

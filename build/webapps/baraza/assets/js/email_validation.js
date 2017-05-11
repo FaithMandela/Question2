@@ -14,7 +14,7 @@ function validateEmail(email) {
  */
 function validate(id, divMsgId, email) {
 	var checkEmailStatusOk = "<div style='color:green'><i class='glyphicon glyphicon-ok'></i> Supplied Email is valid</div>";
-	var checkEmailStatusNotOk = "<div style='color:red'><i class='glyphicon glyphicon-remove'> Supplied Email is not valid</div>";
+	var checkEmailStatusNotOk = "<div style='color:red'><i class='glyphicon glyphicon-remove'></i> Supplied Email is not valid</div>";
 	if (validateEmail(email)) {
 		divMsgId.html(checkEmailStatusOk);
 		//Adds success green color on label and input
@@ -40,7 +40,7 @@ function validate(id, divMsgId, email) {
 function emailMatch(emailOneVal, emailTwoVal, divMessage, emailId){
 
 	var checkEmailMatch = "<div style='color:green'><i class='glyphicon glyphicon-ok'></i> Emails Match</div>";
-	var checkEmailNotMatch = "<div style='color:red'><i class='glyphicon glyphicon-remove'> Emails Don't Match</div>";
+	var checkEmailNotMatch = "<div style='color:red'><i class='glyphicon glyphicon-remove'></i> Emails Don't Match</div>";
 
 	if (emailOneVal != emailTwoVal) {
 		divMessage.html(checkEmailNotMatch);

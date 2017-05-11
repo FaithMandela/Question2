@@ -224,13 +224,14 @@
 					<% if(opResult != null) out.println("<div style='color:#FF0000'>" + opResult + "</div>"); %>
 					<%= web.getSaveMsg() %>
 
-					<div id='validationMessage'></div>
-
 					<div class="portlet box green-seagreen">
 						<div class="portlet-title">
 							<div class="caption">
 								<i class="fa fa-cogs"></i><%= web.getViewName() %>
 							</div>
+
+							<div id='validationMessage'></div>
+
 							<div class="tools">
 								<a href="javascript:;" class="collapse">
 								</a>
@@ -372,9 +373,6 @@
 		$('.multi-select').multiSelect();
 
 	});
-</script>
-
-<script>
 
 	//Calls validation functions on submit
 	$("#baraza").submit(function(event) {
