@@ -48,7 +48,8 @@ CREATE TABLE galileo_queues (
 CREATE INDEX galileo_queues_org_id ON galileo_queues (org_id);
 
 CREATE VIEW vw_client_requests AS
-	SELECT entitys.entity_id as client_id, entitys.entity_name as client_name, client_requests.client_request_id, 
+	SELECT entitys.entity_id as client_id, entitys.entity_name as client_name, 
+		client_requests.org_id, client_requests.client_request_id, 
 		client_requests.request_date, client_requests.passanger, client_requests.travel_date, client_requests.return_date, 
 		client_requests.origin, client_requests.destination, client_requests.flight, client_requests.return,
 		client_requests.hotel, client_requests.tour, client_requests.in_transfer, client_requests.out_transfer, 
@@ -62,7 +63,7 @@ CREATE VIEW vw_request_responses AS
 		vw_client_requests.hotel, vw_client_requests.tour, vw_client_requests.in_transfer, vw_client_requests.out_transfer, 
 		vw_client_requests.active, vw_client_requests.finalised, vw_client_requests.details as request_details,
 		entitys.entity_id as consultant_id, entitys.entity_name as consultant_name, 
-		request_responses.request_response_id, request_responses.sent_date, 
+		request_responses.org_id, request_responses.request_response_id, request_responses.sent_date, 
 		request_responses.completed, request_responses.complete_date, request_responses.amount, 
 		request_responses.commision, request_responses.service_fee, request_responses.details
 	FROM request_responses INNER JOIN vw_client_requests ON request_responses.client_request_id = vw_client_requests.client_request_id
