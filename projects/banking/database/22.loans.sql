@@ -85,32 +85,8 @@ CREATE TABLE loan_notes (
 CREATE INDEX loan_notes_loan_id ON loan_notes(loan_id);
 CREATE INDEX loan_notes_org_id ON loan_notes(org_id);
 
-CREATE TABLE loan_activity (
-	loan_activity_id		serial primary key,
-	loan_id					integer references loans,
-	activity_type_id		integer references activity_types,
-	currency_id				integer references currency,
-	org_id					integer references orgs,
-	
-	activity_date			date default current_date not null,
-	value_date				date not null,
-	
-	account_credit			real default 0 not null,
-	account_debit			real default 0 not null,
-	balance					real not null,
-	exchange_rate			real default 1 not null,
-	
-	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'Draft' not null,
-	workflow_table_id		integer,
-	action_date				timestamp,
-
-	details					text
-);
-CREATE INDEX loan_activity_loan_id ON loan_activity(loan_id);
-CREATE INDEX loan_activity_activity_type_id ON loan_activity(activity_type_id);
-CREATE INDEX loan_activity_currency_id ON loan_activity(currency_id);
-CREATE INDEX loan_activity_org_id ON loan_activity(org_id);
+ALTER TABLE account_activity ADD loan_id integer references loans;
+CREATE INDEX account_activity_loan_id ON account_activity(loan_id);
 
 
 CREATE VIEW vw_loans AS
@@ -155,16 +131,14 @@ CREATE VIEW vw_loan_activity AS
 		vw_loans.interest_frequency, vw_loans.disbursed_date, vw_loans.expected_matured_date, vw_loans.matured_date, 
 		activity_types.activity_type_id, activity_types.activity_type_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
-		loan_activity.org_id, loan_activity.loan_activity_id, loan_activity.activity_date, 
-		loan_activity.account_credit, loan_activity.account_debit, loan_activity.balance, 
-		loan_activity.exchange_rate, loan_activity.application_date, loan_activity.approve_status, 
-		loan_activity.workflow_table_id, loan_activity.action_date, loan_activity.details,
-		
-		(loan_activity.account_credit * loan_activity.exchange_rate) as base_credit,
-		(loan_activity.account_debit * loan_activity.exchange_rate) as base_debit
-	FROM loan_activity INNER JOIN vw_loans ON loan_activity.loan_id = vw_loans.loan_id
-		INNER JOIN activity_types ON loan_activity.activity_type_id = activity_types.activity_type_id
-		INNER JOIN currency ON loan_activity.currency_id = currency.currency_id;
+		account_activity.org_id, account_activity.account_activity_id, account_activity.activity_date, 
+		account_activity.value_date,
+		account_activity.account_credit, account_activity.account_debit, account_activity.balance, 
+		account_activity.exchange_rate, account_activity.application_date, account_activity.approve_status, 
+		account_activity.workflow_table_id, account_activity.action_date, account_activity.details
+	FROM account_activity INNER JOIN vw_loans ON account_activity.loan_id = vw_loans.loan_id
+		INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
+		INNER JOIN currency ON account_activity.currency_id = currency.currency_id;
 		
 CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
 DECLARE
