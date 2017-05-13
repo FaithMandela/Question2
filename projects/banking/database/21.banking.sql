@@ -170,6 +170,7 @@ CREATE TABLE account_activity (
 	currency_id				integer references currency,
 	org_id					integer references orgs,
 	
+	link_activity_id		integer not null,
 	activity_date			date default current_date not null,
 	value_date				date not null,
 	
@@ -189,8 +190,10 @@ CREATE INDEX account_activity_deposit_account_id ON account_activity(deposit_acc
 CREATE INDEX account_activity_transfer_account_id ON account_activity(transfer_account_id);
 CREATE INDEX account_activity_activity_type_id ON account_activity(activity_type_id);
 CREATE INDEX account_activity_currency_id ON account_activity(currency_id);
+CREATE INDEX account_activity_link_activity_id ON account_activity(link_activity_id);
 CREATE INDEX account_activity_org_id ON account_activity(org_id);
 
+CREATE SEQUENCE link_activity_id_seq START 101;
 
 CREATE VIEW vw_activity_types AS
 	SELECT vw_accounts.account_type_name, vw_accounts.account_id, vw_accounts.account_no, vw_accounts.account_name,
@@ -247,6 +250,11 @@ CREATE VIEW vw_account_activity AS
 		vw_deposit_accounts.account_number, vw_deposit_accounts.last_closing_date, 
 		activity_types.activity_type_id, activity_types.activity_type_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
+		
+		account_activity.transfer_account_id, trnf_accounts.account_number as trnf_account_number,
+		trnf_accounts.customer_id as trnf_customer_id, trnf_accounts.customer_name as trnf_customer_name,
+		trnf_accounts.product_id as trnf_product_id,  trnf_accounts.product_name as trnf_product_name,
+		
 		account_activity.org_id, account_activity.account_activity_id, account_activity.activity_date, 
 		account_activity.value_date,
 		account_activity.account_credit, account_activity.account_debit, account_activity.balance, 
@@ -254,7 +262,8 @@ CREATE VIEW vw_account_activity AS
 		account_activity.workflow_table_id, account_activity.action_date, account_activity.details
 	FROM account_activity INNER JOIN vw_deposit_accounts ON account_activity.deposit_account_id = vw_deposit_accounts.deposit_account_id
 		INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
-		INNER JOIN currency ON account_activity.currency_id = currency.currency_id;
+		INNER JOIN currency ON account_activity.currency_id = currency.currency_id
+		LEFT JOIN vw_deposit_accounts trnf_accounts ON account_activity.transfer_account_id =  trnf_accounts.deposit_account_id;
 
 	
 CREATE OR REPLACE FUNCTION aft_customers() RETURNS trigger AS $$
@@ -280,13 +289,12 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER aft_customers AFTER INSERT OR UPDATE ON customers
-    FOR EACH ROW EXECUTE PROCEDURE aft_customers();
+	FOR EACH ROW EXECUTE PROCEDURE aft_customers();
 
 CREATE OR REPLACE FUNCTION ins_deposit_accounts() RETURNS trigger AS $$
 DECLARE
 	myrec			RECORD;
 BEGIN
-
 
 	IF(TG_OP = 'INSERT')THEN
 		SELECT interest_rate, interest_frequency, repay_every, min_opening_balance, lockin_period_frequency,
@@ -308,4 +316,17 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_deposit_accounts BEFORE INSERT OR UPDATE ON deposit_accounts
-    FOR EACH ROW EXECUTE PROCEDURE ins_deposit_accounts();
+	FOR EACH ROW EXECUTE PROCEDURE ins_deposit_accounts();
+
+
+CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
+BEGIN
+	NEW.link_activity_id := nextval('link_activity_id_seq');
+    
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_account_activity BEFORE INSERT OR UPDATE ON account_activity
+	FOR EACH ROW EXECUTE PROCEDURE ins_account_activity();
+

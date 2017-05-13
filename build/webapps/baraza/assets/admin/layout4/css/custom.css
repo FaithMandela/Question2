@@ -259,6 +259,11 @@ ui-widget-content {
 	width: 650px;
 }
 
+input.jsgrid-button.jsgrid-insert-button{
+        background-image: url("assets/images/floppy-disk.png");
+        background-repeat:initial;
+}
+
 
 /*  begin total ui widget overwrite */
 
