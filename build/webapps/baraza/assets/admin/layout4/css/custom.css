@@ -260,7 +260,7 @@ ui-widget-content {
 }
 
 input.jsgrid-button.jsgrid-insert-button{
-        background-image: url("assets/images/floppy-disk.png");
+        background-image: url("../img/floppy-disk.png");
         background-repeat:initial;
 }
 

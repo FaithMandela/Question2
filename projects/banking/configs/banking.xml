@@ -806,6 +806,7 @@
 			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
 			<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
 			<FORM cols="2" name="Clients" keyfield="customer_id" table="customers">
+				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="0">business_account</DEFAULT>
 				<COMBOLIST w="70" title="" y="10" h="20" x="70" span="true">person_title
 					<DATA>Miss</DATA>
@@ -825,7 +826,7 @@
 				<TEXTFIELD w="150" title="Zip Code" y="110" h="20" x="290">zip_code</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Birth" y="130" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 				<COMBOBOX w="430" title="Nationality" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="150" h="20" x="10" lpfield="sys_country_name">nationality</COMBOBOX>
-				<COMBOLIST w="150" title="Gender" y="150" ischar="true" h="20" x="10" span="true">gender
+				<COMBOLIST w="150" title="Gender" y="150" h="20" x="10" span="true">gender
 					<DATA key="M">Male</DATA>
 					<DATA key="F">Female</DATA>
 				</COMBOLIST>
@@ -874,6 +875,7 @@
 				<TEXTTIMESTAMP w="75" title="Created">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
+					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<CHECKBOX w="150" title="Active" default="true" y="30" h="20" x="10">is_active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Credit Limit" default="0" y="70" h="20" x="10">credit_limit</TEXTDECIMAL>
@@ -898,6 +900,7 @@
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 				<FORM name="Loans" keyfield="loan_id" linkfield="customer_id" table="loans">
+					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Principal Amount" y="30" h="20" x="290">principal_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Interest Rate" y="50" h="20" x="10">interest_rate</TEXTDECIMAL>
@@ -913,7 +916,8 @@
 					<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 					<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 					<FORM name="Guarantees" keyfield="guarantee_id" linkfield="loan_id" table="guarantees">
-						<COMBOBOX w="430" title="Customer ID" lptable="customers" y="10" h="20" x="10" lpfield="customer_name">customer_id</COMBOBOX>
+						<USERFIELD>entity_id</USERFIELD>
+						<COMBOBOX w="430" title="Customer" lptable="customers" y="10" h="20" x="10" lpfield="customer_name">customer_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Guarantee Amount" y="30" h="20" x="10">guarantee_amount</TEXTDECIMAL>
 						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 					</FORM>
@@ -926,6 +930,7 @@
 					<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 					<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 					<FORM name="Collaterals" keyfield="collateral_id" linkfield="loan_id" table="collaterals">
+						<USERFIELD>entity_id</USERFIELD>
 						<COMBOBOX w="430" title="Collateral Type" lptable="collateral_types" y="10" h="20" x="10" lpfield="collateral_type_name">collateral_type_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Collateral Amount" y="30" h="20" x="10">collateral_amount</TEXTDECIMAL>
 						<CHECKBOX w="150" title="Collateral Received" y="30" h="20" x="290">collateral_received</CHECKBOX>
@@ -965,6 +970,7 @@
 			<TEXTFIELD w="75" title="Applicant Email">client_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
 			<FORM name="Clients" keyfield="customer_id" table="customers">
+				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="1">business_account</DEFAULT>
 				<TEXTFIELD w="430" title="Customer Name" y="10" h="20" x="10">customer_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Identification Number" y="30" h="20" x="10">identification_number</TEXTFIELD>
@@ -1010,6 +1016,7 @@
 				<TEXTTIMESTAMP w="75" title="Created">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
+					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<CHECKBOX w="150" title="Active" default="true" y="30" h="20" x="10">is_active</CHECKBOX>
 					<TEXTDECIMAL w="150" title="Credit Limit" default="0" y="70" h="20" x="10">credit_limit</TEXTDECIMAL>
@@ -1034,6 +1041,7 @@
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Action Date">action_date</TEXTTIMESTAMP>
 				<FORM name="Loans" keyfield="loan_id" linkfield="customer_id" table="loans">
+					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = true)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
 					<TEXTDECIMAL w="150" title="Principal Amount" y="30" h="20" x="290">principal_amount</TEXTDECIMAL>
 					<TEXTDECIMAL w="150" title="Interest Rate" y="50" h="20" x="10">interest_rate</TEXTDECIMAL>
@@ -1049,7 +1057,8 @@
 					<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 					<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 					<FORM name="Guarantees" keyfield="guarantee_id" linkfield="loan_id" table="guarantees">
-						<COMBOBOX w="430" title="Customer ID" lptable="customers" y="10" h="20" x="10" lpfield="customer_name">customer_id</COMBOBOX>
+						<USERFIELD>entity_id</USERFIELD>
+						<COMBOBOX w="430" title="Customer" lptable="customers" y="10" h="20" x="10" lpfield="customer_name">customer_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Guarantee Amount" y="30" h="20" x="10">guarantee_amount</TEXTDECIMAL>
 						<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 					</FORM>
@@ -1062,6 +1071,7 @@
 					<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 					<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 					<FORM name="Collaterals" keyfield="collateral_id" linkfield="loan_id" table="collaterals">
+						<USERFIELD>entity_id</USERFIELD>
 						<COMBOBOX w="430" title="Collateral Type" lptable="collateral_types" y="10" h="20" x="10" lpfield="collateral_type_name">collateral_type_id</COMBOBOX>
 						<TEXTDECIMAL w="150" title="Collateral Amount" y="30" h="20" x="10">collateral_amount</TEXTDECIMAL>
 						<CHECKBOX w="150" title="Collateral Received" y="30" h="20" x="290">collateral_received</CHECKBOX>
@@ -1130,18 +1140,24 @@
 				<TEXTFIELD w="75" title="Activity Type Name">activity_type_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Account Fee ID">account_fee_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Account Fee Name">account_fee_name</TEXTFIELD>
-				<TEXTFIELD w="75" title="Fee Frequency">fee_frequency</TEXTFIELD>
+				<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				<TEXTDECIMAL w="75" title="Fee Amount">fee_amount</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Fee %">fee_ps</TEXTDECIMAL>
+				<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 				<FORM name="Account Fees" keyfield="account_fee_id" linkfield="product_id" table="account_fees">
 					<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
-					<TEXTFIELD w="150" title="Account Fee Name" y="30" h="20" x="10">account_fee_name</TEXTFIELD>
-					<TEXTFIELD w="150" title="Fee Frequency" y="30" h="20" x="290">fee_frequency</TEXTFIELD>
-					<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
-					<TEXTDATE w="150" title="End Date" y="50" h="20" x="290">end_date</TEXTDATE>
-					<TEXTDECIMAL w="150" title="Fee Amount" y="70" h="20" x="10">fee_amount</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+					<COMBOBOX w="430" title="Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="30" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Account Fee Name" y="50" h="20" x="10">account_fee_name</TEXTFIELD>
+					<CHECKBOX w="150" title="Active" y="70" h="20" x="10">is_active</CHECKBOX>
+					<TEXTFIELD w="150" title="Account Number" y="70" h="20" x="290">account_number</TEXTFIELD>
+					<TEXTDATE w="150" title="Start Date" y="90" h="20" x="10">start_date</TEXTDATE>
+					<TEXTDATE w="150" title="End Date" y="90" h="20" x="290">end_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Fee Amount" y="110" h="20" x="10">fee_amount</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Fee %" y="110" h="20" x="290">fee_ps</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="130" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>
@@ -1193,26 +1209,31 @@
 			<TEXTDECIMAL w="75" title="Maximum Balance">maximum_balance</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 			<GRID name="Account Activity" keyfield="account_activity_id" linkfield="deposit_account_id" table="vw_account_activity">
-				<TEXTFIELD w="75" title="Account Activity ID">account_activity_id</TEXTFIELD>
-				<TEXTFIELD w="75" title="Activity Type">activity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Status">activity_status_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="Transfer">transfer_account_no</TEXTFIELD>
 				<TEXTDATE w="75" title="Activity Date">activity_date</TEXTDATE>
 				<TEXTDATE w="75" title="Value Date">value_date</TEXTDATE>
-				<TEXTDECIMAL w="75" title="Account Credit">account_credit</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Account Debit">account_debit</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Credit">account_credit</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Debit">account_debit</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Balance">balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
 				<FORM name="Account Activity" keyfield="account_activity_id" linkfield="deposit_account_id" table="account_activity">
-					<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-					<TEXTDATE w="150" title="Activity Date" y="50" h="20" x="10">activity_date</TEXTDATE>
-					<TEXTDATE w="150" title="Value Date" y="50" h="20" x="290">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" title="Account Credit" y="70" h="20" x="10">account_credit</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Account Debit" y="70" h="20" x="290">account_debit</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Balance" y="90" h="20" x="10">balance</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="90" h="20" x="290">exchange_rate</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="110" h="70" x="10">details</TEXTAREA>
+					<USERFIELD>entity_id</USERFIELD>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="70" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
+					<COMBOBOX w="430" title="Status" lptable="activity_status" orderby="activity_status_id" noorg="true" y="90" h="20" x="10" lpfield="activity_status_name">activity_status_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Transfer Account" y="190" h="20" x="10">transfer_account_no</TEXTFIELD>
+					<TEXTDATE w="150" title="Activity Date" default="now" y="190" h="20" x="290">activity_date</TEXTDATE>
+					<TEXTDATE w="150" title="Value Date" default="now" y="210" h="20" x="10">value_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Credit" y="210" h="20" x="290">account_credit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Debit" y="230" h="20" x="10">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="250" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="310" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Account Notes" keyfield="account_note_id" linkfield="deposit_account_id" table="vw_account_notes">
@@ -1239,24 +1260,32 @@
 			<TEXTDATE w="75" title="Matured Date">matured_date</TEXTDATE>
 			<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 			<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-			<GRID name="Loan Activity" keyfield="loan_activity_id" linkfield="loan_id" table="vw_loan_activity">
-				<TEXTFIELD w="75" title="Loan Activity ID">loan_activity_id</TEXTFIELD>
+			<GRID name="Account Activity" keyfield="account_activity_id" linkfield="loan_id" table="vw_loan_activity">
+				<TEXTFIELD w="75" title="Activity ID">account_activity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Activity">activity_type_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Frequency">activity_frequency_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Status">activity_status_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="Transfer">transfer_account_no</TEXTFIELD>
 				<TEXTDATE w="75" title="Activity Date">activity_date</TEXTDATE>
-				<TEXTDECIMAL w="75" title="Account Credit">account_credit</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Account Debit">account_debit</TEXTDECIMAL>
+				<TEXTDATE w="75" title="Value Date">value_date</TEXTDATE>
+				<TEXTDECIMAL w="75" title="Credit">account_credit</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Debit">account_debit</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Balance">balance</TEXTDECIMAL>
 				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
-				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
-				<FORM name="Loan Activity" keyfield="loan_activity_id" linkfield="loan_id" table="loan_activity">
-					<COMBOBOX w="430" title="Activity Type" lptable="activity_types" y="10" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
-					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-					<TEXTDATE w="150" title="Activity Date" y="50" h="20" x="10">activity_date</TEXTDATE>
-					<TEXTDATE w="150" title="Value Date" y="50" h="20" x="290">value_date</TEXTDATE>
-					<TEXTDECIMAL w="150" title="Account Credit" y="70" h="20" x="10">account_credit</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Account Debit" y="70" h="20" x="290">account_debit</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Exchange Rate" default="1" y="90" h="20" x="290">exchange_rate</TEXTDECIMAL>
-					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+				<FORM name="Account Activity" keyfield="account_activity_id" linkfield="loan_id" table="account_activity">
+					<USERFIELD>entity_id</USERFIELD>
+					<COMBOBOX w="430" title="Type" lptable="activity_types" y="50" h="20" x="10" lpfield="activity_type_name">activity_type_id</COMBOBOX>
+					<COMBOBOX w="430" title="Frequency" lptable="activity_frequency" orderby="activity_frequency_id" noorg="true" y="70" h="20" x="10" lpfield="activity_frequency_name">activity_frequency_id</COMBOBOX>
+					<COMBOBOX w="430" title="Status" lptable="activity_status" orderby="activity_status_id" noorg="true" y="90" h="20" x="10" lpfield="activity_status_name">activity_status_id</COMBOBOX>
+					<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" y="110" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTFIELD w="150" title="Transfer Account" y="190" h="20" x="10">transfer_account_no</TEXTFIELD>
+					<TEXTDATE w="150" title="Activity Date" default="now" y="190" h="20" x="290">activity_date</TEXTDATE>
+					<TEXTDATE w="150" title="Value Date" default="now" y="210" h="20" x="10">value_date</TEXTDATE>
+					<TEXTDECIMAL w="150" title="Credit" y="210" h="20" x="290">account_credit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Debit" y="230" h="20" x="10">account_debit</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Exchange Rate" y="250" h="20" x="10">exchange_rate</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="310" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>

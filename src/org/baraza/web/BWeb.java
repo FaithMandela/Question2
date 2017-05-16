@@ -817,11 +817,10 @@ public class BWeb {
 		String formLinkData = "";
 
 		int vds = viewKeys.size();
-System.out.println("BASE : 2010 " + vds);
 		if(vds > 2) {
 			linkData = viewData.get(vds - 1);
 			formLinkData = viewData.get(vds - 2);
-System.out.println("BASE : 2020 " + linkData);
+
 			// Table linking on parameters
 			String paramLinkData = linkData;
 			String linkParams = view.getAttribute("linkparams");

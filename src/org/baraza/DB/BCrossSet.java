@@ -27,8 +27,6 @@ public class BCrossSet {
 		rows = new HashMap<String, Integer>();
 		setTable = new HashMap<Integer, Object>();
 		
-System.out.println("BASE : 2010 " + dataTable.size());
-		
 		int j = 0;
 		for(Vector<Object> data : dataTable) {
 			String col0 = ""; if(data.get(0) != null) col0 = data.get(0).toString();
