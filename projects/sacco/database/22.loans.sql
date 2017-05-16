@@ -10,7 +10,7 @@ CREATE TABLE loans (
 	account_number			varchar(32) not null,
 	principal_amount		real not null,
 	interest_rate			real not null,
-	interest_frequency		integer not null,
+	repayment_amount		real not null,
 
 	disbursed_date			date,
 	expected_matured_date	date,
@@ -100,13 +100,15 @@ CREATE INDEX account_activity_loan_id ON account_activity(loan_id);
 
 
 CREATE VIEW vw_loans AS
-	SELECT customers.customer_id, customers.customer_name, products.product_id, products.product_name, 
+	SELECT customers.customer_id, customers.customer_name, 
+		vw_products.product_id, vw_products.product_name, 
+		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		loans.org_id, loans.loan_id, loans.account_number, loans.principal_amount, loans.interest_rate, 
-		loans.disbursed_date, loans.expected_matured_date, loans.matured_date, 
+		loans.repayment_amount, loans.disbursed_date, loans.expected_matured_date, loans.matured_date, 
 		loans.application_date, loans.approve_status, loans.workflow_table_id, loans.action_date, loans.details
 	FROM loans INNER JOIN customers ON loans.customer_id = customers.customer_id
-		INNER JOIN products ON loans.product_id = products.product_id
+		INNER JOIN vw_products ON loans.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON loans.activity_frequency_id = activity_frequency.activity_frequency_id;
 		
 CREATE VIEW vw_guarantees AS
@@ -175,7 +177,7 @@ DECLARE
 BEGIN
 
 	IF(TG_OP = 'INSERT')THEN
-		SELECT interest_rate, activity_frequency_id, repay_every, min_opening_balance, lockin_period_frequency,
+		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
 			minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
