@@ -296,7 +296,9 @@ CREATE VIEW vw_account_fees AS
 		INNER JOIN products ON account_fees.product_id = products.product_id;
 
 CREATE VIEW vw_deposit_accounts AS
-	SELECT customers.customer_id, customers.customer_name, products.product_id, products.product_name, 
+	SELECT customers.customer_id, customers.customer_name, 
+		vw_products.product_id, vw_products.product_name, 
+		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		deposit_accounts.org_id, deposit_accounts.deposit_account_id, deposit_accounts.is_active, 
 		deposit_accounts.account_number, deposit_accounts.last_closing_date, 
@@ -305,7 +307,7 @@ CREATE VIEW vw_deposit_accounts AS
 		deposit_accounts.lockedin_until_date, deposit_accounts.application_date, deposit_accounts.approve_status, 
 		deposit_accounts.workflow_table_id, deposit_accounts.action_date, deposit_accounts.details
 	FROM deposit_accounts INNER JOIN customers ON deposit_accounts.customer_id = customers.customer_id
-		INNER JOIN products ON deposit_accounts.product_id = products.product_id
+		INNER JOIN vw_products ON deposit_accounts.product_id = vw_products.product_id
 		INNER JOIN activity_frequency ON deposit_accounts.activity_frequency_id = activity_frequency.activity_frequency_id;
 
 CREATE VIEW vw_account_notes AS
