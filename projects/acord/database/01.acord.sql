@@ -1,7 +1,46 @@
+﻿ALTER TABLE sys_countrys ADD COLUMN org_id	integer references orgs;
+UPDATE sys_countrys set org_id =  0;
+--- Goals
+
+CREATE TABLE goal_categorys (
+	goal_category_id		serial primary key,
+	org_id					integer references orgs,
+	goal_category_name		varchar(120) not null,
+	details					text
+);
+
+CREATE TABLE goals (
+	goal_id					serial primary key,
+	goal_category_id		integer references goal_categorys,
+	org_id					integer references orgs,
+	goal_name				varchar(150) not null,
+	details 				text
+);
+
+CREATE TABLE goal_objectives (
+	goal_objective_id		serial primary key,
+	goal_id					integer references goals,
+	org_id					integer references orgs,
+	goal_objective_name		varchar(180) not null,
+	details					text
+);
+
+CREATE TABLE goal_objective_measures (
+	goal_objective_measure_id		serial primary key,
+	goal_objective_id				integer references goal_objectives,
+	org_id							integer references orgs,
+	goal_objective_measure_name		varchar(240) not null,
+	target_value					real,
+	value							real,
+	details							text
+);
+
+-- Projects
+
 CREATE TABLE project_types (
     project_type_id			serial primary key,
 	org_id					integer references orgs,
-    project_type_name		varchar(50) not null unique,
+    project_type_name		varchar(100) not null unique,
     details					text
 );
 CREATE INDEX project_types_org_id ON project_types(org_id);
@@ -63,13 +102,6 @@ CREATE INDEX donors_donor_group_id ON donors (donor_group_id);
 CREATE INDEX donors_nationality_id ON donors (nationality_id);
 CREATE INDEX donors_org_id ON donors (org_id);
 
-CREATE TABLE goals (
-	goal_id 				serial primary key,
-	org_id					integer references orgs,
-	goal_name				varchar(50),
-	details					text
-);
-CREATE INDEX goals_org_id ON goals (org_id);
 
 CREATE TABLE targets (
 	target_id				serial primary key,
@@ -97,7 +129,8 @@ CREATE TABLE projects (
 	final_beneficiaries		text,
 	estimated_results		text,
 	main_activities			text,
-	notes					text
+	notes					text,
+	introduction			text
 );
 CREATE INDEX projects_project_type_id ON projects (project_type_id);
 CREATE INDEX projects_org_id ON projects (org_id);
@@ -116,22 +149,6 @@ CREATE TABLE phases (
 CREATE INDEX phases_project_id ON phases (project_id);
 CREATE INDEX phases_org_id ON phases(org_id);
 
-CREATE TABLE tasks (
-	task_id					serial primary key,
-	phase_id				integer references phases,
-	entity_id				integer references entitys,
-	org_id					integer references orgs,
-	task_name				varchar(320) not null,
-	task_start_date			date not null,
-	task_dead_line			date,
-	task_end_date			date,
-	hours_taken				integer default 7 not null,
-	task_done				boolean not null default false,
-	details					text
-);
-CREATE INDEX tasks_phase_id ON tasks (phase_id);
-CREATE INDEX tasks_entity_id ON tasks (entity_id);
-CREATE INDEX tasks_org_id ON tasks (org_id);
 
 CREATE TABLE activities (
 	activity_id				serial primary key,
@@ -160,7 +177,7 @@ CREATE INDEX project_locations_org_id ON project_locations (org_id);
 
 CREATE TABLE project_goals (
 	project_goal_id 		serial primary key,
-	project_id 				varchar(12) references projects,
+	project_id 				varchar references projects,
 	goal_id					integer references goals,
 	org_id					integer references orgs,
 	goal_ps					real,
@@ -247,7 +264,11 @@ CREATE TABLE grants (
 	org_id					integer references orgs,
 	grant_amount			real,
 	grant_pr_date			date,
-	details					text
+	details					text,
+	currency_id 			integer references currency,
+	exchange_rate 			real default 1 not null,
+	received 				boolean,
+	base_amount				real
 );
 CREATE INDEX grants_contract_id ON grants (contract_id);
 CREATE INDEX grants_org_id ON grants (org_id);
@@ -292,14 +313,28 @@ CREATE INDEX expenditure_project_id ON expenditure (project_id);
 CREATE INDEX expenditure_currency_id ON expenditure (currency_id);
 CREATE INDEX expenditure_org_id ON expenditure (org_id);
 
+CREATE TABLE risk_types (
+	risk_type_id		serial primary key,
+	project_id			varchar references projects,
+	org_id				integer references orgs,
+	risk_type_name		varchar(80),
+	details				text
+);
+
+CREATE TABLE risks (
+	risk_id				serial primary key,
+	risk_type_id		integer references risk_types,
+	org_id				integer references orgs,
+	risk_name			varchar(180),
+	contigency_plans	text
+);
 
 ----- Theory of change
 CREATE TABLE problems (
 	problem_id              serial primary key,    
-	project_id    		   	varchar(12) references projects,
+	project_id    		   	varchar references projects,
 	org_id					integer references orgs,
 	narrative               varchar(320),
-
 	details            		text
 );
 CREATE INDEX problems_project_id ON problems (project_id);
@@ -328,13 +363,22 @@ CREATE INDEX outputs_org_id ON outputs (org_id);
 
 CREATE TABLE final_outcomes (
 	final_outcome_id        serial primary key,
-	goal_id                 integer references goals,
 	org_id					integer references orgs,
-	narrative               varchar(320),
-	details            		text
+	details            		text,
+	problem_id 				integer references problems,
+	final_outcome_name 		varchar(320)
+	
 );
-CREATE INDEX final_outcomes_goal_id ON final_outcomes (goal_id);
+CREATE INDEX final_outcomes_problem_id ON final_outcomes (problem_id);
 CREATE INDEX final_outcomes_org_id ON final_outcomes (org_id);
+
+CREATE TABLE objective_finals (
+	goal_objective_id		integer references goal_objectives ON UPDATE CASCADE ON DELETE CASCADE,
+	final_outcome_id				integer references final_outcomes ON UPDATE CASCADE,
+	org_id							integer references orgs,
+	percentage_met					real,
+	CONSTRAINT objective_final_id PRIMARY KEY (goal_objective_id, final_outcome_id)
+);
 
 
 CREATE TABLE intermediate_outcome (
@@ -367,5 +411,183 @@ CREATE TABLE indicators (
  );
 CREATE INDEX indicators_project_id ON indicators (project_id);
 CREATE INDEX indicators_org_id ON indicators (org_id);
+
+CREATE TABLE intermediate_outcomes(
+	intermediate_outcome_id    					serial primary key,
+	problem_id									integer references problems,
+	org_id										integer references orgs,
+	intermediate_outcome_name               	varchar(160),
+	details            							text
+);
+
+CREATE TABLE final_intermediates (
+	final_outcome_id			integer references final_outcomes ON UPDATE CASCADE ON DELETE CASCADE,
+	intermediate_outcome_id		integer references intermediate_outcomes ON UPDATE CASCADE,
+	org_id						integer references orgs,
+	CONSTRAINT final_intermediate_id PRIMARY KEY (final_outcome_id, intermediate_outcome_id)
+);
+
+CREATE TABLE strategys (
+	strategy_id			serial primary key,
+	final_outcome_id	integer references final_outcomes,
+	org_id				integer references orgs,
+	strategy_name		varchar(250) not null,
+	details				text
+);
+
+CREATE TABLE strategy_indicators (
+	strategy_indicator_id		serial primary key,
+	strategy_id					integer references strategys,
+	org_id						integer references orgs,
+	strategy_indicator_name		varchar(180) not null,
+	target_value				real,
+	description					text,
+	verification_source			text
+);
+
+CREATE TABLE intermediate_strategys (
+	intermediate_outcome_id			integer references intermediate_outcomes ON UPDATE CASCADE ON DELETE CASCADE,
+	strategy_id						integer references strategys ON UPDATE CASCADE,
+	org_id							integer references orgs,
+	CONSTRAINT intermediate_strategy_id PRIMARY KEY (intermediate_outcome_id, strategy_id)
+);
+
+
+CREATE TABLE results (
+	result_id				serial primary key,
+	strategy_id				integer references strategys,
+	org_id					integer references orgs,
+	result_name				varchar(180) not null,
+	sector					varchar(120) not null,
+	subsectors				varchar(320) not null,
+	cost					real,
+	beneficiarys_number		real,
+	beneficiary_type		varchar(150) not null default 'N/A',
+  	special_beneficiarys	varchar(120),
+	beneficiarys_comment	text
+);
+
+
+
+
+CREATE TABLE result_indicators (
+	result_indicator_id		serial primary key,
+	result_id				integer references results,
+	org_id					integer references orgs,
+	result_indicator_name 	varchar(180) not null,
+	baseline_value			real,
+	target_value			real,
+	comment					text,
+	sources					text
+);
+
+CREATE TABLE activitys (
+	activity_id			serial primary key,
+	org_id				integer references orgs,
+	activity_name		varchar(180) not null,
+	details				text,
+	strategy_id 		integer references strategys,
+	deadline			date,
+	completed			boolean default false,
+	activity_start_date date,
+	activity_end_date 	date
+);
+
+CREATE TABLE budgets (
+	budget_id				serial primary key,
+	strategy_id				integer references strategys,
+	org_id					integer references orgs,
+	currency_id				integer references currency,
+	global_amount         	real,
+	field_amount			real not null,
+	get_by_date				date,
+	spend_by_date			date not null,
+   	exchange_rate			real default 1 not null,
+	details					text,
+	budget_item_name		varchar(120), 
+	global_base_amount 		real,
+	field_base_amount 		real
+);
+
+
+CREATE TABLE expenditures (
+	expenditure_id     	    serial primary key,
+	strategy_id				integer references strategys,
+	currency_id				integer references currency,
+	org_id					integer references orgs,
+	amount             		real not null,
+	exchange_rate			real default 1 not null,
+	pr_date					date,
+	details            		text,
+	expenditure_name 		varchar(120),
+	base_amount 			real
+);
+
+CREATE TABLE final_outcome_indicators (
+	final_outcome_indicator_id		serial primary key,
+	final_outcome_id				integer references final_outcomes,
+	org_id							integer references orgs,
+	final_outcome_indicator_name	varchar(160) not null,
+	target_value 					real,
+	details							text,
+	sources							text
+);
+
+CREATE TABLE problem_indicators (
+	problem_indicator_id	serial primary key,
+	problem_id				integer references problems,
+	org_id					integer references orgs,
+	problem_indicator_name	varchar(160) not null,
+	target_value			real,
+	details					text,
+	sources					text
+);
+
+CREATE TABLE assumptions (
+	assumption_id		serial primary key,
+	final_outcome_id		integer references final_outcomes,
+	org_id				integer references orgs,
+	assumption_name		varchar(180) not null,
+	details				text
+);
+
+CREATE TABLE phase_activitys (
+	phase_id		integer references phases ON UPDATE CASCADE ON DELETE CASCADE,
+	activity_id		integer references activitys ON UPDATE CASCADE,
+	org_id			integer references orgs,
+	CONSTRAINT phase_activity_id PRIMARY KEY (phase_id, activity_id)
+);
+
+CREATE TABLE proposal_followup (
+	proposal_followup_id		serial primary key,
+	org_id				integer references orgs,
+	proposal_id 			integer references proposals,
+	activity				varchar(120) not null,
+	date				date,
+	details				text
+);
+
+CREATE TABLE tasks (
+	task_id					serial primary key,
+	activity_id				integer references activitys,
+	phase_id				integer references phases,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	task_name				varchar(320) not null,
+	task_start_date			date not null,
+	task_dead_line			date,
+	task_end_date			date,
+	hours_taken				integer default 7 not null,
+	task_done				boolean not null default false,
+	details					text
+);
+
+CREATE INDEX tasks_activity_id ON tasks (activity_id);
+CREATE INDEX tasks_phase_id ON tasks (phase_id);
+CREATE INDEX tasks_entity_id ON tasks (entity_id);
+CREATE INDEX tasks_org_id ON tasks (org_id);
+
+
+
 
 
