@@ -1858,7 +1858,7 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Schools" keyfield="schoolid" table="schools" noorg="true" listfield="schoolname">
 				<DRILLDOWN name="Departments" keyfield="departmentid" wherefield="schoolid" table="departments" noorg="true" listfield="departmentname">
-					<DRILLDOWN name="Majors" keyfield="majorid" wherefield="departmentid" table="majors" listfield="majorname" filtername="majorid"></DRILLDOWN>
+					<DRILLDOWN name="Majors" keyfield="majorid" wherefield="departmentid" table="majors" noorg="true" listfield="majorname" filtername="majorid"></DRILLDOWN>
 				</DRILLDOWN>
 			</DRILLDOWN>
 			<JASPER filtered="true" name="Semester Programme Summary" reportfile="wvqstudentchargesba.jasper"></JASPER>

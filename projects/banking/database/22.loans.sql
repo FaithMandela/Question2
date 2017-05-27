@@ -169,30 +169,6 @@ CREATE VIEW vw_loan_activity AS
 		INNER JOIN activity_types ON account_activity.activity_type_id = activity_types.activity_type_id
 		INNER JOIN currency ON account_activity.currency_id = currency.currency_id
 		LEFT JOIN vw_deposit_accounts trnf_accounts ON account_activity.transfer_account_id =  trnf_accounts.deposit_account_id;
-
-		
-CREATE OR REPLACE FUNCTION ins_loans() RETURNS trigger AS $$
-DECLARE
-	myrec			RECORD;
-BEGIN
-
-	IF(TG_OP = 'INSERT')THEN
-		SELECT interest_rate, activity_frequency_id, min_opening_balance, lockin_period_frequency,
-			minimum_balance, maximum_balance INTO myrec
-		FROM products WHERE product_id = NEW.product_id;
-	
-		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 4, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 4, '0');
-			
-		NEW.interest_rate = myrec.interest_rate;
-		NEW.activity_frequency_id = myrec.activity_frequency_id;
-	END IF;
-	
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_loans BEFORE INSERT OR UPDATE ON loans
-	FOR EACH ROW EXECUTE PROCEDURE ins_loans();
     
 ------------Hooks to approval trigger
 CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON loans

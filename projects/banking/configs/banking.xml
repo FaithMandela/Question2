@@ -5,7 +5,7 @@
 		<MENU name="Customers">105</MENU>
 		<MENU name="Service Desk">
 			<MENU name="Client Forms">22</MENU>
-			<MENU name="Approvals">45</MENU>
+			<MENU name="Approvals">83</MENU>
 		</MENU>
 		<MENU name="Operations">
 			<MENU name="Sales">2</MENU>
@@ -582,7 +582,7 @@
 			</FORM>
 		</GRID>
 	</DESK>
-	<DESK w="700" name="Approvals" key="45" h="500">
+	<DESK w="700" name="Approvals" key="83" h="500">
 		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status = 'Completed')" user="entity_id">
 			<TEXTFIELD w="25" title="ID">approval_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
@@ -805,6 +805,9 @@
 			<TEXTFIELD w="75" title="Email">client_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Gender">gender</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
+			</ACTIONS>
 			<FORM cols="2" name="Clients" keyfield="customer_id" table="customers">
 				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="0">business_account</DEFAULT>
@@ -875,6 +878,9 @@
 				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Created">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="apply_approval" approval="2">Approval Application</ACTION>
+				</ACTIONS>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
 					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>
@@ -971,6 +977,9 @@
 			<TEXTFIELD w="75" title="Identification Type">identification_type</TEXTFIELD>
 			<TEXTFIELD w="75" title="Applicant Email">client_email</TEXTFIELD>
 			<TEXTFIELD w="75" title="Telephone Number">telephone_number</TEXTFIELD>
+			<ACTIONS>
+				<ACTION fnct="apply_approval" approval="1">Approval Application</ACTION>
+			</ACTIONS>
 			<FORM name="Clients" keyfield="customer_id" table="customers">
 				<USERFIELD>entity_id</USERFIELD>
 				<DEFAULT default="1">business_account</DEFAULT>
@@ -1018,6 +1027,9 @@
 				<TEXTFIELD w="75" title="Account Number">account_number</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Created">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Approve Status">approve_status</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="apply_approval" approval="2">Approval Application</ACTION>
+				</ACTIONS>
 				<FORM name="Deposit Accounts" keyfield="deposit_account_id" linkfield="customer_id" table="deposit_accounts">
 					<USERFIELD>entity_id</USERFIELD>
 					<COMBOBOX w="430" title="Product" lptable="products" where="(loan_account = false)" y="10" h="20" x="10" lpfield="product_name">product_id</COMBOBOX>

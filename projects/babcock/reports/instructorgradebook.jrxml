@@ -19,11 +19,11 @@ qstudentmajorview.studentdepartmentid, qstudentmajorview.studentdepartmentname,
 qstudentmajorview.majorid, qstudentmajorview.majorname, qstudentmajorview.quarterid,
 qstudentmajorview.studylevel, qstudentmajorview.studentid, qstudentmajorview.studentname,
 qgradeview.courseid, qgradeview.coursetitle, qgradeview.finalmarks, qgradeview.credit,
-(substring(qgradeview.courseid from 1 for 4) || '  ' || trim(substring(qgradeview.courseid from 5 for 4)) || ' (' || trim(to_char(qgradeview.credit, '9')) || ')') as dispcourseid,
+(substring(qgradeview.courseid from 1 for 4) || '  ' || trim(substring(qgradeview.courseid from 5 for 4)) || ' (' || trim(to_char(qgradeview.credit, '99')) || ')') as dispcourseid,
 to_char(getcurrcredit(qstudentmajorview.qstudentid), '999') as currcredit,
 to_char(getcurrgpa(qstudentmajorview.qstudentid),'999D00') as gpa,
 to_char(getcummgpa(qstudentmajorview.studentdegreeid, qstudentmajorview.quarterid), '9999D00') as cummgpa,
-(getgradeid(qgradeview.finalmarks, qstudentmajorview.org_id) || ',' || to_char(qgradeview.finalmarks, '99')) as instructorgrade
+(getgradeid(qgradeview.finalmarks, qgradeview.org_id) || ',' || to_char(qgradeview.finalmarks, '99')) as instructorgrade
 
 FROM qstudentmajorview INNER JOIN (qgradeview INNER JOIN qcourses ON qgradeview.qcourseid = qcourses.qcourseid) ON qstudentmajorview.qstudentid = qgradeview.qstudentid
 
@@ -246,35 +246,35 @@ ORDER BY qstudentmajorview.studentname;]]>
 				<crosstabHeaderCell>
 					<cellContents>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="205" y="12" width="39" height="18" uuid="59af88fa-a6d5-48e5-9f80-7026798ecd23"/>
+							<reportElement style="Crosstab Data Text" x="205" y="20" width="39" height="18" uuid="59af88fa-a6d5-48e5-9f80-7026798ecd23"/>
 							<textElement>
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Matric]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="0" y="12" width="205" height="18" uuid="f4224e78-ffb4-4970-9199-95f655362276"/>
+							<reportElement style="Crosstab Data Text" x="0" y="20" width="205" height="18" uuid="f4224e78-ffb4-4970-9199-95f655362276"/>
 							<textElement>
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Student Name]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="243" y="12" width="39" height="18" uuid="1e9c1121-a302-4202-8ac3-4c5768e63326"/>
+							<reportElement style="Crosstab Data Text" x="243" y="20" width="39" height="18" uuid="1e9c1121-a302-4202-8ac3-4c5768e63326"/>
 							<textElement>
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Credit]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="283" y="12" width="36" height="18" uuid="c4487593-6870-4677-9823-4fadd21bce63"/>
+							<reportElement style="Crosstab Data Text" x="282" y="20" width="37" height="18" uuid="c4487593-6870-4677-9823-4fadd21bce63"/>
 							<textElement>
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
 							<text><![CDATA[GPA]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="319" y="12" width="38" height="18" uuid="408ff8c8-fa4e-4cc4-a77c-aa602412be68"/>
+							<reportElement style="Crosstab Data Text" x="319" y="20" width="38" height="18" uuid="408ff8c8-fa4e-4cc4-a77c-aa602412be68"/>
 							<textElement>
 								<font fontName="Times New Roman" isBold="true"/>
 							</textElement>
@@ -389,7 +389,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 								<rightPen lineWidth="0.25"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="37" height="20" uuid="2f960f82-0f97-45a5-9f9a-5b90967ff74d"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="38" height="20" uuid="2f960f82-0f97-45a5-9f9a-5b90967ff74d"/>
 								<box>
 									<pen lineWidth="0.0"/>
 									<topPen lineWidth="0.0"/>
@@ -422,7 +422,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 								<rightPen lineWidth="0.25"/>
 							</box>
 							<textField isBlankWhenNull="true">
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="37" height="20" uuid="256d366c-26ff-4fab-9ec7-71a910d5f533"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="38" height="20" uuid="256d366c-26ff-4fab-9ec7-71a910d5f533"/>
 								<textElement>
 									<font fontName="Times New Roman" size="8"/>
 								</textElement>
@@ -434,7 +434,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 						<cellContents/>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<columnGroup name="dispcourseid" height="30" totalPosition="End">
+				<columnGroup name="dispcourseid" height="38" totalPosition="End">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{dispcourseid}]]></bucketExpression>
 					</bucket>
@@ -444,7 +444,7 @@ ORDER BY qstudentmajorview.studentname;]]>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="24" height="30" uuid="744ac1e5-845b-418e-b0f6-46f5ce6ac386"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="24" height="38" uuid="744ac1e5-845b-418e-b0f6-46f5ce6ac386"/>
 								<box leftPadding="1"/>
 								<textElement>
 									<font fontName="Times New Roman" size="8"/>
