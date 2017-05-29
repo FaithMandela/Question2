@@ -116,6 +116,8 @@ CREATE TRIGGER ins_account_activity BEFORE INSERT OR UPDATE ON account_activity
 CREATE OR REPLACE FUNCTION aft_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_account_activity_id		integer;
+	v_product_id				integer;
+	v_use_key_id				integer;
 BEGIN
 
 	IF(NEW.transfer_account_id is not null)THEN
@@ -131,6 +133,29 @@ BEGIN
 			VALUES (NEW.transfer_account_id, NEW.deposit_account_id, NEW.activity_type_id,
 				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
 				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
+				
+			--- Posting the charge on the transfer tranzaction
+			SELECT product_id INTO v_product_id
+			FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
+			
+			SELECT use_key_id INTO v_use_key_id
+			FROM activity_types
+			WHERE (activity_type_id = NEW.activity_type_id);
+			
+			IF(v_use_key_id <> 109)THEN
+				INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
+					activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
+					link_activity_id, activity_date, value_date, account_debit)
+				SELECT NEW.deposit_account_id, account_fees.activity_type_id, account_fees.activity_frequency_id,
+					1, products.currency_id, NEW.entity_id, NEW.org_id, account_fees.account_number,
+					NEW.link_activity_id, current_date, current_date, 
+					(account_fees.fee_amount + account_fees.fee_ps * NEW.account_debit)
+				FROM account_fees INNER JOIN activity_types ON account_fees.activity_type_id = activity_types.activity_type_id
+					INNER JOIN products ON account_fees.product_id = products.product_id
+				WHERE (account_fees.product_id = v_product_id) AND (account_fees.org_id = NEW.org_id)
+					AND (account_fees.activity_frequency_id = 1) AND (activity_types.use_key_id = 109) 
+					AND (account_fees.is_active = true) AND (account_fees.start_date < current_date);
+			END IF;
 		END IF;
 	END IF;
 	

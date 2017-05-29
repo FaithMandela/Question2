@@ -25,19 +25,20 @@ INSERT INTO  activity_status (activity_status_id, activity_status_name) VALUES (
 INSERT INTO  activity_status (activity_status_id, activity_status_name) VALUES (2, 'UnCleared');
 INSERT INTO  activity_status (activity_status_id, activity_status_name) VALUES (3, 'Commited');
 
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 103, 0, 'Account opening charges', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 101, 0, 'Cash Deposits', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 101, 0, 'Cheque Deposits', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 101, 0, 'MPESA Deposits', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 102, 0, 'Cash Withdrawal', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 102, 0, 'Cheque Withdrawal', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 102, 0, 'MPESA Withdrawal', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 109, 0, 'Account Transfer', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 105, 0, 'Loan Intrests', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 106, 0, 'Loan Penalty', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 107, 0, 'Loan Payment', true, NULL);
-INSERT INTO activity_types (account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (34005, 108, 0, 'Loan Disbursement', true, NULL);
-
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (1, 34005, 103, 0, 'Account opening charges', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (2, 34005, 101, 0, 'Cash Deposits', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (3, 34005, 101, 0, 'Cheque Deposits', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (4, 34005, 101, 0, 'MPESA Deposits', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (5, 34005, 102, 0, 'Cash Withdrawal', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (6, 34005, 102, 0, 'Cheque Withdrawal', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (7, 34005, 102, 0, 'MPESA Withdrawal', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (8, 34005, 105, 0, 'Loan Intrests', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (9, 34005, 106, 0, 'Loan Penalty', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (10, 34005, 107, 0, 'Loan Payment', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (11, 34005, 108, 0, 'Loan Disbursement', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (12, 34005, 104, 0, 'Account Transfer', true, NULL);
+INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (13, 34005, 109, 0, 'Transfer fees', true, NULL);
+SELECT pg_catalog.setval('interest_methods_interest_method_id_seq', 4, true);
 
 INSERT INTO interest_methods (interest_method_id, org_id, interest_method_name, formural, details) VALUES (1, 0, 'Loan Fixed Intrest', 'get_intrest(1, loan_id)', NULL);
 INSERT INTO interest_methods (interest_method_id, org_id, interest_method_name, formural, details) VALUES (2, 0, 'Loan reducing balnace', 'get_intrest(2, loan_id)', NULL);
@@ -52,9 +53,9 @@ SELECT pg_catalog.setval('products_product_id_seq', 2, true);
 
 
 INSERT INTO account_fees (activity_type_id, activity_frequency_id, product_id, org_id, account_fee_name, start_date, end_date, fee_amount, account_number, is_active) 
-VALUES (1, 4, 1, 0, 'Opening account', '2017-01-01', NULL, 1000, '400000001', true);
+VALUES (1, 1, 1, 0, 'Opening account', '2017-01-01', NULL, 1000, '400000001', true);
 INSERT INTO account_fees (activity_type_id, activity_frequency_id, product_id, org_id, account_fee_name, start_date, end_date, fee_ps, account_number, is_active) 
-VALUES (8, 4, 1, 0, 'Transaction Charge', '2017-01-01', NULL, 1, '400000001', true);
+VALUES (13, 1, 1, 0, 'Transaction Charge', '2017-01-01', NULL, 1, '400000001', true);
 
 
 --- Create Initial customer and customer account
