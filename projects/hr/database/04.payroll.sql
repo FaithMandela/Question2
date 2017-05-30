@@ -1076,8 +1076,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_taxes AFTER INSERT ON employees
-    FOR EACH ROW EXECUTE PROCEDURE ins_taxes();
-    
+	FOR EACH ROW EXECUTE PROCEDURE ins_taxes();
 
 CREATE OR REPLACE FUNCTION get_formula_adjustment(int, int, real) RETURNS float AS $$
 DECLARE
@@ -1472,14 +1471,15 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER ins_Employee_Adjustments BEFORE INSERT OR UPDATE ON Employee_Adjustments
-    FOR EACH ROW EXECUTE PROCEDURE ins_Employee_Adjustments();
+CREATE TRIGGER ins_employee_adjustments BEFORE INSERT OR UPDATE ON employee_adjustments
+    FOR EACH ROW EXECUTE PROCEDURE ins_employee_adjustments();
 
 CREATE OR REPLACE FUNCTION upd_employee_adjustments() RETURNS trigger AS $$
 DECLARE
-	rec 		RECORD;
-	entityid 	integer;
-	periodid 	integer;
+	rec 			RECORD;
+	entityid 		integer;
+	periodid 		integer;
+	v_balance		real;
 BEGIN
 	SELECT monthly_update, running_balance INTO rec
 	FROM adjustments WHERE adjustment_id = NEW.Adjustment_ID;
@@ -1487,8 +1487,13 @@ BEGIN
 	SELECT entity_id, period_id INTO entityid, periodid
 	FROM employee_month WHERE employee_month_id = NEW.employee_month_id;
 
-	IF(rec.running_balance = true) AND (NEW.balance is not null)THEN
-		UPDATE default_adjustments SET balance = NEW.balance
+	IF(rec.running_balance = true) THEN
+		SELECT sum(amount) INTO v_balance
+		FROM vw_employee_adjustments
+		WHERE (entity_id = entityid) AND (adjustment_id = NEW.adjustment_id);
+		IF(v_balance is null)THEN v_balance := 0; END IF;
+		
+		UPDATE default_adjustments SET balance = v_balance
 		WHERE (entity_id = entityid) AND (adjustment_id = NEW.adjustment_id);
 	END IF;
 
