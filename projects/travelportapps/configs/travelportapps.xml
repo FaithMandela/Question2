@@ -1205,6 +1205,9 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Consultant Sales" orderby="passenger_id DESC " where="portal_id = 1 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
@@ -1219,6 +1222,9 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Direct Sales" orderby="passenger_id DESC " where="portal_id = 3 AND is_valid is true AND approved is true" tab.count="count(passenger_id)" table="vw_allpassengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
@@ -1233,6 +1239,34 @@
 			<TEXTFIELD w="75" title="Destown">destown</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin No">pin_no</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Total Amount Covered">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
+		</GRID>
+		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="UnPaid Invoices" orderby="passenger_id DESC " where="portal_id = 3 AND is_valid is true AND approved is false" tab.count="count(passenger_id)" table="vw_allpassengers">
+			<TEXTFIELD w="75" title="Rate Plan Name">rate_plan_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date">approved_date</TEXTFIELD>
+			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
+			<TEXTFIELD w="75" title="Days From">days_from</TEXTFIELD>
+			<TEXTFIELD w="75" title="Days To">days_to</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="ID NO">id_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="PIN NO">pin_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Date of Birth">passenger_dob</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passport No.">passport_number</TEXTFIELD>
+			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Next Of Kin ">nok_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Next Of Kin Mobile ">nok_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Relationship ">relationship</TEXTFIELD>
+			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
+			<ACTIONS>
+				<ACTION approval="1" fnct="upd_passenger">Cancel</ACTION>
+			</ACTIONS>
 		</GRID>
 		<GRID noorg="true" role="admin,manager" keyfield="passenger_id" name="Insurance Canceled" where="is_valid is false" tab.count="count(passenger_id)" table="vw_passengers">
 			<TEXTFIELD w="75" title="Policy Number">policy_number</TEXTFIELD>
@@ -1259,10 +1293,15 @@
 			<TEXTFIELD w="75" title="Passenger Name">passenger_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Mobile">passenger_mobile</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="ID NO">id_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="PIN NO">pin_no</TEXTFIELD>
 			<TEXTFIELD w="75" title="Date of Birth">passenger_dob</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Residence">sys_country_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Passport No.">passport_number</TEXTFIELD>
 			<TEXTFIELD w="75" title="Country of Travel">destown</TEXTFIELD>
+			<TEXTFIELD w="75" title="Next Of Kin ">nok_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Next Of Kin Mobile ">nok_mobile</TEXTFIELD>
+			<TEXTFIELD w="75" title="Relationship ">relationship</TEXTFIELD>
 			<TEXTFIELD w="75" title="Created By">entity_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Basic Premium">cover_amount</TEXTDECIMAL>
 			<TEXTDECIMAL w="75" title="Total Amount">totalamount_covered</TEXTDECIMAL>
@@ -1287,7 +1326,7 @@
 		</GRID>
 	</DESK>
 	<DESK role="admin,manager" w="700" h="550" name="Payments" key="85">
-		<GRID noorg="true" keyfield="payment_id" name="Pending Payments" where="(approved = false AND is_valid is true)" table="vw_payments">
+		<GRID noorg="true" keyfield="payment_id" name="Pending Payments" where="(approved = false )" table="vw_payments">
 			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
 			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
@@ -1304,13 +1343,13 @@
 				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
 			</FORM>
 		</GRID>
-		<GRID noorg="true" keyfield="payment_id" name="Payments" table="vw_payments">
-			<TEXTFIELD w="75" title="Agency">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Payment Type">payment_type_name</TEXTFIELD>
-			<TEXTDECIMAL w="75" title="Payment Amount">payment_amount</TEXTDECIMAL>
-			<TEXTFIELD w="75" title="Transaction Reference">transaction_reference</TEXTFIELD>
-			<TEXTDATE w="75" title="Payment Date">payment_date</TEXTDATE>
-			<CHECKBOX w="75" title="Approved">approved</CHECKBOX>
+		<GRID noorg="true" keyfield="jp_id" name="Payments" table="vw_jp_pay">
+			<TEXTFIELD w="75" title="Passenger Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Tranid">jp_tranid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">jp_currency</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Payment Amount">jp_amount</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Transaction Reference">jp_merchant_orderid</TEXTFIELD>
+			<TEXTDATE w="75" title="Payment Date">jp_timestamp</TEXTDATE>
 		</GRID>
 		<GRID noorg="true" keyfield="payment_type_id" name="Payment Types" table="payment_types">
 			<TEXTFIELD w="75" title="Payment Type ID">payment_type_id</TEXTFIELD>

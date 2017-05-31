@@ -98,8 +98,6 @@ ALTER TABLE policy_no_seq
   	$BODY$
   	LANGUAGE plpgsql;
 
-
-
 CREATE FUNCTION getCreditLimitBalance(integer) RETURNS double precision AS $$
 	DECLARE
 		credit_limit 	double precision;
@@ -128,3 +126,34 @@ CREATE FUNCTION getTotalAmount(integer) RETURNS double precision AS $$
 		RETURN ROUND(cover_amount::numeric,2);
 		END;
 $$LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION payment_reminder(integer, character varying)
+  RETURNS character varying AS
+$BODY$
+DECLARE
+  v_org_id                integer;
+  v_entity_name           varchar(120);
+BEGIN
+
+  UPDATE  passengers SET reminder_email = current_date WHERE (passenger_id = $2::int);
+
+  RETURN 'Done';
+END;
+$BODY$
+  LANGUAGE plpgsql;
+
+  CREATE OR REPLACE FUNCTION expired_invoice(integer, character varying)
+    RETURNS character varying AS
+  $BODY$
+  DECLARE
+    v_org_id                integer;
+    v_entity_name           varchar(120);
+  BEGIN
+
+    UPDATE  passengers SET status = 'Expired', is_valid = false, reminder_email = current_date WHERE (passenger_id = $2::int);
+
+    RETURN 'Done';
+  END;
+  $BODY$
+    LANGUAGE plpgsql;

@@ -1595,24 +1595,24 @@ SELECT corporate_rate_types.rate_type_id,  corporate_rate_types.rate_type_name, 
   JOIN corporate_rate_category ON corporate_rate_types.corporate_rate_category_id = corporate_rate_category.corporate_rate_category_id ;
 
 
-CREATE OR REPLACE VIEW vw_passengers AS
-	SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_rates.rate_type_id, vw_rates.rate_plan_id, vw_rates.rate_category_name,
-	vw_rates.rate_id, vw_rates.rate_plan_name, vw_rates.standard_rate, vw_rates.north_america_rate,
-	 passengers.days_from,  passengers.days_to,  passengers.corporate_rate_id,
-	 passengers.approved,  passengers.entity_id,
-	passengers.countries,  passengers.passenger_id,  passengers.passenger_name,  passengers.passenger_mobile,
-	passengers.passenger_email,  passengers.passenger_age,  passengers.days_covered,  passengers.nok_name,
-	passengers.nok_mobile,  passengers.passenger_id_no,  passengers.nok_national_id,  passengers.cover_amount,
-	passengers.totalAmount_covered,  passengers.is_north_america,  passengers.details,  passengers.passenger_dob,
-	passengers.policy_number,  vw_entitys.entity_name,  passengers.destown,  sys_countrys.sys_country_name,
-	passengers.approved_date,  passengers.corporate_id,  passengers.pin_no, passengers.reason_for_travel,
-	passengers.departure_country, vw_entitys.entity_role, vw_entitys.function_role, vw_entitys.is_active,passengers.physical_address,
-	passengers.is_valid,passengers.is_individual, portal.portal_id,portal.portal_name
-	FROM passengers
-	 JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
-	 JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id
-	 JOIN portal ON portal.portal_id = passengers.portal_id
-	 JOIN sys_countrys ON passengers.sys_country_id = sys_countrys.sys_country_id;
+  CREATE OR REPLACE VIEW vw_passengers AS
+  	SELECT vw_entitys.org_id,  vw_entitys.org_name, vw_rates.rate_type_id, vw_rates.rate_plan_id, vw_rates.rate_category_name,
+  	vw_rates.rate_id, vw_rates.rate_plan_name, vw_rates.standard_rate, vw_rates.north_america_rate,
+  	 passengers.days_from,  passengers.days_to,  passengers.corporate_rate_id,
+  	 passengers.approved,  passengers.entity_id,
+  	passengers.countries,  passengers.passenger_id,  passengers.passenger_name,  passengers.passenger_mobile,
+  	passengers.passenger_email,  passengers.passenger_age,  passengers.days_covered,  passengers.nok_name,
+  	passengers.nok_mobile,  passengers.passenger_id_no,  passengers.nok_national_id,  passengers.cover_amount,
+  	passengers.totalAmount_covered,  passengers.is_north_america,  passengers.details,  passengers.passenger_dob,
+  	passengers.policy_number,  vw_entitys.entity_name,  passengers.destown,  sys_countrys.sys_country_name,
+  	passengers.approved_date,  passengers.corporate_id,  passengers.pin_no, passengers.reason_for_travel,
+  	passengers.departure_country, vw_entitys.entity_role, vw_entitys.function_role, vw_entitys.is_active,passengers.physical_address,
+  	passengers.is_valid,passengers.is_individual, portal.portal_id,portal.portal_name,passengers.id_no,passengers.relationship
+  	FROM passengers
+  	 JOIN vw_rates ON passengers.rate_id = vw_rates.rate_id
+  	 JOIN vw_entitys ON passengers.entity_id = vw_entitys.entity_id
+  	 JOIN portal ON portal.portal_id = passengers.portal_id
+  	 JOIN sys_countrys ON passengers.sys_country_id = sys_countrys.sys_country_id;
 
 
 CREATE OR REPLACE VIEW vw_policy_members AS
@@ -1628,34 +1628,34 @@ SELECT
     JOIN vw_passengers a ON p.passenger_id = a.passenger_id ;
 
 	CREATE OR REPLACE VIEW vw_allpassengers AS
-SELECT a.org_id,  a.org_name, a.rate_type_id,a.rate_plan_id, a.rate_category_name,
+	SELECT a.org_id,  a.org_name, a.rate_type_id,a.rate_plan_id, a.rate_category_name,
 	a.rate_id,a.rate_plan_name, a.standard_rate, a.north_america_rate,a.days_from,  a.days_to,  a.corporate_rate_id,
 	a.approved, a.entity_id, a.countries, a.passenger_id,  a.passenger_name,  a.passenger_mobile,
 	a.passenger_email,  a.passenger_age,  a.days_covered,  a.nok_name, a.nok_mobile,  a.passenger_id_no,
 	a.passport_number,  round(a.cover_amount::DECIMAL,2)::real as cover_amount,  round(a.totalAmount_covered::DECIMAL,2)::real as totalAmount_covered,  a.is_north_america,  a.details,  a.passenger_dob,
 	a.policy_number,  a.entity_name,  a.destown,  a.sys_country_name, a.approved_date,  a.corporate_id,
 	a.pin_no, a.reason_for_travel,  a.departure_country, a.entity_role, a.function_role, a.is_active,a.is_valid,a.is_individual,
-	a.portal_id,a.portal_name
-FROM ((
+	a.portal_id,a.portal_name,  a.id_no, a.relationship
+	FROM ((
 	SELECT org_id,org_name,rate_type_id, rate_plan_id, rate_category_name,rate_id, rate_plan_name, standard_rate, north_america_rate,
-		days_from,  days_to,  corporate_rate_id,   approved,  entity_id,  countries,  passenger_id,  passenger_name,  passenger_mobile,
-		passenger_email,  passenger_age,  days_covered,  nok_name,  nok_mobile,  passenger_id_no,  nok_national_id as passport_number,  cover_amount,
-		totalAmount_covered,  is_north_america,  details,  passenger_dob,  policy_number,  entity_name,  destown,  sys_country_name,
-		approved_date,  corporate_id,  pin_no, reason_for_travel,  departure_country, entity_role, function_role, is_active,is_valid,is_individual,
-		portal_id, portal_name
+	    days_from,  days_to,  corporate_rate_id,   approved,  entity_id,  countries,  passenger_id,  passenger_name,  passenger_mobile,
+	    passenger_email,  passenger_age,  days_covered,  nok_name,  nok_mobile,  passenger_id_no,  nok_national_id as passport_number,  cover_amount,
+	    totalAmount_covered,  is_north_america,  details,  passenger_dob,  policy_number,  entity_name,  destown,  sys_country_name,
+	    approved_date,  corporate_id,  pin_no, reason_for_travel,  departure_country, entity_role, function_role, is_active,is_valid,is_individual,
+	    portal_id, portal_name,id_no,relationship
 	FROM vw_passengers  )
 	UNION ALL
 	(SELECT org_id,org_name, rate_type_id,  rate_plan_id,  rate_category_name, rate_id,    rate_plan_name,  standard_rate,
-		north_america_rate, days_from,days_to,   null::integer as corporate_rate_id,  approved,  entity_id,
-		countries,passenger_id, member_name as passenger_name,  phone_number as passenger_mobile,
-		primary_email as passenger_email , age as  passenger_age,    null::integer as days_covered, ''::text as nok_name,
-		''::text as nok_mobile,  ''::text as passenger_id_no, passport_number, amount_covered as cover_amount,
-		totalamount_covered,  null::boolean as is_north_america, ''::text as details, passenger_dob::text,policy_number,
-		entity_name, destown, sys_country_name, approved_date, null::integer as corporate_id, pin_number as pin_no,
-		reason_for_travel,     departure_country,   entity_role, function_role ,
-		is_active,  is_valid,is_individual,portal_id, portal_name
+	    north_america_rate, days_from,days_to,   null::integer as corporate_rate_id,  approved,  entity_id,
+	    countries,passenger_id, member_name as passenger_name,  phone_number as passenger_mobile,
+	    primary_email as passenger_email , age as  passenger_age,    null::integer as days_covered, ''::text as nok_name,
+	    ''::text as nok_mobile,  ''::text as passenger_id_no, passport_number, amount_covered as cover_amount,
+	    totalamount_covered,  null::boolean as is_north_america, ''::text as details, passenger_dob::text,policy_number,
+	    entity_name, destown, sys_country_name, approved_date, null::integer as corporate_id, pin_number as pin_no,
+	    reason_for_travel,     departure_country,   entity_role, function_role ,
+	    is_active,  is_valid,is_individual,portal_id, portal_name, ''::text as id_no,''::text as relationship
 	FROM  vw_policy_members )
-)a order by passenger_id DESC;
+	)a order by passenger_id DESC;
 
 
 
@@ -1698,6 +1698,13 @@ CREATE OR REPLACE VIEW vw_app_users AS
     FROM apps_subscriptions
       JOIN apps_list ON apps_subscriptions.apps_list_id = apps_list.apps_list_id
       JOIN vw_orgs ON apps_subscriptions.org_id = vw_orgs.org_id;
+
+	  CREATE OR REPLACE VIEW vw_jp_pay AS
+   SELECT jp_pay.jp_id, jp_pay.jp_tranid, jp_pay.jp_merchant_orderid, jp_pay.jp_amount,
+       jp_pay.jp_currency, jp_pay.jp_timestamp, jp_pay.jp_password, jp_pay.details,
+	   vw_entitys.org_id,  vw_entitys.entity_id, vw_entitys.entity_name, vw_entitys.org_name
+     FROM jp_pay
+       JOIN vw_entitys ON jp_pay.entity_id = vw_entitys.entity_id;
 
 
  CREATE OR REPLACE VIEW vw_app_list AS

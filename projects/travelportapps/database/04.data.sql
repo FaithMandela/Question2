@@ -2075,3 +2075,6 @@ INSERT INTO portal(portal_id, portal_name, descriptions)
     VALUES (1, 'Agency Portal', 'Consultant Portal'),
 	(2, 'Bima Mtandao Portal', 'Bima Mtandao Portal'),
 	(3, 'Self Insured Portal', 'Self Insured Portal');
+
+    INSERT INTO sys_emails( sys_email_id, org_id, sys_email_name,  title,  use_type) VALUES (5, 0, 'Reminder', 'Reminder',  2);
+    INSERT INTO sys_emails( sys_email_id, org_id, sys_email_name,  title,  use_type) VALUES (6, 0, 'Expired', 'Expired',  3);

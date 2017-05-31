@@ -1055,6 +1055,18 @@
 			</FILTERFORM>
 			<JASPER reportfile="print_batch.jasper" name="Print Batch"></JASPER>
 		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Print Batch C5" type="vert" key="batch_no">
+			<FILTERFORM name="Print Batch C5 ">
+				<TEXTFIELD w="150" h="20" x="290" y="50" title="Batch No." key="batch_no">batch_no</TEXTFIELD>
+			</FILTERFORM>
+			<JASPER reportfile="print_batch_c5.jasper" name="Print Batch C5"></JASPER>
+		</FILTER>
+		<FILTER split="150" w="700" h="550" name="Print Batch Envelope" type="vert" key="batch_no">
+			<FILTERFORM name="Print Batch Envelope ">
+				<TEXTFIELD w="150" h="20" x="290" y="50" title="Batch No." key="batch_no">batch_no</TEXTFIELD>
+			</FILTERFORM>
+			<JASPER reportfile="print_batch_envelope.jasper" name="Print Batch Envelope"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK noorg="true" w="700" h="500" name="EMails" key="60">
 		<GRID noorg="true" role="admin,staff" keyfield="sys_emailed_id" name="Email List" orderby="sys_emailed_id DESC" table="vw_sys_emailed">
