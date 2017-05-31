@@ -29,3 +29,25 @@ CREATE FUNCTION ticket_emailed(integer, varchar(64)) RETURNS void AS $$
 $$ LANGUAGE SQL;
 
 
+CREATE OR REPLACE FUNCTION ins_email() RETURNS trigger AS $$
+DECLARE
+	
+BEGIN
+
+	SELECT entity_name INTO NEW.consultant
+	FROM entitys
+	WHERE trim(upper(user_name)) = trim(upper(NEW.son));
+	
+	IF(NEW.consultant is null)THEN
+		SELECT entity_name INTO NEW.consultant
+		FROM entitys
+		WHERE trim(upper(son)) = trim(upper(NEW.son));
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_email BEFORE INSERT ON email
+	FOR EACH ROW EXECUTE PROCEDURE ins_email();
+    

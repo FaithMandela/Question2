@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2017-05-12T11:24:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_ss_items" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d9ba8785-44ad-4413-88d6-52ff7ef63c6a">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="HR"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -25,7 +28,7 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
+	<queryString>
 		<![CDATA[SELECT vw_ss_items.ss_item_id, vw_ss_items.ss_type_name, vw_ss_items.ss_item_name
 FROM vw_ss_items]]>
 	</queryString>
@@ -38,7 +41,7 @@ FROM vw_ss_items]]>
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="66" y="0" width="446" height="62" uuid="cb0dfa6b-3862-4248-ba37-4e8dffbfca55"/>
+				<reportElement style="Title" x="66" y="0" width="394" height="62" uuid="cb0dfa6b-3862-4248-ba37-4e8dffbfca55"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -81,9 +84,9 @@ FROM vw_ss_items]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="107" splitType="Stretch">
+		<band height="95" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="-45" y="-16" width="52" height="15" uuid="32ed1e48-5a4c-4ea2-861e-fdf6247c6a58"/>
+				<reportElement style="Detail" x="0" y="0" width="52" height="15" uuid="32ed1e48-5a4c-4ea2-861e-fdf6247c6a58"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -103,10 +106,12 @@ FROM vw_ss_items]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ss_item_name}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="332" y="0" width="187" height="103" uuid="2b81ba48-9435-4d2d-b40f-24b73e07516e"/>
-				<imageExpression><![CDATA[new com.onbarcode.barcode.jasper.JasperRenderer(com.onbarcode.barcode.jasper.BarcodeGenerator.draw(102,"http://apps.faidaplus.com/faidaplus/document.jsp?ref="+$F{ss_item_id}, "", "X=2&Y=60"))]]></imageExpression>
-			</image>
+			<componentElement>
+				<reportElement x="332" y="-1" width="219" height="91" uuid="22bf95f6-0d1a-4b9a-87dc-80587580c4a4"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA[$F{ss_item_id}]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
 		</band>
 	</detail>
 	<columnFooter>

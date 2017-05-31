@@ -42,8 +42,6 @@ public class BAccordion {
 	public String getAccordion(HttpServletRequest request, String linkData, String formLinkData, List<String> viewData) {
 		String body = "\t<div class='panel-group accordion' id='accordion1'>\n";
 		int vds = viewData.size();
-System.out.println("BASE 2010 : " + linkData);
-System.out.println("BASE 2020 : " + vds);
 		
 		accordionJs = "";
 		Integer ac = new Integer("0");
@@ -96,8 +94,6 @@ System.out.println("BASE 2020 : " + vds);
 		
 		String fieldId = ac.toString();
 		BQuery rs = new BQuery(db, vw, whereSql, null);
-		
-System.out.println("BASE 3010 : " + whereSql);
 		
 		// JSON data set
 		myhtml.append("var db_" + fieldId + "_table = " + rs.getJSON() + ";\n\n");

@@ -9,6 +9,7 @@
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">sys_emails.default_email</ADDRESS>
 		<BODYFIELD reference="{{message}}" basetable="email">message</BODYFIELD>
+		<BODYFIELD reference="{{consultant}}" basetable="email">consultant</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 

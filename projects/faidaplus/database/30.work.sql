@@ -61,7 +61,7 @@ DELETE FROM tickets WHERE ticketdate <= '2013-12-31';
 DELETE FROM logdetails USING logs WHERE logdetails.logid = logs.logid AND logdate <= '2013-12-31';
 DELETE FROM logs WHERE logdate <= '2013-12-31';
 
-UPDATE tickets SET processed = true WHERE (processed = false) AND (ticketdate < '2016-07-20'::date);
+UPDATE tickets SET processed = true WHERE (processed = false) AND (ticketdate < '2017-05-20'::date);
 
 INSERT INTO pccs (pcc, agencyname) VALUES ('781Y', 'FLEET TRAVEL - UAE');
 

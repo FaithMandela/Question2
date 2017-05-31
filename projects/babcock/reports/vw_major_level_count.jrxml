@@ -29,7 +29,9 @@
 	<queryString>
 		<![CDATA[SELECT quarterid, sublevelname, majorname, studylevel, count(qstudentid) as level_count
 FROM vwqstudentbalances
+
 WHERE (finaceapproval = true) AND (quarterid = '$P!{filterid}')
+
 GROUP BY quarterid, sublevelname, majorname, studylevel
 ORDER BY quarterid, sublevelname, majorname, studylevel]]>
 	</queryString>

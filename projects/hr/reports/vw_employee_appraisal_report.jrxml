@@ -44,7 +44,8 @@ vw_department_roles.department_role_name AS job_title,
 vw_department_roles.parent_role_name AS supervisor,
 
 job_reviews.review_date, job_reviews.workflow_table_id,
-applications.contract_start,
+
+MAX(applications.contract_start) AS contract_start,
 
 COALESCE(get_approver(job_reviews.workflow_table_id), get_reporting_list(employees.entity_id)) AS supervisor_name,
 
@@ -58,7 +59,7 @@ LEFT JOIN applications ON applications.employee_id = employees.entity_id
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
 $P!{organd}
 
-;]]>
+GROUP BY employees.entity_id, vw_department_roles.department_role_name, vw_department_roles.parent_role_name, job_reviews.review_date, job_reviews.workflow_table_id;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="employee_id" class="java.lang.String"/>

@@ -53,13 +53,13 @@ ORDER BY career_development_id ASC;]]>
 						<bottomPen lineWidth="0.75"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Roman"/>
+						<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{REPORT_COUNT} + 1]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement positionType="Float" x="30" y="43" width="516" height="21" uuid="26125c22-6984-4f9e-b0b6-2bf30521425a"/>
-					<textElement>
+					<textElement markup="html">
 						<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{career_development_details}]]></textFieldExpression>
@@ -70,7 +70,7 @@ ORDER BY career_development_id ASC;]]>
 						<bottomPen lineWidth="0.75"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Roman"/>
+						<font fontName="Times New Roman" size="11" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{career_development_name}]]></textFieldExpression>
 				</textField>
@@ -80,7 +80,7 @@ ORDER BY career_development_id ASC;]]>
 						<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
+						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[Narrative]]></text>
 				</staticText>
@@ -90,7 +90,7 @@ ORDER BY career_development_id ASC;]]>
 						<bottomPen lineWidth="0.5" lineColor="#E7E7E7"/>
 					</box>
 					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
+						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[Details]]></text>
 				</staticText>
@@ -101,9 +101,9 @@ ORDER BY career_development_id ASC;]]>
 		<groupExpression><![CDATA[$F{evaluation_point_id}]]></groupExpression>
 		<groupHeader>
 			<band height="12">
-				<textField isStretchWithOverflow="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement positionType="Float" x="30" y="0" width="516" height="12" uuid="9b348d25-2690-435a-824b-c284793016da"/>
-					<textElement>
+					<textElement markup="html">
 						<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{narrative}]]></textFieldExpression>
@@ -119,7 +119,7 @@ ORDER BY career_development_id ASC;]]>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="0" width="546" height="20" uuid="a6be3137-67f2-48af-b8d1-e87a9ce17bbb"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Roman"/>
+					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Section VI : Career development Planinng]]></text>
 			</staticText>
