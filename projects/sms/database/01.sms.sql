@@ -45,6 +45,26 @@ CREATE TABLE mpesa_trxs (
 );
 CREATE INDEX mpesa_trxs_org_id ON mpesa_trxs (org_id);
 
+CREATE TABLE mpesa_soap (
+	mpesa_soap_id			serial primary key,
+	org_id					integer references orgs,
+	request_id				varchar(32),
+	TransID					varchar(32),
+	TransAmount				real,
+	BillRefNumber			varchar(32),
+	TransTime				varchar(32),
+	BusinessShortCode		varchar(32),
+	TransType				varchar(32),
+	FirstName				varchar(32),
+	LastName				varchar(32),
+	MSISDN					varchar(32),
+	OrgAccountBalance		real,
+	InvoiceNumber			varchar(32),
+	ThirdPartyTransID		varchar(32),
+	created					timestamp default current_timestamp not null
+);
+CREATE INDEX mpesa_soap_org_id ON mpesa_soap (org_id);
+
 CREATE TABLE sms_trans (
 	sms_trans_id			serial primary key,
 	org_id					integer references orgs,

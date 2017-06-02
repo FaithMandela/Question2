@@ -419,7 +419,8 @@
 				<CHECKBOX w="30" title="Major Advisor" y="70" h="20" x="10">majoradvisor</CHECKBOX>
 				<CHECKBOX w="30" title="Department Head" y="70" h="20" x="210">department_head</CHECKBOX>
 				<CHECKBOX w="30" title="School Dean" y="70" h="20" x="410">school_dean</CHECKBOX>
-				<COMBOBOX w="430" title="Campus" lptable="orgs" noorg="true" y="90" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<CHECKBOX w="30" title="DVC" y="90" h="20" x="10">dvc</CHECKBOX>
+				<COMBOBOX w="430" title="Campus" lptable="orgs" noorg="true" y="110" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 				<TEXTFIELD w="430" title="Email" tab="Contact" y="1" h="20" x="10">email</TEXTFIELD>
 				<TEXTFIELD w="150" title="P.O. Box" tab="Contact" y="21" h="20" x="10">post_office_box</TEXTFIELD>
 				<TEXTFIELD w="150" title="Postal Code" tab="Contact" y="21" h="20" x="290">postal_code</TEXTFIELD>
@@ -1849,6 +1850,7 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Campus" keyfield="org_id" table="orgs" noorg="true" listfield="org_name" filtername="orgid"></DRILLDOWN>
 			<JASPER filtered="true" name="Final - Class Timetable" reportfile="qtimetable.jasper"></JASPER>
+			<JASPER filtered="true" name="Course - Class Timetable" reportfile="qtimetable_cl.jasper"></JASPER>
 			<JASPER filtered="true" name="Tentative - Class Timetable" reportfile="qtimetableb.jasper"></JASPER>
 		</FILTER>
 	</DESK>
@@ -1859,6 +1861,7 @@
 			</DRILLDOWN>
 			<DRILLDOWN name="Campus" keyfield="org_id" table="orgs" noorg="true" listfield="org_name" filtername="orgid"></DRILLDOWN>
 			<JASPER filtered="true" name="Final - Exam Timetable" reportfile="qetimetable.jasper"></JASPER>
+			<JASPER filtered="true" name="Course - Exam Timetable" reportfile="qetimetable_cl.jasper"></JASPER>
 			<JASPER filtered="true" name="Tentative - Exam Timetable" reportfile="qetimetableb.jasper"></JASPER>
 		</FILTER>
 	</DESK>

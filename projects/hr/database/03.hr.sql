@@ -156,7 +156,7 @@ CREATE TABLE employees (
 	exit_date				date,
 	contract				boolean default false not null,
 	contract_period			integer not null,
-	employment_terms		varchar(320),
+	employment_terms		text,
 	identity_card			varchar(50),
 	basic_salary			real not null,
 	bank_account			varchar(32),
@@ -174,7 +174,7 @@ CREATE TABLE employees (
 	height					real, 
 	weight					real, 
 	blood_group				varchar(3),
-	allergies				varchar(320),
+	allergies				text,
 
 	field_of_study			text,
 	interests				text,
