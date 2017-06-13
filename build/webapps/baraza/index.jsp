@@ -544,9 +544,6 @@
                 $('#btSearch').click();
             }
         });
-
-
-
     });
 </script>
 
@@ -640,7 +637,6 @@
     <% if(actionOp != null) {	%>
       jqcf.multiselect = true;
     <% } %>
-
 
 
 	/* check if user is using mobile*/
@@ -751,19 +747,19 @@ console.log("TODO Bulk Save grid");
 	        cellValues.push(coldata);
 	    }
         toastr.options = {
-                    "closeButton": true,
-                    "debug": false,
-                    "positionClass": "toast-top-right",
-                    "onclick": null,
-                    "showDuration": "1000",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
+            "closeButton": true,
+            "debug": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "1000",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
 	    if(cellValues.join(",") == ""){
 	        toastr['info']('No row Selected', "");
 	    } else {
@@ -801,53 +797,49 @@ console.log("TODO Bulk Save grid");
 
     // MULTISELECT INITIALIZE
     $('.multi-select').multiSelect({
-            selectableHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder='Search Address'>",
-            selectionHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder='Search Address'>",
-            selectableFooter: "<div style='text-align: center;padding: 3px;color: #fff;' class='list-group-item bg-blue'>Selectable Items</div>",
-            selectionFooter: "<div style='text-align: center;padding: 3px;color: #fff;' class='list-group-item bg-green'>Selected</div>",
-            afterInit: function(ms){
-            var that = this,
-                $selectableSearch = that.$selectableUl.prev(),
-                $selectionSearch = that.$selectionUl.prev(),
-                selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
-                selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
+        selectableHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder='Search Address'>",
+        selectionHeader: "<input type='text' class='search-input form-control' autocomplete='off' placeholder='Search Address'>",
+        selectableFooter: "<div style='text-align: center;padding: 3px;color: #fff;' class='list-group-item bg-blue'>Selectable Items</div>",
+        selectionFooter: "<div style='text-align: center;padding: 3px;color: #fff;' class='list-group-item bg-green'>Selected</div>",
+        afterInit: function(ms){
+        var that = this,
+            $selectableSearch = that.$selectableUl.prev(),
+            $selectionSearch = that.$selectionUl.prev(),
+            selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
+            selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
 
-            that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
-            .on('keydown', function(e){
-              if (e.which === 40){
-                that.$selectableUl.focus();
-                return false;
-              }
-            });
-
-            that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
-            .on('keydown', function(e){
-              if (e.which == 40){
-                that.$selectionUl.focus();
-                return false;
-              }
-            });
-            },
-            afterSelect: function(){
-                this.qs1.cache();
-                this.qs2.cache();
-            },
-            afterDeselect: function(){
-                this.qs1.cache();
-                this.qs2.cache();
-            }
+        that.qs1 = $selectableSearch.quicksearch(selectableSearchString).on('keydown', function(e){
+          if (e.which === 40){
+            that.$selectableUl.focus();
+            return false;
+          }
         });
 
+        that.qs2 = $selectionSearch.quicksearch(selectionSearchString).on('keydown', function(e){
+          if (e.which == 40){
+            that.$selectionUl.focus();
+            return false;
+          }
+        });
+        },
+        afterSelect: function(){
+            this.qs1.cache();
+            this.qs2.cache();
+        },
+        afterDeselect: function(){
+            this.qs1.cache();
+            this.qs2.cache();
+        }
+    });
 
-        CKEDITOR.config.toolbar = [
-           ['Styles','Format','Font','FontSize'],
-           '/',
-           ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Paste','Find','Replace','-','Outdent','Indent','-','Print'],
-           '/',
-           ['NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-           ['Image','Table','-','Link','Flash','Smiley','TextColor','BGColor','Source']
-        ] ;
-
+    CKEDITOR.config.toolbar = [
+       ['Styles','Format','Font','FontSize'],
+       '/',
+       ['Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Paste','Find','Replace','-','Outdent','Indent','-','Print'],
+       '/',
+       ['NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+       ['Image','Table','-','Link','Flash','Smiley','TextColor','BGColor','Source']
+    ] ;
 
 </script>
 <script>

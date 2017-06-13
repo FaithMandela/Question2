@@ -73,6 +73,7 @@ CREATE TRIGGER ins_deposit_accounts BEFORE INSERT OR UPDATE ON deposit_accounts
 CREATE OR REPLACE FUNCTION ins_account_activity() RETURNS trigger AS $$
 DECLARE
 	v_deposit_account_id		integer;
+	v_loan_id					integer;
 BEGIN
 	IF(NEW.link_activity_id is null)THEN
 		NEW.link_activity_id := nextval('link_activity_id_seq');
@@ -82,10 +83,19 @@ BEGIN
 		SELECT deposit_account_id INTO v_deposit_account_id
 		FROM deposit_accounts
 		WHERE (account_number = NEW.transfer_account_no);
+		
 		IF(v_deposit_account_id is null)THEN
+			SELECT loan_id INTO v_loan_id
+			FROM loans
+			WHERE (account_number = NEW.transfer_account_no);
+		END IF;
+		
+		IF((v_deposit_account_id is null) AND (v_loan_id is null))THEN
 			RAISE EXCEPTION 'Enter a valid account to do transfer';
-		ELSE
+		ELSIF(v_deposit_account_id is not null)THEN
 			NEW.transfer_account_id := v_deposit_account_id;
+		ELSIF(v_loan_id is not null)THEN
+			NEW.transfer_loan_id := v_loan_id;
 		END IF;
 	END IF;
 	
@@ -118,7 +128,11 @@ DECLARE
 	v_account_activity_id		integer;
 	v_product_id				integer;
 	v_use_key_id				integer;
+	v_account_id				integer;
 BEGIN
+
+	IF(NEW.deposit_account_id is not null) THEN v_account_id := NEW.deposit_account_id; END IF;
+	IF(NEW.loan_id is not null) THEN v_account_id := NEW.loan_id; END IF;
 
 	IF(NEW.transfer_account_id is not null)THEN
 		SELECT account_activity_id INTO v_account_activity_id
@@ -130,33 +144,49 @@ BEGIN
 			INSERT INTO account_activity (deposit_account_id, transfer_account_id, activity_type_id,
 				currency_id, org_id, link_activity_id, activity_date, value_date,
 				activity_status_id, account_credit, account_debit, activity_frequency_id)
-			VALUES (NEW.transfer_account_id, NEW.deposit_account_id, NEW.activity_type_id,
+			VALUES (NEW.transfer_account_id, v_account_id, NEW.activity_type_id,
 				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
 				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
-				
-			--- Posting the charge on the transfer tranzaction
-			SELECT product_id INTO v_product_id
-			FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
-			
-			SELECT use_key_id INTO v_use_key_id
-			FROM activity_types
-			WHERE (activity_type_id = NEW.activity_type_id);
-			
-			IF(v_use_key_id < 200) AND (NEW.account_debit > 0)THEN
-				INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
-					activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
-					link_activity_id, activity_date, value_date, account_debit)
-				SELECT NEW.deposit_account_id, account_fees.activity_type_id, account_fees.activity_frequency_id,
-					1, products.currency_id, NEW.entity_id, NEW.org_id, account_fees.account_number,
-					NEW.link_activity_id, current_date, current_date, 
-					(account_fees.fee_amount + account_fees.fee_ps * NEW.account_debit / 100)
-				FROM account_fees INNER JOIN activity_types ON account_fees.activity_type_id = activity_types.activity_type_id
-					INNER JOIN products ON account_fees.product_id = products.product_id
-				WHERE (account_fees.product_id = v_product_id) AND (account_fees.org_id = NEW.org_id)
-					AND (account_fees.activity_frequency_id = 1) AND (activity_types.use_key_id = 202) 
-					AND (account_fees.is_active = true) AND (account_fees.start_date < current_date);
-			END IF;
 		END IF;
+	END IF;
+	
+	IF(NEW.transfer_loan_id is not null)THEN
+		SELECT account_activity_id INTO v_account_activity_id
+		FROM account_activity
+		WHERE (loan_id = NEW.transfer_loan_id)
+			AND (link_activity_id = NEW.link_activity_id);
+			
+		IF(v_account_activity_id is null)THEN
+			INSERT INTO account_activity (loan_id, transfer_account_id, activity_type_id,
+				currency_id, org_id, link_activity_id, activity_date, value_date,
+				activity_status_id, account_credit, account_debit, activity_frequency_id)
+			VALUES (NEW.transfer_loan_id, v_account_id, NEW.activity_type_id,
+				NEW.currency_id, NEW.org_id, NEW.link_activity_id, NEW.activity_date, NEW.value_date,
+				NEW.activity_status_id, NEW.account_debit, NEW.account_credit, 1);
+		END IF;
+	END IF;
+	
+	SELECT use_key_id INTO v_use_key_id
+	FROM activity_types
+	WHERE (activity_type_id = NEW.activity_type_id);
+
+	IF(v_use_key_id < 200) AND (NEW.account_debit > 0)THEN
+		--- Posting the charge on the transfer tranzaction
+		SELECT product_id INTO v_product_id
+		FROM deposit_accounts WHERE deposit_account_id = NEW.deposit_account_id;
+		
+		INSERT INTO account_activity (deposit_account_id, activity_type_id, activity_frequency_id,
+			activity_status_id, currency_id, entity_id, org_id, transfer_account_no,
+			link_activity_id, activity_date, value_date, account_debit)
+		SELECT NEW.deposit_account_id, account_fees.activity_type_id, account_fees.activity_frequency_id,
+			1, products.currency_id, NEW.entity_id, NEW.org_id, account_fees.account_number,
+			NEW.link_activity_id, current_date, current_date, 
+			(account_fees.fee_amount + account_fees.fee_ps * NEW.account_debit / 100)
+		FROM account_fees INNER JOIN activity_types ON account_fees.activity_type_id = activity_types.activity_type_id
+			INNER JOIN products ON account_fees.product_id = products.product_id
+		WHERE (account_fees.product_id = v_product_id) AND (account_fees.org_id = NEW.org_id)
+			AND (account_fees.activity_frequency_id = 1) AND (account_fees.use_key_id = v_use_key_id) 
+			AND (account_fees.is_active = true) AND (account_fees.start_date < current_date);
 	END IF;
 	
 	RETURN NULL;
@@ -172,13 +202,30 @@ DECLARE
 BEGIN
 
 	IF($3 = '1')THEN
-		UPDATE customers SET approve_status = 'Completed' WHERE customer_id = $1::integer;
+		UPDATE customers SET approve_status = 'Completed' 
+		WHERE (customer_id = $1::integer) AND (approve_status = 'Draft');
 
 		msg := 'Applied for client approval';
 	ELSIF($3 = '2')THEN
-		UPDATE deposit_accounts SET approve_status = 'Completed' WHERE deposit_account_id = $1::integer;
+		UPDATE deposit_accounts SET approve_status = 'Completed' 
+		WHERE (deposit_account_id = $1::integer) AND (approve_status = 'Draft');
 		
 		msg := 'Applied for account approval';
+	ELSIF($3 = '3')THEN
+		UPDATE loans SET approve_status = 'Completed' 
+		WHERE (loan_id = $1::integer) AND (approve_status = 'Draft');
+		
+		msg := 'Applied for loan approval';
+	ELSIF($3 = '4')THEN
+		UPDATE guarantees SET approve_status = 'Completed' 
+		WHERE (guarantee_id = $1::integer) AND (approve_status = 'Draft');
+		
+		msg := 'Applied for guarantees approval';
+	ELSIF($3 = '5')THEN
+		UPDATE collaterals SET approve_status = 'Completed' 
+		WHERE (collateral_id = $1::integer) AND (approve_status = 'Draft');
+		
+		msg := 'Applied for collateral approval';
 	END IF;
 
 	RETURN msg;
@@ -196,7 +243,7 @@ BEGIN
 			minimum_balance, maximum_balance INTO myrec
 		FROM products WHERE product_id = NEW.product_id;
 	
-		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 4, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 4, '0');
+		NEW.account_number := '5' || lpad(NEW.org_id::varchar, 2, '0')  || lpad(NEW.customer_id::varchar, 4, '0') || lpad(NEW.loan_id::varchar, 2, '0');
 			
 		NEW.interest_rate = myrec.interest_rate;
 		NEW.activity_frequency_id = myrec.activity_frequency_id;

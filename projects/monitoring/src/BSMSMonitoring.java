@@ -32,6 +32,10 @@ public class BSMSMonitoring {
 			String emailError = monitorEmails(bunsonDB);
 			if(emailError != null) addEMail(monDB, "Bunsons Email : " + emailError);
 			else System.out.println("Bunsons Email okay");
+			
+			String transportError = monitorTransport(bunsonDB);
+			if(transportError != null) addEMail(monDB, "Bunsons Transport : " + transportError);
+			else System.out.println("Bunsons Transport okay");
 		}
 		
 		Connection faidaplusDB = getConnection("jdbc:postgresql://192.168.0.9:5432/faidaplus", "sms_user", "Invent2k");
@@ -168,6 +172,31 @@ public class BSMSMonitoring {
 		}
 		
 		return smsError;
+	}
+	
+	
+	public String monitorTransport(Connection bunsonDB) {
+		String transportError = null;
+		
+		try {
+			String sql = "SELECT etravel_id , picked, created_at::timestamp, CURRENT_TIMESTAMP::timestamp AS now, "
+			+ "(EXTRACT('epoch' FROM (CURRENT_TIMESTAMP::timestamp-created_at::timestamp))/60/60) as difference "
+			+ "FROM etravel "
+			+ "WHERE picked = false "
+			+ "AND (EXTRACT('epoch' FROM (CURRENT_TIMESTAMP::timestamp-created_at::timestamp))/60/60) > 2 "
+			+ "AND etravel_id = (SELECT MAX(etravel_id) FROM etravel); ";
+			Statement st1 = bunsonDB.createStatement();
+			ResultSet rs1 = st1.executeQuery(sql);
+			
+			if(rs1.next()) transportError = "Bunson Transport script needs synchronisation to backend"; 
+				
+			rs1.close();
+			st1.close();
+		} catch(SQLException ex) {
+			System.out.println("Error: " + ex);
+		}
+	
+		return transportError;
 	}
 	
 	public void addEMail(Connection monDB, String narrative) {

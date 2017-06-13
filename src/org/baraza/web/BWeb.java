@@ -633,12 +633,14 @@ public class BWeb {
 			if(view.getAttribute("edit", "true").equals("true") && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn btn-success i_tick icon small' name='process' value='Update'> <i class='fa  fa-save'></i> &nbsp; " + saveBtn + "</button>\n";
 			boolean canDel = true;
-			if(view.getAttribute("delete", "true").equals("false") || view.getAttribute("delete", "true").equals("false")) canDel = false;
+			if(view.getAttribute("delete", "true").equals("false")) canDel = false;
 			if(canDel && view.getAttribute("delete.role") != null) {
 				if(!checkAccess(view.getAttribute("delete.role"))) canDel = false;
 			}
 			if(canDel && (!"{new}".equals(dataItem)))
-				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete'> <i class='fa fa-trash-o'></i> &nbsp; Delete</button>\n";
+				buttons += "<button class='btn btn-danger i_cross icon small' name='process' value='Delete' "
+				+ "onclick=\"return confirm('Are you sure you delete?')\""
+				+ "> <i class='fa fa-trash-o'></i> &nbsp; Delete</button>\n";
 			/*if(view.getAttribute("audit", "true").equals("true") && (!"{new}".equals(dataItem)))
 				buttons += "<button class='btn blue i_key icon small' name='process' value='Audit'>Audit</button>\n";*/
             

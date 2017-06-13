@@ -398,10 +398,14 @@ public class BWebBody extends BQuery {
 				tabNotDone = true;
 			}
 			
+			boolean forForm = true;
+			String elName = el.getName();
+			if(elName.equals("USERFIELD") || elName.equals("USERNAME") || elName.equals("REMOTEIP") || elName.equals("DEFAULT") || elName.equals("FUNCTION")) forForm = false;
+			
 			// Get the elements and determine creation of rows
-			if(noSpan) response.append("	<div class='row'>\n");
-			response.append(getField(el, formLinkData, eof, formCols));
-			if(el.getAttribute("span") == null) { response.append("	</div>\n"); noSpan = true; }
+			if(noSpan) response.append("<div class='row'>\n");
+			if(forForm) response.append(getField(el, formLinkData, eof, formCols));
+			if(el.getAttribute("span") == null) { response.append("</div>\n"); noSpan = true; }
 			else noSpan = false;
 		}
 		
@@ -433,9 +437,9 @@ public class BWebBody extends BQuery {
 			defaultvalue = db.getUserID();
 		}
 		
-		if(el.getAttribute("tab") != null) formCols = 0;
-
-		if(formCols > 1) response.append("<div class='col-md-6'>\n");
+		//if(el.getAttribute("tab") != null) formCols = 0;
+		Integer w = new Integer(el.getAttribute("w", "150"));
+		if((formCols > 1) && (w < 400)) response.append("  <div class='col-md-6'>\n");
 		
 		response.append("	<div class='form-group'>\n");
 		
@@ -904,7 +908,8 @@ public class BWebBody extends BQuery {
 		
 		response.append("		</div>\n");
 		response.append("	</div>\n");
-		if(formCols > 1) response.append("</div>\n");
+		
+		if((formCols > 1) && (w < 400)) response.append("  </div>\n");
 		
 		return response.toString();
 	}

@@ -43,8 +43,7 @@ CREATE TABLE customers (
 
 	details					text,
 	
-	UNIQUE (org_id, identification_number),
-	UNIQUE (org_id, client_email)
+	UNIQUE (org_id, identification_number)
 );
 CREATE INDEX customers_entity_id ON customers(entity_id);
 CREATE INDEX customers_org_id ON customers(org_id);
@@ -64,7 +63,7 @@ CREATE TABLE activity_status (
 
 CREATE TABLE activity_types (
 	activity_type_id		serial primary key,
-	account_id				integer references accounts,
+	account_id				integer not null references accounts,
 	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
 	activity_type_name		varchar(120) not null,
@@ -80,16 +79,29 @@ CREATE TABLE interest_methods (
 	interest_method_id		serial primary key,
 	org_id					integer references orgs,
 	interest_method_name	varchar(120) not null,
-	formural				varchar(320) not null,
+	formural				varchar(320),
+	account_number			varchar(32),
 	details					text,
 	UNIQUE(org_id, interest_method_name)
 );
 CREATE INDEX interest_methods_org_id ON interest_methods(org_id);
 
+CREATE TABLE penalty_methods (
+	penalty_method_id		serial primary key,
+	org_id					integer references orgs,
+	penalty_method_name		varchar(120) not null,
+	formural				varchar(320),
+	account_number			varchar(32),
+	details					text,
+	UNIQUE(org_id, penalty_method_name)
+);
+CREATE INDEX penalty_methods_org_id ON penalty_methods(org_id);
+
 CREATE TABLE products (
 	product_id				serial primary key,
 	account_id				integer references accounts,
 	interest_method_id 		integer references interest_methods,
+	penalty_method_id		integer references penalty_methods,
 	activity_frequency_id	integer references activity_frequency,
 	currency_id				integer references currency,
 	entity_id 				integer references entitys,
@@ -126,9 +138,10 @@ CREATE INDEX products_org_id ON products(org_id);
 
 CREATE TABLE account_fees (
 	account_fee_id			serial primary key,
-	product_id 				integer references products,
-	activity_type_id		integer references activity_types,
-	activity_frequency_id	integer references activity_frequency,
+	product_id 				integer not null references products,
+	activity_type_id		integer not null references activity_types,
+	activity_frequency_id	integer not null references activity_frequency,
+	use_key_id				integer not null references use_keys,
 	org_id					integer references orgs,
 	account_fee_name		varchar(50) not null,
 	start_date				date not null,
@@ -142,6 +155,7 @@ CREATE TABLE account_fees (
 CREATE INDEX account_fees_product_id ON account_fees(product_id);
 CREATE INDEX account_fees_activity_type_id ON account_fees(activity_type_id);
 CREATE INDEX account_fees_activity_frequency_id ON account_fees(activity_frequency_id);
+CREATE INDEX account_fees_activity_use_key_id ON account_fees(use_key_id);
 CREATE INDEX account_fees_org_id ON account_fees(org_id);
 
 CREATE TABLE deposit_accounts (
@@ -154,6 +168,7 @@ CREATE TABLE deposit_accounts (
 
 	is_active				boolean default false not null,
 	account_number			varchar(32) not null,
+	narrative				varchar(120),
 	last_closing_date		date,
 	
 	credit_limit			real,
@@ -274,6 +289,7 @@ CREATE VIEW vw_products AS
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		interest_methods.interest_method_id, interest_methods.interest_method_name, 
+		penalty_methods.penalty_method_id, penalty_methods.penalty_method_name,
 		products.org_id, products.product_id, products.product_name, products.description, 
 		products.loan_account, products.is_active, products.interest_rate, 
 		products.min_opening_balance, products.lockin_period_frequency, 
@@ -282,18 +298,21 @@ CREATE VIEW vw_products AS
 	FROM products INNER JOIN vw_accounts ON products.account_id = vw_accounts.account_id
 		INNER JOIN activity_frequency ON products.activity_frequency_id = activity_frequency.activity_frequency_id
 		INNER JOIN currency ON products.currency_id = currency.currency_id
-		INNER JOIN interest_methods ON products.interest_method_id = interest_methods.interest_method_id;
+		INNER JOIN interest_methods ON products.interest_method_id = interest_methods.interest_method_id
+		INNER JOIN penalty_methods ON products.penalty_method_id = penalty_methods.penalty_method_id;
 
 CREATE VIEW vw_account_fees AS
 	SELECT activity_types.activity_type_id, activity_types.activity_type_name, 
 		products.product_id, products.product_name,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
+		use_keys.use_key_id, use_keys.use_key_name,
 		account_fees.org_id, account_fees.account_fee_id, account_fees.account_fee_name, 
 		account_fees.start_date, account_fees.end_date, account_fees.is_active, account_fees.account_number,
 		account_fees.fee_amount, account_fees.fee_ps, account_fees.details
 	FROM account_fees INNER JOIN activity_types ON account_fees.activity_type_id = activity_types.activity_type_id
+		INNER JOIN products ON account_fees.product_id = products.product_id
 		INNER JOIN activity_frequency ON account_fees.activity_frequency_id = activity_frequency.activity_frequency_id
-		INNER JOIN products ON account_fees.product_id = products.product_id;
+		INNER JOIN use_keys ON account_fees.use_key_id = use_keys.use_key_id;
 
 CREATE VIEW vw_deposit_accounts AS
 	SELECT customers.customer_id, customers.customer_name, 
@@ -301,7 +320,7 @@ CREATE VIEW vw_deposit_accounts AS
 		vw_products.currency_id, vw_products.currency_name, vw_products.currency_symbol,
 		activity_frequency.activity_frequency_id, activity_frequency.activity_frequency_name, 
 		deposit_accounts.org_id, deposit_accounts.deposit_account_id, deposit_accounts.is_active, 
-		deposit_accounts.account_number, deposit_accounts.last_closing_date, 
+		deposit_accounts.account_number, deposit_accounts.narrative, deposit_accounts.last_closing_date, 
 		deposit_accounts.credit_limit, deposit_accounts.minimum_balance, deposit_accounts.maximum_balance, 
 		deposit_accounts.interest_rate, deposit_accounts.lockin_period_frequency, 
 		deposit_accounts.lockedin_until_date, deposit_accounts.application_date, deposit_accounts.approve_status, 

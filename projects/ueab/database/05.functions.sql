@@ -1288,6 +1288,10 @@ BEGIN
 		v_role := v_role || ',pgs_dean';
 		v_no_org := true;
 	END IF;
+	IF(NEW.dvc = true)THEN
+		v_role := v_role || ',dvc';
+		v_no_org := true;
+	END IF;
 
 	IF(TG_OP = 'INSERT')THEN
 		INSERT INTO entitys (org_id, entity_type_id, user_name, entity_name, Entity_Leader, Super_User, no_org, primary_email, function_role)

@@ -57,17 +57,18 @@ public class BJSONData extends HttpServlet {
 			else sortby = sortby + "  " + request.getParameter("sord");
 		}
 		if(sortby != null && webSession.getAttribute("JSONfilter2") != null) {
-			webSession.setAttribute("JSONfilter1", webSession.getAttribute("JSONfilter2"));
+			webSession.setAttribute("JSONfilter2", webSession.getAttribute("JSONfilter2"));
 		}
-		//System.out.println("JSON sort : " + sortby);
+		System.out.println("JSON sort 2020 : " + sortby);
 		
 		String wheresql = null;
-		if(webSession.getAttribute("JSONfilter1") != null) {
-			wheresql = (String)webSession.getAttribute("JSONfilter1");
-			webSession.removeAttribute("JSONfilter1");
+		String filterSN = "F" + web.getViewKey();
+		if(webSession.getAttribute(filterSN) != null) {
+			wheresql = (String)webSession.getAttribute(filterSN);
+			//webSession.removeAttribute(filterSN);
 		}
 		wheresql = web.getJSONWhere(request, wheresql);
-		//System.out.println("BASE 1010 : " + wheresql);
+		System.out.println("JSON Where 2030 : " + wheresql);
 		
 		String pageNum = request.getParameter("page");
 		if(pageNum == null) pageNum = "0";
