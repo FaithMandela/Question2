@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_summary" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8813209d-e8c6-46d2-a977-a017ea829d4d">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="71"/>
+	<property name="ireport.y" value="101"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -49,6 +49,9 @@ ORDER BY portal_id,period DESC]]>
 	</variable>
 	<variable name="num" class="java.lang.Integer" calculation="Count"/>
 	<variable name="type" class="java.lang.String"/>
+	<variable name="portal_total" class="java.lang.Float" resetType="Group" resetGroup="report" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_amount}]]></variableExpression>
+	</variable>
 	<group name="report">
 		<groupExpression><![CDATA[$F{portal_id}]]></groupExpression>
 		<groupHeader>
@@ -56,12 +59,26 @@ ORDER BY portal_id,period DESC]]>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement isPrintRepeatedValues="false" x="27" y="0" width="249" height="15" isPrintWhenDetailOverflows="true" uuid="87b202d5-439c-4459-8e61-5820d2464cf0"/>
 					<textElement>
-						<font fontName="Garamond-Normal"/>
+						<font fontName="Garamond-Normal" size="13" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{portal_id} == 2 ? "Bima Mtandao Portal":$F{portal_id} == 1 ?"Agency Portal":"Individual Portal"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{portal_id} == 2 ? "Bima Mtandao Portal":$F{portal_id} == 1 ?"Agency Portal":"Direct Portal"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
+		<groupFooter>
+			<band height="21">
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="427" y="1" width="127" height="20" uuid="deb7fd97-0c42-4f29-8ce2-492fcb34fd3a"/>
+					<textElement textAlignment="Right">
+						<font fontName="Garamond-Normal" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{portal_total}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="428" y="0" width="126" height="1" uuid="815f0292-562f-4b5f-92ff-d23dc7645774"/>
+				</line>
+			</band>
+		</groupFooter>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -113,7 +130,7 @@ ORDER BY portal_id,period DESC]]>
 			</staticText>
 			<staticText>
 				<reportElement x="351" y="0" width="77" height="15" uuid="b255b35a-3979-4c8d-9f99-8ee9e0bebf98"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total Sales]]></text>
@@ -149,7 +166,7 @@ ORDER BY portal_id,period DESC]]>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="351" y="0" width="77" height="15" uuid="b9dd25e7-55e1-43ee-8835-dabd200b2baa"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="Garamond-Normal"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{insuranceno}]]></textFieldExpression>

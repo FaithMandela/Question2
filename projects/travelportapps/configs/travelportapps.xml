@@ -27,6 +27,7 @@
 			<MENU role="admin,manager" name="Emails">60</MENU>
 			<MENU role="manager,admin" name="Exchange Rates">201</MENU>
 			<MENU role="admin" name="Travelport Apps" superuser="true">76</MENU>
+			<MENU name="Logs">206</MENU>
 		</MENU>
 		<MENU role="admin,manager,agency,broker,user" name="Reports">
 			<MENU role="admin,manager" name="Rates">90</MENU>
@@ -1623,5 +1624,28 @@
 			</FILTERFORM>
 			<JASPER noorg.query="true" reportfile="travelinsurance/mysales.jasper" name="All Agency Sales "></JASPER>
 		</FILTER>
+	</DESK>
+	<DESK w="700" h="550" name="Logs" key="206">
+		<GRID noorg="true" keyfield="logsid" name="Logs" table="vw_logs">
+			<TEXTFIELD w="75" title="Logsid">logsid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Transaction Id">transid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Passenger Email">passenger_email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Entity Name">entity_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="User IP Address">userip</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Amount(KES)">amount_1</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Amount(USD)">amount_2</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Status">status</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Transdate">transdate</TEXTTIMESTAMP>
+			<FORM keyfield="logsid" name="Logs" table="logs">
+				<COMBOBOX w="430" h="20" lpfield="passenger_name" x="10" y="10" lptable="passengers" title="Transid" lpkey="passenger_id">transid</COMBOBOX>
+				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="30" lptable="entitys" title="Entity ID">entity_id</COMBOBOX>
+				<TEXTFIELD w="150" h="20" x="10" y="50" title="Userip">userip</TEXTFIELD>
+				<TEXTDECIMAL w="150" h="20" x="290" y="50" title="Amount 1">amount_1</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" h="20" x="10" y="70" title="Amount 2">amount_2</TEXTDECIMAL>
+				<TEXTTIMESTAMP w="150" h="20" x="290" y="70" title="Transdate">transdate</TEXTTIMESTAMP>
+				<TEXTAREA w="430" h="70" x="10" y="90" title="Portal">portal</TEXTAREA>
+				<TEXTAREA w="430" h="70" x="10" y="160" title="Status">status</TEXTAREA>
+			</FORM>
+		</GRID>
 	</DESK>
 </APP>

@@ -187,28 +187,7 @@ CREATE INDEX donation_entity_id  ON donation(entity_id);
 CREATE INDEX donation_org_id  ON donation(org_id);
 CREATE INDEX donation_donated_by  ON donation(donated_by);
 
-CREATE OR REPLACE FUNCTION ins_donate() RETURNS trigger AS $$
-DECLARE
-	rec 			RECORD;
-	v_entity_id		integer;
-	v_org_id		integer;
-BEGIN
-	IF (TG_OP = 'INSERT') THEN
-		SELECT org_id INTO v_org_id FROM entitys WHERE entity_id = NEW.donated_by;
-		SELECT entity_id INTO v_entity_id FROM entitys WHERE client_code = 'CSR';
-		IF(v_entity_id is null)THEN
-			RAISE EXCEPTION 'The CSR does not exists';
-		END IF;
-		NEW.org_id :=v_org_id;
-		NEW.entity_id :=v_entity_id;
-	END IF;
-	RETURN NEW;
-END;
-$$
-  LANGUAGE plpgsql ;
-CREATE TRIGGER ins_donate  BEFORE INSERT  ON donation
-  FOR EACH ROW
-  EXECUTE PROCEDURE ins_donate();
+
 
 CREATE OR REPLACE FUNCTION ins_sambaza() RETURNS trigger AS $$
 DECLARE
@@ -264,6 +243,14 @@ CREATE TABLE points_value (
 		start_date				date,
 		end_date				date,
 		details 				text
+);
+
+CREATE TABLE user_guide(
+	guide_id serial PRIMARY KEY,
+	title varchar(50),
+	org_id integer references orgs,
+	guide       text
+
 );
 
 CREATE OR REPLACE VIEW vw_booking_type_class AS

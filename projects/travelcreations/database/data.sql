@@ -99,8 +99,8 @@ SELECT pg_catalog.setval('products_product_id_seq', 7, true);
 -- Data for Name: sys_emails; Type: TABLE DATA; Schema: public; Owner: root
 --
 
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (5, NULL, 'Sambaza', NULL, 'Sambaza Update status', NULL, 3);
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (7, NULL, 'Points', NULL, 'Points Generated', '<p>Dear {{name}}</p>
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (10, NULL, 'Donation', NULL, 'Sambaza Update status', NULL, 3);
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (9, NULL, 'Points', NULL, 'Points Generated', '<p>Dear {{name}}</p>
 
 <p>Congratulations!!! Your points are ready for you to redeem.</p>
 
@@ -195,7 +195,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Travel Creations Team</p>
 ', 2);
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (6, NULL, 'Reset Password', NULL, 'Password Reset', '<p>Dear {{name}},</p>
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (8, NULL, 'Reset Password', NULL, 'Password Reset', '<p>Dear {{name}},</p>
 
 <p>Username: {{username}}</p>
 
@@ -204,7 +204,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 <p>Password : {{password}}</p>
 ', 1);
 
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (8, NULL, 'Order on processing ', NULL, 'Order on processing ', '<p><span style="color:#0075B0">Dear {{name}},</span></p>
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (5, NULL, 'Order on processing ', NULL, 'Order on processing ', '<p><span style="color:#0075B0">Dear {{name}},</span></p>
 
 <p><span style="color:#0075B0">Your order of </span>{{mailbody}}<span style="color:#0075B0"> is being processed, once ready for collection an email notification will be sent to you. </span></p>
 
@@ -212,7 +212,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Travel Creations Team</p>
 ', 3);
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (9, NULL, 'Order Collected', NULL, 'Order Collected', '<p><span style="color:#0075B0">Dear {{name}},</span></p>
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (7, NULL, 'Order Collected', NULL, 'Order Collected', '<p><span style="color:#0075B0">Dear {{name}},</span></p>
 
 <p><span style="color:#0075B0">Thank you for collecting the order in the subject line. Happy selling!</span></p>
 
@@ -222,7 +222,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Travel Creations Team</p>
 ', 3);
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (4, 0, 'Order awaiting collection', NULL, 'Order awaiting collection', '<p>Dear {{name}},</p>
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (6, 0, 'Order awaiting collection', NULL, 'Order awaiting collection', '<p>Dear {{name}},</p>
 
 <p><span style="color:#0075B0">Your order&nbsp;</span>{{mailbody}}<span style="color:#0075B0"> is ready for collection. Please login to Travelcreactions go to the orders tab, download and print the collection document and present at the office during collection.</span></p>
 
@@ -230,7 +230,7 @@ INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, tit
 
 <p>Travel Creations Team</p>
 ', 3);
-INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (10, 0, 'Order submitted', NULL, 'Order submitted', '<p>Dear {{name}}</p>
+INSERT INTO sys_emails (sys_email_id, org_id, sys_email_name, default_email, title, details, use_type) VALUES (4, 0, 'Order submitted', NULL, 'Order submitted', '<p>Dear {{name}}</p>
 
 <p>&nbsp;</p>
 

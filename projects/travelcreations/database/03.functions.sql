@@ -97,7 +97,7 @@ DECLARE
 BEGIN
 
 	INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type,mail_body, narrative)
-	VALUES (10, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'Order '||NEW.order_id||' has been submitted');
+	VALUES (4, NEW.order_id , 'vw_orders', 3, get_order_details(NEW.order_id), 'Order '||NEW.order_id||' has been submitted');
 	RETURN NEW;
 END;
 $BODY$
@@ -125,14 +125,14 @@ FROM orders WHERE (order_id = $1::integer);
 		UPDATE orders SET order_status = 'Awaiting Collection' WHERE order_id = $1::integer;
 		details :='Order '||v_batch_no||'-'||v_order_no||' is ready for collection';
 		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-		VALUES ($1::integer,4 ,'orders', 3, 0,details);
+		VALUES ($1::integer,6 ,'orders', 3, 0,details);
 	END IF;
 
 	IF ($3::integer = 2) THEN
 		UPDATE orders SET order_status = 'Collected' WHERE order_id = $1::integer;
 		details := 'Order '||v_batch_no||'-'||v_order_no||' has been collected';
 		INSERT INTO sys_emailed (table_id, sys_email_id, table_name, email_type, org_id,narrative)
-		VALUES ($1::integer,9 ,'orders', 3, 0,details);
+		VALUES ($1::integer,7 ,'orders', 3, 0,details);
 	END IF;
 
 	IF ($3::integer = 3) THEN
@@ -208,7 +208,7 @@ BEGIN
 		v_batch := (SELECT last_value FROM batch_id_seq) ;
 		UPDATE orders SET batch_no = v_batch,batch_date = now(), approve_status = 'Completed' WHERE order_id = $1::integer;
 		INSERT INTO sys_emailed (sys_email_id, table_id, table_name, email_type, mail_body, narrative)
-		VALUES (8, $1::integer , 'vw_orders', 3, get_order_details($1::integer), 'Order '||v_batch||'-'||$1::integer||' is being processed.');
+		VALUES (5, $1::integer , 'vw_orders', 3, get_order_details($1::integer), 'Order '||v_batch||'-'||$1::integer||' is being processed.');
 		msg := 'Orders Batched Successfully';
 	END IF;
 
@@ -358,7 +358,7 @@ $BODY$
   		WHERE entity_id = v_entity_id;
 
   		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name, email_type)
-  		VALUES(v_org_id, 6, v_entity_id, 'entitys', 2);
+  		VALUES(v_org_id, 8, v_entity_id, 'entitys', 2);
   	END IF;
 
   	RETURN NULL;
@@ -371,3 +371,30 @@ $BODY$
   ON orders
   FOR EACH ROW
   EXECUTE PROCEDURE upd_action();
+
+  CREATE OR REPLACE FUNCTION ins_donate() RETURNS trigger AS $$
+  DECLARE
+  	rec 			RECORD;
+  	v_entity_id		integer;
+	v_donated_by integer;
+  	v_org_id		integer;
+  BEGIN
+  	IF (TG_OP = 'INSERT') THEN
+  		SELECT org_id,entity_id INTO v_org_id,v_donated_by FROM entitys WHERE entity_id = NEW.donated_by;
+  		SELECT entity_id INTO v_entity_id FROM entitys WHERE client_code = 'CSR';
+  		IF(v_entity_id is null)THEN
+  			RAISE EXCEPTION 'The CSR does not exists';
+  		END IF;
+  		NEW.org_id :=v_org_id;
+  		NEW.entity_id :=v_entity_id;
+
+		INSERT INTO sys_emailed (org_id, sys_email_id, table_id, table_name)
+  		VALUES(v_org_id, 10, v_donated_by, 'donation');
+  	END IF;
+  	RETURN NEW;
+  END;
+  $$
+    LANGUAGE plpgsql ;
+  CREATE TRIGGER ins_donate  BEFORE INSERT  ON donation
+    FOR EACH ROW
+    EXECUTE PROCEDURE ins_donate();

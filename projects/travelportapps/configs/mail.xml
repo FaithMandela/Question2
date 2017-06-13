@@ -55,7 +55,7 @@
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
-	<REPORT name="Unpaid Invoice" keyfield="passenger_id" action="expired_invoice" actioncount="1"
+	<!-- <REPORT name="Unpaid Invoice" keyfield="passenger_id" action="expired_invoice" actioncount="1"
 		table="passengers, sys_emails"
 		where="(passengers.days_from is not null) AND (passengers.is_valid = true) AND (passengers.approved = false)
 			AND ( current_date > to_date(passengers.days_from, 'DD/MM/YYYY') )
@@ -66,7 +66,7 @@
 		<ADDRESS title="address">passengers.passenger_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="passengers">passenger_name</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
-	</REPORT>
+	</REPORT> -->
 
 	<REPORT name="Approval Advice" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
 			table="sys_emailed, vw_approvals"

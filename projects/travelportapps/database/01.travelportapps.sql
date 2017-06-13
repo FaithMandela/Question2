@@ -1549,6 +1549,40 @@ CREATE TABLE portal(
 );
 
 
+
+    CREATE TABLE logs (
+        logsId serial PRIMARY KEY,
+        transId integer references passengers,
+        entity_id integer references entitys,
+        userip varchar(50),
+        amount_1 real,
+        amount_2 real,
+        portal  text,
+        status text,
+        transDate timestamp default now() not null
+    );
+    CREATE INDEX logs_transId  ON logs(transId);
+    CREATE INDEX logs_entity_id  ON logs(entity_id);
+
+	CREATE TABLE quotationlogs (
+		logsId serial PRIMARY KEY,
+		email varchar(50),
+		mobile_no varchar(50),
+		rate_type varchar(50),
+		rate_plan varchar(50),
+		amount_1 real,
+		status text,
+		log_date timestamp default now() not null
+	);
+
+    CREATE  OR REPLACE VIEW vw_logs AS
+    SELECT logs.logsid, logs.transid, logs.entity_id, logs.userip, logs.amount_1, logs.amount_2, logs.transdate,
+       logs.portal, logs.status,passengers.passenger_name, passengers.passenger_email,entitys.primary_email,entitys.entity_name
+    FROM logs
+    INNER JOIN passengers ON passengers.passenger_id = logs.transid
+    INNER JOIN entitys ON entitys.entity_id = logs.entity_id;
+
+
 	CREATE OR REPLACE VIEW vw_rates AS
      SELECT vw_rate_types.rate_type_id,  vw_rate_types.rate_type_name,  rates.rate_id,  rates.days_from,
    rates.days_to,  rates.standard_rate,  rates.north_america_rate,  vw_rate_types.rate_category_name,

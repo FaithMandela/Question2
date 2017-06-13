@@ -26,6 +26,7 @@
 			<MENU role="admin" name="Workflows">21</MENU>
 			<MENU role="admin" name="Emails">45</MENU>
 			<MENU role="admin" name="Points Scaling Settings">97</MENU>
+			<MENU role="admin" icon="fa fa-question" name="User Guide">223</MENU>
 		</MENU>
 		<MENU role="admin" name="Reports">
 			<MENU name="Orders">55</MENU>
@@ -994,5 +995,15 @@
 	</DESK>
 	<DESK w="700" h="550" name="Collection Document" key="41">
 		<JASPER reportfile="print_batch_doc.jasper" name="Collection Document"></JASPER>
+	</DESK>
+	<DESK w="700" h="500" name="User Guide" key="223">
+		<GRID noorg="true" keyfield="guide_id" name="User Guide" table="user_guide">
+			<TEXTFIELD w="75" title="User Guide ID">guide_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="User Guide Title">title</TEXTFIELD>
+			<FORM keyfield="guide_id" name="User Guide" table="user_guide">
+				<TEXTFIELD w="75" title="User Guide Title">title</TEXTFIELD>
+				<EDITOR tab="Guide" w="530" h="170" x="10" y="2">guide</EDITOR>
+			</FORM>
+		</GRID>
 	</DESK>
 </APP>
