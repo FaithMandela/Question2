@@ -22,13 +22,13 @@ public class BAbout extends JInternalFrame {
 		String mystr = "<html><body><p><b>";
 		mystr += appname + " - Application<br/>\n";
 		mystr += "Based on Open Baraza Frame Work.<br/>\n";
-		mystr += "GNU License.<br/>\n";
+		mystr += "GNU Lesser General Public License.<br/>\n";
 		mystr += "Open Baraza.<br/>\n";
 		mystr += "DEW CIS Solutions Ltd<br/>\n";
 		mystr += "P.O. Box 45689 - 00100<br/>\n";
-		mystr += "16th Floor, View Park Towers, Utalii Lane<br/>\n";
+		mystr += "12th Floor, Barclays Plaza, Loita Street<br/>\n";
 		mystr += "Nairobi<br/>\n Kenya<br/>\n";
-		mystr += "Tel : +254 - 20 - 2243097<br/>\n";
+		mystr += "Tel : +254 - 20 - 2227100<br/>\n";
 		mystr += "Email : info@openbaraza.org<br/>\n";
 		mystr += "Web : <a href=\"www.openbaraza.org\">www.openbaraza.org</a><br/>\n";
 		mystr += "Web : <a href=\"www.dewcis.com\">www.dewcis.com</a><br/>\n";

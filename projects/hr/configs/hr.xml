@@ -403,7 +403,7 @@
 				<TEXTFIELD w="100" title="First Name" required="true" y="10" h="20" x="490" span="true">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="30" h="20" x="10">middle_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" required="true" y="30" h="20" x="290" span="true">applicant_phone</TEXTFIELD>
-				<TEXTFIELD w="430" title="Email" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Email" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Birth (DD/MM/YYYY)" required="true" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
 				<COMBOLIST w="150" title="Gender" y="90" h="20" x="10" span="true">gender
@@ -415,8 +415,8 @@
 					<DATA key="S">Single</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10" span="true">identity_card</TEXTFIELD>
-				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
+				<COMBOBOX w="150" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Current Salary" required="true" y="170" h="20" x="10" span="true">previous_salary</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10" rows="5">interests</TEXTAREA>
@@ -2063,7 +2063,7 @@
 					<ACTION fnct="add_shortlist" approval="1">Short List</ACTION>
 				</ACTIONS>
 				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="((use_key_id = 1) OR (use_key_id = 4))" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Close" y="30" h="20" x="290">contract_close</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="10">contract_start</TEXTDATE>
@@ -2095,7 +2095,7 @@
 					<ACTION fnct="add_shortlist" approval="2">Un Short List</ACTION>
 				</ACTIONS>
 				<FORM name="Applications" keyfield="application_id" linkfield="intake_id" table="applications" th="210">
-					<COMBOBOX w="430" title="Applicant" lptable="entitys" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+					<COMBOBOX w="430" title="Applicant" lptable="entitys" where="((use_key_id = 1) OR (use_key_id = 4))" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
 					<TEXTDATE w="150" title="Contract Date" y="30" h="20" x="10">contract_date</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Close" y="30" h="20" x="290">contract_close</TEXTDATE>
 					<TEXTDATE w="150" title="Contract Start" y="50" h="20" x="10">contract_start</TEXTDATE>

@@ -8,6 +8,7 @@ CREATE TABLE loans (
 	org_id					integer references orgs,
 
 	account_number			varchar(32) not null,
+	disburse_account		varchar(32),
 	principal_amount		real not null,
 	interest_rate			real not null,
 	repayment_amount		real not null,
@@ -96,7 +97,9 @@ CREATE INDEX loan_notes_loan_id ON loan_notes(loan_id);
 CREATE INDEX loan_notes_org_id ON loan_notes(org_id);
 
 ALTER TABLE account_activity ADD loan_id integer references loans;
+ALTER TABLE account_activity ADD transfer_loan_id integer references loans;
 CREATE INDEX account_activity_loan_id ON account_activity(loan_id);
+CREATE INDEX account_activity_transfer_loan_id ON account_activity(transfer_loan_id);
 
 
 CREATE VIEW vw_loans AS

@@ -72,7 +72,6 @@ public class Bajax extends HttpServlet {
 				resp = updateGrid(request);
 			}
 		}
-
 		System.out.println("AJAX Reached : " + request.getParameter("fnct"));		
 		
 		String function = request.getParameter("ajaxfunction");			// function to execute
@@ -229,28 +228,33 @@ public class Bajax extends HttpServlet {
 		if(filterAnd == null) filterAnd = "false";
 		if(filterOr == null) filterOr = "false";
 		
+		String filterSN = "F" + web.getViewKey();
+System.out.println("BASE 3010 : " + filterSN);
+		
 		// Only postgres supports ilike so for the others turn to like
 		String wheresql = "";
 		if((db.getDBType()!=1) && (filterType.startsWith("ilike"))) filterType = "like";
 
-		if(filterType.startsWith("like"))
+		if(filterType.startsWith("like")) {
 			if(db.getDBType()==1) wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
 			else wheresql += "(lower(" + filterName + ") " + filterType + " lower('%" + filterValue + "%'))";
-		else if(filterType.startsWith("ilike"))
+		} else if(filterType.startsWith("ilike")) {
 			wheresql += "(cast(" + filterName + " as varchar) " + filterType + " '%" + filterValue + "%')";
-		else
+		} else {
 			wheresql += "(" + filterName + " " + filterType + " '" + filterValue + "')";
+		}
 		
 		HttpSession webSession = request.getSession(true);
-		if(webSession.getAttribute("JSONfilter2") != null) {
+		if(webSession.getAttribute(filterSN) != null) {
 			if(filterAnd.equals("true")) {
-				wheresql = (String)webSession.getAttribute("JSONfilter2") + " AND " + wheresql;
+				wheresql = (String)webSession.getAttribute(filterSN) + " AND " + wheresql;
 			} else if(filterOr.equals("true")) {
-				wheresql = (String)webSession.getAttribute("JSONfilter2") + " OR " + wheresql;
+				wheresql = (String)webSession.getAttribute(filterSN) + " OR " + wheresql;
 			}
 		}
+		webSession.setAttribute(filterSN, wheresql);
 		webSession.setAttribute("JSONfilter1", wheresql);
-		webSession.setAttribute("JSONfilter2", wheresql);	
+		webSession.setAttribute("JSONfilter2", wheresql);
 		
 		System.out.println(wheresql + " : " + filterAnd);
 		
