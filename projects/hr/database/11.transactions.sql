@@ -51,7 +51,7 @@ CREATE TABLE items (
 	item_unit_id			integer references item_units,
 	sales_account_id		integer references accounts,
 	purchase_account_id		integer references accounts,
-	item_name				varchar(120),
+	item_name				varchar(120) not null,
 	bar_code				varchar(32),
 	inventory				boolean default false not null,
 	for_sale				boolean default true not null,

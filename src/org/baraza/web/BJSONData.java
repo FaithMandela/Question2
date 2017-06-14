@@ -50,25 +50,29 @@ public class BJSONData extends HttpServlet {
 		BElement view = web.getView();
 		//System.out.println("BASE 1010 : " + view.toString());
 		
+		String sortSN = "S" + web.getViewKey();
 		String sortby = request.getParameter("sidx");
+		if(sortby != null && sortby.trim().equals("")) sortby = null;
 		if(sortby != null) {
 			if(sortby.equals("CL")) sortby = view.getAttribute("keyfield") + "  " + request.getParameter("sord");
-			else if(sortby.trim().equals("")) sortby = null;
 			else sortby = sortby + "  " + request.getParameter("sord");
+			
+			webSession.setAttribute(sortSN, sortby);
+		} else if(webSession.getAttribute(sortSN) != null) {
+			sortby = (String)webSession.getAttribute(sortSN);
 		}
-		if(sortby != null && webSession.getAttribute("JSONfilter2") != null) {
-			webSession.setAttribute("JSONfilter2", webSession.getAttribute("JSONfilter2"));
-		}
-		System.out.println("JSON sort 2020 : " + sortby);
+		System.out.println("JSON sort : " + sortby);
 		
 		String wheresql = null;
 		String filterSN = "F" + web.getViewKey();
 		if(webSession.getAttribute(filterSN) != null) {
-			wheresql = (String)webSession.getAttribute(filterSN);
-			//webSession.removeAttribute(filterSN);
+			String filterKSN = "";
+			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
+			if(filterKSN.equals(web.getDataItem())) wheresql = (String)webSession.getAttribute(filterSN);
+			else webSession.removeAttribute(filterSN);
 		}
 		wheresql = web.getJSONWhere(request, wheresql);
-		System.out.println("JSON Where 2030 : " + wheresql);
+		System.out.println("JSON Where : " + wheresql);
 		
 		String pageNum = request.getParameter("page");
 		if(pageNum == null) pageNum = "0";

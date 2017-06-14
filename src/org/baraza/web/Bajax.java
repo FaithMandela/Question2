@@ -230,6 +230,7 @@ public class Bajax extends HttpServlet {
 		
 		String filterSN = "F" + web.getViewKey();
 System.out.println("BASE 3010 : " + filterSN);
+System.out.println("BASE 3020 : " + web.getDataItem());
 		
 		// Only postgres supports ilike so for the others turn to like
 		String wheresql = "";
@@ -252,10 +253,9 @@ System.out.println("BASE 3010 : " + filterSN);
 				wheresql = (String)webSession.getAttribute(filterSN) + " OR " + wheresql;
 			}
 		}
-		webSession.setAttribute(filterSN, wheresql);
-		webSession.setAttribute("JSONfilter1", wheresql);
-		webSession.setAttribute("JSONfilter2", wheresql);
 		
+		webSession.setAttribute(filterSN, wheresql);
+		webSession.setAttribute("K" + filterSN, web.getDataItem());
 		System.out.println(wheresql + " : " + filterAnd);
 		
 		return wheresql;

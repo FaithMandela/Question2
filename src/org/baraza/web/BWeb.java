@@ -587,7 +587,7 @@ public class BWeb {
 				String newBtn = view.getAttribute("new.button", "New");
 				buttons += "<a class='btn blue btn-sm' title='Add New' href='?view=" + viewKey + ":" + String.valueOf(fv) + "&data={new}'><i class='fa fa-plus'></i>   " + newBtn + "</a>\n";
 			}
-			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "'><i class='fa fa-refresh'></i>   Refresh</a>\n";
+			buttons += "<a class='btn green btn-sm' href='?view=" + viewKey + did + "&refresh=true'><i class='fa fa-refresh'></i>   Refresh</a>\n";
 			buttons += "<a class='btn green btn-sm' target='_blank' href='grid_export?view=" + viewKey + did + "&action=export'><i class='fa fa-file-excel-o'></i>   Export</a>\n";
 			
 			if(view.getAttribute("grid.print", "false").equals("true"))
@@ -810,9 +810,6 @@ public class BWeb {
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
 		
-		session.removeAttribute("JSONfilter1");
-		session.removeAttribute("JSONfilter2");
-		
 		// Call the where create function
 		String linkData = getWhere(request);
 		String linkParam = null;
@@ -856,6 +853,8 @@ public class BWeb {
 		}
 
 		if(view.getName().equals("GRID")) {
+			if(request.getParameter("refresh") != null) webSession.removeAttribute("F" + viewKey);
+		
 			body += "\t<div class='table-scrollable'>\n";
 			body += "\t\t<table id='jqlist' class='table table-striped table-bordered table-hover'></table>\n";
 			body += "\t\t<div id='jqpager'></div>\n";
@@ -1623,9 +1622,7 @@ log.severe("BASE : " + mysql);
 		comboField = request.getParameter("field");
 		if(comboField != null) sview = view.getElement(comboField).getElement(0);
 		
-		if(session.getAttribute("JSONfilter2") != null) {
-			wheresql = (String)webSession.getAttribute("JSONfilter2");
-		}
+		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
 
 		int vds = viewKeys.size();
 		if(vds > 2) {
@@ -1930,7 +1927,9 @@ log.severe("BASE : " + mysql);
 		jshd.add("gridview", true);
 		jshd.add("autoencode", true);
 		jshd.add("autowidth", true);
-		
+		jshd.add("sortable", true);
+		if(view.getAttribute("ssort") == null) jshd.add("loadonce", true);
+		else jshd.add("loadonce", false);
 		JsonObject jsObj = jshd.build();
 		
 		//System.out.println("BASE 2030 : " + jsObj.toString());

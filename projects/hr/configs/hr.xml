@@ -1147,7 +1147,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Applicant" key="23" h="650">
-		<GRID name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants">
+		<GRID name="Applicant" keyfield="entity_id" orderby="entity_id" table="vw_applicants" ssort="true">
 			<TEXTFIELD w="50" title="ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="120" title="Name">applicant_name</TEXTFIELD>
 			<TEXTFIELD w="120" title="Email">applicant_email</TEXTFIELD>
@@ -2047,7 +2047,7 @@
 			<TEXTDATE w="75" title="Opening Date">opening_date</TEXTDATE>
 			<TEXTFIELD w="75" title="Positions">positions</TEXTFIELD>
 			<CHECKBOX w="75" title="Contract">contract</CHECKBOX>
-			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 0)">
+			<GRID name="Applications" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 0)" ssort="true">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
@@ -2080,7 +2080,7 @@
 					<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 				</FILES>
 			</GRID>
-			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 1)">
+			<GRID name="Short Listed" keyfield="application_id" linkfield="intake_id" table="vw_applications" params="entity_id" noorg="true" where="(short_listed = 1)" ssort="true">
 				<TEXTFIELD w="75" title="Applicant Name">entity_name</TEXTFIELD>
 				<TEXTTIMESTAMP w="75" title="Application Date">application_date</TEXTTIMESTAMP>
 				<TEXTFIELD w="75" title="Email">primary_email</TEXTFIELD>
