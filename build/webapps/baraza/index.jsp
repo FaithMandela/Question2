@@ -622,7 +622,6 @@
     jqcf.rowList=[10,20,30,40,50];
     jqcf.datatype = "json";
     jqcf.pgbuttons = true;
-	jqcf.loadonce = true;
 	jqcf.autoencode = false;
 	jqcf.editurl = "ajaxupdate";
 

@@ -1262,15 +1262,15 @@ public class BQuery {
 	
 	public String getJSON() {
 		JsonArrayBuilder myja = Json.createArrayBuilder();
-		
+
 		try {
 			rs.beforeFirst();
 			while (rs.next()) {
 				JsonObjectBuilder myjo = Json.createObjectBuilder();
-				
 				if(view == null) {
-					for(int column = 0; column < titles.size(); column++)
-						myjo.add(titles.get(column), rs.getString(column + 1));
+					for(int column = 0; column < titles.size(); column++) {
+						if(titles.get(column) != null) myjo.add(titles.get(column), rs.getString(column + 1));
+					}
 				} else {
 					for(BElement el : view.getElements()) {
 						if(!el.getValue().equals(""))
@@ -1278,7 +1278,6 @@ public class BQuery {
 					}
 					myjo.add("keyfield", getKeyField());
 				}
-				
 				myja.add(myjo);
 			}           	
  		} catch (SQLException ex) {

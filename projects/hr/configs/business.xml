@@ -1,6 +1,6 @@
 <APP name="Business" org="org_id" password="change_password" material="true">
 	<MENU name="Business">
-		<MENU name="Transactions">
+		<MENU name="Transactions" role="finance,business">
 			<MENU name="Sales Pipeline">15</MENU>
 			<MENU name="Sales">2</MENU>
 			<MENU name="Purchase">27</MENU>
@@ -19,7 +19,7 @@
 			<MENU name="Issue Tracking">95</MENU>
 			<MENU name="Approvals">83</MENU>
 		</MENU>
-		<MENU name="Admin">
+		<MENU name="Admin" role="finance,business">
 			<MENU name="Banks">25</MENU>
 			<MENU name="Items">30</MENU>
 			<MENU name="Stores">85</MENU>
@@ -31,7 +31,7 @@
 			<MENU name="All Approvals" role="admin">42</MENU>
 			<MENU name="EMails" role="admin">44</MENU>
 		</MENU>
-		<MENU name="Reports">
+		<MENU name="Reports" role="finance,business">
 			<MENU name="Clients">115</MENU>
 			<MENU name="Suppliers">120</MENU>
 			<MENU name="Bank Accounts">125</MENU>
@@ -315,7 +315,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Sales Quotation">
+			<ACCORDION name="Sales Quotation" keyfield="transaction_id">
 				<FORM cols="2" name="Sales Quotation" keyfield="transaction_id" jumpview="2:0:0" table="transactions" collapse="in">
 					<DEFAULT default="14">transaction_type_id</DEFAULT>
 					<COMBOBOX w="320" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -356,7 +356,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Sales Order">
+			<ACCORDION name="Sales Order" keyfield="transaction_id">
 				<FORM cols="2" name="Sales Order" keyfield="transaction_id" jumpview="2:1:0" table="transactions" collapse="in">
 					<DEFAULT default="1">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -395,7 +395,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Delivery Note">
+			<ACCORDION name="Delivery Note" keyfield="transaction_id">
 				<FORM cols="2" name="Delivery Note" keyfield="transaction_id" jumpview="2:2:0" table="transactions" collapse="in">
 					<DEFAULT default="11">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -446,7 +446,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Invoice">
+			<ACCORDION name="Invoice" keyfield="transaction_id">
 				<FORM cols="2" name="Sales" keyfield="transaction_id" jumpview="2:3:0" table="transactions" collapse="in">
 					<DEFAULT default="2">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -516,7 +516,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Credit Note">
+			<ACCORDION name="Credit Note" keyfield="transaction_id">
 				<FORM cols="2" name="Credit Note" keyfield="transaction_id" jumpview="2:5:0" table="transactions" collapse="in">
 					<DEFAULT default="9">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Client" lptable="entitys" where="(use_key_id = 2)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -559,7 +559,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Purchase Quotation">
+			<ACCORDION name="Purchase Quotation" keyfield="transaction_id">
 				<FORM cols="2" name="Purchase Quotation" keyfield="transaction_id" jumpview="27:0:0" table="transactions" collapse="in">
 					<DEFAULT default="15">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Supplier" lptable="entitys" where="(use_key_id = 3)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -600,7 +600,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Purchase Order">
+			<ACCORDION name="Purchase Order" keyfield="transaction_id">
 				<FORM cols="2" name="Purchase Order" keyfield="transaction_id" jumpview="27:1:0" table="transactions" collapse="in">
 					<DEFAULT default="4">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Supplier" lptable="entitys" where="(use_key_id = 3)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -650,7 +650,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Goods Receipt Note">
+			<ACCORDION name="Goods Receipt Note" keyfield="transaction_id">
 				<FORM cols="2" name="Receipt Note" keyfield="transaction_id" jumpview="27:2:0" table="transactions" collapse="in">
 					<DEFAULT default="12">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Supplier" lptable="entitys" where="(use_key_id = 3)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -700,7 +700,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Invoice">
+			<ACCORDION name="Invoice" keyfield="transaction_id">
 				<FORM cols="2" name="Sales" keyfield="transaction_id" jumpview="27:3:0" table="transactions" collapse="in">
 					<DEFAULT default="5">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Supplier" lptable="entitys" where="(use_key_id= 3)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
@@ -770,7 +770,7 @@
 				<ACTION fnct="copy_transaction" approval="2">Copy</ACTION>
 				<ACTION fnct="complete_transaction" approval="2">Cancel</ACTION>
 			</ACTIONS>
-			<ACCORDION name="Debit Note">
+			<ACCORDION name="Debit Note" keyfield="transaction_id">
 				<FORM cols="2" name="Debit Note" keyfield="transaction_id" jumpview="27:5:0" table="transactions" collapse="in">
 					<DEFAULT default="10">transaction_type_id</DEFAULT>
 					<COMBOBOX w="150" title="Supplier" lptable="entitys" where="(use_key_id = 3)" y="10" h="20" x="10" span="true" lpfield="entity_name">entity_id</COMBOBOX>
