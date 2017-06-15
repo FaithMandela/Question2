@@ -733,7 +733,7 @@
 				<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
 				<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
 				<TEXTAREA w="75" title=" Remarks/Comments">details</TEXTAREA>
-				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="bonus_id" key="2" table="bonus">
+				<FORM noorg="true" keyfield="bonus_id" name="Bonus" linkfield="org_id" key="2" table="bonus">
 					<TEXTFIELD w="75" title="PCC">pcc</TEXTFIELD>
 					<TEXTFIELD w="75" title="Percentage">percentage</TEXTFIELD>
 					<TEXTFIELD w="75" title="Amount">amount</TEXTFIELD>
