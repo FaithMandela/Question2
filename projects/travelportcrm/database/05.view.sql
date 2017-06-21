@@ -55,9 +55,9 @@ CREATE VIEW PTypeView AS
 
 CREATE VIEW PDefinitionview AS
 	SELECT PClassifications.PClassificationID, PClassifications.PClassificationName, PTypes.PTypeID, PTypes.PTypeName,
-		PDefinitions.PDefinitionID, PDefinitions.PDefinitionName, PDefinitions.Description, PDefinitions.Solution
+		PDefinitions.PDefinitionID, PDefinitions.PDefinitionName, PDefinitions.Description, PDefinitions.Solution,
 		(PClassifications.PClassificationName || ' : ' || PTypes.PTypeName || ' : ' || PDefinitions.PDefinitionName) as disp
-	FROM (PClassifications INNER JOIN PTypes ON PClassifications.PClassificationID = PTypes.PClassificationID)
+	FROM PClassifications INNER JOIN PTypes ON PClassifications.PClassificationID = PTypes.PClassificationID
 		INNER JOIN PDefinitions ON PTypes.PTypeID = PDefinitions.PTypeID
 	ORDER BY PClassifications.PClassificationName, PTypes.PTypeName;
 
