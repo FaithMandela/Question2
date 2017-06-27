@@ -254,8 +254,10 @@ System.out.println("BASE 3020 : " + web.getDataItem());
 			}
 		}
 		
+		
 		webSession.setAttribute(filterSN, wheresql);
-		webSession.setAttribute("K" + filterSN, web.getDataItem());
+		if(web.getDataItem() != null) webSession.setAttribute("K" + filterSN, web.getDataItem());
+		else webSession.setAttribute("K" + filterSN, "");
 		System.out.println(wheresql + " : " + filterAnd);
 		
 		return wheresql;
