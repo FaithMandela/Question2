@@ -331,8 +331,8 @@
 
 						<% if(fieldTitles != null) { %>
 							<table class="table" style="margin-bottom:0px;"><tr>
-								<td ><%= fieldTitles %></td>
-								<td >
+								<td><%= fieldTitles %></td>
+								<td>
 									<select class='fnctcombobox form-control' name='filtertype' id='filtertype'>
 										<option value='ilike'>Contains (case insensitive)</option>
 										<option value='like'>Contains (case sensitive)</option>
@@ -343,11 +343,11 @@
 										<option value='>='>Greater or Equal</option>
 									</select>
 								</td>
-								<td ><input class="form-control" name="filtervalue" type="text" id="filtervalue" /></td>
-								<td ><input class="form-control" name='filterand' id='filterand' type='checkbox'/> And</td>
-								<td ><input class="form-control" name='filteror' id='filteror' type='checkbox' /> Or</td>
-								<td ><button type="button" class="form-control" name="btSearch" id="btSearch" value="Search">Search</button></td>
-								<td ></td>
+								<td><input class="form-control" name="filtervalue" type="text" id="filtervalue" /></td>
+								<td><input class="form-control" name='filterand' id='filterand' type='checkbox'/> And</td>
+								<td><input class="form-control" name='filteror' id='filteror' type='checkbox' /> Or</td>
+								<td><button type="button" class="form-control" name="btSearch" id="btSearch" value="Search">Search</button></td>
+								<td><font color="blue"><%=web.getFilterStatus()%></font></td>
 							</tr></table>
 						<% } %>
 

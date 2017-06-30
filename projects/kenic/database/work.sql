@@ -65,11 +65,11 @@ UPDATE Period_Tax_Types SET account_number = '4035' WHERE Tax_Type_id = 3;
 13182
 79083
 
-SELECT * FROM debtor_trans WHERE trans_no = 79083;
-SELECT * FROM gl_trans WHERE type_no = 79083;
-SELECT * FROM bank_trans WHERE trans_no = 79083;
-SELECT * FROM trans_tax_details WHERE trans_no = 79083;
-SELECT * FROM cust_allocations WHERE trans_no_from = 79083 or trans_no_to = 79083;
+SELECT * FROM debtor_trans WHERE trans_no = 42312;
+SELECT * FROM gl_trans WHERE type_no = 42312;
+SELECT * FROM bank_trans WHERE trans_no = 42312;
+SELECT * FROM trans_tax_details WHERE trans_no = 42312;
+SELECT * FROM cust_allocations WHERE trans_no_from = 42312 or trans_no_to = 42312;
 
 UPDATE debtor_trans SET trans_no =  200000 WHERE trans_no = 79083;
 UPDATE gl_trans SET type_no =  200000 WHERE type_no = 79083;
@@ -192,6 +192,12 @@ INSERT INTO ledger (description, currency, tax, created, exdate, previous_expiry
 INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
 
 UPDATE ledger SET is_printed = false WHERE created::date = '2017-02-14'::date;
+
+
+----------------- check payment transactions
+
+SELECT id, client_roid, description, currency, trans_type, processor_account_history_id, documentnumber, exdate, amount 
+FROM ledger WHERE trans_type = 'Payment' ORDER BY ID DESC LIMIT 50;
 
 
 

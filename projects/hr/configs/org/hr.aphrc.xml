@@ -407,7 +407,7 @@
 				<TEXTFIELD w="100" title="First Name" required="true" y="10" h="20" x="490" span="true">first_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Middle Name" y="30" h="20" x="10">middle_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" required="true" y="30" h="20" x="290" span="true">applicant_phone</TEXTFIELD>
-				<TEXTFIELD w="430" title="Email" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
+				<TEXTFIELD w="150" title="Email" required="true" y="50" h="20" x="10">applicant_email</TEXTFIELD>
 				<TEXTDATE w="150" title="Date Of Birth (DD/MM/YYYY)" required="true" y="70" h="20" x="10" span="true">date_of_birth</TEXTDATE>
 				<COMBOBOX w="150" title="Nationality" default="KE" lptable="sys_countrys" noorg="true" lpkey="sys_country_id" y="70" h="20" x="290" lpfield="sys_country_name">nationality</COMBOBOX>
 				<COMBOLIST w="150" title="Gender" y="90" h="20" x="10" span="true">gender
@@ -419,8 +419,8 @@
 					<DATA key="S">Single</DATA>
 				</COMBOLIST>
 				<TEXTFIELD w="150" title="Identity Card" required="true" y="110" h="20" x="10" span="true">identity_card</TEXTFIELD>
-				<TEXTFIELD w="430" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
-				<COMBOBOX w="430" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Language" required="true" y="130" h="20" x="10">language</TEXTFIELD>
+				<COMBOBOX w="150" title="Currency" lptable="currency" y="150" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Current Salary" required="true" y="170" h="20" x="10" span="true">previous_salary</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Expected Salary" required="true" y="170" h="20" x="290">expected_salary</TEXTDECIMAL>
 				<TEXTAREA w="550" tab="Interests" y="2" h="120" x="10" rows="5">interests</TEXTAREA>
@@ -3160,6 +3160,19 @@
 						<CHECKBOX w="150" title="Manditory" y="10" h="20" x="290">manditory</CHECKBOX>
 						<TEXTAREA w="530" tab="Requirement" y="2" h="170" x="10">requirement</TEXTAREA>
 						<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+					</FORM>
+				</GRID>
+				<GRID name="Workflow SQL" keyfield="workflow_sql_id" linkfield="workflow_phase_id" table="workflow_sql">
+					<TEXTFIELD w="75" title="Workflow SQL ID">workflow_sql_id</TEXTFIELD>
+					<TEXTFIELD w="275" title="SQL Name">workflow_sql_name</TEXTFIELD>
+					<CHECKBOX w="75" title="Condition">is_condition</CHECKBOX>
+					<CHECKBOX w="75" title="Action">is_action</CHECKBOX>
+					<FORM name="Workflow SQL" keyfield="workflow_sql_id" linkfield="workflow_phase_id" table="workflow_sql">
+						<TEXTFIELD w="150" title="SQL Name" y="10" h="20" x="10">workflow_sql_name</TEXTFIELD>
+						<CHECKBOX w="150" title="Condition" y="30" h="20" x="10">is_condition</CHECKBOX>
+						<CHECKBOX w="150" title="Action" y="30" h="20" x="290">is_action</CHECKBOX>
+						<TEXTAREA w="430" tab="SQL" y="2" h="70" x="10">sql</TEXTAREA>
+						<TEXTAREA w="430" tab="Message" y="2" h="70" x="10">message</TEXTAREA>
 					</FORM>
 				</GRID>
 				<FORM name="Workflow Phases" keyfield="workflow_phase_id" linkfield="workflow_id" table="workflow_phases" th="210">

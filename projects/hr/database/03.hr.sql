@@ -1295,7 +1295,6 @@ CREATE VIEW vw_all_job_reviews AS
 		
 	ON (a.entity_id = b.entity_id) AND (a.review_year = b.review_year);
 	
-
 CREATE VIEW vw_evaluation_points AS
 	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, 
 		vw_job_reviews.review_category_id, vw_job_reviews.review_category_name, vw_job_reviews.rate_objectives,

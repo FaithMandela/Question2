@@ -106,6 +106,8 @@ ALTER TABLE qgrades ENABLE TRIGGER del_qgrades;
 ALTER TABLE qstudents DISABLE TRIGGER ins_qstudents;
 ALTER TABLE qgrades ENABLE TRIGGER ins_qgrades;
 
+UPDATE qstudents SET quarterid = '2016/2017.1M' WHERE quarterid = '2016/2017.1' AND sublevelid = 'UGPM';
+
 UPDATE qstudents SET org_id = 1 WHERE quarterid = '2016/2017.1M';
 UPDATE qstudents SET org_id = 1 WHERE quarterid = '2016/2017.2M';
 

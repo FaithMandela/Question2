@@ -1058,24 +1058,6 @@ public class BWeb {
 		return operations;
 	}
 
-	public boolean isDiary() {
-		boolean elDiary = false;
-		if(view.getName().equals("DIARY")) elDiary = true;
-		return elDiary;
-	}
-
-	public boolean isForm() {
-		boolean elForm = false;
-		if(view.getName().equals("FORM")) elForm = true;
-		return elForm;
-	}
-
-	public boolean isEditField() {
-		boolean editField = false;
-		if(view.getElementByName("EDITFIELD") != null) editField = true;
-		return editField;
-	}
-
 	public String setOperation(String actionKey, HttpServletRequest request) {
 		String mystr = "";
 		String mysql;
@@ -1114,11 +1096,11 @@ public class BWeb {
 		String mysql;
 
 		String[] values = ids.split(",");
+		BElement aView = view.getElementByName("ACTIONS");
 
-		if((values != null) && (view.getElementByName("ACTIONS") != null)) {
-			BElement opt = view.getElementByName("ACTIONS");
+		if((values != null) && (aView != null)) {
 			int i = Integer.valueOf(operation);
-			BElement el = opt.getElement(i);
+			BElement el = aView.getElement(i);
 			
 			List<String> userRole = db.getUser().getUserRoles();
 			boolean hasAccess = true;
@@ -1131,22 +1113,34 @@ public class BWeb {
 
 			if(hasAccess) {
 				for(String value : values) {
-					String autoKeyID = db.insAudit(el.getAttribute("fnct"), value, "FUNCTION");
+					boolean sqlOkay = true;
+					if(el.getAttribute("sql_table") != null) {
+						String sqlErr = checkSQL(el, value);
+						if(sqlErr != null) {
+							sqlOkay = false;
+							fnctError = true;
+							mystr += sqlErr + "; ";
+						}
+					}
 
-					mysql = "SELECT " + el.getAttribute("fnct") + "('" + value + "', '" + db.getUserID();
-					if(el.getAttribute("approval") != null) mysql += "', '" + el.getAttribute("approval");
-					if(el.getAttribute("phase") != null) mysql += "', '" + el.getAttribute("phase");
-					else mysql += "', '" + viewData.get(viewData.size() - 1);
-					if(el.getAttribute("auditid") != null) mysql += "', '" + autoKeyID;
-					mysql += "') ";
+					if(sqlOkay) {
+						String autoKeyID = db.insAudit(el.getAttribute("fnct"), value, "FUNCTION");
 
-					if(el.getAttribute("from") != null) mysql += " " + el.getAttribute("from");
-					log.info(mysql);
+						mysql = "SELECT " + el.getAttribute("fnct") + "('" + value + "', '" + db.getUserID();
+						if(el.getAttribute("approval") != null) mysql += "', '" + el.getAttribute("approval");
+						if(el.getAttribute("phase") != null) mysql += "', '" + el.getAttribute("phase");
+						else mysql += "', '" + viewData.get(viewData.size() - 1);
+						if(el.getAttribute("auditid") != null) mysql += "', '" + autoKeyID;
+						mysql += "') ";
 
-					String exans = db.executeFunction(mysql);
-					if(exans == null) fnctError = true;
-					if(exans == null) mystr = db.getLastErrorMsg() + "; ";
-					else mystr += exans + "; ";
+						if(el.getAttribute("from") != null) mysql += " " + el.getAttribute("from");
+						log.info(mysql);
+
+						String exans = db.executeFunction(mysql);
+						if(exans == null) fnctError = true;
+						if(exans == null) mystr = db.getLastErrorMsg() + "; ";
+						else mystr += exans + "; ";
+					}
 				}
 			
 				if(fnctError) {
@@ -1154,7 +1148,7 @@ public class BWeb {
 					jshd.add("error", true);
 				} else {
 					jshd.add("error", false);
-					String jumpView = opt.getAttribute("jumpview");
+					String jumpView = aView.getAttribute("jumpview");
 					if(jumpView != null) {
 						viewKey = jumpView;
 						webSession.setAttribute("viewkey", jumpView);
@@ -1169,11 +1163,26 @@ public class BWeb {
 				jshd.add("msg", "No access allowed for function");
 			}
 		}
-		
 		JsonObject jsObj = jshd.build();
 		
 		System.out.println("BASE 2030 : " + jsObj.toString());
 		return jsObj.toString();
+	}
+	
+	public String checkSQL(BElement el, String value) {
+		String sqlErr = "";
+		String appSql = "SELECT sql, message FROM " + el.getAttribute("sql_table")
+		+ " WHERE (is_condition = true) AND " + el.getAttribute("sql_where") + " = '" + value + "'";
+						
+		BQuery aRs = new BQuery(db, appSql);
+		while(aRs.moveNext()) {
+			String ansSql = db.executeFunction(aRs.getString("sql") + value + "'");
+			if(ansSql == null) sqlErr += aRs.getString("message") + ";";
+			else if(ansSql.equals("f")) sqlErr += aRs.getString("message") + ";";
+		}
+		if(sqlErr.equals("")) sqlErr = null;
+		
+		return sqlErr;
 	}
 	
 	public void updateMultiPart(HttpServletRequest request, ServletContext config, String tmpPath) {
@@ -1534,18 +1543,13 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 	public String submitGrid(HttpServletRequest request) {
 		String responce = "";
 		
-		
-log.info("BASE : 3020 " + request.getParameter("data"));
-
 		String tbName = view.getAttribute("updatetable");
 		String editKey = view.getAttribute("keyfield");
-log.info("BASE : 3030 " + tbName);
+
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("EDITFIELD")) {
 				String name = el.getValue();
 				String prms = request.getParameter(name);
-log.info("BASE : 3040 : " + name);
-log.info("BASE : 3045 : " + prms);
 
 				if(prms != null) {
 					String paps[] = prms.split(":");
@@ -1559,7 +1563,7 @@ log.info("BASE : 3045 : " + prms);
 						mysql += " WHERE " + editKey + " = '" + pap + "'";
 				
 log.severe("BASE : " + mysql);
-				//responce = db.executeQuery(mysql);
+						//responce = db.executeQuery(mysql);
 					}
 				}
 			}
@@ -2012,25 +2016,7 @@ log.severe("BASE : " + mysql);
 		return view.getAttribute("icon", viewIcon); 
 	}
 	
-    public boolean isFileImport() {
-		boolean fileImport = false;
-		if(root == null) return fileImport;
-		if(view == null) return fileImport;
-		if(view.getAttribute("new", "true").equals("false")) return fileImport;
-		if(view.getName().equals("FILES")) {
-			fileImport = true;
-        } else if(view.getName().equals("GRID")) {
-			if(view.getAttribute("import") != null) fileImport = true;
-        }
-		return fileImport; 
-	}
-    
-	public boolean isMaterial() {
-		if(root == null) return false;
-		if(root.getAttribute("material", "false").equals("true")) return true;
-        return false;
-	}
-	
+
 	public String getButtonNav() {
 		if(root == null) return null;
 		if(view == null) return null;
@@ -2058,6 +2044,60 @@ log.severe("BASE : " + mysql);
 			if(el.getName().equals("CROSSTAB")) hasSubs = true;
 		}
 		return hasSubs;
+	}
+	
+	public String getFilterStatus() {
+		String filterStatus = "";
+		
+		String filterSN = "F" + viewKey;
+		if(webSession.getAttribute(filterSN) != null) {
+			String filterKSN = "";
+			if(webSession.getAttribute("K" + filterSN) != null) filterKSN = (String)webSession.getAttribute("K" + filterSN);
+			String wDataItem = "";
+			if(dataItem != null) wDataItem = dataItem;
+			
+			if(filterKSN.equals(wDataItem)) filterStatus = "Filtered";
+			else webSession.removeAttribute(filterSN);
+		}
+		
+		return filterStatus;
+	}
+	
+	public boolean isDiary() {
+		boolean elDiary = false;
+		if(view.getName().equals("DIARY")) elDiary = true;
+		return elDiary;
+	}
+
+	public boolean isForm() {
+		boolean elForm = false;
+		if(view.getName().equals("FORM")) elForm = true;
+		return elForm;
+	}
+
+	public boolean isEditField() {
+		boolean editField = false;
+		if(view.getElementByName("EDITFIELD") != null) editField = true;
+		return editField;
+	}
+	
+    public boolean isFileImport() {
+		boolean fileImport = false;
+		if(root == null) return fileImport;
+		if(view == null) return fileImport;
+		if(view.getAttribute("new", "true").equals("false")) return fileImport;
+		if(view.getName().equals("FILES")) {
+			fileImport = true;
+        } else if(view.getName().equals("GRID")) {
+			if(view.getAttribute("import") != null) fileImport = true;
+        }
+		return fileImport; 
+	}
+    
+	public boolean isMaterial() {
+		if(root == null) return false;
+		if(root.getAttribute("material", "false").equals("true")) return true;
+        return false;
 	}
 	
 	public boolean hasExpired() {

@@ -385,14 +385,14 @@ CREATE INDEX checklists_workflow_phase_id ON checklists (workflow_phase_id);
 CREATE INDEX checklists_org_id ON checklists (org_id);
 
 CREATE TABLE workflow_sql (
-	workflow_sql_id			integer primary key,
+	workflow_sql_id			serial primary key,
 	workflow_phase_id		integer not null references workflow_phases,
 	org_id					integer references orgs,
 	workflow_sql_name		varchar(50),
 	is_condition			boolean default false,
 	is_action				boolean default false,
-	message_number			varchar(32),
-	ca_sql					text
+	message					text not null,
+	sql						text not null
 );
 CREATE INDEX workflow_sql_workflow_phase_id ON workflow_sql (workflow_phase_id);
 CREATE INDEX workflow_sql_org_id ON workflow_sql (org_id);
@@ -695,6 +695,16 @@ CREATE VIEW vw_approvals_entitys AS
 		INNER JOIN entitys ON reporting.report_to_id = entitys.entity_id
 	WHERE (approvals.forward_id is null) AND (reporting.primary_report = true) AND (reporting.is_active = true)
 		AND (vw_workflow_phases.use_reporting = true));
+
+CREATE VIEW vw_workflow_sql AS
+	SELECT workflow_sql.org_id, workflow_sql.workflow_sql_id, workflow_sql.workflow_phase_id, workflow_sql.workflow_sql_name, 
+		workflow_sql.is_condition, workflow_sql.is_action, workflow_sql.message, workflow_sql.sql,
+		approvals.approval_id, approvals.org_entity_id, approvals.app_entity_id, 
+		approvals.approval_level, approvals.escalation_days, approvals.escalation_hours, approvals.escalation_time, 
+		approvals.forward_id, approvals.table_name, approvals.table_id, approvals.application_date, approvals.completion_date, 
+		approvals.action_date, approvals.approve_status, approvals.approval_narrative
+	FROM workflow_sql INNER JOIN approvals ON workflow_sql.workflow_phase_id = approvals.workflow_phase_id;
+
 
 CREATE VIEW tomcat_users AS
 	SELECT entitys.user_name, entitys.entity_password, entity_types.entity_role
@@ -1130,10 +1140,6 @@ BEGIN
 		FROM approval_checklists
 		WHERE (approval_id = reca.approval_id) AND (manditory = true) AND (done = false);
 		msg := 'Checklist done.';
-
-		IF(recc.cl_count = 0) THEN
-			msg := upd_approvals(CAST(reca.approval_id as varchar(12)), $2, '2');
-		END IF;
 	ELSIF ($3 = '2') THEN
 		UPDATE approval_checklists SET done = false WHERE (approval_checklist_id = cl_id);
 		msg := 'Checklist not done.';
