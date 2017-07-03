@@ -52,10 +52,10 @@
 				<MENU name="Transport">155</MENU>
 			</MENU>
 		</MENU>
-		<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management,dewcis">
-			<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management,dewcis">7</MENU>
+		<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management">
+			<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management">7</MENU>
 			<MENU name="Client Services" role="finance,dewcis">16</MENU>
-			<MENU name="Reports" role="technical,helpdesk,finance,sales,administration,management,dewcis">
+			<MENU name="Reports" role="technical,helpdesk,finance,sales,administration,management">
 				<MENU name="Services Defination">300</MENU>
 				<MENU name="Services List">301</MENU>
 				<MENU name="Client Services Count">119</MENU>
@@ -70,11 +70,11 @@
 			</MENU>
 		</MENU>
 		<MENU name="Accounts">
-			<MENU name="Segments" role="finance,sales,management,dewcis">8</MENU>
+			<MENU name="Segments" role="finance,sales,management">8</MENU>
 			<MENU name="Incentives">51</MENU>
 			<MENU name="Group Contracts">52</MENU>
 			<MENU name="Client Contracts">53</MENU>
-			<MENU name="Reports" role="finance,sales,management,technical,dewcis">
+			<MENU name="Reports" role="finance,sales,management,technical">
 				<MENU name="Statements">
 					<MENU name="Actual Client Statement">124</MENU>
 					<MENU name="Actual Group Statement">715</MENU>
@@ -147,13 +147,20 @@
 			</MENU>
 		</MENU>
 		<MENU name="User" role="admin">
-			<MENU name="Users" role="admin">1</MENU>
+			<MENU name="Users" role="admin">22</MENU>
 			<MENU name="Reports">
 				<MENU name="Users List">111</MENU>
 			</MENU>
 		</MENU>
 	</MENU>
-	<DESK w="700" name="Entitys" key="1" h="500">
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Open Calls" table="ProblemLogView" noorg="true" where="(IsSolved = false)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(ProblemLogid), 0)" title="Open Calls">open_calls</TEXTFIELD>
+			</TILE>
+		</DASHBOARD>
+	</DESK>
+	<DESK w="700" name="Entitys" key="22" h="500">
 		<GRID name="Users" keyfield="entity_id" table="vw_entitys">
 			<TEXTFIELD w="75" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Full Name">entity_name</TEXTFIELD>
@@ -538,7 +545,7 @@
 			<TEXTFIELD w="40" title="Forward Time">forwardtime</TEXTFIELD>
 			<TEXTFIELD w="40" title="Stage Order">stageorder</TEXTFIELD>
 			<TEXTFIELD w="40" title="Dependent">isdependent</TEXTFIELD>
-			<JASPER filtered="false" name="Forwarded - Details" keyfield="forwardid" reportfile="problemforwardviewd.jasper" key="2"></JASPER>
+			<JASPER filtered="false" name="Forwarded - Details" keyfield="forwardid" reportfile="problemforwardviewd.jasper"></JASPER>
 			<FORM name="Forwarded Details" keyfield="forwardid" table="forwarded">
 				<TEXTFIELD w="430" title="Description" y="10" h="20" x="10">description</TEXTFIELD>
 				<TEXTFIELD w="150" title="Ref. No" y="30" h="20" x="10">referenceno</TEXTFIELD>
@@ -803,9 +810,10 @@
 			</FORM>
 		</GRID>
 		<FILTER location="250" name="Transport Approval" type="horl">
-			<CALENDAR name="Calendar" key="1">
-				<JASPER filtered="true" name="Car Availability" reportfile="caravailability.jasper" key="2"></JASPER>
-			</CALENDAR>
+			<FILTERFORM name="Date Range">
+				<TEXTDATE w="150" title="Starting From" default="now" y="50" h="20" x="10">filterid</TEXTDATE>
+			</FILTERFORM>
+			<JASPER filtered="true" name="Car Availability" reportfile="caravailability.jasper" key="2"></JASPER>
 		</FILTER>
 	</DESK>
 	<DESK w="585" name="Services" type="vert" key="7" h="500">
