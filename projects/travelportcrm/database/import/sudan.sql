@@ -436,4 +436,13 @@ INSERT INTO Clients (ClientName, Premises, town, country, primary_contact, TelNo
 
 UPDATE Clients SET ClientGroupID = 0, entity_id = 0;
 
+UPDATE clients SET street = trim(replace(split_part(premises, 'Street'::text, 2), '-', ''))
+WHERE premises like '%Street%';
+UPDATE clients SET premises = trim(replace(split_part(premises, 'Street'::text, 1), '-', ''))
+WHERE premises like '%Street%';
+UPDATE clients SET street = trim(replace(split_part(premises, 'street'::text, 2), '-', ''))
+WHERE premises like '%street%';
+UPDATE clients SET premises = trim(replace(split_part(premises, 'street'::text, 1), '-', ''))
+WHERE premises like '%street%';
+
 

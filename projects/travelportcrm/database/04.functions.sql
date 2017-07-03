@@ -227,7 +227,7 @@ BEGIN
 		NEW.SolvedTime = now();
 	END IF;
 
-	RETURN NULL;
+	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 

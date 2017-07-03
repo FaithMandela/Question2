@@ -27,6 +27,7 @@
 	<APP dbpath="jdbc:postgresql://localhost/heritage" dbname="heritage" path="heritage" xmlfile="heritage.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Heritage</APP>
 	<APP dbpath="jdbc:postgresql://localhost/acord" dbname="acord" path="acord" xmlfile="acord.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" key="acord">Acord</APP>
 	<APP dbpath="jdbc:postgresql://localhost/travelinsurance" dbname="travelinsurance" path="travelinsurance" xmlfile="travelinsurance.xml" dbclass="org.postgresql.Driver" dbusername="postgres">Travel Insurance</APP>
+	<APP dbpath="jdbc:postgresql://localhost/lpgmanager" dbname="lpgmanager" path="lpgmanager" xmlfile="lpgmanager.xml" dbclass="org.postgresql.Driver" dbusername="postgres" key="lpgmanager">LPG Manager</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="umis.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">UMIS</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="finance.xml" dbclass="org.postgresql.Driver" dbusername="postgres" auth="entity">UMIS Finance</APP>
 	<APP dbpath="jdbc:postgresql://localhost/umis" dbname="umis" path="umis" xmlfile="web/students.xml" dbclass="org.postgresql.Driver" org="org_id" dbusername="postgres" auth="entity">UMIS Students</APP>
