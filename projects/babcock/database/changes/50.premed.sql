@@ -116,7 +116,7 @@ UPDATE qgrades SET org_id = 0 WHERE qstudentid IN
 UPDATE qgrades SET org_id = 0 WHERE qstudentid IN
 (SELECT qstudentid FROM qstudents WHERE qstudents.sublevelid = 'UGPM' AND qstudents.quarterid = '2016/2017.2M');
 
-UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, qgrades.org_id)
+UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, 0)
 WHERE qstudentid IN (SELECT qstudentid FROM qstudents WHERE qstudents.sublevelid = 'UGPM' AND qstudents.quarterid = '2016/2017.2M');
 
 ALTER TABLE qstudents DISABLE TRIGGER ins_qstudents;

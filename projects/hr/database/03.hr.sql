@@ -2388,8 +2388,24 @@ BEGIN
 			
 		WHERE (applications.application_id = v_application_id);
 		
-		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Completed'
+		v_entity_id := currval('entitys_entity_id_seq');
+		
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
 		WHERE (application_id = v_application_id);
+		
+		INSERT INTO address(address_id, address_type_id, sys_country_id, org_id, address_name, 
+			table_name, table_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held)
+		SELECT address_id, address_type_id, sys_country_id, org_id, address_name, 
+			table_name, table_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held
+		FROM address
+		WHERE 
+		linkfield="table_id" table="address">
+		<DEFAULT default="applicant">table_name</DEFAULT>;
+
 			
 		msg := 'Employee added';
 	ELSIF(v_employee_id is null) AND (v_entity_id is not null)THEN
