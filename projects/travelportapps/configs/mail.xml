@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ESCALATION title="Travelport Apps Mail" processdelay="2"
-	host="mail.openbaraza.org" mailuser="demo.openbaraza" mailpassword="OpenBaraza2014" mailfrom="demo@openbaraza.org"
+	host="mail.travelport.co.ke" mailuser="icea.travelinsurance@travelport.co.ke" mailpassword="QGPKv)6s29oq" mailfrom="icea.travelinsurance@travelport.co.ke"
 	inbox="INBOX" sentbox="INBOX.Sent" smtppauth="true"
 	reportpath="/opt/baraza/projects/travelportapps/reports/travelinsurance/">
 
@@ -33,7 +33,7 @@
 	<REPORT name="Entitys" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
 			table="sys_emails, sys_emailed, entitys"
 			where="(entitys.entity_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
-			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND sys_emails.use_type = 1">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
 		<ADDRESS title="address">entitys.primary_email</ADDRESS>
 		<BODYFIELD reference="{{name}}" basetable="entitys">entity_name</BODYFIELD>
@@ -42,31 +42,17 @@
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
-	<REPORT name="Payment Reminder" keyfield="passenger_id" action="payment_reminder" actioncount="1"
-		table="passengers, sys_emails"
-		where="(passengers.days_from is not null) AND (passengers.is_valid = true) AND (passengers.approved = false)
-			AND (to_date(passengers.days_from, 'DD/MM/YYYY')) >= current_date
-			AND (EXTRACT(HOUR FROM current_time) > 8)
-			AND sys_emails.use_type = 2
-			AND (passengers.reminder_email != current_date)">
+	<REPORT name="Email Verification" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
+			table="sys_emails, sys_emailed, entitys"
+			where="(entitys.entity_id = sys_emailed.table_id) AND (sys_emailed.emailed = false)
+			AND (sys_emails.sys_email_id = sys_emailed.sys_email_id) AND sys_emails.use_type = 5">
 		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<ADDRESS title="address">passengers.passenger_email</ADDRESS>
-		<BODYFIELD reference="{{name}}" basetable="passengers">passenger_name</BODYFIELD>
+		<ADDRESS title="address">entitys.primary_email</ADDRESS>
+		<BODYFIELD reference="{{name}}" basetable="entitys">entity_name</BODYFIELD>
+		<BODYFIELD reference="{{getkey}}" basetable="entitys">verifykey</BODYFIELD>
 		<FIELD title="Body" basetable="sys_emails">details</FIELD>
 	</REPORT>
 
-	<!-- <REPORT name="Unpaid Invoice" keyfield="passenger_id" action="expired_invoice" actioncount="1"
-		table="passengers, sys_emails"
-		where="(passengers.days_from is not null) AND (passengers.is_valid = true) AND (passengers.approved = false)
-			AND ( current_date > to_date(passengers.days_from, 'DD/MM/YYYY') )
-			AND (EXTRACT(HOUR FROM current_time) > 8)
-			AND sys_emails.use_type = 3
-			AND (passengers.reminder_email != current_date)">
-		<SUBJECT title="subject">sys_emails.title</SUBJECT>
-		<ADDRESS title="address">passengers.passenger_email</ADDRESS>
-		<BODYFIELD reference="{{name}}" basetable="passengers">passenger_name</BODYFIELD>
-		<FIELD title="Body" basetable="sys_emails">details</FIELD>
-	</REPORT> -->
 
 	<REPORT name="Approval Advice" keyfield="sys_emailed_id" action="Emailed" actioncount="1"
 			table="sys_emailed, vw_approvals"

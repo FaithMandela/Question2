@@ -562,8 +562,8 @@
 				<TEXTDECIMAL w="75" title="Book Rate">book_rate</TEXTDECIMAL>
 				<TEXTFIELD w="75" title="Payment Method">payment_method</TEXTFIELD>
 				<FORM keyfield="booking_id" name="Bookings" linkfield="room_rate_id" table="bookings">
-					<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" where="(use_key_id = 2)" title="Client">entity_id</COMBOBOX>
-					<COMBOBOX w="430" h="20" lpfield="reserve_mode_name" x="10" y="50" lptable="reserve_modes" title="Reserve Mode">reserve_mode_id</COMBOBOX>
+					<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" title="Client">entity_id</COMBOBOX>
+					<COMBOBOX noorg="true" w="430" h="20" lpfield="reserve_mode_name" x="10" y="50" lptable="reserve_modes" title="Reserve Mode">reserve_mode_id</COMBOBOX>
 					<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="70" lptable="currency" title="Currency">currency_id</COMBOBOX>
 					<TEXTDATE w="150" h="20" x="10" y="90" title="Booking Date">booking_date</TEXTDATE>
 					<TEXTDATE w="150" h="20" x="290" y="90" title="Arrival Date">arrival_date</TEXTDATE>
@@ -641,8 +641,8 @@
 			<TEXTDECIMAL w="75" title="Book Rate">book_rate</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Payment Method">payment_method</TEXTFIELD>
 			<FORM keyfield="booking_id" name="Bookings" table="bookings">
-				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" where="(use_key_id = 2)" title="Client">entity_id</COMBOBOX>
-				<COMBOBOX w="430" h="20" lpfield="reserve_mode_name" x="10" y="50" lptable="reserve_modes" title="Reserve Mode">reserve_mode_id</COMBOBOX>
+				<COMBOBOX w="430" h="20" lpfield="entity_name" x="10" y="10" lptable="entitys" title="Client">entity_id</COMBOBOX>
+				<COMBOBOX noorg="true" w="430" h="20" lpfield="reserve_mode_name" x="10" y="50" lptable="reserve_modes" title="Reserve Mode">reserve_mode_id</COMBOBOX>
 				<COMBOBOX w="430" h="20" lpfield="currency_name" x="10" y="70" lptable="currency" title="Currency">currency_id</COMBOBOX>
 				<TEXTDATE w="150" h="20" x="10" y="90" title="Booking Date">booking_date</TEXTDATE>
 				<TEXTDATE w="150" h="20" x="290" y="90" title="Arrival Date">arrival_date</TEXTDATE>

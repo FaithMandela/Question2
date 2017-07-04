@@ -6,6 +6,7 @@ ALTER TABLE entitys ADD COLUMN approve_status character varying(16);
 ALTER TABLE entitys ALTER COLUMN approve_status SET DEFAULT 'Completed'::character varying;
 ALTER TABLE entitys ADD COLUMN action_date timestamp without time zone;
 ALTER TABLE entitys ADD CONSTRAINT primary_email UNIQUE (primary_email);
+ALTER TABLE periods ADD COLUMN redeem boolean DEFAULT false;
 
 CREATE TABLE clients (
 	client_id			    serial primary key,

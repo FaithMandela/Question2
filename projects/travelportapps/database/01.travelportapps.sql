@@ -456,6 +456,22 @@ CREATE TABLE jp_pay (
 CREATE INDEX jp_pay_entity_id ON jp_pay (entity_id);
 CREATE INDEX jp_pay_org_id ON jp_pay (org_id);
 
+CREATE TABLE jamboverify (
+	jv_id					serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	jv_tranid				varchar(320),
+	jv_merchant_orderid			integer references passengers,
+	jv_amount				real,
+	jv_currency				varchar(10),
+	jv_timestamp				timestamp default now(),
+	jv_password				varchar(240),
+	jv_verifed				boolean default false,
+	details					text
+);
+CREATE INDEX jamboverify_entity_id ON jp_pay (entity_id);
+CREATE INDEX jamboverify_org_id ON jp_pay (org_id);
+
 
 CREATE VIEW vw_sys_emailed AS
 	SELECT sys_emails.sys_email_id, sys_emails.org_id, sys_emails.sys_email_name, sys_emails.title, sys_emails.details,

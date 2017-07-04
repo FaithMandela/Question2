@@ -2,6 +2,7 @@
 
 ALTER TABLE entitys ADD client_commision real default 0;
 ALTER TABLE entitys ADD client_discount real default 0;
+ALTER TABLE entitys ADD COLUMN image varchar(50);
 
 CREATE TABLE service_types (
 	service_type_id			serial primary key,
@@ -161,6 +162,18 @@ CREATE INDEX receipts_currency_id ON receipts (currency_id);
 CREATE INDEX receipts_sys_audit_trail_id ON receipts (sys_audit_trail_id);
 CREATE INDEX receipts_org_id ON receipts (org_id);
 
+CREATE TABLE reviews(
+	review_id			serial primary key,
+	org_id				integer references orgs,
+	entity_id			integer references entitys,
+	comment				text,
+	rating				integer,
+	rate_date			timestamp default now()
+
+);
+CREATE INDEX reviews_org_id ON reviews (org_id);
+CREATE INDEX reviews_entity_id ON reviews (entity_id);
+
 CREATE OR REPLACE VIEW vw_clients AS
 	SELECT vw_orgs.org_id, vw_orgs.org_name, vw_orgs.is_default as org_is_default, vw_orgs.is_active as org_is_active,
 		vw_orgs.logo as org_logo, vw_orgs.cert_number as org_cert_number, vw_orgs.pin as org_pin,
@@ -309,3 +322,11 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_stay BEFORE INSERT ON stay
     FOR EACH ROW EXECUTE PROCEDURE ins_stay();
+
+CREATE OR REPLACE VIEW vw_reviews AS
+	SELECT entitys.entity_id, entitys.entity_name, entitys.primary_email,entitys.image,
+		reviews.org_id, reviews.comment, reviews.rate_date, reviews.review_id,
+		orgs.org_name,reviews.rating
+	FROM reviews
+	INNER JOIN orgs ON reviews.org_id = orgs.org_id
+	INNER JOIN entitys ON reviews.entity_id = entitys.entity_id;
