@@ -694,6 +694,7 @@ public class BDB {
 	public boolean getSuperUser() { return user.getSuperUser(); }
 	public List<String> getUserRoles() { return user.getUserRoles(); }
 	public List<String> getGroupRoles() { return user.getGroupRoles(); }
+	public String getGroupIDs() { return user.getGroupIDs(); }
 
 	public String getOrgID() { return orgID; }
 	public void setOrgID(String orgID) { this.orgID = orgID; }

@@ -1438,10 +1438,9 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 		}
 	}
 
-
 	public String getFieldTitles() {
 		String fieldTitles = null;
-		
+
 		if(view == null) return "";
 
 		BElement sview = null;
@@ -1462,7 +1461,6 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 			}
 			fieldTitles += "</select>";
 		}
-
 
 		return fieldTitles;
 	}

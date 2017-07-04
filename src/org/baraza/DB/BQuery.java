@@ -314,6 +314,11 @@ public class BQuery {
 				if(wheresql == null) wheresql = "\nWHERE " + userFilter;
 				else wheresql += " AND " + userFilter;
 			}
+			if(view.getAttribute("group") != null) {
+				String groupFilter = "(" + view.getAttribute("group") + " IN (" + db.getGroupIDs() + "))";
+				if(wheresql == null) wheresql = "\nWHERE " + groupFilter;
+				else wheresql += " AND " + groupFilter;
+			}
 			if((view.getAttribute("noorg") == null) && (db.getOrgID() != null) && (db.getUserOrg() != null)) {
 				String qorgID = db.getOrgID();
 				if(view.getAttribute("orgid") != null) qorgID = view.getAttribute("orgid");

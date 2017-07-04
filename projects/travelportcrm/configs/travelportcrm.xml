@@ -542,6 +542,7 @@
 		<GRID name="Personal Forwarded" keyfield="forwardid" orderby="problemlogid" table="ProblemForwardView" where="(fdSolved = false) AND (dependent = false) AND (IsDrop = false) AND (IsSolved = false)" user="fdentity_id">
 			<TEXTFIELD w="40" title="CRM Ref">problemlogid</TEXTFIELD>
 			<TEXTFIELD w="80" title="Client">clientname</TEXTFIELD>
+			<TEXTFIELD w="50" title="Logged By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="180" title="Description">FDDescription</TEXTFIELD>
 			<TEXTFIELD w="40" title="Forward Time">forwardtime</TEXTFIELD>
 			<TEXTFIELD w="40" title="Stage Order">stageorder</TEXTFIELD>
@@ -562,23 +563,23 @@
 				<TEXTFIELD w="40" title="Quantity">Quantity</TEXTFIELD>
 			</GRID>
 		</GRID>
-		<GRID name="Group Forwarded" keyfield="forwardid" table="ProblemForwardView" where="(fdgroupid = getgroupid()) AND (fdSolved = false) AND (dependent = false) AND (IsDrop = false) AND (IsSolved = false)">
+		<GRID name="Group Forwarded" keyfield="forwardid" table="ProblemForwardView" where="(fdSolved = false) AND (dependent = false) AND (IsDrop = false) AND (IsSolved = false)" group="fdgroupid">
 			<TEXTFIELD w="40" title="CRM Ref">problemlogid</TEXTFIELD>
 			<TEXTFIELD w="80" title="Client">clientname</TEXTFIELD>
-			<TEXTFIELD w="40" title="To">fdentity_name</TEXTFIELD>
-			<TEXTFIELD w="40" title="Logged By">FullName</TEXTFIELD>
+			<TEXTFIELD w="50" title="To">fdusername</TEXTFIELD>
+			<TEXTFIELD w="50" title="Logged By">entity_name</TEXTFIELD>
 			<TEXTFIELD w="140" title="Description">FDDescription</TEXTFIELD>
 			<TEXTFIELD w="40" title="Forward Time">forwardtime</TEXTFIELD>
 			<TEXTFIELD w="40" title="Stage Order">stageorder</TEXTFIELD>
 			<TEXTFIELD w="40" title="Dependent">isdependent</TEXTFIELD>
 			<FORM name="Group Forwarding" keyfield="forwardid" table="forwarded">
-				<COMBOBOX w="210" title="User" lptable="users" wheresql="usergroupid = getUserGroupID()" y="10" h="20" x="10" lpfield="FullName">Userid</COMBOBOX>
-				<TEXTFIELD w="90" title="Ref. No" y="10" h="20" x="350">referenceno</TEXTFIELD>
-				<TEXTFIELD w="430" title="Description" y="30" h="20" x="10">description</TEXTFIELD>
-				<TEXTFIELD w="50" title="Stage Order" y="50" h="20" x="10">stageorder</TEXTFIELD>
-				<CHECKBOX w="50" title="Dependent" y="50" h="20" x="190">isdependent</CHECKBOX>
-				<CHECKBOX w="50" title="For Approval" y="50" h="20" x="390">IsForApproval</CHECKBOX>
-				<TEXTAREA w="430" title="To Be Done" y="70" h="50" x="10">tobedone</TEXTAREA>
+				<COMBOBOX w="350" title="Account Manager" lptable="entitys" where="(use_key_id = 0) and (Is_active = true)" y="10" h="20" x="10" lpfield="entity_name">entity_id</COMBOBOX>
+				<TEXTFIELD w="90" title="Ref. No" y="30" h="20" x="10">referenceno</TEXTFIELD>
+				<TEXTFIELD w="430" title="Description" y="50" h="20" x="10">description</TEXTFIELD>
+				<TEXTFIELD w="50" title="Stage Order" y="70" h="20" x="10">stageorder</TEXTFIELD>
+				<CHECKBOX w="50" title="Dependent" y="70" h="20" x="290">isdependent</CHECKBOX>
+				<CHECKBOX w="50" title="For Approval" y="90" h="20" x="10">IsForApproval</CHECKBOX>
+				<TEXTAREA w="430" title="To Be Done" y="110" h="50" x="10">tobedone</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

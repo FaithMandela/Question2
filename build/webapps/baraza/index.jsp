@@ -50,7 +50,6 @@
 	String excelexport = request.getParameter("excelexport");
 	String actionOp = null;
 
-	String fieldTitles = web.getFieldTitles();
 	String auditTable = null;
 
 	String contentType = request.getContentType();
@@ -79,6 +78,8 @@
 			auditTable = web.getAudit();
 		}
 	}
+
+	String fieldTitles = web.getFieldTitles();
 
 	if(excelexport != null) reportexport = excelexport;
 	if(reportexport != null) {
