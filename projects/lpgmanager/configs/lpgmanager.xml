@@ -1,5 +1,5 @@
-<APP name="Baraza" noorg="false" password="change_password">
-	<MENU name="Baraza">
+<APP name="LPG Manager" noorg="false" password="change_password">
+	<MENU name="LPG Manager">
 		<MENU name="Service Desk">
 			<MENU name="Dashboard">1</MENU>
 			<MENU name="Client Forms">25</MENU>

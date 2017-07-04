@@ -99,3 +99,35 @@ DELETE FROM qstudents WHERE sublevelid = 'MEDI' AND quarterid = '2016/2017.2';
 ALTER TABLE qgrades DISABLE TRIGGER del_qgrades;
 DELETE FROM qgrades WHERE qstudentid = 273994;
 ALTER TABLE qgrades ENABLE TRIGGER del_qgrades;
+
+
+------------------ Grade upgrades
+
+ALTER TABLE qstudents DISABLE TRIGGER ins_qstudents;
+ALTER TABLE qgrades ENABLE TRIGGER ins_qgrades;
+
+UPDATE qstudents SET quarterid = '2016/2017.1M' WHERE quarterid = '2016/2017.1' AND sublevelid = 'UGPM';
+
+UPDATE qstudents SET org_id = 1 WHERE quarterid = '2016/2017.1M';
+UPDATE qstudents SET org_id = 1 WHERE quarterid = '2016/2017.2M';
+
+UPDATE qgrades SET org_id = 0 WHERE qstudentid IN
+(SELECT qstudentid FROM qstudents WHERE qstudents.sublevelid = 'UGPM' AND qstudents.quarterid = '2016/2017.1M');
+UPDATE qgrades SET org_id = 0 WHERE qstudentid IN
+(SELECT qstudentid FROM qstudents WHERE qstudents.sublevelid = 'UGPM' AND qstudents.quarterid = '2016/2017.2M');
+
+UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, qgrades.org_id)
+WHERE qstudentid IN (SELECT qstudentid FROM qstudents WHERE qstudents.sublevelid = 'UGPM' AND qstudents.quarterid = '2016/2017.2M');
+
+ALTER TABLE qstudents DISABLE TRIGGER ins_qstudents;
+ALTER TABLE qgrades ENABLE TRIGGER ins_qgrades;
+
+-------------------- Checks
+
+SELECT qstudentview.qstudentid, qstudentview.studentdegreeid, qstudentview.studentid, qstudentview.org_id,
+qstudents.sublevelid, qstudents.quarterid, qstudents.financeclosed, qstudents.finaceapproval
+FROM qstudentview INNER JOIN qstudents ON qstudentview.qstudentid = qstudents.qstudentid
+WHERE qstudentview.studentid = '75154'
+ORDER BY qstudentview.studentdegreeid;
+
+

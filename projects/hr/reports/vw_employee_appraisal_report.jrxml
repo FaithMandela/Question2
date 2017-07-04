@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_appraisal_report" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33a5cf3b-78f1-4bc5-8667-959d25428d96">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="242"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -50,16 +50,19 @@ MAX(applications.contract_start) AS contract_start,
 COALESCE(get_approver(job_reviews.workflow_table_id), get_reporting_list(employees.entity_id)) AS supervisor_name,
 
 get_approver(job_reviews.workflow_table_id) as approver,
-get_approval_date(job_reviews.workflow_table_id) AS approval_date
+get_approval_date(job_reviews.workflow_table_id) AS approval_date,
+orgs.org_full_name
 
 FROM employees INNER JOIN vw_department_roles ON employees.department_role_id = vw_department_roles.department_role_id
 INNER JOIN job_reviews ON employees.entity_id = job_reviews.entity_id
+INNER JOIN orgs ON job_reviews.org_id = orgs.org_id
 LEFT JOIN applications ON applications.employee_id = employees.entity_id
 
 WHERE (job_reviews.job_review_id = '$P!{filterid}')
 $P!{organd}
 
-GROUP BY employees.entity_id, vw_department_roles.department_role_name, vw_department_roles.parent_role_name, job_reviews.review_date, job_reviews.workflow_table_id;]]>
+GROUP BY employees.entity_id, vw_department_roles.department_role_name, vw_department_roles.parent_role_name, job_reviews.review_date, job_reviews.workflow_table_id,
+orgs.org_full_name;]]>
 	</queryString>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="employee_id" class="java.lang.String"/>
@@ -74,6 +77,7 @@ GROUP BY employees.entity_id, vw_department_roles.department_role_name, vw_depar
 	<field name="supervisor_name" class="java.lang.String"/>
 	<field name="approver" class="java.lang.String"/>
 	<field name="approval_date" class="java.sql.Date"/>
+	<field name="org_full_name" class="java.lang.String"/>
 	<variable name="workflow_table_id" class="java.lang.Integer">
 		<variableExpression><![CDATA[$F{workflow_table_id}]]></variableExpression>
 	</variable>
@@ -90,13 +94,6 @@ GROUP BY employees.entity_id, vw_department_roles.department_role_name, vw_depar
 				</textElement>
 				<text><![CDATA[Please complete this form in sufficient detail to provide data for an accurate dialogue on your performance with your supervisor. Then E-mail/send hard copies to your supervisor. Your supervisor will call you for discussion and add his/her comments. Please note that all the sections in this tool should be completed through a process of dialogue and will have to be agreed to by employee and supervisor. In case of any disagreement between the employee and the supervisor, the tool must be reviewed by the supervisor’s manager at a meeting with both the employee and the supervisor.
 ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="1" y="3" width="555" height="31" backcolor="#FFFFFF" uuid="021f6b38-336f-4412-a015-c707c13676e0"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="18" pdfFontName="Times-Roman"/>
-				</textElement>
-				<text><![CDATA[AFRICAN POPULATION AND HEALTH RESEARCH CENTER]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" x="1" y="135" width="555" height="21" backcolor="#FFFFFF" uuid="7ab5f675-2faa-464d-82f9-34a948b1586d"/>
@@ -168,7 +165,7 @@ GROUP BY employees.entity_id, vw_department_roles.department_role_name, vw_depar
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="10" isBold="true" isItalic="true" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[  Date Joined APHRC]]></text>
+				<text><![CDATA[  Date Joined]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" mode="Opaque" x="9" y="255" width="272" height="20" backcolor="#FFFFFF" uuid="56bf34b4-76a2-474b-994e-20ba0cd5fc93"/>
@@ -471,6 +468,13 @@ GROUP BY employees.entity_id, vw_department_roles.department_role_name, vw_depar
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{supervisor_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="3" width="555" height="31" uuid="fe31481c-5fa7-4881-b57b-b7cfb9c3c1c3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{org_full_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

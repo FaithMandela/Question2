@@ -3341,6 +3341,19 @@
 						<TEXTAREA w="530" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 					</FORM>
 				</GRID>
+				<GRID name="Workflow SQL" keyfield="workflow_sql_id" linkfield="workflow_phase_id" table="workflow_sql">
+					<TEXTFIELD w="75" title="Workflow SQL ID">workflow_sql_id</TEXTFIELD>
+					<TEXTFIELD w="275" title="SQL Name">workflow_sql_name</TEXTFIELD>
+					<CHECKBOX w="75" title="Condition">is_condition</CHECKBOX>
+					<CHECKBOX w="75" title="Action">is_action</CHECKBOX>
+					<FORM name="Workflow SQL" keyfield="workflow_sql_id" linkfield="workflow_phase_id" table="workflow_sql">
+						<TEXTFIELD w="150" title="SQL Name" y="10" h="20" x="10">workflow_sql_name</TEXTFIELD>
+						<CHECKBOX w="150" title="Condition" y="30" h="20" x="10">is_condition</CHECKBOX>
+						<CHECKBOX w="150" title="Action" y="30" h="20" x="290">is_action</CHECKBOX>
+						<TEXTAREA w="430" tab="SQL" y="2" h="70" x="10">sql</TEXTAREA>
+						<TEXTAREA w="430" tab="Message" y="2" h="70" x="10">message</TEXTAREA>
+					</FORM>
+				</GRID>
 				<FORM name="Workflow Phases" keyfield="workflow_phase_id" linkfield="workflow_id" table="workflow_phases" th="210">
 					<COMBOBOX w="430" title="Approvals" lptable="entity_types" lpkey="entity_type_id" y="10" h="20" x="10" lpfield="entity_type_name">approval_entity_id</COMBOBOX>
 					<TEXTFIELD w="150" title="Approval Level" y="30" h="20" x="10">approval_level</TEXTFIELD>
@@ -3371,7 +3384,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Approvals" key="83" h="500">
-		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id" where="(approve_status = 'Completed')" user="entity_id">
+		<GRID name="Approvals" keyfield="approval_id" table="vw_approvals_entitys" params="table_name, table_id,workflow_phase_id" where="(approve_status = 'Completed')" user="entity_id">
 			<TEXTFIELD w="75" title="Workflow">workflow_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="From">org_entity_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Group">source_entity_name</TEXTFIELD>
@@ -3380,7 +3393,7 @@
 			<TEXTFIELD w="175" title="Narrative">approval_narrative</TEXTFIELD>
 			<TEXTTIMESTAMP w="75" title="Date">application_date</TEXTTIMESTAMP>
 			<ACTIONS>
-				<ACTION fnct="upd_approvals" approval="2">Approve</ACTION>
+				<ACTION fnct="upd_approvals" sql_where="approval_id" approval="2" sql_table="vw_workflow_sql">Approve</ACTION>
 				<ACTION fnct="upd_approvals" approval="3">Reject</ACTION>
 				<ACTION fnct="upd_approvals" approval="4">Review</ACTION>
 			</ACTIONS>

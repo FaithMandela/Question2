@@ -55,9 +55,9 @@ CREATE VIEW PTypeView AS
 
 CREATE VIEW PDefinitionview AS
 	SELECT PClassifications.PClassificationID, PClassifications.PClassificationName, PTypes.PTypeID, PTypes.PTypeName,
-		PDefinitions.PDefinitionID, PDefinitions.PDefinitionName, PDefinitions.Description, PDefinitions.Solution
+		PDefinitions.PDefinitionID, PDefinitions.PDefinitionName, PDefinitions.Description, PDefinitions.Solution,
 		(PClassifications.PClassificationName || ' : ' || PTypes.PTypeName || ' : ' || PDefinitions.PDefinitionName) as disp
-	FROM (PClassifications INNER JOIN PTypes ON PClassifications.PClassificationID = PTypes.PClassificationID)
+	FROM PClassifications INNER JOIN PTypes ON PClassifications.PClassificationID = PTypes.PClassificationID
 		INNER JOIN PDefinitions ON PTypes.PTypeID = PDefinitions.PTypeID
 	ORDER BY PClassifications.PClassificationName, PTypes.PTypeName;
 
@@ -185,7 +185,7 @@ CREATE VIEW hourview AS
 	SELECT CAST((generate_series || ':00') AS time) as hourvalue FROM generate_series(8,17);
 
 CREATE VIEW dayview AS
-	SELECT (date '2004-01-01' + generate_series) as dayvalue FROM generate_series(0, 3000);
+	SELECT (date '2017-01-01' + generate_series) as dayvalue FROM generate_series(0, 3000);
 
 CREATE VIEW calendarview AS
 	SELECT dayview.dayvalue, hourview.hourvalue FROM dayview CROSS JOIN hourview;

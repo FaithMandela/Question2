@@ -1295,7 +1295,6 @@ CREATE VIEW vw_all_job_reviews AS
 		
 	ON (a.entity_id = b.entity_id) AND (a.review_year = b.review_year);
 	
-
 CREATE VIEW vw_evaluation_points AS
 	SELECT vw_job_reviews.entity_id, vw_job_reviews.entity_name, 
 		vw_job_reviews.review_category_id, vw_job_reviews.review_category_name, vw_job_reviews.rate_objectives,
@@ -2355,11 +2354,14 @@ DECLARE
 	v_application_id		integer;
 	v_entity_id				integer;
 	v_employee_id			integer;
+	v_intake_id				integer;
+	v_initial_salary		real;
 	msg		 				varchar(120);
 BEGIN
 
 	v_application_id := CAST($1 as int);
-	SELECT employees.entity_id, applications.employee_id INTO v_entity_id, v_employee_id
+	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary
+		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary
 	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
 	WHERE (application_id = v_application_id);
 
@@ -2378,7 +2380,6 @@ BEGIN
 			applicants.date_of_birth, applicants.gender, applicants.nationality, applicants.marital_status, 
 			applicants.picture_file, applicants.identity_card, applicants.language, applicants.interests, applicants.objective,
 			
-			
 			intake.contract, applications.contract_date, applications.contract_start, 
 			applications.contract_period, applications.initial_salary
 		FROM orgs INNER JOIN applicants ON orgs.org_id = applicants.org_id
@@ -2391,13 +2392,15 @@ BEGIN
 		WHERE (application_id = v_application_id);
 			
 		msg := 'Employee added';
-	ELSIF(v_employee_id is null)THEN
-		UPDATE applications SET employee_id = v_employee_id, 
-			department_role_id = intake.department_role_id, pay_scale_id = intake.pay_scale_id, 
+	ELSIF(v_employee_id is null) AND (v_entity_id is not null)THEN
+		UPDATE employees SET department_role_id = intake.department_role_id, pay_scale_id = intake.pay_scale_id, 
 			pay_group_id = intake.pay_group_id, location_id = intake.location_id,
-			approve_status = 'Completed'
-		FROM intake  
-		WHERE (applications.intake_id = intake.intake_id) AND (applications.application_id = v_application_id);
+			basic_salary = v_initial_salary
+		FROM intake
+		WHERE (employees.entity_id = v_entity_id) AND (intake.intake_id = v_intake_id);
+		
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
+		WHERE (application_id = v_application_id);
 		
 		msg := 'Employee details updated';
 	ELSE
@@ -2405,7 +2408,7 @@ BEGIN
 	END IF;
 	
 
-	return msg;
+	RETURN msg;
 END;
 $$ LANGUAGE plpgsql;
 

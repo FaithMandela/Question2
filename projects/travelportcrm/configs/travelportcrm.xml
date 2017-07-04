@@ -52,10 +52,10 @@
 				<MENU name="Transport">155</MENU>
 			</MENU>
 		</MENU>
-		<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management,dewcis">
-			<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management,dewcis">7</MENU>
+		<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management">
+			<MENU name="Services" role="technical,helpdesk,finance,sales,administration,management">7</MENU>
 			<MENU name="Client Services" role="finance,dewcis">16</MENU>
-			<MENU name="Reports" role="technical,helpdesk,finance,sales,administration,management,dewcis">
+			<MENU name="Reports" role="technical,helpdesk,finance,sales,administration,management">
 				<MENU name="Services Defination">300</MENU>
 				<MENU name="Services List">301</MENU>
 				<MENU name="Client Services Count">119</MENU>
@@ -70,11 +70,11 @@
 			</MENU>
 		</MENU>
 		<MENU name="Accounts">
-			<MENU name="Segments" role="finance,sales,management,dewcis">8</MENU>
+			<MENU name="Segments" role="finance,sales,management">8</MENU>
 			<MENU name="Incentives">51</MENU>
 			<MENU name="Group Contracts">52</MENU>
 			<MENU name="Client Contracts">53</MENU>
-			<MENU name="Reports" role="finance,sales,management,technical,dewcis">
+			<MENU name="Reports" role="finance,sales,management,technical">
 				<MENU name="Statements">
 					<MENU name="Actual Client Statement">124</MENU>
 					<MENU name="Actual Group Statement">715</MENU>
@@ -147,13 +147,20 @@
 			</MENU>
 		</MENU>
 		<MENU name="User" role="admin">
-			<MENU name="Users" role="admin">1</MENU>
+			<MENU name="Users" role="admin">22</MENU>
 			<MENU name="Reports">
 				<MENU name="Users List">111</MENU>
 			</MENU>
 		</MENU>
 	</MENU>
-	<DESK w="700" name="Entitys" key="1" h="500">
+	<DESK w="700" name="Dashboard" access="open" key="1" h="500">
+		<DASHBOARD w="700" name="Dashboard">
+			<TILE name="Open Calls" table="ProblemLogView" noorg="true" where="(IsSolved = false)">
+				<TEXTFIELD w="75" fnct="COALESCE(count(ProblemLogid), 0)" title="Open Calls">open_calls</TEXTFIELD>
+			</TILE>
+		</DASHBOARD>
+	</DESK>
+	<DESK w="700" name="Entitys" key="22" h="500">
 		<GRID name="Users" keyfield="entity_id" table="vw_entitys">
 			<TEXTFIELD w="75" title="User ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Full Name">entity_name</TEXTFIELD>
@@ -307,6 +314,7 @@
 				<CHECKBOX w="30" title="Connected" lw="80" y="290" h="20" x="240">Connected</CHECKBOX>
 				<TEXTDATE w="100" title="Contract Ending" lw="110" y="290" h="20" x="350">contractend</TEXTDATE>
 				<TEXTFIELD w="150" title="Mst Cus ID" y="310" h="20" x="10">mst_cus_id</TEXTFIELD>
+				<TEXTFIELD w="150" title="Primary Contact" y="330" h="20" x="10">primary_contact</TEXTFIELD>
 				<TEXTAREA w="430" tab="Details" y="1" h="50" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Consultants" keyfield="Consultantid" linkfield="Clientid" table="consultants">
@@ -439,7 +447,7 @@
 			<TEXTFIELD w="40" title="Recoded Time">recodedtime</TEXTFIELD>
 			<FORM name="HelpDesk" keyfield="problemlogid" table="problemlog">
 				<USERFIELD>updated_by</USERFIELD>
-				<COMBOBOX w="150" title="Definition" lptable="PDefinitionview" y="30" h="20" x="10" lpfield="PDefinitionName">PDefinitionID</COMBOBOX>
+				<COMBOBOX w="150" title="Definition" lptable="PDefinitionview" y="30" h="20" x="10" lpfield="disp">PDefinitionID</COMBOBOX>
 				<COMBOBOX w="150" title="Level" lptable="PLevels" y="30" h="20" x="290" lpfield="PlevelName">PlevelID</COMBOBOX>
 				<COMBOBOX w="430" title="Client" lptable="Clients" y="50" h="20" x="10" lpfield="ClientName">ClientID</COMBOBOX>
 				<TEXTFIELD w="430" title="Description" y="70" h="20" x="10">description</TEXTFIELD>
@@ -531,14 +539,14 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Forwarding" type="vert" key="10" h="500">
-		<GRID name="Personal Forwarded" keyfield="forwardid" orderby="problemlogid" table="ProblemForwardView" where="(fdSolved = false) AND (dependent = false) AND (IsDrop = false) AND (IsSolved = false)" user="entity_id">
+		<GRID name="Personal Forwarded" keyfield="forwardid" orderby="problemlogid" table="ProblemForwardView" where="(fdSolved = false) AND (dependent = false) AND (IsDrop = false) AND (IsSolved = false)" user="fdentity_id">
 			<TEXTFIELD w="40" title="CRM Ref">problemlogid</TEXTFIELD>
 			<TEXTFIELD w="80" title="Client">clientname</TEXTFIELD>
 			<TEXTFIELD w="180" title="Description">FDDescription</TEXTFIELD>
 			<TEXTFIELD w="40" title="Forward Time">forwardtime</TEXTFIELD>
 			<TEXTFIELD w="40" title="Stage Order">stageorder</TEXTFIELD>
 			<TEXTFIELD w="40" title="Dependent">isdependent</TEXTFIELD>
-			<JASPER filtered="false" name="Forwarded - Details" keyfield="forwardid" reportfile="problemforwardviewd.jasper" key="2"></JASPER>
+			<JASPER name="Forwarded - Details" reportfile="problemforwardviewd.jasper"></JASPER>
 			<FORM name="Forwarded Details" keyfield="forwardid" table="forwarded">
 				<TEXTFIELD w="430" title="Description" y="10" h="20" x="10">description</TEXTFIELD>
 				<TEXTFIELD w="150" title="Ref. No" y="30" h="20" x="10">referenceno</TEXTFIELD>
@@ -606,7 +614,19 @@
 					<TEXTAREA w="430" title="What is Done" y="120" h="50" x="10">whatisdone</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Update Calls" keyfield="ProblemLogID" table="problemlog">
+			<FORM new="true" name="Call Logging" keyfield="problemlogid" edit="false" linkfield="ProblemLogID" table="problemlog" key="5">
+				<USERFIELD>updated_by</USERFIELD>
+				<COMBOBOX w="150" title="Definition" lptable="PDefinitionview" wheresql="(PClassificationID > 0)" y="10" h="20" x="10" lpfield="disp">PDefinitionID</COMBOBOX>
+				<COMBOBOX w="150" title="Level" lptable="PLevels" y="30" h="20" x="10" lpfield="PlevelName">PlevelID</COMBOBOX>
+				<COMBOBOX w="430" title="Client" lptable="Clients" y="50" h="20" x="10" lpfield="ClientName">ClientID</COMBOBOX>
+				<TEXTFIELD w="430" title="Description" y="70" h="20" x="10">description</TEXTFIELD>
+				<TEXTFIELD w="150" title="Reportedby" y="90" h="20" x="10">reportedby</TEXTFIELD>
+				<TEXTFIELD w="150" title="Curr. Action" y="110" h="20" x="10">curraction</TEXTFIELD>
+				<TEXTFIELD w="150" title="Curr. Status" y="110" h="20" x="290">currstatus</TEXTFIELD>
+				<TEXTAREA w="430" title="Problem" y="130" h="100" x="10">problem</TEXTAREA>
+			</FORM>
+			<FORM new="false" name="Update Calls" keyfield="ProblemLogID" edit="true" table="problemlog">
+				<USERFIELD>updated_by</USERFIELD>
 				<TEXTFIELD w="150" title="Curr. Action" y="10" h="20" x="10">curraction</TEXTFIELD>
 				<TEXTFIELD w="150" title="Curr. Status" y="10" h="20" x="290">currstatus</TEXTFIELD>
 				<CHECKBOX w="50" title="Closed" y="30" h="20" x="10">issolved</CHECKBOX>
@@ -620,18 +640,6 @@
 				<TEXTFIELD w="175" title="File Name">file_name</TEXTFIELD>
 			</FILES>
 		</GRID>
-		<FORM name="Call Logging" keyfield="problemlogid" linkfield="ProblemLogID" table="problemlog" key="5">
-			<COMBOBOX w="150" title="Classification" lptable="PClassifications" cmbkey="1" y="10" h="20" x="10" lpfield="PClassificationName">PClassificationID</COMBOBOX>
-			<COMBOBOX w="150" linkkey="1" title="Type" lptable="PTypes" linkfield="PClassificationID" cmbkey="2" y="10" h="20" x="290" lpfield="PTypeName">PTypeID</COMBOBOX>
-			<COMBOBOX w="150" linkkey="2" title="Definition" lptable="PDefinitions" linkfield="PTypeID" y="30" h="20" x="10" lpfield="PDefinitionName">PDefinitionID</COMBOBOX>
-			<COMBOBOX w="150" title="Level" lptable="PLevels" y="30" h="20" x="290" lpfield="PlevelName">PlevelID</COMBOBOX>
-			<COMBOBOX w="430" title="Client" lptable="Clients" y="50" h="20" x="10" lpfield="ClientName">ClientID</COMBOBOX>
-			<TEXTFIELD w="430" title="Description" y="70" h="20" x="10">description</TEXTFIELD>
-			<TEXTFIELD w="150" title="Reportedby" y="90" h="20" x="10">reportedby</TEXTFIELD>
-			<TEXTFIELD w="150" title="Curr. Action" y="110" h="20" x="10">curraction</TEXTFIELD>
-			<TEXTFIELD w="150" title="Curr. Status" y="110" h="20" x="290">currstatus</TEXTFIELD>
-			<TEXTAREA w="430" title="Problem" y="130" h="100" x="10">problem</TEXTAREA>
-		</FORM>
 	</DESK>
 	<DESK w="585" name="Work Schedule" type="vert" key="21" h="580">
 		<GRID name="Personal Work Schedule" keyfield="WorkScheduleID" table="WorkScheduleView" where="(IsDone = false)" user="entity_id">
@@ -802,11 +810,6 @@
 				<TEXTAREA w="430" title="Replacements" y="100" h="70" x="10">replacements</TEXTAREA>
 			</FORM>
 		</GRID>
-		<FILTER location="250" name="Transport Approval" type="horl">
-			<CALENDAR name="Calendar" key="1">
-				<JASPER filtered="true" name="Car Availability" reportfile="caravailability.jasper" key="2"></JASPER>
-			</CALENDAR>
-		</FILTER>
 	</DESK>
 	<DESK w="585" name="Services" type="vert" key="7" h="500">
 		<GRID name="Service Types" keyfield="assettypeid" table="assettypes">
