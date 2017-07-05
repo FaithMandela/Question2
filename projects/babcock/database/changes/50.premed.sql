@@ -104,7 +104,7 @@ ALTER TABLE qgrades ENABLE TRIGGER del_qgrades;
 ------------------ Grade upgrades
 
 ALTER TABLE qstudents DISABLE TRIGGER ins_qstudents;
-ALTER TABLE qgrades ENABLE TRIGGER ins_qgrades;
+ALTER TABLE qgrades DISABLE TRIGGER ins_qgrades;
 
 UPDATE qstudents SET quarterid = '2016/2017.1M' WHERE quarterid = '2016/2017.1' AND sublevelid = 'UGPM';
 
@@ -120,7 +120,7 @@ UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, 0)
 WHERE qstudentid IN (SELECT qstudentid FROM qstudents WHERE qstudents.sublevelid = 'UGPM' AND qstudents.quarterid = '2016/2017.2M');
 
 ALTER TABLE qstudents DISABLE TRIGGER ins_qstudents;
-ALTER TABLE qgrades ENABLE TRIGGER ins_qgrades;
+ALTER TABLE qgrades DISABLE TRIGGER ins_qgrades;
 
 -------------------- Checks
 
