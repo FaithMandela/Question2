@@ -2352,6 +2352,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION add_employee(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_application_id		integer;
+	v_applicant_id			integer;
 	v_entity_id				integer;
 	v_employee_id			integer;
 	v_intake_id				integer;
@@ -2360,8 +2361,8 @@ DECLARE
 BEGIN
 
 	v_application_id := CAST($1 as int);
-	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary
-		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary
+	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, applications.entity_id
+		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id
 	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
 	WHERE (application_id = v_application_id);
 
@@ -2393,19 +2394,62 @@ BEGIN
 		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
 		WHERE (application_id = v_application_id);
 		
-		INSERT INTO address(address_id, address_type_id, sys_country_id, org_id, address_name, 
+		--- Copy address
+		INSERT INTO address(address_type_id, sys_country_id, org_id, address_name, 
 			table_name, table_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			is_default, first_password, details, company_name, position_held)
-		SELECT address_id, address_type_id, sys_country_id, org_id, address_name, 
-			table_name, table_id, post_office_box, postal_code, premises, 
+		SELECT address_type_id, sys_country_id, org_id, address_name, 
+			'employees', v_entity_id, post_office_box, postal_code, premises, 
 			street, town, phone_number, extension, mobile, fax, email, website, 
 			is_default, first_password, details, company_name, position_held
 		FROM address
-		WHERE 
-		linkfield="table_id" table="address">
-		<DEFAULT default="applicant">table_name</DEFAULT>;
+		WHERE (table_id = v_applicant_id) AND (table_name = 'applicant');
+		
+		--- Copy education
+		INSERT INTO education(entity_id, education_class_id, org_id, date_from, 
+			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details)
+		SELECT v_entity_id, education_class_id, org_id, date_from, 
+			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details
+		FROM education
+		WHERE (entity_id = v_applicant_id);
+		
+		--- Copy employment
+		INSERT INTO employment(entity_id, org_id, date_from, date_to, employers_name, position_held, details)
+		SELECT v_entity_id, org_id, date_from, date_to, employers_name, position_held, details
+		FROM employment
+		WHERE (entity_id = v_applicant_id);
+		
+		--- Copy Seminars
+		INSERT INTO cv_seminars(entity_id, org_id, cv_seminar_name, cv_seminar_date, details)
+		SELECT v_entity_id, org_id, cv_seminar_name, cv_seminar_date, details
+		FROM cv_seminars
+		WHERE (entity_id = v_applicant_id);
 
+		INSERT INTO cv_projects(entity_id, org_id, cv_project_name, cv_project_date, details)
+		SELECT v_entity_id, org_id, cv_project_name, cv_project_date, details
+		FROM cv_projects
+		WHERE (entity_id = v_applicant_id);
+
+		--- Copy skills
+		INSERT INTO skills(entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
+			aquired, training_date, trained, training_institution, training_cost, details)
+		SELECT v_entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
+			aquired, training_date, trained, training_institution, training_cost, details
+		FROM skills
+		WHERE (entity_id = v_applicant_id);
+		
+		--- Copy referees
+		INSERT INTO address(address_type_id, sys_country_id, org_id, address_name, 
+			table_name, table_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held)
+		SELECT address_type_id, sys_country_id, org_id, address_name, 
+			'referees', v_entity_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held
+		FROM address
+		WHERE (table_id = v_applicant_id) AND (table_name = 'referees');
 			
 		msg := 'Employee added';
 	ELSIF(v_employee_id is null) AND (v_entity_id is not null)THEN

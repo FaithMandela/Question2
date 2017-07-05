@@ -132,7 +132,7 @@ ORDER BY vw_evaluation_objectives.job_review_id, vw_evaluation_objectives.object
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Employees's  comments on achivements against objective]]></text>
+				<text><![CDATA[Employees's  comments on achievements against objective]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="27" y="67" width="468" height="20" uuid="ec31957d-0583-4d48-b38c-1fb50594b8b3"/>
@@ -228,7 +228,7 @@ ORDER BY vw_evaluation_objectives.job_review_id, vw_evaluation_objectives.object
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Reviewer's  comments on achivements against objective]]></text>
+				<text><![CDATA[Reviewer's  comments on achievements against objective]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement positionType="Float" x="27" y="107" width="469" height="20" uuid="0f9c048f-997b-4d13-a261-9d722db0dd15"/>
