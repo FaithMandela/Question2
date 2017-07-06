@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_transfer_assignments" language="groovy" pageWidth="595" pageHeight="421" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08747894-0f5b-4c39-9485-6be2f4dac043">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="21"/>
+	<property name="ireport.y" value="19"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -22,9 +22,11 @@
 	<queryString>
 		<![CDATA[SELECT vw_transfer_assignments.driver_id, vw_transfer_assignments.driver_name, entity_name, vw_transfer_assignments.mobile_number, vw_transfer_assignments.car_type_id,
 vw_transfer_assignments.customer_name, reference_data,vw_transfer_assignments.registration_number, vw_transfer_assignments.car_type_name, vw_transfer_assignments.car_type_code,
-payment_type_name, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, pax_no, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline, vw_transfer_assignments.flight_num,
-substring(vw_transfer_assignments.pickup_time from 1 for 4) || ' HRS' AS display_pickup_time
- FROM vw_transfer_assignments
+payment_type_name, vw_transfer_assignments.passanger_id, vw_transfer_assignments.passanger_name, pax_no, vw_transfer_assignments.transfer_id, vw_transfer_assignments.passanger_mobile, vw_transfer_assignments.passanger_email, vw_transfer_assignments.pickup_time, vw_transfer_assignments.pickup, vw_transfer_assignments.dropoff, vw_transfer_assignments.other_preference, vw_transfer_assignments.amount, vw_transfer_assignments.processed, vw_transfer_assignments.pickup_date, vw_transfer_assignments.tab, vw_transfer_assignments.transfer_assignment_id, vw_transfer_assignments.car_id, vw_transfer_assignments.kms_out, vw_transfer_assignments.kms_in, vw_transfer_assignments.time_out, vw_transfer_assignments.time_in, vw_transfer_assignments.no_show, vw_transfer_assignments.no_show_reason, vw_transfer_assignments.closed, vw_transfer_assignments.last_update, vw_transfer_assignments.transfer_flight_id, vw_transfer_assignments.start_time, vw_transfer_assignments.end_time, vw_transfer_assignments.flight_date, vw_transfer_assignments.start_airport, vw_transfer_assignments.end_airport, vw_transfer_assignments.airline,
+vw_transfer_assignments.flight_num
+
+FROM vw_transfer_assignments
+
 WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 	</queryString>
 	<field name="driver_id" class="java.lang.Integer"/>
@@ -70,7 +72,6 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 	<field name="end_airport" class="java.lang.String"/>
 	<field name="airline" class="java.lang.String"/>
 	<field name="flight_num" class="java.lang.String"/>
-	<field name="display_pickup_time" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -102,7 +103,7 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				<text><![CDATA[Time In]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="267" y="113" width="92" height="15" forecolor="#000000" uuid="ced21cc7-9f95-49f8-9bbf-97338d55bfd3"/>
+				<reportElement style="Column header" x="316" y="113" width="43" height="15" forecolor="#000000" uuid="ced21cc7-9f95-49f8-9bbf-97338d55bfd3"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -152,7 +153,7 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				<textFieldExpression><![CDATA[$F{pickup}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="113" width="188" height="15" uuid="726e7cce-4dab-4713-aca6-3651b7479045"/>
+				<reportElement style="Detail" x="79" y="113" width="77" height="15" uuid="726e7cce-4dab-4713-aca6-3651b7479045"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -212,7 +213,7 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				<text><![CDATA[_______________________________________]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="267" y="93" width="92" height="15" forecolor="#000000" uuid="99348ab1-7709-4a7c-b640-50a52427d99c"/>
+				<reportElement style="Column header" x="158" y="93" width="77" height="15" forecolor="#000000" uuid="99348ab1-7709-4a7c-b640-50a52427d99c"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
@@ -220,7 +221,7 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				<text><![CDATA[Pickup Time]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
-				<reportElement style="Detail" x="79" y="93" width="188" height="15" isRemoveLineWhenBlank="true" uuid="fdeeeb9d-3f58-4f3f-bd2a-201372ef3b86"/>
+				<reportElement style="Detail" x="79" y="93" width="77" height="15" isRemoveLineWhenBlank="true" uuid="fdeeeb9d-3f58-4f3f-bd2a-201372ef3b86"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
@@ -398,13 +399,13 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				</textElement>
 				<text><![CDATA[Dropoff Point]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="HHmmHRS" isBlankWhenNull="true">
-				<reportElement style="Detail" x="359" y="93" width="185" height="15" uuid="352a0afa-8e09-4015-a6b9-1bbd2b56ecc8"/>
+			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
+				<reportElement style="Detail" x="236" y="93" width="35" height="15" uuid="352a0afa-8e09-4015-a6b9-1bbd2b56ecc8"/>
 				<box leftPadding="4"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{display_pickup_time}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pickup_time}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="Column header" stretchType="RelativeToTallestObject" x="267" y="37" width="92" height="15" forecolor="#000000" uuid="ba0184f8-1232-44fa-b9a5-cedbbd75980e"/>
@@ -547,6 +548,38 @@ WHERE vw_transfer_assignments.passanger_id = '$P!{filterid}']]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payment_type_name}]]></textFieldExpression>
 			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement style="Detail" x="158" y="113" width="77" height="15" uuid="1ceb7a85-e732-422e-8bdf-d118f61682f5"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="true" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? "Departure Time" : "Arrival Time"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="HH.mm" isBlankWhenNull="true">
+				<reportElement style="Detail" x="236" y="113" width="35" height="15" uuid="6698e80a-4b46-43a2-a21e-7b8e8d134e9d"/>
+				<box leftPadding="4"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tab} == 1 ? $F{end_time} : $F{start_time}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="271" y="113" width="25" height="15" forecolor="#000000" uuid="79dc7ae9-bce5-4dc1-bdd5-6c222a40ce97"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[HRS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="271" y="93" width="25" height="15" forecolor="#000000" uuid="c13b87d5-f8a6-4779-b071-5bca1cf28383"/>
+				<box leftPadding="1"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10" isBold="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[HRS]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<pageFooter>
