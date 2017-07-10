@@ -104,9 +104,32 @@ CREATE TABLE phases (
 CREATE INDEX phases_project_id ON phases (project_id);
 CREATE INDEX phases_org_id ON phases(org_id);
 
+CREATE TABLE task_types (
+	task_type_id			serial primary key,
+	org_id					integer references orgs,
+	task_type_name			varchar(120) not null,
+	default_cost			real default 0 not null,
+	default_price			real default 0 not null,
+	details					text
+);
+CREATE INDEX task_types_org_id ON task_types(org_id);
+
+CREATE TABLE task_entitys (
+	task_id					serial primary key,
+	task_type_id			integer references task_types,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	task_entity_cost		real default 0 not null,
+	task_entity_price		real default 0 not null,
+	details					text
+);
+CREATE INDEX task_entitys_task_type_id ON task_entitys(task_type_id);
+CREATE INDEX task_entitys_org_id ON task_entitys(org_id);
+
 CREATE TABLE tasks (
 	task_id					serial primary key,
 	phase_id				integer references phases,
+	task_type_id			integer references task_types,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
 	task_name				varchar(320) not null,
@@ -114,10 +137,13 @@ CREATE TABLE tasks (
 	dead_line				date,
 	end_date				date,
 	hours_taken				integer default 7 not null,
+	task_cost				real default 0 not null,
+	task_price				real default 0 not null,
 	completed				boolean not null default false,
 	details					text
 );
 CREATE INDEX tasks_phase_id ON tasks (phase_id);
+CREATE INDEX tasks_task_type_id ON tasks(task_type_id);
 CREATE INDEX tasks_entity_id ON tasks (entity_id);
 CREATE INDEX tasks_org_id ON tasks (org_id);
 
@@ -280,6 +306,13 @@ CREATE VIEW vw_phases AS
 		phases.completed as phase_completed, phases.phase_cost, phases.details
 	FROM phases INNER JOIN vw_projects ON phases.project_id = vw_projects.project_id;
 
+CREATE VIEW vw_task_entitys AS
+	SELECT entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name, task_types.task_type_id, task_types.task_type_name, task_entitys.task_id, task_entitys.task_entity_cost, task_entitys.task_entity_price, task_entitys.details
+	FROM task_entitys
+	INNER JOIN entitys ON task_entitys.entity_id = entitys.entity_id
+	INNER JOIN orgs ON task_entitys.org_id = orgs.org_id
+	INNER JOIN task_types ON task_entitys.task_type_id = task_types.task_type_id;
+	
 CREATE VIEW vw_tasks AS
 	SELECT vw_phases.client_id, vw_phases.client_name, vw_phases.project_type_id, vw_phases.project_type_name, 
 		vw_phases.project_id, vw_phases.project_name, vw_phases.signed, vw_phases.contract_ref, 
