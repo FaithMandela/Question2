@@ -314,4 +314,7 @@ INSERT INTO receipt_sources (org_id, receipt_source_name) VALUES (0, 'Cheque');
 
 INSERT INTO review_category (review_category_id, org_id, review_category_name) VALUES (0, 0, 'Annual Review');
 
+INSERT INTO task_types (task_type_id, org_id, task_type_name, default_cost, default_price)
+VALUES (0, 0, 'Default', 0, 0);
+
 

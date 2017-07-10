@@ -149,6 +149,11 @@ SELECT 1, use_type, sys_email_name, title, details
 FROM sys_emails
 WHERE org_id = 0;
 
+INSERT INTO task_types (org_id, task_type_name, default_cost, default_price)
+SELECT 1, task_type_name, default_cost, default_price
+FROM task_types
+WHERE (org_id = 0);
+
 UPDATE transaction_counters SET document_number = '10001';
 
 UPDATE orgs SET employee_limit = 1000, transaction_limit = 1000000;

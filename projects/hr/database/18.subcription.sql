@@ -302,6 +302,11 @@ BEGIN
 		
 		INSERT INTO stores (org_id, store_name) VALUES (NEW.org_id, 'Main Store');
 		
+		INSERT INTO task_types (org_id, task_type_name, default_cost, default_price)
+		SELECT NEW.org_id, task_type_name, default_cost, default_price
+		FROM task_types
+		WHERE (org_id = 1);
+		
 		SELECT entity_type_id INTO v_entity_type_id
 		FROM entity_types 
 		WHERE (org_id = NEW.org_id) AND (use_key_id = 0);

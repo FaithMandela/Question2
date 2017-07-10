@@ -848,9 +848,9 @@ public class BWebBody extends BQuery {
 		} else if(el.getName().equals("SPINTIME")) {
 			response.append("<div class='input-group input-medium '>\n"); 
 			
-			if(el.getAttribute("type", "1").equals("1")) {
+			if(el.getAttribute("type", "2").equals("1")) {
 				response.append("	<input type='text' class='form-control clockface'");
-			} else if(el.getAttribute("type", "2").equals("1")) {
+			} else if(el.getAttribute("type", "2").equals("2")) {
 				response.append("	<input type='text' class='form-control timepicker timepicker-no-seconds'");
 			} else {
 				response.append("	<input type='text' class='form-control timepicker timepicker-24'");
@@ -874,12 +874,12 @@ public class BWebBody extends BQuery {
 			response.append("/>\n");
 			
 			response.append("	<span class='input-group-btn'>\n");
-			if(el.getAttribute("type", "1").equals("1")) {
+			if(el.getAttribute("type", "2").equals("1")) {
 				response.append("		<button class='btn default clockface-toggle' data-target='" + el.getValue() + "' type='button'>");
+				response.append("<i class='fa fa-clock-o'></i></button>\n");
 			} else {
-				response.append("		<button class='btn default' type='button'>");
+				response.append("		<button class='btn default' type='button'></button>\n");
 			}
-			response.append("<i class='fa fa-clock-o'></i></button>\n");
 			response.append("	</span>\n");
 			response.append("</div>\n");
 		} else if(el.getName().equals("PICTURE")) {

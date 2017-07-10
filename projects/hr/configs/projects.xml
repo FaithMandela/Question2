@@ -80,13 +80,14 @@
 					<TEXTFIELD w="75" title="Hours Taken">hours_taken</TEXTFIELD>
 					<FORM name="Tasks" keyfield="task_id" linkfield="phase_id" table="tasks">
 						<COMBOBOX w="430" title="Staff" lptable="vw_employees" y="10" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
-						<TEXTFIELD w="430" title="Task Name" y="30" h="20" x="10">task_name</TEXTFIELD>
-						<TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
-						<TEXTDATE w="150" title="Dead Line" y="50" h="20" x="290">dead_line</TEXTDATE>
-						<TEXTDATE w="150" title="End Date" y="70" h="20" x="10">end_date</TEXTDATE>
-						<CHECKBOX w="150" title="Completed" y="70" h="20" x="290">completed</CHECKBOX>
-						<TEXTFIELD w="150" title="Hours Taken" y="90" h="20" x="10">hours_taken</TEXTFIELD>
-						<EDITOR w="430" title="Details" y="110" h="70" x="10">details</EDITOR>
+						<COMBOBOX w="430" title="Task Type" lptable="task_types" y="30" h="20" x="10" lpfield="task_type_name">task_type_id</COMBOBOX>
+						<TEXTFIELD w="430" title="Task Name" y="50" h="20" x="10">task_name</TEXTFIELD>
+						<TEXTDATE w="150" title="Start Date" y="70" h="20" x="10">start_date</TEXTDATE>
+						<TEXTDATE w="150" title="Dead Line" y="70" h="20" x="290">dead_line</TEXTDATE>
+						<TEXTDATE w="150" title="End Date" y="90" h="20" x="10">end_date</TEXTDATE>
+						<CHECKBOX w="150" title="Completed" y="90" h="20" x="290">completed</CHECKBOX>
+						<TEXTFIELD w="150" title="Hours Taken" y="110" h="20" x="10">hours_taken</TEXTFIELD>
+						<EDITOR w="430" title="Details" y="130" h="70" x="10">details</EDITOR>
 					</FORM>
 					<GRID name="Timesheet" keyfield="timesheet_id" linkfield="task_id" table="vw_timesheet">
 						<TEXTDATE w="75" title="Date">ts_date</TEXTDATE>
@@ -204,7 +205,7 @@
 		</GRID>
 		<GRID name="Project Types" keyfield="project_type_id" table="project_types">
 			<TEXTFIELD w="75" title="Project Type ID">project_type_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Project Type Name">project_type_name</TEXTFIELD>
+			<TEXTFIELD w="175" title="Project Type Name">project_type_name</TEXTFIELD>
 			<GRID name="Define Phases" keyfield="define_phase_id" linkfield="project_type_id" table="vw_define_phases">
 				<TEXTFIELD w="75" title="Define Phase ID">define_phase_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Group Name">entity_type_name</TEXTFIELD>
@@ -234,6 +235,30 @@
 				<TEXTFIELD w="430" title="Project Type Name" y="10" h="20" x="10">project_type_name</TEXTFIELD>
 				<TEXTAREA w="430" title="Details" y="30" h="270" x="10">details</TEXTAREA>
 			</FORM>
+		</GRID>
+		<GRID name="Task Types" keyfield="task_type_id" table="task_types">
+			<TEXTFIELD w="45" title="Task Type ID">task_type_id</TEXTFIELD>
+			<TEXTFIELD w="175" title="Task Type Name">task_type_name</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Default Cost">default_cost</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Default Price">default_price</TEXTDECIMAL>
+			<FORM name="Task Types" keyfield="task_type_id" table="task_types">
+				<TEXTFIELD w="430" title="Task Type Name" y="10" h="20" x="10">task_type_name</TEXTFIELD>
+				<TEXTDECIMAL w="150" title="Default Cost" y="30" h="20" x="10">default_cost</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Default Price" y="30" h="20" x="290">default_price</TEXTDECIMAL>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+			</FORM>
+			<GRID name="Task Entitys" keyfield="task_entity_id" linkfield="task_type_id" table="vw_task_entitys">
+				<TEXTFIELD w="75" title="Task Entity ID">task_entity_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Staff Name">entity_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="Task Entity Cost">task_entity_cost</TEXTDECIMAL>
+				<TEXTDECIMAL w="75" title="Task Entity Price">task_entity_price</TEXTDECIMAL>
+				<FORM name="Task Entitys" keyfield="task_entity_id" linkfield="task_type_id" table="task_entitys">
+					<COMBOBOX w="430" title="Staff" lptable="vw_employees" y="10" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
+					<TEXTDECIMAL w="150" title="Task Entity Cost" y="30" h="20" x="10">task_entity_cost</TEXTDECIMAL>
+					<TEXTDECIMAL w="150" title="Task Entity Price" y="30" h="20" x="290">task_entity_price</TEXTDECIMAL>
+					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Client" key="10" h="500">

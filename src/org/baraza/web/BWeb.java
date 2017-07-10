@@ -1900,7 +1900,7 @@ log.severe("BASE : " + mysql);
 			
 			if(el.getName().equals("ACTIONS")) hasAction = true;
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
-			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("ACCORDION") || el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
 			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
@@ -2039,8 +2039,9 @@ log.severe("BASE : " + mysql);
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
 			if(el.getName().equals("FILES") || el.getName().equals("DIARY") || el.getName().equals("FORMVIEW")) hasSubs = true;
-			if(el.getName().equals("CROSSTAB")) hasSubs = true;
+			if(el.getName().equals("ACCORDION") || el.getName().equals("CROSSTAB")) hasSubs = true;
 		}
+
 		return hasSubs;
 	}
 	

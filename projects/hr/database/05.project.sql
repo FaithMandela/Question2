@@ -115,7 +115,7 @@ CREATE TABLE task_types (
 CREATE INDEX task_types_org_id ON task_types(org_id);
 
 CREATE TABLE task_entitys (
-	task_id					serial primary key,
+	task_entity_id			serial primary key,
 	task_type_id			integer references task_types,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
@@ -202,7 +202,6 @@ CREATE TABLE access_logs (
 );
 CREATE INDEX access_logs_entity_id ON access_logs (entity_id);
 CREATE INDEX access_logs_org_id ON access_logs (org_id);
-
 
 CREATE TABLE bio_imports1 (
 	bio_imports1_id			serial primary key,
@@ -307,11 +306,12 @@ CREATE VIEW vw_phases AS
 	FROM phases INNER JOIN vw_projects ON phases.project_id = vw_projects.project_id;
 
 CREATE VIEW vw_task_entitys AS
-	SELECT entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name, task_types.task_type_id, task_types.task_type_name, task_entitys.task_id, task_entitys.task_entity_cost, task_entitys.task_entity_price, task_entitys.details
-	FROM task_entitys
-	INNER JOIN entitys ON task_entitys.entity_id = entitys.entity_id
-	INNER JOIN orgs ON task_entitys.org_id = orgs.org_id
-	INNER JOIN task_types ON task_entitys.task_type_id = task_types.task_type_id;
+	SELECT entitys.entity_id, entitys.entity_name, task_types.task_type_id, task_types.task_type_name, 
+		orgs.org_id, orgs.org_name,
+		task_entitys.task_entity_id, task_entitys.task_entity_cost, task_entitys.task_entity_price, task_entitys.details
+	FROM task_entitys INNER JOIN entitys ON task_entitys.entity_id = entitys.entity_id
+		INNER JOIN task_types ON task_entitys.task_type_id = task_types.task_type_id
+		INNER JOIN orgs ON task_entitys.org_id = orgs.org_id;
 	
 CREATE VIEW vw_tasks AS
 	SELECT vw_phases.client_id, vw_phases.client_name, vw_phases.project_type_id, vw_phases.project_type_name, 
@@ -323,7 +323,9 @@ CREATE VIEW vw_tasks AS
 		entitys.entity_id, entitys.entity_name, tasks.task_id, tasks.task_name, 
 		tasks.org_id, tasks.start_date as task_start_date, tasks.dead_line as task_dead_line, 
 		tasks.end_date as task_end_date, tasks.completed as task_completed, 
-		tasks.hours_taken, tasks.details as task_details
+		tasks.hours_taken, tasks.task_cost, tasks.task_price,
+		(tasks.hours_taken * tasks.task_cost) as total_task_cost, (tasks.hours_taken * tasks.task_price) as total_task_price,
+		tasks.details as task_details
 	FROM tasks INNER JOIN entitys ON tasks.entity_id = entitys.entity_id
 		INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id;
 		
@@ -496,4 +498,32 @@ CREATE OR REPLACE FUNCTION sum_attendance_hours(integer, integer) RETURNS interv
 	WHERE (vw_week_attendance.entity_id = $1) AND (vw_week_attendance.period_id = $2)
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION aft_task_types() RETURNS trigger AS $$
+BEGIN
 
+	INSERT INTO task_entitys (entity_id, org_id, task_type_id, task_entity_cost, task_entity_price)
+	SELECT entity_id, NEW.org_id, NEW.task_type_id, NEW.default_cost, NEW.default_price
+	FROM employees
+	WHERE (org_id = NEW.org_id) AND (active = true);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_task_types AFTER INSERT ON task_types
+	FOR EACH ROW EXECUTE PROCEDURE aft_task_types();
+
+CREATE OR REPLACE FUNCTION ins_tasks() RETURNS trigger AS $$
+BEGIN
+
+	SELECT task_entity_cost, task_entity_price INTO NEW.task_cost, NEW.task_price
+	FROM task_entitys
+	WHERE (task_type_id = NEW.task_type_id) AND (entity_id = NEW.entity_id);
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_tasks BEFORE INSERT ON tasks
+	FOR EACH ROW EXECUTE PROCEDURE ins_tasks();
+    
