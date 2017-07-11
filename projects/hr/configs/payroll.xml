@@ -972,11 +972,13 @@
 					</FORM>
 				</GRID>
 				<GRID name="Projects" keyfield="project_staff_cost_id" linkfield="employee_month_id" table="vw_project_staff_costs">
-					<TEXTFIELD w="75" title="Project ID">project_id</TEXTFIELD>
-					<TEXTFIELD w="75" title="Project Name">project_name</TEXTFIELD>
+					<TEXTFIELD w="45" title="Project ID">project_id</TEXTFIELD>
+					<TEXTFIELD w="175" title="Project Name">project_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Project Account">project_account</TEXTFIELD>
 					<TEXTFIELD w="75" title="Project Role">project_role</TEXTFIELD>
-					<TEXTDECIMAL w="75" title="Payroll %">payroll_ps</TEXTDECIMAL>
+					<TEXTDECIMAL w="55" title="Payroll %">payroll_ps</TEXTDECIMAL>
+					<TEXTDECIMAL w="55" title="Task Hours">task_hours</TEXTDECIMAL>
+					<TEXTDECIMAL w="55" title="Staff Pay">staff_pay</TEXTDECIMAL>
 					<FORM name="Project Staff Costs" keyfield="project_staff_cost_id" linkfield="employee_month_id" table="project_staff_costs">
 						<COMBOBOX w="430" title="Project" lptable="projects" y="10" h="20" x="10" lpfield="project_name">project_id</COMBOBOX>
 						<TEXTFIELD w="430" title="Project Role" y="30" h="20" x="10">project_role</TEXTFIELD>
@@ -1194,6 +1196,15 @@
 					<TEXTFIELD w="75" title="Approval">approve_status</TEXTFIELD>
 					<TEXTDECIMAL w="75" title="Per Diem">per_diem</TEXTDECIMAL>
 					<TEXTDECIMAL w="75" title="Full Amount">full_amount</TEXTDECIMAL>
+				</GRID>
+				<GRID name="Projects" keyfield="project_staff_cost_id" linkfield="employee_month_id" table="vw_project_staff_costs">
+					<TEXTFIELD w="45" title="Project ID">project_id</TEXTFIELD>
+					<TEXTFIELD w="175" title="Project Name">project_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="Project Account">project_account</TEXTFIELD>
+					<TEXTFIELD w="75" title="Project Role">project_role</TEXTFIELD>
+					<TEXTDECIMAL w="55" title="Payroll %">payroll_ps</TEXTDECIMAL>
+					<TEXTDECIMAL w="55" title="Task Hours">task_hours</TEXTDECIMAL>
+					<TEXTDECIMAL w="55" title="Staff Pay">staff_pay</TEXTDECIMAL>
 				</GRID>
 				<GRID name="Extra Banking" keyfield="employee_banking_id" linkfield="entity_id" table="vw_default_banking">
 					<TEXTFIELD w="75" title="Bank Name">bank_name</TEXTFIELD>

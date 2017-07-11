@@ -84,7 +84,10 @@ CREATE TABLE project_staff_costs (
 	payroll_ps				real default 0 not null,
 	staff_cost				real default 0 not null,
 	tax_cost				real default 0 not null,
-	Details					text
+	staff_pay				real default 0 not null,
+	task_hours				real default 0 not null,
+	tasks_cost				boolean default false not null,
+	details					text
 );
 CREATE INDEX project_staff_costs_project_id ON project_staff_costs (project_id);
 CREATE INDEX project_staff_costs_employee_month_id ON project_staff_costs (employee_month_id);
@@ -136,7 +139,7 @@ CREATE TABLE tasks (
 	start_date				date not null,
 	dead_line				date,
 	end_date				date,
-	hours_taken				integer default 7 not null,
+	hours_taken				real default 7 not null,
 	task_cost				real default 0 not null,
 	task_price				real default 0 not null,
 	completed				boolean not null default false,
@@ -265,7 +268,8 @@ CREATE VIEW vw_project_staff_costs AS
 		projects.project_id, projects.project_name, projects.project_account,
 		project_staff_costs.org_id, project_staff_costs.project_staff_cost_id, 
 		project_staff_costs.project_role, project_staff_costs.payroll_ps,
-		project_staff_costs.staff_cost, project_staff_costs.tax_cost, project_staff_costs.details
+		project_staff_costs.staff_cost, project_staff_costs.tax_cost, project_staff_costs.staff_pay,
+		project_staff_costs.task_hours, project_staff_costs.tasks_cost, project_staff_costs.details
 	FROM project_staff_costs INNER JOIN vw_employee_month ON project_staff_costs.employee_month_id = vw_employee_month.employee_month_id
 		INNER JOIN projects ON project_staff_costs.project_id = projects.project_id;
 		
@@ -324,7 +328,8 @@ CREATE VIEW vw_tasks AS
 		tasks.org_id, tasks.start_date as task_start_date, tasks.dead_line as task_dead_line, 
 		tasks.end_date as task_end_date, tasks.completed as task_completed, 
 		tasks.hours_taken, tasks.task_cost, tasks.task_price,
-		(tasks.hours_taken * tasks.task_cost) as total_task_cost, (tasks.hours_taken * tasks.task_price) as total_task_price,
+		(tasks.hours_taken * tasks.task_cost) as total_task_cost, 
+		(tasks.hours_taken * tasks.task_price) as total_task_price,
 		tasks.details as task_details
 	FROM tasks INNER JOIN entitys ON tasks.entity_id = entitys.entity_id
 		INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id;
@@ -527,3 +532,35 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_tasks BEFORE INSERT ON tasks
 	FOR EACH ROW EXECUTE PROCEDURE ins_tasks();
     
+CREATE OR REPLACE FUNCTION get_task_costs(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_period_id				integer;
+	v_org_id				integer;
+	v_start_date			date;
+	v_end_date				date;
+	v_project_cost			float;
+	msg 					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id, start_date, end_date INTO v_period_id, v_org_id, v_start_date, v_end_date
+	FROM periods
+	WHERE (period_id = $1::int);
+	
+	DELETE FROM project_staff_costs WHERE (tasks_cost = true)
+	AND (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = v_period_id));
+	
+	INSERT INTO project_staff_costs (tasks_cost, project_id, org_id, employee_month_id, task_hours, staff_pay)
+	SELECT true, phases.project_id, employee_month.org_id, employee_month.employee_month_id,
+		sum(tasks.hours_taken), sum(tasks.hours_taken * tasks.task_price)
+	FROM phases INNER JOIN tasks ON phases.phase_id = tasks.phase_id
+		INNER JOIN employee_month ON tasks.entity_id = employee_month.entity_id
+	WHERE (employee_month.period_id = v_period_id) AND (tasks.completed = true) AND (tasks.hours_taken > 0)
+		AND (tasks.end_date BETWEEN v_start_date AND v_end_date)
+	GROUP BY phases.project_id, employee_month.employee_month_id;
+	
+	msg := 'Done';
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+

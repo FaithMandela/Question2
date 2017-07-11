@@ -70,14 +70,16 @@
 				<TEXTDATE w="75" title="Phase End Date">phase_end_date</TEXTDATE>
 				<TEXTDECIMAL w="75" title="Phase Cost">phase_cost</TEXTDECIMAL>
 				<GRID name="Tasks" keyfield="task_id" linkfield="phase_id" table="vw_tasks">
-					<TEXTFIELD w="75" title="Task ID">task_id</TEXTFIELD>
+					<TEXTFIELD w="45" title="Task ID">task_id</TEXTFIELD>
 					<TEXTFIELD w="75" title="Staff">entity_name</TEXTFIELD>
 					<TEXTFIELD w="75" title="Task Name">task_name</TEXTFIELD>
 					<TEXTDATE w="75" title="Start Date">task_start_date</TEXTDATE>
 					<TEXTDATE w="75" title="Dead Line">task_dead_line</TEXTDATE>
 					<TEXTDATE w="75" title="End Date">task_end_date</TEXTDATE>
 					<CHECKBOX w="45" title="Completed">task_completed</CHECKBOX>
-					<TEXTFIELD w="75" title="Hours Taken">hours_taken</TEXTFIELD>
+					<TEXTFIELD w="55" title="Hours Taken">hours_taken</TEXTFIELD>
+					<TEXTDECIMAL w="55" title="Task Cost">total_task_cost</TEXTDECIMAL>
+					<TEXTDECIMAL w="55" title="Task Price">total_task_price</TEXTDECIMAL>
 					<FORM name="Tasks" keyfield="task_id" linkfield="phase_id" table="tasks">
 						<COMBOBOX w="430" title="Staff" lptable="vw_employees" y="10" h="20" x="10" lpfield="employee_name">entity_id</COMBOBOX>
 						<COMBOBOX w="430" title="Task Type" lptable="task_types" y="30" h="20" x="10" lpfield="task_type_name">task_type_id</COMBOBOX>

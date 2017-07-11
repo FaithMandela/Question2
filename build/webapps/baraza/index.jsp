@@ -657,7 +657,6 @@
 		jqcf.ondblClickRow = function(rowid) {
 		    console.log(rowid);
 		    var data = jQuery("#jqlist").jqGrid('getRowData',rowid);
-			console.log(data.CL);
 		    location.replace(data.CL);
 		};
     }

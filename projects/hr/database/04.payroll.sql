@@ -1149,6 +1149,9 @@ BEGIN
 			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+		
+		--- costs on projects based on staff
+		msg := get_task_costs($1, $2, $3);
 
 		PERFORM updTax(employee_month_id, Period_id)
 		FROM employee_month
@@ -1371,14 +1374,17 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION process_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	rec 		RECORD;
-	msg 		varchar(120);
+	rec 					RECORD;
+	msg 					varchar(120);
 BEGIN
 	IF ($3 = '1') THEN
 		UPDATE employee_adjustments SET tax_reduction_amount = 0 
 		FROM employee_month 
 		WHERE (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
 			AND (employee_month.period_id = CAST($1 as int));
+		
+		--- costs on projects based on staff
+		msg := get_task_costs($1, $2, $3);
 	
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
@@ -1409,10 +1415,10 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_employee_adjustments() RETURNS trigger AS $$
 DECLARE
-	v_formural					varchar(430);
-	v_tax_relief_ps				float;
-	v_tax_reduction_ps			float;
-	v_tax_max_allowed			float;
+	v_formural				varchar(430);
+	v_tax_relief_ps			float;
+	v_tax_reduction_ps		float;
+	v_tax_max_allowed		float;
 BEGIN
 	IF((NEW.Amount = 0) AND (NEW.paid_amount <> 0))THEN
 		NEW.Amount = NEW.paid_amount / 0.7;
