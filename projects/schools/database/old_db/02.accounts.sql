@@ -342,67 +342,67 @@ CREATE VIEW vw_default_tax_types AS
 		INNER JOIN vw_tax_types ON default_tax_types.tax_type_id = vw_tax_types.tax_type_id;
 	
 CREATE OR REPLACE FUNCTION prev_acct(integer, date) RETURNS real AS $$
-	SELECT sum(gls.debit - gls.credit)
+    SELECT sum(gls.debit - gls.credit)
 	FROM gls INNER JOIN journals ON gls.journal_id = journals.journal_id
 	WHERE (gls.account_id = $1) AND (journals.posted = true) 
 		AND (journals.journal_date < $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_acct(integer, date, date) RETURNS real AS $$
-	SELECT sum(gls.debit - gls.credit)
+    SELECT sum(gls.debit - gls.credit)
 	FROM gls INNER JOIN journals ON gls.journal_id = journals.journal_id
 	WHERE (gls.account_id = $1) AND (journals.posted = true) AND (journals.year_closing = false)
 		AND (journals.journal_date >= $2) AND (journals.journal_date <= $3);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION prev_returns(date) RETURNS real AS $$
-	SELECT COALESCE(sum(credit - debit), 0)
+    SELECT COALESCE(sum(credit - debit), 0)
 	FROM vw_gls
 	WHERE (chat_type_id > 3) AND (posted = true) AND (journal_date < $1);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION curr_returns(date, date) RETURNS real AS $$
-	SELECT COALESCE(sum(credit - debit), 0)
+    SELECT COALESCE(sum(credit - debit), 0)
 	FROM vw_gls
 	WHERE (chat_type_id > 3) AND (posted = true) AND (year_closing = false)
 		AND (journal_date >= $1) AND (journal_date <= $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION prev_base_acct(integer, date) RETURNS real AS $$
-	SELECT sum(gls.debit * journals.exchange_rate - gls.credit * journals.exchange_rate) 
+    SELECT sum(gls.debit * journals.exchange_rate - gls.credit * journals.exchange_rate) 
 	FROM gls INNER JOIN journals ON gls.journal_id = journals.journal_id
 	WHERE (gls.account_id = $1) AND (journals.posted = true) 
 		AND (journals.journal_date < $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_base_acct(integer, date, date) RETURNS real AS $$
-	SELECT sum(gls.debit * journals.exchange_rate - gls.credit * journals.exchange_rate) 
+    SELECT sum(gls.debit * journals.exchange_rate - gls.credit * journals.exchange_rate) 
 	FROM gls INNER JOIN journals ON gls.journal_id = journals.journal_id
 	WHERE (gls.account_id = $1) AND (journals.posted = true) AND (journals.year_closing = false)
 		AND (journals.journal_date >= $2) AND (journals.journal_date <= $3);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION prev_base_returns(date) RETURNS real AS $$
-	SELECT COALESCE(sum(base_credit - base_debit), 0)
+    SELECT COALESCE(sum(base_credit - base_debit), 0)
 	FROM vw_gls
 	WHERE (chat_type_id > 3) AND (posted = true) AND (journal_date < $1);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION curr_base_returns(date, date) RETURNS real AS $$
-	SELECT COALESCE(sum(base_credit - base_debit), 0)
+    SELECT COALESCE(sum(base_credit - base_debit), 0)
 	FROM vw_gls
 	WHERE (chat_type_id > 3) AND (posted = true) AND (year_closing = false)
 		AND (journal_date >= $1) AND (journal_date <= $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_default_account(integer, integer) RETURNS integer AS $$
-	SELECT accounts.account_no
+    SELECT accounts.account_no
 	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
 	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_default_account_id(integer, integer) RETURNS integer AS $$
-	SELECT accounts.account_id
+    SELECT accounts.account_id
 	FROM default_accounts INNER JOIN accounts ON default_accounts.account_id = accounts.account_id
 	WHERE (default_accounts.use_key_id = $1) AND (default_accounts.org_id = $2);
 $$ LANGUAGE SQL;
