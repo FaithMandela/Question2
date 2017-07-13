@@ -28,7 +28,7 @@ CREATE TABLE cylinders (
 	cylinder_batch_id		integer references cylinder_batch,
 	org_id					integer references orgs,
 
-	cylinder_number			ineteger,
+	cylinder_number			integer,
 	cylinder_code			varchar(32),
 	certification_date		timestamp default current_timestamp not null,
 	review_date				date,
@@ -67,6 +67,14 @@ CREATE VIEW vw_cylinders AS
 	FROM cylinders INNER JOIN vw_cylinder_batch ON cylinders.cylinder_batch_id = vw_cylinder_batch.cylinder_batch_id
 	INNER JOIN orgs ON cylinders.org_id = orgs.org_id;
 
+	
+------------Hooks to approval trigger
+CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON cylinder_batch
+	FOR EACH ROW EXECUTE PROCEDURE upd_action();
+	
+	
+---- System functions
+	
 CREATE OR REPLACE FUNCTION apply_approval(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	msg							varchar(120);
@@ -86,10 +94,16 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION upd_cylinder_batch() RETURNS trigger AS $$
 BEGIN
 
+	IF(NEW.approve_status = 'Approved')THEN
+		IF(OLD.quantity <> NEW.quantity)THEN
+			RAISE EXCEPTION 'Cannot change quantity after approval';
+		END IF;
+	END IF;
+
 	IF(OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved')THEN
 		INSERT INTO cylinders (cylinder_batch_id, org_id, cylinder_number)
 		SELECT NEW.cylinder_batch_id, NEW.org_id, ab
-		FROM generate_series(2, 4) ab;
+		FROM generate_series(1, NEW.quantity) ab;
 	END IF;
 
 	RETURN null;
@@ -100,3 +114,11 @@ CREATE TRIGGER upd_cylinder_batch AFTER UPDATE ON cylinder_batch
     FOR EACH ROW EXECUTE PROCEDURE upd_cylinder_batch();
     
     
+---------- Data
+INSERT INTO workflows (workflow_id, org_id, source_entity_id, workflow_name, table_name, table_link_field, table_link_id, approve_email, reject_email, approve_file, reject_file, details) 
+VALUES (0, 0, 0, 'Cylinder Batch Approval', 'cylinder_batch', NULL, NULL, 'Request approved', 'Request rejected', NULL, NULL, NULL);
+SELECT pg_catalog.setval('workflows_workflow_id_seq', 30, true);
+
+INSERT INTO workflow_phases (workflow_phase_id, org_id, workflow_id, approval_entity_id, approval_level, return_level, escalation_days, escalation_hours, required_approvals, advice, notice, phase_narrative, advice_email, notice_email, advice_file, notice_file, details) 
+VALUES (0, 0, 0, 0, 1, 0, 0, 3, 1, false, false, 'Approve', 'For your approval', 'Phase approved', NULL, NULL, NULL);
+
