@@ -175,6 +175,22 @@
 				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
+		<GRID name="Leave Types" keyfield="leave_type_id" table="vw_leave_types">
+			<TEXTFIELD w="75" title="Leave Type ID">leave_type_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Leave Type Name">leave_type_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Allowed Leave Days">allowed_leave_days</TEXTFIELD>
+			<TEXTFIELD w="75" title="Leave Days Span">leave_days_span</TEXTFIELD>
+			<TEXTDECIMAL w="75" title="Month Quota">month_quota</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Initial Days">initial_days</TEXTDECIMAL>
+			<TEXTDECIMAL w="75" title="Maximum Carry">maximum_carry</TEXTDECIMAL>
+			<TEXTFIELD w="75" title="Adjustment Type">leave_adjustment</TEXTFIELD>
+			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			<TEXTFIELD w="75" title="Adjustment ID">adjustment_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Adjustment Name">adjustment_name</TEXTFIELD>
+			<FORM new="false" name="Leave Types" keyfield="leave_type_id" delete="false" table="leave_types">
+				<COMBOBOX w="430" title="Adjustment" lptable="adjustments" y="240" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+			</FORM>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Organisation" key="20" h="500">
 		<FORMVIEW name="Organisation" keyfield="org_id" table="orgs">

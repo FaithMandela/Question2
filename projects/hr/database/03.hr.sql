@@ -170,6 +170,8 @@ CREATE TABLE employees (
 	halt_point				varchar(16),
 
 	bio_metric_number		varchar(32),
+	average_daily_rate		real default 0 not null,
+	normal_work_hours		real default 8 not null,
 
 	height					real, 
 	weight					real, 

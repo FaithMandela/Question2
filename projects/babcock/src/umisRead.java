@@ -12,7 +12,7 @@ public class umisRead {
 		try {
 	
 			//URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
-			URL wsURL = new URL("http://localhost:9090/babcock/webservice?wsdl");
+			URL wsURL = new URL("http://localhost:8080/babcock/webservice?wsdl");
 		
 			DataWebServiceService bws = new DataWebServiceService(wsURL);
 			DataWebService port = bws.getDataWebServicePort();

@@ -34,11 +34,8 @@ CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
 CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
 
-CREATE VIEW vw_leave_types AS
-	SELECT adjustments.adjustment_id, adjustments.adjustment_name, orgs.org_id, orgs.org_name, leave_types.leave_type_id, leave_types.leave_type_name, leave_types.allowed_leave_days, leave_types.leave_days_span, leave_types.use_type, leave_types.month_quota, leave_types.initial_days, leave_types.maximum_carry, leave_types.include_holiday, leave_types.include_mon, leave_types.include_tue, leave_types.include_wed, leave_types.include_thu, leave_types.include_fri, leave_types.include_sat, leave_types.include_sun, leave_types.details
-	FROM leave_types
-	INNER JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id
-	INNER JOIN orgs ON leave_types.org_id = orgs.org_id;
+ALTER TABLE leave_types ADD	adjustment_id	integer references adjustments;
+CREATE INDEX leave_types_adjustment_id ON leave_types(adjustment_id);
 
 CREATE TABLE claim_types (
 	claim_type_id			serial primary key,
@@ -340,21 +337,22 @@ CREATE VIEW vw_adjustments AS
 	FROM adjustments INNER JOIN currency ON adjustments.currency_id = currency.currency_id;
 	
 CREATE VIEW vw_leave_types AS
-	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
-		adjustments.org_id, adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, 
-		adjustments.adjustment_order, adjustments.earning_code, adjustments.formural, adjustments.monthly_update, 
-		adjustments.in_payroll, adjustments.in_tax, adjustments.visible, adjustments.running_balance, 
-		adjustments.reduce_balance, adjustments.tax_reduction_ps, adjustments.tax_relief_ps, 
-		adjustments.tax_max_allowed, adjustments.account_number,
-		
-	SELECT adjustments.adjustment_id, adjustments.adjustment_name,
+	SELECT vw_adjustments.currency_id, vw_adjustments.currency_name, vw_adjustments.currency_symbol,
+		vw_adjustments.adjustment_id, vw_adjustments.adjustment_name, 
+		vw_adjustments.adjustment_type, vw_adjustments.adjustment_order, vw_adjustments.earning_code, 
+		vw_adjustments.formural, vw_adjustments.monthly_update,
+		vw_adjustments.in_payroll, vw_adjustments.in_tax, vw_adjustments.visible, vw_adjustments.running_balance, 
+		vw_adjustments.reduce_balance, vw_adjustments.tax_reduction_ps, vw_adjustments.tax_relief_ps, 
+		vw_adjustments.tax_max_allowed, vw_adjustments.account_number,
 		leave_types.org_id, leave_types.leave_type_id, leave_types.leave_type_name, 
 		leave_types.allowed_leave_days, leave_types.leave_days_span, leave_types.use_type, 
 		leave_types.month_quota, leave_types.initial_days, leave_types.maximum_carry, 
 		leave_types.include_holiday, leave_types.include_mon, leave_types.include_tue, leave_types.include_wed, 
-		leave_types.include_thu, leave_types.include_fri, leave_types.include_sat, leave_types.include_sun, leave_types.details
-		
-	FROM leave_types LEFT JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id;	
+		leave_types.include_thu, leave_types.include_fri, leave_types.include_sat, leave_types.include_sun, 
+		leave_types.details,
+		(CASE vw_adjustments.adjustment_type WHEN 1 THEN 'Leave Allowance' 
+			WHEN -1 THEN 'Leave Deduction' ELSE 'No Adjustment' END) as leave_adjustment
+	FROM leave_types LEFT JOIN vw_adjustments ON leave_types.adjustment_id = vw_adjustments.adjustment_id;
 		
 CREATE VIEW vw_claim_types AS
 	SELECT adjustments.adjustment_id, adjustments.adjustment_name, 
