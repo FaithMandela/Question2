@@ -350,8 +350,8 @@ CREATE VIEW vw_leave_types AS
 		leave_types.include_holiday, leave_types.include_mon, leave_types.include_tue, leave_types.include_wed, 
 		leave_types.include_thu, leave_types.include_fri, leave_types.include_sat, leave_types.include_sun, 
 		leave_types.details,
-		(CASE vw_adjustments.adjustment_type WHEN 1 THEN 'Leave Allowance' 
-			WHEN -1 THEN 'Leave Deduction' ELSE 'No Adjustment' END) as leave_adjustment
+		(CASE vw_adjustments.adjustment_type WHEN 1 THEN 'Leave Allowance' WHEN 2 THEN 'Leave Deduction'
+			WHEN 3 THEN 'Leave Expenditure' ELSE 'No Adjustment' END) as leave_adjustment
 	FROM leave_types LEFT JOIN vw_adjustments ON leave_types.adjustment_id = vw_adjustments.adjustment_id;
 		
 CREATE VIEW vw_claim_types AS

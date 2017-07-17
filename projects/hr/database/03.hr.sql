@@ -171,7 +171,7 @@ CREATE TABLE employees (
 
 	bio_metric_number		varchar(32),
 	average_daily_rate		real default 0 not null,
-	normal_work_hours		real default 8 not null,
+	normal_work_hours		real default 9 not null,
 
 	height					real, 
 	weight					real, 
@@ -431,6 +431,7 @@ CREATE TABLE leave_types (
 	
 	use_type				integer default 0 not null,
 	month_quota				real default 0 not null,
+	month_limit				real default 0 not null,
 	initial_days			real default 0 not null,
 	maximum_carry			real default 0 not null,
 	include_holiday 		boolean default false not null,
@@ -1990,7 +1991,7 @@ DECLARE
 	v_year_leave			real;
 BEGIN
 
-	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry 
+	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry
 		INTO reca
 	FROM leave_types
 	WHERE (leave_type_id = $2);
@@ -2068,12 +2069,14 @@ DECLARE
 	v_leave_overlap		integer;
 	v_approve_status	varchar(16);
 	v_table_id			integer;
+	v_month_leave		real;
 	rec					RECORD;
 	msg 				varchar(120);
 BEGIN
 	msg := 'Leave applied';
 
-	SELECT leave_types.leave_days_span, employee_leave.entity_id, employee_leave.leave_type_id,
+	SELECT leave_types.leave_days_span, leave_types.month_limit,
+		employee_leave.entity_id, employee_leave.leave_type_id,
 		employee_leave.leave_days, employee_leave.leave_from, employee_leave.leave_to,
 		employee_leave.contact_entity_id, employee_leave.narrative
 		INTO rec
@@ -2086,6 +2089,12 @@ BEGIN
 	FROM employee_leave
 	WHERE (entity_id = rec.entity_id) AND ((approve_status = 'Completed') OR (approve_status = 'Approved'))
 		AND (((leave_from, leave_to) OVERLAPS (rec.leave_from, rec.leave_to)) = true);
+		
+	SELECT sum(employee_leave_id) INTO v_month_leave
+	FROM employee_leave
+	WHERE (entity_id = rec.entity_id) AND ((approve_status = 'Completed') OR (approve_status = 'Approved'))
+		AND (leave_type_id = rec.leave_type_id)
+		AND (to_char(leave_from, 'YYYYMM') =  to_char(current_date, 'YYYYMM'));
 
 	SELECT approve_status INTO v_approve_status
 	FROM employee_leave

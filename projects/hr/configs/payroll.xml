@@ -188,7 +188,7 @@
 			<TEXTFIELD w="75" title="Adjustment ID">adjustment_id</TEXTFIELD>
 			<TEXTFIELD w="75" title="Adjustment Name">adjustment_name</TEXTFIELD>
 			<FORM new="false" name="Leave Types" keyfield="leave_type_id" delete="false" table="leave_types">
-				<COMBOBOX w="430" title="Adjustment" lptable="adjustments" y="240" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
+				<COMBOBOX w="430" title="Adjustment" lptable="adjustments" where="(adjustment_type != 3)" y="240" h="20" x="10" lpfield="adjustment_name">adjustment_id</COMBOBOX>
 			</FORM>
 		</GRID>
 	</DESK>

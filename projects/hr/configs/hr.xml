@@ -1364,10 +1364,12 @@
 				<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
 				<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
-				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
-				<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
-				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" rows="5">employment_terms</TEXTAREA>
+				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="70" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="90" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+				<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="90" h="20" x="290" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
+				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="130" h="20" x="10" rows="5">employment_terms</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
@@ -1983,6 +1985,7 @@
 				<TEXTFIELD w="150" title="Allowed Leave Days" y="10" h="20" x="290">allowed_leave_days</TEXTFIELD>
 				<TEXTFIELD w="150" title="Leave Days Span" y="30" h="20" x="10">leave_days_span</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Month Quota" y="30" h="20" x="290">month_quota</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Month Limit" y="30" h="20" x="490">month_limit</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Initial Days" y="50" h="20" x="10">initial_days</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Maximum Carry" y="50" h="20" x="290">maximum_carry</TEXTDECIMAL>
 				<COMBOLIST w="150" title="Use Type" y="70" h="20" x="10">use_type
