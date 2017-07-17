@@ -105,7 +105,6 @@ CREATE TABLE periods (
 	gl_payroll_account		varchar(32),
 	gl_advance_account		varchar(32),
 
-
     entity_id 				integer references entitys,
 	application_date		timestamp default now(),
 	approve_status			varchar(16) default 'Draft' not null,

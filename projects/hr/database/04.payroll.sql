@@ -34,6 +34,12 @@ CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
 CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
 
+CREATE VIEW vw_leave_types AS
+	SELECT adjustments.adjustment_id, adjustments.adjustment_name, orgs.org_id, orgs.org_name, leave_types.leave_type_id, leave_types.leave_type_name, leave_types.allowed_leave_days, leave_types.leave_days_span, leave_types.use_type, leave_types.month_quota, leave_types.initial_days, leave_types.maximum_carry, leave_types.include_holiday, leave_types.include_mon, leave_types.include_tue, leave_types.include_wed, leave_types.include_thu, leave_types.include_fri, leave_types.include_sat, leave_types.include_sun, leave_types.details
+	FROM leave_types
+	INNER JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id
+	INNER JOIN orgs ON leave_types.org_id = orgs.org_id;
+
 CREATE TABLE claim_types (
 	claim_type_id			serial primary key,
 	adjustment_id			integer references adjustments,
@@ -332,6 +338,23 @@ CREATE VIEW vw_adjustments AS
 		adjustments.reduce_balance, adjustments.tax_reduction_ps, adjustments.tax_relief_ps, 
 		adjustments.tax_max_allowed, adjustments.account_number, adjustments.details
 	FROM adjustments INNER JOIN currency ON adjustments.currency_id = currency.currency_id;
+	
+CREATE VIEW vw_leave_types AS
+	SELECT currency.currency_id, currency.currency_name, currency.currency_symbol,
+		adjustments.org_id, adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, 
+		adjustments.adjustment_order, adjustments.earning_code, adjustments.formural, adjustments.monthly_update, 
+		adjustments.in_payroll, adjustments.in_tax, adjustments.visible, adjustments.running_balance, 
+		adjustments.reduce_balance, adjustments.tax_reduction_ps, adjustments.tax_relief_ps, 
+		adjustments.tax_max_allowed, adjustments.account_number,
+		
+	SELECT adjustments.adjustment_id, adjustments.adjustment_name,
+		leave_types.org_id, leave_types.leave_type_id, leave_types.leave_type_name, 
+		leave_types.allowed_leave_days, leave_types.leave_days_span, leave_types.use_type, 
+		leave_types.month_quota, leave_types.initial_days, leave_types.maximum_carry, 
+		leave_types.include_holiday, leave_types.include_mon, leave_types.include_tue, leave_types.include_wed, 
+		leave_types.include_thu, leave_types.include_fri, leave_types.include_sat, leave_types.include_sun, leave_types.details
+		
+	FROM leave_types LEFT JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id;	
 		
 CREATE VIEW vw_claim_types AS
 	SELECT adjustments.adjustment_id, adjustments.adjustment_name, 
@@ -1921,21 +1944,27 @@ BEGIN
 		NEW.payment_amount := NEW.amount;
 		NEW.pay_period := 1;
 	END IF;
-
-	IF((NEW.approve_status = 'Approved') AND (OLD.approve_status = 'Completed'))THEN
-		SELECT max(period_id) INTO v_period_id
-		FROM periods
-		WHERE (closed = false);
-		
-		SELECT max(employee_month_id) INTO NEW.employee_month_id
-		FROM employee_month
-		WHERE (period_id = v_period_id) AND (entity_id = NEW.entity_id);
-		
-		IF(v_period_id is null)THEN
-			RAISE EXCEPTION 'You need to have the current period approved';
-		ELSIF(NEW.employee_month_id is null)THEN
-			RAISE EXCEPTION 'You need to have the staff in the current active month';
+	
+	IF(TG_OP = 'UPDATE') AND (NEW.employee_month_id is null)THEN
+		IF((NEW.approve_status = 'Approved') AND (OLD.approve_status = 'Completed'))THEN
+			SELECT min(period_id) INTO v_period_id
+			FROM periods
+			WHERE (activated = true);
+			
+			SELECT max(employee_month_id) INTO NEW.employee_month_id
+			FROM employee_month
+			WHERE (period_id = v_period_id) AND (entity_id = NEW.entity_id);
+			
+			IF(v_period_id is null)THEN
+				RAISE EXCEPTION 'You need to have the current active period';
+			ELSIF(NEW.employee_month_id is null)THEN
+				RAISE EXCEPTION 'You need to have the staff in the current active month';
+			END IF;
 		END IF;
+	ELSIF(NEW.entity_id is null)THEN
+		SELECT entity_id INTO NEW.entity_id
+		FROM employee_month
+		WHERE employee_month_id = NEW.employee_month_id;
 	END IF;
 
 	RETURN NEW;
