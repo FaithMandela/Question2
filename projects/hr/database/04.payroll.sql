@@ -1995,3 +1995,19 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+CREATE OR REPLACE FUNCTION adj_leave_update(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg		 				varchar(120);
+BEGIN
+
+	IF ($3 = '1') THEN
+		UPDATE leave_types SET adjustment_id = null
+		WHERE leave_type_id = CAST($1 as int);
+		
+		msg := 'Cleared the adjustment';
+	END IF;
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+

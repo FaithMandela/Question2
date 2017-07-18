@@ -361,6 +361,16 @@
 			<SPINTIME w="75" title="Finish Time">finish_time</SPINTIME>
 			<TEXTFIELD w="75" fnct="'false'" title="All Day">all_day</TEXTFIELD>
 			<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			<DIARY name="Holidays" keyfield="holiday_id" table="holidays" where="(holiday_date > current_date-360)">
+				<TEXTFIELD w="75" title="Holiday ID">holiday_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Holiday Name">holiday_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">holiday_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'08:00'::time" title="Start Time">start_time</TEXTFIELD>
+				<TEXTDATE w="75" fnct="holiday_date" title="End Date">end_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'17:00'::time" title="End Time">end_time</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'true'" title="All Day">all_day</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			</DIARY>
 			<DIARY name="Events" keyfield="org_event_id" table="org_events" where="(start_date > current_date-360)">
 				<TEXTFIELD w="75" title="Event ID">org_event_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Event Name">org_event_name</TEXTFIELD>
@@ -1369,7 +1379,8 @@
 				<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="90" h="20" x="290" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
 				<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
-				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="130" h="20" x="10" rows="5">employment_terms</TEXTAREA>
+				<TEXTDECIMAL w="150" title="Overtime Rate" tab="Terms" y="130" h="20" x="10">overtime_rate</TEXTDECIMAL>
+				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" rows="5">employment_terms</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>

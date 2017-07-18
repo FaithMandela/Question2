@@ -1731,15 +1731,20 @@ log.severe("BASE : " + mysql);
 
 	public String getCalendar() {
 
-		String events = " events: [";
+		String events = "";
 
 		events += getEvents(view);
 		for(BElement el : view.getElements()) {
-			if(el.getName().equals("DIARY"))
-				events += ", " + getEvents(el);
+			if(el.getName().equals("DIARY")) {
+				String event = getEvents(el);
+				if(!event.equals("")) {
+					if(events.equals("")) events += getEvents(el);
+					else events += ", " + getEvents(el);
+				}
+			}
 		}
 
-		events += "] \n";
+		events = " events: [" + events + "]\n";
 
 		return events;
 	}
@@ -1767,8 +1772,8 @@ log.severe("BASE : " + mysql);
 			events += "', end: '" + crs.readField(5) + " " + crs.readField(6);
 			events += "', allDay: " + crs.readField(7);
 			
-			if(eventView.getAttribute("color")==null) events += ", backgroundColor: Metronic.getBrandColor('silver'), ";
-			else  events += ", backgroundColor: Metronic.getBrandColor('" + eventView.getAttribute("color") + "'), ";
+			if(eventView.getAttribute("color")==null) events += ", backgroundColor: Metronic.getBrandColor('silver') ";
+			else  events += ", backgroundColor: Metronic.getBrandColor('" + eventView.getAttribute("color") + "') ";
 
 			events += "}";
 		}
