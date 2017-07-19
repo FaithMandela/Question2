@@ -180,9 +180,11 @@ CREATE TABLE attendance (
 	attendance_id			serial primary key,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
-	attendance_date			date,
-	time_in					time,
-	time_out				time,
+	attendance_date			date not null,
+	time_in					time not null,
+	time_out				time not null,
+	late					real default 0 not null,
+	overtime				real default 0 not null,
 	details					text
 );
 CREATE INDEX attendance_entity_id ON attendance (entity_id);
@@ -223,6 +225,18 @@ CREATE TABLE bio_imports1 (
 	is_picked				boolean default false
 );
 CREATE INDEX bio_imports1_org_id ON bio_imports1 (org_id);
+
+CREATE TABLE bio_imports2 (
+	bio_imports2_id			serial primary key,
+	org_id					integer references orgs,
+	col1					varchar(50),
+	col2					varchar(50),
+	col3					varchar(50),
+	col4					varchar(50),
+	is_picked				boolean default false
+);
+CREATE INDEX bio_imports2_org_id ON bio_imports2 (org_id);
+
 
 CREATE VIEW vw_define_phases AS
 	SELECT entity_types.entity_type_id, entity_types.entity_type_name, project_types.project_type_id,
@@ -486,6 +500,30 @@ BEGIN
 
 	UPDATE access_logs SET is_picked = true
 	WHERE (is_picked = false) AND (entity_id is not null);
+
+	msg := 'Uploaded the file';
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION process_bio_imports2(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	msg		 				varchar(120);
+BEGIN
+
+	SELECT org_id INTO v_org_id FROM entitys
+	WHERE entity_id = $2::integer;
+	
+	INSERT INTO attendance (entity_id, org_id, attendance_date, time_in, time_out)
+	SELECT employees.entity_id, employees.org_id, to_date(bio_imports2.col2, 'YYYY/MM/DD'), 
+		bio_imports2.col3::time, bio_imports2.col4::time
+	FROM bio_imports2 INNER JOIN employees ON upper(trim(bio_imports2.col1)) = upper(trim(employees.employee_id))
+	WHERE employees.org_id = v_org_id;
+	
+	
+	DELETE FROM bio_imports2;
 
 	msg := 'Uploaded the file';
 	

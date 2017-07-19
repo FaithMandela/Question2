@@ -167,7 +167,8 @@ System.out.println("BASE IMPORT 1410 : " + fileName);
 						
 						if(importType.equals("excel")) {
 							String worksheet = view.getAttribute("worksheet", "0");
-							iv.getExcelData(item.getInputStream(), fileName, worksheet);
+							Integer firstRow = new Integer(view.getAttribute("firstrow", "0"));
+							iv.getExcelData(item.getInputStream(), fileName, worksheet, firstRow);
 						} else if(importType.equals("text")) {
 							iv.getTextData(item.getInputStream());
 						} else if(importType.equals("record")) {

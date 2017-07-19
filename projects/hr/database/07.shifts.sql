@@ -5,7 +5,8 @@ CREATE TABLE shifts (
 	project_id				integer references projects,
 	org_id					integer references orgs,
 	shift_name				varchar(50),
-	shift_hours				integer not null default 8,
+	shift_hours				real not null default 9,
+	break_hours				real not null default 1,
 	
 	include_holiday 		boolean default false not null,
 
@@ -19,11 +20,16 @@ CREATE TABLE shifts (
 
 	time_in					time not null,
 	time_out				time not null,
+	weekend_in				time not null,
+	weekend_out				time not null,
 	
 	details					text
 );
 CREATE INDEX shifts_project_id ON shifts (project_id);
 CREATE INDEX shifts_org_id ON shifts (org_id);
+
+ALTER TABLE attendance ADD shift_id				integer references shifts;
+CREATE INDEX attendance_shift_id ON attendance (shift_id);
 
 CREATE TABLE shift_schedule (
 	shift_schedule_id		serial primary key,
@@ -33,7 +39,8 @@ CREATE TABLE shift_schedule (
 
 	is_active				boolean default true not null,
 
-	details					text
+	details					text,
+	UNIQUE(shift_id, entity_id)
 );
 CREATE INDEX shift_schedule_shift_id ON shift_schedule (shift_id);
 CREATE INDEX shift_schedule_entity_id ON shift_schedule (entity_id);
@@ -42,12 +49,12 @@ CREATE INDEX shift_schedule_org_id ON shift_schedule (org_id);
 
 CREATE VIEW vw_shifts AS
 	SELECT projects.project_id, projects.project_name, 
-		shifts.org_id, shifts.shift_id, shifts.shift_name, shifts.shift_hours, shifts.include_holiday, 
+		shifts.org_id, shifts.shift_id, shifts.shift_name, shifts.shift_hours, shifts.break_hours, shifts.include_holiday, 
 		shifts.include_mon, shifts.include_tue, shifts.include_wed, shifts.include_thu, shifts.include_fri, 
-		shifts.include_sat, shifts.include_sun, shifts.time_in, shifts.time_out, shifts.details
+		shifts.include_sat, shifts.include_sun, shifts.time_in, shifts.time_out, shifts.weekend_in, shifts.weekend_out,
+		shifts.details
 		
-	FROM shifts 
-		LEFT JOIN projects ON shifts.project_id = projects.project_id;
+	FROM shifts LEFT JOIN projects ON shifts.project_id = projects.project_id;
 
 CREATE VIEW vw_shift_schedule AS
 	SELECT vw_shifts.project_id, vw_shifts.project_name, 
@@ -63,4 +70,28 @@ CREATE VIEW vw_shift_schedule AS
 		INNER JOIN entitys ON shift_schedule.entity_id = entitys.entity_id;
 	
 	
+CREATE OR REPLACE FUNCTION add_shift_staff(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg		 				varchar(120);
+	v_entity_id				integer;
+	v_org_id				integer;
+BEGIN
+
+	SELECT entity_id INTO v_entity_id
+	FROM shift_schedule WHERE (entity_id = CAST($1 as int)) AND (shift_id = CAST($3 as int));
 	
+	IF(v_entity_id is null)THEN
+		SELECT org_id INTO v_org_id
+		FROM shifts WHERE (shift_id = CAST($3 as int));
+		
+		INSERT INTO  shift_schedule (shift_id, entity_id, org_id)
+		VALUES (CAST($3 as int), CAST($1 as int), v_org_id);
+
+		msg := 'Added to shift';
+	ELSE
+		msg := 'Already added to shift';
+	END IF;
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;

@@ -347,6 +347,12 @@
 			<TEXTFIELD w="75" title="Col10">col10</TEXTFIELD>
 			<TEXTFIELD w="75" title="Col11">col11</TEXTFIELD>
 		</GRID>
+		<GRID process="process_bio_imports2" limit="200" name="Import Attendance" keyfield="bio_imports2_id" firstrow="1" orderby="bio_imports2_id desc" import="excel" table="bio_imports2">
+			<TEXTFIELD w="75" title="Col1">col1</TEXTFIELD>
+			<TEXTFIELD w="75" title="Col2">col2</TEXTFIELD>
+			<TEXTFIELD w="75" title="Col3">col3</TEXTFIELD>
+			<TEXTFIELD w="75" title="Col4">col4</TEXTFIELD>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="My Tasks" key="20" h="550">
 		<GRID name="Open Tasks" keyfield="task_id" linkfield="phase_id" table="vw_tasks" where="(task_completed = false)" user="entity_id">
@@ -592,20 +598,21 @@
 			<SPINTIME w="75" title="Time In">time_in</SPINTIME>
 			<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
 			<FORM name="Shifts" keyfield="shift_id" table="shifts">
-				<COMBOBOX w="430" title="Project" lptable="projects" y="10" h="20" x="10" lpfield="project_name">project_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Shift Name" y="30" h="20" x="10">shift_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Shift Hours" y="30" h="20" x="290">shift_hours</TEXTFIELD>
 				<CHECKBOX w="150" title="Include Holiday" y="50" h="20" x="10">include_holiday</CHECKBOX>
-				<CHECKBOX w="150" title="Include Mon" y="50" h="20" x="290">include_mon</CHECKBOX>
-				<CHECKBOX w="150" title="Include Tue" y="70" h="20" x="10">include_tue</CHECKBOX>
-				<CHECKBOX w="150" title="Include Wed" y="70" h="20" x="290">include_wed</CHECKBOX>
-				<CHECKBOX w="150" title="Include Thu" y="90" h="20" x="10">include_thu</CHECKBOX>
-				<CHECKBOX w="150" title="Include Fri" y="90" h="20" x="290">include_fri</CHECKBOX>
+				<CHECKBOX w="150" title="Include Mon" default="true" y="50" h="20" x="290">include_mon</CHECKBOX>
+				<CHECKBOX w="150" title="Include Tue" default="true" y="70" h="20" x="10">include_tue</CHECKBOX>
+				<CHECKBOX w="150" title="Include Wed" default="true" y="70" h="20" x="290">include_wed</CHECKBOX>
+				<CHECKBOX w="150" title="Include Thu" default="true" y="90" h="20" x="10">include_thu</CHECKBOX>
+				<CHECKBOX w="150" title="Include Fri" default="true" y="90" h="20" x="290">include_fri</CHECKBOX>
 				<CHECKBOX w="150" title="Include Sat" y="110" h="20" x="10">include_sat</CHECKBOX>
 				<CHECKBOX w="150" title="Include Sun" y="110" h="20" x="290">include_sun</CHECKBOX>
-				<SPINTIME w="150" title="Time In" y="130" h="20" x="10">time_in</SPINTIME>
-				<SPINTIME w="150" title="Time Out" y="130" h="20" x="290">time_out</SPINTIME>
-				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+				<SPINTIME w="150" title="Time In" default="08:00 am" y="130" h="20" x="10">time_in</SPINTIME>
+				<SPINTIME w="150" title="Time Out" default="05:00 pm" y="130" h="20" x="290">time_out</SPINTIME>
+				<SPINTIME w="150" title="Weekend In" default="08:00 am" y="150" h="20" x="10">weekend_in</SPINTIME>
+				<SPINTIME w="150" title="Weekend Out" default="01:00 pm" y="150" h="20" x="290">weekend_out</SPINTIME>
+				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 			<GRID name="Shift Schedule" keyfield="shift_schedule_id" linkfield="shift_id" table="vw_shift_schedule">
 				<TEXTFIELD w="75" title="Shift Schedule ID">shift_schedule_id</TEXTFIELD>
@@ -616,6 +623,17 @@
 					<CHECKBOX w="150" title="Active" y="30" h="20" x="10">is_active</CHECKBOX>
 					<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 				</FORM>
+			</GRID>
+			<GRID name="Add Staff" keyfield="entity_id" orderby="first_name" table="vw_employees" where="(active = true)">
+				<TEXTFIELD w="45" title="ID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="First Name">first_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+				<TEXTFIELD w="75" title="Gender">gender_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Designation">department_role_name</TEXTFIELD>
+				<ACTIONS>
+					<ACTION fnct="add_shift_staff">Add to Shift</ACTION>
+				</ACTIONS>
 			</GRID>
 		</GRID>
 	</DESK>
