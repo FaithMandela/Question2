@@ -518,10 +518,9 @@ BEGIN
 	
 	INSERT INTO attendance (entity_id, org_id, attendance_date, time_in, time_out)
 	SELECT employees.entity_id, employees.org_id, to_date(bio_imports2.col2, 'YYYY/MM/DD'), 
-		bio_imports2.col3::time, bio_imports2.col4::time
+		to_timestamp(bio_imports2.col3, 'HH24:MI')::time, to_timestamp(bio_imports2.col4, 'HH24:MI')::time
 	FROM bio_imports2 INNER JOIN employees ON upper(trim(bio_imports2.col1)) = upper(trim(employees.employee_id))
 	WHERE employees.org_id = v_org_id;
-	
 	
 	DELETE FROM bio_imports2;
 

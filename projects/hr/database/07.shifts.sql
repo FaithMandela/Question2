@@ -68,7 +68,20 @@ CREATE VIEW vw_shift_schedule AS
 	
 	FROM shift_schedule INNER JOIN vw_shifts ON shift_schedule.shift_id = vw_shifts.shift_id
 		INNER JOIN entitys ON shift_schedule.entity_id = entitys.entity_id;
-	
+		
+DROP VIEW vw_attendance;
+CREATE VIEW vw_attendance AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+			shifts.shift_id, shifts.shift_name, shifts.shift_hours,
+			shifts.time_in, shifts.time_out, shifts.weekend_in, shifts.weekend_out,
+			
+			attendance.org_id, attendance.attendance_id, attendance.attendance_date, attendance.time_in, 
+			attendance.time_out, attendance.late, attendance.overtime, attendance.details
+			to_char(attendance.attendance_date, 'YYYYMM') as a_month,
+			EXTRACT(WEEK FROM attendance.attendance_date) as a_week,
+			EXTRACT(DOW FROM attendance.attendance_date) as a_dow
+	FROM attendance INNER JOIN entitys ON attendance.entity_id = entitys.entity_id
+		LEFT JOIN shifts ON attendance.shift_id = shifts.shift_id;
 	
 CREATE OR REPLACE FUNCTION add_shift_staff(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -95,3 +108,20 @@ BEGIN
 	return msg;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION ins_attendance() RETURNS trigger AS $$
+BEGIN
+
+	IF (TG_OP = 'INSERT') THEN
+		SELECT max(shift_id) INTO NEW.shift_id
+		FROM shift_schedule	
+		WHERE (is_active = true);
+	END IF;
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_attendance BEFORE INSERT OR UPDATE ON attendance
+	FOR EACH ROW EXECUTE PROCEDURE ins_attendance();
+
