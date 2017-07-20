@@ -185,10 +185,12 @@ CREATE TABLE attendance (
 	time_out				time not null,
 	late					real default 0 not null,
 	overtime				real default 0 not null,
+	narrative				varchar(120),
 	details					text
 );
 CREATE INDEX attendance_entity_id ON attendance (entity_id);
 CREATE INDEX attendance_org_id ON attendance (org_id);
+CREATE INDEX attendance_attendance_date ON attendance (attendance_date);
 
 CREATE TABLE access_logs (
 	access_log_id			integer primary key,
@@ -377,10 +379,11 @@ CREATE VIEW vw_project_cost AS
 
 CREATE VIEW vw_attendance AS
 	SELECT entitys.entity_id, entitys.entity_name, attendance.attendance_id, attendance.attendance_date, 
-		attendance.org_id, attendance.time_in, attendance.time_out, attendance.details,
+		attendance.org_id, attendance.time_in, attendance.time_out, attendance.late, attendance.overtime,
+		attendance.narrative, attendance.details,
 		to_char(attendance.attendance_date, 'YYYYMM') as a_month,
-        EXTRACT(WEEK FROM attendance.attendance_date) as a_week,
-        EXTRACT(DOW FROM attendance.attendance_date) as a_dow
+		EXTRACT(WEEK FROM attendance.attendance_date) as a_week,
+		EXTRACT(DOW FROM attendance.attendance_date) as a_dow
 	FROM attendance INNER JOIN entitys ON attendance.entity_id = entitys.entity_id;
 	
 CREATE VIEW vw_week_attendance AS
@@ -515,6 +518,8 @@ BEGIN
 
 	SELECT org_id INTO v_org_id FROM entitys
 	WHERE entity_id = $2::integer;
+	
+	DELETE FROM bio_imports2 WHERE (col2 is null) OR (col3 is null) OR (col4 is null);
 	
 	INSERT INTO attendance (entity_id, org_id, attendance_date, time_in, time_out)
 	SELECT employees.entity_id, employees.org_id, to_date(bio_imports2.col2, 'YYYY/MM/DD'), 
