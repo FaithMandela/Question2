@@ -83,20 +83,38 @@ CREATE VIEW vw_attendance_shifts AS
 		LEFT JOIN shifts ON attendance.shift_id = shifts.shift_id;
 
 CREATE VIEW vw_attendance_schedule AS
-	SELECT ss.period_id, ss.period_day, ss.employee_id, ss.entity_id, ss.employee_name, 
+	SELECT ss.org_id, ss.period_id, ss.period_day, ss.employee_id, ss.entity_id, ss.employee_name, 
+		ss.average_daily_rate, ss.normal_work_hours, ss.overtime_rate, ss.special_time_rate, ss.per_day_earning,
+		holidays.holiday_id, holidays.holiday_name,
 		sa.shift_id, sa.shift_name, sa.shift_hours,
 		sa.shift_time_in, sa.shift_time_out, 
 		sa.shift_weekend_in, sa.shift_weekend_out,
 		
-		sa.org_id, sa.attendance_id, sa.attendance_date, sa.time_in, 
+		sa.attendance_id, sa.attendance_date, sa.time_in, 
 		sa.time_out, sa.late, sa.overtime, sa.narrative, 
 		sa.a_month, sa.a_week, sa.a_dow
 			
-	FROM (SELECT employees.entity_id, employees.employee_id,
+	FROM (SELECT employees.org_id, employees.entity_id, employees.employee_id,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
+		employees.average_daily_rate, employees.normal_work_hours, employees.overtime_rate, employees.special_time_rate, employees.per_day_earning,
 		periods.period_id, generate_series(periods.start_date, periods.end_date, '1 day')::date as period_day
 		FROM periods, employees WHERE periods.org_id = employees.org_id) as ss
+		LEFT JOIN holidays ON (ss.period_day = holidays.holiday_date) AND (ss.org_id = holidays.org_id)
 		LEFT JOIN vw_attendance_shifts as sa ON (ss.entity_id = sa.entity_id) AND (ss.period_day = sa.attendance_date);
+		
+CREATE VIEW vw_attendance_summary AS
+	SELECT ats.org_id, ats.period_id, ats.employee_id, ats.entity_id, ats.employee_name, 
+		ats.average_daily_rate, ats.normal_work_hours, ats.overtime_rate, ats.special_time_rate, ats.per_day_earning,
+		ats.holiday_id, ats.holiday_name,
+		ats.shift_id, ats.shift_name, ats.shift_hours, ats.a_month,
+		count(ats.attendance_id) as days_worked,
+		sum(ats.late) as t_late, sum(ats.overtime) as t_overtime
+	FROM vw_attendance_schedule as ats
+	GROUP BY  ats.org_id, ats.period_id, ats.employee_id, ats.entity_id, ats.employee_name,
+		ats.average_daily_rate, ats.normal_work_hours, ats.overtime_rate, ats.special_time_rate, ats.per_day_earning,
+		ats.holiday_id, ats.holiday_name,
+		ats.shift_id, ats.shift_name, ats.shift_hours, ats.a_month;
+
 		
 CREATE OR REPLACE FUNCTION add_shift_staff(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
@@ -171,6 +189,7 @@ BEGIN
 				NEW.narrative := v_holiday_name;
 			END IF;
 			IF(NEW.late < 0)THEN NEW.late := 0; END IF;
+			IF(NEW.overtime < 0)THEN NEW.overtime := 0; END IF;
 		END IF;
 	END IF;
 	
@@ -180,4 +199,49 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER ins_attendance BEFORE INSERT OR UPDATE ON attendance
 	FOR EACH ROW EXECUTE PROCEDURE ins_attendance();
+
+CREATE OR REPLACE FUNCTION get_attendance_pay(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	reca 					RECORD;
+	v_period_id				integer;
+	v_org_id				integer;
+	v_start_date			date;
+	v_end_date				date;
+	v_project_cost			float;
+	msg 					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id, start_date, end_date INTO v_period_id, v_org_id, v_start_date, v_end_date
+	FROM periods
+	WHERE (period_id = $1::int);
+	
+	--- Computer the work hours
+	FOR reca IN SELECT b.employee_month_id, (sum(a.days_worked) * a.average_daily_rate) as month_pay
+		FROM vw_attendance_summary a INNER JOIN employee_month b ON (a.entity_id = b.entity_id) AND (a.period_id = b.period_id)
+		WHERE (a.per_day_earning = true) AND (a.holiday_id is null) AND (a.period_id = v_period_id)
+		GROUP BY b.employee_month_id, a.average_daily_rate
+	LOOP
+		UPDATE employee_month SET basic_pay = reca.month_pay WHERE employee_month_id = reca.employee_month_id;
+	END LOOP;
+	
+	DELETE FROM employee_overtime WHERE (auto_computed = true)
+	AND (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = v_period_id));
+	
+	--- Insert normal overtime
+	INSERT INTO employee_overtime (employee_month_id, org_id, overtime_date, overtime, overtime_rate, auto_computed, approve_status)
+	SELECT b.employee_month_id, a.org_id, v_end_date, a.t_overtime, a.overtime_rate, true, 'Completed'
+	FROM vw_attendance_summary a INNER JOIN employee_month b ON (a.entity_id = b.entity_id) AND (a.period_id = b.period_id)
+	WHERE (a.holiday_id is null) AND (a.period_id = v_period_id);
+
+	--- Insert special time overtime
+	INSERT INTO employee_overtime (employee_month_id, org_id, overtime_date, overtime, overtime_rate, narrative, auto_computed, approve_status)
+	SELECT b.employee_month_id, a.org_id, v_end_date, a.t_overtime, a.overtime_rate, a.holiday_name, true, 'Completed'
+	FROM vw_attendance_summary a INNER JOIN employee_month b ON (a.entity_id = b.entity_id) AND (a.period_id = b.period_id)
+	WHERE (a.holiday_id is not null) AND (a.period_id = v_period_id);
+	
+	msg := 'Done';
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
 

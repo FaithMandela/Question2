@@ -271,8 +271,9 @@ CREATE TABLE employee_overtime (
 	overtime_date			date not null,
 	overtime				float not null,
 	overtime_rate			float not null,
+	auto_computed			boolean default false not null, 
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 	narrative				varchar(240),
@@ -1403,6 +1404,9 @@ BEGIN
 		FROM employee_month 
 		WHERE (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
 			AND (employee_month.period_id = CAST($1 as int));
+			
+		--- compute autogenated overtime
+		msg := get_attendance_pay($1, $2, $3);
 		
 		--- costs on projects based on staff
 		msg := get_task_costs($1, $2, $3);

@@ -173,6 +173,7 @@ CREATE TABLE employees (
 	average_daily_rate		real default 0 not null,
 	normal_work_hours		real default 9 not null,
 	overtime_rate			real default 1.5 not null,
+	special_time_rate		real default 2 not null,
 	per_day_earning			boolean default false not null,
 
 	height					real, 

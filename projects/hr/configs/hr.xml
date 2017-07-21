@@ -1380,8 +1380,9 @@
 				<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Overtime Rate" tab="Terms" y="130" h="20" x="10" span="true">overtime_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Special Rate" tab="Terms" y="130" h="20" x="290">special_time_rate</TEXTDECIMAL>
+				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" span="true" rows="5">employment_terms</TEXTAREA>
 				<CHECKBOX w="150" title="Per day earning" tab="Terms" y="130" h="20" x="290">per_day_earning</CHECKBOX>
-				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" rows="5">employment_terms</TEXTAREA>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>

@@ -18,6 +18,7 @@ CREATE TABLE holidays (
 	details					text
 );
 CREATE INDEX holidays_org_id ON holidays (org_id);
+CREATE INDEX holidays_holiday_date ON holidays (holiday_date);
 
 CREATE TABLE industry (
 	industry_id				serial primary key,

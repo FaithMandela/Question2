@@ -328,7 +328,7 @@
 			<TEXTFIELD w="75" title="Department">department_name</TEXTFIELD>
 			<TEXTFIELD w="75" title="Department Role">department_role_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
-			<GRID limit="200" name="Attendance" keyfield="attendance_id" orderby="attendance_date desc, entity_name" linkfield="entity_id" table="vw_shift_attendance">
+			<GRID limit="200" name="Attendance" keyfield="attendance_id" orderby="attendance_date desc, entity_name" linkfield="entity_id" table="vw_attendance_shifts">
 				<TEXTFIELD w="75" title="Shift">shift_name</TEXTFIELD>
 				<TEXTDATE w="75" title="Attendance Date">attendance_date</TEXTDATE>
 				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
@@ -613,6 +613,12 @@
 			<CHECKBOX w="75" title="Active">active</CHECKBOX>
 			<JASPER name="Attendance" reportfile="vw_week_attendance_b.jasper"></JASPER>
 		</GRID>
+		<FILTER w="700" name="Attendance Schedule" split="150" type="horl" key="6" h="550">
+			<DRILLDOWN name="Year" keyfield="period_year" table="vw_Period_Year" listfield="period_year" pos="top">
+				<DRILLDOWN name="Month" keyfield="period_id" orderby="month_id" wherefield="period_year" table="vw_periods" listfield="Period_Month" pos="top"></DRILLDOWN>
+			</DRILLDOWN>
+			<JASPER name="Attendance Schedule" reportfile="vw_attendance_schedule.jasper"></JASPER>
+		</FILTER>
 	</DESK>
 	<DESK w="700" name="Shifts" key="25" h="550">
 		<GRID name="Shifts" keyfield="shift_id" table="vw_shifts">
