@@ -267,6 +267,7 @@ CREATE INDEX claim_details_org_id ON claim_details(org_id);
 CREATE TABLE employee_overtime (
 	employee_overtime_id	serial primary key,
 	employee_month_id		integer references employee_month not null,
+	entity_id				integer references entitys,
 	org_id					integer references orgs,
 	overtime_date			date not null,
 	overtime				float not null,
@@ -280,6 +281,7 @@ CREATE TABLE employee_overtime (
 	details					text
 );
 CREATE INDEX employee_overtime_employee_month_id ON employee_overtime (employee_month_id);
+CREATE INDEX employee_overtime_entity_id ON employee_overtime (entity_id);
 CREATE INDEX employee_overtime_org_id ON employee_overtime(org_id);
 
 CREATE TABLE employee_per_diem (
@@ -606,6 +608,7 @@ CREATE VIEW vw_employee_month AS
 		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
 		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
+		employees.employee_full_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol, employee_month.exchange_rate,
 		
 		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, employee_month.details,
@@ -653,7 +656,7 @@ CREATE VIEW vw_ems AS
 		em.entity_id, em.entity_name, 
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, em.gender, 
 		em.nationality, em.marital_status, em.appointment_date, em.exit_date, em.contract, em.contract_period, 
-		em.employment_terms, em.identity_card, em.employee_name, 
+		em.employment_terms, em.identity_card, em.employee_name, em.employee_full_name,
 		em.currency_id, em.currency_name, em.currency_symbol, em.exchange_rate, 
 		em.employee_month_id, em.bank_account, em.basic_pay, em.details, em.overtime, 
 		em.full_allowance, em.payroll_allowance, em.tax_allowance, em.full_deduction, 
@@ -676,6 +679,7 @@ CREATE VIEW vw_employee_month_list AS
 		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
 		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
+		employees.employee_full_name,
 		departments.department_id, departments.department_name, departments.department_account, departments.function_code,
 		department_roles.department_role_id, department_roles.department_role_name,
 		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay,

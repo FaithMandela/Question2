@@ -85,6 +85,8 @@ CREATE VIEW vw_attendance_shifts AS
 CREATE VIEW vw_attendance_schedule AS
 	SELECT ss.org_id, ss.period_id, ss.period_day, ss.employee_id, ss.entity_id, ss.employee_name, 
 		ss.average_daily_rate, ss.normal_work_hours, ss.overtime_rate, ss.special_time_rate, ss.per_day_earning,
+		(CASE WHEN ss.normal_work_hours > 0 THEN ss.average_daily_rate * ss.overtime_rate / ss.normal_work_hours ELSE 0 END) as overtime_hr,
+		(CASE WHEN ss.normal_work_hours > 0 THEN ss.average_daily_rate * ss.special_time_rate / ss.normal_work_hours ELSE 0 END) as special_time_hr,
 		holidays.holiday_id, holidays.holiday_name,
 		sa.shift_id, sa.shift_name, sa.shift_hours,
 		sa.shift_time_in, sa.shift_time_out, 
@@ -105,6 +107,7 @@ CREATE VIEW vw_attendance_schedule AS
 CREATE VIEW vw_attendance_summary AS
 	SELECT ats.org_id, ats.period_id, ats.employee_id, ats.entity_id, ats.employee_name, 
 		ats.average_daily_rate, ats.normal_work_hours, ats.overtime_rate, ats.special_time_rate, ats.per_day_earning,
+		ats.overtime_hr, ats.special_time_hr,
 		ats.holiday_id, ats.holiday_name,
 		ats.shift_id, ats.shift_name, ats.shift_hours, ats.a_month,
 		count(ats.attendance_id) as days_worked,
@@ -112,6 +115,7 @@ CREATE VIEW vw_attendance_summary AS
 	FROM vw_attendance_schedule as ats
 	GROUP BY  ats.org_id, ats.period_id, ats.employee_id, ats.entity_id, ats.employee_name,
 		ats.average_daily_rate, ats.normal_work_hours, ats.overtime_rate, ats.special_time_rate, ats.per_day_earning,
+		ats.overtime_hr, ats.special_time_hr,
 		ats.holiday_id, ats.holiday_name,
 		ats.shift_id, ats.shift_name, ats.shift_hours, ats.a_month;
 
@@ -185,7 +189,7 @@ BEGIN
 			END IF;
 			IF((v_holiday_name is not null) AND (rec.include_holiday = false))THEN
 				NEW.late := 0;
-				NEW.overtime := EXTRACT(epoch FROM (NEW.time_out - rec.time_out)) / 3600;
+				NEW.overtime := EXTRACT(epoch FROM (NEW.time_out - NEW.time_in)) / 3600;
 				NEW.narrative := v_holiday_name;
 			END IF;
 			IF(NEW.late < 0)THEN NEW.late := 0; END IF;
@@ -205,6 +209,7 @@ DECLARE
 	reca 					RECORD;
 	v_period_id				integer;
 	v_org_id				integer;
+	v_entity_id				integer;
 	v_start_date			date;
 	v_end_date				date;
 	v_project_cost			float;
@@ -214,6 +219,8 @@ BEGIN
 	SELECT period_id, org_id, start_date, end_date INTO v_period_id, v_org_id, v_start_date, v_end_date
 	FROM periods
 	WHERE (period_id = $1::int);
+	
+	v_entity_id := $2::int;
 	
 	--- Computer the work hours
 	FOR reca IN SELECT b.employee_month_id, (sum(a.days_worked) * a.average_daily_rate) as month_pay
@@ -228,16 +235,16 @@ BEGIN
 	AND (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = v_period_id));
 	
 	--- Insert normal overtime
-	INSERT INTO employee_overtime (employee_month_id, org_id, overtime_date, overtime, overtime_rate, auto_computed, approve_status)
-	SELECT b.employee_month_id, a.org_id, v_end_date, a.t_overtime, a.overtime_rate, true, 'Completed'
+	INSERT INTO employee_overtime (employee_month_id, org_id, overtime_date, overtime, overtime_rate, auto_computed, approve_status, entity_id)
+	SELECT b.employee_month_id, a.org_id, v_end_date, a.t_overtime, a.overtime_hr, true, 'Completed', v_entity_id
 	FROM vw_attendance_summary a INNER JOIN employee_month b ON (a.entity_id = b.entity_id) AND (a.period_id = b.period_id)
-	WHERE (a.holiday_id is null) AND (a.period_id = v_period_id);
+	WHERE (a.holiday_id is null) AND (a.period_id = v_period_id) AND (a.t_overtime is not null);
 
 	--- Insert special time overtime
-	INSERT INTO employee_overtime (employee_month_id, org_id, overtime_date, overtime, overtime_rate, narrative, auto_computed, approve_status)
-	SELECT b.employee_month_id, a.org_id, v_end_date, a.t_overtime, a.overtime_rate, a.holiday_name, true, 'Completed'
+	INSERT INTO employee_overtime (employee_month_id, org_id, overtime_date, overtime, overtime_rate, narrative, auto_computed, approve_status, entity_id)
+	SELECT b.employee_month_id, a.org_id, v_end_date, a.t_overtime, a.special_time_hr, a.holiday_name, true, 'Completed', v_entity_id
 	FROM vw_attendance_summary a INNER JOIN employee_month b ON (a.entity_id = b.entity_id) AND (a.period_id = b.period_id)
-	WHERE (a.holiday_id is not null) AND (a.period_id = v_period_id);
+	WHERE (a.holiday_id is not null) AND (a.period_id = v_period_id) AND (a.t_overtime is not null);
 	
 	msg := 'Done';
 

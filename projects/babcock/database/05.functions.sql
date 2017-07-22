@@ -1490,11 +1490,12 @@ $$ LANGUAGE SQL;
 -- update the transaction ID
 CREATE OR REPLACE FUNCTION updstudentpayments() RETURNS trigger AS $$
 DECLARE
-	reca 					RECORD;
-	old_studentpaymentid 	integer;
+	reca 						RECORD;
+	old_studentpaymentid 		integer;
 BEGIN
-	SELECT departments.schoolid, departments.departmentid, students.accountnumber, qstudents.quarterid, qstudents.studylevel 
-		INTO reca
+	SELECT departments.schoolid, departments.departmentid, students.accountnumber, qstudents.quarterid, qstudents.studylevel,
+		qstudents.org_id
+	INTO reca
 	FROM ((departments INNER JOIN students ON students.departmentid = departments.departmentid)
 		INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
 		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid
@@ -1520,8 +1521,10 @@ BEGIN
 		END IF;
 	END IF;
 
-	IF (reca.schoolid = 'COEN') THEN
+	IF (reca.schoolid = 'COEN')THEN
 		NEW.terminalid = '7000000089';
+	ELSIF(reca.org_id = 1)THEN
+		NEW.terminalid = '7007139046';
 	ELSE
 		NEW.terminalid = '0690000082';
 	END IF;
