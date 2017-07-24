@@ -192,6 +192,20 @@ CREATE INDEX attendance_entity_id ON attendance (entity_id);
 CREATE INDEX attendance_org_id ON attendance (org_id);
 CREATE INDEX attendance_attendance_date ON attendance (attendance_date);
 
+CREATE TABLE absent (
+	absent_id				serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	absent_date				date not null,
+	time_in					time,
+	time_out				time,
+	narrative				varchar(120),
+	details					text
+);
+CREATE INDEX absent_entity_id ON absent (entity_id);
+CREATE INDEX absent_org_id ON absent (org_id);
+CREATE INDEX absent_absent_date ON absent (absent_date);
+
 CREATE TABLE access_logs (
 	access_log_id			integer primary key,
 	entity_id				integer references entitys,

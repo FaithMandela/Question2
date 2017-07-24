@@ -48,15 +48,18 @@ CREATE TABLE check_logs (
 
 CREATE VIEW vw_cylinder_batch AS
 	SELECT cylinder_types.cylinder_type_id, cylinder_types.cylinder_type_name, 
+		cylinder_types.weight, cylinder_types.commercial,
 		entitys.entity_id, entitys.entity_name, orgs.org_id, orgs.org_name, 
 		cylinder_batch.cylinder_batch_id, cylinder_batch.quantity, cylinder_batch.approve_status, 
-		cylinder_batch.workflow_table_id, cylinder_batch.application_date, cylinder_batch.action_date, cylinder_batch.details
+		cylinder_batch.workflow_table_id, cylinder_batch.application_date, cylinder_batch.action_date, cylinder_batch.details,
+		(CASE WHEN cylinder_types.commercial = true THEN 'Commercial' ELSE 'Domestic' END) as com_or_dom
 	FROM cylinder_batch INNER JOIN cylinder_types ON cylinder_batch.cylinder_type_id = cylinder_types.cylinder_type_id
 	INNER JOIN entitys ON cylinder_batch.entity_id = entitys.entity_id
 	INNER JOIN orgs ON cylinder_batch.org_id = orgs.org_id;
 
 CREATE VIEW vw_cylinders AS
 	SELECT vw_cylinder_batch.cylinder_type_id, vw_cylinder_batch.cylinder_type_name, 
+		vw_cylinder_batch.weight, vw_cylinder_batch.commercial, vw_cylinder_batch.com_or_dom,
 		vw_cylinder_batch.entity_id, vw_cylinder_batch.entity_name,  
 		vw_cylinder_batch.cylinder_batch_id, vw_cylinder_batch.quantity, vw_cylinder_batch.approve_status, 
 		vw_cylinder_batch.workflow_table_id, vw_cylinder_batch.application_date, vw_cylinder_batch.action_date,

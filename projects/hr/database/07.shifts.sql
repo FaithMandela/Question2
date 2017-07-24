@@ -1,5 +1,4 @@
 
-
 CREATE TABLE shifts (
 	shift_id				serial primary key,
 	project_id				integer references projects,
@@ -76,6 +75,8 @@ CREATE VIEW vw_attendance_shifts AS
 		
 		attendance.org_id, attendance.attendance_id, attendance.attendance_date, attendance.time_in, 
 		attendance.time_out, attendance.late, attendance.overtime, attendance.narrative, attendance.details,
+		
+		(EXTRACT(epoch FROM (attendance.time_out - attendance.time_in)) / 3600) as worked_hours,
 		to_char(attendance.attendance_date, 'YYYYMM') as a_month,
 		EXTRACT(WEEK FROM attendance.attendance_date) as a_week,
 		EXTRACT(DOW FROM attendance.attendance_date) as a_dow
@@ -92,8 +93,7 @@ CREATE VIEW vw_attendance_schedule AS
 		sa.shift_time_in, sa.shift_time_out, 
 		sa.shift_weekend_in, sa.shift_weekend_out,
 		
-		sa.attendance_id, sa.attendance_date, sa.time_in, 
-		sa.time_out, sa.late, sa.overtime, sa.narrative, 
+		sa.attendance_id, sa.attendance_date, sa.time_in, sa.worked_hours, sa.time_out, sa.late, sa.overtime, sa.narrative, 
 		sa.a_month, sa.a_week, sa.a_dow
 			
 	FROM (SELECT employees.org_id, employees.entity_id, employees.employee_id,
@@ -110,8 +110,9 @@ CREATE VIEW vw_attendance_summary AS
 		ats.overtime_hr, ats.special_time_hr,
 		ats.holiday_id, ats.holiday_name,
 		ats.shift_id, ats.shift_name, ats.shift_hours, ats.a_month,
+		(CASE WHEN ats.normal_work_hours > 0 THEN ats.average_daily_rate / ats.normal_work_hours ELSE 0 END) as normal_time_hr,
 		count(ats.attendance_id) as days_worked,
-		sum(ats.late) as t_late, sum(ats.overtime) as t_overtime
+		sum(ats.worked_hours) as t_worked_hours, sum(ats.late) as t_late, sum(ats.overtime) as t_overtime
 	FROM vw_attendance_schedule as ats
 	GROUP BY  ats.org_id, ats.period_id, ats.employee_id, ats.entity_id, ats.employee_name,
 		ats.average_daily_rate, ats.normal_work_hours, ats.overtime_rate, ats.special_time_rate, ats.per_day_earning,
@@ -223,10 +224,11 @@ BEGIN
 	v_entity_id := $2::int;
 	
 	--- Computer the work hours
-	FOR reca IN SELECT b.employee_month_id, (sum(a.days_worked) * a.average_daily_rate) as month_pay
+	FOR reca IN SELECT b.employee_month_id, 
+		(sum(a.t_worked_hours - a.t_overtime) * a.normal_time_hr) as month_pay
 		FROM vw_attendance_summary a INNER JOIN employee_month b ON (a.entity_id = b.entity_id) AND (a.period_id = b.period_id)
 		WHERE (a.per_day_earning = true) AND (a.holiday_id is null) AND (a.period_id = v_period_id)
-		GROUP BY b.employee_month_id, a.average_daily_rate
+		GROUP BY b.employee_month_id, a.normal_time_hr
 	LOOP
 		UPDATE employee_month SET basic_pay = reca.month_pay WHERE employee_month_id = reca.employee_month_id;
 	END LOOP;
