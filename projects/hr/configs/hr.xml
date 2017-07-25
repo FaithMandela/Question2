@@ -2803,6 +2803,22 @@
 					<TEXTAREA w="430" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
+			<GRID name="Absent" keyfield="absent_id" linkfield="entity_id" table="vw_absent">
+				<TEXTFIELD w="75" title="Absent ID">absent_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Absent Date">absent_date</TEXTDATE>
+				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
+				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
+				<CHECKBOX w="75" title="I Accept">i_accept</CHECKBOX>
+				<TEXTTIMESTAMP w="75" title="Acceptance Date">acceptance_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Absent" keyfield="absent_id" linkfield="entity_id" table="absent">
+					<TEXTDATE w="150" title="Absent Date" y="10" h="20" x="10">absent_date</TEXTDATE>
+					<SPINTIME w="150" title="Time In" y="30" h="20" x="10">time_in</SPINTIME>
+					<SPINTIME w="150" title="Time Out" y="30" h="20" x="290">time_out</SPINTIME>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
 		</GRID>
 		<GRID name="Case Types" keyfield="case_type_id" table="case_types">
 			<TEXTFIELD w="75" title="Case Type ID">case_type_id</TEXTFIELD>

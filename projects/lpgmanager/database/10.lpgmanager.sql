@@ -42,6 +42,7 @@ CREATE TABLE check_logs (
 	org_id					integer references orgs,
 	check_log_date			timestamp default current_timestamp not null,
 	cylinder_code			varchar(32),
+	remote_ip				varchar(32),
 	verified				boolean default false not null
 );
 

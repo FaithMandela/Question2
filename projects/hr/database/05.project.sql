@@ -199,7 +199,10 @@ CREATE TABLE absent (
 	absent_date				date not null,
 	time_in					time,
 	time_out				time,
+	i_accept				boolean default false not null,
+	acceptance_date			timestamp,
 	narrative				varchar(120),
+	employee_comments		text,
 	details					text
 );
 CREATE INDEX absent_entity_id ON absent (entity_id);
@@ -431,6 +434,13 @@ CREATE VIEW vw_week_attendance AS
 		LEFT JOIN (SELECT p5.time_in, p5.time_out, p5.entity_id, p5.a_month, p5.a_week
 			FROM vw_attendance p5 WHERE p5.a_dow = 1) pp5 ON
 			(a.entity_id = pp5.entity_id) AND (a.period_code = pp5.a_month) AND (a.p_week = pp5.a_week);
+			
+CREATE VIEW vw_absent AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+		absent.org_id, absent.absent_id, absent.absent_date, absent.time_in, absent.time_out, 
+		absent.i_accept, absent.acceptance_date, absent.narrative, absent.employee_comments, 
+		absent.details
+	FROM absent INNER JOIN entitys ON absent.entity_id = entitys.entity_id;
 
 CREATE OR REPLACE FUNCTION ins_projects() RETURNS trigger AS $$
 DECLARE
