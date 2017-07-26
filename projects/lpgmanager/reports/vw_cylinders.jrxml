@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2017-07-25T12:50:39 -->
+<!-- 2017-07-26T11:19:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_cylinders" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ad9b4d8b-1182-4c6b-a1e9-528af3790ad4">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -32,7 +32,10 @@
 		<![CDATA[SELECT vw_cylinders.cylinder_number, vw_cylinders.commercial, vw_cylinders.entity_name, 
 vw_cylinders.certification_date, vw_cylinders.review_date, vw_cylinders.weight,
 vw_cylinders.cylinder_id
-FROM vw_cylinders]]>
+
+FROM vw_cylinders
+
+WHERE (vw_cylinders.cylinder_id = '$P!{filterid}')]]>
 	</queryString>
 	<field name="cylinder_number" class="java.lang.Integer"/>
 	<field name="commercial" class="java.lang.Boolean"/>
@@ -45,9 +48,9 @@ FROM vw_cylinders]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="101" splitType="Stretch">
+		<band height="62" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="70" y="27" width="446" height="50" uuid="2ad8e204-8325-4702-a547-effca6e9f9a8"/>
+				<reportElement style="Title" x="39" y="0" width="401" height="50" uuid="2ad8e204-8325-4702-a547-effca6e9f9a8"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
@@ -214,7 +217,7 @@ FROM vw_cylinders]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="165" splitType="Stretch"/>
+		<band height="37" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band splitType="Stretch"/>
