@@ -1701,6 +1701,20 @@
 				<TEXTFIELD w="25" fnct="'KES1'" title="SUNF6">sunf6</TEXTFIELD>
 			</GRID>
 		</GRID>
+		<GRID name="XML Ledger" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+			<TEXTFIELD w="75" title="Period ID">period_id</TEXTFIELD>
+			<TEXTDATE w="75" title="Start Date">start_date</TEXTDATE>
+			<TEXTDATE w="75" title="End Date">end_date</TEXTDATE>
+			<TEXTDECIMAL w="75" title="Overtime Rate">overtime_rate</TEXTDECIMAL>
+			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
+			<GRID export="xml" name="Payroll" keyfield="employee_month_id" orderby="currency_id, employee_name" linkfield="period_id" table="vw_employee_month">
+				<TEXTFIELD w="75" title="EmployeeID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="EmployeeName">employee_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="DepartmentName">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="DepartmentRoleName">department_role_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+			</GRID>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="Banking" key="106" h="750">
 		<FILTER w="700" name="Banking" split="150" type="horl" key="6" h="550">

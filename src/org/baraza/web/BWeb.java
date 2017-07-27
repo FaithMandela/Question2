@@ -1677,7 +1677,39 @@ log.severe("BASE : " + mysql);
 
 		return body;
 	}
-
+	
+	public String getXml(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(true);
+		String body = "";
+		wheresql = null;
+		sortby = null;
+		
+		response.setContentType("text/xml");
+		response.setHeader("Content-Disposition", "attachment; filename=report.xml");
+		
+		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
+		BQuery xmlData = new BQuery(db, view, wheresql, sortby, false);
+		String ifNull = view.getAttribute("ifnull", "");
+		
+		BElement tableXml = new BElement(view.getAttribute("name"));
+		while(xmlData.moveNext()) {
+			BElement rowXml = new BElement(view.getAttribute("name"));
+			for(BElement el : view.getElements()) {
+				BElement xel = new BElement(el.getAttribute("title"));
+				String elValue = xmlData.getString(el.getValue());
+				if(elValue == null) elValue = ifNull;
+				xel.setValue(elValue);
+				rowXml.addNode(xel);
+			}
+			tableXml.addNode(rowXml);
+		}
+		
+		body = tableXml.toString();
+		xmlData.close();
+		
+		return body;
+	}
+	
 	public String csvFormat(String lans) {
 		String ans = "";
 		if(lans != null) {
