@@ -1178,6 +1178,9 @@ BEGIN
 		
 		--- costs on projects based on staff
 		msg := get_task_costs($1, $2, $3);
+		
+		--- compute autogenated overtime
+		msg := get_attendance_pay($1, $2, $3);
 
 		PERFORM updTax(employee_month_id, Period_id)
 		FROM employee_month

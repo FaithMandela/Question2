@@ -1608,8 +1608,22 @@ log.severe("BASE : " + mysql);
 			log.severe("IO Error : " + ex);
 		}
 	}
+	
+	public String getExport(HttpServletRequest request, HttpServletResponse response) {
+		String body = "";
+		if(view.getName().equals("GRID")) {
+			if(view.getAttribute("export", "csv").equals("csv")) {
+				body = getCsv(request, response);
+			} else if(view.getAttribute("export", "csv").equals("xml")) {
+				body = getXml(request, response);
+			}
+		} else if(view.getName().equals("CROSSTAB")) {
+			body = getCsv(request, response);
+		}
+		return body;
+	}
 
-	public String getcsv(HttpServletRequest request, HttpServletResponse response) {
+	public String getCsv(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(true);
 		String body = "";
 		wheresql = null;
