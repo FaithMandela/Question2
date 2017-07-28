@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_accounts" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dbe38b83-791f-4460-a3da-7753119827a3">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
@@ -13,8 +13,12 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
-	<parameter name="organd" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
-	<parameter name="orgwhere" class="java.lang.String"><defaultValueExpression><![CDATA[""]]></defaultValueExpression></parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -95,7 +99,7 @@ ORDER BY vw_accounts.accounts_class_no, vw_accounts.account_type_no, vw_accounts
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="10"/>
+			<band height="4"/>
 		</groupFooter>
 	</group>
 	<background>
@@ -121,14 +125,14 @@ ORDER BY vw_accounts.accounts_class_no, vw_accounts.account_type_no, vw_accounts
 	<detail>
 		<band height="16" splitType="Stretch">
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="212" y="0" width="329" height="15" uuid="2ba6f234-5297-4e0d-8a7e-ef7ef42029c3"/>
+				<reportElement style="Detail" isPrintRepeatedValues="false" x="212" y="0" width="329" height="15" uuid="2ba6f234-5297-4e0d-8a7e-ef7ef42029c3"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{account_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="124" y="0" width="88" height="15" uuid="431b295f-966c-47d4-b933-ec1f4ed95050"/>
+				<reportElement style="Detail" isPrintRepeatedValues="false" x="124" y="0" width="88" height="15" uuid="431b295f-966c-47d4-b933-ec1f4ed95050"/>
 				<textElement>
 					<font fontName="Times New Roman" size="10"/>
 				</textElement>
@@ -137,7 +141,7 @@ ORDER BY vw_accounts.accounts_class_no, vw_accounts.account_type_no, vw_accounts
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="15" splitType="Stretch">
+		<band height="9" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="c7fdd5cd-8caf-4faf-987e-bda1113bbd4a"/>
 				<graphicElement>

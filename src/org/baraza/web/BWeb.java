@@ -1438,10 +1438,9 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 		}
 	}
 
-
 	public String getFieldTitles() {
 		String fieldTitles = null;
-		
+
 		if(view == null) return "";
 
 		BElement sview = null;
@@ -1462,7 +1461,6 @@ System.out.println("Reached ACCORDION " + vds + " : " + formlink);
 			}
 			fieldTitles += "</select>";
 		}
-
 
 		return fieldTitles;
 	}
@@ -1610,8 +1608,22 @@ log.severe("BASE : " + mysql);
 			log.severe("IO Error : " + ex);
 		}
 	}
+	
+	public String getExport(HttpServletRequest request, HttpServletResponse response) {
+		String body = "";
+		if(view.getName().equals("GRID")) {
+			if(view.getAttribute("export", "csv").equals("csv")) {
+				body = getCsv(request, response);
+			} else if(view.getAttribute("export", "csv").equals("xml")) {
+				body = getXml(request, response);
+			}
+		} else if(view.getName().equals("CROSSTAB")) {
+			body = getCsv(request, response);
+		}
+		return body;
+	}
 
-	public String getcsv(HttpServletRequest request, HttpServletResponse response) {
+	public String getCsv(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(true);
 		String body = "";
 		wheresql = null;
@@ -1665,7 +1677,55 @@ log.severe("BASE : " + mysql);
 
 		return body;
 	}
-
+	
+	public String getXml(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(true);
+		String body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+		wheresql = null;
+		sortby = null;
+		
+		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
+		
+		response.setContentType("text/xml");
+		response.setHeader("Content-Disposition", "attachment; filename=report.xml");
+		
+		BElement tableXml = new BElement(view.getAttribute("name"));
+		getXmlTable(tableXml, view, wheresql, sortby);
+		if(tableXml.getNodeNumber() == 1) {
+			tableXml = tableXml.getFirst();
+			if(tableXml != null) body += tableXml.toString();
+		} else {
+			body += tableXml.toString();
+		}
+		
+		return body;
+	}
+	
+	public BElement getXmlTable(BElement tableXml, BElement tView, String tWhere, String tSortby) {
+		BQuery xmlData = new BQuery(db, tView, wheresql, tSortby, false);
+		String ifNull = view.getAttribute("ifnull", "");
+		
+		while(xmlData.moveNext()) {
+			BElement rowXml = new BElement(tView.getAttribute("name"));
+			for(BElement el : tView.getElements()) {
+				if(el.getName().equals("GRID")) {
+					String sWhere = el.getAttribute("linkfield") + " = '" + xmlData.getKeyField() + "'";
+					getXmlTable(rowXml, el, sWhere, null);
+				} else {
+					BElement xel = new BElement(el.getAttribute("title"));
+					String elValue = xmlData.getString(el.getValue());
+					if(elValue == null) elValue = ifNull;
+					xel.setValue(elValue);
+					rowXml.addNode(xel);
+				}
+			}
+			tableXml.addNode(rowXml);
+		}
+		xmlData.close();
+		
+		return tableXml;
+	}
+	
 	public String csvFormat(String lans) {
 		String ans = "";
 		if(lans != null) {
@@ -1733,15 +1793,20 @@ log.severe("BASE : " + mysql);
 
 	public String getCalendar() {
 
-		String events = " events: [";
+		String events = "";
 
 		events += getEvents(view);
 		for(BElement el : view.getElements()) {
-			if(el.getName().equals("DIARY"))
-				events += ", " + getEvents(el);
+			if(el.getName().equals("DIARY")) {
+				String event = getEvents(el);
+				if(!event.equals("")) {
+					if(events.equals("")) events += getEvents(el);
+					else events += ", " + getEvents(el);
+				}
+			}
 		}
 
-		events += "] \n";
+		events = " events: [" + events + "]\n";
 
 		return events;
 	}
@@ -1769,8 +1834,8 @@ log.severe("BASE : " + mysql);
 			events += "', end: '" + crs.readField(5) + " " + crs.readField(6);
 			events += "', allDay: " + crs.readField(7);
 			
-			if(eventView.getAttribute("color")==null) events += ", backgroundColor: Metronic.getBrandColor('silver'), ";
-			else  events += ", backgroundColor: Metronic.getBrandColor('" + eventView.getAttribute("color") + "'), ";
+			if(eventView.getAttribute("color")==null) events += ", backgroundColor: Metronic.getBrandColor('silver') ";
+			else  events += ", backgroundColor: Metronic.getBrandColor('" + eventView.getAttribute("color") + "') ";
 
 			events += "}";
 		}
@@ -1902,7 +1967,7 @@ log.severe("BASE : " + mysql);
 			
 			if(el.getName().equals("ACTIONS")) hasAction = true;
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
-			if(el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
+			if(el.getName().equals("ACCORDION") || el.getName().equals("FILES") || el.getName().equals("DIARY")) hasSubs = true;
 			if(el.getName().equals("COLFIELD") || el.getName().equals("TITLEFIELD")) hasTitle = true;
 			if(el.getName().equals("FILTERGRID")) hasFilter = true;
 		}
@@ -2041,8 +2106,9 @@ log.severe("BASE : " + mysql);
 		for(BElement el : view.getElements()) {
 			if(el.getName().equals("GRID") || el.getName().equals("FORM") || el.getName().equals("JASPER")) hasSubs = true;
 			if(el.getName().equals("FILES") || el.getName().equals("DIARY") || el.getName().equals("FORMVIEW")) hasSubs = true;
-			if(el.getName().equals("CROSSTAB")) hasSubs = true;
+			if(el.getName().equals("ACCORDION") || el.getName().equals("CROSSTAB")) hasSubs = true;
 		}
+
 		return hasSubs;
 	}
 	

@@ -55,10 +55,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-INSERT INTO workflow_sql (workflow_sql_id, workflow_phase_id, org_id, workflow_sql_name, is_condition, is_action, message, sql) VALUES (2, 13, 0, 'Check supervisor rating', true, false, 'Ensure you check ratings', 'SELECT (CASE WHEN job_reviews.supervisor_rating is null THEN false ELSE true END) as ans
+INSERT INTO workflow_sql (workflow_sql_id, workflow_phase_id, org_id, workflow_sql_name, is_condition, is_action, message, sql) VALUES (2, 6, 0, 'Check supervisor rating', true, false, 'Ensure you check ratings', 'SELECT (CASE WHEN job_reviews.supervisor_rating is null THEN false ELSE true END) as ans
 FROM job_reviews INNER JOIN approvals ON job_reviews.workflow_table_id = approvals.table_id
 WHERE approvals.approval_id = ''');
-INSERT INTO workflow_sql (workflow_sql_id, workflow_phase_id, org_id, workflow_sql_name, is_condition, is_action, message, sql) VALUES (3, 13, 0, 'Check reviewer comments', true, false, 'The reviewer comments need to be added', 'SELECT (CASE WHEN job_reviews.recomendation is null THEN false ELSE true END) as ans
+INSERT INTO workflow_sql (workflow_sql_id, workflow_phase_id, org_id, workflow_sql_name, is_condition, is_action, message, sql) VALUES (3, 6, 0, 'Check reviewer comments', true, false, 'The reviewer comments need to be added', 'SELECT (CASE WHEN job_reviews.recomendation is null THEN false ELSE true END) as ans
 FROM job_reviews INNER JOIN approvals ON job_reviews.workflow_table_id = approvals.table_id
 WHERE approvals.approval_id = ''');
 

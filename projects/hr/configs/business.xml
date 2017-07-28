@@ -1212,8 +1212,9 @@
 				<TEXTFIELD w="250" title="Fiscal Year" y="10" h="20" x="10">fiscal_year</TEXTFIELD>
 				<TEXTDATE w="150" title="Fiscal Year Start" y="30" h="20" x="10">fiscal_year_start</TEXTDATE>
 				<TEXTDATE w="150" title="Fiscal Year End" y="30" h="20" x="290">fiscal_year_end</TEXTDATE>
-				<CHECKBOX w="150" title="Year Opened" y="50" h="20" x="10">year_opened</CHECKBOX>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+				<TEXTDATE w="150" title="Submission Date" y="50" h="20" x="10">submission_date</TEXTDATE>
+				<CHECKBOX w="150" title="Year Opened" y="70" h="20" x="10">year_opened</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

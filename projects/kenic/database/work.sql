@@ -1,4 +1,8 @@
 
+
+INSERT INTO receipts (roid, amount, chequenumber, ipay) VALUES ('ESL', 1000, '29017996', true);
+
+
 SELECT count(roid) as domaincount
 FROM domain INNER JOIN zone ON domain.zone = zone.name
 WHERE (clid = 'WOL') AND (exdate > now());

@@ -84,7 +84,10 @@ CREATE TABLE project_staff_costs (
 	payroll_ps				real default 0 not null,
 	staff_cost				real default 0 not null,
 	tax_cost				real default 0 not null,
-	Details					text
+	staff_pay				real default 0 not null,
+	task_hours				real default 0 not null,
+	tasks_cost				boolean default false not null,
+	details					text
 );
 CREATE INDEX project_staff_costs_project_id ON project_staff_costs (project_id);
 CREATE INDEX project_staff_costs_employee_month_id ON project_staff_costs (employee_month_id);
@@ -104,20 +107,46 @@ CREATE TABLE phases (
 CREATE INDEX phases_project_id ON phases (project_id);
 CREATE INDEX phases_org_id ON phases(org_id);
 
+CREATE TABLE task_types (
+	task_type_id			serial primary key,
+	org_id					integer references orgs,
+	task_type_name			varchar(120) not null,
+	default_cost			real default 0 not null,
+	default_price			real default 0 not null,
+	details					text
+);
+CREATE INDEX task_types_org_id ON task_types(org_id);
+
+CREATE TABLE task_entitys (
+	task_entity_id			serial primary key,
+	task_type_id			integer references task_types,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	task_entity_cost		real default 0 not null,
+	task_entity_price		real default 0 not null,
+	details					text
+);
+CREATE INDEX task_entitys_task_type_id ON task_entitys(task_type_id);
+CREATE INDEX task_entitys_org_id ON task_entitys(org_id);
+
 CREATE TABLE tasks (
 	task_id					serial primary key,
 	phase_id				integer references phases,
+	task_type_id			integer references task_types,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
 	task_name				varchar(320) not null,
 	start_date				date not null,
 	dead_line				date,
 	end_date				date,
-	hours_taken				integer default 7 not null,
+	hours_taken				real default 7 not null,
+	task_cost				real default 0 not null,
+	task_price				real default 0 not null,
 	completed				boolean not null default false,
 	details					text
 );
 CREATE INDEX tasks_phase_id ON tasks (phase_id);
+CREATE INDEX tasks_task_type_id ON tasks(task_type_id);
 CREATE INDEX tasks_entity_id ON tasks (entity_id);
 CREATE INDEX tasks_org_id ON tasks (org_id);
 
@@ -151,13 +180,34 @@ CREATE TABLE attendance (
 	attendance_id			serial primary key,
 	entity_id				integer references entitys,
 	org_id					integer references orgs,
-	attendance_date			date,
-	time_in					time,
-	time_out				time,
+	attendance_date			date not null,
+	time_in					time not null,
+	time_out				time not null,
+	late					real default 0 not null,
+	overtime				real default 0 not null,
+	narrative				varchar(120),
 	details					text
 );
 CREATE INDEX attendance_entity_id ON attendance (entity_id);
 CREATE INDEX attendance_org_id ON attendance (org_id);
+CREATE INDEX attendance_attendance_date ON attendance (attendance_date);
+
+CREATE TABLE absent (
+	absent_id				serial primary key,
+	entity_id				integer references entitys,
+	org_id					integer references orgs,
+	absent_date				date not null,
+	time_in					time,
+	time_out				time,
+	i_accept				boolean default false not null,
+	acceptance_date			timestamp,
+	narrative				varchar(120),
+	employee_comments		text,
+	details					text
+);
+CREATE INDEX absent_entity_id ON absent (entity_id);
+CREATE INDEX absent_org_id ON absent (org_id);
+CREATE INDEX absent_absent_date ON absent (absent_date);
 
 CREATE TABLE access_logs (
 	access_log_id			integer primary key,
@@ -177,7 +227,6 @@ CREATE TABLE access_logs (
 CREATE INDEX access_logs_entity_id ON access_logs (entity_id);
 CREATE INDEX access_logs_org_id ON access_logs (org_id);
 
-
 CREATE TABLE bio_imports1 (
 	bio_imports1_id			serial primary key,
 	org_id					integer references orgs,
@@ -195,6 +244,18 @@ CREATE TABLE bio_imports1 (
 	is_picked				boolean default false
 );
 CREATE INDEX bio_imports1_org_id ON bio_imports1 (org_id);
+
+CREATE TABLE bio_imports2 (
+	bio_imports2_id			serial primary key,
+	org_id					integer references orgs,
+	col1					varchar(50),
+	col2					varchar(50),
+	col3					varchar(50),
+	col4					varchar(50),
+	is_picked				boolean default false
+);
+CREATE INDEX bio_imports2_org_id ON bio_imports2 (org_id);
+
 
 CREATE VIEW vw_define_phases AS
 	SELECT entity_types.entity_type_id, entity_types.entity_type_name, project_types.project_type_id,
@@ -240,7 +301,8 @@ CREATE VIEW vw_project_staff_costs AS
 		projects.project_id, projects.project_name, projects.project_account,
 		project_staff_costs.org_id, project_staff_costs.project_staff_cost_id, 
 		project_staff_costs.project_role, project_staff_costs.payroll_ps,
-		project_staff_costs.staff_cost, project_staff_costs.tax_cost, project_staff_costs.details
+		project_staff_costs.staff_cost, project_staff_costs.tax_cost, project_staff_costs.staff_pay,
+		project_staff_costs.task_hours, project_staff_costs.tasks_cost, project_staff_costs.details
 	FROM project_staff_costs INNER JOIN vw_employee_month ON project_staff_costs.employee_month_id = vw_employee_month.employee_month_id
 		INNER JOIN projects ON project_staff_costs.project_id = projects.project_id;
 		
@@ -280,6 +342,14 @@ CREATE VIEW vw_phases AS
 		phases.completed as phase_completed, phases.phase_cost, phases.details
 	FROM phases INNER JOIN vw_projects ON phases.project_id = vw_projects.project_id;
 
+CREATE VIEW vw_task_entitys AS
+	SELECT entitys.entity_id, entitys.entity_name, task_types.task_type_id, task_types.task_type_name, 
+		orgs.org_id, orgs.org_name,
+		task_entitys.task_entity_id, task_entitys.task_entity_cost, task_entitys.task_entity_price, task_entitys.details
+	FROM task_entitys INNER JOIN entitys ON task_entitys.entity_id = entitys.entity_id
+		INNER JOIN task_types ON task_entitys.task_type_id = task_types.task_type_id
+		INNER JOIN orgs ON task_entitys.org_id = orgs.org_id;
+	
 CREATE VIEW vw_tasks AS
 	SELECT vw_phases.client_id, vw_phases.client_name, vw_phases.project_type_id, vw_phases.project_type_name, 
 		vw_phases.project_id, vw_phases.project_name, vw_phases.signed, vw_phases.contract_ref, 
@@ -290,7 +360,10 @@ CREATE VIEW vw_tasks AS
 		entitys.entity_id, entitys.entity_name, tasks.task_id, tasks.task_name, 
 		tasks.org_id, tasks.start_date as task_start_date, tasks.dead_line as task_dead_line, 
 		tasks.end_date as task_end_date, tasks.completed as task_completed, 
-		tasks.hours_taken, tasks.details as task_details
+		tasks.hours_taken, tasks.task_cost, tasks.task_price,
+		(tasks.hours_taken * tasks.task_cost) as total_task_cost, 
+		(tasks.hours_taken * tasks.task_price) as total_task_price,
+		tasks.details as task_details
 	FROM tasks INNER JOIN entitys ON tasks.entity_id = entitys.entity_id
 		INNER JOIN vw_phases ON tasks.phase_id = vw_phases.phase_id;
 		
@@ -323,10 +396,11 @@ CREATE VIEW vw_project_cost AS
 
 CREATE VIEW vw_attendance AS
 	SELECT entitys.entity_id, entitys.entity_name, attendance.attendance_id, attendance.attendance_date, 
-		attendance.org_id, attendance.time_in, attendance.time_out, attendance.details,
+		attendance.org_id, attendance.time_in, attendance.time_out, attendance.late, attendance.overtime,
+		attendance.narrative, attendance.details,
 		to_char(attendance.attendance_date, 'YYYYMM') as a_month,
-        EXTRACT(WEEK FROM attendance.attendance_date) as a_week,
-        EXTRACT(DOW FROM attendance.attendance_date) as a_dow
+		EXTRACT(WEEK FROM attendance.attendance_date) as a_week,
+		EXTRACT(DOW FROM attendance.attendance_date) as a_dow
 	FROM attendance INNER JOIN entitys ON attendance.entity_id = entitys.entity_id;
 	
 CREATE VIEW vw_week_attendance AS
@@ -360,6 +434,13 @@ CREATE VIEW vw_week_attendance AS
 		LEFT JOIN (SELECT p5.time_in, p5.time_out, p5.entity_id, p5.a_month, p5.a_week
 			FROM vw_attendance p5 WHERE p5.a_dow = 1) pp5 ON
 			(a.entity_id = pp5.entity_id) AND (a.period_code = pp5.a_month) AND (a.p_week = pp5.a_week);
+			
+CREATE VIEW vw_absent AS
+	SELECT entitys.entity_id, entitys.entity_name, 
+		absent.org_id, absent.absent_id, absent.absent_date, absent.time_in, absent.time_out, 
+		absent.i_accept, absent.acceptance_date, absent.narrative, absent.employee_comments, 
+		absent.details
+	FROM absent INNER JOIN entitys ON absent.entity_id = entitys.entity_id;
 
 CREATE OR REPLACE FUNCTION ins_projects() RETURNS trigger AS $$
 DECLARE
@@ -453,6 +534,31 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION process_bio_imports2(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_org_id				integer;
+	msg		 				varchar(120);
+BEGIN
+
+	SELECT org_id INTO v_org_id FROM entitys
+	WHERE entity_id = $2::integer;
+	
+	DELETE FROM bio_imports2 WHERE (col2 is null) OR (col3 is null) OR (col4 is null);
+	
+	INSERT INTO attendance (entity_id, org_id, attendance_date, time_in, time_out)
+	SELECT employees.entity_id, employees.org_id, to_date(bio_imports2.col2, 'YYYY/MM/DD'), 
+		to_timestamp(bio_imports2.col3, 'HH24:MI')::time, to_timestamp(bio_imports2.col4, 'HH24:MI')::time
+	FROM bio_imports2 INNER JOIN employees ON upper(trim(bio_imports2.col1)) = upper(trim(employees.employee_id))
+	WHERE employees.org_id = v_org_id;
+	
+	DELETE FROM bio_imports2;
+
+	msg := 'Uploaded the file';
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION sum_attendance_hours(integer, integer) RETURNS interval AS $$
 	SELECT sum(COALESCE(mon_time_diff, '00:00:00'::interval) + COALESCE(tue_time_diff, '00:00:00'::interval) +
@@ -463,4 +569,64 @@ CREATE OR REPLACE FUNCTION sum_attendance_hours(integer, integer) RETURNS interv
 	WHERE (vw_week_attendance.entity_id = $1) AND (vw_week_attendance.period_id = $2)
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION aft_task_types() RETURNS trigger AS $$
+BEGIN
+
+	INSERT INTO task_entitys (entity_id, org_id, task_type_id, task_entity_cost, task_entity_price)
+	SELECT entity_id, NEW.org_id, NEW.task_type_id, NEW.default_cost, NEW.default_price
+	FROM employees
+	WHERE (org_id = NEW.org_id) AND (active = true);
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER aft_task_types AFTER INSERT ON task_types
+	FOR EACH ROW EXECUTE PROCEDURE aft_task_types();
+
+CREATE OR REPLACE FUNCTION ins_tasks() RETURNS trigger AS $$
+BEGIN
+
+	SELECT task_entity_cost, task_entity_price INTO NEW.task_cost, NEW.task_price
+	FROM task_entitys
+	WHERE (task_type_id = NEW.task_type_id) AND (entity_id = NEW.entity_id);
+	
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_tasks BEFORE INSERT ON tasks
+	FOR EACH ROW EXECUTE PROCEDURE ins_tasks();
+    
+CREATE OR REPLACE FUNCTION get_task_costs(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	v_period_id				integer;
+	v_org_id				integer;
+	v_start_date			date;
+	v_end_date				date;
+	v_project_cost			float;
+	msg 					varchar(120);
+BEGIN
+
+	SELECT period_id, org_id, start_date, end_date INTO v_period_id, v_org_id, v_start_date, v_end_date
+	FROM periods
+	WHERE (period_id = $1::int);
+	
+	DELETE FROM project_staff_costs WHERE (tasks_cost = true)
+	AND (employee_month_id IN (SELECT employee_month_id FROM employee_month WHERE period_id = v_period_id));
+	
+	INSERT INTO project_staff_costs (tasks_cost, project_id, org_id, employee_month_id, task_hours, staff_pay)
+	SELECT true, phases.project_id, employee_month.org_id, employee_month.employee_month_id,
+		sum(tasks.hours_taken), sum(tasks.hours_taken * tasks.task_price)
+	FROM phases INNER JOIN tasks ON phases.phase_id = tasks.phase_id
+		INNER JOIN employee_month ON tasks.entity_id = employee_month.entity_id
+	WHERE (employee_month.period_id = v_period_id) AND (tasks.completed = true) AND (tasks.hours_taken > 0)
+		AND (tasks.end_date BETWEEN v_start_date AND v_end_date)
+	GROUP BY phases.project_id, employee_month.employee_month_id;
+	
+	msg := 'Done';
+
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
 

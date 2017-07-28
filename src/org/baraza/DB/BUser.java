@@ -21,6 +21,7 @@ public class BUser {
 	String entityName = null;
 	String entityType = null;
 	String startView = null;
+	String groupIDs = null;
 	List<String> groupRole;
 	List<String> userRole;
 	boolean superUser = false;
@@ -78,10 +79,15 @@ public class BUser {
 			mysql += "FROM entity_types INNER JOIN Entity_subscriptions ON entity_types.entity_type_id = Entity_subscriptions.entity_type_id ";
 			mysql += "WHERE Entity_subscriptions.entity_id = '" + userID + "'";
 			rs = new BQuery(db, mysql);
-			while(rs.moveNext()) groupRole.add(rs.readField("entity_role"));
+			while(rs.moveNext()) {
+				groupRole.add(rs.readField("entity_role"));
+				if(groupIDs == null) groupIDs = rs.readField("entity_type_id");
+				else groupIDs += "," + rs.readField("entity_type_id");
+			}
 			rs.close();
 		}
 
+		if(groupIDs == null) groupIDs = "";
 		if(userID == null) userID = "0";
 	}
 
@@ -125,5 +131,6 @@ public class BUser {
 	public boolean getSuperUser() { return superUser; }
 	public List<String> getUserRoles() { return userRole; }
 	public List<String> getGroupRoles() { return groupRole; }
+	public String getGroupIDs() { return groupIDs; }
 	
 }

@@ -52,12 +52,9 @@ public class BGridExport extends HttpServlet {
 		String process = request.getParameter("process");
 		String reportexport = request.getParameter("reportexport");
 
-		response.setContentType("text/x-csv");
-		response.setHeader("Content-Disposition", "attachment; filename=report.csv");
-
 		try {
 			PrintWriter out = response.getWriter();
-			out.println(web.getcsv(request, response));
+			out.println(web.getExport(request, response));
 		} catch(IOException ex) {
 			System.out.println("IO Exception : " + ex);
 		}

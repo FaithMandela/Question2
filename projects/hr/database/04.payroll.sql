@@ -34,6 +34,9 @@ CREATE INDEX adjustments_currency_id ON adjustments(currency_id);
 CREATE INDEX adjustments_adjustment_effect_id ON adjustments(adjustment_effect_id);
 CREATE INDEX adjustments_org_id ON adjustments(org_id);
 
+ALTER TABLE leave_types ADD	adjustment_id	integer references adjustments;
+CREATE INDEX leave_types_adjustment_id ON leave_types(adjustment_id);
+
 CREATE TABLE claim_types (
 	claim_type_id			serial primary key,
 	adjustment_id			integer references adjustments,
@@ -264,18 +267,21 @@ CREATE INDEX claim_details_org_id ON claim_details(org_id);
 CREATE TABLE employee_overtime (
 	employee_overtime_id	serial primary key,
 	employee_month_id		integer references employee_month not null,
+	entity_id				integer references entitys,
 	org_id					integer references orgs,
 	overtime_date			date not null,
 	overtime				float not null,
 	overtime_rate			float not null,
+	auto_computed			boolean default false not null, 
 	application_date		timestamp default now(),
-	approve_status			varchar(16) default 'draft' not null,
+	approve_status			varchar(16) default 'Draft' not null,
 	workflow_table_id		integer,
 	action_date				timestamp,
 	narrative				varchar(240),
 	details					text
 );
 CREATE INDEX employee_overtime_employee_month_id ON employee_overtime (employee_month_id);
+CREATE INDEX employee_overtime_entity_id ON employee_overtime (entity_id);
 CREATE INDEX employee_overtime_org_id ON employee_overtime(org_id);
 
 CREATE TABLE employee_per_diem (
@@ -332,6 +338,24 @@ CREATE VIEW vw_adjustments AS
 		adjustments.reduce_balance, adjustments.tax_reduction_ps, adjustments.tax_relief_ps, 
 		adjustments.tax_max_allowed, adjustments.account_number, adjustments.details
 	FROM adjustments INNER JOIN currency ON adjustments.currency_id = currency.currency_id;
+	
+CREATE VIEW vw_leave_types AS
+	SELECT vw_adjustments.currency_id, vw_adjustments.currency_name, vw_adjustments.currency_symbol,
+		vw_adjustments.adjustment_id, vw_adjustments.adjustment_name, 
+		vw_adjustments.adjustment_type, vw_adjustments.adjustment_order, vw_adjustments.earning_code, 
+		vw_adjustments.formural, vw_adjustments.monthly_update,
+		vw_adjustments.in_payroll, vw_adjustments.in_tax, vw_adjustments.visible, vw_adjustments.running_balance, 
+		vw_adjustments.reduce_balance, vw_adjustments.tax_reduction_ps, vw_adjustments.tax_relief_ps, 
+		vw_adjustments.tax_max_allowed, vw_adjustments.account_number,
+		leave_types.org_id, leave_types.leave_type_id, leave_types.leave_type_name, 
+		leave_types.allowed_leave_days, leave_types.leave_days_span, leave_types.use_type, 
+		leave_types.month_quota, leave_types.initial_days, leave_types.maximum_carry, 
+		leave_types.include_holiday, leave_types.include_mon, leave_types.include_tue, leave_types.include_wed, 
+		leave_types.include_thu, leave_types.include_fri, leave_types.include_sat, leave_types.include_sun, 
+		leave_types.details,
+		(CASE vw_adjustments.adjustment_type WHEN 1 THEN 'Leave Allowance' WHEN 2 THEN 'Leave Deduction'
+			WHEN 3 THEN 'Leave Expenditure' ELSE 'No Adjustment' END) as leave_adjustment
+	FROM leave_types LEFT JOIN vw_adjustments ON leave_types.adjustment_id = vw_adjustments.adjustment_id;
 		
 CREATE VIEW vw_claim_types AS
 	SELECT adjustments.adjustment_id, adjustments.adjustment_name, 
@@ -572,6 +596,7 @@ CREATE VIEW vw_employee_month AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted,
+		vw_periods.fiscal_year_id, vw_periods.fiscal_year,
 		
 		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
@@ -584,6 +609,7 @@ CREATE VIEW vw_employee_month AS
 		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
 		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
+		employees.employee_full_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol, employee_month.exchange_rate,
 		
 		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, employee_month.details,
@@ -631,7 +657,7 @@ CREATE VIEW vw_ems AS
 		em.entity_id, em.entity_name, 
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, em.gender, 
 		em.nationality, em.marital_status, em.appointment_date, em.exit_date, em.contract, em.contract_period, 
-		em.employment_terms, em.identity_card, em.employee_name, 
+		em.employment_terms, em.identity_card, em.employee_name, em.employee_full_name,
 		em.currency_id, em.currency_name, em.currency_symbol, em.exchange_rate, 
 		em.employee_month_id, em.bank_account, em.basic_pay, em.details, em.overtime, 
 		em.full_allowance, em.payroll_allowance, em.tax_allowance, em.full_deduction, 
@@ -654,6 +680,7 @@ CREATE VIEW vw_employee_month_list AS
 		employees.gender, employees.nationality, employees.marital_status, employees.appointment_date, employees.exit_date, 
 		employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
+		employees.employee_full_name,
 		departments.department_id, departments.department_name, departments.department_account, departments.function_code,
 		department_roles.department_role_id, department_roles.department_role_name,
 		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay,
@@ -1149,6 +1176,12 @@ BEGIN
 			(CASE WHEN loan_balance > monthly_repayment THEN monthly_repayment ELSE loan_balance END)
 		FROM vw_loans 
 		WHERE (loan_balance > 0) AND (approve_status = 'Approved') AND (reducing_balance =  false) AND (org_id = v_org_id);
+		
+		--- costs on projects based on staff
+		msg := get_task_costs($1, $2, $3);
+		
+		--- compute autogenated overtime
+		msg := get_attendance_pay($1, $2, $3);
 
 		PERFORM updTax(employee_month_id, Period_id)
 		FROM employee_month
@@ -1371,14 +1404,20 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION process_payroll(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	rec 		RECORD;
-	msg 		varchar(120);
+	rec 					RECORD;
+	msg 					varchar(120);
 BEGIN
 	IF ($3 = '1') THEN
 		UPDATE employee_adjustments SET tax_reduction_amount = 0 
 		FROM employee_month 
 		WHERE (employee_adjustments.employee_month_id = employee_month.employee_month_id) 
 			AND (employee_month.period_id = CAST($1 as int));
+			
+		--- compute autogenated overtime
+		msg := get_attendance_pay($1, $2, $3);
+		
+		--- costs on projects based on staff
+		msg := get_task_costs($1, $2, $3);
 	
 		PERFORM updTax(employee_month_id, period_id)
 		FROM employee_month
@@ -1409,10 +1448,10 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION ins_employee_adjustments() RETURNS trigger AS $$
 DECLARE
-	v_formural					varchar(430);
-	v_tax_relief_ps				float;
-	v_tax_reduction_ps			float;
-	v_tax_max_allowed			float;
+	v_formural				varchar(430);
+	v_tax_relief_ps			float;
+	v_tax_reduction_ps		float;
+	v_tax_max_allowed		float;
 BEGIN
 	IF((NEW.Amount = 0) AND (NEW.paid_amount <> 0))THEN
 		NEW.Amount = NEW.paid_amount / 0.7;
@@ -1915,21 +1954,27 @@ BEGIN
 		NEW.payment_amount := NEW.amount;
 		NEW.pay_period := 1;
 	END IF;
-
-	IF((NEW.approve_status = 'Approved') AND (OLD.approve_status = 'Completed'))THEN
-		SELECT max(period_id) INTO v_period_id
-		FROM periods
-		WHERE (closed = false);
-		
-		SELECT max(employee_month_id) INTO NEW.employee_month_id
-		FROM employee_month
-		WHERE (period_id = v_period_id) AND (entity_id = NEW.entity_id);
-		
-		IF(v_period_id is null)THEN
-			RAISE EXCEPTION 'You need to have the current period approved';
-		ELSIF(NEW.employee_month_id is null)THEN
-			RAISE EXCEPTION 'You need to have the staff in the current active month';
+	
+	IF(TG_OP = 'UPDATE') AND (NEW.employee_month_id is null)THEN
+		IF((NEW.approve_status = 'Approved') AND (OLD.approve_status = 'Completed'))THEN
+			SELECT min(period_id) INTO v_period_id
+			FROM periods
+			WHERE (activated = true);
+			
+			SELECT max(employee_month_id) INTO NEW.employee_month_id
+			FROM employee_month
+			WHERE (period_id = v_period_id) AND (entity_id = NEW.entity_id);
+			
+			IF(v_period_id is null)THEN
+				RAISE EXCEPTION 'You need to have the current active period';
+			ELSIF(NEW.employee_month_id is null)THEN
+				RAISE EXCEPTION 'You need to have the staff in the current active month';
+			END IF;
 		END IF;
+	ELSIF(NEW.entity_id is null)THEN
+		SELECT entity_id INTO NEW.entity_id
+		FROM employee_month
+		WHERE employee_month_id = NEW.employee_month_id;
 	END IF;
 
 	RETURN NEW;
@@ -1961,4 +2006,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION adj_leave_update(varchar(12), varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
+DECLARE
+	msg		 				varchar(120);
+BEGIN
+
+	IF ($3 = '1') THEN
+		UPDATE leave_types SET adjustment_id = null
+		WHERE leave_type_id = CAST($1 as int);
+		
+		msg := 'Cleared the adjustment';
+	END IF;
+	
+	return msg;
+END;
+$$ LANGUAGE plpgsql;
 

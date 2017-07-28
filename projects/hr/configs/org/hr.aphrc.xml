@@ -94,8 +94,8 @@
 			<TILE name="Number of Staff" role="staff" noorg.query="true" table="employees" where="(active = true)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(entity_id), 0)" title="Total Staff">total_staff</TEXTFIELD>
 			</TILE>
-			<TILE name="Pending Tasks" role="staff" noorg.query="true" table="tasks" where="(completed = true)" user="entity_id" groupby="entity_id">
-				<TEXTFIELD w="75" fnct="COALESCE(count(task_id), 0)" title="Pending Tasks">pending_tasks</TEXTFIELD>
+			<TILE name="Pending Tasks" role="staff" noorg.query="true" groupby="entity_id" table="tasks" where="(completed = true)" user="entity_id">
+				<TEXTFIELD w="75" fnct="count(task_id)" title="Pending Tasks" default="0">pending_tasks</TEXTFIELD>
 			</TILE>
 			<TILE name="Available Jobs" role="staff,applicant" noorg.query="true" table="vw_intake" where="(closing_date > current_date)">
 				<TEXTFIELD w="75" fnct="COALESCE(count(intake_id), 0)" title="Jobs Available">jobs_available</TEXTFIELD>
@@ -1092,7 +1092,7 @@
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="cv_referees">table_name</DEFAULT>
+					<DEFAULT default="referees">table_name</DEFAULT>
 					<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
@@ -1129,7 +1129,7 @@
 			<TEXTDECIMAL w="75" title="Basic Salary">basic_salary</TEXTDECIMAL>
 			<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 			<FORM cols="2" tw="570" name="Details" keyfield="entity_id" table="employees" th="180">
-				<COMBOBOX w="430" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
+				<COMBOBOX w="150" title="Designation" lptable="vw_department_roles" cmb_fnct="department_name || ', ' || department_role_name" orderby="department_name" y="10" h="20" x="10" lpfield="department_role">department_role_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Employee ID" y="30" h="20" x="10" span="true">employee_id</TEXTFIELD>
 				<TEXTFIELD w="150" title="Phone" y="30" h="20" x="290">phone</TEXTFIELD>
 				<COMBOLIST w="70" title="" y="50" h="20" x="70" span="true">person_title
@@ -1157,23 +1157,23 @@
 				</COMBOLIST>
 				<COMBOBOX w="150" title="Birth Nation" lptable="sys_countrys" default_org_fnct="get_default_country" noorg="true" lpkey="sys_country_id" y="110" h="20" x="10" span="true" lpfield="sys_country_name">nation_of_birth</COMBOBOX>
 				<TEXTFIELD w="150" title="Place of Birth" y="110" h="20" x="290">place_of_birth</TEXTFIELD>
-				<COMBOBOX w="430" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
-				<COMBOBOX w="430" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
+				<COMBOBOX w="150" title="Location" lptable="locations" y="130" h="20" x="10" span="true" lpfield="location_name">location_id</COMBOBOX>
+				<COMBOBOX w="150" title="Pay Group" lptable="pay_groups" y="170" h="20" x="10" lpfield="pay_group_name">pay_group_id</COMBOBOX>
 				<TEXTFIELD w="150" title="Identity Card" y="190" h="20" x="10" span="true">identity_card</TEXTFIELD>
 				<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
 				<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10" span="true">bank_account</TEXTFIELD>
-				<COMBOBOX w="430" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
-				<COMBOBOX w="430" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<COMBOBOX w="150" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
+				<COMBOBOX w="150" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
 				<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10" span="true">appointment_date</TEXTDATE>
 				<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
 				<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
 				<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
-				<COMBOBOX w="430" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
-				<COMBOBOX w="430" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
-				<TEXTFIELD w="430" title="Employment Terms" tab="Terms" y="150" h="20" x="10">employment_terms</TEXTFIELD>
+				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+				<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10">employment_terms</TEXTFIELD>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>

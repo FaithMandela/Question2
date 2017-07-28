@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_period_rentals_2" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a76e7d90-c258-48d2-bc89-db5ec98da9c6">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="124"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -58,6 +58,9 @@ ORDER BY vw_period_rentals.property_id, vw_period_rentals.start_date, vw_period_
 	</variable>
 	<variable name="repair_amount_1" class="java.lang.Double" resetType="Group" resetGroup="property_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{repair_amount}]]></variableExpression>
+	</variable>
+	<variable name="total_rent" class="java.lang.String" resetType="None" incrementType="Group" incrementGroup="property_name" calculation="Sum">
+		<variableExpression><![CDATA[$V{rental_amount_1}]]></variableExpression>
 	</variable>
 	<group name="property_name">
 		<groupExpression><![CDATA[$F{property_name}]]></groupExpression>
@@ -316,7 +319,7 @@ ORDER BY vw_period_rentals.property_id, vw_period_rentals.start_date, vw_period_
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="6" splitType="Stretch">
+		<band height="57" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="4f4b0212-8393-41ad-a5d3-87ce39f33eb7"/>
 				<graphicElement>

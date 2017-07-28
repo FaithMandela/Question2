@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
+<!-- 2017-07-26T11:19:02 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_cylinders" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ad9b4d8b-1182-4c6b-a1e9-528af3790ad4">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Cylinders Adapter"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organd" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT vw_cylinders.cylinder_number, vw_cylinders.commercial, vw_cylinders.entity_name, 
+vw_cylinders.certification_date, vw_cylinders.review_date, vw_cylinders.weight,
+vw_cylinders.cylinder_id
+
+FROM vw_cylinders
+
+WHERE (vw_cylinders.cylinder_id = '$P!{filterid}')]]>
+	</queryString>
+	<field name="cylinder_number" class="java.lang.Integer"/>
+	<field name="commercial" class="java.lang.Boolean"/>
+	<field name="entity_name" class="java.lang.String"/>
+	<field name="certification_date" class="java.sql.Timestamp"/>
+	<field name="review_date" class="java.sql.Date"/>
+	<field name="weight" class="java.lang.Float"/>
+	<field name="cylinder_id" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="62" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="39" y="0" width="401" height="50" uuid="2ad8e204-8325-4702-a547-effca6e9f9a8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Cylinders Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="636" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="-10" y="61" width="555" height="1" uuid="7265a3dd-ae56-41b9-8bbf-a0c5097346b0"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement x="133" y="70" width="287" height="560" uuid="f13535ec-1851-4c6c-ad92-d4531e67f318"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="187" y="80" width="175" height="20" uuid="05bbe7f1-8091-43dd-9342-7f0179523ad6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Gas Sure Certificate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="180" width="251" height="13" uuid="15bfa111-3364-4c66-bd9a-8d76e2bcce4f"/>
+				<text><![CDATA[USSD CODE: XXXXXXXXXXXXXXXXXX]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="146" y="217" width="87" height="15" forecolor="#000000" uuid="1a24592c-dc4b-487b-b4b4-8ddb6a49d851"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Cylinder Number :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="265" y="217" width="87" height="15" uuid="fd906f14-57a4-4018-a917-7976bc8a886d"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cylinder_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="147" y="248" width="87" height="15" forecolor="#000000" uuid="15b07e28-bea7-4983-89fe-00d61423de55"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Gas Product :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="265" y="245" width="87" height="15" uuid="4fff0ff4-b314-48da-bac6-4c255891f209"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commercial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="147" y="280" width="87" height="15" forecolor="#000000" uuid="169873db-c9ae-46a0-a2da-bd7f88c57382"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Filling Company :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="265" y="277" width="87" height="15" uuid="c2fe8679-b8cb-48fa-989d-92c6e1a26808"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entity_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="149" y="311" width="87" height="15" forecolor="#000000" uuid="9b9618f3-ad25-4406-8f56-9f1e1f192be2"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Certification Date :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="267" y="310" width="87" height="15" uuid="a2ffb6a1-95d0-432c-965d-f3461b337e01"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{certification_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="261" y="341" width="87" height="15" uuid="9c3b0b21-8a60-4010-8b4e-8f8f08426649"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{review_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="150" y="342" width="87" height="15" forecolor="#000000" uuid="2e4e09d5-0974-4003-9ad9-a45835663068"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Review Date :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement style="Detail" x="266" y="377" width="50" height="15" uuid="7be08e44-be30-450b-a432-3491bc38bbbf"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{weight}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="152" y="375" width="87" height="15" forecolor="#000000" uuid="559df16d-b313-483e-b7ee-e72075f4215c"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Weight :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="315" y="377" width="38" height="15" forecolor="#000000" uuid="c0202d5b-f71d-4004-97d6-62a9e3c6df20"/>
+				<textElement>
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Kg]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="399" width="260" height="21" uuid="3e003139-0747-4a2c-a2e1-1062967ca346"/>
+				<text><![CDATA[NOTES:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="140" y="423" width="268" height="30" uuid="510980ee-1082-4424-961e-56df592b89cd"/>
+				<text><![CDATA[1. On Purchase verify the above details using a QR reader or sending the USSD code as sms to 1234567]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="458" width="269" height="30" uuid="536ec779-c944-42a1-a13c-090c6a8a1d5f"/>
+				<text><![CDATA[2.Verification response will confirm above details as a genuinely filled gas cylinder.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="493" width="268" height="30" uuid="4ef30d97-6749-4c6e-9443-9795970148a1"/>
+				<text><![CDATA[3.DO NOT ACCEPT A CYLINDER THAT LACKS A CERTIFICATE OR THE DETAILS CANNOT BE VALIDATED.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="530" width="267" height="18" uuid="ee3fe04c-40ae-464d-a9a8-1a83270d0f66"/>
+				<text><![CDATA[4.For inquiries contact:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="553" width="266" height="15" uuid="4d5873ca-37b2-43ad-aae3-941086e6387c"/>
+				<text><![CDATA[Esso Gas(k) Ltd on]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="575" width="233" height="18" uuid="74c0644f-9cb4-4893-b120-ffb8a24c0eff"/>
+				<text><![CDATA[123-456-789]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="604" width="231" height="18" uuid="24e8bb35-1cdd-4fab-8614-c9eb7ca30431"/>
+				<text><![CDATA[querrygas@essogas.co.ke]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="210" y="110" width="106" height="59" uuid="aed51a58-e642-4479-89cf-397cba951e57"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA["http://demo.dewcis.com/lpgm/verifyqrcode?mycode=" + $F{cylinder_id}]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="37" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

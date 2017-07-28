@@ -306,7 +306,8 @@ CREATE VIEW vwinvoicelist AS
 		vwsales.invoiceid, vwsales.issued, period.salesperiod, period.invoicedate, 
 		sum(vwsales.amount) as invoice_amount, sum(vwsales.netremits) as gta_totals
 	FROM vwsales INNER JOIN period ON period.periodid = vwsales.periodid
-	WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
+	WHERE (vwsales.clientid IS NOT NULL) 
+		AND ((vwsales.totalprice > 0::double precision) OR (to_char(vwsales.StartDate, 'MMYYYY') = to_char(vwsales.servicedate, 'MMYYYY')))
 	GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, 
 		period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.issued
 	ORDER BY vwsales.clientid;
@@ -665,7 +666,8 @@ CREATE OR REPLACE VIEW vwinvoicelist AS
     sum(vwsales.netremits) AS gta_totals
    FROM vwsales
      JOIN period ON period.periodid = vwsales.periodid
-  WHERE vwsales.clientid IS NOT NULL AND vwsales.totalprice > 0::double precision
+  WHERE (vwsales.clientid IS NOT NULL)
+	AND ((vwsales.totalprice > 0::double precision) OR (to_char(vwsales.StartDate, 'MMYYYY') = to_char(vwsales.servicedate, 'MMYYYY')))
   GROUP BY vwsales.clientid, vwsales.clientname, vwsales.town, vwsales.countryid, vwsales.countryname, vwsales.periodid, period.invoicedate, period.salesperiod, vwsales.invoiceid, vwsales.invoicenumber, vwsales.issued
   ORDER BY vwsales.clientid;
 

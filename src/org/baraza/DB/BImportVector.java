@@ -165,7 +165,7 @@ public class BImportVector {
 		}
 	}
 
-	public void getExcelData(InputStream input, String fileName, String worksheet) { // Get all rows.
+	public void getExcelData(InputStream input, String fileName, String worksheet, Integer firstRow) { // Get all rows.
 		rows.removeAllElements();
 		
 		Workbook wb = null;
@@ -178,9 +178,10 @@ public class BImportVector {
 
 		Sheet sheet = wb.getSheetAt(Integer.valueOf(worksheet));
 		Row row = null;
-		int i = 0;			
+		int i = 0;
+		if(firstRow < sheet.getFirstRowNum()) firstRow = sheet.getFirstRowNum();
 		String myline = "";
-		for(i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+		for(i = firstRow; i <= sheet.getLastRowNum(); i++) {
 			Vector<Object> myvec = new Vector<Object>();
 			row = sheet.getRow(i);
 			if(row != null)  {

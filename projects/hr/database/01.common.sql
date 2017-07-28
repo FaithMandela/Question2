@@ -18,6 +18,7 @@ CREATE TABLE holidays (
 	details					text
 );
 CREATE INDEX holidays_org_id ON holidays (org_id);
+CREATE INDEX holidays_holiday_date ON holidays (holiday_date);
 
 CREATE TABLE industry (
 	industry_id				serial primary key,
@@ -79,6 +80,7 @@ CREATE TABLE fiscal_years (
 	org_id					integer references orgs,
 	fiscal_year_start		date not null,
 	fiscal_year_end			date not null,
+	submission_date			date,
 	year_opened				boolean default true not null,
 	year_closed				boolean default false not null,
 	details					text,
@@ -104,7 +106,6 @@ CREATE TABLE periods (
 	loan_approval			boolean default false not null,
 	gl_payroll_account		varchar(32),
 	gl_advance_account		varchar(32),
-
 
     entity_id 				integer references entitys,
 	application_date		timestamp default now(),

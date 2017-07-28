@@ -314,6 +314,11 @@ public class BQuery {
 				if(wheresql == null) wheresql = "\nWHERE " + userFilter;
 				else wheresql += " AND " + userFilter;
 			}
+			if(view.getAttribute("group") != null) {
+				String groupFilter = "(" + view.getAttribute("group") + " IN (" + db.getGroupIDs() + "))";
+				if(wheresql == null) wheresql = "\nWHERE " + groupFilter;
+				else wheresql += " AND " + groupFilter;
+			}
 			if((view.getAttribute("noorg") == null) && (db.getOrgID() != null) && (db.getUserOrg() != null)) {
 				String qorgID = db.getOrgID();
 				if(view.getAttribute("orgid") != null) qorgID = view.getAttribute("orgid");
@@ -1866,6 +1871,24 @@ public class BQuery {
 				xel.setValue(elValue);
 				tableXml.addNode(xel);
 			}
+		}
+
+		return tableXml.toString();
+	}
+	
+	public String getXmlData(String ifNull) {
+		StringBuilder tableXml = new StringBuilder();
+		beforeFirst();
+		while(moveNext()) {
+			BElement rowXml = new BElement(view.getAttribute("name"));
+			for(BElement el : view.getElements()) {
+				BElement xel = new BElement(el.getAttribute("title"));
+				String elValue = getString(el.getValue());
+				if(elValue == null) elValue = ifNull;
+				xel.setValue(elValue);
+				rowXml.addNode(xel);
+			}
+			tableXml.append(rowXml.toString());
 		}
 
 		return tableXml.toString();

@@ -139,6 +139,7 @@ CREATE TABLE employees (
 	surname					varchar(50) not null,
 	first_name				varchar(50) not null,
 	middle_name				varchar(50),
+	employee_full_name		varchar(120),
 	date_of_birth			date,
 	dob_email				date default '2016-01-01'::date,
 	
@@ -170,6 +171,11 @@ CREATE TABLE employees (
 	halt_point				varchar(16),
 
 	bio_metric_number		varchar(32),
+	average_daily_rate		real default 0 not null,
+	normal_work_hours		real default 9 not null,
+	overtime_rate			real default 1.5 not null,
+	special_time_rate		real default 2 not null,
+	per_day_earning			boolean default false not null,
 
 	height					real, 
 	weight					real, 
@@ -429,6 +435,7 @@ CREATE TABLE leave_types (
 	
 	use_type				integer default 0 not null,
 	month_quota				real default 0 not null,
+	month_limit				real default 0 not null,
 	initial_days			real default 0 not null,
 	maximum_carry			real default 0 not null,
 	include_holiday 		boolean default false not null,
@@ -937,9 +944,8 @@ CREATE VIEW vw_employees AS
 		employees.org_id, employees.entity_id, employees.employee_id, employees.surname, employees.first_name, employees.middle_name, 
 		employees.person_title, employees.field_of_study,
 		(employees.Surname || ' ' || employees.First_name || ' ' || COALESCE(employees.Middle_name, '')) as employee_name,
-		employees.date_of_birth, employees.dob_email, employees.place_of_birth, employees.gender, 
-		employees.nationality, employees.nation_of_birth, 
-		employees.marital_status, employees.appointment_date, 
+		employees.employee_full_name, employees.date_of_birth, employees.dob_email, employees.place_of_birth, 
+		employees.gender, employees.nationality, employees.nation_of_birth, employees.marital_status, employees.appointment_date, 
 		employees.exit_date, employees.contract, employees.contract_period, employees.employment_terms, employees.identity_card, 
 		employees.basic_salary, employees.bank_account, employees.language, employees.picture_file, employees.active, 
 		employees.height, employees.weight, employees.blood_group, employees.allergies,
@@ -1521,10 +1527,18 @@ BEGIN
 		v_use_type := 2;
 		IF(NEW.gender = 'M')THEN v_use_type := 3; END IF;
 
+		--- Add default leave types
 		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
 		SELECT NEW.entity_id, NEW.org_id, leave_type_id, 0
 		FROM leave_types
 		WHERE (org_id = NEW.org_id) AND ((use_type = 1) OR (use_type = v_use_type));
+		
+		--- Add default task rate definations
+		INSERT INTO task_entitys (entity_id, org_id, task_type_id, task_entity_cost, task_entity_price)
+		SELECT NEW.entity_id, NEW.org_id, task_type_id, default_cost, default_price
+		FROM task_types
+		WHERE (org_id = NEW.org_id);
+	
 	ELSIF (TG_OP = 'UPDATE') THEN
 		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
 		WHERE entity_id = NEW.entity_id;
@@ -1537,94 +1551,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER ins_employees BEFORE INSERT OR UPDATE ON employees
     FOR EACH ROW EXECUTE PROCEDURE ins_employees();
     
-CREATE OR REPLACE FUNCTION insf_leave_types() RETURNS trigger AS $$
-BEGIN
-
-	IF(NEW.use_type = 1)THEN
-		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
-		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
-		FROM employees
-		WHERE (org_id = NEW.org_id) AND (active = true);
-	ELSIF(NEW.use_type = 2)THEN
-		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
-		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
-		FROM employees
-		WHERE (org_id = NEW.org_id) AND (active = true) AND (gender = 'F');
-	ELSIF(NEW.use_type = 1)THEN
-		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
-		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
-		FROM employees
-		WHERE (org_id = NEW.org_id) AND (active = true) AND (gender = 'M');
-	END IF;
-
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER insf_leave_types AFTER INSERT ON leave_types
-    FOR EACH ROW EXECUTE PROCEDURE insf_leave_types();
-
-
-CREATE OR REPLACE FUNCTION ins_employee_leave() RETURNS trigger AS $$
-BEGIN
-	
-	IF(NEW.leave_to < NEW.leave_from)THEN
-		RAISE EXCEPTION 'Check on your leave dates.';
-	END IF;
-	IF(NEW.start_half_day = true) AND (NEW.end_half_day = true) AND (NEW.leave_to = NEW.leave_from)THEN
-		RAISE EXCEPTION 'The leave half days cannot be done on the same day';
-	END IF;
-
-	IF(NEW.approve_status = 'Draft') OR (NEW.leave_days is null)THEN
-		NEW.leave_days := get_leave_days(NEW.leave_from, NEW.leave_to, NEW.leave_type_id);
-
-		IF(NEW.start_half_day = true)THEN NEW.leave_days := NEW.leave_days - 0.5; END IF;
-		IF(NEW.end_half_day = true)THEN NEW.leave_days := NEW.leave_days - 0.5; END IF;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_employee_leave BEFORE INSERT OR UPDATE ON employee_leave
-    FOR EACH ROW EXECUTE PROCEDURE ins_employee_leave();
-
-CREATE OR REPLACE FUNCTION ins_leave_work_days() RETURNS trigger AS $$
-BEGIN
-
-	SELECT entity_id INTO NEW.entity_id
-	FROM employee_leave
-	WHERE (employee_leave_id = NEW.employee_leave_id);
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_leave_work_days BEFORE INSERT ON leave_work_days
-    FOR EACH ROW EXECUTE PROCEDURE ins_leave_work_days();
-    
-CREATE OR REPLACE FUNCTION ins_employee_leave_types() RETURNS trigger AS $$
-DECLARE
-	reca					RECORD;
-	v_months				integer;
-BEGIN
-
-	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry INTO reca
-	FROM leave_types
-	WHERE (leave_type_id = NEW.leave_type_id);
-
-	IF(reca.month_quota > 0)THEN
-		v_months := EXTRACT(MONTH FROM NEW.leave_starting) - 1;
-		NEW.leave_balance := reca.month_quota * v_months * -1;
-	END IF;
-
-	RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER ins_employee_leave_types BEFORE INSERT ON employee_leave_types
-    FOR EACH ROW EXECUTE PROCEDURE ins_employee_leave_types();
-
 CREATE OR REPLACE FUNCTION ins_job_reviews() RETURNS trigger AS $$
 BEGIN
 
@@ -1811,11 +1737,11 @@ CREATE TRIGGER upd_action BEFORE INSERT OR UPDATE ON job_reviews
 
 CREATE OR REPLACE FUNCTION upd_action() RETURNS trigger AS $$
 DECLARE
-	wfid		INTEGER;
-	reca		RECORD;
-	tbid		INTEGER;
-	iswf		BOOLEAN;
-	add_flow	BOOLEAN;
+	reca			RECORD;
+	wfid			integer;
+	tbid			integer;
+	iswf			boolean;
+	add_flow		boolean;
 BEGIN
 
 	add_flow := false;
@@ -1874,6 +1800,115 @@ BEGIN
 	RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insf_leave_types() RETURNS trigger AS $$
+BEGIN
+
+	IF(NEW.use_type = 1)THEN
+		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
+		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
+		FROM employees
+		WHERE (org_id = NEW.org_id) AND (active = true);
+	ELSIF(NEW.use_type = 2)THEN
+		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
+		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
+		FROM employees
+		WHERE (org_id = NEW.org_id) AND (active = true) AND (gender = 'F');
+	ELSIF(NEW.use_type = 1)THEN
+		INSERT INTO employee_leave_types (entity_id, org_id, leave_type_id, leave_balance)
+		SELECT entity_id, NEW.org_id, NEW.leave_type_id, 0
+		FROM employees
+		WHERE (org_id = NEW.org_id) AND (active = true) AND (gender = 'M');
+	END IF;
+
+	RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER insf_leave_types AFTER INSERT ON leave_types
+    FOR EACH ROW EXECUTE PROCEDURE insf_leave_types();
+
+CREATE OR REPLACE FUNCTION ins_employee_leave() RETURNS trigger AS $$
+DECLARE
+	v_employee_month_id		integer;
+	v_adjustment_id			integer;
+	v_average_daily_rate	real;
+BEGIN
+	
+	IF(NEW.leave_to < NEW.leave_from)THEN
+		RAISE EXCEPTION 'Check on your leave dates.';
+	END IF;
+	IF(NEW.start_half_day = true) AND (NEW.end_half_day = true) AND (NEW.leave_to = NEW.leave_from)THEN
+		RAISE EXCEPTION 'The leave half days cannot be done on the same day';
+	END IF;
+
+	IF(NEW.approve_status = 'Draft') OR (NEW.leave_days is null)THEN
+		NEW.leave_days := get_leave_days(NEW.leave_from, NEW.leave_to, NEW.leave_type_id);
+
+		IF(NEW.start_half_day = true)THEN NEW.leave_days := NEW.leave_days - 0.5; END IF;
+		IF(NEW.end_half_day = true)THEN NEW.leave_days := NEW.leave_days - 0.5; END IF;
+	END IF;
+
+	SELECT adjustment_id INTO v_adjustment_id
+	FROM leave_types
+	WHERE (leave_type_id = NEW.leave_type_id);
+	IF((TG_OP = 'UPDATE') AND (v_adjustment_id is not null))THEN
+		SELECT employee_month.employee_month_id, employees.average_daily_rate
+			INTO v_employee_month_id, v_average_daily_rate
+		FROM periods INNER JOIN employee_month ON periods.period_id = employee_month.period_id
+			INNER JOIN employees ON employee_month.entity_id = employees.entity_id
+		WHERE (employee_month.entity_id = NEW.entity_id)
+		AND (NEW.leave_from BETWEEN periods.start_date AND periods.end_date);
+
+		IF((v_employee_month_id is not null) AND (OLD.approve_status = 'Completed') AND (NEW.approve_status = 'Approved'))THEN
+			INSERT INTO employee_adjustments(employee_month_id, adjustment_id, org_id, pay_date, amount)
+			VALUES (v_employee_month_id, v_adjustment_id, NEW.org_id, NEW.leave_from, v_average_daily_rate * NEW.leave_days);
+		END IF;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_employee_leave BEFORE INSERT OR UPDATE ON employee_leave
+    FOR EACH ROW EXECUTE PROCEDURE ins_employee_leave();
+
+CREATE OR REPLACE FUNCTION ins_leave_work_days() RETURNS trigger AS $$
+BEGIN
+
+	SELECT entity_id INTO NEW.entity_id
+	FROM employee_leave
+	WHERE (employee_leave_id = NEW.employee_leave_id);
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_leave_work_days BEFORE INSERT ON leave_work_days
+    FOR EACH ROW EXECUTE PROCEDURE ins_leave_work_days();
+    
+CREATE OR REPLACE FUNCTION ins_employee_leave_types() RETURNS trigger AS $$
+DECLARE
+	reca					RECORD;
+	v_months				integer;
+	v_employee_month_id		integer;
+BEGIN
+
+	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry INTO reca
+	FROM leave_types
+	WHERE (leave_type_id = NEW.leave_type_id);
+	
+	IF(reca.month_quota > 0)THEN
+		v_months := EXTRACT(MONTH FROM NEW.leave_starting) - 1;
+		NEW.leave_balance := reca.month_quota * v_months * -1;
+	END IF;
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_employee_leave_types BEFORE INSERT ON employee_leave_types
+    FOR EACH ROW EXECUTE PROCEDURE ins_employee_leave_types();
 
 CREATE OR REPLACE FUNCTION get_leave_taken(integer, integer) RETURNS real AS $$
 	SELECT COALESCE(sum(leave_days), 0)
@@ -1980,7 +2015,7 @@ DECLARE
 	v_year_leave			real;
 BEGIN
 
-	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry 
+	SELECT allowed_leave_days, month_quota, initial_days, maximum_carry
 		INTO reca
 	FROM leave_types
 	WHERE (leave_type_id = $2);
@@ -2054,32 +2089,51 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION leave_aplication(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
-	v_leave_balance		real;
-	v_leave_overlap		integer;
-	v_approve_status	varchar(16);
-	v_table_id			integer;
-	rec					RECORD;
-	msg 				varchar(120);
+	v_leave_balance			real;
+	v_leave_overlap			integer;
+	v_approve_status		varchar(16);
+	v_table_id				integer;
+	v_employee_month_id		integer;
+	v_month_leave			real;
+	rec						RECORD;
+	msg 					varchar(120);
 BEGIN
 	msg := 'Leave applied';
 
-	SELECT leave_types.leave_days_span, employee_leave.entity_id, employee_leave.leave_type_id,
+	SELECT leave_types.leave_days_span, leave_types.month_limit, 
+		employee_leave.entity_id, employee_leave.leave_type_id,
 		employee_leave.leave_days, employee_leave.leave_from, employee_leave.leave_to,
-		employee_leave.contact_entity_id, employee_leave.narrative
+		employee_leave.contact_entity_id, employee_leave.narrative,
+		adjustments.adjustment_id, adjustments.adjustment_type
 		INTO rec
 	FROM leave_types INNER JOIN employee_leave ON leave_types.leave_type_id = employee_leave.leave_type_id
+		LEFT JOIN adjustments ON leave_types.adjustment_id = adjustments.adjustment_id
 	WHERE (employee_leave.employee_leave_id = CAST($1 as int));
 
 	v_leave_balance := get_leave_balance(rec.entity_id, rec.leave_type_id);
 
 	SELECT count(employee_leave_id) INTO v_leave_overlap
 	FROM employee_leave
-	WHERE (entity_id = rec.entity_id) AND ((approve_status = 'Completed') OR (approve_status = 'Approved'))
+	WHERE (entity_id = rec.entity_id) AND (approve_status <> 'Rejected')
 		AND (((leave_from, leave_to) OVERLAPS (rec.leave_from, rec.leave_to)) = true);
+		
+	SELECT sum(employee_leave_id) INTO v_month_leave
+	FROM employee_leave
+	WHERE (entity_id = rec.entity_id) AND (approve_status <> 'Rejected')
+		AND (leave_type_id = rec.leave_type_id)
+		AND (to_char(leave_from, 'YYYYMM') =  to_char(current_date, 'YYYYMM'));
+	IF(v_month_leave is null)THEN v_month_leave := 0; END IF;
 
 	SELECT approve_status INTO v_approve_status
 	FROM employee_leave
 	WHERE (employee_leave_id = CAST($1 as int));
+	
+	IF(rec.adjustment_id is not null)THEN
+		SELECT employee_month.employee_month_id INTO v_employee_month_id
+		FROM periods INNER JOIN employee_month ON periods.period_id = employee_month.period_id
+		WHERE (employee_month.entity_id = rec.entity_id)
+		AND (rec.leave_from BETWEEN periods.start_date AND periods.end_date);
+	END IF;
 	
 	IF(rec.contact_entity_id is null)THEN
 		RAISE EXCEPTION 'You must enter a contact person.';
@@ -2089,11 +2143,17 @@ BEGIN
 	ELSIF(rec.leave_days > rec.leave_days_span)THEN
 		msg := 'Days applied for excced the span allowed';
 		RAISE EXCEPTION '%', msg;
-	ELSIF(v_leave_balance <= 0) THEN
+	ELSIF(v_leave_balance <= 0)THEN
 		msg := 'You do not have enough days to apply for this leave';
 		RAISE EXCEPTION '%', msg;
-	ELSIF(v_leave_overlap > 0) THEN
+	ELSIF(v_leave_overlap > 0)THEN
 		msg := 'You have applied for overlaping leave days';
+		RAISE EXCEPTION '%', msg;
+	ELSIF((rec.month_limit > 0) AND (v_month_leave > rec.month_limit))THEN
+		msg := 'You exceed the month limit';
+		RAISE EXCEPTION '%', msg;
+	ELSIF((rec.adjustment_id is not null) AND (v_employee_month_id is null))THEN
+		msg := 'This leave has an allowance or deduction and needs to be applied on a valid month';
 		RAISE EXCEPTION '%', msg;
 	ELSE
 		UPDATE employee_leave SET approve_status = 'Completed'
@@ -2348,10 +2408,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 CREATE OR REPLACE FUNCTION add_employee(varchar(12), varchar(12), varchar(12)) RETURNS varchar(120) AS $$
 DECLARE
 	v_application_id		integer;
+	v_applicant_id			integer;
 	v_entity_id				integer;
 	v_employee_id			integer;
 	v_intake_id				integer;
@@ -2360,8 +2420,8 @@ DECLARE
 BEGIN
 
 	v_application_id := CAST($1 as int);
-	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary
-		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary
+	SELECT employees.entity_id, applications.employee_id, applications.intake_id, applications.initial_salary, applications.entity_id
+		INTO v_entity_id, v_employee_id, v_intake_id, v_initial_salary, v_applicant_id
 	FROM applications LEFT JOIN employees ON applications.entity_id = employees.entity_id
 	WHERE (application_id = v_application_id);
 
@@ -2388,8 +2448,67 @@ BEGIN
 			
 		WHERE (applications.application_id = v_application_id);
 		
-		UPDATE applications SET employee_id = currval('entitys_entity_id_seq'), approve_status = 'Completed'
+		v_entity_id := currval('entitys_entity_id_seq');
+		
+		UPDATE applications SET employee_id = v_entity_id, approve_status = 'Completed'
 		WHERE (application_id = v_application_id);
+		
+		--- Copy address
+		INSERT INTO address(address_type_id, sys_country_id, org_id, address_name, 
+			table_name, table_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held)
+		SELECT address_type_id, sys_country_id, org_id, address_name, 
+			'employees', v_entity_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held
+		FROM address
+		WHERE (table_id = v_applicant_id) AND (table_name = 'applicant');
+		
+		--- Copy education
+		INSERT INTO education(entity_id, education_class_id, org_id, date_from, 
+			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details)
+		SELECT v_entity_id, education_class_id, org_id, date_from, 
+			date_to, name_of_school, examination_taken, grades_obtained, certificate_number, details
+		FROM education
+		WHERE (entity_id = v_applicant_id);
+		
+		--- Copy employment
+		INSERT INTO employment(entity_id, org_id, date_from, date_to, employers_name, position_held, details)
+		SELECT v_entity_id, org_id, date_from, date_to, employers_name, position_held, details
+		FROM employment
+		WHERE (entity_id = v_applicant_id);
+		
+		--- Copy Seminars
+		INSERT INTO cv_seminars(entity_id, org_id, cv_seminar_name, cv_seminar_date, details)
+		SELECT v_entity_id, org_id, cv_seminar_name, cv_seminar_date, details
+		FROM cv_seminars
+		WHERE (entity_id = v_applicant_id);
+
+		INSERT INTO cv_projects(entity_id, org_id, cv_project_name, cv_project_date, details)
+		SELECT v_entity_id, org_id, cv_project_name, cv_project_date, details
+		FROM cv_projects
+		WHERE (entity_id = v_applicant_id);
+
+		--- Copy skills
+		INSERT INTO skills(entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
+			aquired, training_date, trained, training_institution, training_cost, details)
+		SELECT v_entity_id, skill_type_id, skill_level_id, org_id, state_skill, 
+			aquired, training_date, trained, training_institution, training_cost, details
+		FROM skills
+		WHERE (entity_id = v_applicant_id);
+		
+		--- Copy referees
+		INSERT INTO address(address_type_id, sys_country_id, org_id, address_name, 
+			table_name, table_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held)
+		SELECT address_type_id, sys_country_id, org_id, address_name, 
+			'referees', v_entity_id, post_office_box, postal_code, premises, 
+			street, town, phone_number, extension, mobile, fax, email, website, 
+			is_default, first_password, details, company_name, position_held
+		FROM address
+		WHERE (table_id = v_applicant_id) AND (table_name = 'referees');
 			
 		msg := 'Employee added';
 	ELSIF(v_employee_id is null) AND (v_entity_id is not null)THEN

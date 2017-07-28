@@ -25,9 +25,10 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
+	<queryString>
 		<![CDATA[SELECT property_types.property_type_id, property_types.property_type_name, property_types.commercial_property, property_types.details
-FROM property_types]]>
+FROM property_types
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="property_type_id" class="java.lang.Integer"/>
 	<field name="property_type_name" class="java.lang.String"/>

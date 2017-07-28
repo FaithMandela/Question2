@@ -569,7 +569,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Statements" type="horl" key="143" h="500">
-		<FILTER location="250" name="Clients Statements" type="horl">
+		<FILTER location="250" name="Clients Statements" type="vert">
 			<FILTERFORM name="Clients Statements">
 				<COMBOBOX w="430" title="Client" lptable="clients" y="10" h="20" x="10" lpfield="clientname">clientid</COMBOBOX>
 				<TEXTDATE w="150" title="From" y="30" h="20" default_fnct="get_start_year" x="10">date_from</TEXTDATE>
@@ -586,7 +586,7 @@
 		</FILTER>
 	</DESK>
 	<DESK w="700" name="Client Payments" type="horl" key="148" h="500">
-		<FILTER location="250" name="Client Payments" type="horl">
+		<FILTER location="250" name="Client Payments" type="vert">
 			<FILTERFORM name="GTA Summary Statements">
 				<TEXTDATE w="150" title="Starting From" y="30" h="20" default_fnct="get_start_year" x="10">filterid</TEXTDATE>
 				<TEXTDATE w="150" title="Up to" default="now" y="30" h="20" x="10">filter2id</TEXTDATE>

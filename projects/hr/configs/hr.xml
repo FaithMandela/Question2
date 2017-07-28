@@ -361,6 +361,16 @@
 			<SPINTIME w="75" title="Finish Time">finish_time</SPINTIME>
 			<TEXTFIELD w="75" fnct="'false'" title="All Day">all_day</TEXTFIELD>
 			<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			<DIARY name="Holidays" keyfield="holiday_id" table="holidays" where="(holiday_date > current_date-360)">
+				<TEXTFIELD w="75" title="Holiday ID">holiday_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Holiday Name">holiday_name</TEXTFIELD>
+				<TEXTDATE w="75" title="Start Date">holiday_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'08:00'::time" title="Start Time">start_time</TEXTFIELD>
+				<TEXTDATE w="75" fnct="holiday_date" title="End Date">end_date</TEXTDATE>
+				<TEXTFIELD w="75" fnct="'17:00'::time" title="End Time">end_time</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'true'" title="All Day">all_day</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'false'" title="Editable">editable</TEXTFIELD>
+			</DIARY>
 			<DIARY name="Events" keyfield="org_event_id" table="org_events" where="(start_date > current_date-360)">
 				<TEXTFIELD w="75" title="Event ID">org_event_id</TEXTFIELD>
 				<TEXTFIELD w="75" title="Event Name">org_event_name</TEXTFIELD>
@@ -425,11 +435,12 @@
 				<TEXTAREA w="550" tab="Details" y="2" h="120" x="10" rows="5">details</TEXTAREA>
 			</FORM>
 			<GRID name="Address" keyfield="address_id" table="address" where="table_name = 'applicant'" user="table_id">
-				<COMBOBOX w="240" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+				<COMBOBOX w="150" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
 				<TEXTFIELD w="75" title="Postal Code">postal_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="PO Box">post_office_box</TEXTFIELD>
 				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
-				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
-				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="100" title="Street">street</TEXTFIELD>
+				<TEXTFIELD w="140" title="Premises">premises</TEXTFIELD>
 				<DEFAULT default="applicant">table_name</DEFAULT>
 				<USERFIELD>table_id</USERFIELD>
 			</GRID>
@@ -1284,7 +1295,7 @@
 				<TEXTFIELD w="100" title="Mobile">mobile</TEXTFIELD>
 				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
 				<FORM name="Referees" keyfield="address_id" linkfield="table_id" table="address">
-					<DEFAULT default="cv_referees">table_name</DEFAULT>
+					<DEFAULT default="referees">table_name</DEFAULT>
 					<TEXTFIELD w="430" title="Name" y="10" h="20" x="10">address_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Company Name" y="30" h="20" x="10">company_name</TEXTFIELD>
 					<TEXTFIELD w="150" title="Position Held" y="30" h="20" x="290">position_held</TEXTFIELD>
@@ -1355,17 +1366,24 @@
 				<CHECKBOX w="150" title="Active" default="true" y="190" h="20" x="290">active</CHECKBOX>
 				<TEXTFIELD w="150" title="Bank Account" y="210" h="20" x="10" span="true">bank_account</TEXTFIELD>
 				<COMBOBOX w="150" title="Bank Branch" lptable="vw_bank_branch" cmb_fnct="(bank_name || ', ' || bank_branch_name)" orderby="bank_name" y="230" h="20" x="10" lpfield="bank_branch">bank_branch_id</COMBOBOX>
-				<TEXTFIELD w="150" title="Language" y="250" h="20" x="10">language</TEXTFIELD>
-				<COMBOBOX w="150" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" lpfield="org_name">org_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Language" y="250" h="20" x="10" span="true">language</TEXTFIELD>
+				<TEXTFIELD w="150" title="Bio Metric ID" y="250" h="20" x="290">bio_metric_number</TEXTFIELD>
+				<COMBOBOX w="150" title="Org" lptable="orgs" tab="Terms" where="(is_active = true)" y="10" h="20" x="10" span="true" lpfield="org_name">org_id</COMBOBOX>
+				<TEXTFIELD w="150" title="Local Full Name" tab="Terms" y="10" h="20" x="290">employee_full_name</TEXTFIELD>
 				<TEXTDATE w="150" title="Appointment Date" tab="Terms" y="30" h="20" x="10" span="true">appointment_date</TEXTDATE>
 				<TEXTDATE w="150" title="Exit Date" tab="Terms" y="30" h="20" x="290">exit_date</TEXTDATE>
 				<CHECKBOX w="150" title="Contract" tab="Terms" y="50" h="20" x="10" span="true">contract</CHECKBOX>
 				<TEXTFIELD w="150" title="Contract Period" default="0" tab="Terms" y="50" h="20" x="290">contract_period</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Basic Salary" default="0" tab="Terms" y="70" h="20" x="10" span="true">basic_salary</TEXTDECIMAL>
-				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="90" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="110" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
-				<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="130" h="20" x="10" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
-				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" rows="5">employment_terms</TEXTAREA>
+				<COMBOBOX w="150" title="Currency" lptable="currency" default_org_fnct="get_default_currency" tab="Terms" y="70" h="20" x="290" lpfield="currency_name">currency_id</COMBOBOX>
+				<COMBOBOX w="150" title="Pay Scale" lptable="pay_scales" tab="Terms" y="90" h="20" x="10" span="true" lpfield="pay_scale_name">pay_scale_id</COMBOBOX>
+				<COMBOBOX w="150" title="Pay Step" lptable="vw_pay_scale_steps" tab="Terms" y="90" h="20" x="290" lpfield="pay_step_name">pay_scale_step_id</COMBOBOX>
+				<TEXTDECIMAL w="150" title="Average Daily Rate" tab="Terms" y="110" h="20" x="10" span="true">average_daily_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Normal Work Hours" tab="Terms" y="110" h="20" x="290">normal_work_hours</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Overtime Rate" tab="Terms" y="130" h="20" x="10" span="true">overtime_rate</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Special Rate" tab="Terms" y="130" h="20" x="290">special_time_rate</TEXTDECIMAL>
+				<TEXTAREA w="150" title="Employment Terms" tab="Terms" y="150" h="20" x="10" span="true" rows="5">employment_terms</TEXTAREA>
+				<CHECKBOX w="150" title="Per day earning" tab="Terms" y="130" h="20" x="290">per_day_earning</CHECKBOX>
 				<TEXTAREA w="550" tab="Objective" y="1" h="150" x="10">objective</TEXTAREA>
 				<TEXTAREA w="550" tab="Interests" y="1" h="150" x="10">Interests</TEXTAREA>
 				<TEXTAREA w="550" tab="Field of Study" y="1" h="150" x="10">field_of_study</TEXTAREA>
@@ -1981,6 +1999,7 @@
 				<TEXTFIELD w="150" title="Allowed Leave Days" y="10" h="20" x="290">allowed_leave_days</TEXTFIELD>
 				<TEXTFIELD w="150" title="Leave Days Span" y="30" h="20" x="10">leave_days_span</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Month Quota" y="30" h="20" x="290">month_quota</TEXTDECIMAL>
+				<TEXTDECIMAL w="150" title="Month Limit" y="30" h="20" x="490">month_limit</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Initial Days" y="50" h="20" x="10">initial_days</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Maximum Carry" y="50" h="20" x="290">maximum_carry</TEXTDECIMAL>
 				<COMBOLIST w="150" title="Use Type" y="70" h="20" x="10">use_type
@@ -2626,32 +2645,26 @@
 			<ACTIONS>
 				<ACTION fnct="claims_aplication">Apply for Claim</ACTION>
 			</ACTIONS>
-			<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="vw_claim_details">
-				<TEXTFIELD w="175" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
-				<TEXTFIELD w="175" title="Receipt Number">receipt_number</TEXTFIELD>
-				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
-				<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
-				<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>
-				<FORM name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details">
-					<TEXTFIELD w="150" title="Nature Of Expence" y="10" h="20" x="10">nature_of_expence</TEXTFIELD>
-					<TEXTFIELD w="150" title="Receipt Number" y="10" h="20" x="290">receipt_number</TEXTFIELD>
-					<COMBOBOX w="430" title="Currency" lptable="currency" y="30" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-					<TEXTDECIMAL w="150" title="Amount" y="50" h="20" x="10">amount</TEXTDECIMAL>
-					<TEXTDECIMAL w="150" title="Exchange Rate" y="50" h="20" x="290">exchange_rate</TEXTDECIMAL>
-					<TEXTFIELD w="150" title="Expense Code" y="70" h="20" x="10">expense_code</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
+			<ACCORDION name="Claim" keyfield="claim_id">
+				<FORM name="Claims" keyfield="claim_id" table="claims" collapse="in">
+					<USERFIELD>entity_id</USERFIELD>
+					<DEFAULT default="Draft">approve_status</DEFAULT>
+					<COMBOBOX w="430" title="Claim Type" lptable="claim_types" y="10" h="20" x="10" lpfield="claim_type_name">claim_type_id</COMBOBOX>
+					<TEXTDATE w="150" title="Claim Date" default="now" y="30" h="20" x="10">claim_date</TEXTDATE>
+					<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="290">in_payroll</CHECKBOX>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10" rows="5">details</TEXTAREA>
 				</FORM>
-			</GRID>
-			<FORM name="Claims" keyfield="claim_id" table="claims">
-				<USERFIELD>entity_id</USERFIELD>
-				<DEFAULT default="Draft">approve_status</DEFAULT>
-				<COMBOBOX w="430" title="Claim Type" lptable="claim_types" y="10" h="20" x="10" lpfield="claim_type_name">claim_type_id</COMBOBOX>
-				<TEXTDATE w="150" title="Claim Date" y="30" h="20" x="10">claim_date</TEXTDATE>
-				<CHECKBOX w="150" title="In Payroll" y="30" h="20" x="290">in_payroll</CHECKBOX>
-				<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
-			</FORM>
+				<GRID name="Claim Details" keyfield="claim_detail_id" linkfield="claim_id" table="claim_details" collapse="in">
+					<TEXTFIELD w="175" title="Nature Of Expence">nature_of_expence</TEXTFIELD>
+					<TEXTFIELD w="75" title="Receipt Number">receipt_number</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<COMBOBOX w="170" title="Currency" lptable="currency" lpfield="currency_name">currency_id</COMBOBOX>
+					<TEXTDECIMAL w="75" title="Exchange Rate">exchange_rate</TEXTDECIMAL>
+					<TEXTFIELD w="75" title="Expense Code">expense_code</TEXTFIELD>
+					<TEXTAREA w="175" title="Details">details</TEXTAREA>
+				</GRID>
+			</ACCORDION>
 			<JASPER name="Claim Report" reportfile="vw_claim_details.jasper"></JASPER>
 		</GRID>
 		<GRID name="Claims" keyfield="claim_id" table="vw_claims" where="approve_status!='Draft'" user="entity_id">
@@ -2788,6 +2801,22 @@
 					<TEXTAREA w="430" tab="Complaint" y="2" h="170" x="10">complaint</TEXTAREA>
 					<TEXTAREA w="430" tab="Case Action" y="2" h="170" x="10">case_action</TEXTAREA>
 					<TEXTAREA w="430" tab="Details" y="2" h="170" x="10">details</TEXTAREA>
+				</FORM>
+			</GRID>
+			<GRID name="Absent" keyfield="absent_id" linkfield="entity_id" table="vw_absent">
+				<TEXTFIELD w="75" title="Absent ID">absent_id</TEXTFIELD>
+				<TEXTDATE w="75" title="Absent Date">absent_date</TEXTDATE>
+				<SPINTIME w="75" title="Time In">time_in</SPINTIME>
+				<SPINTIME w="75" title="Time Out">time_out</SPINTIME>
+				<CHECKBOX w="75" title="I Accept">i_accept</CHECKBOX>
+				<TEXTTIMESTAMP w="75" title="Acceptance Date">acceptance_date</TEXTTIMESTAMP>
+				<TEXTFIELD w="75" title="Narrative">narrative</TEXTFIELD>
+				<FORM name="Absent" keyfield="absent_id" linkfield="entity_id" table="absent">
+					<TEXTDATE w="150" title="Absent Date" y="10" h="20" x="10">absent_date</TEXTDATE>
+					<SPINTIME w="150" title="Time In" y="30" h="20" x="10">time_in</SPINTIME>
+					<SPINTIME w="150" title="Time Out" y="30" h="20" x="290">time_out</SPINTIME>
+					<TEXTFIELD w="430" title="Narrative" y="50" h="20" x="10">narrative</TEXTFIELD>
+					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>

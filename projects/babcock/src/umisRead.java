@@ -11,7 +11,8 @@ public class umisRead {
 	
 		try {
 	
-			URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
+			//URL wsURL = new URL("http://umis.babcock.edu.ng/babcock/webservice?wsdl");
+			URL wsURL = new URL("http://localhost:8080/babcock/webservice?wsdl");
 		
 			DataWebServiceService bws = new DataWebServiceService(wsURL);
 			DataWebService port = bws.getDataWebServicePort();
@@ -20,7 +21,7 @@ public class umisRead {
 			String resp = port.getWsData(getGrades(), "babcockWB12345");
 			System.out.println("Reading grade data: \n" + resp);
 			
-			resp = port.getWsData(getMajors(), "babcockWB12345");
+			/*resp = port.getWsData(getMajors(), "babcockWB12345");
 			System.out.println("Reading mjors data: \n" + resp);
 			
 			resp = port.getWsData(getSchools(), "babcockWB12345");
@@ -36,13 +37,13 @@ public class umisRead {
 			System.out.println("Reading residences data: \n" + resp);
 			
 			resp = port.getWsData(getStudentSemester("2016/2017.1", "ACCT"), "babcockWB12345");
-			System.out.println("Reading residences data: \n" + resp);
+			System.out.println("Reading residences data: \n" + resp);*/
 			
 			
-			/*resp = port.getWsData(getHallService("15/1353"), "test123");
+			resp = port.getWsData(getHallService("15/2821"), "babcockWB12345");
 			System.out.println("Reading student data: \n" + resp);
 			
-			resp = port.getWsData(getStudentRequest("06/0382"), "test123");
+			/*resp = port.getWsData(getStudentRequest("06/0382"), "test123");
 			System.out.println("Reading student data: \n" + resp);
 						
 			resp = port.getWsData(getTimeTableRequest("06/0382"), "test123");
