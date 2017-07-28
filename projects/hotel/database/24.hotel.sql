@@ -309,7 +309,7 @@ DECLARE
 	myrec RECORD;
 BEGIN
 	SELECT arrival_date, arrival_time, departure_date, departure_time INTO myrec
-	FROM Bookings WHERE Bookingid = NEW.Bookingid;
+	FROM Bookings WHERE booking_id = NEW.booking_id;
 
 	NEW.arrival_date = myrec.arrival_date;
 	NEW.arrival_time = myrec.arrival_time;

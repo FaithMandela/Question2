@@ -29,6 +29,9 @@
 	</MENU>
 	<DESK access="open" w="700" h="500" name="Dashboard" key="1">
 		<DASHBOARD w="700" name="Dashboard">
+			<TILE noorg.query="true" role="admin" w="60" h="25" name="New Bookings" where="confirmed = FALSE" table="bookings">
+				<TEXTFIELD w="75" fnct="COALESCE(count(booking_id), 0)" title="New Bookings">bookings_id</TEXTFIELD>
+			</TILE>
 			<TILELIST role="staff" keyfield="sys_news_id" name="News" where="(publish = true)" table="sys_news">
 				<TEXTFIELD w="75" title="News Title">sys_news_title</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="70" title="Details">details</TEXTAREA>
@@ -36,7 +39,7 @@
 		</DASHBOARD>
 	</DESK>
 	<DESK w="700" h="500" name="Clients and Suppliers" key="3">
-		<GRID keyfield="entity_id" name="Clients" where="(use_key_id = 2)" table="entitys">
+		<GRID keyfield="entity_id" name="Clients" where="(use_key_id = 5)" table="entitys">
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -48,7 +51,7 @@
 			<FORM keyfield="entity_id" name="Client" table="entitys">
 				<DEFAULT default="client">function_role</DEFAULT>
 				<DEFAULT default="2">use_key_id</DEFAULT>
-				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" where="(use_key_id = 2)" title="Type">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" where="(use_key_id = 5)" title="Type">entity_type_id</COMBOBOX>
 				<COMBOBOX w="430" h="20" lpfield="account_description" x="10" y="10" lptable="vw_accounts" default_org_fnct="get_default_account_id(51" title="Account" webgrid="90">account_id</COMBOBOX>
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Client Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" h="20" x="10" y="50" title="User Name">user_name</TEXTFIELD>
@@ -305,6 +308,9 @@
 				<TEXTFIELD w="150" h="20" x="290" y="130" title="Star">star</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="130" title="Latitude">latitude</TEXTFIELD>
 				<TEXTFIELD w="150" h="20" x="290" y="130" title="Longitude">longitude</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Facebook Link">facebook_link</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Twitter Link">twitter_link</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="130" title="Google+ Link">google_link</TEXTFIELD>
 				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Location" title="Location">location</TEXTAREA>
 				<PICTURE access="ob" tab="Picture" w="550" h="150" x="10" y="1">image</PICTURE>
 				<TEXTAREA w="430" h="70" x="10" y="150" placeholder="Details" title="Details">details</TEXTAREA>
@@ -671,7 +677,7 @@
 				<CHECKBOX w="75" title="Completed">completed</CHECKBOX>
 				<CHECKBOX w="75" title="Room Cleared">room_cleared</CHECKBOX>
 				<FORM keyfield="stay_id" name="Stay" linkfield="booking_id" table="stay">
-					<COMBOBOX w="430" h="20" lpfield="resident_name" x="10" y="10" lptable="residents" title="Resident">resident_id</COMBOBOX>
+					<COMBOBOX noorg="true" w="430" h="20" lpfield="resident_name" x="10" y="10" lptable="residents" linkfield="booking_id" title="Resident">resident_id</COMBOBOX>
 					<COMBOBOX w="430" h="20" lpfield="room_id" x="10" y="30" lptable="rooms" title="Room">room_id</COMBOBOX>
 					<TEXTDATE w="150" h="20" x="10" y="50" title="Arrival Date">arrival_date</TEXTDATE>
 					<SPINTIME w="150" h="20" x="290" y="50" title="Arrival Time">arrival_time</SPINTIME>
@@ -701,7 +707,7 @@
 				</FORM>
 			</GRID>
 		</GRID>
-		<GRID keyfield="entity_id" name="Clients" where="(use_key_id = 2)" table="entitys">
+		<GRID keyfield="entity_id" name="Clients" where="(use_key_id = 5)" table="entitys">
 			<TEXTFIELD w="75" title="Client ID">entity_id</TEXTFIELD>
 			<TEXTFIELD w="140" title="Client Name">entity_name</TEXTFIELD>
 			<TEXTFIELD w="100" title="User Name">user_name</TEXTFIELD>
@@ -727,7 +733,7 @@
 			<FORM keyfield="entity_id" name="Client" table="entitys">
 				<DEFAULT default="client">function_role</DEFAULT>
 				<DEFAULT default="2">use_key_id</DEFAULT>
-				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" where="(use_key_id = 2)" title="Type">entity_type_id</COMBOBOX>
+				<COMBOBOX w="430" h="20" lpfield="entity_type_name" x="10" y="10" lptable="entity_types" where="(use_key_id = 5)" title="Type">entity_type_id</COMBOBOX>
 				<COMBOBOX w="430" h="20" lpfield="account_description" x="10" y="10" lptable="vw_accounts" default_org_fnct="get_default_account_id(51" title="Account" webgrid="90">account_id</COMBOBOX>
 				<TEXTFIELD w="430" h="20" x="10" y="30" title="Client Name">entity_name</TEXTFIELD>
 				<TEXTFIELD w="430" h="20" x="10" y="50" title="User Name">user_name</TEXTFIELD>
