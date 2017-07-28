@@ -25,9 +25,15 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
+	<parameter name="client_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
 		<![CDATA[SELECT vw_property.client_name, vw_property.property_type_name, vw_property.property_name, vw_property.estate, vw_property.plot_no, vw_property.is_active, vw_property.rental_value, vw_property.service_fees, vw_property.commision_value, vw_property.units, vw_property.accupied, vw_property.vacant
-FROM vw_property]]>
+
+FROM vw_property
+
+$P!{orgwhere}]]>
 	</queryString>
 	<field name="client_name" class="java.lang.String"/>
 	<field name="property_type_name" class="java.lang.String"/>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_period_rentals_2" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a76e7d90-c258-48d2-bc89-db5ec98da9c6">
-	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="124"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -25,12 +25,14 @@
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="entity_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_period_rentals.client_name, vw_period_rentals.property_type_name, vw_period_rentals.property_name, vw_period_rentals.estate, vw_period_rentals.tenant_name, vw_period_rentals.start_rent, vw_period_rentals.hse_no, vw_period_rentals.start_date, vw_period_rentals.rental_amount, vw_period_rentals.service_fees, vw_period_rentals.commision, vw_period_rentals.repair_amount, vw_period_rentals.narrative
 
 FROM vw_period_rentals
-
-$P!{orgwhere}
+where client_id='$P!{entity_id}'
 
 ORDER BY vw_period_rentals.property_id, vw_period_rentals.start_date, vw_period_rentals.tenant_name]]>
 	</queryString>
@@ -59,36 +61,26 @@ ORDER BY vw_period_rentals.property_id, vw_period_rentals.start_date, vw_period_
 	<variable name="repair_amount_1" class="java.lang.Double" resetType="Group" resetGroup="property_name" calculation="Sum">
 		<variableExpression><![CDATA[$F{repair_amount}]]></variableExpression>
 	</variable>
-	<variable name="total_rent" class="java.lang.String" resetType="None" incrementType="Group" incrementGroup="property_name" calculation="Sum">
-		<variableExpression><![CDATA[$V{rental_amount_1}]]></variableExpression>
-	</variable>
 	<group name="property_name">
 		<groupExpression><![CDATA[$F{property_name}]]></groupExpression>
 		<groupHeader>
 			<band height="78">
 				<staticText>
-					<reportElement style="Column header" x="1" y="0" width="86" height="15" forecolor="#000000" uuid="eee48b4f-7072-45cd-a793-2e2c6c7fccc1"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<text><![CDATA[Client]]></text>
-				</staticText>
-				<staticText>
-					<reportElement style="Column header" x="1" y="15" width="86" height="15" forecolor="#000000" uuid="a5db2400-716b-4c97-bb1b-f3215db8d1c0"/>
+					<reportElement style="Column header" x="1" y="7" width="86" height="15" forecolor="#000000" uuid="a5db2400-716b-4c97-bb1b-f3215db8d1c0"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Property Type]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="1" y="30" width="86" height="15" forecolor="#000000" uuid="634203f9-e159-4593-ae9f-7c2fb618e641"/>
+					<reportElement style="Column header" x="1" y="22" width="86" height="15" forecolor="#000000" uuid="634203f9-e159-4593-ae9f-7c2fb618e641"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<text><![CDATA[Property Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="1" y="45" width="86" height="15" forecolor="#000000" uuid="e2c2ecd4-e82a-429f-bca5-a78ae81b12fa"/>
+					<reportElement style="Column header" x="1" y="37" width="86" height="15" forecolor="#000000" uuid="e2c2ecd4-e82a-429f-bca5-a78ae81b12fa"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -144,28 +136,21 @@ ORDER BY vw_period_rentals.property_id, vw_period_rentals.start_date, vw_period_
 					<text><![CDATA[Narrative]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="87" y="0" width="344" height="15" uuid="86384865-cf2f-4725-bd17-521abc7c76a3"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{client_name}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="87" y="15" width="344" height="15" uuid="97b43138-fe07-4d86-b13b-1c484618a96e"/>
+					<reportElement style="Detail" x="87" y="7" width="344" height="15" uuid="97b43138-fe07-4d86-b13b-1c484618a96e"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{property_type_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="87" y="30" width="344" height="15" uuid="4c9ea4f5-17fe-4f54-9a09-5c6179600dff"/>
+					<reportElement style="Detail" x="87" y="22" width="344" height="15" uuid="4c9ea4f5-17fe-4f54-9a09-5c6179600dff"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{property_name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-					<reportElement style="Detail" x="87" y="45" width="344" height="15" uuid="1c0784eb-a978-4a44-a3c8-71f1f5e078b4"/>
+					<reportElement style="Detail" x="87" y="37" width="344" height="15" uuid="1c0784eb-a978-4a44-a3c8-71f1f5e078b4"/>
 					<textElement>
 						<font fontName="Times New Roman"/>
 					</textElement>
@@ -245,7 +230,7 @@ ORDER BY vw_period_rentals.property_id, vw_period_rentals.start_date, vw_period_
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="24" pdfFontName="Times-Roman"/>
 				</textElement>
-				<text><![CDATA[Period Rentals Report]]></text>
+				<text><![CDATA[My Period Rentals Report Summary]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -319,7 +304,7 @@ ORDER BY vw_period_rentals.property_id, vw_period_rentals.start_date, vw_period_
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="57" splitType="Stretch">
+		<band height="6" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="4f4b0212-8393-41ad-a5d3-87ce39f33eb7"/>
 				<graphicElement>

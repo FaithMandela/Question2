@@ -28,13 +28,19 @@
 	<parameter name="entity_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="minDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-01-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="maxDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2017-01-30"]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_client_statement.start_date, vw_client_statement.client_name, vw_client_statement.rent_details, vw_client_statement.rent_to_remit, vw_client_statement.amount_remited
 
 FROM vw_client_statement
 
 WHERE (vw_client_statement.client_id = '$P!{entity_id}')
-$P!{organd}]]>
+$P!{organd}AND (CAST(start_date AS Date) BETWEEN '$P!{minDate}' AND '$P!{maxDate}')]]>
 	</queryString>
 	<field name="start_date" class="java.sql.Date"/>
 	<field name="client_name" class="java.lang.String"/>

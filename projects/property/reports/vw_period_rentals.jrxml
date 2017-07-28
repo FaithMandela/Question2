@@ -17,6 +17,7 @@
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="orgid" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="orgwhere" class="java.lang.String">
@@ -24,6 +25,9 @@
 	</parameter>
 	<parameter name="organd" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="entity_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_period_rentals.client_name, vw_period_rentals.property_type_name, vw_period_rentals.property_name, vw_period_rentals.estate, vw_period_rentals.tenant_name, vw_period_rentals.start_rent, vw_period_rentals.hse_no, vw_period_rentals.start_date, vw_period_rentals.rental_amount, vw_period_rentals.service_fees, vw_period_rentals.commision, vw_period_rentals.repair_amount, vw_period_rentals.narrative
