@@ -1877,6 +1877,7 @@ public class BQuery {
 	}
 	
 	public String getXmlData(String ifNull) {
+		StringBuilder tableXml = new StringBuilder();
 		beforeFirst();
 		while(moveNext()) {
 			BElement rowXml = new BElement(view.getAttribute("name"));
@@ -1887,7 +1888,7 @@ public class BQuery {
 				xel.setValue(elValue);
 				rowXml.addNode(xel);
 			}
-			tableXml.addNode(rowXml);
+			tableXml.append(rowXml.toString());
 		}
 
 		return tableXml.toString();

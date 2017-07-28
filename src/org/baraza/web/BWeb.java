@@ -1680,34 +1680,50 @@ log.severe("BASE : " + mysql);
 	
 	public String getXml(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(true);
-		String body = "";
+		String body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		wheresql = null;
 		sortby = null;
+		
+		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
 		
 		response.setContentType("text/xml");
 		response.setHeader("Content-Disposition", "attachment; filename=report.xml");
 		
-		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
-		BQuery xmlData = new BQuery(db, view, wheresql, sortby, false);
+		BElement tableXml = new BElement(view.getAttribute("name"));
+		getXmlTable(tableXml, view, wheresql, sortby);
+		if(tableXml.getNodeNumber() == 1) {
+			tableXml = tableXml.getFirst();
+			if(tableXml != null) body += tableXml.toString();
+		} else {
+			body += tableXml.toString();
+		}
+		
+		return body;
+	}
+	
+	public BElement getXmlTable(BElement tableXml, BElement tView, String tWhere, String tSortby) {
+		BQuery xmlData = new BQuery(db, tView, wheresql, tSortby, false);
 		String ifNull = view.getAttribute("ifnull", "");
 		
-		BElement tableXml = new BElement(view.getAttribute("name"));
 		while(xmlData.moveNext()) {
-			BElement rowXml = new BElement(view.getAttribute("name"));
-			for(BElement el : view.getElements()) {
-				BElement xel = new BElement(el.getAttribute("title"));
-				String elValue = xmlData.getString(el.getValue());
-				if(elValue == null) elValue = ifNull;
-				xel.setValue(elValue);
-				rowXml.addNode(xel);
+			BElement rowXml = new BElement(tView.getAttribute("name"));
+			for(BElement el : tView.getElements()) {
+				if(el.getName().equals("GRID")) {
+					String sWhere = el.getAttribute("linkfield") + " = '" + xmlData.getKeyField() + "'";
+					getXmlTable(rowXml, el, sWhere, null);
+				} else {
+					BElement xel = new BElement(el.getAttribute("title"));
+					String elValue = xmlData.getString(el.getValue());
+					if(elValue == null) elValue = ifNull;
+					xel.setValue(elValue);
+					rowXml.addNode(xel);
+				}
 			}
 			tableXml.addNode(rowXml);
 		}
-		
-		body = tableXml.toString();
 		xmlData.close();
 		
-		return body;
+		return tableXml;
 	}
 	
 	public String csvFormat(String lans) {
