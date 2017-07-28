@@ -1677,7 +1677,55 @@ log.severe("BASE : " + mysql);
 
 		return body;
 	}
-
+	
+	public String getXml(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession(true);
+		String body = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+		wheresql = null;
+		sortby = null;
+		
+		if(webSession.getAttribute("F" + viewKey) != null) wheresql = (String)webSession.getAttribute("F" + viewKey);
+		
+		response.setContentType("text/xml");
+		response.setHeader("Content-Disposition", "attachment; filename=report.xml");
+		
+		BElement tableXml = new BElement(view.getAttribute("name"));
+		getXmlTable(tableXml, view, wheresql, sortby);
+		if(tableXml.getNodeNumber() == 1) {
+			tableXml = tableXml.getFirst();
+			if(tableXml != null) body += tableXml.toString();
+		} else {
+			body += tableXml.toString();
+		}
+		
+		return body;
+	}
+	
+	public BElement getXmlTable(BElement tableXml, BElement tView, String tWhere, String tSortby) {
+		BQuery xmlData = new BQuery(db, tView, wheresql, tSortby, false);
+		String ifNull = view.getAttribute("ifnull", "");
+		
+		while(xmlData.moveNext()) {
+			BElement rowXml = new BElement(tView.getAttribute("name"));
+			for(BElement el : tView.getElements()) {
+				if(el.getName().equals("GRID")) {
+					String sWhere = el.getAttribute("linkfield") + " = '" + xmlData.getKeyField() + "'";
+					getXmlTable(rowXml, el, sWhere, null);
+				} else {
+					BElement xel = new BElement(el.getAttribute("title"));
+					String elValue = xmlData.getString(el.getValue());
+					if(elValue == null) elValue = ifNull;
+					xel.setValue(elValue);
+					rowXml.addNode(xel);
+				}
+			}
+			tableXml.addNode(rowXml);
+		}
+		xmlData.close();
+		
+		return tableXml;
+	}
+	
 	public String csvFormat(String lans) {
 		String ans = "";
 		if(lans != null) {

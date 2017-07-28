@@ -1875,6 +1875,24 @@ public class BQuery {
 
 		return tableXml.toString();
 	}
+	
+	public String getXmlData(String ifNull) {
+		StringBuilder tableXml = new StringBuilder();
+		beforeFirst();
+		while(moveNext()) {
+			BElement rowXml = new BElement(view.getAttribute("name"));
+			for(BElement el : view.getElements()) {
+				BElement xel = new BElement(el.getAttribute("title"));
+				String elValue = getString(el.getValue());
+				if(elValue == null) elValue = ifNull;
+				xel.setValue(elValue);
+				rowXml.addNode(xel);
+			}
+			tableXml.append(rowXml.toString());
+		}
+
+		return tableXml.toString();
+	}
 
 	public int getDBType() {
 		return db.getDBType();
