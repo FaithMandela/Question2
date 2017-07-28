@@ -1701,11 +1701,10 @@
 				<TEXTFIELD w="25" fnct="'KES1'" title="SUNF6">sunf6</TEXTFIELD>
 			</GRID>
 		</GRID>
-		<GRID export="xml" name="IR56B" keyfield="period_id" orderby="start_date desc" table="vw_periods">
+		<GRID export="xml" name="XmlPayroll" keyfield="period_id" orderby="start_date desc" table="vw_periods">
 			<TEXTFIELD w="75" title="PeriodID">period_id</TEXTFIELD>
 			<TEXTDATE w="75" title="StartDate">start_date</TEXTDATE>
 			<TEXTDATE w="75" title="EndDate">end_date</TEXTDATE>
-			<TEXTDECIMAL w="75" title="OvertimeRate">overtime_rate</TEXTDECIMAL>
 			<CHECKBOX w="75" title="Activated">activated</CHECKBOX>
 			<GRID name="Employee" keyfield="employee_month_id" orderby="currency_id, employee_name" linkfield="period_id" table="vw_employee_month">
 				<TEXTFIELD w="75" title="EmployeeID">employee_id</TEXTFIELD>
@@ -1713,6 +1712,42 @@
 				<TEXTFIELD w="75" title="DepartmentName">department_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="DepartmentRoleName">department_role_name</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTFIELD w="75" title="IdentityCard">identity_card</TEXTFIELD>
+				<TEXTFIELD w="75" title="DepartmentName">department_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="DepartmentName">department_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="DepartmentRoleName">department_role_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="DepartmentRoleName">department_role_name</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="BasicPay">basic_pay</TEXTDECIMAL>
+				<GRID name="Statutories" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
+					<TEXTFIELD w="75" title="TaxTypeID">tax_type_id</TEXTFIELD>
+					<TEXTFIELD w="75" title="TaxTypeName">tax_type_name</TEXTFIELD>
+					<TEXTFIELD w="75" title="TaxIdentification">tax_identification</TEXTFIELD>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+				</GRID>
+				<GRID name="Allowances" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 1)">
+					<TEXTFIELD w="75" title="Allowance">adjustment_name</TEXTFIELD>
+					<TEXTDATE w="75" title="PayDate">pay_date</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<CHECKBOX w="75" title="InPayroll">in_payroll</CHECKBOX>
+					<CHECKBOX w="75" title="InTax">in_tax</CHECKBOX>
+					<CHECKBOX w="75" title="Visible">visible</CHECKBOX>
+				</GRID>
+				<GRID name="Deductions" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 2)">
+					<TEXTFIELD w="75" title="Deduction">adjustment_name</TEXTFIELD>
+					<TEXTDATE w="75" title="PayDate">pay_date</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<CHECKBOX w="75" title="InPayroll">in_payroll</CHECKBOX>
+					<CHECKBOX w="75" title="InTax">in_tax</CHECKBOX>
+					<CHECKBOX w="75" title="Visible">visible</CHECKBOX>
+				</GRID>
+				<GRID name="Expenses" keyfield="employee_adjustment_id" linkfield="employee_month_id" table="vw_employee_adjustments" where="(adjustment_type = 3)">
+					<TEXTFIELD w="75" title="Expense">adjustment_name</TEXTFIELD>
+					<TEXTDATE w="75" title="PayDate">pay_date</TEXTDATE>
+					<TEXTDECIMAL w="75" title="Amount">amount</TEXTDECIMAL>
+					<CHECKBOX w="75" title="InPayroll">in_payroll</CHECKBOX>
+					<CHECKBOX w="75" title="InTax">in_tax</CHECKBOX>
+					<CHECKBOX w="75" title="Visible">visible</CHECKBOX>
+				</GRID>
 			</GRID>
 		</GRID>
 	</DESK>
@@ -1888,6 +1923,33 @@
 			</FILTERFORM>
 			<JASPER name="P9A" org.table="vw_employee_month" reportfile="P9A.jasper"></JASPER>
 		</FILTER>
+		<GRID export="xml" name="IR56B" keyfield="fiscal_year_id" table="vw_fiscal_years">
+			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Full Name">org_full_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org Sufix">org_sufix</TEXTFIELD>
+			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
+			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
+			<TEXTFIELD w="75" title="Logo">logo</TEXTFIELD>
+			<TEXTFIELD w="75" title="Pin">pin</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year</TEXTFIELD>
+			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
+			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+			<TEXTDATE w="75" title="Submission Date">submission_date</TEXTDATE>
+			<GRID name="Vw Employee Year" keyfield="org_id" linkfield="fiscal_year_id" table="vw_employee_year">
+				<TEXTFIELD w="75" title="EmployeeID">employee_id</TEXTFIELD>
+				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
+				<TEXTFIELD w="75" title="FullName">employee_full_name</TEXTFIELD>
+				<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
+				<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
+				<TEXTFIELD w="75" title="MaritalStatus">marital_status</TEXTFIELD>
+				<TEXTDATE w="75" title="AppointmentDate">appointment_date</TEXTDATE>
+				<TEXTDATE w="75" title="ExitDate">exit_date</TEXTDATE>
+				<TEXTFIELD w="75" title="IdentityCard">identity_card</TEXTFIELD>
+				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="NetPay">y_net_pay</TEXTDECIMAL>
+			</GRID>
+		</GRID>
 	</DESK>
 	<DESK w="700" name="P10" key="112" h="750">
 		<GRID name="Full Payroll" keyfield="period_id" orderby="start_date desc" table="vw_periods">

@@ -80,6 +80,7 @@ CREATE TABLE fiscal_years (
 	org_id					integer references orgs,
 	fiscal_year_start		date not null,
 	fiscal_year_end			date not null,
+	submission_date			date,
 	year_opened				boolean default true not null,
 	year_closed				boolean default false not null,
 	details					text,
