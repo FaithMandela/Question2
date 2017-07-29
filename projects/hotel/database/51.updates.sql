@@ -8,6 +8,13 @@ ALTER TABLE orgs ADD longitude character varying(20);
 ALTER TABLE room_rates ADD COLUMN max_occupancy integer;
 ALTER TABLE residents ADD COLUMN phone_number character varying(20);
 
+ALTER TABLE orgs ADD COLUMN facebook_link  varchar(50);
+ALTER TABLE orgs ADD COLUMN twitter_link  varchar(50);
+ALTER TABLE orgs ADD COLUMN google_link  varchar(50);
+
+ALTER TABLE residents ADD COLUMN booking_id integer REFERENCES bookings;
+CREATE INDEX residents_bookin_id ON bookings(booking_id);
+
 CREATE TABLE room_images (
 	room_image_id 	serial PRIMARY KEY,
 	org_id 			integer REFERENCES orgs,
@@ -33,7 +40,8 @@ CREATE OR REPLACE VIEW vw_orgs AS
 		vw_org_address.org_premises, vw_org_address.org_street, vw_org_address.org_town,
 		vw_org_address.org_phone_number, vw_org_address.org_extension,
 		vw_org_address.org_mobile, vw_org_address.org_fax, vw_org_address.org_email, vw_org_address.org_website,
-		orgs.star,orgs.city_code,city_codes.city_name,orgs.location,orgs.image, orgs.latitude, orgs.longitude
+		orgs.star,orgs.city_code,city_codes.city_name,orgs.location,orgs.image, orgs.latitude, orgs.longitude,
+		orgs.facebook_link, orgs.twitter_link, orgs.google_link
 	FROM orgs INNER JOIN currency ON orgs.currency_id = currency.currency_id
 	LEFT JOIN city_codes ON orgs.city_code = city_codes.city_code
 		LEFT JOIN vw_org_address ON orgs.org_id = vw_org_address.org_table_id;
@@ -152,3 +160,19 @@ CREATE OR REPLACE VIEW vw_room_images AS
 			LEFT JOIN entitys ON subscriptions.entity_id = entitys.entity_id
 			LEFT JOIN entitys as account_manager ON subscriptions.account_manager_id = account_manager.entity_id
 			LEFT JOIN orgs ON subscriptions.org_id = orgs.org_id;
+
+
+
+CREATE OR REPLACE FUNCTION ins_bookingEmailed() RETURNS TRIGGER AS $$
+DECLARE
+	myrec RECORD;
+BEGIN
+	INSERT INTO sys_emailed(sys_email_id, org_id, table_id, table_name)
+		VALUES (2,NEW.org_id, NEW.booking_id, 'bookigs');
+
+	RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER ins_bookingEmailed AFTER INSERT ON bookings
+    FOR EACH ROW EXECUTE PROCEDURE ins_bookingEmailed();

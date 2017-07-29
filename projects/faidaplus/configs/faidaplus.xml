@@ -911,6 +911,7 @@
 				<TEXTFIELD w="150" h="20" x="290" y="50" title="Batch No." key="batch">batch</TEXTFIELD>
 			</FILTERFORM>
 			<JASPER reportfile="batch_items.jasper" name="Batch Items"></JASPER>
+			<JASPER reportfile="batch_items_sort.jasper" name="Batch Items Report"></JASPER>
 		</FILTER>
 		<FILTER split="150" w="700" h="550" name="Items Purchased" type="vert" key="batch">
 			<FILTERFORM name="Items Purchased ">

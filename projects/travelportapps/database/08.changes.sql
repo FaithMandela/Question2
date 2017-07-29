@@ -20,3 +20,5 @@ CREATE INDEX jamboverify_org_id ON jp_pay (org_id);
     VALUES (7, 0, 'Email Verification', 'Email Verification',  5);
 
     ALTER TABLE entitys ADD COLUMN verifykey varchar(100);
+
+	INSERT INTO sys_emails( sys_email_id, org_id, sys_email_name,  title,  use_type)	VALUES (8, 0, 'Password Reset', 'Password Reset',  4);
