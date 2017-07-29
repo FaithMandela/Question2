@@ -49,23 +49,23 @@ public class BMail {
 	public BMail(BElement root, BLogHandle logHandle) {
 		logHandle.config(log);
 		String host = root.getAttribute("host", "");
-		String imaphost = root.getAttribute("imaphost");
+		String imaphost = root.getAttribute("imaphost", host);
 		int imapPort = 143;
-		if(imaphost == null) imaphost = host;
 		String mailuser = root.getAttribute("mailuser", "");
 		String maildomain = root.getAttribute("maildomain");
 		if(maildomain != null) mailuser = mailuser + "@" + maildomain;
 
 		String mailpassword = root.getAttribute("mailpassword", "");
-		mailfrom = root.getAttribute("mailfrom", "");
-		inbox = root.getAttribute("inbox", "");
-		sentbox = root.getAttribute("sentbox", "");
+		mailfrom = root.getAttribute("mailfrom", "root");
+		inbox = root.getAttribute("inbox", "INBOX");
+		sentbox = root.getAttribute("sentbox", "Sent");
 
 		String smtppauth = root.getAttribute("smtpauth", "false");
 		smtppauth = root.getAttribute("smtppauth", smtppauth);
 		String smtptls = root.getAttribute("smtptls", "false");
 		String ntlm = root.getAttribute("ntlm", "false");
 		String imapssl = root.getAttribute("imapssl", "false");
+		String smtpPort = root.getAttribute("smtp.port");
 		String imapType = "imap";
 
 		try {
@@ -127,6 +127,7 @@ public class BMail {
 				System.clearProperty("ssl.SocketFactory.provider");
 				System.clearProperty("mail.imap.socketFactory.class");
 			}
+			if(smtpPort != null) props.setProperty("smtp.port", "587");
 
 			// Get a Session object			
 			session = Session.getInstance(props, null);

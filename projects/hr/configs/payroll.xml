@@ -1924,17 +1924,17 @@
 			<JASPER name="P9A" org.table="vw_employee_month" reportfile="P9A.jasper"></JASPER>
 		</FILTER>
 		<GRID export="xml" name="IR56B" keyfield="fiscal_year_id" table="vw_fiscal_years">
-			<TEXTFIELD w="75" title="Org Name">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Full Name">org_full_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="Org Sufix">org_sufix</TEXTFIELD>
+			<TEXTFIELD w="75" title="Org ame">org_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="OrgFullName">org_full_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="OrgSufix">org_sufix</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
 			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
 			<TEXTFIELD w="75" title="Logo">logo</TEXTFIELD>
 			<TEXTFIELD w="75" title="Pin">pin</TEXTFIELD>
-			<TEXTFIELD w="75" title="Fiscal Year ID">fiscal_year_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="Fiscal Year">fiscal_year</TEXTFIELD>
-			<TEXTDATE w="75" title="Fiscal Year Start">fiscal_year_start</TEXTDATE>
-			<TEXTDATE w="75" title="Fiscal Year End">fiscal_year_end</TEXTDATE>
+			<TEXTFIELD w="75" title="FiscalYearID">fiscal_year_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="FiscalYear">fiscal_year</TEXTFIELD>
+			<TEXTDATE w="75" title="FiscalYearStart">fiscal_year_start</TEXTDATE>
+			<TEXTDATE w="75" title="FiscalYearEnd">fiscal_year_end</TEXTDATE>
 			<TEXTDATE w="75" title="Submission Date">submission_date</TEXTDATE>
 			<GRID name="Vw Employee Year" keyfield="org_id" linkfield="fiscal_year_id" table="vw_employee_year">
 				<TEXTFIELD w="75" title="EmployeeID">employee_id</TEXTFIELD>

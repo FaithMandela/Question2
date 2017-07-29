@@ -89,14 +89,6 @@ AND vw_survey_100.referral_time::date BETWEEN'$P!{start_date}'::date AND '$P!{en
 				</textElement>
 				<text><![CDATA[REPUBLIC OF KENYA]]></text>
 			</staticText>
-			<image>
-				<reportElement x="1" y="1" width="114" height="99" uuid="a872cdfb-94e9-4e98-b440-0a18dcef52cd"/>
-				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "ministry_of_heath.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="1028" y="1" width="122" height="99" uuid="ea256c78-12b5-4bf1-a8de-23eb7c9bdd55"/>
-				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "chs_logo.png"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement style="Title" x="117" y="43" width="911" height="25" uuid="5bf7de40-e5ee-47b6-9700-8a991bf566d3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
