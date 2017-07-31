@@ -1,5 +1,5 @@
-DROP TABLE payments CASCADE;
-DROP TABLE payment_types CASCADE;
+--DROP TABLE payments CASCADE;
+--DROP TABLE payment_types CASCADE;
 
 CREATE TABLE payment_types (
 	payment_type_id			serial primary key,
@@ -268,3 +268,10 @@ CREATE VIEW vw_tenant_invoice AS
 		INNER JOIN currency ON currency.currency_id = payments.currency_id
 		INNER JOIN vw_orgs ON vw_orgs.org_id = payments.org_id
 		where tx_type = 1 and payment_type_id = 5 ;
+
+
+CREATE VIEW vw_receipts AS
+	SELECT org_id,rental_id,period_id,payment_id,payment_type_id, payment_number,payment_date,account_credit,balance,currency_symbol,
+	(property_name||','||property_type_name||','||estate)AS property,(tenant_name||'-'||hse_no)AS tenant_details,period_disp,period_month
+		FROM vw_tenant_payments
+		WHERE payment_type_id = 2
