@@ -1,6 +1,8 @@
 CREATE TABLE adjustment_effects (
 	adjustment_effect_id	integer primary key,
-	adjustment_effect_name	varchar(50) not null
+	adjustment_effect_name	varchar(50) not null,
+	adjustment_effect_type	integer default 1 not null,
+	adjustment_effect_code	varchar(50)
 );
 
 CREATE TABLE adjustments (

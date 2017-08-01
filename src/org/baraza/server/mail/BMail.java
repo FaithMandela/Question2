@@ -62,6 +62,7 @@ public class BMail {
 
 		String smtppauth = root.getAttribute("smtpauth", "false");
 		smtppauth = root.getAttribute("smtppauth", smtppauth);
+		smtppauth = root.getAttribute("smtp.auth", smtppauth);
 		String smtptls = root.getAttribute("smtptls", "false");
 		String ntlm = root.getAttribute("ntlm", "false");
 		String imapssl = root.getAttribute("imapssl", "false");
@@ -127,7 +128,7 @@ public class BMail {
 				System.clearProperty("ssl.SocketFactory.provider");
 				System.clearProperty("mail.imap.socketFactory.class");
 			}
-			if(smtpPort != null) props.setProperty("smtp.port", "587");
+			if(smtpPort != null) props.setProperty("mail.smtp.port", smtpPort);
 
 			// Get a Session object			
 			session = Session.getInstance(props, null);

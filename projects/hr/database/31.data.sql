@@ -91,9 +91,9 @@ INSERT INTO skill_types (skill_type_id, skill_category_id, skill_type_name, basi
 SELECT pg_catalog.setval('skill_types_skill_type_id_seq', 42, true);
 UPDATE skill_types SET skill_type_name =  initcap(skill_type_name), org_id = 0;
 
-INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (0, 'General');
-INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'Housing');
-INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'Insurance');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (1, 'General Allowance');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (2, 'General Deductions');
+INSERT INTO adjustment_effects (adjustment_effect_id, adjustment_effect_name) VALUES (3, 'General Expences');
 
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 1, 'Sacco Allowance', true, true, '90005');
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (1, 2, 'Bonus', true, true, '90005');
@@ -118,7 +118,7 @@ INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visibl
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 31, 'Trainining', true, false, '90070');
 INSERT INTO adjustments (adjustment_type, adjustment_id, adjustment_Name, Visible, In_Tax, account_number) VALUES (3, 32, 'per diem', true, false, '90070');
 SELECT pg_catalog.setval('adjustments_adjustment_id_seq', 32, true);
-UPDATE adjustments SET org_id = 0, currency_id = 1;
+UPDATE adjustments SET org_id = 0, currency_id = 1, adjustment_effect_id = adjustment_type;
 
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (11, 'Payroll Tax', 1);
 INSERT INTO use_keys (use_key_id, use_key_name, use_function) VALUES (12, 'Payroll Contributions', 1);
