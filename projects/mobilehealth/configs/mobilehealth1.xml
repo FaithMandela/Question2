@@ -44,6 +44,7 @@
                     <TEXTFIELD w="75" title="Name">name</TEXTFIELD>
                     <TEXTFIELD w="75" title="Mobile">mobile</TEXTFIELD>
                     <TEXTFIELD w="75" title="Age">age</TEXTFIELD>
+                    <TEXTFIELD w="75" title="Age In">age_type</TEXTFIELD>
                     <TEXTFIELD w="75" title="Gender">gender</TEXTFIELD>
                     <GRID name="Survey Details" keyfield="mother_mpp_def_id" linkfield="survey_id" table="vw_dss" noorg="true">
                         <TEXTFIELD w="75" title="ID">mother_mpp_def_id</TEXTFIELD>
@@ -1519,6 +1520,14 @@
                 <TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
             </FILTERFORM>
             <JASPER name="CHV vs Clinician village" reportfile="vw_dss_vs_village.jasper"></JASPER>
+            <!-- <FILTERFORM name="Sub County Date Range">
+                <COMBOBOX w="430" title="Sub county" lptable="sub_countys" noorg="true" y="30" h="20" x="10" lpfield="sub_county_name">sub_county_id</COMBOBOX>
+                <COMBOBOX w="430" title="Health Facility" lptable="link_health_facilities" noorg="true" y="30" h="20" x="10" lpfield="link_health_facility_name" orderby="link_health_facility_id ASC">link_health_facility_id</COMBOBOX>
+                <COMBOBOX w="430" title="Status of patient" lptable="categories" noorg="true" y="30" h="20" x="10" lpfield="category_name" orderby="category_ref_id ASC">category_ref_id</COMBOBOX>
+                <TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+                <TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+            </FILTERFORM>
+            <JASPER name="CHV vs Clinician Sub county" reportfile="vw_dss_vs_county.jasper"></JASPER> -->
         </FILTER>
         <FILTER w="700" name="General Individual Indicator summary" split="150" type="vert" h="550">
             <FILTERFORM name="Village Date Range">
@@ -1531,6 +1540,17 @@
             <JASPER name="Newborns (At birth)" reportfile="vw_survey_100_dss_ab.jasper"></JASPER>
             <JASPER name="Newborns (First 28 days)" reportfile="vw_survey_100_dss_oc.jasper"></JASPER>
         </FILTER>
+        <!-- <FILTER w="700" name="General Individual Indicator Sub county summary" split="150" type="vert" h="550">
+            <FILTERFORM name="Village Date Range">
+                <COMBOBOX w="430" title="Village" lptable="villages" noorg="true" y="30" h="20" x="10" lpfield="village_name">village_id</COMBOBOX>
+                <TEXTDATE w="150" title="Start Date" y="50" h="20" x="10">start_date</TEXTDATE>
+                <TEXTDATE w="150" title="End Date" y="50" h="20" x="10">end_date</TEXTDATE>
+            </FILTERFORM>
+            <JASPER name="Postpartum Mothers" reportfile="vw_survey_100_dss_pm.jasper"></JASPER>
+            <JASPER name="Pregnant Mothers" reportfile="vw_survey_100_dss_pg.jasper"></JASPER>
+            <JASPER name="Newborns (At birth)" reportfile="vw_survey_100_dss_ab.jasper"></JASPER>
+            <JASPER name="Newborns (First 28 days)" reportfile="vw_survey_100_dss_oc.jasper"></JASPER>
+        </FILTER> -->
     </DESK>
     <DESK w="700" icon="icon-settings" name="Configurations" key="45" h="550" role="admin">
         <GRID name="Countys" keyfield="county_id" table="countys" noorg="true">

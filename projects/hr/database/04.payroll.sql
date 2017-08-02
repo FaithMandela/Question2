@@ -674,7 +674,8 @@ CREATE VIEW vw_ems AS
 CREATE VIEW vw_employee_month_list AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
-		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted, 
+		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted,
+		vw_periods.fiscal_year_id, vw_periods.fiscal_year,
 		entitys.entity_id, entitys.entity_name,
 		pay_groups.pay_group_id, pay_groups.pay_group_name, pay_groups.gl_payment_account,
 		pay_groups.bank_header, pay_groups.bank_address,
@@ -795,21 +796,21 @@ CREATE VIEW vw_advance_statement AS
 	FROM advance_deductions INNER JOIN vw_employee_month_list as eml ON advance_deductions.employee_month_id = eml.employee_month_id);
 
 CREATE VIEW vw_employee_adjustments AS
-	SELECT eml.employee_month_id, eml.period_id, eml.start_date, 
-		eml.month_id, eml.period_year, eml.period_month,
-		eml.end_date, 
+	SELECT eml.employee_month_id, eml.period_id, eml.start_date, eml.end_date, 
+		eml.month_id, eml.period_year, eml.period_month, 
+		eml.fiscal_year_id, eml.fiscal_year,
 		eml.entity_id, eml.entity_name, eml.employee_id, eml.identity_card,
 		eml.department_id, eml.department_name, eml.department_account, eml.function_code,
 		eml.department_role_id, eml.department_role_name,
-		adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, adjustments.account_number, 
-		adjustments.earning_code,
+		adjustments.adjustment_id, adjustments.adjustment_name, adjustments.adjustment_type, 
+		adjustments.account_number, adjustments.earning_code, adjustments.adjustment_effect_id,
 		currency.currency_id, currency.currency_name, currency.currency_symbol,
 		employee_adjustments.org_id, employee_adjustments.employee_adjustment_id, employee_adjustments.pay_date, employee_adjustments.amount, 
 		employee_adjustments.in_payroll, employee_adjustments.in_tax, employee_adjustments.visible, employee_adjustments.exchange_rate,
 		employee_adjustments.paid_amount, employee_adjustments.balance, employee_adjustments.narrative,
 		employee_adjustments.tax_relief_amount,
 		
-		(employee_adjustments.exchange_rate * employee_adjustments.amount) as base_amount,	
+		(employee_adjustments.exchange_rate * employee_adjustments.amount) as base_amount,
 		(employee_adjustments.exchange_rate * eml.exchange_rate * employee_adjustments.amount) as b_amount,
 		(employee_adjustments.exchange_rate * eml.exchange_rate * employee_adjustments.paid_amount) as b_paid_amount
 		
