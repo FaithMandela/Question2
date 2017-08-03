@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="857" leftMargin="20" rightMargin="313" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="248"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -27,6 +27,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_surveys.health_worker_id, vw_surveys.worker_name, vw_surveys.org_id, vw_surveys.org_name, vw_surveys.county_id, vw_surveys.county_name, vw_surveys.sub_county_id, vw_surveys.sub_county_name, vw_surveys.survey_id, vw_surveys.village_name, vw_surveys.household_number, vw_surveys.household_member, vw_surveys.survey_time, vw_surveys.location_lat, vw_surveys.location_lng, vw_surveys.remarks, supervisor_remarks,
+(get_newVisits(vw_surveys.health_worker_id) + get_followups(vw_surveys.health_worker_id)) As no_households,
 (CASE WHEN  vw_surveys.survey_status = 0 THEN 'Pending'
 
 
@@ -35,7 +36,7 @@ WHEN  vw_surveys.survey_status = 2 THEN 'Returned'
 WHEN  vw_surveys.survey_status = 3 THEN 'Redone'
 ELSE 'Pending' END ) AS survey_status
 
-, vw_surveys.return_reason
+, vw_surveys.return_reason,vw_surveys.status
 FROM vw_surveys WHERE vw_surveys.health_worker_id = '$P!{health_worker_id}'
 AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_date}'::date]]>
 	</queryString>
@@ -56,8 +57,10 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 	<field name="location_lng" class="java.lang.String"/>
 	<field name="remarks" class="java.lang.String"/>
 	<field name="supervisor_remarks" class="java.lang.String"/>
+	<field name="no_households" class="java.lang.Integer"/>
 	<field name="survey_status" class="java.lang.String"/>
 	<field name="return_reason" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
 	<variable name="survey_count" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{survey_id}]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
@@ -66,7 +69,7 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="246" splitType="Stretch">
+		<band height="264" splitType="Stretch">
 			<staticText>
 				<reportElement style="Title" x="0" y="112" width="802" height="43" uuid="6c4a99bb-b0b8-4119-9023-80f97f831697"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -131,28 +134,28 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 				<text><![CDATA[Health Worker Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="341" y="227" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
+				<reportElement style="Column header" x="341" y="247" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[End Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="81" y="227" width="159" height="15" uuid="7d470367-8363-4229-bd7b-5e3ca10c8f6e"/>
+				<reportElement style="Detail" x="81" y="247" width="159" height="15" uuid="7d470367-8363-4229-bd7b-5e3ca10c8f6e"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="14" y="227" width="65" height="15" forecolor="#000000" uuid="a57e6f3c-5ab5-4c35-8635-39c129991c74"/>
+				<reportElement style="Column header" x="14" y="247" width="65" height="15" forecolor="#000000" uuid="a57e6f3c-5ab5-4c35-8635-39c129991c74"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Start Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="406" y="227" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
+				<reportElement style="Detail" x="406" y="247" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -174,6 +177,22 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 				<reportElement x="423" y="11" width="112" height="101" uuid="37bb1864-848d-4d07-a499-ccdf6255a32f"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
 			</image>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="175" y="222" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="b6a5adce-f720-43e4-8e60-3fb5ab2c5571"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_households}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="13" y="220" width="162" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="7767c1bc-6e55-4c72-8646-265acdac559c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total Number of Households]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>
@@ -301,6 +320,20 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 				</textElement>
 				<text><![CDATA[Supervisor Remarks]]></text>
 			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="777" y="0" width="80" height="205" forecolor="#000000" uuid="f7d69529-95db-46d7-87f8-57262e9943b3"/>
+				<box bottomPadding="5">
+					<pen lineWidth="0.25" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
+				</box>
+				<textElement verticalAlignment="Middle" rotation="Left">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Survey Type]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -414,6 +447,20 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{supervisor_remarks}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="777" y="0" width="79" height="17" uuid="200886c2-fe7c-4cb4-ab69-3dfce1c2f129"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
