@@ -1702,7 +1702,7 @@ log.severe("BASE : " + mysql);
 	}
 	
 	public BElement getXmlTable(BElement tableXml, BElement tView, String tWhere, String tSortby) {
-		BQuery xmlData = new BQuery(db, tView, wheresql, tSortby, false);
+		BQuery xmlData = new BQuery(db, tView, tWhere, tSortby, false);
 		String ifNull = view.getAttribute("ifnull", "");
 		
 		while(xmlData.moveNext()) {
@@ -1710,6 +1710,7 @@ log.severe("BASE : " + mysql);
 			for(BElement el : tView.getElements()) {
 				if(el.getName().equals("GRID")) {
 					String sWhere = el.getAttribute("linkfield") + " = '" + xmlData.getKeyField() + "'";
+System.out.println("BASE 2050 : " + sWhere);
 					getXmlTable(rowXml, el, sWhere, null);
 				} else {
 					BElement xel = new BElement(el.getAttribute("title"));
