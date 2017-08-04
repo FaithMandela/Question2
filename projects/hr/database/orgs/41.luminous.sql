@@ -41,6 +41,7 @@ CREATE VIEW vw_employee_effects AS
 		adjustment_effects.adjustment_effect_code, adjustment_effects.adjustment_effect_type,
 		employees.org_id, employees.entity_id,
 		fiscal_years.fiscal_year_id, fiscal_years.fiscal_year,
+		(to_char(fiscal_years.fiscal_year_start, 'YYYYMMDD') || ' - ' || to_char(fiscal_year_end, 'YYYYMMDD')) as year_name,
 		pairkey(fiscal_years.fiscal_year_id, employees.entity_id) as employee_year_id
 	FROM (adjustment_effects CROSS JOIN employees)
 		INNER JOIN fiscal_years ON employees.org_id = fiscal_years.org_id;
@@ -53,8 +54,8 @@ CREATE VIEW vw_adjustment_year AS
 		ef.fiscal_year_id, ef.fiscal_year,
 		ef.employee_year_id,
 		COALESCE(eay.s_amount, 0) as s_amount, 
-		COALESCE(eay.s_base_amount, 0) as t_base_amount
-	
+		COALESCE(eay.s_base_amount, 0) as t_base_amount,
+		(CASE WHEN eay.s_amount is null THEN null ELSE ef.year_name END) as period_name
 	FROM vw_employee_effects ef LEFT JOIN 
 	(SELECT ea.adjustment_effect_id, ea.entity_id, ea.fiscal_year_id,
 		pairkey(ea.fiscal_year_id, ea.entity_id) as employee_year_id,

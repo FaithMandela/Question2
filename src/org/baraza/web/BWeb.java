@@ -1710,17 +1710,21 @@ log.severe("BASE : " + mysql);
 			for(BElement el : tView.getElements()) {
 				if(el.getName().equals("GRID")) {
 					String sWhere = el.getAttribute("linkfield") + " = '" + xmlData.getKeyField() + "'";
-System.out.println("BASE 2050 : " + sWhere);
 					getXmlTable(rowXml, el, sWhere, null);
-				} else {
-					BElement xel = new BElement(el.getAttribute("title"));
+				} else if(el.getAttribute("hide") == null) {
+					String nodeName = el.getAttribute("title");
+					if(el.getAttribute("xml.node") != null) nodeName = xmlData.getString(el.getAttribute("xml.node"));
+					BElement xel = new BElement(nodeName);
 					String elValue = xmlData.getString(el.getValue());
 					if(elValue == null) elValue = ifNull;
 					xel.setValue(elValue);
-					rowXml.addNode(xel);
+					
+					if(tView.getAttribute("xml.intable") == null) rowXml.addNode(xel);
+					else tableXml.addNode(xel);
 				}
 			}
-			tableXml.addNode(rowXml);
+			
+			if(tView.getAttribute("xml.intable") == null) tableXml.addNode(rowXml);
 		}
 		xmlData.close();
 		
