@@ -1948,9 +1948,11 @@
 				<TEXTFIELD w="75" title="IdentityCard">identity_card</TEXTFIELD>
 				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
 				<TEXTDECIMAL w="75" title="NetPay">y_net_pay</TEXTDECIMAL>
-				<GRID name="Adjustment" keyfield="adjustment_effect_id" orderby="adjustment_effect_id" linkfield="employee_year_id" table="vw_adjustment_year" where="(adjustment_effect_type = 1)">
-					<TEXTFIELD w="75" title="Code">adjustment_effect_code</TEXTFIELD>
-					<TEXTDECIMAL w="75" title="Amount">s_amount</TEXTDECIMAL>
+				<GRID name="Adjustment" keyfield="adjustment_effect_id" orderby="adjustment_effect_id" linkfield="employee_year_id" xml.intable="true" table="vw_adjustment_year" where="(adjustment_effect_type = 1)">
+					<TEXTFIELD w="75" fnct="'PerOf' || adjustment_effect_code" title="PerCode" hide="true">per_code</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'AmtOf' || adjustment_effect_code" title="AmontCode" hide="true">amount_code</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="per_code" title="Period">period_name</TEXTFIELD>
+					<TEXTDECIMAL w="75" xml.node="amount_code" title="Amount">s_amount</TEXTDECIMAL>
 				</GRID>
 			</GRID>
 		</GRID>
