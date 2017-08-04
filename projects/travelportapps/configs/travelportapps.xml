@@ -6,6 +6,7 @@
 			<MENU role="individual" name="My Invoice" page="invoice">0</MENU>
 			<MENU role="individual" name="My Insurance">82</MENU>
 			<MENU role="manager,admin,agency,user,broker" name="My Certificate">83</MENU>
+			<MENU role="admin,manager" name="Quotationlogs">211</MENU>
 		</MENU>
 		<MENU role="admin,manager,agency" name="Organisation">
 			<MENU role="admin,manager" icon="fa fa-sitemap" name="Travel Agencies">10</MENU>
@@ -1649,6 +1650,25 @@
 				<TEXTTIMESTAMP w="150" h="20" x="290" y="70" title="Transdate">transdate</TEXTTIMESTAMP>
 				<TEXTAREA w="430" h="70" x="10" y="90" title="Portal">portal</TEXTAREA>
 				<TEXTAREA w="430" h="70" x="10" y="160" title="Status">status</TEXTAREA>
+			</FORM>
+		</GRID>
+	</DESK>
+	<DESK w="700" h="550" name="Quotationlogs" key="211">
+		<GRID noorg="true" keyfield="logsid" name="Quotationlogs" orderby="logsid desc" table="quotationlogs">
+			<TEXTFIELD w="75" title="Logsid">logsid</TEXTFIELD>
+			<TEXTFIELD w="75" title="Email">email</TEXTFIELD>
+			<TEXTFIELD w="75" title="Mobile No">mobile_no</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Type">rate_type</TEXTFIELD>
+			<TEXTFIELD w="75" title="Rate Plan">rate_plan</TEXTFIELD>
+			<TEXTTIMESTAMP w="75" title="Log Date">log_date</TEXTTIMESTAMP>
+			<FORM new="false" noorg="true" keyfield="logsid" name="Quotationlogs" table="quotationlogs">
+				<TEXTFIELD w="150" h="20" x="10" y="10" title="Email">email</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="10" title="Mobile No">mobile_no</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="10" y="30" title="Rate Type">rate_type</TEXTFIELD>
+				<TEXTFIELD w="150" h="20" x="290" y="30" title="Rate Plan">rate_plan</TEXTFIELD>
+				<TEXTDECIMAL w="150" h="20" x="10" y="50" title="Amount 1">amount_1</TEXTDECIMAL>
+				<TEXTAREA w="430" h="70" x="10" y="70" title="Status">status</TEXTAREA>
+				<TEXTTIMESTAMP w="150" h="20" x="10" y="140" title="Log Date">log_date</TEXTTIMESTAMP>
 			</FORM>
 		</GRID>
 	</DESK>
