@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="857" leftMargin="20" rightMargin="313" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="248"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -13,6 +13,48 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="household_count_2" uuid="b5e1ca21-847d-463d-b651-1289ba4ba7a2">
+		<parameter name="start_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="end_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2015-09-30"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="village_id" class="java.lang.String">
+			<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="chv_id" class="java.lang.String"/>
+		<parameter name="health_worker_id" class="java.lang.String">
+			<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select COUNT(household_number) from vw_surveys
+WHERE
+vw_surveys.health_worker_id = '$P!{health_worker_id}'
+AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date]]>
+		</queryString>
+		<field name="count" class="java.lang.Long"/>
+	</subDataset>
 	<parameter name="health_worker_id" class="java.lang.String">
 		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
@@ -27,7 +69,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_surveys.health_worker_id, vw_surveys.worker_name, vw_surveys.org_id, vw_surveys.org_name, vw_surveys.county_id, vw_surveys.county_name, vw_surveys.sub_county_id, vw_surveys.sub_county_name, vw_surveys.survey_id, vw_surveys.village_name, vw_surveys.household_number, vw_surveys.household_member, vw_surveys.survey_time, vw_surveys.location_lat, vw_surveys.location_lng, vw_surveys.remarks, supervisor_remarks,
-(get_newVisits(vw_surveys.health_worker_id) + get_followups(vw_surveys.health_worker_id)) As no_households,
+
 (CASE WHEN  vw_surveys.survey_status = 0 THEN 'Pending'
 
 
@@ -57,7 +99,6 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 	<field name="location_lng" class="java.lang.String"/>
 	<field name="remarks" class="java.lang.String"/>
 	<field name="supervisor_remarks" class="java.lang.String"/>
-	<field name="no_households" class="java.lang.Integer"/>
 	<field name="survey_status" class="java.lang.String"/>
 	<field name="return_reason" class="java.lang.String"/>
 	<field name="status" class="java.lang.String"/>
@@ -177,14 +218,6 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 				<reportElement x="423" y="11" width="112" height="101" uuid="37bb1864-848d-4d07-a499-ccdf6255a32f"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
 			</image>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="175" y="222" width="100" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="b6a5adce-f720-43e4-8e60-3fb5ab2c5571"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Roman" pdfEncoding="Cp1252" isPdfEmbedded="true"/>
-					<paragraph lineSpacing="Single"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{no_households}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement mode="Transparent" x="13" y="220" width="162" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="7767c1bc-6e55-4c72-8646-265acdac559c"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
@@ -193,6 +226,31 @@ AND vw_surveys.survey_time::date BETWEEN'$P!{start_date}'::date AND '$P!{end_dat
 				</textElement>
 				<text><![CDATA[Total Number of Households]]></text>
 			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" mode="Opaque" x="175" y="220" width="346" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="3350787b-4278-4a50-93ce-c2a066125a3e"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="household_count_2" uuid="e589b0f2-5778-479a-bd94-6a57a8b1929f">
+						<datasetParameter name="health_worker_id">
+							<datasetParameterExpression><![CDATA[$P{health_worker_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="start_date">
+							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="76d78874-4d88-404b-8c20-c82592c8e1d5">
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="de527373-bf44-45a1-b851-26c20057fc84"/>
+								<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 		</band>
 	</title>
 	<pageHeader>
