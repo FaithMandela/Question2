@@ -2101,7 +2101,7 @@ BEGIN
 	msg := 'Leave applied';
 
 	SELECT leave_types.leave_days_span, leave_types.month_limit, 
-		employee_leave.entity_id, employee_leave.leave_type_id,
+		employee_leave.employee_leave_id, employee_leave.entity_id, employee_leave.leave_type_id,
 		employee_leave.leave_days, employee_leave.leave_from, employee_leave.leave_to,
 		employee_leave.contact_entity_id, employee_leave.narrative,
 		adjustments.adjustment_id, adjustments.adjustment_type
@@ -2115,7 +2115,8 @@ BEGIN
 	SELECT count(employee_leave_id) INTO v_leave_overlap
 	FROM employee_leave
 	WHERE (entity_id = rec.entity_id) AND (approve_status <> 'Rejected')
-		AND (((leave_from, leave_to) OVERLAPS (rec.leave_from, rec.leave_to)) = true);
+		AND (employee_leave_id <> rec.employee_leave_id)
+		AND (((leave_from, leave_to) OVERLAPS (rec.leave_from - 1, rec.leave_to + 1)) = true);
 		
 	SELECT sum(employee_leave_id) INTO v_month_leave
 	FROM employee_leave

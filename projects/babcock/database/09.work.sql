@@ -286,4 +286,14 @@ ORDER BY narration;
 
 UPDATE studentpayments SET approved = true, phistoryid = 0, amount = WHERE narrative = '';
 
+--------------- Test on charges
+
+SELECT qstudents.qstudentid, qstudents.org_id, qstudents.qresidenceid, qstudents.sublevelid, 
+qstudents.quarterid, qstudents.studylevel 
+FROM vwstudentmajors INNER JOIN (qstudents INNER JOIN quarters ON qstudents.quarterid::text = quarters.quarterid::text) 
+ON vwstudentmajors.studentdegreeid = qstudents.studentdegreeid
+WHERE vwstudentmajors.studentid = '15/0715';
+
+
+
 

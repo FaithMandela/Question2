@@ -41,7 +41,7 @@
 		</GRID>
 	</DESK>
 	<DESK w="700" name="Organisation" key="10" h="500">
-		<GRID name="Organisation" keyfield="org_id" table="orgs">
+		<GRID name="Organisation" keyfield="org_id" table="orgs" noorg="true">
 			<TEXTFIELD w="75" title="Org ID">org_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Org Name">org_name</TEXTFIELD>
 			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
@@ -115,7 +115,7 @@
 					<TEXTAREA w="530" tab="Details" y="1" h="170" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
-			<FORM name="Organisation" keyfield="org_id" table="orgs">
+			<FORM name="Organisation" keyfield="org_id" table="orgs" noorg="true">
 				<TEXTFIELD w="350" title="Organisation" y="10" h="20" x="10">org_name</TEXTFIELD>
 				<CHECKBOX w="150" title="Default" y="30" h="20" x="10">is_default</CHECKBOX>
 				<CHECKBOX w="150" title="Active" y="30" h="20" x="290">is_active</CHECKBOX>

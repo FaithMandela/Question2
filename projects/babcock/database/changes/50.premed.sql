@@ -119,8 +119,8 @@ UPDATE qgrades SET org_id = 0 WHERE qstudentid IN
 UPDATE qgrades SET gradeid = getdbgradeid(round(finalmarks)::integer, 0)
 WHERE qstudentid IN (SELECT qstudentid FROM qstudents WHERE qstudents.sublevelid = 'UGPM' AND qstudents.quarterid = '2016/2017.2M');
 
-ALTER TABLE qstudents DISABLE TRIGGER ins_qstudents;
-ALTER TABLE qgrades DISABLE TRIGGER ins_qgrades;
+ALTER TABLE qstudents ENABLE TRIGGER ins_qstudents;
+ALTER TABLE qgrades ENABLE TRIGGER ins_qgrades;
 
 -------------------- Checks
 
@@ -129,5 +129,10 @@ qstudents.sublevelid, qstudents.quarterid, qstudents.financeclosed, qstudents.fi
 FROM qstudentview INNER JOIN qstudents ON qstudentview.qstudentid = qstudents.qstudentid
 WHERE qstudentview.studentid = '75154'
 ORDER BY qstudentview.studentdegreeid;
+
+
+UPDATE qstudents SET sublevelid = studentdegrees.sublevelid, org_id = studentdegrees.org_id
+FROM studentdegrees
+WHERE (qstudents.sublevelid is null) AND (qstudents.studentdegreeid = studentdegrees.studentdegreeid);
 
 

@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_survey_100" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dd1516cf-ed5b-4546-bd31-d29492bc1c50">
+	<property name="ireport.zoom" value="0.9090909090909091"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="127"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="filterid" class="java.lang.String">
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgid" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orgwhere" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="organd" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT vw_survey_100.worker_name,worker_mobile_num, vw_survey_100.org_name, vw_survey_100.survey_100_id, vw_survey_100.patient_gender, vw_survey_100.patient_name, vw_survey_100.patient_age, vw_survey_100.patient_age_type, vw_survey_100.community_healt_unit, vw_survey_100.link_health_facility_name, vw_survey_100.referral_reason, vw_survey_100.treatment, vw_survey_100.comments,
+vw_survey_100.location_name,
+vw_survey_100.sub_location_name,
+vw_survey_100.village_name,
+vw_survey_100.community_unit,
+vw_survey_100.receiving_officer_name,
+vw_survey_100.receiving_officer_profession,
+vw_survey_100.health_facility_name,
+vw_survey_100.action_taken, vw_survey_100.receiving_officer_date, vw_survey_100.receiving_officer_time,  vw_survey_100.referral_time
+FROM vw_survey_100 WHERE vw_survey_100.survey_100_id = '$P!{filterid}']]>
+	</queryString>
+	<field name="worker_name" class="java.lang.String"/>
+	<field name="worker_mobile_num" class="java.lang.String"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="survey_100_id" class="java.lang.Integer"/>
+	<field name="patient_gender" class="java.lang.String"/>
+	<field name="patient_name" class="java.lang.String"/>
+	<field name="patient_age" class="java.lang.String"/>
+	<field name="patient_age_type" class="java.lang.String"/>
+	<field name="community_healt_unit" class="java.lang.String"/>
+	<field name="link_health_facility_name" class="java.lang.String"/>
+	<field name="referral_reason" class="java.lang.String"/>
+	<field name="treatment" class="java.lang.String"/>
+	<field name="comments" class="java.lang.String"/>
+	<field name="location_name" class="java.lang.String"/>
+	<field name="sub_location_name" class="java.lang.String"/>
+	<field name="village_name" class="java.lang.String"/>
+	<field name="community_unit" class="java.lang.String"/>
+	<field name="receiving_officer_name" class="java.lang.String"/>
+	<field name="receiving_officer_profession" class="java.lang.String"/>
+	<field name="health_facility_name" class="java.lang.String"/>
+	<field name="action_taken" class="java.lang.String"/>
+	<field name="receiving_officer_date" class="java.sql.Date"/>
+	<field name="receiving_officer_time" class="java.sql.Time"/>
+	<field name="referral_time" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="115" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="117" y="18" width="314" height="25" uuid="2b815c29-c481-4de7-9311-6641de9e54de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[REPUBLIC OF KENYA]]></text>
+			</staticText>
+			<image>
+				<reportElement x="1" y="1" width="114" height="99" uuid="a872cdfb-94e9-4e98-b440-0a18dcef52cd"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "ministry_of_heath.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement isPrintRepeatedValues="false" x="432" y="1" width="122" height="99" uuid="ea256c78-12b5-4bf1-a8de-23eb7c9bdd55"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} +  "chs_logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="117" y="43" width="314" height="25" uuid="5bf7de40-e5ee-47b6-9700-8a991bf566d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[MINISTRY OF HEALTH - MOH:100]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="431" y="100" width="38" height="15" forecolor="#000000" uuid="559c61ef-4e15-42d8-8e46-3ef626376463"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[No. k]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="469" y="100" width="83" height="15" uuid="64338fe4-d7c2-487b-b4dd-eb18054a5d10"/>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{survey_100_id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="502" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="47" y="143" width="239" height="15" uuid="3ecd5427-0ef9-4051-a667-6a6dc3098fc5"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{worker_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="130" y="34" width="421" height="15" uuid="13469b17-29b7-4e29-a19e-c80f614ec973"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patient_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="1" y="70" width="551" height="15" uuid="5ce414a9-19e5-4f84-a603-78e9b624aad9"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referral_reason}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="1" y="104" width="551" height="15" uuid="61a77290-3492-41e2-b3ff-2f382d168a21"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{treatment}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="439" y="163" width="108" height="15" uuid="24a954b7-fc9e-4a0e-a8f4-a07c9b4deb39"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub_location_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="100" y="163" width="186" height="15" uuid="ef41ee1f-4841-4248-a199-03ff0e6fb902"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{village_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="1" y="216" width="551" height="15" uuid="efa7dad5-280c-48b3-8559-80fd0474fcd8"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{action_taken}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="439" y="183" width="112" height="15" uuid="9e996260-2a9e-4ebf-a8e4-83250747d44f"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiving_officer_time}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="0" y="-1" width="551" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="147310e4-15d6-410e-a89b-723594f17c6a"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[SECTION A : Patient / Client Data]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy" isBlankWhenNull="true">
+				<reportElement style="Detail" x="38" y="19" width="249" height="15" uuid="7954f8a6-f789-4be8-93a3-bd1a92cd4564"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referral_time}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="0" y="20" width="37" height="15" forecolor="#000000" uuid="b0df84da-1e03-4a5b-b979-1052128abb76"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Date : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="287" y="19" width="116" height="15" forecolor="#000000" uuid="53b14aef-104b-4006-8775-010bab80a34f"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Time of Referral :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="h.mm a" isBlankWhenNull="true">
+				<reportElement style="Detail" x="403" y="20" width="149" height="15" uuid="58634f33-fb44-4361-a090-bdd51fc8e406"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referral_time}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="0" y="142" width="47" height="15" forecolor="#000000" uuid="5917a160-916a-4b75-ad00-d7cdd846d5c4"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Name : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1" y="181" width="69" height="15" forecolor="#000000" uuid="a66dfbd0-0823-4d34-8118-c65e7ef81306"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Location : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="0" y="34" width="130" height="15" forecolor="#000000" uuid="733f2d6c-3e26-4092-8f98-28ac3137eee8"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Name Of the Patient :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1" y="52" width="551" height="15" forecolor="#000000" uuid="5fbea2e3-6dd2-45b0-a09b-9a3313a69ffc"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Reason(s) for Referral :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="3" y="87" width="551" height="15" forecolor="#000000" uuid="ac9d7464-fa3d-49fa-8813-d15421546c03"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Treatment Given]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="343" y="163" width="88" height="15" forecolor="#000000" uuid="2222fc1c-ab8c-40a4-8f5b-6d2ad288d334"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Sub Location : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="0" y="162" width="100" height="15" forecolor="#000000" uuid="a9fee4b8-5027-43c6-bbb7-90de44553314"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Village / Estate : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1" y="199" width="551" height="15" forecolor="#000000" uuid="3a670b1f-d038-466e-978f-05aabfbb4338"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Action Taken : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1" y="125" width="551" height="15" forecolor="#000000" uuid="83f7ffb1-c444-48a2-9ccf-5c1b57d83d8d"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[CHV Referring the Patient]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="439" y="143" width="108" height="15" uuid="caf358f9-84ad-4aa6-a93d-f42499609fc3"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{worker_mobile_num}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="360" y="143" width="71" height="15" forecolor="#000000" uuid="a9cc5d2d-f883-4123-8cfa-5bd180da64fb"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Mobile No : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="394" y="183" width="37" height="15" forecolor="#000000" uuid="0b70e2b2-ed3c-48f9-b8c8-9dc5a6830bb1"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Time :]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Detail" x="70" y="182" width="186" height="15" uuid="831ad8e6-33c6-45e7-8c4c-02ad982cc14c"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="0" y="236" width="555" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="81d1e042-750e-490e-ac0d-16b14011d21b"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true" isUnderline="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECTION B: DSS report]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="1" y="256" width="554" height="34" uuid="a6ad8dbf-b018-417a-83f8-4677133037d1"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_survey_100_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement style="Column header" mode="Opaque" x="2" y="448" width="551" height="20" forecolor="#000000" backcolor="#CCCCCC" uuid="36d0f829-80f8-45f2-ab4c-648b5dd04d49"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" isBold="true" isUnderline="false" pdfFontName="Times-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SECTION C: Clinician report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="468" width="142" height="20" uuid="a2a503f9-0880-49e1-af4b-e31befe99507"/>
+				<textFieldExpression><![CDATA[$F{receiving_officer_time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="488" width="253" height="14" uuid="562d67b4-3f0c-4903-a772-33df2020e762"/>
+				<textFieldExpression><![CDATA[$F{action_taken}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="488" width="142" height="14" uuid="238d6026-f177-4b72-8930-cf4db968e19c"/>
+				<textFieldExpression><![CDATA[$F{receiving_officer_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="3" y="468" width="64" height="15" forecolor="#000000" uuid="ee0d13af-35da-4c7b-8155-c7f7f8d3a804"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Time:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="6" y="487" width="61" height="15" forecolor="#000000" uuid="6649e18e-3175-4142-91a7-48bc2033090e"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Clinician]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="240" y="487" width="47" height="15" forecolor="#000000" uuid="d705da2b-4784-499b-a596-3573181a4be0"/>
+				<box leftPadding="5"/>
+				<textElement>
+					<font fontName="Times New Roman" pdfFontName="Times-Bold"/>
+				</textElement>
+				<text><![CDATA[Action:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="26"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="3" y="0" width="551" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="113249e0-7d4d-4357-b4c2-ef9ef39d8e1a"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="511" y="1" width="40" height="20" forecolor="#736343" uuid="51dc2405-285b-41e6-86c4-0e561a48ce6b"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="428" y="1" width="80" height="20" forecolor="#736343" uuid="d516ff53-a410-441d-bde1-2c12172c6f5b"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE, d MMMMM yyyy HH:mm:ss Z">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="f7349beb-7ed5-4f0f-b50f-969f17b2674f"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
