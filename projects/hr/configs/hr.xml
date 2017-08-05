@@ -1594,7 +1594,8 @@
 			<TEXTFIELD w="75" title="Kin Type Name">kin_type_name</TEXTFIELD>
 			<FORM name="Kin Types" keyfield="kin_type_id" table="kin_types">
 				<TEXTFIELD w="150" title="Kin Type Name" y="10" h="20" x="10">kin_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Spouse" default="false" y="30" h="20" x="10">spouse</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="50" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Skill Category" keyfield="skill_category_id" table="skill_category">
@@ -1624,7 +1625,8 @@
 			<TEXTFIELD w="75" title="Identification Type Name">identification_type_name</TEXTFIELD>
 			<FORM name="Identification Types" keyfield="identification_type_id" table="identification_types">
 				<TEXTFIELD w="150" title="Identification Type Name" y="10" h="20" x="10">identification_type_name</TEXTFIELD>
-				<TEXTAREA w="430" title="Details" y="30" h="70" x="10">details</TEXTAREA>
+				<CHECKBOX w="150" title="Passport" default="false" y="30" h="20" x="10">passport</CHECKBOX>
+				<TEXTAREA w="430" title="Details" y="40" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 	</DESK>

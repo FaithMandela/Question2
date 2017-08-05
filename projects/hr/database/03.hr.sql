@@ -242,6 +242,7 @@ CREATE INDEX employment_org_id ON employment(org_id);
 CREATE TABLE kin_types (
 	kin_type_id				serial primary key,
 	org_id					integer references orgs,
+	spouse					boolean default false not null,
 	kin_type_name			varchar(50),
 	details					text
 );
@@ -340,6 +341,7 @@ CREATE TABLE identification_types (
 	identification_type_id	serial primary key,
 	org_id					integer references orgs,
 	identification_type_name	varchar(50),
+	passport				boolean default false not null,
 	details					text
 );
 CREATE INDEX identification_types_org_id ON identification_types(org_id);
@@ -838,6 +840,7 @@ CREATE INDEX employee_trainings_org_id ON employee_trainings(org_id);
 
 
 ----------- Views 
+
 CREATE VIEW vw_referees AS
 	SELECT sys_countrys.sys_country_id, sys_countrys.sys_country_name, address.address_id, address.org_id, address.address_name, 
 		address.table_name, address.table_id, address.post_office_box, address.postal_code, address.premises, address.street, address.town, 
@@ -1003,7 +1006,8 @@ CREATE VIEW vw_employment AS
 	FROM employment INNER JOIN entitys ON employment.entity_id = entitys.entity_id;
 
 CREATE VIEW vw_kins AS
-	SELECT entitys.entity_id, entitys.entity_name, kin_types.kin_type_id, kin_types.kin_type_name, 
+	SELECT entitys.entity_id, entitys.entity_name, 
+		kin_types.kin_type_id, kin_types.kin_type_name, kin_types.spouse,
 		kins.org_id, kins.kin_id, kins.full_names, kins.date_of_birth, kins.identification, kins.relation, 
 		kins.emergency_contact, kins.beneficiary, kins.beneficiary_ps, kins.details
 	FROM kins INNER JOIN entitys ON kins.entity_id = entitys.entity_id
@@ -1042,11 +1046,20 @@ CREATE VIEW vw_skills AS
 		INNER JOIN skill_levels ON skills.skill_level_id = skill_levels.skill_level_id;
 
 CREATE VIEW vw_identifications AS
-	SELECT entitys.entity_id, entitys.entity_name, identification_types.identification_type_id, identification_types.identification_type_name, 
+	SELECT entitys.entity_id, entitys.entity_name, identification_types.identification_type_id, 
+		identification_types.identification_type_name, identification_types.passport,
 		identifications.org_id, identifications.identification_id, identifications.identification, identifications.is_active, 
 		identifications.starting_from, identifications.expiring_at, identifications.place_of_issue, identifications.details
 	FROM identifications INNER JOIN entitys ON identifications.entity_id = entitys.entity_id
 	INNER JOIN identification_types ON identifications.identification_type_id = identification_types.identification_type_id;
+	
+CREATE VIEW vw_employee_address AS
+	SELECT vw_address.address_id, vw_address.address_name, vw_address.table_id, vw_address.table_name,
+		vw_address.sys_country_id, vw_address.sys_country_name, vw_address.is_default,
+		vw_address.post_office_box, vw_address.postal_code, vw_address.premises, vw_address.street, vw_address.town, 
+		vw_address.phone_number, vw_address.extension, vw_address.mobile, vw_address.fax, vw_address.email, vw_address.website
+	FROM vw_address
+	WHERE (vw_address.table_name = 'employees') AND (vw_address.is_default = true);
 
 CREATE VIEW vw_casual_application AS
 	SELECT casual_category.casual_category_id, casual_category.casual_category_name, departments.department_id, 
@@ -1421,6 +1434,31 @@ CREATE OR REPLACE FUNCTION get_default_currency(int) RETURNS int AS $$
 	FROM orgs
 	WHERE (org_id = $1);
 $$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_spouse_name(int) RETURNS varchar(120) AS $$
+	SELECT kins.full_names
+	FROM kins
+	WHERE (kin_id IN (SELECT max(kin_id) 
+		FROM kins INNER JOIN kin_types ON kins.kin_type_id = kin_types.kin_type_id
+		WHERE (kin_types.spouse = true) AND (entity_id = $1)));
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_spouse_id(int) RETURNS varchar(50) AS $$
+	SELECT kins.identification
+	FROM kins
+	WHERE (kin_id IN (SELECT max(kin_id) 
+		FROM kins INNER JOIN kin_types ON kins.kin_type_id = kin_types.kin_type_id
+		WHERE (kin_types.spouse = true) AND (kins.entity_id = $1)));
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_passport(int) RETURNS varchar(50) AS $$
+	SELECT (identifications.identification || ' ' || identifications.place_of_issue)
+	FROM identifications
+	WHERE (identification_id IN (SELECT max(identification_id) 
+		FROM identifications INNER JOIN identification_types ON identifications.identification_type_id = identification_types.identification_type_id
+		WHERE (identification_types.passport = true) AND (identifications.is_active = true) AND (identifications.entity_id = $1)));
+$$ LANGUAGE SQL;
+
 
 CREATE OR REPLACE FUNCTION ins_applicants() RETURNS trigger AS $$
 DECLARE

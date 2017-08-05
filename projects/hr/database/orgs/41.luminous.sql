@@ -5,18 +5,12 @@ CREATE OR REPLACE FUNCTION pairkey(x int, y int) RETURNS int AS $$
 $$ LANGUAGE sql IMMUTABLE;
 
 
-CREATE VIEW vw_fiscal_years AS
-	SELECT orgs.org_id, orgs.currency_id, orgs.default_country_id, orgs.parent_org_id,
-		orgs.org_name, orgs.org_full_name, orgs.org_sufix, orgs.is_default, orgs.is_active,
-		orgs.logo, orgs.pin,
-		fiscal_years.fiscal_year_id, fiscal_years.fiscal_year, fiscal_years.fiscal_year_start,
-		fiscal_years.fiscal_year_end, fiscal_years.submission_date
-		
-	FROM orgs INNER JOIN fiscal_years ON orgs.org_id = fiscal_years.org_id;
+ALTER TABLE orgs ADD designation varchar(50) default 'PARTNER';
 
 
 CREATE VIEW vw_employee_year AS
-	SELECT em.org_id, em.fiscal_year_id, em.entity_id, em.entity_name,
+	SELECT em.org_id, em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
+		em.entity_id, em.entity_name,
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, 
 		em.gender, em.nationality, em.marital_status, em.appointment_date, em.exit_date, 
 		em.contract, em.contract_period, em.employment_terms, em.identity_card,
@@ -24,28 +18,51 @@ CREATE VIEW vw_employee_year AS
 		em.currency_id, em.currency_name, em.currency_symbol, 
 		
 		pairkey(em.fiscal_year_id, em.entity_id) as employee_year_id,
-		sum(net_pay) as y_net_pay
+		(CASE WHEN em.marital_status = 'M' THEN '2' ELSE '1' END) as ms_code,
+		get_spouse_name(em.entity_id) as spouse_name, get_spouse_id(em.entity_id) as spouse_id,
+		(CASE WHEN em.identity_card is null THEN get_passport(em.entity_id) ELSE null END) as passport_num,
+		ea.postal_code, (ea.premises || ', ' || ea.street) as residential_address,
+		(CASE WHEN ea.premises is null THEN ea.post_office_box ELSE null END) as postal_address,
+		max(em.department_role_name) as capacity,
+		to_char(em.appointment_date, 'YYYYMMDD') as start_date_emp, to_char(em.exit_date, 'YYYYMMDD') as end_date_emp,
+		(to_char(em.fiscal_year_start, 'YYYYMMDD') || ' - ' || to_char(em.fiscal_year_end, 'YYYYMMDD')) as period_of_salary,
+		sum(em.basic_salary) as y_basic_salary, sum(em.gross_salary) as y_gross_salary, sum(em.net_pay) as y_net_pay
 	
-	FROM vw_employee_month em
+	FROM vw_employee_month em LEFT JOIN vw_employee_address ea ON em.entity_id = ea.table_id
 	
-	GROUP BY em.org_id, em.fiscal_year_id,
+	GROUP BY em.org_id, em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
 		em.entity_id, em.entity_name,
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, 
 		em.gender, em.nationality, em.marital_status, em.appointment_date, em.exit_date, 
 		em.contract, em.contract_period, em.employment_terms, em.identity_card,
 		em.employee_name, em.employee_full_name,
-		em.currency_id, em.currency_name, em.currency_symbol;
+		em.currency_id, em.currency_name, em.currency_symbol,
+		ea.postal_code, ea.premises, ea.street, ea.post_office_box;
+
+CREATE VIEW vw_fiscal_years AS
+	SELECT orgs.org_id, orgs.currency_id, orgs.default_country_id, orgs.parent_org_id,
+		orgs.org_name, orgs.org_full_name, orgs.org_sufix, orgs.is_default, orgs.is_active,
+		orgs.logo, orgs.pin, orgs.designation,
+		fiscal_years.fiscal_year_id, fiscal_years.fiscal_year, fiscal_years.fiscal_year_start,
+		fiscal_years.fiscal_year_end, fiscal_years.submission_date,
+		substr(orgs.pin, 1, 3) as section, substr(orgs.pin, 4, 8) as ern,
+		to_char(fiscal_years.submission_date, 'YYYYMMDD') as sub_date,
+		eyc.no_of_records, eyc.total_income
+		
+	FROM orgs INNER JOIN fiscal_years ON orgs.org_id = fiscal_years.org_id
+		INNER JOIN (SELECT fiscal_year_id, org_id, count(entity_id) as no_of_records, sum(y_gross_salary) as total_income
+		FROM vw_employee_year GROUP BY fiscal_year_id, org_id) eyc 
+			ON (fiscal_years.fiscal_year_id = eyc.fiscal_year_id) AND (fiscal_years.org_id = eyc.org_id);
 
 CREATE VIEW vw_employee_effects AS
 	SELECT adjustment_effects.adjustment_effect_id, adjustment_effects.adjustment_effect_name, 
 		adjustment_effects.adjustment_effect_code, adjustment_effects.adjustment_effect_type,
 		employees.org_id, employees.entity_id,
 		fiscal_years.fiscal_year_id, fiscal_years.fiscal_year,
-		(to_char(fiscal_years.fiscal_year_start, 'YYYYMMDD') || ' - ' || to_char(fiscal_year_end, 'YYYYMMDD')) as year_name,
+		(to_char(fiscal_years.fiscal_year_start, 'YYYYMMDD') || ' - ' || to_char(fiscal_years.fiscal_year_end, 'YYYYMMDD')) as year_name,
 		pairkey(fiscal_years.fiscal_year_id, employees.entity_id) as employee_year_id
 	FROM (adjustment_effects CROSS JOIN employees)
 		INNER JOIN fiscal_years ON employees.org_id = fiscal_years.org_id;
-
 
 CREATE VIEW vw_adjustment_year AS
 	SELECT ef.adjustment_effect_id, ef.adjustment_effect_name, 
@@ -65,9 +82,13 @@ CREATE VIEW vw_adjustment_year AS
 		GROUP BY ea.adjustment_effect_id, ea.entity_id, ea.fiscal_year_id) eay
 		
 	ON (ef.adjustment_effect_id = eay.adjustment_effect_id) AND (ef.employee_year_id = eay.employee_year_id);
-
-
+			
+			
 ---- Initialization data
+DELETE FROM items;
+DELETE FROM default_tax_types;
+DELETE FROM tax_rates;
+DELETE FROM tax_types WHERE use_key_id <> 15;
 DELETE FROM loan_types;
 DELETE FROM default_adjustments;
 DELETE FROM adjustments;

@@ -1924,36 +1924,40 @@
 			<JASPER name="P9A" org.table="vw_employee_month" reportfile="P9A.jasper"></JASPER>
 		</FILTER>
 		<GRID export="xml" name="IR56B" keyfield="fiscal_year_id" table="vw_fiscal_years">
-			<TEXTFIELD w="75" title="Orgname">org_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="OrgFullName">org_full_name</TEXTFIELD>
-			<TEXTFIELD w="75" title="OrgSufix">org_sufix</TEXTFIELD>
-			<CHECKBOX w="75" title="Default">is_default</CHECKBOX>
-			<CHECKBOX w="75" title="Active">is_active</CHECKBOX>
-			<TEXTFIELD w="75" title="Logo">logo</TEXTFIELD>
-			<TEXTFIELD w="75" title="Pin">pin</TEXTFIELD>
-			<TEXTFIELD w="75" title="FiscalYearID">fiscal_year_id</TEXTFIELD>
-			<TEXTFIELD w="75" title="FiscalYear">fiscal_year</TEXTFIELD>
-			<TEXTDATE w="75" title="FiscalYearStart">fiscal_year_start</TEXTDATE>
-			<TEXTDATE w="75" title="FiscalYearEnd">fiscal_year_end</TEXTDATE>
-			<TEXTDATE w="75" title="SubmissionDate">submission_date</TEXTDATE>
-			<GRID name="Employee" keyfield="employee_year_id" linkfield="fiscal_year_id" table="vw_employee_year">
-				<TEXTFIELD w="75" title="EmployeeID">employee_id</TEXTFIELD>
+			<TEXTFIELD w="75" title="Section">section</TEXTFIELD>
+			<TEXTFIELD w="75" title="ERN">ern</TEXTFIELD>
+			<TEXTFIELD w="75" title="YrErReturn">fiscal_year</TEXTFIELD>
+			<TEXTFIELD w="75" title="SubDate">sub_date</TEXTFIELD>
+			<TEXTFIELD w="75" title="ErName">org_full_name</TEXTFIELD>
+			<TEXTFIELD w="75" title="Designation">designation</TEXTFIELD>
+			<TEXTFIELD w="75" title="NoRecordBatch">no_of_records</TEXTFIELD>
+			<TEXTFIELD w="75" title="TotIncomeBatch">total_income</TEXTFIELD>
+			<GRID name="Employee" keyfield="employee_year_id" orderby="(row_number() OVER ())" linkfield="fiscal_year_id" table="vw_employee_year">
+				<TEXTFIELD w="75" fnct="lpad((row_number() OVER ())::text, 7, '0')" title="SheetNo">sheet_no</TEXTFIELD>
+				<TEXTFIELD w="75" title="HKID">identity_card</TEXTFIELD>
+				<TEXTFIELD w="75" fnct="'O'" title="TypeOfForm">type_of_form</TEXTFIELD>
 				<TEXTFIELD w="75" title="Surname">surname</TEXTFIELD>
-				<TEXTFIELD w="75" title="FullName">employee_full_name</TEXTFIELD>
-				<CHECKBOX w="75" title="Gender">gender</CHECKBOX>
-				<TEXTFIELD w="75" title="Nationality">nationality</TEXTFIELD>
-				<TEXTFIELD w="75" title="MaritalStatus">marital_status</TEXTFIELD>
-				<TEXTDATE w="75" title="AppointmentDate">appointment_date</TEXTDATE>
-				<TEXTDATE w="75" title="ExitDate">exit_date</TEXTDATE>
-				<TEXTFIELD w="75" title="IdentityCard">identity_card</TEXTFIELD>
-				<TEXTFIELD w="75" title="Currency">currency_symbol</TEXTFIELD>
-				<TEXTDECIMAL w="75" title="NetPay">y_net_pay</TEXTDECIMAL>
+				<TEXTFIELD w="75" title="GivenName">first_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="NameInChinese">employee_full_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Sex">gender</TEXTFIELD>
+				<TEXTFIELD w="75" title="MaritalStatus">ms_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="SpouseName">spouse_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="SpouseHKID">spouse_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="PpNum">passport_num</TEXTFIELD>
+				<TEXTFIELD w="75" title="ResAddr">residential_address</TEXTFIELD>
+				<TEXTFIELD w="75" title="AreaCode">postal_code</TEXTFIELD>
+				<TEXTFIELD w="75" title="PosAddr">postal_address</TEXTFIELD>
+				<TEXTFIELD w="75" title="StartDateOfEmp">start_date_emp</TEXTFIELD>
+				<TEXTFIELD w="75" title="EndDateOfEmp">end_date_emp</TEXTFIELD>
+				<TEXTFIELD w="75" title="PerOfSalary">period_of_salary</TEXTFIELD>
+				<TEXTDECIMAL w="75" title="NetPay">y_basic_salary</TEXTDECIMAL>
 				<GRID name="Adjustment" keyfield="adjustment_effect_id" orderby="adjustment_effect_id" linkfield="employee_year_id" xml.intable="true" table="vw_adjustment_year" where="(adjustment_effect_type = 1)">
 					<TEXTFIELD w="75" fnct="'PerOf' || adjustment_effect_code" title="PerCode" hide="true">per_code</TEXTFIELD>
 					<TEXTFIELD w="75" fnct="'AmtOf' || adjustment_effect_code" title="AmontCode" hide="true">amount_code</TEXTFIELD>
 					<TEXTFIELD w="75" xml.node="per_code" title="Period">period_name</TEXTFIELD>
 					<TEXTDECIMAL w="75" xml.node="amount_code" title="Amount">s_amount</TEXTDECIMAL>
 				</GRID>
+				<TEXTDECIMAL w="75" title="TotalIncome">y_gross_salary</TEXTDECIMAL>
 			</GRID>
 		</GRID>
 	</DESK>
