@@ -191,7 +191,7 @@ CREATE VIEW vw_departments AS
 
 CREATE VIEW vw_periods AS
 	SELECT fiscal_years.fiscal_year_id, fiscal_years.fiscal_year, fiscal_years.fiscal_year_start, 
-		fiscal_years.fiscal_year_end, fiscal_years.year_opened, fiscal_years.year_closed,
+		fiscal_years.fiscal_year_end, fiscal_years.submission_date, fiscal_years.year_opened, fiscal_years.year_closed,
 
 		periods.period_id, periods.org_id, 
 		periods.start_date, periods.end_date, periods.opened, periods.activated, periods.closed, 

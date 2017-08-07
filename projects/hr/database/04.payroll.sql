@@ -598,7 +598,7 @@ CREATE VIEW vw_employee_month AS
 	SELECT vw_periods.period_id, vw_periods.start_date, vw_periods.end_date, vw_periods.overtime_rate, 
 		vw_periods.activated, vw_periods.closed, vw_periods.month_id, vw_periods.period_year, vw_periods.period_month,
 		vw_periods.quarter, vw_periods.semister, vw_periods.gl_payroll_account, vw_periods.is_posted,
-		vw_periods.fiscal_year_id, vw_periods.fiscal_year,
+		vw_periods.fiscal_year_id, vw_periods.fiscal_year, vw_periods.fiscal_year_start, vw_periods.fiscal_year_end, vw_periods.submission_date,
 		
 		vw_bank_branch.bank_id, vw_bank_branch.bank_name, vw_bank_branch.bank_branch_id, 
 		vw_bank_branch.bank_branch_name, vw_bank_branch.bank_branch_code,
@@ -632,8 +632,12 @@ CREATE VIEW vw_employee_month AS
 		getAdjustment(employee_month.employee_month_id, 4, 34) as advance,
 		getAdjustment(employee_month.employee_month_id, 4, 35) as advance_deduction,
 		getAdjustment(employee_month.employee_month_id, 4, 41) as other_banks,
+		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31)) as basic_salary,
+		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31)
+		+ getAdjustment(employee_month.employee_month_id, 1, 2)) as gross_salary,
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
 		+ getAdjustment(employee_month.employee_month_id, 4, 33) - getAdjustment(employee_month.employee_month_id, 4, 11)) as net_pay,
+		
 		(employee_month.Basic_Pay + getAdjustment(employee_month.employee_month_id, 4, 31) + getAdjustment(employee_month.employee_month_id, 4, 22) 
 		+ getAdjustment(employee_month.employee_month_id, 4, 33) + getAdjustment(employee_month.employee_month_id, 4, 34)
 		- getAdjustment(employee_month.employee_month_id, 4, 11) - getAdjustment(employee_month.employee_month_id, 4, 35)
