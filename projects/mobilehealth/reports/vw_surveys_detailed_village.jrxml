@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_surveys_detailed_village" language="groovy" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0a9c37fb-cae8-4f58-ac99-d15629992178">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="55"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -13,6 +13,44 @@
 			<style backcolor="#E6DAC3"/>
 		</conditionalStyle>
 	</style>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="household_count_village" uuid="e7cc6e40-087a-4dfe-8a77-01713e111f94">
+		<parameter name="start_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2015-08-01"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="end_date" class="java.lang.String">
+			<defaultValueExpression><![CDATA["2015-09-30"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="village_id" class="java.lang.String">
+			<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select COUNT(household_number) from vw_surveys
+WHERE
+vw_surveys.village_id = '$P!{village_id}'
+AND vw_surveys.survey_time::date BETWEEN '$P!{start_date}'::date AND  '$P!{end_date}'::date]]>
+		</queryString>
+		<field name="count" class="java.lang.Long"/>
+	</subDataset>
 	<parameter name="filterid" class="java.lang.String">
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
@@ -73,7 +111,7 @@ ORDER BY vw_surveys.survey_time ASC]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="259" splitType="Stretch">
+		<band height="279" splitType="Stretch">
 			<staticText>
 				<reportElement style="Title" x="0" y="129" width="802" height="35" uuid="6c4a99bb-b0b8-4119-9023-80f97f831697"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -89,7 +127,7 @@ ORDER BY vw_surveys.survey_time ASC]]>
 				<text><![CDATA[Organization]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="139" y="169" width="382" height="15" uuid="e8de58e0-3fa9-4e6a-a45c-6509bbcca656"/>
+				<reportElement style="Detail" x="209" y="169" width="382" height="15" uuid="e8de58e0-3fa9-4e6a-a45c-6509bbcca656"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -103,7 +141,7 @@ ORDER BY vw_surveys.survey_time ASC]]>
 				<text><![CDATA[County Name]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="139" y="184" width="382" height="15" uuid="577a6aff-97ba-4493-aa26-930f6560c203"/>
+				<reportElement style="Detail" x="209" y="184" width="382" height="15" uuid="577a6aff-97ba-4493-aa26-930f6560c203"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -117,14 +155,14 @@ ORDER BY vw_surveys.survey_time ASC]]>
 				<text><![CDATA[Sub County Name]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="139" y="199" width="382" height="15" uuid="c0e1c44a-f56a-4095-b7a4-dfe1ccf04073"/>
+				<reportElement style="Detail" x="209" y="199" width="382" height="15" uuid="c0e1c44a-f56a-4095-b7a4-dfe1ccf04073"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sub_county_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="139" y="214" width="382" height="17" uuid="5adce6e3-e580-49e9-a940-fb82899f6ace"/>
+				<reportElement style="Detail" x="209" y="214" width="382" height="17" uuid="5adce6e3-e580-49e9-a940-fb82899f6ace"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -138,28 +176,28 @@ ORDER BY vw_surveys.survey_time ASC]]>
 				<text><![CDATA[Village Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="341" y="241" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
+				<reportElement style="Column header" x="341" y="261" width="65" height="15" forecolor="#000000" uuid="35097522-f91e-40a8-a36b-d46c7b34121b"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[End Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="81" y="241" width="159" height="15" uuid="7d470367-8363-4229-bd7b-5e3ca10c8f6e"/>
+				<reportElement style="Detail" x="81" y="261" width="159" height="15" uuid="7d470367-8363-4229-bd7b-5e3ca10c8f6e"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{start_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="Column header" x="16" y="241" width="65" height="15" forecolor="#000000" uuid="a57e6f3c-5ab5-4c35-8635-39c129991c74"/>
+				<reportElement style="Column header" x="16" y="261" width="65" height="15" forecolor="#000000" uuid="a57e6f3c-5ab5-4c35-8635-39c129991c74"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Start Date : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement style="Detail" x="406" y="241" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
+				<reportElement style="Detail" x="406" y="261" width="159" height="15" uuid="12fdef3e-edd3-499a-8fbc-84d4354771ce"/>
 				<textElement>
 					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
 				</textElement>
@@ -181,6 +219,39 @@ ORDER BY vw_surveys.survey_time ASC]]>
 				<reportElement x="479" y="11" width="112" height="101" uuid="8d5820f0-cc1b-4f0d-8af4-9e8d1da49a4d"/>
 				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + "aphrc_uk_aid.png"]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement mode="Transparent" x="13" y="229" width="196" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="f15ab505-e4db-4390-9478-1226c2ee343c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Times-Bold" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Total number of households visited :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" x="209" y="231" width="382" height="13" uuid="b847adc4-e0b7-4e14-a026-bd426026f769"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="household_count_village" uuid="e1c9ed5b-5157-4e5b-9530-f40455175ad7">
+						<datasetParameter name="start_date">
+							<datasetParameterExpression><![CDATA[$P{start_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="village_id">
+							<datasetParameterExpression><![CDATA[$P{village_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90" uuid="b1b5403b-ee42-4699-b937-ab301512a4ba">
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="6cd29b81-c8fd-4430-8328-2f59197b38f1"/>
+								<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
 		</band>
 	</title>
 	<pageHeader>
