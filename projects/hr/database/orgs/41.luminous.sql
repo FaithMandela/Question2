@@ -108,7 +108,10 @@ VALUES
 (20, 'OtherRAP1', 'OtherRAP1', 1),
 (21, 'OtherRAP2', 'OtherRAP2', 1),
 (22, 'OtherRAP3', 'OtherRAP3', 1),
-(23, 'Pension', 'Pension', 1);
+(23, 'Pension', 'Pension', 1),
+(24, 'Rent1', '1', 2),
+(25, 'Rent2', '2', 2),
+(26, 'Overseas', 'Oversea', 2);
 
 INSERT INTO adjustments (org_id, adjustment_effect_id, adjustment_type, adjustment_Name, Visible, In_Tax, account_number) 
 VALUES 

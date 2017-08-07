@@ -103,7 +103,8 @@
 				<TEXTDECIMAL w="150" title="Default Amount" y="90" h="20" x="10">default_amount</TEXTDECIMAL>
 				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(29" y="110" h="20" x="10">account_number</TEXTFIELD>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Effects" lptable="adjustment_effects" noorg="true" where="(adjustment_effect_type=1)" y="150" h="20" x="10" lpfield="adjustment_effect_name">adjustment_effect_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Deductions" keyfield="adjustment_id" table="vw_adjustments" where="(adjustment_type = 2)">
@@ -135,7 +136,7 @@
 				<TEXTDECIMAL w="150" title="Max Tax Allowed" y="130" h="20" x="290">tax_max_allowed</TEXTDECIMAL>
 				<TEXTDECIMAL w="150" title="Default Amount" y="150" h="20" x="10">default_amount</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="170" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<COMBOBOX w="430" title="Effects" lptable="adjustment_effects" noorg="true" y="190" h="20" x="10" lpfield="adjustment_effect_name">adjustment_effect_id</COMBOBOX>
+				<COMBOBOX w="430" title="Effects" lptable="adjustment_effects" noorg="true" where="(adjustment_effect_type=2)" y="190" h="20" x="10" lpfield="adjustment_effect_name">adjustment_effect_id</COMBOBOX>
 				<TEXTAREA w="430" title="Details" y="210" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
@@ -163,7 +164,8 @@
 				<TEXTFIELD w="150" title="Account Number" default_org_fnct="get_default_account(31" y="90" h="20" x="10">account_number</TEXTFIELD>
 				<TEXTDECIMAL w="150" title="Default Amount" y="110" h="20" x="10">default_amount</TEXTDECIMAL>
 				<COMBOBOX w="430" title="Currency" lptable="currency" y="130" h="20" x="10" lpfield="currency_name">currency_id</COMBOBOX>
-				<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+				<COMBOBOX w="430" title="Effects" lptable="adjustment_effects" noorg="true" where="(adjustment_effect_type=3)" y="150" h="20" x="10" lpfield="adjustment_effect_name">adjustment_effect_id</COMBOBOX>
+				<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 			</FORM>
 		</GRID>
 		<GRID name="Claim Types" keyfield="claim_type_id" table="vw_claim_types">
@@ -1922,6 +1924,7 @@
 				<COMBOBOX w="430" title="Year" lptable="vw_period_year" orderby="period_year desc" y="30" h="20" x="10" lpfield="period_year">period_year</COMBOBOX>
 			</FILTERFORM>
 			<JASPER name="P9A" org.table="vw_employee_month" reportfile="P9A.jasper"></JASPER>
+			<JASPER name="IR56B" reportfile="IR56B.jasper"></JASPER>
 		</FILTER>
 		<GRID export="xml" name="IR56B" keyfield="fiscal_year_id" table="vw_fiscal_years">
 			<TEXTFIELD w="75" title="Section">section</TEXTFIELD>
@@ -1958,6 +1961,33 @@
 					<TEXTDECIMAL w="75" xml.node="amount_code" title="Amount">s_amount</TEXTDECIMAL>
 				</GRID>
 				<TEXTDECIMAL w="75" title="TotalIncome">y_gross_salary</TEXTDECIMAL>
+				<GRID name="rent" keyfield="adjustment_effect_id" orderby="adjustment_effect_id" linkfield="employee_year_id" xml.intable="true" table="vw_adjustment_year" where="(adjustment_effect_id IN (24, 25))">
+					<TEXTFIELD w="75" fnct="'AddrOfPlace' || adjustment_effect_code" title="AddrOfPlace" hide="true">AddrOfPlace</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'NatureOfPlace' || adjustment_effect_code" title="AmontCode" hide="true">NatureOfPlace</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'PerOfPlace' || adjustment_effect_code" title="PerOfPlace" hide="true">PerOfPlace</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'PentPaidEr' || adjustment_effect_code" title="PentPaidEr" hide="true">PentPaidEr</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'RentPaidEe' || adjustment_effect_code" title="RentPaidEe" hide="true">RentPaidEe</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'RentRefund' || adjustment_effect_code" title="RentRefund" hide="true">RentRefund</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'RentPaidErByEe' || adjustment_effect_code" title="RentPaidErByEe" hide="true">RentPaidErByEe</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="AddrOfPlace" fnct="''" title="Period">rc1</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="NatureOfPlace" fnct="''" title="Period">rc2</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="PerOfPlace" fnct="''" title="Period">rc3</TEXTFIELD>
+					<TEXTDECIMAL w="75" xml.node="PentPaidEr" title="Amount">s_amount</TEXTDECIMAL>
+					<TEXTFIELD w="75" xml.node="RentPaidEe" fnct="'0'" title="Period">rc4</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="RentRefund" fnct="'0'" title="Period">rc5</TEXTFIELD>
+					<TEXTDECIMAL w="75" xml.node="RentPaidErByEe" title="Amount">s_amount</TEXTDECIMAL>
+				</GRID>
+				<GRID name="oversea" keyfield="adjustment_effect_id" orderby="adjustment_effect_id" linkfield="employee_year_id" xml.intable="true" table="vw_adjustment_year" where="(adjustment_effect_id = 26)">
+					<TEXTFIELD w="75" fnct="adjustment_effect_code || 'IncInd'" title="AddrOfPlace" hide="true">IncInd</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'AmtPaid' || adjustment_effect_code || 'Co'" title="AmontCode" hide="true">AmtPaid</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'NameOf' || adjustment_effect_code || 'Co'" title="PerOfPlace" hide="true">NameOf</TEXTFIELD>
+					<TEXTFIELD w="75" fnct="'AddrOf' || adjustment_effect_code || 'Co'" title="PentPaidEr" hide="true">AddrOf</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="IncInd" fnct="''" title="Period">rc1</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="AmtPaid" fnct="''" title="Period">rc2</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="NameOf" fnct="''" title="Period">rc3</TEXTFIELD>
+					<TEXTFIELD w="75" xml.node="AddrOf" fnct="''" title="Period">rc5</TEXTFIELD>
+				</GRID>
+				<TEXTFIELD w="75" fnct="''" title="Remarks">remarks</TEXTFIELD>
 			</GRID>
 		</GRID>
 	</DESK>
