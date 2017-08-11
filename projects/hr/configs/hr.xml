@@ -1446,7 +1446,8 @@
 					<TEXTDATE w="150" title="Date To" y="10" h="20" x="290">date_to</TEXTDATE>
 					<TEXTFIELD w="430" title="Employers Name" y="30" h="20" x="10">employers_name</TEXTFIELD>
 					<TEXTFIELD w="430" title="Position Held" y="50" h="20" x="10">position_held</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="70" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="150" title="Principal Employment" y="70" h="20" x="10">principal_employment</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="90" h="70" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 			<GRID name="Kins" keyfield="kin_id" orderby="kin_type_id" linkfield="entity_id" table="vw_kins">

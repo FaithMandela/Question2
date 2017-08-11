@@ -4,12 +4,18 @@ CREATE OR REPLACE FUNCTION pairkey(x int, y int) RETURNS int AS $$
 	ELSE (x - 1) * y + ((x - y - 2)^2)::int / 4 END
 $$ LANGUAGE sql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION get_year_allowance(int, int, int) RETURNS real AS $$
+	SELECT COALESCE(sum(base_amount), 0)::real as s_base_amount
+	FROM vw_employee_adjustments
+	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (adjustment_effect_id = $3);
+$$ LANGUAGE SQL;
 
 ALTER TABLE orgs ADD designation varchar(50) default 'PARTNER';
 
 
 CREATE VIEW vw_employee_year AS
-	SELECT em.org_id, em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
+	SELECT orgs.org_id,orgs.org_name, orgs.org_full_name, orgs.pin,
+		em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
 		em.entity_id, em.entity_name,
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, 
 		em.gender, em.nationality, em.marital_status, em.appointment_date, em.exit_date, 
@@ -24,13 +30,16 @@ CREATE VIEW vw_employee_year AS
 		ea.postal_code, (ea.premises || ', ' || ea.street) as residential_address,
 		(CASE WHEN ea.premises is null THEN ea.post_office_box ELSE null END) as postal_address,
 		max(em.department_role_name) as capacity,
+		get_alternate_employment(em.entity_id) as alternate_employment,
 		to_char(em.appointment_date, 'YYYYMMDD') as start_date_emp, to_char(em.exit_date, 'YYYYMMDD') as end_date_emp,
 		(to_char(em.fiscal_year_start, 'YYYYMMDD') || ' - ' || to_char(em.fiscal_year_end, 'YYYYMMDD')) as period_of_salary,
 		sum(em.basic_salary) as y_basic_salary, sum(em.gross_salary) as y_gross_salary, sum(em.net_pay) as y_net_pay
 	
-	FROM vw_employee_month em LEFT JOIN vw_employee_address ea ON em.entity_id = ea.table_id
+	FROM vw_employee_month em INNER JOIN orgs ON em.org_id = orgs.org_id
+		LEFT JOIN vw_employee_address ea ON em.entity_id = ea.table_id
 	
-	GROUP BY em.org_id, em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
+	GROUP BY orgs.org_id,orgs.org_name, orgs.org_full_name, orgs.pin,
+		em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
 		em.entity_id, em.entity_name,
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, 
 		em.gender, em.nationality, em.marital_status, em.appointment_date, em.exit_date, 

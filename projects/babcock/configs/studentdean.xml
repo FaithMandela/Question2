@@ -171,12 +171,13 @@
 				<FORM name="Semester Residences" keyfield="qresidenceid" linkfield="quarterid" table="qresidences" noorg="true">
 					<COMBOBOX w="350" title="Residence" lptable="residences" noorg="true" y="10" h="20" x="10" lpfield="residencename">residenceid</COMBOBOX>
 					<TEXTFIELD w="150" title="Charges" y="30" h="20" x="10">charges</TEXTFIELD>
-					<COMBOLIST w="150" title="Residence Option" y="30" h="20" editable="true" x="290">residenceoption
+					<TEXTFIELD w="150" title="Full Charges" y="30" h="20" x="290">full_charges</TEXTFIELD>
+					<COMBOLIST w="150" title="Residence Option" y="50" h="20" editable="true" x="10">residenceoption
 						<DATA>Full</DATA>
 						<DATA>Group A</DATA>
 						<DATA>Group B</DATA>
 					</COMBOLIST>
-					<TEXTAREA w="430" title="Details" y="50" h="120" x="10">details</TEXTAREA>
+					<TEXTAREA w="430" title="Details" y="70" h="120" x="10">details</TEXTAREA>
 				</FORM>
 			</GRID>
 		</GRID>

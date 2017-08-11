@@ -1521,9 +1521,13 @@ BEGIN
 		END IF;
 	END IF;
 
-	IF (reca.schoolid = 'COEN')THEN
+	IF(reca.schoolid = 'COEN')THEN
 		NEW.terminalid = '7000000089';
 	ELSIF(reca.org_id = 1)THEN
+		NEW.terminalid = '7007139046';
+	ELSIF(reca.schoolid = 'MBBS')THEN
+		NEW.terminalid = '7007139046';
+	ELSIF(reca.schoolid = 'BCSM')THEN
 		NEW.terminalid = '7007139046';
 	ELSE
 		NEW.terminalid = '0690000082';

@@ -1179,11 +1179,17 @@ CREATE VIEW vwstudentpayments AS
 		'<a href="payments/paymentVisa.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
 		|| '" target="_blank"><IMG SRC="resources/images/visa.jpeg" WIDTH=380 HEIGHT=29 ALT=""></a>'
 		ELSE 'The payment is completed and updated' END) as visapayment,
+		
+		(CASE WHEN studentpayments.approved = false THEN 
+		'<a href="payments/paymentBankit.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
+		|| '" target="_blank"><IMG SRC="resources/images/bankit.png" WIDTH=198 HEIGHT=58 ALT=""></a>'
+		ELSE 'The payment is completed and updated' END) as bankit,
 
 		(CASE WHEN studentpayments.approved = false THEN 
 		'<a href="payments/query.jsp?TRANSACTION_ID='|| studentpayments.studentpaymentid
 		|| '" target="_blank">Query Payment Status</a>'
 		ELSE 'Ok' END) as querypayment
+		
 	FROM (((students INNER JOIN studentdegrees ON students.studentid = studentdegrees.studentid)
 		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid)
 		INNER JOIN studentpayments ON studentpayments.qstudentid = qstudents.qstudentid)

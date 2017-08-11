@@ -37,3 +37,6 @@ WHERE tax_types.org_id = 0) bb
 ON aa.tax_type_name = bb.tax_type_name
 ORDER BY aa.tax_type_id, bb.tax_range
 
+
+
+

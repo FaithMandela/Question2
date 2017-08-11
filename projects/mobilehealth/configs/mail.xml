@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ESCALATION title="Mobile Health Mail" processdelay="2"
+	host="smtp.gmail.com" mailuser="mobilehealthapp@aphrc.org"  mailfrom="mobilehealthapp@aphrc.org"
+	mailpassword="aphrcM0b1l3@pp"
+	inbox="INBOX" sentbox="Sent" smtppauth="true" smtptls="true" imaphost="imap.gmail.com" imapssl="true"
+	testemail="dennis@dennis.me.ke">
+		
+	<REPORT name="DSS" keyfield="sys_emailed_id" action="Emailed" actioncount="1" 
+			table="sys_emails, sys_emailed, link_health_facilities"
+			where="(link_health_facilities.link_health_facility_id = sys_emailed.table_id) 
+				AND (sys_emailed.emailed = false)
+				AND (sys_emails.sys_email_id = sys_emailed.sys_email_id)">
+		<SUBJECT title="subject">sys_emails.title</SUBJECT>
+		<ADDRESS title="address">link_health_facilities.email</ADDRESS>
+		<BODYFIELD reference="{{mail_body}}" basetable="sys_emailed">mail_body</BODYFIELD>
+		<FIELD title="Body" basetable="sys_emails">details</FIELD>
+	</REPORT>
+
+</ESCALATION>
