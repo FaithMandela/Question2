@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ESCALATION title="Mobile Health Mail" processdelay="2"
 	host="smtp.gmail.com" mailuser="mobilehealthapp@aphrc.org"  mailfrom="mobilehealthapp@aphrc.org"
-	mailpassword="aphrcM0b1l3@pp"
+	mailpassword="aphrcM0b1l3@pp" googleauth="true"
 	inbox="INBOX" sentbox="Sent" smtppauth="true" smtptls="true" imaphost="imap.gmail.com" imapssl="true"
 	testemail="dennis@dennis.me.ke">
 		
