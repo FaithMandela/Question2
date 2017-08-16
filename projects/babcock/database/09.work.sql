@@ -295,5 +295,11 @@ ON vwstudentmajors.studentdegreeid = qstudents.studentdegreeid
 WHERE vwstudentmajors.studentid = '15/0715';
 
 
+UPDATE studentpayments SET terminalid = '7007139046'
+WHERE (approved = false) AND (qstudentid IN
+(SELECT qstudentid
+FROM qstudentview
+WHERE (schoolid IN ('MBBS', 'BCSM')) AND (quarterid = '2017/2018.1')));
+
 
 

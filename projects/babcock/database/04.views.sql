@@ -432,14 +432,29 @@ CREATE VIEW qstudentdegreeview AS
 		qstudents.probation, qstudents.roomnumber, qstudents.currbalance, qstudents.applicationtime, qstudents.studylevel,
 		qstudents.finalised, qstudents.finaceapproval, qstudents.majorapproval, qstudents.chaplainapproval, qstudents.studentdeanapproval, 
 		qstudents.overloadapproval, qstudents.overloadhours, qstudents.intersession, qstudents.closed, qstudents.printed, qstudents.approved, qstudents.noapproval,
-		qstudents.org_id,
+		qstudents.org_id, qstudents.so_approval,
 		qresidenceview.residenceid, qresidenceview.residencename, qresidenceview.defaultrate,
 		qresidenceview.offcampus, qresidenceview.Sex as residencesex, qresidenceview.residencedean, qresidenceview.charges as residencecharges,
 		qresidenceview.qresidenceid, qresidenceview.residenceoption, (qresidenceview.qresidenceid || 'R' || qstudents.roomnumber) as roomid  
 	FROM (((students INNER JOIN (studentdegrees INNER JOIN sublevels ON studentdegrees.sublevelid = sublevels.sublevelid) ON students.studentid = studentdegrees.studentid)
 		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid)
 		LEFT JOIN qresidenceview ON qstudents.qresidenceid = qresidenceview.qresidenceid);
-
+		
+CREATE VIEW qcurrstudentdegreeview AS 
+	SELECT qstudentdegreeview.studentid, qstudentdegreeview.departmentid, qstudentdegreeview.studentname, qstudentdegreeview.sex, 
+		qstudentdegreeview.nationality, qstudentdegreeview.maritalstatus, qstudentdegreeview.birthdate, qstudentdegreeview.email, 
+		qstudentdegreeview.studentdegreeid, qstudentdegreeview.degreeid, qstudentdegreeview.sublevelid, qstudentdegreeview.qstudentid, 
+		qstudentdegreeview.quarterid, qstudentdegreeview.charges, qstudentdegreeview.probation, qstudentdegreeview.roomnumber, 
+		qstudentdegreeview.currbalance, qstudentdegreeview.finaceapproval, qstudentdegreeview.studylevel, 
+		qstudentdegreeview.finalised, qstudentdegreeview.majorapproval, 
+		qstudentdegreeview.chaplainapproval, qstudentdegreeview.overloadapproval, 
+		qstudentdegreeview.studentdeanapproval, qstudentdegreeview.overloadhours, qstudentdegreeview.intersession, 
+		qstudentdegreeview.closed, qstudentdegreeview.printed, qstudentdegreeview.approved, qstudentdegreeview.noapproval, 
+		qstudentdegreeview.org_id, qstudentdegreeview.so_approval,
+		qstudentdegreeview.qresidenceid, qstudentdegreeview.residenceid, qstudentdegreeview.residencename, qstudentdegreeview.roomid
+	FROM qstudentdegreeview JOIN quarters ON qstudentdegreeview.quarterid = quarters.quarterid
+	WHERE quarters.active = true;
+	
 CREATE VIEW astudentdegreeview AS
 	SELECT schools.schoolid, schools.schoolname, students.studentid, students.studentname, students.Sex, students.Nationality, students.MaritalStatus,
 		students.birthdate, students.email, studentdegrees.studentdegreeid, degrees.degreeid, degrees.degreelevelid, degrees.degreename,
@@ -451,21 +466,6 @@ CREATE VIEW astudentdegreeview AS
 	FROM ((schools INNER JOIN students ON schools.schoolid = students.departmentid)   
 		INNER JOIN (studentdegrees INNER JOIN degrees ON studentdegrees.degreeid = degrees.degreeid) ON students.studentid = studentdegrees.studentid)
 		INNER JOIN qstudents ON studentdegrees.studentdegreeid = qstudents.studentdegreeid;
-
-CREATE VIEW qcurrstudentdegreeview AS 
-	SELECT qstudentdegreeview.studentid, qstudentdegreeview.departmentid, qstudentdegreeview.studentname, qstudentdegreeview.sex, 
-		qstudentdegreeview.nationality, qstudentdegreeview.maritalstatus, qstudentdegreeview.birthdate, qstudentdegreeview.email, 
-		qstudentdegreeview.studentdegreeid, qstudentdegreeview.degreeid, qstudentdegreeview.sublevelid, qstudentdegreeview.qstudentid, 
-		qstudentdegreeview.quarterid, qstudentdegreeview.charges, qstudentdegreeview.probation, qstudentdegreeview.roomnumber, 
-		qstudentdegreeview.currbalance, qstudentdegreeview.finaceapproval, qstudentdegreeview.studylevel, 
-		qstudentdegreeview.finalised, qstudentdegreeview.majorapproval, 
-		qstudentdegreeview.chaplainapproval, qstudentdegreeview.overloadapproval, 
-		qstudentdegreeview.studentdeanapproval, qstudentdegreeview.overloadhours, qstudentdegreeview.intersession, 
-		qstudentdegreeview.closed, qstudentdegreeview.printed, qstudentdegreeview.approved, qstudentdegreeview.noapproval, 
-		qstudentdegreeview.org_id,
-		qstudentdegreeview.qresidenceid, qstudentdegreeview.residenceid, qstudentdegreeview.residencename, qstudentdegreeview.roomid
-	FROM qstudentdegreeview JOIN quarters ON qstudentdegreeview.quarterid = quarters.quarterid
-	WHERE quarters.active = true;
 
 CREATE VIEW qstudentview AS
 	SELECT studentdegreeview.religionid, studentdegreeview.religionname, studentdegreeview.denominationid, studentdegreeview.denominationname,
