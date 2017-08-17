@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
-<!-- 2017-08-15T16:54:12 -->
+<!-- 2017-08-17T14:41:14 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IR56B" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c38f6be-f816-4cfd-a23b-e0a7c990db68">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Hr Data Adapter "/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -35,12 +35,11 @@
 		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="employee_id" class="java.lang.String">
-		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["4"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT vw_employee_year.org_id, vw_employee_year.org_name, vw_employee_year.org_full_name, vw_employee_year.pin,
-    vw_employee_year.fiscal_year_id, vw_employee_year.fiscal_year_start,
-    vw_employee_year.fiscal_year_end, vw_employee_year.submission_date, vw_employee_year.entity_id,
+    vw_employee_year.fiscal_year_id, vw_employee_year.entity_id,
     vw_employee_year.entity_name, vw_employee_year.employee_id, vw_employee_year.surname,
     vw_employee_year.first_name, vw_employee_year.middle_name, vw_employee_year.date_of_birth,
     vw_employee_year.gender, vw_employee_year.nationality, vw_employee_year.marital_status,
@@ -51,15 +50,20 @@
     vw_employee_year.ms_code, vw_employee_year.spouse_name, vw_employee_year.spouse_id,
     vw_employee_year.passport_num, vw_employee_year.postal_code, vw_employee_year.residential_address,
     vw_employee_year.postal_address, vw_employee_year.capacity, 
+    
+    to_char(vw_employee_year.submission_date, 'FMDDth FMMonth YYYY')as submit_year,
+    to_char(vw_employee_year.fiscal_year_start, 'FMDDth FMMonth YYYY')as start_year,
+    to_char(vw_employee_year.fiscal_year_end, 'FMDDth FMMonth YYYY')as end_year,
 
-    date_part('day', vw_employee_year.start_date_emp::date) as start_date_day,
-    date_part('month', vw_employee_year.start_date_emp::date) as start_date_month,
-    date_part('year', vw_employee_year.start_date_emp::date) as start_date_year,
+   round( date_part('day',vw_employee_year.fiscal_year_start::date) )::integer as start_date_day,   
+    round(date_part('month', vw_employee_year.fiscal_year_start::date))::integer as start_date_month,
+    round(date_part('year', vw_employee_year.fiscal_year_start::date))::integer as start_date_year,
         
     
-    date_part('day', vw_employee_year.end_date_emp::date) as end_date_day, 
-    date_part('month', vw_employee_year.end_date_emp::date) as end_date_month, 
-    date_part('year', vw_employee_year.end_date_emp::date) as end_date_year, 
+    round(date_part('day', vw_employee_year.fiscal_year_end::date))::integer as end_date_day, 
+    round(date_part('month', vw_employee_year.fiscal_year_end::date))::integer as end_date_month, 
+    
+    round(date_part('year', vw_employee_year.fiscal_year_end::date))::integer as end_date_year, 
 
 
     vw_employee_year.period_of_salary, vw_employee_year.y_basic_salary,
@@ -78,15 +82,12 @@
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 21) +
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 22)) as OtherRAP,
     get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 23) as Pension,
-   
-   
+      
     vw_employee_year.alternate_employment,
     (CASE WHEN vw_employee_year.alternate_employment is null THEN '0' ELSE '1' END) as full_time,
     employment.employers_name, employment.position_held, employment.alternative_address, employment.alternative_salary
-   
-
+  
 FROM vw_employee_year LEFT JOIN employment ON vw_employee_year.alternate_employment = employment.employment_id
-
 
 WHERE (vw_employee_year.fiscal_year_id = '$P!{fiscal_year_id}')
 AND (vw_employee_year.entity_id = '$P!{employee_id}')]]>
@@ -96,9 +97,6 @@ AND (vw_employee_year.entity_id = '$P!{employee_id}')]]>
 	<field name="org_full_name" class="java.lang.String"/>
 	<field name="pin" class="java.lang.String"/>
 	<field name="fiscal_year_id" class="java.lang.Integer"/>
-	<field name="fiscal_year_start" class="java.sql.Date"/>
-	<field name="fiscal_year_end" class="java.sql.Date"/>
-	<field name="submission_date" class="java.sql.Date"/>
 	<field name="entity_id" class="java.lang.Integer"/>
 	<field name="entity_name" class="java.lang.String"/>
 	<field name="employee_id" class="java.lang.String"/>
@@ -129,12 +127,15 @@ AND (vw_employee_year.entity_id = '$P!{employee_id}')]]>
 	<field name="residential_address" class="java.lang.String"/>
 	<field name="postal_address" class="java.lang.String"/>
 	<field name="capacity" class="java.lang.String"/>
-	<field name="start_date_day" class="java.lang.Double"/>
-	<field name="start_date_month" class="java.lang.Double"/>
-	<field name="start_date_year" class="java.lang.Double"/>
-	<field name="end_date_day" class="java.lang.Double"/>
-	<field name="end_date_month" class="java.lang.Double"/>
-	<field name="end_date_year" class="java.lang.Double"/>
+	<field name="submit_year" class="java.lang.String"/>
+	<field name="start_year" class="java.lang.String"/>
+	<field name="end_year" class="java.lang.String"/>
+	<field name="start_date_day" class="java.lang.Integer"/>
+	<field name="start_date_month" class="java.lang.Integer"/>
+	<field name="start_date_year" class="java.lang.Integer"/>
+	<field name="end_date_day" class="java.lang.Integer"/>
+	<field name="end_date_month" class="java.lang.Integer"/>
+	<field name="end_date_year" class="java.lang.Integer"/>
 	<field name="period_of_salary" class="java.lang.String"/>
 	<field name="y_basic_salary" class="java.lang.Double"/>
 	<field name="y_gross_salary" class="java.lang.Double"/>
@@ -183,7 +184,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="314" y="0" width="229" height="10" uuid="32521182-18fb-4804-9ca9-f0d7bde6d0aa">
+				<reportElement x="314" y="-2" width="229" height="10" uuid="32521182-18fb-4804-9ca9-f0d7bde6d0aa">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -198,16 +199,23 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[FOR OFFICIAL USE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="12" y="62" width="419" height="10" uuid="7570340d-8f00-4bf1-be74-be4473804475">
+				<reportElement x="5" y="64" width="360" height="10" uuid="7570340d-8f00-4bf1-be74-be4473804475">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<text><![CDATA[Please provide a copy of the completed form IRB56B to your employee and retain a copy for reference]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="78" width="387" height="10" uuid="e180dddb-2eb8-4b16-9c21-2ff0e571af86">
+				<reportElement x="16" y="78" width="309" height="10" uuid="e180dddb-2eb8-4b16-9c21-2ff0e571af86">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -226,7 +234,9 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[1. ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="16" y="92" width="93" height="10" uuid="6039fae8-fe78-48ac-81aa-08a08904cd3f"/>
+				<reportElement x="16" y="92" width="70" height="10" uuid="6039fae8-fe78-48ac-81aa-08a08904cd3f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
@@ -251,7 +261,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[2.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="15" y="121" width="387" height="10" uuid="49a19c58-8540-4e70-829e-afb1b7b10c19">
+				<reportElement x="15" y="121" width="417" height="10" uuid="49a19c58-8540-4e70-829e-afb1b7b10c19">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -260,7 +270,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Name  of Employee or Pensioner (See Note 1(a)):]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="23" y="134" width="500" height="50" uuid="d6445005-4416-4df5-b824-cb49f9762637">
+				<reportElement x="23" y="134" width="530" height="50" uuid="d6445005-4416-4df5-b824-cb49f9762637">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<graphicElement>
@@ -268,19 +278,21 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</rectangle>
 			<line>
-				<reportElement x="182" y="148" width="341" height="1" uuid="acf98eab-2ca4-4af3-8879-868334bc13a4"/>
+				<reportElement x="182" y="148" width="371" height="1" uuid="acf98eab-2ca4-4af3-8879-868334bc13a4"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="182" y="134" width="1" height="50" uuid="74dd76d3-f57b-406d-ab99-01fd7bf001f8"/>
+				<reportElement x="182" y="134" width="1" height="50" uuid="74dd76d3-f57b-406d-ab99-01fd7bf001f8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement x="182" y="164" width="341" height="1" uuid="ea7a2fd7-4fdc-460c-ba8f-3d22bc8ec246"/>
+				<reportElement x="182" y="164" width="371" height="1" uuid="ea7a2fd7-4fdc-460c-ba8f-3d22bc8ec246"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
@@ -288,13 +300,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 			<line>
 				<reportElement x="312" y="134" width="1" height="50" uuid="cdab75bd-03a8-476b-928f-b95ef385fd6d">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="185" y="136" width="104" height="10" uuid="52cc103e-c4ff-4f6b-b371-0c8117216501">
+				<reportElement x="185" y="136" width="134" height="10" uuid="52cc103e-c4ff-4f6b-b371-0c8117216501">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -303,21 +316,21 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Surname :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="185" y="151" width="104" height="10" uuid="93137d63-618e-429d-99fa-651fec7b2fbc"/>
+				<reportElement x="185" y="151" width="134" height="10" uuid="93137d63-618e-429d-99fa-651fec7b2fbc"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<text><![CDATA[Given Name ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="185" y="166" width="127" height="10" uuid="d77a34f3-5e3c-4663-b2e8-925d7f5c00fe"/>
+				<reportElement x="185" y="166" width="157" height="10" uuid="d77a34f3-5e3c-4663-b2e8-925d7f5c00fe"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<text><![CDATA[Full Name in Chinese]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="34" y="156" width="133" height="10" uuid="24a7ccdb-451a-404e-aee6-8cb28dbbe220"/>
+				<reportElement x="34" y="156" width="163" height="10" uuid="24a7ccdb-451a-404e-aee6-8cb28dbbe220"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
@@ -331,34 +344,34 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[3.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="36" y="189" width="280" height="10" uuid="90e140b5-012b-4f0b-9f21-e7519a63a66b">
+				<reportElement x="36" y="189" width="155" height="10" uuid="90e140b5-012b-4f0b-9f21-e7519a63a66b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[ H.K identity Card Number (See Note 2(c))................(This field must be completed)]]></text>
+				<text><![CDATA[ H.K identity Card Number (See Note 2(c))]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="18" y="215" width="300" height="10" uuid="78a890f8-59dd-4bb4-8bfb-39d1cd6a5c93">
+				<reportElement x="18" y="215" width="190" height="10" uuid="78a890f8-59dd-4bb4-8bfb-39d1cd6a5c93">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Sex(Insert the appropriate code: M=Male, F=Female) .......(This box must be completed)]]></text>
+				<text><![CDATA[Sex(Insert the appropriate code: M=Male, F=Female)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="39" y="201" width="280" height="10" uuid="708c3746-2a87-4319-b267-78f965cd026b">
+				<reportElement x="39" y="201" width="265" height="10" uuid="708c3746-2a87-4319-b267-78f965cd026b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Passport Number and place of issue(if  Employee has no H.K Identity Card)..........]]></text>
+				<text><![CDATA[Passport Number and place of issue(if  Employee has no H.K Identity Card)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="18" y="189" width="16" height="10" uuid="7e0ddb81-0557-4c91-a526-719373c7c786">
@@ -393,14 +406,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[5.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="19" y="230" width="330" height="10" uuid="c3e64e20-a9f3-48ac-9bef-ca9a7c00e4e2">
+				<reportElement x="19" y="230" width="346" height="10" uuid="c3e64e20-a9f3-48ac-9bef-ca9a7c00e4e2">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Marital Status(Insert the appropriate code:1=Single/Widowed/Divorced/Living Apart, 2=Married).....]]></text>
+				<text><![CDATA[Marital Status(Insert the appropriate code:1=Single/Widowed/Divorced/Living Apart, 2=Married)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="4" y="245" width="12" height="10" uuid="d60abf61-7e89-4892-a97d-7b176b37886c">
@@ -419,14 +432,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[(a) ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="38" y="245" width="150" height="10" uuid="08c72460-00fc-427b-9195-be332952c60c">
+				<reportElement x="38" y="245" width="115" height="10" uuid="08c72460-00fc-427b-9195-be332952c60c">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[If married, full name of spouse ............]]></text>
+				<text><![CDATA[If married, full name of spouse ]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="17" y="305" width="16" height="10" uuid="ec47ddae-1a6f-4d28-b6a1-8155105578b1">
@@ -447,14 +460,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[7.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="35" y="317" width="250" height="10" uuid="dbfa9e31-080a-4429-a25d-211f597f761b">
+				<reportElement x="35" y="318" width="220" height="10" uuid="dbfa9e31-080a-4429-a25d-211f597f761b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[If part time, name of his/her principal employer(if known) .............]]></text>
+				<text><![CDATA[If part time, name of his/her principal employer(if known)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="3" y="290" width="12" height="10" uuid="80368299-0920-4493-b0dc-e57a65c76ad5">
@@ -473,13 +486,13 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[9.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="35" y="303" width="100" height="10" uuid="7926df90-12e2-4d2a-9001-07a6ebeb1ac6">
+				<reportElement x="35" y="305" width="113" height="10" uuid="7926df90-12e2-4d2a-9001-07a6ebeb1ac6">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Capacity in which employed.............................................................................................................................]]></text>
+				<text><![CDATA[Capacity in which employed]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="16" y="318" width="16" height="10" uuid="74349a8e-ae70-4d1b-b9f9-2daabfc9b37d"/>
@@ -489,32 +502,32 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[(b)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="18" y="289" width="150" height="10" uuid="7353f870-a4ee-4c48-b712-c0c9fa135876">
+				<reportElement x="18" y="289" width="164" height="10" uuid="7353f870-a4ee-4c48-b712-c0c9fa135876">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Postal Address (if different from 7above )..................................................................................................................]]></text>
+				<text><![CDATA[Postal Address (if different from 7above) )..................................................................................................................]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="17" y="274" width="100" height="10" uuid="2bc73b45-7d7e-4980-b903-6ba60e660966">
+				<reportElement x="17" y="274" width="71" height="10" uuid="2bc73b45-7d7e-4980-b903-6ba60e660966">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Residential address...]]></text>
+				<text><![CDATA[Residential address]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="20" y="331" width="120" height="10" uuid="d00be236-f1a0-4038-851d-a34c091c0dba">
+				<reportElement x="20" y="331" width="140" height="10" uuid="d00be236-f1a0-4038-851d-a34c091c0dba">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Period of employment for the year ]]></text>
+				<text><![CDATA[Period of employment for the year from]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="331" width="15" height="10" uuid="53b67baf-bd47-436f-b99d-403b9c5104a3"/>
@@ -524,14 +537,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[10.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="38" y="259" width="300" height="10" uuid="39152f05-fcd1-48aa-a098-219975131468">
+				<reportElement x="38" y="259" width="275" height="10" uuid="39152f05-fcd1-48aa-a098-219975131468">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<text><![CDATA[Spouse's H.K Identity Number/ Passport Number and place of issue(if known)........]]></text>
+				<text><![CDATA[Spouse's H.K Identity Number/ Passport Number and place of issue(if known)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="19" y="260" width="16" height="10" uuid="2977e61b-9f56-454f-b21e-297aaf7abc83"/>
@@ -541,166 +554,205 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[(b)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="314" y="136" width="196" height="10" uuid="adf95a82-8a96-43ab-a9c4-54fc39190400"/>
+				<reportElement x="314" y="136" width="226" height="10" uuid="adf95a82-8a96-43ab-a9c4-54fc39190400"/>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{surname}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="314" y="151" width="204" height="10" uuid="f77c5f2c-9ecc-4daa-a337-521d2aaf09ff"/>
+				<reportElement x="314" y="151" width="234" height="10" uuid="f77c5f2c-9ecc-4daa-a337-521d2aaf09ff"/>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{first_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="120" y="34" width="70" height="10" uuid="3eb5f29f-224b-44ef-96d8-aea78a4e8e5a">
+				<reportElement x="117" y="34" width="55" height="10" uuid="3eb5f29f-224b-44ef-96d8-aea78a4e8e5a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fiscal_year_start}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{start_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="219" y="34" width="70" height="10" uuid="df38505c-5d5c-4df9-9579-7729108230cc">
+				<reportElement x="205" y="34" width="70" height="10" uuid="df38505c-5d5c-4df9-9579-7729108230cc">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fiscal_year_end}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{end_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="317" y="166" width="201" height="10" uuid="402132c4-d42d-465e-bdc0-eb0c17bfd450"/>
+				<reportElement x="317" y="166" width="231" height="10" uuid="402132c4-d42d-465e-bdc0-eb0c17bfd450"/>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{employee_full_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="322" y="189" width="131" height="10" uuid="aad81085-1c03-408b-a8e9-0665b5a97cc8"/>
+				<reportElement x="207" y="189" width="346" height="10" uuid="aad81085-1c03-408b-a8e9-0665b5a97cc8"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{identity_card}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="325" y="201" width="100" height="10" uuid="d7337c62-d055-4542-bbca-c90118e2520b">
+				<reportElement x="308" y="201" width="242" height="10" uuid="d7337c62-d055-4542-bbca-c90118e2520b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{passport_num}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="325" y="215" width="68" height="10" uuid="b312d039-8139-4892-b499-215c792c5069">
+				<reportElement x="224" y="215" width="329" height="10" uuid="b312d039-8139-4892-b499-215c792c5069">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="356" y="230" width="70" height="10" uuid="2b79c242-9432-455c-a994-1ed75e113804">
+				<reportElement x="365" y="230" width="188" height="10" uuid="2b79c242-9432-455c-a994-1ed75e113804">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{marital_status}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ms_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="195" y="245" width="106" height="10" uuid="9afe3987-a882-47f2-b8c2-e8103bba96b4"/>
+				<reportElement x="154" y="245" width="399" height="10" uuid="9afe3987-a882-47f2-b8c2-e8103bba96b4"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{spouse_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="343" y="259" width="70" height="10" uuid="0eb64fc4-1598-4b4e-9519-b8609a475252">
+				<reportElement x="317" y="259" width="236" height="10" uuid="0eb64fc4-1598-4b4e-9519-b8609a475252">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{spouse_id}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="126" y="274" width="191" height="10" uuid="116bbbe2-ed50-4205-b87c-defc1282c1a7">
+				<reportElement x="93" y="274" width="458" height="10" uuid="116bbbe2-ed50-4205-b87c-defc1282c1a7">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{residential_address}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="175" y="289" width="100" height="10" uuid="f07980af-2dd0-4cf6-be7e-c88247fe3930"/>
+				<reportElement x="186" y="289" width="367" height="10" uuid="f07980af-2dd0-4cf6-be7e-c88247fe3930"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{postal_address}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="141" y="303" width="100" height="10" uuid="987761d8-9ace-467d-abe4-d1f02ad1ad0f"/>
+				<reportElement x="154" y="303" width="399" height="10" uuid="987761d8-9ace-467d-abe4-d1f02ad1ad0f"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{capacity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="323" y="330" width="92" height="10" uuid="61797df5-2358-4fda-8587-8a14f675397a">
+				<reportElement x="301" y="330" width="252" height="11" uuid="61797df5-2358-4fda-8587-8a14f675397a">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{contract_period}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="148" y="331" width="70" height="10" uuid="fa676d2d-07b7-4948-a21d-9243eeb2de65">
+				<reportElement x="172" y="331" width="50" height="10" uuid="fa676d2d-07b7-4948-a21d-9243eeb2de65">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fiscal_year_start}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{start_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="244" y="331" width="70" height="10" uuid="7ba7665e-1c6b-47ab-93cd-501cb67a0cc7">
+				<reportElement x="240" y="331" width="50" height="10" uuid="7ba7665e-1c6b-47ab-93cd-501cb67a0cc7">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fiscal_year_end}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{end_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="113" y="92" width="100" height="10" uuid="49f9efdf-577c-43c4-940e-dd0243ad6fb5">
+				<reportElement x="88" y="92" width="465" height="10" uuid="49f9efdf-577c-43c4-940e-dd0243ad6fb5">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{org_full_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="409" y="78" width="100" height="10" uuid="175c972b-d2f7-4d87-bc8c-86538f601f33"/>
+				<reportElement x="328" y="78" width="225" height="10" uuid="175c972b-d2f7-4d87-bc8c-86538f601f33">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box padding="0">
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pin}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="314" y="10" width="229" height="10" uuid="a0633d64-8187-4d79-b290-7d5497f771d4">
+				<reportElement x="314" y="8" width="229" height="10" uuid="a0633d64-8187-4d79-b290-7d5497f771d4">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<box>
@@ -725,26 +777,26 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[FOR THE YEAR FROM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="195" y="34" width="20" height="10" uuid="abae5a7f-c3a0-438b-bdd7-fa09fa1df04e"/>
+				<reportElement x="178" y="34" width="20" height="10" uuid="abae5a7f-c3a0-438b-bdd7-fa09fa1df04e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TO]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="319" y="25" width="8" height="8" uuid="13c4f8f5-c3c8-4a53-84b5-ecb9eda1f53f">
+				<reportElement x="319" y="20" width="8" height="8" uuid="13c4f8f5-c3c8-4a53-84b5-ecb9eda1f53f">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 			</rectangle>
 			<rectangle>
-				<reportElement x="319" y="37" width="8" height="8" uuid="51320243-5fdd-4935-b0f2-1ae03bac6490">
+				<reportElement x="319" y="30" width="8" height="8" uuid="51320243-5fdd-4935-b0f2-1ae03bac6490">
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="334" y="25" width="50" height="10" uuid="9e50c75d-4779-4bb7-ac54-3226e93f6788">
+				<reportElement x="334" y="20" width="50" height="10" uuid="9e50c75d-4779-4bb7-ac54-3226e93f6788">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -754,7 +806,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Additional]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="335" y="37" width="180" height="10" uuid="31b10b7a-f069-4b06-a5e6-f63ee2e3d137">
+				<reportElement x="335" y="30" width="180" height="10" uuid="31b10b7a-f069-4b06-a5e6-f63ee2e3d137">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -764,7 +816,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Replacement of the form(Sheet no .............)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="335" y="48" width="50" height="10" uuid="34715c7d-938c-49f3-b595-b25c57fc9725">
+				<reportElement x="335" y="41" width="50" height="10" uuid="34715c7d-938c-49f3-b595-b25c57fc9725">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -774,17 +826,20 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Submitted on]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="391" y="48" width="70" height="10" uuid="72f1aeaa-5263-4507-95cf-c3fcc7231afe">
+				<reportElement x="391" y="41" width="70" height="10" uuid="72f1aeaa-5263-4507-95cf-c3fcc7231afe">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{submission_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{submit_year}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="467" y="48" width="62" height="10" uuid="5bef925b-e235-48fb-a0ad-f0b17fd59011">
+				<reportElement x="467" y="41" width="62" height="10" uuid="5bef925b-e235-48fb-a0ad-f0b17fd59011">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -794,7 +849,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[(DD/MM/YYYY)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="35" y="143" width="133" height="10" uuid="b9d2bbcb-fca6-4a12-87d6-b26e21b65bcc"/>
+				<reportElement x="35" y="143" width="163" height="10" uuid="b9d2bbcb-fca6-4a12-87d6-b26e21b65bcc"/>
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
@@ -848,14 +903,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="322" y="553" width="25" height="10" uuid="e1571941-d46f-4211-b230-2235e09e01ab"/>
+				<reportElement x="318" y="553" width="24" height="10" uuid="e1571941-d46f-4211-b230-2235e09e01ab"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="212" y="535" width="25" height="10" uuid="a6eefa60-4db0-471c-a30e-6fd67c13be1f"/>
+				<reportElement x="212" y="535" width="24" height="10" uuid="a6eefa60-4db0-471c-a30e-6fd67c13be1f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -869,21 +924,21 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Director's Fee]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="212" y="597" width="25" height="10" uuid="3a247df1-fe1d-428a-8f53-80201342753c"/>
+				<reportElement x="212" y="597" width="24" height="10" uuid="3a247df1-fe1d-428a-8f53-80201342753c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="355" y="410" width="28" height="10" uuid="94171415-d7ba-417a-807e-2f2f178b31dd"/>
+				<reportElement x="354" y="410" width="24" height="10" uuid="94171415-d7ba-417a-807e-2f2f178b31dd"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="393" y="481" width="25" height="10" uuid="0ce0b703-1f02-473b-b18f-b0442a8977cf"/>
+				<reportElement x="390" y="479" width="24" height="10" uuid="0ce0b703-1f02-473b-b18f-b0442a8977cf"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -897,14 +952,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[ Salaries Tax Paid by Employer]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="184" y="498" width="25" height="10" uuid="67022cf4-246d-40e5-8853-3fcc593992d7"/>
+				<reportElement x="180" y="498" width="25" height="10" uuid="67022cf4-246d-40e5-8853-3fcc593992d7"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="353" y="553" width="25" height="10" uuid="9e4ad100-7b9e-4d9e-b5ca-87d89b389205"/>
+				<reportElement x="354" y="553" width="24" height="10" uuid="9e4ad100-7b9e-4d9e-b5ca-87d89b389205"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -918,7 +973,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[AMOUNT (HK $)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="297" y="463" width="14" height="10" uuid="58f146ae-3abb-420c-b2ff-18455ad26da5">
+				<reportElement x="296" y="463" width="14" height="10" uuid="58f146ae-3abb-420c-b2ff-18455ad26da5">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -927,7 +982,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="255" y="377" width="28" height="10" uuid="bf71b71e-53a2-49f0-ad5c-8cd5ab62e03d"/>
+				<reportElement x="248" y="377" width="28" height="10" uuid="bf71b71e-53a2-49f0-ad5c-8cd5ab62e03d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
@@ -947,14 +1002,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="355" y="498" width="25" height="10" uuid="b72df5db-1ad4-417b-9a9a-25f184c10378"/>
+				<reportElement x="354" y="498" width="24" height="10" uuid="b72df5db-1ad4-417b-9a9a-25f184c10378"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="298" y="553" width="14" height="10" uuid="66498e7c-1f28-4837-ba63-a0dc3d4a5662"/>
+				<reportElement x="296" y="553" width="14" height="10" uuid="66498e7c-1f28-4837-ba63-a0dc3d4a5662"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -987,42 +1042,42 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Leave Pay]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="181" y="430" width="25" height="10" uuid="d757006a-c2b5-4d11-abbc-78a409b2d88f"/>
+				<reportElement x="180" y="430" width="25" height="10" uuid="d757006a-c2b5-4d11-abbc-78a409b2d88f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="250" y="430" width="31" height="10" uuid="5e6757ff-2fa5-45ae-891a-a826bf75d7ab"/>
+				<reportElement x="252" y="430" width="24" height="10" uuid="5e6757ff-2fa5-45ae-891a-a826bf75d7ab"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="356" y="535" width="25" height="10" uuid="9497a5f3-1866-4b05-acb9-efe8dcb4ac08"/>
+				<reportElement x="354" y="535" width="24" height="10" uuid="9497a5f3-1866-4b05-acb9-efe8dcb4ac08"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="187" y="535" width="25" height="10" uuid="7218e4d6-d55d-4726-b08f-056e4c63cb04"/>
+				<reportElement x="180" y="535" width="25" height="10" uuid="7218e4d6-d55d-4726-b08f-056e4c63cb04"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="297" y="481" width="14" height="10" uuid="c03bb1e8-b7c2-4616-b63d-adf3c8a5b18f"/>
+				<reportElement x="296" y="481" width="14" height="10" uuid="c03bb1e8-b7c2-4616-b63d-adf3c8a5b18f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="319" y="498" width="25" height="10" uuid="4bf2a431-a051-42a1-aa2f-121b3a1bd375"/>
+				<reportElement x="318" y="498" width="24" height="10" uuid="4bf2a431-a051-42a1-aa2f-121b3a1bd375"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1032,51 +1087,53 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<reportElement x="175" y="375" width="250" height="1" uuid="4d0f418c-2858-424d-85bd-752b577fe6e0"/>
 			</line>
 			<staticText>
-				<reportElement x="297" y="516" width="14" height="10" uuid="e26dac63-5d9d-47c1-bcf8-73398a98286a"/>
+				<reportElement x="296" y="516" width="14" height="10" uuid="e26dac63-5d9d-47c1-bcf8-73398a98286a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="388" y="394" width="28" height="10" uuid="995ef7fe-1a93-4023-b9fc-f3182b908045"/>
+				<reportElement x="390" y="394" width="24" height="10" uuid="995ef7fe-1a93-4023-b9fc-f3182b908045">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="429" y="446" width="100" height="10" uuid="a12b5b2c-355f-4b08-9543-dd6c536fc728">
+				<reportElement x="434" y="446" width="100" height="10" uuid="a12b5b2c-355f-4b08-9543-dd6c536fc728">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commfee}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="427" y="516" width="100" height="10" uuid="042c602b-76df-4d73-b44f-93afd4675bb1"/>
-				<textElement>
+				<reportElement x="434" y="516" width="100" height="10" uuid="042c602b-76df-4d73-b44f-93afd4675bb1"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{saltaxpaid}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="356" y="463" width="25" height="10" uuid="b92916dd-db10-4e9b-b638-b68e79f58020"/>
+				<reportElement x="354" y="463" width="24" height="10" uuid="b92916dd-db10-4e9b-b638-b68e79f58020"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="186" y="570" width="25" height="10" uuid="cf80855e-7fc5-479a-a081-932c4e95f908"/>
+				<reportElement x="180" y="570" width="25" height="10" uuid="cf80855e-7fc5-479a-a081-932c4e95f908"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="181" y="410" width="25" height="10" uuid="f4912c5f-c3aa-427a-b319-fa6a59f0fdf1">
+				<reportElement x="180" y="410" width="25" height="10" uuid="f4912c5f-c3aa-427a-b319-fa6a59f0fdf1">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1085,8 +1142,8 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="431" y="410" width="100" height="10" uuid="e510a4b8-675f-4504-850f-e8dc124c8f18"/>
-				<textElement>
+				<reportElement x="434" y="410" width="100" height="10" uuid="e510a4b8-675f-4504-850f-e8dc124c8f18"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{leavepay}]]></textFieldExpression>
@@ -1099,14 +1156,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[ Back Pay, Payment in Lieu of Notice, Terminal Awards or Gratuities(See Note 6)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="356" y="597" width="25" height="10" uuid="c5bd476e-d8ae-49b0-b085-f6f28be6f9ec"/>
+				<reportElement x="354" y="597" width="24" height="10" uuid="c5bd476e-d8ae-49b0-b085-f6f28be6f9ec"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="214" y="516" width="25" height="10" uuid="e7294fa9-28b9-48ee-881e-de6a8dee927b"/>
+				<reportElement x="212" y="516" width="24" height="10" uuid="e7294fa9-28b9-48ee-881e-de6a8dee927b"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1127,8 +1184,8 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Commision/Fees(See Note 4)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="429" y="573" width="100" height="10" uuid="5f7a147f-a03d-44bc-9fbb-9f72334eff8e"/>
-				<textElement>
+				<reportElement x="434" y="573" width="100" height="10" uuid="5f7a147f-a03d-44bc-9fbb-9f72334eff8e"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{otherrap}]]></textFieldExpression>
@@ -1152,49 +1209,49 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Particulars]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="210" y="570" width="25" height="10" uuid="5555d5f5-95a1-4d73-ada2-e4f27890d71d"/>
+				<reportElement x="212" y="570" width="24" height="10" uuid="5555d5f5-95a1-4d73-ada2-e4f27890d71d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="394" y="553" width="25" height="10" uuid="ed4b1d4a-1013-41f8-af70-37064816ff64"/>
+				<reportElement x="390" y="553" width="24" height="10" uuid="ed4b1d4a-1013-41f8-af70-37064816ff64"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="388" y="463" width="25" height="10" uuid="db16a28d-00ba-45db-ba7b-3e043bc2316c"/>
+				<reportElement x="390" y="463" width="24" height="10" uuid="db16a28d-00ba-45db-ba7b-3e043bc2316c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="187" y="516" width="25" height="10" uuid="3aaa5b06-81e2-4776-8536-5cf8a8b5e8b6"/>
+				<reportElement x="180" y="516" width="25" height="10" uuid="3aaa5b06-81e2-4776-8536-5cf8a8b5e8b6"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="392" y="570" width="25" height="10" uuid="08c4c5f7-55ce-4aa8-9b39-702a30842b08"/>
+				<reportElement x="390" y="570" width="24" height="10" uuid="08c4c5f7-55ce-4aa8-9b39-702a30842b08"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="297" y="535" width="14" height="10" uuid="23bc4981-ed18-4d0f-8be9-0895c8c169ec"/>
+				<reportElement x="296" y="535" width="14" height="10" uuid="23bc4981-ed18-4d0f-8be9-0895c8c169ec"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="213" y="481" width="25" height="10" uuid="b68e0e0d-f57b-4479-b2fe-239c09245975"/>
+				<reportElement x="212" y="481" width="24" height="10" uuid="b68e0e0d-f57b-4479-b2fe-239c09245975"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1214,42 +1271,45 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="432" y="498" width="100" height="10" uuid="15ec159b-084a-4beb-93d9-bb0c37aa383e"/>
-				<textElement>
+				<reportElement x="434" y="498" width="100" height="10" uuid="15ec159b-084a-4beb-93d9-bb0c37aa383e"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payretire}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="322" y="481" width="25" height="10" uuid="d70da9c7-ed05-4770-a4d4-5bfdb71f943c"/>
+				<reportElement x="318" y="481" width="24" height="10" uuid="d70da9c7-ed05-4770-a4d4-5bfdb71f943c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="252" y="394" width="31" height="10" uuid="b600f37a-4554-425c-a723-2675cb5c09dc"/>
+				<reportElement x="252" y="394" width="24" height="10" uuid="b600f37a-4554-425c-a723-2675cb5c09dc">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="318" y="570" width="25" height="10" uuid="f1f03630-013c-49a8-aa3e-5e17be130fec"/>
+				<reportElement x="318" y="570" width="24" height="10" uuid="f1f03630-013c-49a8-aa3e-5e17be130fec"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="321" y="410" width="28" height="10" uuid="1b245ed6-6067-4b04-a028-3c028527448e"/>
+				<reportElement x="318" y="410" width="24" height="10" uuid="1b245ed6-6067-4b04-a028-3c028527448e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="212" y="430" width="32" height="10" uuid="117c0dfc-bd35-4215-b011-2252be2b2cae"/>
+				<reportElement x="212" y="430" width="24" height="10" uuid="117c0dfc-bd35-4215-b011-2252be2b2cae"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1263,55 +1323,55 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<line>
-				<reportElement x="351" y="377" width="1" height="235" uuid="7d02f968-4115-486c-a3d0-97bc6bb4f900"/>
+				<reportElement x="348" y="377" width="1" height="235" uuid="7d02f968-4115-486c-a3d0-97bc6bb4f900"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="323" y="535" width="25" height="10" uuid="fb116513-26e6-4724-b8fa-78886414cb7f"/>
+				<reportElement x="318" y="535" width="24" height="10" uuid="fb116513-26e6-4724-b8fa-78886414cb7f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="252" y="597" width="25" height="10" uuid="696744da-8650-40f2-91da-0033b11370e5"/>
+				<reportElement x="252" y="597" width="24" height="10" uuid="696744da-8650-40f2-91da-0033b11370e5"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="255" y="481" width="25" height="10" uuid="d0ff7186-df70-449e-be31-fd1634caf118"/>
+				<reportElement x="252" y="481" width="24" height="10" uuid="d0ff7186-df70-449e-be31-fd1634caf118"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="352" y="377" width="28" height="10" uuid="79772d06-dab1-4de7-8368-32072ad352c7"/>
+				<reportElement x="353" y="377" width="28" height="10" uuid="79772d06-dab1-4de7-8368-32072ad352c7"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<text><![CDATA[Month]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="253" y="498" width="25" height="10" uuid="c0a2e15e-82a1-4b34-a909-7d87ea6fd324"/>
+				<reportElement x="252" y="498" width="24" height="10" uuid="c0a2e15e-82a1-4b34-a909-7d87ea6fd324"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="212" y="553" width="25" height="10" uuid="93c6a078-7b3a-48e8-b201-2e514a8dae20"/>
+				<reportElement x="212" y="553" width="24" height="10" uuid="93c6a078-7b3a-48e8-b201-2e514a8dae20"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="355" y="430" width="28" height="10" uuid="a2d16749-658c-47b3-9d10-50c95bdf5b19"/>
+				<reportElement x="354" y="430" width="24" height="10" uuid="a2d16749-658c-47b3-9d10-50c95bdf5b19"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1324,35 +1384,37 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="391" y="410" width="28" height="10" uuid="2cbebdb5-08a7-4548-bb62-84dce0146b2a"/>
+				<reportElement x="390" y="410" width="24" height="10" uuid="2cbebdb5-08a7-4548-bb62-84dce0146b2a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="427" y="553" width="112" height="10" uuid="3df92c3b-7982-450d-a1d0-fadfb0c0bdf8"/>
-				<textElement>
+				<reportElement x="434" y="553" width="100" height="10" uuid="3df92c3b-7982-450d-a1d0-fadfb0c0bdf8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gainshareoption}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="186" y="553" width="25" height="10" uuid="2d3ac258-c670-44e5-9e3b-3ee0b8a7b9f6"/>
+				<reportElement x="180" y="553" width="25" height="10" uuid="2d3ac258-c670-44e5-9e3b-3ee0b8a7b9f6"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="393" y="597" width="25" height="10" uuid="7b78226e-962b-444e-a336-d9a200f70f0e"/>
+				<reportElement x="390" y="597" width="24" height="10" uuid="7b78226e-962b-444e-a336-d9a200f70f0e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="393" y="535" width="25" height="10" uuid="6b54e355-2cf5-4140-a13a-4832d8659dfe"/>
+				<reportElement x="390" y="535" width="24" height="10" uuid="6b54e355-2cf5-4140-a13a-4832d8659dfe"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1366,21 +1428,21 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Period]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="319" y="430" width="28" height="10" uuid="bff2729c-e17e-4ae3-8804-a6acc68aecab"/>
+				<reportElement x="318" y="430" width="24" height="10" uuid="bff2729c-e17e-4ae3-8804-a6acc68aecab"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="356" y="570" width="25" height="10" uuid="a3ce8934-50ee-4d5b-b6fc-79b96f895feb"/>
+				<reportElement x="354" y="570" width="24" height="10" uuid="a3ce8934-50ee-4d5b-b6fc-79b96f895feb"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="254" y="535" width="25" height="10" uuid="69ad7340-567c-48de-a04d-d65fd2d61093"/>
+				<reportElement x="252" y="535" width="24" height="10" uuid="69ad7340-567c-48de-a04d-d65fd2d61093"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1404,23 +1466,23 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Particulars of income accruing for the year from]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="429" y="430" width="100" height="10" uuid="e017376a-8818-4210-bbf5-2d3c053aa00f">
+				<reportElement x="434" y="430" width="100" height="10" uuid="e017376a-8818-4210-bbf5-2d3c053aa00f">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{directorfee}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="214" y="410" width="32" height="10" uuid="626d0706-52a6-461d-8c70-0dbddd9ce6bd"/>
+				<reportElement x="212" y="410" width="24" height="10" uuid="626d0706-52a6-461d-8c70-0dbddd9ce6bd"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="324" y="463" width="25" height="10" uuid="be36fa66-962b-471f-9cf4-f50269e44703"/>
+				<reportElement x="318" y="463" width="24" height="10" uuid="be36fa66-962b-471f-9cf4-f50269e44703"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1449,21 +1511,23 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="353" y="394" width="28" height="10" uuid="dac3f554-f647-4dd6-9142-c2a4d568b46e"/>
+				<reportElement x="354" y="394" width="24" height="10" uuid="dac3f554-f647-4dd6-9142-c2a4d568b46e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="426" y="533" width="100" height="10" uuid="272d7d1b-4856-41b5-a0a2-3ccffc176a0a"/>
-				<textElement>
+				<reportElement x="434" y="533" width="100" height="10" uuid="272d7d1b-4856-41b5-a0a2-3ccffc176a0a"/>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{eduben}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="183" y="446" width="25" height="10" uuid="6dc6cda1-a9f1-45ce-8420-14ac310313c5">
+				<reportElement x="180" y="446" width="25" height="10" uuid="6dc6cda1-a9f1-45ce-8420-14ac310313c5">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1472,21 +1536,21 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="395" y="446" width="28" height="10" uuid="5a5a09d7-d63f-4654-a107-a41affe5517a"/>
+				<reportElement x="390" y="446" width="24" height="10" uuid="5a5a09d7-d63f-4654-a107-a41affe5517a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="186" y="481" width="25" height="10" uuid="71777246-8dc6-4ebc-9b40-20e26688ddd7"/>
+				<reportElement x="180" y="481" width="25" height="10" uuid="71777246-8dc6-4ebc-9b40-20e26688ddd7"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="356" y="516" width="25" height="10" uuid="d077da3f-52fa-4970-96f9-a86f76c9de63"/>
+				<reportElement x="354" y="516" width="24" height="10" uuid="d077da3f-52fa-4970-96f9-a86f76c9de63"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1505,7 +1569,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
-				<text><![CDATA[Any other Rewards, Allowances or Prerequisites (See Note 10).   Nature ..........]]></text>
+				<text><![CDATA[Any other Rewards, Allowances or Prerequisites (See Note 10).   Nature]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="296" y="570" width="14" height="10" uuid="f7bad0b5-fb5b-4cc7-9bca-11f152767ef2"/>
@@ -1515,7 +1579,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="212" y="498" width="25" height="10" uuid="5f335f39-9488-40e1-8d46-5d64d593e230"/>
+				<reportElement x="212" y="498" width="24" height="10" uuid="5f335f39-9488-40e1-8d46-5d64d593e230"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1537,14 +1601,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[ Pensions ()See Note 11]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="395" y="516" width="25" height="10" uuid="99651065-4353-48d2-8145-4329ec15b319"/>
+				<reportElement x="390" y="514" width="24" height="10" uuid="99651065-4353-48d2-8145-4329ec15b319"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="391" y="498" width="25" height="10" uuid="3bd9b5ce-a023-4d24-a0ab-e3488987911d"/>
+				<reportElement x="390" y="497" width="24" height="10" uuid="3bd9b5ce-a023-4d24-a0ab-e3488987911d"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1560,7 +1624,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="185" y="597" width="25" height="10" uuid="40898e5d-425e-4b52-b2bc-dff9c26f56bb">
+				<reportElement x="180" y="597" width="25" height="10" uuid="40898e5d-425e-4b52-b2bc-dff9c26f56bb">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
@@ -1570,14 +1634,14 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="354" y="481" width="25" height="10" uuid="07ac9e6f-d819-4c65-9c93-5159428081c0"/>
+				<reportElement x="354" y="481" width="24" height="10" uuid="07ac9e6f-d819-4c65-9c93-5159428081c0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="355" y="446" width="28" height="10" uuid="95bbb306-6912-4a6b-99cb-8933cdcc085f"/>
+				<reportElement x="354" y="446" width="24" height="10" uuid="95bbb306-6912-4a6b-99cb-8933cdcc085f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1591,7 +1655,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[ Education Benefits(See Note 8)]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="180" y="394" width="24" height="10" uuid="08d27267-3e60-48dd-a337-62a02ad872b0">
+				<reportElement x="181" y="394" width="24" height="10" uuid="08d27267-3e60-48dd-a337-62a02ad872b0">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1607,7 +1671,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[EXCLUDE CENTS]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="322" y="516" width="25" height="10" uuid="2704fb42-40eb-491b-a59d-1e8a3b21b036"/>
+				<reportElement x="318" y="516" width="24" height="10" uuid="2704fb42-40eb-491b-a59d-1e8a3b21b036"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1620,7 +1684,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="297" y="430" width="14" height="10" uuid="28a4c4b8-3717-40d1-a32d-abdcfa4eb2b7">
+				<reportElement x="296" y="430" width="14" height="10" uuid="28a4c4b8-3717-40d1-a32d-abdcfa4eb2b7">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1629,21 +1693,21 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="254" y="570" width="25" height="10" uuid="ca853970-f9e5-4c3b-ab65-102f9d117270"/>
+				<reportElement x="252" y="570" width="24" height="10" uuid="ca853970-f9e5-4c3b-ab65-102f9d117270"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="182" y="377" width="26" height="10" uuid="6457d050-d763-4a8f-a702-c26c89f9bd3f"/>
+				<reportElement x="179" y="377" width="26" height="10" uuid="6457d050-d763-4a8f-a702-c26c89f9bd3f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<text><![CDATA[Day]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="252" y="446" width="31" height="10" uuid="b549a86c-ad6e-4891-aa58-ce087fefb541"/>
+				<reportElement x="252" y="446" width="24" height="10" uuid="b549a86c-ad6e-4891-aa58-ce087fefb541"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1658,17 +1722,17 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="253" y="553" width="25" height="10" uuid="f4ba11cd-7ab5-48a7-9b5f-f66d7420a8c7"/>
+				<reportElement x="252" y="553" width="24" height="10" uuid="f4ba11cd-7ab5-48a7-9b5f-f66d7420a8c7"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="431" y="461" width="100" height="10" uuid="d3ec49eb-ed6a-41d3-ad69-5989e6273963">
+				<reportElement x="434" y="461" width="100" height="10" uuid="d3ec49eb-ed6a-41d3-ad69-5989e6273963">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bonus}]]></textFieldExpression>
@@ -1680,14 +1744,16 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="214" y="394" width="32" height="10" uuid="904659a8-270b-44fc-8572-2406050caead"/>
+				<reportElement x="212" y="394" width="24" height="10" uuid="904659a8-270b-44fc-8572-2406050caead">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="251" y="410" width="31" height="10" uuid="dc38f3af-e631-45d0-b5bf-8f4b3d8b3634"/>
+				<reportElement x="252" y="410" width="24" height="10" uuid="dc38f3af-e631-45d0-b5bf-8f4b3d8b3634"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1700,28 +1766,30 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="317" y="394" width="28" height="10" uuid="d5e9e202-93a4-44c0-8d9d-19484b3627c6"/>
+				<reportElement x="318" y="394" width="24" height="10" uuid="d5e9e202-93a4-44c0-8d9d-19484b3627c6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="254" y="463" width="25" height="10" uuid="d61578e8-cb3d-4321-85cd-74be9c7e5174"/>
+				<reportElement x="252" y="463" width="24" height="10" uuid="d61578e8-cb3d-4321-85cd-74be9c7e5174"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="394" y="430" width="28" height="10" uuid="35072870-347b-404a-a980-3c80aa7fbef2"/>
+				<reportElement x="390" y="430" width="24" height="10" uuid="35072870-347b-404a-a980-3c80aa7fbef2"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{end_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="320" y="446" width="28" height="10" uuid="54078da1-d515-420c-8b0c-a9332abac58e"/>
+				<reportElement x="318" y="446" width="24" height="10" uuid="54078da1-d515-420c-8b0c-a9332abac58e"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1761,41 +1829,41 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="259" y="513" width="25" height="10" uuid="a664aa27-19fe-43f4-a659-60885e82434f"/>
+				<reportElement x="252" y="513" width="24" height="10" uuid="a664aa27-19fe-43f4-a659-60885e82434f"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_year}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="182" y="462" width="25" height="10" uuid="62edefac-f9d7-443f-b9bb-65e22e4598c1"/>
+				<reportElement x="180" y="462" width="25" height="10" uuid="62edefac-f9d7-443f-b9bb-65e22e4598c1"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_day}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="215" y="462" width="25" height="10" uuid="e17c5e07-baef-4de1-a003-39f93d984f7a"/>
+				<reportElement x="212" y="462" width="24" height="10" uuid="e17c5e07-baef-4de1-a003-39f93d984f7a"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_month}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="215" y="447" width="25" height="10" uuid="9641dbfc-3bac-4cf1-86d5-03cb619f40e0"/>
+				<reportElement x="212" y="447" width="24" height="10" uuid="9641dbfc-3bac-4cf1-86d5-03cb619f40e0"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{start_date_month}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="309" y="375" width="1" height="235" uuid="87894b21-c05d-499f-aec2-3988fde6ac9c"/>
+				<reportElement x="313" y="375" width="1" height="235" uuid="87894b21-c05d-499f-aec2-3988fde6ac9c"/>
 				<graphicElement>
 					<pen lineStyle="Solid"/>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="318" y="598" width="25" height="10" uuid="17f722db-d1b8-453d-bc92-b69855aeea4c"/>
+				<reportElement x="318" y="598" width="24" height="10" uuid="17f722db-d1b8-453d-bc92-b69855aeea4c"/>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
@@ -1805,16 +1873,16 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<reportElement x="434" y="598" width="100" height="10" uuid="fa7f2cbe-6c38-419d-8058-81ddfb67726b">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pension}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="432" y="480" width="100" height="10" uuid="3f1cb7ed-afdf-48dc-afa7-71f08f175603">
+				<reportElement x="434" y="480" width="100" height="10" uuid="3f1cb7ed-afdf-48dc-afa7-71f08f175603">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bpetc}]]></textFieldExpression>
@@ -1828,7 +1896,7 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="223" y="332" width="14" height="10" uuid="cd11497c-dd16-4140-a28e-e9bb395452e9">
+				<reportElement x="224" y="332" width="14" height="10" uuid="cd11497c-dd16-4140-a28e-e9bb395452e9">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1836,8 +1904,39 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				</textElement>
 				<text><![CDATA[to]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="211" y="379" width="28" height="10" uuid="312f040b-f8d7-498c-b765-227010a54cd5"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<text><![CDATA[Month]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="380" width="28" height="10" uuid="cca050e5-edea-4b6b-b145-ec89d0f6e8ad"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8"/>
+				</textElement>
+				<text><![CDATA[Year]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="434" y="392" width="100" height="10" uuid="9972c76b-a4e4-4bfe-ab94-9d7aa35aa50d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{y_basic_salary}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="333" y="55" width="180" height="7" uuid="8933d334-cb58-45bd-80c0-aa673811f3d2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="5"/>
+				</textElement>
+				<text><![CDATA[("Tick" one of the above boxes where applicable and fill in dates &sheet no )]]></text>
+			</staticText>
 		</band>
-		<band height="740">
+		<band height="210">
 			<staticText>
 				<reportElement x="4" y="-125" width="16" height="10" uuid="c438643f-e603-4f1d-834e-05ff54ff37f7">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
@@ -1913,13 +2012,15 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 			<rectangle>
 				<reportElement x="7" y="101" width="211" height="92" uuid="f0481dc0-27d8-4267-b3fc-f6e3f4f78d88"/>
 				<graphicElement>
-					<pen lineColor="#AAE3FA"/>
+					<pen lineWidth="0.5" lineColor="#030303"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="11" y="174" width="186" height="10" uuid="e6a6a64c-d09a-4be3-8e47-c143ffa88102"/>
-				<textElement textAlignment="Left">
-					<font fontName="Times New Roman" size="8"/>
+				<reportElement x="17" y="178" width="186" height="15" uuid="e6a6a64c-d09a-4be3-8e47-c143ffa88102">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12"/>
 				</textElement>
 				<text><![CDATA[Space for Employers official chop]]></text>
 			</staticText>
@@ -1947,12 +2048,20 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 			<rectangle>
 				<reportElement x="407" y="85" width="111" height="125" uuid="771600e7-3317-405b-8001-d5c04a9a2426"/>
 				<graphicElement>
-					<pen lineColor="#AAE3FA"/>
+					<pen lineWidth="0.5" lineColor="#070808"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="412" y="190" width="100" height="10" uuid="a30d3fdb-be22-4078-8c1f-0c5fb6d6eb1b"/>
-				<textElement textAlignment="Left">
+				<reportElement x="407" y="199" width="111" height="10" uuid="a30d3fdb-be22-4078-8c1f-0c5fb6d6eb1b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<text><![CDATA[For Official use]]></text>
@@ -2126,8 +2235,9 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 				<text><![CDATA[Rent paid to  Employer by Employee (HK $)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="19" y="6" width="420" height="10" uuid="9767bd9d-59eb-483e-b506-81540926c6ef">
+				<reportElement x="17" y="6" width="470" height="10" uuid="9767bd9d-59eb-483e-b506-81540926c6ef">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="Times New Roman" size="8"/>
@@ -2136,32 +2246,45 @@ EMPLOYER'S RETURN OF REMUNERATION AND PENSIONS
 ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="68" y="45" width="139" height="10" uuid="81e62867-e753-479c-be2b-ace5cfc7fbed"/>
+				<reportElement x="68" y="45" width="482" height="10" uuid="81e62867-e753-479c-be2b-ace5cfc7fbed"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{alternative_address}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="332" y="62" width="130" height="10" uuid="a6e96ce2-1afc-4eec-b620-7d0ad1ca4a6a"/>
+				<reportElement x="332" y="62" width="219" height="10" uuid="a6e96ce2-1afc-4eec-b620-7d0ad1ca4a6a"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{alternative_salary}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="445" y="6" width="100" height="10" uuid="20a65331-ef00-4ec0-b479-559726ca3438">
+				<reportElement x="494" y="6" width="51" height="10" uuid="20a65331-ef00-4ec0-b479-559726ca3438">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{full_time}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="184" y="34" width="213" height="10" uuid="4d1844ca-9357-4cd4-96a6-d5674fa90720">
+				<reportElement x="184" y="34" width="367" height="10" uuid="4d1844ca-9357-4cd4-96a6-d5674fa90720">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
 				<textElement>
 					<font fontName="Times New Roman" size="8" isItalic="true"/>
 				</textElement>
