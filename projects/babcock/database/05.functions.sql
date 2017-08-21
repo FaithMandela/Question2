@@ -1095,6 +1095,13 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION updatemajorapproval(varchar(12), int) RETURNS varchar AS $$
 	UPDATE qstudents SET majorapproval = true WHERE qstudentid = $2;
 	INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate) VALUES ($2, $1, 'Major', now());
+	SELECT varchar 'Major adviser Approval Done' as reply;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION updatemajorapproval(varchar(12), varchar(12), varchar(12)) RETURNS varchar AS $$
+	UPDATE qstudents SET majorapproval = true WHERE qstudentid = $1::int;
+	INSERT INTO approvallist(qstudentid, approvedby, approvaltype, approvedate) 
+	VALUES ($1::int, $2, 'Major Adviser', now());
 	SELECT varchar 'Major Approval Done' as reply;
 $$ LANGUAGE SQL;
 

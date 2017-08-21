@@ -467,20 +467,20 @@
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
 			<GRID name="Skills" keyfield="skill_id" table="skills" user="entity_id">
-				<COMBOBOX w="240" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
-				<COMBOBOX w="120" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
+				<COMBOBOX w="150" title="Skill Type" lptable="vw_skill_types" cmb_fnct="(skill_category_name || ' - ' || skill_type_name)" orderby="skill_category_name" lpfield="skill_type_name">skill_type_id</COMBOBOX>
+				<COMBOBOX w="100" title="Skill Level" lptable="skill_levels" lpfield="skill_level_name">skill_level_id</COMBOBOX>
 				<TEXTFIELD w="100" title="Skill">state_skill</TEXTFIELD>
-				<TEXTAREA w="250" title="Details">details</TEXTAREA>
+				<TEXTAREA w="150" title="Details">details</TEXTAREA>
 				<USERFIELD>entity_id</USERFIELD>
 			</GRID>
 			<GRID name="Referees" keyfield="address_id" table="address" where="table_name = 'referees'" user="table_id">
-				<TEXTFIELD w="100" title="Name">address_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Company">company_name</TEXTFIELD>
-				<TEXTFIELD w="100" title="Position">position_held</TEXTFIELD>
-				<TEXTFIELD w="100" title="Phone Number">phone_number</TEXTFIELD>
-				<TEXTFIELD w="140" title="Email">email</TEXTFIELD>
-				<COMBOBOX w="150" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
-				<TEXTFIELD w="100" title="Town">town</TEXTFIELD>
+				<TEXTFIELD w="75" title="Name">address_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Company">company_name</TEXTFIELD>
+				<TEXTFIELD w="75" title="Position">position_held</TEXTFIELD>
+				<TEXTFIELD w="75" title="Phone Number">phone_number</TEXTFIELD>
+				<TEXTFIELD w="100" title="Email">email</TEXTFIELD>
+				<COMBOBOX w="100" title="Country" default="KE" lptable="sys_countrys" noorg="true" lpfield="sys_country_name">sys_country_id</COMBOBOX>
+				<TEXTFIELD w="75" title="Town">town</TEXTFIELD>
 				<DEFAULT default="referees">table_name</DEFAULT>
 				<USERFIELD>table_id</USERFIELD>
 			</GRID>
