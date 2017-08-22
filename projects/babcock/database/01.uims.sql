@@ -647,6 +647,7 @@ CREATE TABLE qstudents (
 	departapproval		boolean default false not null,
 	chaplainapproval	boolean default false not null,
 	studentdeanapproval	boolean default false not null,
+	so_approval			boolean default false not null,
 	overloadapproval	boolean default false not null,
 	overloadhours		float,
 	intersession		boolean default false not null,

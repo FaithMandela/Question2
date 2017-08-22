@@ -48,14 +48,14 @@ public class BMail {
 
 	public BMail(BElement root, BLogHandle logHandle) {
 		logHandle.config(log);
+		String mailuser = root.getAttribute("mailuser", "");
+		String mailpassword = root.getAttribute("mailpassword", "");
 		String host = root.getAttribute("host", "");
 		String imaphost = root.getAttribute("imaphost", host);
 		int imapPort = 143;
-		String mailuser = root.getAttribute("mailuser", "");
 		String maildomain = root.getAttribute("maildomain");
 		if(maildomain != null) mailuser = mailuser + "@" + maildomain;
 
-		String mailpassword = root.getAttribute("mailpassword", "");
 		mailfrom = root.getAttribute("mailfrom", "root");
 		inbox = root.getAttribute("inbox", "INBOX");
 		sentbox = root.getAttribute("sentbox", "Sent");
@@ -67,6 +67,7 @@ public class BMail {
 		String ntlm = root.getAttribute("ntlm", "false");
 		String imapssl = root.getAttribute("imapssl", "false");
 		String smtpPort = root.getAttribute("smtp.port");
+		String googleAuth = root.getAttribute("googleauth", "false");
 		String imapType = "imap";
 
 		try {
@@ -130,11 +131,23 @@ public class BMail {
 			}
 			if(smtpPort != null) props.setProperty("mail.smtp.port", smtpPort);
 
-			// Get a Session object			
-			session = Session.getInstance(props, null);
+			// Get a Session object
+			if(googleAuth.equals("true")) {
+				final String mUser = mailuser;
+				final String mPassword = mailpassword;
+				
+				session = Session.getInstance(props, new javax.mail.Authenticator() {
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(mUser, mPassword);
+					}
+				});
+			} else {
+				session = Session.getInstance(props, null);
+			}
 			session.setDebug(false);
 			store = session.getStore(imapType);
 			store.connect(imaphost, imapPort, mailuser, mailpassword);
+			
 
 			trans = (SMTPTransport)session.getTransport("smtp");
 			if (smtppauth.equals("true") || smtptls.equals("true")) {
@@ -159,6 +172,15 @@ public class BMail {
 
 	public boolean sendMail(String messageto, String ccto, String subject, String mymail, boolean infile, Map<String, String> headers, Map<String, String> reports) {
 		boolean sent = false;
+		
+		// if there is no address
+		if(messageto == null) {
+			log.severe("The email has no recepient address");
+			return true;
+		} else if(messageto.equals("null")) {
+			log.severe("The email has no recepient address");
+			return true;
+		}
 		
 		try { 
 			Message message = new MimeMessage(session);

@@ -4,12 +4,18 @@ CREATE OR REPLACE FUNCTION pairkey(x int, y int) RETURNS int AS $$
 	ELSE (x - 1) * y + ((x - y - 2)^2)::int / 4 END
 $$ LANGUAGE sql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION get_year_allowance(int, int, int) RETURNS real AS $$
+	SELECT COALESCE(sum(base_amount), 0)::real as s_base_amount
+	FROM vw_employee_adjustments
+	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (adjustment_effect_id = $3);
+$$ LANGUAGE SQL;
 
 ALTER TABLE orgs ADD designation varchar(50) default 'PARTNER';
 
 
 CREATE VIEW vw_employee_year AS
-	SELECT em.org_id, em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
+	SELECT orgs.org_id, orgs.org_name, orgs.org_full_name, orgs.pin,
+		em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
 		em.entity_id, em.entity_name,
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, 
 		em.gender, em.nationality, em.marital_status, em.appointment_date, em.exit_date, 
@@ -24,13 +30,16 @@ CREATE VIEW vw_employee_year AS
 		ea.postal_code, (ea.premises || ', ' || ea.street) as residential_address,
 		(CASE WHEN ea.premises is null THEN ea.post_office_box ELSE null END) as postal_address,
 		max(em.department_role_name) as capacity,
+		get_alternate_employment(em.entity_id) as alternate_employment,
 		to_char(em.appointment_date, 'YYYYMMDD') as start_date_emp, to_char(em.exit_date, 'YYYYMMDD') as end_date_emp,
 		(to_char(em.fiscal_year_start, 'YYYYMMDD') || ' - ' || to_char(em.fiscal_year_end, 'YYYYMMDD')) as period_of_salary,
 		sum(em.basic_salary) as y_basic_salary, sum(em.gross_salary) as y_gross_salary, sum(em.net_pay) as y_net_pay
 	
-	FROM vw_employee_month em LEFT JOIN vw_employee_address ea ON em.entity_id = ea.table_id
+	FROM vw_employee_month em INNER JOIN orgs ON em.org_id = orgs.org_id
+		LEFT JOIN vw_employee_address ea ON em.entity_id = ea.table_id
 	
-	GROUP BY em.org_id, em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
+	GROUP BY orgs.org_id, orgs.org_name, orgs.org_full_name, orgs.pin,
+		em.fiscal_year_id, em.fiscal_year_start, em.fiscal_year_end, em.submission_date,
 		em.entity_id, em.entity_name,
 		em.employee_id, em.surname, em.first_name, em.middle_name, em.date_of_birth, 
 		em.gender, em.nationality, em.marital_status, em.appointment_date, em.exit_date, 
@@ -119,6 +128,49 @@ VALUES
 (0, 12, 1, 'Director Fee', true, true, '90005'),
 (0, 12, 1, 'Commission Fee', true, true, '90005'),
 (0, 13, 1, 'Bonus', true, true, '90005');
+
+
+----------------- Work
+
+SELECT vw_employee_year.org_id, vw_employee_year.org_name, vw_employee_year.org_full_name, vw_employee_year.pin,
+	vw_employee_year.fiscal_year_id, vw_employee_year.fiscal_year_start,
+	vw_employee_year.fiscal_year_end, vw_employee_year.submission_date, vw_employee_year.entity_id,
+	vw_employee_year.entity_name, vw_employee_year.employee_id, vw_employee_year.surname,
+	vw_employee_year.first_name, vw_employee_year.middle_name, vw_employee_year.date_of_birth,
+	vw_employee_year.gender, vw_employee_year.nationality, vw_employee_year.marital_status,
+	vw_employee_year.appointment_date, vw_employee_year.exit_date, vw_employee_year.contract,
+	vw_employee_year.contract_period, vw_employee_year.employment_terms, vw_employee_year.identity_card,
+	vw_employee_year.employee_name, vw_employee_year.employee_full_name, vw_employee_year.currency_id,
+	vw_employee_year.currency_name, vw_employee_year.currency_symbol, vw_employee_year.employee_year_id,
+	vw_employee_year.ms_code, vw_employee_year.spouse_name, vw_employee_year.spouse_id,
+	vw_employee_year.passport_num, vw_employee_year.postal_code, vw_employee_year.residential_address,
+	vw_employee_year.postal_address, vw_employee_year.capacity, vw_employee_year.start_date_emp,
+	vw_employee_year.end_date_emp, vw_employee_year.period_of_salary, vw_employee_year.y_basic_salary,
+	vw_employee_year.y_gross_salary, vw_employee_year.y_net_pay,
+	
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 11) as LeavePay,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 12) as DirectorFee,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 13) as CommFee,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 14) as Bonus,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 15) as BpEtc,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 16) as PayRetire,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 17) as SalTaxPaid,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 18) as EduBen,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 19) as GainShareOption,
+	(get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 20) +
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 21) +
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 22)) as OtherRAP,
+	get_year_allowance(vw_employee_year.entity_id, vw_employee_year.fiscal_year_id, 23) as Pension,
+    
+    
+    vw_employee_year.alternate_employment,
+    (CASE WHEN vw_employee_year.alternate_employment is null THEN '0' ELSE '1' END) as full_time,
+    employment.employers_name, employment.position_held, employment.alternative_address, employment.alternative_salary
+    
+
+FROM vw_employee_year LEFT JOIN employment ON vw_employee_year.alternate_employment = employment.employment_id
+
+	
 
 
 

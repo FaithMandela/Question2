@@ -204,4 +204,11 @@ SELECT id, client_roid, description, currency, trans_type, processor_account_his
 FROM ledger WHERE trans_type = 'Payment' ORDER BY ID DESC LIMIT 50;
 
 
+------------------ Checking on domain duplicate renewar
+SELECT * FROM domain WHERE name = 'snippersecurity.co.ke';
 
+SELECT id, client_roid, total, created, previous_expiry_date, renewal_refund 
+FROM ledger WHERE domain_name = 'beyondmedia.co.ke' 
+ORDER BY id;
+
+'snippersecurity.co.ke' 

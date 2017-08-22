@@ -234,6 +234,9 @@ CREATE TABLE employment (
 	date_to					date,
 	employers_name			varchar(240),
 	position_held			varchar(240),
+	principal_employment	boolean default false not null,
+	alternative_address		varchar(240),
+	alternative_salary		real,
 	details					text
 );
 CREATE INDEX employment_entity_id ON employment (entity_id);
@@ -1457,6 +1460,14 @@ CREATE OR REPLACE FUNCTION get_passport(int) RETURNS varchar(50) AS $$
 	WHERE (identification_id IN (SELECT max(identification_id) 
 		FROM identifications INNER JOIN identification_types ON identifications.identification_type_id = identification_types.identification_type_id
 		WHERE (identification_types.passport = true) AND (identifications.is_active = true) AND (identifications.entity_id = $1)));
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION get_alternate_employment(int) RETURNS int AS $$
+	SELECT employment.employment_id
+	FROM employment
+	WHERE (employment_id IN (SELECT max(employment_id) 
+		FROM employment 
+		WHERE (date_to is null) AND (principal_employment = true) AND (entity_id = $1)));
 $$ LANGUAGE SQL;
 
 
