@@ -525,7 +525,7 @@ CREATE TABLE intake (
 	org_id					integer references orgs,
 	opening_date			date not null,
 	closing_date			date not null,
-	positions				int,
+	positions				integer,
 	contract				boolean default false not null,
 	contract_period			integer not null,
 	details					text
@@ -540,6 +540,7 @@ CREATE TABLE contract_types (
 	contract_type_id		serial primary key,
 	org_id					integer references orgs,
 	notice_period			integer default 30 not null,
+	part_time				boolean default false not null,
 	contract_type_name		varchar(50) not null,
 	contract_text			text,
 	details					text
@@ -2327,7 +2328,7 @@ BEGIN
 	ELSIF(v_self_rating = 0) AND (v_rate_objectives = true)THEN
 		msg := 'Indicate your self rating';
 		RAISE EXCEPTION '%', msg;
-	ELSIF(v_point_check is not null)THEN
+	ELSIF(v_point_check is not null) AND (v_rate_objectives = true)THEN
 		msg := 'All objective evaluations points must be between 1 to 4';
 		RAISE EXCEPTION '%', msg;
 	ELSE

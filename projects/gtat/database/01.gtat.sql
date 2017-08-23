@@ -477,17 +477,29 @@ END
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION updPeriod() RETURNS trigger AS $$
+DECLARE
+	v_bookingid		integer;
 BEGIN
-	IF(NEW.Approved = true) THEN
-		INSERT INTO invoicelist(clientid, periodid)
-		SELECT clientid, periodid
-		FROM vwinvoicelist
-		WHERE (invoiceid is null);
 
-		INSERT INTO crnotelist(clientid, periodid)
-		SELECT clientid, periodid
-		FROM vwcrnotelist
-		WHERE (crnoteid is null);
+	IF(NEW.Approved = true) THEN
+		SELECT bookingid INTO v_bookingid
+		FROM management
+		GROUP BY bookingid
+		HAVING count(managementid) > 1;
+		
+		IF(v_bookingid is null)THEN
+			INSERT INTO invoicelist(clientid, periodid)
+			SELECT clientid, periodid
+			FROM vwinvoicelist
+			WHERE (invoiceid is null);
+
+			INSERT INTO crnotelist(clientid, periodid)
+			SELECT clientid, periodid
+			FROM vwcrnotelist
+			WHERE (crnoteid is null);
+		ELSE
+			RAISE EXCEPTION 'You cannot approve due to duplicate bookings';
+		END IF;
 	END IF;
 
 	RETURN null;

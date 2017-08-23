@@ -191,6 +191,8 @@ DELETE FROM cust_allocations WHERE trans_type_from = 10;
 
 INSERT INTO ledger (description, currency, tax, created, exdate, previous_expiry_date, months_posted, trans_type, refund_for_id, documentnumber, ChequeNo, id, client_roid, total) VALUES ('Cheque Receipt', 'KES', NULL, '2015-12-31', '2015-12-31', '2015-12-31', '0', 'Payment', NULL, '1001', '1001', '1001', 'SAL8', '-1000');
 
+----- Clear ETR registrer
+DELETE FROM etr;
 
 ----------- Reprent ETR invoices
 INSERT INTO audit.master (audit_user, audit_login) VALUES ('automation', 'automation');
@@ -211,4 +213,4 @@ SELECT id, client_roid, total, created, previous_expiry_date, renewal_refund
 FROM ledger WHERE domain_name = 'beyondmedia.co.ke' 
 ORDER BY id;
 
-'snippersecurity.co.ke' 
+

@@ -2099,8 +2099,14 @@ CREATE OR REPLACE FUNCTION approve_so(varchar(12), varchar(12), varchar(12), var
 DECLARE
 	mystr VARCHAR(120);
 BEGIN
-	UPDATE qstudents SET so_approval = true WHERE (qstudentid = $1::integer);
-	mystr := 'School officers approval';
+	IF($3 = '3')THEN
+		UPDATE qstudents SET so_approval = true WHERE (qstudentid = $1::integer);
+		mystr := 'School officers approval';
+	ELSIF($3 = '4')THEN
+		UPDATE qstudents SET majorapproval = false WHERE (qstudentid = $1::integer);
+		mystr := 'Returned to major advisor';
+	END IF;
+	
 	RETURN mystr;
 END;
 $$ LANGUAGE plpgsql;

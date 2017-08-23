@@ -10,6 +10,14 @@ CREATE OR REPLACE FUNCTION get_year_allowance(int, int, int) RETURNS real AS $$
 	WHERE (entity_id = $1) AND (fiscal_year_id = $2) AND (adjustment_effect_id = $3);
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION get_work_part_time(int, int) RETURNS boolean AS $$
+	SELECT part_time
+	FROM employee_month
+	WHERE (employee_month_id IN 
+		(SELECT max(employee_month_id) FROM vw_employee_month
+		WHERE (entity_id = $1) AND (fiscal_year_id = $2)));
+$$ LANGUAGE SQL;
+
 ALTER TABLE orgs ADD designation varchar(50) default 'PARTNER';
 
 
@@ -22,6 +30,7 @@ CREATE VIEW vw_employee_year AS
 		em.contract, em.contract_period, em.employment_terms, em.identity_card,
 		em.employee_name, em.employee_full_name,
 		em.currency_id, em.currency_name, em.currency_symbol, 
+		get_work_part_time(em.entity_id, em.fiscal_year_id) as work_part_time,
 		
 		pairkey(em.fiscal_year_id, em.entity_id) as employee_year_id,
 		(CASE WHEN em.marital_status = 'M' THEN '2' ELSE '1' END) as ms_code,

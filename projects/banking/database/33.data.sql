@@ -26,8 +26,10 @@ INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) 
 INSERT INTO activity_frequency (activity_frequency_id, activity_frequency_name) VALUES (7, 'Yearly');
 
 INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (1, 'Completed');
-INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (2, 'UnCleared');
-INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (3, 'Commited');
+INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (2, 'Processing');
+INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (3, 'UnCleared');
+INSERT INTO activity_status (activity_status_id, activity_status_name) VALUES (4, 'Commited');
+
 
 INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (2, 34005, 101, 0, 'Cash Deposits', true, NULL);
 INSERT INTO activity_types (activity_type_id, account_id, use_key_id, org_id, activity_type_name, is_active, details) VALUES (3, 34005, 101, 0, 'Cheque Deposits', true, NULL);

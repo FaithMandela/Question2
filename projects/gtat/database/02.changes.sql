@@ -364,3 +364,7 @@ DELETE FROM tmpclientpayments;
 DELETE FROM clientpayments;
 
 
+----- Delete specific bookings
+SELECT * FROM management WHERE bookingID = 21385400;
+SELECT * FROM sales WHERE bookingID = 21385400;
+SELECT * FROM netrates WHERE bookingID = 21385400;

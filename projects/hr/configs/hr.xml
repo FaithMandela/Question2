@@ -2205,9 +2205,11 @@
 		<GRID name="Contract Types" keyfield="contract_type_id" table="contract_types">
 			<TEXTFIELD w="75" title="Contract Type ID">contract_type_id</TEXTFIELD>
 			<TEXTFIELD w="275" title="Contract Type Name">contract_type_name</TEXTFIELD>
+			<CHECKBOX w="75" title="Part Time">part_time</CHECKBOX>
 			<FORM name="Contract Types" keyfield="contract_type_id" table="contract_types">
 				<TEXTFIELD w="150" title="Contract Type Name" y="10" h="20" x="10">contract_type_name</TEXTFIELD>
 				<TEXTFIELD w="150" title="Notice Period" y="30" h="20" x="10">notice_period</TEXTFIELD>
+				<CHECKBOX w="150" title="Part Time" y="30" h="20" x="290">part_time</CHECKBOX>
 				<EDITOR w="430" tab="Contract" y="30" h="70" x="10">contract_text</EDITOR>
 				<TEXTAREA w="430" tab="Details" y="30" h="70" x="10">details</TEXTAREA>
 			</FORM>
