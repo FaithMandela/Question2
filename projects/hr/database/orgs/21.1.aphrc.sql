@@ -56,12 +56,6 @@ BEGIN
 		SELECT NEW.entity_id, NEW.org_id, leave_type_id, 0
 		FROM leave_types
 		WHERE (org_id = NEW.org_id) AND ((use_type = 1) OR (use_type = v_use_type));
-		
-		--- Add default task rate definations
-		INSERT INTO task_entitys (entity_id, org_id, task_type_id, task_entity_cost, task_entity_price)
-		SELECT NEW.entity_id, NEW.org_id, task_type_id, default_cost, default_price
-		FROM task_types
-		WHERE (org_id = NEW.org_id);
 	
 	ELSIF (TG_OP = 'UPDATE') THEN
 		UPDATE entitys  SET entity_name = (NEW.Surname || ' ' || NEW.First_name || ' ' || COALESCE(NEW.Middle_name, ''))
