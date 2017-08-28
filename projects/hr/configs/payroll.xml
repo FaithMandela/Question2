@@ -854,7 +854,8 @@
 					<TEXTFIELD w="150" title="Bank Account" y="110" h="20" x="10">bank_account</TEXTFIELD>
 					<TEXTDECIMAL w="150" title="Basic Pay" y="130" h="20" x="10">basic_pay</TEXTDECIMAL>
 					<TEXTFIELD w="150" title="Exchange Rate" y="130" h="20" x="290">exchange_rate</TEXTFIELD>
-					<TEXTAREA w="430" title="Details" y="150" h="70" x="10">details</TEXTAREA>
+					<CHECKBOX w="150" title="Part Time" y="150" h="20" x="10">part_time</CHECKBOX>
+					<TEXTAREA w="430" title="Details" y="170" h="70" x="10">details</TEXTAREA>
 				</FORM>
 				<GRID name="Statutories" keyfield="employee_tax_type_id" linkfield="employee_month_id" table="vw_employee_tax_types">
 					<TEXTFIELD w="75" title="Tax Type ID">tax_type_id</TEXTFIELD>

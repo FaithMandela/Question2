@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_employee_objectives_subrpt2" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="BlankPage" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="25" bottomMargin="25" uuid="867ee53a-7493-4bac-902a-d91582454e3e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vw_evaluation_points_subrpt" language="groovy" pageWidth="555" pageHeight="792" whenNoDataType="BlankPage" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="867ee53a-7493-4bac-902a-d91582454e3e">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="44"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -26,19 +26,18 @@
 	<parameter name="orgwhere" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="job_review_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<queryString>
-		<![CDATA[SELECT
-
-vw_evaluation_objectives.entity_id,	vw_evaluation_objectives.entity_name,	vw_evaluation_objectives.job_review_id,	vw_evaluation_objectives.total_points,	vw_evaluation_objectives.review_date, vw_evaluation_objectives.review_done,	vw_evaluation_objectives.recomendation,	vw_evaluation_objectives.reviewer_comments,	vw_evaluation_objectives.approve_status,	vw_evaluation_objectives.workflow_table_id,	vw_evaluation_objectives.application_date,	vw_evaluation_objectives.action_date,	vw_evaluation_objectives.objective_type_id,	vw_evaluation_objectives.objective_type_name,	vw_evaluation_objectives.objective_id,	vw_evaluation_objectives.date_set,	vw_evaluation_objectives.objective_ps,	vw_evaluation_objectives.objective_name,	vw_evaluation_objectives.objective_completed, vw_evaluation_objectives.objective_details,	vw_evaluation_objectives.org_id,	vw_evaluation_objectives.evaluation_point_id,	vw_evaluation_objectives.points	,vw_evaluation_objectives.reviewer_points,	vw_evaluation_objectives.reviewer_narrative,	vw_evaluation_objectives.narrative,	vw_evaluation_objectives.details,
+		<![CDATA[SELECT vw_evaluation_objectives.entity_id,	vw_evaluation_objectives.entity_name,	vw_evaluation_objectives.job_review_id,	vw_evaluation_objectives.total_points,	vw_evaluation_objectives.review_date, vw_evaluation_objectives.review_done,	vw_evaluation_objectives.recomendation,	vw_evaluation_objectives.reviewer_comments,	vw_evaluation_objectives.approve_status,	vw_evaluation_objectives.workflow_table_id,	vw_evaluation_objectives.application_date,	vw_evaluation_objectives.action_date,	vw_evaluation_objectives.objective_type_id,	vw_evaluation_objectives.objective_type_name,	vw_evaluation_objectives.objective_id,	vw_evaluation_objectives.date_set,	vw_evaluation_objectives.objective_ps,	vw_evaluation_objectives.objective_name,	vw_evaluation_objectives.objective_completed, vw_evaluation_objectives.objective_details,	vw_evaluation_objectives.org_id,	vw_evaluation_objectives.evaluation_point_id,	vw_evaluation_objectives.points	,vw_evaluation_objectives.reviewer_points,	vw_evaluation_objectives.reviewer_narrative,	vw_evaluation_objectives.narrative,	vw_evaluation_objectives.details,
 ((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.points)  AS comp_emp_points,
 ((vw_evaluation_objectives.objective_ps/100) * vw_evaluation_objectives.reviewer_points)  AS comp_reviewer_points
 
 FROM job_reviews INNER JOIN vw_evaluation_objectives
-
   ON job_reviews.job_review_id = vw_evaluation_objectives.job_review_id
 
-WHERE (job_reviews.job_review_id = '$P!{filterid}')
-$P!{organd}
+WHERE (job_reviews.job_review_id = '$P!{job_review_id}')
 AND (EXTRACT(YEAR FROM vw_evaluation_objectives.date_set) = EXTRACT(YEAR FROM job_reviews.review_date))
 
 ORDER BY objective_id ASC]]>
@@ -104,48 +103,7 @@ ORDER BY objective_id ASC]]>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="20">
-				<staticText>
-					<reportElement mode="Opaque" x="2" y="0" width="102" height="20" backcolor="#F2F2F2" uuid="f65caa11-5cc7-4204-9762-12a99dd148c3"/>
-					<box leftPadding="4">
-						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
-					</textElement>
-					<text><![CDATA[Self Rating : ]]></text>
-				</staticText>
-				<staticText>
-					<reportElement mode="Opaque" x="335" y="0" width="160" height="20" backcolor="#F2F2F2" uuid="e4714cce-dad5-42e6-99cf-14fa99b3a715"/>
-					<box>
-						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
-					</textElement>
-					<text><![CDATA[Supervisor's Rating : ]]></text>
-				</staticText>
-				<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="495" y="0" width="58" height="20" backcolor="#F2F2F2" uuid="f53e23e1-a8e2-418b-b1ce-b2b65eca7d35"/>
-					<box>
-						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{total_reviwer_rating}]]></textFieldExpression>
-				</textField>
-				<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-					<reportElement mode="Opaque" x="104" y="0" width="231" height="20" backcolor="#F2F2F2" uuid="772716f6-c6cb-44f6-a3ea-85027a02cbb5"/>
-					<box>
-						<topPen lineWidth="1.25" lineColor="#E7E7E7"/>
-					</box>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{total_emp_rating}]]></textFieldExpression>
-				</textField>
-			</band>
+			<band/>
 		</groupFooter>
 	</group>
 	<group name="objective name">
@@ -269,93 +227,29 @@ ORDER BY objective_id ASC]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="282" splitType="Stretch">
-			<staticText>
-				<reportElement style="Title" x="1" y="32" width="554" height="20" uuid="49edbed3-47d2-4d9e-a5e9-a8baac644b30"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman"/>
-				</textElement>
-				<text><![CDATA[Section II. PERFORMANCE REVIEW AGAINST PREDEFINED ANNUAL OBJECTIVES]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="2" y="64" width="549" height="13" uuid="7cc8e32e-bf28-44f6-a38b-ae3a09e2d239"/>
-				<textElement>
-					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
-				</textElement>
-				<text><![CDATA[Complete the following during the appraisal interview: ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Title" x="0" y="168" width="554" height="20" uuid="a492b20d-4d21-4fa3-9961-6b34c1cf6cd2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman"/>
-				</textElement>
-				<text><![CDATA[RATING SCALES]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="8" y="190" width="543" height="92" uuid="545aed9f-63a6-4069-96a0-a5d2402586b0"/>
-				<box topPadding="2" leftPadding="5" bottomPadding="2" rightPadding="5"/>
-				<textElement verticalAlignment="Middle" markup="html">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[<p>The 4-point rating scale to be used for rating against each performance indicator is as follows</p>
-<br/>
-1 - Exceeds the agreed standard set for the indicator.<br/>
-2 - Meets in full the agreed standard set for the indicator.<br/>
-3 - Partially meets the agreed standard set for the indicator.<br/>
-4 - Unsatisfactory; performance is far below the agreed standard set for the indicator.
-]]></text>
-			</staticText>
-			<staticText>
-				<reportElement positionType="Float" x="8" y="79" width="543" height="89" uuid="5bbb6af6-11ab-4ab3-b8cf-31bd12de4455"/>
-				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
-					<pen lineWidth="0.75"/>
-					<topPen lineWidth="0.75"/>
-					<leftPen lineWidth="0.75"/>
-					<bottomPen lineWidth="0.75"/>
-					<rightPen lineWidth="0.75"/>
-				</box>
-				<textElement markup="html">
-					<font fontName="Times New Roman" pdfFontName="Times-Roman" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[1. This section deals with actual achievement in the last one year. Please be as specific as possible in describing your achievements. <br />
-2. List each of your annual objectives separately.  Against each objective, record achievement levels, especially where you surpassed your objectives or where slippage occurred. <br/>
-3. Assess your performance for the entire year, and not just the most recent events.<br/>
-4. Please add more objectives as relevant.]]></text>
-			</staticText>
-		</band>
+		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
 		<band splitType="Stretch"/>
 	</pageHeader>
 	<detail>
-		<band height="55" splitType="Stretch">
-			<subreport>
-				<reportElement style="Detail" positionType="Float" x="25" y="0" width="526" height="10" uuid="53d4dea7-d233-4df6-b24c-bb7179918aee"/>
-				<subreportParameter name="SUBREPORT_DIR">
-					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="objective_id">
-					<subreportParameterExpression><![CDATA[$F{objective_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "vw_objective_details.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="44" splitType="Stretch">
 			<staticText>
-				<reportElement positionType="Float" mode="Opaque" x="25" y="11" width="526" height="20" backcolor="#E7E7E7" uuid="c2c57667-9e63-4f67-bb48-e06ff4799e4c"/>
+				<reportElement positionType="Float" mode="Opaque" x="25" y="2" width="526" height="20" backcolor="#E7E7E7" uuid="c2c57667-9e63-4f67-bb48-e06ff4799e4c"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" isBold="true" pdfFontName="Times-Roman"/>
 				</textElement>
 				<text><![CDATA[Employees's  comments on achievements against objective]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="25" y="31" width="382" height="20" uuid="ec31957d-0583-4d48-b38c-1fb50594b8b3"/>
+				<reportElement positionType="Float" x="25" y="22" width="382" height="20" uuid="ec31957d-0583-4d48-b38c-1fb50594b8b3"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{narrative}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" mode="Transparent" x="407" y="31" width="86" height="20" backcolor="#E7E7E7" uuid="b60d3a47-6786-442d-bc3a-2078ad0e672d">
+				<reportElement positionType="Float" mode="Transparent" x="407" y="22" width="86" height="20" backcolor="#E7E7E7" uuid="b60d3a47-6786-442d-bc3a-2078ad0e672d">
 					<printWhenExpression><![CDATA[$F{points} > 0]]></printWhenExpression>
 				</reportElement>
 				<box>
@@ -367,7 +261,7 @@ ORDER BY objective_id ASC]]>
 				<text><![CDATA[Employee Rating : ]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement positionType="Float" x="494" y="31" width="57" height="20" uuid="5a580e0e-6ca0-45c3-ada6-2cfddd6662de">
+				<reportElement positionType="Float" x="494" y="22" width="57" height="20" uuid="5a580e0e-6ca0-45c3-ada6-2cfddd6662de">
 					<printWhenExpression><![CDATA[$F{points} > 0]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">

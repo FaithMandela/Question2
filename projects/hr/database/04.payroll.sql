@@ -125,6 +125,7 @@ CREATE TABLE employee_month (
 	exchange_rate			real default 1 not null,
 	bank_account			varchar(32),
 	basic_pay				float default 0 not null,
+	part_time				boolean default false not null,
 	details					text,
 	unique (entity_id, period_id)
 );
@@ -614,7 +615,8 @@ CREATE VIEW vw_employee_month AS
 		employees.employee_full_name,
 		currency.currency_id, currency.currency_name, currency.currency_symbol, employee_month.exchange_rate,
 		
-		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, employee_month.details,
+		employee_month.org_id, employee_month.employee_month_id, employee_month.bank_account, employee_month.basic_pay, 
+		employee_month.part_time, employee_month.details,
 		getAdjustment(employee_month.employee_month_id, 4, 31) as overtime,
 		getAdjustment(employee_month.employee_month_id, 1, 1) as full_allowance,
 		getAdjustment(employee_month.employee_month_id, 1, 2) as payroll_allowance,
@@ -1234,6 +1236,17 @@ BEGIN
 			AND (exchange_date < CURRENT_DATE)));
 		
 	IF(NEW.exchange_rate is null)THEN NEW.exchange_rate := 1; END IF;	
+	
+	SELECT contract_types.part_time INTO NEW.part_time
+	FROM contract_types INNER JOIN applications ON contract_types.contract_type_id = applications.contract_type_id
+	WHERE (applications.application_id IN
+	(SELECT max(applications.application_id)
+	FROM applications
+	WHERE (applications.employee_id = NEW.entity_id)
+		AND (applications.contract_start <= current_date) AND (applications.contract_close >= current_date)
+		AND (approve_status = 'Approved')));
+		
+	IF(NEW.part_time is null)THEN NEW.part_time := false; END IF;
 
 	RETURN NEW;
 END;
