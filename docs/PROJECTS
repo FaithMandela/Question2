@@ -9,9 +9,13 @@ Baraza
 - Leave management
 - Arbitration records
 - Employee performance management (Objective definition, performance review)
-- Attendance and absenteeism tracking
 - Shift management
 - Employee Self service
+- Training management
+
+1.1 Attendance
+- Attendance
+- Absenteeism tracking
 
 2. Payroll
 - Custom definitions of allowances, deductions and expenditure
@@ -37,6 +41,7 @@ Baraza
 - Purchase; Quotations > Purchase Order > goods Received note > Invoice > Payments > Debit notes
 - Budgeting; Budget plans > Budgets > income and expenditure plans
 - Requisition management
+- Ledger, trial balance, income and expenditure statement & balance sheet. 
 - Petty Cash
 - Helpdesk
 - Asset management
